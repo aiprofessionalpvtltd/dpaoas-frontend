@@ -1,5 +1,4 @@
 .login-container{
-    background-image: url('../../assets/bg-01.jpg');
     width: 100%;
     min-height: 100vh;
     display: -webkit-box;
@@ -42,7 +41,7 @@
 }
 .wrap-input i{
     position:absolute;
-    top: 43px;
+    top: 40px;
     color: #919191;
 }
 .label-input {

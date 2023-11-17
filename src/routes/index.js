@@ -7,7 +7,7 @@ import { NotFound } from '../pages/NotFound';
 
 function RequireAuth({ children }) {
 //   const token = getAuthToken();
-let token = null;
+let token = "hshsh";
   return token ? children : <Navigate to="/login" replace />;
 }
 
