@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import '../pages/custom.css'
 import arrowLeft from "../assets/arrow.png"
 import { Link } from 'react-router-dom';
 

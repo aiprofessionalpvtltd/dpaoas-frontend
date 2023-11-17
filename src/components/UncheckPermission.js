@@ -1,5 +1,4 @@
 import React from 'react'
-import '../pages/custom.css'
 
 function UncheckPermission({ permission, checkedItems, handleCheckboxChange }) {
     return (

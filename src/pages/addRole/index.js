@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import '../../pages/custom.css'
 import Header from '../../components/Header'
 
 function AddRole() {

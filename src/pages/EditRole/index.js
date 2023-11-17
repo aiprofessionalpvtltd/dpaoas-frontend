@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import Header from '../../components/Header'
-import '../../pages/custom.css'
 import UncheckPermission from '../../components/UncheckPermission';
 import CheckPermission from '../../components/CheckPermission';
 import { useLocation } from 'react-router-dom';
