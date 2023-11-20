@@ -1,19 +1,11 @@
 import React from 'react'
 import { Layout } from '../../../../components/Layout'
-import { faHome } from '@fortawesome/free-solid-svg-icons'
+import { VMSsidebarItems } from '../../../../utils/sideBarItems'
 
 
-const sidebarItems = [
-    {
-        itemName: "Dashboard",
-        link: "/vms/dashboard",
-        icon: faHome
-    },
-
-]
 function VMSDashboard() {
     return (
-        <Layout module={true} sidebarItems={sidebarItems}>
+        <Layout module={true} sidebarItems={VMSsidebarItems}>
 
 
         </Layout>
