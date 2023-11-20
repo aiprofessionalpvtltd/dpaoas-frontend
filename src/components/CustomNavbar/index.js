@@ -10,7 +10,7 @@ export const CustomNavbar = ({ toggleSidebar, module }) => {
           <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
               <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="#">
+                <a class="nav-link" aria-current="page" href="/">
                   Dashboard
                 </a>
               </li>
@@ -20,7 +20,7 @@ export const CustomNavbar = ({ toggleSidebar, module }) => {
         <div class="user-box dropdown px-3 float-end">
           <a
             class="d-flex align-items-center nav-link dropdown-toggle gap-3 dropdown-toggle-nocaret"
-            href="#"
+            href="/"
             role="button"
             data-bs-toggle="dropdown"
             aria-expanded="false"
@@ -40,7 +40,7 @@ export const CustomNavbar = ({ toggleSidebar, module }) => {
             <li>
               <a
                 class="dropdown-item d-flex align-items-center"
-                href="javascript:;"
+                href="/"
               >
                 <i class="bx bx-user fs-5"></i>
                 <span>Profile</span>
@@ -49,7 +49,7 @@ export const CustomNavbar = ({ toggleSidebar, module }) => {
             <li>
               <a
                 class="dropdown-item d-flex align-items-center"
-                href="javascript:;"
+                href="/"
               >
                 <i class="bx bx-cog fs-5"></i>
                 <span>Settings</span>

@@ -1,9 +1,8 @@
 import React from 'react'
-import { Layout } from '../../../../components/Layout';
-import { HRMsidebarItems } from '../../../../utils/sideBarItems';
-import { useNavigate } from 'react-router-dom';
-import Header from '../../../../components/Header';
-
+import { Layout } from '../../../../../components/Layout'
+import { HRMsidebarItems } from '../../../../../utils/sideBarItems'
+import Header from '../../../../../components/Header'
+import { useNavigate } from 'react-router-dom'
 
 const Data = [
     {
@@ -27,21 +26,22 @@ const Data = [
         status: "Active"
     }
 ]
-function HRMDashboard() {
+
+function HRMDepartment() {
     const navigate = useNavigate()
 
     const handleEditClick = (name) => {
-        navigate("/hrm/editrole", { state: name })
+        navigate("/hrm/editdepartment", { state: name })
     };
     return (
         <Layout module={true} sidebarItems={HRMsidebarItems}>
             <div className='dashboard-content'>
-                <Header dashboardLink={"/hrm/dashboard"} addLink1={"/hrm/dashboard"} title1={"Roles"} />
+                <Header dashboardLink={"/hrm/department"} addLink1={"/hrm/department"} title1={"Department"} />
                 <div className='container-fluid'>
                     <div class='card'>
                         <div class="card-header red-bg" style={{ background: "#f3f3f3" }}>
-                            <h1 class="float-start" style={{ color: "#000" }}>Roles List</h1>
-                            <button class="btn btn-primary float-end" type="button" onClick={() => navigate('/hrm/addrole')}>Add Roles</button>
+                            <h1 class="float-start" style={{ color: "#000" }}>Department List</h1>
+                            <button class="btn btn-primary float-end" type="button" onClick={() => navigate('/hrm/addepartment')}>Add Department</button>
                             <div class="clearfix"></div>
                         </div>
                         <div class='card-body'>
@@ -81,4 +81,4 @@ function HRMDashboard() {
     )
 }
 
-export default HRMDashboard
+export default HRMDepartment

@@ -1,14 +1,20 @@
 import Dashboard from "../pages/Dashboard";
 import HRMDashboard from "../pages/Dashboard/Modules/HRM";
+import HRMAddRole from "../pages/Dashboard/Modules/HRM/AddRole";
+import HRMDepartment from "../pages/Dashboard/Modules/HRM/Department";
+import HRMAddDepartment from "../pages/Dashboard/Modules/HRM/Department/AddDepartment";
+import HRMEditDepartment from "../pages/Dashboard/Modules/HRM/Department/EditDepartment";
+import HRMDesignation from "../pages/Dashboard/Modules/HRM/Designation";
+import HRMAddEditDesignation from "../pages/Dashboard/Modules/HRM/Designation/AddEditDesignation";
+import HRMEditRole from "../pages/Dashboard/Modules/HRM/EditRole";
+import HRMUserDashboard from "../pages/Dashboard/Modules/HRM/User";
+import HRMAddEditUser from "../pages/Dashboard/Modules/HRM/User/AddEditUsers";
 import LMSDashboard from "../pages/Dashboard/Modules/LMS";
 import LMSAddEdit from "../pages/Dashboard/Modules/LMS/AddEditForm";
 import LMSHistory from "../pages/Dashboard/Modules/LMS/History";
 import VMSDashboard from "../pages/Dashboard/Modules/VMS";
-import EditRole from "../pages/EditRole";
-import { ListRole } from "../pages/ListRole";
 import { Login } from "../pages/Login";
 // import { Register } from "../pages/Register";
-import AddRole from "../pages/addRole";
 
 
 export const NonProtectedRoutes = [
@@ -19,12 +25,22 @@ export const NonProtectedRoutes = [
 
 export const ProtectedRoutes = [
     { path: "/", element: <Dashboard /> },
-    { path: "/ListRole", element: <ListRole /> },
-    { path: "/AddRole", element: <AddRole /> },
-    { path: "/EditRole", element: <EditRole /> },
 
     // HRM Module routes
     { path: "/hrm/dashboard", element: <HRMDashboard /> },
+    { path: "/hrm/addrole", element: <HRMAddRole /> },
+    { path: "/hrm/editrole", element: <HRMEditRole /> },
+    { path: "/hrm/department", element: <HRMDepartment /> },
+    { path: "/hrm/addepartment", element: <HRMAddDepartment /> },
+    { path: "/hrm/editdepartment", element: <HRMEditDepartment /> },
+    { path: "/hrm/user", element: <HRMUserDashboard /> },
+    { path: "/hrm/addedituser", element: <HRMAddEditUser /> },
+    { path: "/hrm/designation", element: <HRMDesignation /> },
+    { path: "/hrm/addeditdesignation", element: <HRMAddEditDesignation /> },
+
+
+
+
 
     //LMS Module routes
     { path: "/lms/dashboard", element: <LMSDashboard /> },

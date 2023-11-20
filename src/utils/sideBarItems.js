@@ -15,10 +15,26 @@ export const LMSsidebarItems = [
 
 export const HRMsidebarItems = [
     {
-        itemName: "Dashboard",
+        itemName: "Roles",
         link: "/hrm/dashboard",
         icon: faHome
     },
+
+    {
+        itemName: "Department",
+        link: "/hrm/department",
+        icon: faHome
+    },
+    {
+        itemName: "Designation",
+        link: "/hrm/designation",
+        icon: faHome
+    },
+    {
+        itemName: "Users",
+        link: "/hrm/user",
+        icon: faHome
+    }
 
 ]
 
