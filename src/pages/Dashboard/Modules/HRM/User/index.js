@@ -1,9 +1,8 @@
 import React from 'react'
-import { Layout } from '../../../../components/Layout';
-import { HRMsidebarItems } from '../../../../utils/sideBarItems';
+import { Layout } from '../../../../../components/Layout'
+import Header from '../../../../../components/Header'
 import { useNavigate } from 'react-router-dom';
-import Header from '../../../../components/Header';
-
+import { HRMsidebarItems } from '../../../../../utils/sideBarItems';
 
 const Data = [
     {
@@ -27,21 +26,21 @@ const Data = [
         status: "Active"
     }
 ]
-function HRMDashboard() {
+function HRMUserDashboard() {
     const navigate = useNavigate()
 
     const handleEditClick = (name) => {
-        navigate("/hrm/editrole", { state: name })
+        navigate("/hrm/addedituser", { state: name })
     };
     return (
         <Layout module={true} sidebarItems={HRMsidebarItems}>
             <div className='dashboard-content'>
-                <Header dashboardLink={"/hrm/dashboard"} addLink1={"/hrm/dashboard"} title1={"Roles"} />
+                <Header dashboardLink={"/hrm/user"} addLink1={"/hrm/user"} title1={"User"} />
                 <div className='container-fluid'>
                     <div class='card'>
                         <div class="card-header red-bg" style={{ background: "#f3f3f3" }}>
-                            <h1 class="float-start" style={{ color: "#000" }}>Roles List</h1>
-                            <button class="btn btn-primary float-end" type="button" onClick={() => navigate('/hrm/addrole')}>Add Roles</button>
+                            <h1 class="float-start" style={{ color: "#000" }}>User List</h1>
+                            <button class="btn btn-primary float-end" type="button" onClick={() => navigate('/hrm/addedituser')}>Add User</button>
                             <div class="clearfix"></div>
                         </div>
                         <div class='card-body'>
@@ -81,4 +80,4 @@ function HRMDashboard() {
     )
 }
 
-export default HRMDashboard
+export default HRMUserDashboard
