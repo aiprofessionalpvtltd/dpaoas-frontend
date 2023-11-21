@@ -31,7 +31,7 @@ function HRMDepartment() {
     const navigate = useNavigate()
 
     const handleEditClick = (name) => {
-        navigate("/hrm/editdepartment", { state: name })
+        navigate("/hrm/addeditdepartment", { state: name })
     };
     return (
         <Layout module={true} sidebarItems={HRMsidebarItems}>
@@ -41,7 +41,7 @@ function HRMDepartment() {
                     <div class='card'>
                         <div class="card-header red-bg" style={{ background: "#f3f3f3" }}>
                             <h1 class="float-start" style={{ color: "#000" }}>Department List</h1>
-                            <button class="btn btn-primary float-end" type="button" onClick={() => navigate('/hrm/addepartment')}>Add Department</button>
+                            <button class="btn btn-primary float-end" type="button" onClick={() => navigate('/hrm/addeditdepartment')}>Add Department</button>
                             <div class="clearfix"></div>
                         </div>
                         <div class='card-body'>
