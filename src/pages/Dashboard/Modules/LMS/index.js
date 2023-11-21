@@ -58,7 +58,6 @@ function LMSDashboard() {
     const navigate = useNavigate()
     return (
         <Layout module={true} sidebarItems={LMSsidebarItems} centerlogohide={true}>
-            <div class='container-fluid'>
                 <h1>Welcome back Abbas</h1>
                 <div class="row">
                     <div class="col-md-12">
@@ -119,7 +118,6 @@ function LMSDashboard() {
                         </div>
                     </div>
                 </div>
-            </div>
 
         </Layout>
     )

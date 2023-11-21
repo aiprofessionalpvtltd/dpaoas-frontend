@@ -27,7 +27,7 @@ function LMSAddEdit() {
         },
     });
     return (
-        <Layout module={true} sidebarItems={LMSsidebarItems}>
+        <Layout module={true} sidebarItems={LMSsidebarItems} centerlogohide={true}>
                     <div class='card'>
                         <div class='card-header red-bg' style={{ background: "#14ae5c " }}>
                             {location && location.state ? (

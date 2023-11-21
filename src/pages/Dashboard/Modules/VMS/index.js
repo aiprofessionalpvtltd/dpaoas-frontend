@@ -14,15 +14,18 @@ function VMSDashboard() {
     ];
 
     return (
-        <Layout module={true} sidebarItems={VMSsidebarItems}>
+        <Layout module={true} sidebarItems={VMSsidebarItems} centerlogohide={true}>
             <div class="row">
-                <div class="col">
+                <div class="col-12">
                     <CustomTable
                         data={data}
                         tableTitle="Passes"
                         addBtnText="Add Pass"
                         handleAdd={() => navigate('/lms/addedit')}
                         handleEdit={(item) => navigate('/lms/addedit', { state: item })}
+                        hideUserIcon={true}
+                        // handlePrint={}
+                        // handleUser={}
                     // handleDelete={(item) => handleDelete(item.id)}
                     />
                 </div>

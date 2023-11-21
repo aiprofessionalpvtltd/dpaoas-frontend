@@ -1,9 +1,14 @@
 import React from 'react';
-import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faTrash, faUser, faPrint } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-function CustomTable({ data, handleEdit, handleDelete, tableTitle, headerBgColor, hideBtn, addBtnText, handleAdd }) {
+function CustomTable({ data, handleEdit, handleDelete, tableTitle, headerBgColor, hideBtn, addBtnText, handleAdd, handlePrint, handleUser, hideUserIcon }) {
     const keys = data.length > 0 ? Object.keys(data[0]) : [];
+
+    const formatHeader = (key) => {
+        // Split camelCase into separate words and join with spaces
+        return key.replace(/([a-z0-9])([A-Z])/g, '$1 $2').toLowerCase();
+    };
 
     return (
         <div className="dash-detail-container" style={{ marginTop: "20px" }}>
@@ -22,10 +27,10 @@ function CustomTable({ data, handleEdit, handleDelete, tableTitle, headerBgColor
                         <tr>
                             {keys.map((key, index) => (
                                 <th key={index} className="text-center" scope="col" style={{ backgroundColor: "#FFF", color: "#666" }}>
-                                    {key}
+                                    {formatHeader(key)}
                                 </th>
                             ))}
-                            <th className="text-center">Actions</th>
+                            <th className="text-center" style={{ backgroundColor: "#FFF", color: "#666" }}>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -43,6 +48,17 @@ function CustomTable({ data, handleEdit, handleDelete, tableTitle, headerBgColor
                                     <button onClick={() => handleDelete(item)} className="btn default btn-xs black" data-id={item.id}>
                                         <FontAwesomeIcon icon={faTrash} />
                                     </button>
+                                    {hideUserIcon && hideUserIcon && (
+                                        <>
+                                        <button onClick={() => handleUser(item)} className="btn default btn-xs black" data-id={item.id}>
+                                        <FontAwesomeIcon icon={faUser} />
+                                    </button>
+                                    <button onClick={() => handlePrint(item)} className="btn default btn-xs black" data-id={item.id}>
+                                        <FontAwesomeIcon icon={faPrint} />
+                                    </button>
+                                        </>
+                                    )}
+                                    
                                 </td>
                             </tr>
                         ))}
