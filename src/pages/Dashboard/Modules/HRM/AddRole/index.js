@@ -1,62 +1,82 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { HRMsidebarItems } from '../../../../../utils/sideBarItems'
 import { Layout } from '../../../../../components/Layout';
 import Header from '../../../../../components/Header';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 
+const validationSchema = Yup.object({
+    roleName: Yup.string().required('Role name is required'),
+    roledescription: Yup.string().required('Description is required'),
+});
 function HRMAddRole() {
-    const [state, setState] = useState({
-        roleName: "",
-        description: ""
-    })
-    const handleRoleNameChange = (event) => {
-        setState({
-            ...state,
-            roleName: event.target.value
-        });
+    const initialValues = {
+        roleName: '',
+        roledescription: '',
     };
 
-    const handleDescriptionChange = (event) => {
-        setState({
-            ...state,
-            description: event.target.value
-        });
-    };
-
-    const handleSubmit = () => {
-        alert(`You submitted:\n\nroleName: ${state.roleName}\ndescription: ${state.description}`);
-    }
+    const formik = useFormik({
+        initialValues,
+        validationSchema,
+        onSubmit: (values) => {
+            // Handle form submission here
+            console.log(values);
+        },
+    });
     return (
         <Layout module={true} sidebarItems={HRMsidebarItems}>
             <div className='dashboard-content'>
                 <Header dashboardLink={"/hrm/dashboard"} addLink1={"/hrm/dashboard"} addLink2={"/hrm/addrole"} title1={"Roles"} title2={"Add Role"} />
                 <div className='container-fluid'>
                     <div className='card'>
-                        <div className='card-header red-bg' style={{ background: "#666" }}>
+                        <div className='card-header red-bg' style={{ background: '#666' }}>
                             <h1>Add Role</h1>
                         </div>
                         <div className='card-body'>
-                            <div className="container-fluid">
-                                <div className="row">
-                                    <div className="col-6">
-                                        <div className="mb-3">
-                                            <label className="form-label">Role name * </label>
-                                            <input type="email" className="form-control" id="exampleFormControlInput1" placeholder="Role name" value={state.roleName} onChange={handleRoleNameChange} />
+                            <div className='container-fluid'>
+                                <form onSubmit={formik.handleSubmit}>
+                                    <div className='row'>
+                                        <div className='col-6'>
+                                            <div className='mb-3'>
+                                                <label className='form-label'>Role name * </label>
+                                                <input
+                                                    type='text'
+                                                    className={`form-control ${formik.touched.roleName && formik.errors.roleName ? 'is-invalid' : ''}`}
+                                                    id='roleName'
+                                                    placeholder={formik.values.roleName}
+                                                    onChange={formik.handleChange}
+                                                    onBlur={formik.handleBlur}
+                                                />
+                                                {formik.touched.roleName && formik.errors.roleName && (
+                                                    <div className='invalid-feedback'>{formik.errors.roleName}</div>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div className="row">
-                                    <div className="col-6">
-                                        <div className="mb-3">
-                                            <label className="form-label">Description</label>
-                                            <textarea placeholder="Description" className="form-control" value={state.description} onChange={handleDescriptionChange}></textarea>
-                                        </div>
-                                        <div className="d-grid gap-2 d-md-flex justify-content-md-end">
-                                            <button className="btn btn-primary" type="button" onClick={handleSubmit}>Submit</button>
+                                    <div className='row'>
+                                        <div className='col-6'>
+                                            <div className='mb-3'>
+                                                <label className='form-label'>Description</label>
+                                                <textarea
+                                                    placeholder={formik.values.roledescription}
+                                                    className={`form-control ${formik.touched.roledescription && formik.errors.roledescription ? 'is-invalid' : ''}`}
+                                                    id='roledescription'
+                                                    onChange={formik.handleChange}
+                                                    onBlur={formik.handleBlur}
+                                                    value={formik.values.roledescription}
+                                                ></textarea>
+                                                {formik.touched.roledescription && formik.errors.roledescription && (
+                                                    <div className='invalid-feedback'>{formik.errors.roledescription}</div>
+                                                )}
+                                            </div>
+                                            <div className='d-grid gap-2 d-md-flex justify-content-md-end'>
+                                                <button className='btn btn-primary' type='submit'>
+                                                    Submit
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div className="row">
-                                </div>
+                                </form>
                             </div>
                         </div>
                     </div>
