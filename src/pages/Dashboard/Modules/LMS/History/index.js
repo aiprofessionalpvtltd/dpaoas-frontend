@@ -4,42 +4,7 @@ import { LMSsidebarItems } from '../../../../../utils/sideBarItems'
 import CustomTable from '../../../../../components/CustomComponents/CustomTable'
 import { useNavigate } from 'react-router-dom'
 
-const headings = [
-    {
-        id: 1,
-        title: "Name"
-    },
-    {
-        id: 2,
-        title: "Leave Type"
-    },
-    {
-        id: 3,
-        title: "Leave Period"
-    },
-    {
-        id: 1,
-        title: "Total Days"
-    },
-    {
-        id: 2,
-        title: "Reason"
-    },
-    {
-        id: 3,
-        title: "Leave Status"
-    },
-    {
-        id: 2,
-        title: "Submitted To"
-    },
-    {
-        id: 3,
-        title: "Action"
-    },
-
-]
-const apiData = [
+const data = [
     {
         id: 1,
         name: "Saqib Khan",
@@ -67,9 +32,7 @@ function LMSHistory() {
     const navigate = useNavigate()
 
     return (
-        <Layout module={true} sidebarItems={LMSsidebarItems}>
-            <div class='dashboard-content'>
-                <div >
+        <Layout module={true} sidebarItems={LMSsidebarItems} centerlogohide={true}>
                     <div class='card'>
                         <div class='card-header red-bg' style={{ background: "#14ae5c" }}>
                             <h1>Leave History</h1>
@@ -121,13 +84,10 @@ function LMSHistory() {
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
-                                        <CustomTable headingArr={headings} itemsArr={apiData} tableTitle={"Leave Request"} headerBgColor={"#666"} hideBtn={true} handleEdit={() => navigate('/lms/addedit', { state: true })} />
+                                        <CustomTable data={data} tableTitle={"Leave Request"} headerBgColor={"#666"} hideBtn={true} handleEdit={() => navigate('/lms/addedit', { state: true })} />
                                     </div></div>
                             </div>
                         </div>
-
-                    </div>
-                </div>
             </div>
         </Layout>
     )

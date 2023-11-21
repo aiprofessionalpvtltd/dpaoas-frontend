@@ -805,7 +805,7 @@ hr.horizontal {
 }
 
 .red-bg {
-    background: linear-gradient(to bottom, #b5090b 0%, #a00808 100%);
+    background: #14ae5c !important;
 }
 
 .red-bg h1 {
@@ -930,12 +930,12 @@ hr.horizontal {
 }
 
 .dashboard-nav-item:hover {
-    background: linear-gradient(to bottom, #b5090b 0%, #a00808 100%);
+    background: #14ae5c !important;
     color: #FFF;
 }
 
 .dashboard-nav .active {
-    background: linear-gradient(to bottom, #b5090b 0%, #a00808 100%);
+    background: #14ae5c !important;
     color: #FFF !important;
 }
 

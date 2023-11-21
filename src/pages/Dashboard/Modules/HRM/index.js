@@ -34,13 +34,12 @@ function HRMDashboard() {
         navigate("/hrm/editrole", { state: name })
     };
     return (
-        <Layout module={true} sidebarItems={HRMsidebarItems}>
-            <div className='dashboard-content'>
+        <Layout module={true} sidebarItems={HRMsidebarItems} centerlogohide={true}>
                 <Header dashboardLink={"/hrm/dashboard"} addLink1={"/hrm/dashboard"} title1={"Roles"} />
                 <div className='container-fluid'>
                     <div class='card'>
                         <div class="card-header red-bg" style={{ background: "#f3f3f3" }}>
-                            <h1 class="float-start" style={{ color: "#000" }}>Roles List</h1>
+                            <h1 class="float-start">Roles List</h1>
                             <button class="btn btn-primary float-end" type="button" onClick={() => navigate('/hrm/addrole')}>Add Roles</button>
                             <div class="clearfix"></div>
                         </div>
@@ -75,7 +74,6 @@ function HRMDashboard() {
                         </div>
                     </div>
                 </div>
-            </div>
 
         </Layout>
     )

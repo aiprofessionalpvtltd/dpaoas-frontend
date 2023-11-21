@@ -14,7 +14,8 @@ export const Sidebar = ({ sidebarItems }) => {
   return (
     <nav
       id="sidebar"
-      className="dashboard-nav col-md-3 col-lg-2 d-md-block position-fixed vh-100 p-0"
+      className="dashboard-nav"
+      style={{ width: "240px" }}
     >
       <header>
         <a href="/" className="menu-toggle">

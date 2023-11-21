@@ -15,7 +15,7 @@ const validationSchema = Yup.object({
     cnicnumber: Yup.string().required('CNIC Number is required'),
     permanentaddress: Yup.string().required('Permanent Address is required'),
 });
-function HRMAddEditUser() {
+function HRMAddEditEmployee() {
     const location = useLocation()
     const formik = useFormik({
         initialValues: {
@@ -32,15 +32,14 @@ function HRMAddEditUser() {
         },
     });
     return (
-        <Layout module={true} sidebarItems={HRMsidebarItems}>
-            <div className='dashboard-content'>
-                <Header dashboardLink={"/hrm/user"} addLink1={"/hrm/user"} title1={"User"} addLink2={"/hrm/addedituser"} title2={location && location?.state ? "Edit User" : "Add User"} />
+        <Layout module={true} sidebarItems={HRMsidebarItems} centerlogohide={true}>
+                <Header dashboardLink={"/hrm/employee"} addLink1={"/hrm/employee"} title1={"Employee"} addLink2={"/hrm/addeditemployee"} title2={location && location?.state ? "Edit Employee" : "Add Employee"} />
                 <div class="container-fluid">
                     <div class="card">
                         <div class="card-header red-bg" style={{ background: "#14ae5c" }}>
                             {location && location.state ? (
-                                <h1>Edit User</h1>
-                            ) : <h1>Add User</h1>}
+                                <h1>Edit Employee</h1>
+                            ) : <h1>Add Employee</h1>}
                         </div>
                         <div class="card-body">
                             <form onSubmit={formik.handleSubmit}>
@@ -335,9 +334,8 @@ function HRMAddEditUser() {
                         </div>
                     </div>
                 </div>
-            </div>
         </Layout>
     )
 }
 
-export default HRMAddEditUser
+export default HRMAddEditEmployee

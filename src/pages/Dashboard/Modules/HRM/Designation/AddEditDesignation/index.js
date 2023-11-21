@@ -28,8 +28,7 @@ function HRMAddEditDesignation() {
     });
 
     return (
-        <Layout module={true} sidebarItems={HRMsidebarItems}>
-            <div className='dashboard-content'>
+        <Layout module={true} sidebarItems={HRMsidebarItems} centerlogohide={true}>
                 <Header dashboardLink={"/hrm/designation"} addLink1={"/hrm/designation"} title1={"Designation"} addLink2={"/hrm/addeditdesignation"} title2={location && location?.state ? "Edit Designation" : "Add Designation"} />
                 <div className='container-fluid'>
                     <div className='card'>
@@ -58,7 +57,24 @@ function HRMAddEditDesignation() {
                                                 )}
                                             </div>
                                         </div>
+                                        {location && location?.state && (
+                                            <div className='col-6'>
+                                                <div className="mb-3">
+                                                    <label className="form-label">Staus</label>
+                                                    <input type="email" className={`form-control ${formik.touched.designationstatus && formik.errors.designationstatus ? 'is-invalid' : ''}`}
+                                                        id="designationstatus"
+                                                        placeholder={formik.values.designationstatus}
+                                                        onChange={formik.handleChange}
+                                                        onBlur={formik.handleBlur}
+                                                        value={formik.values.designationstatus} />
+                                                    {formik.touched.designationstatus && formik.errors.designationstatus && (
+                                                        <div className='invalid-feedback'>{formik.errors.designationstatus}</div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
+
                                     <div className="row">
                                         <div className="col-6">
                                             <div className="mb-3">
@@ -75,21 +91,7 @@ function HRMAddEditDesignation() {
                                                     <div className='invalid-feedback'>{formik.errors.designationdescription}</div>
                                                 )}
                                             </div>
-                                            {location && location?.state && (
 
-                                                <div className="mb-3">
-                                                    <label className="form-label">Staus</label>
-                                                    <input type="email" className={`form-control ${formik.touched.designationstatus && formik.errors.designationstatus ? 'is-invalid' : ''}`}
-                                                        id="designationstatus"
-                                                        placeholder={formik.values.designationstatus}
-                                                        onChange={formik.handleChange}
-                                                        onBlur={formik.handleBlur}
-                                                        value={formik.values.designationstatus} />
-                                                    {formik.touched.designationstatus && formik.errors.designationstatus && (
-                                                        <div className='invalid-feedback'>{formik.errors.designationstatus}</div>
-                                                    )}
-                                                </div>
-                                            )}
                                             <div className="d-grid gap-2 d-md-flex justify-content-md-end">
                                                 <button className="btn btn-primary" type="submit" >Submit</button>
                                             </div>
@@ -102,7 +104,6 @@ function HRMAddEditDesignation() {
                         </div>
                     </div>
                 </div>
-            </div>
         </Layout>
     )
 }

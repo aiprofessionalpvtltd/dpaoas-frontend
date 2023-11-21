@@ -6,8 +6,8 @@ import HRMAddEditDepartment from "../pages/Dashboard/Modules/HRM/Department/AddE
 import HRMDesignation from "../pages/Dashboard/Modules/HRM/Designation";
 import HRMAddEditDesignation from "../pages/Dashboard/Modules/HRM/Designation/AddEditDesignation";
 import HRMEditRole from "../pages/Dashboard/Modules/HRM/EditRole";
-import HRMUserDashboard from "../pages/Dashboard/Modules/HRM/User";
-import HRMAddEditUser from "../pages/Dashboard/Modules/HRM/User/AddEditUsers";
+import HRMEmployeeDashboard from "../pages/Dashboard/Modules/HRM/Employee";
+import HRMAddEditEmployee from "../pages/Dashboard/Modules/HRM/Employee/AddEditEmployee";
 import LMSDashboard from "../pages/Dashboard/Modules/LMS";
 import LMSAddEdit from "../pages/Dashboard/Modules/LMS/AddEditForm";
 import LMSHistory from "../pages/Dashboard/Modules/LMS/History";
@@ -31,14 +31,10 @@ export const ProtectedRoutes = [
     { path: "/hrm/editrole", element: <HRMEditRole /> },
     { path: "/hrm/department", element: <HRMDepartment /> },
     { path: "/hrm/addeditdepartment", element: <HRMAddEditDepartment /> },
-    { path: "/hrm/user", element: <HRMUserDashboard /> },
-    { path: "/hrm/addedituser", element: <HRMAddEditUser /> },
+    { path: "/hrm/employee", element: <HRMEmployeeDashboard /> },
+    { path: "/hrm/addeditemployee", element: <HRMAddEditEmployee /> },
     { path: "/hrm/designation", element: <HRMDesignation /> },
     { path: "/hrm/addeditdesignation", element: <HRMAddEditDesignation /> },
-
-
-
-
 
     //LMS Module routes
     { path: "/lms/dashboard", element: <LMSDashboard /> },

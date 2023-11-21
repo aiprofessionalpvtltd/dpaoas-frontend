@@ -39,8 +39,7 @@ function HRMEditRole() {
         }
     };
     return (
-        <Layout module={true} sidebarItems={HRMsidebarItems}>
-            <div className='dashboard-content'>
+        <Layout module={true} sidebarItems={HRMsidebarItems} centerlogohide={true}>
                 <Header dashboardLink={"/hrm/dashboard"} addLink1={"/hrm/dashboard"} addLink2={"/hrm/editrole"} title1={"Roles"} title2={"Edit Role"} />
                 <div className='container-fluid'>
                     <div className='card'>
@@ -76,7 +75,6 @@ function HRMEditRole() {
                         </div>
                     </div>
                 </div>
-            </div>
         </Layout>
     )
 }

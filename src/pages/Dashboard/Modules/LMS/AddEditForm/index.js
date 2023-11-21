@@ -28,8 +28,6 @@ function LMSAddEdit() {
     });
     return (
         <Layout module={true} sidebarItems={LMSsidebarItems}>
-            <div class='dashboard-content'>
-                <div >
                     <div class='card'>
                         <div class='card-header red-bg' style={{ background: "#14ae5c " }}>
                             {location && location.state ? (
@@ -211,8 +209,6 @@ function LMSAddEdit() {
                             </form>
                         </div>
                     </div>
-                </div>
-            </div>
         </Layout>
     )
 }

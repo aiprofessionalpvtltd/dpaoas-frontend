@@ -26,21 +26,20 @@ const Data = [
         status: "Active"
     }
 ]
-function HRMUserDashboard() {
+function HRMEmployeeDashboard() {
     const navigate = useNavigate()
 
     const handleEditClick = (name) => {
-        navigate("/hrm/addedituser", { state: name })
+        navigate("/hrm/addeditemployee", { state: name })
     };
     return (
-        <Layout module={true} sidebarItems={HRMsidebarItems}>
-            <div className='dashboard-content'>
-                <Header dashboardLink={"/hrm/user"} addLink1={"/hrm/user"} title1={"User"} />
+        <Layout module={true} sidebarItems={HRMsidebarItems} centerlogohide={true}>
+                <Header dashboardLink={"/hrm/employee"} addLink1={"/hrm/employee"} title1={"Employee"} />
                 <div className='container-fluid'>
                     <div class='card'>
                         <div class="card-header red-bg" style={{ background: "#f3f3f3" }}>
-                            <h1 class="float-start" style={{ color: "#000" }}>User List</h1>
-                            <button class="btn btn-primary float-end" type="button" onClick={() => navigate('/hrm/addedituser')}>Add User</button>
+                            <h1 class="float-start">Employee List</h1>
+                            <button class="btn btn-primary float-end" type="button" onClick={() => navigate('/hrm/addeditemployee')}>Add Employee</button>
                             <div class="clearfix"></div>
                         </div>
                         <div class='card-body'>
@@ -74,10 +73,9 @@ function HRMUserDashboard() {
                         </div>
                     </div>
                 </div>
-            </div>
 
         </Layout>
     )
 }
 
-export default HRMUserDashboard
+export default HRMEmployeeDashboard

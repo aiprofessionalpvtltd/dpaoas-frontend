@@ -31,8 +31,8 @@ export const HRMsidebarItems = [
         icon: faHome
     },
     {
-        itemName: "Users",
-        link: "/hrm/user",
+        itemName: "Employee",
+        link: "/hrm/employee",
         icon: faHome
     }
 

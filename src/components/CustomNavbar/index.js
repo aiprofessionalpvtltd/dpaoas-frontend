@@ -2,7 +2,7 @@ import React from "react";
 import Logo from "../../assets/logo.png"
 import Profile from "../../assets/profile-img.jpg"
 
-export const CustomNavbar = ({ toggleSidebar, module }) => {
+export const CustomNavbar = ({ toggleSidebar, module, centerlogohide }) => {
   return (
     <header class='dashboard-toolbar' style={{ marginLeft: module ? "260px" : "0px" }}>
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -60,9 +60,11 @@ export const CustomNavbar = ({ toggleSidebar, module }) => {
       </nav>
 
       <div class="clearfix"></div>
-      <div class="circle">
-        <img src={Logo} alt="" srcset="" />
-      </div>
+      {!centerlogohide && !centerlogohide && (
+        <div class="circle">
+          <img src={Logo} alt="" srcset="" />
+        </div>
+      )}
     </header>
   );
 };
