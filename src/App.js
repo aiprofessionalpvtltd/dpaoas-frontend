@@ -3,9 +3,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '../src/utils/custom.css'
 import 'aos/dist/aos.css';
 import { NavigationRoutes } from './routes';
+import { AuthProvider } from './api/AuthContext';
 
 function App() {
-  return <NavigationRoutes />;
+  return <AuthProvider><NavigationRoutes /></AuthProvider>
 }
 
 export default App;

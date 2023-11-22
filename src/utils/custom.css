@@ -1093,7 +1093,6 @@ hr.horizontal {
     webkit-box-shadow: 0px 7px 9px -4px rgba(179, 179, 179, 1);
     -moz-box-shadow: 0px 7px 9px -4px rgba(179, 179, 179, 1);
     box-shadow: 0px 7px 9px -4px rgba(179, 179, 179, 1);
-    margin-left: 240px !important;
 }
 
 .nav-item-divider {
@@ -2152,7 +2151,7 @@ textarea {
     padding: 15px;
 }
 .dash-detail-container .table{
-    display: block;
+    /* display: block; */
     overflow:auto
 }
 .dash-detail-container .table .btn.default{

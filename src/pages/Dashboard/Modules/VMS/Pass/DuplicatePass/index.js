@@ -1,7 +1,6 @@
 import React from 'react'
-import { Layout } from '../../../../../components/Layout'
-import { VMSsidebarItems } from '../../../../../utils/sideBarItems'
-import { useLocation } from 'react-router-dom'
+import { Layout } from '../../../../../../components/Layout'
+import { VMSsidebarItems } from '../../../../../../utils/sideBarItems'
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
@@ -11,8 +10,7 @@ const validationSchema = Yup.object({
   requestby: Yup.string().required('Request By is required'),
 
 });
-function VMSAddEditPass() {
-  const location = useLocation()
+function VMSDuplicatePass() {
   const formik = useFormik({
     initialValues: {
       remarks: '',
@@ -29,9 +27,7 @@ function VMSAddEditPass() {
     <Layout module={true} sidebarItems={VMSsidebarItems} centerlogohide={true}>
       <div class='card'>
         <div class='card-header red-bg' style={{ background: "#14ae5c !important" }}>
-          {location && location?.state ? (
-            <h1>Edit Pass</h1>
-          ) : <h1>Add Pass</h1>}
+            <h1>Duplicate Pass</h1>
         </div>
         <div class='card-body'>
           <form onSubmit={formik.handleSubmit}>
@@ -177,4 +173,4 @@ function VMSAddEditPass() {
   )
 }
 
-export default VMSAddEditPass
+export default VMSDuplicatePass

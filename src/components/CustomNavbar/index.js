@@ -4,7 +4,7 @@ import Profile from "../../assets/profile-img.jpg"
 
 export const CustomNavbar = ({ toggleSidebar, module, centerlogohide }) => {
   return (
-    <header class='dashboard-toolbar' style={{ marginLeft: module ? "260px" : "0px" }}>
+    <header class='dashboard-toolbar' style={{ marginLeft: module ? "240px" : "0px", top: centerlogohide ? "0px" : "22px" }}>
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
           <div class="collapse navbar-collapse" id="navbarNavDropdown">
