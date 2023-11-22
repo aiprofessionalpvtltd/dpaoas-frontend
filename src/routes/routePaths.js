@@ -12,6 +12,9 @@ import LMSDashboard from "../pages/Dashboard/Modules/LMS";
 import LMSAddEdit from "../pages/Dashboard/Modules/LMS/AddEditForm";
 import LMSHistory from "../pages/Dashboard/Modules/LMS/History";
 import VMSDashboard from "../pages/Dashboard/Modules/VMS";
+import VMSAddEditPass from "../pages/Dashboard/Modules/VMS/Pass";
+import VMSVisitors from "../pages/Dashboard/Modules/VMS/Visitors";
+import HRMAddEditVisitors from "../pages/Dashboard/Modules/VMS/Visitors/AddEditVisitors";
 import { Login } from "../pages/Login";
 // import { Register } from "../pages/Register";
 
@@ -44,6 +47,8 @@ export const ProtectedRoutes = [
 
     //VMS Module routes
     { path: "/vms/dashboard", element: <VMSDashboard /> },
-
+    { path: "/vms/addeditpass", element: <VMSAddEditPass /> },
+    { path: "/vms/visitor", element: <VMSVisitors /> },
+    { path: "/vms/addeditvisitor", element: <HRMAddEditVisitors /> },
 
 ];

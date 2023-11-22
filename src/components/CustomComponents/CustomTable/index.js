@@ -2,7 +2,7 @@ import React from 'react';
 import { faEdit, faTrash, faUser, faPrint } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-function CustomTable({ data, handleEdit, handleDelete, tableTitle, headerBgColor, hideBtn, addBtnText, handleAdd, handlePrint, handleUser, hideUserIcon }) {
+function CustomTable({ data, handleEdit, handleDelete, tableTitle, headerBgColor, hideBtn, addBtnText, handleAdd, handlePrint, handleUser, hideUserIcon, headertitlebgColor, headertitletextColor }) {
     const keys = data.length > 0 ? Object.keys(data[0]) : [];
 
     const formatHeader = (key) => {
@@ -22,23 +22,29 @@ function CustomTable({ data, handleEdit, handleDelete, tableTitle, headerBgColor
                     )}
                     <div className="clearfix"></div>
                 </div>
-                <table className="table table-striped red-bg-head">
+                <table className="table table-striped red-bg-head" style={{ marginTop: "20px" }}>
                     <thead>
                         <tr>
                             {keys.map((key, index) => (
-                                <th key={index} className="text-center" scope="col" style={{ backgroundColor: "#FFF", color: "#666" }}>
+                                <th key={index} className="text-center" scope="col" style={{ backgroundColor: headertitlebgColor ? headertitlebgColor : "#FFF", color: headertitletextColor ? headertitletextColor : "#666" }}>
                                     {formatHeader(key)}
                                 </th>
                             ))}
-                            <th className="text-center" style={{ backgroundColor: "#FFF", color: "#666" }}>Actions</th>
+                            <th className="text-center" style={{ backgroundColor: headertitlebgColor ? headertitlebgColor : "#FFF", color: headertitletextColor ? headertitletextColor : "#666" }}>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {data.map((item, rowIndex) => (
                             <tr key={rowIndex}>
                                 {keys.map((key, colIndex) => (
-                                    <td key={colIndex} className="text-center">
-                                        {item[key]}
+                                    // <td key={colIndex} className="text-center">
+                                    //     {item[key]}
+                                    // </td>
+                                    <td class="text-center">
+                                        {item[key] === "Active" || item[key] === "InActive" ? (
+                                            <span class={`label label-sm ${item[key] === 'Active' ? 'label-success' : 'label-danger'}`}>{item[key]}</span>
+                                        ) : <span>{item[key]}</span>
+                                        }
                                     </td>
                                 ))}
                                 <td className="text-center">
@@ -50,15 +56,15 @@ function CustomTable({ data, handleEdit, handleDelete, tableTitle, headerBgColor
                                     </button>
                                     {hideUserIcon && hideUserIcon && (
                                         <>
-                                        <button onClick={() => handleUser(item)} className="btn default btn-xs black" data-id={item.id}>
-                                        <FontAwesomeIcon icon={faUser} />
-                                    </button>
-                                    <button onClick={() => handlePrint(item)} className="btn default btn-xs black" data-id={item.id}>
-                                        <FontAwesomeIcon icon={faPrint} />
-                                    </button>
+                                            <button onClick={() => handleUser(item)} className="btn default btn-xs black" data-id={item.id}>
+                                                <FontAwesomeIcon icon={faUser} />
+                                            </button>
+                                            <button onClick={() => handlePrint(item)} className="btn default btn-xs black" data-id={item.id}>
+                                                <FontAwesomeIcon icon={faPrint} />
+                                            </button>
                                         </>
                                     )}
-                                    
+
                                 </td>
                             </tr>
                         ))}
