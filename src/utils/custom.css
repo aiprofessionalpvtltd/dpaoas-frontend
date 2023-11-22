@@ -1093,6 +1093,7 @@ hr.horizontal {
     webkit-box-shadow: 0px 7px 9px -4px rgba(179, 179, 179, 1);
     -moz-box-shadow: 0px 7px 9px -4px rgba(179, 179, 179, 1);
     box-shadow: 0px 7px 9px -4px rgba(179, 179, 179, 1);
+    margin-left: 240px !important;
 }
 
 .nav-item-divider {
@@ -2149,6 +2150,16 @@ textarea {
 .dash-detail-container {
     border: #ddd solid 1px;
     padding: 15px;
+}
+.dash-detail-container .table{
+    display: block;
+    overflow:auto
+}
+.dash-detail-container .table .btn.default{
+    background-color: transparent;
+    padding: 0 4px;
+    border: none;
+    font-size: 15px;
 }
 
 .btn.btn-outline:not(.btn-outline-dashed) {
