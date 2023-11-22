@@ -21,11 +21,12 @@ function VMSDashboard() {
                         data={data}
                         tableTitle="Passes"
                         addBtnText="Add Pass"
-                        handleAdd={() => navigate('/lms/addedit')}
-                        handleEdit={(item) => navigate('/lms/addedit', { state: item })}
+                        handleAdd={() => navigate('/vms/addeditpass')}
+                        handleEdit={(item) => navigate('/vms/addeditpass', { state: item })}
                         hideUserIcon={true}
-                        // handlePrint={}
-                        // handleUser={}
+                        handleUser={() => navigate("/vms/visitor")}
+                    // handlePrint={}
+                    // handleUser={}
                     // handleDelete={(item) => handleDelete(item.id)}
                     />
                 </div>

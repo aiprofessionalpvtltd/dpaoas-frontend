@@ -40,41 +40,41 @@ function HRMEditRole() {
     };
     return (
         <Layout module={true} sidebarItems={HRMsidebarItems} centerlogohide={true}>
-                <Header dashboardLink={"/hrm/dashboard"} addLink1={"/hrm/dashboard"} addLink2={"/hrm/editrole"} title1={"Roles"} title2={"Edit Role"} />
-                <div className='container-fluid'>
-                    <div className='card'>
-                        <div className='card-header red-bg' style={{ background: "#666" }}>
-                            <h1>Edit Role</h1>
-                        </div>
-                        <div className='card-body pb-5'>
-                            <div className="container-fluid">
-                                <div className="row">
-                                    <div className="col">
-                                        <div className="mb-3">
-                                            <label className="form-label">Role name * </label>
-                                            <input type="email" className="form-control" id="exampleFormControlInput1" placeholder={location.state} />
-                                        </div>
+            <Header dashboardLink={"/hrm/dashboard"} addLink1={"/hrm/dashboard"} addLink2={"/hrm/editrole"} title1={"Roles"} title2={"Edit Role"} />
+            <div className='container-fluid'>
+                <div className='card'>
+                    <div className='card-header red-bg' style={{ background: "#666" }}>
+                        <h1>Edit Role</h1>
+                    </div>
+                    <div className='card-body pb-5'>
+                        <div className="container-fluid">
+                            <div className="row">
+                                <div className="col">
+                                    <div className="mb-3">
+                                        <label className="form-label">Role name * </label>
+                                        <input type="email" className="form-control" id="exampleFormControlInput1" placeholder={location?.state?.name} />
+                                    </div>
+                                    {permissionsArray.map(permission => (
+                                        <UncheckPermission permission={permission} checkedItems={checkedItems} handleCheckboxChange={handleCheckboxChange} key={permission.id} />
+                                    ))}
+
+                                    <div className="d-grid gap-2 d-md-flex justify-content-md-end">
+                                        <button className="btn btn-primary" type="button">Submit</button>
+                                    </div>
+                                </div>
+                                <div className="col">
+                                    <div className="permisionbox">
                                         {permissionsArray.map(permission => (
-                                            <UncheckPermission permission={permission} checkedItems={checkedItems} handleCheckboxChange={handleCheckboxChange} key={permission.id} />
+                                            <CheckPermission permission={permission} checkedItems={checkedItems} handleCheckboxChange={handleCheckboxChange} key={permission.id} />
                                         ))}
 
-                                        <div className="d-grid gap-2 d-md-flex justify-content-md-end">
-                                            <button className="btn btn-primary" type="button">Submit</button>
-                                        </div>
-                                    </div>
-                                    <div className="col">
-                                        <div className="permisionbox">
-                                            {permissionsArray.map(permission => (
-                                                <CheckPermission permission={permission} checkedItems={checkedItems} handleCheckboxChange={handleCheckboxChange} key={permission.id} />
-                                            ))}
-
-                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
         </Layout>
     )
 }
