@@ -25,6 +25,7 @@ function VMSDashboard() {
                         handleEdit={(item) => navigate('/vms/addeditpass', { state: item })}
                         hideUserIcon={true}
                         handleUser={() => navigate("/vms/visitor")}
+                        handleDuplicate={() => navigate("/vms/duplicatepass")}
                     // handlePrint={}
                     // handleUser={}
                     // handleDelete={(item) => handleDelete(item.id)}

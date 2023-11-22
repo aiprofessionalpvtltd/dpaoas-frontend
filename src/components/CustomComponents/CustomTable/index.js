@@ -1,8 +1,8 @@
 import React from 'react';
-import { faEdit, faTrash, faUser, faPrint } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faTrash, faUser, faPrint, faClone } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-function CustomTable({ data, handleEdit, handleDelete, tableTitle, headerBgColor, hideBtn, addBtnText, handleAdd, handlePrint, handleUser, hideUserIcon, headertitlebgColor, headertitletextColor }) {
+function CustomTable({ data, handleEdit, handleDelete, tableTitle, headerBgColor, hideBtn, addBtnText, handleAdd, handlePrint, handleUser, handleDuplicate, hideUserIcon, headertitlebgColor, headertitletextColor, block }) {
     const keys = data.length > 0 ? Object.keys(data[0]) : [];
 
     const formatHeader = (key) => {
@@ -22,7 +22,7 @@ function CustomTable({ data, handleEdit, handleDelete, tableTitle, headerBgColor
                     )}
                     <div className="clearfix"></div>
                 </div>
-                <table className="table table-striped red-bg-head" style={{ marginTop: "20px" }}>
+                <table className="table table-striped red-bg-head" style={{ marginTop: "20px", display:block? "block":"" }}>
                     <thead>
                         <tr>
                             {keys.map((key, index) => (
@@ -61,6 +61,9 @@ function CustomTable({ data, handleEdit, handleDelete, tableTitle, headerBgColor
                                             </button>
                                             <button onClick={() => handlePrint(item)} className="btn default btn-xs black" data-id={item.id}>
                                                 <FontAwesomeIcon icon={faPrint} />
+                                            </button>
+                                            <button onClick={() => handleDuplicate(item)} className="btn default btn-xs black" data-id={item.id}>
+                                                <FontAwesomeIcon icon={faClone} />
                                             </button>
                                         </>
                                     )}

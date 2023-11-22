@@ -7,9 +7,6 @@ import { useLocation } from "react-router-dom";
 
 export const Sidebar = ({ sidebarItems }) => {
   const location = useLocation();
-  console.log('====================================');
-  console.log("sidebarItems", sidebarItems);
-  console.log('====================================');
 
   return (
     <nav

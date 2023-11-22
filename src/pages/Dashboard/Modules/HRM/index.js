@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import { Layout } from '../../../../components/Layout';
 import { HRMsidebarItems } from '../../../../utils/sideBarItems';
 import { useNavigate } from 'react-router-dom';
@@ -26,8 +26,6 @@ const data = [
 ]
 function HRMDashboard() {
     const navigate = useNavigate()
-
-
     return (
         <Layout module={true} sidebarItems={HRMsidebarItems} centerlogohide={true}>
             <Header dashboardLink={"/hrm/dashboard"} addLink1={"/hrm/dashboard"} title1={"Roles"} />
