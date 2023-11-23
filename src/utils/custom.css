@@ -3268,5 +3268,7 @@ textarea {
 .purplebg {
     background: linear-gradient(to bottom, #7a46a0 0%, #7030a0 100%);
 }
-
+.react-datepicker-wrapper{
+    width: "100% !importent";
+}
 /*------------------ Roles Dashboard Css End  -----------------*/

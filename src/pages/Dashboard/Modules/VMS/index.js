@@ -28,6 +28,7 @@ function VMSDashboard() {
                         hideUserIcon={true}
                         handleUser={() => navigate("/vms/visitor")}
                         handleDuplicate={() => navigate("/vms/duplicatepass")}
+                        seachBarShow={true}
                     // handlePrint={}
                     // handleUser={}
                     // handleDelete={(item) => handleDelete(item.id)}

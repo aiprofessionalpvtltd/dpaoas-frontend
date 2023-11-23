@@ -25,6 +25,7 @@ function VMSVisitors() {
                         addBtnText="Add Visitor"
                         handleAdd={() => navigate('/vms/addeditvisitor')}
                         handleEdit={(item) => navigate('/vms/addeditvisitor', { state: item })}
+                        seachBarShow={true}
                     // handlePrint={}
                     // handleUser={}
                     // handleDelete={(item) => handleDelete(item.id)}

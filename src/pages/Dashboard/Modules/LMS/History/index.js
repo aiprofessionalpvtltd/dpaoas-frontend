@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Layout } from '../../../../../components/Layout'
 import { LMSsidebarItems } from '../../../../../utils/sideBarItems'
 import CustomTable from '../../../../../components/CustomComponents/CustomTable'
 import { useNavigate } from 'react-router-dom'
 import Header from '../../../../../components/Header'
+import DatePicker from "react-datepicker";
 
 const data = [
     {
@@ -31,6 +32,9 @@ const data = [
 ]
 function LMSHistory() {
     const navigate = useNavigate()
+    const [startDate, setStartDate] = useState(new Date());
+    const [endDate, setEndDate] = useState(new Date());
+
 
     return (
         <Layout module={true} sidebarItems={LMSsidebarItems} centerlogohide={true}>
@@ -74,14 +78,14 @@ function LMSHistory() {
                             </div>
                             <div class="col">
                                 <div class="mb-3">
-                                    <label class="form-label">Start Date</label>
-                                    <input class="form-control" type="text" />
+                                    <label class="form-label" style={{ display: "block" }}>Start Date</label>
+                                    <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} className='form-control' />
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="mb-3">
-                                    <label class="form-label">End Date</label>
-                                    <input class="form-control" type="text" />
+                                    <label class="form-label" style={{ display: "block" }}>End Date</label>
+                                    <DatePicker selected={endDate} onChange={(date) => setEndDate(date)} className='form-control' />
                                 </div>
                             </div>
                         </div>

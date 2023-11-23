@@ -1,6 +1,7 @@
 import React from "react";
 import Logo from "../../assets/logo.png"
 import Profile from "../../assets/profile-img.jpg"
+import { Dropdown } from "react-bootstrap";
 
 export const CustomNavbar = ({ toggleSidebar, module, centerlogohide }) => {
   return (
@@ -17,46 +18,29 @@ export const CustomNavbar = ({ toggleSidebar, module, centerlogohide }) => {
             </ul>
           </div>
         </div>
-        <div class="user-box dropdown px-3 float-end">
-          <a
-            class="d-flex align-items-center nav-link dropdown-toggle gap-3 dropdown-toggle-nocaret"
-            href="/"
-            role="button"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            <img
-              src={Profile}
-              class="user-img"
-              alt="user avatar"
-            />
-            <div class="user-info">
-              <p class="user-name mb-0">Muhammad</p>
-              <p class="designattion mb-0">Director</p>
-            </div>
-          </a>
-          <div class="clearfix"></div>
-          <ul class="dropdown-menu">
-            <li>
-              <a
-                class="dropdown-item d-flex align-items-center"
-                href="/"
-              >
-                <i class="bx bx-user fs-5"></i>
-                <span>Profile</span>
-              </a>
-            </li>
-            <li>
-              <a
-                class="dropdown-item d-flex align-items-center"
-                href="/"
-              >
-                <i class="bx bx-cog fs-5"></i>
-                <span>Settings</span>
-              </a>
-            </li>
-          </ul>
+        <Dropdown className="user-box dropdown px-3 float-end">
+      <Dropdown.Toggle
+        as="a"
+        className="d-flex align-items-center nav-link dropdown-toggle gap-3 dropdown-toggle-nocaret"
+        href="#"
+        role="button"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+      >
+        <img src={Profile} className="user-img" alt="user avatar" />
+        <div className="user-info">
+          <p className="user-name mb-0">Muhammad</p>
+          <p className="designation mb-0">Director</p>
         </div>
+      </Dropdown.Toggle>
+      <div className="clearfix"></div>
+      <Dropdown.Menu>
+        <Dropdown.Item href="/login" style={{ border: 'none' }}>
+          <i className="bx bx-user fs-5"></i>
+          <span>Logout</span>
+        </Dropdown.Item>
+      </Dropdown.Menu>
+    </Dropdown>
       </nav>
 
       <div class="clearfix"></div>

@@ -1,14 +1,21 @@
 import React from 'react';
 import { faEdit, faTrash, faUser, faPrint, faClone } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
-function CustomTable({ data, handleEdit, handleDelete, tableTitle, headerBgColor, hideBtn, addBtnText, handleAdd, handlePrint, handleUser, handleDuplicate, hideUserIcon, headertitlebgColor, headertitletextColor, block, hideEditIcon }) {
+function CustomTable({ data, handleEdit, handleDelete, tableTitle, headerBgColor, hideBtn, addBtnText, handleAdd, handlePrint, handleUser, handleDuplicate, hideUserIcon, headertitlebgColor, headertitletextColor, block, hideEditIcon, seachBarShow }) {
     const keys = data.length > 0 ? Object.keys(data[0]) : [];
 
     const formatHeader = (key) => {
         // Split camelCase into separate words and join with spaces
         return key.replace(/([a-z0-9])([A-Z])/g, '$1 $2').toLowerCase();
     };
+
+    const editTooltip = <Tooltip id="edit-tooltip">Edit</Tooltip>;
+    const deleteTooltip = <Tooltip id="delete-tooltip">Delete</Tooltip>;
+    const vistorTooltip = <Tooltip id="visitor-tooltip">Visitors</Tooltip>;
+    const printTooltip = <Tooltip id="print-tooltip">Print</Tooltip>;
+    const duplicateTooltip = <Tooltip id="duplicate-tooltip">Duplicate</Tooltip>;
 
     return (
         <div className="dash-detail-container" style={{ marginTop: "20px" }}>
@@ -22,6 +29,17 @@ function CustomTable({ data, handleEdit, handleDelete, tableTitle, headerBgColor
                     )}
                     <div className="clearfix"></div>
                 </div>
+                {seachBarShow && seachBarShow && (
+                    <div class="input-group float-end" style={{ width: "250px", marginTop: "10px", marginBottom: "15px" }}>
+                        <input type="text" class="form-control" placeholder="Search" />
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" type="submit">
+                                <i class="glyphicon glyphicon-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                )}
+
                 <table className="table table-striped red-bg-head" style={{ marginTop: "20px", display: block ? "block" : "" }}>
                     <thead>
                         <tr>
@@ -30,7 +48,7 @@ function CustomTable({ data, handleEdit, handleDelete, tableTitle, headerBgColor
                                     {formatHeader(key)}
                                 </th>
                             ))}
-                            <th className="text-center" style={{ backgroundColor: headertitlebgColor ? headertitlebgColor : "#FFF", color: headertitletextColor ? headertitletextColor : "#666" }}>Actions</th>
+                            <th className="text-center" style={{ width: "180px", backgroundColor: headertitlebgColor ? headertitlebgColor : "#FFF", color: headertitletextColor ? headertitletextColor : "#666" }}>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -49,25 +67,35 @@ function CustomTable({ data, handleEdit, handleDelete, tableTitle, headerBgColor
                                 ))}
                                 <td className="text-center">
                                     {!hideEditIcon && !hideEditIcon && (
-
-                                        <button onClick={() => handleEdit(item)} className="btn default btn-xs black" data-id={item.id}>
-                                            <FontAwesomeIcon icon={faEdit} />
-                                        </button>
+                                        <OverlayTrigger placement="top" overlay={editTooltip}>
+                                            <button onClick={() => handleEdit(item)} className="btn default btn-xs black" data-id={item.id}>
+                                                <FontAwesomeIcon icon={faEdit} />
+                                            </button>
+                                        </OverlayTrigger>
                                     )}
-                                    <button onClick={() => handleDelete(item)} className="btn default btn-xs black" data-id={item.id}>
-                                        <FontAwesomeIcon icon={faTrash} />
-                                    </button>
+                                    <OverlayTrigger placement="top" overlay={deleteTooltip}>
+                                        <button onClick={() => handleDelete(item)} className="btn default btn-xs black" data-id={item.id}>
+                                            <FontAwesomeIcon icon={faTrash} />
+                                        </button>
+                                    </OverlayTrigger>
                                     {hideUserIcon && hideUserIcon && (
                                         <>
-                                            <button onClick={() => handleUser(item)} className="btn default btn-xs black" data-id={item.id}>
-                                                <FontAwesomeIcon icon={faUser} />
-                                            </button>
-                                            <button onClick={() => handlePrint(item)} className="btn default btn-xs black" data-id={item.id}>
-                                                <FontAwesomeIcon icon={faPrint} />
-                                            </button>
-                                            <button onClick={() => handleDuplicate(item)} className="btn default btn-xs black" data-id={item.id}>
-                                                <FontAwesomeIcon icon={faClone} />
-                                            </button>
+                                            <OverlayTrigger placement="top" overlay={vistorTooltip}>
+                                                <button onClick={() => handleUser(item)} className="btn default btn-xs black" data-id={item.id}>
+                                                    <FontAwesomeIcon icon={faUser} />
+                                                </button>
+                                            </OverlayTrigger>
+                                            <OverlayTrigger placement="top" overlay={printTooltip}>
+
+                                                <button onClick={() => handlePrint(item)} className="btn default btn-xs black" data-id={item.id}>
+                                                    <FontAwesomeIcon icon={faPrint} />
+                                                </button>
+                                            </OverlayTrigger>
+                                            <OverlayTrigger placement="top" overlay={duplicateTooltip}>
+                                                <button onClick={() => handleDuplicate(item)} className="btn default btn-xs black" data-id={item.id}>
+                                                    <FontAwesomeIcon icon={faClone} />
+                                                </button>
+                                            </OverlayTrigger>
                                         </>
                                     )}
 
