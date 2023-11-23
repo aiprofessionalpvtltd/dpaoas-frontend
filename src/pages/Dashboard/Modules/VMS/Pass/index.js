@@ -4,6 +4,7 @@ import { VMSsidebarItems } from '../../../../../utils/sideBarItems'
 import { useLocation } from 'react-router-dom'
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import Header from '../../../../../components/Header';
 
 const validationSchema = Yup.object({
   remarks: Yup.string().required('Remarks is required'),
@@ -27,6 +28,7 @@ function VMSAddEditPass() {
   });
   return (
     <Layout module={true} sidebarItems={VMSsidebarItems} centerlogohide={true}>
+      <Header dashboardLink={"/vms/dashboard"} addLink1={"/vms/dashboard"} title1={"Passes"} addLink2={"/vms/addeditpass"} title2={location && location?.state ? "Edit Pass" : "Add Pass"} />
       <div class='card'>
         <div class='card-header red-bg' style={{ background: "#14ae5c !important" }}>
           {location && location?.state ? (

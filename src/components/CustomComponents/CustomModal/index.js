@@ -1,19 +1,25 @@
 import React from 'react'
-import { VMSsidebarItems } from '../../../../../../utils/sideBarItems'
-import { Layout } from '../../../../../../components/Layout'
-import { useLocation } from 'react-router-dom'
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import Header from '../../../../../../components/Header';
+import Modal from 'react-modal';
 
+const customStyles = {
+    content: {
+        top: '50%',
+        left: '50%',
+        right: 'auto',
+        bottom: 'auto',
+        marginRight: '-50%',
+        transform: 'translate(-50%, -50%)',
+    },
+};
 const validationSchema = Yup.object({
     visitorname: Yup.string().required('Visitor Name is required'),
     cnic: Yup.string().required('Cnic is required'),
     visitordetail: Yup.string().required('Visitor Detail By is required'),
 
 });
-function VMSAddEditVisitors() {
-    const location = useLocation()
+function CustomModal({ isOpen, onRequestClose }) {
     const formik = useFormik({
         initialValues: {
             visitorname: '',
@@ -27,14 +33,16 @@ function VMSAddEditVisitors() {
         },
     });
     return (
-        <Layout module={true} sidebarItems={VMSsidebarItems} centerlogohide={true}>
-            <Header dashboardLink={"/vms/dashboard"} addLink1={"/vms/visitor"} title1={"Visitors"} addLink2={"/vms/addeditvisitor"} title2={location && location.state ? "Edit Visitors" : "Add Visitors"} />
-
+        <Modal
+            isOpen={isOpen}
+            // onAfterOpen={afterOpenModal}
+            onRequestClose={onRequestClose}
+            style={customStyles}
+            contentLabel="Example Modal"
+        >
             <div class='card'>
                 <div class='card-header red-bg' style={{ background: "#14ae5c !important" }}>
-                    {location && location.state ? (
-                        <h1>Edit Visitors</h1>
-                    ) : <h1>Add Visitors</h1>}
+                    <h1>ADD Duplicate Visitors</h1>
                 </div>
                 <div class='card-body'>
                     <form onSubmit={formik.handleSubmit}>
@@ -99,8 +107,8 @@ function VMSAddEditVisitors() {
                     </form>
                 </div>
             </div>
-        </Layout>
+        </Modal>
     )
 }
 
-export default VMSAddEditVisitors
+export default CustomModal

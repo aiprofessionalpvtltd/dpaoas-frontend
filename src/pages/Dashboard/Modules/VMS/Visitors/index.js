@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import CustomTable from '../../../../../components/CustomComponents/CustomTable';
 import { Layout } from '../../../../../components/Layout';
 import { VMSsidebarItems } from '../../../../../utils/sideBarItems';
+import Header from '../../../../../components/Header';
 
 function VMSVisitors() {
     const navigate = useNavigate();
@@ -15,6 +16,7 @@ function VMSVisitors() {
 
     return (
         <Layout module={true} sidebarItems={VMSsidebarItems} centerlogohide={true}>
+            <Header dashboardLink={"/vms/dashboard"} addLink1={"/vms/visitor"} title1={"Visitors"} />
             <div class="row">
                 <div class="col-12">
                     <CustomTable

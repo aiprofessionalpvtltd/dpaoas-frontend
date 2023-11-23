@@ -3,6 +3,7 @@ import { Layout } from '../../../../components/Layout'
 import { VMSsidebarItems } from '../../../../utils/sideBarItems'
 import CustomTable from '../../../../components/CustomComponents/CustomTable'
 import { useNavigate } from 'react-router-dom'
+import Header from '../../../../components/Header'
 
 
 function VMSDashboard() {
@@ -15,6 +16,7 @@ function VMSDashboard() {
 
     return (
         <Layout module={true} sidebarItems={VMSsidebarItems} centerlogohide={true}>
+            <Header dashboardLink={"/vms/dashboard"} addLink1={"/vms/dashboard"} title1={"Passes"} />
             <div class="row">
                 <div class="col-12">
                     <CustomTable
