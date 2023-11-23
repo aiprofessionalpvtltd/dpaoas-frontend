@@ -1,7 +1,7 @@
 import React from 'react'
 import { Layout } from '../../components/Layout'
 import { Tiles } from '../../components/CustomComponents/Tiles'
-import { faCheck, faFileExcel } from "@fortawesome/free-solid-svg-icons";
+import { faAddressCard, faUserCog, faMailBulk } from "@fortawesome/free-solid-svg-icons";
 
 function Dashboard() {
     return (
@@ -10,13 +10,13 @@ function Dashboard() {
                 <div class="clearfix"></div>
                 <div class="row main-dashboard-tiles">
                     <div class="col">
-                        <Tiles title={"LMS"} link={"/lms/dashboard"} type={""} cardbg={"bluebg"} icon={faFileExcel} />
+                        <Tiles title={"LMS"} link={"/lms/dashboard"} type={""} cardbg={"bluebg"} icon={faMailBulk} />
                     </div>
                     <div class="col">
-                        <Tiles title={"HRM"} link={"/hrm/dashboard"} type={""} cardbg={"greenbg"} icon={faCheck} />
+                        <Tiles title={"HRM"} link={"/hrm/dashboard"} type={""} cardbg={"greenbg"} icon={faUserCog} />
                     </div>
                     <div class="col">
-                        <Tiles title={"VMS"} link={"/vms/dashboard"} type={""} cardbg={"greybg"} icon={faFileExcel} />
+                        <Tiles title={"VMS"} link={"/vms/dashboard"} type={""} cardbg={"greybg"} icon={faAddressCard} />
                     </div>
                     {/* <div class="col-sm-3">
                         <Tiles title={"HR"} link={"/"} type={""} cardbg={"purplebg"} icon={faFileAlt}/>
