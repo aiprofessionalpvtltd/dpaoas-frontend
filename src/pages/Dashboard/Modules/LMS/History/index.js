@@ -39,7 +39,6 @@ function LMSHistory() {
     return (
         <Layout module={true} sidebarItems={LMSsidebarItems} centerlogohide={true}>
             <Header dashboardLink={"/lms/dashboard"} addLink1={"/lms/history"} title1={"History"} />
-
             <div class='card'>
                 <div class='card-header red-bg' style={{ background: "#14ae5c" }}>
                     <h1>Leave History</h1>

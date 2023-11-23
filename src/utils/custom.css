@@ -3276,3 +3276,48 @@ textarea {
 }
 
 /*------------------ Roles Dashboard Css End  -----------------*/
+/* ------------------------LMS Dashboard Card ---------------------- */
+.widget-card-1 .card1-icon {
+    font-style: initial;
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    top: -15px;
+    right: 20px;
+    font-size: 35px;
+    border-radius: 8px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    color: #fff;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+  }
+  .bg-c-green {
+    background-color: #14ae5c;
+  }
+  .widget-card-1 h4 {
+    font-weight: 400;
+    font-size: 20px;
+    font-weight: bold;
+    line-height: normal;
+    color: #515151;
+    margin-top: 26px;
+  }
+  .card .card-block-small {
+    padding: 15px 20px;
+    height: 120px;
+}
+.widget-card-1:hover i {
+    margin-top: -10px;
+    text-align: right;
+  }
+.card-block-small:hover{
+    cursor: pointer;
+}
