@@ -2151,11 +2151,13 @@ textarea {
     border: #ddd solid 1px;
     padding: 15px;
 }
-.dash-detail-container .table{
+
+.dash-detail-container .table {
     /* display: block; */
-    overflow:auto
+    overflow: auto
 }
-.dash-detail-container .table .btn.default{
+
+.dash-detail-container .table .btn.default {
     background-color: transparent;
     padding: 0 4px;
     border: none;
@@ -3268,7 +3270,9 @@ textarea {
 .purplebg {
     background: linear-gradient(to bottom, #7a46a0 0%, #7030a0 100%);
 }
-.react-datepicker-wrapper{
-    width: "100% !importent";
+
+.react-datepicker-wrapper {
+    width: 100% !important;
 }
+
 /*------------------ Roles Dashboard Css End  -----------------*/

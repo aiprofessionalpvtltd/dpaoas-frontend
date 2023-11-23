@@ -49,16 +49,6 @@ function LMSHistory() {
                         <div class="row">
                             <div class="col">
                                 <div class="mb-3">
-                                    <label class="form-label">All</label>
-                                    <select class="form-select">
-                                        <option>Approved</option>
-                                        <option>Pending</option>
-                                        <option>Rejected</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="mb-3">
                                     <label class="form-label">Department</label>
                                     <select class="form-select">
                                         <option>IT</option>
@@ -69,13 +59,16 @@ function LMSHistory() {
                             </div>
                             <div class="col">
                                 <div class="mb-3">
-                                    <label class="form-label">Designation</label>
+                                    <label class="form-label">Name</label>
                                     <select class="form-select">
-                                        <option>Software Dev</option>
-                                        <option>UI/UX</option>
+                                        <option>Saqib</option>
+                                        <option>Hmaid</option>
+                                        <option>Mohsin</option>
                                     </select>
                                 </div>
                             </div>
+
+
                             <div class="col">
                                 <div class="mb-3">
                                     <label class="form-label" style={{ display: "block" }}>Start Date</label>
