@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import "./login.css";
 import logo from "../../assets/logo.png"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faLock } from "@fortawesome/free-solid-svg-icons";
@@ -17,11 +16,12 @@ export const Login = () => {
     return (
         <div class="login-container" >
             <div class="wrap-login">
+            <span style={{fontSize: "25px", marginTop: "10px", fontWeight:"bold"}} class="login-form-title">Senate SMART Docs</span>
+            <span style={{fontSize: "22px", marginBottom: "30px",marginTop: "10px",fontWeight:"bold"}} class="login-form-title">(SSDocs)</span>
                 <div class="login-form">
                     <div class="logo">
                         <img src={logo} alt="" />
                     </div>
-                    <span class="login-form-title">Login</span>
                     <div class="wrap-input">
                         <span class="label-input">Username</span>
                         <input class="input-field1" type="text" name="username" placeholder="Type your username" />
@@ -42,7 +42,7 @@ export const Login = () => {
                     <div class="container-login-form-btn">
                         <div class="wrap-login-form-btn">
                             <div class="login-form-bgbtn"></div>
-                            <button class="login-form-btn" onClick={handleLogin}>Login</button>
+                            <button style={{backgroundColor:"#3c93dd"}} class="login-form-btn" onClick={handleLogin}>Login</button>
                         </div>
                     </div>
                 </div>

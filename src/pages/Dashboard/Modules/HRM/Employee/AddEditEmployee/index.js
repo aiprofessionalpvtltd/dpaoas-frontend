@@ -84,8 +84,8 @@ function HRMAddEditEmployee() {
                                             <div class="mb-3">
                                                 <label class="form-label">Gender</label>
                                                 <select class="form-select">
-                                                    <option>Year</option>
-                                                    <option>2023</option>
+                                                    <option>Male</option>
+                                                    <option>Female</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -93,7 +93,6 @@ function HRMAddEditEmployee() {
                                             <div class="mb-3">
                                                 <label class="form-label">Title</label>
                                                 <input class="form-control" type="text" />
-
                                             </div>
                                         </div>
                                     </div>
@@ -118,9 +117,9 @@ function HRMAddEditEmployee() {
                                             <div class="mb-3">
                                                 <label class="form-label">Domicile</label>
                                                 <select class="form-select">
-                                                    <option>Document Type</option>
-                                                    <option>External</option>
-                                                    <option>Internal</option>
+                                                    <option>Federal</option>
+                                                    <option>Punjab</option>
+                                                    <option>Sindh</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -135,11 +134,7 @@ function HRMAddEditEmployee() {
                                         <div class="col">
                                             <div class="mb-3">
                                                 <label class="form-label">Place of Birth</label>
-                                                <select class="form-select">
-                                                    <option>Branch</option>
-                                                    <option>Legislation</option>
-                                                    <option>IT</option>
-                                                </select>
+                                                <input class="form-control" type="text" />
                                             </div>
                                         </div>
                                     </div>
@@ -195,11 +190,7 @@ function HRMAddEditEmployee() {
                                         <div class="col">
                                             <div class="mb-3">
                                                 <label class="form-label">Religion</label>
-                                                <select class="form-select">
-                                                    <option>Branch</option>
-                                                    <option>Legislation</option>
-                                                    <option>IT</option>
-                                                </select>
+                                                <input class="form-control" type="text" />
                                             </div>
                                         </div>
                                     </div>
@@ -208,9 +199,8 @@ function HRMAddEditEmployee() {
                                             <div class="mb-3">
                                                 <label class="form-label">Marital Status</label>
                                                 <select class="form-select">
-                                                    <option>Document Type</option>
-                                                    <option>External</option>
-                                                    <option>Internal</option>
+                                                    <option>Married</option>
+                                                    <option>Single</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -218,21 +208,8 @@ function HRMAddEditEmployee() {
                                             <div class="mb-3">
                                                 <label class="form-label">Province</label>
                                                 <select class="form-select">
-                                                    <option>Branch</option>
-                                                    <option>Legislation</option>
-                                                    <option>IT</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <div class="mb-3">
-                                                <label class="form-label">Domicile</label>
-                                                <select class="form-select">
-                                                    <option>Document Type</option>
-                                                    <option>External</option>
-                                                    <option>Internal</option>
+                                                    <option>KPK</option>
+                                                    <option>Punjab</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -284,9 +261,8 @@ function HRMAddEditEmployee() {
                                             <div class="mb-3">
                                                 <label class="form-label">Phone Type</label>
                                                 <select class="form-select">
-                                                    <option>Branch</option>
-                                                    <option>Legislation</option>
-                                                    <option>IT</option>
+                                                    <option>Landline</option>
+                                                    <option>GSM</option>
                                                 </select>
                                             </div>
                                         </div>

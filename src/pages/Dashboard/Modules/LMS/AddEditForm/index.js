@@ -43,18 +43,15 @@ function LMSAddEdit() {
                                 <div class="col">
                                     <div class="mb-3">
                                         <label class="form-label">Leave Forwarder</label>
-                                        <select class="form-select">
-                                            <option>Year</option>
-                                            <option>2023</option>
-                                        </select>
+                                        <input class="form-control" type="text"/>
                                     </div>
                                 </div>
                                 <div class="col">
                                     <div class="mb-3">
                                         <label class="form-label">Submitted To</label>
                                         <select class="form-select">
-                                            <option>Year</option>
-                                            <option>2023</option>
+                                            <option>HR</option>
+                                            <option>DG</option>
                                         </select>
                                     </div>
                                 </div>
@@ -64,8 +61,8 @@ function LMSAddEdit() {
                                     <div class="mb-3">
                                         <label class="form-label">Leave Type </label>
                                         <select class="form-select">
-                                            <option>Year</option>
-                                            <option>2023</option>
+                                            <option>Casual</option>
+                                            <option>Sick</option>
                                         </select>
                                     </div>
                                 </div>
@@ -84,18 +81,7 @@ function LMSAddEdit() {
                                 <div class="col">
                                     <div className='mb-3'>
                                         <label className='form-label'>Start Date </label>
-                                        <select
-                                            className={`form-select ${formik.touched.startdate && formik.errors.startdate ? 'is-invalid' : ''}`}
-                                            onChange={formik.handleChange}
-                                            onBlur={formik.handleBlur}
-                                            value={formik.values.startdate}
-                                            name="startdate"
-                                        >
-                                            <option value="" label="Select an option" />
-                                            <option value="Branch">Branch</option>
-                                            <option value="Legislation">Legislation</option>
-                                            <option value="IT">IT</option>
-                                        </select>
+                                        <input class="form-control" type="text"/>
                                         {formik.touched.startdate && formik.errors.startdate && (
                                             <div className='invalid-feedback'>{formik.errors.startdate}</div>
                                         )}
@@ -104,11 +90,7 @@ function LMSAddEdit() {
                                 <div class="col">
                                     <div class="mb-3">
                                         <label class="form-label">End Date </label>
-                                        <select class="form-select">
-                                            <option>Branch</option>
-                                            <option>Legislation</option>
-                                            <option>IT</option>
-                                        </select>
+                                        <input class="form-control" type="text"/>
                                     </div>
                                 </div>
                             </div>
@@ -117,9 +99,9 @@ function LMSAddEdit() {
                                     <div class="mb-3">
                                         <label class="form-label">Status </label>
                                         <select class="form-select">
-                                            <option>Document Type</option>
-                                            <option>External</option>
-                                            <option>Internal</option>
+                                            <option>Pending</option>
+                                            <option>Approved</option>
+                                            <option>Rejected</option>
                                         </select>
                                     </div>
                                 </div>

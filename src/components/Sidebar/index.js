@@ -4,6 +4,7 @@ import Logo from "../../assets/logo.png";
 import "./sidebar.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useLocation } from "react-router-dom";
+import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 
 export const Sidebar = ({ sidebarItems }) => {
   const location = useLocation();
@@ -33,10 +34,10 @@ export const Sidebar = ({ sidebarItems }) => {
 
 
         <div className="nav-item-divider"></div>
-        {/* <a href="dashboard.html" className="dashboard-nav-item">
+        <a href="/login" className="dashboard-nav-item">
           <FontAwesomeIcon icon={faSignOutAlt} size="lg" width={24} />
           <span className="text">Logout</span>
-        </a> */}
+        </a>
       </nav>
     </nav>
   );

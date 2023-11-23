@@ -1,4 +1,4 @@
-import { faHome, faFileAlt } from '@fortawesome/free-solid-svg-icons'
+import { faHome, faFileAlt, faUserTag, faBuilding, faAddressCard, faUser } from '@fortawesome/free-solid-svg-icons'
 
 export const LMSsidebarItems = [
     {
@@ -17,23 +17,23 @@ export const HRMsidebarItems = [
     {
         itemName: "Roles",
         link: "/hrm/dashboard",
-        icon: faHome
+        icon: faUserTag
     },
 
     {
         itemName: "Department",
         link: "/hrm/department",
-        icon: faHome
+        icon: faBuilding
     },
     {
         itemName: "Designation",
         link: "/hrm/designation",
-        icon: faHome
+        icon: faAddressCard
     },
     {
         itemName: "Employee",
         link: "/hrm/employee",
-        icon: faHome
+        icon: faUser
     }
 
 ]
