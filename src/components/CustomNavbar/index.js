@@ -10,7 +10,7 @@ export const CustomNavbar = ({ toggleSidebar, module, centerlogohide }) => {
           <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
               <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="/">
+                <a style={{ fontWeight: "bold" }} class="nav-link" aria-current="page" href="/">
                   Dashboard
                 </a>
               </li>

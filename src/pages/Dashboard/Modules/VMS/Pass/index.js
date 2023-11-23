@@ -120,9 +120,8 @@ function VMSAddEditPass() {
                   <div class="mb-3">
                     <label class="form-label">Active</label>
                     <select class="form-select">
-                      <option>Document Type</option>
-                      <option>External</option>
-                      <option>Internal</option>
+                      <option>Yes</option>
+                      <option>No</option>
                     </select>
                   </div>
                 </div>

@@ -6,7 +6,7 @@ import { faCheck, faFileExcel } from "@fortawesome/free-solid-svg-icons";
 function Dashboard() {
     return (
         <Layout>
-            <div class='dashboard-content'>
+            <div class='dashboard-content' style={{ marginTop: "100px" }}>
                 <div class="clearfix"></div>
                 <div class="row main-dashboard-tiles">
                     <div class="col">

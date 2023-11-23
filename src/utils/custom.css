@@ -801,7 +801,7 @@ hr.horizontal {
     -ms-flex-positive: 2;
     flex-grow: 2; */
     padding: 25px;
-    margin-top: 40px;
+    margin-top: 10px;
 }
 
 .red-bg {
@@ -1194,6 +1194,7 @@ hr.horizontal {
     border-radius: 10px;
     overflow: hidden;
     padding: 35px 55px;
+    box-shadow: 0px 7px 9px -4px rgba(179, 179, 179, 1);
 }
 
 .login-form-title {
@@ -1218,7 +1219,7 @@ hr.horizontal {
 
 .wrap-input i {
     position: absolute;
-    top: 43px;
+    top: 40px;
     color: #919191;
 }
 
@@ -2461,7 +2462,7 @@ textarea {
     list-style: none;
     background-color: #FFF;
     font-size: 17px;
-    margin: 25px 15px 35px 15px;
+    margin: 0px 15px 35px 0px;
 }
 
 .breadcrumb {
@@ -3241,9 +3242,9 @@ textarea {
     color: #fff;
     font-size: 80px;
     position: absolute;
-    top: 48px;
+    top: 38px;
     opacity: 0.3;
-    left: -10px;
+    left: -7px;
     -webkit-transform: rotate(15deg);
     transform: rotate(15deg);
     -webkit-transition: all 0.3s ease-in-out;
