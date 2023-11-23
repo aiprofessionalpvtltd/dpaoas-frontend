@@ -1,8 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Layout } from '../../../../../../components/Layout'
 import { VMSsidebarItems } from '../../../../../../utils/sideBarItems'
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import CustomTable from '../../../../../../components/CustomComponents/CustomTable';
+import CustomModal from '../../../../../../components/CustomComponents/CustomModal';
+import Header from '../../../../../../components/Header';
 
 const validationSchema = Yup.object({
   remarks: Yup.string().required('Remarks is required'),
@@ -10,7 +13,10 @@ const validationSchema = Yup.object({
   requestby: Yup.string().required('Request By is required'),
 
 });
+
 function VMSDuplicatePass() {
+  // const navigate = useNavigate()
+  const [modalIsOpen, setIsOpen] = useState(false);
   const formik = useFormik({
     initialValues: {
       remarks: '',
@@ -23,11 +29,22 @@ function VMSDuplicatePass() {
       console.log(values);
     },
   });
+  const data = [
+    { VisitorName: "Saqib", CNIC: '61101-1254556-3	', Detail: 'jdsljadslg dalkfjldkfjdsaf kldjaflkajflsdjf jlksddjflkajsdflk' },
+    { VisitorName: "Saqib", CNIC: '61101-1254556-3	', Detail: 'jdsljadslg dalkfjldkfjdsaf kldjaflkajflsdjf jlksddjflkajsdflk' },
+    { VisitorName: "Saqib", CNIC: '61101-1254556-3	', Detail: 'jdsljadslg dalkfjldkfjdsaf kldjaflkajflsdjf jlksddjflkajsdflk' },
+  ];
+  function closeModal() {
+    setIsOpen(false);
+  }
   return (
     <Layout module={true} sidebarItems={VMSsidebarItems} centerlogohide={true}>
+      <CustomModal isOpen={modalIsOpen} onRequestClose={closeModal} />
+      <Header dashboardLink={"/vms/dashboard"} addLink1={"/vms/dashboard"} title1={"Passes"} addLink2={"/vms/duplicatepass"} title2={"Duplicate Pass"} />
+
       <div class='card'>
         <div class='card-header red-bg' style={{ background: "#14ae5c !important" }}>
-            <h1>Duplicate Pass</h1>
+          <h1>Duplicate Pass</h1>
         </div>
         <div class='card-body'>
           <form onSubmit={formik.handleSubmit}>
@@ -161,12 +178,27 @@ function VMSDuplicatePass() {
                 </div>
               </div>
               <div class="row">
+                <div class="col-12">
+                  <CustomTable
+                    data={data}
+                    tableTitle="Visitors"
+                    addBtnText="Add Visitor"
+                    handleAdd={() => setIsOpen(true)}
+                    hideEditIcon={true}
+                  // handlePrint={}
+                  // handleUser={}
+                  // handleDelete={(item) => handleDelete(item.id)}
+                  />
+                </div>
+              </div>
+              <div class="row">
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                  <button class="btn btn-primary" type="submit">Submit</button>
+                  <button class="btn btn-primary mt-3" type="submit">Submit</button>
                 </div>
               </div>
             </div>
           </form>
+
         </div>
       </div>
     </Layout>
