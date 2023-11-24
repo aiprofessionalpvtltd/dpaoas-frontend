@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { LMSsidebarItems } from '../../../../../utils/sideBarItems'
 import { Layout } from '../../../../../components/Layout'
 import logoImage from "../../../../../assets/profile-img.jpg"
@@ -15,6 +15,7 @@ const validationSchema = Yup.object({
 });
 function LMSAddEdit() {
     const location = useLocation()
+    const [isChecked, setChecked] = useState(false);
     const formik = useFormik({
         initialValues: {
             reason: '',
@@ -27,6 +28,10 @@ function LMSAddEdit() {
             console.log(values);
         },
     });
+
+    const handleCheckboxChange = () => {
+        setChecked(!isChecked);
+    };
     return (
         <Layout module={true} sidebarItems={LMSsidebarItems} centerlogohide={true}>
             <Header dashboardLink={"/lms/dashboard"} addLink1={"/lms/addedit"} title1={location && location.state ? "Edit Leave" : "Add Leave"} />
@@ -40,24 +45,29 @@ function LMSAddEdit() {
                     <form onSubmit={formik.handleSubmit}>
                         <div class="container-fluid">
                             <div className='row'>
-                            <div class="col">
+                                <div class="col mt-3">
                                     <div class="mb-3">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
+                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked={isChecked} onChange={handleCheckboxChange} />
                                             <label class="form-check-label" for="flexCheckDefault">
                                                 Leave on behalf
                                             </label>
                                         </div>
                                     </div>
                                 </div>
+                                {isChecked && (
+                                    <div class="col">
+                                        <div class="mb-3">
+                                            <label class="form-label">Leave Forwarder</label>
+                                            <select class="form-select">
+                                                <option>HR</option>
+                                                <option>DG</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                             <div class="row">
-                                <div class="col">
-                                    <div class="mb-3">
-                                        <label class="form-label">Leave Forwarder</label>
-                                        <input class="form-control" type="text"/>
-                                    </div>
-                                </div>
                                 <div class="col">
                                     <div class="mb-3">
                                         <label class="form-label">Submitted To</label>
@@ -67,6 +77,17 @@ function LMSAddEdit() {
                                         </select>
                                     </div>
                                 </div>
+                                <div class="col">
+                                    <div class="mb-3">
+                                        <label class="form-label">Status </label>
+                                        <select class="form-select">
+                                            <option>Pending</option>
+                                            <option>Approved</option>
+                                            <option>Rejected</option>
+                                        </select>
+                                    </div>
+                                </div>
+
                             </div>
                             <div class="row">
                                 <div class="col">
@@ -93,7 +114,7 @@ function LMSAddEdit() {
                                 <div class="col">
                                     <div className='mb-3'>
                                         <label className='form-label'>Start Date </label>
-                                        <input class="form-control" type="text"/>
+                                        <input class="form-control" type="text" />
                                         {formik.touched.startdate && formik.errors.startdate && (
                                             <div className='invalid-feedback'>{formik.errors.startdate}</div>
                                         )}
@@ -102,29 +123,7 @@ function LMSAddEdit() {
                                 <div class="col">
                                     <div class="mb-3">
                                         <label class="form-label">End Date </label>
-                                        <input class="form-control" type="text"/>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="mb-3">
-                                        <label class="form-label">Status </label>
-                                        <select class="form-select">
-                                            <option>Pending</option>
-                                            <option>Approved</option>
-                                            <option>Rejected</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="mb-3">
-                                        <div class="form-check" style={{ marginTop: "39px" }}>
-                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
-                                            <label class="form-check-label" for="flexCheckDefault">
-                                                Leave Station
-                                            </label>
-                                        </div>
+                                        <input class="form-control" type="text" />
                                     </div>
                                 </div>
                             </div>
@@ -135,7 +134,18 @@ function LMSAddEdit() {
                                         <input class="form-control" type="file" id="formFile" />
                                     </div>
                                 </div>
+                                <div class="col-6">
+                                    <div class="mb-3">
+                                        <div class="form-check" style={{ marginTop: "39px" }}>
+                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
+                                            <label class="form-check-label" for="flexCheckDefault">
+                                                Leave Station
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
+
                             <div class="row">
                                 <div class="col">
                                     <div class="mb-3">

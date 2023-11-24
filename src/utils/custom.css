@@ -1213,7 +1213,7 @@ hr.horizontal {
 .wrap-input {
     width: 100%;
     position: relative;
-    border-bottom: 2px solid #d9d9d9;
+    /* border-bottom: 2px solid #d9d9d9; */
     margin-bottom: 23px;
 }
 
@@ -3298,26 +3298,31 @@ textarea {
     justify-content: center;
     -webkit-transition: all 0.3s ease-in-out;
     transition: all 0.3s ease-in-out;
-  }
-  .bg-c-green {
+}
+
+.bg-c-green {
     background-color: #14ae5c;
-  }
-  .widget-card-1 h4 {
+}
+
+.widget-card-1 h4 {
     font-weight: 400;
     font-size: 20px;
     font-weight: bold;
     line-height: normal;
     color: #515151;
     margin-top: 26px;
-  }
-  .card .card-block-small {
+}
+
+.card .card-block-small {
     padding: 15px 20px;
     height: 120px;
 }
+
 .widget-card-1:hover i {
     margin-top: -10px;
     text-align: right;
-  }
-.card-block-small:hover{
+}
+
+.card-block-small:hover {
     cursor: pointer;
 }

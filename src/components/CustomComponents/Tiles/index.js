@@ -21,7 +21,7 @@ export const Tiles = ({ title, value, link, cardbg, icon, type }) => {
       ) : (
         <a href={link}>
           <div class={`card ${cardbg} text-white widget-visitor-card`} style={{ overflow: "hidden" }}>
-            <div class="card-block-small text-center" style={{ height: "120px" }}>
+            <div class="card-block-small text-center" style={{ height: "150px" }}>
               <h2 style={{ marginTop: "15px" }}>{title}</h2>
               <i>
                 <FontAwesomeIcon icon={icon} />

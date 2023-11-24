@@ -1,9 +1,13 @@
-import React, { createContext } from "react";
+import React, { createContext, useState } from "react";
 import { CheckPermission } from "../../utils/permissionsConfig";
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
+  const [permissions, setPermissions] = useState(null);
+  // const [roles, setRoles] = useState(null);
+  const roles = null
+
   const user = {
     role: 'HR',
     permissions: [
@@ -19,14 +23,15 @@ export const AuthProvider = ({ children }) => {
   }
 
   const login = () => {
-    const res = CheckPermission(user.role, user.permissions);
-    console.log(res);
+    const res = CheckPermission(user.role, roles, user.permissions);
+    setPermissions(res?.permissions);
   }
 
   return (
     <AuthContext.Provider
       value={{
         login,
+        permissions
       }}
     >
       {children}
