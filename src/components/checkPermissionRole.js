@@ -1,6 +1,8 @@
 import React from 'react'
 
-function UncheckPermission({ permission, checkedItems, handleCheckboxChange }) {
+function CheckPermissionRole({ permission, checkedItems, handleCheckboxChange }) {
+    console.log("uncheck Detail", checkedItems);
+    console.log("permission.option", permission.option);
     return (
         <div className="mb-3" key={permission.permission}>
             <label className="form-label">{permission.permission}</label>
@@ -11,7 +13,7 @@ function UncheckPermission({ permission, checkedItems, handleCheckboxChange }) {
                             <div className="col-md-6 select-fix parent_selector">
                                 <input type="hidden" name="role_permissions[]" value={option} />
                                 <div data-id="orange" className="select-op-sm-orangeBG" style={{ borderLeft: `8px solid ${permission.backgroundColors}` }}>
-                                    <input type="checkbox" value="3" className="cls-permission" checked={checkedItems.includes(option)} onChange={() => handleCheckboxChange(option)} />{option}
+                                    <input type="checkbox" value="3" className="cls-permission" checked={checkedItems.includes(option)} onChange={() => handleCheckboxChange(option)} />{option?.label}
                                 </div>
                             </div>
                         )
@@ -22,4 +24,4 @@ function UncheckPermission({ permission, checkedItems, handleCheckboxChange }) {
     )
 }
 
-export default UncheckPermission
+export default CheckPermissionRole

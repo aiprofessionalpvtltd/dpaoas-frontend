@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import arrowLeft from "../assets/arrow.png"
 import { Link } from 'react-router-dom';
 
-function CheckPermission({ permission, checkedItems, handleCheckboxChange }) {
+function UnCheckPermissionRole({ permission, checkedItems, handleCheckboxChange }) {
     const [hiddenItems, setHiddenItems] = useState(true);
     const handleHideShow = () => {
         setHiddenItems((prevHiddenItems) => !prevHiddenItems);
@@ -19,9 +19,9 @@ function CheckPermission({ permission, checkedItems, handleCheckboxChange }) {
                         !checkedItems.includes(option) && (
                             <div className="col-6 mb-3">
                                 <input type="hidden" name="role_permissions[]" value="1" />
-                                <div data-id="orange" className="select-op-sm-orangeBG" style={{borderLeft:`8px solid ${permission?.backgroundColors}`}}>
+                                <div data-id="orange" className="select-op-sm-orangeBG" style={{ borderLeft: `8px solid ${permission?.backgroundColors}` }}>
                                     <input type="checkbox" name="role_permissions[]" value={option} className="cls-permission" id="cb-3" data-id="3" data-ajax="1" checked={checkedItems.includes(option)}
-                                        onChange={() => handleCheckboxChange(option)} />{option}
+                                        onChange={() => handleCheckboxChange(option)} />{option?.label}
                                 </div>
                             </div>
                         )
@@ -33,4 +33,4 @@ function CheckPermission({ permission, checkedItems, handleCheckboxChange }) {
     )
 }
 
-export default CheckPermission
+export default UnCheckPermissionRole

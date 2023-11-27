@@ -4,28 +4,34 @@ import { HRMsidebarItems } from '../../../../utils/sideBarItems';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../../../components/Header';
 import CustomTable from '../../../../components/CustomComponents/CustomTable';
+import { getRolesData } from '../../../../api/Auth';
 
 
 const data = [
     {
-        name: "Admin",
-        status: "Active"
+        "id": 1,
+        "name": "IT",
+        "description": "IT Things",
+        "roleStatus": "active",
+        "createdAt": "2023-11-17T07:44:24.020Z",
+        "updatedAt": "2023-11-17T07:44:24.020Z"
     },
     {
-        name: "Editor",
-        status: "InActive"
-    },
-    {
-        name: "Manager",
-        status: "Active"
-    },
-    {
-        name: "Employee",
-        status: "Active"
+        "id": 2,
+        "name": "HRM",
+        "description": "Human Resource Management",
+        "roleStatus": "active",
+        "createdAt": "2023-11-24T09:58:14.137Z",
+        "updatedAt": "2023-11-24T09:58:14.137Z"
     }
+
 ]
+
+
+
 function HRMDashboard() {
     const navigate = useNavigate()
+    const Roles = getRolesData()
     return (
         <Layout module={true} sidebarItems={HRMsidebarItems} centerlogohide={true}>
             <Header dashboardLink={"/hrm/dashboard"} addLink1={"/hrm/dashboard"} title1={"Roles"} />

@@ -2,9 +2,10 @@ import React from 'react'
 import Header from '../../../../../../components/Header'
 import { Layout } from '../../../../../../components/Layout'
 import { HRMsidebarItems } from '../../../../../../utils/sideBarItems';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { UpdateDepartment, createDepartment } from '../../../../../../api/APIs';
 
 const validationSchema = Yup.object({
     departmentName: Yup.string().required('Department name is required'),
@@ -13,6 +14,7 @@ const validationSchema = Yup.object({
 });
 function HRMAddEditDepartment() {
     const location = useLocation()
+    const navigate = useNavigate()
 
     const formik = useFormik({
         initialValues: {
@@ -20,14 +22,39 @@ function HRMAddEditDepartment() {
             description: '',
             status: '',
         },
+
         validationSchema: validationSchema,
         onSubmit: (values) => {
             // Handle form submission here
-            console.log(values);
+            // console.log(values);
+            CreateDepartmentApi(values)
         },
     });
 
+    const CreateDepartmentApi = async (values) => {
+        const data = { name: values?.departmentName, description: values?.description }
+        try {
+            const response = await createDepartment(data)
+            if (response.success) {
+                navigate("/hrm/department")
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
+
+    const UpdateDepartmentApi = async (values) => {
+        const data = { name: values?.departmentName, description: values?.description, departmentStatus: values.status }
+        try {
+            const response = await UpdateDepartment(data)
+            if (response.success) {
+                navigate("/hrm/department")
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
 
 
