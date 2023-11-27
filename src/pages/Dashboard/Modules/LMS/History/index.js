@@ -61,7 +61,7 @@ function LMSHistory() {
                                     <label class="form-label">Name</label>
                                     <select class="form-select">
                                         <option>Saqib</option>
-                                        <option>Hmaid</option>
+                                        <option>Hamid</option>
                                         <option>Mohsin</option>
                                     </select>
                                 </div>
@@ -80,7 +80,9 @@ function LMSHistory() {
                                     <DatePicker selected={endDate} onChange={(date) => setEndDate(date)} className='form-control' />
                                 </div>
                             </div>
+
                         </div>
+                        <div class="row"><div class="d-grid gap-2 d-md-flex justify-content-md-end"><button class="btn btn-primary" type="button">Search</button></div></div>
                         <div class="row">
                             <div class="col-12">
                                 <CustomTable data={data} tableTitle={"Leave Request"} headerBgColor={"#666"} hideBtn={true} handleEdit={() => navigate('/lms/addedit', { state: true })} />

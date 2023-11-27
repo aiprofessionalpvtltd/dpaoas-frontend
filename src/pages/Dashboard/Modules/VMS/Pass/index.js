@@ -1,10 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Layout } from '../../../../../components/Layout'
 import { VMSsidebarItems } from '../../../../../utils/sideBarItems'
 import { useLocation } from 'react-router-dom'
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import Header from '../../../../../components/Header';
+import DatePicker from "react-datepicker";
+
 
 const validationSchema = Yup.object({
   remarks: Yup.string().required('Remarks is required'),
@@ -14,6 +16,8 @@ const validationSchema = Yup.object({
 });
 function VMSAddEditPass() {
   const location = useLocation()
+    const [fromdate, setFromDate] = useState(new Date());
+    const [todate, setToDate] = useState(new Date());
   const formik = useFormik({
     initialValues: {
       remarks: '',
@@ -105,13 +109,13 @@ function VMSAddEditPass() {
                 <div class="col">
                   <div class="mb-3">
                     <label class="form-label">From Date</label>
-                    <input class="form-control" type="text" />
+                    <DatePicker selected={fromdate} onChange={(date) => setFromDate(date)} className='form-control' />
                   </div>
                 </div>
                 <div class="col">
                   <div class="mb-3">
                     <label class="form-label">To Date</label>
-                    <input class="form-control" type="text" />
+                    <DatePicker selected={todate} onChange={(date) => setToDate(date)} className='form-control' />
                   </div>
                 </div>
               </div>

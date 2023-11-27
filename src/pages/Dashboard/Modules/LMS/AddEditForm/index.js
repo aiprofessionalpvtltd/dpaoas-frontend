@@ -6,26 +6,37 @@ import { useLocation } from 'react-router-dom'
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import Header from '../../../../../components/Header'
+import DatePicker from "react-datepicker";
+import { CustomAlert } from '../../../../../components/CustomComponents/CustomAlert'
 
 const validationSchema = Yup.object({
     reason: Yup.string().required('Reason is required'),
     comments: Yup.string().required('Comment is required'),
-    startdate: Yup.string().required('Start Date is required'),
-
 });
 function LMSAddEdit() {
     const location = useLocation()
+
+    const [startDate, setStartDate] = useState(new Date());
+    const [endDate, setEndDate] = useState(new Date());
     const [isChecked, setChecked] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+
+    const handleShow = () => setShowModal(true);
+    const handleClose = () => setShowModal(false);
+    const handleOkClick = () => {
+        handleClose();
+    };
     const formik = useFormik({
         initialValues: {
             reason: '',
             comments: '',
-            startdate: ''
+            // startdate: ''
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
             // Handle form submission here
             console.log(values);
+            handleShow()
         },
     });
 
@@ -35,6 +46,7 @@ function LMSAddEdit() {
     return (
         <Layout module={true} sidebarItems={LMSsidebarItems} centerlogohide={true}>
             <Header dashboardLink={"/lms/dashboard"} addLink1={"/lms/addedit"} title1={location && location.state ? "Edit Leave" : "Add Leave"} />
+            <CustomAlert showModal={showModal} handleClose={handleClose} handleOkClick={handleOkClick} />
             <div class='card'>
                 <div class='card-header red-bg' style={{ background: "#14ae5c " }}>
                     {location && location.state ? (
@@ -114,16 +126,13 @@ function LMSAddEdit() {
                                 <div class="col">
                                     <div className='mb-3'>
                                         <label className='form-label'>Start Date </label>
-                                        <input class="form-control" type="text" />
-                                        {formik.touched.startdate && formik.errors.startdate && (
-                                            <div className='invalid-feedback'>{formik.errors.startdate}</div>
-                                        )}
+                                        <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} className='form-control' />
                                     </div>
                                 </div>
                                 <div class="col">
                                     <div class="mb-3">
                                         <label class="form-label">End Date </label>
-                                        <input class="form-control" type="text" />
+                                        <DatePicker selected={endDate} onChange={(date) => setEndDate(date)} className='form-control' />
                                     </div>
                                 </div>
                             </div>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Header from '../../../../../../components/Header'
 import { Layout } from '../../../../../../components/Layout'
 import { HRMsidebarItems } from '../../../../../../utils/sideBarItems'
@@ -7,6 +7,8 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { useLocation } from 'react-router-dom'
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import DatePicker from "react-datepicker";
+
 
 const validationSchema = Yup.object({
     employeename: Yup.string().required('Employee name is required'),
@@ -17,6 +19,11 @@ const validationSchema = Yup.object({
 });
 function HRMAddEditEmployee() {
     const location = useLocation()
+    const [dateofbirth, setDateOfBirth] = useState(new Date());
+    const [placeofbirth, setPlaceOfBirth] = useState(new Date());
+    const [cnicissue, setCnicIssue] = useState(new Date());
+    const [cnicexpire, setCnicExpire] = useState(new Date());
+
     const formik = useFormik({
         initialValues: {
             employeename: '',
@@ -128,13 +135,13 @@ function HRMAddEditEmployee() {
                                         <div class="col">
                                             <div class="mb-3">
                                                 <label class="form-label">Date of Birth</label>
-                                                <input class="form-control" type="text" />
+                                                  <DatePicker selected={dateofbirth} onChange={(date) => setDateOfBirth(date)} className='form-control' />
                                             </div>
                                         </div>
                                         <div class="col">
                                             <div class="mb-3">
                                                 <label class="form-label">Place of Birth</label>
-                                                <input class="form-control" type="text" />
+                                                <DatePicker selected={placeofbirth} onChange={(date) => setPlaceOfBirth(date)} className='form-control' />
                                             </div>
                                         </div>
                                     </div>
@@ -158,7 +165,7 @@ function HRMAddEditEmployee() {
                                         <div class="col">
                                             <div class="mb-3">
                                                 <label class="form-label">CNIC Issue Date</label>
-                                                <input class="form-control" type="text" />
+                                                <DatePicker selected={cnicissue} onChange={(date) => setCnicIssue(date)} className='form-control' />
                                             </div>
                                         </div>
                                     </div>
@@ -166,7 +173,7 @@ function HRMAddEditEmployee() {
                                         <div class="col">
                                             <div class="mb-3">
                                                 <label class="form-label">CNIC Exp Date</label>
-                                                <input class="form-control" type="text" />
+                                                <DatePicker selected={cnicexpire} onChange={(date) => setCnicExpire(date)} className='form-control' />
                                             </div>
                                         </div>
                                         <div class="col">
