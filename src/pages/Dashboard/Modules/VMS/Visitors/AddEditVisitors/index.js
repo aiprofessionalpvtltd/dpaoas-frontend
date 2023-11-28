@@ -5,6 +5,7 @@ import { useLocation } from 'react-router-dom'
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import Header from '../../../../../../components/Header';
+import { UpdateVisitorsByVisitorId, createVisitorsByPassId } from '../../../../../../api/APIs';
 
 const validationSchema = Yup.object({
     visitorname: Yup.string().required('Visitor Name is required'),
@@ -24,8 +25,25 @@ function VMSAddEditVisitors() {
         onSubmit: (values) => {
             // Handle form submission here
             console.log(values);
+            CreateVisitorsApi(values)
         },
     });
+
+    const CreateVisitorsApi = async (values) => {
+        try {
+            const response = await createVisitorsByPassId(values)
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const updateVisitorsApi = async (values) => {
+        try {
+            const response = await UpdateVisitorsByVisitorId(values)
+        } catch (error) {
+            console.log(error);
+        }
+    }
     return (
         <Layout module={true} sidebarItems={VMSsidebarItems} centerlogohide={true}>
             <Header dashboardLink={"/vms/dashboard"} addLink1={"/vms/visitor"} title1={"Visitors"} addLink2={"/vms/addeditvisitor"} title2={location && location.state ? "Edit Visitors" : "Add Visitors"} />

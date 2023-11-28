@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
 import { Layout } from '../../../../../components/Layout'
 import { VMSsidebarItems } from '../../../../../utils/sideBarItems'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import Header from '../../../../../components/Header';
 import DatePicker from "react-datepicker";
+import { UpdatePasses, createPasses } from '../../../../../api/APIs';
 
 
 const validationSchema = Yup.object({
@@ -16,8 +17,10 @@ const validationSchema = Yup.object({
 });
 function VMSAddEditPass() {
   const location = useLocation()
-    const [fromdate, setFromDate] = useState(new Date());
-    const [todate, setToDate] = useState(new Date());
+  const navigate = useNavigate()
+  const [fromdate, setFromDate] = useState(new Date());
+  const [todate, setToDate] = useState(new Date());
+
   const formik = useFormik({
     initialValues: {
       remarks: '',
@@ -28,8 +31,32 @@ function VMSAddEditPass() {
     onSubmit: (values) => {
       // Handle form submission here
       console.log(values);
+      CreatePassesApi(values)
     },
   });
+
+  const CreatePassesApi = async (values) => {
+    try {
+      const response = await createPasses(values)
+      if (response.success) {
+        navigate("/vms/dashboard")
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const UpdatePassesApi = async (values) => {
+    try {
+      const response = await UpdatePasses(values)
+      if (response.success) {
+        navigate("/vms/dashboard")
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <Layout module={true} sidebarItems={VMSsidebarItems} centerlogohide={true}>
       <Header dashboardLink={"/vms/dashboard"} addLink1={"/vms/dashboard"} title1={"Passes"} addLink2={"/vms/addeditpass"} title2={location && location?.state ? "Edit Pass" : "Add Pass"} />

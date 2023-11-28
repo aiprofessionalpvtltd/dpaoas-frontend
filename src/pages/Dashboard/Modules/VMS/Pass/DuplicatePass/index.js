@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Layout } from '../../../../../../components/Layout'
 import { VMSsidebarItems } from '../../../../../../utils/sideBarItems'
 import { useFormik } from 'formik';
@@ -7,6 +7,7 @@ import CustomTable from '../../../../../../components/CustomComponents/CustomTab
 import CustomModal from '../../../../../../components/CustomComponents/CustomModal';
 import Header from '../../../../../../components/Header';
 import DatePicker from "react-datepicker";
+import { getDuplicatePassByPassId } from '../../../../../../api/APIs';
 
 const validationSchema = Yup.object({
   remarks: Yup.string().required('Remarks is required'),
@@ -15,11 +16,25 @@ const validationSchema = Yup.object({
 
 });
 
+const validationSchemaModal = Yup.object({
+  visitorname: Yup.string().required('Visitor Name is required'),
+  cnic: Yup.string().required('Cnic is required'),
+  visitordetail: Yup.string().required('Visitor Detail By is required'),
+
+});
+
+const initialValuesModal = {
+  visitorname: "",
+  cnic: "",
+  visitordetail: ""
+}
+
 function VMSDuplicatePass() {
   // const navigate = useNavigate()
   const [modalIsOpen, setIsOpen] = useState(false);
   const [fromdate, setFromDate] = useState(new Date());
   const [todate, setToDate] = useState(new Date());
+
 
   const formik = useFormik({
     initialValues: {
@@ -33,17 +48,39 @@ function VMSDuplicatePass() {
       console.log(values);
     },
   });
-  const data = [
-    { VisitorName: "Saqib", CNIC: '61101-1254556-3	', Detail: 'jdsljadslg dalkfjldkfjdsaf kldjaflkajflsdjf jlksddjflkajsdflk' },
-    { VisitorName: "Saqib", CNIC: '61101-1254556-3	', Detail: 'jdsljadslg dalkfjldkfjdsaf kldjaflkajflsdjf jlksddjflkajsdflk' },
-    { VisitorName: "Saqib", CNIC: '61101-1254556-3	', Detail: 'jdsljadslg dalkfjldkfjdsaf kldjaflkajflsdjf jlksddjflkajsdflk' },
-  ];
+  const [data, setData] = useState([
+    { visitorname: "Saqib", cnic: '61101-1254556-3	', visitordetail: 'jdsljadslg dalkfjldkfjdsaf kldjaflkajflsdjf jlksddjflkajsdflk' },
+    { visitorname: "Saqib", cnic: '61101-1254556-3	', visitordetail: 'jdsljadslg dalkfjldkfjdsaf kldjaflkajflsdjf jlksddjflkajsdflk' },
+    { visitorname: "Saqib", cnic: '61101-1254556-3	', visitordetail: 'jdsljadslg dalkfjldkfjdsaf kldjaflkajflsdjf jlksddjflkajsdflk' },
+  ]);
+
   function closeModal() {
     setIsOpen(false);
   }
+  const getDuplicatePassByIDApi = async (passId) => {
+    try {
+      const response = await getDuplicatePassByPassId(passId)
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  useEffect(() => {
+
+  }, [])
+
+  const handleSubmitModal = (values) => {
+    const newData = [
+      ...data,
+      values
+    ];
+
+    setData(newData)
+    closeModal();
+  }
+
   return (
     <Layout module={true} sidebarItems={VMSsidebarItems} centerlogohide={true}>
-      <CustomModal isOpen={modalIsOpen} onRequestClose={closeModal} />
+      <CustomModal isOpen={modalIsOpen} onRequestClose={closeModal} initialValues={initialValuesModal} validationSchema={validationSchemaModal} handleSubmit={handleSubmitModal} />
       <Header dashboardLink={"/vms/dashboard"} addLink1={"/vms/dashboard"} title1={"Passes"} addLink2={"/vms/duplicatepass"} title2={"Duplicate Pass"} />
 
       <div class='card'>

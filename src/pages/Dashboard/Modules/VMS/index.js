@@ -1,25 +1,72 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Layout } from '../../../../components/Layout'
 import { VMSsidebarItems } from '../../../../utils/sideBarItems'
 import CustomTable from '../../../../components/CustomComponents/CustomTable'
 import { useNavigate } from 'react-router-dom'
 import Header from '../../../../components/Header'
+import { getPasses } from '../../../../api/APIs'
 
 
 function VMSDashboard() {
     const navigate = useNavigate();
 
     const data = [
-        { SrNo: 1, PassId: '545646', PassDate: '11/02/2023', PassType: 'Naeem Malik IT(Director)', RequestedType: 'Entry May be allowed with comment base', RequestedBy: 'Official', VisitPurpose: '11/02/2023', FromDate: '25/02/2023', ToDate: '26/02/2023', IsActive: 'Yes' },
-        { SrNo: 1, PassId: '545646', PassDate: '11/02/2023', PassType: 'Naeem Malik IT(Director)', RequestedType: 'Entry May be allowed with comment base', RequestedBy: 'Official', VisitPurpose: '11/02/2023', FromDate: '25/02/2023', ToDate: '26/02/2023', IsActive: 'Yes' },
-    ];
+        {
+            "id": 1,
+            "passDate": "21-11-2023",
+            "requestedBy": "Ali Ahmad Jan",
+            "branch": "Additional Secretary Office",
+            "visitPurpose": "Educational Trip",
+            "cardType": "Personal",
+            "companyName": "AI Professionals Pvt Limited",
+            "fromDate": "21-11-2023",
+            "toDate": "30-11-2023",
+            "allowOffDays": [
+                "Saturday"
+            ],
+            "remarks": "Visit",
+            "passStatus": "Inactive",
+            "createdAt": "2023-11-21T10:32:24.068Z",
+            "updatedAt": "2023-11-22T04:06:59.873Z"
+        },
+        {
+            "id": 2,
+            "passDate": "21-11-2023",
+            "requestedBy": "Ali Ahmad Jan",
+            "branch": "Additional Secretary Office",
+            "visitPurpose": "Educational Trip",
+            "cardType": "Personal",
+            "companyName": "AI Professionals Pvt Limited",
+            "fromDate": "22-11-2023",
+            "toDate": "1-12-2023",
+            "allowOffDays": [
+                "Saturday"
+            ],
+            "remarks": "Visit",
+            "passStatus": "Inactive",
+            "createdAt": "2023-11-22T06:05:52.689Z",
+            "updatedAt": "2023-11-22T06:05:52.689Z"
+        },
 
+    ]
+
+    const getPassesData = async () => {
+        try {
+            const response = await getPasses()
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    useEffect(() => {
+        getPassesData()
+    }, [])
     return (
         <Layout module={true} sidebarItems={VMSsidebarItems} centerlogohide={true}>
             <Header dashboardLink={"/vms/dashboard"} addLink1={"/vms/dashboard"} title1={"Passes"} />
             <div class="row">
                 <div class="col-12">
                     <CustomTable
+                        block={true}
                         data={data}
                         tableTitle="Passes"
                         addBtnText="Add Pass"
