@@ -6,6 +6,8 @@ import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 function CustomTable({ data, handleEdit, handleDelete, tableTitle, headerBgColor, hideBtn, addBtnText, handleAdd, handlePrint, handleUser, handleDuplicate, hideUserIcon, headertitlebgColor, headertitletextColor, block, hideEditIcon, seachBarShow }) {
     const keys = data.length > 0 ? Object.keys(data[0]) : [];
 
+    console.log("data", data);
+
     const formatHeader = (key) => {
         // Split camelCase into separate words and join with spaces
         return key.replace(/([a-z0-9])([A-Z])/g, '$1 $2').toLowerCase();
@@ -44,11 +46,11 @@ function CustomTable({ data, handleEdit, handleDelete, tableTitle, headerBgColor
                     <thead>
                         <tr>
                             {keys.map((key, index) => (
-                                <th key={index} className="text-center" scope="col" style={{ backgroundColor: headertitlebgColor ? headertitlebgColor : "#FFF", color: headertitletextColor ? headertitletextColor : "#666" }}>
+                                <th key={index} className="text-center" scope="col" >
                                     {formatHeader(key)}
                                 </th>
                             ))}
-                            <th className="text-center" style={{ width: "180px", backgroundColor: headertitlebgColor ? headertitlebgColor : "#FFF", color: headertitletextColor ? headertitletextColor : "#666" }}>Actions</th>
+                            <th className="text-center" style={{ width: "180px" }}>Actions</th>
                         </tr>
                     </thead>
                     <tbody>

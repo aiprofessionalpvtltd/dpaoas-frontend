@@ -1,6 +1,5 @@
 import React from 'react'
 import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import Modal from 'react-modal';
 
 const customStyles = {
@@ -13,23 +12,13 @@ const customStyles = {
         transform: 'translate(-50%, -50%)',
     },
 };
-const validationSchema = Yup.object({
-    visitorname: Yup.string().required('Visitor Name is required'),
-    cnic: Yup.string().required('Cnic is required'),
-    visitordetail: Yup.string().required('Visitor Detail By is required'),
 
-});
-function CustomModal({ isOpen, onRequestClose }) {
+function CustomModal({ isOpen, initialValues, validationSchema, onRequestClose, handleSubmit }) {
     const formik = useFormik({
-        initialValues: {
-            visitorname: '',
-            cnic: '',
-            visitordetail: ''
-        },
+        initialValues: initialValues,
         validationSchema: validationSchema,
         onSubmit: (values) => {
-            // Handle form submission here
-            console.log(values);
+            handleSubmit(values)
         },
     });
     return (
