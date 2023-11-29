@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Layout } from '../../../../components/Layout'
 import { VMSsidebarItems } from '../../../../utils/sideBarItems'
 import CustomTable from '../../../../components/CustomComponents/CustomTable'
@@ -9,6 +9,13 @@ import { getPasses } from '../../../../api/APIs'
 
 function VMSDashboard() {
     const navigate = useNavigate();
+    const [currentPage, setCurrentPage] = useState(1);
+    const pageSize = 4; // Set your desired page size
+
+    const handlePageChange = (page) => {
+        // Update currentPage when a page link is clicked
+        setCurrentPage(page);
+    };
 
     const data = [
         {
@@ -76,6 +83,9 @@ function VMSDashboard() {
                         handleUser={() => navigate("/vms/visitor")}
                         handleDuplicate={() => navigate("/vms/duplicatepass")}
                         seachBarShow={true}
+                        handlePageChange={handlePageChange}
+                        currentPage={currentPage}
+                        pageSize={pageSize}
                     // handlePrint={}
                     // handleUser={}
                     // handleDelete={(item) => handleDelete(item.id)}

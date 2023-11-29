@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Layout } from '../../../../components/Layout'
 import LeaveCard from '../../../../components/CustomComponents/LeaveCard'
 import CustomTable from '../../../../components/CustomComponents/CustomTable'
 import profileimage from "../../../../assets/profile-img.jpg"
 import { LMSsidebarItems } from '../../../../utils/sideBarItems'
 import { useNavigate } from 'react-router-dom'
+import { getAllLeaves } from '../../../../api/APIs'
 
 const data = [
     {
@@ -20,6 +21,28 @@ const data = [
     },
     {
         id: 2,
+        name: "Mohsin Khan",
+        leaveType: "Sick",
+        startDate: "11/02/2023",
+        endDate: "11/02/2023",
+        totalDays: "30",
+        reason: "Feeling Not Good",
+        leaveStatus: "Approved",
+        submittedTo: "Mohsin"
+    },
+    {
+        id: 3,
+        name: "Saqib Khan",
+        leaveType: "Sick",
+        startDate: "11/02/2023",
+        endDate: "11/02/2023",
+        totalDays: "30",
+        reason: "Feeling Not Good",
+        leaveStatus: "Approved",
+        submittedTo: "Mohsin"
+    },
+    {
+        id: 4,
         name: "Mohsin Khan",
         leaveType: "Sick",
         startDate: "11/02/2023",
@@ -55,7 +78,45 @@ const onleaveData = [
     }
 ]
 function LMSDashboard() {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const [leaveData, setLeaveData] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const pageSize = 4; // Set your desired page size
+
+    const handlePageChange = (page) => {
+        // Update currentPage when a page link is clicked
+        setCurrentPage(page);
+    };
+
+    const transformLeavesData = (apiData) => {
+        return apiData.map((leave) => ({
+          id: leave.id,
+          name: leave["users.name"],
+          leaveType: leave.requestLeaveSubType,
+          startDate: leave.requestStartDate,
+          endDate: leave.requestEndDate,
+          totalDays: leave.requestNumberOfDays,
+          reason: leave.requestLeaveReason,
+          leaveStatus: leave.requestStatus,
+          submittedTo: leave.leavesubmittedTo,
+        }));
+      };
+
+    const getAllLeavesApi = async () => {
+        try {
+            const response = await getAllLeaves(currentPage, pageSize);
+            // const transformedData = transformLeavesData(response.data);
+            console.log("Leaves: ", response);
+            // setLeaveData(response);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    useEffect(() => {
+        getAllLeavesApi()
+    }, [currentPage])
+
     return (
         <Layout module={true} sidebarItems={LMSsidebarItems} centerlogohide={true}>
             <h1>Welcome back Abbas</h1>
@@ -79,6 +140,9 @@ function LMSDashboard() {
                         addBtnText="Add Leave"
                         handleAdd={() => navigate('/lms/addedit')}
                         handleEdit={() => navigate('/lms/addedit', { state: true })}
+                        handlePageChange={handlePageChange}
+                        currentPage={currentPage}
+                        pageSize={pageSize}
                     // handleDelete={(item) => handleDelete(item.id)}
                     />
                 </div>

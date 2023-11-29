@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
 import CustomTable from '../../../../../components/CustomComponents/CustomTable';
 import { Layout } from '../../../../../components/Layout';
@@ -8,6 +8,13 @@ import { getVisirorsByPassId } from '../../../../../api/APIs';
 
 function VMSVisitors() {
     const navigate = useNavigate();
+    const [currentPage, setCurrentPage] = useState(1);
+    const pageSize = 4; // Set your desired page size
+
+    const handlePageChange = (page) => {
+        // Update currentPage when a page link is clicked
+        setCurrentPage(page);
+    };
 
     const data = [
         {
@@ -53,6 +60,9 @@ function VMSVisitors() {
                         handleAdd={() => navigate('/vms/addeditvisitor')}
                         handleEdit={(item) => navigate('/vms/addeditvisitor', { state: item })}
                         seachBarShow={true}
+                        handlePageChange={handlePageChange}
+                        currentPage={currentPage}
+                        pageSize={pageSize}
                     // handlePrint={}
                     // handleUser={}
                     // handleDelete={(item) => handleDelete(item.id)}

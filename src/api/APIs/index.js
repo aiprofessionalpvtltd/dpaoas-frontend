@@ -3,7 +3,7 @@ import { getAuthToken } from "../Auth";
 
 // Set config defaults when creating the instance
 export const axiosClient = axios.create({
-  baseURL: "BAse URL/api",
+  baseURL: "http://172.16.170.8:5151/api",
 });
 
 export const loginUser = async (data) => {
@@ -19,6 +19,8 @@ export const loginUser = async (data) => {
     throw error;
   }
 };
+
+                                      /* Organizational Management System (APIs) */
 
 // Roles Module
 
@@ -174,7 +176,7 @@ export const createPasses = async (data) => {
     console.error('Error fetching API endpoint:', error);
     throw error;
   }
-};
+}
 
 export const UpdatePasses = async (data) => {
   try {
@@ -272,6 +274,42 @@ export const getDuplicatePassByPassId = async (passId) => {
     const response = await axiosClient.get(`/pass/duplicate/${passId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
+      }
+    });
+    return response?.data;
+  } catch (error) {
+    console.error('Error fetching API endpoint:', error);
+    throw error;
+  }
+};
+
+
+
+                                      /* Leave Management System (APIs) */
+
+// Leave Module
+
+export const getAllLeaves = async (page, pageSize) => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClient.get(`/leave/all?page=${page}&pageSize=${pageSize}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    });
+    return response?.data;
+  } catch (error) {
+    console.error('Error fetching API endpoint:', error);
+    throw error;
+  }
+};
+
+export const createLeave = async (data) => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClient.post(`/leave/create`, data, {
+      headers: {
+        'Content-Type': 'application/json',
       }
     });
     return response?.data;

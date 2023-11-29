@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Layout } from '../../../../components/Layout';
 import { HRMsidebarItems } from '../../../../utils/sideBarItems';
 import { useNavigate } from 'react-router-dom';
@@ -31,7 +31,15 @@ const data = [
 
 function HRMDashboard() {
     const navigate = useNavigate()
-    const Roles = getRolesData()
+    const Roles = getRolesData();
+    const [currentPage, setCurrentPage] = useState(1);
+    const pageSize = 4; // Set your desired page size
+
+    const handlePageChange = (page) => {
+        // Update currentPage when a page link is clicked
+        setCurrentPage(page);
+    };
+
     return (
         <Layout module={true} sidebarItems={HRMsidebarItems} centerlogohide={true}>
             <Header dashboardLink={"/hrm/dashboard"} addLink1={"/hrm/dashboard"} title1={"Roles"} />
@@ -45,6 +53,9 @@ function HRMDashboard() {
                         handleEdit={(item) => navigate('/hrm/editrole', { state: item })}
                         headertitlebgColor={"#666"}
                         headertitletextColor={"#FFF"}
+                        handlePageChange={handlePageChange}
+                        currentPage={currentPage}
+                        pageSize={pageSize}
                     // handlePrint={}
                     // handleUser={}
                     // handleDelete={(item) => handleDelete(item.id)}
