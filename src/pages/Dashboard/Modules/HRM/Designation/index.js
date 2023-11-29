@@ -1,32 +1,43 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Layout } from '../../../../../components/Layout'
 import Header from '../../../../../components/Header'
 import { useNavigate } from 'react-router-dom';
 import { HRMsidebarItems } from '../../../../../utils/sideBarItems';
 import CustomTable from '../../../../../components/CustomComponents/CustomTable';
+import { getDesignations } from '../../../../../api/APIs';
 
 const data = [
     {
-        name: "Admin",
-        status: "Active"
+        "id": 1,
+        "name": "IT Administrator",
+        "description": "Admin Related Things",
+        "designationStatus": "active",
+        "createdAt": "2023-11-21T09:08:06.733Z",
+        "updatedAt": "2023-11-21T09:08:06.733Z"
     },
     {
-        name: "Editor",
-        status: "InActive"
+        "id": 2,
+        "name": "HR",
+        "description": "Manage Human Resources",
+        "designationStatus": "active",
+        "createdAt": "2023-11-21T09:08:45.694Z",
+        "updatedAt": "2023-11-21T09:08:45.694Z"
     },
-    {
-        name: "Manager",
-        status: "Active"
-    },
-    {
-        name: "Employee",
-        status: "Active"
-    }
 ]
 
 function HRMDesignation() {
     const navigate = useNavigate()
 
+    const getDesignationApi = async () => {
+        try {
+            const response = await getDesignations()
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    useEffect(() => {
+        getDesignationApi()
+    }, [])
     return (
         <Layout module={true} sidebarItems={HRMsidebarItems} centerlogohide={true}>
             <Header dashboardLink={"/hrm/designation"} addLink1={"/hrm/designation"} title1={"Designation"} />

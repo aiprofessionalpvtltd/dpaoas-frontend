@@ -3,9 +3,10 @@ import { Layout } from '../../components/Layout'
 import { Tiles } from '../../components/CustomComponents/Tiles'
 import { faAddressCard, faUserCog, faMailBulk } from "@fortawesome/free-solid-svg-icons";
 import { AuthContext } from '../../api/AuthContext';
+import { getPermissionsData } from '../../api/Auth';
 
 function Dashboard() {
-    const { permissions } = useContext(AuthContext);
+    const permissions = getPermissionsData();
     console.log(permissions);
     return (
         <Layout>

@@ -61,8 +61,8 @@ function CustomTable({ data, handleEdit, handleDelete, tableTitle, headerBgColor
                                     //     {item[key]}
                                     // </td>
                                     <td class="text-center">
-                                        {item[key] === "Active" || item[key] === "InActive" ? (
-                                            <span class={`label label-sm ${item[key] === 'Active' ? 'label-success' : 'label-danger'}`}>{item[key]}</span>
+                                        {item[key] === "active" || item[key] === "inactive" ? (
+                                            <span class={`label label-sm ${item[key] === 'active' ? 'label-success' : 'label-danger'}`}>{item[key]}</span>
                                         ) : <span>{item[key]}</span>
                                         }
                                     </td>

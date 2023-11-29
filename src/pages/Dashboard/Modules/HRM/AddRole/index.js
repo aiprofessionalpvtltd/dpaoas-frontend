@@ -4,25 +4,39 @@ import { Layout } from '../../../../../components/Layout';
 import Header from '../../../../../components/Header';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { createRole } from '../../../../../api/APIs';
+import { useNavigate } from 'react-router';
 
 const validationSchema = Yup.object({
     roleName: Yup.string().required('Role name is required'),
     roledescription: Yup.string().required('Description is required'),
 });
 function HRMAddRole() {
+    const navigate = useNavigate()
     const initialValues = {
         roleName: '',
         roledescription: '',
     };
-
+    const CreateRoleApi = async (values) => {
+        const data = { name: values?.roleName, description: values?.roledescription }
+        try {
+            const response = await createRole(data)
+            if (response.success) {
+                navigate("/hrm/dashboard")
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
     const formik = useFormik({
         initialValues,
         validationSchema,
         onSubmit: (values) => {
             // Handle form submission here
-            console.log(values);
+            CreateRoleApi(values)
         },
     });
+
     return (
         <Layout module={true} sidebarItems={HRMsidebarItems} centerlogohide={true}>
             <Header dashboardLink={"/hrm/dashboard"} addLink1={"/hrm/dashboard"} addLink2={"/hrm/addrole"} title1={"Roles"} title2={"Add Role"} />

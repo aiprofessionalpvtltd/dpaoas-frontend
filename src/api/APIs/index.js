@@ -1,8 +1,9 @@
 import axios from "axios";
+import { getAuthToken } from "../Auth";
 
 // Set config defaults when creating the instance
 export const axiosClient = axios.create({
-  baseURL: "BAse URL",
+  baseURL: "BAse URL/api",
 });
 
 export const loginUser = async (data) => {
