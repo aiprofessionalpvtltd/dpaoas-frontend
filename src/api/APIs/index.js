@@ -293,9 +293,9 @@ export const getAllLeaves = async (page, pageSize) => {
   try {
     const token = getAuthToken();
     const response = await axiosClient.get(`/leave/all?page=${page}&pageSize=${pageSize}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      }
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // }
     });
     return response?.data;
   } catch (error) {
@@ -311,6 +311,36 @@ export const createLeave = async (data) => {
       headers: {
         'Content-Type': 'application/json',
       }
+    });
+    return response?.data;
+  } catch (error) {
+    console.error('Error fetching API endpoint:', error);
+    throw error;
+  }
+};
+
+export const UpdateLeaveById = async (id, data) => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClient.put(`/leave/${id}`, data, {
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // }
+    });
+    return response?.data;
+  } catch (error) {
+    console.error('Error fetching API endpoint:', error);
+    throw error;
+  }
+};
+
+export const getWhosOnLeave = async (startDate, endDate, dept) => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClient.get(`/leave/search?startDate=${startDate}&endDate=${endDate}&departmentName=${dept}`, {
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // }
     });
     return response?.data;
   } catch (error) {

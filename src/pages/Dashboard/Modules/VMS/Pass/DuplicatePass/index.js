@@ -34,7 +34,7 @@ function VMSDuplicatePass() {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [fromdate, setFromDate] = useState(new Date());
   const [todate, setToDate] = useState(new Date());
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0);
     const pageSize = 4; // Set your desired page size
 
     const handlePageChange = (page) => {

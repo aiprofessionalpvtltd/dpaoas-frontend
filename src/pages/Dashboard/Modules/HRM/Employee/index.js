@@ -25,7 +25,7 @@ const data = [
 ]
 function HRMEmployeeDashboard() {
     const navigate = useNavigate();
-    const [currentPage, setCurrentPage] = useState(1);
+    const [currentPage, setCurrentPage] = useState(0);
     const pageSize = 4; // Set your desired page size
 
     const handlePageChange = (page) => {

@@ -34,7 +34,7 @@ function LMSHistory() {
   const navigate = useNavigate();
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0);
   const pageSize = 3; // Set your desired page size
 
   const handlePageChange = (page) => {

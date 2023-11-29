@@ -32,7 +32,7 @@ const data = [
 function HRMDashboard() {
     const navigate = useNavigate()
     const Roles = getRolesData();
-    const [currentPage, setCurrentPage] = useState(1);
+    const [currentPage, setCurrentPage] = useState(0);
     const pageSize = 4; // Set your desired page size
 
     const handlePageChange = (page) => {

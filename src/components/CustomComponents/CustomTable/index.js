@@ -40,10 +40,10 @@ function CustomTable({
   };
 
   useEffect(() => {
-    setTotalPages(Math.ceil(data.length / pageSize));
-  }, []);
+    setTotalPages(Math.max(1, Math.ceil(data.length / pageSize)));
+  }, [data.length, pageSize]);  
 
-  const startIndex = (currentPage - 1) * pageSize;
+  const startIndex = currentPage * pageSize;
   const endIndex = startIndex + pageSize;
   const displayedData = data.slice(startIndex, endIndex);
 
@@ -56,26 +56,26 @@ function CustomTable({
   const renderPagination = () => (
     <nav aria-label="Page navigation">
       <ul className="pagination">
-        <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-          <button className="page-link" onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
+        <li className={`page-item ${currentPage <= 0 ? 'disabled' : ''}`}>
+          <button className="page-link" onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage <= 0}>
             Previous
           </button>
         </li>
         {Array.from({ length: totalPages }).map((_, index) => (
-          <li key={index} className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}>
-            <button className="page-link" onClick={() => handlePageChange(index + 1)}>
+          <li key={index} className={`page-item ${currentPage === index ? 'active' : ''}`}>
+            <button className="page-link" onClick={() => handlePageChange(index)}>
               {index + 1}
             </button>
           </li>
         ))}
-        <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-          <button className="page-link" onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
+        <li className={`page-item ${currentPage >= totalPages - 1 ? 'disabled' : ''}`}>
+          <button className="page-link" onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage >= totalPages - 1}>
             Next
           </button>
         </li>
       </ul>
     </nav>
-  );
+  );  
 
   return (
     <div className="dash-detail-container" style={{ marginTop: "20px" }}>
@@ -100,13 +100,13 @@ function CustomTable({
         </div>
         {seachBarShow && seachBarShow && (
           <div
-            class="input-group float-end"
+            className="input-group float-end"
             style={{ width: "250px", marginTop: "10px", marginBottom: "15px" }}
           >
-            <input type="text" class="form-control" placeholder="Search" />
-            <div class="input-group-btn">
-              <button class="btn btn-default" type="submit">
-                <i class="glyphicon glyphicon-search"></i>
+            <input type="text" className="form-control" placeholder="Search" />
+            <div className="input-group-btn">
+              <button className="btn btn-default" type="submit">
+                <i className="glyphicon glyphicon-search"></i>
               </button>
             </div>
           </div>
@@ -147,7 +147,7 @@ function CustomTable({
                     Actions
                 </th>
               ) : (
-                <span>No data found :(</span>
+                    <div>No data found :(</div>
               )}
             </tr>
           </thead>
@@ -158,10 +158,10 @@ function CustomTable({
                   // <td key={colIndex} className="text-center">
                   //     {item[key]}
                   // </td>
-                  <td class="text-center">
+                  <td className="text-center">
                     {item[key] === "active" || item[key] === "inactive" ? (
                       <span
-                        class={`label label-sm ${
+                        className={`label label-sm ${
                           item[key] === "active"
                             ? "label-success"
                             : "label-danger"

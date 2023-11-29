@@ -24,9 +24,9 @@ export const Sidebar = ({ sidebarItems }) => {
         </a>
       </header>
       <nav className="dashboard-nav-list">
-        {sidebarItems && sidebarItems.map(item => (
+        {sidebarItems && sidebarItems.map((item, index) => (
 
-          <a href={item.link} className={`${location.pathname === item.link ? "dashboard-nav-item active" : "dashboard-nav-item"}`}>
+          <a key={index} href={item.link} className={`${location.pathname === item.link ? "dashboard-nav-item active" : "dashboard-nav-item"}`}>
             <FontAwesomeIcon icon={item.icon} size="lg" width={24} />
             <span className="text">{item.itemName}</span>
           </a>

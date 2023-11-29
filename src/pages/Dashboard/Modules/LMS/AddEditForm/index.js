@@ -9,12 +9,14 @@ import Header from "../../../../../components/Header";
 import DatePicker from "react-datepicker";
 import { CustomAlert } from "../../../../../components/CustomComponents/CustomAlert";
 import { createLeave } from "../../../../../api/APIs";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const validationSchema = Yup.object({
   reason: Yup.string().required("Reason is required"),
   comments: Yup.string().required("Comment is required"),
-  leaveForwarder: Yup.string().required("Leave Forwarder is required"),
-  submittedTo: Yup.string().required("This field is required"),
+  // leaveForwarder: Yup.string().required("Leave Forwarder is required"),
+  submittedTo: Yup.number().required("This field is required"),
   status: Yup.string().required("Status is required"),
   leaveType: Yup.string().required("Leave Type is required"),
   leaveSubtype: Yup.string().required("Leave Subtype is required"),
@@ -24,6 +26,7 @@ const validationSchema = Yup.object({
 });
 function LMSAddEdit() {
   const location = useLocation();
+  console.log("Edit form", location?.state);
 
   const [isChecked, setChecked] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -35,13 +38,29 @@ function LMSAddEdit() {
     CreateLeaveApi(formValues);
     handleClose();
   };
+
+  const showSuccessMessage = (message) => {
+    toast.success(message, {
+      position: toast.POSITION.TOP_RIGHT,
+      autoClose: 3000,
+      hideProgressBar: false,
+    });
+  };
+
+  const showErrorMessage = (message) => {
+    toast.error(message, {
+      position: toast.POSITION.TOP_RIGHT,
+      autoClose: 3000,
+      hideProgressBar: false,
+    });
+  };
   
   const formik = useFormik({
     initialValues: {
       reason: "",
       comments: "",
       leaveForwarder: "",
-      submittedTo: "",
+      submittedTo: null,
       status: "",
       leaveType: "",
       leaveSubtype: "",
@@ -81,16 +100,18 @@ function LMSAddEdit() {
 
     try {
       const response = await createLeave(data);
-      console.log(response);
-      if (response.success) {
+      if (response?.success) {
+        showSuccessMessage(response?.message)
       }
     } catch (error) {
-      alert(error);
+      showErrorMessage(error?.response?.data?.message);
     }
   };
 
   return (
     <Layout module={true} sidebarItems={LMSsidebarItems} centerlogohide={true}>
+      <ToastContainer />
+
       <Header
         dashboardLink={"/lms/dashboard"}
         addLink1={"/lms/addedit"}
@@ -165,35 +186,39 @@ function LMSAddEdit() {
               </div>
 
               <div class="row">
-                <div class="col">
-                  <div class="mb-3">
-                    <label class="form-label">Submitted To</label>
-                    <select
-                      class={`form-select ${
-                        formik.touched.submittedTo && formik.errors.submittedTo
-                          ? "is-invalid"
-                          : ""
-                      }`}
-                      placeholder="Leave Forwarder"
-                      value={formik.values.submittedTo}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      name="submittedTo"
-                    >
-                      <option value="" selected disabled hidden>
-                        Select
-                      </option>
-                      <option>HR</option>
-                      <option>DG</option>
-                    </select>
-                    {formik.touched.submittedTo &&
-                      formik.errors.submittedTo && (
-                        <div className="invalid-feedback">
-                          {formik.errors.submittedTo}
-                        </div>
-                      )}
-                  </div>
-                </div>
+              <div class="col">
+  <div class="mb-3">
+    <label class="form-label">Submitted To</label>
+    <select
+      class={`form-select ${
+        formik.touched.submittedTo && formik.errors.submittedTo
+          ? "is-invalid"
+          : ""
+      }`}
+      placeholder="Leave Forwarder"
+      value={formik.values.submittedTo}
+      onChange={(e) => {
+        // Set submittedTo as a number directly
+        formik.handleChange(e);
+        formik.setFieldValue("submittedTo", Number(e.target.value));
+      }}
+      onBlur={formik.handleBlur}
+      name="submittedTo"
+    >
+      <option value="" selected disabled hidden>
+        Select
+      </option>
+      <option value={1}>HR</option>
+      <option value={2}>DG</option>
+    </select>
+    {formik.touched.submittedTo &&
+      formik.errors.submittedTo && (
+        <div className="invalid-feedback">
+          {formik.errors.submittedTo}
+        </div>
+      )}
+  </div>
+</div>
 
                 <div class="col">
                   <div class="mb-3">
@@ -213,9 +238,9 @@ function LMSAddEdit() {
                       <option value="" selected disabled hidden>
                         Select
                       </option>
-                      <option>Pending</option>
-                      <option>Approved</option>
-                      <option>Rejected</option>
+                      <option value={"pending"}>Pending</option>
+                      <option value={"approved"}>Approved</option>
+                      <option value={"rejected"}>Rejected</option>
                     </select>
                     {formik.touched.status && formik.errors.status && (
                       <div className="invalid-feedback">
@@ -275,8 +300,9 @@ function LMSAddEdit() {
                       <option value="" selected disabled hidden>
                         Select
                       </option>
-                      <option>Year</option>
-                      <option>2023</option>
+                      <option value={"preApproved"}>Pre Approved</option>
+                      <option value={"postApproved"}>Post Approved</option>
+                      <option value={"telephonicInformed"}>Telephonic Informed</option>
                     </select>
                     {formik.touched.leaveSubtype &&
                       formik.errors.leaveSubtype && (
