@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import arrowLeft from "../../assets/arrow.png";
 
-const UncheckedItem = ({ item, handleHideShow, hiddenItems, handleCheckboxChange, checkedItems }) => {
+export const UncheckedItem = ({ item, handleHideShow, hiddenItems, handleCheckboxChange, checkedItems }) => {
   return (
     <div key={item.id}>
       <Link
@@ -59,5 +59,3 @@ const UncheckedItem = ({ item, handleHideShow, hiddenItems, handleCheckboxChange
     </div>
   );
 };
-
-export default UncheckedItem;

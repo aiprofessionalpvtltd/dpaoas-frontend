@@ -1,6 +1,6 @@
 import React from "react";
 
-const CheckedItem = ({ checked, handleCheckboxChange }) => {
+export const CheckedItem = ({ checked, handleCheckboxChange }) => {
   return (
     <div className="mb-3">
       <label className="form-label">{checked?.permission}</label>
@@ -35,5 +35,3 @@ const CheckedItem = ({ checked, handleCheckboxChange }) => {
     </div>
   );
 };
-
-export default CheckedItem;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { LMSsidebarItems } from "../../../../../utils/sideBarItems";
 import { Layout } from "../../../../../components/Layout";
 import logoImage from "../../../../../assets/profile-img.jpg";
@@ -8,7 +8,7 @@ import * as Yup from "yup";
 import Header from "../../../../../components/Header";
 import DatePicker from "react-datepicker";
 import { CustomAlert } from "../../../../../components/CustomComponents/CustomAlert";
-import { createLeave } from "../../../../../api/APIs";
+import { UpdateLeaveById, createLeave, getLeaveById } from "../../../../../api/APIs";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -26,16 +26,20 @@ const validationSchema = Yup.object({
 });
 function LMSAddEdit() {
   const location = useLocation();
-  console.log("Edit form", location?.state);
 
-  const [isChecked, setChecked] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [formValues, setFormValues] = useState();
+  const [leaveByIdData, setLeaveByIdData] = useState([]);
+  const [isChecked, setChecked] = useState(false);
 
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
   const handleOkClick = () => {
-    CreateLeaveApi(formValues);
+    if(location?.state?.id) {
+      UpdateLeaveApi(formValues);
+    } else {
+      CreateLeaveApi(formValues);
+    }
     handleClose();
   };
 
@@ -54,31 +58,55 @@ function LMSAddEdit() {
       hideProgressBar: false,
     });
   };
+
+  const initialValues = {
+    reason: leaveByIdData.length > 0 ? leaveByIdData[0]?.requestLeaveReason : "",
+    comments: "",
+    leaveForwarder: leaveByIdData.length > 0 ? leaveByIdData[0]?.requestLeaveForwarder : "",
+    submittedTo: leaveByIdData.length > 0 ? 2 : null,
+    status: leaveByIdData.length > 0 ? leaveByIdData[0]?.requestStatus : "",
+    leaveType: leaveByIdData.length > 0 ? leaveByIdData[0]?.requestLeaveType : "",
+    leaveSubtype: leaveByIdData.length > 0 ? leaveByIdData[0]?.requestLeaveSubType : "",
+    startDate: leaveByIdData.length > 0 ? new Date(leaveByIdData[0]?.requestStartDate) : null,
+    endDate: leaveByIdData.length > 0 ? new Date(leaveByIdData[0]?.requestEndDate) : null,
+    leaveStation: leaveByIdData.length > 0 ? leaveByIdData[0]?.requestStationLeave : false,
+  }  
   
   const formik = useFormik({
-    initialValues: {
-      reason: "",
-      comments: "",
-      leaveForwarder: "",
-      submittedTo: null,
-      status: "",
-      leaveType: "",
-      leaveSubtype: "",
-      startDate: null,
-      endDate: null,
-      leaveStation: false,
-    },
+    initialValues: initialValues,
     validationSchema: validationSchema,
     onSubmit: (values) => {
       // Handle form submission here
       handleShow();
       setFormValues(values);
     },
+    enableReinitialize: true
   });
 
   const handleCheckboxChange = () => {
     setChecked(!isChecked);
   };
+
+  const getLeaveByIdApi = async () => {
+    try {
+        const response = await getLeaveById(location.state?.id);
+        if(response?.success) {
+            showSuccessMessage(response?.message)
+            setLeaveByIdData(response.data);
+            if(response?.data[0]?.requestLeaveForwarder) {
+              setChecked(true);
+            }
+        }
+    } catch (error) {
+        showErrorMessage(error?.response?.data?.message);
+    }
+}
+
+  useEffect(() => {
+    if(location.state?.id) {
+      getLeaveByIdApi();
+    }
+  }, [])
 
   const CreateLeaveApi = async (values) => {
     const data = {
@@ -100,6 +128,36 @@ function LMSAddEdit() {
 
     try {
       const response = await createLeave(data);
+      if (response?.success) {
+        showSuccessMessage(response?.message)
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  };
+
+  const UpdateLeaveApi = async (values) => {
+    const data = {
+      fkRequestTypeId: 1,
+      fkUserId: 1,
+      requestStatus: values.status,
+      requestStartDate: values.startDate,
+      requestEndDate: values.endDate,
+      requestLeaveSubType: values.leaveSubtype,
+      requestLeaveReason: values.reason,
+      requestNumberOfDays: "5",
+      requestLeaveSubmittedTo: values.submittedTo,
+      requestLeaveApplyOnBehalf: isChecked,
+      requestLeaveForwarder: values.leaveForwarder,
+      requestStationLeave: values.leaveStation,
+      leaveComment: values.comments,
+      commentedBy: 1
+    };
+
+    console.log("Edit data",data);
+
+    try {
+      const response = await UpdateLeaveById(location?.state?.id, data);
       if (response?.success) {
         showSuccessMessage(response?.message)
       }
@@ -463,46 +521,47 @@ function LMSAddEdit() {
                   </button>
                 </div>
               </div>
-              {location.state && (
-                <div class="row">
-                  <div class="col">
-                    <div
-                      class="d-flex flex-row p-3"
-                      style={{ border: "#ddd solid 1px", marginTop: "25px" }}
-                    >
-                      <img
-                        style={{ marginBottom: "30px", marginRight: "15px" }}
-                        src={logoImage}
-                        width="40"
-                        height="40"
-                        class="rounded-circle mr-3"
-                        alt="logo"
-                      />
-                      <div class="w-100">
-                        <div class="d-flex justify-content-between align-items-center">
-                          <div class="d-flex flex-row align-items-center">
-                            <span class="mr-2">Saqib</span>
-                            <small
-                              style={{ marginLeft: "8px" }}
-                              class="c-badge"
-                            >
-                              Pending
-                            </small>
-                          </div>
-                          <small>Mon, 07-18-2022 09:02 AM</small>
-                        </div>
-                        <p
-                          class="text-justify comment-text mb-0"
-                          style={{ marginTop: "7px" }}
-                        >
-                          I dont have any assistance from relatives, so I have
-                          to participate it.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
+              {location.state?.id && leaveByIdData[0]?.comments?.length > 0 && leaveByIdData[0]?.comments.map((item, index) => (
+  <div key={index} className="row">
+    <div className="col">
+      <div
+        className="d-flex flex-row p-3"
+        style={{ border: "#ddd solid 1px", marginTop: "25px" }}
+      >
+        <img
+          style={{ marginBottom: "30px", marginRight: "15px" }}
+          src={logoImage}
+          width="40"
+          height="40"
+          className="rounded-circle mr-3"
+          alt="logo"
+        />
+        <div className="w-100">
+          <div className="d-flex justify-content-between align-items-center">
+            <div className="d-flex flex-row align-items-center">
+              <span className="mr-2">{item.commentedByName}</span>
+              <small
+                style={{ marginLeft: "8px" }}
+                className="c-badge"
+              >
+                Pending
+              </small>
+            </div>
+            <small>Mon, 07-18-2022 09:02 AM</small>
+          </div>
+          <p
+            className="text-justify comment-text mb-0"
+            style={{ marginTop: "7px" }}
+          >
+            {item.leaveComment}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+))}
+
+
             </div>
           </form>
         </div>
