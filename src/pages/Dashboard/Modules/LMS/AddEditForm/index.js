@@ -8,17 +8,22 @@ import * as Yup from "yup";
 import Header from "../../../../../components/Header";
 import DatePicker from "react-datepicker";
 import { CustomAlert } from "../../../../../components/CustomComponents/CustomAlert";
-import { UpdateLeaveById, createLeave, getLeaveById } from "../../../../../api/APIs";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import {
+  UpdateLeaveById,
+  createLeave,
+  getAllLeaveTypes,
+  getLeaveById,
+} from "../../../../../api/APIs";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const validationSchema = Yup.object({
   reason: Yup.string().required("Reason is required"),
-  comments: Yup.string().required("Comment is required"),
+  // comments: Yup.string().required("Comment is required"),
   // leaveForwarder: Yup.string().required("Leave Forwarder is required"),
   submittedTo: Yup.number().required("This field is required"),
   status: Yup.string().required("Status is required"),
-  leaveType: Yup.string().required("Leave Type is required"),
+  leaveType: Yup.number().required("Leave Type is required"),
   leaveSubtype: Yup.string().required("Leave Subtype is required"),
   startDate: Yup.date().required("Start date is required"),
   endDate: Yup.date().required("End date is required"),
@@ -30,12 +35,13 @@ function LMSAddEdit() {
   const [showModal, setShowModal] = useState(false);
   const [formValues, setFormValues] = useState();
   const [leaveByIdData, setLeaveByIdData] = useState([]);
+  const [leaveTypesData, setLeaveTypesData] = useState([]);
   const [isChecked, setChecked] = useState(false);
 
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
   const handleOkClick = () => {
-    if(location?.state?.id) {
+    if (location?.state?.id) {
       UpdateLeaveApi(formValues);
     } else {
       CreateLeaveApi(formValues);
@@ -60,18 +66,29 @@ function LMSAddEdit() {
   };
 
   const initialValues = {
-    reason: leaveByIdData.length > 0 ? leaveByIdData[0]?.requestLeaveReason : "",
+    reason:
+      leaveByIdData.length > 0 ? leaveByIdData[0]?.requestLeaveReason : "",
     comments: "",
-    leaveForwarder: leaveByIdData.length > 0 ? leaveByIdData[0]?.requestLeaveForwarder : "",
-    submittedTo: leaveByIdData.length > 0 ? 2 : null,
+    leaveForwarder:
+      leaveByIdData.length > 0 ? leaveByIdData[0]?.requestLeaveForwarder : "",
+    submittedTo: leaveByIdData.length > 0 ? leaveByIdData[0]?.requestLeaveSubmittedTo : null,
     status: leaveByIdData.length > 0 ? leaveByIdData[0]?.requestStatus : "",
-    leaveType: leaveByIdData.length > 0 ? leaveByIdData[0]?.requestLeaveType : "",
-    leaveSubtype: leaveByIdData.length > 0 ? leaveByIdData[0]?.requestLeaveSubType : "",
-    startDate: leaveByIdData.length > 0 ? new Date(leaveByIdData[0]?.requestStartDate) : null,
-    endDate: leaveByIdData.length > 0 ? new Date(leaveByIdData[0]?.requestEndDate) : null,
-    leaveStation: leaveByIdData.length > 0 ? leaveByIdData[0]?.requestStationLeave : false,
-  }  
-  
+    leaveType:
+      leaveByIdData.length > 0 ? leaveByIdData[0]?.fkRequestTypeId : null,
+    leaveSubtype:
+      leaveByIdData.length > 0 ? leaveByIdData[0]?.requestLeaveSubType : "",
+    startDate:
+      leaveByIdData.length > 0
+        ? new Date(leaveByIdData[0]?.requestStartDate)
+        : null,
+    endDate:
+      leaveByIdData.length > 0
+        ? new Date(leaveByIdData[0]?.requestEndDate)
+        : null,
+    leaveStation:
+      leaveByIdData.length > 0 ? leaveByIdData[0]?.requestStationLeave : false,
+  };
+
   const formik = useFormik({
     initialValues: initialValues,
     validationSchema: validationSchema,
@@ -80,7 +97,7 @@ function LMSAddEdit() {
       handleShow();
       setFormValues(values);
     },
-    enableReinitialize: true
+    enableReinitialize: true,
   });
 
   const handleCheckboxChange = () => {
@@ -89,47 +106,66 @@ function LMSAddEdit() {
 
   const getLeaveByIdApi = async () => {
     try {
-        const response = await getLeaveById(location.state?.id);
-        if(response?.success) {
-            showSuccessMessage(response?.message)
-            setLeaveByIdData(response.data);
-            if(response?.data[0]?.requestLeaveForwarder) {
-              setChecked(true);
-            }
+      const response = await getLeaveById(location.state?.id);
+      if (response?.success) {
+        // showSuccessMessage(response?.message);
+        setLeaveByIdData(response.data);
+        if (response?.data[0]?.requestLeaveForwarder) {
+          setChecked(true);
         }
+      }
     } catch (error) {
-        showErrorMessage(error?.response?.data?.message);
+      // showErrorMessage(error?.response?.data?.message);
     }
-}
+  };
+
+  const getAllLeaveTypesApi = async () => {
+    try {
+      const response = await getAllLeaveTypes();
+      if (response?.success) {
+        setLeaveTypesData(response?.data);
+      }
+    } catch (error) {
+      // showErrorMessage(error?.response?.data?.message);
+    }
+  };
 
   useEffect(() => {
-    if(location.state?.id) {
+    getAllLeaveTypesApi();
+    if (location.state?.id) {
       getLeaveByIdApi();
     }
-  }, [])
+  }, []);
 
   const CreateLeaveApi = async (values) => {
+    const startDateObj = new Date(values.startDate);
+    const endDateObj = new Date(values.endDate);
+
+    // Calculate the time difference in milliseconds
+    const timeDiff = endDateObj - startDateObj;
+
+    // Calculate the number of days
+    const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+
     const data = {
-      fkRequestTypeId: 1,
+      fkRequestTypeId: values.leaveType,
       fkUserId: 1,
       requestStatus: values.status,
       requestStartDate: values.startDate,
       requestEndDate: values.endDate,
       requestLeaveSubType: values.leaveSubtype,
       requestLeaveReason: values.reason,
-      requestNumberOfDays: "5",
+      requestNumberOfDays: String(daysDiff),
       requestLeaveSubmittedTo: values.submittedTo,
       requestLeaveApplyOnBehalf: isChecked,
       requestLeaveForwarder: values.leaveForwarder,
       requestStationLeave: values.leaveStation,
     };
 
-    console.log(data);
-
     try {
       const response = await createLeave(data);
       if (response?.success) {
-        showSuccessMessage(response?.message)
+        showSuccessMessage(response?.message);
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -137,29 +173,36 @@ function LMSAddEdit() {
   };
 
   const UpdateLeaveApi = async (values) => {
+    const startDateObj = new Date(values.startDate);
+    const endDateObj = new Date(values.endDate);
+
+    // Calculate the time difference in milliseconds
+    const timeDiff = endDateObj - startDateObj;
+
+    // Calculate the number of days
+    const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+
     const data = {
-      fkRequestTypeId: 1,
+      fkRequestTypeId: values.leaveType,
       fkUserId: 1,
       requestStatus: values.status,
       requestStartDate: values.startDate,
       requestEndDate: values.endDate,
       requestLeaveSubType: values.leaveSubtype,
       requestLeaveReason: values.reason,
-      requestNumberOfDays: "5",
+      requestNumberOfDays: String(daysDiff),
       requestLeaveSubmittedTo: values.submittedTo,
       requestLeaveApplyOnBehalf: isChecked,
       requestLeaveForwarder: values.leaveForwarder,
       requestStationLeave: values.leaveStation,
       leaveComment: values.comments,
-      commentedBy: 1
+      commentedBy: 1,
     };
-
-    console.log("Edit data",data);
 
     try {
       const response = await UpdateLeaveById(location?.state?.id, data);
       if (response?.success) {
-        showSuccessMessage(response?.message)
+        showSuccessMessage(response?.message);
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -244,39 +287,42 @@ function LMSAddEdit() {
               </div>
 
               <div class="row">
-              <div class="col">
-  <div class="mb-3">
-    <label class="form-label">Submitted To</label>
-    <select
-      class={`form-select ${
-        formik.touched.submittedTo && formik.errors.submittedTo
-          ? "is-invalid"
-          : ""
-      }`}
-      placeholder="Leave Forwarder"
-      value={formik.values.submittedTo}
-      onChange={(e) => {
-        // Set submittedTo as a number directly
-        formik.handleChange(e);
-        formik.setFieldValue("submittedTo", Number(e.target.value));
-      }}
-      onBlur={formik.handleBlur}
-      name="submittedTo"
-    >
-      <option value="" selected disabled hidden>
-        Select
-      </option>
-      <option value={1}>HR</option>
-      <option value={2}>DG</option>
-    </select>
-    {formik.touched.submittedTo &&
-      formik.errors.submittedTo && (
-        <div className="invalid-feedback">
-          {formik.errors.submittedTo}
-        </div>
-      )}
-  </div>
-</div>
+                <div class="col">
+                  <div class="mb-3">
+                    <label class="form-label">Submitted To</label>
+                    <select
+                      class={`form-select ${
+                        formik.touched.submittedTo && formik.errors.submittedTo
+                          ? "is-invalid"
+                          : ""
+                      }`}
+                      placeholder="Leave Forwarder"
+                      value={formik.values.submittedTo}
+                      onChange={(e) => {
+                        // Set submittedTo as a number directly
+                        formik.handleChange(e);
+                        formik.setFieldValue(
+                          "submittedTo",
+                          Number(e.target.value)
+                        );
+                      }}
+                      onBlur={formik.handleBlur}
+                      name="submittedTo"
+                    >
+                      <option value="" selected disabled hidden>
+                        Select
+                      </option>
+                      <option value={1}>HR</option>
+                      <option value={2}>DG</option>
+                    </select>
+                    {formik.touched.submittedTo &&
+                      formik.errors.submittedTo && (
+                        <div className="invalid-feedback">
+                          {formik.errors.submittedTo}
+                        </div>
+                      )}
+                  </div>
+                </div>
 
                 <div class="col">
                   <div class="mb-3">
@@ -328,8 +374,12 @@ function LMSAddEdit() {
                       <option value="" selected disabled hidden>
                         Select
                       </option>
-                      <option>Casual</option>
-                      <option>Sick</option>
+                      {leaveTypesData &&
+                        leaveTypesData.map((item) => (
+                          <option key={item.id} value={item.id}>
+                            {item.leaveType}
+                          </option>
+                        ))}
                     </select>
                     {formik.touched.leaveType && formik.errors.leaveType && (
                       <div className="invalid-feedback">
@@ -360,7 +410,9 @@ function LMSAddEdit() {
                       </option>
                       <option value={"preApproved"}>Pre Approved</option>
                       <option value={"postApproved"}>Post Approved</option>
-                      <option value={"telephonicInformed"}>Telephonic Informed</option>
+                      <option value={"telephonicInformed"}>
+                        Telephonic Informed
+                      </option>
                     </select>
                     {formik.touched.leaveSubtype &&
                       formik.errors.leaveSubtype && (
@@ -489,30 +541,32 @@ function LMSAddEdit() {
                 </div>
               </div>
               <div class="row">
-                <div class="col">
-                  <div class="mb-3">
-                    <label class="form-label">Comment</label>
-                    <textarea
-                      cols="30"
-                      rows="10"
-                      placeholder={formik.values.comments}
-                      className={`form-control ${
-                        formik.touched.comments && formik.errors.comments
-                          ? "is-invalid"
-                          : ""
-                      }`}
-                      id="comments"
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      value={formik.values.comments}
-                    ></textarea>
-                    {formik.touched.comments && formik.errors.comments && (
-                      <div className="invalid-feedback">
-                        {formik.errors.comments}
-                      </div>
-                    )}
+                {location.state?.id && (
+                  <div class="col">
+                    <div class="mb-3">
+                      <label class="form-label">Comment</label>
+                      <textarea
+                        cols="30"
+                        rows="10"
+                        placeholder={formik.values.comments}
+                        className={`form-control ${
+                          formik.touched.comments && formik.errors.comments
+                            ? "is-invalid"
+                            : ""
+                        }`}
+                        id="comments"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.comments}
+                      ></textarea>
+                      {formik.touched.comments && formik.errors.comments && (
+                        <div className="invalid-feedback">
+                          {formik.errors.comments}
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
               <div class="row">
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
@@ -521,47 +575,49 @@ function LMSAddEdit() {
                   </button>
                 </div>
               </div>
-              {location.state?.id && leaveByIdData[0]?.comments?.length > 0 && leaveByIdData[0]?.comments.map((item, index) => (
-  <div key={index} className="row">
-    <div className="col">
-      <div
-        className="d-flex flex-row p-3"
-        style={{ border: "#ddd solid 1px", marginTop: "25px" }}
-      >
-        <img
-          style={{ marginBottom: "30px", marginRight: "15px" }}
-          src={logoImage}
-          width="40"
-          height="40"
-          className="rounded-circle mr-3"
-          alt="logo"
-        />
-        <div className="w-100">
-          <div className="d-flex justify-content-between align-items-center">
-            <div className="d-flex flex-row align-items-center">
-              <span className="mr-2">{item.commentedByName}</span>
-              <small
-                style={{ marginLeft: "8px" }}
-                className="c-badge"
-              >
-                Pending
-              </small>
-            </div>
-            <small>Mon, 07-18-2022 09:02 AM</small>
-          </div>
-          <p
-            className="text-justify comment-text mb-0"
-            style={{ marginTop: "7px" }}
-          >
-            {item.leaveComment}
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-))}
-
-
+              {location.state?.id &&
+                leaveByIdData[0]?.comments?.length > 0 &&
+                leaveByIdData[0]?.comments.map((item, index) => (
+                  <div key={index} className="row">
+                    <div className="col">
+                      <div
+                        className="d-flex flex-row p-3"
+                        style={{ border: "#ddd solid 1px", marginTop: "25px" }}
+                      >
+                        <img
+                          style={{ marginBottom: "30px", marginRight: "15px" }}
+                          src={logoImage}
+                          width="40"
+                          height="40"
+                          className="rounded-circle mr-3"
+                          alt="logo"
+                        />
+                        <div className="w-100">
+                          <div className="d-flex justify-content-between align-items-center">
+                            <div className="d-flex flex-row align-items-center">
+                              <span className="mr-2">
+                                {item.commentedByName}
+                              </span>
+                              <small
+                                style={{ marginLeft: "8px" }}
+                                className="c-badge"
+                              >
+                                Pending
+                              </small>
+                            </div>
+                            <small>Mon, 07-18-2022 09:02 AM</small>
+                          </div>
+                          <p
+                            className="text-justify comment-text mb-0"
+                            style={{ marginTop: "7px" }}
+                          >
+                            {item.leaveComment}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
             </div>
           </form>
         </div>

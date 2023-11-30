@@ -83,7 +83,7 @@ function LMSDashboard() {
     const navigate = useNavigate();
     const [leaveData, setLeaveData] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
-    const pageSize = 4; // Set your desired page size
+    const pageSize = 10; // Set your desired page size
 
     const showSuccessMessage = (message) => {
         toast.success(message, {
