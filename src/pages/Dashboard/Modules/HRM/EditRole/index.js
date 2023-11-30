@@ -3,8 +3,8 @@ import { useLocation } from "react-router-dom";
 import Header from "../../../../../components/Header";
 import { Layout } from "../../../../../components/Layout";
 import { HRMsidebarItems } from "../../../../../utils/sideBarItems";
-import CheckedItem from "../../../../../components/EditRole/CheckedItem";
-import UncheckedItem from "../../../../../components/EditRole/UncheckedItem";
+import { CheckedItem } from "../../../../../components/EditRole/CheckedItem";
+import { UncheckedItem } from "../../../../../components/EditRole/UncheckedItem";
 
 function HRMEditRole() {
   const [hiddenItems, setHiddenItems] = useState(null);

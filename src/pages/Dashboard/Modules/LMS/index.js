@@ -109,14 +109,14 @@ function LMSDashboard() {
     const transformLeavesData = (apiData) => {
         return apiData.map((leave) => ({
           id: leave.id,
-          name: leave["users.name"],
+          name: leave["employees.firstName"],
           leaveType: leave.requestLeaveSubType,
           startDate: leave.requestStartDate,
           endDate: leave.requestEndDate,
           totalDays: leave.requestNumberOfDays,
           reason: leave.requestLeaveReason,
           leaveStatus: leave.requestStatus,
-          submittedTo: leave.leavesubmittedTo,
+          submittedTo: leave.leavesubmittedTofirstName,
         }));
       };
 
