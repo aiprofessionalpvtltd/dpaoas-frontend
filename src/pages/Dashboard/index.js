@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { Layout } from '../../components/Layout'
 import { Tiles } from '../../components/CustomComponents/Tiles'
-import { faAddressCard, faUserCog, faMailBulk } from "@fortawesome/free-solid-svg-icons";
+import { faAddressCard, faUserCog, faMailBulk, faClipboardList } from "@fortawesome/free-solid-svg-icons";
 import { AuthContext } from '../../api/AuthContext';
 import { getPermissionsData } from '../../api/Auth';
 
@@ -14,21 +14,24 @@ function Dashboard() {
                 <div class="clearfix"></div>
                 <div class="row main-dashboard-tiles">
                     {/* {(permissions?.Leave?.canView || permissions?.LeaveHistory?.canView) && ( */}
-                    <div class="col">
+                    <div class="col-4">
                         <Tiles title={"Leave Management System"} link={"/lms/dashboard"} type={""} cardbg={"bluebg"} icon={faMailBulk} />
                     </div>
                     {/* )} */}
                     {/* {(permissions?.Roles?.canView || permissions?.Employees?.canView || permissions?.Departments?.canView || permissions?.Designation?.canView) && ( */}
-                    <div class="col">
+                    <div class="col-4">
                         <Tiles title={"Organizational Dashboard"} link={"/hrm/dashboard"} type={""} cardbg={"greenbg"} icon={faUserCog} />
                     </div>
                     {/* )} */}
-                    <div class="col">
+                    <div class="col-4">
                         <Tiles title={"Visitors Management System"} link={"/vms/dashboard"} type={""} cardbg={"greybg"} icon={faAddressCard} />
                     </div>
-                    {/* <div class="col-sm-3">
-                        <Tiles title={"HR"} link={"/"} type={""} cardbg={"purplebg"} icon={faFileAlt}/>
-                    </div> */}
+                </div>
+
+                <div class="row main-dashboard-tiles">
+                    <div class="col-4">
+                        <Tiles title={"Notice Management System"} link={"/notice/dashboard"} type={""} cardbg={"bluebg"} icon={faClipboardList} />
+                    </div>
                 </div>
             </div>
 

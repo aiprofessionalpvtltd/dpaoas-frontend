@@ -3326,3 +3326,187 @@ textarea {
 .card-block-small:hover {
     cursor: pointer;
 }
+
+/* ------------------------LMS Dashboard Card Css End ---------------------- */
+
+
+
+/* ------------------------Notice Module Start ---------------------- */
+
+.green-color{
+    color: #14ae5c !important;
+}
+.red-message-color{
+    color: red;
+}
+.sitting-card-left{
+   text-align: center;
+}
+.sitting-card-left:nth-child(1){
+    margin-top: 90px;
+}
+.sitting-card-left:nth-child(2){
+    margin-top: 80px;
+}
+.sitting-card-left:nth-child(3){
+    margin-top: 70px;
+}
+.sitting-card-left:nth-child(4){
+    margin-top: 60px;
+}
+.sitting-card-left:nth-child(5){
+    margin-top: 50px;
+}
+.sitting-card-left:nth-child(6){
+    margin-top: 40px;
+}
+.sitting-card-left:nth-child(7){
+    margin-top: 30px;
+}
+.sitting-card-left:nth-child(8){
+    margin-top: 20px;
+}
+.sitting-card-left:nth-child(9){
+    margin-top: 10px;
+}
+.sitting-card-left h2{
+    font-size: 18px;
+}
+.sitting-card-right h2{
+    font-size: 18px;
+}
+.sitting-plan-main{
+    margin-top: 40px;
+}
+.sitting-card-right{
+    text-align: center;
+}
+.sitting-card-right:nth-child(1){
+    margin-top: 10px;
+}
+.sitting-card-right:nth-child(2){
+    margin-top: 20px;
+}
+.sitting-card-right:nth-child(3){
+    margin-top: 30px;
+}
+.sitting-card-right:nth-child(4){
+    margin-top: 40px;
+}
+.sitting-card-right:nth-child(5){
+    margin-top: 50px;
+}
+.sitting-card-right:nth-child(6){
+    margin-top: 60px;
+}
+.sitting-card-right:nth-child(7){
+    margin-top: 70px;
+}
+.sitting-card-right:nth-child(8){
+    margin-top: 80px;
+}
+.sitting-card-right:nth-child(9){
+    margin-top: 90px;
+}
+.dashboard-nav .active a {
+    color: #FFF;
+}
+.sitting-row:nth-child(2) {
+    margin-top: -100px;
+}
+.sitting-row:nth-child(3) {
+    margin-top: -90px;
+}
+.sitting-row:nth-child(4) {
+    margin-top: -80px;
+}
+.sitting-row:nth-child(5) {
+    margin-top: -70px;
+}
+.sitting-row:nth-child(6) {
+    margin-top: -60px;
+}
+.sitt-card-left{
+    border: #666 solid 2px;
+    border-radius: 10px;
+    width: 85px;
+    height: 100px;
+    padding: 5px;
+    text-align: center;
+    margin-left: 10px;
+    transform: rotate(-5deg);
+}
+.sitt-card-right{
+    border: #666 solid 2px;
+    border-radius: 10px;
+    width: 85px;
+    height: 100px;
+    padding: 5px;
+    text-align: center;
+    margin-left: 10px;
+    transform: rotate(5deg);
+}
+.center-content{
+    width: 210px;
+    height: 100px;
+    border: #000 solid 3px;
+    border-radius: 5px;
+    margin: 0 auto;
+    text-align: center;
+    vertical-align: middle;
+    margin-bottom: 25px;
+}
+.center-content h3{
+    font-size: 26px;
+    padding-top: 29px;
+}
+.sitting-card-right p{
+    transform: rotate(5deg);
+}
+.sitting-card-left p{
+    transform: rotate(-5deg);
+}
+
+.tab-right {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+    position:relative;
+    width: 342px;
+    float: right;
+    border-radius: 8px;
+  }
+  
+  .tab-right button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font-size: 17px;
+  }
+  
+  .tab-right button:hover {
+    background-color: #ddd;
+  }
+  
+  .tab-right button.active {
+    background-color: #ccc;
+  }
+  
+  button span {
+    background: red;
+    border-radius: 50px;
+    color: #FFF;
+    width: 25px;
+    height: 25px;
+    margin-left: 5px;
+    display: inline-block;
+    font-size: 16px;
+  }
+
+
+/* ------------------------Notice Module Css End ---------------------- */
+

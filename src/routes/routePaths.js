@@ -11,6 +11,7 @@ import HRMAddEditEmployee from "../pages/Dashboard/Modules/HRM/Employee/AddEditE
 import LMSDashboard from "../pages/Dashboard/Modules/LMS";
 import LMSAddEdit from "../pages/Dashboard/Modules/LMS/AddEditForm";
 import LMSHistory from "../pages/Dashboard/Modules/LMS/History";
+import NoticeDashboard from "../pages/Dashboard/Modules/Notice";
 import VMSDashboard from "../pages/Dashboard/Modules/VMS";
 import VMSAddEditPass from "../pages/Dashboard/Modules/VMS/Pass";
 import VMSDuplicatePass from "../pages/Dashboard/Modules/VMS/Pass/DuplicatePass";
@@ -52,6 +53,31 @@ export const ProtectedRoutes = [
     { path: "/vms/visitor", element: <VMSVisitors /> },
     { path: "/vms/addeditvisitor", element: <VMSAddEditVisitors /> },
     { path: "/vms/duplicatepass", element: <VMSDuplicatePass /> },
+    
 
+    //Notice Module routes
+    { path: "/notice/dashboard", element: <NoticeDashboard /> },
+
+    { path: "/notice/question", element: <NoticeDashboard /> },
+    { path: "/notice/question/new", element: <NoticeDashboard /> },
+    { path: "/notice/question/search", element: <NoticeDashboard /> },
+    { path: "/notice/question/sent", element: <NoticeDashboard /> },
+
+    { path: "/notice/motion", element: <NoticeDashboard /> },
+    { path: "/notice/motion/new", element: <NoticeDashboard /> },
+    { path: "/notice/motion/search", element: <NoticeDashboard /> },
+    { path: "/notice/motion/sent", element: <NoticeDashboard /> },
+
+    { path: "/notice/resolution", element: <NoticeDashboard /> },
+    { path: "/notice/resolution/new", element: <NoticeDashboard /> },
+    { path: "/notice/resolution/search", element: <NoticeDashboard /> },
+    { path: "/notice/resolution/sent", element: <NoticeDashboard /> },
+
+    { path: "/notice/seatingplan", element: <NoticeDashboard /> },
+    { path: "/notice/seatingplan/manage-session-days", element: <NoticeDashboard /> },
+    { path: "/notice/seatingplan/manage-seating-plan", element: <NoticeDashboard /> },
+
+    { path: "/notice/reports", element: <NoticeDashboard /> },
+    { path: "/notice/reports/business-summary", element: <NoticeDashboard /> },
 
 ];
