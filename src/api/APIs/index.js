@@ -319,6 +319,21 @@ export const getLeaveById = async (id) => {
   }
 };
 
+export const getAllLeaveTypes = async () => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClient.get(`/leave/types`, {
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // }
+    });
+    return response?.data;
+  } catch (error) {
+    console.error('Error fetching API endpoint:', error);
+    throw error;
+  }
+};
+
 export const createLeave = async (data) => {
   try {
     const token = getAuthToken();
