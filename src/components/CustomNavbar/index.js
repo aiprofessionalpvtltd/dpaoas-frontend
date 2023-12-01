@@ -2,8 +2,11 @@ import React from "react";
 import Logo from "../../assets/logo.png"
 import Profile from "../../assets/profile-img.jpg"
 import { Dropdown } from "react-bootstrap";
+import { logout } from "../../api/Auth";
+import { useNavigate } from "react-router-dom";
 
 export const CustomNavbar = ({ toggleSidebar, module, centerlogohide }) => {
+  const navigation = useNavigate();
   return (
     <header class='dashboard-toolbar' style={{ marginLeft: module ? "240px" : "0px", top: centerlogohide ? "0px" : "22px" }}>
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -35,7 +38,10 @@ export const CustomNavbar = ({ toggleSidebar, module, centerlogohide }) => {
       </Dropdown.Toggle>
       <div className="clearfix"></div>
       <Dropdown.Menu>
-        <Dropdown.Item href="/login" style={{ border: 'none' }}>
+        <Dropdown.Item style={{ border: 'none' }} onClick={() => {
+          logout();
+          navigation('/login')
+        }}>
           <i className="bx bx-user fs-5"></i>
           <span>Logout</span>
         </Dropdown.Item>
@@ -46,7 +52,7 @@ export const CustomNavbar = ({ toggleSidebar, module, centerlogohide }) => {
       <div class="clearfix"></div>
       {!centerlogohide && !centerlogohide && (
         <div class="circle">
-          <img src={Logo} alt="" srcset="" />
+          <img src={Logo} alt="" srcSet="" />
         </div>
       )}
     </header>

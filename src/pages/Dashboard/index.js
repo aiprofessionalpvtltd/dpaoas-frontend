@@ -7,7 +7,7 @@ import { getPermissionsData } from '../../api/Auth';
 
 function Dashboard() {
     const permissions = getPermissionsData();
-    console.log(permissions);
+    // console.log(permissions);
     return (
         <Layout>
             <div class='dashboard-content' style={{ marginTop: "100px" }}>

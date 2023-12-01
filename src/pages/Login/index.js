@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import logo from "../../assets/logo.png"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faLock } from "@fortawesome/free-solid-svg-icons";
@@ -6,6 +6,9 @@ import { AuthContext } from "../../api/AuthContext";
 import { useNavigate } from "react-router";
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { getAuthToken } from "../../api/Auth";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const validationSchema = Yup.object({
     username: Yup.string().required('User Name is required'),
@@ -13,8 +16,27 @@ const validationSchema = Yup.object({
 
 });
 export const Login = () => {
-    const { login } = useContext(AuthContext);
+    const { login, userLoginToken } = useContext(AuthContext);
     const navigation = useNavigate();
+
+    const showSuccessMessage = (message) => {
+        toast.success(message, {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 3000,
+          hideProgressBar: false,
+        });
+      };
+    
+      const showErrorMessage = (message) => {
+        toast.error(message, {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 3000,
+          hideProgressBar: false,
+        });
+      };
+
+
+
     const formik = useFormik({
         initialValues: {
             username: '',
@@ -23,17 +45,31 @@ export const Login = () => {
         validationSchema: validationSchema,
         onSubmit: (values) => {
 
-            console.log(values);
-            handleLogin()
+            handleLogin(values)
         },
     });
 
-    const handleLogin = () => {
-        login();
-        navigation('/');
-    }
+    const handleLogin = (values) => {
+        const data = {
+            email: values.username,
+            password: values.password
+        }
+        login(data).then((res) => {
+            if (res?.user?.id) {
+                showSuccessMessage("User loggedIn successfully")
+                setTimeout(() => {
+                    navigation('/');
+                }, 3000)
+            }
+        }).catch((err) => {
+            showErrorMessage(err?.response?.data?.message)
+        });
+    }  
+    
     return (
         <div class="login-container" >
+            <ToastContainer />
+
             <div class="wrap-login">
                 <span style={{ fontSize: "25px", marginTop: "10px", fontWeight: "bold" }} class="login-form-title">Senate SMART Docs</span>
                 <span style={{ fontSize: "22px", marginBottom: "30px", marginTop: "10px", fontWeight: "bold" }} class="login-form-title">(SSDocs)</span>

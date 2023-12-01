@@ -92,7 +92,11 @@
 
 .dashboard-nav-item:hover {
     background: linear-gradient(to bottom, #b5090b 0%, #a00808 100%);
-    color: #FFF;
+    color: #FFF !important;
+}
+
+.dashboard-nav-item:hover .text{
+    color: #FFF !important;
 }
 
 .active {
@@ -158,6 +162,9 @@
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
+    position: static !important;
+    transform: none !important;
+    border: none;
 }
 
 .dashboard-nav-dropdown-item {
@@ -172,6 +179,8 @@
     -ms-flex-align: center;
     align-items: center;
     transition: ease-out 0.5s;
+    border: none;
+    text-wrap: wrap;
 }
 
 .dashboard-nav-dropdown-item:hover {

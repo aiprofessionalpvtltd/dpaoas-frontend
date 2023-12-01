@@ -88,7 +88,7 @@ export const NoticeSidebarItems = [
                 icon: faClipboardList
             },
             {
-                itemName: "Search Motion",
+                itemName: "Sent Motion",
                 link: "/notice/motion/sent",
                 icon: faClipboardList
             },
@@ -110,10 +110,87 @@ export const NoticeSidebarItems = [
                 icon: faClipboardList
             },
             {
-                itemName: "Search Resolution",
+                itemName: "Sent Resolution",
                 link: "/notice/resolution/sent",
                 icon: faClipboardList
             },
+        ],
+    },
+    {
+        itemName: "Manage",
+        link: "/notice/manage",
+        icon: faClipboardList,
+        subItems: [
+            {
+                itemName: "Members",
+                link: "/notice/manage/members",
+                icon: faClipboardList
+            },
+            // {
+            //     itemName: "Deleted Questions",
+            //     link: "/notice/manage/deleted-questions",
+            //     icon: faClipboardList
+            // },
+            // {
+            //     itemName: "Divisions",
+            //     link: "/notice/manage/divisions",
+            //     icon: faClipboardList
+            // },
+            // {
+            //     itemName: "Groups",
+            //     link: "/notice/manage/groups",
+            //     icon: faClipboardList
+            // },
+            // {
+            //     itemName: "Members",
+            //     link: "/notice/manage/members",
+            //     icon: faClipboardList
+            // },
+            // {
+            //     itemName: "Parliamentary Years",
+            //     link: "/notice/manage/parliamentary-years",
+            //     icon: faClipboardList
+            // },
+            // {
+            //     itemName: "Question Categories",
+            //     link: "/notice/manage/question-categories",
+            //     icon: faClipboardList
+            // },
+            // {
+            //     itemName: "Question Status",
+            //     link: "/notice/manage/groups/question-status",
+            //     icon: faClipboardList
+            // },
+            // {
+            //     itemName: "Remove Questions from List",
+            //     link: "/notice/manage/remove-questions",
+            //     icon: faClipboardList
+            // },
+            // {
+            //     itemName: "Rota",
+            //     link: "/notice/manage/rota",
+            //     icon: faClipboardList
+            // },
+            // {
+            //     itemName: "Session Sittings",
+            //     link: "/notice/manage/session-sittings",
+            //     icon: faClipboardList
+            // },
+            {
+                itemName: "Sessions",
+                link: "/notice/manage/sessions",
+                icon: faClipboardList
+            },
+            // {
+            //     itemName: "Sitting Types",
+            //     link: "/notice/manage/sitting-types",
+            //     icon: faClipboardList
+            // },
+            // {
+            //     itemName: "Swap Question",
+            //     link: "/notice/manage/swap-question",
+            //     icon: faClipboardList
+            // },
         ],
     },
     {

@@ -3,7 +3,7 @@ import { getAuthToken } from "../Auth";
 
 // Set config defaults when creating the instance
 export const axiosClient = axios.create({
-  baseURL: "http://172.16.170.8:5151/api",
+  baseURL: "http://172.16.170.8:5152/api",
 });
 
 export const loginUser = async (data) => {

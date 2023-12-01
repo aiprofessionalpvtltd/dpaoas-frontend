@@ -1,0 +1,62 @@
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
+import { NoticeSidebarItems } from '../../../../../../utils/sideBarItems';
+import { Layout } from '../../../../../../components/Layout';
+import Header from '../../../../../../components/Header';
+import CustomTable from '../../../../../../components/CustomComponents/CustomTable';
+
+const data = [
+    {
+        name: "Admin",
+        status: "Active"
+    },
+    {
+        name: "Editor",
+        status: "InActive"
+    },
+    {
+        name: "Manager",
+        status: "Active"
+    },
+    {
+        name: "Employee",
+        status: "Active"
+    }
+]
+function Sessions() {
+    const navigate = useNavigate();
+    const [currentPage, setCurrentPage] = useState(0);
+    const pageSize = 4; // Set your desired page size
+
+    const handlePageChange = (page) => {
+        // Update currentPage when a page link is clicked
+        setCurrentPage(page);
+    };
+
+    return (
+        <Layout module={true} sidebarItems={NoticeSidebarItems} centerlogohide={true}>
+            <Header dashboardLink={"/"} addLink1={"/notice/dashboard"} addLink2={"/notice/manage/sessions"} title1={"Notice"} title2={"Sessions"} />
+            <div class="row">
+                <div class="col-12">
+                    <CustomTable
+                        data={data}
+                        tableTitle="Sessions List"
+                        addBtnText="Add Session"
+                        handleAdd={() => navigate('/notice/manage/sessions/addedit')}
+                        handleEdit={(item) => navigate('/notice/manage/sessions/addedit', { state: item })}
+                        headertitlebgColor={"#666"}
+                        headertitletextColor={"#FFF"}
+                        handlePageChange={handlePageChange}
+                        currentPage={currentPage}
+                        pageSize={pageSize}
+                    // handlePrint={}
+                    // handleUser={}
+                    // handleDelete={(item) => handleDelete(item.id)}
+                    />
+                </div>
+            </div>
+        </Layout>
+    )
+}
+
+export default Sessions

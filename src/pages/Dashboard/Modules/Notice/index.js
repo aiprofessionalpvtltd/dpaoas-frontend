@@ -38,8 +38,8 @@ function NoticeDashboard() {
 
     return (
         <Layout module={true} sidebarItems={NoticeSidebarItems} centerlogohide={true}>
-            {/* <Header dashboardLink={"/hrm/dashboard"} addLink1={"/hrm/dashboard"} title1={"Roles"} />
-            <div class="row">
+             <Header dashboardLink={"/"} addLink1={"/notice/dashboard"} title1={"Notice"} />
+            {/*<div class="row">
                 <div class="col-12">
                     <CustomTable
                         data={data}
