@@ -6,32 +6,46 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import Header from '../../../../../../components/Header';
 import { UpdateVisitorsByVisitorId, createVisitorsByPassId } from '../../../../../../api/APIs';
+import { showSuccessMessage } from '../../../../../../utils/ToastAlert';
+import { ToastContainer } from 'react-toastify';
+import { getPassID } from '../../../../../../api/Auth';
 
 const validationSchema = Yup.object({
-    visitorname: Yup.string().required('Visitor Name is required'),
+    name: Yup.string().required('Visitor Name is required'),
     cnic: Yup.string().required('Cnic is required'),
-    visitordetail: Yup.string().required('Visitor Detail By is required'),
+    details: Yup.string().required('Visitor Detail By is required'),
 
 });
 function VMSAddEditVisitors() {
     const location = useLocation()
+    const passID = getPassID()
+    console.log("Passss id", location?.state);
     const formik = useFormik({
         initialValues: {
-            visitorname: '',
-            cnic: '',
-            visitordetail: ''
+            name: location?.state?.name ? location?.state?.name : '',
+            cnic: location?.state?.cnic ? location?.state?.cnic : '',
+            details: location?.state?.details ? location?.state?.details : ''
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
             // Handle form submission here
             console.log(values);
-            CreateVisitorsApi(values)
+            if (location?.state?.id) {
+                updateVisitorsApi(values)
+            } else {
+                CreateVisitorsApi(values)
+            }
+
         },
     });
 
     const CreateVisitorsApi = async (values) => {
+        console.log("Create Visitors Api", values);
         try {
-            const response = await createVisitorsByPassId(values)
+            const response = await createVisitorsByPassId(passID, values)
+            if (response?.success) {
+                showSuccessMessage(response?.message);
+            }
         } catch (error) {
             console.log(error);
         }
@@ -39,7 +53,10 @@ function VMSAddEditVisitors() {
 
     const updateVisitorsApi = async (values) => {
         try {
-            const response = await UpdateVisitorsByVisitorId(values)
+            const response = await UpdateVisitorsByVisitorId(location?.state?.id, values)
+            if (response?.success) {
+                showSuccessMessage(response?.message);
+            }
         } catch (error) {
             console.log(error);
         }
@@ -47,10 +64,11 @@ function VMSAddEditVisitors() {
     return (
         <Layout module={true} sidebarItems={VMSsidebarItems} centerlogohide={true}>
             <Header dashboardLink={"/vms/dashboard"} addLink1={"/vms/visitor"} title1={"Visitors"} addLink2={"/vms/addeditvisitor"} title2={location && location.state ? "Edit Visitors" : "Add Visitors"} />
+            <ToastContainer />
 
             <div class='card'>
                 <div class='card-header red-bg' style={{ background: "#14ae5c !important" }}>
-                    {location && location.state ? (
+                    {location && location?.state?.cnic ? (
                         <h1>Edit Visitors</h1>
                     ) : <h1>Add Visitors</h1>}
                 </div>
@@ -61,14 +79,14 @@ function VMSAddEditVisitors() {
                                 <div class="col">
                                     <div class="mb-3">
                                         <label class="form-label">Visitor Name</label>
-                                        <input type="text" className={`form-control ${formik.touched.visitorname && formik.errors.visitorname ? 'is-invalid' : ''}`}
-                                            id="visitorname"
-                                            placeholder={formik.values.visitorname}
+                                        <input type="text" className={`form-control ${formik.touched.name && formik.errors.name ? 'is-invalid' : ''}`}
+                                            id="name"
+                                            placeholder={formik.values.name}
                                             onChange={formik.handleChange}
                                             onBlur={formik.handleBlur}
-                                            value={formik.values.visitorname} />
-                                        {formik.touched.visitorname && formik.errors.visitorname && (
-                                            <div className='invalid-feedback'>{formik.errors.visitorname}</div>
+                                            value={formik.values.name} />
+                                        {formik.touched.name && formik.errors.name && (
+                                            <div className='invalid-feedback'>{formik.errors.name}</div>
                                         )}
                                     </div>
                                 </div>
@@ -95,15 +113,15 @@ function VMSAddEditVisitors() {
                                         <textarea
                                             cols="30"
                                             rows="10"
-                                            placeholder={formik.values.visitordetail}
-                                            className={`form-control ${formik.touched.visitordetail && formik.errors.visitordetail ? 'is-invalid' : ''}`}
-                                            id='visitordetail'
+                                            placeholder={formik.values.details}
+                                            className={`form-control ${formik.touched.details && formik.errors.details ? 'is-invalid' : ''}`}
+                                            id='details'
                                             onChange={formik.handleChange}
                                             onBlur={formik.handleBlur}
-                                            value={formik.values.visitordetail}
+                                            value={formik.values.details}
                                         ></textarea>
-                                        {formik.touched.visitordetail && formik.errors.visitordetail && (
-                                            <div className='invalid-feedback'>{formik.errors.visitordetail}</div>
+                                        {formik.touched.details && formik.errors.details && (
+                                            <div className='invalid-feedback'>{formik.errors.details}</div>
                                         )}
                                     </div>
                                 </div>

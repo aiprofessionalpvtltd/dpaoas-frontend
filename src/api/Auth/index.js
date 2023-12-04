@@ -31,3 +31,13 @@ export const getPermissionsData = () => {
   const Data = localStorage.getItem('permissions');
   return Data;
 };
+
+
+//Pass Id
+export const setPassID = (id) => {
+  localStorage.setItem('passid', id);
+};
+
+export const getPassID = (id) => {
+  return localStorage.getItem('passid', id)
+};

@@ -4,73 +4,70 @@ import { VMSsidebarItems } from '../../../../utils/sideBarItems'
 import CustomTable from '../../../../components/CustomComponents/CustomTable'
 import { useNavigate } from 'react-router-dom'
 import Header from '../../../../components/Header'
-import { getPasses } from '../../../../api/APIs'
+import { getPassPdfBYPassID, getPasses } from '../../../../api/APIs'
 import { ToastContainer } from 'react-toastify';
-import { showErrorMessage } from '../../../../utils/ToastAlert'
+import { showErrorMessage, showSuccessMessage } from '../../../../utils/ToastAlert'
+import { setPassID } from '../../../../api/Auth'
 
 
 
 function VMSDashboard() {
     const navigate = useNavigate();
-    const [currentPage, setCurrentPage] = useState(0);
-    const pageSize = 4; // Set your desired page size
+    const [passAllData, setPassAllData] = useState([])
+    const [currentPage, setCurrentPage] = useState(1);
+    const pageSize = 10; // Set your desired page size
 
     const handlePageChange = (page) => {
         // Update currentPage when a page link is clicked
         setCurrentPage(page);
     };
 
-    const data = [
-        {
-            "id": 1,
-            "passDate": "21-11-2023",
-            "requestedBy": "Ali Ahmad Jan",
-            "branch": "Additional Secretary Office",
-            "visitPurpose": "Educational Trip",
-            "cardType": "Personal",
-            "companyName": "AI Professionals Pvt Limited",
-            "fromDate": "21-11-2023",
-            "toDate": "30-11-2023",
-            "allowOffDays": [
-                "Saturday"
-            ],
-            "remarks": "Visit",
-            "passStatus": "Inactive",
-            "createdAt": "2023-11-21T10:32:24.068Z",
-            "updatedAt": "2023-11-22T04:06:59.873Z"
-        },
-        {
-            "id": 2,
-            "passDate": "21-11-2023",
-            "requestedBy": "Ali Ahmad Jan",
-            "branch": "Additional Secretary Office",
-            "visitPurpose": "Educational Trip",
-            "cardType": "Personal",
-            "companyName": "AI Professionals Pvt Limited",
-            "fromDate": "22-11-2023",
-            "toDate": "1-12-2023",
-            "allowOffDays": [
-                "Saturday"
-            ],
-            "remarks": "Visit",
-            "passStatus": "Inactive",
-            "createdAt": "2023-11-22T06:05:52.689Z",
-            "updatedAt": "2023-11-22T06:05:52.689Z"
-        },
-
-    ]
+    const transformLeavesData = (apiData) => {
+        return apiData.map((leave) => ({
+            id: leave.id,
+            passDate: leave.passDate,
+            requestedBy: leave.requestedBy,
+            branch: leave.branch,
+            visitPurpose: leave.visitPurpose,
+            cardType: leave.cardType,
+            companyName: leave.companyName,
+            fromDate: leave.fromDate,
+            toDate: leave.toDate,
+            allowOffDays: leave.allowOffDays,
+            remarks: leave.remarks,
+            passStatus: leave.passStatus,
+            createdAt: leave.createdAt,
+            updatedAt: leave.updatedAt
+        }));
+    };
 
     const getPassesData = async () => {
         try {
-            const response = await getPasses()
+            const response = await getPasses(currentPage, pageSize)
+            if (response?.success) {
+                showSuccessMessage(response?.message)
+                const transformedData = transformLeavesData(response.data);
+                console.log("ALll Datatat, ", transformedData);
+                setPassAllData(transformedData);
+            }
         } catch (error) {
             console.log(error);
-            showErrorMessage()
+            // alert(error.response)
+            console.log("error.response", error.response.data.error);
+            showErrorMessage(error.response.data.error)
         }
     }
     useEffect(() => {
         getPassesData()
-    }, [currentPage])
+    }, [])
+    const HandlePrint = async (id) => {
+        try {
+            const response = await getPassPdfBYPassID(id)
+            console.log("REsponse ", response?.data);
+        } catch (error) {
+            console.log(error);
+        }
+    }
     return (
         <Layout module={true} sidebarItems={VMSsidebarItems} centerlogohide={true}>
             <Header dashboardLink={"/vms/dashboard"} addLink1={"/vms/dashboard"} title1={"Passes"} />
@@ -79,18 +76,24 @@ function VMSDashboard() {
                 <div class="col-12">
                     <CustomTable
                         block={true}
-                        data={data}
+                        data={passAllData}
                         tableTitle="Passes"
                         addBtnText="Add Pass"
                         handleAdd={() => navigate('/vms/addeditpass')}
                         handleEdit={(item) => navigate('/vms/addeditpass', { state: item })}
                         hideUserIcon={true}
-                        handleUser={() => navigate("/vms/visitor")}
-                        handleDuplicate={() => navigate("/vms/duplicatepass")}
+                        handleUser={(item) => {
+                            setPassID(item.id)
+                            navigate("/vms/visitor", { state: item })
+                        }}
+                        handleDuplicate={(item) => navigate("/vms/duplicatepass", { state: item.id })}
                         seachBarShow={true}
                         handlePageChange={handlePageChange}
                         currentPage={currentPage}
                         pageSize={pageSize}
+                        handlePrint={(item) => HandlePrint(item.id)}
+                        headertitlebgColor={"#666"}
+                        headertitletextColor={"#FFF"}
                     // handlePrint={}
                     // handleUser={}
                     // handleDelete={(item) => handleDelete(item.id)}

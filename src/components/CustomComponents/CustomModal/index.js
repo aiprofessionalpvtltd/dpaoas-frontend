@@ -18,7 +18,10 @@ function CustomModal({ isOpen, initialValues, validationSchema, onRequestClose, 
         initialValues: initialValues,
         validationSchema: validationSchema,
         onSubmit: (values) => {
-            handleSubmit(values)
+            const { id, ...dataToSubmit } = values;
+
+            console.log("values without id", dataToSubmit);
+            handleSubmit(dataToSubmit);
         },
     });
     return (
@@ -40,14 +43,14 @@ function CustomModal({ isOpen, initialValues, validationSchema, onRequestClose, 
                                 <div class="col">
                                     <div class="mb-3">
                                         <label class="form-label">Visitor Name</label>
-                                        <input type="text" className={`form-control ${formik.touched.visitorname && formik.errors.visitorname ? 'is-invalid' : ''}`}
-                                            id="visitorname"
-                                            placeholder={formik.values.visitorname}
+                                        <input type="text" className={`form-control ${formik.touched.name && formik.errors.name ? 'is-invalid' : ''}`}
+                                            id="name"
+                                            placeholder={formik.values.name}
                                             onChange={formik.handleChange}
                                             onBlur={formik.handleBlur}
-                                            value={formik.values.visitorname} />
-                                        {formik.touched.visitorname && formik.errors.visitorname && (
-                                            <div className='invalid-feedback'>{formik.errors.visitorname}</div>
+                                            value={formik.values.name} />
+                                        {formik.touched.name && formik.errors.name && (
+                                            <div className='invalid-feedback'>{formik.errors.name}</div>
                                         )}
                                     </div>
                                 </div>
@@ -74,15 +77,15 @@ function CustomModal({ isOpen, initialValues, validationSchema, onRequestClose, 
                                         <textarea
                                             cols="30"
                                             rows="10"
-                                            placeholder={formik.values.visitordetail}
-                                            className={`form-control ${formik.touched.visitordetail && formik.errors.visitordetail ? 'is-invalid' : ''}`}
-                                            id='visitordetail'
+                                            placeholder={formik.values.details}
+                                            className={`form-control ${formik.touched.details && formik.errors.details ? 'is-invalid' : ''}`}
+                                            id='details'
                                             onChange={formik.handleChange}
                                             onBlur={formik.handleBlur}
-                                            value={formik.values.visitordetail}
+                                            value={formik.values.details}
                                         ></textarea>
-                                        {formik.touched.visitordetail && formik.errors.visitordetail && (
-                                            <div className='invalid-feedback'>{formik.errors.visitordetail}</div>
+                                        {formik.touched.details && formik.errors.details && (
+                                            <div className='invalid-feedback'>{formik.errors.details}</div>
                                         )}
                                     </div>
                                 </div>

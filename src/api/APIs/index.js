@@ -6,6 +6,10 @@ export const axiosClient = axios.create({
   baseURL: "http://172.16.170.8:5151/api",
 });
 
+export const axiosClientVMS = axios.create({
+  baseURL: "http://172.16.170.8:5152/api",
+});
+
 export const loginUser = async (data) => {
   try {
     const response = await axiosClient.post(`/users/login`, data, {
@@ -20,7 +24,7 @@ export const loginUser = async (data) => {
   }
 };
 
-                                      /* Organizational Management System (APIs) */
+/* Organizational Management System (APIs) */
 
 // Roles Module
 
@@ -148,10 +152,10 @@ export const UpdateDesignation = async (data) => {
 
 //VMS Module
 //Passes
-export const getPasses = async (page, pageSize) => {
+export const getPasses = async (currentPage, pageSize) => {
   try {
     const token = getAuthToken();
-    const response = await axiosClient.get(`/pass?currentPage=${page}&pageSize=${pageSize}`, {
+    const response = await axiosClientVMS.get(`/pass?currentPage=${currentPage}&pageSize=${pageSize}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       }
@@ -163,10 +167,26 @@ export const getPasses = async (page, pageSize) => {
   }
 };
 
+export const getPassPdfBYPassID = async (id) => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientVMS.get(`/api/pass/pdfData/${id}`)
+    //  {
+    //   headers: {
+    //     Authorization: `Bearer ${token}`,
+    //   }
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error('Error fetching API endpoint:', error);
+    throw error;
+  }
+};
+
 export const createPasses = async (data) => {
   try {
     const token = getAuthToken();
-    const response = await axiosClient.post(`/pass/create`, data, {
+    const response = await axiosClientVMS.post(`/pass/create`, data, {
       headers: {
         Authorization: `Bearer ${token}`,
       }
@@ -178,14 +198,11 @@ export const createPasses = async (data) => {
   }
 }
 
-export const UpdatePasses = async (data) => {
+export const UpdatePasses = async (data, id) => {
+  console.log("data UpData", data);
   try {
     const token = getAuthToken();
-    const response = await axiosClient.put(`/pass/update/${data.id}`, data, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      }
-    });
+    const response = await axiosClientVMS.put(`/pass/update/${id}`, data);
     return response?.data;
   } catch (error) {
     console.error('Error fetching API endpoint:', error);
@@ -196,7 +213,7 @@ export const UpdatePasses = async (data) => {
 export const DeletePasses = async (data) => {
   try {
     const token = getAuthToken();
-    const response = await axiosClient.put(`/pass/delete/${data.id}`, {
+    const response = await axiosClientVMS.put(`/pass/delete/${data.id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       }
@@ -211,7 +228,7 @@ export const DeletePasses = async (data) => {
 export const getVisirorsByPassId = async (passId) => {
   try {
     const token = getAuthToken();
-    const response = await axiosClient.get(`/pass/visitors/${passId}`, {
+    const response = await axiosClientVMS.get(`/pass/visitors/${passId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       }
@@ -223,14 +240,16 @@ export const getVisirorsByPassId = async (passId) => {
   }
 };
 
-export const createVisitorsByPassId = async (data) => {
+export const createVisitorsByPassId = async (id, data) => {
+  console.log("iddddddddd", id);
   try {
     const token = getAuthToken();
-    const response = await axiosClient.post(`/visitor/create/${data.id}`, data, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      }
-    });
+    const response = await axiosClientVMS.post(`/visitor/create/${id}`, data)
+    //  {
+    //   headers: {
+    //     Authorization: `Bearer ${token}`,
+    //   }
+    // });
     return response?.data;
   } catch (error) {
     console.error('Error fetching API endpoint:', error);
@@ -238,10 +257,10 @@ export const createVisitorsByPassId = async (data) => {
   }
 };
 
-export const UpdateVisitorsByVisitorId = async (data) => {
+export const UpdateVisitorsByVisitorId = async (id, data) => {
   try {
     const token = getAuthToken();
-    const response = await axiosClient.put(`/visitor/update/${data.visitorid}`, data, {
+    const response = await axiosClientVMS.put(`/visitor/update/${id}`, data, {
       headers: {
         Authorization: `Bearer ${token}`,
       }
@@ -256,7 +275,7 @@ export const UpdateVisitorsByVisitorId = async (data) => {
 export const DeleteVisitorsByVisitorId = async (data) => {
   try {
     const token = getAuthToken();
-    const response = await axiosClient.put(`/visitor/delete/${data.visitorId}`, {
+    const response = await axiosClientVMS.put(`/visitor/delete/${data.visitorId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       }
@@ -271,7 +290,7 @@ export const DeleteVisitorsByVisitorId = async (data) => {
 export const getDuplicatePassByPassId = async (passId) => {
   try {
     const token = getAuthToken();
-    const response = await axiosClient.get(`/pass/duplicate/${passId}`, {
+    const response = await axiosClientVMS.get(`/pass/duplicate/${passId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       }
@@ -283,9 +302,25 @@ export const getDuplicatePassByPassId = async (passId) => {
   }
 };
 
+export const createDuplicatePass = async (data) => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientVMS.post(`/pass/createDuplicate`, data)
+    // {
+    //   headers: {
+    //     Authorization: `Bearer ${token}`,
+    //   }
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error('Error fetching API endpoint:', error);
+    throw error;
+  }
+};
 
 
-                                      /* Leave Management System (APIs) */
+
+/* Leave Management System (APIs) */
 
 // Leave Module
 
