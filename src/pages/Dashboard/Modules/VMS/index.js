@@ -5,6 +5,9 @@ import CustomTable from '../../../../components/CustomComponents/CustomTable'
 import { useNavigate } from 'react-router-dom'
 import Header from '../../../../components/Header'
 import { getPasses } from '../../../../api/APIs'
+import { ToastContainer } from 'react-toastify';
+import { showErrorMessage } from '../../../../utils/ToastAlert'
+
 
 
 function VMSDashboard() {
@@ -62,14 +65,16 @@ function VMSDashboard() {
             const response = await getPasses()
         } catch (error) {
             console.log(error);
+            showErrorMessage()
         }
     }
     useEffect(() => {
         getPassesData()
-    }, [])
+    }, [currentPage])
     return (
         <Layout module={true} sidebarItems={VMSsidebarItems} centerlogohide={true}>
             <Header dashboardLink={"/vms/dashboard"} addLink1={"/vms/dashboard"} title1={"Passes"} />
+            <ToastContainer />
             <div class="row">
                 <div class="col-12">
                     <CustomTable

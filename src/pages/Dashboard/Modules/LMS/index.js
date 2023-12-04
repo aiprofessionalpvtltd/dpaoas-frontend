@@ -84,7 +84,7 @@ function LMSDashboard() {
     const [leaveData, setLeaveData] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
     const pageSize = 10; // Set your desired page size
-
+  
     const showSuccessMessage = (message) => {
         toast.success(message, {
           position: toast.POSITION.TOP_RIGHT,
@@ -109,7 +109,7 @@ function LMSDashboard() {
     const transformLeavesData = (apiData) => {
         return apiData.map((leave) => ({
           id: leave.id,
-          name: leave["employees.firstName"],
+          name: `${leave.leavefirstName} ${leave.leavelastName}`,
           leaveType: leave.requestLeaveSubType,
           startDate: leave.requestStartDate,
           endDate: leave.requestEndDate,
@@ -126,6 +126,7 @@ function LMSDashboard() {
             if(response?.success) {
                 showSuccessMessage(response?.message)
                 const transformedData = transformLeavesData(response.data);
+                console.log("ALll Datatat, ", transformedData);
                 setLeaveData(transformedData);
             }
         } catch (error) {

@@ -3,7 +3,7 @@ import { getAuthToken } from "../Auth";
 
 // Set config defaults when creating the instance
 export const axiosClient = axios.create({
-  baseURL: "http://172.16.170.8:5152/api",
+  baseURL: "http://172.16.170.8:5151/api",
 });
 
 export const loginUser = async (data) => {
@@ -148,10 +148,10 @@ export const UpdateDesignation = async (data) => {
 
 //VMS Module
 //Passes
-export const getPasses = async () => {
+export const getPasses = async (page, pageSize) => {
   try {
     const token = getAuthToken();
-    const response = await axiosClient.get(`/pass`, {
+    const response = await axiosClient.get(`/pass?currentPage=${page}&pageSize=${pageSize}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       }
@@ -292,7 +292,7 @@ export const getDuplicatePassByPassId = async (passId) => {
 export const getAllLeaves = async (page, pageSize) => {
   try {
     const token = getAuthToken();
-    const response = await axiosClient.get(`/leave/all?page=${page}&pageSize=${pageSize}`, {
+    const response = await axiosClient.get(`/leave/getAllLeavesOfUser/1?page=${page}&pageSize=${pageSize}`, {
       // headers: {
       //   Authorization: `Bearer ${token}`,
       // }

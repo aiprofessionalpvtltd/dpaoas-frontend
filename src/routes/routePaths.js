@@ -11,6 +11,14 @@ import HRMAddEditEmployee from "../pages/Dashboard/Modules/HRM/Employee/AddEditE
 import LMSDashboard from "../pages/Dashboard/Modules/LMS";
 import LMSAddEdit from "../pages/Dashboard/Modules/LMS/AddEditForm";
 import LMSHistory from "../pages/Dashboard/Modules/LMS/History";
+import MMSMotionDashboard from "../pages/Dashboard/Modules/MMS/Motion";
+import MMSMotionDetail from "../pages/Dashboard/Modules/MMS/Motion/MotionDetail";
+import MMSMotionList from "../pages/Dashboard/Modules/MMS/Motion/MotionList";
+import MMSNewMotion from "../pages/Dashboard/Modules/MMS/Motion/NewMotion";
+import MMSSearchMotion from "../pages/Dashboard/Modules/MMS/Motion/SearchMotion";
+import MMSMotionSummery from "../pages/Dashboard/Modules/MMS/Reports";
+import MMSSearchQuestion from "../pages/Dashboard/Modules/MMS/SearchQuestion";
+import MMSSearchResolution from "../pages/Dashboard/Modules/MMS/SearchResolution";
 import NoticeDashboard from "../pages/Dashboard/Modules/Notice";
 import Members from "../pages/Dashboard/Modules/Notice/Manage/Members";
 import MembersAddEditForm from "../pages/Dashboard/Modules/Notice/Manage/Members/AddEditMembers";
@@ -28,6 +36,25 @@ import SearchResolution from "../pages/Dashboard/Modules/Notice/Resolution/Searc
 import SentResolution from "../pages/Dashboard/Modules/Notice/Resolution/Sent";
 import ManageSeatingPlan from "../pages/Dashboard/Modules/Notice/SeatingPlan/ManageSeatingPlan";
 import ManageSessionDays from "../pages/Dashboard/Modules/Notice/SeatingPlan/ManageSessionDays";
+import QMSQuestionDashboard from "../pages/Dashboard/Modules/QMS";
+import QMSNoticeQuestion from "../pages/Dashboard/Modules/QMS/Notice/NoticeQuestion";
+import QMSNoticeQuestionDetail from "../pages/Dashboard/Modules/QMS/Notice/NoticeQuestionDetail";
+import QMSNoticeResolution from "../pages/Dashboard/Modules/QMS/Notice/NoticeResolution";
+import QMSNoticeResolutionDetail from "../pages/Dashboard/Modules/QMS/Notice/NoticeResolutionDetail";
+import QMSDaferQuestionDetail from "../pages/Dashboard/Modules/QMS/Question/DaferQuestionDetail";
+import QMSDeleteQuestion from "../pages/Dashboard/Modules/QMS/Question/DeleteQuestion";
+import QMSNewQuestion from "../pages/Dashboard/Modules/QMS/Question/NewQuestion";
+import QMSQuestionDetail from "../pages/Dashboard/Modules/QMS/Question/QuestionDetail";
+import QMSQuestionList from "../pages/Dashboard/Modules/QMS/Question/QuestionList";
+import QMSDeferQuestionReports from "../pages/Dashboard/Modules/QMS/Reports/DeferQuestionReports";
+import QMSQuestionAnnualReports from "../pages/Dashboard/Modules/QMS/Reports/QuestionAnnualReports";
+import QMSQuestionSummary from "../pages/Dashboard/Modules/QMS/Reports/QuestionSummary";
+import QMSResolutionAnnualReports from "../pages/Dashboard/Modules/QMS/Reports/ResolutionAnnualReports";
+import QMSResolutionSummary from "../pages/Dashboard/Modules/QMS/Reports/ResolutionSummary";
+import QMSDeleteResolution from "../pages/Dashboard/Modules/QMS/Resolution/DeleteResolution";
+import QMSResolutionList from "../pages/Dashboard/Modules/QMS/Resolution/ResolutionList";
+import QMSSearchQuestion from "../pages/Dashboard/Modules/QMS/SearchQuestion";
+import QMSSerchResolution from "../pages/Dashboard/Modules/QMS/SearchResolution";
 import VMSDashboard from "../pages/Dashboard/Modules/VMS";
 import VMSAddEditPass from "../pages/Dashboard/Modules/VMS/Pass";
 import VMSDuplicatePass from "../pages/Dashboard/Modules/VMS/Pass/DuplicatePass";
@@ -102,5 +129,59 @@ export const ProtectedRoutes = [
 
     { path: "/notice/reports", element: <NoticeDashboard /> },
     { path: "/notice/reports/business-summary", element: <BusinessSummary /> },
+
+    //MMS Module
+    { path: "/mms/dashboard", element: <MMSMotionDashboard /> },
+
+    { path: "/mms/motion", element: <MMSMotionDashboard /> },
+    { path: "/mms/motion/new", element: <MMSNewMotion /> },
+    { path: "/mms/motion/search", element: <MMSSearchMotion /> },
+    { path: "/mms/motion/detail", element: <MMSMotionDetail /> },
+    { path: "/mms/motion/list", element: <MMSMotionList /> },
+
+    { path: "/mms/question/search", element: <MMSSearchQuestion /> },
+    { path: "/mms/resolution/search", element: <MMSSearchResolution /> },
+
+    { path: "/mms/reports", element: <MMSMotionDashboard /> },
+    { path: "/mms/reports/motion-summary", element: <MMSMotionSummery /> },
+
+
+    //QMS Module
+    { path: "/qms/dashboard", element: <QMSQuestionDashboard /> },
+    { path: "/qms/question/search", element: <QMSSearchQuestion /> },
+    { path: "/qms/resolution/search", element: <QMSSerchResolution /> },
+
+    
+    { path: "/qms/reports", element: <QMSQuestionDashboard /> },
+    { path: "/qms/reports/resolution-summary", element: <QMSResolutionSummary /> },
+    { path: "/qms/reports/question-summary", element: <QMSQuestionSummary /> },
+    { path: "/qms/reports/resolution-annual-reports", element: <QMSResolutionAnnualReports /> },
+    { path: "/qms/reports/question-annual-reports", element: <QMSQuestionAnnualReports /> },
+    { path: "/qms/reports/defer-question-reports", element: <QMSDeferQuestionReports /> },
+
+    
+    { path: "/qms/question", element: <QMSQuestionDashboard /> },
+    { path: "/qms/question/list", element: <QMSQuestionList /> },
+    { path: "/qms/question/detail", element: <QMSQuestionDetail /> },
+    { path: "/qms/question/new", element: <QMSNewQuestion /> },
+    { path: "/qms/question/delete", element: <QMSDeleteQuestion /> },
+    { path: "/qms/question/defer", element: <QMSDaferQuestionDetail /> },
+
+    { path: "/qms/resolution", element: <QMSQuestionDashboard /> },
+    { path: "/qms/rsolution/list", element: <QMSResolutionList /> },
+    { path: "/qms/resolution/delete", element: <QMSDeleteResolution /> },
+
+    { path: "/qms/notice", element: <QMSQuestionDashboard /> },
+    { path: "/qms/notice/notice-question", element: <QMSNoticeQuestion /> },
+    { path: "/qms/notice/notice-question-detail", element: <QMSNoticeQuestionDetail /> },
+    { path: "/qms/notice/notice-resolution", element: <QMSNoticeResolution /> },
+    { path: "/qms/notice/notice-resolution-detail", element: <QMSNoticeResolutionDetail /> },
+
+    
+
+
+
+
+
 
 ];

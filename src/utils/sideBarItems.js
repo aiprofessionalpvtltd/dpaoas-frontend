@@ -223,3 +223,187 @@ export const NoticeSidebarItems = [
         ],
     },
 ]
+
+//Motion Management SideBar items
+
+export const MMSSideBarItems = [
+    {
+        itemName: "Motion",
+        link: "/mms/motion",
+        icon: faClipboardList,
+        subItems: [
+            {
+                itemName: "New Motion",
+                link: "/mms/motion/new",
+                icon: faClipboardList
+            },
+            {
+                itemName: "Search Motion",
+                link: "/mms/motion/search",
+                icon: faClipboardList
+            },
+            {
+                itemName: "Motion Detail",
+                link: "/mms/motion/detail",
+                icon: faClipboardList
+            },
+            {
+                itemName: "Motion List",
+                link: "/mms/motion/list",
+                icon: faClipboardList
+            }
+        ],
+    },
+    {
+        itemName: "Search Question",
+        link: "/mms/question/search",
+        icon: faClipboardList,
+       
+    },
+    {
+        itemName: "Search Resolution",
+        link: "/mms/resolution/search",
+        icon: faClipboardList,
+    },
+   
+    {
+        itemName: "Reports",
+        link: "/mms/reports",
+        icon: faClipboardList,
+        subItems: [
+            {
+                itemName: "Motion Summary",
+                link: "/mms/reports/motion-summary",
+                icon: faClipboardList
+            }
+        ],
+    },
+]
+
+//Question Management System
+export const QMSSideBarItems = [
+    {
+        itemName: "Search Question",
+        link: "/qms/question/search",
+        icon: faClipboardList,
+        
+    },
+    {
+        itemName: "Search Resolution",
+        link: "/qms/resolution/search",
+        icon: faClipboardList,
+       
+    },
+    {
+        itemName: "Question",
+        link: "/qms/question",
+        icon: faClipboardList,
+        subItems: [
+            {
+                itemName: "Question List",
+                link: "/qms/question/list",
+                icon: faClipboardList
+            },
+            {
+                itemName: "Question Detail",
+                link: "/qms/question/detail",
+                icon: faClipboardList
+            },
+            {
+                itemName: "New Question",
+                link: "/qms/question/new",
+                icon: faClipboardList
+            },
+            {
+                itemName: "Delete Question",
+                link: "/qms/question/delete",
+                icon: faClipboardList
+            },
+            {
+                itemName: "Defer Question Detail",
+                link: "/qms/question/defer",
+                icon: faClipboardList
+            }
+            
+        ],
+    },
+    {
+        itemName: "Resolution",
+        link: "/qms/resolution",
+        icon: faClipboardList,
+        subItems: [
+            {
+                itemName: "Resolution List",
+                link: "/qms/rsolution/list",
+                icon: faClipboardList
+            },
+            {
+                itemName: "Resolution Delete",
+                link: "/qms/resolution/delete",
+                icon: faClipboardList
+            },
+        ],
+    },
+
+    {
+        itemName: "Notice",
+        link: "/qms/notice",
+        icon: faClipboardList,
+        subItems: [
+            {
+                itemName: "Notice Question",
+                link: "/qms/notice/notice-question",
+                icon: faClipboardList
+            },
+            {
+                itemName: "Notice Question Detail",
+                link: "/qms/notice/notice-question-detail",
+                icon: faClipboardList
+            },
+            {
+                itemName: "Notice Resolution",
+                link: "/qms/notice/notice-resolution",
+                icon: faClipboardList
+            },
+            {
+                itemName: "Notice Resolution Detail",
+                link: "/qms/notice/notice-resolution-detail",
+                icon: faClipboardList
+            },
+
+        ],
+    },
+   
+    {
+        itemName: "Reports",
+        link: "/qms/reports",
+        icon: faClipboardList,
+        subItems: [
+            {
+                itemName: "Resolution Summary",
+                link: "/qms/reports/resolution-summary",
+                icon: faClipboardList
+            },
+            {
+                itemName: "Question Summary",
+                link: "/qms/reports/question-summary",
+                icon: faClipboardList
+            },
+            {
+                itemName: "Resolution Annual Reports",
+                link: "/qms/reports/resolution-annual-reports",
+                icon: faClipboardList
+            },
+            {
+                itemName: "Question Annual Reports",
+                link: "/qms/reports/question-annual-reports",
+                icon: faClipboardList
+            },
+            {
+                itemName: "Defer Question Reports",
+                link: "/qms/reports/defer-question-reports",
+                icon: faClipboardList
+            }
+        ],
+    },
+]

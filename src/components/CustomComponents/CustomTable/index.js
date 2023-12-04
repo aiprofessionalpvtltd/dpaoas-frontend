@@ -29,7 +29,8 @@ function CustomTable({
   hideEditIcon,
   seachBarShow,
   currentPage,
-  pageSize
+  pageSize,
+  headerShown
 }) {
   const keys = data.length > 0 ? Object.keys(data[0]) : [];
   const [totalPages, setTotalPages] = useState(null);
@@ -78,8 +79,10 @@ function CustomTable({
   );  
 
   return (
-    <div className="dash-detail-container" style={{ marginTop: "20px" }}>
+    <div className="dash-detail-container" style={{marginTop:"20px"}}>
       <div className="dash-card">
+        {!headerShown && !headerShown && (
+
         <div
           className="dash-card-header"
           style={{
@@ -98,6 +101,7 @@ function CustomTable({
           )}
           <div className="clearfix"></div>
         </div>
+        )}
         {seachBarShow && seachBarShow && (
           <div
             className="input-group float-end"

@@ -7,15 +7,15 @@ import { useNavigate } from 'react-router';
 
 function NewResolution() {
     const navigate = useNavigate()
-    
+
 
     return (
         <Layout module={true} sidebarItems={NoticeSidebarItems} centerlogohide={true}>
             <Header dashboardLink={"/"} addLink1={"/notice/dashboard"} addLink2={"/notice/resolution/new"} title1={"Notice"} title2={"New Resolution"} />
             <div class='dashboard-content'>
-            <div class='container-fluid'>
+                <div class='container-fluid'>
                     <div class='card mt-5'>
-                        <div class='card-header red-bg' style={{background: "#14ae5c !important"}}>
+                        <div class='card-header red-bg' style={{ background: "#14ae5c !important" }}>
                             <h1>NEW RESOLUTION</h1>
                         </div>
                         <div class='card-body'>
@@ -24,7 +24,7 @@ function NewResolution() {
                                     <div class="col">
                                         <div class="mb-3">
                                             <label class="form-label">Session No</label>
-                                            <input class="form-control" type="text"/>
+                                            <input class="form-control" type="text" />
                                         </div>
                                     </div>
                                     <div class="col">
@@ -64,13 +64,23 @@ function NewResolution() {
                                     <div class="col-6">
                                         <div class="mb-3">
                                             <label for="formFile" class="form-label">Notice Office Diary Date </label>
-                                            <input class="form-control" type="text"/>
+                                            <input class="form-control" type="text" />
                                         </div>
                                     </div>
                                     <div class="col-6">
                                         <div class="mb-3">
                                             <label for="formFile" class="form-label">Notice Office Diary Time </label>
-                                            <input class="form-control" type="text"/>
+                                            <input class="form-control" type="text" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="mb-3">
+                                            <label for="formFile" class="form-label">
+                                                Attachment{" "}
+                                            </label>
+                                            <input class="form-control" type="file" id="formFile" />
                                         </div>
                                     </div>
                                 </div>
