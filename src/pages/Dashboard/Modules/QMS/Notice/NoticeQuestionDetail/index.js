@@ -20,14 +20,14 @@ function QMSNoticeQuestionDetail() {
                                 </div>
                             </div>
                             <div class="col-6">
-                                <button class="btn btn-primary" type="submit">Update</button>
-                                <button class="btn btn-warning" type="submit">View File</button>
-                                <button class="btn btn-primary" type="submit">Revive</button>
-                                <button class="btn btn-primary" type="submit">Duplicate</button>
+                                <button class="btn btn-primary me-2" type="submit">Update</button>
+                                <button class="btn btn-warning me-2" type="submit">View File</button>
+                                <button class="btn btn-primary me-2" type="submit">Revive</button>
+                                <button class="btn btn-primary me-2" type="submit">Duplicate</button>
                                 <button class="btn btn-danger" type="submit">Delete</button>
                             </div>
                     </div>
-                    <div class='card mt-5'>
+                    <div class='card mt-4'>
                         <div class='card-header red-bg' style={{background: "#14ae5c !important"}}>
                             <h1>NOTICE QUESTION DETAIL</h1>
                         </div>

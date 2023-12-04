@@ -51,7 +51,7 @@ function QMSDeleteQuestion() {
         <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
             <Header dashboardLink={"/"} addLink1={"/qms/dashboard"} title1={"Question"} addLink2={"/qms/question/delete"} title2={"Delete Question"} />
             <div class='container-fluid'>
-                <div class='card mt-5'>
+                <div class='card mt-4'>
                     <div class='card-header red-bg' style={{ background: "#14ae5c !important" }}>
                         <h1>DELETED QUESTIONS</h1>
                     </div>

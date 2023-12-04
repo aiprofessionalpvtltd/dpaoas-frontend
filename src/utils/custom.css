@@ -1156,10 +1156,10 @@ hr.horizontal {
     margin-bottom: 25px;
 }
 
-.page-item.active .page-link {
+/* .page-item.active .page-link {
     background: linear-gradient(to bottom, #b5090b 0%, #a00808 100%);
     border-color: #a00808 !important;
-}
+} */
 
 .dropdown-item {
     border-bottom: 1px solid rgba(0, 0, 0, .15);
@@ -2464,7 +2464,7 @@ textarea {
     list-style: none;
     background-color: #FFF;
     font-size: 17px;
-    margin: 0px 15px 35px 0px;
+    margin: 0px 15px 25px 15px;
 }
 
 .breadcrumb {
@@ -3509,4 +3509,10 @@ textarea {
 
 
 /* ------------------------Notice Module Css End ---------------------- */
+.dashboard-nav-dropdown-item{
+    padding: 8px 20px 8px 43px !important;
+}
+.dashboard-nav a {
+    white-space: break-spaces;
+  }
 
