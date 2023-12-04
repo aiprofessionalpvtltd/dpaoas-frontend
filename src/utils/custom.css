@@ -2150,6 +2150,7 @@ textarea {
 .dash-detail-container {
     border: #ddd solid 1px;
     padding: 15px;
+    background: #FFF;
 }
 
 .dash-detail-container .table {
@@ -3242,9 +3243,9 @@ textarea {
 
 .widget-visitor-card i {
     color: #fff;
-    font-size: 80px;
+    font-size: 70px;
     position: absolute;
-    top: 38px;
+    top: 76px;
     opacity: 0.3;
     left: -7px;
     -webkit-transform: rotate(15deg);
@@ -3515,4 +3516,10 @@ textarea {
 .dashboard-nav a {
     white-space: break-spaces;
   }
+  .dashboard-nav-dropdown-toggle::after{
+    transform: rotate(90deg);
+}
+.show > .dashboard-nav-dropdown-toggle::after{
+    transform: none !important;
+}
 
