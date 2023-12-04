@@ -51,7 +51,7 @@ function QMSDeferQuestionReports() {
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
     <Header dashboardLink={"/"} addLink1={"/qms/dashboard"} title1={"Question"} addLink2={"/qms/reports/defer-question-reports"} title2={"Defer Question Reports"} />
     <div class='container-fluid'>
-                    <div class='card mt-5'>
+                    <div class='card mt-4'>
                         <div class='card-header red-bg' style={{background: "#14ae5c !important"}}>
                             <h1>Defferd Question (Current Session)</h1>
                         </div>
