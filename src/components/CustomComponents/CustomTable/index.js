@@ -30,7 +30,8 @@ function CustomTable({
   seachBarShow,
   currentPage,
   pageSize,
-  headerShown
+  headerShown,
+  searchonchange
 }) {
   const keys = data.length > 0 ? Object.keys(data[0]) : [];
   const [totalPages, setTotalPages] = useState(null);
@@ -42,7 +43,7 @@ function CustomTable({
 
   useEffect(() => {
     setTotalPages(Math.max(1, Math.ceil(data.length / pageSize)));
-  }, [data.length, pageSize]);  
+  }, [data.length, pageSize]);
 
   const startIndex = currentPage * pageSize;
   const endIndex = startIndex + pageSize;
@@ -76,38 +77,38 @@ function CustomTable({
         </li>
       </ul>
     </nav>
-  );  
+  );
 
   return (
-    <div className="dash-detail-container" style={{marginTop:"20px"}}>
+    <div className="dash-detail-container" style={{ marginTop: "20px" }}>
       <div className="dash-card">
         {!headerShown && !headerShown && (
 
-        <div
-          className="dash-card-header"
-          style={{
-            background: headerBgColor ? headerBgColor : "rgb(20, 174, 92)",
-          }}
-        >
-          <h2 className="float-start mt-2">{tableTitle}</h2>
-          {!hideBtn && (
-            <button
-              className="btn btn-primary float-end"
-              type="button"
-              onClick={handleAdd}
-            >
-              {addBtnText}
-            </button>
-          )}
-          <div className="clearfix"></div>
-        </div>
+          <div
+            className="dash-card-header"
+            style={{
+              background: headerBgColor ? headerBgColor : "rgb(20, 174, 92)",
+            }}
+          >
+            <h2 className="float-start mt-2">{tableTitle}</h2>
+            {!hideBtn && (
+              <button
+                className="btn btn-primary float-end"
+                type="button"
+                onClick={handleAdd}
+              >
+                {addBtnText}
+              </button>
+            )}
+            <div className="clearfix"></div>
+          </div>
         )}
         {seachBarShow && seachBarShow && (
           <div
             className="input-group float-end"
             style={{ width: "250px", marginTop: "10px", marginBottom: "15px" }}
           >
-            <input type="text" className="form-control" placeholder="Search" />
+            <input type="text" className="form-control" placeholder="Search" onChange={searchonchange} />
             <div className="input-group-btn">
               <button className="btn btn-default" type="submit">
                 <i className="glyphicon glyphicon-search"></i>
@@ -139,19 +140,19 @@ function CustomTable({
               ))}
               {data.length > 0 ? (
                 <th
-                    className="text-center"
-                    style={{
+                  className="text-center"
+                  style={{
                     width: "180px",
                     backgroundColor: headertitlebgColor
-                        ? headertitlebgColor
-                        : "#FFF",
+                      ? headertitlebgColor
+                      : "#FFF",
                     color: headertitletextColor ? headertitletextColor : "#666",
-                    }}
+                  }}
                 >
-                    Actions
+                  Actions
                 </th>
               ) : (
-                    <div>No data found :(</div>
+                <div>No data found :(</div>
               )}
             </tr>
           </thead>
@@ -165,11 +166,10 @@ function CustomTable({
                   <td className="text-center">
                     {item[key] === "active" || item[key] === "inactive" ? (
                       <span
-                        className={`label label-sm ${
-                          item[key] === "active"
+                        className={`label label-sm ${item[key] === "active"
                             ? "label-success"
                             : "label-danger"
-                        }`}
+                          }`}
                       >
                         {item[key]}
                       </span>
@@ -241,7 +241,7 @@ function CustomTable({
       </div>
       {data.length > 0 && (
         <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-end' }}>
-            {renderPagination()}
+          {renderPagination()}
         </div>
       )}
     </div>

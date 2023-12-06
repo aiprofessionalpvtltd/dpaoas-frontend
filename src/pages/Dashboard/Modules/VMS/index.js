@@ -4,18 +4,21 @@ import { VMSsidebarItems } from '../../../../utils/sideBarItems'
 import CustomTable from '../../../../components/CustomComponents/CustomTable'
 import { useNavigate } from 'react-router-dom'
 import Header from '../../../../components/Header'
-import { getPassPdfBYPassID, getPasses } from '../../../../api/APIs'
+import { DeletePasses, SearchPasses, getPassPdfBYPassID, getPasses } from '../../../../api/APIs'
 import { ToastContainer } from 'react-toastify';
 import { showErrorMessage, showSuccessMessage } from '../../../../utils/ToastAlert'
 import { setPassID } from '../../../../api/Auth'
+import { Worker, Viewer } from '@react-pdf-viewer/core';
+import '@react-pdf-viewer/core/lib/styles/index.css';
 
 
 
 function VMSDashboard() {
     const navigate = useNavigate();
+    const [pdfBlob, setPdfBlob] = useState(null);
     const [passAllData, setPassAllData] = useState([])
-    const [currentPage, setCurrentPage] = useState(1);
-    const pageSize = 10; // Set your desired page size
+    const [currentPage, setCurrentPage] = useState(0);
+    const pageSize = 5; // Set your desired page size
 
     const handlePageChange = (page) => {
         // Update currentPage when a page link is clicked
@@ -43,35 +46,83 @@ function VMSDashboard() {
 
     const getPassesData = async () => {
         try {
-            const response = await getPasses(currentPage, pageSize)
+            const response = await getPasses(currentPage, pageSize);
             if (response?.success) {
-                showSuccessMessage(response?.message)
-                const transformedData = transformLeavesData(response.data);
-                console.log("ALll Datatat, ", transformedData);
+                // showSuccessMessage(response?.message);
+                const transformedData = transformLeavesData(response?.data);
                 setPassAllData(transformedData);
             }
         } catch (error) {
             console.log(error);
-            // alert(error.response)
-            console.log("error.response", error.response.data.error);
-            showErrorMessage(error.response.data.error)
+            showErrorMessage(error?.response?.data?.error);
         }
-    }
-    useEffect(() => {
-        getPassesData()
-    }, [])
+    };
+
     const HandlePrint = async (id) => {
         try {
-            const response = await getPassPdfBYPassID(id)
-            console.log("REsponse ", response?.data);
+            const response = await getPassPdfBYPassID(id);
+            console.log("response", response);
+            const pdfData = new Blob([response], { type: 'application/pdf' });
+            setPdfBlob(pdfData);
+            // Assuming response is a Buffer, adjust accordingly
+            //   const buffer = response;
+            //   if(response){
+            //       const dataUrl = `data:application/pdf;base64,${buffer.toString('base64')}`;
+            //       setPdfUrl(dataUrl);
+            //   }
         } catch (error) {
             console.log(error);
         }
-    }
+    };
+
+    const handleDelete = async (id) => {
+        try {
+            const response = await DeletePasses(id);
+            if (response?.success) {
+                showSuccessMessage(response?.message);
+
+                // Filter out the deleted item from the state
+                // setPassAllData((prevData) => prevData.filter(item => item.id !== id));
+
+                // Toggle refreshData to trigger a re-render (optional)
+                getPassesData()
+            }
+        } catch (error) {
+            console.log(error);
+            // Handle error here
+        }
+    };
+
+    const searchPassess = async (data) => {
+        try {
+            const response = await SearchPasses(data); // Add await here
+            if (response?.success) {
+                console.log("response Response", response.data);
+                // showSuccessMessage(response?.message);
+
+                // Assuming response.data is an array of data
+                const transformedData = transformLeavesData(response.data);
+                setPassAllData(transformedData);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+
+    useEffect(() => {
+        getPassesData();
+    }, []);
+    const version = `2.7.570`
     return (
         <Layout module={true} sidebarItems={VMSsidebarItems} centerlogohide={true}>
             <Header dashboardLink={"/vms/dashboard"} addLink1={"/vms/dashboard"} title1={"Passes"} />
             <ToastContainer />
+            {pdfBlob && (
+                <Worker workerUrl={`https://unpkg.com/pdfjs-dist@${version}/build/pdf.worker.min.js`}>
+                    <Viewer fileUrl={URL.createObjectURL(pdfBlob)} />
+                </Worker>
+            )}
             <div class="row">
                 <div class="col-12">
                     <CustomTable
@@ -94,6 +145,8 @@ function VMSDashboard() {
                         handlePrint={(item) => HandlePrint(item.id)}
                         headertitlebgColor={"#666"}
                         headertitletextColor={"#FFF"}
+                        handleDelete={(item) => handleDelete(item.id)}
+                        searchonchange={(e) => searchPassess(e.target.value)}
                     // handlePrint={}
                     // handleUser={}
                     // handleDelete={(item) => handleDelete(item.id)}

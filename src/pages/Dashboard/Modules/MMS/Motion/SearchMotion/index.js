@@ -1,31 +1,58 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { MMSSideBarItems } from '../../../../../../utils/sideBarItems'
 import { Layout } from '../../../../../../components/Layout'
 import Header from '../../../../../../components/Header'
 import CustomTable from '../../../../../../components/CustomComponents/CustomTable'
 import { useNavigate } from 'react-router-dom'
 import { useFormik } from 'formik';
+import DatePicker from 'react-datepicker';
 import * as Yup from 'yup';
+import { getAllMotion, searchMotion } from '../../../../../../api/APIs'
+import { showErrorMessage } from '../../../../../../utils/ToastAlert'
+import { ToastContainer } from 'react-toastify'
 
 const validationSchema = Yup.object({
-    motionDiaryNo: Yup.string().required('Motion Diary No is required'),
-    memberName: Yup.string().required('Member Name is required'),
+    motionDiaryNo: Yup.string(),
+    memberName: Yup.string(),
+    motionID: Yup.string(),
+    keyword: Yup.string(),
+    fromSession: Yup.string(),
+    toSession: Yup.string(),
+    motionType: Yup.string(),
+    motionWeek: Yup.string(),
+    ministry: Yup.string(),
+    motionStatus: Yup.string(),
+    fromNoticeDate: Yup.date(),
+    toNoticeDate: Yup.date(),
+    fileNo: Yup.string(),
 });
 
 function MMSSearchMotion() {
     const navigate = useNavigate()
     const [currentPage, setCurrentPage] = useState(0);
+    const [motionData, setMotionData] = useState([])
     const pageSize = 4; // Set your desired page size
 
     const formik = useFormik({
         initialValues: {
             motionDiaryNo: '',
+            motionID: '',
+            keyword: '',
             memberName: '',
+            fromSession: '',
+            toSession: '',
+            motionType: '',
+            motionWeek: '',
+            ministry: '',
+            motionStatus: '0',
+            fromNoticeDate: '',
+            toNoticeDate: '',
+            fileNo: '',
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
             // Handle form submission here
-            console.log(values);
+            searchMotionList(values);
         },
     });
 
@@ -33,44 +60,75 @@ function MMSSearchMotion() {
         // Update currentPage when a page link is clicked
         setCurrentPage(page);
     };
-    const data = [
-        {
-            "Sr#": 1,
-            "MID": "21-11-2023",
-            "M-File No": "Ali Ahmad Jan",
-            "Motion Diary No": "Additional Secretary Office",
-            "Session Number": "Educational Trip",
-            "Motion Type": "Personal",
-            "Subject Matter": "AI Professionals Pvt Limited",
-            "Notice No./Date": "21-11-2023",
-            "Motion Week": "30-11-2023",
-            "Motion Status": [
-                "Saturday"
-            ],
-            "Movers": "Visit",
-            "Ministries": "Inactive",
-        },
-        {
-            "Sr#": 1,
-            "MID": "21-11-2023",
-            "M-File No": "Ali Ahmad Jan",
-            "Motion Diary No": "Additional Secretary Office",
-            "Session Number": "Educational Trip",
-            "Motion Type": "Personal",
-            "Subject Matter": "AI Professionals Pvt Limited",
-            "Notice No./Date": "21-11-2023",
-            "Motion Week": "30-11-2023",
-            "Motion Status": [
-                "Saturday"
-            ],
-            "Movers": "Visit",
-            "Ministries": "Inactive",
-        },
-    ]
 
+    const transformMotionData = (apiData) => {
+        return apiData.map((leave) => ({
+            id: leave?.id,
+            fkSessionId: leave?.sessions.id,
+            fileNumber: leave?.fileNumber,
+            motionType: leave?.motionType,
+            motionWeek: leave?.motionWeek,
+            noticeOfficeDiaryNo: leave?.noticeOfficeDairies?.noticeOfficeDiaryNo,
+            // ministryName: leave?.motionMinistries?.ministries,
+            // ministryIds: leave?.motionMinistries?.fkMinistryId,
+            noticeOfficeDiaryDate: leave?.noticeOfficeDairies?.noticeOfficeDiaryDate,
+            noticeOfficeDiaryTime: leave?.noticeOfficeDairies?.noticeOfficeDiaryTime,
+            // memberName:leave?.motionMovers?.members,
+            englishText: leave?.englishText,
+            urduText: leave?.urduText,
+            fkMotionStatus: leave?.fkMotionStatus
+        }));
+    };
+    const getMotionListData = async () => {
+        try {
+            const response = await getAllMotion(currentPage, pageSize);
+            if (response?.success) {
+                // showSuccessMessage(response?.message);
+                const transformedData = transformMotionData(response?.data?.rows);
+                setMotionData(transformedData);
+            }
+        } catch (error) {
+            console.log(error);
+            showErrorMessage(error?.response?.data?.error);
+        }
+    };
+
+    const searchMotionList = async (values) => {
+        const data = {
+            fileNumber: values?.fileNo,
+            fkSessionId: values?.fromSession,
+            noticeOfficeDiaryNo: values?.motionDiaryNo,
+            fkMemberId: values?.memberName,
+            fkMinistryId: values?.ministry,
+            motionId: values?.motionID,
+            sessionStartRange: values?.fromSession,
+            sessionEndRange: values?.toSession,
+            noticeStartRange: values?.fromNoticeDate,
+            noticeEndRange: values?.toNoticeDate,
+            // englishText : values?.englishText, 
+            motionWeek: values?.motionWeek,
+            motionType: values?.motionType
+        }
+        try {
+            const response = await searchMotion(data); // Add await here
+            if (response?.success) {
+                // showSuccessMessage(response?.message);
+                const transformedData = transformMotionData(response?.data?.rows);
+                setMotionData(transformedData);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+
+    useEffect(() => {
+        getMotionListData()
+    }, [])
     return (
         <Layout module={true} sidebarItems={MMSSideBarItems} centerlogohide={true}>
             <Header dashboardLink={"/"} addLink1={"/mms/dashboard"} title1={"Motion"} addLink2={"/mms/motion/search"} title2={"Search Motion"} />
+            <ToastContainer />
             <div class='container-fluid'>
                 <div class='card mt-5'>
                     <div class='card-header red-bg' style={{ background: "#14ae5c !important" }}>
@@ -79,28 +137,29 @@ function MMSSearchMotion() {
                     <div class='card-body'>
                         <div class="container-fluid">
                             <form onSubmit={formik.handleSubmit}>
-
                                 <div class="row">
                                     <div class="col">
                                         <div class="mb-3">
                                             <label class="form-label">Motion Diary No</label>
                                             <input
                                                 type='text'
-                                                placeholder={formik.values.motionDiaryNo}
-                                                className={`form-control ${formik.touched.motionDiaryNo && formik.errors.motionDiaryNo ? 'is-invalid' : ''}`}
+                                                className={'form-control'}
                                                 id='motionDiaryNo'
+                                                placeholder={formik.values.motionDiaryNo}
                                                 onChange={formik.handleChange}
                                                 onBlur={formik.handleBlur}
                                             />
-                                            {formik.touched.motionDiaryNo && formik.errors.motionDiaryNo && (
-                                                <div className='invalid-feedback'>{formik.errors.motionDiaryNo}</div>
-                                            )}
+
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="mb-3">
                                             <label class="form-label">Motion ID</label>
-                                            <input class="form-control" type="text" />
+                                            <input class="form-control" type="text"
+                                                placeholder={formik.values.motionID}
+                                                onChange={formik.handleChange}
+                                                id='motionID'
+                                                onBlur={formik.handleBlur} />
                                         </div>
                                     </div>
                                 </div>
@@ -108,23 +167,24 @@ function MMSSearchMotion() {
                                     <div class="col">
                                         <div class="mb-3">
                                             <label class="form-label">Keyword</label>
-                                            <input class="form-control" type="text" />
+                                            <input class="form-control" type="text" placeholder={formik.values.keyword}
+                                                onChange={formik.handleChange}
+                                                id='keyword'
+                                                onBlur={formik.handleBlur} />
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="mb-3">
-                                            <label class="form-label">Member Name</label>
+                                            <label class="form-label" >Member Name</label>
                                             <input
                                                 type='text'
                                                 placeholder={formik.values.memberName}
-                                                className={`form-control ${formik.touched.memberName && formik.errors.memberName ? 'is-invalid' : ''}`}
+                                                className={`form-control`}
                                                 id='memberName'
                                                 onChange={formik.handleChange}
                                                 onBlur={formik.handleBlur}
                                             />
-                                            {formik.touched.memberName && formik.errors.memberName && (
-                                                <div className='invalid-feedback'>{formik.errors.memberName}</div>
-                                            )}
+
                                         </div>
                                     </div>
                                 </div>
@@ -132,7 +192,11 @@ function MMSSearchMotion() {
                                     <div class="col">
                                         <div class="mb-3">
                                             <label class="form-label">From Session</label>
-                                            <select class="form-select">
+                                            <select class="form-select"
+                                                placeholder={formik.values.fromSession}
+                                                onChange={formik.handleChange}
+                                                id='fromSession'
+                                                onBlur={formik.handleBlur}>
                                                 <option>Select</option>
                                                 <option>121</option>
                                                 <option>122</option>
@@ -143,7 +207,10 @@ function MMSSearchMotion() {
                                     <div class="col">
                                         <div class="mb-3">
                                             <label class="form-label">To Session</label>
-                                            <select class="form-select">
+                                            <select class="form-select" placeholder={formik.values.toSession}
+                                                onChange={formik.handleChange}
+                                                id='toSession'
+                                                onBlur={formik.handleBlur} >
                                                 <option>Select</option>
                                                 <option>121</option>
                                                 <option>122</option>
@@ -156,7 +223,10 @@ function MMSSearchMotion() {
                                     <div class="col">
                                         <div class="mb-3">
                                             <label class="form-label">Motion Type</label>
-                                            <select class="form-select">
+                                            <select class="form-select" placeholder={formik.values.motionType}
+                                                onChange={formik.handleChange}
+                                                id='motionType'
+                                                onBlur={formik.handleBlur}>
                                                 <option>Motion Type</option>
                                                 <option>Adjournment Motion</option>
                                                 <option>Call Attention Notice</option>
@@ -169,7 +239,10 @@ function MMSSearchMotion() {
                                     <div class="col">
                                         <div class="mb-3">
                                             <label class="form-label">Motion Week</label>
-                                            <select class="form-select">
+                                            <select class="form-select" placeholder={formik.values.motionWeek}
+                                                onChange={formik.handleChange}
+                                                id='motionWeek'
+                                                onBlur={formik.handleBlur}>
                                                 <option>Motion Week</option>
                                                 <option>Not Applicable</option>
                                                 <option>1st Week</option>
@@ -185,13 +258,19 @@ function MMSSearchMotion() {
                                     <div class="col">
                                         <div class="mb-3">
                                             <label class="form-label">Ministry</label>
-                                            <input class="form-control" type="text" />
+                                            <input class="form-control" type="text" placeholder={formik.values.ministry}
+                                                onChange={formik.handleChange}
+                                                id='ministry'
+                                                onBlur={formik.handleBlur} />
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="mb-3">
                                             <label class="form-label">Motion Status</label>
-                                            <select class="form-select">
+                                            <select class="form-select" placeholder={formik.values.motionStatus}
+                                                onChange={formik.handleChange}
+                                                id='motionStatus'
+                                                onBlur={formik.handleBlur}>
                                                 <option selected="selected" value="0">Motion Status</option>
                                                 <option value="40">Admissibility not Allowed by the House</option>
                                                 <option value="20">Admitted</option>
@@ -243,13 +322,29 @@ function MMSSearchMotion() {
                                     <div class="col">
                                         <div class="mb-3">
                                             <label class="form-label">From Notice Date</label>
-                                            <input class="form-control" type="text" />
+                                            <DatePicker
+                                                selected={formik.values.fromNoticeDate}
+                                                onChange={(date) => formik.setFieldValue('fromNoticeDate', date)}
+                                                className={`form-control ${formik.errors.fromNoticeDate && formik.touched.fromNoticeDate
+                                                    ? 'is-invalid'
+                                                    : ''
+                                                    }`}
+                                            />
+                                            {formik.errors.fromNoticeDate && formik.touched.fromNoticeDate && (
+                                                <div className="invalid-feedback">{formik.errors.fromNoticeDate}</div>
+                                            )}
+
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="mb-3">
                                             <label class="form-label">To Notice Date</label>
-                                            <input class="form-control" type="text" />
+                                            <DatePicker
+                                                selected={formik.values.toNoticeDate}
+                                                onChange={(date) => formik.setFieldValue('toNoticeDate', date)}
+                                                className={'form-control'}
+                                            />
+
                                         </div>
                                     </div>
                                 </div>
@@ -257,7 +352,10 @@ function MMSSearchMotion() {
                                     <div class="col-6">
                                         <div class="mb-3">
                                             <label class="form-label">File No</label>
-                                            <input class="form-control" type="text" />
+                                            <input class="form-control" type="text" placeholder={formik.values.fileNo}
+                                                onChange={formik.handleChange}
+                                                id='fileNo'
+                                                onBlur={formik.handleBlur} />
                                         </div>
                                     </div>
                                 </div>
@@ -274,21 +372,15 @@ function MMSSearchMotion() {
                                 <div class="dash-detail-container" style={{ marginTop: "20px" }}>
                                     <CustomTable
                                         block={true}
-                                        data={data}
-                                        tableTitle=""
-                                        addBtnText="Print Motion"
-                                        handleAdd={() => alert("Print")}
-                                        handleEdit={(item) => navigate('/vms/addeditpass', { state: item })}
-                                        hideUserIcon={true}
-                                        handleUser={() => navigate("/vms/visitor")}
-                                        handleDuplicate={() => navigate("/vms/duplicatepass")}
-                                        // seachBarShow={true}
+                                        data={motionData}
+                                        headerShown={true}
+                                        handleDelete={(item) => alert(item.id)}
+                                        handleEdit={(item) => navigate('/mms/motion/new', { state: item })}
+                                        headertitlebgColor={"#666"}
+                                        headertitletextColor={"#FFF"}
                                         handlePageChange={handlePageChange}
                                         currentPage={currentPage}
                                         pageSize={pageSize}
-                                    // handlePrint={}
-                                    // handleUser={}
-                                    // handleDelete={(item) => handleDelete(item.id)}
                                     />
                                 </div>
                             </form>

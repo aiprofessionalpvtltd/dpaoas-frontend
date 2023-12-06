@@ -1,50 +1,158 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Layout } from '../../../../../../components/Layout'
 import { MMSSideBarItems } from '../../../../../../utils/sideBarItems'
 import Header from '../../../../../../components/Header'
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { createNewMotion, getAllMinistry, updateNewMotion } from '../../../../../../api/APIs';
+import DatePicker from 'react-datepicker';
+import TimePicker from 'react-time-picker';
+import { showSuccessMessage, showErrorMessage } from '../../../../../../utils/ToastAlert';
+import { ToastContainer } from 'react-toastify';
+import { useLocation } from 'react-router-dom';
 
 const validationSchema = Yup.object({
-    sessionNumber: Yup.string().required('Session Number is required'),
-    fileNo: Yup.string().required('File Number is required'),
+    sessionNumber: Yup.string().required('Session No is required'),
+    fileNo: Yup.string().required('File No is required'),
+    motionType: Yup.string().required('Motion Type is required'),
+    motionWeek: Yup.string().required('Motion Week is required'),
+    noticeOfficeDiaryNo: Yup.string().required('Notice Office Diary No is required'),
+    noticeOfficeDiaryDate: Yup.string().required('Notice Office Diary Date is required'),
+    noticeOfficeDiaryTime: Yup.string().required('Notice Office Diary Time is required'),
+    motionStatus: Yup.string().required('Motion Status is required'),
+    mover: Yup.string().required('Mover is required'),
+    ministry: Yup.string().required('Ministry is required'),
+    // Add more fields and validations as needed
 });
 
 function MMSNewMotion() {
+    const location = useLocation()
+    const [ministryData, setMinistryData] = useState([])
+    const getCurrentTime = () => {
+        const now = new Date();
+        return now.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+    };
+    const noticeOfficeDiaryDate = location?.state?.noticeOfficeDiaryDate ? new Date(location?.state?.noticeOfficeDiaryDate) : new Date();
+    const noticeOfficeDiaryTime = location?.state?.noticeOfficeDiaryTime ? new Date(location?.state?.noticeOfficeDiaryTime) : getCurrentTime();
     const formik = useFormik({
         initialValues: {
-            sessionNumber: '',
-            fileNo: '',
+            sessionNumber: location.state ? location.state.sessionNumber : '',
+            fileNo: location.state ? location.state.fileNumber : '',
+            motionType: location.state ? location.state.motionType : '',
+            motionWeek: location.state ? location.state.motionWeek : '',
+            noticeOfficeDiaryNo: location.state ? location.state.noticeOfficeDiaryNo : '',
+            noticeOfficeDiaryDate: noticeOfficeDiaryDate,
+            noticeOfficeDiaryTime: noticeOfficeDiaryTime,
+            motionStatus: location.state ? location.state.motionStatus : '',
+            mover: location.state ? location.state.mover : '',
+            ministry: location.state ? location.state.ministry : '',
+            // Add more fields as needed
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
-            // Handle form submission here
-            console.log(values);
-        },
+            // console.log('Form submitted with values:', values);
+            if (location?.state) {
+                handleEditMotion(values)
+            } else {
+                handleAddNewMotion(values)
+            }
+        }
     });
+    const handleAddNewMotion = async (values) => {
+        const formData = new FormData();
+        formData.append('fkSessionId', values?.sessionNumber);
+        formData.append('fileNumber', values?.fileNo);
+        formData.append('motionType', values?.motionType);
+        formData.append('motionWeek', values?.motionWeek);
+        formData.append('noticeOfficeDiaryNo', values?.noticeOfficeDiaryNo);
+        formData.append('moverIds[]', values?.mover);
+        formData.append('ministryIds[]', values?.ministry);
+        formData.append('noticeOfficeDiaryDate', values?.noticeOfficeDiaryDate);
+        formData.append('noticeOfficeDiaryTime', values?.noticeOfficeDiaryTime);
+        formData.append('businessType', "Motion");
+        formData.append('englishText', "dkals");
+        formData.append('urduText', "dkpad");
+        formData.append('fkMotionStatus', values?.motionStatus);
+        try {
+            const response = await createNewMotion(formData)
+            if (response?.success) {
+                showSuccessMessage(response?.message);
+            }
+        } catch (error) {
+            showErrorMessage(error?.response?.data?.message);
+        }
+    }
+
+    const handleEditMotion = async (values) => {
+        const formData = new FormData();
+        formData.append('fkSessionId', values?.sessionNumber);
+        formData.append('fileNumber', values?.fileNo);
+        formData.append('motionType', values?.motionType);
+        formData.append('motionWeek', values?.motionWeek);
+        formData.append('noticeOfficeDiaryNo', values?.noticeOfficeDiaryNo);
+        formData.append('moverIds[]', values?.mover);
+        formData.append('ministryIds[]', values?.ministry);
+        formData.append('noticeOfficeDiaryDate', values?.noticeOfficeDiaryDate);
+        formData.append('noticeOfficeDiaryTime', values?.noticeOfficeDiaryTime);
+        formData.append('businessType', "Motion");
+        formData.append('englishText', "dkals");
+        formData.append('urduText', "dkpad");
+        formData.append('fkMotionStatus', values?.motionStatus);
+        try {
+            const response = await updateNewMotion(location?.state?.id, formData)
+            if (response?.success) {
+                showSuccessMessage(response?.message);
+            }
+        } catch (error) {
+            showErrorMessage(error?.response?.data?.message);
+        }
+    }
+
+    const AllMinistryData = async () => {
+        try {
+            const response = await getAllMinistry()
+            if (response?.success) {
+                // showSuccessMessage(response?.message);
+                setMinistryData(response?.data);
+            }
+        } catch (error) {
+            console.log(error);
+            showErrorMessage(error?.response?.data?.error);
+        }
+    }
+    useEffect(() => {
+        AllMinistryData()
+    }, [])
     return (
         <Layout module={true} sidebarItems={MMSSideBarItems} centerlogohide={true}>
             <Header dashboardLink={"/"} addLink1={"/mms/dashboard"} title1={"Motion"} addLink2={"/mms/motion/new"} title2={"New Motion"} />
+            <ToastContainer />
             <div class='container-fluid'>
                 <div class='card mt-5'>
                     <div class='card-header red-bg' style={{ background: "#14ae5c !important" }}>
-                        <h1>NEW MOTION</h1>
+                        {location?.state ? <h1>Edit MOTION</h1> : <h1>NEW MOTION</h1>}
                     </div>
                     <div class='card-body'>
                         <div class="container-fluid">
                             <form onSubmit={formik.handleSubmit}>
-
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="mb-3">
-                                            <label class="form-label">Session No</label>
-                                            <select id="sessionNumber"
+                                <div className="row">
+                                    <div className="col">
+                                        <div className="mb-3">
+                                            <label className="form-label">Session No</label>
+                                            <select
                                                 name="sessionNumber"
+                                                id="sessionNumber"
                                                 onChange={formik.handleChange}
                                                 onBlur={formik.handleBlur}
                                                 value={formik.values.sessionNumber}
-                                                className={formik.errors.sessionNumber && formik.touched.sessionNumber ? 'form-select is-invalid' : 'form-select'}>
-                                                <option>331</option>
+                                                className={
+                                                    formik.errors.sessionNumber && formik.touched.sessionNumber
+                                                        ? 'form-select is-invalid'
+                                                        : 'form-select'
+                                                }
+                                            >
+                                                <option>select</option>
+                                                <option value={"1"}>331</option>
                                                 <option>332</option>
                                                 <option>333</option>
                                             </select>
@@ -53,28 +161,44 @@ function MMSNewMotion() {
                                             )}
                                         </div>
                                     </div>
-                                    <div class="col">
-                                        <div class="mb-3">
-                                            <label class="form-label">File No</label>
+                                    <div className="col">
+                                        <div className="mb-3">
+                                            <label className="form-label">File No</label>
                                             <input
-                                                type='text'
+                                                type="text"
                                                 placeholder={formik.values.fileNo}
-                                                className={`form-control ${formik.touched.fileNo && formik.errors.fileNo ? 'is-invalid' : ''}`}
-                                                id='fileNo'
+                                                className={`form-control ${formik.touched.fileNo && formik.errors.fileNo ? 'is-invalid' : ''
+                                                    }`}
+                                                id="fileNo"
                                                 onChange={formik.handleChange}
                                                 onBlur={formik.handleBlur}
                                             />
                                             {formik.touched.fileNo && formik.errors.fileNo && (
-                                                <div className='invalid-feedback'>{formik.errors.fileNo}</div>
+                                                <div className="invalid-feedback">{formik.errors.fileNo}</div>
                                             )}
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="mb-3">
-                                            <label class="form-label">Motion Type</label>
-                                            <select class="form-select">
+
+                                {/* Add more fields */}
+                                {/* Motion Type */}
+                                <div className="row">
+                                    <div className="col">
+                                        <div className="mb-3">
+                                            <label className="form-label">Motion Type</label>
+                                            <select
+                                                className="form-select"
+                                                id="motionType"
+                                                name="motionType"
+                                                onChange={formik.handleChange}
+                                                onBlur={formik.handleBlur}
+                                                value={formik.values.motionType}
+                                                class={
+                                                    formik.errors.motionType && formik.touched.motionType
+                                                        ? 'form-select is-invalid'
+                                                        : 'form-select'
+                                                }
+                                            >
                                                 <option>Select</option>
                                                 <option>Adjournment Motion</option>
                                                 <option>Call Attention Notice</option>
@@ -82,12 +206,29 @@ function MMSNewMotion() {
                                                 <option>Motion Under Rule 218</option>
                                                 <option>Motion Under Rule 60</option>
                                             </select>
+                                            {formik.errors.motionType && formik.touched.motionType && (
+                                                <div className="invalid-feedback">{formik.errors.motionType}</div>
+                                            )}
                                         </div>
                                     </div>
-                                    <div class="col">
-                                        <div class="mb-3">
-                                            <label class="form-label">Motion Week</label>
-                                            <select class="form-select">
+                                    {/* Motion Week */}
+                                    <div className="col">
+                                        <div className="mb-3">
+                                            <label className="form-label">Motion Week</label>
+                                            <select
+                                                className="form-select"
+                                                id="motionWeek"
+                                                name="motionWeek"
+                                                onChange={formik.handleChange}
+                                                onBlur={formik.handleBlur}
+                                                value={formik.values.motionWeek}
+                                                class={
+                                                    formik.errors.motionWeek && formik.touched.motionWeek
+                                                        ? 'form-select is-invalid'
+                                                        : 'form-select'
+                                                }
+                                            >
+                                                <option>Select</option>
                                                 <option>Not Applicable</option>
                                                 <option>1st Week</option>
                                                 <option>2nd Week</option>
@@ -95,111 +236,176 @@ function MMSNewMotion() {
                                                 <option>4th Week</option>
                                                 <option>5th Week</option>
                                             </select>
+                                            {formik.errors.motionWeek && formik.touched.motionWeek && (
+                                                <div className="invalid-feedback">{formik.errors.motionWeek}</div>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="mb-3">
-                                            <label class="form-label">Notice Office Diary No</label>
-                                            <select class="form-select">
+
+                                {/* Add more fields */}
+                                {/* Notice Office Diary No */}
+                                <div className="row">
+                                    <div className="col">
+                                        <div className="mb-3">
+                                            <label className="form-label">Notice Office Diary No</label>
+                                            <select
+                                                className="form-select"
+                                                id="noticeOfficeDiaryNo"
+                                                name="noticeOfficeDiaryNo"
+                                                onChange={formik.handleChange}
+                                                onBlur={formik.handleBlur}
+                                                value={formik.values.noticeOfficeDiaryNo}
+                                                class={
+                                                    formik.errors.noticeOfficeDiaryNo && formik.touched.noticeOfficeDiaryNo
+                                                        ? 'form-select is-invalid'
+                                                        : 'form-select'
+                                                }
+                                            >
+                                                <option>select</option>
                                                 <option>2655</option>
                                                 <option>2556</option>
                                             </select>
+                                            {formik.errors.noticeOfficeDiaryNo && formik.touched.noticeOfficeDiaryNo && (
+                                                <div className="invalid-feedback">{formik.errors.noticeOfficeDiaryNo}</div>
+                                            )}
                                         </div>
                                     </div>
-                                    <div class="col">
-                                        <div class="mb-3">
-                                            <label class="form-label">Notice Office Diary Date</label>
-                                            <input class="form-control" type="text" />
+                                    {/* Notice Office Diary Date */}
+                                    <div className="col">
+                                        <div className="mb-3">
+                                            <label className="form-label">Notice Office Diary Date</label>
+                                            <DatePicker
+                                                selected={formik.values.noticeOfficeDiaryDate}
+                                                onChange={(date) => formik.setFieldValue('noticeOfficeDiaryDate', date)}
+                                                className={`form-control ${formik.errors.noticeOfficeDiaryDate && formik.touched.noticeOfficeDiaryDate
+                                                    ? 'is-invalid'
+                                                    : ''
+                                                    }`}
+                                            />
+                                            {formik.errors.noticeOfficeDiaryDate && formik.touched.noticeOfficeDiaryDate && (
+                                                <div className="invalid-feedback">{formik.errors.noticeOfficeDiaryDate}</div>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="mb-3">
-                                            <label class="form-label">Notice Office Diary Time</label>
-                                            <input class="form-control" type="text" />
+
+                                {/* Add more fields */}
+                                {/* Notice Office Diary Time */}
+                                <div className="row">
+                                    <div className="col">
+                                        <div className="mb-3">
+                                            <label className="form-label">Notice Office Diary Time</label>
+                                            <TimePicker
+                                                value={formik.values.noticeOfficeDiaryTime}
+                                                clockIcon={null} // Disable clock view
+                                                openClockOnFocus={false}
+                                                format="hh:mm a"
+                                                onChange={(time) => formik.setFieldValue('noticeOfficeDiaryTime', time)}
+                                                className={`form-control ${formik.errors.noticeOfficeDiaryTime && formik.touched.noticeOfficeDiaryTime
+                                                    ? 'is-invalid'
+                                                    : ''
+                                                    }`}
+                                            />
+                                            {formik.errors.noticeOfficeDiaryTime && formik.touched.noticeOfficeDiaryTime && (
+                                                <div className="invalid-feedback">{formik.errors.noticeOfficeDiaryTime}</div>
+                                            )}
                                         </div>
                                     </div>
-                                    <div class="col">
-                                        <div class="mb-3">
-                                            <label class="form-label">Motion Status</label>
-                                            <select class="form-control control-txt">
+                                    {/* Motion Status */}
+                                    <div className="col">
+                                        <div className="mb-3">
+                                            <label className="form-label">Motion Status</label>
+                                            <select
+                                                className="form-control control-txt"
+                                                id="motionStatus"
+                                                name="motionStatus"
+                                                onChange={formik.handleChange}
+                                                onBlur={formik.handleBlur}
+                                                value={formik.values.motionStatus}
+                                                class={
+                                                    formik.errors.motionStatus && formik.touched.motionStatus
+                                                        ? 'form-select is-invalid'
+                                                        : 'form-select'
+                                                }
+                                            >
                                                 <option>Select</option>
-                                                <option>Admissibility not Allowed by the House</option>
-                                                <option>Admitted</option>
-                                                <option>Admitted but Lapsed</option>
-                                                <option>Admitted for 2 Hr. Discussion</option>
-                                                <option>Allowed</option>
-                                                <option>Approved</option>
-                                                <option>Deferred</option>
-                                                <option>Disallowed</option>
-                                                <option>Disallowed in Chamber</option>
-                                                <option>Discuss in the House</option>
-                                                <option>Discussed</option>
-                                                <option>Disposed Off</option>
-                                                <option>Droped by the House</option>
-                                                <option>Dropped</option>
-                                                <option>Held in Order</option>
-                                                <option>Held out of Order</option>
-                                                <option>Infructuous</option>
-                                                <option>Lapsed</option>
-                                                <option>Move To Session</option>
-                                                <option>Moved and Deferred</option>
-                                                <option>Moved and is Pending for Discussion</option>
-                                                <option>Moved in the House</option>
-                                                <option>Moved in the house without notice</option>
-                                                <option>Not Pressed</option>
-                                                <option>Notice Received for 2nd Time</option>
-                                                <option>Referred to Priv Cmt.</option>
-                                                <option>Referred to Special Committee</option>
-                                                <option>Referred to Spl Cmt</option>
-                                                <option>Referred to Standing Committee</option>
-                                                <option>Referred to the Privileges Committee</option>
-                                                <option>Ruled out of Order</option>
-                                                <option>Ruled out of Order in the house</option>
-                                                <option>Ruling Reserved</option>
-                                                <option>Selected/Not Sel. for Statement</option>
-                                                <option>Talked Out</option>
-                                                <option>To be heard</option>
-                                                <option>To be heard but Lapsed</option>
-                                                <option>Under Process</option>
-                                                <option>Under-Correspondence</option>
-                                                <option>Withdrawn at Secretariat Level</option>
-                                                <option>Withdrawn by the Member</option>
-                                                <option>Withdrawn in the House</option>
-
+                                                <option value={"1"}>active</option>
+                                                <option value={"2"}>inactive</option>
+                                                {/* Add motion status options */}
                                             </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="mb-3">
-                                            <label class="form-label">Mover</label>
-                                            <select class="form-select">
-                                                <option>2655</option>
-                                                <option>2556</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="mb-3">
-                                            <label class="form-label">Ministry</label>
-                                            <select class="form-select">
-                                                <option>2655</option>
-                                                <option>2556</option>
-                                            </select>
+                                            {formik.errors.motionStatus && formik.touched.motionStatus && (
+                                                <div className="invalid-feedback">{formik.errors.motionStatus}</div>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
 
+                                {/* Add more fields */}
+                                {/* Mover */}
+                                <div className="row">
+                                    <div className="col">
+                                        <div className="mb-3">
+                                            <label className="form-label">Mover</label>
+                                            <select
+                                                className="form-select"
+                                                id="mover"
+                                                name="mover"
+                                                onChange={formik.handleChange}
+                                                onBlur={formik.handleBlur}
+                                                value={formik.values.mover}
+                                                class={
+                                                    formik.errors.mover && formik.touched.mover
+                                                        ? 'form-select is-invalid'
+                                                        : 'form-select'
+                                                }
+                                            >
+                                                <option>select</option>
+                                                <option value={"1"}>2655</option>
+                                                <option value={"2"}>2556</option>
+                                            </select>
+                                            {formik.errors.mover && formik.touched.mover && (
+                                                <div className="invalid-feedback">{formik.errors.mover}</div>
+                                            )}
+                                        </div>
+                                    </div>
+                                    {/* Ministry */}
+                                    <div className="col">
+                                        <div className="mb-3">
+                                            <label className="form-label">Ministry</label>
+                                            <select
+                                                className="form-select"
+                                                id="ministry"
+                                                name="ministry"
+                                                onChange={formik.handleChange}
+                                                onBlur={formik.handleBlur}
+                                                value={formik.values.ministry}
+                                                class={formik.errors.ministry && formik.touched.ministry
+                                                    ? 'form-select is-invalid'
+                                                    : 'form-select'
+                                                }
+                                            >
+                                                <option value={""} selected disabled hidden>select</option>
+                                                {ministryData && ministryData.map((item) => (
+                                                    <option value={item.id}>{item.ministryName}</option>
+                                                ))}
+                                            </select>
+                                            {formik.errors.ministry && formik.touched.ministry && (
+                                                <div className="invalid-feedback">{formik.errors.ministry}</div>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Add more fields */}
+                                {/* Motion Text */}
                                 <p>Motion Text</p>
 
-                                <div class="row">
-                                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                        <button class="btn btn-primary" type="submit">Save</button>
+                                <div className="row">
+                                    <div className="d-grid gap-2 d-md-flex justify-content-md-end">
+                                        <button className="btn btn-primary" type="submit">
+                                            Save
+                                        </button>
                                     </div>
                                 </div>
                             </form>
