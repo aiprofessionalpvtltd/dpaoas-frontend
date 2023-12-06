@@ -4,7 +4,7 @@ import CustomTable from '../../../../../components/CustomComponents/CustomTable'
 import { Layout } from '../../../../../components/Layout';
 import { VMSsidebarItems } from '../../../../../utils/sideBarItems';
 import Header from '../../../../../components/Header';
-import { getVisirorsByPassId } from '../../../../../api/APIs';
+import { DeleteVisitorsByVisitorId, getVisirorsByPassId } from '../../../../../api/APIs';
 import { showSuccessMessage } from '../../../../../utils/ToastAlert';
 import { ToastContainer } from 'react-toastify';
 import { getPassID } from '../../../../../api/Auth';
@@ -60,7 +60,7 @@ function VMSVisitors() {
         try {
             const response = await getVisirorsByPassId(PassID)
             if (response?.success) {
-                showSuccessMessage(response?.message)
+                // showSuccessMessage(response?.message)
                 const transformedData = transformLeavesData(response.data);
                 setAllVisitorData(transformedData);
             }
@@ -72,8 +72,25 @@ function VMSVisitors() {
 
     useEffect(() => {
         getVisitorsAPi()
-    }, [])
+    }, [allvisitorData])
 
+    const handleDelete = async (id) => {
+        try {
+            const response = await DeleteVisitorsByVisitorId(id);
+            if (response?.success) {
+                showSuccessMessage(response?.message);
+
+                // Filter out the deleted item from the state
+                // setPassAllData((prevData) => prevData.filter(item => item.id !== id));
+
+                // Toggle refreshData to trigger a re-render (optional)
+                getVisitorsAPi()
+            }
+        } catch (error) {
+            console.log(error);
+            // Handle error here
+        }
+    };
     return (
         <Layout module={true} sidebarItems={VMSsidebarItems} centerlogohide={true}>
             <Header dashboardLink={"/vms/dashboard"} addLink1={"/vms/visitor"} title1={"Visitors"} />
@@ -93,6 +110,7 @@ function VMSVisitors() {
                         pageSize={pageSize}
                         headertitlebgColor={"#666"}
                         headertitletextColor={"#FFF"}
+                        handleDelete={(item) => handleDelete(item.id)}
                     // handlePrint={}
                     // handleUser={}
                     // handleDelete={(item) => handleDelete(item.id)}

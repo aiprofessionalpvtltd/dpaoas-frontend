@@ -8,7 +8,7 @@ function MMSMotionDashboard() {
     return (
         <Layout module={true} sidebarItems={MMSSideBarItems} centerlogohide={true}>
              <Header dashboardLink={"/"} addLink1={"/mms/dashboard"} title1={"Motion"} />
-    
+
         </Layout>
     )
 }
