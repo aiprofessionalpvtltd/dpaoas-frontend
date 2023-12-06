@@ -110,7 +110,7 @@ function VMSDuplicatePass() {
       try {
         const response = await getDuplicatePassByPassId(location.state);
         if (response?.success) {
-          showSuccessMessage(response?.message);
+          // showSuccessMessage(response?.message);
           const transformedData = transformDuplicatePassData(response.data.visitor);
           setData(transformedData);
           setDuplicateData(response?.data?.pass);
@@ -186,6 +186,17 @@ function VMSDuplicatePass() {
       console.log(error);
     }
   }
+  const handleDelete = async (id) => {
+    try {
+      showSuccessMessage("Visitors Delete Succesfully");
+      setData((prevData) => prevData.filter(item => item.id !== id));
+
+
+    } catch (error) {
+      console.log(error);
+      // Handle error here
+    }
+  };
   return (
     <Layout module={true} sidebarItems={VMSsidebarItems} centerlogohide={true}>
       <CustomModal isOpen={modalIsOpen} onRequestClose={closeModal} initialValues={initialValuesModal} validationSchema={validationSchemaModal} handleSubmit={handleSubmitModal} />
@@ -387,9 +398,9 @@ function VMSDuplicatePass() {
                     handlePageChange={handlePageChange}
                     currentPage={currentPage}
                     pageSize={pageSize}
-                  // handlePrint={}
-                  // handleUser={}
-                  // handleDelete={(item) => handleDelete(item.id)}
+                    // handlePrint={}
+                    // handleUser={}
+                    handleDelete={(item) => handleDelete(item.id)}
                   />
                 </div>
               </div>

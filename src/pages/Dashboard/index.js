@@ -33,7 +33,7 @@ function Dashboard() {
                         <Tiles title={"Notice Management System"} link={"/notice/question/new"} type={""} cardbg={"bluebg"} icon={faClipboardList} />
                     </div>
                     <div class="col-4">
-                        <Tiles title={"Motion Management System"} link={"/mms/dashboard"} type={""} cardbg={"bluebg"} icon={faClipboardList} />
+                        <Tiles title={"Motion Management System"} link={"/mms/motion/list"} type={""} cardbg={"bluebg"} icon={faClipboardList} />
                     </div>
                     <div class="col-4">
                         <Tiles title={"Question Management System"} link={"/qms/dashboard"} type={""} cardbg={"bluebg"} icon={faClipboardList} />

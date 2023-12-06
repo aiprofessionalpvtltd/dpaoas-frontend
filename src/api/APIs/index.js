@@ -10,7 +10,7 @@ export const axiosClientVMS = axios.create({
   baseURL: "http://172.16.170.8:5152/api",
 });
 
-export const axiosClientRes = axios.create({
+export const axiosClientMMS = axios.create({
   baseURL: "http://172.16.170.8:5252/api",
 });
 
@@ -172,9 +172,10 @@ export const getPasses = async (currentPage, pageSize) => {
 };
 
 export const getPassPdfBYPassID = async (id) => {
+  console.log("idddddd", id);
   try {
     const token = getAuthToken();
-    const response = await axiosClientVMS.get(`/api/pass/pdfData/${id}`)
+    const response = await axiosClientVMS.get(`/pass/pdfData/${id}`)
     //  {
     //   headers: {
     //     Authorization: `Bearer ${token}`,
@@ -214,14 +215,32 @@ export const UpdatePasses = async (data, id) => {
   }
 };
 
-export const DeletePasses = async (data) => {
+export const SearchPasses = async (search) => {
   try {
     const token = getAuthToken();
-    const response = await axiosClientVMS.put(`/pass/delete/${data.id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      }
-    });
+    const response = await axiosClientVMS.get(`/pass/searchQuery?search=${search}`,)
+    // {
+    //   headers: {
+    //     Authorization: `Bearer ${token}`,
+    //   }
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error('Error fetching API endpoint:', error);
+    throw error;
+  }
+};
+
+export const DeletePasses = async (id) => {
+  console.log("Delete Id", id);
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientVMS.delete(`/pass/delete/${id}`)
+    // {
+    //   headers: {
+    //     Authorization: `Bearer ${token}`,
+    //   }
+    // });
     return response?.data;
   } catch (error) {
     console.error('Error fetching API endpoint:', error);
@@ -276,10 +295,10 @@ export const UpdateVisitorsByVisitorId = async (id, data) => {
   }
 };
 
-export const DeleteVisitorsByVisitorId = async (data) => {
+export const DeleteVisitorsByVisitorId = async (id) => {
   try {
     const token = getAuthToken();
-    const response = await axiosClientVMS.put(`/visitor/delete/${data.visitorId}`, {
+    const response = await axiosClientVMS.delete(`/visitor/delete/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       }
@@ -427,7 +446,7 @@ export const getWhosOnLeave = async (startDate, endDate, dept) => {
 export const createResolution = async (data) => {
   try {
     const token = getAuthToken();
-    const response = await axiosClientRes.post(`/resolution/create`, data, {
+    const response = await axiosClientMMS.post(`/resolution/create`, data, {
       headers: {
         "accept": "application/json",
         "Content-Type": "multipart/form-data",
@@ -440,10 +459,11 @@ export const createResolution = async (data) => {
   }
 };
 
+
 export const getAllResolutions = async (page, pageSize) => {
   try {
     const token = getAuthToken();
-    const response = await axiosClientRes.get(`/resolution?currentPage=${page}&pageSize=${pageSize}`, {
+    const response = await axiosClientMMS.get(`/resolution?currentPage=${page}&pageSize=${pageSize}`, {
       // headers: {
       //   Authorization: `Bearer ${token}`,
       // }
@@ -464,7 +484,7 @@ export const searchResolution = async (searchParams) => {
       Object.entries(searchParams).filter(([_, value]) => value !== "")
     );
 
-    const response = await axiosClientRes.get(`/resolution/searchQuery`, {
+    const response = await axiosClientMMS.get(`/resolution/searchQuery`, {
       params: filteredSearchParams,
       // headers: {
       //   Authorization: `Bearer ${token}`,
@@ -482,7 +502,7 @@ export const searchResolution = async (searchParams) => {
 export const createQuestion = async (data) => {
   try {
     const token = getAuthToken();
-    const response = await axiosClientRes.post(`/questions/create`, data, {
+    const response = await axiosClientMMS.post(`/questions/create`, data, {
       headers: {
         "accept": "application/json",
         "Content-Type": "multipart/form-data",
@@ -498,7 +518,7 @@ export const createQuestion = async (data) => {
 export const getAllQuestion = async (page, pageSize) => {
   try {
     const token = getAuthToken();
-    const response = await axiosClientRes.get(`/questions/all?currentPage=${page}&pageSize=${pageSize}`, {
+    const response = await axiosClientMMS.get(`/questions/all?currentPage=${page}&pageSize=${pageSize}`, {
       // headers: {
       //   Authorization: `Bearer ${token}`,
       // }
@@ -510,6 +530,7 @@ export const getAllQuestion = async (page, pageSize) => {
   }
 };
 
+
 export const searchQuestion = async (searchParams) => {
   try {
     // const token = getAuthToken();
@@ -519,7 +540,7 @@ export const searchQuestion = async (searchParams) => {
       Object.entries(searchParams).filter(([_, value]) => value !== "")
     );
 
-    const response = await axiosClientRes.get(`/questions/searchQuestion`, {
+    const response = await axiosClientMMS.get(`/questions/searchQuestion`, {
       params: filteredSearchParams,
       // headers: {
       //   Authorization: `Bearer ${token}`,
@@ -538,11 +559,98 @@ export const searchQuestion = async (searchParams) => {
 export const getAllSessions = async () => {
   try {
     const token = getAuthToken();
-    const response = await axiosClientRes.get(`/sessions`, {
+    const response = await axiosClientMMS.get(`/sessions`, {
       // headers: {
       //   Authorization: `Bearer ${token}`,
       // }
     });
+    return response?.data;
+  } catch (error) {
+    console.error('Error fetching API endpoint:', error);
+    throw error;
+  }
+};
+
+
+
+//Motion Management System
+export const createNewMotion = async (data) => {
+  console.log("Motion Daataa", data);
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientMMS.post(`/motion/create`, data, {
+      headers: {
+        "accept": "application/json",
+        "Content-Type": "multipart/form-data",
+      }
+    });
+    return response?.data;
+  } catch (error) {
+    console.error('Error fetching API endpoint:', error);
+    throw error;
+  }
+};
+
+export const getAllMinistry = async () => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientMMS.get(`/motion/ministries`,)
+    // {
+    //   headers: {
+    //     Authorization: `Bearer ${token}`,
+    //   }
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error('Error fetching API endpoint:', error);
+    throw error;
+  }
+};
+
+export const getAllMotion = async (currentPage, pageSize) => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientMMS.get(`/motion/all?page=${currentPage}&pageSize=${pageSize}`,)
+    // {
+    //   headers: {
+    //     Authorization: `Bearer ${token}`,
+    //   }
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error('Error fetching API endpoint:', error);
+    throw error;
+  }
+};
+
+export const updateNewMotion = async (id, data) => {
+  console.log("Motion Daataa", id);
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientMMS.put(`/motion/${id}`, data, {
+      headers: {
+        "accept": "application/json",
+        "Content-Type": "multipart/form-data",
+      }
+    });
+
+    return response?.data;
+  } catch (error) {
+    console.error('Error fetching API endpoint:', error);
+    throw error;
+  }
+};
+
+//SearchMotion
+export const searchMotion = async (data) => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientMMS.get(`/motion/all?page=${0}&pageSize=${1000}&fileNumber=${data?.fileNumber}&fkSessionId=${data?.fkSessionId}&noticeOfficeDiaryNo=${data?.noticeOfficeDiaryNo}&fkMemberId=${data?.fkMemberId}&fkMinistryId=${data?.fkMinistryId}&motionId=${data?.motionId}&sessionStartRange=${data?.sessionStartRange}&sessionEndRange=${data?.sessionEndRange}&noticeStartRange=${data?.noticeStartRange}&noticeEndRange=${data?.noticeEndRange}&motionWeek=${data.motionWeek}&motionType=${data?.motionType}`,)
+    // {
+    //   headers: {
+    //     Authorization: `Bearer ${token}`,
+    //   }
+    // });
     return response?.data;
   } catch (error) {
     console.error('Error fetching API endpoint:', error);

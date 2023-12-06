@@ -233,6 +233,11 @@ export const MMSSideBarItems = [
         icon: faClipboardList,
         subItems: [
             {
+                itemName: "Motion List",
+                link: "/mms/motion/list",
+                icon: faClipboardList
+            },
+            {
                 itemName: "New Motion",
                 link: "/mms/motion/new",
                 icon: faClipboardList
@@ -247,25 +252,21 @@ export const MMSSideBarItems = [
                 link: "/mms/motion/detail",
                 icon: faClipboardList
             },
-            {
-                itemName: "Motion List",
-                link: "/mms/motion/list",
-                icon: faClipboardList
-            }
+
         ],
     },
     {
         itemName: "Search Question",
         link: "/mms/question/search",
         icon: faClipboardList,
-       
+
     },
     {
         itemName: "Search Resolution",
         link: "/mms/resolution/search",
         icon: faClipboardList,
     },
-   
+
     {
         itemName: "Reports",
         link: "/mms/reports",
@@ -286,13 +287,13 @@ export const QMSSideBarItems = [
         itemName: "Search Question",
         link: "/qms/question/search",
         icon: faClipboardList,
-        
+
     },
     {
         itemName: "Search Resolution",
         link: "/qms/resolution/search",
         icon: faClipboardList,
-       
+
     },
     {
         itemName: "Question",
@@ -324,7 +325,7 @@ export const QMSSideBarItems = [
                 link: "/qms/question/defer",
                 icon: faClipboardList
             }
-            
+
         ],
     },
     {
@@ -373,7 +374,7 @@ export const QMSSideBarItems = [
 
         ],
     },
-   
+
     {
         itemName: "Reports",
         link: "/qms/reports",

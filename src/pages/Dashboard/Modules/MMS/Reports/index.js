@@ -56,6 +56,54 @@ function MMSMotionSummery() {
                                     <button class="btn btn-primary" type="submit">View Summary</button>
                                 </div>
                             </div>
+                            <div class="dash-detail-container" style={{ marginTop: "20px" }}>
+                                <table class="table red-bg-head th">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-left" scope="col">Summary Detail</th>
+                                            <th class="text-left" scope="col">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="text-left" style={{ paddingLeft: "23px" }}>Total Motions</td>
+                                            <td class="text-left" style={{ paddingLeft: "23px" }}>39</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-left" style={{ paddingLeft: "23px" }}>Admissibility not Allowed by the House</td>
+                                            <td class="text-left" style={{ paddingLeft: "23px" }}>2</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-left" style={{ paddingLeft: "23px" }}>Admitted but Lapsed</td>
+                                            <td class="text-left" style={{ paddingLeft: "23px" }}>76</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-left" style={{ paddingLeft: "23px" }}>Approved</td>
+                                            <td class="text-left" style={{ paddingLeft: "23px" }}>19</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-left" style={{ paddingLeft: "23px" }}>Disallowed</td>
+                                            <td class="text-left" style={{ paddingLeft: "23px" }}>49</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-left" style={{ paddingLeft: "23px" }}>Held out of Order</td>
+                                            <td class="text-left" style={{ paddingLeft: "23px" }}>127</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-left" style={{ paddingLeft: "23px" }}>Lapsed</td>
+                                            <td class="text-left" style={{ paddingLeft: "23px" }}>11</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-left" style={{ paddingLeft: "23px" }}>Referred to Standing Committee</td>
+                                            <td class="text-left" style={{ paddingLeft: "23px" }}>37</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-left" style={{ paddingLeft: "23px" }}>Under Process</td>
+                                            <td class="text-left" style={{ paddingLeft: "23px" }}>5</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
