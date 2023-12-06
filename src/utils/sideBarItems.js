@@ -66,7 +66,7 @@ export const NoticeSidebarItems = [
                 icon: faClipboardList
             },
             {
-                itemName: "Search Question",
+                itemName: "Sent Question",
                 link: "/notice/question/sent",
                 icon: faClipboardList
             },

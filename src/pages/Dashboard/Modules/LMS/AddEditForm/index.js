@@ -87,6 +87,7 @@ function LMSAddEdit() {
         : null,
     leaveStation:
       leaveByIdData.length > 0 ? leaveByIdData[0]?.requestStationLeave : false,
+      attachment: null
   };
 
   const formik = useFormik({
@@ -95,6 +96,7 @@ function LMSAddEdit() {
     onSubmit: (values) => {
       // Handle form submission here
       handleShow();
+      console.log("Submit", values);
       setFormValues(values);
     },
     enableReinitialize: true,
@@ -147,23 +149,23 @@ function LMSAddEdit() {
     // Calculate the number of days
     const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
 
-    const data = {
-      fkRequestTypeId: values.leaveType,
-      fkUserId: 1,
-      requestStatus: values.status,
-      requestStartDate: values.startDate,
-      requestEndDate: values.endDate,
-      requestLeaveSubType: values.leaveSubtype,
-      requestLeaveReason: values.reason,
-      requestNumberOfDays: String(daysDiff),
-      requestLeaveSubmittedTo: values.submittedTo,
-      requestLeaveApplyOnBehalf: isChecked,
-      requestLeaveForwarder: values.leaveForwarder,
-      requestStationLeave: values.leaveStation,
-    };
+    const formData = new FormData();
+  formData.append('fkRequestTypeId', values.leaveType);
+  formData.append('fkUserId', 1);
+  formData.append('requestStatus', values.status);
+  formData.append('requestStartDate', values.startDate);
+  formData.append('requestEndDate', values.endDate);
+  formData.append('requestLeaveSubType', values.leaveSubtype);
+  formData.append('requestLeaveReason', values.reason);
+  formData.append('requestNumberOfDays', String(daysDiff));
+  formData.append('requestLeaveSubmittedTo', values.submittedTo);
+  formData.append('requestLeaveApplyOnBehalf', isChecked);
+  formData.append('requestLeaveForwarder', values.leaveForwarder);
+  formData.append('requestStationLeave', values.leaveStation);
+  formData.append('file', values.attachment);
 
     try {
-      const response = await createLeave(data);
+      const response = await createLeave(formData);
       if (response?.success) {
         showSuccessMessage(response?.message);
       }
@@ -471,14 +473,22 @@ function LMSAddEdit() {
               </div>
 
               <div class="row">
-                <div class="col-6">
-                  <div class="mb-3">
-                    <label for="formFile" class="form-label">
-                      Attachment{" "}
-                    </label>
-                    <input class="form-control" type="file" id="formFile" />
-                  </div>
+              <div className="col-6">
+                <div className="mb-3">
+                  <label htmlFor="formFile" className="form-label">
+                    Attachment
+                  </label>
+                  <input
+                    className="form-control"
+                    type="file"
+                    id="formFile"
+                    name="attachment"
+                    onChange={(event) => {
+                      formik.setFieldValue('attachment', event.currentTarget.files[0]);
+                    }}
+                  />
                 </div>
+              </div>
 
                 <div class="col-6">
                   <div class="mb-3">

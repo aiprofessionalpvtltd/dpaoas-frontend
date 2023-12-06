@@ -10,6 +10,10 @@ export const axiosClientVMS = axios.create({
   baseURL: "http://172.16.170.8:5152/api",
 });
 
+export const axiosClientRes = axios.create({
+  baseURL: "http://172.16.170.8:5252/api",
+});
+
 export const loginUser = async (data) => {
   try {
     const response = await axiosClient.post(`/users/login`, data, {
@@ -374,7 +378,8 @@ export const createLeave = async (data) => {
     const token = getAuthToken();
     const response = await axiosClient.post(`/leave/create`, data, {
       headers: {
-        'Content-Type': 'application/json',
+        "accept": "application/json",
+        "Content-Type": "multipart/form-data",
       }
     });
     return response?.data;
@@ -403,6 +408,137 @@ export const getWhosOnLeave = async (startDate, endDate, dept) => {
   try {
     const token = getAuthToken();
     const response = await axiosClient.get(`/leave/search?startDate=${startDate}&endDate=${endDate}&departmentName=${dept}`, {
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // }
+    });
+    return response?.data;
+  } catch (error) {
+    console.error('Error fetching API endpoint:', error);
+    throw error;
+  }
+};
+
+
+/* Notice Management System (APIs) */
+
+// Resolution Module
+
+export const createResolution = async (data) => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientRes.post(`/resolution/create`, data, {
+      headers: {
+        "accept": "application/json",
+        "Content-Type": "multipart/form-data",
+      }
+    });
+    return response?.data;
+  } catch (error) {
+    console.error('Error fetching API endpoint:', error);
+    throw error;
+  }
+};
+
+export const getAllResolutions = async (page, pageSize) => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientRes.get(`/resolution?currentPage=${page}&pageSize=${pageSize}`, {
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // }
+    });
+    return response?.data;
+  } catch (error) {
+    console.error('Error fetching API endpoint:', error);
+    throw error;
+  }
+};
+
+export const searchResolution = async (searchParams) => {
+  try {
+    // const token = getAuthToken();
+
+    // Filter out empty values
+    const filteredSearchParams = Object.fromEntries(
+      Object.entries(searchParams).filter(([_, value]) => value !== "")
+    );
+
+    const response = await axiosClientRes.get(`/resolution/searchQuery`, {
+      params: filteredSearchParams,
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // },
+    });
+    return response?.data;
+  } catch (error) {
+    console.error('Error fetching API endpoint:', error);
+    throw error;
+  }
+};
+
+
+// Question Module
+export const createQuestion = async (data) => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientRes.post(`/questions/create`, data, {
+      headers: {
+        "accept": "application/json",
+        "Content-Type": "multipart/form-data",
+      }
+    });
+    return response?.data;
+  } catch (error) {
+    console.error('Error fetching API endpoint:', error);
+    throw error;
+  }
+};
+
+export const getAllQuestion = async (page, pageSize) => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientRes.get(`/questions/all?currentPage=${page}&pageSize=${pageSize}`, {
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // }
+    });
+    return response?.data;
+  } catch (error) {
+    console.error('Error fetching API endpoint:', error);
+    throw error;
+  }
+};
+
+export const searchQuestion = async (searchParams) => {
+  try {
+    // const token = getAuthToken();
+
+    // Filter out empty values
+    const filteredSearchParams = Object.fromEntries(
+      Object.entries(searchParams).filter(([_, value]) => value !== "")
+    );
+
+    const response = await axiosClientRes.get(`/questions/searchQuestion`, {
+      params: filteredSearchParams,
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // },
+    });
+    return response?.data;
+  } catch (error) {
+    console.error('Error fetching API endpoint:', error);
+    throw error;
+  }
+};
+
+
+// Sessions
+
+export const getAllSessions = async () => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientRes.get(`/sessions`, {
       // headers: {
       //   Authorization: `Bearer ${token}`,
       // }
