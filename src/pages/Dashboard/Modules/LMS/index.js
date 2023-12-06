@@ -126,7 +126,6 @@ function LMSDashboard() {
             if(response?.success) {
                 showSuccessMessage(response?.message)
                 const transformedData = transformLeavesData(response.data);
-                console.log("ALll Datatat, ", transformedData);
                 setLeaveData(transformedData);
             }
         } catch (error) {

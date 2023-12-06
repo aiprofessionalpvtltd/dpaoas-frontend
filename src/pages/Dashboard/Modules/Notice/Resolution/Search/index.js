@@ -1,16 +1,96 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { NoticeSidebarItems } from '../../../../../../utils/sideBarItems'
 import { Layout } from '../../../../../../components/Layout';
 import Header from '../../../../../../components/Header';
 import { useNavigate } from 'react-router';
+import { showErrorMessage, showSuccessMessage } from '../../../../../../utils/ToastAlert';
+import { searchResolution } from '../../../../../../api/APIs';
+import { Field, Form, Formik } from 'formik';
+import CustomTable from '../../../../../../components/CustomComponents/CustomTable';
+import { ToastContainer } from 'react-toastify';
 
 
 function SearchResolution() {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const [searchedData, setSearchedData] = useState([]);
+    const [currentPage, setCurrentPage] = useState(0);
+    const pageSize = 10; // Set your desired page size
+    
+    const handlePageChange = (page) => {
+        // Update currentPage when a page link is clicked
+        setCurrentPage(page);
+    };
+
+    const initialValues = {
+        resolutionDiaryNo: "",
+        resolutionID: "",
+        keyword: "",
+        memberName: "",
+        fromSession: "",
+        toSession: "",
+        resolutionType: "",
+        resolutionStatus: "",
+        fromNoticeDate: "",
+        toNoticeDate: "",
+      };
+
+      const transformLeavesData = (apiData) => {
+        return apiData.map((res) => {
+          const movers = res?.resolutionMoversAssociation.map((item) => (
+            item?.memberAssociation?.memberName
+          )) || [];
+      
+          return {
+            RID: res.id,
+            ResDN: res.resolutionDiaries,
+            SessionNumber: res.session?.sessionName,
+            ResolutionType: res.resolutionType,
+            SubjectMatter: "",
+            NoticeNo: res.noticeDiary?.noticeOfficeDiaryNo,
+            ResolutionStatus: res.resolutionStatus?.resolutionStatus,
+            Movers: movers,
+          };
+        });
+      };      
+
+      const handleSubmit = (values) => {
+        // Handle form submission
+        SearchResolutionApi(values);
+      };
+
+    const SearchResolutionApi = async (values) => {
+        const searchParams = {
+                fkSessionNoFrom: values.fromSession,
+                fkSessionNoTo: values.toSession,
+                resolutionType: values.resolutionType,
+                colourResNo: "",
+                keyword: values.keyword,
+                resolutionId: values.resolutionID,
+                resolutionDiaryNo: values.resolutionDiaryNo,
+                fkResolutionStatus: values.resolutionStatus,
+                noticeOfficeDiaryNo: "",
+                noticeOfficeDiaryDateFrom: values.fromNoticeDate,
+                noticeOfficeDiaryDateTo: values.toNoticeDate,
+                resolutionMovers: "",
+          };
+
+        try {
+          const response = await searchResolution(searchParams);
+          if (response?.success) {
+            const transformedData = transformLeavesData(response.data);
+                setSearchedData(transformedData);
+            showSuccessMessage(response?.message);
+          }
+        } catch (error) {
+          showErrorMessage(error?.response?.data?.message);
+        }
+      };
     
 
     return (
         <Layout module={true} sidebarItems={NoticeSidebarItems} centerlogohide={true}>
+        <ToastContainer />
+
             <Header dashboardLink={"/"} addLink1={"/notice/dashboard"} addLink2={"/notice/resolution/search"} title1={"Notice"} title2={"Search Resolution"} />
             <div class='dashboard-content'>
             <div class='container-fluid'>
@@ -20,201 +100,166 @@ function SearchResolution() {
                         </div>
                         <div class='card-body'>
                             <div class="container-fluid">
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="mb-3">
-                                            <label class="form-label">Resolution Diary No</label>
-                                            <input class="form-control" type="text"/>
+                            <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+                                <Form>
+                                <div className="container-fluid">
+                                    <div className="row">
+                                    <div className="col">
+                                        <div className="mb-3">
+                                        <label className="form-label">Resolution Diary No</label>
+                                        <Field
+                                            className="form-control"
+                                            type="text"
+                                            name="resolutionDiaryNo"
+                                        />
                                         </div>
                                     </div>
-                                    <div class="col">
-                                        <div class="mb-3">
-                                            <label class="form-label">Resolution ID</label>
-                                            <input class="form-control" type="text"/>
+                                    <div className="col">
+                                        <div className="mb-3">
+                                        <label className="form-label">Resolution ID</label>
+                                        <Field
+                                            className="form-control"
+                                            type="text"
+                                            name="resolutionID"
+                                        />
                                         </div>
+                                    </div>
+                                    </div>
+                                    <div className="row">
+                                    <div className="col">
+                                        <div className="mb-3">
+                                        <label className="form-label">Keyword</label>
+                                        <Field
+                                            className="form-control"
+                                            type="text"
+                                            name="keyword"
+                                        />
+                                        </div>
+                                    </div>
+                                    <div className="col">
+                                        <div className="mb-3">
+                                        <label className="form-label">Member Name</label>
+                                        <Field
+                                            className="form-control"
+                                            type="text"
+                                            name="memberName"
+                                        />
+                                        </div>
+                                    </div>
+                                    </div>
+                                    <div className="row">
+                                    <div className="col">
+                                        <div className="mb-3">
+                                        <label className="form-label">From Session</label>
+                                        <Field
+                                            as="select"
+                                            className="form-select"
+                                            name="fromSession"
+                                        >
+                                            <option>Select</option>
+                                            <option>121</option>
+                                            <option>122</option>
+                                            <option>123</option>
+                                        </Field>
+                                        </div>
+                                    </div>
+                                    <div className="col">
+                                        <div className="mb-3">
+                                        <label className="form-label">To Session</label>
+                                        <Field
+                                            as="select"
+                                            className="form-select"
+                                            name="toSession"
+                                        >
+                                            <option>Select</option>
+                                            <option>121</option>
+                                            <option>122</option>
+                                            <option>123</option>
+                                        </Field>
+                                        </div>
+                                    </div>
+                                    </div>
+                                    <div className="row">
+                                    <div className="col">
+                                        <div className="mb-3">
+                                        <label className="form-label">Resolution Type</label>
+                                        <Field
+                                            as="select"
+                                            className="form-select"
+                                            name="resolutionType"
+                                        >
+                                            <option>Resolution Type</option>
+                                            <option>Government Resolution</option>
+                                            <option>Private Member Resolution</option>
+                                            <option>Govt. Resolution Supported by others</option>
+                                        </Field>
+                                        </div>
+                                    </div>
+                                    <div className="col">
+                                        <div className="mb-3">
+                                        <label className="form-label">Resolution Status</label>
+                                        <Field
+                                            as="select"
+                                            className="form-select"
+                                            name="resolutionStatus"
+                                        >
+                                            <option selected="selected" value="0">
+                                            Resolution Status
+                                            </option>
+                                            {/* Add other options as needed */}
+                                        </Field>
+                                        </div>
+                                    </div>
+                                    </div>
+                                    <div className="row">
+                                    <div className="col">
+                                        <div className="mb-3">
+                                        <label className="form-label">From Notice Date</label>
+                                        <Field
+                                            className="form-control"
+                                            type="text"
+                                            name="fromNoticeDate"
+                                        />
+                                        </div>
+                                    </div>
+                                    <div className="col">
+                                        <div className="mb-3">
+                                        <label className="form-label">To Notice Date</label>
+                                        <Field
+                                            className="form-control"
+                                            type="text"
+                                            name="toNoticeDate"
+                                        />
+                                        </div>
+                                    </div>
+                                    </div>
+                                    <div className="row">
+                                    <div className="d-grid gap-2 d-md-flex justify-content-md-end">
+                                        <button className="btn btn-primary" type="submit">
+                                        Search
+                                        </button>
+                                        <button className="btn btn-primary" type="reset">
+                                        Reset
+                                        </button>
+                                    </div>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="mb-3">
-                                            <label class="form-label">Keyword</label>
-                                            <input class="form-control" type="text"/>
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="mb-3">
-                                            <label class="form-label">Member Name</label>
-                                            <input class="form-control" type="text"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="mb-3">
-                                            <label class="form-label">From Session</label>
-                                            <select class="form-select">
-                                                <option>Select</option>
-                                                <option>121</option>
-                                                <option>122</option>
-                                                <option>123</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="mb-3">
-                                            <label class="form-label">To Session</label>
-                                            <select class="form-select">
-                                                <option>Select</option>
-                                                <option>121</option>
-                                                <option>122</option>
-                                                <option>123</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="mb-3">
-                                            <label class="form-label">Resolution Type</label>
-                                            <select class="form-select">
-                                                <option>Resolution Type</option>
-                                                <option>Government Resolution</option>
-                                                <option>Private Member Resolution</option>
-                                                <option>Govt. Resolution Supported by others</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="mb-3">
-                                            <label class="form-label">Resolution Status</label>
-                                            <select class="form-select">
-                                                <option selected="selected" value="0">Resolution Status</option>
-                                                <option>Allowed</option>
-                                                <option>Disallowed</option>
-                                                <option>Withdraw</option>
-                                                <option>Admitted</option>
-                                                <option>Under Process</option>
-                                                <option>Admitted and Selected in Balloting</option>
-                                                <option>Dropped by the House</option>
-                                                <option>Admitted but Lapsed</option>
-                                                <option>Included in the order of day</option>
-                                                <option>Passed by the House</option>
-                                                <option>Passed As Amended</option>
-                                                <option>Withdrawn by the Member</option>
-                                                <option>Rejected by the House</option>
-                                                <option>Passed Unanimously</option>
-                                                <option>Under Correspondence</option>
-                                                <option>Moved and Pending for Discussion</option>
-                                                <option>Lapsed</option>
-                                                <option>Deferred</option>
-                                                <option>Refered to Standing Committee</option>
-                                                <option>Move To Session</option>
-                                                <option>Move in the House</option>
-                                                <option>Pending for further discussion</option>
-                                                <option>NFA</option>
-                                                <option>Admitted as Call Attention Notice</option>
-
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="mb-3">
-                                            <label class="form-label">From Notice Date</label>
-                                            <input class="form-control" type="text"/>
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="mb-3">
-                                            <label class="form-label">To Notice Date</label>
-                                            <input class="form-control" type="text"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                        <button class="btn btn-primary" type="submit">Search</button>
-                                        <button class="btn btn-primary" type="submit">Reset</button>
-                                    </div>
-                                </div>
+                                </Form>
+                            </Formik>
 
                                 <div class="dash-detail-container" style={{marginTop: "20px"}}>
-                                    <table class="table red-bg-head th">
-                                        <thead>
-                                      <tr>
-                                        <th class="text-center" scope="col">Sr#</th>
-                                        <th class="text-center" scope="col">RID</th>
-                                        <th class="text-center" scope="col">Res-DN</th>
-                                        <th class="text-center" scope="col">Session Number</th>
-                                        <th class="text-center" scope="col">Resolution Type</th>
-                                        <th class="text-left" style={{paddingLeft: "6px"}} scope="col">Subject Matter</th>
-                                        <th class="text-center" scope="col">Notice No./Date</th>
-                                        <th class="text-center" scope="col">Resolution Status</th>
-                                        <th class="text-center" scope="col">Movers</th>
-                                        <th class="text-center" scope="col">Action</th>
-                                      </tr>
-                                    </thead>
-                                    <tbody>
-                                      <tr>
-                                        <td class="text-center"></td>
-                                        <td class="text-center"></td>
-                                        <td class="text-center"></td>
-                                        <td class="text-center"></td>
-                                        <td class="text-center"></td>
-                                        <td class="text-left"></td>
-                                        <td class="text-center"></td>
-                                        <td class="text-center"></td>
-                                        <td></td>
-                                        <td class="text-center">
-                                          <a href="#"><i class="fas fa-print"></i></a>
-                                        </td>
-                                      </tr>
-                                      <tr>
-                                        <td class="text-center"></td>
-                                        <td class="text-center"></td>
-                                        <td class="text-center"></td>
-                                        <td class="text-center"></td>
-                                        <td class="text-center"></td>
-                                        <td class="text-left"></td>
-                                        <td class="text-center"></td>
-                                        <td class="text-center"></td>
-                                        <td></td>
-                                        <td class="text-center">
-                                          <a href="#"><i class="fas fa-print"></i></a>
-                                        </td>
-                                      </tr>
-                                      <tr>
-                                        <td class="text-center"></td>
-                                        <td class="text-center"></td>
-                                        <td class="text-center"></td>
-                                        <td class="text-center"></td>
-                                        <td class="text-center"></td>
-                                        <td class="text-left"></td>
-                                        <td class="text-center"></td>
-                                        <td class="text-center"></td>
-                                        <td></td>
-                                        <td class="text-center">
-                                          <a href="#"><i class="fas fa-print"></i></a>
-                                        </td>
-                                      </tr>
-                                      <tr>
-                                        <td class="text-center"></td>
-                                        <td class="text-center"></td>
-                                        <td class="text-center"></td>
-                                        <td class="text-center"></td>
-                                        <td class="text-center"></td>
-                                        <td class="text-left"></td>
-                                        <td class="text-center"></td>
-                                        <td class="text-center"></td>
-                                        <td></td>
-                                        <td class="text-center">
-                                          <a href="#"><i class="fas fa-print"></i></a>
-                                        </td>
-                                      </tr>
-                                    </tbody>
-                                  
-                                    </table>
+
+                                <CustomTable
+                        block={true}
+                        hideBtn={true}
+                        data={searchedData}
+                        tableTitle="Resolutions"
+                        // handleEdit={(item) => navigate('/lms/addedit', { state: item })}
+                        handlePageChange={handlePageChange}
+                        currentPage={currentPage}
+                        pageSize={pageSize}
+                    // handleDelete={(item) => handleDelete(item.id)}
+                    />
                                 </div>
 
                             </div>

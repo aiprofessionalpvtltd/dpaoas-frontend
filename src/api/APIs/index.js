@@ -397,7 +397,8 @@ export const createLeave = async (data) => {
     const token = getAuthToken();
     const response = await axiosClient.post(`/leave/create`, data, {
       headers: {
-        'Content-Type': 'application/json',
+        "accept": "application/json",
+        "Content-Type": "multipart/form-data",
       }
     });
     return response?.data;
@@ -437,6 +438,141 @@ export const getWhosOnLeave = async (startDate, endDate, dept) => {
   }
 };
 
+
+/* Notice Management System (APIs) */
+
+// Resolution Module
+
+export const createResolution = async (data) => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientMMS.post(`/resolution/create`, data, {
+      headers: {
+        "accept": "application/json",
+        "Content-Type": "multipart/form-data",
+      }
+    });
+    return response?.data;
+  } catch (error) {
+    console.error('Error fetching API endpoint:', error);
+    throw error;
+  }
+};
+
+
+export const getAllResolutions = async (page, pageSize) => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientMMS.get(`/resolution?currentPage=${page}&pageSize=${pageSize}`, {
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // }
+    });
+    return response?.data;
+  } catch (error) {
+    console.error('Error fetching API endpoint:', error);
+    throw error;
+  }
+};
+
+export const searchResolution = async (searchParams) => {
+  try {
+    // const token = getAuthToken();
+
+    // Filter out empty values
+    const filteredSearchParams = Object.fromEntries(
+      Object.entries(searchParams).filter(([_, value]) => value !== "")
+    );
+
+    const response = await axiosClientMMS.get(`/resolution/searchQuery`, {
+      params: filteredSearchParams,
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // },
+    });
+    return response?.data;
+  } catch (error) {
+    console.error('Error fetching API endpoint:', error);
+    throw error;
+  }
+};
+
+
+// Question Module
+export const createQuestion = async (data) => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientMMS.post(`/questions/create`, data, {
+      headers: {
+        "accept": "application/json",
+        "Content-Type": "multipart/form-data",
+      }
+    });
+    return response?.data;
+  } catch (error) {
+    console.error('Error fetching API endpoint:', error);
+    throw error;
+  }
+};
+
+export const getAllQuestion = async (page, pageSize) => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientMMS.get(`/questions/all?currentPage=${page}&pageSize=${pageSize}`, {
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // }
+    });
+    return response?.data;
+  } catch (error) {
+    console.error('Error fetching API endpoint:', error);
+    throw error;
+  }
+};
+
+
+export const searchQuestion = async (searchParams) => {
+  try {
+    // const token = getAuthToken();
+
+    // Filter out empty values
+    const filteredSearchParams = Object.fromEntries(
+      Object.entries(searchParams).filter(([_, value]) => value !== "")
+    );
+
+    const response = await axiosClientMMS.get(`/questions/searchQuestion`, {
+      params: filteredSearchParams,
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // },
+    });
+    return response?.data;
+  } catch (error) {
+    console.error('Error fetching API endpoint:', error);
+    throw error;
+  }
+};
+
+
+// Sessions
+
+export const getAllSessions = async () => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientMMS.get(`/sessions`, {
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // }
+    });
+    return response?.data;
+  } catch (error) {
+    console.error('Error fetching API endpoint:', error);
+    throw error;
+  }
+};
+
+
+
 //Motion Management System
 export const createNewMotion = async (data) => {
   console.log("Motion Daataa", data);
@@ -448,6 +584,38 @@ export const createNewMotion = async (data) => {
         "Content-Type": "multipart/form-data",
       }
     });
+    return response?.data;
+  } catch (error) {
+    console.error('Error fetching API endpoint:', error);
+    throw error;
+  }
+};
+
+export const getAllMinistry = async () => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientMMS.get(`/motion/ministries`,)
+    // {
+    //   headers: {
+    //     Authorization: `Bearer ${token}`,
+    //   }
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error('Error fetching API endpoint:', error);
+    throw error;
+  }
+};
+
+export const getAllMotion = async (currentPage, pageSize) => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientMMS.get(`/motion/all?page=${currentPage}&pageSize=${pageSize}`,)
+    // {
+    //   headers: {
+    //     Authorization: `Bearer ${token}`,
+    //   }
+    // });
     return response?.data;
   } catch (error) {
     console.error('Error fetching API endpoint:', error);
@@ -472,39 +640,6 @@ export const updateNewMotion = async (id, data) => {
     throw error;
   }
 };
-
-export const getAllMotion = async (currentPage, pageSize) => {
-  try {
-    const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/motion/all?page=${currentPage}&pageSize=${pageSize}`,)
-    // {
-    //   headers: {
-    //     Authorization: `Bearer ${token}`,
-    //   }
-    // });
-    return response?.data;
-  } catch (error) {
-    console.error('Error fetching API endpoint:', error);
-    throw error;
-  }
-};
-
-export const getAllMinistry = async () => {
-  try {
-    const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/motion/ministries`,)
-    // {
-    //   headers: {
-    //     Authorization: `Bearer ${token}`,
-    //   }
-    // });
-    return response?.data;
-  } catch (error) {
-    console.error('Error fetching API endpoint:', error);
-    throw error;
-  }
-};
-
 
 //SearchMotion
 export const searchMotion = async (data) => {

@@ -18,6 +18,7 @@ function CustomTable({
   headerBgColor,
   hideBtn,
   addBtnText,
+  showPrint,
   handleAdd,
   handlePrint,
   handleUser,
@@ -180,6 +181,7 @@ function CustomTable({
                 ))}
                 <td className="text-center">
                   {!hideEditIcon && !hideEditIcon && (
+                    <>
                     <OverlayTrigger placement="top" overlay={editTooltip}>
                       <button
                         onClick={() => handleEdit(item)}
@@ -189,7 +191,6 @@ function CustomTable({
                         <FontAwesomeIcon icon={faEdit} />
                       </button>
                     </OverlayTrigger>
-                  )}
                   <OverlayTrigger placement="top" overlay={deleteTooltip}>
                     <button
                       onClick={() => handleDelete(item)}
@@ -199,6 +200,8 @@ function CustomTable({
                       <FontAwesomeIcon icon={faTrash} />
                     </button>
                   </OverlayTrigger>
+                  </>
+                  )}
                   {hideUserIcon && hideUserIcon && (
                     <>
                       <OverlayTrigger placement="top" overlay={vistorTooltip}>
@@ -232,6 +235,17 @@ function CustomTable({
                         </button>
                       </OverlayTrigger>
                     </>
+                  )}
+                  {showPrint && (
+                    <OverlayTrigger placement="top" overlay={printTooltip}>
+                        <button
+                          onClick={() => handlePrint(item)}
+                          className="btn default btn-xs black"
+                          data-id={item.id}
+                        >
+                          <FontAwesomeIcon icon={faPrint} />
+                        </button>
+                      </OverlayTrigger>
                   )}
                 </td>
               </tr>
