@@ -575,7 +575,6 @@ export const getAllSessions = async () => {
 
 //Motion Management System
 export const createNewMotion = async (data) => {
-  console.log("Motion Daataa", data);
   try {
     const token = getAuthToken();
     const response = await axiosClientMMS.post(`/motion/create`, data, {
@@ -640,7 +639,6 @@ export const getAllMotion = async (currentPage, pageSize) => {
 };
 
 export const updateNewMotion = async (id, data) => {
-  console.log("Motion Daataa", id);
   try {
     const token = getAuthToken();
     const response = await axiosClientMMS.put(`/motion/${id}`, data, {

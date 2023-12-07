@@ -254,11 +254,12 @@ function SearchResolution() {
                         hideBtn={true}
                         data={searchedData}
                         tableTitle="Resolutions"
-                        // handleEdit={(item) => navigate('/lms/addedit', { state: item })}
                         handlePageChange={handlePageChange}
                         currentPage={currentPage}
+                        showPrint={true}
                         pageSize={pageSize}
-                    // handleDelete={(item) => handleDelete(item.id)}
+                        handleAdd={(item) => navigate('/')}
+                        handleEdit={(item) => navigate('/')}
                     />
                                 </div>
 
@@ -266,9 +267,6 @@ function SearchResolution() {
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="footer">
-                © Copyright AI Professionals
             </div>
         </Layout>
     )

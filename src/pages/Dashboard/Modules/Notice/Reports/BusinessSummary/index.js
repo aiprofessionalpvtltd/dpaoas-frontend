@@ -156,9 +156,7 @@ function BusinessSummary() {
                     </div>
                 </div>
             </div>
-            <div class="footer">
-                © Copyright AI Professionals
-            </div>
+ 
         </Layout>
     )
 }

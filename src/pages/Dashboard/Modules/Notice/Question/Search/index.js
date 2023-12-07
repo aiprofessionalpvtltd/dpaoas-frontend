@@ -98,9 +98,9 @@ function SearchQuestion() {
         title1={"Notice"}
         title2={"Search Question"}
       />
-      <div class="dashboard-content">
+      <div  >
         <div class="container-fluid">
-          <div class="card mt-5">
+          <div class="card mt-1">
             <div
               class="card-header red-bg"
               style={{ background: "#14ae5c !important" }}
@@ -293,8 +293,9 @@ function SearchQuestion() {
                     handlePageChange={handlePageChange}
                     currentPage={currentPage}
                     showPrint={true}
-                    hideEditIcon={true}
-                    pageSize={pageSize}
+                        pageSize={pageSize}
+                        handleAdd={(item) => navigate('/')}
+                        handleEdit={(item) => navigate('/')}
                     // handleDelete={(item) => handleDelete(item.id)}
                   />
                 </div>
@@ -303,7 +304,7 @@ function SearchQuestion() {
           </div>
         </div>
       </div>
-      <div class="footer">© Copyright AI Professionals</div>
+       
     </Layout>
   );
 }
