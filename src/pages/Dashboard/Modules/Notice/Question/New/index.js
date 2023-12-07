@@ -126,9 +126,9 @@ function NewQuestion() {
         handleOkClick={handleOkClick}
       />
 
-      <div class="dashboard-content">
+      <div  >
         <div class="container-fluid">
-          <div class="card mt-5">
+          <div class="card mt-1">
             <div
               class="card-header red-bg"
               style={{ background: "#14ae5c !important" }}
@@ -363,7 +363,7 @@ function NewQuestion() {
           </div>
         </div>
       </div>
-      <div class="footer">© Copyright AI Professionals</div>
+       
     </Layout>
   );
 }

@@ -3,7 +3,7 @@ import { NoticeSidebarItems } from "../../../../../../utils/sideBarItems";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
 import { useNavigate } from "react-router";
-import { getAllQuestion, searchQuestion } from "../../../../../../api/APIs";
+import { getAllMotion, getAllQuestion, searchMotion, searchQuestion } from "../../../../../../api/APIs";
 import {
   showErrorMessage,
   showSuccessMessage,
@@ -41,17 +41,16 @@ function SentMotion() {
     return apiData.map((res, index) => {
       return {
         SrNo: index,
-        QID: res.id,
-        QDN: res.questionDiary,
-        NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate,
-        NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
-        SessionNumber: res?.session?.sessionName,
+        MID: res?.id,
+        NoticeNo: res?.noticeOfficeDairies?.noticeOfficeDiaryNo,
+        NoticeDate: res?.noticeOfficeDairies?.noticeOfficeDiaryDate,
+        MotionType: res?.motionType,
+        SessionNo: res?.session?.sessionName,
         SubjectMatter: [res?.englishText, res?.urduText]
           .filter(Boolean)
           .join(", "),
-        Category: res.questionCategory,
-        // SubmittedBy: res.category,
-        Status: res.questionStatus?.questionStatus,
+        Mover: res?.motionMovers?.map((item) => item?.members?.memberName),
+        MotionStatus: res?.motionStatuses?.statusName,
       };
     });
   };
@@ -63,23 +62,23 @@ function SentMotion() {
 
   const SearchQuestionApi = async (values) => {
     const searchParams = {
-      fromSessionNo: values.fromSession,
-      toSessionNo: values.toSession,
-      memberName: values.memberName,
-      questionCategory: values.category,
-      keyword: values.keyword,
-      questionID: values.questionID,
-      questionStatus: values.resolutionStatus,
-      questionDiaryNo: values.questionDiaryNo,
-      noticeOfficeDiaryDateFrom: values.fromNoticeDate,
-      noticeOfficeDiaryDateTo: values.toNoticeDate,
-    };
+        fromSessionNo: values.fromSession,
+        toSessionNo: values.toSession,
+        memberName: values.memberName,
+        englishText: values.keyword,
+        motionID: values.motionID,
+        motionType: values.motionType,
+        motionStatus: values.motionStatus,
+        noticeDiaryNo: values.noticeDiaryNo,
+        noticeOfficeDiaryDateFrom: values.fromNoticeDate,
+        noticeOfficeDiaryDateTo: values.toNoticeDate,
+      };
 
     try {
-      const response = await searchQuestion(searchParams);
+      const response = await searchMotion(searchParams);
       if (response?.success) {
         showSuccessMessage(response?.message);
-        const transformedData = transformLeavesData(response.data);
+        const transformedData = transformLeavesData(response.data?.rows);
         setSearchedData(transformedData);
       }
     } catch (error) {
@@ -89,10 +88,10 @@ function SentMotion() {
 
   const getAllQuestionsApi = async () => {
     try {
-      const response = await getAllQuestion(currentPage, pageSize);
+      const response = await getAllMotion(currentPage, pageSize);
       if (response?.success) {
         showSuccessMessage(response?.message);
-        const transformedData = transformLeavesData(response.data);
+        const transformedData = transformLeavesData(response.data?.rows);
         setResData(transformedData);
       }
     } catch (error) {
@@ -118,9 +117,9 @@ function SentMotion() {
         title1={"Notice"}
         title2={"Sent Motion"}
       />
-      <div class="dashboard-content">
+      <div  >
         <div class="container-fluid">
-          <div class="card mt-5">
+          <div class="card mt-1">
             <div
               class="card-header red-bg"
               style={{ background: "#14ae5c !important" }}
@@ -342,9 +341,9 @@ function SentMotion() {
                         handlePageChange={handlePageChange}
                         currentPage={currentPage}
                         showPrint={true}
-                        hideEditIcon={true}
                         pageSize={pageSize}
-                        // handleDelete={(item) => handleDelete(item.id)}
+                        handleAdd={(item) => navigate('/')}
+                        handleEdit={(item) => navigate('/')}
                       />
                     </div>
                   </div>
@@ -354,7 +353,7 @@ function SentMotion() {
           </div>
         </div>
       </div>
-      <div class="footer">© Copyright AI Professionals</div>
+       
     </Layout>
   );
 }
