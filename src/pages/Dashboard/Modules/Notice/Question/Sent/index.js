@@ -17,6 +17,7 @@ function SentQuestion() {
   const [searchedData, setSearchedData] = useState([]);
   const [resData, setResData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
+  const [count, setCount] = useState(null);
   const pageSize = 10; // Set your desired page size
 
   const handlePageChange = (page) => {
@@ -90,6 +91,7 @@ function SentQuestion() {
       const response = await getAllQuestion(currentPage, pageSize);
       if (response?.success) {
         showSuccessMessage(response?.message);
+        setCount(response?.count);
         const transformedData = transformLeavesData(response.data);
         setResData(transformedData);
       }
@@ -116,9 +118,9 @@ function SentQuestion() {
         title1={"Notice"}
         title2={"Sent Question"}
       />
-      <div class="dashboard-content">
+      <div  >
         <div class="container-fluid">
-          <div class="card mt-5">
+          <div class="card mt-1">
             <div
               class="card-header red-bg"
               style={{ background: "#14ae5c !important" }}
@@ -308,11 +310,13 @@ function SentQuestion() {
                     hideBtn={true}
                     data={searchedData.length > 0 ? searchedData : resData}
                     tableTitle="Questions"
-                    // handleEdit={(item) => navigate('/lms/addedit', { state: item })}
                     handlePageChange={handlePageChange}
                     currentPage={currentPage}
-                    pageSize={pageSize}
-                    // handleDelete={(item) => handleDelete(item.id)}
+                    showPrint={true}
+                        pageSize={pageSize}
+                        handleAdd={(item) => navigate('/')}
+                        handleEdit={(item) => navigate('/')}
+                        totalCount={count}
                   />
                 </div>
               </div>
@@ -320,7 +324,7 @@ function SentQuestion() {
           </div>
         </div>
       </div>
-      <div class="footer">© Copyright AI Professionals</div>
+       
     </Layout>
   );
 }

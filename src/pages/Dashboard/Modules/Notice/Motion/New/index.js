@@ -10,13 +10,13 @@ import DatePicker from "react-datepicker";
 import Select from "react-select";
 import { Editor } from "../../../../../../components/CustomComponents/Editor";
 import { ToastContainer } from "react-toastify";
-import { createQuestion, getAllSessions } from "../../../../../../api/APIs";
+import { createNewMotion, getAllSessions } from "../../../../../../api/APIs";
 import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
 
 const validationSchema = Yup.object({
-  sessionNumber: Yup.string().required("Session No is required"),
+  sessionNumber: Yup.number().required("Session No is required"),
   motionType: Yup.string().required("Motion Type is required"),
-  noticeOfficeDiaryNo: Yup.string().required(
+  noticeOfficeDiaryNo: Yup.number().required(
     "Notice Office Diary No is required"
   ),
   noticeOfficeDiaryDate: Yup.string().required(
@@ -26,8 +26,8 @@ const validationSchema = Yup.object({
     "Notice Office Diary Time is required"
   ),
   mover: Yup.string().required("Mover is required"),
-  englishText: Yup.string().required("English Text is required"),
-  urduText: Yup.string().required("Urdu Text is required"),
+//   englishText: Yup.string().required("English Text is required"),
+//   urduText: Yup.string().required("Urdu Text is required"),
 });
 
 function NewMotion() {
@@ -39,7 +39,7 @@ function NewMotion() {
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
   const handleOkClick = () => {
-    CreateQuestionApi(formValues);
+    CreateMotionApi(formValues);
     handleClose();
   };
 
@@ -63,22 +63,21 @@ function NewMotion() {
     enableReinitialize: true,
   });
 
-  const CreateQuestionApi = async (values) => {
+  const CreateMotionApi = async (values) => {
     const formData = new FormData();
-    formData.append("fkSessionId", 1);
-    formData.append("noticeOfficeDiaryNo", Number(values.noticeOfficeDiaryNo));
-    formData.append("noticeOfficeDiaryDate", values.noticeOfficeDiaryDate);
-    formData.append("noticeOfficeDiaryTime", "11:40am");
-    formData.append("questionCategory", values.questionCategory);
-    formData.append("fkQuestionStatus", 3);
-    formData.append("fkMemberId", values.fkMemberId);
-
-    formData.append("englishText", "English text");
-    formData.append("urduText", "Urdu text");
-    formData.append("questionImage", values.questionImage);
+        formData.append('fkSessionId', values?.sessionNumber);
+        formData.append('motionType', values?.motionType);
+        formData.append('noticeOfficeDiaryNo', values?.noticeOfficeDiaryNo);
+        formData.append('moverIds[]', values?.mover);
+        formData.append('noticeOfficeDiaryDate', values?.noticeOfficeDiaryDate);
+        formData.append('noticeOfficeDiaryTime', values?.noticeOfficeDiaryTime);
+        formData.append('businessType', "Motion");
+        formData.append('englishText', "English text");
+        formData.append('urduText', "Urdu text");
+        formData.append('file', values?.attachment);
 
     try {
-      const response = await createQuestion(formData);
+      const response = await createNewMotion(formData);
       if (response?.success) {
         showSuccessMessage(response?.message);
       }
@@ -127,9 +126,9 @@ function NewMotion() {
         handleOkClick={handleOkClick}
       />
 
-      <div class="dashboard-content">
+      <div  >
         <div class="container-fluid">
-          <div class="card mt-5">
+          <div class="card mt-1">
             <div
               class="card-header red-bg"
               style={{ background: "#14ae5c !important" }}
@@ -304,8 +303,8 @@ function NewMotion() {
                           <option value="" selected disabled hidden>
                             Select
                           </option>
-                          <option>Motion Type</option>
-                          <option>Adjournment Motion</option>
+                          <option value={"1"}>Motion Type</option>
+                          <option value={"2"}>Adjournment Motion</option>
                         </select>
                         {formik.touched.mover &&
                           formik.errors.mover && (
@@ -368,7 +367,6 @@ function NewMotion() {
           </div>
         </div>
       </div>
-      <div class="footer">© Copyright AI Professionals</div>
     </Layout>
   );
 }

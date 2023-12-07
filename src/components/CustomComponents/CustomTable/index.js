@@ -32,7 +32,8 @@ function CustomTable({
   currentPage,
   pageSize,
   headerShown,
-  searchonchange
+  searchonchange,
+  totalCount
 }) {
   const keys = data.length > 0 ? Object.keys(data[0]) : [];
   const [totalPages, setTotalPages] = useState(null);
@@ -64,15 +65,15 @@ function CustomTable({
             Previous
           </button>
         </li>
-        {Array.from({ length: totalPages }).map((_, index) => (
+        {Array.from({ length: totalCount ? totalCount : totalPages }).map((_, index) => (
           <li key={index} className={`page-item ${currentPage === index ? 'active' : ''}`}>
             <button className="page-link" onClick={() => handlePageChange(index)}>
               {index + 1}
             </button>
           </li>
         ))}
-        <li className={`page-item ${currentPage >= totalPages - 1 ? 'disabled' : ''}`}>
-          <button className="page-link" onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage >= totalPages - 1}>
+        <li className={`page-item ${currentPage >= totalCount ? totalCount : totalPages - 1 ? 'disabled' : ''}`}>
+          <button className="page-link" onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage >= totalCount ? totalCount : totalPages - 1}>
             Next
           </button>
         </li>

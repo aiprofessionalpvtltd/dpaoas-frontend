@@ -575,7 +575,6 @@ export const getAllSessions = async () => {
 
 //Motion Management System
 export const createNewMotion = async (data) => {
-  console.log("Motion Daataa", data);
   try {
     const token = getAuthToken();
     const response = await axiosClientMMS.post(`/motion/create`, data, {
@@ -624,7 +623,6 @@ export const getAllMotion = async (currentPage, pageSize) => {
 };
 
 export const updateNewMotion = async (id, data) => {
-  console.log("Motion Daataa", id);
   try {
     const token = getAuthToken();
     const response = await axiosClientMMS.put(`/motion/${id}`, data, {
@@ -642,15 +640,20 @@ export const updateNewMotion = async (id, data) => {
 };
 
 //SearchMotion
-export const searchMotion = async (data) => {
+export const searchMotion = async (searchParams) => {
   try {
     const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/motion/all?page=${0}&pageSize=${1000}&fileNumber=${data?.fileNumber}&fkSessionId=${data?.fkSessionId}&noticeOfficeDiaryNo=${data?.noticeOfficeDiaryNo}&fkMemberId=${data?.fkMemberId}&fkMinistryId=${data?.fkMinistryId}&motionId=${data?.motionId}&sessionStartRange=${data?.sessionStartRange}&sessionEndRange=${data?.sessionEndRange}&noticeStartRange=${data?.noticeStartRange}&noticeEndRange=${data?.noticeEndRange}&motionWeek=${data.motionWeek}&motionType=${data?.motionType}`,)
-    // {
-    //   headers: {
-    //     Authorization: `Bearer ${token}`,
-    //   }
-    // });
+    // Filter out empty values
+    const filteredSearchParams = Object.fromEntries(
+      Object.entries(searchParams).filter(([_, value]) => value !== "")
+    );
+
+    const response = await axiosClientMMS.get(`/motion/all?page=${0}&pageSize=${1000}`,{
+      params: filteredSearchParams,
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // },
+    });
     return response?.data;
   } catch (error) {
     console.error('Error fetching API endpoint:', error);

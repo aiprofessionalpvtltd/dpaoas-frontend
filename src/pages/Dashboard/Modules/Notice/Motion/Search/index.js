@@ -3,7 +3,7 @@ import { NoticeSidebarItems } from "../../../../../../utils/sideBarItems";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
 import { useNavigate } from "react-router";
-import { searchQuestion } from "../../../../../../api/APIs";
+import { searchMotion, searchQuestion } from "../../../../../../api/APIs";
 import {
   showErrorMessage,
   showSuccessMessage,
@@ -40,17 +40,16 @@ function SearchMotion() {
     return apiData.map((res, index) => {
       return {
         SrNo: index,
-        QID: res.id,
-        QDN: res.questionDiary,
-        NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate,
-        NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
-        SessionNumber: res?.session?.sessionName,
+        MID: res?.id,
+        NoticeNo: res?.noticeOfficeDairies?.noticeOfficeDiaryNo,
+        NoticeDate: res?.noticeOfficeDairies?.noticeOfficeDiaryDate,
+        MotionType: res?.motionType,
+        SessionNo: res?.session?.sessionName,
         SubjectMatter: [res?.englishText, res?.urduText]
           .filter(Boolean)
           .join(", "),
-        Category: res.questionCategory,
-        // SubmittedBy: res.category,
-        Status: res.questionStatus?.questionStatus,
+        Mover: res?.motionMovers?.map((item) => item?.members?.memberName),
+        MotionStatus: res?.motionStatuses?.statusName,
       };
     });
   };
@@ -65,20 +64,20 @@ function SearchMotion() {
       fromSessionNo: values.fromSession,
       toSessionNo: values.toSession,
       memberName: values.memberName,
-      questionCategory: values.category,
-      keyword: values.keyword,
-      questionID: values.questionID,
-      questionStatus: values.resolutionStatus,
-      questionDiaryNo: values.questionDiaryNo,
+      englishText: values.keyword,
+      motionID: values.motionID,
+      motionType: values.motionType,
+      motionStatus: values.motionStatus,
+      noticeDiaryNo: values.noticeDiaryNo,
       noticeOfficeDiaryDateFrom: values.fromNoticeDate,
       noticeOfficeDiaryDateTo: values.toNoticeDate,
     };
 
     try {
-      const response = await searchQuestion(searchParams);
+      const response = await searchMotion(searchParams);
       if (response?.success) {
         showSuccessMessage(response?.message);
-        const transformedData = transformLeavesData(response.data);
+        const transformedData = transformLeavesData(response.data.rows);
         setSearchedData(transformedData);
       }
     } catch (error) {
@@ -100,9 +99,9 @@ function SearchMotion() {
         title1={"Notice"}
         title2={"Search Motion"}
       />
-      <div class="dashboard-content">
+      <div  >
         <div class="container-fluid">
-          <div class="card mt-5">
+          <div class="card mt-1">
             <div
               class="card-header red-bg"
               style={{ background: "#14ae5c !important" }}
@@ -324,8 +323,9 @@ function SearchMotion() {
                         handlePageChange={handlePageChange}
                         currentPage={currentPage}
                         showPrint={true}
-                        hideEditIcon={true}
                         pageSize={pageSize}
+                        handleAdd={(item) => navigate('/')}
+                        handleEdit={(item) => navigate('/')}
                         // handleDelete={(item) => handleDelete(item.id)}
                       />
                     </div>
@@ -336,7 +336,7 @@ function SearchMotion() {
           </div>
         </div>
       </div>
-      <div class="footer">© Copyright AI Professionals</div>
+       
     </Layout>
   );
 }

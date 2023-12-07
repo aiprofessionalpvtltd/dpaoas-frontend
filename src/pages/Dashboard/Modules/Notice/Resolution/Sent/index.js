@@ -121,9 +121,9 @@ function SentResolution() {
         title1={"Notice"}
         title2={"Sent Resolution"}
       />
-      <div class="dashboard-content">
+      <div  >
         <div class="container-fluid">
-          <div class="card mt-5">
+          <div class="card mt-1">
             <div
               class="card-header red-bg"
               style={{ background: "#14ae5c !important" }}
@@ -390,13 +390,12 @@ function SentResolution() {
                       hideBtn={true}
                       data={resData}
                       tableTitle="Resolutions"
-                      handleEdit={(item) =>
-                        navigate("/lms/addedit", { state: item })
-                      }
                       handlePageChange={handlePageChange}
                       currentPage={currentPage}
-                      pageSize={pageSize}
-                      // handleDelete={(item) => handleDelete(item.id)}
+                      showPrint={true}
+                        pageSize={pageSize}
+                        handleAdd={(item) => navigate('/')}
+                        handleEdit={(item) => navigate('/')}
                     />
                   </div>
                 </div>
@@ -405,7 +404,7 @@ function SentResolution() {
           </div>
         </div>
       </div>
-      <div class="footer">© Copyright AI Professionals</div>
+       
     </Layout>
   );
 }
