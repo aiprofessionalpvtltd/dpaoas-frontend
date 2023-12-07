@@ -4,29 +4,31 @@ import { useNavigate } from 'react-router-dom';
 import CustomTable from '../../../../../components/CustomComponents/CustomTable';
 import { MMSSideBarItems } from '../../../../../utils/sideBarItems';
 import Header from '../../../../../components/Header';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
-const validationSchema = Yup.object({
-    questionDiaryNo: Yup.string().required('Question Diary No is required'),
-    memberName: Yup.string().required('Member Name is required'),
-});
+import { Field, Form, Formik } from "formik";
+import { showErrorMessage, showSuccessMessage } from '../../../../../utils/ToastAlert';
+import { searchQuestion } from '../../../../../api/APIs';
+
 
 function MMSSearchQuestion() {
     const navigate = useNavigate()
+    const [searchedData, setSearchedData] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
     const pageSize = 4; // Set your desired page size
 
-    const formik = useFormik({
-        initialValues: {
-            questionDiaryNo: '',
-            memberName: '',
-        },
-        validationSchema: validationSchema,
-        onSubmit: (values) => {
-            // Handle form submission here
-            console.log(values);
-        },
-    });
+    const initialValues = {
+        questionDiaryNo: "",
+        questionID: "",
+        keyword: "",
+        memberName: "",
+        fromSession: "",
+        toSession: "",
+        category: "",
+        questionStatus: "",
+        fromNoticeDate: "",
+        toNoticeDate: "",
+        divisions: "",
+        noticeOfficeDiaryNo: ""
+    };
     const handlePageChange = (page) => {
         // Update currentPage when a page link is clicked
         setCurrentPage(page);
@@ -65,6 +67,52 @@ function MMSSearchQuestion() {
             "Ministries": "Inactive",
         },
     ]
+    const transformLeavesData = (apiData) => {
+        return apiData.map((res, index) => {
+            return {
+                SrNo: index,
+                QID: res.id,
+                QDN: res.questionDiary,
+                NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate,
+                NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
+                SessionNumber: res?.session?.sessionName,
+                SubjectMatter: [res?.englishText, res?.urduText].filter(Boolean).join(', '),
+                Category: res.questionCategory,
+                // SubmittedBy: res.category,
+                Status: res.questionStatus?.questionStatus
+            };
+        });
+    };
+    const handleSubmit = (values) => {
+        // Handle form submission
+        SearchQuestionApi(values);
+    };
+
+    const SearchQuestionApi = async (values) => {
+        const searchParams = {
+            fromSessionNo: values.fromSession,
+            toSessionNo: values.toSession,
+            memberName: values.memberName,
+            questionCategory: values.category,
+            keyword: values.keyword,
+            questionID: values.questionID,
+            questionStatus: values.resolutionStatus,
+            questionDiaryNo: values.questionDiaryNo,
+            noticeOfficeDiaryDateFrom: values.fromNoticeDate,
+            noticeOfficeDiaryDateTo: values.toNoticeDate,
+        };
+
+        try {
+            const response = await searchQuestion(searchParams);
+            if (response?.success) {
+                showSuccessMessage(response?.message);
+                const transformedData = transformLeavesData(response.data);
+                setSearchedData(transformedData);
+            }
+        } catch (error) {
+            showErrorMessage(error?.response?.data?.message);
+        }
+    };
     return (
         <Layout module={true} sidebarItems={MMSSideBarItems} centerlogohide={true}>
             <Header dashboardLink={"/"} addLink1={"/mms/dashboard"} title1={"Motion"} addLink2={"/mms/question/search"} title2={"Search Queston"} />
@@ -75,96 +123,244 @@ function MMSSearchQuestion() {
                     </div>
                     <div class='card-body'>
                         <div class="container-fluid">
-                            <form onSubmit={formik.handleSubmit}>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="mb-3">
-                                        <label class="form-label">Question Diary No</label>
-                                        <input
-                                                type='text'
-                                                placeholder={formik.values.questionDiaryNo}
-                                                className={`form-control ${formik.touched.questionDiaryNo && formik.errors.questionDiaryNo ? 'is-invalid' : ''}`}
-                                                id='questionDiaryNo'
-                                                onChange={formik.handleChange}
-                                                onBlur={formik.handleBlur}
-                                            />
-                                            {formik.touched.questionDiaryNo && formik.errors.questionDiaryNo && (
-                                                <div className='invalid-feedback'>{formik.errors.questionDiaryNo}</div>
-                                            )}
+
+                            <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+                                <Form>
+                                    <div className="container-fluid">
+                                        <div className="row">
+                                            <div className="col">
+                                                <div className="mb-3">
+                                                    <label className="form-label">
+                                                        Question Diary No
+                                                    </label>
+                                                    <Field
+                                                        className="form-control"
+                                                        type="text"
+                                                        name="questionDiaryNo"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="col">
+                                                <div className="mb-3">
+                                                    <label className="form-label">Question ID</label>
+                                                    <Field
+                                                        className="form-control"
+                                                        type="number"
+                                                        name="questionID"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="row">
+                                            <div className="col">
+                                                <div className="mb-3">
+                                                    <label className="form-label">Keyword</label>
+                                                    <Field
+                                                        className="form-control"
+                                                        type="text"
+                                                        name="keyword"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="col">
+                                                <div className="mb-3">
+                                                    <label className="form-label">Member Name</label>
+                                                    <Field
+                                                        className="form-control"
+                                                        type="text"
+                                                        name="memberName"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="row">
+                                            <div className="col">
+                                                <div className="mb-3">
+                                                    <label className="form-label">From Session</label>
+                                                    <Field
+                                                        as="select"
+                                                        className="form-select"
+                                                        name="fromSession"
+                                                    >
+                                                        <option>Select</option>
+                                                        <option>121</option>
+                                                        <option>122</option>
+                                                        <option>123</option>
+                                                    </Field>
+                                                </div>
+                                            </div>
+                                            <div className="col">
+                                                <div className="mb-3">
+                                                    <label className="form-label">To Session</label>
+                                                    <Field
+                                                        as="select"
+                                                        className="form-select"
+                                                        name="toSession"
+                                                    >
+                                                        <option>Select</option>
+                                                        <option>121</option>
+                                                        <option>122</option>
+                                                        <option>123</option>
+                                                    </Field>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="row">
+                                            <div className="col">
+                                                <div className="mb-3">
+                                                    <label className="form-label">
+                                                        Category
+                                                    </label>
+                                                    <Field
+                                                        as="select"
+                                                        className="form-select"
+                                                        name="category"
+                                                    >
+                                                        <option value="Starred">
+                                                            Starred
+                                                        </option>
+                                                        <option value="UnStarred">
+                                                            UnStarred
+                                                        </option>
+                                                        <option value="Short Notice">
+                                                            Short Notice
+                                                        </option>
+                                                    </Field>
+                                                </div>
+                                            </div>
+                                            <div className="col">
+                                                <div className="mb-3">
+                                                    <label className="form-label">
+                                                        Question Status
+                                                    </label>
+                                                    <Field
+                                                        as="select"
+                                                        className="form-select"
+                                                        name="questionStatus"
+                                                    >
+                                                        <option selected="selected" value="" hidden>
+                                                            Select
+                                                        </option>
+                                                        <option>Question Status</option>
+                                                        <option>Admitted</option>
+                                                        <option>Admitted but Lapsed</option>
+                                                        <option>Deferred</option>
+                                                        <option>Disallowed</option>
+                                                        <option>Disallowed on Reconsideration</option>
+                                                        <option>File not Available</option>
+                                                        <option>Lapsed</option>
+                                                        <option>NFA</option>
+                                                        <option>Replied</option>
+                                                        <option>Replied/Referred to Standing Committee</option>
+                                                        <option>Under Correspondence</option>
+                                                        <option>Under Process</option>
+                                                        <option>Withdrawn</option>
+                                                    </Field>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="row">
+                                            <div className="col">
+                                                <div className="mb-3">
+                                                    <label className="form-label">
+                                                        From Notice Date
+                                                    </label>
+                                                    <Field
+                                                        className="form-control"
+                                                        type="text"
+                                                        name="fromNoticeDate"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="col">
+                                                <div className="mb-3">
+                                                    <label className="form-label">To Notice Date</label>
+                                                    <Field
+                                                        className="form-control"
+                                                        type="text"
+                                                        name="toNoticeDate"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className='row'>
+                                            <div className="col">
+                                                <div className="mb-3">
+                                                    <label className="form-label">Division</label>
+                                                    <Field
+                                                        className="form-control"
+                                                        type="text"
+                                                        name="divisions"
+                                                    />
+                                                </div>
+
+                                            </div>
+                                            <div className="col">
+                                                <div className="mb-3">
+                                                    <label className="form-label">Notice Diary No</label>
+                                                    <Field
+                                                        className="form-control"
+                                                        type="text"
+                                                        name="noticeOfficeDiaryNo"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {/* <div className='row'>
+                      <div className="col">
+                          <div className="mb-3">
+                            <label className="form-label">Complete Text</label>
+                            <Field
+                              className="form-control"
+                              type="checkbox"
+                              name="completeText"
+                            />
+                          </div>
+                          
+                        </div>
+                        <div className="col">
+                          <div className="mb-3">
+                            <label className="form-label">Exact Match</label>
+                            <Field
+                              className="form-control"
+                              type="checkbox"
+                              name="exactMatch"
+                            />
+                          </div>
+                        </div>
+                      </div> */}
+                                        <div className="row">
+                                            <div className="d-grid gap-2 d-md-flex justify-content-md-end">
+                                                <button className="btn btn-primary" type="submit">
+                                                    Search
+                                                </button>
+                                                <button className="btn btn-primary" type="reset">
+                                                    Reset
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col">
-                                    <div class="mb-3">
-                                        <label class="form-label">Question ID</label>
-                                        <input class="form-control" type="text" />
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="mb-3">
-                                        <label class="form-label">Keyword</label>
-                                        <input class="form-control" type="text" />
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="mb-3">
-                                        <label class="form-label">Member Name</label>
-                                        <input
-                                                type='text'
-                                                placeholder={formik.values.memberName}
-                                                className={`form-control ${formik.touched.memberName && formik.errors.memberName ? 'is-invalid' : ''}`}
-                                                id='memberName'
-                                                onChange={formik.handleChange}
-                                                onBlur={formik.handleBlur}
-                                            />
-                                            {formik.touched.memberName && formik.errors.memberName && (
-                                                <div className='invalid-feedback'>{formik.errors.memberName}</div>
-                                            )}
-                                    </div>
-                                </div>
+                                </Form>
+                            </Formik>
+                            <div className='mt-3'>
+                                <CustomTable
+                                    block={true}
+                                    headerShown={true}
+                                    data={searchedData}
+                                    // handleEdit={(item) => navigate('/vms/addeditpass', { state: item })}
+                                    handlePageChange={handlePageChange}
+                                    currentPage={currentPage}
+                                    pageSize={pageSize}
+                                    headertitlebgColor={"#666"}
+                                    headertitletextColor={"#FFF"}
+                                    hideEditIcon={true}
+                                    ActionHide={true}
+
+                                // handleDelete={(item) => handleDelete(item.id)}
+                                />
                             </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="mb-3">
-                                        <label class="form-label">From Session</label>
-                                        <select class="form-select">
-                                            <option>Select</option>
-                                            <option>121</option>
-                                            <option>122</option>
-                                            <option>123</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="mb-3">
-                                        <label class="form-label">To Session</label>
-                                        <select class="form-select">
-                                            <option>Select</option>
-                                            <option>121</option>
-                                            <option>122</option>
-                                            <option>123</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="mb-3">
-                                        <label class="form-label">Category</label>
-                                        <select class="form-select">
-                                            <option>Starred</option>
-                                            <option>Un-Starred</option>
-                                            <option>Short Notice</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="mb-3">
-                                        <label class="form-label">Group</label>
-                                        <select class="form-select">
-                                            <option></option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
+
+                            <div class="row mt-3">
                                 <div class="col">
                                     <div class="mb-3">
                                         <label class="form-label">Question Status</label>
@@ -183,146 +379,19 @@ function MMSSearchQuestion() {
                                             <option>Under Correspondence</option>
                                             <option>Under Process</option>
                                             <option>Withdrawn</option>
-
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col">
                                     <div class="mb-3">
-                                        <label class="form-label">Notice Diary No</label>
-                                        <input class="form-control" type="text" />
+                                        <label class="form-label">Status Date</label>
+                                        <input class="form-control" />
                                     </div>
                                 </div>
                                 <div class="col">
-                                    <div class="mb-3">
-                                        <label class="form-label">From Notice Date</label>
-                                        <input class="form-control" type="text" />
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="mb-3">
-                                        <label class="form-label">To Notice Date</label>
-                                        <input class="form-control" type="text" />
-                                    </div>
+                                    <button style={{ marginTop: "30px" }} class="btn btn-primary" type="submit">Change Status</button>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="mb-3">
-                                        <label class="form-label">Gender</label>
-                                        <select class="form-select">
-                                            <option selected="selected" value="0">Gender</option>
-                                            <option value="1">Male</option>
-                                            <option value="2">Female</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="mb-3">
-                                        <label class="form-label">Religion</label>
-                                        <select name="ctl00$ContentPlaceHolder3$ReligionDDL" id="ReligionDDL" class="form-select">
-                                            <option selected="selected" value="0">Religion</option>
-                                            <option value="1">Islam</option>
-                                            <option value="2">Christianity</option>
-                                            <option value="3">Hinduism</option>
-                                            <option value="5">Sikh</option>
-                                            <option value="4">Other</option>
-
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="mb-3">
-                                        <label class="form-label">Not in Religion</label>
-                                        <select class="form-select">
-                                            <option>Not in Religion</option>
-                                            <option>Islam</option>
-                                            <option>Christianity</option>
-                                            <option>Hinduism</option>
-                                            <option>Sikh</option>
-                                            <option>Other</option>
-
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="mb-3">
-                                        <div class="form-check" style={{ marginTop: "39px" }}>
-                                            <input class="form-check-input " type="checkbox" id="flexCheckDefault" />
-                                            <label class="form-check-label" for="flexCheckDefault">Complete Text</label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-3">
-                                    <div class="mb-3">
-                                        <label class="form-label">Division</label>
-                                        <input class="form-control" type="text" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                    <button class="btn btn-primary" type="submit">Search</button>
-                                    <button class="btn btn-primary" type="">Reset</button>
-                                </div>
-                            </div>
-
-                            <div class="dash-detail-container" style={{ marginTop: "20px" }}>
-
-                                <CustomTable
-                                    block={true}
-                                    data={data}
-                                    tableTitle=""
-                                    addBtnText="Print Question"
-                                    handleAdd={() => alert("Print")}
-                                    handleEdit={(item) => navigate('/vms/addeditpass', { state: item })}
-                                    hideUserIcon={true}
-                                    handleUser={() => navigate("/vms/visitor")}
-                                    handleDuplicate={() => navigate("/vms/duplicatepass")}
-                                    // seachBarShow={true}
-                                    handlePageChange={handlePageChange}
-                                    currentPage={currentPage}
-                                    pageSize={pageSize}
-                                // handlePrint={}
-                                // handleUser={}
-                                // handleDelete={(item) => handleDelete(item.id)}
-                                />
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="mb-3">
-                                            <label class="form-label">Question Status</label>
-                                            <select class="form-select">
-                                                <option>Question Status</option>
-                                                <option>Admitted</option>
-                                                <option>Admitted but Lapsed</option>
-                                                <option>Deferred</option>
-                                                <option>Disallowed</option>
-                                                <option>Disallowed on Reconsideration</option>
-                                                <option>File not Available</option>
-                                                <option>Lapsed</option>
-                                                <option>NFA</option>
-                                                <option>Replied</option>
-                                                <option>Replied/Referred to Standing Committee</option>
-                                                <option>Under Correspondence</option>
-                                                <option>Under Process</option>
-                                                <option>Withdrawn</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="mb-3">
-                                            <label class="form-label">Status Date</label>
-                                            <input class="form-control" />
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <button style={{ marginTop: "30px" }} class="btn btn-primary" type="submit">Change Status</button>
-                                    </div>
-                                </div>
-                            </div>
-                            </form>
                         </div>
                     </div>
                 </div>

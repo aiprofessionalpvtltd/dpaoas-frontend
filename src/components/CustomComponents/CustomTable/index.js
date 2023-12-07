@@ -32,7 +32,8 @@ function CustomTable({
   currentPage,
   pageSize,
   headerShown,
-  searchonchange
+  searchonchange,
+  ActionHide,
 }) {
   const keys = data.length > 0 ? Object.keys(data[0]) : [];
   const [totalPages, setTotalPages] = useState(null);
@@ -81,7 +82,7 @@ function CustomTable({
   );
 
   return (
-    <div className="dash-detail-container" style={{ marginTop: "20px" }}>
+    <div className="dash-detail-container">
       <div className="dash-card">
         {!headerShown && !headerShown && (
 
@@ -140,18 +141,18 @@ function CustomTable({
                 </th>
               ))}
               {data.length > 0 ? (
-                <th
-                  className="text-center"
-                  style={{
-                    width: "180px",
-                    backgroundColor: headertitlebgColor
-                      ? headertitlebgColor
-                      : "#FFF",
-                    color: headertitletextColor ? headertitletextColor : "#666",
-                  }}
-                >
-                  Actions
-                </th>
+                !ActionHide && (
+                  <th
+                    className="text-center"
+                    style={{
+                      width: "180px",
+                      backgroundColor: headertitlebgColor ? headertitlebgColor : "#FFF",
+                      color: headertitletextColor ? headertitletextColor : "#666",
+                    }}
+                  >
+                    Actions
+                  </th>
+                )
               ) : (
                 <div>No data found :(</div>
               )}
@@ -168,8 +169,8 @@ function CustomTable({
                     {item[key] === "active" || item[key] === "inactive" ? (
                       <span
                         className={`label label-sm ${item[key] === "active"
-                            ? "label-success"
-                            : "label-danger"
+                          ? "label-success"
+                          : "label-danger"
                           }`}
                       >
                         {item[key]}
@@ -182,25 +183,25 @@ function CustomTable({
                 <td className="text-center">
                   {!hideEditIcon && !hideEditIcon && (
                     <>
-                    <OverlayTrigger placement="top" overlay={editTooltip}>
-                      <button
-                        onClick={() => handleEdit(item)}
-                        className="btn default btn-xs black"
-                        data-id={item.id}
-                      >
-                        <FontAwesomeIcon icon={faEdit} />
-                      </button>
-                    </OverlayTrigger>
-                  <OverlayTrigger placement="top" overlay={deleteTooltip}>
-                    <button
-                      onClick={() => handleDelete(item)}
-                      className="btn default btn-xs black"
-                      data-id={item.id}
-                    >
-                      <FontAwesomeIcon icon={faTrash} />
-                    </button>
-                  </OverlayTrigger>
-                  </>
+                      <OverlayTrigger placement="top" overlay={editTooltip}>
+                        <button
+                          onClick={() => handleEdit(item)}
+                          className="btn default btn-xs black"
+                          data-id={item.id}
+                        >
+                          <FontAwesomeIcon icon={faEdit} />
+                        </button>
+                      </OverlayTrigger>
+                      <OverlayTrigger placement="top" overlay={deleteTooltip}>
+                        <button
+                          onClick={() => handleDelete(item)}
+                          className="btn default btn-xs black"
+                          data-id={item.id}
+                        >
+                          <FontAwesomeIcon icon={faTrash} />
+                        </button>
+                      </OverlayTrigger>
+                    </>
                   )}
                   {hideUserIcon && hideUserIcon && (
                     <>
@@ -238,14 +239,14 @@ function CustomTable({
                   )}
                   {showPrint && (
                     <OverlayTrigger placement="top" overlay={printTooltip}>
-                        <button
-                          onClick={() => handlePrint(item)}
-                          className="btn default btn-xs black"
-                          data-id={item.id}
-                        >
-                          <FontAwesomeIcon icon={faPrint} />
-                        </button>
-                      </OverlayTrigger>
+                      <button
+                        onClick={() => handlePrint(item)}
+                        className="btn default btn-xs black"
+                        data-id={item.id}
+                      >
+                        <FontAwesomeIcon icon={faPrint} />
+                      </button>
+                    </OverlayTrigger>
                   )}
                 </td>
               </tr>

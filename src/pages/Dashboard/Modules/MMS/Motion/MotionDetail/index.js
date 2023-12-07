@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Layout } from '../../../../../../components/Layout'
 import Header from '../../../../../../components/Header'
 import { MMSSideBarItems } from '../../../../../../utils/sideBarItems'
@@ -6,6 +6,11 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import DatePicker from 'react-datepicker';
 import TimePicker from 'react-time-picker';
+import { getAllMinistry, getAllSessions, getallMembers, getallMotionStatus, sendMotionForTranslation, updateNewMotion } from '../../../../../../api/APIs';
+import { showErrorMessage, showSuccessMessage } from '../../../../../../utils/ToastAlert';
+import { useLocation } from 'react-router';
+import { ToastContainer } from 'react-toastify';
+import CustomTable from '../../../../../../components/CustomComponents/CustomTable';
 
 const validationSchema = Yup.object({
     sessionNumber: Yup.number().required('Session No is required'),
@@ -16,7 +21,7 @@ const validationSchema = Yup.object({
     noticeOfficeDiaryNo: Yup.number().required('Notice Office Diary No is required'),
     noticeOfficeDiaryDate: Yup.date().required('Notice Office Diary Date is required'),
     noticeOfficeDiaryTime: Yup.string().required('Notice Office Diary Time is required'),
-    motionStatus: Yup.string().required('Motion Status is required'),
+    motionStatus: Yup.string(),
     mover: Yup.string(),
     ministry: Yup.string(),
     dateofMovinginHouse: Yup.date().required('Date Of Moving in House is required'),
@@ -25,41 +30,151 @@ const validationSchema = Yup.object({
     // Add more fields and validations as needed
 });
 function MMSMotionDetail() {
+    const location = useLocation()
+    console.log("location?.state", location?.state?.id);
+    const [ministryData, setMinistryData] = useState([])
+    const [sessions, setSessions] = useState([]);
+    const [members, setMembers] = useState([])
+    const [motionStatusData, setMotionStatusData] = useState([])
     const formik = useFormik({
         initialValues: {
-            sessionNumber: '',
-            motionID: '',
-            fileNo: '',
-            motionType: '',
-            motionWeek: '',
+            sessionNumber: location?.state?.fkSessionId,
+            motionID: location?.state?.motionMovers.length > 0 ?? location?.state?.motionMovers[0]?.fkMotionId,
+            fileNo: location?.state?.fileNumber,
+            motionType: location?.state?.motionType,
+            motionWeek: location?.state?.motionWeek,
             noticeOfficeDiaryNo: '',
             noticeOfficeDiaryDate: '',
             noticeOfficeDiaryTime: '',
             motionStatus: '',
-            dateofMovinginHouse: '',
-            dateofDiscussion: '',
-            dateofRefferingToSC: '',
-            mover: '',
-            ministry: '',
+            dateofMovinginHouse: new Date(location?.state?.dateOfMovingHouse),
+            dateofDiscussion: new Date(location?.state?.dateOfDiscussion),
+            dateofRefferingToSC: new Date(location?.state?.dateOfReferringToSc),
+            mover: location?.state?.motionMovers.length > 0 ?? location?.state?.motionoMvers[0]?.fkMemberId,
+            ministry: location?.state?.motionMinistries.length > 0 ?? location?.state?.motionMinistries[0]?.fkMinistryId,
             // Add more fields as needed
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
-            alert("form submit")
-            console.log('Form submitted with values:', values);
+            // alert("form submit")
+            // console.log('Form submitted with values:', values);
+            handleEditMotion(values)
 
         }
     });
+
+
+
+
+    const handleEditMotion = async (values) => {
+        const formData = new FormData();
+        formData.append('fkSessionId', values?.sessionNumber);
+        formData.append('fileNumber', values?.fileNo);
+        formData.append('motionType', values?.motionType);
+        formData.append('motionWeek', values?.motionWeek);
+        formData.append('noticeOfficeDiaryNo', values?.noticeOfficeDiaryNo);
+        formData.append('moverIds[]', values?.mover);
+        formData.append('ministryIds[]', values?.ministry);
+        formData.append('noticeOfficeDiaryDate', values?.noticeOfficeDiaryDate);
+        formData.append('noticeOfficeDiaryTime', values?.noticeOfficeDiaryTime);
+        formData.append('businessType', "Motion");
+        formData.append('englishText', "dkals");
+        formData.append('urduText', "dkpad");
+        formData.append('fkMotionStatus', values?.motionStatus);
+        try {
+            const response = await updateNewMotion(location?.state?.id, formData)
+            if (response?.success) {
+                showSuccessMessage(response?.message);
+            }
+        } catch (error) {
+            showErrorMessage(error?.response?.data?.message);
+        }
+    }
+
+    const AllMinistryData = async () => {
+        try {
+            const response = await getAllMinistry()
+            if (response?.success) {
+                // showSuccessMessage(response?.message);
+                setMinistryData(response?.data);
+            }
+        } catch (error) {
+            console.log(error);
+            showErrorMessage(error?.response?.data?.error);
+        }
+    }
+    const getAllSessionsApi = async () => {
+        try {
+            const response = await getAllSessions();
+            if (response?.success) {
+                setSessions(response?.data);
+            }
+        } catch (error) {
+            showErrorMessage(error?.response?.data?.message);
+        }
+    };
+
+    const AllMembersData = async () => {
+        const currentPage = 0
+        const pageSize = 100
+        try {
+            const response = await getallMembers(currentPage, pageSize)
+            if (response?.success) {
+                // showSuccessMessage(response?.message);
+                setMembers(response?.data?.rows);
+            }
+        } catch (error) {
+            console.log(error);
+            showErrorMessage(error?.response?.data?.error);
+        }
+    }
+    const getMotionStatus = async () => {
+        try {
+            const response = await getallMotionStatus()
+            if (response?.success) {
+                setMotionStatusData(response?.data);
+            }
+        } catch (error) {
+            showErrorMessage(error?.response?.data?.message);
+        }
+    }
+    const transfrerMinistryData = (apiData) => {
+        return apiData.map((leave, index) => ({
+            SR: `${index + 1}`,
+            fkMotionId: `${leave?.fkMotionId}`,
+            motionStatuses: leave?.motionStatuses?.statusName
+        }));
+    };
+    const StatusHistoryData = transfrerMinistryData(location?.state?.motionStatusHistories)
+    console.log("sadkajhhhhhhh", StatusHistoryData);
+    const hendlesendMotionForTranslation = async () => {
+        try {
+            const response = await sendMotionForTranslation(location?.state?.id)
+            if (response?.success) {
+                showSuccessMessage(response?.message);
+            }
+        } catch (error) {
+            console.log();
+        }
+    }
+    useEffect(() => {
+        getMotionStatus()
+        AllMembersData()
+        AllMinistryData()
+        getAllSessionsApi()
+        // transfrerMinistryData(location?.state?.motionStatusHistories)
+    }, [])
     return (
         <Layout module={true} sidebarItems={MMSSideBarItems} centerlogohide={true}>
             <Header dashboardLink={"/"} addLink1={"/mms/dashboard"} title1={"Motion"} addLink2={"/mms/motion/detail"} title2={"Motion Detail"} />
+            <ToastContainer />
             <div class='container-fluid'>
                 <form onSubmit={formik.handleSubmit}>
 
                     <div class="row mt-4">
                         <div class="">
                             <button class="btn btn-warning me-2" type="button">View File</button>
-                            <button class="btn btn-primary me-2" type="button">Send for Translation</button>
+                            <button class="btn btn-primary me-2" type="button" onClick={() => hendlesendMotionForTranslation()}>Send for Translation</button>
                             <button class="btn btn-primary me-2" type="button">Print</button>
                             <button class="btn btn-primary me-2" type="submit">Save</button>
                             <button class="btn btn-danger float-end" type="button">Delete</button>
@@ -77,16 +192,30 @@ function MMSMotionDetail() {
                                     <div class="col">
                                         <div class="mb-3">
                                             <label class="form-label">Session No</label>
-                                            <input
-                                                type='text'
-                                                className={`form-control ${formik.touched.sessionNumber && formik.errors.sessionNumber ? 'is-invalid' : ''}`}
-                                                id='sessionNumber'
-                                                placeholder={formik.values.sessionNumber}
+                                            <select
+                                                name="sessionNumber"
+                                                id="sessionNumber"
                                                 onChange={formik.handleChange}
                                                 onBlur={formik.handleBlur}
-                                            />
-                                            {formik.touched.sessionNumber && formik.errors.sessionNumber && (
-                                                <div className='invalid-feedback'>{formik.errors.sessionNumber}</div>
+                                                value={formik.values.sessionNumber}
+                                                className={
+                                                    formik.errors.sessionNumber && formik.touched.sessionNumber
+                                                        ? 'form-select is-invalid'
+                                                        : 'form-select'
+                                                }
+                                            >
+                                                <option value="" selected disabled hidden>
+                                                    Select
+                                                </option>
+                                                {sessions &&
+                                                    sessions.map((item) => (
+                                                        <option key={item.id} value={item.id}>
+                                                            {item?.sessionName}
+                                                        </option>
+                                                    ))}
+                                            </select>
+                                            {formik.errors.sessionNumber && formik.touched.sessionNumber && (
+                                                <div className="invalid-feedback">{formik.errors.sessionNumber}</div>
                                             )}
                                         </div>
                                     </div>
@@ -215,49 +344,13 @@ function MMSMotionDetail() {
                                                 onChange={formik.handleChange}
                                                 id='motionStatus'
                                                 onBlur={formik.handleBlur}>
-                                                <option selected="selected" value="0">Motion Status</option>
-                                                <option value="40">Admissibility not Allowed by the House</option>
-                                                <option value="20">Admitted</option>
-                                                <option value="26">Admitted but Lapsed</option>
-                                                <option value="8">Admitted for 2 Hr. Discussion</option>
-                                                <option value="6">Allowed</option>
-                                                <option value="44">Approved</option>
-                                                <option value="27">Deferred</option>
-                                                <option value="21">Disallowed</option>
-                                                <option value="9">Disallowed in Chamber</option>
-                                                <option value="22">Discuss in the House</option>
-                                                <option value="29">Discussed</option>
-                                                <option value="7">Disposed Off</option>
-                                                <option value="24">Droped by the House</option>
-                                                <option value="28">Dropped</option>
-                                                <option value="42">Held in Order</option>
-                                                <option value="43">Held out of Order</option>
-                                                <option value="18">Infructuous</option>
-                                                <option value="12">Lapsed</option>
-                                                <option value="30">Move To Session</option>
-                                                <option value="19">Moved and Deferred</option>
-                                                <option value="38">Moved and is Pending for Discussion</option>
-                                                <option value="33">Moved in the House</option>
-                                                <option value="11">Moved in the house without notice</option>
-                                                <option value="14">Not Pressed</option>
-                                                <option value="36">Notice Received for 2nd Time</option>
-                                                <option value="17">Referred to Priv Cmt.</option>
-                                                <option value="32">Referred to Special Committee</option>
-                                                <option value="16">Referred to Spl Cmt</option>
-                                                <option value="1">Referred to Standing Committee</option>
-                                                <option value="37">Referred to the Privileges Committee</option>
-                                                <option value="2">Ruled out of Order</option>
-                                                <option value="10">Ruled out of Order in the house</option>
-                                                <option value="15">Ruling Reserved</option>
-                                                <option value="34">Selected/Not Sel. for Statement</option>
-                                                <option value="41">Talked Out</option>
-                                                <option value="39">To be heard</option>
-                                                <option value="31">To be heard but Lapsed</option>
-                                                <option value="5">Under Process</option>
-                                                <option value="25">Under-Correspondence</option>
-                                                <option value="4">Withdrawn at Secretariat Level</option>
-                                                <option value="23">Withdrawn by the Member</option>
-                                                <option value="3">Withdrawn in the House</option>
+                                                <option selected disabled hidden>Select</option>
+                                                {motionStatusData &&
+                                                    motionStatusData.map((item) => (
+                                                        <option key={item.id} value={item.id}>
+                                                            {item?.statusName}
+                                                        </option>
+                                                    ))}
                                             </select>
                                         </div>
                                     </div>
@@ -320,10 +413,13 @@ function MMSMotionDetail() {
                                             <select class="form-select" placeholder={formik.values.mover}
                                                 onChange={formik.handleChange}
                                                 id='mover'>
-                                                <option>Select</option>
-                                                <option></option>
-                                                <option></option>
-                                                <option></option>
+                                                <option value={""} selected disabled hidden>select</option>
+                                                {members &&
+                                                    members.map((item) => (
+                                                        <option key={item.id} value={item.id}>
+                                                            {item?.memberName}
+                                                        </option>
+                                                    ))}
                                             </select>
                                         </div>
                                     </div>
@@ -333,10 +429,10 @@ function MMSMotionDetail() {
                                             <select class="form-select" placeholder={formik.values.ministry}
                                                 onChange={formik.handleChange}
                                                 id='ministry'>
-                                                <option>Select</option>
-                                                <option></option>
-                                                <option></option>
-                                                <option></option>
+                                                <option value={""} selected disabled hidden>select</option>
+                                                {ministryData && ministryData.map((item) => (
+                                                    <option value={item.id}>{item.ministryName}</option>
+                                                ))}
                                             </select>
                                         </div>
                                     </div>
@@ -345,76 +441,29 @@ function MMSMotionDetail() {
                                 <p>add text editor here</p>
                                 <p>add text editor here</p>
                                 <p>add text editor here</p>
+
+
                                 <h2 style={{ color: "#666", marginTop: "30px", fontSize: "21px" }}>Status History</h2>
                                 <div class="dash-detail-container" style={{ marginTop: "20px" }}>
+
                                     <table class="table red-bg-head th">
                                         <thead>
                                             <tr>
                                                 <th class="text-center" scope="col">Sr#</th>
-                                                <th class="text-center" scope="col">Notice Diary Number</th>
-                                                <th class="text-center" scope="col">Notice Diary Date</th>
-                                                <th class="text-center" scope="col">Notice Diary Time</th>
-                                                <th class="text-center" scope="col">Session Number</th>
-                                                <th class="text-center" scope="col">Mover</th>
-                                                <th class="text-center" scope="col">Category</th>
-                                                <th class="text-left" style={{ paddingLeft: "6px" }} scope="col">Description</th>
-                                                <th class="text-center" scope="col">Receipt confirmed</th>
-                                                <th class="text-center" scope="col">Action</th>
+                                                <th class="text-center" scope="col">MotionID</th>
+                                                <th class="text-center" scope="col">Motion Statuses</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td class="text-center"></td>
-                                                <td class="text-center"></td>
-                                                <td class="text-center"></td>
-                                                <td class="text-center"></td>
-                                                <td class="text-center"></td>
-                                                <td class="text-center"></td>
-                                                <td class="text-center"></td>
-                                                <td class="text-left"></td>
-                                                <td class="text-center"></td>
-                                                <td class="text-center">
-                                                    <a href="#"><i class="fas fa-print"></i></a>
-                                                </td>
-                                            </tr>
+                                            {StatusHistoryData.length > 0 && StatusHistoryData.map((item, index) => (
+                                                <tr>
+                                                    <td class="text-center">{item.SR}</td>
+                                                    <td class="text-center">{item.fkMotionId}</td>
+                                                    <td class="text-center">{item.motionStatuses}</td>
 
-                                        </tbody>
+                                                </tr>
+                                            ))}
 
-                                    </table>
-                                </div>
-
-                                <h2 style={{ color: "#666", marginTop: "30px", fontSize: "21px" }}>Revival History</h2>
-                                <div class="dash-detail-container" style={{ marginTop: "20px" }}>
-                                    <table class="table red-bg-head th">
-                                        <thead>
-                                            <tr>
-                                                <th class="text-center" scope="col">Sr#</th>
-                                                <th class="text-center" scope="col">Notice Diary Number</th>
-                                                <th class="text-center" scope="col">Notice Diary Date</th>
-                                                <th class="text-center" scope="col">Notice Diary Time</th>
-                                                <th class="text-center" scope="col">Session Number</th>
-                                                <th class="text-center" scope="col">Mover</th>
-                                                <th class="text-center" scope="col">Category</th>
-                                                <th class="text-left" style={{ paddingLeft: "6px" }} scope="col">Description</th>
-                                                <th class="text-center" scope="col">Receipt confirmed</th>
-                                                <th class="text-center" scope="col">Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td class="text-center"></td>
-                                                <td class="text-center"></td>
-                                                <td class="text-center"></td>
-                                                <td class="text-center"></td>
-                                                <td class="text-center"></td>
-                                                <td class="text-center"></td>
-                                                <td class="text-center"></td>
-                                                <td class="text-left"></td>
-                                                <td class="text-center"></td>
-                                                <td class="text-center">
-                                                    <a href="#"><i class="fas fa-print"></i></a>
-                                                </td>
-                                            </tr>
 
                                         </tbody>
 

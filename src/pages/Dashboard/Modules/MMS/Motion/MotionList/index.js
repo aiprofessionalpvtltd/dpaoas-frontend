@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import CustomTable from '../../../../../../components/CustomComponents/CustomTable'
 import { showErrorMessage } from '../../../../../../utils/ToastAlert'
 import { ToastContainer } from 'react-toastify'
-import { getAllMotion, searchMotion } from '../../../../../../api/APIs'
+import { getAllMotion, getMotionByID, searchMotion } from '../../../../../../api/APIs'
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import DatePicker from 'react-datepicker';
@@ -39,6 +39,7 @@ function MMSMotionList() {
         validationSchema: validationSchema,
         onSubmit: (values) => {
             console.log('Form submitted with values:', values);
+            searchMotionList(values)
 
         }
     });
@@ -81,40 +82,54 @@ function MMSMotionList() {
         }));
     };
 
-    const getMotionListData = async () => {
+    // const getMotionListData = async () => {
+    //     try {
+    //         const response = await getAllMotion(currentPage, pageSize);
+    //         if (response?.success) {
+    //             // showSuccessMessage(response?.message);
+    //             const transformedData = transformMotionData(response?.data?.rows);
+    //             const ministryData = transfrerMinistryData(response?.data?.rows)
+    //             setMotionData(transformedData);
+    //             setMinistryData(ministryData)
+    //         }
+    //     } catch (error) {
+    //         console.log(error);
+    //         showErrorMessage(error?.response?.data?.error);
+    //     }
+    // };
+
+    const searchMotionList = async (values) => {
+        const data = {
+            fkSessionId: values?.sessionNumber,
+            motionWeek: values?.motionWeek,
+            motionType: values?.motionType,
+        }
         try {
-            const response = await getAllMotion(currentPage, pageSize);
+            const response = await searchMotion(currentPage, pageSize, data); // Add await here
             if (response?.success) {
-                // showSuccessMessage(response?.message);
                 const transformedData = transformMotionData(response?.data?.rows);
                 const ministryData = transfrerMinistryData(response?.data?.rows)
                 setMotionData(transformedData);
                 setMinistryData(ministryData)
             }
         } catch (error) {
-            console.log(error);
             showErrorMessage(error?.response?.data?.error);
         }
     };
 
-    const searchMotionList = async (data) => {
+    // useEffect(() => {
+    //     // getMotionListData()
+    // }, [])
+    const handleEdit = async (id) => {
         try {
-            const response = await searchMotion(data); // Add await here
+            const response = await getMotionByID(id)
             if (response?.success) {
-                console.log("response Response", response.data);
-                // showSuccessMessage(response?.message);
-
-                // Assuming response.data is an array of data
-                const transformedData = transformMotionData(response.data);
+                navigate('/mms/motion/detail', { state: response?.data })
             }
         } catch (error) {
             console.log(error);
         }
-    };
-
-    useEffect(() => {
-        getMotionListData()
-    }, [])
+    }
     return (
         <Layout module={true} sidebarItems={MMSSideBarItems} centerlogohide={true}>
             <Header dashboardLink={"/"} addLink1={"/mms/dashboard"} title1={"Motion"} addLink2={"/mms/motion/list"} title2={"Motion List"} />
@@ -218,7 +233,7 @@ function MMSMotionList() {
                                 data={motionData}
                                 headerShown={true}
                                 handleDelete={(item) => alert(item.id)}
-                                handleEdit={(item) => navigate('/mms/motion/new', { state: item })}
+                                handleEdit={(item) => handleEdit(item.id)}
                                 headertitlebgColor={"#666"}
                                 headertitletextColor={"#FFF"}
                                 handlePageChange={handlePageChange}
@@ -233,7 +248,7 @@ function MMSMotionList() {
                                 data={ministryData}
                                 headerShown={true}
                                 handleDelete={(item) => alert(item.id)}
-                                handleEdit={(item) => navigate('/mms/motion/new', { state: item })}
+                                handleEdit={(item) => navigate('/mms/motion/detail', { state: item })}
                                 headertitlebgColor={"#666"}
                                 headertitletextColor={"#FFF"}
                                 handlePageChange={handlePageChange}

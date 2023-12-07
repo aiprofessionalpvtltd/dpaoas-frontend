@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom'
 import { useFormik } from 'formik';
 import DatePicker from 'react-datepicker';
 import * as Yup from 'yup';
-import { getAllMotion, searchMotion } from '../../../../../../api/APIs'
+import { getAllMinistry, getAllMotion, getAllSessions, getallMembers, getallMotionStatus, searchMotion } from '../../../../../../api/APIs'
 import { showErrorMessage } from '../../../../../../utils/ToastAlert'
 import { ToastContainer } from 'react-toastify'
 
@@ -30,6 +30,10 @@ const validationSchema = Yup.object({
 function MMSSearchMotion() {
     const navigate = useNavigate()
     const [currentPage, setCurrentPage] = useState(0);
+    const [sessions, setSessions] = useState([])
+    const [ministryData, setMinistryData] = useState([])
+    const [motionStatus, setMotionStatus] = useState([])
+    const [members, setMembers] = useState([])
     const [motionData, setMotionData] = useState([])
     const pageSize = 4; // Set your desired page size
 
@@ -76,7 +80,7 @@ function MMSSearchMotion() {
             // memberName:leave?.motionMovers?.members,
             englishText: leave?.englishText,
             urduText: leave?.urduText,
-            fkMotionStatus: leave?.fkMotionStatus
+            fkMotionStatus: leave?.motionStatuses?.statusName
         }));
     };
     const getMotionListData = async () => {
@@ -105,12 +109,12 @@ function MMSSearchMotion() {
             sessionEndRange: values?.toSession,
             noticeStartRange: values?.fromNoticeDate,
             noticeEndRange: values?.toNoticeDate,
-            // englishText : values?.englishText, 
+            englishText: values?.keyword,
             motionWeek: values?.motionWeek,
             motionType: values?.motionType
         }
         try {
-            const response = await searchMotion(data); // Add await here
+            const response = await searchMotion(currentPage, pageSize, data); // Add await here
             if (response?.success) {
                 // showSuccessMessage(response?.message);
                 const transformedData = transformMotionData(response?.data?.rows);
@@ -121,9 +125,60 @@ function MMSSearchMotion() {
         }
     };
 
+    const getAllSessionsApi = async () => {
+        try {
+            const response = await getAllSessions();
+            if (response?.success) {
+                setSessions(response?.data);
+            }
+        } catch (error) {
+            showErrorMessage(error?.response?.data?.message);
+        }
+    };
+
+    const getMotionStatus = async () => {
+        try {
+            const response = await getallMotionStatus()
+            if (response?.success) {
+                setMotionStatus(response?.data);
+            }
+        } catch (error) {
+            showErrorMessage(error?.response?.data?.message);
+        }
+    }
+
+    const AllMinistryData = async () => {
+        try {
+            const response = await getAllMinistry()
+            if (response?.success) {
+                // showSuccessMessage(response?.message);
+                setMinistryData(response?.data);
+            }
+        } catch (error) {
+            console.log(error);
+            showErrorMessage(error?.response?.data?.error);
+        }
+    }
+
+    const AllMembersData = async () => {
+        try {
+            const response = await getallMembers(currentPage, pageSize)
+            if (response?.success) {
+                // showSuccessMessage(response?.message);
+                setMembers(response?.data?.rows);
+            }
+        } catch (error) {
+            console.log(error);
+            showErrorMessage(error?.response?.data?.error);
+        }
+    }
 
     useEffect(() => {
+        AllMembersData()
+        AllMinistryData()
         getMotionListData()
+        getAllSessionsApi()
+        getMotionStatus()
     }, [])
     return (
         <Layout module={true} sidebarItems={MMSSideBarItems} centerlogohide={true}>
@@ -176,14 +231,27 @@ function MMSSearchMotion() {
                                     <div class="col">
                                         <div class="mb-3">
                                             <label class="form-label" >Member Name</label>
-                                            <input
+                                            {/* <input
                                                 type='text'
                                                 placeholder={formik.values.memberName}
                                                 className={`form-control`}
                                                 id='memberName'
                                                 onChange={formik.handleChange}
                                                 onBlur={formik.handleBlur}
-                                            />
+                                            /> */}
+                                            <select class="form-select"
+                                                placeholder={formik.values.memberName}
+                                                onChange={formik.handleChange}
+                                                id='memberName'
+                                                onBlur={formik.handleBlur}>
+                                                <option selected disabled hidden>Select</option>
+                                                {members &&
+                                                    members.map((item) => (
+                                                        <option key={item.id} value={item.id}>
+                                                            {item?.memberName}
+                                                        </option>
+                                                    ))}
+                                            </select>
 
                                         </div>
                                     </div>
@@ -197,10 +265,13 @@ function MMSSearchMotion() {
                                                 onChange={formik.handleChange}
                                                 id='fromSession'
                                                 onBlur={formik.handleBlur}>
-                                                <option>Select</option>
-                                                <option>121</option>
-                                                <option>122</option>
-                                                <option>123</option>
+                                                <option selected disabled hidden>Select</option>
+                                                {sessions &&
+                                                    sessions.map((item) => (
+                                                        <option key={item.id} value={item.id}>
+                                                            {item?.sessionName}
+                                                        </option>
+                                                    ))}
                                             </select>
                                         </div>
                                     </div>
@@ -211,10 +282,14 @@ function MMSSearchMotion() {
                                                 onChange={formik.handleChange}
                                                 id='toSession'
                                                 onBlur={formik.handleBlur} >
-                                                <option>Select</option>
-                                                <option>121</option>
-                                                <option>122</option>
-                                                <option>123</option>
+                                                <option selected disabled hidden>Select</option>
+                                                {sessions &&
+                                                    sessions.map((item) => (
+                                                        <option key={item.id} value={item.id}>
+                                                            {item?.sessionName}
+                                                        </option>
+                                                    ))}
+
                                             </select>
                                         </div>
                                     </div>
@@ -227,6 +302,7 @@ function MMSSearchMotion() {
                                                 onChange={formik.handleChange}
                                                 id='motionType'
                                                 onBlur={formik.handleBlur}>
+                                                <option selected disabled hidden>Select motion Type</option>
                                                 <option>Motion Type</option>
                                                 <option>Adjournment Motion</option>
                                                 <option>Call Attention Notice</option>
@@ -258,10 +334,20 @@ function MMSSearchMotion() {
                                     <div class="col">
                                         <div class="mb-3">
                                             <label class="form-label">Ministry</label>
-                                            <input class="form-control" type="text" placeholder={formik.values.ministry}
+                                            <select
+                                                className="form-select"
+                                                id="ministry"
+                                                name="ministry"
                                                 onChange={formik.handleChange}
-                                                id='ministry'
-                                                onBlur={formik.handleBlur} />
+                                                onBlur={formik.handleBlur}
+                                                value={formik.values.ministry}
+                                                class="form-control">
+                                                <option value={""} selected disabled hidden>select</option>
+                                                {ministryData && ministryData.map((item) => (
+                                                    <option value={item.id}>{item.ministryName}</option>
+                                                ))}
+
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="col">
@@ -271,49 +357,13 @@ function MMSSearchMotion() {
                                                 onChange={formik.handleChange}
                                                 id='motionStatus'
                                                 onBlur={formik.handleBlur}>
-                                                <option selected="selected" value="0">Motion Status</option>
-                                                <option value="40">Admissibility not Allowed by the House</option>
-                                                <option value="20">Admitted</option>
-                                                <option value="26">Admitted but Lapsed</option>
-                                                <option value="8">Admitted for 2 Hr. Discussion</option>
-                                                <option value="6">Allowed</option>
-                                                <option value="44">Approved</option>
-                                                <option value="27">Deferred</option>
-                                                <option value="21">Disallowed</option>
-                                                <option value="9">Disallowed in Chamber</option>
-                                                <option value="22">Discuss in the House</option>
-                                                <option value="29">Discussed</option>
-                                                <option value="7">Disposed Off</option>
-                                                <option value="24">Droped by the House</option>
-                                                <option value="28">Dropped</option>
-                                                <option value="42">Held in Order</option>
-                                                <option value="43">Held out of Order</option>
-                                                <option value="18">Infructuous</option>
-                                                <option value="12">Lapsed</option>
-                                                <option value="30">Move To Session</option>
-                                                <option value="19">Moved and Deferred</option>
-                                                <option value="38">Moved and is Pending for Discussion</option>
-                                                <option value="33">Moved in the House</option>
-                                                <option value="11">Moved in the house without notice</option>
-                                                <option value="14">Not Pressed</option>
-                                                <option value="36">Notice Received for 2nd Time</option>
-                                                <option value="17">Referred to Priv Cmt.</option>
-                                                <option value="32">Referred to Special Committee</option>
-                                                <option value="16">Referred to Spl Cmt</option>
-                                                <option value="1">Referred to Standing Committee</option>
-                                                <option value="37">Referred to the Privileges Committee</option>
-                                                <option value="2">Ruled out of Order</option>
-                                                <option value="10">Ruled out of Order in the house</option>
-                                                <option value="15">Ruling Reserved</option>
-                                                <option value="34">Selected/Not Sel. for Statement</option>
-                                                <option value="41">Talked Out</option>
-                                                <option value="39">To be heard</option>
-                                                <option value="31">To be heard but Lapsed</option>
-                                                <option value="5">Under Process</option>
-                                                <option value="25">Under-Correspondence</option>
-                                                <option value="4">Withdrawn at Secretariat Level</option>
-                                                <option value="23">Withdrawn by the Member</option>
-                                                <option value="3">Withdrawn in the House</option>
+                                                <option selected disabled hidden>Select</option>
+                                                {motionStatus &&
+                                                    motionStatus.map((item) => (
+                                                        <option key={item.id} value={item.id}>
+                                                            {item?.statusName}
+                                                        </option>
+                                                    ))}
                                             </select>
                                         </div>
                                     </div>
@@ -365,10 +415,6 @@ function MMSSearchMotion() {
                                         <button class="btn btn-primary" type="">Reset</button>
                                     </div>
                                 </div>
-
-
-
-
                                 <div class="dash-detail-container" style={{ marginTop: "20px" }}>
                                     <CustomTable
                                         block={true}
