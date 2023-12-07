@@ -4,7 +4,7 @@ import { MMSSideBarItems } from '../../../../../../utils/sideBarItems'
 import Header from '../../../../../../components/Header'
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { createNewMotion, getAllMinistry, updateNewMotion } from '../../../../../../api/APIs';
+import { createNewMotion, getAllMinistry, getAllSessions, getallMembers, getallMotionStatus, updateNewMotion } from '../../../../../../api/APIs';
 import DatePicker from 'react-datepicker';
 import TimePicker from 'react-time-picker';
 import { showSuccessMessage, showErrorMessage } from '../../../../../../utils/ToastAlert';
@@ -28,6 +28,11 @@ const validationSchema = Yup.object({
 function MMSNewMotion() {
     const location = useLocation()
     const [ministryData, setMinistryData] = useState([])
+    const [sessions, setSessions] = useState([]);
+    const [members, setMembers] = useState([])
+    const [motionStatusData, setMotionStatusData] = useState([])
+
+
     const getCurrentTime = () => {
         const now = new Date();
         return now.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
@@ -120,8 +125,46 @@ function MMSNewMotion() {
             showErrorMessage(error?.response?.data?.error);
         }
     }
+    const getAllSessionsApi = async () => {
+        try {
+            const response = await getAllSessions();
+            if (response?.success) {
+                setSessions(response?.data);
+            }
+        } catch (error) {
+            showErrorMessage(error?.response?.data?.message);
+        }
+    };
+
+    const AllMembersData = async () => {
+        const currentPage = 0
+        const pageSize = 100
+        try {
+            const response = await getallMembers(currentPage, pageSize)
+            if (response?.success) {
+                // showSuccessMessage(response?.message);
+                setMembers(response?.data?.rows);
+            }
+        } catch (error) {
+            console.log(error);
+            showErrorMessage(error?.response?.data?.error);
+        }
+    }
+    const getMotionStatus = async () => {
+        try {
+            const response = await getallMotionStatus()
+            if (response?.success) {
+                setMotionStatusData(response?.data);
+            }
+        } catch (error) {
+            showErrorMessage(error?.response?.data?.message);
+        }
+    }
     useEffect(() => {
+        getMotionStatus()
+        AllMembersData()
         AllMinistryData()
+        getAllSessionsApi()
     }, [])
     return (
         <Layout module={true} sidebarItems={MMSSideBarItems} centerlogohide={true}>
@@ -151,10 +194,15 @@ function MMSNewMotion() {
                                                         : 'form-select'
                                                 }
                                             >
-                                                <option>select</option>
-                                                <option value={"1"}>331</option>
-                                                <option>332</option>
-                                                <option>333</option>
+                                                <option value="" selected disabled hidden>
+                                                    Select
+                                                </option>
+                                                {sessions &&
+                                                    sessions.map((item) => (
+                                                        <option key={item.id} value={item.id}>
+                                                            {item?.sessionName}
+                                                        </option>
+                                                    ))}
                                             </select>
                                             {formik.errors.sessionNumber && formik.touched.sessionNumber && (
                                                 <div className="invalid-feedback">{formik.errors.sessionNumber}</div>
@@ -329,9 +377,13 @@ function MMSNewMotion() {
                                                         : 'form-select'
                                                 }
                                             >
-                                                <option>Select</option>
-                                                <option value={"1"}>active</option>
-                                                <option value={"2"}>inactive</option>
+                                                <option selected disabled hidden>Select</option>
+                                                {motionStatusData &&
+                                                    motionStatusData.map((item) => (
+                                                        <option key={item.id} value={item.id}>
+                                                            {item?.statusName}
+                                                        </option>
+                                                    ))}
                                                 {/* Add motion status options */}
                                             </select>
                                             {formik.errors.motionStatus && formik.touched.motionStatus && (
@@ -360,9 +412,13 @@ function MMSNewMotion() {
                                                         : 'form-select'
                                                 }
                                             >
-                                                <option>select</option>
-                                                <option value={"1"}>2655</option>
-                                                <option value={"2"}>2556</option>
+                                                <option value={""} selected disabled hidden>select</option>
+                                                {members &&
+                                                    members.map((item) => (
+                                                        <option key={item.id} value={item.id}>
+                                                            {item?.memberName}
+                                                        </option>
+                                                    ))}
                                             </select>
                                             {formik.errors.mover && formik.touched.mover && (
                                                 <div className="invalid-feedback">{formik.errors.mover}</div>

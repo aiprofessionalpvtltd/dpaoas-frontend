@@ -247,11 +247,7 @@ export const MMSSideBarItems = [
                 link: "/mms/motion/search",
                 icon: faClipboardList
             },
-            {
-                itemName: "Motion Detail",
-                link: "/mms/motion/detail",
-                icon: faClipboardList
-            },
+
 
         ],
     },

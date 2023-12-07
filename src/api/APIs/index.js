@@ -606,6 +606,22 @@ export const getAllMinistry = async () => {
   }
 };
 
+export const getMotionByID = async (id) => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientMMS.get(`/motion/${id}`,)
+    // {
+    //   headers: {
+    //     Authorization: `Bearer ${token}`,
+    //   }
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error('Error fetching API endpoint:', error);
+    throw error;
+  }
+};
+
 export const getAllMotion = async (currentPage, pageSize) => {
   try {
     const token = getAuthToken();
@@ -640,19 +656,64 @@ export const updateNewMotion = async (id, data) => {
 };
 
 //SearchMotion
-export const searchMotion = async (searchParams) => {
+export const searchMotion = async (currentPage, pageSize, data) => {
   try {
     const token = getAuthToken();
-    // Filter out empty values
     const filteredSearchParams = Object.fromEntries(
-      Object.entries(searchParams).filter(([_, value]) => value !== "")
+      Object.entries(data).filter(([_, value]) => value !== "")
     );
-
-    const response = await axiosClientMMS.get(`/motion/all?page=${0}&pageSize=${1000}`,{
+    const response = await axiosClientMMS.get(`/motion/all?page=${currentPage}&pageSize=${pageSize}`, {
       params: filteredSearchParams,
       // headers: {
       //   Authorization: `Bearer ${token}`,
       // },
+    });
+    return response?.data;
+  } catch (error) {
+    console.error('Error fetching API endpoint:', error);
+    throw error;
+  }
+};
+
+// Motion Status
+export const getallMotionStatus = async () => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientMMS.get(`/motion/motionStatuses`, {
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // }
+    });
+    return response?.data;
+  } catch (error) {
+    console.error('Error fetching API endpoint:', error);
+    throw error;
+  }
+};
+//Member 
+export const getallMembers = async (currentPage, pageSize) => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientMMS.get(`/members/all?page=${currentPage}&pageSize=${pageSize}`, {
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // }
+    });
+    return response?.data;
+  } catch (error) {
+    console.error('Error fetching API endpoint:', error);
+    throw error;
+  }
+};
+
+
+export const sendMotionForTranslation = async (id) => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientMMS.put(`/motion/sendForTranslation/${id}`, {
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // }
     });
     return response?.data;
   } catch (error) {
