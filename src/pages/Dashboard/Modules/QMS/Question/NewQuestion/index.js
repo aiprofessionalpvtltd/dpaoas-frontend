@@ -1,214 +1,329 @@
-import React from 'react'
-import { Layout } from '../../../../../../components/Layout'
-import Header from '../../../../../../components/Header'
-import { QMSSideBarItems } from '../../../../../../utils/sideBarItems'
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
+import React, { useEffect, useState } from "react";
+import { Layout } from "../../../../../../components/Layout";
+import Header from "../../../../../../components/Header";
+import { QMSSideBarItems } from "../../../../../../utils/sideBarItems";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../../utils/ToastAlert";
+import { createQuestion, getAllSessions } from "../../../../../../api/APIs";
+import { CustomAlert } from "../../../../../../components/CustomComponents/CustomAlert";
+import { ToastContainer } from "react-toastify";
+import DatePicker from "react-datepicker";
+import { Editor } from "../../../../../../components/CustomComponents/Editor";
+import { useNavigate } from "react-router";
+
 const validationSchema = Yup.object({
-    questionId:Yup.string().required('Question Id is required'),
-    sessionNo:Yup.string().required('Session Number is required'),
-    noticeOfficeDiaryNo:Yup.number(),
-    noticeOfficeDiaryDate : Yup.string(),
-    noticeOfficeDiaryTime : Yup.string(),
-    questionDiaryNo : Yup.string(),
-    catagory : Yup.string(),
-    senator : Yup.string(),
-    division : Yup.string()
+  // fkSessionId: Yup.number().required("Session No is required"),
+  questionCategory: Yup.string().required("Category is required"),
+  noticeOfficeDiaryNo: Yup.number().required(
+    "Notice office diary No is required",
+  ),
+  fkMemberId: Yup.number().required("Member id is required"),
+  noticeOfficeDiaryDate: Yup.string().required(
+    "Notice Office Diary Date is required",
+  ),
 });
 
 function QMSNewQuestion() {
-    const formik = useFormik({
-        initialValues: {
-            questionId: '',
-            sessionNo : '',
-            noticeOfficeDiaryNo : '',
-            noticeOfficeDiaryDate : '',
-            noticeOfficeDiaryTime : '',
-            questionDiaryNo : '',
-            catagory : '',
-            senator : '',
-            division : ''
-        },
-        validationSchema: validationSchema,
-        onSubmit: (values) => {
-            // Handle form submission here
-            console.log(values);
-        },
-    });
-    return (
-        <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
-            <Header dashboardLink={"/"} addLink1={"/qms/dashboard"} title1={"Question"} addLink2={"/qms/question/new"} title2={"New Question"} />
-            <div class='container-fluid'>
-                <div class='card mt-4'>
-                    <div class='card-header red-bg' style={{ background: "#14ae5c !important" }}>
-                        <h1>NEW QUESTION</h1>
-                    </div>
-                    <div class='card-body'>
-                        <div class="container-fluid">
-                        <form onSubmit={formik.handleSubmit}>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="mb-3">
-                                        <label class="form-label">Question ID</label>
-                                        <input
-                                        type='text'
-                                        placeholder={formik.values.questionId}
-                                        className={`form-control ${formik.touched.questionId && formik.errors.questionId ? 'is-invalid' : ''}`}
-                                        id='questionId'
-                                        onChange={formik.handleChange}
-                                        onBlur={formik.handleBlur}
-                                        />
-                                        {formik.touched.questionId && formik.errors.questionId && (
-                                            <div className='invalid-feedback'>{formik.errors.questionId}</div>
-                                    )}
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="mb-3">
-                                        <label class="form-label">Session No</label>
-                                        <input
-                                        type='text'
-                                        placeholder={formik.values.sessionNo}
-                                        className={`form-control ${formik.touched.sessionNo && formik.errors.sessionNo ? 'is-invalid' : ''}`}
-                                        id='sessionNo'
-                                        onChange={formik.handleChange}
-                                        onBlur={formik.handleBlur}
-                                        />
-                                        {formik.touched.sessionNo && formik.errors.sessionNo && (
-                                            <div className='invalid-feedback'>{formik.errors.sessionNo}</div>
-                                    )}
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="mb-3">
-                                        <label class="form-label">Notice Office Diary No</label>
-                                        <input
-                                        type='number'
-                                        placeholder={formik.values.noticeOfficeDiaryNo}
-                                        className={`form-control ${formik.touched.noticeOfficeDiaryNo && formik.errors.noticeOfficeDiaryNo ? 'is-invalid' : ''}`}
-                                        id='noticeOfficeDiaryNo'
-                                        onChange={formik.handleChange}
-                                        onBlur={formik.handleBlur}
-                                        />
-                                        {formik.touched.noticeOfficeDiaryNo && formik.errors.noticeOfficeDiaryNo && (
-                                            <div className='invalid-feedback'>{formik.errors.noticeOfficeDiaryNo}</div>
-                                    )}
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="mb-3">
-                                        <label class="form-label">Notice Office Diary Date</label>
-                                        <input
-                                        type='text'
-                                        placeholder={formik.values.noticeOfficeDiaryDate}
-                                        className={`form-control ${formik.touched.noticeOfficeDiaryDate && formik.errors.noticeOfficeDiaryDate ? 'is-invalid' : ''}`}
-                                        id='noticeOfficeDiaryDate'
-                                        onChange={formik.handleChange}
-                                        onBlur={formik.handleBlur}
-                                        />
-                                        {formik.touched.noticeOfficeDiaryDate && formik.errors.noticeOfficeDiaryDate && (
-                                            <div className='invalid-feedback'>{formik.errors.noticeOfficeDiaryDate}</div>
-                                    )}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="mb-3">
-                                        <label class="form-label">Notice Office Diary Time</label>
-                                        <input
-                                        type='text'
-                                        placeholder={formik.values.noticeOfficeDiaryTime}
-                                        className={`form-control ${formik.touched.noticeOfficeDiaryTime && formik.errors.noticeOfficeDiaryTime ? 'is-invalid' : ''}`}
-                                        id='noticeOfficeDiaryTime'
-                                        onChange={formik.handleChange}
-                                        onBlur={formik.handleBlur}
-                                        />
-                                        {formik.touched.noticeOfficeDiaryTime && formik.errors.noticeOfficeDiaryTime && (
-                                            <div className='invalid-feedback'>{formik.errors.noticeOfficeDiaryTime}</div>
-                                    )}
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="mb-3">
-                                        <label class="form-label">Question Diary No</label>
-                                        <input
-                                        type='text'
-                                        placeholder={formik.values.questionDiaryNo}
-                                        className={`form-control ${formik.touched.questionDiaryNo && formik.errors.questionDiaryNo ? 'is-invalid' : ''}`}
-                                        id='questionDiaryNo'
-                                        onChange={formik.handleChange}
-                                        onBlur={formik.handleBlur}
-                                        />
-                                        {formik.touched.questionDiaryNo && formik.errors.questionDiaryNo && (
-                                            <div className='invalid-feedback'>{formik.errors.questionDiaryNo}</div>
-                                    )}
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="mb-3">
-                                        <label class="form-label">Catagory</label>
-                                        <select class="form-select" id='catagory'
-                                        onChange={formik.handleChange}
-                                        onBlur={formik.handleBlur}>
-                                            <option>Select</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="mb-3">
-                                        <label class="form-label">Senator</label>
-                                        <input
-                                        type='text'
-                                        placeholder={formik.values.senator}
-                                        className={`form-control ${formik.touched.senator && formik.errors.senator ? 'is-invalid' : ''}`}
-                                        id='senator'
-                                        onChange={formik.handleChange}
-                                        onBlur={formik.handleBlur}
-                                        />
-                                        {formik.touched.senator && formik.errors.senator && (
-                                            <div className='invalid-feedback'>{formik.errors.senator}</div>
-                                    )}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-3">
-                                    <div class="mb-3">
-                                        <label class="form-label">Division</label>
-                                        <input
-                                        type='text'
-                                        placeholder={formik.values.division}
-                                        className={`form-control ${formik.touched.division && formik.errors.division ? 'is-invalid' : ''}`}
-                                        id='division'
-                                        onChange={formik.handleChange}
-                                        onBlur={formik.handleBlur}
-                                        />
-                                        {formik.touched.division && formik.errors.division && (
-                                            <div className='invalid-feedback'>{formik.errors.division}</div>
-                                    )}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
+  const navigate = useNavigate();
+  const [showModal, setShowModal] = useState(false);
+  const [sessions, setSessions] = useState([]);
+  const [formValues, setFormValues] = useState([]);
 
-                            </div>
+  const handleShow = () => setShowModal(true);
+  const handleClose = () => setShowModal(false);
+  const handleOkClick = () => {
+    CreateQuestionApi(formValues);
+    handleClose();
+  };
 
-                            <p>add english text editor here</p>
-                            <p>add urdu text editor here</p>
+  const formik = useFormik({
+    initialValues: {
+      fkSessionId: null,
+      questionCategory: "",
+      noticeOfficeDiaryNo: null,
+      fkMemberId: null,
+      noticeOfficeDiaryDate: "",
+      noticeOfficeDiaryTime: "",
+      englishText: "",
+      urduText: "",
+    },
+    validationSchema: validationSchema,
+    onSubmit: (values) => {
+      handleShow();
+      setFormValues(values);
+    },
+    enableReinitialize: true,
+  });
 
-                            <div class="row">
-                                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                    <button class="btn btn-primary" type="submit">Submit</button>
-                                </div>
-                            </div>
-                        </form>
-                        </div>
-                    </div>
-                </div>
+  const CreateQuestionApi = async (values) => {
+    const formData = new FormData();
+    formData.append("fkSessionId", 1);
+    formData.append("noticeOfficeDiaryNo", Number(values.noticeOfficeDiaryNo));
+    formData.append("noticeOfficeDiaryDate", values.noticeOfficeDiaryDate);
+    formData.append("noticeOfficeDiaryTime", "11:40am");
+    formData.append("questionCategory", values.questionCategory);
+    formData.append("fkQuestionStatus", 3);
+    formData.append("fkMemberId", values.fkMemberId);
+
+    formData.append("englishText", "English text");
+    formData.append("urduText", "Urdu text");
+
+    try {
+      const response = await createQuestion(formData);
+      if (response?.success) {
+        showSuccessMessage(response?.message);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  };
+
+  const getAllSessionsApi = async () => {
+    try {
+      const response = await getAllSessions();
+      if (response?.success) {
+        setSessions(response?.data);
+      }
+    } catch (error) {
+      // showErrorMessage(error?.response?.data?.message);
+    }
+  };
+
+  useEffect(() => {
+    getAllSessionsApi();
+  }, []);
+
+  const handleProcedureContentChange = (content) => {
+    console.log(content);
+  };
+  return (
+    <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
+      <ToastContainer />
+      <Header
+        dashboardLink={"/"}
+        addLink1={"/qms/dashboard"}
+        title1={"Question"}
+        addLink2={"/qms/question/new"}
+        title2={"New Question"}
+      />
+      <CustomAlert
+        showModal={showModal}
+        handleClose={handleClose}
+        handleOkClick={handleOkClick}
+      />
+
+      <div>
+        <div class="container-fluid">
+          <div class="card mt-1">
+            <div
+              class="card-header red-bg"
+              style={{ background: "#14ae5c !important" }}
+            >
+              <h1>NEW QUESTION</h1>
             </div>
-        </Layout>
-    )
+            <div class="card-body">
+              <form onSubmit={formik.handleSubmit}>
+                <div class="container-fluid">
+                  <div class="row">
+                    <div class="col">
+                      <div class="mb-3">
+                        <label class="form-label">Session No</label>
+                        <select
+                          class={`form-select ${
+                            formik.touched.fkSessionId &&
+                            formik.errors.fkSessionId
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                          placeholder="Session No"
+                          value={formik.values.fkSessionId}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          name="fkSessionId"
+                        >
+                          <option value="" selected disabled hidden>
+                            Select
+                          </option>
+                          {sessions &&
+                            sessions.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item?.sessionName}
+                              </option>
+                            ))}
+                        </select>
+                        {formik.touched.fkSessionId &&
+                          formik.errors.fkSessionId && (
+                            <div className="invalid-feedback">
+                              {formik.errors.fkSessionId}
+                            </div>
+                          )}
+                      </div>
+                    </div>
+
+                    <div class="col">
+                      <div class="mb-3">
+                        <label class="form-label">Category</label>
+                        <select
+                          class={`form-select ${
+                            formik.touched.questionCategory &&
+                            formik.errors.questionCategory
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.questionCategory || ""}
+                          name="questionCategory"
+                        >
+                          <option value="" selected disabled hidden>
+                            Select
+                          </option>
+                          <option value="Starred">Starred</option>
+                          <option value="Un-Starred">Un-Starred</option>
+                          <option value="Short Notice">Short Notice</option>
+                        </select>
+                        {formik.touched.questionCategory &&
+                          formik.errors.questionCategory && (
+                            <div class="invalid-feedback">
+                              {formik.errors.questionCategory}
+                            </div>
+                          )}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col">
+                      <div class="mb-3">
+                        <label class="form-label">Notice Office Diary No</label>
+                        <input
+                          class={`form-control ${
+                            formik.touched.noticeOfficeDiaryNo &&
+                            formik.errors.noticeOfficeDiaryNo
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                          type="number"
+                          id="noticeOfficeDiaryNo"
+                          value={formik.values.noticeOfficeDiaryNo}
+                          name="noticeOfficeDiaryNo"
+                          onBlur={formik.handleBlur}
+                          onChange={formik.handleChange}
+                        />
+                        {formik.touched.noticeOfficeDiaryNo &&
+                          formik.errors.noticeOfficeDiaryNo && (
+                            <div class="invalid-feedback">
+                              {formik.errors.noticeOfficeDiaryNo}
+                            </div>
+                          )}
+                      </div>
+                    </div>
+
+                    <div class="col">
+                      <div class="mb-3">
+                        <label class="form-label">Member ID</label>
+                        <input
+                          className={`form-control ${
+                            formik.touched.fkMemberId &&
+                            formik.errors.fkMemberId
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                          type="text"
+                          id="fkMemberId"
+                          value={formik.values.fkMemberId}
+                          name="fkMemberId"
+                          onBlur={formik.handleBlur}
+                          onChange={formik.handleChange}
+                        />
+                        {formik.touched.fkMemberId &&
+                          formik.errors.fkMemberId && (
+                            <div class="invalid-feedback">
+                              {formik.errors.fkMemberId}
+                            </div>
+                          )}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div className="col">
+                      <div className="mb-3">
+                        <label className="form-label">
+                          Notice Office Diary Date{" "}
+                        </label>
+                        <DatePicker
+                          selected={formik.values.noticeOfficeDiaryDate}
+                          onChange={(date) =>
+                            formik.setFieldValue("noticeOfficeDiaryDate", date)
+                          }
+                          onBlur={formik.handleBlur}
+                          className={`form-control ${
+                            formik.touched.noticeOfficeDiaryDate &&
+                            formik.errors.noticeOfficeDiaryDate
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                        />
+                        {formik.touched.noticeOfficeDiaryDate &&
+                          formik.errors.noticeOfficeDiaryDate && (
+                            <div className="invalid-feedback">
+                              {formik.errors.noticeOfficeDiaryDate}
+                            </div>
+                          )}
+                      </div>
+                    </div>
+
+                    <div className="col">
+                      <div className="mb-3">
+                        <label className="form-label">
+                          Notice Office Diary Time
+                        </label>
+                        <input
+                          className="form-control"
+                          type="text"
+                          id="noticeOfficeDiaryTime"
+                          value={formik.values.noticeOfficeDiaryTime}
+                          name="noticeOfficeDiaryTime"
+                          onBlur={formik.handleBlur}
+                          onChange={formik.handleChange}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style={{ marginTop: 10 }}>
+                    <Editor
+                      title={"English Text"}
+                      onChange={handleProcedureContentChange}
+                    />
+                  </div>
+
+                  <div style={{ marginTop: 70, marginBottom: 40 }}>
+                    <Editor
+                      title={"Urdu Text"}
+                      onChange={handleProcedureContentChange}
+                    />
+                  </div>
+
+                  <div class="row">
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                      <button class="btn btn-primary" type="submit">
+                        Submit
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Layout>
+  );
 }
 
-export default QMSNewQuestion
+export default QMSNewQuestion;

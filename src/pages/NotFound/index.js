@@ -1,6 +1,6 @@
-import React from 'react';
-import { Container, Row, Col, Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { Container, Row, Col, Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 export const NotFound = () => {
   return (
@@ -9,11 +9,7 @@ export const NotFound = () => {
         <Col>
           <h1>404</h1>
           <h4>Oops! Page not found.</h4>
-          <Button
-            as={Link}
-            to="/"
-            variant="primary"
-          >
+          <Button as={Link} to="/" variant="primary">
             Go to Homepage
           </Button>
         </Col>

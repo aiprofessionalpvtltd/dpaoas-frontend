@@ -1,14 +1,25 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
 import { QMSSideBarItems } from "../../../../../../utils/sideBarItems";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { useLocation } from "react-router";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../../utils/ToastAlert";
+import {
+  UpdateQuestionById,
+  getAllQuestionStatus,
+  sendQuestionTranslation,
+} from "../../../../../../api/APIs";
+import { ToastContainer } from "react-toastify";
 const validationSchema = Yup.object({
   sessionNo: Yup.string(),
   noticeOfficeDiaryNo: Yup.string(),
-  noticeOfficeDiaryDate: Yup.string().required("Notice Office Diary Date is required"),
-  noticeOfficeDiaryTime: Yup.string().required("Notice Office Diary Time is required"),
+  noticeOfficeDiaryDate: Yup.string(),
+  noticeOfficeDiaryTime: Yup.string(),
   priority: Yup.string(),
   questionId: Yup.string(),
   questionDiaryNo: Yup.string(),
@@ -22,29 +33,92 @@ const validationSchema = Yup.object({
 });
 
 function QMSQuestionDetail() {
+  const location = useLocation();
+
+  console.log("Question Id", location?.state?.id);
+
+  const [showDeferForm, setShowDeferForm] = useState(false);
+  const [allquestionStatus, setAllQuestionStatus] = useState([]);
+
   const formik = useFormik({
     initialValues: {
-      sessionNo: "",
-      noticeOfficeDiaryNo: "",
-      noticeOfficeDiaryDate: "",
-      noticeOfficeDiaryTime: "",
+      sessionNo: location?.state?.session?.fkSessionId,
+      noticeOfficeDiaryNo:
+        location?.state?.noticeOfficeDiary?.noticeOfficeDiaryNo,
+      noticeOfficeDiaryDate:
+        location?.state?.noticeOfficeDiary?.noticeOfficeDiaryDate,
+      noticeOfficeDiaryTime:
+        location?.state?.noticeOfficeDiary?.noticeOfficeDiaryTime,
       priority: "",
-      questionId: "",
-      questionDiaryNo: "",
-      category: "",
-      questionStatus: "",
-      replyDate: "",
-      senator: "",
-      group: "",
-      division: "",
-      fileStatus: "",
+      questionId: location?.state?.fkSessionId,
+      questionDiaryNo: location?.state?.fkNoticeDiary,
+      category: location?.state?.questionCategory,
+      questionStatus: location?.state?.fkQuestionStatus,
+      replyDate: location?.state?.replyDate,
+      senator: location?.state?.member.memberName,
+      group: location?.state?.groups,
+      division: location?.state?.divisions,
+      fileStatus: location?.state?.fileStatus,
     },
-    validationSchema: validationSchema,
+    // validationSchema: validationSchema,
     onSubmit: (values) => {
       // Handle form submission here
-      console.log(values);
+      updateQuestion(values);
     },
   });
+
+  const updateQuestion = async (values) => {
+    const formData = new FormData();
+    formData.append("fkSessionId", values?.sessionNo);
+    formData.append("noticeOfficeDiaryNo", values?.noticeOfficeDiaryNo);
+    formData.append("noticeOfficeDiaryDate", values?.noticeOfficeDiaryDate);
+    formData.append("noticeOfficeDiaryTime", values?.noticeOfficeDiaryTime);
+    formData.append("questionCategory", values?.category);
+    formData.append("questionDiaryNo", values?.questionDiaryNo);
+    formData.append("fkMemberId", values?.senator);
+    formData.append("fkGroupId", values?.group);
+    formData.append("fkDivisionId", values?.division);
+    formData.append("fileStatus", values?.fileStatus);
+    formData.append("replyDate", values?.replyDate);
+
+    formData.append("ammendedText", "dkals");
+    formData.append("urduText", "dkpad");
+    formData.append("originalText", "dkpad");
+    try {
+      const response = await UpdateQuestionById(location?.state?.id, formData);
+      if (response?.success) {
+        showSuccessMessage(response?.message);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  };
+  const GetALlStatus = async () => {
+    try {
+      const response = await getAllQuestionStatus();
+      if (response?.success) {
+        setAllQuestionStatus(response?.data);
+        // showSuccessMessage(response.message)
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const hendleQuestionTranslation = async () => {
+    try {
+      const response = await sendQuestionTranslation(location?.state?.id);
+      if (response?.success) {
+        showSuccessMessage(response.message);
+      }
+    } catch (error) {
+      showErrorMessage(error.response.data.message);
+    }
+  };
+
+  useEffect(() => {
+    GetALlStatus();
+  }, []);
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <Header
@@ -54,9 +128,13 @@ function QMSQuestionDetail() {
         addLink2={"/qms/question/detail"}
         title2={"Question Detail"}
       />
+      <ToastContainer />
       <div class="container-fluid">
         <div class="card mt-4">
-          <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
+          <div
+            class="card-header red-bg"
+            style={{ background: "#14ae5c !important" }}
+          >
             <h1>QUESTIONS DETAIL</h1>
           </div>
           <div class="card-body">
@@ -70,15 +148,58 @@ function QMSQuestionDetail() {
                     <button class="btn btn-primary" type="">
                       Revive
                     </button>
-                    <button class="btn btn-primary" type="">
+                    <button
+                      class="btn btn-primary"
+                      type="button"
+                      onClick={() => setShowDeferForm(!showDeferForm)}
+                    >
                       Defer
                     </button>
-                    <button class="btn btn-primary" type="">
+                    <button
+                      class="btn btn-primary"
+                      type="button"
+                      onClick={() => hendleQuestionTranslation()}
+                    >
                       Send for Translation
                     </button>
                   </div>
                   <div class="clearfix"></div>
                 </div>
+                {showDeferForm && (
+                  <div
+                    class="dash-detail-container"
+                    style={{ marginTop: "20px", marginBottom: "25px" }}
+                  >
+                    <h4>Deffer Question</h4>
+                    <div class="row">
+                      <div class="col">
+                        <div class="mb-3">
+                          <label class="form-label">Session No</label>
+                          <select class="form-select">
+                            <option value={""} selected disabled hidden>
+                              select
+                            </option>
+                            <option value={"2"}>123</option>
+                            <option>12123</option>
+                            <option>45456</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col">
+                        <div class="mb-3">
+                          <label class="form-label">Deffer Date</label>
+                          <input class="form-control" type="text" />
+                        </div>
+                      </div>
+                      <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button class="btn btn-primary" type="">
+                          Defer
+                        </button>
+                      </div>
+                      <div class="clearfix"></div>
+                    </div>
+                  </div>
+                )}
                 <div class="row">
                   <div class="col">
                     <div class="mb-3">
@@ -89,7 +210,10 @@ function QMSQuestionDetail() {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       >
-                        <option>123</option>
+                        <option value={""} selected disabled hidden>
+                          select
+                        </option>
+                        <option value={"1"}>123</option>
                         <option>12123</option>
                         <option>45456</option>
                       </select>
@@ -98,16 +222,14 @@ function QMSQuestionDetail() {
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Notice Office Diary No</label>
-                      <select
-                        class="form-select"
+                      <input
+                        placeholder={formik.values.noticeOfficeDiaryNo}
+                        type="text"
+                        class="form-control"
                         id="noticeOfficeDiaryNo"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                      >
-                        <option>6546</option>
-                        <option>45654</option>
-                        <option>45646</option>
-                      </select>
+                      />
                     </div>
                   </div>
                   <div class="col">
@@ -116,18 +238,11 @@ function QMSQuestionDetail() {
                       <input
                         type="text"
                         placeholder={formik.values.noticeOfficeDiaryDate}
-                        className={`form-control ${
-                          formik.touched.noticeOfficeDiaryDate && formik.errors.noticeOfficeDiaryDate
-                            ? "is-invalid"
-                            : ""
-                        }`}
+                        className={"form-control"}
                         id="noticeOfficeDiaryDate"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
-                      {formik.touched.noticeOfficeDiaryDate && formik.errors.noticeOfficeDiaryDate && (
-                        <div className="invalid-feedback">{formik.errors.noticeOfficeDiaryDate}</div>
-                      )}
                     </div>
                   </div>
                   <div class="col">
@@ -136,18 +251,11 @@ function QMSQuestionDetail() {
                       <input
                         type="text"
                         placeholder={formik.values.noticeOfficeDiaryTime}
-                        className={`form-control ${
-                          formik.touched.noticeOfficeDiaryTime && formik.errors.noticeOfficeDiaryTime
-                            ? "is-invalid"
-                            : ""
-                        }`}
+                        className={"form-control"}
                         id="noticeOfficeDiaryTime"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
-                      {formik.touched.noticeOfficeDiaryTime && formik.errors.noticeOfficeDiaryTime && (
-                        <div className="invalid-feedback">{formik.errors.noticeOfficeDiaryTime}</div>
-                      )}
                     </div>
                   </div>
                 </div>
@@ -173,18 +281,14 @@ function QMSQuestionDetail() {
                     <div class="mb-3">
                       <label class="form-label">Question ID</label>
                       <input
+                        enterKeyHint={true}
                         type="text"
                         placeholder={formik.values.questionId}
-                        className={`form-control ${
-                          formik.touched.questionId && formik.errors.questionId ? "is-invalid" : ""
-                        }`}
+                        className={"form-control"}
                         id="questionId"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
-                      {formik.touched.questionId && formik.errors.questionId && (
-                        <div className="invalid-feedback">{formik.errors.questionId}</div>
-                      )}
                     </div>
                   </div>
                   <div class="col">
@@ -193,16 +297,11 @@ function QMSQuestionDetail() {
                       <input
                         type="text"
                         placeholder={formik.values.questionDiaryNo}
-                        className={`form-control ${
-                          formik.touched.questionDiaryNo && formik.errors.questionDiaryNo ? "is-invalid" : ""
-                        }`}
+                        className={"form-control"}
                         id="questionDiaryNo"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
-                      {formik.touched.questionDiaryNo && formik.errors.questionDiaryNo && (
-                        <div className="invalid-feedback">{formik.errors.questionDiaryNo}</div>
-                      )}
                     </div>
                   </div>
                   <div class="col">
@@ -214,10 +313,12 @@ function QMSQuestionDetail() {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       >
-                        <option>Select</option>
-                        <option>Starred</option>
-                        <option>Un-Starred</option>
-                        <option>Short Notice</option>
+                        <option value={""} selected disabled hidden>
+                          Select
+                        </option>
+                        <option value={"Starred"}>Starred</option>
+                        <option value={"Un-Starred"}>Un-Starred</option>
+                        <option value={"Short Notice"}>Short Notice</option>
                       </select>
                     </div>
                   </div>
@@ -232,20 +333,15 @@ function QMSQuestionDetail() {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       >
-                        <option>Select</option>
-                        <option>Admitted</option>
-                        <option>Admitted but Lapsed</option>
-                        <option>Deferred</option>
-                        <option>Disallowed</option>
-                        <option>Disallowed on Reconsideration</option>
-                        <option>File not Available</option>
-                        <option>Lapsed</option>
-                        <option>NFA</option>
-                        <option>Replied</option>
-                        <option>Replied/Referred to Standing Committee</option>
-                        <option>Under Correspondence</option>
-                        <option>Under Process</option>
-                        <option>Withdrawn</option>
+                        <option selected disabled hidden>
+                          select
+                        </option>
+                        {allquestionStatus &&
+                          allquestionStatus.map((item) => (
+                            <option key={item.id} value={item.id}>
+                              {item?.questionStatus}
+                            </option>
+                          ))}
                       </select>
                     </div>
                   </div>
@@ -255,34 +351,30 @@ function QMSQuestionDetail() {
                       <input
                         type="text"
                         placeholder={formik.values.replyDate}
-                        className={`form-control ${
-                          formik.touched.replyDate && formik.errors.replyDate ? "is-invalid" : ""
-                        }`}
+                        className={`form-control`}
                         id="replyDate"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
-                      {formik.touched.replyDate && formik.errors.replyDate && (
-                        <div className="invalid-feedback">{formik.errors.replyDate}</div>
-                      )}
                     </div>
                   </div>
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Senator</label>
-                      <input
-                        type="text"
+                      <select
                         placeholder={formik.values.senator}
-                        className={`form-control ${
-                          formik.touched.senator && formik.errors.senator ? "is-invalid" : ""
-                        }`}
+                        className={`form-control`}
                         id="senator"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                      />
-                      {formik.touched.senator && formik.errors.senator && (
-                        <div className="invalid-feedback">{formik.errors.senator}</div>
-                      )}
+                      >
+                        <option value={""} selected disabled hidden>
+                          Select
+                        </option>
+                        <option value={"2"}>Saqib khan</option>
+                        <option>Ali Khan</option>
+                        <option>Mohsin Khan</option>
+                      </select>
                     </div>
                   </div>
                   <div class="col">
@@ -294,8 +386,10 @@ function QMSQuestionDetail() {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       >
-                        <option>Select</option>
-                        <option>1st Group</option>
+                        <option value={""} selected disabled hidden>
+                          Select
+                        </option>
+                        <option value={"1"}>1st Group</option>
                         <option>2nd Group</option>
                         <option>3rd Group</option>
                         <option>4th Group</option>
@@ -315,15 +409,24 @@ function QMSQuestionDetail() {
                         onBlur={formik.handleBlur}
                       >
                         <option>Select</option>
-                        <option>Aviation Division</option>
+                        <option value={"1"}>Aviation Division</option>
                         <option>Cabinet Division</option>
-                        <option>Capital Administration &amp; Development Div.</option>
-                        <option>Climate Change and Environmental Coordination</option>
+                        <option>
+                          Capital Administration &amp; Development Div.
+                        </option>
+                        <option>
+                          Climate Change and Environmental Coordination
+                        </option>
                         <option>Establishment Division</option>
                         <option>Housing and Works Division</option>
-                        <option>Information Technology &amp; Telecommunications Division</option>
+                        <option>
+                          Information Technology &amp; Telecommunications
+                          Division
+                        </option>
                         <option>National Security Division</option>
-                        <option>Poverty Alleviation and Social Safety Division</option>
+                        <option>
+                          Poverty Alleviation and Social Safety Division
+                        </option>
                         <option>Textile Division</option>
                       </select>
                     </div>
@@ -337,10 +440,17 @@ function QMSQuestionDetail() {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       >
-                        <option>Available</option>
-                        <option>Missing</option>
-                        <option>Moved for Approval</option>
-                        <option>Moved for Advance Copy</option>
+                        <option value={""} selected disabled hidden>
+                          select
+                        </option>
+                        <option value={"Available"}>Available</option>
+                        <option value={"Missing"}>Missing</option>
+                        <option value={"Moved for Approval"}>
+                          Moved for Approval
+                        </option>
+                        <option value={"Moved for Advance Copy"}>
+                          Moved for Advance Copy
+                        </option>
                       </select>
                     </div>
                   </div>
@@ -400,13 +510,19 @@ function QMSQuestionDetail() {
                       <td class="text-left" style={{ paddingLeft: "23px" }}>
                         Sent for translation By
                       </td>
-                      <td class="text-left" style={{ paddingLeft: "23px" }}></td>
+                      <td
+                        class="text-left"
+                        style={{ paddingLeft: "23px" }}
+                      ></td>
                     </tr>
                     <tr>
                       <td class="text-left" style={{ paddingLeft: "23px" }}>
                         Translation Approved By{" "}
                       </td>
-                      <td class="text-left" style={{ paddingLeft: "23px" }}></td>
+                      <td
+                        class="text-left"
+                        style={{ paddingLeft: "23px" }}
+                      ></td>
                     </tr>
                     <tr>
                       <td class="text-left" style={{ paddingLeft: "23px" }}>
@@ -420,12 +536,19 @@ function QMSQuestionDetail() {
                       <td class="text-left" style={{ paddingLeft: "23px" }}>
                         Recovered By{" "}
                       </td>
-                      <td class="text-left" style={{ paddingLeft: "23px" }}></td>
+                      <td
+                        class="text-left"
+                        style={{ paddingLeft: "23px" }}
+                      ></td>
                     </tr>
                   </tbody>
                 </table>
               </div>
-              <h2 style={{ color: "#666", fontSize: "24px", marginTop: "30px" }}>Status History</h2>
+              <h2
+                style={{ color: "#666", fontSize: "24px", marginTop: "30px" }}
+              >
+                Status History
+              </h2>
               <div class="dash-detail-container" style={{ marginTop: "20px" }}>
                 <table class="table red-bg-head th">
                   <thead>
@@ -458,7 +581,11 @@ function QMSQuestionDetail() {
                   </tbody>
                 </table>
               </div>
-              <h2 style={{ color: "#666", marginTop: "25px", fontSize: "24px" }}>Revival History</h2>
+              <h2
+                style={{ color: "#666", marginTop: "25px", fontSize: "24px" }}
+              >
+                Revival History
+              </h2>
               <div class="dash-detail-container" style={{ marginTop: "20px" }}>
                 <table class="table red-bg-head th">
                   <thead>
@@ -495,7 +622,11 @@ function QMSQuestionDetail() {
                   </tbody>
                 </table>
               </div>
-              <h2 style={{ color: "#666", marginTop: "25px", fontSize: "24px" }}>Defer History</h2>
+              <h2
+                style={{ color: "#666", marginTop: "25px", fontSize: "24px" }}
+              >
+                Defer History
+              </h2>
               <div class="dash-detail-container" style={{ marginTop: "20px" }}>
                 <table class="table red-bg-head th">
                   <thead>
@@ -532,7 +663,11 @@ function QMSQuestionDetail() {
                   </tbody>
                 </table>
               </div>
-              <h2 style={{ color: " #666", marginTop: "25px", fontSize: "24px" }}>File Status History</h2>
+              <h2
+                style={{ color: " #666", marginTop: "25px", fontSize: "24px" }}
+              >
+                File Status History
+              </h2>
               <div class="dash-detail-container" style={{ marginTop: "20px" }}>
                 <table class="table red-bg-head th">
                   <thead>

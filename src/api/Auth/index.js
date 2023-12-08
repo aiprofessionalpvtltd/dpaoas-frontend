@@ -1,43 +1,41 @@
 export const setAuthToken = (token) => {
-  localStorage.setItem('userToken', token);
+  localStorage.setItem("userToken", token);
 };
 
 export const getAuthToken = () => {
-  const authToken = localStorage.getItem('userToken');
+  const authToken = localStorage.getItem("userToken");
   return authToken;
 };
 
 export const logout = () => {
-  localStorage.removeItem('userToken');
+  localStorage.removeItem("userToken");
 };
-
 
 // Roles
 export const setRolesData = (data) => {
-  localStorage.setItem('roles', data);
+  localStorage.setItem("roles", data);
 };
 
 export const getRolesData = () => {
-  const Data = localStorage.getItem('roles');
+  const Data = localStorage.getItem("roles");
   return Data;
 };
 
 // Permissions
 export const setPermissionsData = (data) => {
-  localStorage.setItem('permissions', data);
+  localStorage.setItem("permissions", data);
 };
 
 export const getPermissionsData = () => {
-  const Data = localStorage.getItem('permissions');
+  const Data = localStorage.getItem("permissions");
   return Data;
 };
 
-
 //Pass Id
 export const setPassID = (id) => {
-  localStorage.setItem('passid', id);
+  localStorage.setItem("passid", id);
 };
 
 export const getPassID = (id) => {
-  return localStorage.getItem('passid', id)
+  return localStorage.getItem("passid", id);
 };

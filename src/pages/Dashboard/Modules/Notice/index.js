@@ -1,45 +1,51 @@
-import React, { useState } from 'react';
-import { Layout } from '../../../../components/Layout';
-import { NoticeSidebarItems } from '../../../../utils/sideBarItems';
-import { useNavigate } from 'react-router-dom';
-import Header from '../../../../components/Header';
-import CustomTable from '../../../../components/CustomComponents/CustomTable';
-
+import React, { useState } from "react";
+import { Layout } from "../../../../components/Layout";
+import { NoticeSidebarItems } from "../../../../utils/sideBarItems";
+import { useNavigate } from "react-router-dom";
+import Header from "../../../../components/Header";
+import CustomTable from "../../../../components/CustomComponents/CustomTable";
 
 const data = [
-    {
-        "id": 1,
-        "name": "IT",
-        "description": "IT Things",
-        "roleStatus": "active",
-        "createdAt": "2023-11-17T07:44:24.020Z",
-        "updatedAt": "2023-11-17T07:44:24.020Z"
-    },
-    {
-        "id": 2,
-        "name": "HRM",
-        "description": "Human Resource Management",
-        "roleStatus": "active",
-        "createdAt": "2023-11-24T09:58:14.137Z",
-        "updatedAt": "2023-11-24T09:58:14.137Z"
-    }
-
-]
+  {
+    id: 1,
+    name: "IT",
+    description: "IT Things",
+    roleStatus: "active",
+    createdAt: "2023-11-17T07:44:24.020Z",
+    updatedAt: "2023-11-17T07:44:24.020Z",
+  },
+  {
+    id: 2,
+    name: "HRM",
+    description: "Human Resource Management",
+    roleStatus: "active",
+    createdAt: "2023-11-24T09:58:14.137Z",
+    updatedAt: "2023-11-24T09:58:14.137Z",
+  },
+];
 
 function NoticeDashboard() {
-    const navigate = useNavigate()
-    const [currentPage, setCurrentPage] = useState(0);
-    const pageSize = 4; // Set your desired page size
+  const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState(0);
+  const pageSize = 4; // Set your desired page size
 
-    const handlePageChange = (page) => {
-        // Update currentPage when a page link is clicked
-        setCurrentPage(page);
-    };
+  const handlePageChange = (page) => {
+    // Update currentPage when a page link is clicked
+    setCurrentPage(page);
+  };
 
-    return (
-        <Layout module={true} sidebarItems={NoticeSidebarItems} centerlogohide={true}>
-             <Header dashboardLink={"/"} addLink1={"/notice/dashboard"} title1={"Notice"} />
-            {/*<div class="row">
+  return (
+    <Layout
+      module={true}
+      sidebarItems={NoticeSidebarItems}
+      centerlogohide={true}
+    >
+      <Header
+        dashboardLink={"/"}
+        addLink1={"/notice/dashboard"}
+        title1={"Notice"}
+      />
+      {/*<div class="row">
                 <div class="col-12">
                     <CustomTable
                         data={data}
@@ -58,8 +64,8 @@ function NoticeDashboard() {
                     />
                 </div>
             </div> */}
-        </Layout>
-    )
+    </Layout>
+  );
 }
 
-export default NoticeDashboard
+export default NoticeDashboard;

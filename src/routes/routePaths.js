@@ -63,101 +63,122 @@ import VMSAddEditVisitors from "../pages/Dashboard/Modules/VMS/Visitors/AddEditV
 import { Login } from "../pages/Login";
 // import { Register } from "../pages/Register";
 
-
 export const NonProtectedRoutes = [
-    { path: "/login", element: <Login /> },
-    // { path: "/register", element: <Register /> },
-
+  { path: "/login", element: <Login /> },
+  // { path: "/register", element: <Register /> },
 ];
 
 export const ProtectedRoutes = [
-    { path: "/", element: <Dashboard /> },
+  { path: "/", element: <Dashboard /> },
 
-    // HRM Module routes
-    { path: "/hrm/dashboard", element: <HRMDashboard /> },
-    { path: "/hrm/addrole", element: <HRMAddRole /> },
-    { path: "/hrm/editrole", element: <HRMEditRole /> },
-    { path: "/hrm/department", element: <HRMDepartment /> },
-    { path: "/hrm/addeditdepartment", element: <HRMAddEditDepartment /> },
-    { path: "/hrm/employee", element: <HRMEmployeeDashboard /> },
-    { path: "/hrm/addeditemployee", element: <HRMAddEditEmployee /> },
-    { path: "/hrm/designation", element: <HRMDesignation /> },
-    { path: "/hrm/addeditdesignation", element: <HRMAddEditDesignation /> },
+  // HRM Module routes
+  { path: "/hrm/dashboard", element: <HRMDashboard /> },
+  { path: "/hrm/addrole", element: <HRMAddRole /> },
+  { path: "/hrm/editrole", element: <HRMEditRole /> },
+  { path: "/hrm/department", element: <HRMDepartment /> },
+  { path: "/hrm/addeditdepartment", element: <HRMAddEditDepartment /> },
+  { path: "/hrm/employee", element: <HRMEmployeeDashboard /> },
+  { path: "/hrm/addeditemployee", element: <HRMAddEditEmployee /> },
+  { path: "/hrm/designation", element: <HRMDesignation /> },
+  { path: "/hrm/addeditdesignation", element: <HRMAddEditDesignation /> },
 
-    //LMS Module routes
-    { path: "/lms/dashboard", element: <LMSDashboard /> },
-    { path: "/lms/history", element: <LMSHistory /> },
-    { path: "/lms/addedit", element: <LMSAddEdit /> },
+  //LMS Module routes
+  { path: "/lms/dashboard", element: <LMSDashboard /> },
+  { path: "/lms/history", element: <LMSHistory /> },
+  { path: "/lms/addedit", element: <LMSAddEdit /> },
 
+  //VMS Module routes
+  { path: "/vms/dashboard", element: <VMSDashboard /> },
+  { path: "/vms/addeditpass", element: <VMSAddEditPass /> },
+  { path: "/vms/visitor", element: <VMSVisitors /> },
+  { path: "/vms/addeditvisitor", element: <VMSAddEditVisitors /> },
+  { path: "/vms/duplicatepass", element: <VMSDuplicatePass /> },
 
-    //VMS Module routes
-    { path: "/vms/dashboard", element: <VMSDashboard /> },
-    { path: "/vms/addeditpass", element: <VMSAddEditPass /> },
-    { path: "/vms/visitor", element: <VMSVisitors /> },
-    { path: "/vms/addeditvisitor", element: <VMSAddEditVisitors /> },
-    { path: "/vms/duplicatepass", element: <VMSDuplicatePass /> },
-    
+  //Notice Module routes
+  { path: "/notice/dashboard", element: <NoticeDashboard /> },
 
-    //Notice Module routes
-    { path: "/notice/dashboard", element: <NoticeDashboard /> },
+  { path: "/notice/question", element: <NoticeDashboard /> },
+  { path: "/notice/question/new", element: <NewQuestion /> },
+  { path: "/notice/question/search", element: <SearchQuestion /> },
+  { path: "/notice/question/sent", element: <SentQuestion /> },
 
-    { path: "/notice/question", element: <NoticeDashboard /> },
-    { path: "/notice/question/new", element: <NewQuestion /> },
-    { path: "/notice/question/search", element: <SearchQuestion /> },
-    { path: "/notice/question/sent", element: <SentQuestion /> },
+  { path: "/notice/motion", element: <NoticeDashboard /> },
+  { path: "/notice/motion/new", element: <NewMotion /> },
+  { path: "/notice/motion/search", element: <SearchMotion /> },
+  { path: "/notice/motion/sent", element: <SentMotion /> },
 
-    { path: "/notice/motion", element: <NoticeDashboard /> },
-    { path: "/notice/motion/new", element: <NewMotion /> },
-    { path: "/notice/motion/search", element: <SearchMotion /> },
-    { path: "/notice/motion/sent", element: <SentMotion /> },
+  { path: "/notice/resolution", element: <NoticeDashboard /> },
+  { path: "/notice/resolution/new", element: <NewResolution /> },
+  { path: "/notice/resolution/search", element: <SearchResolution /> },
+  { path: "/notice/resolution/sent", element: <SentResolution /> },
 
-    { path: "/notice/resolution", element: <NoticeDashboard /> },
-    { path: "/notice/resolution/new", element: <NewResolution /> },
-    { path: "/notice/resolution/search", element: <SearchResolution /> },
-    { path: "/notice/resolution/sent", element: <SentResolution /> },
+  { path: "/notice/manage", element: <NoticeDashboard /> },
+  { path: "/notice/manage/members", element: <Members /> },
+  { path: "/notice/manage/members/addedit", element: <MembersAddEditForm /> },
 
-    { path: "/notice/manage", element: <NoticeDashboard /> },
-    { path: "/notice/manage/members", element: <Members /> },
-    { path: "/notice/manage/members/addedit", element: <MembersAddEditForm /> },
+  { path: "/notice/manage/sessions", element: <Sessions /> },
+  { path: "/notice/manage/sessions/addedit", element: <SessionsAddEditForm /> },
 
-    { path: "/notice/manage/sessions", element: <Sessions /> },
-    { path: "/notice/manage/sessions/addedit", element: <SessionsAddEditForm /> },
+  { path: "/notice/seatingplan", element: <NoticeDashboard /> },
+  {
+    path: "/notice/seatingplan/manage-session-days",
+    element: <ManageSessionDays />,
+  },
+  {
+    path: "/notice/seatingplan/manage-seating-plan",
+    element: <ManageSeatingPlan />,
+  },
 
-    { path: "/notice/seatingplan", element: <NoticeDashboard /> },
-    { path: "/notice/seatingplan/manage-session-days", element: <ManageSessionDays /> },
-    { path: "/notice/seatingplan/manage-seating-plan", element: <ManageSeatingPlan /> },
+  { path: "/notice/reports", element: <NoticeDashboard /> },
+  { path: "/notice/reports/business-summary", element: <BusinessSummary /> },
 
-    { path: "/notice/reports", element: <NoticeDashboard /> },
-    { path: "/notice/reports/business-summary", element: <BusinessSummary /> },
+  //MMS Module
+  { path: "/mms/dashboard", element: <MMSMotionDashboard /> },
 
-    //MMS Module
-    { path: "/mms/dashboard", element: <MMSMotionDashboard /> },
+  { path: "/mms/motion", element: <MMSMotionDashboard /> },
+  { path: "/mms/motion/new", element: <MMSNewMotion /> },
+  { path: "/mms/motion/search", element: <MMSSearchMotion /> },
+  { path: "/mms/motion/detail", element: <MMSMotionDetail /> },
+  { path: "/mms/motion/list", element: <MMSMotionList /> },
 
-    { path: "/mms/motion", element: <MMSMotionDashboard /> },
-    { path: "/mms/motion/new", element: <MMSNewMotion /> },
-    { path: "/mms/motion/search", element: <MMSSearchMotion /> },
-    { path: "/mms/motion/detail", element: <MMSMotionDetail /> },
-    { path: "/mms/motion/list", element: <MMSMotionList /> },
+  { path: "/mms/question/search", element: <MMSSearchQuestion /> },
+  { path: "/mms/resolution/search", element: <MMSSearchResolution /> },
 
-    { path: "/mms/question/search", element: <MMSSearchQuestion /> },
-    { path: "/mms/resolution/search", element: <MMSSearchResolution /> },
+  { path: "/mms/reports", element: <MMSMotionDashboard /> },
+  { path: "/mms/reports/motion-summary", element: <MMSMotionSummery /> },
 
-    { path: "/mms/reports", element: <MMSMotionDashboard /> },
-    { path: "/mms/reports/motion-summary", element: <MMSMotionSummery /> },
+  //QMS Module
+  { path: "/qms/dashboard", element: <QMSQuestionDashboard /> },
+  { path: "/qms/question/search", element: <QMSSearchQuestion /> },
+  { path: "/qms/resolution/search", element: <QMSSerchResolution /> },
 
+  { path: "/qms/reports", element: <QMSQuestionDashboard /> },
+  {
+    path: "/qms/reports/resolution-summary",
+    element: <QMSResolutionSummary />,
+  },
+  { path: "/qms/reports/question-summary", element: <QMSQuestionSummary /> },
+  {
+    path: "/qms/reports/resolution-annual-reports",
+    element: <QMSResolutionAnnualReports />,
+  },
+  {
+    path: "/qms/reports/question-annual-reports",
+    element: <QMSQuestionAnnualReports />,
+  },
+  {
+    path: "/qms/reports/defer-question-reports",
+    element: <QMSDeferQuestionReports />,
+  },
 
     //QMS Module
     { path: "/qms/dashboard", element: <QMSQuestionDashboard /> },
     { path: "/qms/search/question", element: <QMSSearchQuestion /> },
     { path: "/qms/search/resolution", element: <QMSSerchResolution /> },
 
-    
-    { path: "/qms/reports", element: <QMSQuestionDashboard /> },
-    { path: "/qms/reports/resolution-summary", element: <QMSResolutionSummary /> },
-    { path: "/qms/reports/question-summary", element: <QMSQuestionSummary /> },
-    { path: "/qms/reports/resolution-annual-reports", element: <QMSResolutionAnnualReports /> },
-    { path: "/qms/reports/question-annual-reports", element: <QMSQuestionAnnualReports /> },
-    { path: "/qms/reports/defer-question-reports", element: <QMSDeferQuestionReports /> },
+  { path: "/qms/resolution", element: <QMSQuestionDashboard /> },
+  { path: "/qms/rsolution/list", element: <QMSResolutionList /> },
+  { path: "/qms/resolution/delete", element: <QMSDeleteResolution /> },
 
     
     { path: "/qms/question", element: <QMSQuestionDashboard /> },

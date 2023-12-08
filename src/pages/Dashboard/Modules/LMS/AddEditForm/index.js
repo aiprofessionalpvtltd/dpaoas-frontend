@@ -71,7 +71,10 @@ function LMSAddEdit() {
     comments: "",
     leaveForwarder:
       leaveByIdData.length > 0 ? leaveByIdData[0]?.requestLeaveForwarder : "",
-    submittedTo: leaveByIdData.length > 0 ? leaveByIdData[0]?.requestLeaveSubmittedTo : null,
+    submittedTo:
+      leaveByIdData.length > 0
+        ? leaveByIdData[0]?.requestLeaveSubmittedTo
+        : null,
     status: leaveByIdData.length > 0 ? leaveByIdData[0]?.requestStatus : "",
     leaveType:
       leaveByIdData.length > 0 ? leaveByIdData[0]?.fkRequestTypeId : null,
@@ -87,7 +90,7 @@ function LMSAddEdit() {
         : null,
     leaveStation:
       leaveByIdData.length > 0 ? leaveByIdData[0]?.requestStationLeave : false,
-      attachment: null
+    attachment: null,
   };
 
   const formik = useFormik({
@@ -150,19 +153,19 @@ function LMSAddEdit() {
     const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
 
     const formData = new FormData();
-  formData.append('fkRequestTypeId', values.leaveType);
-  formData.append('fkUserId', 1);
-  formData.append('requestStatus', values.status);
-  formData.append('requestStartDate', values.startDate);
-  formData.append('requestEndDate', values.endDate);
-  formData.append('requestLeaveSubType', values.leaveSubtype);
-  formData.append('requestLeaveReason', values.reason);
-  formData.append('requestNumberOfDays', String(daysDiff));
-  formData.append('requestLeaveSubmittedTo', values.submittedTo);
-  formData.append('requestLeaveApplyOnBehalf', isChecked);
-  formData.append('requestLeaveForwarder', values.leaveForwarder);
-  formData.append('requestStationLeave', values.leaveStation);
-  formData.append('file', values.attachment);
+    formData.append("fkRequestTypeId", values.leaveType);
+    formData.append("fkUserId", 1);
+    formData.append("requestStatus", values.status);
+    formData.append("requestStartDate", values.startDate);
+    formData.append("requestEndDate", values.endDate);
+    formData.append("requestLeaveSubType", values.leaveSubtype);
+    formData.append("requestLeaveReason", values.reason);
+    formData.append("requestNumberOfDays", String(daysDiff));
+    formData.append("requestLeaveSubmittedTo", values.submittedTo);
+    formData.append("requestLeaveApplyOnBehalf", isChecked);
+    formData.append("requestLeaveForwarder", values.leaveForwarder);
+    formData.append("requestStationLeave", values.leaveStation);
+    formData.append("file", values.attachment);
 
     try {
       const response = await createLeave(formData);
@@ -305,7 +308,7 @@ function LMSAddEdit() {
                         formik.handleChange(e);
                         formik.setFieldValue(
                           "submittedTo",
-                          Number(e.target.value)
+                          Number(e.target.value),
                         );
                       }}
                       onBlur={formik.handleBlur}
@@ -473,22 +476,25 @@ function LMSAddEdit() {
               </div>
 
               <div class="row">
-              <div className="col-6">
-                <div className="mb-3">
-                  <label htmlFor="formFile" className="form-label">
-                    Attachment
-                  </label>
-                  <input
-                    className="form-control"
-                    type="file"
-                    id="formFile"
-                    name="attachment"
-                    onChange={(event) => {
-                      formik.setFieldValue('attachment', event.currentTarget.files[0]);
-                    }}
-                  />
+                <div className="col-6">
+                  <div className="mb-3">
+                    <label htmlFor="formFile" className="form-label">
+                      Attachment
+                    </label>
+                    <input
+                      className="form-control"
+                      type="file"
+                      id="formFile"
+                      name="attachment"
+                      onChange={(event) => {
+                        formik.setFieldValue(
+                          "attachment",
+                          event.currentTarget.files[0],
+                        );
+                      }}
+                    />
+                  </div>
                 </div>
-              </div>
 
                 <div class="col-6">
                   <div class="mb-3">
@@ -506,7 +512,7 @@ function LMSAddEdit() {
                         onChange={() =>
                           formik.setFieldValue(
                             "leaveStation",
-                            !formik.values.leaveStation
+                            !formik.values.leaveStation,
                           )
                         }
                       />

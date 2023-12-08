@@ -3,7 +3,12 @@ import { NoticeSidebarItems } from "../../../../../../utils/sideBarItems";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
 import { useNavigate } from "react-router";
-import { getAllMotion, getAllQuestion, searchMotion, searchQuestion } from "../../../../../../api/APIs";
+import {
+  getAllMotion,
+  getAllQuestion,
+  searchMotion,
+  searchQuestion,
+} from "../../../../../../api/APIs";
 import {
   showErrorMessage,
   showSuccessMessage,
@@ -63,17 +68,17 @@ function SentMotion() {
 
   const SearchQuestionApi = async (values) => {
     const searchParams = {
-        fromSessionNo: values.fromSession,
-        toSessionNo: values.toSession,
-        memberName: values.memberName,
-        englishText: values.keyword,
-        motionID: values.motionID,
-        motionType: values.motionType,
-        motionStatus: values.motionStatus,
-        noticeDiaryNo: values.noticeDiaryNo,
-        noticeOfficeDiaryDateFrom: values.fromNoticeDate,
-        noticeOfficeDiaryDateTo: values.toNoticeDate,
-      };
+      fromSessionNo: values.fromSession,
+      toSessionNo: values.toSession,
+      memberName: values.memberName,
+      englishText: values.keyword,
+      motionID: values.motionID,
+      motionType: values.motionType,
+      motionStatus: values.motionStatus,
+      noticeDiaryNo: values.noticeDiaryNo,
+      noticeOfficeDiaryDateFrom: values.fromNoticeDate,
+      noticeOfficeDiaryDateTo: values.toNoticeDate,
+    };
 
     try {
       const response = await searchMotion(searchParams);
@@ -119,7 +124,7 @@ function SentMotion() {
         title1={"Notice"}
         title2={"Sent Motion"}
       />
-      <div  >
+      <div>
         <div class="container-fluid">
           <div class="card mt-1">
             <div
@@ -356,7 +361,6 @@ function SentMotion() {
           </div>
         </div>
       </div>
-       
     </Layout>
   );
 }

@@ -7,7 +7,12 @@ import {
   showErrorMessage,
   showSuccessMessage,
 } from "../../../../../../utils/ToastAlert";
-import { getAllQuestion, getAllResolutions, searchQuestion, searchResolution } from "../../../../../../api/APIs";
+import {
+  getAllQuestion,
+  getAllResolutions,
+  searchQuestion,
+  searchResolution,
+} from "../../../../../../api/APIs";
 import { Field, Form, Formik } from "formik";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import { ToastContainer } from "react-toastify";
@@ -47,10 +52,12 @@ function SentQuestion() {
         NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate,
         NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
         SessionNumber: res?.session?.sessionName,
-        SubjectMatter: [res?.englishText, res?.urduText].filter(Boolean).join(', '),
+        SubjectMatter: [res?.englishText, res?.urduText]
+          .filter(Boolean)
+          .join(", "),
         Category: res.questionCategory,
         // SubmittedBy: res.category,
-        Status: res.questionStatus?.questionStatus
+        Status: res.questionStatus?.questionStatus,
       };
     });
   };
@@ -62,17 +69,17 @@ function SentQuestion() {
 
   const SearchQuestionApi = async (values) => {
     const searchParams = {
-        fromSessionNo: values.fromSession,
-        toSessionNo: values.toSession,
-        memberName: values.memberName,
-        questionCategory: values.category,
-        keyword: values.keyword,
-        questionID: values.questionID,
-        questionStatus: values.resolutionStatus,
-        questionDiaryNo: values.questionDiaryNo,
-        noticeOfficeDiaryDateFrom: values.fromNoticeDate,
-        noticeOfficeDiaryDateTo: values.toNoticeDate,
-      };
+      fromSessionNo: values.fromSession,
+      toSessionNo: values.toSession,
+      memberName: values.memberName,
+      questionCategory: values.category,
+      keyword: values.keyword,
+      questionID: values.questionID,
+      questionStatus: values.resolutionStatus,
+      questionDiaryNo: values.questionDiaryNo,
+      noticeOfficeDiaryDateFrom: values.fromNoticeDate,
+      noticeOfficeDiaryDateTo: values.toNoticeDate,
+    };
 
     try {
       const response = await searchQuestion(searchParams);
@@ -110,7 +117,7 @@ function SentQuestion() {
       sidebarItems={NoticeSidebarItems}
       centerlogohide={true}
     >
-    <ToastContainer />
+      <ToastContainer />
       <Header
         dashboardLink={"/"}
         addLink1={"/notice/dashboard"}
@@ -118,7 +125,7 @@ function SentQuestion() {
         title1={"Notice"}
         title2={"Sent Question"}
       />
-      <div  >
+      <div>
         <div class="container-fluid">
           <div class="card mt-1">
             <div
@@ -213,23 +220,15 @@ function SentQuestion() {
                       <div className="row">
                         <div className="col">
                           <div className="mb-3">
-                            <label className="form-label">
-                              Category
-                            </label>
+                            <label className="form-label">Category</label>
                             <Field
                               as="select"
                               className="form-select"
                               name="category"
                             >
-                                <option value="Starred">
-                                    Starred
-                                </option>
-                                <option value="UnStarred">
-                                    UnStarred
-                                </option>
-                                <option value="Short Notice">
-                                    Short Notice
-                                </option>
+                              <option value="Starred">Starred</option>
+                              <option value="UnStarred">UnStarred</option>
+                              <option value="Short Notice">Short Notice</option>
                             </Field>
                           </div>
                         </div>
@@ -246,19 +245,21 @@ function SentQuestion() {
                               <option selected="selected" value="" hidden>
                                 Select
                               </option>
-                                                <option>Admitted</option>
-                                                <option>Admitted but Lapsed</option>
-                                                <option>Deferred</option>
-                                                <option>Disallowed</option>
-                                                <option>Disallowed on Reconsideration</option>
-                                                <option>File not Available</option>
-                                                <option>Lapsed</option>
-                                                <option>NFA</option>
-                                                <option>Replied</option>
-                                                <option>Replied/Referred to Standing Committee</option>
-                                                <option>Under Correspondence</option>
-                                                <option>Under Process</option>
-                                                <option>Withdrawn</option>
+                              <option>Admitted</option>
+                              <option>Admitted but Lapsed</option>
+                              <option>Deferred</option>
+                              <option>Disallowed</option>
+                              <option>Disallowed on Reconsideration</option>
+                              <option>File not Available</option>
+                              <option>Lapsed</option>
+                              <option>NFA</option>
+                              <option>Replied</option>
+                              <option>
+                                Replied/Referred to Standing Committee
+                              </option>
+                              <option>Under Correspondence</option>
+                              <option>Under Process</option>
+                              <option>Withdrawn</option>
                             </Field>
                           </div>
                         </div>
@@ -313,10 +314,10 @@ function SentQuestion() {
                     handlePageChange={handlePageChange}
                     currentPage={currentPage}
                     showPrint={true}
-                        pageSize={pageSize}
-                        handleAdd={(item) => navigate('/')}
-                        handleEdit={(item) => navigate('/')}
-                        totalCount={count}
+                    pageSize={pageSize}
+                    handleAdd={(item) => navigate("/")}
+                    handleEdit={(item) => navigate("/")}
+                    totalCount={count}
                   />
                 </div>
               </div>
@@ -324,7 +325,6 @@ function SentQuestion() {
           </div>
         </div>
       </div>
-       
     </Layout>
   );
 }

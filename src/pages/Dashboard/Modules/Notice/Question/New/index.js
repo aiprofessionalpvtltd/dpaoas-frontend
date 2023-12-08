@@ -3,7 +3,11 @@ import { NoticeSidebarItems } from "../../../../../../utils/sideBarItems";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
 import { useNavigate } from "react-router";
-import { createQuestion, createResolution, getAllSessions } from "../../../../../../api/APIs";
+import {
+  createQuestion,
+  createResolution,
+  getAllSessions,
+} from "../../../../../../api/APIs";
 import {
   showErrorMessage,
   showSuccessMessage,
@@ -17,14 +21,16 @@ import { Editor } from "../../../../../../components/CustomComponents/Editor";
 import { ToastContainer } from "react-toastify";
 
 const validationSchema = Yup.object({
-    // fkSessionId: Yup.number().required("Session No is required"),
-    questionCategory: Yup.string().required("Category is required"),
-  noticeOfficeDiaryNo: Yup.number().required("Notice office diary No is required"),
+  // fkSessionId: Yup.number().required("Session No is required"),
+  questionCategory: Yup.string().required("Category is required"),
+  noticeOfficeDiaryNo: Yup.number().required(
+    "Notice office diary No is required",
+  ),
   fkMemberId: Yup.number().required("Member id is required"),
   noticeOfficeDiaryDate: Yup.string().required(
-    "Notice Office Diary Date is required"
+    "Notice Office Diary Date is required",
   ),
-//   noticeOfficeDiaryTime: Yup.string().required('Notice Office Diary Time is required'),
+  //   noticeOfficeDiaryTime: Yup.string().required('Notice Office Diary Time is required'),
   // englishText: Yup.string().required('English Text is required'),
   // urduText: Yup.string().required('Urdu Text is required'),
 });
@@ -111,7 +117,7 @@ function NewQuestion() {
       sidebarItems={NoticeSidebarItems}
       centerlogohide={true}
     >
-        <ToastContainer />
+      <ToastContainer />
       <Header
         dashboardLink={"/"}
         addLink1={"/notice/dashboard"}
@@ -126,7 +132,7 @@ function NewQuestion() {
         handleOkClick={handleOkClick}
       />
 
-      <div  >
+      <div>
         <div class="container-fluid">
           <div class="card mt-1">
             <div
@@ -192,15 +198,9 @@ function NewQuestion() {
                           <option value="" selected disabled hidden>
                             Select
                           </option>
-                          <option value="Starred">
-                            Starred
-                          </option>
-                          <option value="Un-Starred">
-                            Un-Starred
-                          </option>
-                          <option value="Short Notice">
-                            Short Notice
-                          </option>
+                          <option value="Starred">Starred</option>
+                          <option value="Un-Starred">Un-Starred</option>
+                          <option value="Short Notice">Short Notice</option>
                         </select>
                         {formik.touched.questionCategory &&
                           formik.errors.questionCategory && (
@@ -210,10 +210,8 @@ function NewQuestion() {
                           )}
                       </div>
                     </div>
-
                   </div>
                   <div class="row">
-                    
                     <div class="col">
                       <div class="mb-3">
                         <label class="form-label">Notice Office Diary No</label>
@@ -317,7 +315,7 @@ function NewQuestion() {
                     <div className="col-6">
                       <div className="mb-3">
                         <label htmlFor="formFile" className="form-label">
-                        Question Image
+                          Question Image
                         </label>
                         <input
                           className="form-control"
@@ -328,7 +326,7 @@ function NewQuestion() {
                           onChange={(event) => {
                             formik.setFieldValue(
                               "questionImage",
-                              event.currentTarget.files[0]
+                              event.currentTarget.files[0],
                             );
                           }}
                         />
@@ -363,7 +361,6 @@ function NewQuestion() {
           </div>
         </div>
       </div>
-       
     </Layout>
   );
 }

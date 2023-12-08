@@ -22,7 +22,7 @@ export const CheckedItem = ({ checked, handleCheckboxChange }) => {
                     handleCheckboxChange(
                       checked?.itemId,
                       optionItem?.id,
-                      checked?.permission
+                      checked?.permission,
                     )
                   }
                 />

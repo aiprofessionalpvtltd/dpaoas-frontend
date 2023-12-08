@@ -2,44 +2,50 @@ import React, { useEffect, useMemo, useState } from "react";
 import "quill/dist/quill.snow.css";
 import "./editorStyles.css";
 import ReactQuill from "react-quill";
-import ImageResize from 'quill-image-resize-module-react';
+import ImageResize from "quill-image-resize-module-react";
 const Quill = ReactQuill.Quill;
 
-Quill.register('modules/imageResize', ImageResize);
+Quill.register("modules/imageResize", ImageResize);
 
 export const Editor = ({ onChange, title }) => {
   const [isEditorLoaded, setEditorLoaded] = useState(false);
 
-  const fonts = useMemo(() => [
-    "Roboto",
-    "Raleway",
-    "Montserrat",
-    "Lato",
-    "Rubik",
-    "Agbalumo",
-    "Ubuntu",
-  ], []);
+  const fonts = useMemo(
+    () => [
+      "Roboto",
+      "Raleway",
+      "Montserrat",
+      "Lato",
+      "Rubik",
+      "Agbalumo",
+      "Ubuntu",
+    ],
+    [],
+  );
 
-  const sizes = useMemo(() => [
-    "10px",
-    "12px",
-    "14px",
-    "16px",
-    "18px",
-    "20px",
-    "22px",
-    "24px",
-    "26px",
-    "28px",
-    "30px",
-    "32px",
-    "34px",
-    "36px",
-    "38px",
-    "40px",
-    "42px",
-    "44px",
-  ], []);
+  const sizes = useMemo(
+    () => [
+      "10px",
+      "12px",
+      "14px",
+      "16px",
+      "18px",
+      "20px",
+      "22px",
+      "24px",
+      "26px",
+      "28px",
+      "30px",
+      "32px",
+      "34px",
+      "36px",
+      "38px",
+      "40px",
+      "42px",
+      "44px",
+    ],
+    [],
+  );
 
   useEffect(() => {
     if (!isEditorLoaded) {
@@ -67,7 +73,7 @@ export const Editor = ({ onChange, title }) => {
         { list: "bullet" },
       ],
       ["link"],
-    //   ["link", "image"],
+      //   ["link", "image"],
       [{ indent: "-1" }, { indent: "+1" }],
       [
         {
@@ -153,9 +159,9 @@ export const Editor = ({ onChange, title }) => {
       ],
     ],
     imageResize: {
-        parchment: Quill.import('parchment'),
-        modules: ['Resize', 'DisplaySize']
-    }
+      parchment: Quill.import("parchment"),
+      modules: ["Resize", "DisplaySize"],
+    },
   };
 
   var formats = [

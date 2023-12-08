@@ -11,23 +11,26 @@ import Select from "react-select";
 import { Editor } from "../../../../../../components/CustomComponents/Editor";
 import { ToastContainer } from "react-toastify";
 import { createNewMotion, getAllSessions } from "../../../../../../api/APIs";
-import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../../utils/ToastAlert";
 
 const validationSchema = Yup.object({
   sessionNumber: Yup.number().required("Session No is required"),
   motionType: Yup.string().required("Motion Type is required"),
   noticeOfficeDiaryNo: Yup.number().required(
-    "Notice Office Diary No is required"
+    "Notice Office Diary No is required",
   ),
   noticeOfficeDiaryDate: Yup.string().required(
-    "Notice Office Diary Date is required"
+    "Notice Office Diary Date is required",
   ),
   noticeOfficeDiaryTime: Yup.string().required(
-    "Notice Office Diary Time is required"
+    "Notice Office Diary Time is required",
   ),
   mover: Yup.string().required("Mover is required"),
-//   englishText: Yup.string().required("English Text is required"),
-//   urduText: Yup.string().required("Urdu Text is required"),
+  //   englishText: Yup.string().required("English Text is required"),
+  //   urduText: Yup.string().required("Urdu Text is required"),
 });
 
 function NewMotion() {
@@ -65,16 +68,16 @@ function NewMotion() {
 
   const CreateMotionApi = async (values) => {
     const formData = new FormData();
-        formData.append('fkSessionId', values?.sessionNumber);
-        formData.append('motionType', values?.motionType);
-        formData.append('noticeOfficeDiaryNo', values?.noticeOfficeDiaryNo);
-        formData.append('moverIds[]', values?.mover);
-        formData.append('noticeOfficeDiaryDate', values?.noticeOfficeDiaryDate);
-        formData.append('noticeOfficeDiaryTime', values?.noticeOfficeDiaryTime);
-        formData.append('businessType', "Motion");
-        formData.append('englishText', "English text");
-        formData.append('urduText', "Urdu text");
-        formData.append('file', values?.attachment);
+    formData.append("fkSessionId", values?.sessionNumber);
+    formData.append("motionType", values?.motionType);
+    formData.append("noticeOfficeDiaryNo", values?.noticeOfficeDiaryNo);
+    formData.append("moverIds[]", values?.mover);
+    formData.append("noticeOfficeDiaryDate", values?.noticeOfficeDiaryDate);
+    formData.append("noticeOfficeDiaryTime", values?.noticeOfficeDiaryTime);
+    formData.append("businessType", "Motion");
+    formData.append("englishText", "English text");
+    formData.append("urduText", "Urdu text");
+    formData.append("file", values?.attachment);
 
     try {
       const response = await createNewMotion(formData);
@@ -126,7 +129,7 @@ function NewMotion() {
         handleOkClick={handleOkClick}
       />
 
-      <div  >
+      <div>
         <div class="container-fluid">
           <div class="card mt-1">
             <div
@@ -290,8 +293,7 @@ function NewMotion() {
                         <label class="form-label">Movers</label>
                         <select
                           class={`form-select ${
-                            formik.touched.mover &&
-                            formik.errors.mover
+                            formik.touched.mover && formik.errors.mover
                               ? "is-invalid"
                               : ""
                           }`}
@@ -306,15 +308,13 @@ function NewMotion() {
                           <option value={"1"}>Motion Type</option>
                           <option value={"2"}>Adjournment Motion</option>
                         </select>
-                        {formik.touched.mover &&
-                          formik.errors.mover && (
-                            <div class="invalid-feedback">
-                              {formik.errors.mover}
-                            </div>
-                          )}
+                        {formik.touched.mover && formik.errors.mover && (
+                          <div class="invalid-feedback">
+                            {formik.errors.mover}
+                          </div>
+                        )}
                       </div>
                     </div>
-
                   </div>
 
                   <div class="row">
@@ -332,7 +332,7 @@ function NewMotion() {
                           onChange={(event) => {
                             formik.setFieldValue(
                               "attachment",
-                              event.currentTarget.files[0]
+                              event.currentTarget.files[0],
                             );
                           }}
                         />

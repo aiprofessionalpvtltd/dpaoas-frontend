@@ -1,9 +1,9 @@
-import React, { useContext } from 'react';
+import React, { useContext } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import { NonProtectedRoutes, ProtectedRoutes } from './routePaths';
-import { NotFound } from '../pages/NotFound';
-import { getAuthToken } from '../api/Auth';
-import { AuthContext } from '../api/AuthContext';
+import { NonProtectedRoutes, ProtectedRoutes } from "./routePaths";
+import { NotFound } from "../pages/NotFound";
+import { getAuthToken } from "../api/Auth";
+import { AuthContext } from "../api/AuthContext";
 
 function RequireAuth({ children }) {
   // const token = getAuthToken();
@@ -12,7 +12,7 @@ function RequireAuth({ children }) {
 }
 
 export const NavigationRoutes = () => {
-  const {userLoginToken} = useContext(AuthContext);
+  const { userLoginToken } = useContext(AuthContext);
   return (
     <BrowserRouter>
       <Routes>
@@ -21,11 +21,15 @@ export const NavigationRoutes = () => {
         ))}
 
         {ProtectedRoutes.map((route, index) => (
-          <Route key={index} path={route.path} element={<RequireAuth>{route.element}</RequireAuth>} />
+          <Route
+            key={index}
+            path={route.path}
+            element={<RequireAuth>{route.element}</RequireAuth>}
+          />
         ))}
 
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
-  )
-}
+  );
+};

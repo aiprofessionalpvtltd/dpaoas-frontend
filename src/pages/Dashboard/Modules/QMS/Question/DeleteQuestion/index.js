@@ -102,7 +102,10 @@ function QMSDeleteQuestion() {
       />
       <div class="container-fluid">
         <div class="card mt-4">
-          <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
+          <div
+            class="card-header red-bg"
+            style={{ background: "#14ae5c !important" }}
+          >
             <h1>DELETED QUESTIONS</h1>
           </div>
           <div class="card-body">
@@ -116,15 +119,21 @@ function QMSDeleteQuestion() {
                         type="text"
                         placeholder={formik.values.questionDiaryNo}
                         className={`form-control ${
-                          formik.touched.questionDiaryNo && formik.errors.questionDiaryNo ? "is-invalid" : ""
+                          formik.touched.questionDiaryNo &&
+                          formik.errors.questionDiaryNo
+                            ? "is-invalid"
+                            : ""
                         }`}
                         id="questionDiaryNo"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
-                      {formik.touched.questionDiaryNo && formik.errors.questionDiaryNo && (
-                        <div className="invalid-feedback">{formik.errors.questionDiaryNo}</div>
-                      )}
+                      {formik.touched.questionDiaryNo &&
+                        formik.errors.questionDiaryNo && (
+                          <div className="invalid-feedback">
+                            {formik.errors.questionDiaryNo}
+                          </div>
+                        )}
                     </div>
                   </div>
                   <div class="col">
@@ -134,15 +143,20 @@ function QMSDeleteQuestion() {
                         type="text"
                         placeholder={formik.values.questionId}
                         className={`form-control ${
-                          formik.touched.questionId && formik.errors.questionId ? "is-invalid" : ""
+                          formik.touched.questionId && formik.errors.questionId
+                            ? "is-invalid"
+                            : ""
                         }`}
                         id="questionId"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
-                      {formik.touched.questionId && formik.errors.questionId && (
-                        <div className="invalid-feedback">{formik.errors.questionId}</div>
-                      )}
+                      {formik.touched.questionId &&
+                        formik.errors.questionId && (
+                          <div className="invalid-feedback">
+                            {formik.errors.questionId}
+                          </div>
+                        )}
                     </div>
                   </div>
                   <div class="col">
@@ -152,14 +166,18 @@ function QMSDeleteQuestion() {
                         type="text"
                         placeholder={formik.values.keyword}
                         className={`form-control ${
-                          formik.touched.keyword && formik.errors.keyword ? "is-invalid" : ""
+                          formik.touched.keyword && formik.errors.keyword
+                            ? "is-invalid"
+                            : ""
                         }`}
                         id="keyword"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
                       {formik.touched.keyword && formik.errors.keyword && (
-                        <div className="invalid-feedback">{formik.errors.keyword}</div>
+                        <div className="invalid-feedback">
+                          {formik.errors.keyword}
+                        </div>
                       )}
                     </div>
                   </div>
@@ -170,15 +188,20 @@ function QMSDeleteQuestion() {
                         type="text"
                         placeholder={formik.values.memberName}
                         className={`form-control ${
-                          formik.touched.memberName && formik.errors.memberName ? "is-invalid" : ""
+                          formik.touched.memberName && formik.errors.memberName
+                            ? "is-invalid"
+                            : ""
                         }`}
                         id="memberName"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
-                      {formik.touched.memberName && formik.errors.memberName && (
-                        <div className="invalid-feedback">{formik.errors.memberName}</div>
-                      )}
+                      {formik.touched.memberName &&
+                        formik.errors.memberName && (
+                          <div className="invalid-feedback">
+                            {formik.errors.memberName}
+                          </div>
+                        )}
                     </div>
                   </div>
                 </div>
@@ -278,15 +301,21 @@ function QMSDeleteQuestion() {
                         type="text"
                         placeholder={formik.values.noticeDiaryNo}
                         className={`form-control ${
-                          formik.touched.noticeDiaryNo && formik.errors.noticeDiaryNo ? "is-invalid" : ""
+                          formik.touched.noticeDiaryNo &&
+                          formik.errors.noticeDiaryNo
+                            ? "is-invalid"
+                            : ""
                         }`}
                         id="noticeDiaryNo"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
-                      {formik.touched.noticeDiaryNo && formik.errors.noticeDiaryNo && (
-                        <div className="invalid-feedback">{formik.errors.noticeDiaryNo}</div>
-                      )}
+                      {formik.touched.noticeDiaryNo &&
+                        formik.errors.noticeDiaryNo && (
+                          <div className="invalid-feedback">
+                            {formik.errors.noticeDiaryNo}
+                          </div>
+                        )}
                     </div>
                   </div>
                   <div class="col">
@@ -296,15 +325,21 @@ function QMSDeleteQuestion() {
                         type="text"
                         placeholder={formik.values.fromNoticeDate}
                         className={`form-control ${
-                          formik.touched.fromNoticeDate && formik.errors.fromNoticeDate ? "is-invalid" : ""
+                          formik.touched.fromNoticeDate &&
+                          formik.errors.fromNoticeDate
+                            ? "is-invalid"
+                            : ""
                         }`}
                         id="fromNoticeDate"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
-                      {formik.touched.fromNoticeDate && formik.errors.fromNoticeDate && (
-                        <div className="invalid-feedback">{formik.errors.fromNoticeDate}</div>
-                      )}
+                      {formik.touched.fromNoticeDate &&
+                        formik.errors.fromNoticeDate && (
+                          <div className="invalid-feedback">
+                            {formik.errors.fromNoticeDate}
+                          </div>
+                        )}
                     </div>
                   </div>
                   <div class="col">
@@ -314,15 +349,21 @@ function QMSDeleteQuestion() {
                         type="text"
                         placeholder={formik.values.toNoticeDate}
                         className={`form-control ${
-                          formik.touched.toNoticeDate && formik.errors.toNoticeDate ? "is-invalid" : ""
+                          formik.touched.toNoticeDate &&
+                          formik.errors.toNoticeDate
+                            ? "is-invalid"
+                            : ""
                         }`}
                         id="toNoticeDate"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
-                      {formik.touched.toNoticeDate && formik.errors.toNoticeDate && (
-                        <div className="invalid-feedback">{formik.errors.toNoticeDate}</div>
-                      )}
+                      {formik.touched.toNoticeDate &&
+                        formik.errors.toNoticeDate && (
+                          <div className="invalid-feedback">
+                            {formik.errors.toNoticeDate}
+                          </div>
+                        )}
                     </div>
                   </div>
                 </div>
@@ -404,14 +445,18 @@ function QMSDeleteQuestion() {
                         type="text"
                         placeholder={formik.values.division}
                         className={`form-control ${
-                          formik.touched.division && formik.errors.division ? "is-invalid" : ""
+                          formik.touched.division && formik.errors.division
+                            ? "is-invalid"
+                            : ""
                         }`}
                         id="division"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
                       {formik.touched.division && formik.errors.division && (
-                        <div className="invalid-feedback">{formik.errors.division}</div>
+                        <div className="invalid-feedback">
+                          {formik.errors.division}
+                        </div>
                       )}
                     </div>
                   </div>
@@ -445,7 +490,9 @@ function QMSDeleteQuestion() {
                   block={true}
                   data={data}
                   handleAdd={() => alert("Print")}
-                  handleEdit={(item) => navigate("/vms/addeditpass", { state: item })}
+                  handleEdit={(item) =>
+                    navigate("/vms/addeditpass", { state: item })
+                  }
                   hideUserIcon={true}
                   handleUser={() => navigate("/vms/visitor")}
                   handleDuplicate={() => navigate("/vms/duplicatepass")}

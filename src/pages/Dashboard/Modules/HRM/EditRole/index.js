@@ -63,7 +63,7 @@ function HRMEditRole() {
       (item) =>
         item.itemId === itemId &&
         item.option.some((opt) => opt.id === optionId) &&
-        item.permission === permission
+        item.permission === permission,
     );
 
     if (isChecked) {
@@ -76,7 +76,7 @@ function HRMEditRole() {
                 permission: permission,
                 option: item.option.filter((opt) => opt.id !== optionId),
               }
-            : item
+            : item,
         );
       });
     } else {
@@ -88,7 +88,8 @@ function HRMEditRole() {
           permission: permission,
           option: [
             ...(prevCheckedItems.find(
-              (item) => item.itemId === itemId && item.permission === permission
+              (item) =>
+                item.itemId === itemId && item.permission === permission,
             )?.option || []), // Use existing options if available
             {
               id: optionId,
@@ -105,7 +106,7 @@ function HRMEditRole() {
   const filteredItems = permissionsArray.length
     ? allItems.map((item) => {
         const checkedItem = checkedItems.find(
-          (checked) => checked.itemId === item.id
+          (checked) => checked.itemId === item.id,
         );
 
         return {
@@ -115,9 +116,9 @@ function HRMEditRole() {
               !(
                 checkedItem &&
                 checkedItem.option.some(
-                  (checkedOption) => checkedOption.id === option.id
+                  (checkedOption) => checkedOption.id === option.id,
                 )
-              )
+              ),
           ),
         };
       })
@@ -129,7 +130,7 @@ function HRMEditRole() {
         itemId: permission.id,
         option: option,
         permission: permission.permission,
-      }))
+      })),
     );
 
     const outputArr = [];
@@ -138,7 +139,7 @@ function HRMEditRole() {
       const existingItem = outputArr.find(
         (outputItem) =>
           outputItem.itemId === item.itemId &&
-          outputItem.permission === item.permission
+          outputItem.permission === item.permission,
       );
 
       if (existingItem) {

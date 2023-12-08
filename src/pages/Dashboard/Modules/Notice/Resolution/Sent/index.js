@@ -115,7 +115,7 @@ function SentResolution() {
       sidebarItems={NoticeSidebarItems}
       centerlogohide={true}
     >
-        <ToastContainer />
+      <ToastContainer />
 
       <Header
         dashboardLink={"/"}
@@ -124,7 +124,7 @@ function SentResolution() {
         title1={"Notice"}
         title2={"Sent Resolution"}
       />
-      <div  >
+      <div>
         <div class="container-fluid">
           <div class="card mt-1">
             <div
@@ -408,7 +408,6 @@ function SentResolution() {
           </div>
         </div>
       </div>
-       
     </Layout>
   );
 }

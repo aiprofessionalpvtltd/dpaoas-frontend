@@ -1,11 +1,19 @@
-import React from 'react'
+import React from "react";
 // import { CircularProgressbar } from 'react-circular-progressbar';
-import 'react-circular-progressbar/dist/styles.css';
+import "react-circular-progressbar/dist/styles.css";
 
-function LeaveCard({ available, used, progressValue, title, percentage, name, value }) {
-    return (
-        <div class="col-4">
-            {/* <div class="dash-card">
+function LeaveCard({
+  available,
+  used,
+  progressValue,
+  title,
+  percentage,
+  name,
+  value,
+}) {
+  return (
+    <div class="col-4">
+      {/* <div class="dash-card">
                 <div class="dash-card-header green-bg" style={{ textAlign: "center" }}>
                     <h2 style={{ marginBottom: 0 }}>{title}</h2>
                 </div>
@@ -62,14 +70,19 @@ function LeaveCard({ available, used, progressValue, title, percentage, name, va
                 </div>
 
             </div> */}
-            <div class="card widget-card-1">
-                <div class="card-block-small">
-                    <i class="icofont icofont-pie-chart bg-c-green card1-icon" style={{ fontSize: "24px" }}>{value}</i>
-                    <h4>{title}</h4>
-                </div>
-            </div>
+      <div class="card widget-card-1">
+        <div class="card-block-small">
+          <i
+            class="icofont icofont-pie-chart bg-c-green card1-icon"
+            style={{ fontSize: "24px" }}
+          >
+            {value}
+          </i>
+          <h4>{title}</h4>
         </div>
-    )
+      </div>
+    </div>
+  );
 }
 
-export default LeaveCard
+export default LeaveCard;

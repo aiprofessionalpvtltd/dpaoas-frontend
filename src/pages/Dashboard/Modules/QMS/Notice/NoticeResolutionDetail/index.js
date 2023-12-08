@@ -6,7 +6,9 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 const validationSchema = Yup.object({
   sessionNo: Yup.number().required("Session Number is required"),
-  noticeOfficeDiaryNo: Yup.number().required("Notice Office Diary Number is required"),
+  noticeOfficeDiaryNo: Yup.number().required(
+    "Notice Office Diary Number is required",
+  ),
   noticeOfficeDiaryDate: Yup.string(),
   noticeOfficeDiaryTime: Yup.string(),
   resolutionType: Yup.string(),
@@ -42,7 +44,10 @@ function QMSNoticeResolutionDetail() {
       />
       <div class="container-fluid">
         <div class="card mt-4">
-          <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
+          <div
+            class="card-header red-bg"
+            style={{ background: "#14ae5c !important" }}
+          >
             <h1>Notice Resolution Detail</h1>
           </div>
           <div class="card-body">
@@ -56,14 +61,18 @@ function QMSNoticeResolutionDetail() {
                         type="text"
                         placeholder={formik.values.sessionNo}
                         className={`form-control ${
-                          formik.touched.sessionNo && formik.errors.sessionNo ? "is-invalid" : ""
+                          formik.touched.sessionNo && formik.errors.sessionNo
+                            ? "is-invalid"
+                            : ""
                         }`}
                         id="sessionNo"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
                       {formik.touched.sessionNo && formik.errors.sessionNo && (
-                        <div className="invalid-feedback">{formik.errors.sessionNo}</div>
+                        <div className="invalid-feedback">
+                          {formik.errors.sessionNo}
+                        </div>
                       )}
                     </div>
                   </div>
@@ -74,15 +83,21 @@ function QMSNoticeResolutionDetail() {
                         type="text"
                         placeholder={formik.values.noticeOfficeDiaryNo}
                         className={`form-control ${
-                          formik.touched.noticeOfficeDiaryNo && formik.errors.noticeOfficeDiaryNo ? "is-invalid" : ""
+                          formik.touched.noticeOfficeDiaryNo &&
+                          formik.errors.noticeOfficeDiaryNo
+                            ? "is-invalid"
+                            : ""
                         }`}
                         id="noticeOfficeDiaryNo"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
-                      {formik.touched.noticeOfficeDiaryNo && formik.errors.noticeOfficeDiaryNo && (
-                        <div className="invalid-feedback">{formik.errors.noticeOfficeDiaryNo}</div>
-                      )}
+                      {formik.touched.noticeOfficeDiaryNo &&
+                        formik.errors.noticeOfficeDiaryNo && (
+                          <div className="invalid-feedback">
+                            {formik.errors.noticeOfficeDiaryNo}
+                          </div>
+                        )}
                     </div>
                   </div>
                   <div class="col">
@@ -92,7 +107,8 @@ function QMSNoticeResolutionDetail() {
                         type="text"
                         placeholder={formik.values.noticeOfficeDiaryDate}
                         className={`form-control ${
-                          formik.touched.noticeOfficeDiaryDate && formik.errors.noticeOfficeDiaryDate
+                          formik.touched.noticeOfficeDiaryDate &&
+                          formik.errors.noticeOfficeDiaryDate
                             ? "is-invalid"
                             : ""
                         }`}
@@ -100,19 +116,25 @@ function QMSNoticeResolutionDetail() {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
-                      {formik.touched.noticeOfficeDiaryDate && formik.errors.noticeOfficeDiaryDate && (
-                        <div className="invalid-feedback">{formik.errors.noticeOfficeDiaryDate}</div>
-                      )}
+                      {formik.touched.noticeOfficeDiaryDate &&
+                        formik.errors.noticeOfficeDiaryDate && (
+                          <div className="invalid-feedback">
+                            {formik.errors.noticeOfficeDiaryDate}
+                          </div>
+                        )}
                     </div>
                   </div>
                   <div class="col">
                     <div class="mb-3">
-                      <label class="form-label">Notice Office Diary Time </label>
+                      <label class="form-label">
+                        Notice Office Diary Time{" "}
+                      </label>
                       <input
                         type="text"
                         placeholder={formik.values.noticeOfficeDiaryTime}
                         className={`form-control ${
-                          formik.touched.noticeOfficeDiaryTime && formik.errors.noticeOfficeDiaryTime
+                          formik.touched.noticeOfficeDiaryTime &&
+                          formik.errors.noticeOfficeDiaryTime
                             ? "is-invalid"
                             : ""
                         }`}
@@ -120,9 +142,12 @@ function QMSNoticeResolutionDetail() {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
-                      {formik.touched.noticeOfficeDiaryTime && formik.errors.noticeOfficeDiaryTime && (
-                        <div className="invalid-feedback">{formik.errors.noticeOfficeDiaryTime}</div>
-                      )}
+                      {formik.touched.noticeOfficeDiaryTime &&
+                        formik.errors.noticeOfficeDiaryTime && (
+                          <div className="invalid-feedback">
+                            {formik.errors.noticeOfficeDiaryTime}
+                          </div>
+                        )}
                     </div>
                   </div>
                 </div>

@@ -1,29 +1,28 @@
-import React, { useState } from 'react'
-import { NoticeSidebarItems } from '../../../../../../utils/sideBarItems'
-import { Layout } from '../../../../../../components/Layout';
-import Header from '../../../../../../components/Header';
-import { useNavigate } from 'react-router';
-import CustomTable from '../../../../../../components/CustomComponents/CustomTable';
+import React, { useState } from "react";
+import { NoticeSidebarItems } from "../../../../../../utils/sideBarItems";
+import { Layout } from "../../../../../../components/Layout";
+import Header from "../../../../../../components/Header";
+import { useNavigate } from "react-router";
+import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 
 const data = [
-    {
-        name: "Admin",
-        status: "Active"
-    },
-    {
-        name: "Editor",
-        status: "InActive"
-    },
-    {
-        name: "Manager",
-        status: "Active"
-    },
-    {
-        name: "Employee",
-        status: "Active"
-    }
-]
-
+  {
+    name: "Admin",
+    status: "Active",
+  },
+  {
+    name: "Editor",
+    status: "InActive",
+  },
+  {
+    name: "Manager",
+    status: "Active",
+  },
+  {
+    name: "Employee",
+    status: "Active",
+  },
+];
 
 function Members() {
     const navigate = useNavigate()
@@ -32,16 +31,25 @@ function Members() {
     
     const pageSize = 4; // Set your desired page size
 
-    const handlePageChange = (page) => {
-        // Update currentPage when a page link is clicked
-        setCurrentPage(page);
-    };
-    
+  const handlePageChange = (page) => {
+    // Update currentPage when a page link is clicked
+    setCurrentPage(page);
+  };
 
-    return (
-        <Layout module={true} sidebarItems={NoticeSidebarItems} centerlogohide={true}>
-            <Header dashboardLink={"/"} addLink1={"/notice/dashboard"} addLink2={"/notice/manage/members"} title1={"Notice"} title2={"Members"} />
-            <div class="card">
+  return (
+    <Layout
+      module={true}
+      sidebarItems={NoticeSidebarItems}
+      centerlogohide={true}
+    >
+      <Header
+        dashboardLink={"/"}
+        addLink1={"/notice/dashboard"}
+        addLink2={"/notice/manage/members"}
+        title1={"Notice"}
+        title2={"Members"}
+      />
+      <div class="card">
         <div class="card-header red-bg" style={{ background: "#14ae5c" }}>
           <h1>Members Detail</h1>
         </div>
@@ -89,7 +97,6 @@ function Members() {
                   </select>
                 </div>
               </div>
-
             </div>
             <div class="row">
               <div class="d-grid gap-2 d-md-flex justify-content-md-end">
@@ -106,7 +113,9 @@ function Members() {
                   addBtnText="Add Member"
                   headerBgColor={"rgb(20, 174, 92)"}
                   hideBtn={false}
-                  handleEdit={() => navigate("/notice/manage/members/addedit", { state: true })}
+                  handleEdit={() =>
+                    navigate("/notice/manage/members/addedit", { state: true })
+                  }
                   handleAdd={() => navigate("/notice/manage/members/addedit")}
                   handlePageChange={handlePageChange}
                   currentPage={currentPage}
@@ -117,9 +126,8 @@ function Members() {
           </div>
         </div>
       </div>
- 
-        </Layout>
-    )
+    </Layout>
+  );
 }
 
-export default Members
+export default Members;

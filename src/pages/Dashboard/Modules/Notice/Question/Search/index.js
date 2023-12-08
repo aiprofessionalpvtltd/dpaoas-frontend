@@ -46,10 +46,12 @@ function SearchQuestion() {
         NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate,
         NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
         SessionNumber: res?.session?.sessionName,
-        SubjectMatter: [res?.englishText, res?.urduText].filter(Boolean).join(', '),
+        SubjectMatter: [res?.englishText, res?.urduText]
+          .filter(Boolean)
+          .join(", "),
         Category: res.questionCategory,
         // SubmittedBy: res.category,
-        Status: res.questionStatus?.questionStatus
+        Status: res.questionStatus?.questionStatus,
       };
     });
   };
@@ -92,7 +94,7 @@ function SearchQuestion() {
       sidebarItems={NoticeSidebarItems}
       centerlogohide={true}
     >
-    <ToastContainer />
+      <ToastContainer />
       <Header
         dashboardLink={"/"}
         addLink1={"/notice/dashboard"}
@@ -100,7 +102,7 @@ function SearchQuestion() {
         title1={"Notice"}
         title2={"Search Question"}
       />
-      <div  >
+      <div>
         <div class="container-fluid">
           <div class="card mt-1">
             <div
@@ -195,23 +197,15 @@ function SearchQuestion() {
                       <div className="row">
                         <div className="col">
                           <div className="mb-3">
-                            <label className="form-label">
-                              Category
-                            </label>
+                            <label className="form-label">Category</label>
                             <Field
                               as="select"
                               className="form-select"
                               name="category"
                             >
-                                <option value="Starred">
-                                    Starred
-                                </option>
-                                <option value="UnStarred">
-                                    UnStarred
-                                </option>
-                                <option value="Short Notice">
-                                    Short Notice
-                                </option>
+                              <option value="Starred">Starred</option>
+                              <option value="UnStarred">UnStarred</option>
+                              <option value="Short Notice">Short Notice</option>
                             </Field>
                           </div>
                         </div>
@@ -228,19 +222,21 @@ function SearchQuestion() {
                               <option selected="selected" value="" hidden>
                                 Select
                               </option>
-                                                <option>Admitted</option>
-                                                <option>Admitted but Lapsed</option>
-                                                <option>Deferred</option>
-                                                <option>Disallowed</option>
-                                                <option>Disallowed on Reconsideration</option>
-                                                <option>File not Available</option>
-                                                <option>Lapsed</option>
-                                                <option>NFA</option>
-                                                <option>Replied</option>
-                                                <option>Replied/Referred to Standing Committee</option>
-                                                <option>Under Correspondence</option>
-                                                <option>Under Process</option>
-                                                <option>Withdrawn</option>
+                              <option>Admitted</option>
+                              <option>Admitted but Lapsed</option>
+                              <option>Deferred</option>
+                              <option>Disallowed</option>
+                              <option>Disallowed on Reconsideration</option>
+                              <option>File not Available</option>
+                              <option>Lapsed</option>
+                              <option>NFA</option>
+                              <option>Replied</option>
+                              <option>
+                                Replied/Referred to Standing Committee
+                              </option>
+                              <option>Under Correspondence</option>
+                              <option>Under Process</option>
+                              <option>Withdrawn</option>
                             </Field>
                           </div>
                         </div>
@@ -295,9 +291,9 @@ function SearchQuestion() {
                     handlePageChange={handlePageChange}
                     currentPage={currentPage}
                     showPrint={true}
-                        pageSize={pageSize}
-                        handleAdd={(item) => navigate('/')}
-                        handleEdit={(item) => navigate('/')}
+                    pageSize={pageSize}
+                    handleAdd={(item) => navigate("/")}
+                    handleEdit={(item) => navigate("/")}
                     // handleDelete={(item) => handleDelete(item.id)}
                     totalCount={count}
                   />
@@ -307,7 +303,6 @@ function SearchQuestion() {
           </div>
         </div>
       </div>
-       
     </Layout>
   );
 }

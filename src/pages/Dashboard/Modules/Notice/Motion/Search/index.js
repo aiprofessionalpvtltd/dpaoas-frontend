@@ -101,7 +101,7 @@ function SearchMotion() {
         title1={"Notice"}
         title2={"Search Motion"}
       />
-      <div  >
+      <div>
         <div class="container-fluid">
           <div class="card mt-1">
             <div
@@ -339,7 +339,6 @@ function SearchMotion() {
           </div>
         </div>
       </div>
-       
     </Layout>
   );
 }

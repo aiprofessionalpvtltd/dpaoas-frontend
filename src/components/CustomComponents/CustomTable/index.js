@@ -34,7 +34,7 @@ function CustomTable({
   headerShown,
   searchonchange,
   ActionHide,
-  totalCount
+  totalCount,
 }) {
   const keys = data?.length > 0 ? Object.keys(data[0]) : [];
   const [totalPages, setTotalPages] = useState(0);
@@ -61,8 +61,12 @@ function CustomTable({
   const renderPagination = () => (
     <nav aria-label="Page navigation">
       <ul className="pagination">
-        <li className={`page-item ${currentPage <= 0 ? 'disabled' : ''}`}>
-          <button className="page-link" onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage <= 0}>
+        <li className={`page-item ${currentPage <= 0 ? "disabled" : ""}`}>
+          <button
+            className="page-link"
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage <= 0}
+          >
             Previous
           </button>
         </li>
@@ -86,7 +90,6 @@ function CustomTable({
     <div className="dash-detail-container">
       <div className="dash-card">
         {!headerShown && !headerShown && (
-
           <div
             className="dash-card-header"
             style={{
@@ -111,7 +114,12 @@ function CustomTable({
             className="input-group float-end"
             style={{ width: "250px", marginTop: "10px", marginBottom: "15px" }}
           >
-            <input type="text" className="form-control" placeholder="Search" onChange={searchonchange} />
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Search"
+              onChange={searchonchange}
+            />
             <div className="input-group-btn">
               <button className="btn btn-default" type="submit">
                 <i className="glyphicon glyphicon-search"></i>
@@ -147,8 +155,12 @@ function CustomTable({
                     className="text-center"
                     style={{
                       width: "180px",
-                      backgroundColor: headertitlebgColor ? headertitlebgColor : "#FFF",
-                      color: headertitletextColor ? headertitletextColor : "#666",
+                      backgroundColor: headertitlebgColor
+                        ? headertitlebgColor
+                        : "#FFF",
+                      color: headertitletextColor
+                        ? headertitletextColor
+                        : "#666",
                     }}
                   >
                     Actions
@@ -261,10 +273,11 @@ function CustomTable({
                   <td className="text-center">
                     {item[key] === "active" || item[key] === "inactive" ? (
                       <span
-                        className={`label label-sm ${item[key] === "active"
-                          ? "label-success"
-                          : "label-danger"
-                          }`}
+                        className={`label label-sm ${
+                          item[key] === "active"
+                            ? "label-success"
+                            : "label-danger"
+                        }`}
                       >
                         {item[key]}
                       </span>
@@ -348,7 +361,13 @@ function CustomTable({
         </table>
       </div>
       {data.length > 0 && (
-        <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-end' }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "flex-end",
+          }}
+        >
           {renderPagination()}
         </div>
       )}

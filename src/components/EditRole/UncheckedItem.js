@@ -2,7 +2,13 @@ import React from "react";
 import { Link } from "react-router-dom";
 import arrowLeft from "../../assets/arrow.png";
 
-export const UncheckedItem = ({ item, handleHideShow, hiddenItems, handleCheckboxChange, checkedItems }) => {
+export const UncheckedItem = ({
+  item,
+  handleHideShow,
+  hiddenItems,
+  handleCheckboxChange,
+  checkedItems,
+}) => {
   return (
     <div key={item.id}>
       <Link
@@ -38,14 +44,10 @@ export const UncheckedItem = ({ item, handleHideShow, hiddenItems, handleCheckbo
                     checked={checkedItems.some(
                       (checkedItem) =>
                         checkedItem.itemId === item.id &&
-                        checkedItem.optionId === option.id
+                        checkedItem.optionId === option.id,
                     )}
                     onChange={() =>
-                      handleCheckboxChange(
-                        item.id,
-                        option.id,
-                        item.permission
-                      )
+                      handleCheckboxChange(item.id, option.id, item.permission)
                     }
                   />
                   {option?.label}

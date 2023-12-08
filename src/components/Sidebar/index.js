@@ -10,7 +10,10 @@ import { logout } from "../../api/Auth";
 
 export const Sidebar = ({ sidebarItems }) => {
   const location = useLocation();
-  const basePath = location.pathname.substring(0, location.pathname.lastIndexOf("/")); // For dropdowns
+  const basePath = location.pathname.substring(
+    0,
+    location.pathname.lastIndexOf("/"),
+  ); // For dropdowns
   const navigation = useNavigate();
 
   // Create an object to store the state for each dropdown
@@ -45,8 +48,8 @@ export const Sidebar = ({ sidebarItems }) => {
                 >
                   <Dropdown.Toggle
                     className={`dashboard-nav-item dashboard-nav-dropdown-toggle ${
-                        basePath === item.link ? "active" : ""
-                      }`}
+                      basePath === item.link ? "active" : ""
+                    }`}
                     style={{
                       width: "100%",
                       backgroundColor: "white",
@@ -58,7 +61,10 @@ export const Sidebar = ({ sidebarItems }) => {
                   >
                     <FontAwesomeIcon icon={item.icon} size="lg" width={24} />
                     <span
-                      style={{ color: basePath === item.link ? "#fff" : "#666", background: "none" }}
+                      style={{
+                        color: basePath === item.link ? "#fff" : "#666",
+                        background: "none",
+                      }}
                       className="text"
                     >
                       {item.itemName}
@@ -73,8 +79,8 @@ export const Sidebar = ({ sidebarItems }) => {
                       >
                         <Dropdown.Item
                           className={`dashboard-nav-dropdown-item ${
-                        location.pathname === sub.link ? "active" : ""
-                      }`}
+                            location.pathname === sub.link ? "active" : ""
+                          }`}
                           href={sub.link}
                         >
                           <FontAwesomeIcon
@@ -104,10 +110,13 @@ export const Sidebar = ({ sidebarItems }) => {
           ))}
 
         <div className="nav-item-divider"></div>
-        <a className="dashboard-nav-item" onClick={() => {
-          logout();
-          navigation('/login')
-        }}>
+        <a
+          className="dashboard-nav-item"
+          onClick={() => {
+            logout();
+            navigation("/login");
+          }}
+        >
           <FontAwesomeIcon icon={faSignOutAlt} size="lg" width={24} />
           <span className="text">Logout</span>
         </a>
