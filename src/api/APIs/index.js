@@ -497,6 +497,21 @@ export const searchResolution = async (searchParams) => {
   }
 };
 
+export const DeleteResolution = async (id) => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientMMS.delete(`/resolution/delete/${id}`)
+    // {
+    //   headers: {
+    //     Authorization: `Bearer ${token}`,
+    //   }
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error('Error fetching API endpoint:', error);
+    throw error;
+  }
+};
 
 // Question Module
 export const createQuestion = async (data) => {

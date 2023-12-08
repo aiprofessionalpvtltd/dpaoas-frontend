@@ -20,6 +20,7 @@ function SentResolution() {
   const navigate = useNavigate();
   const [resData, setResData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
+    const [count, setCount] = useState(null);
   const pageSize = 10; // Set your desired page size
 
   const handlePageChange = (page) => {
@@ -80,6 +81,7 @@ function SentResolution() {
     try {
       const response = await searchResolution(searchParams);
       if (response?.success) {
+        setCount(response.data?.count);
         const transformedData = transformLeavesData(response.data);
         setResData(transformedData);
         showSuccessMessage(response?.message);
@@ -94,6 +96,7 @@ function SentResolution() {
       const response = await getAllResolutions(currentPage, pageSize);
       if (response?.success) {
         showSuccessMessage(response?.message);
+        setCount(response.data?.count);
         const transformedData = transformLeavesData(response.data);
         setResData(transformedData);
       }
@@ -396,6 +399,7 @@ function SentResolution() {
                         pageSize={pageSize}
                         handleAdd={(item) => navigate('/')}
                         handleEdit={(item) => navigate('/')}
+                        totalCount={count}
                     />
                   </div>
                 </div>

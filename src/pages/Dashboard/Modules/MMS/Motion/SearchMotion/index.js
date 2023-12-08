@@ -30,6 +30,7 @@ const validationSchema = Yup.object({
 function MMSSearchMotion() {
     const navigate = useNavigate()
     const [currentPage, setCurrentPage] = useState(0);
+    const [count, setCount] = useState(null);
     const [sessions, setSessions] = useState([])
     const [ministryData, setMinistryData] = useState([])
     const [motionStatus, setMotionStatus] = useState([])
@@ -66,9 +67,9 @@ function MMSSearchMotion() {
     };
 
     const transformMotionData = (apiData) => {
-        return apiData.map((leave) => ({
+        return apiData?.map((leave) => ({
             id: leave?.id,
-            fkSessionId: leave?.sessions.id,
+            fkSessionId: leave?.sessions?.id,
             fileNumber: leave?.fileNumber,
             motionType: leave?.motionType,
             motionWeek: leave?.motionWeek,
@@ -88,6 +89,7 @@ function MMSSearchMotion() {
             const response = await getAllMotion(currentPage, pageSize);
             if (response?.success) {
                 // showSuccessMessage(response?.message);
+                setCount(response?.data?.count)
                 const transformedData = transformMotionData(response?.data?.rows);
                 setMotionData(transformedData);
             }
@@ -176,10 +178,14 @@ function MMSSearchMotion() {
     useEffect(() => {
         AllMembersData()
         AllMinistryData()
-        getMotionListData()
         getAllSessionsApi()
         getMotionStatus()
     }, [])
+
+    useEffect(() => {
+        getMotionListData();
+    }, [currentPage])
+    
     return (
         <Layout module={true} sidebarItems={MMSSideBarItems} centerlogohide={true}>
             <Header dashboardLink={"/"} addLink1={"/mms/dashboard"} title1={"Motion"} addLink2={"/mms/motion/search"} title2={"Search Motion"} />
@@ -427,6 +433,7 @@ function MMSSearchMotion() {
                                         handlePageChange={handlePageChange}
                                         currentPage={currentPage}
                                         pageSize={pageSize}
+                                        totalCount={count}
                                     />
                                 </div>
                             </form>

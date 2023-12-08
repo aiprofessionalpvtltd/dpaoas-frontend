@@ -15,6 +15,7 @@ const validationSchema = Yup.object({
 function QMSSearchQuestion() {
     const navigate = useNavigate()
     const [currentPage, setCurrentPage] = useState(0);
+    const [count, setCount] = useState(null);
     const pageSize = 4; // Set your desired page size
 
     const formik = useFormik({
@@ -68,7 +69,7 @@ function QMSSearchQuestion() {
     ]
     return (
         <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
-            <Header dashboardLink={"/"} addLink1={"/qms/dashboard"} title1={"Question"} addLink2={"/qms/question/search"} title2={"Search Queston"} />
+            <Header dashboardLink={"/"} addLink1={"/qms/dashboard"} title1={"Question"} addLink2={"/qms/search/question"} title2={"Search Queston"} />
             <div class='container-fluid'>
                 <div class='card mt-4'>
                     <div class='card-header red-bg' style={{ background: "#14ae5c !important" }}>

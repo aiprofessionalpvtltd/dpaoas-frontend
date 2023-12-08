@@ -281,13 +281,13 @@ export const MMSSideBarItems = [
 export const QMSSideBarItems = [
     {
         itemName: "Search Question",
-        link: "/qms/question/search",
+        link: "/qms/search/question",
         icon: faClipboardList,
 
     },
     {
         itemName: "Search Resolution",
-        link: "/qms/resolution/search",
+        link: "/qms/search/resolution",
         icon: faClipboardList,
 
     },
@@ -331,7 +331,7 @@ export const QMSSideBarItems = [
         subItems: [
             {
                 itemName: "Resolution List",
-                link: "/qms/rsolution/list",
+                link: "/qms/resolution/list",
                 icon: faClipboardList
             },
             {

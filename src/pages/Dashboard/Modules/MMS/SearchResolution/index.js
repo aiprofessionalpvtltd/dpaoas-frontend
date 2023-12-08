@@ -13,6 +13,7 @@ import { searchResolution } from '../../../../../api/APIs';
 function MMSSearchResolution() {
     const navigate = useNavigate()
     const [currentPage, setCurrentPage] = useState(0);
+    const [count, setCount] = useState(null);
     const [searchedData, setSearchedData] = useState([]);
 
     const pageSize = 4; // Set your desired page size
@@ -43,10 +44,10 @@ function MMSSearchResolution() {
             )) || [];
 
             return {
-                RID: res.id,
-                ResDN: res.resolutionDiaries,
+                RID: res?.id,
+                ResDN: res?.resolutionDiaries,
                 SessionNumber: res.session?.sessionName,
-                ResolutionType: res.resolutionType,
+                ResolutionType: res?.resolutionType,
                 SubjectMatter: "",
                 NoticeNo: res.noticeDiary?.noticeOfficeDiaryNo,
                 ResolutionStatus: res.resolutionStatus?.resolutionStatus,
@@ -80,6 +81,7 @@ function MMSSearchResolution() {
             const response = await searchResolution(searchParams);
             if (response?.success) {
                 const transformedData = transformLeavesData(response.data);
+                setCount(response?.data?.count)
                 setSearchedData(transformedData);
                 showSuccessMessage(response?.message);
             }
@@ -299,7 +301,6 @@ function MMSSearchResolution() {
                             <div style={{ marginTop: "20px" }}>
 
                                 <CustomTable
-                                    block={true}
                                     data={searchedData}
                                     tableTitle=""
                                     addBtnText="Print Resolution"
@@ -312,6 +313,7 @@ function MMSSearchResolution() {
                                     headertitletextColor={"#FFF"}
                                     hideEditIcon={true}
                                     ActionHide={true}
+                                    totalCount={count}
                                 // handlePrint={}
                                 // handleUser={}
                                 // handleDelete={(item) => handleDelete(item.id)}

@@ -8,6 +8,7 @@ import { QMSSideBarItems } from '../../../../../utils/sideBarItems'
 function QMSSerchResolution() {
     const navigate = useNavigate()
     const [currentPage, setCurrentPage] = useState(0);
+    const [count, setCount] = useState(null);
     const pageSize = 4;
 
     const handlePageChange = (page) => {
@@ -52,7 +53,7 @@ function QMSSerchResolution() {
 
     return (
         <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
-            <Header dashboardLink={"/"} addLink1={"/qms/dashboard"} title1={"Question"} addLink2={"/qms/resolution/search"} title2={"Search Resolution"} />
+            <Header dashboardLink={"/"} addLink1={"/qms/dashboard"} title1={"Question"} addLink2={"/qms/search/resolution"} title2={"Search Resolution"} />
             <div class='container-fluid'>
                 <div class='card mt-4'>
                     <div class='card-header red-bg' style={{ background: "#14ae5c !important" }}>

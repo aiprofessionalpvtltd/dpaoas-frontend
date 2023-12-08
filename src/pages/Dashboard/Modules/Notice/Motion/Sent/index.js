@@ -16,8 +16,9 @@ function SentMotion() {
   const navigate = useNavigate();
   const [searchedData, setSearchedData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
+    const [count, setCount] = useState(null);
   const [resData, setResData] = useState([]);
-  const pageSize = 10; // Set your desired page size
+  const pageSize = 4; // Set your desired page size
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
@@ -40,7 +41,7 @@ function SentMotion() {
   const transformLeavesData = (apiData) => {
     return apiData.map((res, index) => {
       return {
-        SrNo: index,
+        // SrNo: index,
         MID: res?.id,
         NoticeNo: res?.noticeOfficeDairies?.noticeOfficeDiaryNo,
         NoticeDate: res?.noticeOfficeDairies?.noticeOfficeDiaryDate,
@@ -91,6 +92,7 @@ function SentMotion() {
       const response = await getAllMotion(currentPage, pageSize);
       if (response?.success) {
         showSuccessMessage(response?.message);
+        setCount(response?.data?.count)
         const transformedData = transformLeavesData(response.data?.rows);
         setResData(transformedData);
       }
@@ -101,7 +103,7 @@ function SentMotion() {
 
   useEffect(() => {
     getAllQuestionsApi();
-  }, []);
+  }, [currentPage]);
 
   return (
     <Layout
@@ -344,6 +346,7 @@ function SentMotion() {
                         pageSize={pageSize}
                         handleAdd={(item) => navigate('/')}
                         handleEdit={(item) => navigate('/')}
+                        totalCount={count}
                       />
                     </div>
                   </div>

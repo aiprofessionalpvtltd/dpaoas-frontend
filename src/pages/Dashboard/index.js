@@ -36,7 +36,7 @@ function Dashboard() {
                         <Tiles title={"Motion Management System"} link={"/mms/motion/list"} type={""} cardbg={"bluebg"} icon={faClipboardList} />
                     </div>
                     <div class="col-4">
-                        <Tiles title={"Question Management System"} link={"/qms/dashboard"} type={""} cardbg={"bluebg"} icon={faClipboardList} />
+                        <Tiles title={"Question Management System"} link={"/qms/search/question"} type={""} cardbg={"bluebg"} icon={faClipboardList} />
                     </div>
                 </div>
             </div>

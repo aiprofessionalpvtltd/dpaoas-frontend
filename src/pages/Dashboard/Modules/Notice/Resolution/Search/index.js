@@ -14,6 +14,7 @@ function SearchResolution() {
     const navigate = useNavigate();
     const [searchedData, setSearchedData] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
+    const [count, setCount] = useState(null);
     const pageSize = 10; // Set your desired page size
     
     const handlePageChange = (page) => {
@@ -77,6 +78,7 @@ function SearchResolution() {
         try {
           const response = await searchResolution(searchParams);
           if (response?.success) {
+            setCount(count);
             const transformedData = transformLeavesData(response.data);
                 setSearchedData(transformedData);
             showSuccessMessage(response?.message);
@@ -260,6 +262,7 @@ function SearchResolution() {
                         pageSize={pageSize}
                         handleAdd={(item) => navigate('/')}
                         handleEdit={(item) => navigate('/')}
+                        totalCount={count}
                     />
                                 </div>
 

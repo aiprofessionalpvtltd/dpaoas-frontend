@@ -13,6 +13,7 @@ function MMSSearchQuestion() {
     const navigate = useNavigate()
     const [searchedData, setSearchedData] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
+    const [count, setCount] = useState(null);
     const pageSize = 4; // Set your desired page size
 
     const initialValues = {
@@ -33,51 +34,18 @@ function MMSSearchQuestion() {
         // Update currentPage when a page link is clicked
         setCurrentPage(page);
     };
-    const data = [
-        {
-            "Sr#": 1,
-            "MID": "21-11-2023",
-            "M-File No": "Ali Ahmad Jan",
-            "Motion Diary No": "Additional Secretary Office",
-            "Session Number": "Educational Trip",
-            "Motion Type": "Personal",
-            "Subject Matter": "AI Professionals Pvt Limited",
-            "Notice No./Date": "21-11-2023",
-            "Motion Week": "30-11-2023",
-            "Motion Status": [
-                "Saturday"
-            ],
-            "Movers": "Visit",
-            "Ministries": "Inactive",
-        },
-        {
-            "Sr#": 1,
-            "MID": "21-11-2023",
-            "M-File No": "Ali Ahmad Jan",
-            "Motion Diary No": "Additional Secretary Office",
-            "Session Number": "Educational Trip",
-            "Motion Type": "Personal",
-            "Subject Matter": "AI Professionals Pvt Limited",
-            "Notice No./Date": "21-11-2023",
-            "Motion Week": "30-11-2023",
-            "Motion Status": [
-                "Saturday"
-            ],
-            "Movers": "Visit",
-            "Ministries": "Inactive",
-        },
-    ]
+
     const transformLeavesData = (apiData) => {
         return apiData.map((res, index) => {
             return {
                 SrNo: index,
-                QID: res.id,
-                QDN: res.questionDiary,
+                QID: res?.id,
+                QDN: res?.questionDiary,
                 NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate,
                 NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
                 SessionNumber: res?.session?.sessionName,
                 SubjectMatter: [res?.englishText, res?.urduText].filter(Boolean).join(', '),
-                Category: res.questionCategory,
+                Category: res?.questionCategory,
                 // SubmittedBy: res.category,
                 Status: res.questionStatus?.questionStatus
             };
@@ -106,6 +74,7 @@ function MMSSearchQuestion() {
             const response = await searchQuestion(searchParams);
             if (response?.success) {
                 showSuccessMessage(response?.message);
+                setCount(response.data?.count)
                 const transformedData = transformLeavesData(response.data);
                 setSearchedData(transformedData);
             }
@@ -344,7 +313,6 @@ function MMSSearchQuestion() {
                             </Formik>
                             <div className='mt-3'>
                                 <CustomTable
-                                    block={true}
                                     headerShown={true}
                                     data={searchedData}
                                     // handleEdit={(item) => navigate('/vms/addeditpass', { state: item })}
@@ -355,7 +323,7 @@ function MMSSearchQuestion() {
                                     headertitletextColor={"#FFF"}
                                     hideEditIcon={true}
                                     ActionHide={true}
-
+                                    totalCount={count}
                                 // handleDelete={(item) => handleDelete(item.id)}
                                 />
                             </div>

@@ -18,6 +18,7 @@ function VMSDashboard() {
     const [pdfBlob, setPdfBlob] = useState(null);
     const [passAllData, setPassAllData] = useState([])
     const [currentPage, setCurrentPage] = useState(0);
+    const [count, setCount] = useState(null);
     const pageSize = 5; // Set your desired page size
 
     const handlePageChange = (page) => {
@@ -147,9 +148,6 @@ function VMSDashboard() {
                         headertitletextColor={"#FFF"}
                         handleDelete={(item) => handleDelete(item.id)}
                         searchonchange={(e) => searchPassess(e.target.value)}
-                    // handlePrint={}
-                    // handleUser={}
-                    // handleDelete={(item) => handleDelete(item.id)}
                     />
                 </div>
             </div>

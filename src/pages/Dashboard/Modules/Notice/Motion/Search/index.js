@@ -16,6 +16,7 @@ function SearchMotion() {
   const navigate = useNavigate();
   const [searchedData, setSearchedData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
+    const [count, setCount] = useState(null);
   const pageSize = 10; // Set your desired page size
 
   const handlePageChange = (page) => {
@@ -77,6 +78,7 @@ function SearchMotion() {
       const response = await searchMotion(searchParams);
       if (response?.success) {
         showSuccessMessage(response?.message);
+        setCount(response?.data?.count)
         const transformedData = transformLeavesData(response.data.rows);
         setSearchedData(transformedData);
       }
@@ -326,6 +328,7 @@ function SearchMotion() {
                         pageSize={pageSize}
                         handleAdd={(item) => navigate('/')}
                         handleEdit={(item) => navigate('/')}
+                        totalCount={count}
                         // handleDelete={(item) => handleDelete(item.id)}
                       />
                     </div>

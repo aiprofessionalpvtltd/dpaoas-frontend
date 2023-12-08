@@ -148,8 +148,8 @@ export const ProtectedRoutes = [
 
     //QMS Module
     { path: "/qms/dashboard", element: <QMSQuestionDashboard /> },
-    { path: "/qms/question/search", element: <QMSSearchQuestion /> },
-    { path: "/qms/resolution/search", element: <QMSSerchResolution /> },
+    { path: "/qms/search/question", element: <QMSSearchQuestion /> },
+    { path: "/qms/search/resolution", element: <QMSSerchResolution /> },
 
     
     { path: "/qms/reports", element: <QMSQuestionDashboard /> },
@@ -168,7 +168,7 @@ export const ProtectedRoutes = [
     { path: "/qms/question/defer", element: <QMSDaferQuestionDetail /> },
 
     { path: "/qms/resolution", element: <QMSQuestionDashboard /> },
-    { path: "/qms/rsolution/list", element: <QMSResolutionList /> },
+    { path: "/qms/resolution/list", element: <QMSResolutionList /> },
     { path: "/qms/resolution/delete", element: <QMSDeleteResolution /> },
 
     { path: "/qms/notice", element: <QMSQuestionDashboard /> },

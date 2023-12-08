@@ -16,6 +16,7 @@ function SearchQuestion() {
   const navigate = useNavigate();
   const [searchedData, setSearchedData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
+    const [count, setCount] = useState(null);
   const pageSize = 10; // Set your desired page size
 
   const handlePageChange = (page) => {
@@ -39,7 +40,7 @@ function SearchQuestion() {
   const transformLeavesData = (apiData) => {
     return apiData.map((res, index) => {
       return {
-        SrNo: index,
+        // SrNo: index,
         QID: res.id,
         QDN: res.questionDiary,
         NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate,
@@ -76,6 +77,7 @@ function SearchQuestion() {
       const response = await searchQuestion(searchParams);
       if (response?.success) {
         showSuccessMessage(response?.message);
+        setCount(response?.data?.count)
         const transformedData = transformLeavesData(response.data);
         setSearchedData(transformedData);
       }
@@ -297,6 +299,7 @@ function SearchQuestion() {
                         handleAdd={(item) => navigate('/')}
                         handleEdit={(item) => navigate('/')}
                     // handleDelete={(item) => handleDelete(item.id)}
+                    totalCount={count}
                   />
                 </div>
               </div>

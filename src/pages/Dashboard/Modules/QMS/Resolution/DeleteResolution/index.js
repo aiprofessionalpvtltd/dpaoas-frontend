@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
 import { QMSSideBarItems } from "../../../../../../utils/sideBarItems";
@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { getAllResolutions } from "../../../../../../api/APIs";
+import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
 const validationSchema = Yup.object({
   resolutionDiaryNo: Yup.number(),
   resolutionID: Yup.string(),
@@ -45,43 +47,50 @@ function QMSDeleteResolution() {
       console.log(values);
     },
   });
-  const navigate = useNavigate();
-  const [currentPage, setCurrentPage] = useState(0);
-  const pageSize = 4; // Set your desired page size
-  const data = [
-    {
-      "Sr#": 1,
-      MID: "21-11-2023",
-      "M-File No": "Ali Ahmad Jan",
-      "Motion Diary No": "Additional Secretary Office",
-      "Session Number": "Educational Trip",
-      "Motion Type": "Personal",
-      "Subject Matter": "AI Professionals Pvt Limited",
-      "Notice No./Date": "21-11-2023",
-      "Motion Week": "30-11-2023",
-      "Motion Status": ["Saturday"],
-      Movers: "Visit",
-      Ministries: "Inactive",
-    },
-    {
-      "Sr#": 1,
-      MID: "21-11-2023",
-      "M-File No": "Ali Ahmad Jan",
-      "Motion Diary No": "Additional Secretary Office",
-      "Session Number": "Educational Trip",
-      "Motion Type": "Personal",
-      "Subject Matter": "AI Professionals Pvt Limited",
-      "Notice No./Date": "21-11-2023",
-      "Motion Week": "30-11-2023",
-      "Motion Status": ["Saturday"],
-      Movers: "Visit",
-      Ministries: "Inactive",
-    },
-  ];
-  const handlePageChange = (page) => {
-    // Update currentPage when a page link is clicked
-    setCurrentPage(page);
-  };
+  
+  const navigate = useNavigate()
+    const [currentPage, setCurrentPage] = useState(0);
+    const [resData, setResData] = useState([]);
+    const pageSize = 4; // Set your desired page size
+
+    const handlePageChange = (page) => {
+        // Update currentPage when a page link is clicked
+        setCurrentPage(page);
+    };
+
+    const transformLeavesData = (apiData) => {
+      return apiData
+        .filter((leave) => leave?.resolutionActive === 'inactive')
+        .map((leave) => {
+          return {
+            SrNo: leave.id,
+            SessionNumber: leave?.session?.sessionName,
+            ResolutionType: leave?.resolutionType,
+            SubjectMatter: "",
+            NoticeNo: leave?.noticeDiary?.noticeOfficeDiaryNo,
+            ResolutionStatus: leave?.resolutionStatus?.resolutionStatus,
+            Status: leave?.resolutionActive
+          };
+        });
+    };    
+
+    const getAllResolutionsApi = async () => {
+        try {
+          const response = await getAllResolutions(currentPage, pageSize);
+          if (response?.success) {
+            showSuccessMessage(response?.message);
+            const transformedData = transformLeavesData(response.data?.resolution);
+            setResData(transformedData);
+          }
+        } catch (error) {
+          showErrorMessage(error?.response?.data?.message);
+        }
+      };
+    
+      useEffect(() => {
+        getAllResolutionsApi();
+      }, [currentPage]);
+
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <Header
@@ -343,26 +352,19 @@ function QMSDeleteResolution() {
                   </div>
                   <div class="clearfix"></div>
                 </div>
+               
                 <CustomTable
-                  headerShown={true}
-                  hideBtn={true}
-                  block={true}
-                  data={data}
-                  handleAdd={() => alert("Print")}
-                  handleEdit={(item) => navigate("/vms/addeditpass", { state: item })}
-                  hideUserIcon={true}
-                  handleUser={() => navigate("/vms/visitor")}
-                  handleDuplicate={() => navigate("/vms/duplicatepass")}
-                  // seachBarShow={true}
-                  handlePageChange={handlePageChange}
-                  currentPage={currentPage}
-                  pageSize={pageSize}
-                  headertitlebgColor={"#666"}
-                  headertitletextColor={"#FFF"}
-                  // handlePrint={}
-                  // handleUser={}
-                  // handleDelete={(item) => handleDelete(item.id)}
-                />
+                                    hideBtn={true}
+                                    data={resData || []}
+                                    tableTitle="Deleted Resolutions"
+                                    handlePageChange={handlePageChange}
+                                    currentPage={currentPage}
+                                    showPrint={true}
+                                        pageSize={pageSize}
+                                        handleAdd={(item) => navigate('/')}
+                                        handleEdit={(item) => navigate('/')}
+                                    />
+
                 <div style={{ float: "right", marginTop: "10px" }}>
                   <button class="btn btn-primary" type="submit">
                     Recover
