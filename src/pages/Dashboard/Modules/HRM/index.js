@@ -47,7 +47,7 @@ function HRMDashboard() {
       <div class="row">
         <div class="col-12">
           <CustomTable
-            data={Roles}
+            data={Roles.length > 0 && Roles}
             tableTitle="Roles List"
             addBtnText="Add Roles"
             handleAdd={() => navigate("/hrm/addrole")}

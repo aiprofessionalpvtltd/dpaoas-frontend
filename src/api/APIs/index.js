@@ -35,7 +35,7 @@ export const loginUser = async (data) => {
 export const getRoles = async () => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientVMS.get(`/roles?currentPage=${1}&pageSize=${1000}`, {
+    const response = await axiosClientVMS.get(`/roles?currentPage=${0}&pageSize=${1000}`, {
       // headers: {
       //   Authorization: `Bearer ${token}`,
       // },
