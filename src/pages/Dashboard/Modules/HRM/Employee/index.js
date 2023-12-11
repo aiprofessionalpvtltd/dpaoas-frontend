@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Layout } from "../../../../../components/Layout";
 import Header from "../../../../../components/Header";
 import { useNavigate } from "react-router-dom";
 import { HRMsidebarItems } from "../../../../../utils/sideBarItems";
 import CustomTable from "../../../../../components/CustomComponents/CustomTable";
+import { ToastContainer } from "react-toastify";
+import { DeleteEmployee, getAllEmployee } from "../../../../../api/APIs";
+import { showErrorMessage, showSuccessMessage } from "../../../../../utils/ToastAlert";
 
 const data = [
   {
@@ -24,16 +27,59 @@ const data = [
   },
 ];
 function HRMEmployeeDashboard() {
-    const navigate = useNavigate();
-    const [currentPage, setCurrentPage] = useState(0);
-    // const [count, setCount] = useState(null);
-    const pageSize = 4; // Set your desired page size
+  const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [employeeData, setEmployeeData] = useState([])
+
+  // const [count, setCount] = useState(null);
+  const pageSize = 4; // Set your desired page size
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
     setCurrentPage(page);
   };
 
+
+  const transformEmployeeData = (apiData) => {
+    return apiData.map((leave) => ({
+      id: leave.id,
+      firstName: leave.firstName,
+      lastName: leave.lastName,
+      phoneNo: leave.phoneNo,
+      gender: leave.gender,
+      fileNumber: leave.fileNumber,
+      supervisor: leave.supervisor,
+      fkDepartmentId: leave.fkDepartmentId,
+      fkDesignationId: leave.fkDesignationId,
+
+    }));
+  };
+  const getEmployeeData = async () => {
+    try {
+      const response = await getAllEmployee(currentPage, pageSize);
+      if (response?.success) {
+        const transformedData = transformEmployeeData(response?.data);
+        setEmployeeData(transformedData)
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await DeleteEmployee(id)
+      if (response?.success) {
+        showSuccessMessage(response.message)
+        getEmployeeData()
+      }
+    } catch (error) {
+      showErrorMessage(error.response.data.message)
+    }
+  }
+  useEffect(() => {
+    getEmployeeData();
+  }, []);
   return (
     <Layout module={true} sidebarItems={HRMsidebarItems} centerlogohide={true}>
       <Header
@@ -41,10 +87,11 @@ function HRMEmployeeDashboard() {
         addLink1={"/hrm/employee"}
         title1={"Employee"}
       />
+      <ToastContainer />
       <div class="row">
         <div class="col-12">
           <CustomTable
-            data={data}
+            data={employeeData}
             tableTitle="Employee List"
             addBtnText="Add Employee"
             handleAdd={() => navigate("/hrm/addeditemployee")}
@@ -58,7 +105,7 @@ function HRMEmployeeDashboard() {
             pageSize={pageSize}
             // handlePrint={}
             // handleUser={}
-            // handleDelete={(item) => handleDelete(item.id)}
+            handleDelete={(item) => handleDelete(item.id)}
           />
         </div>
       </div>

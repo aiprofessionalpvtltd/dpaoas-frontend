@@ -4,7 +4,9 @@ import { HRMsidebarItems } from "../../../../../utils/sideBarItems";
 import Header from "../../../../../components/Header";
 import { useNavigate } from "react-router-dom";
 import CustomTable from "../../../../../components/CustomComponents/CustomTable";
-import { getDepartment } from "../../../../../api/APIs";
+import { DeleteDepartment, getDepartment } from "../../../../../api/APIs";
+import { showErrorMessage, showSuccessMessage } from "../../../../../utils/ToastAlert";
+import { ToastContainer } from "react-toastify";
 
 const data = [
   {
@@ -26,23 +28,49 @@ const data = [
 ];
 
 function HRMDepartment() {
-    const navigate = useNavigate();
-    const [currentPage, setCurrentPage] = useState(0);
-    // const [count, setCount] = useState(null);
-    const pageSize = 4; // Set your desired page size
+  const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [departmentData, setDepartmentData] = useState([])
+  // const [count, setCount] = useState(null);
+  const pageSize = 4; // Set your desired page size
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
     setCurrentPage(page);
   };
 
+  const transformDepartmentData = (apiData) => {
+    return apiData.map((leave) => ({
+      id: leave?.id,
+      departmentName: leave?.departmentName,
+      description: leave?.description,
+      departmentStatus: leave?.departmentStatus,
+    }));
+  };
   const getDepartmentData = async () => {
     try {
-      const response = await getDepartment();
+      const response = await getDepartment(currentPage, pageSize);
+      if (response?.success) {
+        const transformedData = transformDepartmentData(response?.data);
+        console.log("lsdflsdjljfkl", transformedData);
+        setDepartmentData(transformedData)
+      }
     } catch (error) {
       console.log(error);
     }
   };
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await DeleteDepartment(id)
+      if (response?.success) {
+        showSuccessMessage(response.message)
+        getDepartmentData()
+      }
+    } catch (error) {
+      showErrorMessage(error.response.data.message)
+    }
+  }
   useEffect(() => {
     getDepartmentData();
   }, []);
@@ -53,10 +81,11 @@ function HRMDepartment() {
         addLink1={"/hrm/department"}
         title1={"Department"}
       />
+      <ToastContainer />
       <div class="row">
         <div class="col-12">
           <CustomTable
-            data={data}
+            data={departmentData}
             tableTitle="Department List"
             addBtnText="Add Department"
             handleAdd={() => navigate("/hrm/addeditdepartment")}
@@ -70,7 +99,7 @@ function HRMDepartment() {
             pageSize={pageSize}
             // handlePrint={}
             // handleUser={}
-            // handleDelete={(item) => handleDelete(item.id)}
+            handleDelete={(item) => handleDelete(item.id)}
           />
         </div>
       </div>
