@@ -26,45 +26,15 @@ export const AuthProvider = ({ children }) => {
       console.log(error);
     }
   };
-  useEffect(() => {
-    RolesDetail();
-  }, []);
-
-  // Check the local storage for the token and the user on initial render
-  useEffect(() => {
-    const token = getAuthToken();
-    if (token) {
-      // Set the state with the stored values
-      setUserLoginToken(token);
-    }
-  }, [getAuthToken, userLoginToken]);
-
-  const user = {
-    role: "HR",
-    permissions: [
-      {
-        label: "Roles",
-        hasAccess: ["View", "Edit"],
-      },
-      {
-        label: "Users",
-        hasAccess: ["View", "Delete"],
-      },
-      {
-        label: "Leave",
-        hasAccess: ["View", "Delete"],
-      },
-    ],
-  };
 
   const login = async (data) => {
     try {
+      RolesDetail();
       const response = await loginUser(data);
       if (response.data) {
         setAuthToken(response?.data?.user?.id);
-        // const res = CheckPermission(response?.data?.user?.role, roles, response?.data?.user?.permissions);
-        // setPermissions(res?.permissions);
-        // setPermissionsData(res?.permissions);
+        const res = CheckPermission(response?.data?.user?.roleName, roles, response?.data?.permissions);
+        setPermissionsData(res?.permissions);
       }
       return response?.data;
     } catch (error) {

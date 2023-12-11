@@ -85,7 +85,6 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
     Promise.all(apiRequests)
       .then(() => {
         // All requests are completed
-        console.log("Requests completed");
       })
       .catch((error) => {
         // Handle error
