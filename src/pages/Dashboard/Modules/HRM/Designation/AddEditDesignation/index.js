@@ -9,11 +9,13 @@ import {
   UpdateDesignation,
   createDesignation,
 } from "../../../../../../api/APIs";
+import { showSuccessMessage } from "../../../../../../utils/ToastAlert";
+import { ToastContainer } from "react-toastify";
 
 const validationSchema = Yup.object({
   designationname: Yup.string().required("Designation name is required"),
   designationdescription: Yup.string().required("description is required"),
-  designationstatus: Yup.string().required("status is required"),
+  designationstatus: Yup.string(),
 });
 function HRMAddEditDesignation() {
   const location = useLocation();
@@ -21,27 +23,31 @@ function HRMAddEditDesignation() {
 
   const formik = useFormik({
     initialValues: {
-      designationname: "",
-      designationdescription: "",
-      designationstatus: "",
+      designationname: location.state ? location.state.designationName : "",
+      designationdescription: location.state ? location.state.description : "",
+      designationstatus: location.state ? location.state.designationStatus : "",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       // Handle form submission here
-      console.log(values);
-      CreateDesignationApi(values);
+      if (location.state) {
+        UpdateDesignationApi(values)
+      } else {
+        CreateDesignationApi(values);
+      }
     },
   });
 
   const CreateDesignationApi = async (values) => {
     const data = {
-      name: values?.designationname,
+      designationName: values?.designationname,
       description: values?.designationdescription,
+      designationStatus: "active"
     };
     try {
       const response = await createDesignation(data);
       if (response.success) {
-        navigate("/hrm/designation");
+        showSuccessMessage(response.message)
       }
     } catch (error) {
       console.log(error);
@@ -50,14 +56,14 @@ function HRMAddEditDesignation() {
 
   const UpdateDesignationApi = async (values) => {
     const data = {
-      name: values?.departmentName,
-      description: values?.description,
-      desginationStatus: values.status,
+      designationName: values?.designationname,
+      description: values?.designationdescription,
+      desginationStatus: values.designationstatus,
     };
     try {
-      const response = await UpdateDesignation(data);
+      const response = await UpdateDesignation(location?.state?.id, data);
       if (response.success) {
-        navigate("/hrm/designation");
+        showSuccessMessage(response.message)
       }
     } catch (error) {
       console.log(error);
@@ -75,6 +81,7 @@ function HRMAddEditDesignation() {
           location && location?.state ? "Edit Designation" : "Add Designation"
         }
       />
+      <ToastContainer />
       <div className="container-fluid">
         <div className="card">
           <div className="card-header red-bg" style={{ background: "#666" }}>
@@ -94,12 +101,11 @@ function HRMAddEditDesignation() {
                       <input
                         type="text"
                         placeholder={formik.values.designationname}
-                        className={`form-control ${
-                          formik.touched.designationname &&
+                        className={`form-control ${formik.touched.designationname &&
                           formik.errors.designationname
-                            ? "is-invalid"
-                            : ""
-                        }`}
+                          ? "is-invalid"
+                          : ""
+                          }`}
                         id="designationname"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -117,25 +123,15 @@ function HRMAddEditDesignation() {
                       <div className="mb-3">
                         <label className="form-label">Staus</label>
                         <input
-                          type="email"
-                          className={`form-control ${
-                            formik.touched.designationstatus &&
-                            formik.errors.designationstatus
-                              ? "is-invalid"
-                              : ""
-                          }`}
+                          type="text"
+                          className={`form-control`}
                           id="designationstatus"
                           placeholder={formik.values.designationstatus}
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                           value={formik.values.designationstatus}
                         />
-                        {formik.touched.designationstatus &&
-                          formik.errors.designationstatus && (
-                            <div className="invalid-feedback">
-                              {formik.errors.designationstatus}
-                            </div>
-                          )}
+
                       </div>
                     </div>
                   )}
@@ -147,12 +143,11 @@ function HRMAddEditDesignation() {
                       <label className="form-label">Description</label>
                       <textarea
                         placeholder={formik.values.designationdescription}
-                        className={`form-control ${
-                          formik.touched.designationdescription &&
+                        className={`form-control ${formik.touched.designationdescription &&
                           formik.errors.designationdescription
-                            ? "is-invalid"
-                            : ""
-                        }`}
+                          ? "is-invalid"
+                          : ""
+                          }`}
                         id="designationdescription"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
