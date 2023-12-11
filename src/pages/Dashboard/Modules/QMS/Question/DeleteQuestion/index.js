@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Layout } from "../../../../../../components/Layout";
 import { QMSSideBarItems } from "../../../../../../utils/sideBarItems";
 import Header from "../../../../../../components/Header";
@@ -6,6 +6,9 @@ import CustomTable from "../../../../../../components/CustomComponents/CustomTab
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { getAllQuestion } from "../../../../../../api/APIs";
+import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
+import { ToastContainer } from "react-toastify";
 const validationSchema = Yup.object({
   questionDiaryNo: Yup.number(),
   questionId: Yup.string(),
@@ -56,6 +59,8 @@ function QMSDeleteQuestion() {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
+  const [resData, setResData] = useState([]);
+
   const pageSize = 4; // Set your desired page size
   const data = [
     {
@@ -91,8 +96,45 @@ function QMSDeleteQuestion() {
     // Update currentPage when a page link is clicked
     setCurrentPage(page);
   };
+
+  const transformLeavesData = (apiData) => {
+    return apiData.filter((question) => question?.questionActive === 'inactive')
+      .map((res, index) => {
+        return {
+          SrNo: index,
+          QID: res.id,
+          // QDN: res.questionDiary,
+          NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate,
+          NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
+          SessionNumber: res?.session?.sessionName,
+          SubjectMatter: [res?.englishText, res?.urduText]
+            .filter(Boolean)
+            .join(", "),
+          Category: res.questionCategory,
+          // SubmittedBy: res.category,
+          Status: res.questionStatus?.questionStatus,
+        };
+      });
+  };
+  const getAllQuestionsApi = async () => {
+    try {
+      const response = await getAllQuestion(currentPage, pageSize);
+      if (response?.success) {
+        showSuccessMessage(response?.message);
+        setCount(response?.count);
+        const transformedData = transformLeavesData(response.data);
+        setResData(transformedData);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  };
+  useEffect(() => {
+    getAllQuestionsApi()
+  }, [])
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
+      <ToastContainer />
       <Header
         dashboardLink={"/"}
         addLink1={"/qms/dashboard"}
@@ -118,12 +160,11 @@ function QMSDeleteQuestion() {
                       <input
                         type="text"
                         placeholder={formik.values.questionDiaryNo}
-                        className={`form-control ${
-                          formik.touched.questionDiaryNo &&
-                          formik.errors.questionDiaryNo
+                        className={`form-control ${formik.touched.questionDiaryNo &&
+                            formik.errors.questionDiaryNo
                             ? "is-invalid"
                             : ""
-                        }`}
+                          }`}
                         id="questionDiaryNo"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -142,11 +183,10 @@ function QMSDeleteQuestion() {
                       <input
                         type="text"
                         placeholder={formik.values.questionId}
-                        className={`form-control ${
-                          formik.touched.questionId && formik.errors.questionId
+                        className={`form-control ${formik.touched.questionId && formik.errors.questionId
                             ? "is-invalid"
                             : ""
-                        }`}
+                          }`}
                         id="questionId"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -165,11 +205,10 @@ function QMSDeleteQuestion() {
                       <input
                         type="text"
                         placeholder={formik.values.keyword}
-                        className={`form-control ${
-                          formik.touched.keyword && formik.errors.keyword
+                        className={`form-control ${formik.touched.keyword && formik.errors.keyword
                             ? "is-invalid"
                             : ""
-                        }`}
+                          }`}
                         id="keyword"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -187,11 +226,10 @@ function QMSDeleteQuestion() {
                       <input
                         type="text"
                         placeholder={formik.values.memberName}
-                        className={`form-control ${
-                          formik.touched.memberName && formik.errors.memberName
+                        className={`form-control ${formik.touched.memberName && formik.errors.memberName
                             ? "is-invalid"
                             : ""
-                        }`}
+                          }`}
                         id="memberName"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -300,12 +338,11 @@ function QMSDeleteQuestion() {
                       <input
                         type="text"
                         placeholder={formik.values.noticeDiaryNo}
-                        className={`form-control ${
-                          formik.touched.noticeDiaryNo &&
-                          formik.errors.noticeDiaryNo
+                        className={`form-control ${formik.touched.noticeDiaryNo &&
+                            formik.errors.noticeDiaryNo
                             ? "is-invalid"
                             : ""
-                        }`}
+                          }`}
                         id="noticeDiaryNo"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -324,12 +361,11 @@ function QMSDeleteQuestion() {
                       <input
                         type="text"
                         placeholder={formik.values.fromNoticeDate}
-                        className={`form-control ${
-                          formik.touched.fromNoticeDate &&
-                          formik.errors.fromNoticeDate
+                        className={`form-control ${formik.touched.fromNoticeDate &&
+                            formik.errors.fromNoticeDate
                             ? "is-invalid"
                             : ""
-                        }`}
+                          }`}
                         id="fromNoticeDate"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -348,12 +384,11 @@ function QMSDeleteQuestion() {
                       <input
                         type="text"
                         placeholder={formik.values.toNoticeDate}
-                        className={`form-control ${
-                          formik.touched.toNoticeDate &&
-                          formik.errors.toNoticeDate
+                        className={`form-control ${formik.touched.toNoticeDate &&
+                            formik.errors.toNoticeDate
                             ? "is-invalid"
                             : ""
-                        }`}
+                          }`}
                         id="toNoticeDate"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -444,11 +479,10 @@ function QMSDeleteQuestion() {
                       <input
                         type="text"
                         placeholder={formik.values.division}
-                        className={`form-control ${
-                          formik.touched.division && formik.errors.division
+                        className={`form-control ${formik.touched.division && formik.errors.division
                             ? "is-invalid"
                             : ""
-                        }`}
+                          }`}
                         id="division"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -485,26 +519,16 @@ function QMSDeleteQuestion() {
                   <div class="clearfix"></div>
                 </div>
                 <CustomTable
-                  headerShown={true}
                   hideBtn={true}
-                  block={true}
-                  data={data}
-                  handleAdd={() => alert("Print")}
-                  handleEdit={(item) =>
-                    navigate("/vms/addeditpass", { state: item })
-                  }
-                  hideUserIcon={true}
-                  handleUser={() => navigate("/vms/visitor")}
-                  handleDuplicate={() => navigate("/vms/duplicatepass")}
-                  // seachBarShow={true}
+                  data={resData || []}
+                  tableTitle="Deleted Questions"
                   handlePageChange={handlePageChange}
                   currentPage={currentPage}
+                  showPrint={true}
                   pageSize={pageSize}
-                  headertitlebgColor={"#666"}
-                  headertitletextColor={"#FFF"}
-                  // handlePrint={}
-                  // handleUser={}
-                  // handleDelete={(item) => handleDelete(item.id)}
+                  handleAdd={(item) => navigate('/')}
+                  handleEdit={(item) => navigate('/')}
+                  totalCount={count}
                 />
               </div>
             </div>
