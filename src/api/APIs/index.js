@@ -186,12 +186,12 @@ export const getPassPdfBYPassID = async (id) => {
   console.log("idddddd", id);
   try {
     const token = getAuthToken();
-    const response = await axiosClientVMS.get(`/pass/pdfData/${id}`);
-    //  {
-    //   headers: {
-    //     Authorization: `Bearer ${token}`,
-    //   }
-    // });
+    const response = await axiosClientVMS.get(`/pass/pdfData/${id}`,
+     {
+      headers: {
+        "Content-Type": "application/pdf"
+      }
+    });
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -644,6 +644,38 @@ export const UpdateQuestionById = async (id, data) => {
   try {
     const token = getAuthToken();
     const response = await axiosClientMMS.put(`/questions/update/${id}`, data, {
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // }
+    });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+//Daffer Question
+export const createDefferQuestion = async (id, DefferData) => {
+  console.log("iwefjiouios". DefferData);
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientMMS.post(`/questions/deferQuestion/${id}`, DefferData, {
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // }
+    });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+// Revive 
+export const createReviveQuestion = async (id, reviveData) => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientMMS.post(`/questions/reviveQuestion/${id}`, reviveData, {
       // headers: {
       //   Authorization: `Bearer ${token}`,
       // }

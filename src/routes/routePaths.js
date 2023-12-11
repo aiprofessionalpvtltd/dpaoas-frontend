@@ -41,7 +41,6 @@ import QMSNoticeQuestion from "../pages/Dashboard/Modules/QMS/Notice/NoticeQuest
 import QMSNoticeQuestionDetail from "../pages/Dashboard/Modules/QMS/Notice/NoticeQuestionDetail";
 import QMSNoticeResolution from "../pages/Dashboard/Modules/QMS/Notice/NoticeResolution";
 import QMSNoticeResolutionDetail from "../pages/Dashboard/Modules/QMS/Notice/NoticeResolutionDetail";
-import QMSDaferQuestionDetail from "../pages/Dashboard/Modules/QMS/Question/DaferQuestionDetail";
 import QMSDeleteQuestion from "../pages/Dashboard/Modules/QMS/Question/DeleteQuestion";
 import QMSNewQuestion from "../pages/Dashboard/Modules/QMS/Question/NewQuestion";
 import QMSQuestionDetail from "../pages/Dashboard/Modules/QMS/Question/QuestionDetail";
@@ -186,7 +185,6 @@ export const ProtectedRoutes = [
     { path: "/qms/question/detail", element: <QMSQuestionDetail /> },
     { path: "/qms/question/new", element: <QMSNewQuestion /> },
     { path: "/qms/question/delete", element: <QMSDeleteQuestion /> },
-    { path: "/qms/question/defer", element: <QMSDaferQuestionDetail /> },
 
     { path: "/qms/resolution", element: <QMSQuestionDashboard /> },
     { path: "/qms/resolution/list", element: <QMSResolutionList /> },
