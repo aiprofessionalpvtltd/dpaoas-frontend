@@ -24,10 +24,10 @@ const data = [
   },
 ];
 function Sessions() {
-    const navigate = useNavigate();
-    const [currentPage, setCurrentPage] = useState(0);
-    // const [count, setCount] = useState(null);
-    const pageSize = 4; // Set your desired page size
+  const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState(0);
+  // const [count, setCount] = useState(null);
+  const pageSize = 4; // Set your desired page size
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
@@ -35,11 +35,7 @@ function Sessions() {
   };
 
   return (
-    <Layout
-      module={true}
-      sidebarItems={NoticeSidebarItems}
-      centerlogohide={true}
-    >
+    <Layout module={true} sidebarItems={NoticeSidebarItems} centerlogohide={true}>
       <Header
         dashboardLink={"/"}
         addLink1={"/notice/dashboard"}
@@ -47,25 +43,25 @@ function Sessions() {
         title1={"Notice"}
         title2={"Sessions"}
       />
-      <div class="row">
-        <div class="col-12">
-          <CustomTable
-            data={data}
-            tableTitle="Sessions List"
-            addBtnText="Add Session"
-            handleAdd={() => navigate("/notice/manage/sessions/addedit")}
-            handleEdit={(item) =>
-              navigate("/notice/manage/sessions/addedit", { state: item })
-            }
-            headertitlebgColor={"#666"}
-            headertitletextColor={"#FFF"}
-            handlePageChange={handlePageChange}
-            currentPage={currentPage}
-            pageSize={pageSize}
-            // handlePrint={}
-            // handleUser={}
-            // handleDelete={(item) => handleDelete(item.id)}
-          />
+      <div className="container-fluid">
+        <div class="card">
+          <div class="col-12">
+            <CustomTable
+              data={data}
+              tableTitle="Sessions List"
+              addBtnText="Add Session"
+              handleAdd={() => navigate("/notice/manage/sessions/addedit")}
+              handleEdit={(item) => navigate("/notice/manage/sessions/addedit", { state: item })}
+              headertitlebgColor={"#666"}
+              headertitletextColor={"#FFF"}
+              handlePageChange={handlePageChange}
+              currentPage={currentPage}
+              pageSize={pageSize}
+              // handlePrint={}
+              // handleUser={}
+              // handleDelete={(item) => handleDelete(item.id)}
+            />
+          </div>
         </div>
       </div>
     </Layout>

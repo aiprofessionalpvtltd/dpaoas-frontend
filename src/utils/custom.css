@@ -793,6 +793,7 @@ hr.horizontal {
     -ms-flex-positive: 2;
     flex-grow: 2;
     margin-top: 84px;
+    position: relative;
 }
 
 .dashboard-content {
@@ -802,6 +803,7 @@ hr.horizontal {
     flex-grow: 2; */
     padding: 25px;
     margin-top: 10px;
+    margin-bottom: 65px;
 }
 
 .red-bg {
@@ -820,6 +822,7 @@ hr.horizontal {
     bottom: 0;
     overflow: auto;
     background-color: #373193;
+    z-index: 1;
 }
 
 .dashboard-compact .dashboard-nav {
@@ -2449,6 +2452,8 @@ textarea {
     color: #666;
     font-size: 16px;
     padding: 15px 0;
+    position: absolute;
+    bottom: 0;
 }
 
 .green-bg {
@@ -2465,7 +2470,7 @@ textarea {
     list-style: none;
     background-color: #FFF;
     font-size: 17px;
-    margin: 0px 15px 25px 15px;
+    margin:0px 15px 25px 10px;
 }
 
 .breadcrumb {
