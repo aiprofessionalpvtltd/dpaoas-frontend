@@ -14,11 +14,8 @@ function MMSMotionSummery() {
         title2={"Motion Summary"}
       />
       <div class="container-fluid">
-        <div class="card mt-5">
-          <div
-            class="card-header red-bg"
-            style={{ background: "#14ae5c !important" }}
-          >
+        <div class="card mt-1">
+          <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
             <h1>MOTION SUMMARY</h1>
           </div>
           <div class="card-body">
