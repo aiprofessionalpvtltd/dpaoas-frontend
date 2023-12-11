@@ -8,11 +8,7 @@ function BusinessSummary() {
   const navigate = useNavigate();
 
   return (
-    <Layout
-      module={true}
-      sidebarItems={NoticeSidebarItems}
-      centerlogohide={true}
-    >
+    <Layout module={true} sidebarItems={NoticeSidebarItems} centerlogohide={true}>
       <Header
         dashboardLink={"/"}
         addLink1={"/notice/dashboard"}
@@ -20,13 +16,10 @@ function BusinessSummary() {
         title1={"Notice"}
         title2={"Business Summary"}
       />
-      <div class="dashboard-content">
+      <div>
         <div class="container-fluid">
-          <div class="card mt-5">
-            <div
-              class="card-header red-bg"
-              style={{ background: "#14ae5c !important" }}
-            >
+          <div class="card mt-1">
+            <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
               <h1>BUSINESS REPORT</h1>
             </div>
             <div class="card-body">
@@ -56,10 +49,7 @@ function BusinessSummary() {
                   </div>
                 </div>
                 <h2 style={{ color: "#666" }}>Question</h2>
-                <div
-                  class="dash-detail-container"
-                  style={{ marginTop: "20px" }}
-                >
+                <div class="dash-detail-container" style={{ marginTop: "20px" }}>
                   <table class="table red-bg-head th">
                     <thead>
                       <tr>
@@ -84,11 +74,7 @@ function BusinessSummary() {
                         <th class="text-center" scope="col">
                           Category
                         </th>
-                        <th
-                          class="text-left"
-                          style={{ paddingLeft: "6px" }}
-                          scope="col"
-                        >
+                        <th class="text-left" style={{ paddingLeft: "6px" }} scope="col">
                           Description
                         </th>
                         <th class="text-center" scope="col">
@@ -120,10 +106,7 @@ function BusinessSummary() {
                   </table>
                 </div>
                 <h2 style={{ color: "#666", marginTop: "30px" }}>Motions</h2>
-                <div
-                  class="dash-detail-container"
-                  style={{ marginTop: "20px" }}
-                >
+                <div class="dash-detail-container" style={{ marginTop: "20px" }}>
                   <table class="table red-bg-head th">
                     <thead>
                       <tr>
@@ -148,11 +131,7 @@ function BusinessSummary() {
                         <th class="text-center" scope="col">
                           Category
                         </th>
-                        <th
-                          class="text-left"
-                          style={{ paddingLeft: "6px" }}
-                          scope="col"
-                        >
+                        <th class="text-left" style={{ paddingLeft: "6px" }} scope="col">
                           Description
                         </th>
                         <th class="text-center" scope="col">
@@ -183,13 +162,8 @@ function BusinessSummary() {
                     </tbody>
                   </table>
                 </div>
-                <h2 style={{ color: "#666", marginTop: "30px" }}>
-                  Resolutions
-                </h2>
-                <div
-                  class="dash-detail-container"
-                  style={{ marginTop: "20px" }}
-                >
+                <h2 style={{ color: "#666", marginTop: "30px" }}>Resolutions</h2>
+                <div class="dash-detail-container" style={{ marginTop: "20px" }}>
                   <table class="table red-bg-head th">
                     <thead>
                       <tr>
@@ -214,11 +188,7 @@ function BusinessSummary() {
                         <th class="text-center" scope="col">
                           Category
                         </th>
-                        <th
-                          class="text-left"
-                          style={{ paddingLeft: "6px" }}
-                          scope="col"
-                        >
+                        <th class="text-left" style={{ paddingLeft: "6px" }} scope="col">
                           Description
                         </th>
                         <th class="text-center" scope="col">

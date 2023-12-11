@@ -14,10 +14,7 @@ import {
 } from "../../../../../../api/APIs";
 import DatePicker from "react-datepicker";
 import TimePicker from "react-time-picker";
-import {
-  showSuccessMessage,
-  showErrorMessage,
-} from "../../../../../../utils/ToastAlert";
+import { showSuccessMessage, showErrorMessage } from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 import { useLocation } from "react-router-dom";
 
@@ -26,15 +23,9 @@ const validationSchema = Yup.object({
   fileNo: Yup.string().required("File No is required"),
   motionType: Yup.string().required("Motion Type is required"),
   motionWeek: Yup.string().required("Motion Week is required"),
-  noticeOfficeDiaryNo: Yup.string().required(
-    "Notice Office Diary No is required",
-  ),
-  noticeOfficeDiaryDate: Yup.string().required(
-    "Notice Office Diary Date is required",
-  ),
-  noticeOfficeDiaryTime: Yup.string().required(
-    "Notice Office Diary Time is required",
-  ),
+  noticeOfficeDiaryNo: Yup.string().required("Notice Office Diary No is required"),
+  noticeOfficeDiaryDate: Yup.string().required("Notice Office Diary Date is required"),
+  noticeOfficeDiaryTime: Yup.string().required("Notice Office Diary Time is required"),
   motionStatus: Yup.string().required("Motion Status is required"),
   mover: Yup.string().required("Mover is required"),
   ministry: Yup.string().required("Ministry is required"),
@@ -68,9 +59,7 @@ function MMSNewMotion() {
       fileNo: location.state ? location.state.fileNumber : "",
       motionType: location.state ? location.state.motionType : "",
       motionWeek: location.state ? location.state.motionWeek : "",
-      noticeOfficeDiaryNo: location.state
-        ? location.state.noticeOfficeDiaryNo
-        : "",
+      noticeOfficeDiaryNo: location.state ? location.state.noticeOfficeDiaryNo : "",
       noticeOfficeDiaryDate: noticeOfficeDiaryDate,
       noticeOfficeDiaryTime: noticeOfficeDiaryTime,
       motionStatus: location.state ? location.state.motionStatus : "",
@@ -202,11 +191,8 @@ function MMSNewMotion() {
       />
       <ToastContainer />
       <div class="container-fluid">
-        <div class="card mt-5">
-          <div
-            class="card-header red-bg"
-            style={{ background: "#14ae5c !important" }}
-          >
+        <div class="card mt-1">
+          <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
             {location?.state ? <h1>Edit MOTION</h1> : <h1>NEW MOTION</h1>}
           </div>
           <div class="card-body">
@@ -223,8 +209,7 @@ function MMSNewMotion() {
                         onBlur={formik.handleBlur}
                         value={formik.values.sessionNumber}
                         className={
-                          formik.errors.sessionNumber &&
-                          formik.touched.sessionNumber
+                          formik.errors.sessionNumber && formik.touched.sessionNumber
                             ? "form-select is-invalid"
                             : "form-select"
                         }
@@ -239,12 +224,9 @@ function MMSNewMotion() {
                             </option>
                           ))}
                       </select>
-                      {formik.errors.sessionNumber &&
-                        formik.touched.sessionNumber && (
-                          <div className="invalid-feedback">
-                            {formik.errors.sessionNumber}
-                          </div>
-                        )}
+                      {formik.errors.sessionNumber && formik.touched.sessionNumber && (
+                        <div className="invalid-feedback">{formik.errors.sessionNumber}</div>
+                      )}
                     </div>
                   </div>
                   <div className="col">
@@ -253,19 +235,13 @@ function MMSNewMotion() {
                       <input
                         type="text"
                         placeholder={formik.values.fileNo}
-                        className={`form-control ${
-                          formik.touched.fileNo && formik.errors.fileNo
-                            ? "is-invalid"
-                            : ""
-                        }`}
+                        className={`form-control ${formik.touched.fileNo && formik.errors.fileNo ? "is-invalid" : ""}`}
                         id="fileNo"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
                       {formik.touched.fileNo && formik.errors.fileNo && (
-                        <div className="invalid-feedback">
-                          {formik.errors.fileNo}
-                        </div>
+                        <div className="invalid-feedback">{formik.errors.fileNo}</div>
                       )}
                     </div>
                   </div>
@@ -297,12 +273,9 @@ function MMSNewMotion() {
                         <option>Motion Under Rule 218</option>
                         <option>Motion Under Rule 60</option>
                       </select>
-                      {formik.errors.motionType &&
-                        formik.touched.motionType && (
-                          <div className="invalid-feedback">
-                            {formik.errors.motionType}
-                          </div>
-                        )}
+                      {formik.errors.motionType && formik.touched.motionType && (
+                        <div className="invalid-feedback">{formik.errors.motionType}</div>
+                      )}
                     </div>
                   </div>
                   {/* Motion Week */}
@@ -330,12 +303,9 @@ function MMSNewMotion() {
                         <option>4th Week</option>
                         <option>5th Week</option>
                       </select>
-                      {formik.errors.motionWeek &&
-                        formik.touched.motionWeek && (
-                          <div className="invalid-feedback">
-                            {formik.errors.motionWeek}
-                          </div>
-                        )}
+                      {formik.errors.motionWeek && formik.touched.motionWeek && (
+                        <div className="invalid-feedback">{formik.errors.motionWeek}</div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -345,9 +315,7 @@ function MMSNewMotion() {
                 <div className="row">
                   <div className="col">
                     <div className="mb-3">
-                      <label className="form-label">
-                        Notice Office Diary No
-                      </label>
+                      <label className="form-label">Notice Office Diary No</label>
                       <select
                         className="form-select"
                         id="noticeOfficeDiaryNo"
@@ -356,8 +324,7 @@ function MMSNewMotion() {
                         onBlur={formik.handleBlur}
                         value={formik.values.noticeOfficeDiaryNo}
                         class={
-                          formik.errors.noticeOfficeDiaryNo &&
-                          formik.touched.noticeOfficeDiaryNo
+                          formik.errors.noticeOfficeDiaryNo && formik.touched.noticeOfficeDiaryNo
                             ? "form-select is-invalid"
                             : "form-select"
                         }
@@ -366,38 +333,27 @@ function MMSNewMotion() {
                         <option>2655</option>
                         <option>2556</option>
                       </select>
-                      {formik.errors.noticeOfficeDiaryNo &&
-                        formik.touched.noticeOfficeDiaryNo && (
-                          <div className="invalid-feedback">
-                            {formik.errors.noticeOfficeDiaryNo}
-                          </div>
-                        )}
+                      {formik.errors.noticeOfficeDiaryNo && formik.touched.noticeOfficeDiaryNo && (
+                        <div className="invalid-feedback">{formik.errors.noticeOfficeDiaryNo}</div>
+                      )}
                     </div>
                   </div>
                   {/* Notice Office Diary Date */}
                   <div className="col">
                     <div className="mb-3">
-                      <label className="form-label">
-                        Notice Office Diary Date
-                      </label>
+                      <label className="form-label">Notice Office Diary Date</label>
                       <DatePicker
                         selected={formik.values.noticeOfficeDiaryDate}
-                        onChange={(date) =>
-                          formik.setFieldValue("noticeOfficeDiaryDate", date)
-                        }
+                        onChange={(date) => formik.setFieldValue("noticeOfficeDiaryDate", date)}
                         className={`form-control ${
-                          formik.errors.noticeOfficeDiaryDate &&
-                          formik.touched.noticeOfficeDiaryDate
+                          formik.errors.noticeOfficeDiaryDate && formik.touched.noticeOfficeDiaryDate
                             ? "is-invalid"
                             : ""
                         }`}
                       />
-                      {formik.errors.noticeOfficeDiaryDate &&
-                        formik.touched.noticeOfficeDiaryDate && (
-                          <div className="invalid-feedback">
-                            {formik.errors.noticeOfficeDiaryDate}
-                          </div>
-                        )}
+                      {formik.errors.noticeOfficeDiaryDate && formik.touched.noticeOfficeDiaryDate && (
+                        <div className="invalid-feedback">{formik.errors.noticeOfficeDiaryDate}</div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -407,30 +363,22 @@ function MMSNewMotion() {
                 <div className="row">
                   <div className="col">
                     <div className="mb-3">
-                      <label className="form-label">
-                        Notice Office Diary Time
-                      </label>
+                      <label className="form-label">Notice Office Diary Time</label>
                       <TimePicker
                         value={formik.values.noticeOfficeDiaryTime}
                         clockIcon={null} // Disable clock view
                         openClockOnFocus={false}
                         format="hh:mm a"
-                        onChange={(time) =>
-                          formik.setFieldValue("noticeOfficeDiaryTime", time)
-                        }
+                        onChange={(time) => formik.setFieldValue("noticeOfficeDiaryTime", time)}
                         className={`form-control ${
-                          formik.errors.noticeOfficeDiaryTime &&
-                          formik.touched.noticeOfficeDiaryTime
+                          formik.errors.noticeOfficeDiaryTime && formik.touched.noticeOfficeDiaryTime
                             ? "is-invalid"
                             : ""
                         }`}
                       />
-                      {formik.errors.noticeOfficeDiaryTime &&
-                        formik.touched.noticeOfficeDiaryTime && (
-                          <div className="invalid-feedback">
-                            {formik.errors.noticeOfficeDiaryTime}
-                          </div>
-                        )}
+                      {formik.errors.noticeOfficeDiaryTime && formik.touched.noticeOfficeDiaryTime && (
+                        <div className="invalid-feedback">{formik.errors.noticeOfficeDiaryTime}</div>
+                      )}
                     </div>
                   </div>
                   {/* Motion Status */}
@@ -445,8 +393,7 @@ function MMSNewMotion() {
                         onBlur={formik.handleBlur}
                         value={formik.values.motionStatus}
                         class={
-                          formik.errors.motionStatus &&
-                          formik.touched.motionStatus
+                          formik.errors.motionStatus && formik.touched.motionStatus
                             ? "form-select is-invalid"
                             : "form-select"
                         }
@@ -462,12 +409,9 @@ function MMSNewMotion() {
                           ))}
                         {/* Add motion status options */}
                       </select>
-                      {formik.errors.motionStatus &&
-                        formik.touched.motionStatus && (
-                          <div className="invalid-feedback">
-                            {formik.errors.motionStatus}
-                          </div>
-                        )}
+                      {formik.errors.motionStatus && formik.touched.motionStatus && (
+                        <div className="invalid-feedback">{formik.errors.motionStatus}</div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -485,11 +429,7 @@ function MMSNewMotion() {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         value={formik.values.mover}
-                        class={
-                          formik.errors.mover && formik.touched.mover
-                            ? "form-select is-invalid"
-                            : "form-select"
-                        }
+                        class={formik.errors.mover && formik.touched.mover ? "form-select is-invalid" : "form-select"}
                       >
                         <option value={""} selected disabled hidden>
                           select
@@ -502,9 +442,7 @@ function MMSNewMotion() {
                           ))}
                       </select>
                       {formik.errors.mover && formik.touched.mover && (
-                        <div className="invalid-feedback">
-                          {formik.errors.mover}
-                        </div>
+                        <div className="invalid-feedback">{formik.errors.mover}</div>
                       )}
                     </div>
                   </div>
@@ -520,23 +458,17 @@ function MMSNewMotion() {
                         onBlur={formik.handleBlur}
                         value={formik.values.ministry}
                         class={
-                          formik.errors.ministry && formik.touched.ministry
-                            ? "form-select is-invalid"
-                            : "form-select"
+                          formik.errors.ministry && formik.touched.ministry ? "form-select is-invalid" : "form-select"
                         }
                       >
                         <option value={""} selected disabled hidden>
                           select
                         </option>
                         {ministryData &&
-                          ministryData.map((item) => (
-                            <option value={item.id}>{item.ministryName}</option>
-                          ))}
+                          ministryData.map((item) => <option value={item.id}>{item.ministryName}</option>)}
                       </select>
                       {formik.errors.ministry && formik.touched.ministry && (
-                        <div className="invalid-feedback">
-                          {formik.errors.ministry}
-                        </div>
+                        <div className="invalid-feedback">{formik.errors.ministry}</div>
                       )}
                     </div>
                   </div>

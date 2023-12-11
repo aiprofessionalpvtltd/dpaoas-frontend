@@ -3,10 +3,7 @@ import { NoticeSidebarItems } from "../../../../../../utils/sideBarItems";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
 import { useNavigate } from "react-router";
-import {
-  showErrorMessage,
-  showSuccessMessage,
-} from "../../../../../../utils/ToastAlert";
+import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
 import { searchResolution } from "../../../../../../api/APIs";
 import { Field, Form, Formik } from "formik";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
@@ -38,10 +35,7 @@ function SearchResolution() {
 
   const transformLeavesData = (apiData) => {
     return apiData.map((res) => {
-      const movers =
-        res?.resolutionMoversAssociation.map(
-          (item) => item?.memberAssociation?.memberName,
-        ) || [];
+      const movers = res?.resolutionMoversAssociation.map((item) => item?.memberAssociation?.memberName) || [];
 
       return {
         RID: res.id,
@@ -90,11 +84,7 @@ function SearchResolution() {
   };
 
   return (
-    <Layout
-      module={true}
-      sidebarItems={NoticeSidebarItems}
-      centerlogohide={true}
-    >
+    <Layout module={true} sidebarItems={NoticeSidebarItems} centerlogohide={true}>
       <ToastContainer />
 
       <Header
@@ -104,13 +94,10 @@ function SearchResolution() {
         title1={"Notice"}
         title2={"Search Resolution"}
       />
-      <div class="dashboard-content">
+      <div>
         <div class="container-fluid">
-          <div class="card mt-5">
-            <div
-              class="card-header red-bg"
-              style={{ background: "#14ae5c !important" }}
-            >
+          <div class="card mt-1">
+            <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
               <h1>SEARCH RESOLUTION</h1>
             </div>
             <div class="card-body">
@@ -121,24 +108,14 @@ function SearchResolution() {
                       <div className="row">
                         <div className="col">
                           <div className="mb-3">
-                            <label className="form-label">
-                              Resolution Diary No
-                            </label>
-                            <Field
-                              className="form-control"
-                              type="text"
-                              name="resolutionDiaryNo"
-                            />
+                            <label className="form-label">Resolution Diary No</label>
+                            <Field className="form-control" type="text" name="resolutionDiaryNo" />
                           </div>
                         </div>
                         <div className="col">
                           <div className="mb-3">
                             <label className="form-label">Resolution ID</label>
-                            <Field
-                              className="form-control"
-                              type="text"
-                              name="resolutionID"
-                            />
+                            <Field className="form-control" type="text" name="resolutionID" />
                           </div>
                         </div>
                       </div>
@@ -146,21 +123,13 @@ function SearchResolution() {
                         <div className="col">
                           <div className="mb-3">
                             <label className="form-label">Keyword</label>
-                            <Field
-                              className="form-control"
-                              type="text"
-                              name="keyword"
-                            />
+                            <Field className="form-control" type="text" name="keyword" />
                           </div>
                         </div>
                         <div className="col">
                           <div className="mb-3">
                             <label className="form-label">Member Name</label>
-                            <Field
-                              className="form-control"
-                              type="text"
-                              name="memberName"
-                            />
+                            <Field className="form-control" type="text" name="memberName" />
                           </div>
                         </div>
                       </div>
@@ -168,11 +137,7 @@ function SearchResolution() {
                         <div className="col">
                           <div className="mb-3">
                             <label className="form-label">From Session</label>
-                            <Field
-                              as="select"
-                              className="form-select"
-                              name="fromSession"
-                            >
+                            <Field as="select" className="form-select" name="fromSession">
                               <option>Select</option>
                               <option>121</option>
                               <option>122</option>
@@ -183,11 +148,7 @@ function SearchResolution() {
                         <div className="col">
                           <div className="mb-3">
                             <label className="form-label">To Session</label>
-                            <Field
-                              as="select"
-                              className="form-select"
-                              name="toSession"
-                            >
+                            <Field as="select" className="form-select" name="toSession">
                               <option>Select</option>
                               <option>121</option>
                               <option>122</option>
@@ -199,33 +160,19 @@ function SearchResolution() {
                       <div className="row">
                         <div className="col">
                           <div className="mb-3">
-                            <label className="form-label">
-                              Resolution Type
-                            </label>
-                            <Field
-                              as="select"
-                              className="form-select"
-                              name="resolutionType"
-                            >
+                            <label className="form-label">Resolution Type</label>
+                            <Field as="select" className="form-select" name="resolutionType">
                               <option>Resolution Type</option>
                               <option>Government Resolution</option>
                               <option>Private Member Resolution</option>
-                              <option>
-                                Govt. Resolution Supported by others
-                              </option>
+                              <option>Govt. Resolution Supported by others</option>
                             </Field>
                           </div>
                         </div>
                         <div className="col">
                           <div className="mb-3">
-                            <label className="form-label">
-                              Resolution Status
-                            </label>
-                            <Field
-                              as="select"
-                              className="form-select"
-                              name="resolutionStatus"
-                            >
+                            <label className="form-label">Resolution Status</label>
+                            <Field as="select" className="form-select" name="resolutionStatus">
                               <option selected="selected" value="0">
                                 Resolution Status
                               </option>
@@ -237,24 +184,14 @@ function SearchResolution() {
                       <div className="row">
                         <div className="col">
                           <div className="mb-3">
-                            <label className="form-label">
-                              From Notice Date
-                            </label>
-                            <Field
-                              className="form-control"
-                              type="text"
-                              name="fromNoticeDate"
-                            />
+                            <label className="form-label">From Notice Date</label>
+                            <Field className="form-control" type="text" name="fromNoticeDate" />
                           </div>
                         </div>
                         <div className="col">
                           <div className="mb-3">
                             <label className="form-label">To Notice Date</label>
-                            <Field
-                              className="form-control"
-                              type="text"
-                              name="toNoticeDate"
-                            />
+                            <Field className="form-control" type="text" name="toNoticeDate" />
                           </div>
                         </div>
                       </div>
@@ -272,10 +209,7 @@ function SearchResolution() {
                   </Form>
                 </Formik>
 
-                <div
-                  class="dash-detail-container"
-                  style={{ marginTop: "20px" }}
-                >
+                <div class="dash-detail-container" style={{ marginTop: "20px" }}>
                   <CustomTable
                     block={true}
                     hideBtn={true}
