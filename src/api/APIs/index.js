@@ -51,9 +51,55 @@ export const createRole = async (data) => {
   try {
     const token = getAuthToken();
     const response = await axiosClientVMS.post(`/roles/create`, data, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // },
+    });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+
+export const EditRole = async (id, data) => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientVMS.put(`/roles/updateRole/${id}`, data, {
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // },
+    });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const DeleteRole = async (id) => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientVMS.delete(`/roles/delete/${id}`, {
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // },
+    });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const getModules = async () => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientVMS.get(`/permissions/modulesPermissions`, {
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // },
     });
     return response?.data;
   } catch (error) {
