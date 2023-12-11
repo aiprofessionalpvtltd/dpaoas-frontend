@@ -11,6 +11,8 @@ import {
 } from "../../../../../../utils/ToastAlert";
 import {
   UpdateQuestionById,
+  createDefferQuestion,
+  createReviveQuestion,
   getAllQuestionStatus,
   sendQuestionTranslation,
 } from "../../../../../../api/APIs";
@@ -38,7 +40,25 @@ function QMSQuestionDetail() {
   console.log("Question Id", location?.state?.id);
 
   const [showDeferForm, setShowDeferForm] = useState(false);
+  const [showRetriveForm, setShowRetriveForm] = useState(false);
+
   const [allquestionStatus, setAllQuestionStatus] = useState([]);
+
+  const [deferState, setDeferState] = useState({
+    sessionNo: "",
+    deferDate: ""
+  })
+
+  const [reviveState, setReviveState] = useState({
+    sessionNo: "",
+    qroup: "",
+    division: "",
+    noticeDiaryNo: "",
+    noticeDiaryDate: "",
+    noticeDiaryTime: "",
+    questionStatus: "",
+    questionDiaryNo: ""
+  })
 
   const formik = useFormik({
     initialValues: {
@@ -116,6 +136,36 @@ function QMSQuestionDetail() {
     }
   };
 
+  const hendleDeffer = async () => {
+    const DefferData = { fkSessionId: 1, deferredDate: deferState.deferDate, deferredBy: "login user ID" }
+    try {
+      const response = await createDefferQuestion(location?.state?.id, DefferData)
+      if (response?.success) {
+        showSuccessMessage(response.message);
+      }
+    } catch (error) {
+      showErrorMessage(error.response.data.message);
+    }
+  }
+
+  const hendleRevive = async () => {
+    const reviveData = {
+      fkFromSessionId: reviveState.sessionNo,
+      fkToSessionId: 1,
+      fkGroupId: reviveState.qroup,
+      fkDivisionId: reviveState.division,
+      fkQuestionStatus: reviveState.questionStatus
+    }
+    try {
+      const response = await createReviveQuestion(location?.state?.id, reviveData)
+      if (response?.success) {
+        showSuccessMessage(response.message);
+      }
+    } catch (error) {
+      showErrorMessage(error.response.data.message);
+    }
+  }
+
   useEffect(() => {
     GetALlStatus();
   }, []);
@@ -145,13 +195,19 @@ function QMSQuestionDetail() {
                     <button class="btn btn-warning" type="">
                       No File Attached
                     </button>
-                    <button class="btn btn-primary" type="">
+                    <button class="btn btn-primary" type="button" onClick={() => {
+                      setShowRetriveForm(!showRetriveForm)
+                      setShowDeferForm(false)
+                    }}>
                       Revive
                     </button>
                     <button
                       class="btn btn-primary"
                       type="button"
-                      onClick={() => setShowDeferForm(!showDeferForm)}
+                      onClick={() => {
+                        setShowDeferForm(!showDeferForm)
+                        setShowRetriveForm(false)
+                      }}
                     >
                       Defer
                     </button>
@@ -175,7 +231,7 @@ function QMSQuestionDetail() {
                       <div class="col">
                         <div class="mb-3">
                           <label class="form-label">Session No</label>
-                          <select class="form-select">
+                          <select class="form-select" value={deferState.sessionNo} onChange={(e) => setDeferState({ ...deferState, sessionNo: e.target.value })}>
                             <option value={""} selected disabled hidden>
                               select
                             </option>
@@ -188,12 +244,110 @@ function QMSQuestionDetail() {
                       <div class="col">
                         <div class="mb-3">
                           <label class="form-label">Deffer Date</label>
-                          <input class="form-control" type="text" />
+                          <input class="form-control" type="text" value={deferState.deferDate} onChange={(e) => setDeferState({ ...deferState, deferDate: e.target.value })} />
                         </div>
                       </div>
                       <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <button class="btn btn-primary" type="">
+                        <button class="btn btn-primary" type="button" onClick={hendleDeffer}>
                           Defer
+                        </button>
+                      </div>
+                      <div class="clearfix"></div>
+                    </div>
+                  </div>
+                )}
+                {showRetriveForm && (
+                  <div
+                    class="dash-detail-container"
+                    style={{ marginTop: "20px", marginBottom: "25px" }}
+                  >
+                    <h4>Revive Question</h4>
+                    <div class="row">
+                      <div class="col">
+                        <div class="mb-3">
+                          <label class="form-label">Session No</label>
+                          <select class="form-select" value={deferState.sessionNo} onChange={(e) => setDeferState({ ...deferState, sessionNo: e.target.value })}>
+                            <option value={""} selected disabled hidden>
+                              select
+                            </option>
+                            <option value={"2"}>123</option>
+                            <option>12123</option>
+                            <option>45456</option>
+                          </select>
+                        </div>
+
+                      </div>
+                      <div class="col">
+                        <div class="mb-3">
+                          <label class="form-label">Group</label>
+                          <select class="form-select" value={reviveState.qroup} onChange={(e) => setReviveState({ ...reviveState, qroup: e.target.value })}>
+                            <option value={""} selected disabled hidden>
+                              select
+                            </option>
+                            <option value={"2"}>123</option>
+                            <option>Qroup 1</option>
+                            <option>45456</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col">
+                        <div class="mb-3">
+                          <label class="form-label">Division</label>
+                          <select class="form-select" value={reviveState.division} onChange={(e) => setReviveState({ ...reviveState, division: e.target.value })}>
+                            <option value={""} selected disabled hidden>
+                              select
+                            </option>
+                            <option value={"2"}>Division 1</option>
+                            <option>12123</option>
+                            <option>45456</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col">
+                        <div class="mb-3">
+                          <label class="form-label">Notice Diary No</label>
+                          <input class="form-control" type="text" value={reviveState.noticeDiaryNo} onChange={(e) => setReviveState({ ...reviveState, noticeDiaryNo: e.target.value })} />
+                        </div>
+                      </div>
+
+                      <div class="col">
+                        <div class="mb-3">
+                          <label class="form-label">Notice Diary Date</label>
+                          <input class="form-control" type="text" value={reviveState.noticeDiaryDate} onChange={(e) => setReviveState({ ...reviveState, noticeDiaryDate: e.target.value })} />
+                        </div>
+                      </div>
+
+                      <div className="row">
+                        <div class="col">
+                          <div class="mb-3">
+                            <label class="form-label">Notice Diary Time</label>
+                            <input class="form-control" type="text" value={reviveState.noticeDiaryTime} onChange={(e) => setReviveState({ ...reviveState, noticeDiaryTime: e.target.value })} />
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="mb-3">
+                            <label class="form-label">Question Status</label>
+                            <select class="form-select" value={reviveState.questionStatus} onChange={(e) => setReviveState({ ...reviveState, questionStatus: e.target.value })}>
+                              <option value={""} selected disabled hidden>
+                                select
+                              </option>
+                              <option value={"1"}>Defferd</option>
+                              <option value={"2"}>Qroup 1</option>
+                              <option value={"3"}>45456</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="mb-3">
+                            <label class="form-label">Question Diary No</label>
+                            <input class="form-control" type="text" value={reviveState.questionDiaryNo} onChange={(e) => setReviveState({ ...reviveState, questionDiaryNo: e.target.value })} />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button class="btn btn-primary" type="button" onClick={hendleRevive}>
+                          Revive
                         </button>
                       </div>
                       <div class="clearfix"></div>
@@ -281,7 +435,7 @@ function QMSQuestionDetail() {
                     <div class="mb-3">
                       <label class="form-label">Question ID</label>
                       <input
-                        enterKeyHint={true}
+                        readOnly={true}
                         type="text"
                         placeholder={formik.values.questionId}
                         className={"form-control"}
