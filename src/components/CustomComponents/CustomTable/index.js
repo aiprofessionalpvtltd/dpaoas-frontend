@@ -35,6 +35,7 @@ function CustomTable({
   searchonchange,
   ActionHide,
   totalCount,
+  hidePagination
 }) {
   const keys = data?.length > 0 ? Object.keys(data[0]) : [];
   const [totalPages, setTotalPages] = useState(0);
@@ -172,7 +173,7 @@ function CustomTable({
             </tr>
           </thead>
           <tbody>
-            {totalCount
+            {totalCount || hidePagination
               ? data.map((item, rowIndex) => (
                 <tr key={rowIndex}>
                 {keys.map((key, colIndex) => (
@@ -360,16 +361,18 @@ function CustomTable({
           </tbody>
         </table>
       </div>
-      {data.length > 0 && (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            alignItems: "flex-end",
-          }}
-        >
-          {renderPagination()}
-        </div>
+      {hidePagination ? null : (
+        data.length > 0 && (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "flex-end",
+            }}
+          >
+            {renderPagination()}
+          </div>
+        )
       )}
     </div>
   );

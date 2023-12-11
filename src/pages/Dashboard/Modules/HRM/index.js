@@ -47,7 +47,7 @@ function HRMDashboard() {
       <div class="row">
         <div class="col-12">
           <CustomTable
-            data={data}
+            data={Roles.length > 0 && Roles}
             tableTitle="Roles List"
             addBtnText="Add Roles"
             handleAdd={() => navigate("/hrm/addrole")}
@@ -57,6 +57,7 @@ function HRMDashboard() {
             handlePageChange={handlePageChange}
             currentPage={currentPage}
             pageSize={pageSize}
+            hidePagination={true}
             // handlePrint={}
             // handleUser={}
             // handleDelete={(item) => handleDelete(item.id)}
