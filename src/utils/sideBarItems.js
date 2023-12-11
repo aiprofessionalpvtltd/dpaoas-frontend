@@ -316,12 +316,6 @@ export const QMSSideBarItems = [
                 link: "/qms/question/delete",
                 icon: faClipboardList
             },
-            {
-                itemName: "Defer Question Detail",
-                link: "/qms/question/defer",
-                icon: faClipboardList
-            }
-
         ],
     },
     {
