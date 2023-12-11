@@ -103,9 +103,7 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
             centerlogohide={centerlogohide}
           />
           <div className="dashboard-content">
-            {(shouldRenderNotice ||
-              shouldRenderMotion ||
-              shouldRenderQuestion) && (
+            {shouldRenderNotice ? (
               <>
                 <div class="tab-right me-3 mt-1 mb-4">
                   <button>
@@ -117,6 +115,35 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
                   </button>
                   <button>
                     Questions{count?.question && <span>{count.question}</span>}
+                  </button>
+                </div>
+                <div class="clearfix"></div>
+              </>
+            ) : shouldRenderMotion ? (
+              <>
+                <div class="tab-right me-3 mt-1 mb-4">
+                  <button>
+                    Translations{count?.question && <span>{count?.question}</span>}
+                  </button>
+                  <button>
+                    Notice Motions
+                    {count?.motion && <span>{count.motion}</span>}
+                  </button>
+                </div>
+                <div class="clearfix"></div>
+              </>
+            ) : shouldRenderQuestion && (
+              <>
+                <div class="tab-right me-3 mt-1 mb-4">
+                  <button>
+                    Translations{count?.motion && <span>{count?.motion}</span>}
+                  </button>
+                  <button>
+                    Notice Resolutions
+                    {count?.resolution && <span>{count.resolution}</span>}
+                  </button>
+                  <button>
+                    Notice Questions{count?.question && <span>{count.question}</span>}
                   </button>
                 </div>
                 <div class="clearfix"></div>
