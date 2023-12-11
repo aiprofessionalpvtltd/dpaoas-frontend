@@ -149,12 +149,17 @@ function QMSQuestionDetail() {
   }
 
   const hendleRevive = async () => {
-    const reviveData = {
-      fkFromSessionId: reviveState.sessionNo,
-      fkToSessionId: 1,
-      fkGroupId: reviveState.qroup,
-      fkDivisionId: reviveState.division,
-      fkQuestionStatus: reviveState.questionStatus
+    const reviveData = 
+      {
+        fkFromSessionId: reviveState.sessionNo,
+        fkToSessionId: reviveState.sessionNo,
+        fkGroupId: reviveState.qroup,
+        fkDivisionId: reviveState.division,
+        noticeOfficeDiaryNo: reviveState.noticeDiaryNo,
+        noticeOfficeDiaryDate: reviveState.noticeDiaryDate,
+        noticeOfficeDiaryTime: reviveState.noticeDiaryTime,
+        questionDiaryNo: reviveState.questionDiaryNo,
+        fkQuestionStatus: reviveState.questionStatus
     }
     try {
       const response = await createReviveQuestion(location?.state?.id, reviveData)
@@ -235,7 +240,7 @@ function QMSQuestionDetail() {
                             <option value={""} selected disabled hidden>
                               select
                             </option>
-                            <option value={"2"}>123</option>
+                            <option value={"1"}>123</option>
                             <option>12123</option>
                             <option>45456</option>
                           </select>
@@ -266,11 +271,11 @@ function QMSQuestionDetail() {
                       <div class="col">
                         <div class="mb-3">
                           <label class="form-label">Session No</label>
-                          <select class="form-select" value={deferState.sessionNo} onChange={(e) => setDeferState({ ...deferState, sessionNo: e.target.value })}>
+                          <select class="form-select" value={reviveState.sessionNo} onChange={(e) => setReviveState({ ...reviveState, sessionNo: e.target.value })}>
                             <option value={""} selected disabled hidden>
                               select
                             </option>
-                            <option value={"2"}>123</option>
+                            <option value={"1"}>123</option>
                             <option>12123</option>
                             <option>45456</option>
                           </select>
@@ -284,7 +289,7 @@ function QMSQuestionDetail() {
                             <option value={""} selected disabled hidden>
                               select
                             </option>
-                            <option value={"2"}>123</option>
+                            <option value={"1"}>123</option>
                             <option>Qroup 1</option>
                             <option>45456</option>
                           </select>
@@ -297,7 +302,7 @@ function QMSQuestionDetail() {
                             <option value={""} selected disabled hidden>
                               select
                             </option>
-                            <option value={"2"}>Division 1</option>
+                            <option value={"1"}>Division 1</option>
                             <option>12123</option>
                             <option>45456</option>
                           </select>
