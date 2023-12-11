@@ -21,7 +21,7 @@ function SentResolution() {
   const [resData, setResData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
     const [count, setCount] = useState(null);
-  const pageSize = 10; // Set your desired page size
+  const pageSize = 4; // Set your desired page size
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
@@ -97,7 +97,7 @@ function SentResolution() {
       if (response?.success) {
         showSuccessMessage(response?.message);
         setCount(response.data?.count);
-        const transformedData = transformLeavesData(response.data);
+        const transformedData = transformLeavesData(response.data?.resolution);
         setResData(transformedData);
       }
     } catch (error) {
@@ -107,7 +107,7 @@ function SentResolution() {
 
   useEffect(() => {
     getAllResolutionsApi();
-  }, []);
+  }, [currentPage]);
 
   return (
     <Layout
@@ -389,7 +389,6 @@ function SentResolution() {
                     style={{ marginTop: "20px" }}
                   >
                     <CustomTable
-                      block={true}
                       hideBtn={true}
                       data={resData}
                       tableTitle="Resolutions"

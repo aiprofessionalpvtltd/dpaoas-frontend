@@ -57,6 +57,7 @@ function HRMDashboard() {
             handlePageChange={handlePageChange}
             currentPage={currentPage}
             pageSize={pageSize}
+            hidePagination={true}
             // handlePrint={}
             // handleUser={}
             // handleDelete={(item) => handleDelete(item.id)}

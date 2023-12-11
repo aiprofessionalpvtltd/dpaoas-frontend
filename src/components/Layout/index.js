@@ -121,7 +121,7 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
               </>
             ) : shouldRenderMotion ? (
               <>
-                <div class="tab-right me-3 mt-1 mb-4">
+                <div class="tab-right me-3 mt-1 mb-4" style={{ width: "310px" }}>
                   <button>
                     Translations{count?.question && <span>{count?.question}</span>}
                   </button>
@@ -134,7 +134,7 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
               </>
             ) : shouldRenderQuestion && (
               <>
-                <div class="tab-right me-3 mt-1 mb-4">
+                <div class="tab-right me-3 mt-1 mb-4" style={{ width: "528px" }}>
                   <button>
                     Translations{count?.motion && <span>{count?.motion}</span>}
                   </button>
