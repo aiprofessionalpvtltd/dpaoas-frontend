@@ -47,6 +47,21 @@ export const getRoles = async () => {
   }
 };
 
+export const getRoleById = async (id) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientVMS.get(`/roles/${id}`, {
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // },
+    });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
 export const createRole = async (data) => {
   try {
     const token = getAuthToken();
@@ -62,8 +77,7 @@ export const createRole = async (data) => {
   }
 };
 
-
-export const EditRole = async (id, data) => {
+export const updateRole = async (id, data) => {
   try {
     const token = getAuthToken();
     const response = await axiosClientVMS.put(`/roles/updateRole/${id}`, data, {
