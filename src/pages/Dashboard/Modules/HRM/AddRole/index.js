@@ -6,6 +6,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { createRole } from "../../../../../api/APIs";
 import { useNavigate } from "react-router";
+import { showSuccessMessage } from "../../../../../utils/ToastAlert";
 
 const validationSchema = Yup.object({
   roleName: Yup.string().required("Role name is required"),
@@ -25,7 +26,8 @@ function HRMAddRole() {
     try {
       const response = await createRole(data);
       if (response.success) {
-        navigate("/hrm/dashboard");
+        showSuccessMessage(response?.message)
+        // navigate("/hrm/dashboard");
       }
     } catch (error) {
       console.log(error);

@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Layout } from "../../../../components/Layout";
 import { HRMsidebarItems } from "../../../../utils/sideBarItems";
 import { useNavigate } from "react-router-dom";
 import Header from "../../../../components/Header";
 import CustomTable from "../../../../components/CustomComponents/CustomTable";
 import { getRolesData } from "../../../../api/Auth";
+import { DeleteRole, getRoles } from "../../../../api/APIs";
+import { showSuccessMessage } from "../../../../utils/ToastAlert";
 
 const data = [
   {
@@ -27,8 +29,8 @@ const data = [
 
 function HRMDashboard() {
     const navigate = useNavigate()
-    const Roles = getRolesData();
     const [currentPage, setCurrentPage] = useState(0);
+    const [rolesList, setRolesList] = useState([]);
     // const [count, setCount] = useState(null);
     const pageSize = 4; // Set your desired page size
 
@@ -36,6 +38,31 @@ function HRMDashboard() {
     // Update currentPage when a page link is clicked
     setCurrentPage(page);
   };
+
+  const fetchRoles = async () => {
+    try {
+      const response = await getRoles();
+      setRolesList(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchRoles();
+  }, []);
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await DeleteRole(id);
+      if (response.success) {
+        showSuccessMessage(response?.message);
+        fetchRoles();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <Layout module={true} sidebarItems={HRMsidebarItems} centerlogohide={true}>
@@ -47,7 +74,7 @@ function HRMDashboard() {
       <div class="row">
         <div class="col-12">
           <CustomTable
-            data={data}
+            data={rolesList && rolesList.length > 0 ? rolesList : []}
             tableTitle="Roles List"
             addBtnText="Add Roles"
             handleAdd={() => navigate("/hrm/addrole")}
@@ -57,9 +84,8 @@ function HRMDashboard() {
             handlePageChange={handlePageChange}
             currentPage={currentPage}
             pageSize={pageSize}
-            // handlePrint={}
-            // handleUser={}
-            // handleDelete={(item) => handleDelete(item.id)}
+            hidePagination={true}
+            handleDelete={(item) => handleDelete(item.id)}
           />
         </div>
       </div>

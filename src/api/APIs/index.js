@@ -16,7 +16,7 @@ export const axiosClientMMS = axios.create({
 
 export const loginUser = async (data) => {
   try {
-    const response = await axiosClient.post(`/users/login`, data, {
+    const response = await axiosClientVMS.post(`/users/login`, data, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -34,11 +34,11 @@ export const loginUser = async (data) => {
 
 export const getRoles = async () => {
   try {
-    const token = getAuthToken();
-    const response = await axiosClient.get(`/roles`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+    // const token = getAuthToken();
+    const response = await axiosClientVMS.get(`/roles?currentPage=${0}&pageSize=${1000}`, {
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // },
     });
     return response?.data;
   } catch (error) {
@@ -50,10 +50,56 @@ export const getRoles = async () => {
 export const createRole = async (data) => {
   try {
     const token = getAuthToken();
-    const response = await axiosClient.post(`/roles/create`, data, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+    const response = await axiosClientVMS.post(`/roles/create`, data, {
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // },
+    });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+
+export const EditRole = async (id, data) => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientVMS.put(`/roles/updateRole/${id}`, data, {
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // },
+    });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const DeleteRole = async (id) => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientVMS.delete(`/roles/delete/${id}`, {
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // },
+    });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const getModules = async () => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientVMS.get(`/permissions/modulesPermissions`, {
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // },
     });
     return response?.data;
   } catch (error) {
@@ -63,14 +109,15 @@ export const createRole = async (data) => {
 };
 
 //Department
-export const getDepartment = async () => {
+export const getDepartment = async (currentPage, pageSize) => {
   try {
     const token = getAuthToken();
-    const response = await axiosClient.get(`/departments`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await axiosClientVMS.get(`/departments/?currentPage=${currentPage}&pageSize=${pageSize}`)
+    //  {
+    //   headers: {
+    //     Authorization: `Bearer ${token}`,
+    //   },
+    // });
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -81,11 +128,12 @@ export const getDepartment = async () => {
 export const createDepartment = async (data) => {
   try {
     const token = getAuthToken();
-    const response = await axiosClient.post(`/designations/create`, data, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await axiosClientVMS.post(`/departments/create`, data)
+    //  {
+    //   headers: {
+    //     Authorization: `Bearer ${token}`,
+    //   },
+    // });
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -93,17 +141,35 @@ export const createDepartment = async (data) => {
   }
 };
 
-export const UpdateDepartment = async (data) => {
+export const UpdateDepartment = async (id, data) => {
   try {
     const token = getAuthToken();
-    const response = await axiosClient.put(
-      `/departments/delete/${data.id}`,
+    const response = await axiosClientVMS.put(
+      `/departments/update/${id}`,
       data,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
+      // {
+      //   headers: {
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // },
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const DeleteDepartment = async (id) => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientVMS.delete(
+      `/departments/delete/${id}`,
+      // {
+      //   headers: {
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // },
     );
     return response?.data;
   } catch (error) {
@@ -113,14 +179,15 @@ export const UpdateDepartment = async (data) => {
 };
 
 //Designations
-export const getDesignations = async () => {
+export const getDesignations = async (currentPage, pageSize) => {
   try {
     const token = getAuthToken();
-    const response = await axiosClient.get(`/designations`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await axiosClientVMS.get(`/designations/?currentPage=${currentPage}&pageSize=${pageSize}`)
+    // {
+    //   headers: {
+    //     Authorization: `Bearer ${token}`,
+    //   },
+    // });
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -131,11 +198,12 @@ export const getDesignations = async () => {
 export const createDesignation = async (data) => {
   try {
     const token = getAuthToken();
-    const response = await axiosClient.post(`/designations/create`, data, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await axiosClientVMS.post(`/designations/create`, data)
+    //  {
+    //   headers: {
+    //     Authorization: `Bearer ${token}`,
+    //   },
+    // });
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -143,11 +211,11 @@ export const createDesignation = async (data) => {
   }
 };
 
-export const UpdateDesignation = async (data) => {
+export const UpdateDesignation = async (id, data) => {
   try {
     const token = getAuthToken();
-    const response = await axiosClient.put(
-      `/designations/update/${data.id}`,
+    const response = await axiosClientVMS.put(
+      `/designations/update/${id}`,
       data,
       {
         headers: {
@@ -161,6 +229,97 @@ export const UpdateDesignation = async (data) => {
     throw error;
   }
 };
+
+export const DeleteDesignation = async (id) => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientVMS.delete(
+      `/designations/delete/${id}`)
+    //   {
+    //     headers: {
+    //       Authorization: `Bearer ${token}`,
+    //     },
+    //   },
+    // );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+//Employee
+export const createEmployee = async (data) => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientVMS.post(
+      `/employee/create`, data)
+    //   {
+    //     headers: {
+    //       Authorization: `Bearer ${token}`,
+    //     },
+    //   },
+    // );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const getAllEmployee = async (currentPage, pageSize) => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientVMS.get(
+      `/employee/?currentPage=${currentPage}&pageSize=${pageSize}`)
+    //   {
+    //     headers: {
+    //       Authorization: `Bearer ${token}`,
+    //     },
+    //   },
+    // );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const DeleteEmployee = async (id) => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientVMS.delete(
+      `/employee/delete/${id}`)
+    //   {
+    //     headers: {
+    //       Authorization: `Bearer ${token}`,
+    //     },
+    //   },
+    // );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+export const UpdateEmployee = async (id, data) => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientVMS.put(
+      `/employee/update/${id}`, data)
+    //   {
+    //     headers: {
+    //       Authorization: `Bearer ${token}`,
+    //     },
+    //   },
+    // );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
 
 //VMS Module
 //Passes
@@ -187,11 +346,11 @@ export const getPassPdfBYPassID = async (id) => {
   try {
     const token = getAuthToken();
     const response = await axiosClientVMS.get(`/pass/pdfData/${id}`,
-     {
-      headers: {
-        "Content-Type": "application/pdf"
-      }
-    });
+      {
+        headers: {
+          "Content-Type": "application/pdf"
+        }
+      });
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -656,7 +815,7 @@ export const UpdateQuestionById = async (id, data) => {
 };
 //Daffer Question
 export const createDefferQuestion = async (id, DefferData) => {
-  console.log("iwefjiouios". DefferData);
+  console.log("iwefjiouios".DefferData);
   try {
     const token = getAuthToken();
     const response = await axiosClientMMS.post(`/questions/deferQuestion/${id}`, DefferData, {

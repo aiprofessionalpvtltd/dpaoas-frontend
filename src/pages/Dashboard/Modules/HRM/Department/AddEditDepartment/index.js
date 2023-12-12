@@ -6,11 +6,13 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { UpdateDepartment, createDepartment } from "../../../../../../api/APIs";
+import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
+import { ToastContainer } from "react-toastify";
 
 const validationSchema = Yup.object({
   departmentName: Yup.string().required("Department name is required"),
   description: Yup.string().required("description is required"),
-  status: Yup.string().required("status is required"),
+  status: Yup.string()
 });
 function HRMAddEditDepartment() {
   const location = useLocation();
@@ -18,44 +20,49 @@ function HRMAddEditDepartment() {
 
   const formik = useFormik({
     initialValues: {
-      departmentName: "",
-      description: "",
-      status: "",
+      departmentName: location.state ? location.state.departmentName : "",
+      description: location.state ? location.state.description : "",
+      status: location.state ? location.state.departmentStatus : "",
     },
 
     validationSchema: validationSchema,
     onSubmit: (values) => {
       // Handle form submission here
       // console.log(values);
-      CreateDepartmentApi(values);
+      if (location.state) {
+        UpdateDepartmentApi()
+      } else {
+        CreateDepartmentApi(values);
+      }
     },
   });
 
   const CreateDepartmentApi = async (values) => {
     const data = {
-      name: values?.departmentName,
+      departmentName: values?.departmentName,
       description: values?.description,
+      departmentStatus: "active"
     };
     try {
       const response = await createDepartment(data);
       if (response.success) {
-        navigate("/hrm/department");
+        showSuccessMessage(response.message)
       }
     } catch (error) {
-      console.log(error);
+      showErrorMessage(error.response.data.message)
     }
   };
 
   const UpdateDepartmentApi = async (values) => {
     const data = {
-      name: values?.departmentName,
+      departmentName: values?.departmentName,
       description: values?.description,
-      departmentStatus: values.status,
+      departmentStatus: values?.status
     };
     try {
-      const response = await UpdateDepartment(data);
+      const response = await UpdateDepartment(location.state.id, data);
       if (response.success) {
-        navigate("/hrm/department");
+        showSuccessMessage(response.message)
       }
     } catch (error) {
       console.log(error);
@@ -73,6 +80,7 @@ function HRMAddEditDepartment() {
           location && location?.state ? "Edit Department" : "Add Department"
         }
       />
+      <ToastContainer />
       <div className="container-fluid">
         <div className="card">
           <div className="card-header red-bg" style={{ background: "#666" }}>
@@ -91,12 +99,11 @@ function HRMAddEditDepartment() {
                       <label className="form-label">Department name * </label>
                       <input
                         type="text"
-                        className={`form-control ${
-                          formik.touched.departmentName &&
-                          formik.errors.departmentName
+                        className={`form-control ${formik.touched.departmentName &&
+                            formik.errors.departmentName
                             ? "is-invalid"
                             : ""
-                        }`}
+                          }`}
                         id="departmentName"
                         placeholder={formik.values.departmentName}
                         onChange={formik.handleChange}
@@ -115,23 +122,14 @@ function HRMAddEditDepartment() {
                       <div className="mb-3">
                         <label className="form-label">Staus</label>
                         <input
-                          type="email"
-                          className={`form-control ${
-                            formik.touched.status && formik.errors.status
-                              ? "is-invalid"
-                              : ""
-                          }`}
+                          type="text"
+                          className={`form-control`}
                           id="exampleFormControlInput1"
                           placeholder={formik.values.status}
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                           value={formik.values.status}
                         />
-                        {formik.touched.status && formik.errors.status && (
-                          <div className="invalid-feedback">
-                            {formik.errors.status}
-                          </div>
-                        )}
                       </div>
                     </div>
                   )}
@@ -143,12 +141,11 @@ function HRMAddEditDepartment() {
                       <label className="form-label">Description</label>
                       <textarea
                         placeholder={formik.values.description}
-                        className={`form-control ${
-                          formik.touched.description &&
-                          formik.errors.description
+                        className={`form-control ${formik.touched.description &&
+                            formik.errors.description
                             ? "is-invalid"
                             : ""
-                        }`}
+                          }`}
                         id="description"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}

@@ -5,13 +5,19 @@ import { Layout } from "../../../../../components/Layout";
 import { HRMsidebarItems } from "../../../../../utils/sideBarItems";
 import { CheckedItem } from "../../../../../components/EditRole/CheckedItem";
 import { UncheckedItem } from "../../../../../components/EditRole/UncheckedItem";
+import { getPermissionsData } from "../../../../../api/Auth";
+import { getModules } from "../../../../../api/APIs";
 
 function HRMEditRole() {
   const [hiddenItems, setHiddenItems] = useState(null);
   const handleHideShow = (id) => {
     setHiddenItems((prevHiddenItems) => (prevHiddenItems === id ? null : id));
   };
+
+  const userPermissions = getPermissionsData();
   const location = useLocation();
+  // console.log("State", location.state);
+  // console.log("State", userPermissions);
   const [allItems, setAllItems] = useState([
     {
       id: "1",
@@ -163,6 +169,19 @@ function HRMEditRole() {
 
     setCheckedItems(outputArr);
   }, [permissionsArray]);
+
+  const fetchModules = async () => {
+    try {
+      const response = await getModules();
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchModules();
+  }, []);
 
   return (
     <Layout module={true} sidebarItems={HRMsidebarItems} centerlogohide={true}>
