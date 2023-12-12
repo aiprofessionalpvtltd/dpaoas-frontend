@@ -2,11 +2,7 @@ import React, { useEffect, useState } from "react";
 import { CustomNavbar } from "../CustomNavbar";
 import { Sidebar } from "../Sidebar";
 import { useLocation } from "react-router";
-import {
-  getAllMotion,
-  getAllQuestion,
-  getAllResolutions,
-} from "../../api/APIs";
+import { getAllMotion, getAllQuestion, getAllResolutions } from "../../api/APIs";
 
 export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
   const [sidebarVisible, setSidebarVisible] = useState(true);
@@ -16,18 +12,9 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
     resolution: null,
   });
   const location = useLocation();
-  const basePathNotice = location.pathname.substring(
-    0,
-    location.pathname.lastIndexOf("/notice") + 7,
-  );
-  const basePathMotion = location.pathname.substring(
-    0,
-    location.pathname.indexOf("/mms") + 4,
-  );
-  const basePathQuestion = location.pathname.substring(
-    0,
-    location.pathname.lastIndexOf("/qms") + 4,
-  );
+  const basePathNotice = location.pathname.substring(0, location.pathname.lastIndexOf("/notice") + 7);
+  const basePathMotion = location.pathname.substring(0, location.pathname.indexOf("/mms") + 4);
+  const basePathQuestion = location.pathname.substring(0, location.pathname.lastIndexOf("/qms") + 4);
 
   const shouldRenderNotice = basePathNotice.includes("/notice");
   const shouldRenderMotion = basePathMotion.includes("/mms");
@@ -96,34 +83,24 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
       {module && <Sidebar sidebarItems={sidebarItems} />}
       {module ? (
         <main className="dashboard-app" style={{ marginLeft: "220px" }}>
-          <CustomNavbar
-            toggleSidebar={toggleSidebar}
-            module={module}
-            centerlogohide={centerlogohide}
-          />
+          <CustomNavbar toggleSidebar={toggleSidebar} module={module} centerlogohide={centerlogohide} />
           <div className="dashboard-content">
             {shouldRenderNotice ? (
               <>
-                <div class="tab-right me-3 mt-1 mb-4">
-                  <button>
-                    Motion{count?.motion && <span>{count.motion}</span>}
-                  </button>
+                <div class="tab-right me-4 mt-1 mb-4">
+                  <button>Motion{count?.motion && <span>{count.motion}</span>}</button>
                   <button>
                     Resolution
                     {count?.resolution && <span>{count.resolution}</span>}
                   </button>
-                  <button>
-                    Questions{count?.question && <span>{count.question}</span>}
-                  </button>
+                  <button>Questions{count?.question && <span>{count.question}</span>}</button>
                 </div>
                 <div class="clearfix"></div>
               </>
             ) : shouldRenderMotion ? (
               <>
-                <div class="tab-right me-3 mt-1 mb-4" style={{ width: "310px" }}>
-                  <button>
-                    Translations{count?.question && <span>{count?.question}</span>}
-                  </button>
+                <div class="tab-right me-4 mt-1 mb-4" style={{ width: "310px" }}>
+                  <button>Translations{count?.question && <span>{count?.question}</span>}</button>
                   <button>
                     Notice Motions
                     {count?.motion && <span>{count.motion}</span>}
@@ -131,22 +108,20 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
                 </div>
                 <div class="clearfix"></div>
               </>
-            ) : shouldRenderQuestion && (
-              <>
-                <div class="tab-right me-3 mt-1 mb-4" style={{ width: "528px" }}>
-                  <button>
-                    Translations{count?.motion && <span>{count?.motion}</span>}
-                  </button>
-                  <button>
-                    Notice Resolutions
-                    {count?.resolution && <span>{count.resolution}</span>}
-                  </button>
-                  <button>
-                    Notice Questions{count?.question && <span>{count.question}</span>}
-                  </button>
-                </div>
-                <div class="clearfix"></div>
-              </>
+            ) : (
+              shouldRenderQuestion && (
+                <>
+                  <div class="tab-right me-4 mt-1 mb-4" style={{ width: "528px" }}>
+                    <button>Translations{count?.motion && <span>{count?.motion}</span>}</button>
+                    <button>
+                      Notice Resolutions
+                      {count?.resolution && <span>{count.resolution}</span>}
+                    </button>
+                    <button>Notice Questions{count?.question && <span>{count.question}</span>}</button>
+                  </div>
+                  <div class="clearfix"></div>
+                </>
+              )
             )}
             <div className="container-fluid">{children}</div>
           </div>
