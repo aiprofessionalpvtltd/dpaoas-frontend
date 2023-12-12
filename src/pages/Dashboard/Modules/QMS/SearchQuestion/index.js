@@ -2,32 +2,22 @@ import React, { useEffect, useState } from "react";
 import { Layout } from "../../../../../components/Layout";
 import { useNavigate } from "react-router-dom";
 import CustomTable from "../../../../../components/CustomComponents/CustomTable";
-import {
-  MMSSideBarItems,
-  QMSSideBarItems,
-} from "../../../../../utils/sideBarItems";
+import { MMSSideBarItems, QMSSideBarItems } from "../../../../../utils/sideBarItems";
 import Header from "../../../../../components/Header";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import DatePicker from "react-datepicker";
 import { ToastContainer } from "react-toastify";
-import {
-  getAllQuestionBYID,
-  getAllQuestionStatus,
-  searchQuestion,
-} from "../../../../../api/APIs";
-import {
-  showErrorMessage,
-  showSuccessMessage,
-} from "../../../../../utils/ToastAlert";
+import { getAllQuestionBYID, getAllQuestionStatus, searchQuestion } from "../../../../../api/APIs";
+import { showErrorMessage, showSuccessMessage } from "../../../../../utils/ToastAlert";
 
 function QMSSearchQuestion() {
-    const navigate = useNavigate()
-    const [currentPage, setCurrentPage] = useState(0);
-    const [searchedData, setSearchedData] = useState([])
-    const [allquestionStatus, setAllQuestionStatus] = useState([])
+  const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState(0);
+  const [searchedData, setSearchedData] = useState([]);
+  const [allquestionStatus, setAllQuestionStatus] = useState([]);
 
-    const [count, setCount] = useState(null);
+  const [count, setCount] = useState(null);
 
   const pageSize = 4; // Set your desired page size
 
@@ -67,9 +57,7 @@ function QMSSearchQuestion() {
         NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate,
         NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
         SessionNumber: res?.session?.sessionName,
-        SubjectMatter: [res?.englishText, res?.urduText]
-          .filter(Boolean)
-          .join(", "),
+        SubjectMatter: [res?.englishText, res?.urduText].filter(Boolean).join(", "),
         Category: res?.questionCategory,
         // SubmittedBy: res.category,
         Status: res?.questionStatus?.questionStatus,
@@ -144,10 +132,7 @@ function QMSSearchQuestion() {
       <ToastContainer />
       <div class="container-fluid">
         <div class="card mt-4">
-          <div
-            class="card-header red-bg"
-            style={{ background: "#14ae5c !important" }}
-          >
+          <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
             <h1>SEARCH QUESTIONS</h1>
           </div>
           <div class="card-body">
@@ -323,9 +308,7 @@ function QMSSearchQuestion() {
                       <label class="form-label">From Notice Date</label>
                       <DatePicker
                         selected={formik.values.fromNoticeDate}
-                        onChange={(date) =>
-                          formik.setFieldValue("fromNoticeDate", date)
-                        }
+                        onChange={(date) => formik.setFieldValue("fromNoticeDate", date)}
                         className={"form-control"}
                       />
                     </div>
@@ -335,9 +318,7 @@ function QMSSearchQuestion() {
                       <label class="form-label">To Notice Date</label>
                       <DatePicker
                         selected={formik.values.toNoticeDate}
-                        onChange={(date) =>
-                          formik.setFieldValue("toNoticeDate", date)
-                        }
+                        onChange={(date) => formik.setFieldValue("toNoticeDate", date)}
                         className={"form-control"}
                       />
                     </div>
@@ -359,11 +340,7 @@ function QMSSearchQuestion() {
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Religion</label>
-                      <select
-                        name="ctl00$ContentPlaceHolder3$ReligionDDL"
-                        id="ReligionDDL"
-                        class="form-select"
-                      >
+                      <select name="ctl00$ContentPlaceHolder3$ReligionDDL" id="ReligionDDL" class="form-select">
                         <option selected="selected" value="0">
                           Religion
                         </option>
@@ -425,11 +402,7 @@ function QMSSearchQuestion() {
                   <div class="col-2">
                     <div class="mb-3">
                       <div class="form-check" style={{ marginTop: "39px" }}>
-                        <input
-                          class="form-check-input "
-                          type="checkbox"
-                          id="flexCheckDefault"
-                        />
+                        <input class="form-check-input " type="checkbox" id="flexCheckDefault" />
                         <label class="form-check-label" for="flexCheckDefault">
                           Complete Text
                         </label>
@@ -439,11 +412,7 @@ function QMSSearchQuestion() {
                   <div class="col-2">
                     <div class="mb-3">
                       <div class="form-check" style={{ marginTop: "39px" }}>
-                        <input
-                          class="form-check-input "
-                          type="checkbox"
-                          id="flexCheckDefault"
-                        />
+                        <input class="form-check-input " type="checkbox" id="flexCheckDefault" />
                         <label class="form-check-label" for="flexCheckDefault">
                           Exact Match
                         </label>
@@ -487,7 +456,7 @@ function QMSSearchQuestion() {
                   headertitletextColor={"#FFF"}
                 />
               </div>
-              <div class="row">
+              <div class="row mt-4">
                 <div class="col">
                   <div class="mb-3">
                     <label class="form-label">Question Status</label>
@@ -516,11 +485,7 @@ function QMSSearchQuestion() {
                   </div>
                 </div>
                 <div class="col">
-                  <button
-                    style={{ marginTop: "30px" }}
-                    class="btn btn-primary"
-                    type="submit"
-                  >
+                  <button style={{ marginTop: "30px" }} class="btn btn-primary" type="submit">
                     Change Status
                   </button>
                 </div>
