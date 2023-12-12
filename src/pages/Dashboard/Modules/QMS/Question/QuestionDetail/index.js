@@ -37,7 +37,7 @@ const validationSchema = Yup.object({
 function QMSQuestionDetail() {
   const location = useLocation();
 
-  console.log("Question Id", location?.state?.id);
+  console.log("Question Detail Data", location.state.history.questionStatusHistory);
 
   const [showDeferForm, setShowDeferForm] = useState(false);
   const [showRetriveForm, setShowRetriveForm] = useState(false);
@@ -62,23 +62,23 @@ function QMSQuestionDetail() {
 
   const formik = useFormik({
     initialValues: {
-      sessionNo: location?.state?.session?.fkSessionId,
+      sessionNo: location?.state?.question?.session?.fkSessionId,
       noticeOfficeDiaryNo:
-        location?.state?.noticeOfficeDiary?.noticeOfficeDiaryNo,
+        location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryNo,
       noticeOfficeDiaryDate:
-        location?.state?.noticeOfficeDiary?.noticeOfficeDiaryDate,
+        location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryDate,
       noticeOfficeDiaryTime:
-        location?.state?.noticeOfficeDiary?.noticeOfficeDiaryTime,
+        location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryTime,
       priority: "",
-      questionId: location?.state?.fkSessionId,
-      questionDiaryNo: location?.state?.fkNoticeDiary,
-      category: location?.state?.questionCategory,
-      questionStatus: location?.state?.fkQuestionStatus,
-      replyDate: location?.state?.replyDate,
-      senator: location?.state?.member.memberName,
-      group: location?.state?.groups,
-      division: location?.state?.divisions,
-      fileStatus: location?.state?.fileStatus,
+      questionId: location?.state?.question?.fkSessionId,
+      questionDiaryNo: location?.state?.question?.fkNoticeDiary,
+      category: location?.state?.question?.questionCategory,
+      questionStatus: location?.state?.question?.fkQuestionStatus,
+      replyDate: location?.state?.question?.replyDate,
+      senator: location?.state?.question?.member.memberName,
+      group: location?.state?.question?.groups,
+      division: location?.state?.question?.divisions,
+      fileStatus: location?.state?.question?.fileStatus,
     },
     // validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -105,7 +105,7 @@ function QMSQuestionDetail() {
     formData.append("urduText", "dkpad");
     formData.append("originalText", "dkpad");
     try {
-      const response = await UpdateQuestionById(location?.state?.id, formData);
+      const response = await UpdateQuestionById(location?.state?.question?.id, formData);
       if (response?.success) {
         showSuccessMessage(response?.message);
       }
@@ -127,7 +127,7 @@ function QMSQuestionDetail() {
 
   const hendleQuestionTranslation = async () => {
     try {
-      const response = await sendQuestionTranslation(location?.state?.id);
+      const response = await sendQuestionTranslation(location?.state?.question?.id);
       if (response?.success) {
         showSuccessMessage(response.message);
       }
@@ -139,7 +139,7 @@ function QMSQuestionDetail() {
   const hendleDeffer = async () => {
     const DefferData = { fkSessionId: 1, deferredDate: deferState.deferDate, deferredBy: "login user ID" }
     try {
-      const response = await createDefferQuestion(location?.state?.id, DefferData)
+      const response = await createDefferQuestion(location?.state?.question?.id, DefferData)
       if (response?.success) {
         showSuccessMessage(response.message);
       }
@@ -149,20 +149,20 @@ function QMSQuestionDetail() {
   }
 
   const hendleRevive = async () => {
-    const reviveData = 
-      {
-        fkFromSessionId: reviveState.sessionNo,
-        fkToSessionId: reviveState.sessionNo,
-        fkGroupId: reviveState.qroup,
-        fkDivisionId: reviveState.division,
-        noticeOfficeDiaryNo: reviveState.noticeDiaryNo,
-        noticeOfficeDiaryDate: reviveState.noticeDiaryDate,
-        noticeOfficeDiaryTime: reviveState.noticeDiaryTime,
-        questionDiaryNo: reviveState.questionDiaryNo,
-        fkQuestionStatus: reviveState.questionStatus
+    const reviveData =
+    {
+      fkFromSessionId: reviveState.sessionNo,
+      fkToSessionId: reviveState.sessionNo,
+      fkGroupId: reviveState.qroup,
+      fkDivisionId: reviveState.division,
+      noticeOfficeDiaryNo: reviveState.noticeDiaryNo,
+      noticeOfficeDiaryDate: reviveState.noticeDiaryDate,
+      noticeOfficeDiaryTime: reviveState.noticeDiaryTime,
+      questionDiaryNo: reviveState.questionDiaryNo,
+      fkQuestionStatus: reviveState.questionStatus
     }
     try {
-      const response = await createReviveQuestion(location?.state?.id, reviveData)
+      const response = await createReviveQuestion(location?.state?.question?.id, reviveData)
       if (response?.success) {
         showSuccessMessage(response.message);
       }
@@ -170,6 +170,61 @@ function QMSQuestionDetail() {
       showErrorMessage(error.response.data.message);
     }
   }
+
+  //History
+  const transfrerStatusHistoryData = (apiData) => {
+    return apiData.map((leave, index) => ({
+      SR: `${index + 1}`,
+      sessionNo: leave?.session?.sessionName,
+      status: leave?.questionStatus?.questionStatus,
+      questionDate: leave?.questionStatusDate,
+    }));
+  };
+  const StatusHistoryData = transfrerStatusHistoryData(
+    location?.state?.history?.questionStatusHistory
+  );
+  //questionRevival
+  const transfrerRevivalHistoryData = (apiData) => {
+    return apiData.map((leave, index) => ({
+      SR: `${index + 1}`,
+      FromSession: leave?.FromSession?.sessionName,
+      ToSession: leave?.ToSession?.sessionName,
+      questionDiary: leave?.questionDiary?.questionDiaryNo,
+      revivalDate: leave?.createdAt
+    }));
+  };
+
+  const QuestionRevivalHistoryData = transfrerRevivalHistoryData(
+    location?.state?.history?.questionRevival
+  );
+
+  //Deffer History
+  const transfrerDefferHistoryData = (apiData) => {
+    return apiData.map((leave, index) => ({
+      SR: `${index + 1}`,
+      defferToSession: leave?.session?.sessionName,
+      defferOn: leave?.deferredDate,
+      deferredBy: leave?.deferredBy,
+      revivalDate: leave?.createdAt
+    }));
+  };
+
+  const QuestionDefferHistoryData = transfrerDefferHistoryData(
+    location?.state?.history?.questionDefer
+  );
+
+  //File History
+  const transfrerFilerHistoryData = (apiData) => {
+    return apiData.map((leave, index) => ({
+      SR: `${index + 1}`,
+      fileStatus: leave?.fileStatus,
+      fileStatusDate: leave?.fileStatusDate,
+    }));
+  };
+
+  const QuestionFileHistoryData = transfrerFilerHistoryData(
+    location?.state?.history?.questionFileHistory
+  );
 
   useEffect(() => {
     GetALlStatus();
@@ -724,19 +779,19 @@ function QMSQuestionDetail() {
                       <th class="text-center" scope="col">
                         Status Date
                       </th>
-                      <th class="text-center" scope="col">
-                        User
-                      </th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td class="text-center">1</td>
-                      <td class="text-center"></td>
-                      <td class="text-center"></td>
-                      <td class="text-center"></td>
-                      <td class="text-center"></td>
-                    </tr>
+                    {StatusHistoryData.length > 0 &&
+                      StatusHistoryData.map((item, index) => (
+                        <tr>
+                          <td class="text-center">{item.SR}</td>
+                          <td class="text-center">{item.sessionNo}</td>
+                          <td class="text-center">{item.status}</td>
+                          <td class="text-center">{item.questionDate}</td>
+
+                        </tr>
+                      ))}
                   </tbody>
                 </table>
               </div>
@@ -770,17 +825,21 @@ function QMSQuestionDetail() {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td class="text-center"></td>
-                      <td class="text-center"></td>
-                      <td class="text-center"></td>
-                      <td class="text-center"></td>
-                      <td class="text-center"></td>
-                      <td class="text-center"></td>
-                    </tr>
+
+                    {QuestionRevivalHistoryData.length > 0 &&
+                      QuestionRevivalHistoryData.map((item, index) => (
+                        <tr>
+                          <td class="text-center">{item.SR}</td>
+                          <td class="text-center">{item.FromSession}</td>
+                          <td class="text-center">{item.ToSession}</td>
+                          <td class="text-center">{item.questionDiary}</td>
+                          <td class="text-center">{item.revivalDate}</td>
+                        </tr>
+                      ))}
                   </tbody>
                 </table>
               </div>
+
               <h2
                 style={{ color: "#666", marginTop: "25px", fontSize: "24px" }}
               >
@@ -811,14 +870,16 @@ function QMSQuestionDetail() {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td class="text-center"></td>
-                      <td class="text-center"></td>
-                      <td class="text-center"></td>
-                      <td class="text-center"></td>
-                      <td class="text-center"></td>
-                      <td class="text-center"></td>
-                    </tr>
+                    {QuestionDefferHistoryData.length > 0 &&
+                      QuestionDefferHistoryData.map((item, index) => (
+                        <tr>
+                          <td class="text-center">{item.SR}</td>
+                          <td class="text-center">{item.defferToSession}</td>
+                          <td class="text-center">{item.defferOn}</td>
+                          <td class="text-center">{item.deferredBy}</td>
+                          <td class="text-center">{item.revivalDate}</td>
+                        </tr>
+                      ))}
                   </tbody>
                 </table>
               </div>
@@ -846,12 +907,14 @@ function QMSQuestionDetail() {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td class="text-center"></td>
-                      <td class="text-center"></td>
-                      <td class="text-center"></td>
-                      <td class="text-center"></td>
-                    </tr>
+                    {QuestionFileHistoryData.length > 0 &&
+                      QuestionFileHistoryData.map((item, index) => (
+                        <tr>
+                          <td class="text-center">{item.SR}</td>
+                          <td class="text-center">{item.fileStatus}</td>
+                          <td class="text-center">{item.fileStatusDate}</td>
+                        </tr>
+                      ))}
                   </tbody>
                 </table>
               </div>

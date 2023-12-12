@@ -2471,6 +2471,8 @@ textarea {
     background-color: #FFF;
     font-size: 17px;
     margin:0px 15px 25px 10px;
+    border: #ccc solid 1px;
+    border-radius: 6px;
 }
 
 .breadcrumb {
@@ -2483,7 +2485,7 @@ textarea {
 
 .bredcrumb ul.breadcrumb li {
     display: inline;
-    font-size: 14px;
+    font-size: 16px;
 }
 
 .bredcrumb ul.breadcrumb li a {
@@ -3193,7 +3195,7 @@ textarea {
 
 
 .main-dashboard-tiles {
-    margin: 20px 0;
+    margin: 20px 0 40px 0;
 }
 
 .main-dashboard-tiles .card {

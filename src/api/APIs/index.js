@@ -796,18 +796,28 @@ export const sendQuestionTranslation = async (id) => {
   }
 };
 //GetQuestionBYId
-export const getAllQuestionBYID = async (id) => {
-  console.log("IDDDDDDD", id);
+export const getAllQuestionByID = async (id) => {
   try {
     const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/questions/${id}`, {
-      // headers: {
-      //   Authorization: `Bearer ${token}`,
-      // }
-    });
-    return response?.data;
+    const [questionResponse, historyResponse] = await Promise.all([
+      axiosClientMMS.get(`/questions/${id}`, {
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // }
+      }),
+      axiosClientMMS.get(`/questions/getQuestionHistories/${id}`, {
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // }
+      }),
+    ]);
+
+    return {
+      question: questionResponse?.data,
+      history: historyResponse?.data,
+    };
   } catch (error) {
-    console.error("Error fetching API endpoint:", error);
+    console.error("Error fetching API endpoints:", error);
     throw error;
   }
 };
