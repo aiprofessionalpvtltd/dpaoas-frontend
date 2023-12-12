@@ -8,28 +8,11 @@ import { DeleteDesignation, getDesignations } from "../../../../../api/APIs";
 import { showErrorMessage, showSuccessMessage } from "../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 
-const data = [
-  {
-    id: 1,
-    name: "IT Administrator",
-    description: "Admin Related Things",
-    designationStatus: "active",
-    createdAt: "2023-11-21T09:08:06.733Z",
-    updatedAt: "2023-11-21T09:08:06.733Z",
-  },
-  {
-    id: 2,
-    name: "HR",
-    description: "Manage Human Resources",
-    designationStatus: "active",
-    createdAt: "2023-11-21T09:08:45.694Z",
-    updatedAt: "2023-11-21T09:08:45.694Z",
-  },
-];
+
 
 function HRMDesignation() {
   const navigate = useNavigate();
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0);
   const [designationData, setDesignationData] = useState([]);
   const pageSize = 4; // Set your desired page size
 
