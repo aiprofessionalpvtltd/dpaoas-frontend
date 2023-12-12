@@ -16,8 +16,7 @@ import {
     showSuccessMessage,
 } from "../../../../utils/ToastAlert";
 import { setPassID } from "../../../../api/Auth";
-import { Worker, Viewer } from "@react-pdf-viewer/core";
-import "@react-pdf-viewer/core/lib/styles/index.css";
+
 
 function VMSDashboard() {
     const navigate = useNavigate();
@@ -68,7 +67,10 @@ function VMSDashboard() {
     const HandlePrint = async (id) => {
         try {
             const response = await getPassPdfBYPassID(id);
-            console.log("response",response);
+            console.log("response", response?.data?.fileLink);
+            const url = `http://172.16.170.8:5152${response?.data?.fileLink}`
+            window.open(url, '_blank')
+            // setPdfUrl(url)
         } catch (error) {
             console.log(error);
         }
@@ -111,7 +113,7 @@ function VMSDashboard() {
     useEffect(() => {
         getPassesData();
     }, []);
-    const version = `2.7.570`;
+
     return (
         <Layout module={true} sidebarItems={VMSsidebarItems} centerlogohide={true}>
             <Header
@@ -120,13 +122,9 @@ function VMSDashboard() {
                 title1={"Passes"}
             />
             <ToastContainer />
-            {pdfUrl && (
-                 <div style={{ width: '100%', height: '500px' }}>
-                 <Worker workerUrl={`https://unpkg.com/pdfjs-dist@${version}/build/pdf.worker.min.js`}>
-                   <Viewer fileUrl={pdfUrl} />
-                 </Worker>
-               </div>
-            )}
+            {/* <div>
+      <iframe title="PDF Viewer" src={pdfUrl} width="100%" height="500px" />
+    </div> */}
             <div class="row">
                 <div class="col-12">
                     <CustomTable

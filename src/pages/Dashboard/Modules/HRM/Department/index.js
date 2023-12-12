@@ -29,7 +29,7 @@ const data = [
 
 function HRMDepartment() {
   const navigate = useNavigate();
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0);
   const [departmentData, setDepartmentData] = useState([])
   // const [count, setCount] = useState(null);
   const pageSize = 4; // Set your desired page size
