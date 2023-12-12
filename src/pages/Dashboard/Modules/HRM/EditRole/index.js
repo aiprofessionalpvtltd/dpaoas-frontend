@@ -9,6 +9,7 @@ import { getModules, getRoleById, updateRole } from "../../../../../api/APIs";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { showSuccessMessage } from "../../../../../utils/ToastAlert";
+import { ToastContainer } from "react-toastify";
 
 const validationSchema = Yup.object({
   roleName: Yup.string().required("Role name is required"),
@@ -21,88 +22,15 @@ function HRMEditRole() {
   };
 
   const location = useLocation();
+  const [roleId, setRoleId] = useState(location?.state ? location.state?.id : null);
 
   const initialValues = {
     roleName: location.state?.name ? location.state?.name : "",
     roledescription: location.state?.description ? location.state?.description : "",
   };
 
-  const [allItems, setAllItems] = useState([
-    {
-      id: "1",
-      "label": "Roles",
-      "hasAccess": [
-          {
-              "id": 2,
-              "name": "Add"
-          },
-          {
-              "id": 1,
-              "name": "View"
-          },
-          {
-            "id": 3,
-            "name": "Edit"
-        },
-        {
-            "id": 4,
-            "name": "Delete"
-        }
-      ],
-      backgroundColors: "#fb9527",
-    },
-    {
-      id: "2",
-      "label": "Question",
-      "hasAccess": [
-        {
-          "id": 7,
-          "name": "Add"
-      },
-      {
-          "id": 8,
-          "name": "View"
-      },
-      {
-        "id": 9,
-        "name": "Edit"
-    },
-    {
-        "id": 10,
-        "name": "Delete"
-    }
-      ],
-      backgroundColors: "#fb3157",
-    },
-  ]);
-  const [permissionsArray, setPermissionsArray] = useState([
-    {
-      id: "1",
-      "label": "Roles",
-      "hasAccess": [
-          {
-              "id": 2,
-              "name": "Add"
-          },
-          {
-              "id": 1,
-              "name": "View"
-          }
-      ],
-      backgroundColors: "#fb9527",
-    },
-    {
-      id: "2",
-      "label": "Question",
-      "hasAccess": [
-          {
-              "id": 8,
-              "name": "View"
-          }
-      ],
-      backgroundColors: "#fb3157",
-    },
-  ]);
+  const [allItems, setAllItems] = useState([]);
+  const [permissionsArray, setPermissionsArray] = useState([]);
 
   const [checkedItems, setCheckedItems] = useState([]);
 
@@ -215,7 +143,7 @@ function HRMEditRole() {
   const fetchModules = async () => {
     try {
       const response = await getModules();
-      setAllItems(response.data?.modulesPermissions)
+      setAllItems(response.data?.modulesPermissions);
     } catch (error) {
       console.log(error);
     }
@@ -223,8 +151,8 @@ function HRMEditRole() {
 
   const fetchModuleById = async () => {
     try {
-      const response = await getRoleById(location.state?.id);
-      // setPermissionsArray(response.data)
+      const response = await getRoleById(roleId);
+      setPermissionsArray(response.data?.permissions)
     } catch (error) {
       console.log(error);
     }
@@ -243,18 +171,18 @@ function HRMEditRole() {
     const data = {
       name: values?.roleName,
       description: values?.roledescription,
-      // permissionsToRemove: [3],
-      permissionToAdd: permissionOptionIds
+      permissionsToUpdate: permissionOptionIds
     };
 
-    // try {
-    //   const response = await updateRole(data);
-    //   if (response.success) {
-    //     showSuccessMessage(response?.message)
-    //   }
-    // } catch (error) {
-    //   console.log(error);
-    // }
+
+    try {
+      const response = await updateRole(roleId, data);
+      if (response.success) {
+        showSuccessMessage(response?.message)
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
   
   const formik = useFormik({
@@ -268,6 +196,7 @@ function HRMEditRole() {
 
   return (
     <Layout module={true} sidebarItems={HRMsidebarItems} centerlogohide={true}>
+      <ToastContainer />
       <Header
         dashboardLink={"/hrm/dashboard"}
         addLink1={"/hrm/dashboard"}
@@ -329,7 +258,7 @@ function HRMEditRole() {
                         )}
                     </div>
                     {checkedItems
-                      .sort((a, b) => a.itemId.localeCompare(b.itemId))
+                      .sort((a, b) => a.itemId===b.itemId)
                       .map((checked, index) => (
                         <CheckedItem
                           key={index}

@@ -52,7 +52,7 @@ export const Login = () => {
     };
     login(data)
       .then((res) => {
-        if (res?.user?.id) {
+        if (res?.token) {
           showSuccessMessage("User loggedIn successfully");
           setTimeout(() => {
             navigation("/");
