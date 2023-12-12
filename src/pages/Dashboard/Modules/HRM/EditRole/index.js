@@ -5,8 +5,14 @@ import { Layout } from "../../../../../components/Layout";
 import { HRMsidebarItems } from "../../../../../utils/sideBarItems";
 import { CheckedItem } from "../../../../../components/EditRole/CheckedItem";
 import { UncheckedItem } from "../../../../../components/EditRole/UncheckedItem";
-import { getPermissionsData } from "../../../../../api/Auth";
-import { getModules } from "../../../../../api/APIs";
+import { getModules, getRoleById, updateRole } from "../../../../../api/APIs";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { showSuccessMessage } from "../../../../../utils/ToastAlert";
+
+const validationSchema = Yup.object({
+  roleName: Yup.string().required("Role name is required"),
+});
 
 function HRMEditRole() {
   const [hiddenItems, setHiddenItems] = useState(null);
@@ -14,30 +20,57 @@ function HRMEditRole() {
     setHiddenItems((prevHiddenItems) => (prevHiddenItems === id ? null : id));
   };
 
-  const userPermissions = getPermissionsData();
   const location = useLocation();
-  // console.log("State", location.state);
-  // console.log("State", userPermissions);
+
+  const initialValues = {
+    roleName: location.state?.name ? location.state?.name : "",
+    roledescription: location.state?.description ? location.state?.description : "",
+  };
+
   const [allItems, setAllItems] = useState([
     {
       id: "1",
-      permission: "Users",
-      option: [
-        { id: 1, label: "View" },
-        { id: 2, label: "Edit" },
-        { id: 3, label: "Create" },
-        { id: 4, label: "Delete" },
+      "label": "Roles",
+      "hasAccess": [
+          {
+              "id": 2,
+              "name": "Add"
+          },
+          {
+              "id": 1,
+              "name": "View"
+          },
+          {
+            "id": 3,
+            "name": "Edit"
+        },
+        {
+            "id": 4,
+            "name": "Delete"
+        }
       ],
       backgroundColors: "#fb9527",
     },
     {
       id: "2",
-      permission: "Role",
-      option: [
-        { id: 1, label: "View" },
-        { id: 2, label: "Edit" },
-        { id: 3, label: "Create" },
-        { id: 4, label: "Delete" },
+      "label": "Question",
+      "hasAccess": [
+        {
+          "id": 7,
+          "name": "Add"
+      },
+      {
+          "id": 8,
+          "name": "View"
+      },
+      {
+        "id": 9,
+        "name": "Edit"
+    },
+    {
+        "id": 10,
+        "name": "Delete"
+    }
       ],
       backgroundColors: "#fb3157",
     },
@@ -45,23 +78,32 @@ function HRMEditRole() {
   const [permissionsArray, setPermissionsArray] = useState([
     {
       id: "1",
-      permission: "Users",
-      option: [
-        { id: 1, label: "View" },
-        { id: 2, label: "Edit" },
+      "label": "Roles",
+      "hasAccess": [
+          {
+              "id": 2,
+              "name": "Add"
+          },
+          {
+              "id": 1,
+              "name": "View"
+          }
       ],
       backgroundColors: "#fb9527",
     },
     {
       id: "2",
-      permission: "Role",
-      option: [
-        { id: 1, label: "View" },
-        { id: 3, label: "Create" },
+      "label": "Question",
+      "hasAccess": [
+          {
+              "id": 8,
+              "name": "View"
+          }
       ],
       backgroundColors: "#fb3157",
     },
   ]);
+
   const [checkedItems, setCheckedItems] = useState([]);
 
   const handleCheckboxChange = (itemId, optionId, permission) => {
@@ -71,7 +113,7 @@ function HRMEditRole() {
         item.option.some((opt) => opt.id === optionId) &&
         item.permission === permission,
     );
-
+  
     if (isChecked) {
       // Item is checked, remove the specific option from the option array within the corresponding permission group.
       setCheckedItems((prevCheckedItems) => {
@@ -101,7 +143,7 @@ function HRMEditRole() {
               id: optionId,
               label: allItems
                 .find((item) => item.id === itemId)
-                ?.option.find((opt) => opt.id === optionId)?.label,
+                ?.hasAccess.find((opt) => opt.id === optionId)?.name,
             },
           ],
         },
@@ -110,78 +152,119 @@ function HRMEditRole() {
   };
 
   const filteredItems = permissionsArray.length
-    ? allItems.map((item) => {
-        const checkedItem = checkedItems.find(
-          (checked) => checked.itemId === item.id,
-        );
-
-        return {
-          ...item,
-          option: item.option.filter(
-            (option) =>
-              !(
-                checkedItem &&
-                checkedItem.option.some(
-                  (checkedOption) => checkedOption.id === option.id,
-                )
-              ),
-          ),
-        };
-      })
-    : allItems;
-
-  useEffect(() => {
-    const initialCheckedItems = permissionsArray.flatMap((permission) =>
-      permission.option.map((option) => ({
-        itemId: permission.id,
-        option: option,
-        permission: permission.permission,
-      })),
-    );
-
-    const outputArr = [];
-
-    initialCheckedItems.forEach((item) => {
-      const existingItem = outputArr.find(
-        (outputItem) =>
-          outputItem.itemId === item.itemId &&
-          outputItem.permission === item.permission,
+  ? allItems.map((item) => {
+      const checkedItem = checkedItems.find(
+        (checked) => checked.itemId === item.id,
       );
 
-      if (existingItem) {
-        existingItem.option.push({
-          id: item.option.id,
-          label: item.option.label,
-        });
-      } else {
-        outputArr.push({
-          itemId: item.itemId,
-          permission: item.permission,
-          option: [
-            {
-              id: item.option.id,
-              label: item.option.label,
-            },
-          ],
-        });
-      }
-    });
+      return {
+        ...item,
+        hasAccess: item.hasAccess.filter(
+          (access) =>
+            !(
+              checkedItem &&
+              checkedItem.option.some(
+                (checkedOption) => checkedOption.id === access.id,
+              )
+            ),
+        ),
+      };
+    })
+  : allItems;
 
-    setCheckedItems(outputArr);
-  }, [permissionsArray]);
-
+    useEffect(() => {
+      const initialCheckedItems = permissionsArray.flatMap((permission) =>
+        permission.hasAccess.map((access) => ({
+          itemId: permission.id,
+          option: access,
+          permission: permission.label,
+        })),
+      );
+    
+      const outputArr = [];
+    
+      initialCheckedItems.forEach((item) => {
+        const existingItem = outputArr.find(
+          (outputItem) =>
+            outputItem.itemId === item.itemId &&
+            outputItem.permission === item.permission,
+        );
+    
+        if (existingItem) {
+          existingItem.option.push({
+            id: item.option.id,
+            label: item.option.name,
+          });
+        } else {
+          outputArr.push({
+            itemId: item.itemId,
+            permission: item.permission,
+            option: [
+              {
+                id: item.option.id,
+                label: item.option.name,
+              },
+            ],
+          });
+        }
+      });
+    
+      setCheckedItems(outputArr);
+    }, [permissionsArray]);
+    
   const fetchModules = async () => {
     try {
       const response = await getModules();
-      console.log(response);
+      setAllItems(response.data?.modulesPermissions)
     } catch (error) {
       console.log(error);
     }
   };
 
+  const fetchModuleById = async () => {
+    try {
+      const response = await getRoleById(location.state?.id);
+      // setPermissionsArray(response.data)
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   useEffect(() => {
+    fetchModuleById();
     fetchModules();
   }, []);
+  
+  const EditRoleApi = async (values) => {
+    const permissionOptionIds = checkedItems.flatMap((item) =>
+      item.option.map((option) => option.id)
+    );
+
+    const data = {
+      name: values?.roleName,
+      description: values?.roledescription,
+      // permissionsToRemove: [3],
+      permissionToAdd: permissionOptionIds
+    };
+
+    // try {
+    //   const response = await updateRole(data);
+    //   if (response.success) {
+    //     showSuccessMessage(response?.message)
+    //   }
+    // } catch (error) {
+    //   console.log(error);
+    // }
+  };
+  
+  const formik = useFormik({
+    initialValues,
+    validationSchema,
+    onSubmit: (values) => {
+      // Handle form submission here
+      EditRoleApi(values);
+    },
+  });
 
   return (
     <Layout module={true} sidebarItems={HRMsidebarItems} centerlogohide={true}>
@@ -199,48 +282,84 @@ function HRMEditRole() {
           </div>
           <div className="card-body pb-5">
             <div className="container-fluid">
-              <div className="row">
-                <div className="col">
-                  <div className="mb-3">
-                    <label className="form-label">Role name * </label>
-                    <input
-                      type="email"
-                      className="form-control"
-                      id="exampleFormControlInput1"
-                      placeholder={location?.state?.name}
-                    />
-                  </div>
-                  {checkedItems
-                    .sort((a, b) => a.itemId.localeCompare(b.itemId))
-                    .map((checked, index) => (
-                      <CheckedItem
-                        key={index}
-                        checked={checked}
-                        handleCheckboxChange={handleCheckboxChange}
+              <form onSubmit={formik.handleSubmit}>
+                <div className="row">
+                  <div className="col">
+                    <div className="mb-3">
+                      <label className="form-label">Role name * </label>
+                      <input
+                        type="text"
+                        className={`form-control ${
+                          formik.touched.roleName && formik.errors.roleName
+                            ? "is-invalid"
+                            : ""
+                        }`}
+                        id="roleName"
+                        placeholder={"Role name"}
+                        value={formik.values.roleName}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
                       />
-                    ))}
+                      {formik.touched.roleName && formik.errors.roleName && (
+                        <div className="invalid-feedback">
+                          {formik.errors.roleName}
+                        </div>
+                      )}
+                    </div>
+                    <div className="mb-3">
+                      <label className="form-label">Description</label>
+                      <textarea
+                        placeholder={formik.values.roledescription}
+                        className={`form-control ${
+                          formik.touched.roledescription &&
+                          formik.errors.roledescription
+                            ? "is-invalid"
+                            : ""
+                        }`}
+                        id="roledescription"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.roledescription}
+                      ></textarea>
+                      {formik.touched.roledescription &&
+                        formik.errors.roledescription && (
+                          <div className="invalid-feedback">
+                            {formik.errors.roledescription}
+                          </div>
+                        )}
+                    </div>
+                    {checkedItems
+                      .sort((a, b) => a.itemId.localeCompare(b.itemId))
+                      .map((checked, index) => (
+                        <CheckedItem
+                          key={index}
+                          checked={checked}
+                          handleCheckboxChange={handleCheckboxChange}
+                        />
+                      ))}
 
-                  <div className="d-grid gap-2 d-md-flex justify-content-md-end">
-                    <button className="btn btn-primary" type="button">
-                      Submit
-                    </button>
+                    <div className="d-grid gap-2 d-md-flex justify-content-md-end">
+                      <button className="btn btn-primary" type="submit">
+                        Submit
+                      </button>
+                    </div>
+                  </div>
+                  <div className="col">
+                    <div className="permisionbox">
+                      {filteredItems.map((item, index) => (
+                        <UncheckedItem
+                          key={index}
+                          item={item}
+                          handleHideShow={handleHideShow}
+                          hiddenItems={hiddenItems}
+                          handleCheckboxChange={handleCheckboxChange}
+                          checkedItems={checkedItems}
+                        />
+                      ))}
+                    </div>
                   </div>
                 </div>
-                <div className="col">
-                  <div className="permisionbox">
-                    {filteredItems.map((item) => (
-                      <UncheckedItem
-                        key={item.id}
-                        item={item}
-                        handleHideShow={handleHideShow}
-                        hiddenItems={hiddenItems}
-                        handleCheckboxChange={handleCheckboxChange}
-                        checkedItems={checkedItems}
-                      />
-                    ))}
-                  </div>
-                </div>
-              </div>
+              </form>
             </div>
           </div>
         </div>
