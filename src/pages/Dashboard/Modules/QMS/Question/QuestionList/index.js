@@ -8,10 +8,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { getAllQuestion, getAllQuestionBYID } from "../../../../../../api/APIs";
 import { ToastContainer } from "react-toastify";
-import {
-  showErrorMessage,
-  showSuccessMessage,
-} from "../../../../../../utils/ToastAlert";
+import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
 const validationSchema = Yup.object({
   sessionNumber: Yup.string().required("Session No is required"),
   category: Yup.string(),
@@ -80,9 +77,7 @@ function QMSQuestionList() {
         NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate,
         NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
         SessionNumber: res?.session?.sessionName,
-        SubjectMatter: [res?.englishText, res?.urduText]
-          .filter(Boolean)
-          .join(", "),
+        SubjectMatter: [res?.englishText, res?.urduText].filter(Boolean).join(", "),
         Category: res.questionCategory,
         // SubmittedBy: res.category,
         Status: res.questionStatus?.questionStatus,
@@ -130,10 +125,7 @@ function QMSQuestionList() {
 
       <div class="container-fluid">
         <div class="card mt-4">
-          <div
-            class="card-header red-bg"
-            style={{ background: "#14ae5c !important" }}
-          >
+          <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
             <h1>Question List</h1>
           </div>
           <div class="card-body">
@@ -147,21 +139,15 @@ function QMSQuestionList() {
                         type="text"
                         placeholder={formik.values.sessionNumber}
                         className={`form-control ${
-                          formik.touched.sessionNumber &&
-                          formik.errors.sessionNumber
-                            ? "is-invalid"
-                            : ""
+                          formik.touched.sessionNumber && formik.errors.sessionNumber ? "is-invalid" : ""
                         }`}
                         id="sessionNumber"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
-                      {formik.touched.sessionNumber &&
-                        formik.errors.sessionNumber && (
-                          <div className="invalid-feedback">
-                            {formik.errors.sessionNumber}
-                          </div>
-                        )}
+                      {formik.touched.sessionNumber && formik.errors.sessionNumber && (
+                        <div className="invalid-feedback">{formik.errors.sessionNumber}</div>
+                      )}
                     </div>
                   </div>
                   <div class="col">
@@ -246,7 +232,7 @@ function QMSQuestionList() {
                     </div>
                   </div>
                 </div>
-                <div class="row">
+                <div class="row mb-3">
                   <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                     <button class="btn btn-primary" type="submit">
                       Generate
