@@ -2471,6 +2471,8 @@ textarea {
     background-color: #FFF;
     font-size: 17px;
     margin:0px 15px 25px 10px;
+    border: #ccc solid 1px;
+    border-radius: 6px;
 }
 
 .breadcrumb {
