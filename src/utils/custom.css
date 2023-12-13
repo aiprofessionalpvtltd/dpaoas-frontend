@@ -616,6 +616,10 @@ h1,
 .table.red-bg-head th {
     background: #666;
     color: #FFF;
+    font-size: 14px;
+}
+.table td{
+    font-size: 13px;
 }
 
 .p-0 {
