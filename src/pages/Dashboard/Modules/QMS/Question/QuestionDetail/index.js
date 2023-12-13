@@ -200,13 +200,18 @@ function QMSQuestionDetail() {
 
   //Deffer History
   const transfrerDefferHistoryData = (apiData) => {
-    return apiData.map((leave, index) => ({
-      SR: `${index + 1}`,
-      defferToSession: leave?.session?.sessionName,
-      defferOn: leave?.deferredDate,
-      deferredBy: leave?.deferredBy,
-      revivalDate: leave?.createdAt
-    }));
+    if (Array.isArray(apiData)) {
+      return apiData.map((leave, index) => ({
+        SR: `${index + 1}`,
+        defferToSession: leave?.session?.sessionName,
+        defferOn: leave?.deferredDate,
+        deferredBy: leave?.deferredBy,
+        revivalDate: leave?.createdAt
+      }));
+    } else {
+      // Handle the case when apiData is not an array (e.g., "No defer data found")
+      return [];
+    }
   };
 
   const QuestionDefferHistoryData = transfrerDefferHistoryData(

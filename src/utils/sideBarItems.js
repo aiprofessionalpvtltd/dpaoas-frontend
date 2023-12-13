@@ -301,11 +301,11 @@ export const QMSSideBarItems = [
                 link: "/qms/question/list",
                 icon: faClipboardList
             },
-            {
-                itemName: "Question Detail",
-                link: "/qms/question/detail",
-                icon: faClipboardList
-            },
+            // {
+            //     itemName: "Question Detail",
+            //     link: "/qms/question/detail",
+            //     icon: faClipboardList
+            // },
             {
                 itemName: "New Question",
                 link: "/qms/question/new",
@@ -356,11 +356,11 @@ export const QMSSideBarItems = [
                 link: "/qms/notice/notice-resolution",
                 icon: faClipboardList
             },
-            {
-                itemName: "Notice Resolution Detail",
-                link: "/qms/notice/notice-resolution-detail",
-                icon: faClipboardList
-            },
+            // {
+            //     itemName: "Notice Resolution Detail",
+            //     link: "/qms/notice/notice-resolution-detail",
+            //     icon: faClipboardList
+            // },
 
         ],
     },

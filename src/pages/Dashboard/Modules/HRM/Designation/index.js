@@ -13,6 +13,7 @@ import { ToastContainer } from "react-toastify";
 function HRMDesignation() {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(0);
+  const [count, setCount] = useState(null)
   const [designationData, setDesignationData] = useState([]);
   const pageSize = 4; // Set your desired page size
 
@@ -34,6 +35,7 @@ function HRMDesignation() {
     try {
       const response = await getDesignations(currentPage, pageSize);
       if (response?.success) {
+        setCount(response?.count);
         const transformedData = transformDesignationData(response?.data);
         setDesignationData(transformedData)
       }
@@ -80,6 +82,7 @@ function HRMDesignation() {
             pageSize={pageSize}
             // handlePrint={}
             // handleUser={}
+            totalCount={count}
             handleDelete={(item) => handleDelete(item.id)}
           />
         </div>

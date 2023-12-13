@@ -4,37 +4,72 @@ import Header from "../../../../../../components/Header";
 import { QMSSideBarItems } from "../../../../../../utils/sideBarItems";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { useLocation } from "react-router";
+import { UpdateResolution, sendResolutionForTranslation } from "../../../../../../api/APIs";
+import { showSuccessMessage } from "../../../../../../utils/ToastAlert";
+import { ToastContainer } from "react-toastify";
 const validationSchema = Yup.object({
-  sessionNo: Yup.number().required("Session Number is required"),
-  noticeOfficeDiaryNo: Yup.number().required(
-    "Notice Office Diary Number is required",
-  ),
-  noticeOfficeDiaryDate: Yup.string(),
-  noticeOfficeDiaryTime: Yup.string(),
+  sessionNo: Yup.number(),
+  noticeOfficeDiaryNo: Yup.number(),
+  noticeOfficeDiaryDate: Yup.string().required("Notice Office Diary Date is required"),
+  noticeOfficeDiaryTime: Yup.string().required("Notice Office Diary Time is required"),
   resolutionType: Yup.string(),
   resolutionStatus: Yup.string(),
-  resolutionMovers: Yup.string(),
+  resolutionMovers: Yup.array(),
 });
 
 function QMSNoticeResolutionDetail() {
+  const location = useLocation()
+  console.log("dksfifsdpoipfosdpfiopf", location.state.id);
   const formik = useFormik({
     initialValues: {
-      sessionNo: "",
-      noticeOfficeDiaryNo: "",
-      noticeOfficeDiaryDate: "",
-      noticeOfficeDiaryTime: "",
+      sessionNo: location?.state?.session?.sessionName,
+      noticeOfficeDiaryNo: location?.state?.noticeDiary?.noticeOfficeDiaryNo,
+      noticeOfficeDiaryDate: location?.state?.noticeDiary?.noticeOfficeDiaryDate,
+      noticeOfficeDiaryTime: location?.state?.noticeDiary?.noticeOfficeDiaryTime,
       resolutionType: "",
       resolutionStatus: "",
       resolutionMovers: "",
     },
-    validationSchema: validationSchema,
+    // validationSchema: validationSchema,
     onSubmit: (values) => {
       // Handle form submission here
-      console.log(values);
+      hendleUpdate(values);
     },
   });
+
+  const hendleUpdate = async (values) => {
+    const data = new FormData()
+    data.append('noticeOfficeDiaryDate', values.noticeOfficeDiaryDate)
+    data.append('noticeOfficeDiaryTime', values.noticeOfficeDiaryTime)
+    data.append('resolutionType', values.resolutionType)
+    data.append('fkResolutionStatus', values.resolutionStatus)
+    data.append('resolutionMovers[]', values.resolutionMovers)
+    data.append('resolutionDiaryNo', location?.state?.noticeDiary?.noticeOfficeDiaryNo)
+
+    try {
+      const response = await UpdateResolution(location.state.id, data)
+      if (response?.success) {
+        showSuccessMessage(response.message)
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const hendleSendResolutionForTranslation = async () => {
+    try {
+      const response = await sendResolutionForTranslation(location?.state?.id)
+      if (response?.success) {
+        showSuccessMessage(response.message)
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
+      <ToastContainer />
       <Header
         dashboardLink={"/"}
         addLink1={"/qms/dashboard"}
@@ -59,21 +94,14 @@ function QMSNoticeResolutionDetail() {
                       <label class="form-label">Session No</label>
                       <input
                         type="text"
+                        readOnly={true}
                         placeholder={formik.values.sessionNo}
-                        className={`form-control ${
-                          formik.touched.sessionNo && formik.errors.sessionNo
-                            ? "is-invalid"
-                            : ""
-                        }`}
+                        className={`form-control`}
                         id="sessionNo"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
-                      {formik.touched.sessionNo && formik.errors.sessionNo && (
-                        <div className="invalid-feedback">
-                          {formik.errors.sessionNo}
-                        </div>
-                      )}
+
                     </div>
                   </div>
                   <div class="col">
@@ -82,22 +110,11 @@ function QMSNoticeResolutionDetail() {
                       <input
                         type="text"
                         placeholder={formik.values.noticeOfficeDiaryNo}
-                        className={`form-control ${
-                          formik.touched.noticeOfficeDiaryNo &&
-                          formik.errors.noticeOfficeDiaryNo
-                            ? "is-invalid"
-                            : ""
-                        }`}
+                        className={`form-control`}
                         id="noticeOfficeDiaryNo"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
+                        readOnly={true}
                       />
-                      {formik.touched.noticeOfficeDiaryNo &&
-                        formik.errors.noticeOfficeDiaryNo && (
-                          <div className="invalid-feedback">
-                            {formik.errors.noticeOfficeDiaryNo}
-                          </div>
-                        )}
+
                     </div>
                   </div>
                   <div class="col">
@@ -106,12 +123,11 @@ function QMSNoticeResolutionDetail() {
                       <input
                         type="text"
                         placeholder={formik.values.noticeOfficeDiaryDate}
-                        className={`form-control ${
-                          formik.touched.noticeOfficeDiaryDate &&
-                          formik.errors.noticeOfficeDiaryDate
+                        className={`form-control ${formik.touched.noticeOfficeDiaryDate &&
+                            formik.errors.noticeOfficeDiaryDate
                             ? "is-invalid"
                             : ""
-                        }`}
+                          }`}
                         id="noticeOfficeDiaryDate"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -132,12 +148,11 @@ function QMSNoticeResolutionDetail() {
                       <input
                         type="text"
                         placeholder={formik.values.noticeOfficeDiaryTime}
-                        className={`form-control ${
-                          formik.touched.noticeOfficeDiaryTime &&
-                          formik.errors.noticeOfficeDiaryTime
+                        className={`form-control ${formik.touched.noticeOfficeDiaryTime &&
+                            formik.errors.noticeOfficeDiaryTime
                             ? "is-invalid"
                             : ""
-                        }`}
+                          }`}
                         id="noticeOfficeDiaryTime"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -162,6 +177,16 @@ function QMSNoticeResolutionDetail() {
                         onBlur={formik.handleBlur}
                       >
                         <option>Select</option>
+                        <option value="Government Resolution">
+                          Government Resolution
+                        </option>
+                        <option value="Private Member Resolution">
+                          Private Member Resolution
+                        </option>
+                        <option value="Govt. Resolution Supported by others">
+                          Govt. Resolution Supported by others
+                        </option>
+
                       </select>
                     </div>
                   </div>
@@ -175,6 +200,7 @@ function QMSNoticeResolutionDetail() {
                         onBlur={formik.handleBlur}
                       >
                         <option>Select</option>
+                        <option value={"1"}>inactive</option>
                       </select>
                     </div>
                   </div>
@@ -188,6 +214,7 @@ function QMSNoticeResolutionDetail() {
                         onBlur={formik.handleBlur}
                       >
                         <option>Select</option>
+                        <option value={"1"}>Saqib Khan</option>
                       </select>
                     </div>
                   </div>
@@ -200,7 +227,7 @@ function QMSNoticeResolutionDetail() {
                     <button class="btn btn-primary" type="submit">
                       Save
                     </button>
-                    <button class="btn btn-primary" type="">
+                    <button class="btn btn-primary" type="button" onClick={() => hendleSendResolutionForTranslation()}>
                       Send for Translation
                     </button>
                   </div>

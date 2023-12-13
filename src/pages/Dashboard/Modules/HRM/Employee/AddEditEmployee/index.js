@@ -10,7 +10,7 @@ import * as Yup from "yup";
 import DatePicker from "react-datepicker";
 import { UpdateEmployee, createEmployee } from "../../../../../../api/APIs";
 import { ToastContainer } from "react-toastify";
-import { showSuccessMessage } from "../../../../../../utils/ToastAlert";
+import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
 
 const validationSchema = Yup.object({
   employeename: Yup.string().required("Employee name is required"),
@@ -72,17 +72,26 @@ function HRMAddEditEmployee() {
 
   const UpdateEmployeeApi = async (values) => {
     const data = {
-      name: values?.departmentName,
-      description: values?.description,
-      desginationStatus: values.status,
-    };
+      firstName: values.fatherhusbandname,
+      lastName: "string",
+      userName: values.employeename,
+      phoneNo: values.permanentaddress,
+      gender: "string",
+      email: "test@test.com",
+      password: "string",
+      fileNumber: values.filenumber,
+      supervisor: 0,
+      fkRoleId: 0,
+      fkDepartmentId: 0,
+      fkDesignationId: 0
+    }
     try {
       const response = await UpdateEmployee(location?.state?.id, data);
       if (response.success) {
         showSuccessMessage(response.message)
       }
     } catch (error) {
-      console.log(error);
+      showErrorMessage(error.response.data.message);
     }
   };
   return (
@@ -115,8 +124,8 @@ function HRMAddEditEmployee() {
                         type="text"
                         placeholder={formik.values.filenumber}
                         className={`form-control ${formik.touched.filenumber && formik.errors.filenumber
-                            ? "is-invalid"
-                            : ""
+                          ? "is-invalid"
+                          : ""
                           }`}
                         id="filenumber"
                         onChange={formik.handleChange}
@@ -137,9 +146,9 @@ function HRMAddEditEmployee() {
                         type="text"
                         placeholder={formik.values.employeename}
                         className={`form-control ${formik.touched.employeename &&
-                            formik.errors.employeename
-                            ? "is-invalid"
-                            : ""
+                          formik.errors.employeename
+                          ? "is-invalid"
+                          : ""
                           }`}
                         id="employeename"
                         onChange={formik.handleChange}
@@ -179,9 +188,9 @@ function HRMAddEditEmployee() {
                         type="text"
                         placeholder={formik.values.fatherhusbandname}
                         className={`form-control ${formik.touched.fatherhusbandname &&
-                            formik.errors.fatherhusbandname
-                            ? "is-invalid"
-                            : ""
+                          formik.errors.fatherhusbandname
+                          ? "is-invalid"
+                          : ""
                           }`}
                         id="fatherhusbandname"
                         onChange={formik.handleChange}
@@ -236,8 +245,8 @@ function HRMAddEditEmployee() {
                         type="text"
                         placeholder={formik.values.cnicnumber}
                         className={`form-control ${formik.touched.cnicnumber && formik.errors.cnicnumber
-                            ? "is-invalid"
-                            : ""
+                          ? "is-invalid"
+                          : ""
                           }`}
                         id="cnicnumber"
                         onChange={formik.handleChange}
@@ -325,9 +334,9 @@ function HRMAddEditEmployee() {
                       <textarea
                         placeholder={formik.values.permanentaddress}
                         className={`form-control ${formik.touched.permanentaddress &&
-                            formik.errors.permanentaddress
-                            ? "is-invalid"
-                            : ""
+                          formik.errors.permanentaddress
+                          ? "is-invalid"
+                          : ""
                           }`}
                         id="permanentaddress"
                         onChange={formik.handleChange}

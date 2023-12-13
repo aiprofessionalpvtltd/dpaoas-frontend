@@ -48,7 +48,7 @@ function SentQuestion() {
       return {
         SrNo: index,
         QID: res.id,
-        QDN: res.questionDiary,
+        QDN: res.fkQuestionDiaryId,
         NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate,
         NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
         SessionNumber: res?.session?.sessionName,

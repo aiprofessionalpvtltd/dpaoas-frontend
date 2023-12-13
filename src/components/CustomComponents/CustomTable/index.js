@@ -287,6 +287,7 @@ function CustomTable({
                     )}
                   </td>
                 ))}
+                {!ActionHide && (
                 <td className="text-center">
                   {!hideEditIcon && !hideEditIcon && (
                     <>
@@ -356,6 +357,7 @@ function CustomTable({
                     </OverlayTrigger>
                   )}
                 </td>
+                )}
               </tr>
             ))}
           </tbody>
