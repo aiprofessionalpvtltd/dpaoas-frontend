@@ -31,7 +31,7 @@ function HRMDepartment() {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(0);
   const [departmentData, setDepartmentData] = useState([])
-  // const [count, setCount] = useState(null);
+  const [count, setCount] = useState(null);
   const pageSize = 4; // Set your desired page size
 
   const handlePageChange = (page) => {
@@ -53,6 +53,8 @@ function HRMDepartment() {
       if (response?.success) {
         const transformedData = transformDepartmentData(response?.data);
         console.log("lsdflsdjljfkl", transformedData);
+        setCount(response?.count);
+
         setDepartmentData(transformedData)
       }
     } catch (error) {
@@ -99,6 +101,7 @@ function HRMDepartment() {
             pageSize={pageSize}
             // handlePrint={}
             // handleUser={}
+            totalCount={count}
             handleDelete={(item) => handleDelete(item.id)}
           />
         </div>

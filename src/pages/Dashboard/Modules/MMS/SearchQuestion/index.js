@@ -7,11 +7,13 @@ import Header from "../../../../../components/Header";
 import { Field, Form, Formik } from "formik";
 import { showErrorMessage, showSuccessMessage } from "../../../../../utils/ToastAlert";
 import { searchQuestion } from "../../../../../api/APIs";
+import { ToastContainer } from "react-toastify";
 
 function MMSSearchQuestion() {
   const navigate = useNavigate();
   const [searchedData, setSearchedData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
+  console.log("Search Datatta",searchedData);
   const [count, setCount] = useState(null);
   const pageSize = 4; // Set your desired page size
 
@@ -39,13 +41,12 @@ function MMSSearchQuestion() {
       return {
         SrNo: index,
         QID: res?.id,
-        QDN: res?.questionDiary,
+        QDN: res?.fkQuestionDiaryId,
         NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate,
         NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
         SessionNumber: res?.session?.sessionName,
         SubjectMatter: [res?.englishText, res?.urduText].filter(Boolean).join(", "),
         Category: res?.questionCategory,
-        // SubmittedBy: res.category,
         Status: res.questionStatus?.questionStatus,
       };
     });
@@ -73,7 +74,7 @@ function MMSSearchQuestion() {
       const response = await searchQuestion(searchParams);
       if (response?.success) {
         showSuccessMessage(response?.message);
-        setCount(response.data?.count);
+        setCount(response?.data?.count);
         const transformedData = transformLeavesData(response.data);
         setSearchedData(transformedData);
       }
@@ -90,6 +91,7 @@ function MMSSearchQuestion() {
         addLink2={"/mms/question/search"}
         title2={"Search Queston"}
       />
+      <ToastContainer />
       <div class="container-fluid">
         <div class="card mt-1">
           <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
@@ -134,9 +136,9 @@ function MMSSearchQuestion() {
                           <label className="form-label">From Session</label>
                           <Field as="select" className="form-select" name="fromSession">
                             <option>Select</option>
-                            <option>121</option>
-                            <option>122</option>
-                            <option>123</option>
+                            <option value={"1"}>121</option>
+                            <option value={"2"}>122</option>
+                            <option value={"3"}>123</option>
                           </Field>
                         </div>
                       </div>
@@ -157,6 +159,7 @@ function MMSSearchQuestion() {
                         <div className="mb-3">
                           <label className="form-label">Category</label>
                           <Field as="select" className="form-select" name="category">
+                            <option value="" selected disabled hidden>select</option>
                             <option value="Starred">Starred</option>
                             <option value="UnStarred">UnStarred</option>
                             <option value="Short Notice">Short Notice</option>

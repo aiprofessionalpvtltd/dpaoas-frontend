@@ -28,10 +28,10 @@ const data = [
 ];
 function HRMEmployeeDashboard() {
   const navigate = useNavigate();
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0);
   const [employeeData, setEmployeeData] = useState([])
 
-  // const [count, setCount] = useState(null);
+  const [count, setCount] = useState(null);
   const pageSize = 4; // Set your desired page size
 
   const handlePageChange = (page) => {
@@ -48,9 +48,9 @@ function HRMEmployeeDashboard() {
       phoneNo: leave.phoneNo,
       gender: leave.gender,
       fileNumber: leave.fileNumber,
-      supervisor: leave.supervisor,
-      fkDepartmentId: leave.fkDepartmentId,
-      fkDesignationId: leave.fkDesignationId,
+      // supervisor: leave.supervisor,
+      departmentName: leave.department.departmentName,
+      designation: leave.designation.designationName,
 
     }));
   };
@@ -58,6 +58,7 @@ function HRMEmployeeDashboard() {
     try {
       const response = await getAllEmployee(currentPage, pageSize);
       if (response?.success) {
+        setCount(response?.count);
         const transformedData = transformEmployeeData(response?.data);
         setEmployeeData(transformedData)
       }
@@ -105,6 +106,7 @@ function HRMEmployeeDashboard() {
             pageSize={pageSize}
             // handlePrint={}
             // handleUser={}
+            totalCount={count}
             handleDelete={(item) => handleDelete(item.id)}
           />
         </div>

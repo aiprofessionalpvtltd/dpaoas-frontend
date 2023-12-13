@@ -704,6 +704,55 @@ export const DeleteResolution = async (id) => {
   }
 };
 
+export const getResolutionBYID = async (id) => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientMMS.get(`/resolution/${id}`)
+    // {
+    //   headers: {
+    //     Authorization: `Bearer ${token}`,
+    //   }
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error('Error fetching API endpoint:', error);
+    throw error;
+  }
+};
+
+export const UpdateResolution = async (id, data) => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientMMS.put(`/resolution/update/${id}`, data, {
+      headers: {
+        accept: "application/json",
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const sendResolutionForTranslation = async (id) => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientMMS.put(`/resolution/sendTranslation/${id}`)
+    //  {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
 // Question Module
 export const createQuestion = async (data) => {
   try {

@@ -1,11 +1,128 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Layout } from "../../../../../../components/Layout";
 import { QMSSideBarItems } from "../../../../../../utils/sideBarItems";
 import Header from "../../../../../../components/Header";
+import { useFormik } from "formik";
+import { ToastContainer } from "react-toastify";
+import { getAllQuestionStatus, getResolutionBYID, searchResolution } from "../../../../../../api/APIs";
+import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
+import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
+import { useNavigate } from "react-router";
 
 function QMSNoticeResolution() {
+const navigate = useNavigate()
+  const [currentPage, setCurrentPage] = useState(0);
+  const [searchedData, setSearchedData] = useState([]);
+  const [allResolutionStatus, setAllResolutionStatus] = useState([]);
+
+  const pageSize = 4;
+
+  const formik = useFormik({
+    initialValues: {
+    resolutionDiaryNo: "",
+    resolutionID: "",
+    keyword: "",
+    memberName: "",
+    fromSession: "",
+    toSession: "",
+    resolutionType: "",
+    resolutionStatus: "",
+    fromNoticeDate: "",
+    toNoticeDate: "",
+    colourResNo: "",
+    noticeOfficeDiaryNo: "",
+    },
+    
+    onSubmit: (values) => {
+      // Handle form submission here
+      SearchResolutionApi(values);
+    },
+  });
+
+  const handlePageChange = (page) => {
+    // Update currentPage when a page link is clicked
+    setCurrentPage(page);
+  };
+
+  const transformLeavesData = (apiData) => {
+    return apiData.map((res) => {
+      const movers =
+        res?.resolutionMoversAssociation.map(
+          (item) => item?.memberAssociation?.memberName,
+        ) || [];
+
+      return {
+        RID: res.id,
+        ResDN: res.resolutionDiaries,
+        SessionNumber: res.session?.sessionName,
+        ResolutionType: res.resolutionType,
+       
+        NoticeNo: res.noticeDiary?.noticeOfficeDiaryNo,
+        ResolutionStatus: res.resolutionStatus?.resolutionStatus,
+        Movers: movers,
+      };
+    });
+  };
+
+
+  const SearchResolutionApi = async (values) => {
+    const searchParams = {
+      fkSessionNoFrom: values.fromSession,
+      fkSessionNoTo: values.toSession,
+      resolutionType: values.resolutionType,
+      colourResNo: values.colourResNo,
+      keyword: values.keyword,
+      resolutionId: values.resolutionID,
+      resolutionDiaryNo: values.resolutionDiaryNo,
+      fkResolutionStatus: values.resolutionStatus,
+      noticeOfficeDiaryNo: values.noticeOfficeDiaryNo,
+      noticeOfficeDiaryDateFrom: values.fromNoticeDate,
+      noticeOfficeDiaryDateTo: values.toNoticeDate,
+      resolutionMovers: "",
+    };
+
+    try {
+      const response = await searchResolution(searchParams);
+      if (response?.success) {
+        const transformedData = transformLeavesData(response.data);
+        setSearchedData(transformedData);
+        showSuccessMessage(response?.message);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  };
+
+  const GetALlStatus = async () => {
+    try {
+      const response = await getAllQuestionStatus();
+      if (response?.success) {
+        setAllResolutionStatus(response?.data);
+        // showSuccessMessage(response.message)
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleEdit = async (id) => {
+    try {
+      const response = await getResolutionBYID(id)
+      if (response?.success) {
+        navigate("/qms/notice/notice-resolution-detail", { state: response?.data });
+    }
+    } catch (error) {
+      showErrorMessage(error.response.data.message)
+    }
+  }
+
+
+  useEffect(() => {
+    GetALlStatus();
+  }, []);
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
+      <ToastContainer />
       <Header
         dashboardLink={"/"}
         addLink1={"/qms/dashboard"}
@@ -23,29 +140,42 @@ function QMSNoticeResolution() {
           </div>
           <div class="card-body">
             <div class="container-fluid">
+            <form onSubmit={formik.handleSubmit}>
               <div class="row">
                 <div class="col">
                   <div class="mb-3">
                     <label class="form-label">Notice Diary No</label>
-                    <input class="form-control" type="text" />
+                    <input class="form-control" type="text"  id="noticeOfficeDiaryNo"
+                        placeholder={formik.values.noticeOfficeDiaryNo}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}/>
                   </div>
                 </div>
                 <div class="col">
                   <div class="mb-3">
                     <label class="form-label">Resolution ID</label>
-                    <input class="form-control" type="text" />
+                    <input class="form-control" type="text" id="resolutionID"
+                        placeholder={formik.values.resolutionID}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}/>
                   </div>
                 </div>
                 <div class="col">
                   <div class="mb-3">
                     <label class="form-label">Keyword</label>
-                    <input class="form-control" type="text" />
+                    <input class="form-control" type="text" id="keyword"
+                        placeholder={formik.values.keyword}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}/>
                   </div>
                 </div>
                 <div class="col">
                   <div class="mb-3">
                     <label class="form-label">Member Name</label>
-                    <input class="form-control" type="text" />
+                    <input class="form-control" type="text" id="memberName"
+                        placeholder={formik.values.memberName}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}/>
                   </div>
                 </div>
               </div>
@@ -53,7 +183,10 @@ function QMSNoticeResolution() {
                 <div class="col">
                   <div class="mb-3">
                     <label class="form-label">From Session</label>
-                    <select class="form-select">
+                    <select class="form-select" id="fromSession"
+                        placeholder={formik.values.fromSession}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}>
                       <option>Select</option>
                       <option>121</option>
                       <option>122</option>
@@ -64,7 +197,10 @@ function QMSNoticeResolution() {
                 <div class="col">
                   <div class="mb-3">
                     <label class="form-label">To Session</label>
-                    <select class="form-select">
+                    <select class="form-select" id="toSession"
+                        placeholder={formik.values.toSession}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}>
                       <option>Select</option>
                       <option>121</option>
                       <option>122</option>
@@ -75,7 +211,10 @@ function QMSNoticeResolution() {
                 <div class="col">
                   <div class="mb-3">
                     <label class="form-label">Resolution Type</label>
-                    <select class="form-select">
+                    <select class="form-select" id="resolutionType"
+                        placeholder={formik.values.resolutionType}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}>
                       <option>Select</option>
                       <option>121</option>
                       <option>122</option>
@@ -86,11 +225,19 @@ function QMSNoticeResolution() {
                 <div class="col">
                   <div class="mb-3">
                     <label class="form-label">Resolution Status</label>
-                    <select class="form-select">
-                      <option>Select</option>
-                      <option>121</option>
-                      <option>122</option>
-                      <option>123</option>
+                    <select class="form-select" id="resolutionStatus"
+                        placeholder={formik.values.resolutionStatus}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}>
+                    <option value="" selected disabled hidden>
+                              select
+                            </option>
+                            {allResolutionStatus &&
+                              allResolutionStatus.map((item) => (
+                                <option key={item.id} value={item.id}>
+                                  {item?.questionStatus}
+                                </option>
+                              ))}
                     </select>
                   </div>
                 </div>
@@ -99,13 +246,19 @@ function QMSNoticeResolution() {
                 <div class="col">
                   <div class="mb-3">
                     <label class="form-label">From Notice Date</label>
-                    <input class="form-control" type="text" />
+                    <input class="form-control" type="text" id="fromNoticeDate"
+                        placeholder={formik.values.fromNoticeDate}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}/>
                   </div>
                 </div>
                 <div class="col">
                   <div class="mb-3">
                     <label class="form-label">To Notice Date</label>
-                    <input class="form-control" type="text" />
+                    <input class="form-control" type="text" id="toNoticeDate"
+                        placeholder={formik.values.toNoticeDate}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}/>
                   </div>
                 </div>
               </div>
@@ -114,54 +267,29 @@ function QMSNoticeResolution() {
                   <button class="btn btn-primary" type="submit">
                     Search
                   </button>
-                  <button class="btn btn-primary" type="submit">
+                  <button class="btn btn-primary" type="">
                     Reset
                   </button>
                 </div>
               </div>
-              <div class="dash-detail-container" style={{ marginTop: "20px" }}>
-                <table class="table red-bg-head th">
-                  <thead>
-                    <tr>
-                      <th class="text-center" scope="col">
-                        Sr#
-                      </th>
-                      <th class="text-center" scope="col">
-                        Notce No./Date
-                      </th>
-                      <th class="text-center" scope="col">
-                        Session Number
-                      </th>
-                      <th class="text-center" scope="col">
-                        Resolution Type
-                      </th>
-                      <th class="text-center" scope="col">
-                        Subject Matter
-                      </th>
-                      <th class="text-center" scope="col">
-                        Resolution Status
-                      </th>
-                      <th class="text-center" scope="col">
-                        Action
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td class="text-center">1</td>
-                      <td class="text-center"></td>
-                      <td class="text-center"></td>
-                      <td class="text-center"></td>
-                      <td class="text-center"></td>
-                      <td class="text-center"></td>
-                      <td class="text-center">
-                        <button class="btn btn-primary" type="submit">
-                          Print
-                        </button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+              </form>
+              <div class="" style={{ marginTop: "20px" }}>
+              <CustomTable
+                // block={true}
+                data={searchedData}
+                tableTitle=""
+                headerShown={true}
+                // seachBarShow={true}
+                handlePageChange={handlePageChange}
+                currentPage={currentPage}
+                pageSize={pageSize}
+                headertitlebgColor={"#666"}
+                headertitletextColor={"#FFF"}
+                // handlePrint={}
+                // handleUser={}
+                handleEdit={(item) => handleEdit(item.RID)}
+                handleDelete={(item) => alert(item.id)}
+              />
               </div>
             </div>
           </div>
