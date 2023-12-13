@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await loginUser(data);
       if (response.data) {
-        setAuthToken(response?.data?.user?.id);
+        setAuthToken(response?.data?.token);
         if(roles) {
           setRolesData(roles);
           const res = CheckPermission(response?.data?.user?.roleName, roles, response?.data?.permissions);

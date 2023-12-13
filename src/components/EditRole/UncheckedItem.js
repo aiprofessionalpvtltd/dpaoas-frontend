@@ -8,14 +8,16 @@ export const UncheckedItem = ({
   hiddenItems,
   handleCheckboxChange,
   checkedItems,
+  bgColor
 }) => {
   return (
     <div key={item.id}>
       <Link
         className="hideDetailsButton primaryButton2"
+        style={{ backgroundColor: bgColor }}
         onClick={() => handleHideShow(item.id)}
       >
-        {item.permission}
+        {item.label}
         <img
           id="rotate-icon1"
           src={arrowLeft}
@@ -26,31 +28,33 @@ export const UncheckedItem = ({
       {hiddenItems === item.id && (
         <div className="main-role">
           <div className="row mb-3">
-            {item.option.map((option) => (
-              <div className="col-6 mb-3" key={option.id}>
+            {item.hasAccess.map((access) => (
+              <div className="col-6 mb-3" key={access.id}>
                 <div
-                  data-id="orange"
+                  data-id={bgColor}
                   className="select-op-sm-orangeBG"
-                  style={{ borderLeft: `8px solid ` }}
+                  style={{ borderLeft: `8px solid ${bgColor}` }}
                 >
                   <input
                     type="checkbox"
                     name="role_permissions[]"
-                    value={option.id}
+                    value={access.id}
                     className="cls-permission"
-                    id={`cb-${option.id}`}
-                    data-id={option.id}
+                    id={`cb-${access.id}`}
+                    data-id={access.id}
                     data-ajax="1"
                     checked={checkedItems.some(
                       (checkedItem) =>
                         checkedItem.itemId === item.id &&
-                        checkedItem.optionId === option.id,
+                        checkedItem.option.some(
+                          (checkedOption) => checkedOption.id === access.id
+                        )
                     )}
                     onChange={() =>
-                      handleCheckboxChange(item.id, option.id, item.permission)
+                      handleCheckboxChange(item.id, access.id, item.label)
                     }
                   />
-                  {option?.label}
+                  {access?.name}
                 </div>
               </div>
             ))}

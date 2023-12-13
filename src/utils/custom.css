@@ -3195,7 +3195,7 @@ textarea {
 
 
 .main-dashboard-tiles {
-    margin: 20px 0;
+    margin: 20px 0 40px 0;
 }
 
 .main-dashboard-tiles .card {
@@ -3273,6 +3273,18 @@ textarea {
 
 .greybg {
     background: #7f7f7f !important;
+}
+
+.darkGreenbg {
+    background: #00cfbe !important;
+}
+
+.lightGreen {
+    background: #1b4b59 !important;
+}
+
+.orangebg {
+    background: #ee8449 !important;
 }
 
 .purplebg {

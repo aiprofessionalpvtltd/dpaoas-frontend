@@ -12,13 +12,14 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
     resolution: null,
   });
   const location = useLocation();
+
   const basePathNotice = location.pathname.substring(0, location.pathname.lastIndexOf("/notice") + 7);
   const basePathMotion = location.pathname.substring(0, location.pathname.indexOf("/mms") + 4);
   const basePathQuestion = location.pathname.substring(0, location.pathname.lastIndexOf("/qms") + 4);
 
-  const shouldRenderNotice = basePathNotice.includes("/notice");
-  const shouldRenderMotion = basePathMotion.includes("/mms");
-  const shouldRenderQuestion = basePathQuestion.includes("/qms");
+  const shouldRenderNotice = basePathNotice === "/notice";
+  const shouldRenderMotion = basePathMotion === "/mms";
+  const shouldRenderQuestion = basePathQuestion === "/qms";
 
   const toggleSidebar = () => {
     setSidebarVisible(!sidebarVisible);
@@ -88,12 +89,12 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
             {shouldRenderNotice ? (
               <>
                 <div class="tab-right me-4 mt-1 mb-4">
-                  <button>Motion{count?.motion && <span>{count.motion}</span>}</button>
-                  <button>
+                  <a href={"/notice/motion/sent"}><button>Motion{count?.motion && <span>{count.motion}</span>}</button></a>
+                  <a href={"/notice/resolution/sent"}><button>
                     Resolution
                     {count?.resolution && <span>{count.resolution}</span>}
-                  </button>
-                  <button>Questions{count?.question && <span>{count.question}</span>}</button>
+                  </button></a>
+                  <a href={"/notice/resolution/sent"}><button>Questions{count?.question && <span>{count.question}</span>}</button></a>
                 </div>
                 <div class="clearfix"></div>
               </>
@@ -101,10 +102,10 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
               <>
                 <div class="tab-right me-4 mt-1 mb-4" style={{ width: "310px" }}>
                   <button>Translations{count?.question && <span>{count?.question}</span>}</button>
-                  <button>
+                  <a href={"/mms/motion/list"}><button>
                     Notice Motions
                     {count?.motion && <span>{count.motion}</span>}
-                  </button>
+                  </button></a>
                 </div>
                 <div class="clearfix"></div>
               </>
