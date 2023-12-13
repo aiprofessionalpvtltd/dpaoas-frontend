@@ -206,6 +206,7 @@ export const NoticeSidebarItems = [
             {
                 itemName: "Manage Seating Plan",
                 link: "/notice/seatingplan/manage-seating-plan",
+                target: "blank",
                 icon: faClipboardList
             }
         ],

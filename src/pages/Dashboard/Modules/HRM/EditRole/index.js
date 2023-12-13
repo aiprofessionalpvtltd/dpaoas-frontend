@@ -101,7 +101,24 @@ function HRMEditRole() {
           ),
         };
       })
-    : allItems;
+    : allItems.map((item) => {
+      const checkedItem = checkedItems.find(
+        (checked) => checked.itemId === item.id
+      );
+
+      return {
+        ...item,
+        hasAccess: item.hasAccess.filter(
+          (access) =>
+            !(
+              checkedItem &&
+              checkedItem.option.some(
+                (checkedOption) => checkedOption.id === access.id
+              )
+            )
+        ),
+      };
+    });
 
   useEffect(() => {
     const initialCheckedItems = permissionsArray.flatMap((permission) =>

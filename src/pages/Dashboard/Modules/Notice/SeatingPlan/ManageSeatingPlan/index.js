@@ -80,14 +80,20 @@ function ManageSeatingPlan() {
       name: "انور لال دین",
       seatNo: 102,
     },
+    {
+      id: 9,
+      name: "انور لال دین",
+      seatNo: 101,
+    },
   ];
 
   return (
-    <Layout
-      module={true}
-      sidebarItems={NoticeSidebarItems}
-      centerlogohide={true}
-    >
+    // <Layout
+    //   module={true}
+    //   sidebarItems={NoticeSidebarItems}
+    //   centerlogohide={true}
+    // >
+    <>
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={() => setIsOpen(false)}
@@ -164,31 +170,6 @@ function ManageSeatingPlan() {
         </div>
       </Modal>
 
-      <Header
-        dashboardLink={"/"}
-        addLink1={"/notice/dashboard"}
-        addLink2={"/notice/seatingplan/manage-seating-plan"}
-        title1={"Notice"}
-        title2={"Seating Plan"}
-      />
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <button class="btn btn-primary" onClick={(e) => setFullScreen(true)}>
-          View in full mode
-        </button>
-      </div>
-
-      <FullScreen
-        isFullScreen={isFullScreen}
-        onChange={(isFull) => {
-          setFullScreen(isFull);
-        }}
-      >
         <div
           style={{
             overflowY: "auto",
@@ -881,8 +862,7 @@ function ManageSeatingPlan() {
             </div>
           </div>
         </div>
-      </FullScreen>
-    </Layout>
+      </>
   );
 }
 

@@ -82,6 +82,7 @@ export const Sidebar = ({ sidebarItems }) => {
                             location.pathname === sub.link ? "active" : ""
                           }`}
                           href={sub.link}
+                          target={sub?.target}
                         >
                           <FontAwesomeIcon
                             icon={sub.icon}
