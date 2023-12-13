@@ -129,6 +129,9 @@ function CustomTable({
           </div>
         )}
 
+        {data.length <= 0 && (
+          <div style={{ textAlign: 'center', marginTop: "30px", fontSize: "20px" }}>No data found :(</div>
+        )}
         <table
           className="table table-striped red-bg-head"
           style={{ marginTop: "20px", display: block ? "block" : "" }}
@@ -150,7 +153,7 @@ function CustomTable({
                   {formatHeader(key)}
                 </th>
               ))}
-              {data.length > 0 ? (
+              {data.length > 0 && (
                 !ActionHide && (
                   <th
                     className="text-center"
@@ -167,8 +170,6 @@ function CustomTable({
                     Actions
                   </th>
                 )
-              ) : (
-                <div>No data found :(</div>
               )}
             </tr>
           </thead>

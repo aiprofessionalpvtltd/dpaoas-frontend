@@ -239,24 +239,24 @@ function MMSMotionList() {
                   </div>
                 </div>
               </form>
-              <CustomTable
-                block={true}
-                data={motionData}
-                headerShown={true}
-                handleDelete={(item) => alert(item.id)}
-                handleEdit={(item) => handleEdit(item.id)}
-                headertitlebgColor={"#666"}
-                headertitletextColor={"#FFF"}
-                handlePageChange={handlePageChange}
-                currentPage={currentPage}
-                pageSize={pageSize}
-
-                // handlePrint={}
-                // handleUser={}
-                // handleDelete={(item) => handleDelete(item.id)}
-              />
+              <div className="mt-3 mb-3">
+                <CustomTable
+                  block={true}
+                  data={motionData}
+                  tableTitle="Motion Data"
+                  headerShown={true}
+                  handleDelete={(item) => alert(item.id)}
+                  handleEdit={(item) => handleEdit(item.id)}
+                  headertitlebgColor={"#666"}
+                  headertitletextColor={"#FFF"}
+                  handlePageChange={handlePageChange}
+                  currentPage={currentPage}
+                  pageSize={pageSize}
+                />
+              </div>
               <CustomTable
                 data={ministryData}
+                tableTitle="Ministry Data"
                 headerShown={true}
                 handleDelete={(item) => alert(item.id)}
                 handleEdit={(item) => navigate("/mms/motion/detail", { state: item })}
@@ -265,9 +265,6 @@ function MMSMotionList() {
                 handlePageChange={handlePageChange}
                 currentPage={currentPage}
                 pageSize={pageSize}
-                // handlePrint={}
-                // handleUser={}
-                // handleDelete={(item) => handleDelete(item.id)}
               />
             </div>
           </div>
