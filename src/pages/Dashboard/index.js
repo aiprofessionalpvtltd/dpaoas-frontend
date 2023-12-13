@@ -6,6 +6,9 @@ import {
   faUserCog,
   faMailBulk,
   faClipboardList,
+  faBullhorn,
+  faFileImport,
+  faClipboardQuestion
 } from "@fortawesome/free-solid-svg-icons";
 import { AuthContext } from "../../api/AuthContext";
 import { getPermissionsData } from "../../api/Auth";
@@ -53,13 +56,13 @@ function Dashboard() {
 
                 <div class="row main-dashboard-tiles">
                     <div class="col-4">
-                        <Tiles title={"Notice Management System"} link={"/notice/question/new"} type={""} cardbg={"bluebg"} icon={faClipboardList} />
+                        <Tiles title={"Notice Management System"} link={"/notice/question/new"} type={""} cardbg={"darkGreenbg"} icon={faBullhorn} />
                     </div>
                     <div class="col-4">
-                        <Tiles title={"Motion Management System"} link={"/mms/motion/list"} type={""} cardbg={"bluebg"} icon={faClipboardList} />
+                        <Tiles title={"Motion Management System"} link={"/mms/motion/list"} type={""} cardbg={"lightGreen"} icon={faFileImport} />
                     </div>
                     <div class="col-4">
-                        <Tiles title={"Question Management System"} link={"/qms/search/question"} type={""} cardbg={"bluebg"} icon={faClipboardList} />
+                        <Tiles title={"Question Management System"} link={"/qms/search/question"} type={""} cardbg={"orangebg"} icon={faClipboardQuestion} />
                     </div>
                 </div>
             </div>

@@ -1,6 +1,6 @@
 import React from "react";
 
-export const CheckedItem = ({ checked, handleCheckboxChange }) => {
+export const CheckedItem = ({ checked, handleCheckboxChange, bgColor }) => {
   return (
     <div className="mb-3">
       <label className="form-label">{checked?.permission}</label>
@@ -9,9 +9,9 @@ export const CheckedItem = ({ checked, handleCheckboxChange }) => {
           {checked?.option?.map((optionItem, index) => (
             <div className="col-md-6 select-fix parent_selector" key={index}>
               <div
-                data-id="orange"
+                data-id={bgColor}
                 className="select-op-sm-orangeBG"
-                style={{ borderLeft: `8px solid ` }}
+                style={{ borderLeft: `8px solid ${bgColor}` }}
               >
                 <input
                   type="checkbox"

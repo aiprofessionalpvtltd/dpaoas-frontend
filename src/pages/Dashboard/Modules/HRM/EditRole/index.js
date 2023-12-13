@@ -22,11 +22,15 @@ function HRMEditRole() {
   };
 
   const location = useLocation();
-  const [roleId, setRoleId] = useState(location?.state ? location.state?.id : null);
+  const [roleId, setRoleId] = useState(
+    location?.state ? location.state?.id : null
+  );
 
   const initialValues = {
     roleName: location.state?.name ? location.state?.name : "",
-    roledescription: location.state?.description ? location.state?.description : "",
+    roledescription: location.state?.description
+      ? location.state?.description
+      : "",
   };
 
   const [allItems, setAllItems] = useState([]);
@@ -39,9 +43,9 @@ function HRMEditRole() {
       (item) =>
         item.itemId === itemId &&
         item.option.some((opt) => opt.id === optionId) &&
-        item.permission === permission,
+        item.permission === permission
     );
-  
+
     if (isChecked) {
       // Item is checked, remove the specific option from the option array within the corresponding permission group.
       setCheckedItems((prevCheckedItems) => {
@@ -52,7 +56,7 @@ function HRMEditRole() {
                 permission: permission,
                 option: item.option.filter((opt) => opt.id !== optionId),
               }
-            : item,
+            : item
         );
       });
     } else {
@@ -64,8 +68,7 @@ function HRMEditRole() {
           permission: permission,
           option: [
             ...(prevCheckedItems.find(
-              (item) =>
-                item.itemId === itemId && item.permission === permission,
+              (item) => item.itemId === itemId && item.permission === permission
             )?.option || []), // Use existing options if available
             {
               id: optionId,
@@ -80,66 +83,66 @@ function HRMEditRole() {
   };
 
   const filteredItems = permissionsArray.length
-  ? allItems.map((item) => {
-      const checkedItem = checkedItems.find(
-        (checked) => checked.itemId === item.id,
-      );
-
-      return {
-        ...item,
-        hasAccess: item.hasAccess.filter(
-          (access) =>
-            !(
-              checkedItem &&
-              checkedItem.option.some(
-                (checkedOption) => checkedOption.id === access.id,
-              )
-            ),
-        ),
-      };
-    })
-  : allItems;
-
-    useEffect(() => {
-      const initialCheckedItems = permissionsArray.flatMap((permission) =>
-        permission.hasAccess.map((access) => ({
-          itemId: permission.id,
-          option: access,
-          permission: permission.label,
-        })),
-      );
-    
-      const outputArr = [];
-    
-      initialCheckedItems.forEach((item) => {
-        const existingItem = outputArr.find(
-          (outputItem) =>
-            outputItem.itemId === item.itemId &&
-            outputItem.permission === item.permission,
+    ? allItems.map((item) => {
+        const checkedItem = checkedItems.find(
+          (checked) => checked.itemId === item.id
         );
-    
-        if (existingItem) {
-          existingItem.option.push({
-            id: item.option.id,
-            label: item.option.name,
-          });
-        } else {
-          outputArr.push({
-            itemId: item.itemId,
-            permission: item.permission,
-            option: [
-              {
-                id: item.option.id,
-                label: item.option.name,
-              },
-            ],
-          });
-        }
-      });
-    
-      setCheckedItems(outputArr);
-    }, [permissionsArray]);
-    
+
+        return {
+          ...item,
+          hasAccess: item.hasAccess.filter(
+            (access) =>
+              !(
+                checkedItem &&
+                checkedItem.option.some(
+                  (checkedOption) => checkedOption.id === access.id
+                )
+              )
+          ),
+        };
+      })
+    : allItems;
+
+  useEffect(() => {
+    const initialCheckedItems = permissionsArray.flatMap((permission) =>
+      permission.hasAccess.map((access) => ({
+        itemId: permission.id,
+        option: access,
+        permission: permission.label,
+      }))
+    );
+
+    const outputArr = [];
+
+    initialCheckedItems.forEach((item) => {
+      const existingItem = outputArr.find(
+        (outputItem) =>
+          outputItem.itemId === item.itemId &&
+          outputItem.permission === item.permission
+      );
+
+      if (existingItem) {
+        existingItem.option.push({
+          id: item.option.id,
+          label: item.option.name,
+        });
+      } else {
+        outputArr.push({
+          itemId: item.itemId,
+          permission: item.permission,
+          option: [
+            {
+              id: item.option.id,
+              label: item.option.name,
+            },
+          ],
+        });
+      }
+    });
+
+    setCheckedItems(outputArr);
+  }, [permissionsArray]);
+
   const fetchModules = async () => {
     try {
       const response = await getModules();
@@ -152,17 +155,17 @@ function HRMEditRole() {
   const fetchModuleById = async () => {
     try {
       const response = await getRoleById(roleId);
-      setPermissionsArray(response.data?.permissions)
+      setPermissionsArray(response.data?.permissions);
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   useEffect(() => {
     fetchModuleById();
     fetchModules();
   }, []);
-  
+
   const EditRoleApi = async (values) => {
     const permissionOptionIds = checkedItems.flatMap((item) =>
       item.option.map((option) => option.id)
@@ -171,20 +174,19 @@ function HRMEditRole() {
     const data = {
       name: values?.roleName,
       description: values?.roledescription,
-      permissionsToUpdate: permissionOptionIds
+      permissionsToUpdate: permissionOptionIds,
     };
-
 
     try {
       const response = await updateRole(roleId, data);
       if (response.success) {
-        showSuccessMessage(response?.message)
+        showSuccessMessage(response?.message);
       }
     } catch (error) {
       console.log(error);
     }
   };
-  
+
   const formik = useFormik({
     initialValues,
     validationSchema,
@@ -193,6 +195,39 @@ function HRMEditRole() {
       EditRoleApi(values);
     },
   });
+
+  const colors = [
+    "#1b4b59",
+    "#fb3157",
+    "#53d769",
+    "#fd3d3a",
+    "#d925e0",
+    "#345e9a",
+    "#2ab4c0",
+    "#d08008",
+    "#357A54",
+    "#7f4902",
+    "#b74242",
+    "#8537a7",
+    "#d1c937",
+    "#49e6bf",
+    "#3f00ff",
+    "#471a0b",
+    "#d925e0",
+    "#b58eaa",
+    "#a32f0a",
+    "#d96e00",
+    "#098689",
+    "#157efb",
+    "#cddc39",
+    "#7f4902",
+    "#bf7c7c",
+    "#990000",
+    "#fb9527",
+    "#099113",
+    "#39dc39",
+    "#2a0c7a",
+  ];
 
   return (
     <Layout module={true} sidebarItems={HRMsidebarItems} centerlogohide={true}>
@@ -258,11 +293,16 @@ function HRMEditRole() {
                         )}
                     </div>
                     {checkedItems
-                      .sort((a, b) => a.itemId===b.itemId)
+                      .sort((a, b) => {
+                        const itemIdA = String(a?.itemId || ""); // Convert to string
+                        const itemIdB = String(b?.itemId || ""); // Convert to string
+                        return itemIdA.localeCompare(itemIdB);
+                      })
                       .map((checked, index) => (
                         <CheckedItem
                           key={index}
                           checked={checked}
+                          bgColor={colors[index]}
                           handleCheckboxChange={handleCheckboxChange}
                         />
                       ))}
@@ -281,6 +321,7 @@ function HRMEditRole() {
                           item={item}
                           handleHideShow={handleHideShow}
                           hiddenItems={hiddenItems}
+                          bgColor={colors[index]}
                           handleCheckboxChange={handleCheckboxChange}
                           checkedItems={checkedItems}
                         />

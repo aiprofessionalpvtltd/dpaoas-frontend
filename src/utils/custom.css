@@ -3275,6 +3275,18 @@ textarea {
     background: #7f7f7f !important;
 }
 
+.darkGreenbg {
+    background: #00cfbe !important;
+}
+
+.lightGreen {
+    background: #1b4b59 !important;
+}
+
+.orangebg {
+    background: #ee8449 !important;
+}
+
 .purplebg {
     background: linear-gradient(to bottom, #7a46a0 0%, #7030a0 100%);
 }

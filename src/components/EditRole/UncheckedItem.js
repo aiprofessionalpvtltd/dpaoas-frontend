@@ -8,11 +8,13 @@ export const UncheckedItem = ({
   hiddenItems,
   handleCheckboxChange,
   checkedItems,
+  bgColor
 }) => {
   return (
     <div key={item.id}>
       <Link
         className="hideDetailsButton primaryButton2"
+        style={{ backgroundColor: bgColor }}
         onClick={() => handleHideShow(item.id)}
       >
         {item.label}
@@ -29,9 +31,9 @@ export const UncheckedItem = ({
             {item.hasAccess.map((access) => (
               <div className="col-6 mb-3" key={access.id}>
                 <div
-                  data-id={item?.backgroundColors}
+                  data-id={bgColor}
                   className="select-op-sm-orangeBG"
-                  style={{ borderLeft: `8px solid ${item?.backgroundColors}` }}
+                  style={{ borderLeft: `8px solid ${bgColor}` }}
                 >
                   <input
                     type="checkbox"
