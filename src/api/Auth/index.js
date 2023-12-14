@@ -7,10 +7,20 @@ export const getAuthToken = () => {
   return authToken && JSON.parse(authToken);
 };
 
+export const setUserData = (data) => {
+  localStorage.setItem("userData", JSON.stringify(data));
+};
+
+export const getUserData = () => {
+  const userData = localStorage.getItem("userData");
+  return userData && JSON.parse(userData);
+};
+
 export const logout = () => {
   localStorage.removeItem("userToken");
   localStorage.removeItem("roles");
   localStorage.removeItem("permissions");
+  localStorage.removeItem("userData");
 };
 
 // Roles

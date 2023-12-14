@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Layout } from "../../components/Layout";
 import { Tiles } from "../../components/CustomComponents/Tiles";
 import {
@@ -8,20 +8,59 @@ import {
   faClipboardList,
   faBullhorn,
   faFileImport,
-  faClipboardQuestion
+  faClipboardQuestion,
 } from "@fortawesome/free-solid-svg-icons";
 import { AuthContext } from "../../api/AuthContext";
-import { getPermissionsData } from "../../api/Auth";
+import { getPermissionsData, getUserData, setPermissionsData, setRolesData } from "../../api/Auth";
+import { getRoles } from "../../api/APIs";
+import { CheckPermission } from "../../utils/permissionsConfig";
 
 function Dashboard() {
-  const permissions = getPermissionsData();
-  // console.log(permissions);
+  const [roles, setRoles] = useState([]);
+  const { permissions } = useContext(AuthContext);
+  const [permissionsLocal, setPermissionsLocal] = useState([]);
+  const userRole = getUserData();
+  
+  useEffect(() => {    
+    const fetchRoles = async () => {
+      try {
+        const response = await getRoles();
+        setRoles(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchRoles();
+  }, []);
+
+  
+  useEffect(() => {
+    if (roles) {
+      setRolesData(roles);
+      const localPermissionsData = getPermissionsData();
+      setPermissionsLocal(localPermissionsData);
+  
+      // Check if permissions exist and has length
+      if (permissions && permissions.length > 0) {
+        const res = CheckPermission(userRole?.role?.name, roles, permissions);
+        setPermissionsData(res?.permissions);
+        setPermissionsLocal(res?.permissions);
+      } else {
+        // Handle the case when permissions are empty or undefined
+        // For example, set default permissions
+        setPermissionsData(localPermissionsData);
+        setPermissionsLocal(localPermissionsData);
+      }
+    }
+  }, [roles, permissions]);  
+
   return (
     <Layout>
       <div class="dashboard-content" style={{ marginTop: "100px" }}>
         <div class="clearfix"></div>
         <div class="row main-dashboard-tiles">
-          {/* {(permissions?.Leave?.canView || permissions?.LeaveHistory?.canView) && ( */}
+          {/* {(permissionsLocal?.Leave?.canView || permissionsLocal?.LeaveHistory?.canView) && ( */}
           <div class="col-4">
             <Tiles
               title={"Leave Management System"}
@@ -32,7 +71,7 @@ function Dashboard() {
             />
           </div>
           {/* )} */}
-          {/* {(permissions?.Roles?.canView || permissions?.Employees?.canView || permissions?.Departments?.canView || permissions?.Designation?.canView) && ( */}
+          {/* {(permissionsLocal?.Roles?.canView || permissionsLocal?.Employees?.canView || permissionsLocal?.Departments?.canView || permissionsLocal?.Designation?.canView) && ( */}
           <div class="col-4">
             <Tiles
               title={"Organizational Dashboard"}
@@ -54,21 +93,38 @@ function Dashboard() {
           </div>
         </div>
 
-                <div class="row main-dashboard-tiles">
-                    <div class="col-4">
-                        <Tiles title={"Notice Management System"} link={"/notice/question/new"} type={""} cardbg={"darkGreenbg"} icon={faBullhorn} />
-                    </div>
-                    <div class="col-4">
-                        <Tiles title={"Motion Management System"} link={"/mms/motion/list"} type={""} cardbg={"lightGreen"} icon={faFileImport} />
-                    </div>
-                    <div class="col-4">
-                        <Tiles title={"Question Management System"} link={"/qms/search/question"} type={""} cardbg={"orangebg"} icon={faClipboardQuestion} />
-                    </div>
-                </div>
-            </div>
-
-        </Layout>
-    )
+        <div class="row main-dashboard-tiles">
+          <div class="col-4">
+            <Tiles
+              title={"Notice Management System"}
+              link={"/notice/question/new"}
+              type={""}
+              cardbg={"darkGreenbg"}
+              icon={faBullhorn}
+            />
+          </div>
+          <div class="col-4">
+            <Tiles
+              title={"Motion Management System"}
+              link={"/mms/motion/list"}
+              type={""}
+              cardbg={"lightGreen"}
+              icon={faFileImport}
+            />
+          </div>
+          <div class="col-4">
+            <Tiles
+              title={"Question Management System"}
+              link={"/qms/search/question"}
+              type={""}
+              cardbg={"orangebg"}
+              icon={faClipboardQuestion}
+            />
+          </div>
+        </div>
+      </div>
+    </Layout>
+  );
 }
 
 export default Dashboard;

@@ -4,7 +4,7 @@ export const CheckPermission = (role, roles, permissions) => {
   const roleNames = roles?.map(role => role.name);
   const modulePermissions = {};
 
-  permissions.forEach((module) => {
+  permissions?.forEach((module) => {
     if (roleNames?.includes(role)) {
       modulePermissions[module.label] = {
         canView: module.hasAccess.includes("View"),
