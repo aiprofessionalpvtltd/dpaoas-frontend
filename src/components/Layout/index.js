@@ -80,9 +80,11 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
   }, [shouldRenderNotice, shouldRenderQuestion, shouldRenderMotion]);
 
   return (
+    <>
     <div className="container-fluid">
       {module && <Sidebar sidebarItems={sidebarItems} />}
       {module ? (
+        <>
         <main className="dashboard-app" style={{ marginLeft: "220px" }}>
           <CustomNavbar toggleSidebar={toggleSidebar} module={module} centerlogohide={centerlogohide} />
           <div className="dashboard-content">
@@ -94,7 +96,7 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
                     Resolution
                     {count?.resolution && <span>{count.resolution}</span>}
                   </button></a>
-                  <a href={"/notice/resolution/sent"}><button>Questions{count?.question && <span>{count.question}</span>}</button></a>
+                  <a href={"/notice/question/sent"}><button>Questions{count?.question && <span>{count.question}</span>}</button></a>
                 </div>
                 <div class="clearfix"></div>
               </>
@@ -114,11 +116,11 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
                 <>
                   <div class="tab-right me-4 mt-1 mb-4" style={{ width: "528px" }}>
                     <button>Translations{count?.motion && <span>{count?.motion}</span>}</button>
-                    <button>
+                    <a href={"/qms/resolution/list"}><button>
                       Notice Resolutions
                       {count?.resolution && <span>{count.resolution}</span>}
-                    </button>
-                    <button>Notice Questions{count?.question && <span>{count.question}</span>}</button>
+                    </button></a>
+                    <a href={"/qms/question/list"}><button>Notice Questions{count?.question && <span>{count.question}</span>}</button></a>
                   </div>
                   <div class="clearfix"></div>
                 </>
@@ -126,17 +128,20 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
             )}
             <div className="container-fluid">{children}</div>
           </div>
-          <div class="footer">© Copyright AI Professionals</div>
         </main>
+          </>
       ) : (
+        <>
         <main>
           <CustomNavbar toggleSidebar={toggleSidebar} />
           <div className="dashboard-content">
             <div className="container-fluid">{children}</div>
           </div>
-          <div class="footer">© Copyright AI Professionals</div>
         </main>
+          </>
       )}
     </div>
+    <div class="footer">© Copyright AI Professionals</div>
+    </>
   );
 };

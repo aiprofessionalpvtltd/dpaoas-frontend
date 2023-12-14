@@ -9,6 +9,8 @@ import { getAllLeaves, getWhosOnLeave } from "../../../../api/APIs";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { showErrorMessage, showSuccessMessage } from "../../../../utils/ToastAlert";
+import moment from "moment";
+import Moment from "react-moment";
 
 const data = [
   {
@@ -83,9 +85,10 @@ const onleaveData = [
 function LMSDashboard() {
     const navigate = useNavigate();
     const [leaveData, setLeaveData] = useState([]);
+    const [whoOnLeave, setWhoOnLeave] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
-    // const [count, setCount] = useState(null);
-    const pageSize = 10; // Set your desired page size
+    const [count, setCount] = useState(null);
+    const pageSize = 4; // Set your desired page size
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
@@ -97,8 +100,8 @@ function LMSDashboard() {
       id: leave.id,
       name: `${leave.leavefirstName} ${leave.leavelastName}`,
       leaveType: leave.requestLeaveSubType,
-      startDate: leave.requestStartDate,
-      endDate: leave.requestEndDate,
+      startDate: moment(leave.requestStartDate).format('YYYY/MM/DD'),
+      endDate: moment(leave.requestEndDate).format('YYYY/MM/DD'),
       totalDays: leave.requestNumberOfDays,
       reason: leave.requestLeaveReason,
       leaveStatus: leave.requestStatus,
@@ -110,8 +113,8 @@ function LMSDashboard() {
     try {
       const response = await getAllLeaves(currentPage, pageSize);
       if (response?.success) {
-        showSuccessMessage(response?.message);
-        const transformedData = transformLeavesData(response.data);
+        setCount(response?.data?.counts);
+        const transformedData = transformLeavesData(response.data?.result);
         setLeaveData(transformedData);
       }
     } catch (error) {
@@ -122,17 +125,11 @@ function LMSDashboard() {
   const getWhosOnLeaveApi = async () => {
     try {
       const currentDate = new Date();
-
-      const year = currentDate.getFullYear();
-      const month = String(currentDate.getMonth() + 1).padStart(2, "0"); // Months are zero-based
-      const day = String(currentDate.getDate()).padStart(2, "0");
-
-      const formattedDate = `${year}-${month}-${day}`;
+      const formattedDate = moment(currentDate).format('YYYY-MM-DD');
 
       const response = await getWhosOnLeave(formattedDate, formattedDate, 1);
       if (response?.success) {
-        showSuccessMessage(response?.message);
-        // setLeaveData(response);
+        setWhoOnLeave(response?.data);
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -190,11 +187,12 @@ function LMSDashboard() {
             handlePageChange={handlePageChange}
             currentPage={currentPage}
             pageSize={pageSize}
+            totalCount={count}
             // handleDelete={(item) => handleDelete(item.id)}
           />
         </div>
         <div class="col-3">
-          <div class="dash-detail-container" style={{ marginTop: "20px" }}>
+          <div class="dash-detail-container">
             <div class="dash-card">
               <div class="dash-card-header green-bg">
                 <h2>Who is on Leave</h2>
@@ -208,12 +206,12 @@ function LMSDashboard() {
                   }}
                   class="float-start"
                 >
-                  ON leave :{" "}
-                  <span style={{ color: "red" }}>{onleaveData?.length}</span>
+                  On leave :{" "}
+                  <span style={{ color: "red" }}>{whoOnLeave?.length}</span>
                 </h3>
                 <div class="clearfix"></div>
-                {onleaveData &&
-                  onleaveData.map((item, index) => (
+                {whoOnLeave &&
+                  whoOnLeave.map((item, index) => (
                     <div class="d-flex flex-row" key={index}>
                       <img
                         style={{ marginBottom: "30px", marginRight: "15px" }}
@@ -224,18 +222,25 @@ function LMSDashboard() {
                         alt="logo"
                       />
                       <div class="w-100">
-                        <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex flex-row justify-content-between align-items-center">
                           <div class="d-flex flex-row align-items-center">
-                            <span class="mr-2">{item.name}</span>
+                            <span class="mr-2">{item.userfirstName} {item.userlastName}</span>
                           </div>
+                          <p
+                            class="text-justify comment-text mb-0"
+                            style={{ textAlign: "left" }}
+                          >
+                            <span>
+                              {item.requestLeaveReason}
+                            </span>
+                          </p>
                         </div>
                         <p
                           class="text-justify comment-text mb-0"
                           style={{ textAlign: "left" }}
                         >
                           <span>
-                            {item.date}
-                            <span>{item.leaveType}</span>
+                            {<Moment format="MMMM DD">{item.requestStartDate}</Moment>} - {<Moment format="MMMM DD">{item.requestEndDate}</Moment>}
                           </span>
                         </p>
                       </div>

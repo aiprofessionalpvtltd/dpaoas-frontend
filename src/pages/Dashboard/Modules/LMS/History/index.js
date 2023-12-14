@@ -1,48 +1,91 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Layout } from "../../../../../components/Layout";
 import { LMSsidebarItems } from "../../../../../utils/sideBarItems";
 import CustomTable from "../../../../../components/CustomComponents/CustomTable";
 import { useNavigate } from "react-router-dom";
 import Header from "../../../../../components/Header";
 import DatePicker from "react-datepicker";
+import { useFormik } from "formik";
+import moment from "moment";
+import { searchLeaveHistory } from "../../../../../api/APIs";
+import { showErrorMessage, showSuccessMessage } from "../../../../../utils/ToastAlert";
+import { CustomAlert } from "../../../../../components/CustomComponents/CustomAlert";
+import { ToastContainer } from "react-toastify";
 
-const data = [
-  {
-    id: 1,
-    name: "Saqib Khan",
-    leaveType: "Sick",
-    startDate: "11/02/2023",
-    endDate: "11/02/2023",
-    days: "30",
-    reason: "Filling Not Good",
-    leaveStatus: "Approved",
-    submittedTo: "Mohsin",
-  },
-  {
-    id: 2,
-    name: "Mohsin Khan",
-    leaveType: "Sick",
-    startDate: "11/02/2023",
-    endDate: "11/02/2023",
-    days: "30",
-    reason: "Filling Not Good",
-    leaveStatus: "Approved",
-    submittedTo: "Mohsin",
-  },
-];
 function LMSHistory() {
   const navigate = useNavigate();
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
-    // const [count, setCount] = useState(null);
+  const [data, setData] = useState(null);
+  const [historyData, setHistoryData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
+  const [showModal, setShowModal] = useState(false);
     // const [count, setCount] = useState(null);
-  const pageSize = 3; // Set your desired page size
+  const pageSize = 4; // Set your desired page size
+
+  const handleShow = () => setShowModal(true);
+  const handleClose = () => setShowModal(false);
+  const handleOkClick = () => {
+    if(data) {
+      searchHistoryApi(data);
+    }
+    handleClose();
+  };
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
     setCurrentPage(page);
   };
+
+  const formik = useFormik({
+    initialValues: {
+      startDate: "",
+      endDate: "",
+      employeeName: "",
+      departmentName: "",
+    },
+    onSubmit: (values) => {
+        // Handle form submission here
+        handleShow();
+        setData(values);
+    },
+  });
+
+  const transformLeavesData = (apiData) => {
+    return apiData.map((leave) => ({
+      id: leave.id,
+      name: `${leave.userfirstName} ${leave.userlastName}`,
+      leaveType: leave.requestLeaveSubType,
+      startDate: moment(leave.requestStartDate).format('YYYY/MM/DD'),
+      endDate: moment(leave.requestEndDate).format('YYYY/MM/DD'),
+      NoOfLeaves: leave.requestNumberOfDays,
+      reason: leave.requestLeaveReason,
+      leaveStatus: leave.requestStatus,
+      submittedTo: leave.leavesubmittedTofirstName,
+    }));
+  };
+
+  const searchHistoryApi = async (values) => {
+    try {
+      const params = {
+        startDate: moment(values.startDate).format('YYYY-MM-DD'),
+        endDate: moment(values.endDate).format('YYYY-MM-DD'),
+        employeeName: values.employeeName,
+        departmentName: values.departmentName,
+      }
+
+      const response = await searchLeaveHistory(params);
+      if (response?.success) {
+        showSuccessMessage(response.message);
+        const transformedData = transformLeavesData(response.data);
+        setHistoryData(transformedData);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  };
+
+  useEffect(() => {
+    searchHistoryApi();
+  }, [currentPage]);
 
   return (
     <Layout module={true} sidebarItems={LMSsidebarItems} centerlogohide={true}>
@@ -51,81 +94,114 @@ function LMSHistory() {
         addLink1={"/lms/history"}
         title1={"History"}
       />
+      <ToastContainer />
+      <CustomAlert
+        showModal={showModal}
+        handleClose={handleClose}
+        handleOkClick={handleOkClick}
+      />
+
       <div class="card">
         <div class="card-header red-bg" style={{ background: "#14ae5c" }}>
           <h1>Leave History</h1>
         </div>
         <div class="card-body">
-          <div class="container-fluid">
-            <div class="row">
-              <div class="col">
-                <div class="mb-3">
-                  <label class="form-label">Department</label>
-                  <select class="form-select">
-                    <option>IT</option>
-                    <option>Admin</option>
-                    <option>Finance</option>
-                  </select>
+          <form onSubmit={formik.handleSubmit}>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col">
+                  <div class="mb-3">
+                    <label class="form-label">Department</label>
+                    <select 
+                      class="form-select"
+                      placeholder={formik.values.departmentName}
+                      value={formik.values.departmentName}
+                      id="departmentName"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                    >
+                      <option value={""} selected disabled hidden>
+                          select
+                      </option>
+                      <option  value={1}>IT</option>
+                      <option  value={2}>Admin</option>
+                      <option  value={3}>Finance</option>
+                    </select>
+                  </div>
                 </div>
-              </div>
-              <div class="col">
-                <div class="mb-3">
-                  <label class="form-label">Name</label>
-                  <select class="form-select">
-                    <option>Saqib</option>
-                    <option>Hamid</option>
-                    <option>Mohsin</option>
-                  </select>
+                {formik.values.departmentName && (
+                <div class="col">
+                  <div class="mb-3">
+                    <label class="form-label">Name</label>
+                    <select 
+                      class="form-select"
+                      placeholder={formik.values.employeeName}
+                      value={formik.values.employeeName}
+                      id="employeeName"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                    >
+                      <option value={""} selected disabled hidden>
+                          select
+                      </option>
+                      <option value={1}>Saqib</option>
+                      <option value={2}>Hamid</option>
+                      <option value={3}>Mohsin</option>
+                    </select>
+                  </div>
                 </div>
-              </div>
+                )}
 
-              <div class="col">
-                <div class="mb-3">
-                  <label class="form-label" style={{ display: "block" }}>
-                    Start Date
-                  </label>
-                  <DatePicker
-                    selected={startDate}
-                    onChange={(date) => setStartDate(date)}
-                    className="form-control"
+                <div class="col">
+                  <div class="mb-3">
+                    <label class="form-label" style={{ display: "block" }}>
+                      Start Date
+                    </label>
+                    <DatePicker
+                      id="startDate"
+                      selected={formik.values.startDate}
+                      onChange={(date) => formik.setFieldValue("startDate", date)}
+                      className={"form-control"}
+                    />
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="mb-3">
+                    <label class="form-label" style={{ display: "block" }}>
+                      End Date
+                    </label>
+                    <DatePicker
+                      id="endDate"
+                      selected={formik.values.endDate}
+                      onChange={(date) => formik.setFieldValue("endDate", date)}
+                      className={"form-control"}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                  <button class="btn btn-primary" type="submit">
+                    Search
+                  </button>
+                </div>
+              </div>
+              <div class="row mt-3">
+                <div class="col-12">
+                  <CustomTable
+                    data={historyData?.length > 0 ? historyData : []}
+                    tableTitle={"Leave History"}
+                    headerBgColor={"#666"}
+                    hideBtn={true}
+                    handleEdit={() => navigate("/lms/addedit", { state: true })}
+                    handlePageChange={handlePageChange}
+                    currentPage={currentPage}
+                    pageSize={pageSize}
                   />
                 </div>
               </div>
-              <div class="col">
-                <div class="mb-3">
-                  <label class="form-label" style={{ display: "block" }}>
-                    End Date
-                  </label>
-                  <DatePicker
-                    selected={endDate}
-                    onChange={(date) => setEndDate(date)}
-                    className="form-control"
-                  />
-                </div>
-              </div>
             </div>
-            <div class="row">
-              <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                <button class="btn btn-primary" type="button">
-                  Search
-                </button>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-12">
-                <CustomTable
-                  data={data}
-                  tableTitle={"Leave Request"}
-                  headerBgColor={"#666"}
-                  hideBtn={true}
-                  handleEdit={() => navigate("/lms/addedit", { state: true })}
-                  handlePageChange={handlePageChange}
-                  currentPage={currentPage}
-                  pageSize={pageSize}
-                />
-              </div>
-            </div>
-          </div>
+          </form>
         </div>
       </div>
     </Layout>

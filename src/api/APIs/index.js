@@ -628,6 +628,31 @@ export const getWhosOnLeave = async (startDate, endDate, dept) => {
   }
 };
 
+export const searchLeaveHistory = async (searchParams) => {
+  try {
+    const token = getAuthToken();
+
+    // Filter out empty values
+    const filteredSearchParams = Object.fromEntries(
+      Object.entries(searchParams).filter(([_, value]) => value !== ""),
+    );
+
+    const response = await axiosClient.get(
+      `/leave/search`,
+      {
+        params: filteredSearchParams,
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // }
+      },
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
 /* Notice Management System (APIs) */
 
 // Resolution Module
