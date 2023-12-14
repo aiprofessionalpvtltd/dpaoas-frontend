@@ -6,6 +6,7 @@ import CustomTable from "../../../../../../components/CustomComponents/CustomTab
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import DatePicker from "react-datepicker";
 import { getAllQuestion } from "../../../../../../api/APIs";
 import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
@@ -358,47 +359,49 @@ function QMSDeleteQuestion() {
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">From Notice Date</label>
-                      <input
-                        type="text"
-                        placeholder={formik.values.fromNoticeDate}
-                        className={`form-control ${formik.touched.fromNoticeDate &&
+                        <DatePicker
+                          selected={formik.values.fromNoticeDate}
+                          onChange={(date) =>
+                            formik.setFieldValue("fromNoticeDate", date)
+                          }
+                          onBlur={formik.handleBlur}
+                          className={`form-control ${
+                            formik.touched.fromNoticeDate &&
                             formik.errors.fromNoticeDate
-                            ? "is-invalid"
-                            : ""
+                              ? "is-invalid"
+                              : ""
                           }`}
-                        id="fromNoticeDate"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                      />
-                      {formik.touched.fromNoticeDate &&
-                        formik.errors.fromNoticeDate && (
-                          <div className="invalid-feedback">
-                            {formik.errors.fromNoticeDate}
-                          </div>
-                        )}
+                        />
+                        {formik.touched.fromNoticeDate &&
+                          formik.errors.fromNoticeDate && (
+                            <div className="invalid-feedback">
+                              {formik.errors.fromNoticeDate}
+                            </div>
+                          )}
                     </div>
                   </div>
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">To Notice Date</label>
-                      <input
-                        type="text"
-                        placeholder={formik.values.toNoticeDate}
-                        className={`form-control ${formik.touched.toNoticeDate &&
+                         <DatePicker
+                          selected={formik.values.toNoticeDate}
+                          onChange={(date) =>
+                            formik.setFieldValue("toNoticeDate", date)
+                          }
+                          onBlur={formik.handleBlur}
+                          className={`form-control ${
+                            formik.touched.toNoticeDate &&
                             formik.errors.toNoticeDate
-                            ? "is-invalid"
-                            : ""
+                              ? "is-invalid"
+                              : ""
                           }`}
-                        id="toNoticeDate"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                      />
-                      {formik.touched.toNoticeDate &&
-                        formik.errors.toNoticeDate && (
-                          <div className="invalid-feedback">
-                            {formik.errors.toNoticeDate}
-                          </div>
-                        )}
+                        />
+                        {formik.touched.toNoticeDate &&
+                          formik.errors.toNoticeDate && (
+                            <div className="invalid-feedback">
+                              {formik.errors.toNoticeDate}
+                            </div>
+                          )}
                     </div>
                   </div>
                 </div>

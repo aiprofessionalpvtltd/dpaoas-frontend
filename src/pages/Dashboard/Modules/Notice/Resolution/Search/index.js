@@ -1,18 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { NoticeSidebarItems } from "../../../../../../utils/sideBarItems";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
 import { useNavigate } from "react-router";
 import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
-import { searchResolution } from "../../../../../../api/APIs";
-import { Field, Form, Formik } from "formik";
+import { getAllQuestionStatus, searchResolution } from "../../../../../../api/APIs";
+import { useFormik } from "formik";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import { ToastContainer } from "react-toastify";
+import DatePicker from "react-datepicker"
 
 function SearchResolution() {
   const navigate = useNavigate();
   const [searchedData, setSearchedData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
+  const [allResolutionStatus, setAllResolutionStatus] = useState([]);
   const pageSize = 10; // Set your desired page size
 
   const handlePageChange = (page) => {
@@ -20,18 +22,27 @@ function SearchResolution() {
     setCurrentPage(page);
   };
 
-  const initialValues = {
-    resolutionDiaryNo: "",
-    resolutionID: "",
-    keyword: "",
-    memberName: "",
-    fromSession: "",
-    toSession: "",
-    resolutionType: "",
-    resolutionStatus: "",
-    fromNoticeDate: "",
-    toNoticeDate: "",
-  };
+  const formik = useFormik({
+    initialValues: {
+      resolutionDiaryNo: "",
+      resolutionID: "",
+      keyword: "",
+      memberName: "",
+      fromSession: "",
+      toSession: "",
+      resolutionType: "",
+      resolutionStatus: "",
+      fromNoticeDate: "",
+      toNoticeDate: "",
+      colourResNo: "",
+      noticeOfficeDiaryNo: "",
+    },
+
+    onSubmit: (values) => {
+      // Handle form submission here
+      SearchResolutionApi(values);
+    },
+  });
 
   const transformLeavesData = (apiData) => {
     return apiData.map((res) => {
@@ -48,11 +59,6 @@ function SearchResolution() {
         Movers: movers,
       };
     });
-  };
-
-  const handleSubmit = (values) => {
-    // Handle form submission
-    SearchResolutionApi(values);
   };
 
   const SearchResolutionApi = async (values) => {
@@ -83,6 +89,21 @@ function SearchResolution() {
     }
   };
 
+  const GetALlStatus = async () => {
+    try {
+      const response = await getAllQuestionStatus();
+      if (response?.success) {
+        setAllResolutionStatus(response?.data);
+        showSuccessMessage(response.message)
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    GetALlStatus();
+  }, []);
+
   return (
     <Layout module={true} sidebarItems={NoticeSidebarItems} centerlogohide={true}>
       <ToastContainer />
@@ -102,112 +123,187 @@ function SearchResolution() {
             </div>
             <div class="card-body">
               <div class="container-fluid">
-                <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-                  <Form>
-                    <div className="container-fluid">
-                      <div className="row">
-                        <div className="col">
-                          <div className="mb-3">
-                            <label className="form-label">Resolution Diary No</label>
-                            <Field className="form-control" type="text" name="resolutionDiaryNo" />
-                          </div>
-                        </div>
-                        <div className="col">
-                          <div className="mb-3">
-                            <label className="form-label">Resolution ID</label>
-                            <Field className="form-control" type="text" name="resolutionID" />
-                          </div>
-                        </div>
-                      </div>
-                      <div className="row">
-                        <div className="col">
-                          <div className="mb-3">
-                            <label className="form-label">Keyword</label>
-                            <Field className="form-control" type="text" name="keyword" />
-                          </div>
-                        </div>
-                        <div className="col">
-                          <div className="mb-3">
-                            <label className="form-label">Member Name</label>
-                            <Field className="form-control" type="text" name="memberName" />
-                          </div>
-                        </div>
-                      </div>
-                      <div className="row">
-                        <div className="col">
-                          <div className="mb-3">
-                            <label className="form-label">From Session</label>
-                            <Field as="select" className="form-select" name="fromSession">
-                              <option>Select</option>
-                              <option>121</option>
-                              <option>122</option>
-                              <option>123</option>
-                            </Field>
-                          </div>
-                        </div>
-                        <div className="col">
-                          <div className="mb-3">
-                            <label className="form-label">To Session</label>
-                            <Field as="select" className="form-select" name="toSession">
-                              <option>Select</option>
-                              <option>121</option>
-                              <option>122</option>
-                              <option>123</option>
-                            </Field>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="row">
-                        <div className="col">
-                          <div className="mb-3">
-                            <label className="form-label">Resolution Type</label>
-                            <Field as="select" className="form-select" name="resolutionType">
-                              <option>Resolution Type</option>
-                              <option>Government Resolution</option>
-                              <option>Private Member Resolution</option>
-                              <option>Govt. Resolution Supported by others</option>
-                            </Field>
-                          </div>
-                        </div>
-                        <div className="col">
-                          <div className="mb-3">
-                            <label className="form-label">Resolution Status</label>
-                            <Field as="select" className="form-select" name="resolutionStatus">
-                              <option selected="selected" value="0">
-                                Resolution Status
-                              </option>
-                              {/* Add other options as needed */}
-                            </Field>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="row">
-                        <div className="col">
-                          <div className="mb-3">
-                            <label className="form-label">From Notice Date</label>
-                            <Field className="form-control" type="text" name="fromNoticeDate" />
-                          </div>
-                        </div>
-                        <div className="col">
-                          <div className="mb-3">
-                            <label className="form-label">To Notice Date</label>
-                            <Field className="form-control" type="text" name="toNoticeDate" />
-                          </div>
-                        </div>
-                      </div>
-                      <div className="row">
-                        <div className="d-grid gap-2 d-md-flex justify-content-md-end">
-                          <button className="btn btn-primary" type="submit">
-                            Search
-                          </button>
-                          <button className="btn btn-primary" type="reset">
-                            Reset
-                          </button>
-                        </div>
+              <form onSubmit={formik.handleSubmit}>
+                <div className="container-fluid">
+                  <div className="row">
+                    <div className="col">
+                      <div className="mb-3">
+                        <label className="form-label">
+                          Resolution Diary No
+                        </label>
+                        <input
+                          className="form-control"
+                          type="text"
+                          id="resolutionDiaryNo"
+                          placeholder={formik.values.resolutionDiaryNo}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                        />
                       </div>
                     </div>
-                  </Form>
-                </Formik>
+                    <div className="col">
+                      <div className="mb-3">
+                        <label className="form-label">Resolution ID</label>
+                        <input
+                          className="form-control"
+                          type="text"
+                          id="resolutionID"
+                          placeholder={formik.values.resolutionID}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col">
+                      <div className="mb-3">
+                        <label className="form-label">Keyword</label>
+                        <input
+                          className="form-control"
+                          type="text"
+                          id="keyword"
+                          placeholder={formik.values.keyword}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                        />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="mb-3">
+                        <label className="form-label">Member Name</label>
+                        <input
+                          className="form-control"
+                          type="text"
+                          id="memberName"
+                          placeholder={formik.values.memberName}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col">
+                      <div className="mb-3">
+                        <label className="form-label">From Session</label>
+                        <select
+                          class="form-select"
+                          id="fromSession"
+                          placeholder={formik.values.fromSession}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                        >
+                          <option>Select</option>
+                          <option>121</option>
+                          <option>122</option>
+                          <option>123</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="mb-3">
+                        <label className="form-label">To Session</label>
+                        <select
+
+                          className="form-select"
+                          id="toSession"
+                          placeholder={formik.values.toSession}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                        >
+                          <option>Select</option>
+                          <option>121</option>
+                          <option>122</option>
+                          <option>123</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col">
+                      <div className="mb-3">
+                        <label className="form-label">Resolution Type</label>
+                        <select
+                          className="form-select"
+                          id="resolutionType"
+                          placeholder={formik.values.resolutionType}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                        >
+                          <option value={""} selected disabled hidden>
+                            Resolution Type
+                          </option>
+                          <option>Resolution Type</option>
+                          <option>Government Resolution</option>
+                          <option>Private Member Resolution</option>
+                          <option>
+                            Govt. Resolution Supported by others
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="mb-3">
+                        <label className="form-label">
+                          Resolution Status
+                        </label>
+                        <select
+                          className="form-select"
+                          id="resolutionStatus"
+                          placeholder={formik.values.resolutionStatus}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                        >
+                          <option value="" selected disabled hidden>
+                            select
+                          </option>
+                          {allResolutionStatus &&
+                            allResolutionStatus.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item?.questionStatus}
+                              </option>
+                            ))}
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col">
+                      <div className="mb-3">
+                        <label className="form-label">From Notice Date</label>
+
+                        <DatePicker
+                          selected={formik.values.fromNoticeDate}
+                          onChange={(date) => formik.setFieldValue("fromNoticeDate", date)}
+                          className={`form-control`}
+                        />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="mb-3">
+                        <label className="form-label">To Notice Date</label>
+
+                        <DatePicker
+                          selected={formik.values.toNoticeDate}
+                          onChange={(date) => formik.setFieldValue("toNoticeDate", date)}
+                          className={`form-control`}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="d-grid gap-2 d-md-flex justify-content-md-end">
+                      <button className="btn btn-primary" type="submit">
+                        Search
+                      </button>
+                      <button className="btn btn-primary" type="reset">
+                        Reset
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </form>
 
                 <div class="dash-detail-container" style={{ marginTop: "20px" }}>
                   <CustomTable
