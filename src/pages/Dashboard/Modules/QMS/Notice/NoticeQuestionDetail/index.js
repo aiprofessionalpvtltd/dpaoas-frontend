@@ -6,6 +6,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import TimePicker from "react-time-picker";
 import DatePicker from "react-datepicker";
+import { Editor } from "../../../../../../components/CustomComponents/Editor";
 
 const validationSchema = Yup.object({
   sessionNumber: Yup.string().required("Session No is required"),
@@ -100,9 +101,9 @@ function QMSNoticeQuestionDetail() {
                           type="text"
                           placeholder={formik.values.sessionNumber}
                           className={`form-control ${formik.touched.sessionNumber &&
-                              formik.errors.sessionNumber
-                              ? "is-invalid"
-                              : ""
+                            formik.errors.sessionNumber
+                            ? "is-invalid"
+                            : ""
                             }`}
                           id="sessionNumber"
                           onChange={formik.handleChange}
@@ -125,9 +126,9 @@ function QMSNoticeQuestionDetail() {
                           type="text"
                           placeholder={formik.values.noticeOfficeDiaryNumber}
                           className={`form-control ${formik.touched.noticeOfficeDiaryNumber &&
-                              formik.errors.noticeOfficeDiaryNumber
-                              ? "is-invalid"
-                              : ""
+                            formik.errors.noticeOfficeDiaryNumber
+                            ? "is-invalid"
+                            : ""
                             }`}
                           id="noticeOfficeDiaryNumber"
                           onChange={formik.handleChange}
@@ -153,9 +154,9 @@ function QMSNoticeQuestionDetail() {
                           }
                           onBlur={formik.handleBlur}
                           className={`form-control ${formik.touched.noticeOfficeDiaryDate &&
-                              formik.errors.noticeOfficeDiaryDate
-                              ? "is-invalid"
-                              : ""
+                            formik.errors.noticeOfficeDiaryDate
+                            ? "is-invalid"
+                            : ""
                             }`}
                         />
                         {formik.touched.noticeOfficeDiaryDate &&
@@ -180,9 +181,9 @@ function QMSNoticeQuestionDetail() {
                             formik.setFieldValue("noticeOfficeDiaryTime", time)
                           }
                           className={`form-control ${formik.touched.noticeOfficeDiaryTime &&
-                              formik.errors.noticeOfficeDiaryTime
-                              ? "is-invalid"
-                              : ""
+                            formik.errors.noticeOfficeDiaryTime
+                            ? "is-invalid"
+                            : ""
                             }`}
                         />
                         {formik.touched.noticeOfficeDiaryTime &&
@@ -202,9 +203,9 @@ function QMSNoticeQuestionDetail() {
                           type="text"
                           placeholder={formik.values.questionDiaryNumber}
                           className={`form-control ${formik.touched.questionDiaryNumber &&
-                              formik.errors.questionDiaryNumber
-                              ? "is-invalid"
-                              : ""
+                            formik.errors.questionDiaryNumber
+                            ? "is-invalid"
+                            : ""
                             }`}
                           id="questionDiaryNumber"
                           onChange={formik.handleChange}
@@ -255,8 +256,19 @@ function QMSNoticeQuestionDetail() {
                     </div>
                   </div>
                 </div>
-                <p>English Test Here</p>
-                <p>Urdu Text Here</p>
+                <div style={{ marginTop: 10 }}>
+                  <Editor
+                    title={"English Text"}
+                  // onChange={handleProcedureContentChange}
+                  />
+                </div>
+
+                <div style={{ marginTop: 70, marginBottom: 40 }}>
+                  <Editor
+                    title={"Urdu Text"}
+                  // onChange={handleProcedureContentChange}
+                  />
+                </div>
               </div>
             </div>
           </div>
