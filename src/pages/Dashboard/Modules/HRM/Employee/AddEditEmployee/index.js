@@ -10,7 +10,10 @@ import * as Yup from "yup";
 import DatePicker from "react-datepicker";
 import { UpdateEmployee, createEmployee } from "../../../../../../api/APIs";
 import { ToastContainer } from "react-toastify";
-import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../../utils/ToastAlert";
 
 const validationSchema = Yup.object({
   employeename: Yup.string().required("Employee name is required"),
@@ -38,9 +41,9 @@ function HRMAddEditEmployee() {
     onSubmit: (values) => {
       // Handle form submission here
       if (location.state) {
-        UpdateEmployeeApi(values)
+        UpdateEmployeeApi(values);
       } else {
-        CreateEmployeeApi(values)
+        CreateEmployeeApi(values);
       }
     },
   });
@@ -58,12 +61,12 @@ function HRMAddEditEmployee() {
       supervisor: 0,
       fkRoleId: 0,
       fkDepartmentId: 0,
-      fkDesignationId: 0
-    }
+      fkDesignationId: 0,
+    };
     try {
       const response = await createEmployee(data);
       if (response.success) {
-        showSuccessMessage(response.message)
+        showSuccessMessage(response.message);
       }
     } catch (error) {
       console.log(error);
@@ -83,12 +86,12 @@ function HRMAddEditEmployee() {
       supervisor: 0,
       fkRoleId: 0,
       fkDepartmentId: 0,
-      fkDesignationId: 0
-    }
+      fkDesignationId: 0,
+    };
     try {
       const response = await UpdateEmployee(location?.state?.id, data);
       if (response.success) {
-        showSuccessMessage(response.message)
+        showSuccessMessage(response.message);
       }
     } catch (error) {
       showErrorMessage(error.response.data.message);
@@ -123,10 +126,11 @@ function HRMAddEditEmployee() {
                       <input
                         type="text"
                         placeholder={formik.values.filenumber}
-                        className={`form-control ${formik.touched.filenumber && formik.errors.filenumber
-                          ? "is-invalid"
-                          : ""
-                          }`}
+                        className={`form-control ${
+                          formik.touched.filenumber && formik.errors.filenumber
+                            ? "is-invalid"
+                            : ""
+                        }`}
                         id="filenumber"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -145,11 +149,12 @@ function HRMAddEditEmployee() {
                       <input
                         type="text"
                         placeholder={formik.values.employeename}
-                        className={`form-control ${formik.touched.employeename &&
+                        className={`form-control ${
+                          formik.touched.employeename &&
                           formik.errors.employeename
-                          ? "is-invalid"
-                          : ""
-                          }`}
+                            ? "is-invalid"
+                            : ""
+                        }`}
                         id="employeename"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -187,11 +192,12 @@ function HRMAddEditEmployee() {
                       <input
                         type="text"
                         placeholder={formik.values.fatherhusbandname}
-                        className={`form-control ${formik.touched.fatherhusbandname &&
+                        className={`form-control ${
+                          formik.touched.fatherhusbandname &&
                           formik.errors.fatherhusbandname
-                          ? "is-invalid"
-                          : ""
-                          }`}
+                            ? "is-invalid"
+                            : ""
+                        }`}
                         id="fatherhusbandname"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -244,10 +250,11 @@ function HRMAddEditEmployee() {
                       <input
                         type="text"
                         placeholder={formik.values.cnicnumber}
-                        className={`form-control ${formik.touched.cnicnumber && formik.errors.cnicnumber
-                          ? "is-invalid"
-                          : ""
-                          }`}
+                        className={`form-control ${
+                          formik.touched.cnicnumber && formik.errors.cnicnumber
+                            ? "is-invalid"
+                            : ""
+                        }`}
                         id="cnicnumber"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -333,11 +340,12 @@ function HRMAddEditEmployee() {
                       <label class="form-label">Permanent Address</label>
                       <textarea
                         placeholder={formik.values.permanentaddress}
-                        className={`form-control ${formik.touched.permanentaddress &&
+                        className={`form-control ${
+                          formik.touched.permanentaddress &&
                           formik.errors.permanentaddress
-                          ? "is-invalid"
-                          : ""
-                          }`}
+                            ? "is-invalid"
+                            : ""
+                        }`}
                         id="permanentaddress"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}

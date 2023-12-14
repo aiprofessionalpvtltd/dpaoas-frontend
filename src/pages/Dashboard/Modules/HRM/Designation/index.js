@@ -5,15 +5,16 @@ import { useNavigate } from "react-router-dom";
 import { HRMsidebarItems } from "../../../../../utils/sideBarItems";
 import CustomTable from "../../../../../components/CustomComponents/CustomTable";
 import { DeleteDesignation, getDesignations } from "../../../../../api/APIs";
-import { showErrorMessage, showSuccessMessage } from "../../../../../utils/ToastAlert";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
-
-
 
 function HRMDesignation() {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(0);
-  const [count, setCount] = useState(null)
+  const [count, setCount] = useState(null);
   const [designationData, setDesignationData] = useState([]);
   const pageSize = 4; // Set your desired page size
 
@@ -37,7 +38,7 @@ function HRMDesignation() {
       if (response?.success) {
         setCount(response?.count);
         const transformedData = transformDesignationData(response?.data);
-        setDesignationData(transformedData)
+        setDesignationData(transformedData);
       }
     } catch (error) {
       console.log(error);
@@ -46,14 +47,14 @@ function HRMDesignation() {
 
   const handleDelete = async (id) => {
     try {
-      const response = await DeleteDesignation(id)
+      const response = await DeleteDesignation(id);
       if (response?.success) {
-        showSuccessMessage(response.message)
+        showSuccessMessage(response.message);
       }
     } catch (error) {
-      showErrorMessage(error.response.data.message)
+      showErrorMessage(error.response.data.message);
     }
-  }
+  };
   useEffect(() => {
     getDesignationApi();
   }, []);

@@ -12,7 +12,14 @@ import {
 import { ToastContainer } from "react-toastify";
 import { useFormik } from "formik";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
-import { getAllMinistry, getAllMotion, getAllSessions, getallMembers, getallMotionStatus, searchMotion } from "../../../../../../api/APIs";
+import {
+  getAllMinistry,
+  getAllMotion,
+  getAllSessions,
+  getallMembers,
+  getallMotionStatus,
+  searchMotion,
+} from "../../../../../../api/APIs";
 
 function SentMotion() {
   const navigate = useNavigate();
@@ -54,7 +61,7 @@ function SentMotion() {
       fkSessionId: leave?.sessions?.id,
       fileNumber: leave?.fileNumber,
       motionType: leave?.motionType,
-      motionWeek: '',
+      motionWeek: "",
       noticeOfficeDiaryNo: leave?.noticeOfficeDairies?.noticeOfficeDiaryNo,
       // ministryName: leave?.motionMinistries?.ministries,
       // ministryIds: leave?.motionMinistries?.fkMinistryId,
@@ -87,7 +94,7 @@ function SentMotion() {
       fkSessionId: values?.fromSession,
       noticeOfficeDiaryNo: values?.motionDiaryNo,
       fkMemberId: values?.memberName,
-      fkMinistryId: '',
+      fkMinistryId: "",
       motionId: values?.motionID,
       sessionStartRange: values?.fromSession,
       sessionEndRange: values?.toSession,
@@ -130,8 +137,6 @@ function SentMotion() {
       showErrorMessage(error?.response?.data?.message);
     }
   };
-
-
 
   const AllMembersData = async () => {
     try {
@@ -392,13 +397,22 @@ function SentMotion() {
                       <label class="form-label">From Notice Date</label>
                       <DatePicker
                         selected={formik.values.fromNoticeDate}
-                        onChange={(date) => formik.setFieldValue("fromNoticeDate", date)}
-                        className={`form-control ${formik.errors.fromNoticeDate && formik.touched.fromNoticeDate ? "is-invalid" : ""
-                          }`}
+                        onChange={(date) =>
+                          formik.setFieldValue("fromNoticeDate", date)
+                        }
+                        className={`form-control ${
+                          formik.errors.fromNoticeDate &&
+                          formik.touched.fromNoticeDate
+                            ? "is-invalid"
+                            : ""
+                        }`}
                       />
-                      {formik.errors.fromNoticeDate && formik.touched.fromNoticeDate && (
-                        <div className="invalid-feedback">{formik.errors.fromNoticeDate}</div>
-                      )}
+                      {formik.errors.fromNoticeDate &&
+                        formik.touched.fromNoticeDate && (
+                          <div className="invalid-feedback">
+                            {formik.errors.fromNoticeDate}
+                          </div>
+                        )}
                     </div>
                   </div>
                   <div class="col">
@@ -406,7 +420,9 @@ function SentMotion() {
                       <label class="form-label">To Notice Date</label>
                       <DatePicker
                         selected={formik.values.toNoticeDate}
-                        onChange={(date) => formik.setFieldValue("toNoticeDate", date)}
+                        onChange={(date) =>
+                          formik.setFieldValue("toNoticeDate", date)
+                        }
                         className={"form-control"}
                       />
                     </div>
@@ -422,13 +438,18 @@ function SentMotion() {
                     </button>
                   </div>
                 </div>
-                <div class="dash-detail-container" style={{ marginTop: "20px" }}>
+                <div
+                  class="dash-detail-container"
+                  style={{ marginTop: "20px" }}
+                >
                   <CustomTable
                     block={true}
                     data={motionData}
                     headerShown={true}
                     handleDelete={(item) => alert(item.id)}
-                    handleEdit={(item) => navigate("/mms/motion/new", { state: item })}
+                    handleEdit={(item) =>
+                      navigate("/mms/motion/new", { state: item })
+                    }
                     headertitlebgColor={"#666"}
                     headertitletextColor={"#FFF"}
                     handlePageChange={handlePageChange}

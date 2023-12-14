@@ -19,7 +19,6 @@ import CustomTable from "../../../../../../components/CustomComponents/CustomTab
 import { ToastContainer } from "react-toastify";
 import DatePicker from "react-datepicker";
 
-
 function SentQuestion() {
   const navigate = useNavigate();
   const [searchedData, setSearchedData] = useState([]);
@@ -35,25 +34,24 @@ function SentQuestion() {
     setCurrentPage(page);
   };
 
-
   const formik = useFormik({
     initialValues: {
-        questionDiaryNo: "",
-        questionID: "",
-        keyword: "",
-        memberName: "",
-        fromSession: "",
-        toSession: "",
-        category: "",
-        questionStatus: "",
-        fromNoticeDate: "",
-        toNoticeDate: "",
+      questionDiaryNo: "",
+      questionID: "",
+      keyword: "",
+      memberName: "",
+      fromSession: "",
+      toSession: "",
+      category: "",
+      questionStatus: "",
+      fromNoticeDate: "",
+      toNoticeDate: "",
     },
     onSubmit: (values) => {
-        // Handle form submission here
-        SearchQuestionApi(values);
+      // Handle form submission here
+      SearchQuestionApi(values);
     },
-});
+  });
 
   const transformLeavesData = (apiData) => {
     return apiData.map((res, index) => {
@@ -73,8 +71,6 @@ function SentQuestion() {
       };
     });
   };
-
-  
 
   const SearchQuestionApi = async (values) => {
     const searchParams = {
@@ -118,21 +114,21 @@ function SentQuestion() {
 
   const GetALlStatus = async () => {
     try {
-        const response = await getAllQuestionStatus();
-        if (response?.success) {
-            setAllQuestionStatus(response?.data);
-            showSuccessMessage(response.message)
-        }
+      const response = await getAllQuestionStatus();
+      if (response?.success) {
+        setAllQuestionStatus(response?.data);
+        showSuccessMessage(response.message);
+      }
     } catch (error) {
-        console.log(error);
+      console.log(error);
     }
-};
+  };
 
   useEffect(() => {
     getAllQuestionsApi();
     GetALlStatus();
   }, []);
-  
+
   return (
     <Layout
       module={true}
@@ -158,158 +154,183 @@ function SentQuestion() {
             </div>
             <div class="card-body">
               <div class="container-fluid">
-              <form onSubmit={formik.handleSubmit}>
-                                <div className="container-fluid">
-                                    <div className="row">
-                                        <div className="col">
-                                            <div className="mb-3">
-                                                <label className="form-label">Question Diary No</label>
-                                                <input className="form-control" type="text" id="questionDiaryNo" placeholder={formik.values.questionDiaryNo}
-                                                    onChange={formik.handleChange}
-                                                    onBlur={formik.handleBlur} />
-                                            </div>
-                                        </div>
-                                        <div className="col">
-                                            <div className="mb-3">
-                                                <label className="form-label">Question ID</label>
-                                                <input className="form-control" type="number" id="questionID"
-                                                    onChange={formik.handleChange}
-                                                    onBlur={formik.handleBlur} />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col">
-                                            <div className="mb-3">
-                                                <label className="form-label">Keyword</label>
-                                                <input className="form-control" type="text" name="keyword" id="keyword"
-                                                    onChange={formik.handleChange}
-                                                    onBlur={formik.handleBlur} />
-                                            </div>
-                                        </div>
-                                        <div className="col">
-                                            <div className="mb-3">
-                                                <label className="form-label">Member Name</label>
-                                                <input className="form-control" type="text" name="memberName" id="memberName"
-                                                    onChange={formik.handleChange}
-                                                    onBlur={formik.handleBlur} />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col">
-                                            <div className="mb-3">
-                                                <label className="form-label">From Session</label>
-                                                <select
-                                                    class="form-select"
-                                                    placeholder={formik.values.fromSession}
-                                                    id="fromSession"
-                                                    onChange={formik.handleChange}
-                                                    onBlur={formik.handleBlur}
-                                                >
-                                                    <option>Select</option>
-                                                    <option value={"2"}>121</option>
-                                                    <option value={"3"}>122</option>
-                                                    <option value={"4"}>123</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div className="col">
-                                            <div className="mb-3">
-                                                <label className="form-label">To Session</label>
-                                                <select
-                                                    class="form-select"
-                                                    placeholder={formik.values.toSession}
-                                                    id="toSession"
-                                                    onChange={formik.handleChange}
-                                                    onBlur={formik.handleBlur}
-                                                >
-                                                    <option>Select</option>
-                                                    <option value={"1"}>121</option>
-                                                    <option>122</option>
-                                                    <option>123</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col">
-                                            <div className="mb-3">
-                                                <label className="form-label">Category</label>
-                                                <select
-                                                    class="form-select"
-                                                    placeholder={formik.values.category}
-                                                    id="category"
-                                                    onChange={formik.handleChange}
-                                                    onBlur={formik.handleBlur}
-                                                >
-                                                    <option value={" "} selected disabled hidden>
-                                                        select
-                                                    </option>
-                                                    <option value={"Starred"}>Starred</option>
-                                                    <option value={"Un-Starred"}>Un-Starred</option>
-                                                    <option value={"Short Notice"}>Short Notice</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div className="col">
-                                            <div className="mb-3">
-                                                <label className="form-label">Question Status</label>
-                                                <select
-                                                    class="form-select"
-                                                    placeholder={formik.values.questionStatus}
-                                                    id="questionStatus"
-                                                    onChange={formik.handleChange}
-                                                    onBlur={formik.handleBlur}
-                                                >
-                                                    <option value={""} selected disabled hidden>
-                                                        select
-                                                    </option>
-                                                    {allquestionStatus &&
-                                                        allquestionStatus.map((item) => (
-                                                            <option key={item.id} value={item.id}>
-                                                                {item?.questionStatus}
-                                                            </option>
-                                                        ))}
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col">
-                                            <div className="mb-3">
-                                                <label className="form-label">From Notice Date</label>
-                                                <DatePicker
-                                                    selected={formik.values.fromNoticeDate}
-                                                    onChange={(date) => formik.setFieldValue("fromNoticeDate", date)}
-                                                    className={"form-control"}
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="col">
-                                            <div className="mb-3">
-                                                <label className="form-label">To Notice Date</label>
-                                                <DatePicker
-                                                    selected={formik.values.toNoticeDate}
-                                                    onChange={(date) => formik.setFieldValue("toNoticeDate", date)}
-                                                    className={"form-control"}
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                   
-                                    <div className="row">
-                                        <div className="d-grid gap-2 d-md-flex justify-content-md-end">
-                                            <button className="btn btn-primary" type="submit">
-                                                Search
-                                            </button>
-                                            <button className="btn btn-primary" type="reset">
-                                                Reset
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
+                <form onSubmit={formik.handleSubmit}>
+                  <div className="container-fluid">
+                    <div className="row">
+                      <div className="col">
+                        <div className="mb-3">
+                          <label className="form-label">
+                            Question Diary No
+                          </label>
+                          <input
+                            className="form-control"
+                            type="text"
+                            id="questionDiaryNo"
+                            placeholder={formik.values.questionDiaryNo}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                          />
+                        </div>
+                      </div>
+                      <div className="col">
+                        <div className="mb-3">
+                          <label className="form-label">Question ID</label>
+                          <input
+                            className="form-control"
+                            type="number"
+                            id="questionID"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="row">
+                      <div className="col">
+                        <div className="mb-3">
+                          <label className="form-label">Keyword</label>
+                          <input
+                            className="form-control"
+                            type="text"
+                            name="keyword"
+                            id="keyword"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                          />
+                        </div>
+                      </div>
+                      <div className="col">
+                        <div className="mb-3">
+                          <label className="form-label">Member Name</label>
+                          <input
+                            className="form-control"
+                            type="text"
+                            name="memberName"
+                            id="memberName"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="row">
+                      <div className="col">
+                        <div className="mb-3">
+                          <label className="form-label">From Session</label>
+                          <select
+                            class="form-select"
+                            placeholder={formik.values.fromSession}
+                            id="fromSession"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                          >
+                            <option>Select</option>
+                            <option value={"2"}>121</option>
+                            <option value={"3"}>122</option>
+                            <option value={"4"}>123</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div className="col">
+                        <div className="mb-3">
+                          <label className="form-label">To Session</label>
+                          <select
+                            class="form-select"
+                            placeholder={formik.values.toSession}
+                            id="toSession"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                          >
+                            <option>Select</option>
+                            <option value={"1"}>121</option>
+                            <option>122</option>
+                            <option>123</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="row">
+                      <div className="col">
+                        <div className="mb-3">
+                          <label className="form-label">Category</label>
+                          <select
+                            class="form-select"
+                            placeholder={formik.values.category}
+                            id="category"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                          >
+                            <option value={" "} selected disabled hidden>
+                              select
+                            </option>
+                            <option value={"Starred"}>Starred</option>
+                            <option value={"Un-Starred"}>Un-Starred</option>
+                            <option value={"Short Notice"}>Short Notice</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div className="col">
+                        <div className="mb-3">
+                          <label className="form-label">Question Status</label>
+                          <select
+                            class="form-select"
+                            placeholder={formik.values.questionStatus}
+                            id="questionStatus"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                          >
+                            <option value={""} selected disabled hidden>
+                              select
+                            </option>
+                            {allquestionStatus &&
+                              allquestionStatus.map((item) => (
+                                <option key={item.id} value={item.id}>
+                                  {item?.questionStatus}
+                                </option>
+                              ))}
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="row">
+                      <div className="col">
+                        <div className="mb-3">
+                          <label className="form-label">From Notice Date</label>
+                          <DatePicker
+                            selected={formik.values.fromNoticeDate}
+                            onChange={(date) =>
+                              formik.setFieldValue("fromNoticeDate", date)
+                            }
+                            className={"form-control"}
+                          />
+                        </div>
+                      </div>
+                      <div className="col">
+                        <div className="mb-3">
+                          <label className="form-label">To Notice Date</label>
+                          <DatePicker
+                            selected={formik.values.toNoticeDate}
+                            onChange={(date) =>
+                              formik.setFieldValue("toNoticeDate", date)
+                            }
+                            className={"form-control"}
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="row">
+                      <div className="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button className="btn btn-primary" type="submit">
+                          Search
+                        </button>
+                        <button className="btn btn-primary" type="reset">
+                          Reset
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </form>
 
                 <div
                   class="dash-detail-container"

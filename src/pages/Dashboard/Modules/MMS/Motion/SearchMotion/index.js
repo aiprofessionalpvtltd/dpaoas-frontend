@@ -205,7 +205,10 @@ function MMSSearchMotion() {
       <ToastContainer />
       <div class="container-fluid">
         <div class="card mt-1">
-          <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
+          <div
+            class="card-header red-bg"
+            style={{ background: "#14ae5c !important" }}
+          >
             <h1>SEARCH MOTION</h1>
           </div>
           <div class="card-body">
@@ -391,7 +394,9 @@ function MMSSearchMotion() {
                           select
                         </option>
                         {ministryData &&
-                          ministryData.map((item) => <option value={item.id}>{item.ministryName}</option>)}
+                          ministryData.map((item) => (
+                            <option value={item.id}>{item.ministryName}</option>
+                          ))}
                       </select>
                     </div>
                   </div>
@@ -424,14 +429,22 @@ function MMSSearchMotion() {
                       <label class="form-label">From Notice Date</label>
                       <DatePicker
                         selected={formik.values.fromNoticeDate}
-                        onChange={(date) => formik.setFieldValue("fromNoticeDate", date)}
+                        onChange={(date) =>
+                          formik.setFieldValue("fromNoticeDate", date)
+                        }
                         className={`form-control ${
-                          formik.errors.fromNoticeDate && formik.touched.fromNoticeDate ? "is-invalid" : ""
+                          formik.errors.fromNoticeDate &&
+                          formik.touched.fromNoticeDate
+                            ? "is-invalid"
+                            : ""
                         }`}
                       />
-                      {formik.errors.fromNoticeDate && formik.touched.fromNoticeDate && (
-                        <div className="invalid-feedback">{formik.errors.fromNoticeDate}</div>
-                      )}
+                      {formik.errors.fromNoticeDate &&
+                        formik.touched.fromNoticeDate && (
+                          <div className="invalid-feedback">
+                            {formik.errors.fromNoticeDate}
+                          </div>
+                        )}
                     </div>
                   </div>
                   <div class="col">
@@ -439,7 +452,9 @@ function MMSSearchMotion() {
                       <label class="form-label">To Notice Date</label>
                       <DatePicker
                         selected={formik.values.toNoticeDate}
-                        onChange={(date) => formik.setFieldValue("toNoticeDate", date)}
+                        onChange={(date) =>
+                          formik.setFieldValue("toNoticeDate", date)
+                        }
                         className={"form-control"}
                       />
                     </div>
@@ -470,13 +485,18 @@ function MMSSearchMotion() {
                     </button>
                   </div>
                 </div>
-                <div class="dash-detail-container" style={{ marginTop: "20px" }}>
+                <div
+                  class="dash-detail-container"
+                  style={{ marginTop: "20px" }}
+                >
                   <CustomTable
                     block={true}
                     data={motionData}
                     headerShown={true}
                     handleDelete={(item) => alert(item.id)}
-                    handleEdit={(item) => navigate("/mms/motion/new", { state: item })}
+                    handleEdit={(item) =>
+                      navigate("/mms/motion/new", { state: item })
+                    }
                     headertitlebgColor={"#666"}
                     headertitletextColor={"#FFF"}
                     handlePageChange={handlePageChange}

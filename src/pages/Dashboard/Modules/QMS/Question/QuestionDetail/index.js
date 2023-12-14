@@ -37,7 +37,10 @@ const validationSchema = Yup.object({
 function QMSQuestionDetail() {
   const location = useLocation();
 
-  console.log("Question Detail Data", location.state.history.questionStatusHistory);
+  console.log(
+    "Question Detail Data",
+    location.state.history.questionStatusHistory,
+  );
 
   const [showDeferForm, setShowDeferForm] = useState(false);
   const [showRetriveForm, setShowRetriveForm] = useState(false);
@@ -46,8 +49,8 @@ function QMSQuestionDetail() {
 
   const [deferState, setDeferState] = useState({
     sessionNo: "",
-    deferDate: ""
-  })
+    deferDate: "",
+  });
 
   const [reviveState, setReviveState] = useState({
     sessionNo: "",
@@ -57,8 +60,8 @@ function QMSQuestionDetail() {
     noticeDiaryDate: "",
     noticeDiaryTime: "",
     questionStatus: "",
-    questionDiaryNo: ""
-  })
+    questionDiaryNo: "",
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -105,7 +108,10 @@ function QMSQuestionDetail() {
     formData.append("urduText", "dkpad");
     formData.append("originalText", "dkpad");
     try {
-      const response = await UpdateQuestionById(location?.state?.question?.id, formData);
+      const response = await UpdateQuestionById(
+        location?.state?.question?.id,
+        formData,
+      );
       if (response?.success) {
         showSuccessMessage(response?.message);
       }
@@ -127,7 +133,9 @@ function QMSQuestionDetail() {
 
   const hendleQuestionTranslation = async () => {
     try {
-      const response = await sendQuestionTranslation(location?.state?.question?.id);
+      const response = await sendQuestionTranslation(
+        location?.state?.question?.id,
+      );
       if (response?.success) {
         showSuccessMessage(response.message);
       }
@@ -137,20 +145,26 @@ function QMSQuestionDetail() {
   };
 
   const hendleDeffer = async () => {
-    const DefferData = { fkSessionId: 1, deferredDate: deferState.deferDate, deferredBy: "login user ID" }
+    const DefferData = {
+      fkSessionId: 1,
+      deferredDate: deferState.deferDate,
+      deferredBy: "login user ID",
+    };
     try {
-      const response = await createDefferQuestion(location?.state?.question?.id, DefferData)
+      const response = await createDefferQuestion(
+        location?.state?.question?.id,
+        DefferData,
+      );
       if (response?.success) {
         showSuccessMessage(response.message);
       }
     } catch (error) {
       showErrorMessage(error.response.data.message);
     }
-  }
+  };
 
   const hendleRevive = async () => {
-    const reviveData =
-    {
+    const reviveData = {
       fkFromSessionId: reviveState.sessionNo,
       fkToSessionId: reviveState.sessionNo,
       fkGroupId: reviveState.qroup,
@@ -159,17 +173,20 @@ function QMSQuestionDetail() {
       noticeOfficeDiaryDate: reviveState.noticeDiaryDate,
       noticeOfficeDiaryTime: reviveState.noticeDiaryTime,
       questionDiaryNo: reviveState.questionDiaryNo,
-      fkQuestionStatus: reviveState.questionStatus
-    }
+      fkQuestionStatus: reviveState.questionStatus,
+    };
     try {
-      const response = await createReviveQuestion(location?.state?.question?.id, reviveData)
+      const response = await createReviveQuestion(
+        location?.state?.question?.id,
+        reviveData,
+      );
       if (response?.success) {
         showSuccessMessage(response.message);
       }
     } catch (error) {
       showErrorMessage(error.response.data.message);
     }
-  }
+  };
 
   //History
   const transfrerStatusHistoryData = (apiData) => {
@@ -181,7 +198,7 @@ function QMSQuestionDetail() {
     }));
   };
   const StatusHistoryData = transfrerStatusHistoryData(
-    location?.state?.history?.questionStatusHistory
+    location?.state?.history?.questionStatusHistory,
   );
   //questionRevival
   const transfrerRevivalHistoryData = (apiData) => {
@@ -190,12 +207,12 @@ function QMSQuestionDetail() {
       FromSession: leave?.FromSession?.sessionName,
       ToSession: leave?.ToSession?.sessionName,
       questionDiary: leave?.questionDiary?.questionDiaryNo,
-      revivalDate: leave?.createdAt
+      revivalDate: leave?.createdAt,
     }));
   };
 
   const QuestionRevivalHistoryData = transfrerRevivalHistoryData(
-    location?.state?.history?.questionRevival
+    location?.state?.history?.questionRevival,
   );
 
   //Deffer History
@@ -206,7 +223,7 @@ function QMSQuestionDetail() {
         defferToSession: leave?.session?.sessionName,
         defferOn: leave?.deferredDate,
         deferredBy: leave?.deferredBy,
-        revivalDate: leave?.createdAt
+        revivalDate: leave?.createdAt,
       }));
     } else {
       // Handle the case when apiData is not an array (e.g., "No defer data found")
@@ -215,7 +232,7 @@ function QMSQuestionDetail() {
   };
 
   const QuestionDefferHistoryData = transfrerDefferHistoryData(
-    location?.state?.history?.questionDefer
+    location?.state?.history?.questionDefer,
   );
 
   //File History
@@ -228,7 +245,7 @@ function QMSQuestionDetail() {
   };
 
   const QuestionFileHistoryData = transfrerFilerHistoryData(
-    location?.state?.history?.questionFileHistory
+    location?.state?.history?.questionFileHistory,
   );
 
   useEffect(() => {
@@ -260,18 +277,22 @@ function QMSQuestionDetail() {
                     <button class="btn btn-warning" type="">
                       No File Attached
                     </button>
-                    <button class="btn btn-primary" type="button" onClick={() => {
-                      setShowRetriveForm(!showRetriveForm)
-                      setShowDeferForm(false)
-                    }}>
+                    <button
+                      class="btn btn-primary"
+                      type="button"
+                      onClick={() => {
+                        setShowRetriveForm(!showRetriveForm);
+                        setShowDeferForm(false);
+                      }}
+                    >
                       Revive
                     </button>
                     <button
                       class="btn btn-primary"
                       type="button"
                       onClick={() => {
-                        setShowDeferForm(!showDeferForm)
-                        setShowRetriveForm(false)
+                        setShowDeferForm(!showDeferForm);
+                        setShowRetriveForm(false);
                       }}
                     >
                       Defer
@@ -296,7 +317,16 @@ function QMSQuestionDetail() {
                       <div class="col">
                         <div class="mb-3">
                           <label class="form-label">Session No</label>
-                          <select class="form-select" value={deferState.sessionNo} onChange={(e) => setDeferState({ ...deferState, sessionNo: e.target.value })}>
+                          <select
+                            class="form-select"
+                            value={deferState.sessionNo}
+                            onChange={(e) =>
+                              setDeferState({
+                                ...deferState,
+                                sessionNo: e.target.value,
+                              })
+                            }
+                          >
                             <option value={""} selected disabled hidden>
                               select
                             </option>
@@ -309,11 +339,25 @@ function QMSQuestionDetail() {
                       <div class="col">
                         <div class="mb-3">
                           <label class="form-label">Deffer Date</label>
-                          <input class="form-control" type="text" value={deferState.deferDate} onChange={(e) => setDeferState({ ...deferState, deferDate: e.target.value })} />
+                          <input
+                            class="form-control"
+                            type="text"
+                            value={deferState.deferDate}
+                            onChange={(e) =>
+                              setDeferState({
+                                ...deferState,
+                                deferDate: e.target.value,
+                              })
+                            }
+                          />
                         </div>
                       </div>
                       <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <button class="btn btn-primary" type="button" onClick={hendleDeffer}>
+                        <button
+                          class="btn btn-primary"
+                          type="button"
+                          onClick={hendleDeffer}
+                        >
                           Defer
                         </button>
                       </div>
@@ -331,7 +375,16 @@ function QMSQuestionDetail() {
                       <div class="col">
                         <div class="mb-3">
                           <label class="form-label">Session No</label>
-                          <select class="form-select" value={reviveState.sessionNo} onChange={(e) => setReviveState({ ...reviveState, sessionNo: e.target.value })}>
+                          <select
+                            class="form-select"
+                            value={reviveState.sessionNo}
+                            onChange={(e) =>
+                              setReviveState({
+                                ...reviveState,
+                                sessionNo: e.target.value,
+                              })
+                            }
+                          >
                             <option value={""} selected disabled hidden>
                               select
                             </option>
@@ -340,12 +393,20 @@ function QMSQuestionDetail() {
                             <option>45456</option>
                           </select>
                         </div>
-
                       </div>
                       <div class="col">
                         <div class="mb-3">
                           <label class="form-label">Group</label>
-                          <select class="form-select" value={reviveState.qroup} onChange={(e) => setReviveState({ ...reviveState, qroup: e.target.value })}>
+                          <select
+                            class="form-select"
+                            value={reviveState.qroup}
+                            onChange={(e) =>
+                              setReviveState({
+                                ...reviveState,
+                                qroup: e.target.value,
+                              })
+                            }
+                          >
                             <option value={""} selected disabled hidden>
                               select
                             </option>
@@ -358,7 +419,16 @@ function QMSQuestionDetail() {
                       <div class="col">
                         <div class="mb-3">
                           <label class="form-label">Division</label>
-                          <select class="form-select" value={reviveState.division} onChange={(e) => setReviveState({ ...reviveState, division: e.target.value })}>
+                          <select
+                            class="form-select"
+                            value={reviveState.division}
+                            onChange={(e) =>
+                              setReviveState({
+                                ...reviveState,
+                                division: e.target.value,
+                              })
+                            }
+                          >
                             <option value={""} selected disabled hidden>
                               select
                             </option>
@@ -371,14 +441,34 @@ function QMSQuestionDetail() {
                       <div class="col">
                         <div class="mb-3">
                           <label class="form-label">Notice Diary No</label>
-                          <input class="form-control" type="text" value={reviveState.noticeDiaryNo} onChange={(e) => setReviveState({ ...reviveState, noticeDiaryNo: e.target.value })} />
+                          <input
+                            class="form-control"
+                            type="text"
+                            value={reviveState.noticeDiaryNo}
+                            onChange={(e) =>
+                              setReviveState({
+                                ...reviveState,
+                                noticeDiaryNo: e.target.value,
+                              })
+                            }
+                          />
                         </div>
                       </div>
 
                       <div class="col">
                         <div class="mb-3">
                           <label class="form-label">Notice Diary Date</label>
-                          <input class="form-control" type="text" value={reviveState.noticeDiaryDate} onChange={(e) => setReviveState({ ...reviveState, noticeDiaryDate: e.target.value })} />
+                          <input
+                            class="form-control"
+                            type="text"
+                            value={reviveState.noticeDiaryDate}
+                            onChange={(e) =>
+                              setReviveState({
+                                ...reviveState,
+                                noticeDiaryDate: e.target.value,
+                              })
+                            }
+                          />
                         </div>
                       </div>
 
@@ -386,13 +476,32 @@ function QMSQuestionDetail() {
                         <div class="col">
                           <div class="mb-3">
                             <label class="form-label">Notice Diary Time</label>
-                            <input class="form-control" type="text" value={reviveState.noticeDiaryTime} onChange={(e) => setReviveState({ ...reviveState, noticeDiaryTime: e.target.value })} />
+                            <input
+                              class="form-control"
+                              type="text"
+                              value={reviveState.noticeDiaryTime}
+                              onChange={(e) =>
+                                setReviveState({
+                                  ...reviveState,
+                                  noticeDiaryTime: e.target.value,
+                                })
+                              }
+                            />
                           </div>
                         </div>
                         <div class="col">
                           <div class="mb-3">
                             <label class="form-label">Question Status</label>
-                            <select class="form-select" value={reviveState.questionStatus} onChange={(e) => setReviveState({ ...reviveState, questionStatus: e.target.value })}>
+                            <select
+                              class="form-select"
+                              value={reviveState.questionStatus}
+                              onChange={(e) =>
+                                setReviveState({
+                                  ...reviveState,
+                                  questionStatus: e.target.value,
+                                })
+                              }
+                            >
                               <option value={""} selected disabled hidden>
                                 select
                               </option>
@@ -405,13 +514,27 @@ function QMSQuestionDetail() {
                         <div class="col">
                           <div class="mb-3">
                             <label class="form-label">Question Diary No</label>
-                            <input class="form-control" type="text" value={reviveState.questionDiaryNo} onChange={(e) => setReviveState({ ...reviveState, questionDiaryNo: e.target.value })} />
+                            <input
+                              class="form-control"
+                              type="text"
+                              value={reviveState.questionDiaryNo}
+                              onChange={(e) =>
+                                setReviveState({
+                                  ...reviveState,
+                                  questionDiaryNo: e.target.value,
+                                })
+                              }
+                            />
                           </div>
                         </div>
                       </div>
 
                       <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <button class="btn btn-primary" type="button" onClick={hendleRevive}>
+                        <button
+                          class="btn btn-primary"
+                          type="button"
+                          onClick={hendleRevive}
+                        >
                           Revive
                         </button>
                       </div>
@@ -794,7 +917,6 @@ function QMSQuestionDetail() {
                           <td class="text-center">{item.sessionNo}</td>
                           <td class="text-center">{item.status}</td>
                           <td class="text-center">{item.questionDate}</td>
-
                         </tr>
                       ))}
                   </tbody>
@@ -830,7 +952,6 @@ function QMSQuestionDetail() {
                     </tr>
                   </thead>
                   <tbody>
-
                     {QuestionRevivalHistoryData.length > 0 &&
                       QuestionRevivalHistoryData.map((item, index) => (
                         <tr>

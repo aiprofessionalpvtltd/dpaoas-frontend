@@ -6,13 +6,16 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { UpdateDepartment, createDepartment } from "../../../../../../api/APIs";
-import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 
 const validationSchema = Yup.object({
   departmentName: Yup.string().required("Department name is required"),
   description: Yup.string().required("description is required"),
-  status: Yup.string()
+  status: Yup.string(),
 });
 function HRMAddEditDepartment() {
   const location = useLocation();
@@ -30,7 +33,7 @@ function HRMAddEditDepartment() {
       // Handle form submission here
       // console.log(values);
       if (location.state) {
-        UpdateDepartmentApi()
+        UpdateDepartmentApi();
       } else {
         CreateDepartmentApi(values);
       }
@@ -41,15 +44,15 @@ function HRMAddEditDepartment() {
     const data = {
       departmentName: values?.departmentName,
       description: values?.description,
-      departmentStatus: "active"
+      departmentStatus: "active",
     };
     try {
       const response = await createDepartment(data);
       if (response.success) {
-        showSuccessMessage(response.message)
+        showSuccessMessage(response.message);
       }
     } catch (error) {
-      showErrorMessage(error.response.data.message)
+      showErrorMessage(error.response.data.message);
     }
   };
 
@@ -57,12 +60,12 @@ function HRMAddEditDepartment() {
     const data = {
       departmentName: values?.departmentName,
       description: values?.description,
-      departmentStatus: values?.status
+      departmentStatus: values?.status,
     };
     try {
       const response = await UpdateDepartment(location.state.id, data);
       if (response.success) {
-        showSuccessMessage(response.message)
+        showSuccessMessage(response.message);
       }
     } catch (error) {
       console.log(error);
@@ -99,11 +102,12 @@ function HRMAddEditDepartment() {
                       <label className="form-label">Department name * </label>
                       <input
                         type="text"
-                        className={`form-control ${formik.touched.departmentName &&
-                            formik.errors.departmentName
+                        className={`form-control ${
+                          formik.touched.departmentName &&
+                          formik.errors.departmentName
                             ? "is-invalid"
                             : ""
-                          }`}
+                        }`}
                         id="departmentName"
                         placeholder={formik.values.departmentName}
                         onChange={formik.handleChange}
@@ -141,11 +145,12 @@ function HRMAddEditDepartment() {
                       <label className="form-label">Description</label>
                       <textarea
                         placeholder={formik.values.description}
-                        className={`form-control ${formik.touched.description &&
-                            formik.errors.description
+                        className={`form-control ${
+                          formik.touched.description &&
+                          formik.errors.description
                             ? "is-invalid"
                             : ""
-                          }`}
+                        }`}
                         id="description"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}

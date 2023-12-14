@@ -20,7 +20,7 @@ function SentResolution() {
   const navigate = useNavigate();
   const [resData, setResData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
-    const [count, setCount] = useState(null);
+  const [count, setCount] = useState(null);
   const pageSize = 4; // Set your desired page size
 
   const handlePageChange = (page) => {
@@ -395,10 +395,10 @@ function SentResolution() {
                       handlePageChange={handlePageChange}
                       currentPage={currentPage}
                       showPrint={true}
-                        pageSize={pageSize}
-                        handleAdd={(item) => navigate('/')}
-                        handleEdit={(item) => navigate('/')}
-                        totalCount={count}
+                      pageSize={pageSize}
+                      handleAdd={(item) => navigate("/")}
+                      handleEdit={(item) => navigate("/")}
+                      totalCount={count}
                     />
                   </div>
                 </div>

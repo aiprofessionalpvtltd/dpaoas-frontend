@@ -13,14 +13,14 @@ import { ToastContainer } from "react-toastify";
 import { getPassID } from "../../../../../api/Auth";
 
 function VMSVisitors() {
-    const location = useLocation()
-    // console.log("visitors screen pass is\d",location?.state?.id)
-    const PassID = getPassID()
-    const navigate = useNavigate();
-    const [allvisitorData, setAllVisitorData] = useState([])
-    const [currentPage, setCurrentPage] = useState(0);
-    const [count, setCount] = useState(null);
-    const pageSize = 7; // Set your desired page size
+  const location = useLocation();
+  // console.log("visitors screen pass is\d",location?.state?.id)
+  const PassID = getPassID();
+  const navigate = useNavigate();
+  const [allvisitorData, setAllVisitorData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [count, setCount] = useState(null);
+  const pageSize = 7; // Set your desired page size
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked

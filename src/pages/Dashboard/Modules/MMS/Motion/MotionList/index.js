@@ -6,7 +6,11 @@ import { useNavigate } from "react-router-dom";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import { showErrorMessage } from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
-import { getAllMotion, getMotionByID, searchMotion } from "../../../../../../api/APIs";
+import {
+  getAllMotion,
+  getMotionByID,
+  searchMotion,
+} from "../../../../../../api/APIs";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import DatePicker from "react-datepicker";
@@ -141,9 +145,16 @@ function MMSMotionList() {
       <ToastContainer />
       <div class="container-fluid">
         <div class="card mt-1">
-          <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
+          <div
+            class="card-header red-bg"
+            style={{ background: "#14ae5c !important" }}
+          >
             <h1 className="float-start mt-2">MOTION LIST</h1>
-            <button className="btn btn-primary float-end" type="button" onClick={handleAdd}>
+            <button
+              className="btn btn-primary float-end"
+              type="button"
+              onClick={handleAdd}
+            >
               {"Add Motion"}
             </button>
           </div>
@@ -222,7 +233,9 @@ function MMSMotionList() {
                       <label class="form-label">List Date</label>
                       <DatePicker
                         selected={formik.values.listDate}
-                        onChange={(date) => formik.setFieldValue("listDate", date)}
+                        onChange={(date) =>
+                          formik.setFieldValue("listDate", date)
+                        }
                         className={"form-control"}
                       />
                     </div>
@@ -259,7 +272,9 @@ function MMSMotionList() {
                 tableTitle="Ministry Data"
                 headerShown={true}
                 handleDelete={(item) => alert(item.id)}
-                handleEdit={(item) => navigate("/mms/motion/detail", { state: item })}
+                handleEdit={(item) =>
+                  navigate("/mms/motion/detail", { state: item })
+                }
                 headertitlebgColor={"#666"}
                 headertitletextColor={"#FFF"}
                 handlePageChange={handlePageChange}

@@ -5,7 +5,10 @@ import Header from "../../../../../components/Header";
 import { useNavigate } from "react-router-dom";
 import CustomTable from "../../../../../components/CustomComponents/CustomTable";
 import { DeleteDepartment, getDepartment } from "../../../../../api/APIs";
-import { showErrorMessage, showSuccessMessage } from "../../../../../utils/ToastAlert";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 
 const data = [
@@ -30,7 +33,7 @@ const data = [
 function HRMDepartment() {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(0);
-  const [departmentData, setDepartmentData] = useState([])
+  const [departmentData, setDepartmentData] = useState([]);
   const [count, setCount] = useState(null);
   const pageSize = 4; // Set your desired page size
 
@@ -55,7 +58,7 @@ function HRMDepartment() {
         console.log("lsdflsdjljfkl", transformedData);
         setCount(response?.count);
 
-        setDepartmentData(transformedData)
+        setDepartmentData(transformedData);
       }
     } catch (error) {
       console.log(error);
@@ -64,15 +67,15 @@ function HRMDepartment() {
 
   const handleDelete = async (id) => {
     try {
-      const response = await DeleteDepartment(id)
+      const response = await DeleteDepartment(id);
       if (response?.success) {
-        showSuccessMessage(response.message)
-        getDepartmentData()
+        showSuccessMessage(response.message);
+        getDepartmentData();
       }
     } catch (error) {
-      showErrorMessage(error.response.data.message)
+      showErrorMessage(error.response.data.message);
     }
-  }
+  };
   useEffect(() => {
     getDepartmentData();
   }, []);

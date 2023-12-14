@@ -28,11 +28,11 @@ const data = [
 ];
 
 function HRMDashboard() {
-    const navigate = useNavigate()
-    const [currentPage, setCurrentPage] = useState(0);
-    const [rolesList, setRolesList] = useState([]);
-    // const [count, setCount] = useState(null);
-    const pageSize = 4; // Set your desired page size
+  const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState(0);
+  const [rolesList, setRolesList] = useState([]);
+  // const [count, setCount] = useState(null);
+  const pageSize = 4; // Set your desired page size
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
@@ -62,7 +62,7 @@ function HRMDashboard() {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   return (
     <Layout module={true} sidebarItems={HRMsidebarItems} centerlogohide={true}>

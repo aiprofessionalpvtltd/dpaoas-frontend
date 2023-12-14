@@ -35,7 +35,7 @@ function CustomTable({
   searchonchange,
   ActionHide,
   totalCount,
-  hidePagination
+  hidePagination,
 }) {
   const keys = data?.length > 0 ? Object.keys(data[0]) : [];
   const [totalPages, setTotalPages] = useState(0);
@@ -46,9 +46,14 @@ function CustomTable({
   };
 
   useEffect(() => {
-    setTotalPages(Math.max(1, Math.ceil((totalCount ? totalCount : data?.length) / pageSize)));
+    setTotalPages(
+      Math.max(
+        1,
+        Math.ceil((totalCount ? totalCount : data?.length) / pageSize),
+      ),
+    );
   }, [data?.length, pageSize]);
-  
+
   const startIndex = currentPage * pageSize;
   const endIndex = startIndex + pageSize;
   const displayedData = data?.slice(startIndex, endIndex);
@@ -72,14 +77,28 @@ function CustomTable({
           </button>
         </li>
         {Array.from({ length: totalPages }).map((_, index) => (
-          <li key={index} className={`page-item ${currentPage === index ? 'active' : ''}`}>
-            <button className="page-link" onClick={() => handlePageChange(index)}>
+          <li
+            key={index}
+            className={`page-item ${currentPage === index ? "active" : ""}`}
+          >
+            <button
+              className="page-link"
+              onClick={() => handlePageChange(index)}
+            >
               {index + 1}
             </button>
           </li>
         ))}
-        <li className={`page-item ${currentPage >= totalPages - 1 ? 'disabled' : ''}`}>
-          <button className="page-link" onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage >= totalPages - 1}>
+        <li
+          className={`page-item ${
+            currentPage >= totalPages - 1 ? "disabled" : ""
+          }`}
+        >
+          <button
+            className="page-link"
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage >= totalPages - 1}
+          >
             Next
           </button>
         </li>
@@ -130,7 +149,11 @@ function CustomTable({
         )}
 
         {data.length <= 0 && (
-          <div style={{ textAlign: 'center', marginTop: "30px", fontSize: "20px" }}>No data found :(</div>
+          <div
+            style={{ textAlign: "center", marginTop: "30px", fontSize: "20px" }}
+          >
+            No data found :(
+          </div>
         )}
         <table
           className="table table-striped red-bg-head"
@@ -153,230 +176,252 @@ function CustomTable({
                   {formatHeader(key)}
                 </th>
               ))}
-              {data.length > 0 && (
-                !ActionHide && (
-                  <th
-                    className="text-center"
-                    style={{
-                      width: "180px",
-                      backgroundColor: headertitlebgColor
-                        ? headertitlebgColor
-                        : "#FFF",
-                      color: headertitletextColor
-                        ? headertitletextColor
-                        : "#666",
-                    }}
-                  >
-                    Actions
-                  </th>
-                )
+              {data.length > 0 && !ActionHide && (
+                <th
+                  className="text-center"
+                  style={{
+                    width: "180px",
+                    backgroundColor: headertitlebgColor
+                      ? headertitlebgColor
+                      : "#FFF",
+                    color: headertitletextColor ? headertitletextColor : "#666",
+                  }}
+                >
+                  Actions
+                </th>
               )}
             </tr>
           </thead>
           <tbody>
             {totalCount || hidePagination
               ? data.map((item, rowIndex) => (
-                <tr key={rowIndex}>
-                {keys.map((key, colIndex) => (
-                  // <td key={colIndex} className="text-center">
-                  //     {item[key]}
-                  // </td>
-                  <td className="text-center">
-                    {item[key] === "active" || item[key] === "inactive" ? (
-                      <span
-                        className={`label label-sm ${item[key] === "active"
-                          ? "label-success"
-                          : "label-danger"
-                          }`}
-                      >
-                        {item[key]}
-                      </span>
-                    ) : (
-                      <span>{item[key]}</span>
+                  <tr key={rowIndex}>
+                    {keys.map((key, colIndex) => (
+                      // <td key={colIndex} className="text-center">
+                      //     {item[key]}
+                      // </td>
+                      <td className="text-center">
+                        {item[key] === "active" || item[key] === "inactive" ? (
+                          <span
+                            className={`label label-sm ${
+                              item[key] === "active"
+                                ? "label-success"
+                                : "label-danger"
+                            }`}
+                          >
+                            {item[key]}
+                          </span>
+                        ) : (
+                          <span>{item[key]}</span>
+                        )}
+                      </td>
+                    ))}
+                    <td className="text-center">
+                      {!hideEditIcon && !hideEditIcon && (
+                        <>
+                          <OverlayTrigger placement="top" overlay={editTooltip}>
+                            <button
+                              onClick={() => handleEdit(item)}
+                              className="btn default btn-xs black"
+                              data-id={item.id}
+                            >
+                              <FontAwesomeIcon icon={faEdit} />
+                            </button>
+                          </OverlayTrigger>
+                          <OverlayTrigger
+                            placement="top"
+                            overlay={deleteTooltip}
+                          >
+                            <button
+                              onClick={() => handleDelete(item)}
+                              className="btn default btn-xs black"
+                              data-id={item.id}
+                            >
+                              <FontAwesomeIcon icon={faTrash} />
+                            </button>
+                          </OverlayTrigger>
+                        </>
+                      )}
+                      {hideUserIcon && hideUserIcon && (
+                        <>
+                          <OverlayTrigger
+                            placement="top"
+                            overlay={vistorTooltip}
+                          >
+                            <button
+                              onClick={() => handleUser(item)}
+                              className="btn default btn-xs black"
+                              data-id={item.id}
+                            >
+                              <FontAwesomeIcon icon={faUser} />
+                            </button>
+                          </OverlayTrigger>
+                          <OverlayTrigger
+                            placement="top"
+                            overlay={printTooltip}
+                          >
+                            <button
+                              onClick={() => handlePrint(item)}
+                              className="btn default btn-xs black"
+                              data-id={item.id}
+                            >
+                              <FontAwesomeIcon icon={faPrint} />
+                            </button>
+                          </OverlayTrigger>
+                          <OverlayTrigger
+                            placement="top"
+                            overlay={duplicateTooltip}
+                          >
+                            <button
+                              onClick={() => handleDuplicate(item)}
+                              className="btn default btn-xs black"
+                              data-id={item.id}
+                            >
+                              <FontAwesomeIcon icon={faClone} />
+                            </button>
+                          </OverlayTrigger>
+                        </>
+                      )}
+                      {showPrint && (
+                        <OverlayTrigger placement="top" overlay={printTooltip}>
+                          <button
+                            onClick={() => handlePrint(item)}
+                            className="btn default btn-xs black"
+                            data-id={item.id}
+                          >
+                            <FontAwesomeIcon icon={faPrint} />
+                          </button>
+                        </OverlayTrigger>
+                      )}
+                    </td>
+                  </tr>
+                ))
+              : displayedData.map((item, rowIndex) => (
+                  <tr key={rowIndex}>
+                    {keys.map((key, colIndex) => (
+                      // <td key={colIndex} className="text-center">
+                      //     {item[key]}
+                      // </td>
+                      <td className="text-center">
+                        {item[key] === "active" || item[key] === "inactive" ? (
+                          <span
+                            className={`label label-sm ${
+                              item[key] === "active"
+                                ? "label-success"
+                                : "label-danger"
+                            }`}
+                          >
+                            {item[key]}
+                          </span>
+                        ) : (
+                          <span>{item[key]}</span>
+                        )}
+                      </td>
+                    ))}
+                    {!ActionHide && (
+                      <td className="text-center">
+                        {!hideEditIcon && !hideEditIcon && (
+                          <>
+                            <OverlayTrigger
+                              placement="top"
+                              overlay={editTooltip}
+                            >
+                              <button
+                                onClick={() => handleEdit(item)}
+                                className="btn default btn-xs black"
+                                data-id={item.id}
+                              >
+                                <FontAwesomeIcon icon={faEdit} />
+                              </button>
+                            </OverlayTrigger>
+                            <OverlayTrigger
+                              placement="top"
+                              overlay={deleteTooltip}
+                            >
+                              <button
+                                onClick={() => handleDelete(item)}
+                                className="btn default btn-xs black"
+                                data-id={item.id}
+                              >
+                                <FontAwesomeIcon icon={faTrash} />
+                              </button>
+                            </OverlayTrigger>
+                          </>
+                        )}
+                        {hideUserIcon && hideUserIcon && (
+                          <>
+                            <OverlayTrigger
+                              placement="top"
+                              overlay={vistorTooltip}
+                            >
+                              <button
+                                onClick={() => handleUser(item)}
+                                className="btn default btn-xs black"
+                                data-id={item.id}
+                              >
+                                <FontAwesomeIcon icon={faUser} />
+                              </button>
+                            </OverlayTrigger>
+                            <OverlayTrigger
+                              placement="top"
+                              overlay={printTooltip}
+                            >
+                              <button
+                                onClick={() => handlePrint(item)}
+                                className="btn default btn-xs black"
+                                data-id={item.id}
+                              >
+                                <FontAwesomeIcon icon={faPrint} />
+                              </button>
+                            </OverlayTrigger>
+                            <OverlayTrigger
+                              placement="top"
+                              overlay={duplicateTooltip}
+                            >
+                              <button
+                                onClick={() => handleDuplicate(item)}
+                                className="btn default btn-xs black"
+                                data-id={item.id}
+                              >
+                                <FontAwesomeIcon icon={faClone} />
+                              </button>
+                            </OverlayTrigger>
+                          </>
+                        )}
+                        {showPrint && (
+                          <OverlayTrigger
+                            placement="top"
+                            overlay={printTooltip}
+                          >
+                            <button
+                              onClick={() => handlePrint(item)}
+                              className="btn default btn-xs black"
+                              data-id={item.id}
+                            >
+                              <FontAwesomeIcon icon={faPrint} />
+                            </button>
+                          </OverlayTrigger>
+                        )}
+                      </td>
                     )}
-                  </td>
+                  </tr>
                 ))}
-                <td className="text-center">
-                  {!hideEditIcon && !hideEditIcon && (
-                    <>
-                      <OverlayTrigger placement="top" overlay={editTooltip}>
-                        <button
-                          onClick={() => handleEdit(item)}
-                          className="btn default btn-xs black"
-                          data-id={item.id}
-                        >
-                          <FontAwesomeIcon icon={faEdit} />
-                        </button>
-                      </OverlayTrigger>
-                      <OverlayTrigger placement="top" overlay={deleteTooltip}>
-                        <button
-                          onClick={() => handleDelete(item)}
-                          className="btn default btn-xs black"
-                          data-id={item.id}
-                        >
-                          <FontAwesomeIcon icon={faTrash} />
-                        </button>
-                      </OverlayTrigger>
-                    </>
-                  )}
-                  {hideUserIcon && hideUserIcon && (
-                    <>
-                      <OverlayTrigger placement="top" overlay={vistorTooltip}>
-                        <button
-                          onClick={() => handleUser(item)}
-                          className="btn default btn-xs black"
-                          data-id={item.id}
-                        >
-                          <FontAwesomeIcon icon={faUser} />
-                        </button>
-                      </OverlayTrigger>
-                      <OverlayTrigger placement="top" overlay={printTooltip}>
-                        <button
-                          onClick={() => handlePrint(item)}
-                          className="btn default btn-xs black"
-                          data-id={item.id}
-                        >
-                          <FontAwesomeIcon icon={faPrint} />
-                        </button>
-                      </OverlayTrigger>
-                      <OverlayTrigger
-                        placement="top"
-                        overlay={duplicateTooltip}
-                      >
-                        <button
-                          onClick={() => handleDuplicate(item)}
-                          className="btn default btn-xs black"
-                          data-id={item.id}
-                        >
-                          <FontAwesomeIcon icon={faClone} />
-                        </button>
-                      </OverlayTrigger>
-                    </>
-                  )}
-                  {showPrint && (
-                    <OverlayTrigger placement="top" overlay={printTooltip}>
-                      <button
-                        onClick={() => handlePrint(item)}
-                        className="btn default btn-xs black"
-                        data-id={item.id}
-                      >
-                        <FontAwesomeIcon icon={faPrint} />
-                      </button>
-                    </OverlayTrigger>
-                  )}
-                </td>
-              </tr>
-              )) : displayedData.map((item, rowIndex) => (
-              <tr key={rowIndex}>
-                {keys.map((key, colIndex) => (
-                  // <td key={colIndex} className="text-center">
-                  //     {item[key]}
-                  // </td>
-                  <td className="text-center">
-                    {item[key] === "active" || item[key] === "inactive" ? (
-                      <span
-                        className={`label label-sm ${
-                          item[key] === "active"
-                            ? "label-success"
-                            : "label-danger"
-                        }`}
-                      >
-                        {item[key]}
-                      </span>
-                    ) : (
-                      <span>{item[key]}</span>
-                    )}
-                  </td>
-                ))}
-                {!ActionHide && (
-                <td className="text-center">
-                  {!hideEditIcon && !hideEditIcon && (
-                    <>
-                      <OverlayTrigger placement="top" overlay={editTooltip}>
-                        <button
-                          onClick={() => handleEdit(item)}
-                          className="btn default btn-xs black"
-                          data-id={item.id}
-                        >
-                          <FontAwesomeIcon icon={faEdit} />
-                        </button>
-                      </OverlayTrigger>
-                      <OverlayTrigger placement="top" overlay={deleteTooltip}>
-                        <button
-                          onClick={() => handleDelete(item)}
-                          className="btn default btn-xs black"
-                          data-id={item.id}
-                        >
-                          <FontAwesomeIcon icon={faTrash} />
-                        </button>
-                      </OverlayTrigger>
-                    </>
-                  )}
-                  {hideUserIcon && hideUserIcon && (
-                    <>
-                      <OverlayTrigger placement="top" overlay={vistorTooltip}>
-                        <button
-                          onClick={() => handleUser(item)}
-                          className="btn default btn-xs black"
-                          data-id={item.id}
-                        >
-                          <FontAwesomeIcon icon={faUser} />
-                        </button>
-                      </OverlayTrigger>
-                      <OverlayTrigger placement="top" overlay={printTooltip}>
-                        <button
-                          onClick={() => handlePrint(item)}
-                          className="btn default btn-xs black"
-                          data-id={item.id}
-                        >
-                          <FontAwesomeIcon icon={faPrint} />
-                        </button>
-                      </OverlayTrigger>
-                      <OverlayTrigger
-                        placement="top"
-                        overlay={duplicateTooltip}
-                      >
-                        <button
-                          onClick={() => handleDuplicate(item)}
-                          className="btn default btn-xs black"
-                          data-id={item.id}
-                        >
-                          <FontAwesomeIcon icon={faClone} />
-                        </button>
-                      </OverlayTrigger>
-                    </>
-                  )}
-                  {showPrint && (
-                    <OverlayTrigger placement="top" overlay={printTooltip}>
-                      <button
-                        onClick={() => handlePrint(item)}
-                        className="btn default btn-xs black"
-                        data-id={item.id}
-                      >
-                        <FontAwesomeIcon icon={faPrint} />
-                      </button>
-                    </OverlayTrigger>
-                  )}
-                </td>
-                )}
-              </tr>
-            ))}
           </tbody>
         </table>
       </div>
-      {hidePagination ? null : (
-        data.length > 0 && (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              alignItems: "flex-end",
-            }}
-          >
-            {renderPagination()}
-          </div>
-        )
-      )}
+      {hidePagination
+        ? null
+        : data.length > 0 && (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                alignItems: "flex-end",
+              }}
+            >
+              {renderPagination()}
+            </div>
+          )}
     </div>
   );
 }

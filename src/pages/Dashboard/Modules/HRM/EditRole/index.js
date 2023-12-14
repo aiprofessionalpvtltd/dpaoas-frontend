@@ -23,7 +23,7 @@ function HRMEditRole() {
 
   const location = useLocation();
   const [roleId, setRoleId] = useState(
-    location?.state ? location.state?.id : null
+    location?.state ? location.state?.id : null,
   );
 
   const initialValues = {
@@ -43,7 +43,7 @@ function HRMEditRole() {
       (item) =>
         item.itemId === itemId &&
         item.option.some((opt) => opt.id === optionId) &&
-        item.permission === permission
+        item.permission === permission,
     );
 
     if (isChecked) {
@@ -56,7 +56,7 @@ function HRMEditRole() {
                 permission: permission,
                 option: item.option.filter((opt) => opt.id !== optionId),
               }
-            : item
+            : item,
         );
       });
     } else {
@@ -68,7 +68,8 @@ function HRMEditRole() {
           permission: permission,
           option: [
             ...(prevCheckedItems.find(
-              (item) => item.itemId === itemId && item.permission === permission
+              (item) =>
+                item.itemId === itemId && item.permission === permission,
             )?.option || []), // Use existing options if available
             {
               id: optionId,
@@ -85,7 +86,7 @@ function HRMEditRole() {
   const filteredItems = permissionsArray.length
     ? allItems.map((item) => {
         const checkedItem = checkedItems.find(
-          (checked) => checked.itemId === item.id
+          (checked) => checked.itemId === item.id,
         );
 
         return {
@@ -95,30 +96,30 @@ function HRMEditRole() {
               !(
                 checkedItem &&
                 checkedItem.option.some(
-                  (checkedOption) => checkedOption.id === access.id
+                  (checkedOption) => checkedOption.id === access.id,
                 )
-              )
+              ),
           ),
         };
       })
     : allItems.map((item) => {
-      const checkedItem = checkedItems.find(
-        (checked) => checked.itemId === item.id
-      );
+        const checkedItem = checkedItems.find(
+          (checked) => checked.itemId === item.id,
+        );
 
-      return {
-        ...item,
-        hasAccess: item.hasAccess.filter(
-          (access) =>
-            !(
-              checkedItem &&
-              checkedItem.option.some(
-                (checkedOption) => checkedOption.id === access.id
-              )
-            )
-        ),
-      };
-    });
+        return {
+          ...item,
+          hasAccess: item.hasAccess.filter(
+            (access) =>
+              !(
+                checkedItem &&
+                checkedItem.option.some(
+                  (checkedOption) => checkedOption.id === access.id,
+                )
+              ),
+          ),
+        };
+      });
 
   useEffect(() => {
     const initialCheckedItems = permissionsArray.flatMap((permission) =>
@@ -126,7 +127,7 @@ function HRMEditRole() {
         itemId: permission.id,
         option: access,
         permission: permission.label,
-      }))
+      })),
     );
 
     const outputArr = [];
@@ -135,7 +136,7 @@ function HRMEditRole() {
       const existingItem = outputArr.find(
         (outputItem) =>
           outputItem.itemId === item.itemId &&
-          outputItem.permission === item.permission
+          outputItem.permission === item.permission,
       );
 
       if (existingItem) {
@@ -185,7 +186,7 @@ function HRMEditRole() {
 
   const EditRoleApi = async (values) => {
     const permissionOptionIds = checkedItems.flatMap((item) =>
-      item.option.map((option) => option.id)
+      item.option.map((option) => option.id),
     );
 
     const data = {

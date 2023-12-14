@@ -284,15 +284,15 @@ function QMSNewQuestion() {
                           Notice Office Diary Time
                         </label>
                         <TimePicker
-                            value={formik.values.noticeOfficeDiaryTime}
-                            clockIcon={null} // Disable clock view
-                            openClockOnFocus={false}
-                            format="hh:mm a"
-                            onChange={(time) =>
-                                formik.setFieldValue("noticeOfficeDiaryTime", time)
-                            }
-                            className={`form-control`}
-                            />
+                          value={formik.values.noticeOfficeDiaryTime}
+                          clockIcon={null} // Disable clock view
+                          openClockOnFocus={false}
+                          format="hh:mm a"
+                          onChange={(time) =>
+                            formik.setFieldValue("noticeOfficeDiaryTime", time)
+                          }
+                          className={`form-control`}
+                        />
                       </div>
                     </div>
                   </div>

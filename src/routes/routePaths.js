@@ -170,37 +170,34 @@ export const ProtectedRoutes = [
     element: <QMSDeferQuestionReports />,
   },
 
-    //QMS Module
-    { path: "/qms/dashboard", element: <QMSQuestionDashboard /> },
-    { path: "/qms/search/question", element: <QMSSearchQuestion /> },
-    { path: "/qms/search/resolution", element: <QMSSerchResolution /> },
+  //QMS Module
+  { path: "/qms/dashboard", element: <QMSQuestionDashboard /> },
+  { path: "/qms/search/question", element: <QMSSearchQuestion /> },
+  { path: "/qms/search/resolution", element: <QMSSerchResolution /> },
 
   { path: "/qms/resolution", element: <QMSQuestionDashboard /> },
   { path: "/qms/rsolution/list", element: <QMSResolutionList /> },
   { path: "/qms/resolution/delete", element: <QMSDeleteResolution /> },
 
-    
-    { path: "/qms/question", element: <QMSQuestionDashboard /> },
-    { path: "/qms/question/list", element: <QMSQuestionList /> },
-    { path: "/qms/question/detail", element: <QMSQuestionDetail /> },
-    { path: "/qms/question/new", element: <QMSNewQuestion /> },
-    { path: "/qms/question/delete", element: <QMSDeleteQuestion /> },
+  { path: "/qms/question", element: <QMSQuestionDashboard /> },
+  { path: "/qms/question/list", element: <QMSQuestionList /> },
+  { path: "/qms/question/detail", element: <QMSQuestionDetail /> },
+  { path: "/qms/question/new", element: <QMSNewQuestion /> },
+  { path: "/qms/question/delete", element: <QMSDeleteQuestion /> },
 
-    { path: "/qms/resolution", element: <QMSQuestionDashboard /> },
-    { path: "/qms/resolution/list", element: <QMSResolutionList /> },
-    { path: "/qms/resolution/delete", element: <QMSDeleteResolution /> },
+  { path: "/qms/resolution", element: <QMSQuestionDashboard /> },
+  { path: "/qms/resolution/list", element: <QMSResolutionList /> },
+  { path: "/qms/resolution/delete", element: <QMSDeleteResolution /> },
 
-    { path: "/qms/notice", element: <QMSQuestionDashboard /> },
-    { path: "/qms/notice/notice-question", element: <QMSNoticeQuestion /> },
-    { path: "/qms/notice/notice-question-detail", element: <QMSNoticeQuestionDetail /> },
-    { path: "/qms/notice/notice-resolution", element: <QMSNoticeResolution /> },
-    { path: "/qms/notice/notice-resolution-detail", element: <QMSNoticeResolutionDetail /> },
-
-    
-
-
-
-
-
-
+  { path: "/qms/notice", element: <QMSQuestionDashboard /> },
+  { path: "/qms/notice/notice-question", element: <QMSNoticeQuestion /> },
+  {
+    path: "/qms/notice/notice-question-detail",
+    element: <QMSNoticeQuestionDetail />,
+  },
+  { path: "/qms/notice/notice-resolution", element: <QMSNoticeResolution /> },
+  {
+    path: "/qms/notice/notice-resolution-detail",
+    element: <QMSNoticeResolutionDetail />,
+  },
 ];

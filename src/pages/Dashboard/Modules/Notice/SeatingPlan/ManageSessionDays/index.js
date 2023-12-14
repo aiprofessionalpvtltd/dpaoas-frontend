@@ -8,7 +8,11 @@ function ManageSessionDays() {
   const navigate = useNavigate();
 
   return (
-    <Layout module={true} sidebarItems={NoticeSidebarItems} centerlogohide={true}>
+    <Layout
+      module={true}
+      sidebarItems={NoticeSidebarItems}
+      centerlogohide={true}
+    >
       <Header
         dashboardLink={"/"}
         addLink1={"/notice/dashboard"}
@@ -19,12 +23,18 @@ function ManageSessionDays() {
       <div>
         <div class="container-fluid">
           <div class="card mt-1">
-            <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
+            <div
+              class="card-header red-bg"
+              style={{ background: "#14ae5c !important" }}
+            >
               <h1>Manage Session Day</h1>
             </div>
             <div class="card-body">
               <div class="container-fluid">
-                <div class="dash-detail-container" style={{ marginTop: "20px" }}>
+                <div
+                  class="dash-detail-container"
+                  style={{ marginTop: "20px" }}
+                >
                   <table class="table red-bg-head th">
                     <thead>
                       <tr>

@@ -5,7 +5,10 @@ import { QMSSideBarItems } from "../../../../../../utils/sideBarItems";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useLocation } from "react-router";
-import { UpdateResolution, sendResolutionForTranslation } from "../../../../../../api/APIs";
+import {
+  UpdateResolution,
+  sendResolutionForTranslation,
+} from "../../../../../../api/APIs";
 import { showSuccessMessage } from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 import TimePicker from "react-time-picker";
@@ -15,15 +18,19 @@ import { Editor } from "../../../../../../components/CustomComponents/Editor";
 const validationSchema = Yup.object({
   sessionNo: Yup.number(),
   noticeOfficeDiaryNo: Yup.number(),
-  noticeOfficeDiaryDate: Yup.string().required("Notice Office Diary Date is required"),
-  noticeOfficeDiaryTime: Yup.string().required("Notice Office Diary Time is required"),
+  noticeOfficeDiaryDate: Yup.string().required(
+    "Notice Office Diary Date is required",
+  ),
+  noticeOfficeDiaryTime: Yup.string().required(
+    "Notice Office Diary Time is required",
+  ),
   resolutionType: Yup.string(),
   resolutionStatus: Yup.string(),
   resolutionMovers: Yup.array(),
 });
 
 function QMSNoticeResolutionDetail() {
-  const location = useLocation()
+  const location = useLocation();
   console.log("dksfifsdpoipfosdpfiopf", location.state.id);
   const formik = useFormik({
     initialValues: {
@@ -43,34 +50,37 @@ function QMSNoticeResolutionDetail() {
   });
 
   const hendleUpdate = async (values) => {
-    const data = new FormData()
-    data.append('noticeOfficeDiaryDate', values.noticeOfficeDiaryDate)
-    data.append('noticeOfficeDiaryTime', values.noticeOfficeDiaryTime)
-    data.append('resolutionType', values.resolutionType)
-    data.append('fkResolutionStatus', values.resolutionStatus)
-    data.append('resolutionMovers[]', values.resolutionMovers)
-    data.append('resolutionDiaryNo', location?.state?.noticeDiary?.noticeOfficeDiaryNo)
+    const data = new FormData();
+    data.append("noticeOfficeDiaryDate", values.noticeOfficeDiaryDate);
+    data.append("noticeOfficeDiaryTime", values.noticeOfficeDiaryTime);
+    data.append("resolutionType", values.resolutionType);
+    data.append("fkResolutionStatus", values.resolutionStatus);
+    data.append("resolutionMovers[]", values.resolutionMovers);
+    data.append(
+      "resolutionDiaryNo",
+      location?.state?.noticeDiary?.noticeOfficeDiaryNo,
+    );
 
     try {
-      const response = await UpdateResolution(location.state.id, data)
+      const response = await UpdateResolution(location.state.id, data);
       if (response?.success) {
-        showSuccessMessage(response.message)
+        showSuccessMessage(response.message);
       }
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   const hendleSendResolutionForTranslation = async () => {
     try {
-      const response = await sendResolutionForTranslation(location?.state?.id)
+      const response = await sendResolutionForTranslation(location?.state?.id);
       if (response?.success) {
-        showSuccessMessage(response.message)
+        showSuccessMessage(response.message);
       }
     } catch (error) {
       console.log(error);
     }
-  }
+  };
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <ToastContainer />
@@ -105,7 +115,6 @@ function QMSNoticeResolutionDetail() {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
-
                     </div>
                   </div>
                   <div class="col">
@@ -118,7 +127,6 @@ function QMSNoticeResolutionDetail() {
                         id="noticeOfficeDiaryNo"
                         readOnly={true}
                       />
-
                     </div>
                   </div>
                   <div class="col">
@@ -130,11 +138,12 @@ function QMSNoticeResolutionDetail() {
                           formik.setFieldValue("noticeOfficeDiaryDate", date)
                         }
                         onBlur={formik.handleBlur}
-                        className={`form-control ${formik.touched.noticeOfficeDiaryDate &&
+                        className={`form-control ${
+                          formik.touched.noticeOfficeDiaryDate &&
                           formik.errors.noticeOfficeDiaryDate
-                          ? "is-invalid"
-                          : ""
-                          }`}
+                            ? "is-invalid"
+                            : ""
+                        }`}
                       />
                       {formik.touched.noticeOfficeDiaryDate &&
                         formik.errors.noticeOfficeDiaryDate && (
@@ -157,11 +166,12 @@ function QMSNoticeResolutionDetail() {
                         onChange={(time) =>
                           formik.setFieldValue("noticeOfficeDiaryTime", time)
                         }
-                        className={`form-control ${formik.touched.noticeOfficeDiaryTime &&
+                        className={`form-control ${
+                          formik.touched.noticeOfficeDiaryTime &&
                           formik.errors.noticeOfficeDiaryTime
-                          ? "is-invalid"
-                          : ""
-                          }`}
+                            ? "is-invalid"
+                            : ""
+                        }`}
                       />
                       {formik.touched.noticeOfficeDiaryTime &&
                         formik.errors.noticeOfficeDiaryTime && (
@@ -192,7 +202,6 @@ function QMSNoticeResolutionDetail() {
                         <option value="Govt. Resolution Supported by others">
                           Govt. Resolution Supported by others
                         </option>
-
                       </select>
                     </div>
                   </div>
@@ -233,7 +242,11 @@ function QMSNoticeResolutionDetail() {
                     <button class="btn btn-primary" type="submit">
                       Save
                     </button>
-                    <button class="btn btn-primary" type="button" onClick={() => hendleSendResolutionForTranslation()}>
+                    <button
+                      class="btn btn-primary"
+                      type="button"
+                      onClick={() => hendleSendResolutionForTranslation()}
+                    >
                       Send for Translation
                     </button>
                   </div>
@@ -242,13 +255,13 @@ function QMSNoticeResolutionDetail() {
               <div style={{ marginTop: 10 }}>
                 <Editor
                   title={"English Text"}
-                // onChange={handleProcedureContentChange}
+                  // onChange={handleProcedureContentChange}
                 />
               </div>
               <div style={{ marginTop: 70, marginBottom: 40 }}>
                 <Editor
                   title={"Urdu Text"}
-                // onChange={handleProcedureContentChange}
+                  // onChange={handleProcedureContentChange}
                 />
               </div>
             </div>

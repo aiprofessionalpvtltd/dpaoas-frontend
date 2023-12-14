@@ -3,7 +3,15 @@ import { NoticeSidebarItems } from "../../../../../../utils/sideBarItems";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
 import { useNavigate } from "react-router";
-import { getAllMinistry, getAllMotion, getAllSessions, getallMembers, getallMotionStatus, searchMotion, searchQuestion } from "../../../../../../api/APIs";
+import {
+  getAllMinistry,
+  getAllMotion,
+  getAllSessions,
+  getallMembers,
+  getallMotionStatus,
+  searchMotion,
+  searchQuestion,
+} from "../../../../../../api/APIs";
 import DatePicker from "react-datepicker";
 import {
   showErrorMessage,
@@ -194,7 +202,7 @@ function SearchMotion() {
               <h1>SEARCH MOTION</h1>
             </div>
             <div class="card-body">
-            <form onSubmit={formik.handleSubmit}>
+              <form onSubmit={formik.handleSubmit}>
                 <div class="row">
                   <div class="col">
                     <div class="mb-3">
@@ -375,7 +383,9 @@ function SearchMotion() {
                           select
                         </option>
                         {ministryData &&
-                          ministryData.map((item) => <option value={item.id}>{item.ministryName}</option>)}
+                          ministryData.map((item) => (
+                            <option value={item.id}>{item.ministryName}</option>
+                          ))}
                       </select>
                     </div>
                   </div>
@@ -408,14 +418,22 @@ function SearchMotion() {
                       <label class="form-label">From Notice Date</label>
                       <DatePicker
                         selected={formik.values.fromNoticeDate}
-                        onChange={(date) => formik.setFieldValue("fromNoticeDate", date)}
+                        onChange={(date) =>
+                          formik.setFieldValue("fromNoticeDate", date)
+                        }
                         className={`form-control ${
-                          formik.errors.fromNoticeDate && formik.touched.fromNoticeDate ? "is-invalid" : ""
+                          formik.errors.fromNoticeDate &&
+                          formik.touched.fromNoticeDate
+                            ? "is-invalid"
+                            : ""
                         }`}
                       />
-                      {formik.errors.fromNoticeDate && formik.touched.fromNoticeDate && (
-                        <div className="invalid-feedback">{formik.errors.fromNoticeDate}</div>
-                      )}
+                      {formik.errors.fromNoticeDate &&
+                        formik.touched.fromNoticeDate && (
+                          <div className="invalid-feedback">
+                            {formik.errors.fromNoticeDate}
+                          </div>
+                        )}
                     </div>
                   </div>
                   <div class="col">
@@ -423,7 +441,9 @@ function SearchMotion() {
                       <label class="form-label">To Notice Date</label>
                       <DatePicker
                         selected={formik.values.toNoticeDate}
-                        onChange={(date) => formik.setFieldValue("toNoticeDate", date)}
+                        onChange={(date) =>
+                          formik.setFieldValue("toNoticeDate", date)
+                        }
                         className={"form-control"}
                       />
                     </div>
@@ -439,13 +459,18 @@ function SearchMotion() {
                     </button>
                   </div>
                 </div>
-                <div class="dash-detail-container" style={{ marginTop: "20px" }}>
+                <div
+                  class="dash-detail-container"
+                  style={{ marginTop: "20px" }}
+                >
                   <CustomTable
                     block={true}
                     data={motionData}
                     headerShown={true}
                     handleDelete={(item) => alert(item.id)}
-                    handleEdit={(item) => navigate("/mms/motion/new", { state: item })}
+                    handleEdit={(item) =>
+                      navigate("/mms/motion/new", { state: item })
+                    }
                     headertitlebgColor={"#666"}
                     headertitletextColor={"#FFF"}
                     handlePageChange={handlePageChange}

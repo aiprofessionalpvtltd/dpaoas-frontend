@@ -31,7 +31,7 @@ function HRMAddEditDesignation() {
     onSubmit: (values) => {
       // Handle form submission here
       if (location.state) {
-        UpdateDesignationApi(values)
+        UpdateDesignationApi(values);
       } else {
         CreateDesignationApi(values);
       }
@@ -42,12 +42,12 @@ function HRMAddEditDesignation() {
     const data = {
       designationName: values?.designationname,
       description: values?.designationdescription,
-      designationStatus: "active"
+      designationStatus: "active",
     };
     try {
       const response = await createDesignation(data);
       if (response.success) {
-        showSuccessMessage(response.message)
+        showSuccessMessage(response.message);
       }
     } catch (error) {
       console.log(error);
@@ -63,7 +63,7 @@ function HRMAddEditDesignation() {
     try {
       const response = await UpdateDesignation(location?.state?.id, data);
       if (response.success) {
-        showSuccessMessage(response.message)
+        showSuccessMessage(response.message);
       }
     } catch (error) {
       console.log(error);
@@ -101,11 +101,12 @@ function HRMAddEditDesignation() {
                       <input
                         type="text"
                         placeholder={formik.values.designationname}
-                        className={`form-control ${formik.touched.designationname &&
+                        className={`form-control ${
+                          formik.touched.designationname &&
                           formik.errors.designationname
-                          ? "is-invalid"
-                          : ""
-                          }`}
+                            ? "is-invalid"
+                            : ""
+                        }`}
                         id="designationname"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -131,7 +132,6 @@ function HRMAddEditDesignation() {
                           onBlur={formik.handleBlur}
                           value={formik.values.designationstatus}
                         />
-
                       </div>
                     </div>
                   )}
@@ -143,11 +143,12 @@ function HRMAddEditDesignation() {
                       <label className="form-label">Description</label>
                       <textarea
                         placeholder={formik.values.designationdescription}
-                        className={`form-control ${formik.touched.designationdescription &&
+                        className={`form-control ${
+                          formik.touched.designationdescription &&
                           formik.errors.designationdescription
-                          ? "is-invalid"
-                          : ""
-                          }`}
+                            ? "is-invalid"
+                            : ""
+                        }`}
                         id="designationdescription"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}

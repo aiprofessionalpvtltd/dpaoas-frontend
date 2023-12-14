@@ -5,13 +5,20 @@ import Header from "../../../../../../components/Header";
 import { useFormik } from "formik";
 import { ToastContainer } from "react-toastify";
 import DatePicker from "react-datepicker";
-import { getAllQuestionStatus, getResolutionBYID, searchResolution } from "../../../../../../api/APIs";
-import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
+import {
+  getAllQuestionStatus,
+  getResolutionBYID,
+  searchResolution,
+} from "../../../../../../api/APIs";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../../utils/ToastAlert";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import { useNavigate } from "react-router";
 
 function QMSNoticeResolution() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(0);
   const [searchedData, setSearchedData] = useState([]);
   const [allResolutionStatus, setAllResolutionStatus] = useState([]);
@@ -65,7 +72,6 @@ function QMSNoticeResolution() {
     });
   };
 
-
   const SearchResolutionApi = async (values) => {
     const searchParams = {
       fkSessionNoFrom: values.fromSession,
@@ -98,7 +104,7 @@ function QMSNoticeResolution() {
     try {
       const response = await getAllQuestionStatus();
       if (response?.success) {
-        showSuccessMessage(response?.message)
+        showSuccessMessage(response?.message);
         setAllResolutionStatus(response?.data);
       }
     } catch (error) {
@@ -108,15 +114,16 @@ function QMSNoticeResolution() {
 
   const handleEdit = async (id) => {
     try {
-      const response = await getResolutionBYID(id)
+      const response = await getResolutionBYID(id);
       if (response?.success) {
-        navigate("/qms/notice/notice-resolution-detail", { state: response?.data });
+        navigate("/qms/notice/notice-resolution-detail", {
+          state: response?.data,
+        });
       }
     } catch (error) {
-      showErrorMessage(error.response.data.message)
+      showErrorMessage(error.response.data.message);
     }
-  }
-
+  };
 
   useEffect(() => {
     GetALlStatus();
@@ -146,37 +153,53 @@ function QMSNoticeResolution() {
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Notice Diary No</label>
-                      <input class="form-control" type="text" id="noticeOfficeDiaryNo"
+                      <input
+                        class="form-control"
+                        type="text"
+                        id="noticeOfficeDiaryNo"
                         placeholder={formik.values.noticeOfficeDiaryNo}
                         onChange={formik.handleChange}
-                        onBlur={formik.handleBlur} />
+                        onBlur={formik.handleBlur}
+                      />
                     </div>
                   </div>
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Resolution ID</label>
-                      <input class="form-control" type="text" id="resolutionID"
+                      <input
+                        class="form-control"
+                        type="text"
+                        id="resolutionID"
                         placeholder={formik.values.resolutionID}
                         onChange={formik.handleChange}
-                        onBlur={formik.handleBlur} />
+                        onBlur={formik.handleBlur}
+                      />
                     </div>
                   </div>
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Keyword</label>
-                      <input class="form-control" type="text" id="keyword"
+                      <input
+                        class="form-control"
+                        type="text"
+                        id="keyword"
                         placeholder={formik.values.keyword}
                         onChange={formik.handleChange}
-                        onBlur={formik.handleBlur} />
+                        onBlur={formik.handleBlur}
+                      />
                     </div>
                   </div>
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Member Name</label>
-                      <input class="form-control" type="text" id="memberName"
+                      <input
+                        class="form-control"
+                        type="text"
+                        id="memberName"
                         placeholder={formik.values.memberName}
                         onChange={formik.handleChange}
-                        onBlur={formik.handleBlur} />
+                        onBlur={formik.handleBlur}
+                      />
                     </div>
                   </div>
                 </div>
@@ -184,10 +207,13 @@ function QMSNoticeResolution() {
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">From Session</label>
-                      <select class="form-select" id="fromSession"
+                      <select
+                        class="form-select"
+                        id="fromSession"
                         placeholder={formik.values.fromSession}
                         onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}>
+                        onBlur={formik.handleBlur}
+                      >
                         <option>Select</option>
                         <option>121</option>
                         <option>122</option>
@@ -198,10 +224,13 @@ function QMSNoticeResolution() {
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">To Session</label>
-                      <select class="form-select" id="toSession"
+                      <select
+                        class="form-select"
+                        id="toSession"
                         placeholder={formik.values.toSession}
                         onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}>
+                        onBlur={formik.handleBlur}
+                      >
                         <option>Select</option>
                         <option>121</option>
                         <option>122</option>
@@ -212,10 +241,13 @@ function QMSNoticeResolution() {
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Resolution Type</label>
-                      <select class="form-select" id="resolutionType"
+                      <select
+                        class="form-select"
+                        id="resolutionType"
                         placeholder={formik.values.resolutionType}
                         onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}>
+                        onBlur={formik.handleBlur}
+                      >
                         <option>Select</option>
                         <option>121</option>
                         <option>122</option>
@@ -226,10 +258,13 @@ function QMSNoticeResolution() {
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Resolution Status</label>
-                      <select class="form-select" id="resolutionStatus"
+                      <select
+                        class="form-select"
+                        id="resolutionStatus"
                         placeholder={formik.values.resolutionStatus}
                         onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}>
+                        onBlur={formik.handleBlur}
+                      >
                         <option value="" selected disabled hidden>
                           select
                         </option>
@@ -249,7 +284,9 @@ function QMSNoticeResolution() {
                       <label class="form-label">From Notice Date</label>
                       <DatePicker
                         selected={formik.values.fromNoticeDate}
-                        onChange={(date) => formik.setFieldValue("fromNoticeDate", date)}
+                        onChange={(date) =>
+                          formik.setFieldValue("fromNoticeDate", date)
+                        }
                         className={`form-control`}
                       />
                     </div>
@@ -259,7 +296,9 @@ function QMSNoticeResolution() {
                       <label class="form-label">To Notice Date</label>
                       <DatePicker
                         selected={formik.values.toNoticeDate}
-                        onChange={(date) => formik.setFieldValue("toNoticeDate", date)}
+                        onChange={(date) =>
+                          formik.setFieldValue("toNoticeDate", date)
+                        }
                         className={`form-control`}
                       />
                     </div>

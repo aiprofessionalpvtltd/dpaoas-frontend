@@ -6,48 +6,44 @@ import CustomTable from "../../../../../../components/CustomComponents/CustomTab
 import { useNavigate } from "react-router-dom";
 
 function QMSDeferQuestionReports() {
-    const navigate = useNavigate()
-    const [currentPage, setCurrentPage] = useState(0);
-    const [count, setCount] = useState(null);
-    const pageSize = 4; // Set your desired page size
-    const data = [
-        {
-            "Sr#": 1,
-            "MID": "21-11-2023",
-            "M-File No": "Ali Ahmad Jan",
-            "Motion Diary No": "Additional Secretary Office",
-            "Session Number": "Educational Trip",
-            "Motion Type": "Personal",
-            "Subject Matter": "AI Professionals Pvt Limited",
-            "Notice No./Date": "21-11-2023",
-            "Motion Week": "30-11-2023",
-            "Motion Status": [
-                "Saturday"
-            ],
-            "Movers": "Visit",
-            "Ministries": "Inactive",
-        },
-        {
-            "Sr#": 1,
-            "MID": "21-11-2023",
-            "M-File No": "Ali Ahmad Jan",
-            "Motion Diary No": "Additional Secretary Office",
-            "Session Number": "Educational Trip",
-            "Motion Type": "Personal",
-            "Subject Matter": "AI Professionals Pvt Limited",
-            "Notice No./Date": "21-11-2023",
-            "Motion Week": "30-11-2023",
-            "Motion Status": [
-                "Saturday"
-            ],
-            "Movers": "Visit",
-            "Ministries": "Inactive",
-        },
-    ]
-    const handlePageChange = (page) => {
-        // Update currentPage when a page link is clicked
-        setCurrentPage(page);
-    };
+  const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState(0);
+  const [count, setCount] = useState(null);
+  const pageSize = 4; // Set your desired page size
+  const data = [
+    {
+      "Sr#": 1,
+      MID: "21-11-2023",
+      "M-File No": "Ali Ahmad Jan",
+      "Motion Diary No": "Additional Secretary Office",
+      "Session Number": "Educational Trip",
+      "Motion Type": "Personal",
+      "Subject Matter": "AI Professionals Pvt Limited",
+      "Notice No./Date": "21-11-2023",
+      "Motion Week": "30-11-2023",
+      "Motion Status": ["Saturday"],
+      Movers: "Visit",
+      Ministries: "Inactive",
+    },
+    {
+      "Sr#": 1,
+      MID: "21-11-2023",
+      "M-File No": "Ali Ahmad Jan",
+      "Motion Diary No": "Additional Secretary Office",
+      "Session Number": "Educational Trip",
+      "Motion Type": "Personal",
+      "Subject Matter": "AI Professionals Pvt Limited",
+      "Notice No./Date": "21-11-2023",
+      "Motion Week": "30-11-2023",
+      "Motion Status": ["Saturday"],
+      Movers: "Visit",
+      Ministries: "Inactive",
+    },
+  ];
+  const handlePageChange = (page) => {
+    // Update currentPage when a page link is clicked
+    setCurrentPage(page);
+  };
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <Header

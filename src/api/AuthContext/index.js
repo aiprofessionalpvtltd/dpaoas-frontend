@@ -1,9 +1,6 @@
 import React, { createContext, useState } from "react";
 import { loginUser } from "../APIs";
-import {
-  setAuthToken,
-  setUserData
-} from "../Auth";
+import { setAuthToken, setUserData } from "../Auth";
 
 export const AuthContext = createContext();
 
@@ -17,7 +14,6 @@ export const AuthProvider = ({ children }) => {
         setAuthToken(response?.data?.token);
         setUserData(response.data?.user);
         setPermissions(response?.data?.permissions);
-
       }
       return response?.data;
     } catch (error) {
@@ -30,7 +26,7 @@ export const AuthProvider = ({ children }) => {
       value={{
         login,
         setPermissions,
-        permissions
+        permissions,
       }}
     >
       {children}

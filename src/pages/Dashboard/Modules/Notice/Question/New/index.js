@@ -308,17 +308,16 @@ function NewQuestion() {
                           onBlur={formik.handleBlur}
                           onChange={formik.handleChange}
                         /> */}
-                         <TimePicker
-                                                value={formik.values.noticeOfficeDiaryTime}
-                                                clockIcon={null} // Disable clock view
-                                                openClockOnFocus={false}
-                                                format="hh:mm a"
-                                                onChange={(time) =>
-                                                    formik.setFieldValue("noticeOfficeDiaryTime", time)
-                                                }
-                                                className={`form-control`}
-                                            />
-                                            
+                        <TimePicker
+                          value={formik.values.noticeOfficeDiaryTime}
+                          clockIcon={null} // Disable clock view
+                          openClockOnFocus={false}
+                          format="hh:mm a"
+                          onChange={(time) =>
+                            formik.setFieldValue("noticeOfficeDiaryTime", time)
+                          }
+                          className={`form-control`}
+                        />
                       </div>
                     </div>
                   </div>

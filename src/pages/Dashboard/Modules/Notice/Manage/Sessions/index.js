@@ -35,7 +35,11 @@ function Sessions() {
   };
 
   return (
-    <Layout module={true} sidebarItems={NoticeSidebarItems} centerlogohide={true}>
+    <Layout
+      module={true}
+      sidebarItems={NoticeSidebarItems}
+      centerlogohide={true}
+    >
       <Header
         dashboardLink={"/"}
         addLink1={"/notice/dashboard"}
@@ -51,7 +55,9 @@ function Sessions() {
               tableTitle="Sessions List"
               addBtnText="Add Session"
               handleAdd={() => navigate("/notice/manage/sessions/addedit")}
-              handleEdit={(item) => navigate("/notice/manage/sessions/addedit", { state: item })}
+              handleEdit={(item) =>
+                navigate("/notice/manage/sessions/addedit", { state: item })
+              }
               headertitlebgColor={"#666"}
               headertitletextColor={"#FFF"}
               handlePageChange={handlePageChange}

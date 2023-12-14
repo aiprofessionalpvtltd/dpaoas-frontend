@@ -16,8 +16,8 @@ import {
 } from "../../../../../api/APIs";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import moment from 'moment';
-import Moment from 'react-moment';
+import moment from "moment";
+import Moment from "react-moment";
 
 const validationSchema = Yup.object({
   reason: Yup.string().required("Reason is required"),
@@ -154,8 +154,8 @@ function LMSAddEdit() {
     // Calculate the number of days
     const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
 
-    const formattedDateStart = moment(startDateObj).format('YYYY-MM-DD');
-    const formattedDateEnd = moment(endDateObj).format('YYYY-MM-DD');
+    const formattedDateStart = moment(startDateObj).format("YYYY-MM-DD");
+    const formattedDateEnd = moment(endDateObj).format("YYYY-MM-DD");
 
     const formData = new FormData();
     formData.append("fkRequestTypeId", values.leaveType);

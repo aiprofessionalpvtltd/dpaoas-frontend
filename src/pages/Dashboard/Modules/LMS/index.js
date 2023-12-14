@@ -8,7 +8,10 @@ import { useNavigate } from "react-router-dom";
 import { getAllLeaves, getWhosOnLeave } from "../../../../api/APIs";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { showErrorMessage, showSuccessMessage } from "../../../../utils/ToastAlert";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../utils/ToastAlert";
 import moment from "moment";
 import Moment from "react-moment";
 
@@ -83,12 +86,12 @@ const onleaveData = [
   },
 ];
 function LMSDashboard() {
-    const navigate = useNavigate();
-    const [leaveData, setLeaveData] = useState([]);
-    const [whoOnLeave, setWhoOnLeave] = useState([]);
-    const [currentPage, setCurrentPage] = useState(0);
-    const [count, setCount] = useState(null);
-    const pageSize = 4; // Set your desired page size
+  const navigate = useNavigate();
+  const [leaveData, setLeaveData] = useState([]);
+  const [whoOnLeave, setWhoOnLeave] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [count, setCount] = useState(null);
+  const pageSize = 4; // Set your desired page size
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
@@ -100,8 +103,8 @@ function LMSDashboard() {
       id: leave.id,
       name: `${leave.leavefirstName} ${leave.leavelastName}`,
       leaveType: leave.requestLeaveSubType,
-      startDate: moment(leave.requestStartDate).format('YYYY/MM/DD'),
-      endDate: moment(leave.requestEndDate).format('YYYY/MM/DD'),
+      startDate: moment(leave.requestStartDate).format("YYYY/MM/DD"),
+      endDate: moment(leave.requestEndDate).format("YYYY/MM/DD"),
       totalDays: leave.requestNumberOfDays,
       reason: leave.requestLeaveReason,
       leaveStatus: leave.requestStatus,
@@ -125,7 +128,7 @@ function LMSDashboard() {
   const getWhosOnLeaveApi = async () => {
     try {
       const currentDate = new Date();
-      const formattedDate = moment(currentDate).format('YYYY-MM-DD');
+      const formattedDate = moment(currentDate).format("YYYY-MM-DD");
 
       const response = await getWhosOnLeave(formattedDate, formattedDate, 1);
       if (response?.success) {
@@ -224,15 +227,15 @@ function LMSDashboard() {
                       <div class="w-100">
                         <div class="d-flex flex-row justify-content-between align-items-center">
                           <div class="d-flex flex-row align-items-center">
-                            <span class="mr-2">{item.userfirstName} {item.userlastName}</span>
+                            <span class="mr-2">
+                              {item.userfirstName} {item.userlastName}
+                            </span>
                           </div>
                           <p
                             class="text-justify comment-text mb-0"
                             style={{ textAlign: "left" }}
                           >
-                            <span>
-                              {item.requestLeaveReason}
-                            </span>
+                            <span>{item.requestLeaveReason}</span>
                           </p>
                         </div>
                         <p
@@ -240,7 +243,17 @@ function LMSDashboard() {
                           style={{ textAlign: "left" }}
                         >
                           <span>
-                            {<Moment format="MMMM DD">{item.requestStartDate}</Moment>} - {<Moment format="MMMM DD">{item.requestEndDate}</Moment>}
+                            {
+                              <Moment format="MMMM DD">
+                                {item.requestStartDate}
+                              </Moment>
+                            }{" "}
+                            -{" "}
+                            {
+                              <Moment format="MMMM DD">
+                                {item.requestEndDate}
+                              </Moment>
+                            }
                           </span>
                         </p>
                       </div>

@@ -8,7 +8,7 @@ export const UncheckedItem = ({
   hiddenItems,
   handleCheckboxChange,
   checkedItems,
-  bgColor
+  bgColor,
 }) => {
   return (
     <div key={item.id}>
@@ -47,8 +47,8 @@ export const UncheckedItem = ({
                       (checkedItem) =>
                         checkedItem.itemId === item.id &&
                         checkedItem.option.some(
-                          (checkedOption) => checkedOption.id === access.id
-                        )
+                          (checkedOption) => checkedOption.id === access.id,
+                        ),
                     )}
                     onChange={() =>
                       handleCheckboxChange(item.id, access.id, item.label)

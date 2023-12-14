@@ -8,7 +8,10 @@ import DatePicker from "react-datepicker";
 import { useFormik } from "formik";
 import moment from "moment";
 import { searchLeaveHistory } from "../../../../../api/APIs";
-import { showErrorMessage, showSuccessMessage } from "../../../../../utils/ToastAlert";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../utils/ToastAlert";
 import { CustomAlert } from "../../../../../components/CustomComponents/CustomAlert";
 import { ToastContainer } from "react-toastify";
 
@@ -18,13 +21,13 @@ function LMSHistory() {
   const [historyData, setHistoryData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [showModal, setShowModal] = useState(false);
-    // const [count, setCount] = useState(null);
+  // const [count, setCount] = useState(null);
   const pageSize = 4; // Set your desired page size
 
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
   const handleOkClick = () => {
-    if(data) {
+    if (data) {
       searchHistoryApi(data);
     }
     handleClose();
@@ -43,9 +46,9 @@ function LMSHistory() {
       departmentName: "",
     },
     onSubmit: (values) => {
-        // Handle form submission here
-        handleShow();
-        setData(values);
+      // Handle form submission here
+      handleShow();
+      setData(values);
     },
   });
 
@@ -54,8 +57,8 @@ function LMSHistory() {
       id: leave.id,
       name: `${leave.userfirstName} ${leave.userlastName}`,
       leaveType: leave.requestLeaveSubType,
-      startDate: moment(leave.requestStartDate).format('YYYY/MM/DD'),
-      endDate: moment(leave.requestEndDate).format('YYYY/MM/DD'),
+      startDate: moment(leave.requestStartDate).format("YYYY/MM/DD"),
+      endDate: moment(leave.requestEndDate).format("YYYY/MM/DD"),
       NoOfLeaves: leave.requestNumberOfDays,
       reason: leave.requestLeaveReason,
       leaveStatus: leave.requestStatus,
@@ -66,11 +69,11 @@ function LMSHistory() {
   const searchHistoryApi = async (values) => {
     try {
       const params = {
-        startDate: moment(values.startDate).format('YYYY-MM-DD'),
-        endDate: moment(values.endDate).format('YYYY-MM-DD'),
+        startDate: moment(values.startDate).format("YYYY-MM-DD"),
+        endDate: moment(values.endDate).format("YYYY-MM-DD"),
         employeeName: values.employeeName,
         departmentName: values.departmentName,
-      }
+      };
 
       const response = await searchLeaveHistory(params);
       if (response?.success) {
@@ -112,7 +115,7 @@ function LMSHistory() {
                 <div class="col">
                   <div class="mb-3">
                     <label class="form-label">Department</label>
-                    <select 
+                    <select
                       class="form-select"
                       placeholder={formik.values.departmentName}
                       value={formik.values.departmentName}
@@ -121,35 +124,35 @@ function LMSHistory() {
                       onBlur={formik.handleBlur}
                     >
                       <option value={""} selected disabled hidden>
-                          select
+                        select
                       </option>
-                      <option  value={1}>IT</option>
-                      <option  value={2}>Admin</option>
-                      <option  value={3}>Finance</option>
+                      <option value={1}>IT</option>
+                      <option value={2}>Admin</option>
+                      <option value={3}>Finance</option>
                     </select>
                   </div>
                 </div>
                 {formik.values.departmentName && (
-                <div class="col">
-                  <div class="mb-3">
-                    <label class="form-label">Name</label>
-                    <select 
-                      class="form-select"
-                      placeholder={formik.values.employeeName}
-                      value={formik.values.employeeName}
-                      id="employeeName"
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                    >
-                      <option value={""} selected disabled hidden>
+                  <div class="col">
+                    <div class="mb-3">
+                      <label class="form-label">Name</label>
+                      <select
+                        class="form-select"
+                        placeholder={formik.values.employeeName}
+                        value={formik.values.employeeName}
+                        id="employeeName"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      >
+                        <option value={""} selected disabled hidden>
                           select
-                      </option>
-                      <option value={1}>Saqib</option>
-                      <option value={2}>Hamid</option>
-                      <option value={3}>Mohsin</option>
-                    </select>
+                        </option>
+                        <option value={1}>Saqib</option>
+                        <option value={2}>Hamid</option>
+                        <option value={3}>Mohsin</option>
+                      </select>
+                    </div>
                   </div>
-                </div>
                 )}
 
                 <div class="col">
@@ -160,7 +163,9 @@ function LMSHistory() {
                     <DatePicker
                       id="startDate"
                       selected={formik.values.startDate}
-                      onChange={(date) => formik.setFieldValue("startDate", date)}
+                      onChange={(date) =>
+                        formik.setFieldValue("startDate", date)
+                      }
                       className={"form-control"}
                     />
                   </div>

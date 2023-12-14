@@ -41,7 +41,7 @@ export const getRoles = async () => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
     return response?.data;
   } catch (error) {
@@ -119,7 +119,7 @@ export const getModules = async () => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
     return response?.data;
   } catch (error) {
@@ -138,7 +138,7 @@ export const getDepartment = async (currentPage, pageSize) => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
     return response?.data;
   } catch (error) {
@@ -172,7 +172,7 @@ export const UpdateDepartment = async (id, data) => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
     return response?.data;
   } catch (error) {
@@ -206,7 +206,7 @@ export const getDesignations = async (currentPage, pageSize) => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
     return response?.data;
   } catch (error) {
@@ -240,7 +240,7 @@ export const UpdateDesignation = async (id, data) => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
     return response?.data;
   } catch (error) {
@@ -289,7 +289,7 @@ export const getAllEmployee = async (currentPage, pageSize) => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
     return response?.data;
   } catch (error) {
@@ -338,7 +338,7 @@ export const getPasses = async (currentPage, pageSize) => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
     return response?.data;
   } catch (error) {
@@ -399,7 +399,7 @@ export const SearchPasses = async (search) => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
     return response?.data;
   } catch (error) {
@@ -527,7 +527,7 @@ export const getAllLeaves = async (page, pageSize) => {
         // headers: {
         //   Authorization: `Bearer ${token}`,
         // }
-      }
+      },
     );
     return response?.data;
   } catch (error) {
@@ -606,7 +606,7 @@ export const getWhosOnLeave = async (startDate, endDate, dept) => {
         // headers: {
         //   Authorization: `Bearer ${token}`,
         // }
-      }
+      },
     );
     return response?.data;
   } catch (error) {
@@ -621,7 +621,7 @@ export const searchLeaveHistory = async (searchParams) => {
 
     // Filter out empty values
     const filteredSearchParams = Object.fromEntries(
-      Object.entries(searchParams).filter(([_, value]) => value !== "")
+      Object.entries(searchParams).filter(([_, value]) => value !== ""),
     );
 
     const response = await axiosClient.get(`/leave/search`, {
@@ -666,7 +666,7 @@ export const getAllResolutions = async (page, pageSize) => {
         // headers: {
         //   Authorization: `Bearer ${token}`,
         // }
-      }
+      },
     );
     return response?.data;
   } catch (error) {
@@ -681,7 +681,7 @@ export const searchResolution = async (searchParams) => {
 
     // Filter out empty values
     const filteredSearchParams = Object.fromEntries(
-      Object.entries(searchParams).filter(([_, value]) => value !== "")
+      Object.entries(searchParams).filter(([_, value]) => value !== ""),
     );
 
     const response = await axiosClientMMS.get(`/resolution/searchQuery`, {
@@ -740,7 +740,7 @@ export const UpdateResolution = async (id, data) => {
           accept: "application/json",
           "Content-Type": "multipart/form-data",
         },
-      }
+      },
     );
     return response?.data;
   } catch (error) {
@@ -753,7 +753,7 @@ export const sendResolutionForTranslation = async (id) => {
   try {
     const token = getAuthToken();
     const response = await axiosClientMMS.put(
-      `/resolution/sendTranslation/${id}`
+      `/resolution/sendTranslation/${id}`,
     );
     //  {
     //   headers: {
@@ -794,7 +794,7 @@ export const getAllQuestion = async (page, pageSize) => {
         // headers: {
         //   Authorization: `Bearer ${token}`,
         // }
-      }
+      },
     );
     return response?.data;
   } catch (error) {
@@ -809,7 +809,7 @@ export const searchQuestion = async (searchParams) => {
 
     // Filter out empty values
     const filteredSearchParams = Object.fromEntries(
-      Object.entries(searchParams).filter(([_, value]) => value !== "")
+      Object.entries(searchParams).filter(([_, value]) => value !== ""),
     );
 
     const response = await axiosClientMMS.get(`/questions/searchQuestion`, {
@@ -851,7 +851,7 @@ export const sendQuestionTranslation = async (id) => {
         // headers: {
         //   Authorization: `Bearer ${token}`,
         // }
-      }
+      },
     );
     return response?.data;
   } catch (error) {
@@ -913,7 +913,7 @@ export const createDefferQuestion = async (id, DefferData) => {
         // headers: {
         //   Authorization: `Bearer ${token}`,
         // }
-      }
+      },
     );
     return response?.data;
   } catch (error) {
@@ -933,7 +933,7 @@ export const createReviveQuestion = async (id, reviveData) => {
         // headers: {
         //   Authorization: `Bearer ${token}`,
         // }
-      }
+      },
     );
     return response?.data;
   } catch (error) {
@@ -1012,7 +1012,7 @@ export const getAllMotion = async (currentPage, pageSize) => {
   try {
     const token = getAuthToken();
     const response = await axiosClientMMS.get(
-      `/motion/all?page=${currentPage}&pageSize=${pageSize}`
+      `/motion/all?page=${currentPage}&pageSize=${pageSize}`,
     );
     // {
     //   headers: {
@@ -1048,7 +1048,7 @@ export const searchMotion = async (currentPage, pageSize, data) => {
   try {
     const token = getAuthToken();
     const filteredSearchParams = Object.fromEntries(
-      Object.entries(data).filter(([_, value]) => value !== "")
+      Object.entries(data).filter(([_, value]) => value !== ""),
     );
     const response = await axiosClientMMS.get(
       `/motion/all?page=${currentPage}&pageSize=${pageSize}`,
@@ -1057,7 +1057,7 @@ export const searchMotion = async (currentPage, pageSize, data) => {
         // headers: {
         //   Authorization: `Bearer ${token}`,
         // },
-      }
+      },
     );
     return response?.data;
   } catch (error) {
@@ -1091,7 +1091,7 @@ export const getallMembers = async (currentPage, pageSize) => {
         // headers: {
         //   Authorization: `Bearer ${token}`,
         // }
-      }
+      },
     );
     return response?.data;
   } catch (error) {
@@ -1109,7 +1109,7 @@ export const sendMotionForTranslation = async (id) => {
         // headers: {
         //   Authorization: `Bearer ${token}`,
         // }
-      }
+      },
     );
     return response?.data;
   } catch (error) {

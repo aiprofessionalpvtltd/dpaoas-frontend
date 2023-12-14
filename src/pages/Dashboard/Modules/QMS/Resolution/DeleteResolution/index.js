@@ -8,7 +8,10 @@ import { useFormik } from "formik";
 import DatePicker from "react-datepicker";
 import * as Yup from "yup";
 import { getAllResolutions } from "../../../../../../api/APIs";
-import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../../utils/ToastAlert";
 const validationSchema = Yup.object({
   resolutionDiaryNo: Yup.number(),
   resolutionID: Yup.string(),
@@ -48,49 +51,49 @@ function QMSDeleteResolution() {
       console.log(values);
     },
   });
-  
-  const navigate = useNavigate()
-    const [currentPage, setCurrentPage] = useState(0);
-    const [resData, setResData] = useState([]);
-    const pageSize = 4; // Set your desired page size
 
-    const handlePageChange = (page) => {
-        // Update currentPage when a page link is clicked
-        setCurrentPage(page);
-    };
+  const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState(0);
+  const [resData, setResData] = useState([]);
+  const pageSize = 4; // Set your desired page size
 
-    const transformLeavesData = (apiData) => {
-      return apiData
-        .filter((leave) => leave?.resolutionActive === 'inactive')
-        .map((leave) => {
-          return {
-            SrNo: leave.id,
-            SessionNumber: leave?.session?.sessionName,
-            ResolutionType: leave?.resolutionType,
-            SubjectMatter: "",
-            NoticeNo: leave?.noticeDiary?.noticeOfficeDiaryNo,
-            ResolutionStatus: leave?.resolutionStatus?.resolutionStatus,
-            Status: leave?.resolutionActive
-          };
-        });
-    };    
+  const handlePageChange = (page) => {
+    // Update currentPage when a page link is clicked
+    setCurrentPage(page);
+  };
 
-    const getAllResolutionsApi = async () => {
-        try {
-          const response = await getAllResolutions(currentPage, pageSize);
-          if (response?.success) {
-            showSuccessMessage(response?.message);
-            const transformedData = transformLeavesData(response.data?.resolution);
-            setResData(transformedData);
-          }
-        } catch (error) {
-          showErrorMessage(error?.response?.data?.message);
-        }
-      };
-    
-      useEffect(() => {
-        getAllResolutionsApi();
-      }, [currentPage]);
+  const transformLeavesData = (apiData) => {
+    return apiData
+      .filter((leave) => leave?.resolutionActive === "inactive")
+      .map((leave) => {
+        return {
+          SrNo: leave.id,
+          SessionNumber: leave?.session?.sessionName,
+          ResolutionType: leave?.resolutionType,
+          SubjectMatter: "",
+          NoticeNo: leave?.noticeDiary?.noticeOfficeDiaryNo,
+          ResolutionStatus: leave?.resolutionStatus?.resolutionStatus,
+          Status: leave?.resolutionActive,
+        };
+      });
+  };
+
+  const getAllResolutionsApi = async () => {
+    try {
+      const response = await getAllResolutions(currentPage, pageSize);
+      if (response?.success) {
+        showSuccessMessage(response?.message);
+        const transformedData = transformLeavesData(response.data?.resolution);
+        setResData(transformedData);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  };
+
+  useEffect(() => {
+    getAllResolutionsApi();
+  }, [currentPage]);
 
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
@@ -307,49 +310,49 @@ function QMSDeleteResolution() {
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">From Notice Date</label>
-                         <DatePicker
-                          selected={formik.values.fromNoticeDate}
-                          onChange={(date) =>
-                            formik.setFieldValue("fromNoticeDate", date)
-                          }
-                          onBlur={formik.handleBlur}
-                          className={`form-control ${
-                            formik.touched.fromNoticeDate &&
-                            formik.errors.fromNoticeDate
-                              ? "is-invalid"
-                              : ""
-                          }`}
-                        />
-                        {formik.touched.fromNoticeDate &&
-                          formik.errors.fromNoticeDate && (
-                            <div className="invalid-feedback">
-                              {formik.errors.fromNoticeDate}
-                            </div>
-                          )}
+                      <DatePicker
+                        selected={formik.values.fromNoticeDate}
+                        onChange={(date) =>
+                          formik.setFieldValue("fromNoticeDate", date)
+                        }
+                        onBlur={formik.handleBlur}
+                        className={`form-control ${
+                          formik.touched.fromNoticeDate &&
+                          formik.errors.fromNoticeDate
+                            ? "is-invalid"
+                            : ""
+                        }`}
+                      />
+                      {formik.touched.fromNoticeDate &&
+                        formik.errors.fromNoticeDate && (
+                          <div className="invalid-feedback">
+                            {formik.errors.fromNoticeDate}
+                          </div>
+                        )}
                     </div>
                   </div>
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">To Notice Date</label>
                       <DatePicker
-                          selected={formik.values.toNoticeDate}
-                          onChange={(date) =>
-                            formik.setFieldValue("toNoticeDate", date)
-                          }
-                          onBlur={formik.handleBlur}
-                          className={`form-control ${
-                            formik.touched.toNoticeDate &&
-                            formik.errors.toNoticeDate
-                              ? "is-invalid"
-                              : ""
-                          }`}
-                        />
-                        {formik.touched.toNoticeDate &&
-                          formik.errors.toNoticeDate && (
-                            <div className="invalid-feedback">
-                              {formik.errors.toNoticeDate}
-                            </div>
-                          )}
+                        selected={formik.values.toNoticeDate}
+                        onChange={(date) =>
+                          formik.setFieldValue("toNoticeDate", date)
+                        }
+                        onBlur={formik.handleBlur}
+                        className={`form-control ${
+                          formik.touched.toNoticeDate &&
+                          formik.errors.toNoticeDate
+                            ? "is-invalid"
+                            : ""
+                        }`}
+                      />
+                      {formik.touched.toNoticeDate &&
+                        formik.errors.toNoticeDate && (
+                          <div className="invalid-feedback">
+                            {formik.errors.toNoticeDate}
+                          </div>
+                        )}
                     </div>
                   </div>
                 </div>
@@ -395,18 +398,18 @@ function QMSDeleteResolution() {
                   </div>
                   <div class="clearfix"></div>
                 </div>
-               
+
                 <CustomTable
-                                    hideBtn={true}
-                                    data={resData || []}
-                                    tableTitle="Deleted Resolutions"
-                                    handlePageChange={handlePageChange}
-                                    currentPage={currentPage}
-                                    showPrint={true}
-                                        pageSize={pageSize}
-                                        handleAdd={(item) => navigate('/')}
-                                        handleEdit={(item) => navigate('/')}
-                                    />
+                  hideBtn={true}
+                  data={resData || []}
+                  tableTitle="Deleted Resolutions"
+                  handlePageChange={handlePageChange}
+                  currentPage={currentPage}
+                  showPrint={true}
+                  pageSize={pageSize}
+                  handleAdd={(item) => navigate("/")}
+                  handleEdit={(item) => navigate("/")}
+                />
 
                 <div style={{ float: "right", marginTop: "10px" }}>
                   <button class="btn btn-primary" type="submit">

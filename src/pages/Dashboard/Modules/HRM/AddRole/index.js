@@ -27,14 +27,14 @@ function HRMAddRole() {
     try {
       const response = await createRole(data);
       if (response.success) {
-        showSuccessMessage(response?.message)
+        showSuccessMessage(response?.message);
         // navigate("/hrm/dashboard");
       }
     } catch (error) {
       console.log(error);
     }
   };
-  
+
   const formik = useFormik({
     initialValues,
     validationSchema,

@@ -8,7 +8,10 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import DatePicker from "react-datepicker";
 import { getAllQuestion } from "../../../../../../api/APIs";
-import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 const validationSchema = Yup.object({
   questionDiaryNo: Yup.number(),
@@ -99,7 +102,8 @@ function QMSDeleteQuestion() {
   };
 
   const transformLeavesData = (apiData) => {
-    return apiData.filter((question) => question?.questionActive === 'inactive')
+    return apiData
+      .filter((question) => question?.questionActive === "inactive")
       .map((res, index) => {
         return {
           SrNo: index,
@@ -131,8 +135,8 @@ function QMSDeleteQuestion() {
     }
   };
   useEffect(() => {
-    getAllQuestionsApi()
-  }, [])
+    getAllQuestionsApi();
+  }, []);
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <ToastContainer />
@@ -161,11 +165,12 @@ function QMSDeleteQuestion() {
                       <input
                         type="text"
                         placeholder={formik.values.questionDiaryNo}
-                        className={`form-control ${formik.touched.questionDiaryNo &&
-                            formik.errors.questionDiaryNo
+                        className={`form-control ${
+                          formik.touched.questionDiaryNo &&
+                          formik.errors.questionDiaryNo
                             ? "is-invalid"
                             : ""
-                          }`}
+                        }`}
                         id="questionDiaryNo"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -184,10 +189,11 @@ function QMSDeleteQuestion() {
                       <input
                         type="text"
                         placeholder={formik.values.questionId}
-                        className={`form-control ${formik.touched.questionId && formik.errors.questionId
+                        className={`form-control ${
+                          formik.touched.questionId && formik.errors.questionId
                             ? "is-invalid"
                             : ""
-                          }`}
+                        }`}
                         id="questionId"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -206,10 +212,11 @@ function QMSDeleteQuestion() {
                       <input
                         type="text"
                         placeholder={formik.values.keyword}
-                        className={`form-control ${formik.touched.keyword && formik.errors.keyword
+                        className={`form-control ${
+                          formik.touched.keyword && formik.errors.keyword
                             ? "is-invalid"
                             : ""
-                          }`}
+                        }`}
                         id="keyword"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -227,10 +234,11 @@ function QMSDeleteQuestion() {
                       <input
                         type="text"
                         placeholder={formik.values.memberName}
-                        className={`form-control ${formik.touched.memberName && formik.errors.memberName
+                        className={`form-control ${
+                          formik.touched.memberName && formik.errors.memberName
                             ? "is-invalid"
                             : ""
-                          }`}
+                        }`}
                         id="memberName"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -339,11 +347,12 @@ function QMSDeleteQuestion() {
                       <input
                         type="text"
                         placeholder={formik.values.noticeDiaryNo}
-                        className={`form-control ${formik.touched.noticeDiaryNo &&
-                            formik.errors.noticeDiaryNo
+                        className={`form-control ${
+                          formik.touched.noticeDiaryNo &&
+                          formik.errors.noticeDiaryNo
                             ? "is-invalid"
                             : ""
-                          }`}
+                        }`}
                         id="noticeDiaryNo"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -359,49 +368,49 @@ function QMSDeleteQuestion() {
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">From Notice Date</label>
-                        <DatePicker
-                          selected={formik.values.fromNoticeDate}
-                          onChange={(date) =>
-                            formik.setFieldValue("fromNoticeDate", date)
-                          }
-                          onBlur={formik.handleBlur}
-                          className={`form-control ${
-                            formik.touched.fromNoticeDate &&
-                            formik.errors.fromNoticeDate
-                              ? "is-invalid"
-                              : ""
-                          }`}
-                        />
-                        {formik.touched.fromNoticeDate &&
-                          formik.errors.fromNoticeDate && (
-                            <div className="invalid-feedback">
-                              {formik.errors.fromNoticeDate}
-                            </div>
-                          )}
+                      <DatePicker
+                        selected={formik.values.fromNoticeDate}
+                        onChange={(date) =>
+                          formik.setFieldValue("fromNoticeDate", date)
+                        }
+                        onBlur={formik.handleBlur}
+                        className={`form-control ${
+                          formik.touched.fromNoticeDate &&
+                          formik.errors.fromNoticeDate
+                            ? "is-invalid"
+                            : ""
+                        }`}
+                      />
+                      {formik.touched.fromNoticeDate &&
+                        formik.errors.fromNoticeDate && (
+                          <div className="invalid-feedback">
+                            {formik.errors.fromNoticeDate}
+                          </div>
+                        )}
                     </div>
                   </div>
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">To Notice Date</label>
-                         <DatePicker
-                          selected={formik.values.toNoticeDate}
-                          onChange={(date) =>
-                            formik.setFieldValue("toNoticeDate", date)
-                          }
-                          onBlur={formik.handleBlur}
-                          className={`form-control ${
-                            formik.touched.toNoticeDate &&
-                            formik.errors.toNoticeDate
-                              ? "is-invalid"
-                              : ""
-                          }`}
-                        />
-                        {formik.touched.toNoticeDate &&
-                          formik.errors.toNoticeDate && (
-                            <div className="invalid-feedback">
-                              {formik.errors.toNoticeDate}
-                            </div>
-                          )}
+                      <DatePicker
+                        selected={formik.values.toNoticeDate}
+                        onChange={(date) =>
+                          formik.setFieldValue("toNoticeDate", date)
+                        }
+                        onBlur={formik.handleBlur}
+                        className={`form-control ${
+                          formik.touched.toNoticeDate &&
+                          formik.errors.toNoticeDate
+                            ? "is-invalid"
+                            : ""
+                        }`}
+                      />
+                      {formik.touched.toNoticeDate &&
+                        formik.errors.toNoticeDate && (
+                          <div className="invalid-feedback">
+                            {formik.errors.toNoticeDate}
+                          </div>
+                        )}
                     </div>
                   </div>
                 </div>
@@ -482,10 +491,11 @@ function QMSDeleteQuestion() {
                       <input
                         type="text"
                         placeholder={formik.values.division}
-                        className={`form-control ${formik.touched.division && formik.errors.division
+                        className={`form-control ${
+                          formik.touched.division && formik.errors.division
                             ? "is-invalid"
                             : ""
-                          }`}
+                        }`}
                         id="division"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -529,8 +539,8 @@ function QMSDeleteQuestion() {
                   currentPage={currentPage}
                   showPrint={true}
                   pageSize={pageSize}
-                  handleAdd={(item) => navigate('/')}
-                  handleEdit={(item) => navigate('/')}
+                  handleAdd={(item) => navigate("/")}
+                  handleEdit={(item) => navigate("/")}
                   totalCount={count}
                 />
               </div>

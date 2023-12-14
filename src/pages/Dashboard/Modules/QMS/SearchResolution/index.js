@@ -70,7 +70,6 @@ function QMSSerchResolution() {
     });
   };
 
-
   const SearchResolutionApi = async (values) => {
     const searchParams = {
       fkSessionNoFrom: values.fromSession,
@@ -215,7 +214,6 @@ function QMSSerchResolution() {
                       <div className="mb-3">
                         <label className="form-label">To Session</label>
                         <select
-
                           className="form-select"
                           id="toSession"
                           placeholder={formik.values.toSession}
@@ -247,17 +245,13 @@ function QMSSerchResolution() {
                           <option>Resolution Type</option>
                           <option>Government Resolution</option>
                           <option>Private Member Resolution</option>
-                          <option>
-                            Govt. Resolution Supported by others
-                          </option>
+                          <option>Govt. Resolution Supported by others</option>
                         </select>
                       </div>
                     </div>
                     <div className="col">
                       <div className="mb-3">
-                        <label className="form-label">
-                          Resolution Status
-                        </label>
+                        <label className="form-label">Resolution Status</label>
                         <select
                           className="form-select"
                           id="resolutionStatus"
@@ -285,7 +279,9 @@ function QMSSerchResolution() {
 
                         <DatePicker
                           selected={formik.values.fromNoticeDate}
-                          onChange={(date) => formik.setFieldValue("fromNoticeDate", date)}
+                          onChange={(date) =>
+                            formik.setFieldValue("fromNoticeDate", date)
+                          }
                           className={`form-control`}
                         />
                       </div>
@@ -296,7 +292,9 @@ function QMSSerchResolution() {
 
                         <DatePicker
                           selected={formik.values.toNoticeDate}
-                          onChange={(date) => formik.setFieldValue("toNoticeDate", date)}
+                          onChange={(date) =>
+                            formik.setFieldValue("toNoticeDate", date)
+                          }
                           className={`form-control`}
                         />
                       </div>
@@ -368,9 +366,9 @@ function QMSSerchResolution() {
                 headertitletextColor={"#FFF"}
                 hideEditIcon={true}
                 ActionHide={true}
-              // handlePrint={}
-              // handleUser={}
-              // handleDelete={(item) => handleDelete(item.id)}
+                // handlePrint={}
+                // handleUser={}
+                // handleDelete={(item) => handleDelete(item.id)}
               />
               <div class="row mt-3">
                 <div class="col">

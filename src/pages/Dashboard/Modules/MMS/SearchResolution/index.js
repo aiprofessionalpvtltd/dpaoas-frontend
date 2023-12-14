@@ -6,10 +6,15 @@ import { MMSSideBarItems } from "../../../../../utils/sideBarItems";
 import Header from "../../../../../components/Header";
 import { Field, Form, Formik, useFormik } from "formik";
 import { ToastContainer } from "react-toastify";
-import { showErrorMessage, showSuccessMessage } from "../../../../../utils/ToastAlert";
-import { getAllQuestionStatus, searchResolution } from "../../../../../api/APIs";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../utils/ToastAlert";
+import {
+  getAllQuestionStatus,
+  searchResolution,
+} from "../../../../../api/APIs";
 import DatePicker from "react-datepicker";
-
 
 function MMSSearchResolution() {
   const navigate = useNavigate();
@@ -18,10 +23,8 @@ function MMSSearchResolution() {
   const [searchedData, setSearchedData] = useState([]);
   const [allResolutionStatus, setAllResolutionStatus] = useState([]);
 
-
   const pageSize = 4; // Set your desired page size
 
- 
   const formik = useFormik({
     initialValues: {
       resolutionDiaryNo: "",
@@ -50,7 +53,10 @@ function MMSSearchResolution() {
   };
   const transformLeavesData = (apiData) => {
     return apiData.map((res) => {
-      const movers = res?.resolutionMoversAssociation.map((item) => item?.memberAssociation?.memberName) || [];
+      const movers =
+        res?.resolutionMoversAssociation.map(
+          (item) => item?.memberAssociation?.memberName,
+        ) || [];
 
       return {
         RID: res?.id,
@@ -64,8 +70,6 @@ function MMSSearchResolution() {
       };
     });
   };
-
-
 
   const SearchResolutionApi = async (values) => {
     const searchParams = {
@@ -101,7 +105,7 @@ function MMSSearchResolution() {
       const response = await getAllQuestionStatus();
       if (response?.success) {
         setAllResolutionStatus(response?.data);
-        showSuccessMessage(response.message)
+        showSuccessMessage(response.message);
       }
     } catch (error) {
       console.log(error);
@@ -123,12 +127,15 @@ function MMSSearchResolution() {
 
       <div class="container-fluid">
         <div class="card mt-1">
-          <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
+          <div
+            class="card-header red-bg"
+            style={{ background: "#14ae5c !important" }}
+          >
             <h1>SEARCH RESOLUTION</h1>
           </div>
           <div class="card-body">
             <div class="container-fluid">
-            <form onSubmit={formik.handleSubmit}>
+              <form onSubmit={formik.handleSubmit}>
                 <div className="container-fluid">
                   <div className="row">
                     <div className="col">
@@ -210,7 +217,6 @@ function MMSSearchResolution() {
                       <div className="mb-3">
                         <label className="form-label">To Session</label>
                         <select
-
                           className="form-select"
                           id="toSession"
                           placeholder={formik.values.toSession}
@@ -242,17 +248,13 @@ function MMSSearchResolution() {
                           <option>Resolution Type</option>
                           <option>Government Resolution</option>
                           <option>Private Member Resolution</option>
-                          <option>
-                            Govt. Resolution Supported by others
-                          </option>
+                          <option>Govt. Resolution Supported by others</option>
                         </select>
                       </div>
                     </div>
                     <div className="col">
                       <div className="mb-3">
-                        <label className="form-label">
-                          Resolution Status
-                        </label>
+                        <label className="form-label">Resolution Status</label>
                         <select
                           className="form-select"
                           id="resolutionStatus"
@@ -280,7 +282,9 @@ function MMSSearchResolution() {
 
                         <DatePicker
                           selected={formik.values.fromNoticeDate}
-                          onChange={(date) => formik.setFieldValue("fromNoticeDate", date)}
+                          onChange={(date) =>
+                            formik.setFieldValue("fromNoticeDate", date)
+                          }
                           className={`form-control`}
                         />
                       </div>
@@ -291,7 +295,9 @@ function MMSSearchResolution() {
 
                         <DatePicker
                           selected={formik.values.toNoticeDate}
-                          onChange={(date) => formik.setFieldValue("toNoticeDate", date)}
+                          onChange={(date) =>
+                            formik.setFieldValue("toNoticeDate", date)
+                          }
                           className={`form-control`}
                         />
                       </div>

@@ -6,7 +6,10 @@ import { HRMsidebarItems } from "../../../../../utils/sideBarItems";
 import CustomTable from "../../../../../components/CustomComponents/CustomTable";
 import { ToastContainer } from "react-toastify";
 import { DeleteEmployee, getAllEmployee } from "../../../../../api/APIs";
-import { showErrorMessage, showSuccessMessage } from "../../../../../utils/ToastAlert";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../utils/ToastAlert";
 
 const data = [
   {
@@ -29,7 +32,7 @@ const data = [
 function HRMEmployeeDashboard() {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(0);
-  const [employeeData, setEmployeeData] = useState([])
+  const [employeeData, setEmployeeData] = useState([]);
 
   const [count, setCount] = useState(null);
   const pageSize = 4; // Set your desired page size
@@ -38,7 +41,6 @@ function HRMEmployeeDashboard() {
     // Update currentPage when a page link is clicked
     setCurrentPage(page);
   };
-
 
   const transformEmployeeData = (apiData) => {
     return apiData.map((leave) => ({
@@ -51,7 +53,6 @@ function HRMEmployeeDashboard() {
       // supervisor: leave.supervisor,
       departmentName: leave.department.departmentName,
       designation: leave.designation.designationName,
-
     }));
   };
   const getEmployeeData = async () => {
@@ -60,7 +61,7 @@ function HRMEmployeeDashboard() {
       if (response?.success) {
         setCount(response?.count);
         const transformedData = transformEmployeeData(response?.data);
-        setEmployeeData(transformedData)
+        setEmployeeData(transformedData);
       }
     } catch (error) {
       console.log(error);
@@ -69,15 +70,15 @@ function HRMEmployeeDashboard() {
 
   const handleDelete = async (id) => {
     try {
-      const response = await DeleteEmployee(id)
+      const response = await DeleteEmployee(id);
       if (response?.success) {
-        showSuccessMessage(response.message)
-        getEmployeeData()
+        showSuccessMessage(response.message);
+        getEmployeeData();
       }
     } catch (error) {
-      showErrorMessage(error.response.data.message)
+      showErrorMessage(error.response.data.message);
     }
-  }
+  };
   useEffect(() => {
     getEmployeeData();
   }, []);

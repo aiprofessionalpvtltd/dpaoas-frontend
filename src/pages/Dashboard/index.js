@@ -11,7 +11,12 @@ import {
   faClipboardQuestion,
 } from "@fortawesome/free-solid-svg-icons";
 import { AuthContext } from "../../api/AuthContext";
-import { getPermissionsData, getUserData, setPermissionsData, setRolesData } from "../../api/Auth";
+import {
+  getPermissionsData,
+  getUserData,
+  setPermissionsData,
+  setRolesData,
+} from "../../api/Auth";
 import { getRoles } from "../../api/APIs";
 import { CheckPermission } from "../../utils/permissionsConfig";
 
@@ -20,8 +25,8 @@ function Dashboard() {
   const { permissions } = useContext(AuthContext);
   const [permissionsLocal, setPermissionsLocal] = useState([]);
   const userRole = getUserData();
-  
-  useEffect(() => {    
+
+  useEffect(() => {
     const fetchRoles = async () => {
       try {
         const response = await getRoles();
@@ -34,13 +39,12 @@ function Dashboard() {
     fetchRoles();
   }, []);
 
-  
   useEffect(() => {
     if (roles) {
       setRolesData(roles);
       const localPermissionsData = getPermissionsData();
       setPermissionsLocal(localPermissionsData);
-  
+
       // Check if permissions exist and has length
       if (permissions && permissions.length > 0) {
         const res = CheckPermission(userRole?.role?.name, roles, permissions);
@@ -53,7 +57,7 @@ function Dashboard() {
         setPermissionsLocal(localPermissionsData);
       }
     }
-  }, [roles, permissions]);  
+  }, [roles, permissions]);
 
   return (
     <Layout>

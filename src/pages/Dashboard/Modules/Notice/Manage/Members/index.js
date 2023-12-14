@@ -37,7 +37,11 @@ function Members() {
   };
 
   return (
-    <Layout module={true} sidebarItems={NoticeSidebarItems} centerlogohide={true}>
+    <Layout
+      module={true}
+      sidebarItems={NoticeSidebarItems}
+      centerlogohide={true}
+    >
       <Header
         dashboardLink={"/"}
         addLink1={"/notice/dashboard"}
@@ -110,7 +114,11 @@ function Members() {
                     addBtnText="Add Member"
                     headerBgColor={"rgb(20, 174, 92)"}
                     hideBtn={false}
-                    handleEdit={() => navigate("/notice/manage/members/addedit", { state: true })}
+                    handleEdit={() =>
+                      navigate("/notice/manage/members/addedit", {
+                        state: true,
+                      })
+                    }
                     handleAdd={() => navigate("/notice/manage/members/addedit")}
                     handlePageChange={handlePageChange}
                     currentPage={currentPage}

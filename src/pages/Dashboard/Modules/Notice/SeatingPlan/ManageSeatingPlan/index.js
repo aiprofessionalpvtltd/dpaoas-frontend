@@ -170,699 +170,699 @@ function ManageSeatingPlan() {
         </div>
       </Modal>
 
-        <div
-          style={{
-            overflowY: "auto",
-            maxHeight: "100%",
-            background: "#F0F2F5",
-          }}
-        >
-          <div class="dashboard-content">
-            <div class="container-fluid">
-              <div class="sitting-plan-main">
-                <div class="sitting-row">
-                  <div class="row">
-                    <div class="col">
-                      {seats.map((item, index) => (
-                        <div
-                          class="sitting-card-left float-start"
-                          onClick={() => openModal(item)}
-                        >
-                          <div class="sitt-card-left">
-                            <h2>
-                              {selectedItem && selectedItem.id === index + 1
-                                ? selectedItem?.name
-                                : item.name}
-                            </h2>
-                          </div>
-                          <p>{item.seatNo}</p>
+      <div
+        style={{
+          overflowY: "auto",
+          maxHeight: "100%",
+          background: "#F0F2F5",
+        }}
+      >
+        <div class="dashboard-content">
+          <div class="container-fluid">
+            <div class="sitting-plan-main">
+              <div class="sitting-row">
+                <div class="row">
+                  <div class="col">
+                    {seats.map((item, index) => (
+                      <div
+                        class="sitting-card-left float-start"
+                        onClick={() => openModal(item)}
+                      >
+                        <div class="sitt-card-left">
+                          <h2>
+                            {selectedItem && selectedItem.id === index + 1
+                              ? selectedItem?.name
+                              : item.name}
+                          </h2>
                         </div>
-                      ))}
+                        <p>{item.seatNo}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <div class="col-1 text-center">
+                    <strong>F</strong>
+                  </div>
+                  <div class="col">
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
+                      </div>
+                      <p>100</p>
                     </div>
-                    <div class="col-1 text-center">
-                      <strong>F</strong>
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
+                      </div>
+                      <p>99</p>
                     </div>
-                    <div class="col">
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>100</p>
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>99</p>
+                      <p>98</p>
+                    </div>
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>98</p>
+                      <p>97</p>
+                    </div>
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>97</p>
+                      <p>96</p>
+                    </div>
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>96</p>
+                      <p>95</p>
+                    </div>
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>95</p>
+                      <p>94</p>
+                    </div>
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>94</p>
+                      <p>93</p>
+                    </div>
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>93</p>
-                      </div>
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>92</p>
-                      </div>
+                      <p>92</p>
                     </div>
                   </div>
                 </div>
-                <div class="sitting-row">
-                  <div class="row">
-                    <div class="col">
-                      <div class="sitting-card-left float-start">
-                        <div class="sitt-card-left">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>91</p>
+              </div>
+              <div class="sitting-row">
+                <div class="row">
+                  <div class="col">
+                    <div class="sitting-card-left float-start">
+                      <div class="sitt-card-left">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-left float-start">
-                        <div class="sitt-card-left">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>90</p>
-                      </div>
-                      <div class="sitting-card-left float-start">
-                        <div class="sitt-card-left">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>89</p>
-                      </div>
-                      <div class="sitting-card-left float-start">
-                        <div class="sitt-card-left">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>88</p>
-                      </div>
-                      <div class="sitting-card-left float-start">
-                        <div class="sitt-card-left">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>87</p>
-                      </div>
-                      <div class="sitting-card-left float-start">
-                        <div class="sitt-card-left">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>86</p>
-                      </div>
-                      <div class="sitting-card-left float-start">
-                        <div class="sitt-card-left">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>85</p>
-                      </div>
-                      <div class="sitting-card-left float-start">
-                        <div class="sitt-card-left">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>84</p>
-                      </div>
-                      <div class="sitting-card-left float-start">
-                        <div class="sitt-card-left">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>83</p>
-                      </div>
+                      <p>91</p>
                     </div>
-                    <div class="col-1 text-center">
-                      <strong>E</strong>
+                    <div class="sitting-card-left float-start">
+                      <div class="sitt-card-left">
+                        <h2>انور لال دین</h2>
+                      </div>
+                      <p>90</p>
                     </div>
-                    <div class="col">
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>82</p>
+                    <div class="sitting-card-left float-start">
+                      <div class="sitt-card-left">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>81</p>
+                      <p>89</p>
+                    </div>
+                    <div class="sitting-card-left float-start">
+                      <div class="sitt-card-left">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>80</p>
+                      <p>88</p>
+                    </div>
+                    <div class="sitting-card-left float-start">
+                      <div class="sitt-card-left">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>79</p>
+                      <p>87</p>
+                    </div>
+                    <div class="sitting-card-left float-start">
+                      <div class="sitt-card-left">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>78</p>
+                      <p>86</p>
+                    </div>
+                    <div class="sitting-card-left float-start">
+                      <div class="sitt-card-left">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>77</p>
+                      <p>85</p>
+                    </div>
+                    <div class="sitting-card-left float-start">
+                      <div class="sitt-card-left">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>76</p>
+                      <p>84</p>
+                    </div>
+                    <div class="sitting-card-left float-start">
+                      <div class="sitt-card-left">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>75</p>
+                      <p>83</p>
+                    </div>
+                  </div>
+                  <div class="col-1 text-center">
+                    <strong>E</strong>
+                  </div>
+                  <div class="col">
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>74</p>
+                      <p>82</p>
+                    </div>
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
                       </div>
+                      <p>81</p>
+                    </div>
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
+                      </div>
+                      <p>80</p>
+                    </div>
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
+                      </div>
+                      <p>79</p>
+                    </div>
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
+                      </div>
+                      <p>78</p>
+                    </div>
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
+                      </div>
+                      <p>77</p>
+                    </div>
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
+                      </div>
+                      <p>76</p>
+                    </div>
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
+                      </div>
+                      <p>75</p>
+                    </div>
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
+                      </div>
+                      <p>74</p>
                     </div>
                   </div>
                 </div>
-                <div class="sitting-row">
-                  <div class="row">
-                    <div class="col">
-                      <div class="sitting-card-left float-start">
-                        <div class="sitt-card-left">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>73</p>
+              </div>
+              <div class="sitting-row">
+                <div class="row">
+                  <div class="col">
+                    <div class="sitting-card-left float-start">
+                      <div class="sitt-card-left">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-left float-start">
-                        <div class="sitt-card-left">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>72</p>
-                      </div>
-                      <div class="sitting-card-left float-start">
-                        <div class="sitt-card-left">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>71</p>
-                      </div>
-                      <div class="sitting-card-left float-start">
-                        <div class="sitt-card-left">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>70</p>
-                      </div>
-                      <div class="sitting-card-left float-start">
-                        <div class="sitt-card-left">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>69</p>
-                      </div>
-                      <div class="sitting-card-left float-start">
-                        <div class="sitt-card-left">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>68</p>
-                      </div>
-                      <div class="sitting-card-left float-start">
-                        <div class="sitt-card-left">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>67</p>
-                      </div>
-                      <div class="sitting-card-left float-start">
-                        <div class="sitt-card-left">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>66</p>
-                      </div>
-                      <div class="sitting-card-left float-start">
-                        <div class="sitt-card-left">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>65</p>
-                      </div>
+                      <p>73</p>
                     </div>
-                    <div class="col-1 text-center">
-                      <strong>D</strong>
+                    <div class="sitting-card-left float-start">
+                      <div class="sitt-card-left">
+                        <h2>انور لال دین</h2>
+                      </div>
+                      <p>72</p>
                     </div>
-                    <div class="col">
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>64</p>
+                    <div class="sitting-card-left float-start">
+                      <div class="sitt-card-left">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>63</p>
+                      <p>71</p>
+                    </div>
+                    <div class="sitting-card-left float-start">
+                      <div class="sitt-card-left">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>62</p>
+                      <p>70</p>
+                    </div>
+                    <div class="sitting-card-left float-start">
+                      <div class="sitt-card-left">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>61</p>
+                      <p>69</p>
+                    </div>
+                    <div class="sitting-card-left float-start">
+                      <div class="sitt-card-left">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>60</p>
+                      <p>68</p>
+                    </div>
+                    <div class="sitting-card-left float-start">
+                      <div class="sitt-card-left">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>59</p>
+                      <p>67</p>
+                    </div>
+                    <div class="sitting-card-left float-start">
+                      <div class="sitt-card-left">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>58</p>
+                      <p>66</p>
+                    </div>
+                    <div class="sitting-card-left float-start">
+                      <div class="sitt-card-left">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>57</p>
+                      <p>65</p>
+                    </div>
+                  </div>
+                  <div class="col-1 text-center">
+                    <strong>D</strong>
+                  </div>
+                  <div class="col">
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>56</p>
+                      <p>64</p>
+                    </div>
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
                       </div>
+                      <p>63</p>
+                    </div>
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
+                      </div>
+                      <p>62</p>
+                    </div>
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
+                      </div>
+                      <p>61</p>
+                    </div>
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
+                      </div>
+                      <p>60</p>
+                    </div>
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
+                      </div>
+                      <p>59</p>
+                    </div>
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
+                      </div>
+                      <p>58</p>
+                    </div>
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
+                      </div>
+                      <p>57</p>
+                    </div>
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
+                      </div>
+                      <p>56</p>
                     </div>
                   </div>
                 </div>
-                <div class="sitting-row">
-                  <div class="row">
-                    <div class="col">
-                      <div class="sitting-card-left float-start">
-                        <div class="sitt-card-left">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>55</p>
+              </div>
+              <div class="sitting-row">
+                <div class="row">
+                  <div class="col">
+                    <div class="sitting-card-left float-start">
+                      <div class="sitt-card-left">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-left float-start">
-                        <div class="sitt-card-left">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>51</p>
-                      </div>
-                      <div class="sitting-card-left float-start">
-                        <div class="sitt-card-left">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>53</p>
-                      </div>
-                      <div class="sitting-card-left float-start">
-                        <div class="sitt-card-left">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>52</p>
-                      </div>
-                      <div class="sitting-card-left float-start">
-                        <div class="sitt-card-left">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>51</p>
-                      </div>
-                      <div class="sitting-card-left float-start">
-                        <div class="sitt-card-left">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>50</p>
-                      </div>
-                      <div class="sitting-card-left float-start">
-                        <div class="sitt-card-left">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>49</p>
-                      </div>
-                      <div class="sitting-card-left float-start">
-                        <div class="sitt-card-left">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>48</p>
-                      </div>
-                      <div class="sitting-card-left float-start">
-                        <div class="sitt-card-left">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>47</p>
-                      </div>
+                      <p>55</p>
                     </div>
-                    <div class="col-1 text-center">
-                      <strong>C</strong>
+                    <div class="sitting-card-left float-start">
+                      <div class="sitt-card-left">
+                        <h2>انور لال دین</h2>
+                      </div>
+                      <p>51</p>
                     </div>
-                    <div class="col">
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>46</p>
+                    <div class="sitting-card-left float-start">
+                      <div class="sitt-card-left">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>45</p>
+                      <p>53</p>
+                    </div>
+                    <div class="sitting-card-left float-start">
+                      <div class="sitt-card-left">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>44</p>
+                      <p>52</p>
+                    </div>
+                    <div class="sitting-card-left float-start">
+                      <div class="sitt-card-left">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>43</p>
+                      <p>51</p>
+                    </div>
+                    <div class="sitting-card-left float-start">
+                      <div class="sitt-card-left">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>42</p>
+                      <p>50</p>
+                    </div>
+                    <div class="sitting-card-left float-start">
+                      <div class="sitt-card-left">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>41</p>
+                      <p>49</p>
+                    </div>
+                    <div class="sitting-card-left float-start">
+                      <div class="sitt-card-left">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>40</p>
+                      <p>48</p>
+                    </div>
+                    <div class="sitting-card-left float-start">
+                      <div class="sitt-card-left">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>39</p>
+                      <p>47</p>
+                    </div>
+                  </div>
+                  <div class="col-1 text-center">
+                    <strong>C</strong>
+                  </div>
+                  <div class="col">
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>38</p>
+                      <p>46</p>
+                    </div>
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
                       </div>
+                      <p>45</p>
+                    </div>
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
+                      </div>
+                      <p>44</p>
+                    </div>
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
+                      </div>
+                      <p>43</p>
+                    </div>
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
+                      </div>
+                      <p>42</p>
+                    </div>
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
+                      </div>
+                      <p>41</p>
+                    </div>
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
+                      </div>
+                      <p>40</p>
+                    </div>
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
+                      </div>
+                      <p>39</p>
+                    </div>
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
+                      </div>
+                      <p>38</p>
                     </div>
                   </div>
                 </div>
-                <div class="sitting-row">
-                  <div class="row">
-                    <div class="col">
-                      <div class="sitting-card-left float-start">
-                        <div class="sitt-card-left">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>37</p>
+              </div>
+              <div class="sitting-row">
+                <div class="row">
+                  <div class="col">
+                    <div class="sitting-card-left float-start">
+                      <div class="sitt-card-left">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-left float-start">
-                        <div class="sitt-card-left">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>36</p>
-                      </div>
-                      <div class="sitting-card-left float-start">
-                        <div class="sitt-card-left">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>35</p>
-                      </div>
-                      <div class="sitting-card-left float-start">
-                        <div class="sitt-card-left">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>34</p>
-                      </div>
-                      <div class="sitting-card-left float-start">
-                        <div class="sitt-card-left">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>33</p>
-                      </div>
-                      <div class="sitting-card-left float-start">
-                        <div class="sitt-card-left">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>32</p>
-                      </div>
-                      <div class="sitting-card-left float-start">
-                        <div class="sitt-card-left">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>31</p>
-                      </div>
-                      <div class="sitting-card-left float-start">
-                        <div class="sitt-card-left">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>30</p>
-                      </div>
-                      <div class="sitting-card-left float-start">
-                        <div class="sitt-card-left">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>29</p>
-                      </div>
+                      <p>37</p>
                     </div>
-                    <div class="col-1 text-center">
-                      <strong>B</strong>
+                    <div class="sitting-card-left float-start">
+                      <div class="sitt-card-left">
+                        <h2>انور لال دین</h2>
+                      </div>
+                      <p>36</p>
                     </div>
-                    <div class="col">
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>28</p>
+                    <div class="sitting-card-left float-start">
+                      <div class="sitt-card-left">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>27</p>
+                      <p>35</p>
+                    </div>
+                    <div class="sitting-card-left float-start">
+                      <div class="sitt-card-left">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>26</p>
+                      <p>34</p>
+                    </div>
+                    <div class="sitting-card-left float-start">
+                      <div class="sitt-card-left">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>25</p>
+                      <p>33</p>
+                    </div>
+                    <div class="sitting-card-left float-start">
+                      <div class="sitt-card-left">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>24</p>
+                      <p>32</p>
+                    </div>
+                    <div class="sitting-card-left float-start">
+                      <div class="sitt-card-left">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>23</p>
+                      <p>31</p>
+                    </div>
+                    <div class="sitting-card-left float-start">
+                      <div class="sitt-card-left">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>22</p>
+                      <p>30</p>
+                    </div>
+                    <div class="sitting-card-left float-start">
+                      <div class="sitt-card-left">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>21</p>
+                      <p>29</p>
+                    </div>
+                  </div>
+                  <div class="col-1 text-center">
+                    <strong>B</strong>
+                  </div>
+                  <div class="col">
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>20</p>
+                      <p>28</p>
+                    </div>
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
                       </div>
+                      <p>27</p>
+                    </div>
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
+                      </div>
+                      <p>26</p>
+                    </div>
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
+                      </div>
+                      <p>25</p>
+                    </div>
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
+                      </div>
+                      <p>24</p>
+                    </div>
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
+                      </div>
+                      <p>23</p>
+                    </div>
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
+                      </div>
+                      <p>22</p>
+                    </div>
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
+                      </div>
+                      <p>21</p>
+                    </div>
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
+                      </div>
+                      <p>20</p>
                     </div>
                   </div>
                 </div>
-                <div class="sitting-row">
-                  <div class="row">
-                    <div class="col">
-                      <div class="sitting-card-left float-start">
-                        <div class="sitt-card-left">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>19</p>
+              </div>
+              <div class="sitting-row">
+                <div class="row">
+                  <div class="col">
+                    <div class="sitting-card-left float-start">
+                      <div class="sitt-card-left">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-left float-start">
-                        <div class="sitt-card-left">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>18</p>
-                      </div>
-                      <div class="sitting-card-left float-start">
-                        <div class="sitt-card-left">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>17</p>
-                      </div>
-                      <div class="sitting-card-left float-start">
-                        <div class="sitt-card-left">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>16</p>
-                      </div>
-                      <div class="sitting-card-left float-start">
-                        <div class="sitt-card-left">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>15</p>
-                      </div>
-                      <div class="sitting-card-left float-start">
-                        <div class="sitt-card-left">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>14</p>
-                      </div>
-                      <div class="sitting-card-left float-start">
-                        <div class="sitt-card-left">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>13</p>
-                      </div>
-                      <div class="sitting-card-left float-start">
-                        <div class="sitt-card-left">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>12</p>
-                      </div>
-                      <div class="sitting-card-left float-start">
-                        <div class="sitt-card-left">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>11</p>
-                      </div>
+                      <p>19</p>
                     </div>
-                    <div class="col-1 text-center">
-                      <strong>A</strong>
+                    <div class="sitting-card-left float-start">
+                      <div class="sitt-card-left">
+                        <h2>انور لال دین</h2>
+                      </div>
+                      <p>18</p>
                     </div>
-                    <div class="col">
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>10</p>
+                    <div class="sitting-card-left float-start">
+                      <div class="sitt-card-left">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>9</p>
+                      <p>17</p>
+                    </div>
+                    <div class="sitting-card-left float-start">
+                      <div class="sitt-card-left">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>8</p>
+                      <p>16</p>
+                    </div>
+                    <div class="sitting-card-left float-start">
+                      <div class="sitt-card-left">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>7</p>
+                      <p>15</p>
+                    </div>
+                    <div class="sitting-card-left float-start">
+                      <div class="sitt-card-left">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>6</p>
+                      <p>14</p>
+                    </div>
+                    <div class="sitting-card-left float-start">
+                      <div class="sitt-card-left">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>5</p>
+                      <p>13</p>
+                    </div>
+                    <div class="sitting-card-left float-start">
+                      <div class="sitt-card-left">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>4</p>
+                      <p>12</p>
+                    </div>
+                    <div class="sitting-card-left float-start">
+                      <div class="sitt-card-left">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>3</p>
+                      <p>11</p>
+                    </div>
+                  </div>
+                  <div class="col-1 text-center">
+                    <strong>A</strong>
+                  </div>
+                  <div class="col">
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
                       </div>
-                      <div class="sitting-card-right float-start">
-                        <div class="sitt-card-right">
-                          <h2>انور لال دین</h2>
-                        </div>
-                        <p>2</p>
+                      <p>10</p>
+                    </div>
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
                       </div>
+                      <p>9</p>
+                    </div>
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
+                      </div>
+                      <p>8</p>
+                    </div>
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
+                      </div>
+                      <p>7</p>
+                    </div>
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
+                      </div>
+                      <p>6</p>
+                    </div>
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
+                      </div>
+                      <p>5</p>
+                    </div>
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
+                      </div>
+                      <p>4</p>
+                    </div>
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
+                      </div>
+                      <p>3</p>
+                    </div>
+                    <div class="sitting-card-right float-start">
+                      <div class="sitt-card-right">
+                        <h2>انور لال دین</h2>
+                      </div>
+                      <p>2</p>
                     </div>
                   </div>
                 </div>
-                <div class="center-content">
-                  <h3>CHAIRMAN</h3>
-                </div>
+              </div>
+              <div class="center-content">
+                <h3>CHAIRMAN</h3>
               </div>
             </div>
           </div>
         </div>
-      </>
+      </div>
+    </>
   );
 }
 
