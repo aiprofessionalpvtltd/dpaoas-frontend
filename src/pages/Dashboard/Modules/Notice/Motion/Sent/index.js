@@ -3,111 +3,157 @@ import { NoticeSidebarItems } from "../../../../../../utils/sideBarItems";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
 import { useNavigate } from "react-router";
-import {
-  getAllMotion,
-  getAllQuestion,
-  searchMotion,
-  searchQuestion,
-} from "../../../../../../api/APIs";
+import DatePicker from "react-datepicker";
+
 import {
   showErrorMessage,
   showSuccessMessage,
 } from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
-import { Field, Form, Formik } from "formik";
+import { useFormik } from "formik";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
+import { getAllMinistry, getAllMotion, getAllSessions, getallMembers, getallMotionStatus, searchMotion } from "../../../../../../api/APIs";
 
 function SentMotion() {
   const navigate = useNavigate();
-  const [searchedData, setSearchedData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
-    const [count, setCount] = useState(null);
-  const [resData, setResData] = useState([]);
+  const [count, setCount] = useState(null);
+  const [sessions, setSessions] = useState([]);
+  const [motionStatus, setMotionStatus] = useState([]);
+  const [members, setMembers] = useState([]);
+  const [motionData, setMotionData] = useState([]);
   const pageSize = 4; // Set your desired page size
+
+  const formik = useFormik({
+    initialValues: {
+      motionDiaryNo: "",
+      motionID: "",
+      keyword: "",
+      memberName: "",
+      fromSession: "",
+      toSession: "",
+      motionType: "",
+      motionStatus: "0",
+      fromNoticeDate: "",
+      toNoticeDate: "",
+    },
+    onSubmit: (values) => {
+      // Handle form submission here
+      searchMotionList(values);
+    },
+  });
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
     setCurrentPage(page);
   };
 
-  const initialValues = {
-    noticeDiaryNo: "",
-    motionID: "",
-    keyword: "",
-    memberName: "",
-    fromSession: "",
-    toSession: "",
-    motionType: "",
-    motionStatus: "",
-    fromNoticeDate: "",
-    toNoticeDate: "",
+  const transformMotionData = (apiData) => {
+    return apiData?.map((leave) => ({
+      id: leave?.id,
+      fkSessionId: leave?.sessions?.id,
+      fileNumber: leave?.fileNumber,
+      motionType: leave?.motionType,
+      motionWeek: '',
+      noticeOfficeDiaryNo: leave?.noticeOfficeDairies?.noticeOfficeDiaryNo,
+      // ministryName: leave?.motionMinistries?.ministries,
+      // ministryIds: leave?.motionMinistries?.fkMinistryId,
+      noticeOfficeDiaryDate: leave?.noticeOfficeDairies?.noticeOfficeDiaryDate,
+      noticeOfficeDiaryTime: leave?.noticeOfficeDairies?.noticeOfficeDiaryTime,
+      // memberName:leave?.motionMovers?.members,
+      englishText: leave?.englishText,
+      urduText: leave?.urduText,
+      fkMotionStatus: leave?.motionStatuses?.statusName,
+    }));
   };
-
-  const transformLeavesData = (apiData) => {
-    return apiData.map((res, index) => {
-      return {
-        // SrNo: index,
-        MID: res?.id,
-        NoticeNo: res?.noticeOfficeDairies?.noticeOfficeDiaryNo,
-        NoticeDate: res?.noticeOfficeDairies?.noticeOfficeDiaryDate,
-        MotionType: res?.motionType,
-        SessionNo: res?.session?.sessionName,
-        SubjectMatter: [res?.englishText, res?.urduText]
-          .filter(Boolean)
-          .join(", "),
-        Mover: res?.motionMovers?.map((item) => item?.members?.memberName),
-        MotionStatus: res?.motionStatuses?.statusName,
-      };
-    });
-  };
-
-  const handleSubmit = (values) => {
-    // Handle form submission
-    SearchQuestionApi(values);
-  };
-
-  const SearchQuestionApi = async (values) => {
-    const searchParams = {
-      fromSessionNo: values.fromSession,
-      toSessionNo: values.toSession,
-      memberName: values.memberName,
-      englishText: values.keyword,
-      motionID: values.motionID,
-      motionType: values.motionType,
-      motionStatus: values.motionStatus,
-      noticeDiaryNo: values.noticeDiaryNo,
-      noticeOfficeDiaryDateFrom: values.fromNoticeDate,
-      noticeOfficeDiaryDateTo: values.toNoticeDate,
-    };
-
+  const getMotionListData = async () => {
     try {
-      const response = await searchMotion(searchParams);
+      const response = await getAllMotion(currentPage, pageSize);
+      if (response?.success) {
+        // showSuccessMessage(response?.message);
+        setCount(response?.data?.count);
+        const transformedData = transformMotionData(response?.data?.rows);
+        setMotionData(transformedData);
+      }
+    } catch (error) {
+      console.log(error);
+      showErrorMessage(error?.response?.data?.error);
+    }
+  };
+
+  const searchMotionList = async (values) => {
+    const data = {
+      // fileNumber: ,
+      fkSessionId: values?.fromSession,
+      noticeOfficeDiaryNo: values?.motionDiaryNo,
+      fkMemberId: values?.memberName,
+      fkMinistryId: '',
+      motionId: values?.motionID,
+      sessionStartRange: values?.fromSession,
+      sessionEndRange: values?.toSession,
+      noticeStartRange: values?.fromNoticeDate,
+      noticeEndRange: values?.toNoticeDate,
+      englishText: values?.keyword,
+      motionWeek: values?.motionWeek,
+      motionType: values?.motionType,
+    };
+    try {
+      const response = await searchMotion(currentPage, pageSize, data); // Add await here
       if (response?.success) {
         showSuccessMessage(response?.message);
-        const transformedData = transformLeavesData(response.data?.rows);
-        setSearchedData(transformedData);
+        const transformedData = transformMotionData(response?.data?.rows);
+        setMotionData(transformedData);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getAllSessionsApi = async () => {
+    try {
+      const response = await getAllSessions();
+      if (response?.success) {
+        setSessions(response?.data);
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
     }
   };
 
-  const getAllQuestionsApi = async () => {
+  const getMotionStatus = async () => {
     try {
-      const response = await getAllMotion(currentPage, pageSize);
+      const response = await getallMotionStatus();
       if (response?.success) {
-        showSuccessMessage(response?.message);
-        setCount(response?.data?.count)
-        const transformedData = transformLeavesData(response.data?.rows);
-        setResData(transformedData);
+        setMotionStatus(response?.data);
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
+    }
+  };
+
+
+
+  const AllMembersData = async () => {
+    try {
+      const response = await getallMembers(currentPage, pageSize);
+      if (response?.success) {
+        // showSuccessMessage(response?.message);
+        setMembers(response?.data?.rows);
+      }
+    } catch (error) {
+      console.log(error);
+      showErrorMessage(error?.response?.data?.error);
     }
   };
 
   useEffect(() => {
-    getAllQuestionsApi();
+    AllMembersData();
+    getAllSessionsApi();
+    getMotionStatus();
+  }, []);
+
+  useEffect(() => {
+    getMotionListData();
   }, [currentPage]);
 
   return (
@@ -134,229 +180,264 @@ function SentMotion() {
               <h1>SENT MOTION</h1>
             </div>
             <div class="card-body">
-              <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-                <Form>
-                  <div class="container-fluid">
-                    <div class="row">
-                      <div class="col">
-                        <div class="mb-3">
-                          <label class="form-label">Notice Diary No</label>
-                          <Field
-                            className="form-control"
-                            type="text"
-                            name="noticeDiaryNo"
-                          />
-                        </div>
-                      </div>
-                      <div class="col">
-                        <div class="mb-3">
-                          <label class="form-label">Motion ID</label>
-                          <Field
-                            className="form-control"
-                            type="text"
-                            name="motionID"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col">
-                        <div class="mb-3">
-                          <label class="form-label">Keyword</label>
-                          <Field
-                            className="form-control"
-                            type="text"
-                            name="keyword"
-                          />
-                        </div>
-                      </div>
-                      <div class="col">
-                        <div class="mb-3">
-                          <label class="form-label">Member Name</label>
-                          <Field
-                            className="form-control"
-                            type="text"
-                            name="memberName"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="row">
-                      <div className="col">
-                        <div className="mb-3">
-                          <label className="form-label">From Session</label>
-                          <Field
-                            as="select"
-                            className="form-select"
-                            name="fromSession"
-                          >
-                            <option value="" selected disabled hidden>
-                              Select
-                            </option>
-                            <option>121</option>
-                            <option>122</option>
-                            <option>123</option>
-                          </Field>
-                        </div>
-                      </div>
-                      <div className="col">
-                        <div className="mb-3">
-                          <label className="form-label">To Session</label>
-                          <Field
-                            as="select"
-                            className="form-select"
-                            name="toSession"
-                          >
-                            <option value="" selected disabled hidden>
-                              Select
-                            </option>
-                            <option>121</option>
-                            <option>122</option>
-                            <option>123</option>
-                          </Field>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col">
-                        <div class="mb-3">
-                          <label class="form-label">Motion Type</label>
-                          <Field
-                            as="select"
-                            className="form-select"
-                            name="motionType"
-                          >
-                            <option value="" selected disabled hidden>
-                              Select
-                            </option>
-                            <option>Motion Type</option>
-                            <option>Adjournment Motion</option>
-                            <option>Call Attention Notice</option>
-                            <option>Privilege Motion</option>
-                            <option>Laying of Copy</option>
-                            <option>Motion For Consideration/Discussion</option>
-                            <option>Motion Under Rule 194</option>
-                            <option>Motion Under Rule 218</option>
-                            <option>Motion Under Rule 60</option>
-                          </Field>
-                        </div>
-                      </div>
-                      <div class="col">
-                        <div class="mb-3">
-                          <label class="form-label">Motion Status</label>
-                          <Field
-                            as="select"
-                            className="form-select"
-                            name="motionStatus"
-                          >
-                            <option value="" selected disabled hidden>
-                              Select
-                            </option>
-                            <option>Motion Status</option>
-                            <option>Referred to Standing Committee</option>
-                            <option>Ruled out of Order</option>
-                            <option>Withdrawn in the House</option>
-                            <option>Withdrawn at Secretariat Level</option>
-                            <option>Under Process</option>
-                            <option>Allowed</option>
-                            <option>Disposed Off</option>
-                            <option>Admitted for 2 Hr. Discussion</option>
-                            <option>Disallowed in Chamber</option>
-                            <option>Ruled out of Order in the house</option>
-                            <option>Moved in the house without notice</option>
-                            <option>Lapsed</option>
-                            <option>Not Pressed</option>
-                            <option>Ruling Reserved</option>
-                            <option>Referred to Spl Cmt</option>
-                            <option>Referred to Priv Cmt.</option>
-                            <option>Infructuous</option>
-                            <option>Moved and Deferred</option>
-                            <option>Admitted</option>
-                            <option>Disallowed</option>
-                            <option>Discuss in the House</option>
-                            <option>Withdrawn by the Member</option>
-                            <option>Droped by the House</option>
-                            <option>Under-Correspondence</option>
-                            <option>Admitted but Lapsed</option>
-                            <option>Deferred</option>
-                            <option>Dropped</option>
-                            <option>Discussed</option>
-                            <option>Move To Session</option>
-                            <option>To be heard but Lapsed</option>
-                            <option>Referred to Special Committee</option>
-                            <option>Moved in the House</option>
-                            <option>Selected/Not Sel. for Statement</option>
-                            <option>Notice Received for 2nd Time</option>
-                            <option>
-                              Referred to the Privileges Committee
-                            </option>
-                            <option>Moved and is Pending for Discussion</option>
-                            <option>To be heard</option>
-                            <option>
-                              Admissibility not Allowed by the House
-                            </option>
-                            <option>Talked Out</option>
-                            <option>Held in Order</option>
-                            <option>Held out of Order</option>
-                            <option>Approved</option>
-                          </Field>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="row">
-                      <div className="col">
-                        <div className="mb-3">
-                          <label className="form-label">From Notice Date</label>
-                          <Field
-                            className="form-control"
-                            type="text"
-                            name="fromNoticeDate"
-                          />
-                        </div>
-                      </div>
-                      <div className="col">
-                        <div className="mb-3">
-                          <label className="form-label">To Notice Date</label>
-                          <Field
-                            className="form-control"
-                            type="text"
-                            name="toNoticeDate"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <button class="btn btn-primary" type="submit">
-                          Search
-                        </button>
-                        <button class="btn btn-primary" type="submit">
-                          Reset
-                        </button>
-                      </div>
-                    </div>
-
-                    <div
-                      class="dash-detail-container"
-                      style={{ marginTop: "20px" }}
-                    >
-                      <CustomTable
-                        block={true}
-                        hideBtn={true}
-                        data={searchedData.length > 0 ? searchedData : resData}
-                        tableTitle="Motion"
-                        handlePageChange={handlePageChange}
-                        currentPage={currentPage}
-                        showPrint={true}
-                        pageSize={pageSize}
-                        handleAdd={(item) => navigate('/')}
-                        handleEdit={(item) => navigate('/')}
-                        totalCount={count}
+              <form onSubmit={formik.handleSubmit}>
+                <div class="row">
+                  <div class="col">
+                    <div class="mb-3">
+                      <label class="form-label">Notice Office Diary No</label>
+                      <input
+                        type="text"
+                        className={"form-control"}
+                        id="motionDiaryNo"
+                        placeholder={formik.values.motionDiaryNo}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
                       />
                     </div>
                   </div>
-                </Form>
-              </Formik>
+                  <div class="col">
+                    <div class="mb-3">
+                      <label class="form-label">Motion ID</label>
+                      <input
+                        class="form-control"
+                        type="text"
+                        placeholder={formik.values.motionID}
+                        onChange={formik.handleChange}
+                        id="motionID"
+                        onBlur={formik.handleBlur}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <div class="mb-3">
+                      <label class="form-label">Keyword</label>
+                      <input
+                        class="form-control"
+                        type="text"
+                        placeholder={formik.values.keyword}
+                        onChange={formik.handleChange}
+                        id="keyword"
+                        onBlur={formik.handleBlur}
+                      />
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="mb-3">
+                      <label class="form-label">Member Name</label>
+                      {/* <input
+                                                type='text'
+                                                placeholder={formik.values.memberName}
+                                                className={`form-control`}
+                                                id='memberName'
+                                                onChange={formik.handleChange}
+                                                onBlur={formik.handleBlur}
+                                            /> */}
+                      <select
+                        class="form-select"
+                        placeholder={formik.values.memberName}
+                        onChange={formik.handleChange}
+                        id="memberName"
+                        onBlur={formik.handleBlur}
+                      >
+                        <option selected disabled hidden>
+                          Select
+                        </option>
+                        {members &&
+                          members.map((item) => (
+                            <option key={item.id} value={item.id}>
+                              {item?.memberName}
+                            </option>
+                          ))}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <div class="mb-3">
+                      <label class="form-label">From Session</label>
+                      <select
+                        class="form-select"
+                        placeholder={formik.values.fromSession}
+                        onChange={formik.handleChange}
+                        id="fromSession"
+                        onBlur={formik.handleBlur}
+                      >
+                        <option selected disabled hidden>
+                          Select
+                        </option>
+                        {sessions &&
+                          sessions.map((item) => (
+                            <option key={item.id} value={item.id}>
+                              {item?.sessionName}
+                            </option>
+                          ))}
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="mb-3">
+                      <label class="form-label">To Session</label>
+                      <select
+                        class="form-select"
+                        placeholder={formik.values.toSession}
+                        onChange={formik.handleChange}
+                        id="toSession"
+                        onBlur={formik.handleBlur}
+                      >
+                        <option selected disabled hidden>
+                          Select
+                        </option>
+                        {sessions &&
+                          sessions.map((item) => (
+                            <option key={item.id} value={item.id}>
+                              {item?.sessionName}
+                            </option>
+                          ))}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <div class="mb-3">
+                      <label class="form-label">Motion Type</label>
+                      <select
+                        class="form-select"
+                        placeholder={formik.values.motionType}
+                        onChange={formik.handleChange}
+                        id="motionType"
+                        onBlur={formik.handleBlur}
+                      >
+                        <option selected disabled hidden>
+                          Select motion Type
+                        </option>
+                        <option>Motion Type</option>
+                        <option>Adjournment Motion</option>
+                        <option>Call Attention Notice</option>
+                        <option>Privilege Motion</option>
+                        <option>Motion Under Rule 218</option>
+                        <option>Motion Under Rule 60</option>
+                      </select>
+                    </div>
+                  </div>
+                  {/* <div class="col">
+                    <div class="mb-3">
+                      <label class="form-label">Motion Week</label>
+                      <select
+                        class="form-select"
+                        placeholder={formik.values.motionWeek}
+                        onChange={formik.handleChange}
+                        id="motionWeek"
+                        onBlur={formik.handleBlur}
+                      >
+                        <option>Motion Week</option>
+                        <option>Not Applicable</option>
+                        <option>1st Week</option>
+                        <option>2nd Week</option>
+                        <option>3rd Week</option>
+                        <option>4th Week</option>
+                        <option>5th Week</option>
+                      </select>
+                    </div>
+                  </div> */}
+                  {/* <div class="col">
+                    <div class="mb-3">
+                      <label class="form-label">Ministry</label>
+                      <select
+                        className="form-select"
+                        id="ministry"
+                        name="ministry"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.ministry}
+                        class="form-control"
+                      >
+                        <option value={""} selected disabled hidden>
+                          select
+                        </option>
+                        {ministryData &&
+                          ministryData.map((item) => <option value={item.id}>{item.ministryName}</option>)}
+                      </select>
+                    </div>
+                  </div> */}
+                  <div class="col">
+                    <div class="mb-3">
+                      <label class="form-label">Motion Status</label>
+                      <select
+                        class="form-select"
+                        placeholder={formik.values.motionStatus}
+                        onChange={formik.handleChange}
+                        id="motionStatus"
+                        onBlur={formik.handleBlur}
+                      >
+                        <option selected disabled hidden>
+                          Select
+                        </option>
+                        {motionStatus &&
+                          motionStatus.map((item) => (
+                            <option key={item.id} value={item.id}>
+                              {item?.statusName}
+                            </option>
+                          ))}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <div class="mb-3">
+                      <label class="form-label">From Notice Date</label>
+                      <DatePicker
+                        selected={formik.values.fromNoticeDate}
+                        onChange={(date) => formik.setFieldValue("fromNoticeDate", date)}
+                        className={`form-control ${formik.errors.fromNoticeDate && formik.touched.fromNoticeDate ? "is-invalid" : ""
+                          }`}
+                      />
+                      {formik.errors.fromNoticeDate && formik.touched.fromNoticeDate && (
+                        <div className="invalid-feedback">{formik.errors.fromNoticeDate}</div>
+                      )}
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="mb-3">
+                      <label class="form-label">To Notice Date</label>
+                      <DatePicker
+                        selected={formik.values.toNoticeDate}
+                        onChange={(date) => formik.setFieldValue("toNoticeDate", date)}
+                        className={"form-control"}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button class="btn btn-primary" type="submit">
+                      Search
+                    </button>
+                    <button class="btn btn-primary" type="">
+                      Reset
+                    </button>
+                  </div>
+                </div>
+                <div class="dash-detail-container" style={{ marginTop: "20px" }}>
+                  <CustomTable
+                    block={true}
+                    data={motionData}
+                    headerShown={true}
+                    handleDelete={(item) => alert(item.id)}
+                    handleEdit={(item) => navigate("/mms/motion/new", { state: item })}
+                    headertitlebgColor={"#666"}
+                    headertitletextColor={"#FFF"}
+                    handlePageChange={handlePageChange}
+                    currentPage={currentPage}
+                    pageSize={pageSize}
+                    totalCount={count}
+                  />
+                </div>
+              </form>
             </div>
           </div>
         </div>

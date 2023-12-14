@@ -4,6 +4,10 @@ import Header from "../../../../../../components/Header";
 import { QMSSideBarItems } from "../../../../../../utils/sideBarItems";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import TimePicker from "react-time-picker";
+import DatePicker from "react-datepicker";
+import { Editor } from "../../../../../../components/CustomComponents/Editor";
+
 const validationSchema = Yup.object({
   sessionNumber: Yup.string().required("Session No is required"),
   noticeOfficeDiaryNumber: Yup.string().required(
@@ -96,12 +100,11 @@ function QMSNoticeQuestionDetail() {
                         <input
                           type="text"
                           placeholder={formik.values.sessionNumber}
-                          className={`form-control ${
-                            formik.touched.sessionNumber &&
+                          className={`form-control ${formik.touched.sessionNumber &&
                             formik.errors.sessionNumber
-                              ? "is-invalid"
-                              : ""
-                          }`}
+                            ? "is-invalid"
+                            : ""
+                            }`}
                           id="sessionNumber"
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
@@ -122,12 +125,11 @@ function QMSNoticeQuestionDetail() {
                         <input
                           type="text"
                           placeholder={formik.values.noticeOfficeDiaryNumber}
-                          className={`form-control ${
-                            formik.touched.noticeOfficeDiaryNumber &&
+                          className={`form-control ${formik.touched.noticeOfficeDiaryNumber &&
                             formik.errors.noticeOfficeDiaryNumber
-                              ? "is-invalid"
-                              : ""
-                          }`}
+                            ? "is-invalid"
+                            : ""
+                            }`}
                           id="noticeOfficeDiaryNumber"
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
@@ -145,18 +147,17 @@ function QMSNoticeQuestionDetail() {
                         <label class="form-label">
                           Notice Office Diary Date
                         </label>
-                        <input
-                          type="text"
-                          placeholder={formik.values.noticeOfficeDiaryDate}
-                          className={`form-control ${
-                            formik.touched.noticeOfficeDiaryDate &&
-                            formik.errors.noticeOfficeDiaryDate
-                              ? "is-invalid"
-                              : ""
-                          }`}
-                          id="noticeOfficeDiaryDate"
-                          onChange={formik.handleChange}
+                        <DatePicker
+                          selected={formik.values.noticeOfficeDiaryDate}
+                          onChange={(date) =>
+                            formik.setFieldValue("noticeOfficeDiaryDate", date)
+                          }
                           onBlur={formik.handleBlur}
+                          className={`form-control ${formik.touched.noticeOfficeDiaryDate &&
+                            formik.errors.noticeOfficeDiaryDate
+                            ? "is-invalid"
+                            : ""
+                            }`}
                         />
                         {formik.touched.noticeOfficeDiaryDate &&
                           formik.errors.noticeOfficeDiaryDate && (
@@ -171,18 +172,19 @@ function QMSNoticeQuestionDetail() {
                         <label class="form-label">
                           Notice Office Diary Time
                         </label>
-                        <input
-                          type="text"
-                          placeholder={formik.values.noticeOfficeDiaryTime}
-                          className={`form-control ${
-                            formik.touched.noticeOfficeDiaryTime &&
+                        <TimePicker
+                          value={formik.values.noticeOfficeDiaryTime}
+                          clockIcon={null} // Disable clock view
+                          openClockOnFocus={false}
+                          format="hh:mm a"
+                          onChange={(time) =>
+                            formik.setFieldValue("noticeOfficeDiaryTime", time)
+                          }
+                          className={`form-control ${formik.touched.noticeOfficeDiaryTime &&
                             formik.errors.noticeOfficeDiaryTime
-                              ? "is-invalid"
-                              : ""
-                          }`}
-                          id="noticeOfficeDiaryTime"
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
+                            ? "is-invalid"
+                            : ""
+                            }`}
                         />
                         {formik.touched.noticeOfficeDiaryTime &&
                           formik.errors.noticeOfficeDiaryTime && (
@@ -200,12 +202,11 @@ function QMSNoticeQuestionDetail() {
                         <input
                           type="text"
                           placeholder={formik.values.questionDiaryNumber}
-                          className={`form-control ${
-                            formik.touched.questionDiaryNumber &&
+                          className={`form-control ${formik.touched.questionDiaryNumber &&
                             formik.errors.questionDiaryNumber
-                              ? "is-invalid"
-                              : ""
-                          }`}
+                            ? "is-invalid"
+                            : ""
+                            }`}
                           id="questionDiaryNumber"
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
@@ -255,8 +256,19 @@ function QMSNoticeQuestionDetail() {
                     </div>
                   </div>
                 </div>
-                <p>English Test Here</p>
-                <p>Urdu Text Here</p>
+                <div style={{ marginTop: 10 }}>
+                  <Editor
+                    title={"English Text"}
+                  // onChange={handleProcedureContentChange}
+                  />
+                </div>
+
+                <div style={{ marginTop: 70, marginBottom: 40 }}>
+                  <Editor
+                    title={"Urdu Text"}
+                  // onChange={handleProcedureContentChange}
+                  />
+                </div>
               </div>
             </div>
           </div>

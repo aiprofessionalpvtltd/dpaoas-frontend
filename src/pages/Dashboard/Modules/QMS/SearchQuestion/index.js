@@ -145,9 +145,9 @@ function QMSSearchQuestion() {
                                             <label class="form-label">Question Diary No</label>
                                             <input
                                                 type="text"
-                                                placeholder={formik.values.questionDiaryNo}
                                                 className={"form-control"}
                                                 id="questionDiaryNo"
+                                                placeholder={formik.values.questionDiaryNo}
                                                 onChange={formik.handleChange}
                                                 onBlur={formik.handleBlur}
                                             />
@@ -482,7 +482,11 @@ function QMSSearchQuestion() {
                                 <div class="col">
                                     <div class="mb-3">
                                         <label class="form-label">Status Date</label>
-                                        <input class="form-control" />
+                                        <DatePicker
+                                                // selected={formik.values.fromNoticeDate}
+                                                // onChange={(date) => formik.setFieldValue("fromNoticeDate", date)}
+                                                className={"form-control"}
+                                            />
                                     </div>
                                 </div>
                                 <div class="col">

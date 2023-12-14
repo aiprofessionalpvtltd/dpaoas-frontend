@@ -4,6 +4,8 @@ import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
 import { useNavigate } from "react-router";
 import { createResolution, getAllSessions } from "../../../../../../api/APIs";
+import TimePicker from "react-time-picker";
+
 import {
   showErrorMessage,
   showSuccessMessage,
@@ -306,15 +308,18 @@ function NewResolution() {
                         <label className="form-label">
                           Notice Office Diary Time
                         </label>
-                        <input
-                          className="form-control"
-                          type="text"
-                          id="noticeOfficeDiaryTime"
-                          value={formik.values.noticeOfficeDiaryTime}
-                          name="noticeOfficeDiaryTime"
-                          onBlur={formik.handleBlur}
-                          onChange={formik.handleChange}
+                       
+                        <TimePicker
+                            value={formik.values.noticeOfficeDiaryTime}
+                            clockIcon={null} // Disable clock view
+                            openClockOnFocus={false}
+                            format="hh:mm a"
+                            onChange={(time) =>
+                                formik.setFieldValue("noticeOfficeDiaryTime", time)
+                            }
+                            className={`form-control`}
                         />
+                                            
                       </div>
                     </div>
                   </div>
