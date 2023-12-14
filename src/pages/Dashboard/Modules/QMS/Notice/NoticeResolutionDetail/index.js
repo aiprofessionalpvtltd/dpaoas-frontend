@@ -8,6 +8,10 @@ import { useLocation } from "react-router";
 import { UpdateResolution, sendResolutionForTranslation } from "../../../../../../api/APIs";
 import { showSuccessMessage } from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
+import TimePicker from "react-time-picker";
+import DatePicker from "react-datepicker";
+import { Editor } from "../../../../../../components/CustomComponents/Editor";
+
 const validationSchema = Yup.object({
   sessionNo: Yup.number(),
   noticeOfficeDiaryNo: Yup.number(),
@@ -25,8 +29,8 @@ function QMSNoticeResolutionDetail() {
     initialValues: {
       sessionNo: location?.state?.session?.sessionName,
       noticeOfficeDiaryNo: location?.state?.noticeDiary?.noticeOfficeDiaryNo,
-      noticeOfficeDiaryDate: location?.state?.noticeDiary?.noticeOfficeDiaryDate,
-      noticeOfficeDiaryTime: location?.state?.noticeDiary?.noticeOfficeDiaryTime,
+      noticeOfficeDiaryDate: "",
+      noticeOfficeDiaryTime: "",
       resolutionType: "",
       resolutionStatus: "",
       resolutionMovers: "",
@@ -120,17 +124,17 @@ function QMSNoticeResolutionDetail() {
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Notice Office Diary Date</label>
-                      <input
-                        type="text"
-                        placeholder={formik.values.noticeOfficeDiaryDate}
-                        className={`form-control ${formik.touched.noticeOfficeDiaryDate &&
-                            formik.errors.noticeOfficeDiaryDate
-                            ? "is-invalid"
-                            : ""
-                          }`}
-                        id="noticeOfficeDiaryDate"
-                        onChange={formik.handleChange}
+                      <DatePicker
+                        selected={formik.values.noticeOfficeDiaryDate}
+                        onChange={(date) =>
+                          formik.setFieldValue("noticeOfficeDiaryDate", date)
+                        }
                         onBlur={formik.handleBlur}
+                        className={`form-control ${formik.touched.noticeOfficeDiaryDate &&
+                          formik.errors.noticeOfficeDiaryDate
+                          ? "is-invalid"
+                          : ""
+                          }`}
                       />
                       {formik.touched.noticeOfficeDiaryDate &&
                         formik.errors.noticeOfficeDiaryDate && (
@@ -145,17 +149,19 @@ function QMSNoticeResolutionDetail() {
                       <label class="form-label">
                         Notice Office Diary Time{" "}
                       </label>
-                      <input
-                        type="text"
-                        placeholder={formik.values.noticeOfficeDiaryTime}
+                      <TimePicker
+                        value={formik.values.noticeOfficeDiaryTime}
+                        clockIcon={null} // Disable clock view
+                        openClockOnFocus={false}
+                        format="hh:mm a"
+                        onChange={(time) =>
+                          formik.setFieldValue("noticeOfficeDiaryTime", time)
+                        }
                         className={`form-control ${formik.touched.noticeOfficeDiaryTime &&
-                            formik.errors.noticeOfficeDiaryTime
-                            ? "is-invalid"
-                            : ""
+                          formik.errors.noticeOfficeDiaryTime
+                          ? "is-invalid"
+                          : ""
                           }`}
-                        id="noticeOfficeDiaryTime"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
                       />
                       {formik.touched.noticeOfficeDiaryTime &&
                         formik.errors.noticeOfficeDiaryTime && (
@@ -233,8 +239,18 @@ function QMSNoticeResolutionDetail() {
                   </div>
                 </div>
               </form>
-              <p>Resolution text here</p>
-              <p>Urdu text here</p>
+              <div style={{ marginTop: 10 }}>
+                <Editor
+                  title={"English Text"}
+                // onChange={handleProcedureContentChange}
+                />
+              </div>
+              <div style={{ marginTop: 70, marginBottom: 40 }}>
+                <Editor
+                  title={"Urdu Text"}
+                // onChange={handleProcedureContentChange}
+                />
+              </div>
             </div>
           </div>
         </div>

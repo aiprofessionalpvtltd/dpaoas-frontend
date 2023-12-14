@@ -145,9 +145,9 @@ function QMSSearchQuestion() {
                                             <label class="form-label">Question Diary No</label>
                                             <input
                                                 type="text"
-                                                placeholder={formik.values.questionDiaryNo}
                                                 className={"form-control"}
                                                 id="questionDiaryNo"
+                                                placeholder={formik.values.questionDiaryNo}
                                                 onChange={formik.handleChange}
                                                 onBlur={formik.handleBlur}
                                             />

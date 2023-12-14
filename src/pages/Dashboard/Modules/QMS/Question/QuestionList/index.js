@@ -5,6 +5,8 @@ import Header from "../../../../../../components/Header";
 import { useNavigate } from "react-router-dom";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import { useFormik } from "formik";
+import DatePicker from "react-datepicker";
+
 import * as Yup from "yup";
 import { getAllQuestion, getAllQuestionByID } from "../../../../../../api/APIs";
 import { ToastContainer } from "react-toastify";
@@ -208,13 +210,15 @@ function QMSQuestionList() {
                                     <div class="col">
                                         <div class="mb-3">
                                             <label class="form-label">House Lay Date</label>
-                                            <input
-                                                class="form-control"
-                                                id="houseLayDate"
-                                                onChange={formik.handleChange}
+                                            <DatePicker
+                                                selected={formik.values.houseLayDate}
+                                                onChange={(date) =>
+                                                    formik.setFieldValue("houseLayDate", date)
+                                                }
                                                 onBlur={formik.handleBlur}
-                                                type="text"
+                                                className={`form-control`}
                                             />
+
                                         </div>
                                     </div>
                                     <div class="col">

@@ -3,6 +3,7 @@ import { NoticeSidebarItems } from "../../../../../../utils/sideBarItems";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
 import { useNavigate } from "react-router";
+import TimePicker from "react-time-picker";
 import {
   createQuestion,
   createResolution,
@@ -298,7 +299,7 @@ function NewQuestion() {
                         <label className="form-label">
                           Notice Office Diary Time
                         </label>
-                        <input
+                        {/* <input
                           className="form-control"
                           type="text"
                           id="noticeOfficeDiaryTime"
@@ -306,7 +307,18 @@ function NewQuestion() {
                           name="noticeOfficeDiaryTime"
                           onBlur={formik.handleBlur}
                           onChange={formik.handleChange}
-                        />
+                        /> */}
+                         <TimePicker
+                                                value={formik.values.noticeOfficeDiaryTime}
+                                                clockIcon={null} // Disable clock view
+                                                openClockOnFocus={false}
+                                                format="hh:mm a"
+                                                onChange={(time) =>
+                                                    formik.setFieldValue("noticeOfficeDiaryTime", time)
+                                                }
+                                                className={`form-control`}
+                                            />
+                                            
                       </div>
                     </div>
                   </div>

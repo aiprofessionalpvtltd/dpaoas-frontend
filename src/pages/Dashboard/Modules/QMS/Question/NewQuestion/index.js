@@ -4,6 +4,7 @@ import Header from "../../../../../../components/Header";
 import { QMSSideBarItems } from "../../../../../../utils/sideBarItems";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import TimePicker from "react-time-picker";
 import {
   showErrorMessage,
   showSuccessMessage,
@@ -64,7 +65,7 @@ function QMSNewQuestion() {
     formData.append("fkSessionId", 1);
     formData.append("noticeOfficeDiaryNo", Number(values.noticeOfficeDiaryNo));
     formData.append("noticeOfficeDiaryDate", values.noticeOfficeDiaryDate);
-    formData.append("noticeOfficeDiaryTime", "11:40am");
+    formData.append("noticeOfficeDiaryTime", values.noticeOfficeDiaryTime);
     formData.append("questionCategory", values.questionCategory);
     formData.append("fkQuestionStatus", 3);
     formData.append("fkMemberId", values.fkMemberId);
@@ -282,15 +283,16 @@ function QMSNewQuestion() {
                         <label className="form-label">
                           Notice Office Diary Time
                         </label>
-                        <input
-                          className="form-control"
-                          type="text"
-                          id="noticeOfficeDiaryTime"
-                          value={formik.values.noticeOfficeDiaryTime}
-                          name="noticeOfficeDiaryTime"
-                          onBlur={formik.handleBlur}
-                          onChange={formik.handleChange}
-                        />
+                        <TimePicker
+                            value={formik.values.noticeOfficeDiaryTime}
+                            clockIcon={null} // Disable clock view
+                            openClockOnFocus={false}
+                            format="hh:mm a"
+                            onChange={(time) =>
+                                formik.setFieldValue("noticeOfficeDiaryTime", time)
+                            }
+                            className={`form-control`}
+                            />
                       </div>
                     </div>
                   </div>

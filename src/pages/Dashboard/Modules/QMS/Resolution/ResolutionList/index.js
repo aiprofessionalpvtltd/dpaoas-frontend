@@ -7,6 +7,8 @@ import Header from "../../../../../../components/Header";
 import { DeleteResolution, getAllResolutions } from "../../../../../../api/APIs";
 import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
+import DatePicker from "react-datepicker";
+
 
 function QMSResolutionList() {
   const navigate = useNavigate();
@@ -97,7 +99,14 @@ function QMSResolutionList() {
                 <div class="col">
                   <div class="mb-3">
                     <label class="form-label">List Date</label>
-                    <input class="form-control" type="text" />
+                    <DatePicker
+                      // selected={formik.values.fromNoticeDate}
+                      // onChange={(date) =>
+                      //   formik.setFieldValue("fromNoticeDate", date)
+                      // }
+                      // onBlur={formik.handleBlur}
+                      className={`form-control`}
+                    />
                   </div>
                 </div>
               </div>
