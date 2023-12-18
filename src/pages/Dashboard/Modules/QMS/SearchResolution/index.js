@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Layout } from "../../../../../components/Layout";
 import Header from "../../../../../components/Header";
 import CustomTable from "../../../../../components/CustomComponents/CustomTable";
@@ -15,12 +15,15 @@ import {
   getAllQuestionStatus,
   searchResolution,
 } from "../../../../../api/APIs";
+import { AuthContext } from "../../../../../api/AuthContext";
 
 function QMSSerchResolution() {
   const navigate = useNavigate();
+
+  const {members,sessions, resolutionStatus} = useContext(AuthContext)
+
   const [currentPage, setCurrentPage] = useState(0);
   const [searchedData, setSearchedData] = useState([]);
-  const [allResolutionStatus, setAllResolutionStatus] = useState([]);
 
   const pageSize = 4;
 
@@ -98,20 +101,7 @@ function QMSSerchResolution() {
     }
   };
 
-  const GetALlStatus = async () => {
-    try {
-      const response = await getAllQuestionStatus();
-      if (response?.success) {
-        setAllResolutionStatus(response?.data);
-        // showSuccessMessage(response.message)
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  useEffect(() => {
-    GetALlStatus();
-  }, []);
+ 
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <Header
@@ -181,14 +171,23 @@ function QMSSerchResolution() {
                     <div className="col">
                       <div className="mb-3">
                         <label className="form-label">Member Name</label>
-                        <input
-                          className="form-control"
-                          type="text"
-                          id="memberName"
-                          placeholder={formik.values.memberName}
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                        />
+                        <select
+                        class="form-select"
+                        placeholder={formik.values.memberName}
+                        onChange={formik.handleChange}
+                        id="memberName"
+                        onBlur={formik.handleBlur}
+                      >
+                        <option selected disabled hidden>
+                          Select
+                        </option>
+                        {members &&
+                          members.map((item) => (
+                            <option key={item.id} value={item.id}>
+                              {item?.memberName}
+                            </option>
+                          ))}
+                      </select>
                       </div>
                     </div>
                   </div>
@@ -203,10 +202,15 @@ function QMSSerchResolution() {
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                         >
-                          <option>Select</option>
-                          <option>121</option>
-                          <option>122</option>
-                          <option>123</option>
+                         <option selected disabled hidden>
+                          Select
+                        </option>
+                        {sessions &&
+                          sessions.map((item) => (
+                            <option key={item.id} value={item.id}>
+                              {item?.sessionName}
+                            </option>
+                          ))}
                         </select>
                       </div>
                     </div>
@@ -220,10 +224,15 @@ function QMSSerchResolution() {
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                         >
-                          <option>Select</option>
-                          <option>121</option>
-                          <option>122</option>
-                          <option>123</option>
+                         <option selected disabled hidden>
+                          Select
+                        </option>
+                        {sessions &&
+                          sessions.map((item) => (
+                            <option key={item.id} value={item.id}>
+                              {item?.sessionName}
+                            </option>
+                          ))}
                         </select>
                       </div>
                     </div>
@@ -262,10 +271,10 @@ function QMSSerchResolution() {
                           <option value="" selected disabled hidden>
                             select
                           </option>
-                          {allResolutionStatus &&
-                            allResolutionStatus.map((item) => (
+                          {resolutionStatus &&
+                            resolutionStatus.map((item) => (
                               <option key={item.id} value={item.id}>
-                                {item?.questionStatus}
+                                {item?.resolutionStatus}
                               </option>
                             ))}
                         </select>
@@ -378,10 +387,10 @@ function QMSSerchResolution() {
                       <option selected="selected" value="0" disabled hidden>
                         selected
                       </option>
-                      {allResolutionStatus &&
-                        allResolutionStatus.map((item) => (
+                      {resolutionStatus &&
+                        resolutionStatus.map((item) => (
                           <option key={item.id} value={item.id}>
-                            {item?.questionStatus}
+                            {item?.resolutionStatus}
                           </option>
                         ))}
                     </select>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Layout } from "../../../../../../components/Layout";
 import { QMSSideBarItems } from "../../../../../../utils/sideBarItems";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
@@ -14,9 +14,11 @@ import {
 } from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 import DatePicker from "react-datepicker";
+import { AuthContext } from "../../../../../../api/AuthContext";
 
 function QMSResolutionList() {
   const navigate = useNavigate();
+  const {sessions} = useContext(AuthContext)
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(1);
   const [resData, setResData] = useState([]);
@@ -95,7 +97,22 @@ function QMSResolutionList() {
                 <div class="col">
                   <div class="mb-3">
                     <label class="form-label">Session No</label>
-                    <input class="form-control" type="text" />
+                    <select
+                        class="form-control form-select"
+                        id="toSession"
+                        // onChange={formik.handleChange}
+                        // onBlur={formik.handleBlur}
+                      >
+                        <option value="" selected disabled hidden>
+                            Select
+                          </option>
+                          {sessions &&
+                            sessions.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item?.sessionName}
+                              </option>
+                            ))}
+                      </select>
                   </div>
                 </div>
                 <div class="col">

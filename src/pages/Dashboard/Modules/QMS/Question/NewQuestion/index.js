@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
 import { QMSSideBarItems } from "../../../../../../utils/sideBarItems";
@@ -15,6 +15,7 @@ import { ToastContainer } from "react-toastify";
 import DatePicker from "react-datepicker";
 import { Editor } from "../../../../../../components/CustomComponents/Editor";
 import { useNavigate } from "react-router";
+import { AuthContext } from "../../../../../../api/AuthContext";
 
 const validationSchema = Yup.object({
   // fkSessionId: Yup.number().required("Session No is required"),
@@ -30,8 +31,9 @@ const validationSchema = Yup.object({
 
 function QMSNewQuestion() {
   const navigate = useNavigate();
+  const {members,sessions} = useContext(AuthContext)
   const [showModal, setShowModal] = useState(false);
-  const [sessions, setSessions] = useState([]);
+  
   const [formValues, setFormValues] = useState([]);
 
   const handleShow = () => setShowModal(true);
@@ -83,20 +85,7 @@ function QMSNewQuestion() {
     }
   };
 
-  const getAllSessionsApi = async () => {
-    try {
-      const response = await getAllSessions();
-      if (response?.success) {
-        setSessions(response?.data);
-      }
-    } catch (error) {
-      // showErrorMessage(error?.response?.data?.message);
-    }
-  };
-
-  useEffect(() => {
-    getAllSessionsApi();
-  }, []);
+  
 
   const handleProcedureContentChange = (content) => {
     console.log(content);
@@ -226,7 +215,7 @@ function QMSNewQuestion() {
                     <div class="col">
                       <div class="mb-3">
                         <label class="form-label">Member ID</label>
-                        <input
+                        {/* <input
                           className={`form-control ${
                             formik.touched.fkMemberId &&
                             formik.errors.fkMemberId
@@ -239,7 +228,29 @@ function QMSNewQuestion() {
                           name="fkMemberId"
                           onBlur={formik.handleBlur}
                           onChange={formik.handleChange}
-                        />
+                        /> */}
+                        <select
+                        class={`form-select ${
+                          formik.touched.fkMemberId &&
+                          formik.errors.fkMemberId
+                            ? "is-invalid"
+                            : ""
+                        }`}
+                        placeholder={formik.values.fkMemberId}
+                        onChange={formik.handleChange}
+                        id="fkMemberId"
+                        onBlur={formik.handleBlur}
+                      >
+                        <option selected disabled hidden>
+                          Select
+                        </option>
+                        {members &&
+                          members.map((item) => (
+                            <option key={item.id} value={item.id}>
+                              {item?.memberName}
+                            </option>
+                          ))}
+                      </select>
                         {formik.touched.fkMemberId &&
                           formik.errors.fkMemberId && (
                             <div class="invalid-feedback">
