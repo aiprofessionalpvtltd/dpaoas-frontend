@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Header from "../../../../../../components/Header";
 import { Layout } from "../../../../../../components/Layout";
 import { MMSSideBarItems } from "../../../../../../utils/sideBarItems";
@@ -14,6 +14,7 @@ import {
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import DatePicker from "react-datepicker";
+import { AuthContext } from "../../../../../../api/AuthContext";
 
 const validationSchema = Yup.object({
   sessionNumber: Yup.string(),
@@ -25,6 +26,8 @@ const validationSchema = Yup.object({
 });
 function MMSMotionList() {
   const navigate = useNavigate();
+  const {sessions} = useContext(AuthContext)
+
   const [currentPage, setCurrentPage] = useState(0);
   // const [count, setCount] = useState(null);
   const [motionData, setMotionData] = useState([]);
@@ -165,14 +168,29 @@ function MMSMotionList() {
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Session No</label>
-                      <input
-                        class="form-control"
-                        type="text"
+                      <select
+                        name="sessionNumber"
                         id="sessionNumber"
                         onChange={formik.handleChange}
-                        value={formik.values.sessionNumber}
                         onBlur={formik.handleBlur}
-                      />
+                        value={formik.values.sessionNumber}
+                        className={
+                          formik.errors.sessionNumber &&
+                          formik.touched.sessionNumber
+                            ? "form-select is-invalid"
+                            : "form-select"
+                        }
+                      >
+                        <option value="" selected disabled hidden>
+                          Select
+                        </option>
+                        {sessions &&
+                          sessions.map((item) => (
+                            <option key={item.id} value={item.id}>
+                              {item?.sessionName}
+                            </option>
+                          ))}
+                      </select>
                     </div>
                   </div>
                   <div class="col">

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { NoticeSidebarItems } from "../../../../../../utils/sideBarItems";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
@@ -18,9 +18,11 @@ import { Field, Form, Formik, useFormik } from "formik";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import { ToastContainer } from "react-toastify";
 import DatePicker from "react-datepicker";
+import { AuthContext } from "../../../../../../api/AuthContext";
 
 function SentQuestion() {
   const navigate = useNavigate();
+  const { members, sessions } = useContext(AuthContext)
   const [searchedData, setSearchedData] = useState([]);
   const [resData, setResData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
@@ -202,14 +204,22 @@ function SentQuestion() {
                       <div className="col">
                         <div className="mb-3">
                           <label className="form-label">Member Name</label>
-                          <input
-                            className="form-control"
-                            type="text"
-                            name="memberName"
-                            id="memberName"
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                          />
+                          <select
+                        class="form-select"
+                        placeholder={formik.values.memberName}
+                        onChange={formik.handleChange}
+                        id="memberName"
+                      >
+                        <option value={""} selected disabled hidden>
+                          select
+                        </option>
+                        {members &&
+                          members.map((item) => (
+                            <option key={item.id} value={item.id}>
+                              {item?.memberName}
+                            </option>
+                          ))}
+                      </select>
                         </div>
                       </div>
                     </div>
@@ -224,10 +234,15 @@ function SentQuestion() {
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                           >
-                            <option>Select</option>
-                            <option value={"2"}>121</option>
-                            <option value={"3"}>122</option>
-                            <option value={"4"}>123</option>
+                             <option value="" selected disabled hidden>
+                          Select
+                        </option>
+                        {sessions &&
+                          sessions.map((item) => (
+                            <option key={item.id} value={item.id}>
+                              {item?.sessionName}
+                            </option>
+                          ))}
                           </select>
                         </div>
                       </div>
@@ -241,10 +256,15 @@ function SentQuestion() {
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                           >
-                            <option>Select</option>
-                            <option value={"1"}>121</option>
-                            <option>122</option>
-                            <option>123</option>
+                             <option value="" selected disabled hidden>
+                          Select
+                        </option>
+                        {sessions &&
+                          sessions.map((item) => (
+                            <option key={item.id} value={item.id}>
+                              {item?.sessionName}
+                            </option>
+                          ))}
                           </select>
                         </div>
                       </div>

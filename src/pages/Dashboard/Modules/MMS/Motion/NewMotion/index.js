@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Layout } from "../../../../../../components/Layout";
 import { MMSSideBarItems } from "../../../../../../utils/sideBarItems";
 import Header from "../../../../../../components/Header";
@@ -21,6 +21,7 @@ import {
 import { ToastContainer } from "react-toastify";
 import { useLocation } from "react-router-dom";
 import { Editor } from "../../../../../../components/CustomComponents/Editor";
+import { AuthContext } from "../../../../../../api/AuthContext";
 
 const validationSchema = Yup.object({
   sessionNumber: Yup.string().required("Session No is required"),
@@ -45,9 +46,7 @@ const validationSchema = Yup.object({
 
 function MMSNewMotion() {
   const location = useLocation();
-  const [ministryData, setMinistryData] = useState([]);
-  const [sessions, setSessions] = useState([]);
-  const [members, setMembers] = useState([]);
+  const {ministryData,members,sessions} = useContext(AuthContext)
   const [motionStatusData, setMotionStatusData] = useState([]);
 
   const getCurrentTime = () => {
@@ -141,43 +140,6 @@ function MMSNewMotion() {
     }
   };
 
-  const AllMinistryData = async () => {
-    try {
-      const response = await getAllMinistry();
-      if (response?.success) {
-        // showSuccessMessage(response?.message);
-        setMinistryData(response?.data);
-      }
-    } catch (error) {
-      console.log(error);
-      showErrorMessage(error?.response?.data?.error);
-    }
-  };
-  const getAllSessionsApi = async () => {
-    try {
-      const response = await getAllSessions();
-      if (response?.success) {
-        setSessions(response?.data);
-      }
-    } catch (error) {
-      showErrorMessage(error?.response?.data?.message);
-    }
-  };
-
-  const AllMembersData = async () => {
-    const currentPage = 0;
-    const pageSize = 100;
-    try {
-      const response = await getallMembers(currentPage, pageSize);
-      if (response?.success) {
-        // showSuccessMessage(response?.message);
-        setMembers(response?.data?.rows);
-      }
-    } catch (error) {
-      console.log(error);
-      showErrorMessage(error?.response?.data?.error);
-    }
-  };
   const getMotionStatus = async () => {
     try {
       const response = await getallMotionStatus();
@@ -190,9 +152,6 @@ function MMSNewMotion() {
   };
   useEffect(() => {
     getMotionStatus();
-    AllMembersData();
-    AllMinistryData();
-    getAllSessionsApi();
   }, []);
   return (
     <Layout module={true} sidebarItems={MMSSideBarItems} centerlogohide={true}>

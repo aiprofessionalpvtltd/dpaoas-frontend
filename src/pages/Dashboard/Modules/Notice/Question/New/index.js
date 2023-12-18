@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { NoticeSidebarItems } from "../../../../../../utils/sideBarItems";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
@@ -20,6 +20,7 @@ import DatePicker from "react-datepicker";
 import Select from "react-select";
 import { Editor } from "../../../../../../components/CustomComponents/Editor";
 import { ToastContainer } from "react-toastify";
+import { AuthContext } from "../../../../../../api/AuthContext";
 
 const validationSchema = Yup.object({
   // fkSessionId: Yup.number().required("Session No is required"),
@@ -38,8 +39,8 @@ const validationSchema = Yup.object({
 
 function NewQuestion() {
   const navigate = useNavigate();
+  const { members, sessions } = useContext(AuthContext)
   const [showModal, setShowModal] = useState(false);
-  const [sessions, setSessions] = useState([]);
   const [formValues, setFormValues] = useState([]);
 
   const handleShow = () => setShowModal(true);
@@ -93,20 +94,6 @@ function NewQuestion() {
     }
   };
 
-  const getAllSessionsApi = async () => {
-    try {
-      const response = await getAllSessions();
-      if (response?.success) {
-        setSessions(response?.data);
-      }
-    } catch (error) {
-      // showErrorMessage(error?.response?.data?.message);
-    }
-  };
-
-  useEffect(() => {
-    getAllSessionsApi();
-  }, []);
 
   const handleProcedureContentChange = (content) => {
     console.log(content);
@@ -150,12 +137,11 @@ function NewQuestion() {
                       <div class="mb-3">
                         <label class="form-label">Session No</label>
                         <select
-                          class={`form-select ${
-                            formik.touched.fkSessionId &&
-                            formik.errors.fkSessionId
+                          class={`form-select ${formik.touched.fkSessionId &&
+                              formik.errors.fkSessionId
                               ? "is-invalid"
                               : ""
-                          }`}
+                            }`}
                           placeholder="Session No"
                           value={formik.values.fkSessionId}
                           onChange={formik.handleChange}
@@ -185,12 +171,11 @@ function NewQuestion() {
                       <div class="mb-3">
                         <label class="form-label">Category</label>
                         <select
-                          class={`form-select ${
-                            formik.touched.questionCategory &&
-                            formik.errors.questionCategory
+                          class={`form-select ${formik.touched.questionCategory &&
+                              formik.errors.questionCategory
                               ? "is-invalid"
                               : ""
-                          }`}
+                            }`}
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                           value={formik.values.questionCategory || ""}
@@ -217,12 +202,11 @@ function NewQuestion() {
                       <div class="mb-3">
                         <label class="form-label">Notice Office Diary No</label>
                         <input
-                          class={`form-control ${
-                            formik.touched.noticeOfficeDiaryNo &&
-                            formik.errors.noticeOfficeDiaryNo
+                          class={`form-control ${formik.touched.noticeOfficeDiaryNo &&
+                              formik.errors.noticeOfficeDiaryNo
                               ? "is-invalid"
                               : ""
-                          }`}
+                            }`}
                           type="number"
                           id="noticeOfficeDiaryNo"
                           value={formik.values.noticeOfficeDiaryNo}
@@ -242,20 +226,27 @@ function NewQuestion() {
                     <div class="col">
                       <div class="mb-3">
                         <label class="form-label">Member ID</label>
-                        <input
-                          className={`form-control ${
-                            formik.touched.fkMemberId &&
-                            formik.errors.fkMemberId
+
+                        <select
+                          class={`form-select ${formik.touched.fkMemberId &&
+                              formik.errors.fkMemberId
                               ? "is-invalid"
                               : ""
-                          }`}
-                          type="text"
-                          id="fkMemberId"
-                          value={formik.values.fkMemberId}
-                          name="fkMemberId"
-                          onBlur={formik.handleBlur}
+                            }`}
+                          placeholder={formik.values.fkMemberId}
                           onChange={formik.handleChange}
-                        />
+                          id="fkMemberId"
+                        >
+                          <option value={""} selected disabled hidden>
+                            select
+                          </option>
+                          {members &&
+                            members.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item?.memberName}
+                              </option>
+                            ))}
+                        </select>
                         {formik.touched.fkMemberId &&
                           formik.errors.fkMemberId && (
                             <div class="invalid-feedback">
@@ -278,12 +269,11 @@ function NewQuestion() {
                             formik.setFieldValue("noticeOfficeDiaryDate", date)
                           }
                           onBlur={formik.handleBlur}
-                          className={`form-control ${
-                            formik.touched.noticeOfficeDiaryDate &&
-                            formik.errors.noticeOfficeDiaryDate
+                          className={`form-control ${formik.touched.noticeOfficeDiaryDate &&
+                              formik.errors.noticeOfficeDiaryDate
                               ? "is-invalid"
                               : ""
-                          }`}
+                            }`}
                         />
                         {formik.touched.noticeOfficeDiaryDate &&
                           formik.errors.noticeOfficeDiaryDate && (
@@ -350,7 +340,7 @@ function NewQuestion() {
                       title={"English Text"}
                       onChange={(content) =>
                         formik.setFieldValue("englishText", content)}
-                        value={formik.values.englishText}
+                      value={formik.values.englishText}
                     />
                   </div>
 
@@ -359,7 +349,7 @@ function NewQuestion() {
                       title={"Urdu Text"}
                       onChange={(content) =>
                         formik.setFieldValue("urduText", content)}
-                        value={formik.values.urduText}
+                      value={formik.values.urduText}
                     />
                   </div>
 
