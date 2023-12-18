@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { NoticeSidebarItems } from "../../../../../../utils/sideBarItems";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
@@ -7,6 +7,8 @@ import {
   getAllResolutions,
   searchResolution,
 } from "../../../../../../api/APIs";
+import Select from "react-select";
+
 import {
   showErrorMessage,
   showSuccessMessage,
@@ -15,9 +17,11 @@ import CustomTable from "../../../../../../components/CustomComponents/CustomTab
 import { useFormik } from "formik";
 import DatePicker from "react-datepicker";
 import { ToastContainer } from "react-toastify";
+import { AuthContext } from "../../../../../../api/AuthContext";
 
 function SentResolution() {
   const navigate = useNavigate();
+  const {members,sessions} = useContext(AuthContext)
   const [resData, setResData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
@@ -195,18 +199,22 @@ function SentResolution() {
                     <div class="col">
                       <div class="mb-3">
                         <label class="form-label">Member Name</label>
-                        <input
-                          className={`form-control ${
-                            formik.touched.memberName &&
-                            formik.errors.memberName
-                              ? "is-invalid"
-                              : ""
-                          }`}
-                          type="text"
-                          name="memberName"
-                          onChange={formik.handleChange}
+                        
+                        <Select
+                          options={members.map((item) => ({
+                            value: item.id,
+                            label: item.memberName,
+                          }))}
+                          isMulti
+                          onChange={(selectedOptions) =>
+                            formik.setFieldValue(
+                              "memberName",
+                              selectedOptions,
+                            )
+                          }
                           onBlur={formik.handleBlur}
                           value={formik.values.memberName}
+                          name="memberName"
                         />
                       </div>
                     </div>
@@ -227,10 +235,15 @@ function SentResolution() {
                           value={formik.values.fromSession || ""}
                           name="fromSession"
                         >
-                          <option>Select</option>
-                          <option>121</option>
-                          <option>122</option>
-                          <option>123</option>
+                         <option value="" selected disabled hidden>
+                            Select
+                          </option>
+                          {sessions &&
+                            sessions.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item?.sessionName}
+                              </option>
+                            ))}
                         </select>
                       </div>
                     </div>
@@ -248,10 +261,15 @@ function SentResolution() {
                           value={formik.values.toSession || ""}
                           name="toSession"
                         >
-                          <option>Select</option>
-                          <option>121</option>
-                          <option>122</option>
-                          <option>123</option>
+                          <option value="" selected disabled hidden>
+                            Select
+                          </option>
+                          {sessions &&
+                            sessions.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item?.sessionName}
+                              </option>
+                            ))}
                         </select>
                       </div>
                     </div>

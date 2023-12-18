@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { NoticeSidebarItems } from "../../../../../../utils/sideBarItems";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
@@ -17,6 +17,7 @@ import DatePicker from "react-datepicker";
 import Select from "react-select";
 import { Editor } from "../../../../../../components/CustomComponents/Editor";
 import { ToastContainer } from "react-toastify";
+import { AuthContext } from "../../../../../../api/AuthContext";
 
 const validationSchema = Yup.object({
   fkSessionNo: Yup.number().required("Session No is required"),
@@ -36,8 +37,10 @@ const validationSchema = Yup.object({
 
 function NewResolution() {
   const navigate = useNavigate();
+  const {members,sessions} = useContext(AuthContext)
+  console.log("members",members);
   const [showModal, setShowModal] = useState(false);
-  const [sessions, setSessions] = useState([]);
+ 
   const [formValues, setFormValues] = useState([]);
 
   const handleShow = () => setShowModal(true);
@@ -95,21 +98,6 @@ function NewResolution() {
       showErrorMessage(error?.response?.data?.message);
     }
   };
-
-  const getAllSessionsApi = async () => {
-    try {
-      const response = await getAllSessions();
-      if (response?.success) {
-        setSessions(response?.data);
-      }
-    } catch (error) {
-      // showErrorMessage(error?.response?.data?.message);
-    }
-  };
-
-  useEffect(() => {
-    getAllSessionsApi();
-  }, []);
 
   const moversOptions = [
     { value: 1, label: "saqib" },
@@ -253,7 +241,10 @@ function NewResolution() {
                       <div class="mb-3">
                         <label class="form-label">Movers</label>
                         <Select
-                          options={moversOptions}
+                          options={members.map((item) => ({
+                            value: item.id,
+                            label: item.memberName,
+                          }))}
                           isMulti
                           onChange={(selectedOptions) =>
                             formik.setFieldValue(
