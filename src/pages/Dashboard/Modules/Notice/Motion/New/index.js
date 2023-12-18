@@ -77,8 +77,8 @@ function NewMotion() {
     formData.append("noticeOfficeDiaryDate", values?.noticeOfficeDiaryDate);
     formData.append("noticeOfficeDiaryTime", values?.noticeOfficeDiaryTime);
     formData.append("businessType", "Motion");
-    formData.append("englishText", "English text");
-    formData.append("urduText", "Urdu text");
+    formData.append("englishText", values.englishText);
+    formData.append("urduText", values.urduText);
     formData.append("file", values?.attachment);
 
     try {
@@ -355,14 +355,18 @@ function NewMotion() {
                   <div style={{ marginTop: 10 }}>
                     <Editor
                       title={"English Text"}
-                      onChange={handleProcedureContentChange}
+                      onChange={(content) =>
+                        formik.setFieldValue("englishText", content)}
+                        value={formik.values.englishText}
                     />
                   </div>
 
                   <div style={{ marginTop: 70, marginBottom: 40 }}>
                     <Editor
                       title={"Urdu Text"}
-                      onChange={handleProcedureContentChange}
+                      onChange={(content) =>
+                        formik.setFieldValue("urduText", content)}
+                        value={formik.values.urduText}
                     />
                   </div>
 

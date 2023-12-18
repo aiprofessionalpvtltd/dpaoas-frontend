@@ -7,7 +7,7 @@ const Quill = ReactQuill.Quill;
 
 Quill.register("modules/imageResize", ImageResize);
 
-export const Editor = ({ onChange, title }) => {
+export const Editor = ({ onChange, title, value }) => {
   const [isEditorLoaded, setEditorLoaded] = useState(false);
 
   const fonts = useMemo(
@@ -193,6 +193,7 @@ export const Editor = ({ onChange, title }) => {
           modules={modules}
           formats={formats}
           placeholder="write your content ...."
+          value={value}
           onChange={onChange}
           style={{ height: "300px" }}
         ></ReactQuill>

@@ -81,8 +81,8 @@ function NewResolution() {
       formData.append(`resolutionMovers[${index}][fkMemberId]`, mover.value);
     });
 
-    formData.append("englishText", "English text");
-    formData.append("urduText", "Urdu text");
+    formData.append("englishText", values.englishText);
+    formData.append("urduText", values.urduText);
     formData.append("fkResolutionStatus", 1);
     formData.append("attachment", values.attachment);
 
@@ -349,15 +349,20 @@ function NewResolution() {
                   <div style={{ marginTop: 10 }}>
                     <Editor
                       title={"English Text"}
-                      onChange={handleProcedureContentChange}
+                      onChange={(content) =>
+                        formik.setFieldValue("englishText", content)}
+                        value={formik.values.englishText}
                     />
                   </div>
 
                   <div style={{ marginTop: 70, marginBottom: 40 }}>
                     <Editor
                       title={"Urdu Text"}
-                      onChange={handleProcedureContentChange}
+                      onChange={(content) =>
+                        formik.setFieldValue("urduText", content)}
+                        value={formik.values.urduText}
                     />
+                  
                   </div>
 
                   <div class="row">
