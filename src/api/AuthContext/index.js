@@ -1,11 +1,15 @@
-import React, { createContext, useState } from "react";
-import { loginUser } from "../APIs";
+import React, { createContext, useEffect, useState } from "react";
+import { getAllMinistry, getAllSessions, getallMembers, loginUser } from "../APIs";
 import { setAuthToken, setUserData } from "../Auth";
+import { showErrorMessage } from "../../utils/ToastAlert";
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [permissions, setPermissions] = useState([]);
+  const [ministryData, setMinistryData] = useState([]);
+  const [sessions, setSessions] = useState([]);
+  const [members, setMembers] = useState([]);
 
   const login = async (data) => {
     try {
@@ -21,12 +25,60 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+
+  const AllMinistryData = async () => {
+    try {
+      const response = await getAllMinistry();
+      if (response?.success) {
+        // showSuccessMessage(response?.message);
+        setMinistryData(response?.data);
+      }
+    } catch (error) {
+      console.log(error);
+      showErrorMessage(error?.response?.data?.error);
+    }
+  };
+  const getAllSessionsApi = async () => {
+    try {
+      const response = await getAllSessions();
+      if (response?.success) {
+        setSessions(response?.data);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  };
+
+  const AllMembersData = async () => {
+    const currentPage = 0;
+    const pageSize = 100;
+    try {
+      const response = await getallMembers(currentPage, pageSize);
+      if (response?.success) {
+        // showSuccessMessage(response?.message);
+        setMembers(response?.data?.rows);
+      }
+    } catch (error) {
+      console.log(error);
+      showErrorMessage(error?.response?.data?.error);
+    }
+  };
+
+  useEffect(() => {
+    AllMembersData();
+    AllMinistryData();
+    getAllSessionsApi();
+  }, []);
+
   return (
     <AuthContext.Provider
       value={{
         login,
         setPermissions,
         permissions,
+        ministryData,
+        members,
+        sessions
       }}
     >
       {children}

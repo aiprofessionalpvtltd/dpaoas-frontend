@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { MMSSideBarItems } from "../../../../../../utils/sideBarItems";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
@@ -17,6 +17,7 @@ import {
 } from "../../../../../../api/APIs";
 import { showErrorMessage } from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
+import { AuthContext } from "../../../../../../api/AuthContext";
 
 const validationSchema = Yup.object({
   motionDiaryNo: Yup.string(),
@@ -36,12 +37,11 @@ const validationSchema = Yup.object({
 
 function MMSSearchMotion() {
   const navigate = useNavigate();
+  const {ministryData,members,sessions} = useContext(AuthContext)
+  
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
-  const [sessions, setSessions] = useState([]);
-  const [ministryData, setMinistryData] = useState([]);
   const [motionStatus, setMotionStatus] = useState([]);
-  const [members, setMembers] = useState([]);
   const [motionData, setMotionData] = useState([]);
   const pageSize = 4; // Set your desired page size
 
@@ -134,17 +134,6 @@ function MMSSearchMotion() {
     }
   };
 
-  const getAllSessionsApi = async () => {
-    try {
-      const response = await getAllSessions();
-      if (response?.success) {
-        setSessions(response?.data);
-      }
-    } catch (error) {
-      showErrorMessage(error?.response?.data?.message);
-    }
-  };
-
   const getMotionStatus = async () => {
     try {
       const response = await getallMotionStatus();
@@ -156,36 +145,7 @@ function MMSSearchMotion() {
     }
   };
 
-  const AllMinistryData = async () => {
-    try {
-      const response = await getAllMinistry();
-      if (response?.success) {
-        // showSuccessMessage(response?.message);
-        setMinistryData(response?.data);
-      }
-    } catch (error) {
-      console.log(error);
-      showErrorMessage(error?.response?.data?.error);
-    }
-  };
-
-  const AllMembersData = async () => {
-    try {
-      const response = await getallMembers(currentPage, pageSize);
-      if (response?.success) {
-        // showSuccessMessage(response?.message);
-        setMembers(response?.data?.rows);
-      }
-    } catch (error) {
-      console.log(error);
-      showErrorMessage(error?.response?.data?.error);
-    }
-  };
-
   useEffect(() => {
-    AllMembersData();
-    AllMinistryData();
-    getAllSessionsApi();
     getMotionStatus();
   }, []);
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Layout } from "../../../../../components/Layout";
 import { useNavigate } from "react-router-dom";
 import CustomTable from "../../../../../components/CustomComponents/CustomTable";
@@ -15,9 +15,11 @@ import {
   searchResolution,
 } from "../../../../../api/APIs";
 import DatePicker from "react-datepicker";
+import { AuthContext } from "../../../../../api/AuthContext";
 
 function MMSSearchResolution() {
   const navigate = useNavigate();
+  const {members,sessions} = useContext(AuthContext)
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
   const [searchedData, setSearchedData] = useState([]);
@@ -184,14 +186,22 @@ function MMSSearchResolution() {
                     <div className="col">
                       <div className="mb-3">
                         <label className="form-label">Member Name</label>
-                        <input
-                          className="form-control"
-                          type="text"
-                          id="memberName"
-                          placeholder={formik.values.memberName}
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                        />
+                        <select
+                        class="form-select"
+                        placeholder={formik.values.memberName}
+                        onChange={formik.handleChange}
+                        id="memberName"
+                      >
+                        <option value={""} selected disabled hidden>
+                          select
+                        </option>
+                        {members &&
+                          members.map((item) => (
+                            <option key={item.id} value={item.id}>
+                              {item?.memberName}
+                            </option>
+                          ))}
+                      </select>
                       </div>
                     </div>
                   </div>
@@ -206,10 +216,15 @@ function MMSSearchResolution() {
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                         >
-                          <option>Select</option>
-                          <option>121</option>
-                          <option>122</option>
-                          <option>123</option>
+                          <option value="" selected disabled hidden>
+                          Select
+                        </option>
+                        {sessions &&
+                          sessions.map((item) => (
+                            <option key={item.id} value={item.id}>
+                              {item?.sessionName}
+                            </option>
+                          ))}
                         </select>
                       </div>
                     </div>
@@ -223,10 +238,15 @@ function MMSSearchResolution() {
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                         >
-                          <option>Select</option>
-                          <option>121</option>
-                          <option>122</option>
-                          <option>123</option>
+                          <option value="" selected disabled hidden>
+                          Select
+                        </option>
+                        {sessions &&
+                          sessions.map((item) => (
+                            <option key={item.id} value={item.id}>
+                              {item?.sessionName}
+                            </option>
+                          ))}
                         </select>
                       </div>
                     </div>

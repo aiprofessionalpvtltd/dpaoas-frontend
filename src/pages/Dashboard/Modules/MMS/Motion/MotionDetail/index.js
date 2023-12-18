@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
 import { MMSSideBarItems } from "../../../../../../utils/sideBarItems";
@@ -21,6 +21,8 @@ import {
 import { useLocation } from "react-router";
 import { ToastContainer } from "react-toastify";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
+import { AuthContext } from "../../../../../../api/AuthContext";
+import { Editor } from "../../../../../../components/CustomComponents/Editor";
 
 const validationSchema = Yup.object({
   sessionNumber: Yup.number().required("Session No is required"),
@@ -47,14 +49,15 @@ const validationSchema = Yup.object({
     "Date Of Reffering To SC is required",
   ),
   dateofDiscussion: Yup.date().required("Date Of Discussion is required"),
+  urduText:Yup.string(),
+  englishText:Yup.string(),
+  motionText:Yup.string()
   // Add more fields and validations as needed
 });
 function MMSMotionDetail() {
   const location = useLocation();
-
-  const [ministryData, setMinistryData] = useState([]);
-  const [sessions, setSessions] = useState([]);
-  const [members, setMembers] = useState([]);
+  const {ministryData,members,sessions} = useContext(AuthContext)
+  
   const [motionStatusData, setMotionStatusData] = useState([]);
   const formik = useFormik({
     initialValues: {
@@ -78,6 +81,9 @@ function MMSMotionDetail() {
       ministry:
         location?.state?.motionMinistries.length > 0 ??
         location?.state?.motionMinistries[0]?.fkMinistryId,
+        urduText:"",
+        englishText:"",
+        motionText:""
       // Add more fields as needed
     },
     validationSchema: validationSchema,
@@ -98,8 +104,8 @@ function MMSMotionDetail() {
     formData.append("noticeOfficeDiaryDate", values?.noticeOfficeDiaryDate);
     formData.append("noticeOfficeDiaryTime", values?.noticeOfficeDiaryTime);
     formData.append("businessType", "Motion");
-    formData.append("englishText", "dkals");
-    formData.append("urduText", "dkpad");
+    formData.append("englishText", values.englishText);
+    formData.append("urduText", values?.urduText);
     formData.append("fkMotionStatus", values?.motionStatus);
     try {
       const response = await updateNewMotion(location?.state?.id, formData);
@@ -111,43 +117,7 @@ function MMSMotionDetail() {
     }
   };
 
-  const AllMinistryData = async () => {
-    try {
-      const response = await getAllMinistry();
-      if (response?.success) {
-        // showSuccessMessage(response?.message);
-        setMinistryData(response?.data);
-      }
-    } catch (error) {
-      console.log(error);
-      showErrorMessage(error?.response?.data?.error);
-    }
-  };
-  const getAllSessionsApi = async () => {
-    try {
-      const response = await getAllSessions();
-      if (response?.success) {
-        setSessions(response?.data);
-      }
-    } catch (error) {
-      showErrorMessage(error?.response?.data?.message);
-    }
-  };
-
-  const AllMembersData = async () => {
-    const currentPage = 0;
-    const pageSize = 100;
-    try {
-      const response = await getallMembers(currentPage, pageSize);
-      if (response?.success) {
-        // showSuccessMessage(response?.message);
-        setMembers(response?.data?.rows);
-      }
-    } catch (error) {
-      console.log(error);
-      showErrorMessage(error?.response?.data?.error);
-    }
-  };
+ 
   const getMotionStatus = async () => {
     try {
       const response = await getallMotionStatus();
@@ -181,10 +151,6 @@ function MMSMotionDetail() {
   };
   useEffect(() => {
     getMotionStatus();
-    AllMembersData();
-    AllMinistryData();
-    getAllSessionsApi();
-    // transfrerMinistryData(location?.state?.motionStatusHistories)
   }, []);
   return (
     <Layout module={true} sidebarItems={MMSSideBarItems} centerlogohide={true}>
@@ -551,9 +517,30 @@ function MMSMotionDetail() {
                   </div>
                 </div>
 
-                <p>add text editor here</p>
-                <p>add text editor here</p>
-                <p>add text editor here</p>
+                <div style={{ marginTop: 10 }}>
+                  <Editor
+                    title={"Motion Text"}
+                    // onChange={(content) =>
+                    //     formik.setFieldValue("englishText", content)}
+                    //     value={formik.values.englishText}
+                  />
+                </div>
+                <div style={{ marginTop: 70, marginBottom: 40 }}>
+                    <Editor
+                      title={"Urdu Text"}
+                      onChange={(content) =>
+                        formik.setFieldValue("urduText", content)}
+                        value={formik.values.urduText}
+                    />
+                  </div>
+                  <div style={{ marginTop: 70, marginBottom: 40 }}>
+                    <Editor
+                      title={"English Text"}
+                      onChange={(content) =>
+                        formik.setFieldValue("englishText", content)}
+                        value={formik.values.englishText}
+                    />
+                  </div>
 
                 <h2
                   style={{ color: "#666", marginTop: "30px", fontSize: "21px" }}

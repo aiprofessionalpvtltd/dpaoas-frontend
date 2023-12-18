@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { NoticeSidebarItems } from "../../../../../../utils/sideBarItems";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
@@ -20,14 +20,14 @@ import {
   getallMotionStatus,
   searchMotion,
 } from "../../../../../../api/APIs";
+import { AuthContext } from "../../../../../../api/AuthContext";
 
 function SentMotion() {
   const navigate = useNavigate();
+  const {members,sessions} = useContext(AuthContext)
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
-  const [sessions, setSessions] = useState([]);
   const [motionStatus, setMotionStatus] = useState([]);
-  const [members, setMembers] = useState([]);
   const [motionData, setMotionData] = useState([]);
   const pageSize = 4; // Set your desired page size
 
@@ -116,16 +116,7 @@ function SentMotion() {
     }
   };
 
-  const getAllSessionsApi = async () => {
-    try {
-      const response = await getAllSessions();
-      if (response?.success) {
-        setSessions(response?.data);
-      }
-    } catch (error) {
-      showErrorMessage(error?.response?.data?.message);
-    }
-  };
+  
 
   const getMotionStatus = async () => {
     try {
@@ -138,22 +129,9 @@ function SentMotion() {
     }
   };
 
-  const AllMembersData = async () => {
-    try {
-      const response = await getallMembers(currentPage, pageSize);
-      if (response?.success) {
-        // showSuccessMessage(response?.message);
-        setMembers(response?.data?.rows);
-      }
-    } catch (error) {
-      console.log(error);
-      showErrorMessage(error?.response?.data?.error);
-    }
-  };
+ 
 
   useEffect(() => {
-    AllMembersData();
-    getAllSessionsApi();
     getMotionStatus();
   }, []);
 

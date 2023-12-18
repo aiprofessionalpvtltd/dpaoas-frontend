@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { NoticeSidebarItems } from "../../../../../../utils/sideBarItems";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
@@ -17,6 +17,7 @@ import {
   showErrorMessage,
   showSuccessMessage,
 } from "../../../../../../utils/ToastAlert";
+import { AuthContext } from "../../../../../../api/AuthContext";
 
 const validationSchema = Yup.object({
   sessionNumber: Yup.number().required("Session No is required"),
@@ -37,8 +38,8 @@ const validationSchema = Yup.object({
 
 function NewMotion() {
   const navigate = useNavigate();
+  const {members,sessions} = useContext(AuthContext)
   const [showModal, setShowModal] = useState(false);
-  const [sessions, setSessions] = useState([]);
   const [formValues, setFormValues] = useState([]);
 
   const handleShow = () => setShowModal(true);
@@ -91,20 +92,6 @@ function NewMotion() {
     }
   };
 
-  const getAllSessionsApi = async () => {
-    try {
-      const response = await getAllSessions();
-      if (response?.success) {
-        setSessions(response?.data);
-      }
-    } catch (error) {
-      showErrorMessage(error?.response?.data?.message);
-    }
-  };
-
-  useEffect(() => {
-    getAllSessionsApi();
-  }, []);
 
   const handleProcedureContentChange = (content) => {
     console.log(content);
@@ -314,11 +301,15 @@ function NewMotion() {
                           value={formik.values.mover || ""}
                           name="mover"
                         >
-                          <option value="" selected disabled hidden>
-                            Select
-                          </option>
-                          <option value={"1"}>Motion Type</option>
-                          <option value={"2"}>Adjournment Motion</option>
+                          <option value={""} selected disabled hidden>
+                          select
+                        </option>
+                        {members &&
+                          members.map((item) => (
+                            <option key={item.id} value={item.id}>
+                              {item?.memberName}
+                            </option>
+                          ))}
                         </select>
                         {formik.touched.mover && formik.errors.mover && (
                           <div class="invalid-feedback">
