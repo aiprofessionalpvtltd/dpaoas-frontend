@@ -7,9 +7,12 @@ import {
   getAllQuestion,
   getAllResolutions,
 } from "../../api/APIs";
+import { getAuthToken, logout } from "../../api/Auth";
+import { useNavigate } from "react-router-dom";
 
 export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
   const [sidebarVisible, setSidebarVisible] = useState(true);
+  const navigation = useNavigate();
   const [count, setCount] = useState({
     motion: null,
     question: null,
@@ -91,6 +94,14 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
         // Handle error
       });
   }, [shouldRenderNotice, shouldRenderQuestion, shouldRenderMotion]);
+
+  useEffect(() => {
+    const token = getAuthToken();
+    if(token === undefined || token === null) {
+      logout();
+      navigation("/login");
+    }
+  }, []);
 
   return (
     <>
