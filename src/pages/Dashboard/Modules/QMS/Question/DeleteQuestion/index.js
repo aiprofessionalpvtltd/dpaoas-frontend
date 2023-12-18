@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Layout } from "../../../../../../components/Layout";
 import { QMSSideBarItems } from "../../../../../../utils/sideBarItems";
 import Header from "../../../../../../components/Header";
@@ -13,6 +13,7 @@ import {
   showSuccessMessage,
 } from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
+import { AuthContext } from "../../../../../../api/AuthContext";
 const validationSchema = Yup.object({
   questionDiaryNo: Yup.number(),
   questionId: Yup.string(),
@@ -61,6 +62,8 @@ function QMSDeleteQuestion() {
     },
   });
   const navigate = useNavigate();
+
+  const {members,sessions} = useContext(AuthContext)
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
   const [resData, setResData] = useState([]);
@@ -231,7 +234,7 @@ function QMSDeleteQuestion() {
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Member Name</label>
-                      <input
+                      {/* <input
                         type="text"
                         placeholder={formik.values.memberName}
                         className={`form-control ${
@@ -242,7 +245,29 @@ function QMSDeleteQuestion() {
                         id="memberName"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                      />
+                      /> */}
+                       <select
+                        class={`form-select ${
+                          formik.touched.memberName &&
+                          formik.errors.memberName
+                            ? "is-invalid"
+                            : ""
+                        }`}
+                        placeholder={formik.values.memberName}
+                        onChange={formik.handleChange}
+                        id="memberName"
+                        onBlur={formik.handleBlur}
+                      >
+                        <option selected disabled hidden>
+                          Select
+                        </option>
+                        {members &&
+                          members.map((item) => (
+                            <option key={item.id} value={item.id}>
+                              {item?.memberName}
+                            </option>
+                          ))}
+                      </select>
                       {formik.touched.memberName &&
                         formik.errors.memberName && (
                           <div className="invalid-feedback">
@@ -262,9 +287,15 @@ function QMSDeleteQuestion() {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       >
-                        <option>333</option>
-                        <option>332</option>
-                        <option>331</option>
+                        <option value="" selected disabled hidden>
+                            Select
+                          </option>
+                          {sessions &&
+                            sessions.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item?.sessionName}
+                              </option>
+                            ))}
                       </select>
                     </div>
                   </div>
@@ -277,9 +308,15 @@ function QMSDeleteQuestion() {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       >
-                        <option>333</option>
-                        <option>332</option>
-                        <option>331</option>
+                        <option value="" selected disabled hidden>
+                            Select
+                          </option>
+                          {sessions &&
+                            sessions.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item?.sessionName}
+                              </option>
+                            ))}
                       </select>
                     </div>
                   </div>

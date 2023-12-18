@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Layout } from "../../../../../../components/Layout";
 import { QMSSideBarItems } from "../../../../../../utils/sideBarItems";
 import Header from "../../../../../../components/Header";
@@ -16,12 +16,14 @@ import {
 } from "../../../../../../utils/ToastAlert";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import { useNavigate } from "react-router";
+import { AuthContext } from "../../../../../../api/AuthContext";
 
 function QMSNoticeResolution() {
   const navigate = useNavigate();
+  const {members,sessions, resolutionStatus} = useContext(AuthContext)
+
   const [currentPage, setCurrentPage] = useState(0);
   const [searchedData, setSearchedData] = useState([]);
-  const [allResolutionStatus, setAllResolutionStatus] = useState([]);
 
   const pageSize = 4;
 
@@ -100,17 +102,7 @@ function QMSNoticeResolution() {
     }
   };
 
-  const GetALlStatus = async () => {
-    try {
-      const response = await getAllQuestionStatus();
-      if (response?.success) {
-        showSuccessMessage(response?.message);
-        setAllResolutionStatus(response?.data);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+ 
 
   const handleEdit = async (id) => {
     try {
@@ -125,9 +117,7 @@ function QMSNoticeResolution() {
     }
   };
 
-  useEffect(() => {
-    GetALlStatus();
-  }, []);
+ 
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <ToastContainer />
@@ -192,14 +182,24 @@ function QMSNoticeResolution() {
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Member Name</label>
-                      <input
-                        class="form-control"
-                        type="text"
-                        id="memberName"
+                     
+                      <select
+                        class="form-select"
                         placeholder={formik.values.memberName}
                         onChange={formik.handleChange}
+                        id="memberName"
                         onBlur={formik.handleBlur}
-                      />
+                      >
+                        <option selected disabled hidden>
+                          Select
+                        </option>
+                        {members &&
+                          members.map((item) => (
+                            <option key={item.id} value={item.id}>
+                              {item?.memberName}
+                            </option>
+                          ))}
+                      </select>
                     </div>
                   </div>
                 </div>
@@ -214,10 +214,15 @@ function QMSNoticeResolution() {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       >
-                        <option>Select</option>
-                        <option>121</option>
-                        <option>122</option>
-                        <option>123</option>
+                        <option selected disabled hidden>
+                          Select
+                        </option>
+                        {sessions &&
+                          sessions.map((item) => (
+                            <option key={item.id} value={item.id}>
+                              {item?.sessionName}
+                            </option>
+                          ))}
                       </select>
                     </div>
                   </div>
@@ -231,10 +236,15 @@ function QMSNoticeResolution() {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       >
-                        <option>Select</option>
-                        <option>121</option>
-                        <option>122</option>
-                        <option>123</option>
+                        <option selected disabled hidden>
+                          Select
+                        </option>
+                        {sessions &&
+                          sessions.map((item) => (
+                            <option key={item.id} value={item.id}>
+                              {item?.sessionName}
+                            </option>
+                          ))}
                       </select>
                     </div>
                   </div>
@@ -266,14 +276,14 @@ function QMSNoticeResolution() {
                         onBlur={formik.handleBlur}
                       >
                         <option value="" selected disabled hidden>
-                          select
-                        </option>
-                        {allResolutionStatus &&
-                          allResolutionStatus.map((item) => (
-                            <option key={item.id} value={item.id}>
-                              {item?.questionStatus}
-                            </option>
-                          ))}
+                            select
+                          </option>
+                          {resolutionStatus &&
+                            resolutionStatus.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item?.resolutionStatus}
+                              </option>
+                            ))}
                       </select>
                     </div>
                   </div>

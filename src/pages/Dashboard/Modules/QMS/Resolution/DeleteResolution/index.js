@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
 import { QMSSideBarItems } from "../../../../../../utils/sideBarItems";
@@ -12,6 +12,7 @@ import {
   showErrorMessage,
   showSuccessMessage,
 } from "../../../../../../utils/ToastAlert";
+import { AuthContext } from "../../../../../../api/AuthContext";
 const validationSchema = Yup.object({
   resolutionDiaryNo: Yup.number(),
   resolutionID: Yup.string(),
@@ -53,6 +54,7 @@ function QMSDeleteResolution() {
   });
 
   const navigate = useNavigate();
+  const {members,sessions, resolutionStatus} = useContext(AuthContext)
   const [currentPage, setCurrentPage] = useState(0);
   const [resData, setResData] = useState([]);
   const pageSize = 4; // Set your desired page size
@@ -189,18 +191,29 @@ function QMSDeleteResolution() {
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Member Name</label>
-                      <input
-                        type="text"
-                        placeholder={formik.values.memberName}
-                        className={`form-control ${
-                          formik.touched.memberName && formik.errors.memberName
+                      
+                      <select
+                        class={`form-select ${
+                          formik.touched.memberName &&
+                          formik.errors.memberName
                             ? "is-invalid"
                             : ""
                         }`}
-                        id="memberName"
+                        placeholder={formik.values.memberName}
                         onChange={formik.handleChange}
+                        id="memberName"
                         onBlur={formik.handleBlur}
-                      />
+                      >
+                        <option selected disabled hidden>
+                          Select
+                        </option>
+                        {members &&
+                          members.map((item) => (
+                            <option key={item.id} value={item.id}>
+                              {item?.memberName}
+                            </option>
+                          ))}
+                      </select>
                       {formik.touched.memberName &&
                         formik.errors.memberName && (
                           <div className="invalid-feedback">
@@ -220,9 +233,15 @@ function QMSDeleteResolution() {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       >
-                        <option>333</option>
-                        <option>332</option>
-                        <option>331</option>
+                        <option value="" selected disabled hidden>
+                            Select
+                          </option>
+                          {sessions &&
+                            sessions.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item?.sessionName}
+                              </option>
+                            ))}
                       </select>
                     </div>
                   </div>
@@ -235,9 +254,15 @@ function QMSDeleteResolution() {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       >
-                        <option>333</option>
-                        <option>332</option>
-                        <option>331</option>
+                       <option value="" selected disabled hidden>
+                            Select
+                          </option>
+                          {sessions &&
+                            sessions.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item?.sessionName}
+                              </option>
+                            ))}
                       </select>
                     </div>
                   </div>
@@ -279,7 +304,15 @@ function QMSDeleteResolution() {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       >
-                        <option>Resolution Status</option>
+                        <option value="" selected disabled hidden>
+                            select
+                          </option>
+                          {resolutionStatus &&
+                            resolutionStatus.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item?.resolutionStatus}
+                              </option>
+                            ))}
                       </select>
                     </div>
                   </div>

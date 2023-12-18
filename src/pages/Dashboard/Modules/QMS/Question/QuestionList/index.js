@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Layout } from "../../../../../../components/Layout";
 import { QMSSideBarItems } from "../../../../../../utils/sideBarItems";
 import Header from "../../../../../../components/Header";
@@ -14,8 +14,9 @@ import {
   showErrorMessage,
   showSuccessMessage,
 } from "../../../../../../utils/ToastAlert";
+import { AuthContext } from "../../../../../../api/AuthContext";
 const validationSchema = Yup.object({
-  sessionNumber: Yup.string().required("Session No is required"),
+  sessionNumber: Yup.string(),
   category: Yup.string(),
   groupNo: Yup.string(),
   startListNo: Yup.string(),
@@ -25,6 +26,7 @@ const validationSchema = Yup.object({
 });
 
 function QMSQuestionList() {
+  const {sessions} = useContext(AuthContext)
   const [resData, setResData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
@@ -109,8 +111,7 @@ function QMSQuestionList() {
   const handleEdit = async (id) => {
     try {
       const { question, history } = await getAllQuestionByID(id);
-      console.log("LIST DAtA", history?.data);
-
+      console.log("LIST DAtA", history?.data, question?.data)
       if (question?.success) {
         navigate("/qms/question/detail", {
           state: { question: question?.data, history: history?.data },
@@ -150,7 +151,7 @@ function QMSQuestionList() {
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Session No</label>
-                      <input
+                      {/* <input
                         type="text"
                         placeholder={formik.values.sessionNumber}
                         className={`form-control ${
@@ -168,7 +169,24 @@ function QMSQuestionList() {
                           <div className="invalid-feedback">
                             {formik.errors.sessionNumber}
                           </div>
-                        )}
+                        )} */}
+                        <select
+                          class="form-select"
+                          id="sessionNumber"
+                          placeholder={formik.values.sessionNumber}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                        >
+                         <option selected disabled hidden>
+                          Select
+                        </option>
+                        {sessions &&
+                          sessions.map((item) => (
+                            <option key={item.id} value={item.id}>
+                              {item?.sessionName}
+                            </option>
+                          ))}
+                        </select>
                     </div>
                   </div>
                   <div class="col">
