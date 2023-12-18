@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useState } from "react";
-import { getAllMinistry, getAllSessions, getallMembers, loginUser } from "../APIs";
+import { getAllMinistry, getAllResolutionStatus, getAllSessions, getallMembers, loginUser } from "../APIs";
 import { setAuthToken, setUserData } from "../Auth";
 import { showErrorMessage } from "../../utils/ToastAlert";
 
@@ -9,6 +9,8 @@ export const AuthProvider = ({ children }) => {
   const [permissions, setPermissions] = useState([]);
   const [ministryData, setMinistryData] = useState([]);
   const [sessions, setSessions] = useState([]);
+  const [resolutionStatus, setResolutionStatus] = useState([]);
+
   const [members, setMembers] = useState([]);
 
   const login = async (data) => {
@@ -64,7 +66,19 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const getAllResolutionStatusApi = async () => {
+    try {
+      const response = await getAllResolutionStatus();
+      if (response?.success) {
+        setResolutionStatus(response?.data);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  };
+
   useEffect(() => {
+    getAllResolutionStatusApi()
     AllMembersData();
     AllMinistryData();
     getAllSessionsApi();
@@ -78,7 +92,8 @@ export const AuthProvider = ({ children }) => {
         permissions,
         ministryData,
         members,
-        sessions
+        sessions,
+        resolutionStatus
       }}
     >
       {children}

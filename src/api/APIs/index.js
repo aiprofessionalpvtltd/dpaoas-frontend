@@ -675,6 +675,24 @@ export const getAllResolutions = async (page, pageSize) => {
   }
 };
 
+export const getAllResolutionStatus = async () => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/resolution/resolutionStatuses`,
+      {
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // }
+      },
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
 export const searchResolution = async (searchParams) => {
   try {
     // const token = getAuthToken();
