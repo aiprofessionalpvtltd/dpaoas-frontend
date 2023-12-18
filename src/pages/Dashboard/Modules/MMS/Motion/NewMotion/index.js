@@ -39,6 +39,7 @@ const validationSchema = Yup.object({
   motionStatus: Yup.string().required("Motion Status is required"),
   mover: Yup.string().required("Mover is required"),
   ministry: Yup.string().required("Ministry is required"),
+  englishText:Yup.string()
   // Add more fields and validations as needed
 });
 
@@ -77,6 +78,7 @@ function MMSNewMotion() {
       motionStatus: location.state ? location.state.motionStatus : "",
       mover: location.state ? location.state.mover : "",
       ministry: location.state ? location.state.ministry : "",
+      englishText:""
       // Add more fields as needed
     },
     validationSchema: validationSchema,
@@ -101,7 +103,7 @@ function MMSNewMotion() {
     formData.append("noticeOfficeDiaryDate", values?.noticeOfficeDiaryDate);
     formData.append("noticeOfficeDiaryTime", values?.noticeOfficeDiaryTime);
     formData.append("businessType", "Motion");
-    formData.append("englishText", "dkals");
+    formData.append("englishText", values.englishText);
     formData.append("urduText", "dkpad");
     formData.append("fkMotionStatus", values?.motionStatus);
     try {
@@ -546,7 +548,9 @@ function MMSNewMotion() {
                 <div style={{ marginTop: 10 }}>
                   <Editor
                     title={"Motion Text"}
-                    //   onChange={handleProcedureContentChange}
+                    onChange={(content) =>
+                        formik.setFieldValue("englishText", content)}
+                        value={formik.values.englishText}
                   />
                 </div>
 

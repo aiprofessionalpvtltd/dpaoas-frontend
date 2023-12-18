@@ -70,8 +70,8 @@ function QMSNewQuestion() {
     formData.append("fkQuestionStatus", 3);
     formData.append("fkMemberId", values.fkMemberId);
 
-    formData.append("englishText", "English text");
-    formData.append("urduText", "Urdu text");
+    formData.append("englishText", values.englishText);
+    formData.append("urduText", values.urduText);
 
     try {
       const response = await createQuestion(formData);
@@ -300,14 +300,18 @@ function QMSNewQuestion() {
                   <div style={{ marginTop: 10 }}>
                     <Editor
                       title={"English Text"}
-                      onChange={handleProcedureContentChange}
+                      onChange={(content) =>
+                        formik.setFieldValue("englishText", content)}
+                        value={formik.values.englishText}
                     />
                   </div>
 
                   <div style={{ marginTop: 70, marginBottom: 40 }}>
                     <Editor
                       title={"Urdu Text"}
-                      onChange={handleProcedureContentChange}
+                      onChange={(content) =>
+                        formik.setFieldValue("urduText", content)}
+                        value={formik.values.urduText}
                     />
                   </div>
 

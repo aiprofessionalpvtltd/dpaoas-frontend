@@ -4,6 +4,8 @@ import Header from "../../../../../../components/Header";
 import { QMSSideBarItems } from "../../../../../../utils/sideBarItems";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import TimePicker from "react-time-picker";
+import DatePicker from "react-datepicker";
 import { useLocation } from "react-router";
 import {
   showErrorMessage,
@@ -17,6 +19,7 @@ import {
   sendQuestionTranslation,
 } from "../../../../../../api/APIs";
 import { ToastContainer } from "react-toastify";
+import { Editor } from "../../../../../../components/CustomComponents/Editor";
 const validationSchema = Yup.object({
   sessionNo: Yup.string(),
   noticeOfficeDiaryNo: Yup.string(),
@@ -32,6 +35,11 @@ const validationSchema = Yup.object({
   group: Yup.string(),
   division: Yup.string(),
   fileStatus: Yup.string(),
+  urduText: Yup.string(),
+  englishText: Yup.string(),
+  ammendedText: Yup.string(),
+  originalText: Yup.string()
+
 });
 
 function QMSQuestionDetail() {
@@ -68,8 +76,8 @@ function QMSQuestionDetail() {
       sessionNo: location?.state?.question?.session?.fkSessionId,
       noticeOfficeDiaryNo:
         location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryNo,
-      noticeOfficeDiaryDate:
-        location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryDate,
+      noticeOfficeDiaryDate: "",
+      // location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryDate,
       noticeOfficeDiaryTime:
         location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryTime,
       priority: "",
@@ -82,6 +90,10 @@ function QMSQuestionDetail() {
       group: location?.state?.question?.groups,
       division: location?.state?.question?.divisions,
       fileStatus: location?.state?.question?.fileStatus,
+      englishText: "",
+      urduText: "",
+      ammendedText: "",
+      originalText: ""
     },
     // validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -104,9 +116,10 @@ function QMSQuestionDetail() {
     formData.append("fileStatus", values?.fileStatus);
     formData.append("replyDate", values?.replyDate);
 
-    formData.append("ammendedText", "dkals");
-    formData.append("urduText", "dkpad");
-    formData.append("originalText", "dkpad");
+    formData.append("ammendedText", values.ammendedText);
+    formData.append("urduText", values.urduText);
+    formData.append("englishText", values.englishText);
+    formData.append("originalText", values.originalText);
     try {
       const response = await UpdateQuestionById(
         location?.state?.question?.id,
@@ -339,16 +352,17 @@ function QMSQuestionDetail() {
                       <div class="col">
                         <div class="mb-3">
                           <label class="form-label">Deffer Date</label>
-                          <input
-                            class="form-control"
-                            type="text"
-                            value={deferState.deferDate}
-                            onChange={(e) =>
+
+                          <DatePicker
+                            selected={deferState.deferDate}
+                            onChange={(date) =>
                               setDeferState({
                                 ...deferState,
-                                deferDate: e.target.value,
+                                deferDate: date,
                               })
                             }
+                            onBlur={formik.handleBlur}
+                            className={`form-control`}
                           />
                         </div>
                       </div>
@@ -458,16 +472,17 @@ function QMSQuestionDetail() {
                       <div class="col">
                         <div class="mb-3">
                           <label class="form-label">Notice Diary Date</label>
-                          <input
-                            class="form-control"
-                            type="text"
-                            value={reviveState.noticeDiaryDate}
-                            onChange={(e) =>
+
+                          <DatePicker
+                            selected={reviveState.noticeDiaryDate}
+                            onChange={(date) =>
                               setReviveState({
                                 ...reviveState,
-                                noticeDiaryDate: e.target.value,
+                                noticeDiaryDate: date,
                               })
                             }
+                            onBlur={formik.handleBlur}
+                            className={`form-control`}
                           />
                         </div>
                       </div>
@@ -476,16 +491,19 @@ function QMSQuestionDetail() {
                         <div class="col">
                           <div class="mb-3">
                             <label class="form-label">Notice Diary Time</label>
-                            <input
-                              class="form-control"
-                              type="text"
+
+                            <TimePicker
                               value={reviveState.noticeDiaryTime}
-                              onChange={(e) =>
+                              clockIcon={null} // Disable clock view
+                              openClockOnFocus={false}
+                              format="hh:mm a"
+                              onChange={(time) =>
                                 setReviveState({
                                   ...reviveState,
-                                  noticeDiaryTime: e.target.value,
+                                  noticeDiaryTime: time,
                                 })
                               }
+                              className={`form-control`}
                             />
                           </div>
                         </div>
@@ -577,26 +595,28 @@ function QMSQuestionDetail() {
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Notice Office Diary Date</label>
-                      <input
-                        type="text"
-                        placeholder={formik.values.noticeOfficeDiaryDate}
-                        className={"form-control"}
-                        id="noticeOfficeDiaryDate"
-                        onChange={formik.handleChange}
+                      <DatePicker
+                        selected={formik.values.noticeOfficeDiaryDate}
+                        onChange={(date) =>
+                          formik.setFieldValue("noticeOfficeDiaryDate", date)
+                        }
                         onBlur={formik.handleBlur}
+                        className={`form-control`}
                       />
                     </div>
                   </div>
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Notice Office Diary Time</label>
-                      <input
-                        type="text"
-                        placeholder={formik.values.noticeOfficeDiaryTime}
-                        className={"form-control"}
-                        id="noticeOfficeDiaryTime"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
+                      <TimePicker
+                        value={formik.values.noticeOfficeDiaryTime}
+                        clockIcon={null} // Disable clock view
+                        openClockOnFocus={false}
+                        format="hh:mm a"
+                        onChange={(time) =>
+                          formik.setFieldValue("noticeOfficeDiaryTime", time)
+                        }
+                        className={`form-control`}
                       />
                     </div>
                   </div>
@@ -690,14 +710,24 @@ function QMSQuestionDetail() {
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Reply Date</label>
-                      <input
+                      {/* <input
                         type="text"
                         placeholder={formik.values.replyDate}
                         className={`form-control`}
                         id="replyDate"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
+                      /> */}
+                      <DatePicker
+                        selected={formik.values.replyDate}
+                        onChange={(date) =>
+                          formik.setFieldValue("replyDate", date)
+                        }
+                        onBlur={formik.handleBlur}
+                        className={`form-control`}
                       />
+
+
                     </div>
                   </div>
                   <div class="col">
@@ -797,10 +827,31 @@ function QMSQuestionDetail() {
                     </div>
                   </div>
                 </div>
-                <p>Original Question text here</p>
-                <p>Ammended Question Text here</p>
-                <p>Urdu Text here</p>
-                <div class="d-grid gap-2 d-md-flex">
+                <div style={{ marginTop: 10 }}>
+                  <Editor
+                    title={"Original Text"}
+                    onChange={(content) =>
+                      formik.setFieldValue("originalText", content)}
+                    value={formik.values.originalText}
+                  />
+                </div>
+                <div style={{ marginTop: 70, marginBottom: 40 }}>
+                  <Editor
+                    title={"Ammended Text"}
+                    onChange={(content) =>
+                      formik.setFieldValue("ammendedText", content)}
+                    value={formik.values.ammendedText}
+                  />
+                </div>
+                <div style={{ marginTop: 70, marginBottom: 40 }}>
+                  <Editor
+                    title={"Urdu Text"}
+                    onChange={(content) =>
+                      formik.setFieldValue("urduText", content)}
+                    value={formik.values.urduText}
+                  />
+                </div>
+                <div class="d-grid gap-2 d-md-flex" style={{ marginTop: 70, marginBottom: 40 }}>
                   <button class="btn btn-primary" type="submit">
                     Update
                   </button>
@@ -818,8 +869,15 @@ function QMSQuestionDetail() {
                   </button>
                 </div>
               </form>
-              <p>Reply Text here</p>
-              <div class="dash-detail-container" style={{ marginTop: "20px" }}>
+              <div style={{ marginTop: 10 }}>
+                <Editor
+                  title={"English Text"}
+                  onChange={(content) =>
+                    formik.setFieldValue("englishText", content)}
+                  value={formik.values.englishText}
+                />
+              </div>
+              <div class="dash-detail-container" style={{ marginTop: 70, marginBottom: 40 }}>
                 <table class="table red-bg-head th">
                   <thead>
                     <tr>

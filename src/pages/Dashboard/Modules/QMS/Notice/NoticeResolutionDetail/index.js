@@ -27,6 +27,8 @@ const validationSchema = Yup.object({
   resolutionType: Yup.string(),
   resolutionStatus: Yup.string(),
   resolutionMovers: Yup.array(),
+  urduText:Yup.string(),
+  englishText:Yup.string()
 });
 
 function QMSNoticeResolutionDetail() {
@@ -41,6 +43,8 @@ function QMSNoticeResolutionDetail() {
       resolutionType: "",
       resolutionStatus: "",
       resolutionMovers: "",
+      englishText:"",
+      urduText:""
     },
     // validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -60,6 +64,8 @@ function QMSNoticeResolutionDetail() {
       "resolutionDiaryNo",
       location?.state?.noticeDiary?.noticeOfficeDiaryNo,
     );
+    data.append("englishText", values.englishText)
+    data.append("urduText", values.urduText)
 
     try {
       const response = await UpdateResolution(location.state.id, data);
@@ -255,13 +261,17 @@ function QMSNoticeResolutionDetail() {
               <div style={{ marginTop: 10 }}>
                 <Editor
                   title={"English Text"}
-                  // onChange={handleProcedureContentChange}
+                  onChange={(content) =>
+                    formik.setFieldValue("englishText", content)}
+                    value={formik.values.englishText}
                 />
               </div>
               <div style={{ marginTop: 70, marginBottom: 40 }}>
                 <Editor
                   title={"Urdu Text"}
-                  // onChange={handleProcedureContentChange}
+                  onChange={(content) =>
+                    formik.setFieldValue("urduText", content)}
+                    value={formik.values.urduText}
                 />
               </div>
             </div>

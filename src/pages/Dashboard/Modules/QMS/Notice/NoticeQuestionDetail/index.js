@@ -23,6 +23,8 @@ const validationSchema = Yup.object({
     "Question Diary Number is required",
   ),
   category: Yup.string(),
+  englishText: Yup.string(),
+  urduText:Yup.string()
 });
 
 function QMSNoticeQuestionDetail() {
@@ -34,6 +36,8 @@ function QMSNoticeQuestionDetail() {
       noticeOfficeDiaryTime: "",
       questionDiaryNumber: "",
       category: "",
+      englishText:"",
+      urduText:""
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -264,14 +268,18 @@ function QMSNoticeQuestionDetail() {
                 <div style={{ marginTop: 10 }}>
                   <Editor
                     title={"English Text"}
-                    // onChange={handleProcedureContentChange}
+                    onChange={(content) =>
+                      formik.setFieldValue("englishText", content)}
+                      value={formik.values.englishText}
                   />
                 </div>
 
                 <div style={{ marginTop: 70, marginBottom: 40 }}>
                   <Editor
                     title={"Urdu Text"}
-                    // onChange={handleProcedureContentChange}
+                    onChange={(content) =>
+                      formik.setFieldValue("urduText", content)}
+                      value={formik.values.urduText}
                   />
                 </div>
               </div>
