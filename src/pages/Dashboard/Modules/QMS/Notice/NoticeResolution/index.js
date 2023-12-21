@@ -5,22 +5,15 @@ import Header from "../../../../../../components/Header";
 import { useFormik } from "formik";
 import { ToastContainer } from "react-toastify";
 import DatePicker from "react-datepicker";
-import {
-  getAllQuestionStatus,
-  getResolutionBYID,
-  searchResolution,
-} from "../../../../../../api/APIs";
-import {
-  showErrorMessage,
-  showSuccessMessage,
-} from "../../../../../../utils/ToastAlert";
+import { getAllQuestionStatus, getResolutionBYID, searchResolution } from "../../../../../../api/APIs";
+import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import { useNavigate } from "react-router";
 import { AuthContext } from "../../../../../../api/AuthContext";
 
 function QMSNoticeResolution() {
   const navigate = useNavigate();
-  const {members,sessions, resolutionStatus} = useContext(AuthContext)
+  const { members, sessions, resolutionStatus } = useContext(AuthContext);
 
   const [currentPage, setCurrentPage] = useState(0);
   const [searchedData, setSearchedData] = useState([]);
@@ -56,10 +49,7 @@ function QMSNoticeResolution() {
 
   const transformLeavesData = (apiData) => {
     return apiData.map((res) => {
-      const movers =
-        res?.resolutionMoversAssociation.map(
-          (item) => item?.memberAssociation?.memberName,
-        ) || [];
+      const movers = res?.resolutionMoversAssociation.map((item) => item?.memberAssociation?.memberName) || [];
 
       return {
         RID: res.id,
@@ -102,8 +92,6 @@ function QMSNoticeResolution() {
     }
   };
 
- 
-
   const handleEdit = async (id) => {
     try {
       const response = await getResolutionBYID(id);
@@ -117,7 +105,6 @@ function QMSNoticeResolution() {
     }
   };
 
- 
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <ToastContainer />
@@ -130,10 +117,7 @@ function QMSNoticeResolution() {
       />
       <div class="container-fluid">
         <div class="card mt-4">
-          <div
-            class="card-header red-bg"
-            style={{ background: "#14ae5c !important" }}
-          >
+          <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
             <h1>Notice Resolution</h1>
           </div>
           <div class="card-body">
@@ -182,7 +166,7 @@ function QMSNoticeResolution() {
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Member Name</label>
-                     
+
                       <select
                         class="form-select"
                         placeholder={formik.values.memberName}
@@ -276,14 +260,14 @@ function QMSNoticeResolution() {
                         onBlur={formik.handleBlur}
                       >
                         <option value="" selected disabled hidden>
-                            select
-                          </option>
-                          {resolutionStatus &&
-                            resolutionStatus.map((item) => (
-                              <option key={item.id} value={item.id}>
-                                {item?.resolutionStatus}
-                              </option>
-                            ))}
+                          Select
+                        </option>
+                        {resolutionStatus &&
+                          resolutionStatus.map((item) => (
+                            <option key={item.id} value={item.id}>
+                              {item?.resolutionStatus}
+                            </option>
+                          ))}
                       </select>
                     </div>
                   </div>
@@ -294,9 +278,7 @@ function QMSNoticeResolution() {
                       <label class="form-label">From Notice Date</label>
                       <DatePicker
                         selected={formik.values.fromNoticeDate}
-                        onChange={(date) =>
-                          formik.setFieldValue("fromNoticeDate", date)
-                        }
+                        onChange={(date) => formik.setFieldValue("fromNoticeDate", date)}
                         className={`form-control`}
                       />
                     </div>
@@ -306,9 +288,7 @@ function QMSNoticeResolution() {
                       <label class="form-label">To Notice Date</label>
                       <DatePicker
                         selected={formik.values.toNoticeDate}
-                        onChange={(date) =>
-                          formik.setFieldValue("toNoticeDate", date)
-                        }
+                        onChange={(date) => formik.setFieldValue("toNoticeDate", date)}
                         className={`form-control`}
                       />
                     </div>

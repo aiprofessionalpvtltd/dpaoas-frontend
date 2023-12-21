@@ -6,20 +6,14 @@ import { MMSSideBarItems } from "../../../../../utils/sideBarItems";
 import Header from "../../../../../components/Header";
 import { Field, Form, Formik, useFormik } from "formik";
 import { ToastContainer } from "react-toastify";
-import {
-  showErrorMessage,
-  showSuccessMessage,
-} from "../../../../../utils/ToastAlert";
-import {
-  getAllQuestionStatus,
-  searchResolution,
-} from "../../../../../api/APIs";
+import { showErrorMessage, showSuccessMessage } from "../../../../../utils/ToastAlert";
+import { getAllQuestionStatus, searchResolution } from "../../../../../api/APIs";
 import DatePicker from "react-datepicker";
 import { AuthContext } from "../../../../../api/AuthContext";
 
 function MMSSearchResolution() {
   const navigate = useNavigate();
-  const {members,sessions} = useContext(AuthContext)
+  const { members, sessions } = useContext(AuthContext);
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
   const [searchedData, setSearchedData] = useState([]);
@@ -55,10 +49,7 @@ function MMSSearchResolution() {
   };
   const transformLeavesData = (apiData) => {
     return apiData.map((res) => {
-      const movers =
-        res?.resolutionMoversAssociation.map(
-          (item) => item?.memberAssociation?.memberName,
-        ) || [];
+      const movers = res?.resolutionMoversAssociation.map((item) => item?.memberAssociation?.memberName) || [];
 
       return {
         RID: res?.id,
@@ -129,10 +120,7 @@ function MMSSearchResolution() {
 
       <div class="container-fluid">
         <div class="card mt-1">
-          <div
-            class="card-header red-bg"
-            style={{ background: "#14ae5c !important" }}
-          >
+          <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
             <h1>SEARCH RESOLUTION</h1>
           </div>
           <div class="card-body">
@@ -142,9 +130,7 @@ function MMSSearchResolution() {
                   <div className="row">
                     <div className="col">
                       <div className="mb-3">
-                        <label className="form-label">
-                          Resolution Diary No
-                        </label>
+                        <label className="form-label">Resolution Diary No</label>
                         <input
                           className="form-control"
                           type="text"
@@ -187,21 +173,21 @@ function MMSSearchResolution() {
                       <div className="mb-3">
                         <label className="form-label">Member Name</label>
                         <select
-                        class="form-select"
-                        placeholder={formik.values.memberName}
-                        onChange={formik.handleChange}
-                        id="memberName"
-                      >
-                        <option value={""} selected disabled hidden>
-                          select
-                        </option>
-                        {members &&
-                          members.map((item) => (
-                            <option key={item.id} value={item.id}>
-                              {item?.memberName}
-                            </option>
-                          ))}
-                      </select>
+                          class="form-select"
+                          placeholder={formik.values.memberName}
+                          onChange={formik.handleChange}
+                          id="memberName"
+                        >
+                          <option value={""} selected disabled hidden>
+                            Select
+                          </option>
+                          {members &&
+                            members.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item?.memberName}
+                              </option>
+                            ))}
+                        </select>
                       </div>
                     </div>
                   </div>
@@ -217,14 +203,14 @@ function MMSSearchResolution() {
                           onBlur={formik.handleBlur}
                         >
                           <option value="" selected disabled hidden>
-                          Select
-                        </option>
-                        {sessions &&
-                          sessions.map((item) => (
-                            <option key={item.id} value={item.id}>
-                              {item?.sessionName}
-                            </option>
-                          ))}
+                            Select
+                          </option>
+                          {sessions &&
+                            sessions.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item?.sessionName}
+                              </option>
+                            ))}
                         </select>
                       </div>
                     </div>
@@ -239,14 +225,14 @@ function MMSSearchResolution() {
                           onBlur={formik.handleBlur}
                         >
                           <option value="" selected disabled hidden>
-                          Select
-                        </option>
-                        {sessions &&
-                          sessions.map((item) => (
-                            <option key={item.id} value={item.id}>
-                              {item?.sessionName}
-                            </option>
-                          ))}
+                            Select
+                          </option>
+                          {sessions &&
+                            sessions.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item?.sessionName}
+                              </option>
+                            ))}
                         </select>
                       </div>
                     </div>
@@ -283,7 +269,7 @@ function MMSSearchResolution() {
                           onBlur={formik.handleBlur}
                         >
                           <option value="" selected disabled hidden>
-                            select
+                            Select
                           </option>
                           {allResolutionStatus &&
                             allResolutionStatus.map((item) => (
@@ -302,9 +288,7 @@ function MMSSearchResolution() {
 
                         <DatePicker
                           selected={formik.values.fromNoticeDate}
-                          onChange={(date) =>
-                            formik.setFieldValue("fromNoticeDate", date)
-                          }
+                          onChange={(date) => formik.setFieldValue("fromNoticeDate", date)}
                           className={`form-control`}
                         />
                       </div>
@@ -315,9 +299,7 @@ function MMSSearchResolution() {
 
                         <DatePicker
                           selected={formik.values.toNoticeDate}
-                          onChange={(date) =>
-                            formik.setFieldValue("toNoticeDate", date)
-                          }
+                          onChange={(date) => formik.setFieldValue("toNoticeDate", date)}
                           className={`form-control`}
                         />
                       </div>

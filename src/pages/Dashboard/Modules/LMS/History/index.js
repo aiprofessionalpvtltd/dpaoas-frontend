@@ -8,10 +8,7 @@ import DatePicker from "react-datepicker";
 import { useFormik } from "formik";
 import moment from "moment";
 import { searchLeaveHistory } from "../../../../../api/APIs";
-import {
-  showErrorMessage,
-  showSuccessMessage,
-} from "../../../../../utils/ToastAlert";
+import { showErrorMessage, showSuccessMessage } from "../../../../../utils/ToastAlert";
 import { CustomAlert } from "../../../../../components/CustomComponents/CustomAlert";
 import { ToastContainer } from "react-toastify";
 
@@ -92,17 +89,9 @@ function LMSHistory() {
 
   return (
     <Layout module={true} sidebarItems={LMSsidebarItems} centerlogohide={true}>
-      <Header
-        dashboardLink={"/lms/dashboard"}
-        addLink1={"/lms/history"}
-        title1={"History"}
-      />
+      <Header dashboardLink={"/lms/dashboard"} addLink1={"/lms/history"} title1={"History"} />
       <ToastContainer />
-      <CustomAlert
-        showModal={showModal}
-        handleClose={handleClose}
-        handleOkClick={handleOkClick}
-      />
+      <CustomAlert showModal={showModal} handleClose={handleClose} handleOkClick={handleOkClick} />
 
       <div class="card">
         <div class="card-header red-bg" style={{ background: "#14ae5c" }}>
@@ -124,7 +113,7 @@ function LMSHistory() {
                       onBlur={formik.handleBlur}
                     >
                       <option value={""} selected disabled hidden>
-                        select
+                        Select
                       </option>
                       <option value={1}>IT</option>
                       <option value={2}>Admin</option>
@@ -163,9 +152,7 @@ function LMSHistory() {
                     <DatePicker
                       id="startDate"
                       selected={formik.values.startDate}
-                      onChange={(date) =>
-                        formik.setFieldValue("startDate", date)
-                      }
+                      onChange={(date) => formik.setFieldValue("startDate", date)}
                       className={"form-control"}
                     />
                   </div>

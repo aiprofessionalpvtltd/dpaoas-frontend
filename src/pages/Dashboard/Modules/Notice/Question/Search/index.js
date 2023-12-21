@@ -5,15 +5,8 @@ import Header from "../../../../../../components/Header";
 import { useNavigate } from "react-router";
 import DatePicker from "react-datepicker";
 
-import {
-  showErrorMessage,
-  showSuccessMessage,
-} from "../../../../../../utils/ToastAlert";
-import {
-  getAllQuestionStatus,
-  searchQuestion,
-  searchResolution,
-} from "../../../../../../api/APIs";
+import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
+import { getAllQuestionStatus, searchQuestion, searchResolution } from "../../../../../../api/APIs";
 import { Field, Form, Formik, useFormik } from "formik";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import { ToastContainer } from "react-toastify";
@@ -21,7 +14,7 @@ import { AuthContext } from "../../../../../../api/AuthContext";
 
 function SearchQuestion() {
   const navigate = useNavigate();
-  const { members, sessions } = useContext(AuthContext)
+  const { members, sessions } = useContext(AuthContext);
   const [searchedData, setSearchedData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
@@ -64,9 +57,7 @@ function SearchQuestion() {
         NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate,
         NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
         SessionNumber: res?.session?.sessionName,
-        SubjectMatter: [res?.englishText, res?.urduText]
-          .filter(Boolean)
-          .join(", "),
+        SubjectMatter: [res?.englishText, res?.urduText].filter(Boolean).join(", "),
         Category: res.questionCategory,
         // SubmittedBy: res.category,
         Status: res.questionStatus?.questionStatus,
@@ -117,11 +108,7 @@ function SearchQuestion() {
     GetALlStatus();
   }, []);
   return (
-    <Layout
-      module={true}
-      sidebarItems={NoticeSidebarItems}
-      centerlogohide={true}
-    >
+    <Layout module={true} sidebarItems={NoticeSidebarItems} centerlogohide={true}>
       <ToastContainer />
       <Header
         dashboardLink={"/"}
@@ -133,10 +120,7 @@ function SearchQuestion() {
       <div>
         <div class="container-fluid">
           <div class="card mt-1">
-            <div
-              class="card-header red-bg"
-              style={{ background: "#14ae5c !important" }}
-            >
+            <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
               <h1>SEARCH QUESTION</h1>
             </div>
             <div class="card-body">
@@ -146,9 +130,7 @@ function SearchQuestion() {
                     <div className="row">
                       <div className="col">
                         <div className="mb-3">
-                          <label className="form-label">
-                            Question Diary No
-                          </label>
+                          <label className="form-label">Question Diary No</label>
                           <input
                             className="form-control"
                             type="text"
@@ -190,21 +172,21 @@ function SearchQuestion() {
                         <div className="mb-3">
                           <label className="form-label">Member Name</label>
                           <select
-                        class="form-select"
-                        placeholder={formik.values.memberName}
-                        onChange={formik.handleChange}
-                        id="memberName"
-                      >
-                        <option value={""} selected disabled hidden>
-                          select
-                        </option>
-                        {members &&
-                          members.map((item) => (
-                            <option key={item.id} value={item.id}>
-                              {item?.memberName}
+                            class="form-select"
+                            placeholder={formik.values.memberName}
+                            onChange={formik.handleChange}
+                            id="memberName"
+                          >
+                            <option value={""} selected disabled hidden>
+                              Select
                             </option>
-                          ))}
-                      </select>
+                            {members &&
+                              members.map((item) => (
+                                <option key={item.id} value={item.id}>
+                                  {item?.memberName}
+                                </option>
+                              ))}
+                          </select>
                         </div>
                       </div>
                     </div>
@@ -220,14 +202,14 @@ function SearchQuestion() {
                             onBlur={formik.handleBlur}
                           >
                             <option value="" selected disabled hidden>
-                          Select
-                        </option>
-                        {sessions &&
-                          sessions.map((item) => (
-                            <option key={item.id} value={item.id}>
-                              {item?.sessionName}
+                              Select
                             </option>
-                          ))}
+                            {sessions &&
+                              sessions.map((item) => (
+                                <option key={item.id} value={item.id}>
+                                  {item?.sessionName}
+                                </option>
+                              ))}
                           </select>
                         </div>
                       </div>
@@ -242,14 +224,14 @@ function SearchQuestion() {
                             onBlur={formik.handleBlur}
                           >
                             <option value="" selected disabled hidden>
-                          Select
-                        </option>
-                        {sessions &&
-                          sessions.map((item) => (
-                            <option key={item.id} value={item.id}>
-                              {item?.sessionName}
+                              Select
                             </option>
-                          ))}
+                            {sessions &&
+                              sessions.map((item) => (
+                                <option key={item.id} value={item.id}>
+                                  {item?.sessionName}
+                                </option>
+                              ))}
                           </select>
                         </div>
                       </div>
@@ -266,7 +248,7 @@ function SearchQuestion() {
                             onBlur={formik.handleBlur}
                           >
                             <option value={" "} selected disabled hidden>
-                              select
+                              Select
                             </option>
                             <option value={"Starred"}>Starred</option>
                             <option value={"Un-Starred"}>Un-Starred</option>
@@ -285,7 +267,7 @@ function SearchQuestion() {
                             onBlur={formik.handleBlur}
                           >
                             <option value={""} selected disabled hidden>
-                              select
+                              Select
                             </option>
                             {allquestionStatus &&
                               allquestionStatus.map((item) => (
@@ -303,9 +285,7 @@ function SearchQuestion() {
                           <label className="form-label">From Notice Date</label>
                           <DatePicker
                             selected={formik.values.fromNoticeDate}
-                            onChange={(date) =>
-                              formik.setFieldValue("fromNoticeDate", date)
-                            }
+                            onChange={(date) => formik.setFieldValue("fromNoticeDate", date)}
                             className={"form-control"}
                           />
                         </div>
@@ -315,9 +295,7 @@ function SearchQuestion() {
                           <label className="form-label">To Notice Date</label>
                           <DatePicker
                             selected={formik.values.toNoticeDate}
-                            onChange={(date) =>
-                              formik.setFieldValue("toNoticeDate", date)
-                            }
+                            onChange={(date) => formik.setFieldValue("toNoticeDate", date)}
                             className={"form-control"}
                           />
                         </div>
@@ -337,10 +315,7 @@ function SearchQuestion() {
                   </div>
                 </form>
 
-                <div
-                  class="dash-detail-container"
-                  style={{ marginTop: "20px" }}
-                >
+                <div class="dash-detail-container" style={{ marginTop: "20px" }}>
                   <CustomTable
                     block={true}
                     hideBtn={true}

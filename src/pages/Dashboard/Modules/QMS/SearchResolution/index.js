@@ -5,22 +5,16 @@ import CustomTable from "../../../../../components/CustomComponents/CustomTable"
 import { useNavigate } from "react-router-dom";
 import { QMSSideBarItems } from "../../../../../utils/sideBarItems";
 import DatePicker from "react-datepicker";
-import {
-  showErrorMessage,
-  showSuccessMessage,
-} from "../../../../../utils/ToastAlert";
+import { showErrorMessage, showSuccessMessage } from "../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 import { useFormik } from "formik";
-import {
-  getAllQuestionStatus,
-  searchResolution,
-} from "../../../../../api/APIs";
+import { getAllQuestionStatus, searchResolution } from "../../../../../api/APIs";
 import { AuthContext } from "../../../../../api/AuthContext";
 
 function QMSSerchResolution() {
   const navigate = useNavigate();
 
-  const {members,sessions, resolutionStatus} = useContext(AuthContext)
+  const { members, sessions, resolutionStatus } = useContext(AuthContext);
 
   const [currentPage, setCurrentPage] = useState(0);
   const [searchedData, setSearchedData] = useState([]);
@@ -55,10 +49,7 @@ function QMSSerchResolution() {
 
   const transformLeavesData = (apiData) => {
     return apiData.map((res) => {
-      const movers =
-        res?.resolutionMoversAssociation.map(
-          (item) => item?.memberAssociation?.memberName,
-        ) || [];
+      const movers = res?.resolutionMoversAssociation.map((item) => item?.memberAssociation?.memberName) || [];
 
       return {
         RID: res.id,
@@ -101,7 +92,6 @@ function QMSSerchResolution() {
     }
   };
 
- 
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <Header
@@ -114,10 +104,7 @@ function QMSSerchResolution() {
       <ToastContainer />
       <div class="container-fluid">
         <div class="card mt-4">
-          <div
-            class="card-header red-bg"
-            style={{ background: "#14ae5c !important" }}
-          >
+          <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
             <h1>SEARCH RESOLUTION</h1>
           </div>
           <div class="card-body">
@@ -127,9 +114,7 @@ function QMSSerchResolution() {
                   <div className="row">
                     <div className="col">
                       <div className="mb-3">
-                        <label className="form-label">
-                          Resolution Diary No
-                        </label>
+                        <label className="form-label">Resolution Diary No</label>
                         <input
                           className="form-control"
                           type="text"
@@ -172,22 +157,22 @@ function QMSSerchResolution() {
                       <div className="mb-3">
                         <label className="form-label">Member Name</label>
                         <select
-                        class="form-select"
-                        placeholder={formik.values.memberName}
-                        onChange={formik.handleChange}
-                        id="memberName"
-                        onBlur={formik.handleBlur}
-                      >
-                        <option selected disabled hidden>
-                          Select
-                        </option>
-                        {members &&
-                          members.map((item) => (
-                            <option key={item.id} value={item.id}>
-                              {item?.memberName}
-                            </option>
-                          ))}
-                      </select>
+                          class="form-select"
+                          placeholder={formik.values.memberName}
+                          onChange={formik.handleChange}
+                          id="memberName"
+                          onBlur={formik.handleBlur}
+                        >
+                          <option selected disabled hidden>
+                            Select
+                          </option>
+                          {members &&
+                            members.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item?.memberName}
+                              </option>
+                            ))}
+                        </select>
                       </div>
                     </div>
                   </div>
@@ -202,15 +187,15 @@ function QMSSerchResolution() {
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                         >
-                         <option selected disabled hidden>
-                          Select
-                        </option>
-                        {sessions &&
-                          sessions.map((item) => (
-                            <option key={item.id} value={item.id}>
-                              {item?.sessionName}
-                            </option>
-                          ))}
+                          <option selected disabled hidden>
+                            Select
+                          </option>
+                          {sessions &&
+                            sessions.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item?.sessionName}
+                              </option>
+                            ))}
                         </select>
                       </div>
                     </div>
@@ -224,15 +209,15 @@ function QMSSerchResolution() {
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                         >
-                         <option selected disabled hidden>
-                          Select
-                        </option>
-                        {sessions &&
-                          sessions.map((item) => (
-                            <option key={item.id} value={item.id}>
-                              {item?.sessionName}
-                            </option>
-                          ))}
+                          <option selected disabled hidden>
+                            Select
+                          </option>
+                          {sessions &&
+                            sessions.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item?.sessionName}
+                              </option>
+                            ))}
                         </select>
                       </div>
                     </div>
@@ -269,7 +254,7 @@ function QMSSerchResolution() {
                           onBlur={formik.handleBlur}
                         >
                           <option value="" selected disabled hidden>
-                            select
+                            Select
                           </option>
                           {resolutionStatus &&
                             resolutionStatus.map((item) => (
@@ -288,9 +273,7 @@ function QMSSerchResolution() {
 
                         <DatePicker
                           selected={formik.values.fromNoticeDate}
-                          onChange={(date) =>
-                            formik.setFieldValue("fromNoticeDate", date)
-                          }
+                          onChange={(date) => formik.setFieldValue("fromNoticeDate", date)}
                           className={`form-control`}
                         />
                       </div>
@@ -301,9 +284,7 @@ function QMSSerchResolution() {
 
                         <DatePicker
                           selected={formik.values.toNoticeDate}
-                          onChange={(date) =>
-                            formik.setFieldValue("toNoticeDate", date)
-                          }
+                          onChange={(date) => formik.setFieldValue("toNoticeDate", date)}
                           className={`form-control`}
                         />
                       </div>
@@ -407,11 +388,7 @@ function QMSSerchResolution() {
                   </div>
                 </div>
                 <div class="col">
-                  <button
-                    style={{ marginTop: "30px" }}
-                    class="btn btn-primary"
-                    type="submit"
-                  >
+                  <button style={{ marginTop: "30px" }} class="btn btn-primary" type="submit">
                     Change Status
                   </button>
                 </div>

@@ -8,10 +8,7 @@ import { useFormik } from "formik";
 import DatePicker from "react-datepicker";
 import * as Yup from "yup";
 import { getAllResolutions } from "../../../../../../api/APIs";
-import {
-  showErrorMessage,
-  showSuccessMessage,
-} from "../../../../../../utils/ToastAlert";
+import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
 import { AuthContext } from "../../../../../../api/AuthContext";
 const validationSchema = Yup.object({
   resolutionDiaryNo: Yup.number(),
@@ -54,7 +51,7 @@ function QMSDeleteResolution() {
   });
 
   const navigate = useNavigate();
-  const {members,sessions, resolutionStatus} = useContext(AuthContext)
+  const { members, sessions, resolutionStatus } = useContext(AuthContext);
   const [currentPage, setCurrentPage] = useState(0);
   const [resData, setResData] = useState([]);
   const pageSize = 4; // Set your desired page size
@@ -108,10 +105,7 @@ function QMSDeleteResolution() {
       />
       <div class="container-fluid">
         <div class="card mt-4">
-          <div
-            class="card-header red-bg"
-            style={{ background: "#14ae5c !important" }}
-          >
+          <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
             <h1>DELETED RESOLUTION</h1>
           </div>
           <div class="card-body">
@@ -125,21 +119,15 @@ function QMSDeleteResolution() {
                         type="text"
                         placeholder={formik.values.resolutionDiaryNo}
                         className={`form-control ${
-                          formik.touched.resolutionDiaryNo &&
-                          formik.errors.resolutionDiaryNo
-                            ? "is-invalid"
-                            : ""
+                          formik.touched.resolutionDiaryNo && formik.errors.resolutionDiaryNo ? "is-invalid" : ""
                         }`}
                         id="resolutionDiaryNo"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
-                      {formik.touched.resolutionDiaryNo &&
-                        formik.errors.resolutionDiaryNo && (
-                          <div className="invalid-feedback">
-                            {formik.errors.resolutionDiaryNo}
-                          </div>
-                        )}
+                      {formik.touched.resolutionDiaryNo && formik.errors.resolutionDiaryNo && (
+                        <div className="invalid-feedback">{formik.errors.resolutionDiaryNo}</div>
+                      )}
                     </div>
                   </div>
                   <div class="col">
@@ -149,21 +137,15 @@ function QMSDeleteResolution() {
                         type="text"
                         placeholder={formik.values.resolutionID}
                         className={`form-control ${
-                          formik.touched.resolutionID &&
-                          formik.errors.resolutionID
-                            ? "is-invalid"
-                            : ""
+                          formik.touched.resolutionID && formik.errors.resolutionID ? "is-invalid" : ""
                         }`}
                         id="resolutionID"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
-                      {formik.touched.resolutionID &&
-                        formik.errors.resolutionID && (
-                          <div className="invalid-feedback">
-                            {formik.errors.resolutionID}
-                          </div>
-                        )}
+                      {formik.touched.resolutionID && formik.errors.resolutionID && (
+                        <div className="invalid-feedback">{formik.errors.resolutionID}</div>
+                      )}
                     </div>
                   </div>
                   <div class="col">
@@ -173,31 +155,24 @@ function QMSDeleteResolution() {
                         type="text"
                         placeholder={formik.values.keyword}
                         className={`form-control ${
-                          formik.touched.keyword && formik.errors.keyword
-                            ? "is-invalid"
-                            : ""
+                          formik.touched.keyword && formik.errors.keyword ? "is-invalid" : ""
                         }`}
                         id="keyword"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
                       {formik.touched.keyword && formik.errors.keyword && (
-                        <div className="invalid-feedback">
-                          {formik.errors.keyword}
-                        </div>
+                        <div className="invalid-feedback">{formik.errors.keyword}</div>
                       )}
                     </div>
                   </div>
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Member Name</label>
-                      
+
                       <select
                         class={`form-select ${
-                          formik.touched.memberName &&
-                          formik.errors.memberName
-                            ? "is-invalid"
-                            : ""
+                          formik.touched.memberName && formik.errors.memberName ? "is-invalid" : ""
                         }`}
                         placeholder={formik.values.memberName}
                         onChange={formik.handleChange}
@@ -214,12 +189,9 @@ function QMSDeleteResolution() {
                             </option>
                           ))}
                       </select>
-                      {formik.touched.memberName &&
-                        formik.errors.memberName && (
-                          <div className="invalid-feedback">
-                            {formik.errors.memberName}
-                          </div>
-                        )}
+                      {formik.touched.memberName && formik.errors.memberName && (
+                        <div className="invalid-feedback">{formik.errors.memberName}</div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -234,14 +206,14 @@ function QMSDeleteResolution() {
                         onBlur={formik.handleBlur}
                       >
                         <option value="" selected disabled hidden>
-                            Select
-                          </option>
-                          {sessions &&
-                            sessions.map((item) => (
-                              <option key={item.id} value={item.id}>
-                                {item?.sessionName}
-                              </option>
-                            ))}
+                          Select
+                        </option>
+                        {sessions &&
+                          sessions.map((item) => (
+                            <option key={item.id} value={item.id}>
+                              {item?.sessionName}
+                            </option>
+                          ))}
                       </select>
                     </div>
                   </div>
@@ -254,15 +226,15 @@ function QMSDeleteResolution() {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       >
-                       <option value="" selected disabled hidden>
-                            Select
-                          </option>
-                          {sessions &&
-                            sessions.map((item) => (
-                              <option key={item.id} value={item.id}>
-                                {item?.sessionName}
-                              </option>
-                            ))}
+                        <option value="" selected disabled hidden>
+                          Select
+                        </option>
+                        {sessions &&
+                          sessions.map((item) => (
+                            <option key={item.id} value={item.id}>
+                              {item?.sessionName}
+                            </option>
+                          ))}
                       </select>
                     </div>
                   </div>
@@ -305,14 +277,14 @@ function QMSDeleteResolution() {
                         onBlur={formik.handleBlur}
                       >
                         <option value="" selected disabled hidden>
-                            select
-                          </option>
-                          {resolutionStatus &&
-                            resolutionStatus.map((item) => (
-                              <option key={item.id} value={item.id}>
-                                {item?.resolutionStatus}
-                              </option>
-                            ))}
+                          Select
+                        </option>
+                        {resolutionStatus &&
+                          resolutionStatus.map((item) => (
+                            <option key={item.id} value={item.id}>
+                              {item?.resolutionStatus}
+                            </option>
+                          ))}
                       </select>
                     </div>
                   </div>
@@ -323,21 +295,15 @@ function QMSDeleteResolution() {
                         type="text"
                         placeholder={formik.values.noticeDiaryNo}
                         className={`form-control ${
-                          formik.touched.noticeDiaryNo &&
-                          formik.errors.noticeDiaryNo
-                            ? "is-invalid"
-                            : ""
+                          formik.touched.noticeDiaryNo && formik.errors.noticeDiaryNo ? "is-invalid" : ""
                         }`}
                         id="noticeDiaryNo"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
-                      {formik.touched.noticeDiaryNo &&
-                        formik.errors.noticeDiaryNo && (
-                          <div className="invalid-feedback">
-                            {formik.errors.noticeDiaryNo}
-                          </div>
-                        )}
+                      {formik.touched.noticeDiaryNo && formik.errors.noticeDiaryNo && (
+                        <div className="invalid-feedback">{formik.errors.noticeDiaryNo}</div>
+                      )}
                     </div>
                   </div>
                   <div class="col">
@@ -345,23 +311,15 @@ function QMSDeleteResolution() {
                       <label class="form-label">From Notice Date</label>
                       <DatePicker
                         selected={formik.values.fromNoticeDate}
-                        onChange={(date) =>
-                          formik.setFieldValue("fromNoticeDate", date)
-                        }
+                        onChange={(date) => formik.setFieldValue("fromNoticeDate", date)}
                         onBlur={formik.handleBlur}
                         className={`form-control ${
-                          formik.touched.fromNoticeDate &&
-                          formik.errors.fromNoticeDate
-                            ? "is-invalid"
-                            : ""
+                          formik.touched.fromNoticeDate && formik.errors.fromNoticeDate ? "is-invalid" : ""
                         }`}
                       />
-                      {formik.touched.fromNoticeDate &&
-                        formik.errors.fromNoticeDate && (
-                          <div className="invalid-feedback">
-                            {formik.errors.fromNoticeDate}
-                          </div>
-                        )}
+                      {formik.touched.fromNoticeDate && formik.errors.fromNoticeDate && (
+                        <div className="invalid-feedback">{formik.errors.fromNoticeDate}</div>
+                      )}
                     </div>
                   </div>
                   <div class="col">
@@ -369,23 +327,15 @@ function QMSDeleteResolution() {
                       <label class="form-label">To Notice Date</label>
                       <DatePicker
                         selected={formik.values.toNoticeDate}
-                        onChange={(date) =>
-                          formik.setFieldValue("toNoticeDate", date)
-                        }
+                        onChange={(date) => formik.setFieldValue("toNoticeDate", date)}
                         onBlur={formik.handleBlur}
                         className={`form-control ${
-                          formik.touched.toNoticeDate &&
-                          formik.errors.toNoticeDate
-                            ? "is-invalid"
-                            : ""
+                          formik.touched.toNoticeDate && formik.errors.toNoticeDate ? "is-invalid" : ""
                         }`}
                       />
-                      {formik.touched.toNoticeDate &&
-                        formik.errors.toNoticeDate && (
-                          <div className="invalid-feedback">
-                            {formik.errors.toNoticeDate}
-                          </div>
-                        )}
+                      {formik.touched.toNoticeDate && formik.errors.toNoticeDate && (
+                        <div className="invalid-feedback">{formik.errors.toNoticeDate}</div>
+                      )}
                     </div>
                   </div>
                 </div>

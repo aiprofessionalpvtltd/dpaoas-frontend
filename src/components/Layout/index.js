@@ -2,11 +2,7 @@ import React, { useEffect, useState } from "react";
 import { CustomNavbar } from "../CustomNavbar";
 import { Sidebar } from "../Sidebar";
 import { useLocation } from "react-router";
-import {
-  getAllMotion,
-  getAllQuestion,
-  getAllResolutions,
-} from "../../api/APIs";
+import { getAllMotion, getAllQuestion, getAllResolutions } from "../../api/APIs";
 import { getAuthToken, logout } from "../../api/Auth";
 import { useNavigate } from "react-router-dom";
 
@@ -20,18 +16,9 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
   });
   const location = useLocation();
 
-  const basePathNotice = location.pathname.substring(
-    0,
-    location.pathname.lastIndexOf("/notice") + 7,
-  );
-  const basePathMotion = location.pathname.substring(
-    0,
-    location.pathname.indexOf("/mms") + 4,
-  );
-  const basePathQuestion = location.pathname.substring(
-    0,
-    location.pathname.lastIndexOf("/qms") + 4,
-  );
+  const basePathNotice = location.pathname.substring(0, location.pathname.lastIndexOf("/notice") + 7);
+  const basePathMotion = location.pathname.substring(0, location.pathname.indexOf("/mms") + 4);
+  const basePathQuestion = location.pathname.substring(0, location.pathname.lastIndexOf("/qms") + 4);
 
   const shouldRenderNotice = basePathNotice === "/notice";
   const shouldRenderMotion = basePathMotion === "/mms";
@@ -97,7 +84,7 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
 
   useEffect(() => {
     const token = getAuthToken();
-    if(token === undefined || token === null) {
+    if (token === undefined || token === null) {
       logout();
       navigation("/login");
     }
@@ -110,19 +97,13 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
         {module ? (
           <>
             <main className="dashboard-app" style={{ marginLeft: "220px" }}>
-              <CustomNavbar
-                toggleSidebar={toggleSidebar}
-                module={module}
-                centerlogohide={centerlogohide}
-              />
+              <CustomNavbar toggleSidebar={toggleSidebar} module={module} centerlogohide={centerlogohide} />
               <div className="dashboard-content">
                 {shouldRenderNotice ? (
                   <>
                     <div class="tab-right me-4 mt-1 mb-4">
                       <a href={"/notice/motion/sent"}>
-                        <button>
-                          Motion{count?.motion && <span>{count.motion}</span>}
-                        </button>
+                        <button>Motion{count?.motion && <span>{count.motion}</span>}</button>
                       </a>
                       <a href={"/notice/resolution/sent"}>
                         <button>
@@ -141,10 +122,7 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
                   </>
                 ) : shouldRenderMotion ? (
                   <>
-                    <div
-                      class="tab-right me-4 mt-1 mb-4"
-                      style={{ width: "310px" }}
-                    >
+                    <div class="tab-right me-4 mt-1 mb-4">
                       <button>
                         Translations
                         {count?.question && <span>{count?.question}</span>}
@@ -161,10 +139,7 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
                 ) : (
                   shouldRenderQuestion && (
                     <>
-                      <div
-                        class="tab-right me-4 mt-1 mb-4"
-                        style={{ width: "528px" }}
-                      >
+                      <div class="tab-right me-4 mt-1 mb-4">
                         <button>
                           Translations
                           {count?.motion && <span>{count?.motion}</span>}
@@ -172,9 +147,7 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
                         <a href={"/qms/resolution/list"}>
                           <button>
                             Notice Resolutions
-                            {count?.resolution && (
-                              <span>{count.resolution}</span>
-                            )}
+                            {count?.resolution && <span>{count.resolution}</span>}
                           </button>
                         </a>
                         <a href={"/qms/question/list"}>

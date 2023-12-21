@@ -816,6 +816,8 @@ hr.horizontal {
 
 .red-bg h1 {
     color: #FFF;
+    font-size: 20px;
+    margin-bottom: 0;
 }
 
 .dashboard-nav {
@@ -3495,7 +3497,7 @@ textarea {
     border: 1px solid #ccc;
     background-color: #f1f1f1;
     position:relative;
-    width: 403px;
+    /* width: 403px; */
     float: right;
     border-radius: 8px;
   }

@@ -7,12 +7,18 @@ function Header({ dashboardLink, addLink1, addLink2, title1, title2 }) {
           <li>
             <a href={dashboardLink}>Dashboard</a>
           </li>
-          <li>
-            <a href={addLink1}>{title1}</a>
-          </li>
+          {addLink2 && title2 ? (
+            <li>
+              <a href={addLink1}>{title1}</a>
+            </li>
+          ) : (
+            <li>
+              <span>{title1}</span>
+            </li>
+          )}
           {addLink2 && title2 && (
             <li>
-              <a href={addLink2}>{title2}</a>
+              <span>{title2}</span>
             </li>
           )}
         </ul>
