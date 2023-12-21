@@ -13,6 +13,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import moment from "moment";
 import Moment from "react-moment";
+import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const validationSchema = Yup.object({
   reason: Yup.string().required("Reason is required"),
@@ -376,8 +378,21 @@ function LMSAddEdit() {
 
                 <div class="row">
                   <div className="col">
-                    <div className="mb-3">
+                    <div className="mb-3" style={{ position: "relative" }}>
                       <label className="form-label">Start Date</label>
+                      <span
+                        style={{
+                          position: "absolute",
+                          right: "15px",
+                          top: "36px",
+                          zIndex: 1,
+                          fontSize: "20px",
+                          zIndex: "1",
+                          color: "#666",
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faCalendarAlt} />
+                      </span>
                       <DatePicker
                         selected={formik.values.startDate}
                         onChange={(date) => formik.setFieldValue("startDate", date)}
