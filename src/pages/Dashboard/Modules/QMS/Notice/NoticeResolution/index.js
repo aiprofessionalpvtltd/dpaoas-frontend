@@ -5,11 +5,20 @@ import Header from "../../../../../../components/Header";
 import { useFormik } from "formik";
 import { ToastContainer } from "react-toastify";
 import DatePicker from "react-datepicker";
-import { getAllQuestionStatus, getResolutionBYID, searchResolution } from "../../../../../../api/APIs";
-import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
+import {
+  getAllQuestionStatus,
+  getResolutionBYID,
+  searchResolution,
+} from "../../../../../../api/APIs";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../../utils/ToastAlert";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import { useNavigate } from "react-router";
 import { AuthContext } from "../../../../../../api/AuthContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 
 function QMSNoticeResolution() {
   const navigate = useNavigate();
@@ -49,7 +58,10 @@ function QMSNoticeResolution() {
 
   const transformLeavesData = (apiData) => {
     return apiData.map((res) => {
-      const movers = res?.resolutionMoversAssociation.map((item) => item?.memberAssociation?.memberName) || [];
+      const movers =
+        res?.resolutionMoversAssociation.map(
+          (item) => item?.memberAssociation?.memberName,
+        ) || [];
 
       return {
         RID: res.id,
@@ -117,7 +129,10 @@ function QMSNoticeResolution() {
       />
       <div class="container-fluid">
         <div class="card mt-4">
-          <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
+          <div
+            class="card-header red-bg"
+            style={{ background: "#14ae5c !important" }}
+          >
             <h1>Notice Resolution</h1>
           </div>
           <div class="card-body">
@@ -274,21 +289,51 @@ function QMSNoticeResolution() {
                 </div>
                 <div class="row">
                   <div class="col">
-                    <div class="mb-3">
+                    <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label">From Notice Date</label>
+                      <span
+                        style={{
+                          position: "absolute",
+                          right: "15px",
+                          top: "36px",
+                          zIndex: 1,
+                          fontSize: "20px",
+                          zIndex: "1",
+                          color: "#666",
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faCalendarAlt} />
+                      </span>
                       <DatePicker
                         selected={formik.values.fromNoticeDate}
-                        onChange={(date) => formik.setFieldValue("fromNoticeDate", date)}
+                        onChange={(date) =>
+                          formik.setFieldValue("fromNoticeDate", date)
+                        }
                         className={`form-control`}
                       />
                     </div>
                   </div>
                   <div class="col">
-                    <div class="mb-3">
+                    <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label">To Notice Date</label>
+                      <span
+                        style={{
+                          position: "absolute",
+                          right: "15px",
+                          top: "36px",
+                          zIndex: 1,
+                          fontSize: "20px",
+                          zIndex: "1",
+                          color: "#666",
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faCalendarAlt} />
+                      </span>
                       <DatePicker
                         selected={formik.values.toNoticeDate}
-                        onChange={(date) => formik.setFieldValue("toNoticeDate", date)}
+                        onChange={(date) =>
+                          formik.setFieldValue("toNoticeDate", date)
+                        }
                         className={`form-control`}
                       />
                     </div>

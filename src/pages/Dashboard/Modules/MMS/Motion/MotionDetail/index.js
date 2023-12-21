@@ -23,6 +23,8 @@ import { ToastContainer } from "react-toastify";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import { AuthContext } from "../../../../../../api/AuthContext";
 import { Editor } from "../../../../../../components/CustomComponents/Editor";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 
 const validationSchema = Yup.object({
   sessionNumber: Yup.number().required("Session No is required"),
@@ -49,15 +51,15 @@ const validationSchema = Yup.object({
     "Date Of Reffering To SC is required",
   ),
   dateofDiscussion: Yup.date().required("Date Of Discussion is required"),
-  urduText:Yup.string(),
-  englishText:Yup.string(),
-  motionText:Yup.string()
+  urduText: Yup.string(),
+  englishText: Yup.string(),
+  motionText: Yup.string(),
   // Add more fields and validations as needed
 });
 function MMSMotionDetail() {
   const location = useLocation();
-  const {ministryData,members,sessions} = useContext(AuthContext)
-  
+  const { ministryData, members, sessions } = useContext(AuthContext);
+
   const [motionStatusData, setMotionStatusData] = useState([]);
   const formik = useFormik({
     initialValues: {
@@ -81,9 +83,9 @@ function MMSMotionDetail() {
       ministry:
         location?.state?.motionMinistries.length > 0 ??
         location?.state?.motionMinistries[0]?.fkMinistryId,
-        urduText:"",
-        englishText:"",
-        motionText:""
+      urduText: "",
+      englishText: "",
+      motionText: "",
       // Add more fields as needed
     },
     validationSchema: validationSchema,
@@ -117,7 +119,6 @@ function MMSMotionDetail() {
     }
   };
 
- 
   const getMotionStatus = async () => {
     try {
       const response = await getallMotionStatus();
@@ -331,8 +332,21 @@ function MMSMotionDetail() {
                     </div>
                   </div>
                   <div class="col">
-                    <div class="mb-3">
+                    <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label">Notice Office Diary Date</label>
+                      <span
+                        style={{
+                          position: "absolute",
+                          right: "15px",
+                          top: "36px",
+                          zIndex: 1,
+                          fontSize: "20px",
+                          zIndex: "1",
+                          color: "#666",
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faCalendarAlt} />
+                      </span>
                       <DatePicker
                         selected={formik.values.noticeOfficeDiaryDate}
                         onChange={(date) =>
@@ -404,8 +418,21 @@ function MMSMotionDetail() {
                     </div>
                   </div>
                   <div class="col">
-                    <div class="mb-3">
+                    <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label">Date of Moving in House</label>
+                      <span
+                        style={{
+                          position: "absolute",
+                          right: "15px",
+                          top: "36px",
+                          zIndex: 1,
+                          fontSize: "20px",
+                          zIndex: "1",
+                          color: "#666",
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faCalendarAlt} />
+                      </span>
                       <DatePicker
                         selected={formik.values.dateofMovinginHouse}
                         onChange={(date) =>
@@ -427,8 +454,21 @@ function MMSMotionDetail() {
                     </div>
                   </div>
                   <div class="col">
-                    <div class="mb-3">
+                    <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label">Date of Discussion</label>
+                      <span
+                        style={{
+                          position: "absolute",
+                          right: "15px",
+                          top: "36px",
+                          zIndex: 1,
+                          fontSize: "20px",
+                          zIndex: "1",
+                          color: "#666",
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faCalendarAlt} />
+                      </span>
                       <DatePicker
                         selected={formik.values.dateofDiscussion}
                         onChange={(date) =>
@@ -450,8 +490,21 @@ function MMSMotionDetail() {
                     </div>
                   </div>
                   <div class="col">
-                    <div class="mb-3">
+                    <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label">Date of Reffering To SC</label>
+                      <span
+                        style={{
+                          position: "absolute",
+                          right: "15px",
+                          top: "36px",
+                          zIndex: 1,
+                          fontSize: "20px",
+                          zIndex: "1",
+                          color: "#666",
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faCalendarAlt} />
+                      </span>
                       <DatePicker
                         selected={formik.values.dateofRefferingToSC}
                         onChange={(date) =>
@@ -526,21 +579,23 @@ function MMSMotionDetail() {
                   />
                 </div>
                 <div style={{ marginTop: 70, marginBottom: 40 }}>
-                    <Editor
-                      title={"Urdu Text"}
-                      onChange={(content) =>
-                        formik.setFieldValue("urduText", content)}
-                        value={formik.values.urduText}
-                    />
-                  </div>
-                  <div style={{ marginTop: 70, marginBottom: 40 }}>
-                    <Editor
-                      title={"English Text"}
-                      onChange={(content) =>
-                        formik.setFieldValue("englishText", content)}
-                        value={formik.values.englishText}
-                    />
-                  </div>
+                  <Editor
+                    title={"Urdu Text"}
+                    onChange={(content) =>
+                      formik.setFieldValue("urduText", content)
+                    }
+                    value={formik.values.urduText}
+                  />
+                </div>
+                <div style={{ marginTop: 70, marginBottom: 40 }}>
+                  <Editor
+                    title={"English Text"}
+                    onChange={(content) =>
+                      formik.setFieldValue("englishText", content)
+                    }
+                    value={formik.values.englishText}
+                  />
+                </div>
 
                 <h2
                   style={{ color: "#666", marginTop: "30px", fontSize: "21px" }}

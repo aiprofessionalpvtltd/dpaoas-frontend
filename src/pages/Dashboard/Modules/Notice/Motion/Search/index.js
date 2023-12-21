@@ -13,11 +13,16 @@ import {
   searchQuestion,
 } from "../../../../../../api/APIs";
 import DatePicker from "react-datepicker";
-import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 import { useFormik } from "formik";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import { AuthContext } from "../../../../../../api/AuthContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 
 function SearchMotion() {
   const navigate = useNavigate();
@@ -135,7 +140,11 @@ function SearchMotion() {
   }, [currentPage]);
 
   return (
-    <Layout module={true} sidebarItems={NoticeSidebarItems} centerlogohide={true}>
+    <Layout
+      module={true}
+      sidebarItems={NoticeSidebarItems}
+      centerlogohide={true}
+    >
       <ToastContainer />
       <Header
         dashboardLink={"/"}
@@ -147,7 +156,10 @@ function SearchMotion() {
       <div>
         <div class="container-fluid">
           <div class="card mt-1">
-            <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
+            <div
+              class="card-header red-bg"
+              style={{ background: "#14ae5c !important" }}
+            >
               <h1>SEARCH MOTION</h1>
             </div>
             <div class="card-body">
@@ -332,7 +344,9 @@ function SearchMotion() {
                           Select
                         </option>
                         {ministryData &&
-                          ministryData.map((item) => <option value={item.id}>{item.ministryName}</option>)}
+                          ministryData.map((item) => (
+                            <option value={item.id}>{item.ministryName}</option>
+                          ))}
                       </select>
                     </div>
                   </div>
@@ -361,26 +375,62 @@ function SearchMotion() {
                 </div>
                 <div class="row">
                   <div class="col">
-                    <div class="mb-3">
+                    <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label">From Notice Date</label>
+                      <span
+                        style={{
+                          position: "absolute",
+                          right: "15px",
+                          top: "36px",
+                          zIndex: 1,
+                          fontSize: "20px",
+                          zIndex: "1",
+                          color: "#666",
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faCalendarAlt} />
+                      </span>
                       <DatePicker
                         selected={formik.values.fromNoticeDate}
-                        onChange={(date) => formik.setFieldValue("fromNoticeDate", date)}
+                        onChange={(date) =>
+                          formik.setFieldValue("fromNoticeDate", date)
+                        }
                         className={`form-control ${
-                          formik.errors.fromNoticeDate && formik.touched.fromNoticeDate ? "is-invalid" : ""
+                          formik.errors.fromNoticeDate &&
+                          formik.touched.fromNoticeDate
+                            ? "is-invalid"
+                            : ""
                         }`}
                       />
-                      {formik.errors.fromNoticeDate && formik.touched.fromNoticeDate && (
-                        <div className="invalid-feedback">{formik.errors.fromNoticeDate}</div>
-                      )}
+                      {formik.errors.fromNoticeDate &&
+                        formik.touched.fromNoticeDate && (
+                          <div className="invalid-feedback">
+                            {formik.errors.fromNoticeDate}
+                          </div>
+                        )}
                     </div>
                   </div>
                   <div class="col">
-                    <div class="mb-3">
+                    <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label">To Notice Date</label>
+                      <span
+                        style={{
+                          position: "absolute",
+                          right: "15px",
+                          top: "36px",
+                          zIndex: 1,
+                          fontSize: "20px",
+                          zIndex: "1",
+                          color: "#666",
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faCalendarAlt} />
+                      </span>
                       <DatePicker
                         selected={formik.values.toNoticeDate}
-                        onChange={(date) => formik.setFieldValue("toNoticeDate", date)}
+                        onChange={(date) =>
+                          formik.setFieldValue("toNoticeDate", date)
+                        }
                         className={"form-control"}
                       />
                     </div>
@@ -396,13 +446,18 @@ function SearchMotion() {
                     </button>
                   </div>
                 </div>
-                <div class="dash-detail-container" style={{ marginTop: "20px" }}>
+                <div
+                  class="dash-detail-container"
+                  style={{ marginTop: "20px" }}
+                >
                   <CustomTable
                     block={true}
                     data={motionData}
                     headerShown={true}
                     handleDelete={(item) => alert(item.id)}
-                    handleEdit={(item) => navigate("/mms/motion/new", { state: item })}
+                    handleEdit={(item) =>
+                      navigate("/mms/motion/new", { state: item })
+                    }
                     headertitlebgColor={"#666"}
                     headertitletextColor={"#FFF"}
                     handlePageChange={handlePageChange}

@@ -18,6 +18,8 @@ import Select from "react-select";
 import { Editor } from "../../../../../../components/CustomComponents/Editor";
 import { ToastContainer } from "react-toastify";
 import { AuthContext } from "../../../../../../api/AuthContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 
 const validationSchema = Yup.object({
   fkSessionNo: Yup.number().required("Session No is required"),
@@ -37,10 +39,10 @@ const validationSchema = Yup.object({
 
 function NewResolution() {
   const navigate = useNavigate();
-  const {members,sessions} = useContext(AuthContext)
-  console.log("members",members);
+  const { members, sessions } = useContext(AuthContext);
+  console.log("members", members);
   const [showModal, setShowModal] = useState(false);
- 
+
   const [formValues, setFormValues] = useState([]);
 
   const handleShow = () => setShowModal(true);
@@ -268,10 +270,23 @@ function NewResolution() {
 
                   <div class="row">
                     <div className="col">
-                      <div className="mb-3">
+                      <div className="mb-3" style={{ position: "relative" }}>
                         <label className="form-label">
                           Notice Office Diary Date{" "}
                         </label>
+                        <span
+                          style={{
+                            position: "absolute",
+                            right: "15px",
+                            top: "36px",
+                            zIndex: 1,
+                            fontSize: "20px",
+                            zIndex: "1",
+                            color: "#666",
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faCalendarAlt} />
+                        </span>
                         <DatePicker
                           selected={formik.values.noticeOfficeDiaryDate}
                           onChange={(date) =>
@@ -341,8 +356,9 @@ function NewResolution() {
                     <Editor
                       title={"English Text"}
                       onChange={(content) =>
-                        formik.setFieldValue("englishText", content)}
-                        value={formik.values.englishText}
+                        formik.setFieldValue("englishText", content)
+                      }
+                      value={formik.values.englishText}
                     />
                   </div>
 
@@ -350,10 +366,10 @@ function NewResolution() {
                     <Editor
                       title={"Urdu Text"}
                       onChange={(content) =>
-                        formik.setFieldValue("urduText", content)}
-                        value={formik.values.urduText}
+                        formik.setFieldValue("urduText", content)
+                      }
+                      value={formik.values.urduText}
                     />
-                  
                   </div>
 
                   <div class="row">

@@ -16,6 +16,8 @@ import DatePicker from "react-datepicker";
 import { Editor } from "../../../../../../components/CustomComponents/Editor";
 import { useNavigate } from "react-router";
 import { AuthContext } from "../../../../../../api/AuthContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 
 const validationSchema = Yup.object({
   // fkSessionId: Yup.number().required("Session No is required"),
@@ -31,9 +33,9 @@ const validationSchema = Yup.object({
 
 function QMSNewQuestion() {
   const navigate = useNavigate();
-  const {members,sessions} = useContext(AuthContext)
+  const { members, sessions } = useContext(AuthContext);
   const [showModal, setShowModal] = useState(false);
-  
+
   const [formValues, setFormValues] = useState([]);
 
   const handleShow = () => setShowModal(true);
@@ -84,8 +86,6 @@ function QMSNewQuestion() {
       showErrorMessage(error?.response?.data?.message);
     }
   };
-
-  
 
   const handleProcedureContentChange = (content) => {
     console.log(content);
@@ -230,27 +230,27 @@ function QMSNewQuestion() {
                           onChange={formik.handleChange}
                         /> */}
                         <select
-                        class={`form-select ${
-                          formik.touched.fkMemberId &&
-                          formik.errors.fkMemberId
-                            ? "is-invalid"
-                            : ""
-                        }`}
-                        placeholder={formik.values.fkMemberId}
-                        onChange={formik.handleChange}
-                        id="fkMemberId"
-                        onBlur={formik.handleBlur}
-                      >
-                        <option selected disabled hidden>
-                          Select
-                        </option>
-                        {members &&
-                          members.map((item) => (
-                            <option key={item.id} value={item.id}>
-                              {item?.memberName}
-                            </option>
-                          ))}
-                      </select>
+                          class={`form-select ${
+                            formik.touched.fkMemberId &&
+                            formik.errors.fkMemberId
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                          placeholder={formik.values.fkMemberId}
+                          onChange={formik.handleChange}
+                          id="fkMemberId"
+                          onBlur={formik.handleBlur}
+                        >
+                          <option selected disabled hidden>
+                            Select
+                          </option>
+                          {members &&
+                            members.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item?.memberName}
+                              </option>
+                            ))}
+                        </select>
                         {formik.touched.fkMemberId &&
                           formik.errors.fkMemberId && (
                             <div class="invalid-feedback">
@@ -263,10 +263,23 @@ function QMSNewQuestion() {
 
                   <div class="row">
                     <div className="col">
-                      <div className="mb-3">
+                      <div className="mb-3" style={{ position: "relative" }}>
                         <label className="form-label">
                           Notice Office Diary Date{" "}
                         </label>
+                        <span
+                          style={{
+                            position: "absolute",
+                            right: "15px",
+                            top: "36px",
+                            zIndex: 1,
+                            fontSize: "20px",
+                            zIndex: "1",
+                            color: "#666",
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faCalendarAlt} />
+                        </span>
                         <DatePicker
                           selected={formik.values.noticeOfficeDiaryDate}
                           onChange={(date) =>
@@ -312,8 +325,9 @@ function QMSNewQuestion() {
                     <Editor
                       title={"English Text"}
                       onChange={(content) =>
-                        formik.setFieldValue("englishText", content)}
-                        value={formik.values.englishText}
+                        formik.setFieldValue("englishText", content)
+                      }
+                      value={formik.values.englishText}
                     />
                   </div>
 
@@ -321,8 +335,9 @@ function QMSNewQuestion() {
                     <Editor
                       title={"Urdu Text"}
                       onChange={(content) =>
-                        formik.setFieldValue("urduText", content)}
-                        value={formik.values.urduText}
+                        formik.setFieldValue("urduText", content)
+                      }
+                      value={formik.values.urduText}
                     />
                   </div>
 

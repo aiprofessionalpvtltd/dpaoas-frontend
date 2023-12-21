@@ -15,10 +15,12 @@ import {
 import { ToastContainer } from "react-toastify";
 import DatePicker from "react-datepicker";
 import { AuthContext } from "../../../../../../api/AuthContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 
 function QMSResolutionList() {
   const navigate = useNavigate();
-  const {sessions} = useContext(AuthContext)
+  const { sessions } = useContext(AuthContext);
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(1);
   const [resData, setResData] = useState([]);
@@ -98,21 +100,21 @@ function QMSResolutionList() {
                   <div class="mb-3">
                     <label class="form-label">Session No</label>
                     <select
-                        class="form-control form-select"
-                        id="toSession"
-                        // onChange={formik.handleChange}
-                        // onBlur={formik.handleBlur}
-                      >
-                        <option value="" selected disabled hidden>
-                            Select
+                      class="form-control form-select"
+                      id="toSession"
+                      // onChange={formik.handleChange}
+                      // onBlur={formik.handleBlur}
+                    >
+                      <option value="" selected disabled hidden>
+                        Select
+                      </option>
+                      {sessions &&
+                        sessions.map((item) => (
+                          <option key={item.id} value={item.id}>
+                            {item?.sessionName}
                           </option>
-                          {sessions &&
-                            sessions.map((item) => (
-                              <option key={item.id} value={item.id}>
-                                {item?.sessionName}
-                              </option>
-                            ))}
-                      </select>
+                        ))}
+                    </select>
                   </div>
                 </div>
                 <div class="col">
@@ -122,8 +124,21 @@ function QMSResolutionList() {
                   </div>
                 </div>
                 <div class="col">
-                  <div class="mb-3">
+                  <div class="mb-3" style={{ position: "relative" }}>
                     <label class="form-label">List Date</label>
+                    <span
+                      style={{
+                        position: "absolute",
+                        right: "15px",
+                        top: "36px",
+                        zIndex: 1,
+                        fontSize: "20px",
+                        zIndex: "1",
+                        color: "#666",
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faCalendarAlt} />
+                    </span>
                     <DatePicker
                       // selected={formik.values.fromNoticeDate}
                       // onChange={(date) =>

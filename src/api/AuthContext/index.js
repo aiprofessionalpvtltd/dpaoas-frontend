@@ -1,5 +1,11 @@
 import React, { createContext, useEffect, useState } from "react";
-import { getAllMinistry, getAllResolutionStatus, getAllSessions, getallMembers, loginUser } from "../APIs";
+import {
+  getAllMinistry,
+  getAllResolutionStatus,
+  getAllSessions,
+  getallMembers,
+  loginUser,
+} from "../APIs";
 import { setAuthToken, setUserData } from "../Auth";
 import { showErrorMessage } from "../../utils/ToastAlert";
 
@@ -26,7 +32,6 @@ export const AuthProvider = ({ children }) => {
       throw error;
     }
   };
-
 
   const AllMinistryData = async () => {
     try {
@@ -78,7 +83,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    getAllResolutionStatusApi()
+    getAllResolutionStatusApi();
     AllMembersData();
     AllMinistryData();
     getAllSessionsApi();
@@ -93,7 +98,7 @@ export const AuthProvider = ({ children }) => {
         ministryData,
         members,
         sessions,
-        resolutionStatus
+        resolutionStatus,
       }}
     >
       {children}

@@ -18,6 +18,8 @@ import {
 import { showErrorMessage } from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 import { AuthContext } from "../../../../../../api/AuthContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 
 const validationSchema = Yup.object({
   motionDiaryNo: Yup.string(),
@@ -37,8 +39,8 @@ const validationSchema = Yup.object({
 
 function MMSSearchMotion() {
   const navigate = useNavigate();
-  const {ministryData,members,sessions} = useContext(AuthContext)
-  
+  const { ministryData, members, sessions } = useContext(AuthContext);
+
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
   const [motionStatus, setMotionStatus] = useState([]);
@@ -385,8 +387,21 @@ function MMSSearchMotion() {
                 </div>
                 <div class="row">
                   <div class="col">
-                    <div class="mb-3">
+                    <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label">From Notice Date</label>
+                      <span
+                        style={{
+                          position: "absolute",
+                          right: "15px",
+                          top: "36px",
+                          zIndex: 1,
+                          fontSize: "20px",
+                          zIndex: "1",
+                          color: "#666",
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faCalendarAlt} />
+                      </span>
                       <DatePicker
                         selected={formik.values.fromNoticeDate}
                         onChange={(date) =>
@@ -408,8 +423,21 @@ function MMSSearchMotion() {
                     </div>
                   </div>
                   <div class="col">
-                    <div class="mb-3">
+                    <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label">To Notice Date</label>
+                      <span
+                        style={{
+                          position: "absolute",
+                          right: "15px",
+                          top: "36px",
+                          zIndex: 1,
+                          fontSize: "20px",
+                          zIndex: "1",
+                          color: "#666",
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faCalendarAlt} />
+                      </span>
                       <DatePicker
                         selected={formik.values.toNoticeDate}
                         onChange={(date) =>

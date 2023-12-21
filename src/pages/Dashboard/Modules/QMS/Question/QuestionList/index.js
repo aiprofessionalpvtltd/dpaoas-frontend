@@ -26,7 +26,7 @@ const validationSchema = Yup.object({
 });
 
 function QMSQuestionList() {
-  const {sessions} = useContext(AuthContext)
+  const { sessions } = useContext(AuthContext);
   const [resData, setResData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
@@ -111,7 +111,7 @@ function QMSQuestionList() {
   const handleEdit = async (id) => {
     try {
       const { question, history } = await getAllQuestionByID(id);
-      console.log("LIST DAtA", history?.data, question?.data)
+      console.log("LIST DAtA", history?.data, question?.data);
       if (question?.success) {
         navigate("/qms/question/detail", {
           state: { question: question?.data, history: history?.data },
@@ -170,14 +170,14 @@ function QMSQuestionList() {
                             {formik.errors.sessionNumber}
                           </div>
                         )} */}
-                        <select
-                          class="form-select"
-                          id="sessionNumber"
-                          placeholder={formik.values.sessionNumber}
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                        >
-                         <option selected disabled hidden>
+                      <select
+                        class="form-select"
+                        id="sessionNumber"
+                        placeholder={formik.values.sessionNumber}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      >
+                        <option selected disabled hidden>
                           Select
                         </option>
                         {sessions &&
@@ -186,7 +186,7 @@ function QMSQuestionList() {
                               {item?.sessionName}
                             </option>
                           ))}
-                        </select>
+                      </select>
                     </div>
                   </div>
                   <div class="col">

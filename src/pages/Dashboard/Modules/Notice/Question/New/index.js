@@ -4,8 +4,15 @@ import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
 import { useNavigate } from "react-router";
 import TimePicker from "react-time-picker";
-import { createQuestion, createResolution, getAllSessions } from "../../../../../../api/APIs";
-import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
+import {
+  createQuestion,
+  createResolution,
+  getAllSessions,
+} from "../../../../../../api/APIs";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../../utils/ToastAlert";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import { CustomAlert } from "../../../../../../components/CustomComponents/CustomAlert";
@@ -14,13 +21,19 @@ import Select from "react-select";
 import { Editor } from "../../../../../../components/CustomComponents/Editor";
 import { ToastContainer } from "react-toastify";
 import { AuthContext } from "../../../../../../api/AuthContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 
 const validationSchema = Yup.object({
   // fkSessionId: Yup.number().required("Session No is required"),
   questionCategory: Yup.string().required("Category is required"),
-  noticeOfficeDiaryNo: Yup.number().required("Notice office diary No is required"),
+  noticeOfficeDiaryNo: Yup.number().required(
+    "Notice office diary No is required",
+  ),
   fkMemberId: Yup.number().required("Member id is required"),
-  noticeOfficeDiaryDate: Yup.string().required("Notice Office Diary Date is required"),
+  noticeOfficeDiaryDate: Yup.string().required(
+    "Notice Office Diary Date is required",
+  ),
   //   noticeOfficeDiaryTime: Yup.string().required('Notice Office Diary Time is required'),
   // englishText: Yup.string().required('English Text is required'),
   // urduText: Yup.string().required('Urdu Text is required'),
@@ -88,7 +101,11 @@ function NewQuestion() {
   };
 
   return (
-    <Layout module={true} sidebarItems={NoticeSidebarItems} centerlogohide={true}>
+    <Layout
+      module={true}
+      sidebarItems={NoticeSidebarItems}
+      centerlogohide={true}
+    >
       <ToastContainer />
       <Header
         dashboardLink={"/"}
@@ -98,12 +115,19 @@ function NewQuestion() {
         title2={"New Question"}
       />
 
-      <CustomAlert showModal={showModal} handleClose={handleClose} handleOkClick={handleOkClick} />
+      <CustomAlert
+        showModal={showModal}
+        handleClose={handleClose}
+        handleOkClick={handleOkClick}
+      />
 
       <div>
         <div class="container-fluid">
           <div class="card mt-1">
-            <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
+            <div
+              class="card-header red-bg"
+              style={{ background: "#14ae5c !important" }}
+            >
               <h1>NEW QUESTION</h1>
             </div>
             <div class="card-body">
@@ -115,7 +139,10 @@ function NewQuestion() {
                         <label class="form-label">Session No</label>
                         <select
                           class={`form-select ${
-                            formik.touched.fkSessionId && formik.errors.fkSessionId ? "is-invalid" : ""
+                            formik.touched.fkSessionId &&
+                            formik.errors.fkSessionId
+                              ? "is-invalid"
+                              : ""
                           }`}
                           placeholder="Session No"
                           value={formik.values.fkSessionId}
@@ -133,9 +160,12 @@ function NewQuestion() {
                               </option>
                             ))}
                         </select>
-                        {formik.touched.fkSessionId && formik.errors.fkSessionId && (
-                          <div className="invalid-feedback">{formik.errors.fkSessionId}</div>
-                        )}
+                        {formik.touched.fkSessionId &&
+                          formik.errors.fkSessionId && (
+                            <div className="invalid-feedback">
+                              {formik.errors.fkSessionId}
+                            </div>
+                          )}
                       </div>
                     </div>
 
@@ -144,7 +174,10 @@ function NewQuestion() {
                         <label class="form-label">Category</label>
                         <select
                           class={`form-select ${
-                            formik.touched.questionCategory && formik.errors.questionCategory ? "is-invalid" : ""
+                            formik.touched.questionCategory &&
+                            formik.errors.questionCategory
+                              ? "is-invalid"
+                              : ""
                           }`}
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
@@ -158,9 +191,12 @@ function NewQuestion() {
                           <option value="Un-Starred">Un-Starred</option>
                           <option value="Short Notice">Short Notice</option>
                         </select>
-                        {formik.touched.questionCategory && formik.errors.questionCategory && (
-                          <div class="invalid-feedback">{formik.errors.questionCategory}</div>
-                        )}
+                        {formik.touched.questionCategory &&
+                          formik.errors.questionCategory && (
+                            <div class="invalid-feedback">
+                              {formik.errors.questionCategory}
+                            </div>
+                          )}
                       </div>
                     </div>
                   </div>
@@ -170,7 +206,10 @@ function NewQuestion() {
                         <label class="form-label">Notice Office Diary No</label>
                         <input
                           class={`form-control ${
-                            formik.touched.noticeOfficeDiaryNo && formik.errors.noticeOfficeDiaryNo ? "is-invalid" : ""
+                            formik.touched.noticeOfficeDiaryNo &&
+                            formik.errors.noticeOfficeDiaryNo
+                              ? "is-invalid"
+                              : ""
                           }`}
                           type="number"
                           id="noticeOfficeDiaryNo"
@@ -179,9 +218,12 @@ function NewQuestion() {
                           onBlur={formik.handleBlur}
                           onChange={formik.handleChange}
                         />
-                        {formik.touched.noticeOfficeDiaryNo && formik.errors.noticeOfficeDiaryNo && (
-                          <div class="invalid-feedback">{formik.errors.noticeOfficeDiaryNo}</div>
-                        )}
+                        {formik.touched.noticeOfficeDiaryNo &&
+                          formik.errors.noticeOfficeDiaryNo && (
+                            <div class="invalid-feedback">
+                              {formik.errors.noticeOfficeDiaryNo}
+                            </div>
+                          )}
                       </div>
                     </div>
 
@@ -191,7 +233,10 @@ function NewQuestion() {
 
                         <select
                           class={`form-select ${
-                            formik.touched.fkMemberId && formik.errors.fkMemberId ? "is-invalid" : ""
+                            formik.touched.fkMemberId &&
+                            formik.errors.fkMemberId
+                              ? "is-invalid"
+                              : ""
                           }`}
                           placeholder={formik.values.fkMemberId}
                           onChange={formik.handleChange}
@@ -207,36 +252,62 @@ function NewQuestion() {
                               </option>
                             ))}
                         </select>
-                        {formik.touched.fkMemberId && formik.errors.fkMemberId && (
-                          <div class="invalid-feedback">{formik.errors.fkMemberId}</div>
-                        )}
+                        {formik.touched.fkMemberId &&
+                          formik.errors.fkMemberId && (
+                            <div class="invalid-feedback">
+                              {formik.errors.fkMemberId}
+                            </div>
+                          )}
                       </div>
                     </div>
                   </div>
 
                   <div class="row">
                     <div className="col">
-                      <div className="mb-3">
-                        <label className="form-label">Notice Office Diary Date </label>
+                      <div className="mb-3" style={{ position: "relative" }}>
+                        <label className="form-label">
+                          Notice Office Diary Date{" "}
+                        </label>
+                        <span
+                          style={{
+                            position: "absolute",
+                            right: "15px",
+                            top: "36px",
+                            zIndex: 1,
+                            fontSize: "20px",
+                            zIndex: "1",
+                            color: "#666",
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faCalendarAlt} />
+                        </span>
                         <DatePicker
                           selected={formik.values.noticeOfficeDiaryDate}
-                          onChange={(date) => formik.setFieldValue("noticeOfficeDiaryDate", date)}
+                          onChange={(date) =>
+                            formik.setFieldValue("noticeOfficeDiaryDate", date)
+                          }
                           onBlur={formik.handleBlur}
                           className={`form-control ${
-                            formik.touched.noticeOfficeDiaryDate && formik.errors.noticeOfficeDiaryDate
+                            formik.touched.noticeOfficeDiaryDate &&
+                            formik.errors.noticeOfficeDiaryDate
                               ? "is-invalid"
                               : ""
                           }`}
                         />
-                        {formik.touched.noticeOfficeDiaryDate && formik.errors.noticeOfficeDiaryDate && (
-                          <div className="invalid-feedback">{formik.errors.noticeOfficeDiaryDate}</div>
-                        )}
+                        {formik.touched.noticeOfficeDiaryDate &&
+                          formik.errors.noticeOfficeDiaryDate && (
+                            <div className="invalid-feedback">
+                              {formik.errors.noticeOfficeDiaryDate}
+                            </div>
+                          )}
                       </div>
                     </div>
 
                     <div className="col">
                       <div className="mb-3">
-                        <label className="form-label">Notice Office Diary Time</label>
+                        <label className="form-label">
+                          Notice Office Diary Time
+                        </label>
                         {/* <input
                           className="form-control"
                           type="text"
@@ -251,7 +322,9 @@ function NewQuestion() {
                           clockIcon={null} // Disable clock view
                           openClockOnFocus={false}
                           format="hh:mm a"
-                          onChange={(time) => formik.setFieldValue("noticeOfficeDiaryTime", time)}
+                          onChange={(time) =>
+                            formik.setFieldValue("noticeOfficeDiaryTime", time)
+                          }
                           className={`form-control`}
                         />
                       </div>
@@ -271,7 +344,10 @@ function NewQuestion() {
                           id="formFile"
                           name="questionImage"
                           onChange={(event) => {
-                            formik.setFieldValue("questionImage", event.currentTarget.files[0]);
+                            formik.setFieldValue(
+                              "questionImage",
+                              event.currentTarget.files[0],
+                            );
                           }}
                         />
                       </div>
@@ -281,7 +357,9 @@ function NewQuestion() {
                   <div style={{ marginTop: 10 }}>
                     <Editor
                       title={"English Text"}
-                      onChange={(content) => formik.setFieldValue("englishText", content)}
+                      onChange={(content) =>
+                        formik.setFieldValue("englishText", content)
+                      }
                       value={formik.values.englishText}
                     />
                   </div>
@@ -289,7 +367,9 @@ function NewQuestion() {
                   <div style={{ marginTop: 70, marginBottom: 40 }}>
                     <Editor
                       title={"Urdu Text"}
-                      onChange={(content) => formik.setFieldValue("urduText", content)}
+                      onChange={(content) =>
+                        formik.setFieldValue("urduText", content)
+                      }
                       value={formik.values.urduText}
                     />
                   </div>

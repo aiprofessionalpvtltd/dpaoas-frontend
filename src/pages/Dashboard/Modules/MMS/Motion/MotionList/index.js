@@ -15,6 +15,8 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import DatePicker from "react-datepicker";
 import { AuthContext } from "../../../../../../api/AuthContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 
 const validationSchema = Yup.object({
   sessionNumber: Yup.string(),
@@ -26,7 +28,7 @@ const validationSchema = Yup.object({
 });
 function MMSMotionList() {
   const navigate = useNavigate();
-  const {sessions} = useContext(AuthContext)
+  const { sessions } = useContext(AuthContext);
 
   const [currentPage, setCurrentPage] = useState(0);
   // const [count, setCount] = useState(null);
@@ -247,8 +249,21 @@ function MMSMotionList() {
                     </div>
                   </div>
                   <div class="col">
-                    <div class="mb-3">
+                    <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label">List Date</label>
+                      <span
+                        style={{
+                          position: "absolute",
+                          right: "15px",
+                          top: "36px",
+                          zIndex: 1,
+                          fontSize: "20px",
+                          zIndex: "1",
+                          color: "#666",
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faCalendarAlt} />
+                      </span>
                       <DatePicker
                         selected={formik.values.listDate}
                         onChange={(date) =>

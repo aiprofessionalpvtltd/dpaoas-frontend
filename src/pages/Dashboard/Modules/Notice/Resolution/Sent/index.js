@@ -18,10 +18,12 @@ import { useFormik } from "formik";
 import DatePicker from "react-datepicker";
 import { ToastContainer } from "react-toastify";
 import { AuthContext } from "../../../../../../api/AuthContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 
 function SentResolution() {
   const navigate = useNavigate();
-  const {members,sessions} = useContext(AuthContext)
+  const { members, sessions } = useContext(AuthContext);
   const [resData, setResData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
@@ -199,7 +201,7 @@ function SentResolution() {
                     <div class="col">
                       <div class="mb-3">
                         <label class="form-label">Member Name</label>
-                        
+
                         <Select
                           options={members.map((item) => ({
                             value: item.id,
@@ -207,10 +209,7 @@ function SentResolution() {
                           }))}
                           isMulti
                           onChange={(selectedOptions) =>
-                            formik.setFieldValue(
-                              "memberName",
-                              selectedOptions,
-                            )
+                            formik.setFieldValue("memberName", selectedOptions)
                           }
                           onBlur={formik.handleBlur}
                           value={formik.values.memberName}
@@ -235,7 +234,7 @@ function SentResolution() {
                           value={formik.values.fromSession || ""}
                           name="fromSession"
                         >
-                         <option value="" selected disabled hidden>
+                          <option value="" selected disabled hidden>
                             Select
                           </option>
                           {sessions &&
@@ -353,8 +352,21 @@ function SentResolution() {
                   </div>
                   <div class="row">
                     <div className="col">
-                      <div className="mb-3">
+                      <div className="mb-3" style={{ position: "relative" }}>
                         <label className="form-label">From Notice Date</label>
+                        <span
+                          style={{
+                            position: "absolute",
+                            right: "15px",
+                            top: "36px",
+                            zIndex: 1,
+                            fontSize: "20px",
+                            zIndex: "1",
+                            color: "#666",
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faCalendarAlt} />
+                        </span>
                         <DatePicker
                           selected={formik.values.fromNoticeDate}
                           onChange={(date) =>
@@ -372,8 +384,21 @@ function SentResolution() {
                     </div>
 
                     <div className="col">
-                      <div className="mb-3">
+                      <div className="mb-3" style={{ position: "relative" }}>
                         <label className="form-label">To Notice Date</label>
+                        <span
+                          style={{
+                            position: "absolute",
+                            right: "15px",
+                            top: "36px",
+                            zIndex: 1,
+                            fontSize: "20px",
+                            zIndex: "1",
+                            color: "#666",
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faCalendarAlt} />
+                        </span>
                         <DatePicker
                           selected={formik.values.toNoticeDate}
                           onChange={(date) =>
