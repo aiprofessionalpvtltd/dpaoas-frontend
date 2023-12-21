@@ -13,15 +13,26 @@ import Select from "react-select";
 import { Editor } from "../../../../../../components/CustomComponents/Editor";
 import { ToastContainer } from "react-toastify";
 import { createNewMotion, getAllSessions } from "../../../../../../api/APIs";
-import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../../utils/ToastAlert";
 import { AuthContext } from "../../../../../../api/AuthContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 
 const validationSchema = Yup.object({
   sessionNumber: Yup.number().required("Session No is required"),
   motionType: Yup.string().required("Motion Type is required"),
-  noticeOfficeDiaryNo: Yup.number().required("Notice Office Diary No is required"),
-  noticeOfficeDiaryDate: Yup.string().required("Notice Office Diary Date is required"),
-  noticeOfficeDiaryTime: Yup.string().required("Notice Office Diary Time is required"),
+  noticeOfficeDiaryNo: Yup.number().required(
+    "Notice Office Diary No is required",
+  ),
+  noticeOfficeDiaryDate: Yup.string().required(
+    "Notice Office Diary Date is required",
+  ),
+  noticeOfficeDiaryTime: Yup.string().required(
+    "Notice Office Diary Time is required",
+  ),
   mover: Yup.string().required("Mover is required"),
   //   englishText: Yup.string().required("English Text is required"),
   //   urduText: Yup.string().required("Urdu Text is required"),
@@ -88,7 +99,11 @@ function NewMotion() {
   };
 
   return (
-    <Layout module={true} sidebarItems={NoticeSidebarItems} centerlogohide={true}>
+    <Layout
+      module={true}
+      sidebarItems={NoticeSidebarItems}
+      centerlogohide={true}
+    >
       <ToastContainer />
       <Header
         dashboardLink={"/"}
@@ -98,12 +113,19 @@ function NewMotion() {
         title2={"New Motion"}
       />
 
-      <CustomAlert showModal={showModal} handleClose={handleClose} handleOkClick={handleOkClick} />
+      <CustomAlert
+        showModal={showModal}
+        handleClose={handleClose}
+        handleOkClick={handleOkClick}
+      />
 
       <div>
         <div class="container-fluid">
           <div class="card mt-1">
-            <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
+            <div
+              class="card-header red-bg"
+              style={{ background: "#14ae5c !important" }}
+            >
               <h1>NEW MOTION</h1>
             </div>
             <div class="card-body">
@@ -115,7 +137,10 @@ function NewMotion() {
                         <label class="form-label">Session No</label>
                         <select
                           class={`form-select ${
-                            formik.touched.sessionNumber && formik.errors.sessionNumber ? "is-invalid" : ""
+                            formik.touched.sessionNumber &&
+                            formik.errors.sessionNumber
+                              ? "is-invalid"
+                              : ""
                           }`}
                           placeholder="Session No"
                           value={formik.values.sessionNumber}
@@ -133,9 +158,12 @@ function NewMotion() {
                               </option>
                             ))}
                         </select>
-                        {formik.touched.sessionNumber && formik.errors.sessionNumber && (
-                          <div className="invalid-feedback">{formik.errors.sessionNumber}</div>
-                        )}
+                        {formik.touched.sessionNumber &&
+                          formik.errors.sessionNumber && (
+                            <div className="invalid-feedback">
+                              {formik.errors.sessionNumber}
+                            </div>
+                          )}
                       </div>
                     </div>
 
@@ -144,7 +172,10 @@ function NewMotion() {
                         <label class="form-label">Motion Type</label>
                         <select
                           class={`form-select ${
-                            formik.touched.motionType && formik.errors.motionType ? "is-invalid" : ""
+                            formik.touched.motionType &&
+                            formik.errors.motionType
+                              ? "is-invalid"
+                              : ""
                           }`}
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
@@ -164,36 +195,62 @@ function NewMotion() {
                           <option>Motion Under Rule 218</option>
                           <option>Motion Under Rule 60</option>
                         </select>
-                        {formik.touched.motionType && formik.errors.motionType && (
-                          <div class="invalid-feedback">{formik.errors.motionType}</div>
-                        )}
+                        {formik.touched.motionType &&
+                          formik.errors.motionType && (
+                            <div class="invalid-feedback">
+                              {formik.errors.motionType}
+                            </div>
+                          )}
                       </div>
                     </div>
                   </div>
 
                   <div class="row">
                     <div className="col">
-                      <div className="mb-3">
-                        <label className="form-label">Notice Office Diary Date </label>
+                      <div className="mb-3" style={{ position: "relative" }}>
+                        <label className="form-label">
+                          Notice Office Diary Date{" "}
+                        </label>
+                        <span
+                          style={{
+                            position: "absolute",
+                            right: "15px",
+                            top: "36px",
+                            zIndex: 1,
+                            fontSize: "20px",
+                            zIndex: "1",
+                            color: "#666",
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faCalendarAlt} />
+                        </span>
                         <DatePicker
                           selected={formik.values.noticeOfficeDiaryDate}
-                          onChange={(date) => formik.setFieldValue("noticeOfficeDiaryDate", date)}
+                          onChange={(date) =>
+                            formik.setFieldValue("noticeOfficeDiaryDate", date)
+                          }
                           onBlur={formik.handleBlur}
                           className={`form-control ${
-                            formik.touched.noticeOfficeDiaryDate && formik.errors.noticeOfficeDiaryDate
+                            formik.touched.noticeOfficeDiaryDate &&
+                            formik.errors.noticeOfficeDiaryDate
                               ? "is-invalid"
                               : ""
                           }`}
                         />
-                        {formik.touched.noticeOfficeDiaryDate && formik.errors.noticeOfficeDiaryDate && (
-                          <div className="invalid-feedback">{formik.errors.noticeOfficeDiaryDate}</div>
-                        )}
+                        {formik.touched.noticeOfficeDiaryDate &&
+                          formik.errors.noticeOfficeDiaryDate && (
+                            <div className="invalid-feedback">
+                              {formik.errors.noticeOfficeDiaryDate}
+                            </div>
+                          )}
                       </div>
                     </div>
 
                     <div className="col">
                       <div className="mb-3">
-                        <label className="form-label">Notice Office Diary Time</label>
+                        <label className="form-label">
+                          Notice Office Diary Time
+                        </label>
                         {/* <input
                           className="form-control"
                           type="text"
@@ -208,7 +265,9 @@ function NewMotion() {
                           clockIcon={null} // Disable clock view
                           openClockOnFocus={false}
                           format="hh:mm a"
-                          onChange={(time) => formik.setFieldValue("noticeOfficeDiaryTime", time)}
+                          onChange={(time) =>
+                            formik.setFieldValue("noticeOfficeDiaryTime", time)
+                          }
                           className={`form-control`}
                         />
                       </div>
@@ -221,7 +280,10 @@ function NewMotion() {
                         <label class="form-label">Notice Office Diary No</label>
                         <input
                           class={`form-control ${
-                            formik.touched.noticeOfficeDiaryNo && formik.errors.noticeOfficeDiaryNo ? "is-invalid" : ""
+                            formik.touched.noticeOfficeDiaryNo &&
+                            formik.errors.noticeOfficeDiaryNo
+                              ? "is-invalid"
+                              : ""
                           }`}
                           type="number"
                           id="noticeOfficeDiaryNo"
@@ -230,9 +292,12 @@ function NewMotion() {
                           onBlur={formik.handleBlur}
                           onChange={formik.handleChange}
                         />
-                        {formik.touched.noticeOfficeDiaryNo && formik.errors.noticeOfficeDiaryNo && (
-                          <div class="invalid-feedback">{formik.errors.noticeOfficeDiaryNo}</div>
-                        )}
+                        {formik.touched.noticeOfficeDiaryNo &&
+                          formik.errors.noticeOfficeDiaryNo && (
+                            <div class="invalid-feedback">
+                              {formik.errors.noticeOfficeDiaryNo}
+                            </div>
+                          )}
                       </div>
                     </div>
 
@@ -240,7 +305,11 @@ function NewMotion() {
                       <div class="mb-3">
                         <label class="form-label">Movers</label>
                         <select
-                          class={`form-select ${formik.touched.mover && formik.errors.mover ? "is-invalid" : ""}`}
+                          class={`form-select ${
+                            formik.touched.mover && formik.errors.mover
+                              ? "is-invalid"
+                              : ""
+                          }`}
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                           value={formik.values.mover || ""}
@@ -257,7 +326,9 @@ function NewMotion() {
                             ))}
                         </select>
                         {formik.touched.mover && formik.errors.mover && (
-                          <div class="invalid-feedback">{formik.errors.mover}</div>
+                          <div class="invalid-feedback">
+                            {formik.errors.mover}
+                          </div>
                         )}
                       </div>
                     </div>
@@ -276,7 +347,10 @@ function NewMotion() {
                           id="formFile"
                           name="attachment"
                           onChange={(event) => {
-                            formik.setFieldValue("attachment", event.currentTarget.files[0]);
+                            formik.setFieldValue(
+                              "attachment",
+                              event.currentTarget.files[0],
+                            );
                           }}
                         />
                       </div>
@@ -286,7 +360,9 @@ function NewMotion() {
                   <div style={{ marginTop: 10 }}>
                     <Editor
                       title={"English Text"}
-                      onChange={(content) => formik.setFieldValue("englishText", content)}
+                      onChange={(content) =>
+                        formik.setFieldValue("englishText", content)
+                      }
                       value={formik.values.englishText}
                     />
                   </div>
@@ -294,7 +370,9 @@ function NewMotion() {
                   <div style={{ marginTop: 70, marginBottom: 40 }}>
                     <Editor
                       title={"Urdu Text"}
-                      onChange={(content) => formik.setFieldValue("urduText", content)}
+                      onChange={(content) =>
+                        formik.setFieldValue("urduText", content)
+                      }
                       value={formik.values.urduText}
                     />
                   </div>

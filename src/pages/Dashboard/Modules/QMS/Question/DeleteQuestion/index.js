@@ -14,6 +14,8 @@ import {
 } from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 import { AuthContext } from "../../../../../../api/AuthContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 const validationSchema = Yup.object({
   questionDiaryNo: Yup.number(),
   questionId: Yup.string(),
@@ -63,7 +65,7 @@ function QMSDeleteQuestion() {
   });
   const navigate = useNavigate();
 
-  const {members,sessions} = useContext(AuthContext)
+  const { members, sessions } = useContext(AuthContext);
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
   const [resData, setResData] = useState([]);
@@ -246,10 +248,9 @@ function QMSDeleteQuestion() {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       /> */}
-                       <select
+                      <select
                         class={`form-select ${
-                          formik.touched.memberName &&
-                          formik.errors.memberName
+                          formik.touched.memberName && formik.errors.memberName
                             ? "is-invalid"
                             : ""
                         }`}
@@ -288,14 +289,14 @@ function QMSDeleteQuestion() {
                         onBlur={formik.handleBlur}
                       >
                         <option value="" selected disabled hidden>
-                            Select
-                          </option>
-                          {sessions &&
-                            sessions.map((item) => (
-                              <option key={item.id} value={item.id}>
-                                {item?.sessionName}
-                              </option>
-                            ))}
+                          Select
+                        </option>
+                        {sessions &&
+                          sessions.map((item) => (
+                            <option key={item.id} value={item.id}>
+                              {item?.sessionName}
+                            </option>
+                          ))}
                       </select>
                     </div>
                   </div>
@@ -309,14 +310,14 @@ function QMSDeleteQuestion() {
                         onBlur={formik.handleBlur}
                       >
                         <option value="" selected disabled hidden>
-                            Select
-                          </option>
-                          {sessions &&
-                            sessions.map((item) => (
-                              <option key={item.id} value={item.id}>
-                                {item?.sessionName}
-                              </option>
-                            ))}
+                          Select
+                        </option>
+                        {sessions &&
+                          sessions.map((item) => (
+                            <option key={item.id} value={item.id}>
+                              {item?.sessionName}
+                            </option>
+                          ))}
                       </select>
                     </div>
                   </div>
@@ -403,8 +404,21 @@ function QMSDeleteQuestion() {
                     </div>
                   </div>
                   <div class="col">
-                    <div class="mb-3">
+                    <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label">From Notice Date</label>
+                      <span
+                        style={{
+                          position: "absolute",
+                          right: "15px",
+                          top: "36px",
+                          zIndex: 1,
+                          fontSize: "20px",
+                          zIndex: "1",
+                          color: "#666",
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faCalendarAlt} />
+                      </span>
                       <DatePicker
                         selected={formik.values.fromNoticeDate}
                         onChange={(date) =>
@@ -427,8 +441,21 @@ function QMSDeleteQuestion() {
                     </div>
                   </div>
                   <div class="col">
-                    <div class="mb-3">
+                    <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label">To Notice Date</label>
+                      <span
+                        style={{
+                          position: "absolute",
+                          right: "15px",
+                          top: "36px",
+                          zIndex: 1,
+                          fontSize: "20px",
+                          zIndex: "1",
+                          color: "#666",
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faCalendarAlt} />
+                      </span>
                       <DatePicker
                         selected={formik.values.toNoticeDate}
                         onChange={(date) =>

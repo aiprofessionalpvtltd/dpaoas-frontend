@@ -22,6 +22,8 @@ import { ToastContainer } from "react-toastify";
 import { useLocation } from "react-router-dom";
 import { Editor } from "../../../../../../components/CustomComponents/Editor";
 import { AuthContext } from "../../../../../../api/AuthContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 
 const validationSchema = Yup.object({
   sessionNumber: Yup.string().required("Session No is required"),
@@ -40,13 +42,13 @@ const validationSchema = Yup.object({
   motionStatus: Yup.string().required("Motion Status is required"),
   mover: Yup.string().required("Mover is required"),
   ministry: Yup.string().required("Ministry is required"),
-  englishText:Yup.string()
+  englishText: Yup.string(),
   // Add more fields and validations as needed
 });
 
 function MMSNewMotion() {
   const location = useLocation();
-  const {ministryData,members,sessions} = useContext(AuthContext)
+  const { ministryData, members, sessions } = useContext(AuthContext);
   const [motionStatusData, setMotionStatusData] = useState([]);
 
   const getCurrentTime = () => {
@@ -77,7 +79,7 @@ function MMSNewMotion() {
       motionStatus: location.state ? location.state.motionStatus : "",
       mover: location.state ? location.state.mover : "",
       ministry: location.state ? location.state.ministry : "",
-      englishText:""
+      englishText: "",
       // Add more fields as needed
     },
     validationSchema: validationSchema,
@@ -338,10 +340,23 @@ function MMSNewMotion() {
                   </div>
                   {/* Notice Office Diary Date */}
                   <div className="col">
-                    <div className="mb-3">
+                    <div className="mb-3" style={{ position: "relative" }}>
                       <label className="form-label">
                         Notice Office Diary Date
                       </label>
+                      <span
+                        style={{
+                          position: "absolute",
+                          right: "15px",
+                          top: "36px",
+                          zIndex: 1,
+                          fontSize: "20px",
+                          zIndex: "1",
+                          color: "#666",
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faCalendarAlt} />
+                      </span>
                       <DatePicker
                         selected={formik.values.noticeOfficeDiaryDate}
                         onChange={(date) =>
@@ -508,8 +523,9 @@ function MMSNewMotion() {
                   <Editor
                     title={"Motion Text"}
                     onChange={(content) =>
-                        formik.setFieldValue("englishText", content)}
-                        value={formik.values.englishText}
+                      formik.setFieldValue("englishText", content)
+                    }
+                    value={formik.values.englishText}
                   />
                 </div>
 

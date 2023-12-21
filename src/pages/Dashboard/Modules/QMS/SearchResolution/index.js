@@ -5,11 +5,19 @@ import CustomTable from "../../../../../components/CustomComponents/CustomTable"
 import { useNavigate } from "react-router-dom";
 import { QMSSideBarItems } from "../../../../../utils/sideBarItems";
 import DatePicker from "react-datepicker";
-import { showErrorMessage, showSuccessMessage } from "../../../../../utils/ToastAlert";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 import { useFormik } from "formik";
-import { getAllQuestionStatus, searchResolution } from "../../../../../api/APIs";
+import {
+  getAllQuestionStatus,
+  searchResolution,
+} from "../../../../../api/APIs";
 import { AuthContext } from "../../../../../api/AuthContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 
 function QMSSerchResolution() {
   const navigate = useNavigate();
@@ -49,7 +57,10 @@ function QMSSerchResolution() {
 
   const transformLeavesData = (apiData) => {
     return apiData.map((res) => {
-      const movers = res?.resolutionMoversAssociation.map((item) => item?.memberAssociation?.memberName) || [];
+      const movers =
+        res?.resolutionMoversAssociation.map(
+          (item) => item?.memberAssociation?.memberName,
+        ) || [];
 
       return {
         RID: res.id,
@@ -104,7 +115,10 @@ function QMSSerchResolution() {
       <ToastContainer />
       <div class="container-fluid">
         <div class="card mt-4">
-          <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
+          <div
+            class="card-header red-bg"
+            style={{ background: "#14ae5c !important" }}
+          >
             <h1>SEARCH RESOLUTION</h1>
           </div>
           <div class="card-body">
@@ -114,7 +128,9 @@ function QMSSerchResolution() {
                   <div className="row">
                     <div className="col">
                       <div className="mb-3">
-                        <label className="form-label">Resolution Diary No</label>
+                        <label className="form-label">
+                          Resolution Diary No
+                        </label>
                         <input
                           className="form-control"
                           type="text"
@@ -268,23 +284,51 @@ function QMSSerchResolution() {
                   </div>
                   <div className="row">
                     <div className="col">
-                      <div className="mb-3">
+                      <div className="mb-3" style={{ position: "relative" }}>
                         <label className="form-label">From Notice Date</label>
-
+                        <span
+                          style={{
+                            position: "absolute",
+                            right: "15px",
+                            top: "36px",
+                            zIndex: 1,
+                            fontSize: "20px",
+                            zIndex: "1",
+                            color: "#666",
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faCalendarAlt} />
+                        </span>
                         <DatePicker
                           selected={formik.values.fromNoticeDate}
-                          onChange={(date) => formik.setFieldValue("fromNoticeDate", date)}
+                          onChange={(date) =>
+                            formik.setFieldValue("fromNoticeDate", date)
+                          }
                           className={`form-control`}
                         />
                       </div>
                     </div>
                     <div className="col">
-                      <div className="mb-3">
+                      <div className="mb-3" style={{ position: "relative" }}>
                         <label className="form-label">To Notice Date</label>
-
+                        <span
+                          style={{
+                            position: "absolute",
+                            right: "15px",
+                            top: "36px",
+                            zIndex: 1,
+                            fontSize: "20px",
+                            zIndex: "1",
+                            color: "#666",
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faCalendarAlt} />
+                        </span>
                         <DatePicker
                           selected={formik.values.toNoticeDate}
-                          onChange={(date) => formik.setFieldValue("toNoticeDate", date)}
+                          onChange={(date) =>
+                            formik.setFieldValue("toNoticeDate", date)
+                          }
                           className={`form-control`}
                         />
                       </div>
@@ -378,8 +422,21 @@ function QMSSerchResolution() {
                   </div>
                 </div>
                 <div class="col">
-                  <div class="mb-3">
+                  <div class="mb-3" style={{ position: "relative" }}>
                     <label class="form-label">Status Date</label>
+                    <span
+                      style={{
+                        position: "absolute",
+                        right: "15px",
+                        top: "36px",
+                        zIndex: 1,
+                        fontSize: "20px",
+                        zIndex: "1",
+                        color: "#666",
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faCalendarAlt} />
+                    </span>
                     <DatePicker
                       // selected={formik.values.fromNoticeDate}
                       // onChange={(date) => formik.setFieldValue("fromNoticeDate", date)}
@@ -388,7 +445,11 @@ function QMSSerchResolution() {
                   </div>
                 </div>
                 <div class="col">
-                  <button style={{ marginTop: "30px" }} class="btn btn-primary" type="submit">
+                  <button
+                    style={{ marginTop: "30px" }}
+                    class="btn btn-primary"
+                    type="submit"
+                  >
                     Change Status
                   </button>
                 </div>

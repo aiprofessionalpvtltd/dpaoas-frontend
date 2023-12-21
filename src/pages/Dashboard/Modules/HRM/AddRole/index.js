@@ -68,7 +68,9 @@ function HRMAddRole() {
                       <input
                         type="text"
                         className={`form-control ${
-                          formik.touched.roleName && formik.errors.roleName ? "is-invalid" : ""
+                          formik.touched.roleName && formik.errors.roleName
+                            ? "is-invalid"
+                            : ""
                         }`}
                         id="roleName"
                         placeholder={formik.values.roleName}
@@ -76,7 +78,9 @@ function HRMAddRole() {
                         onBlur={formik.handleBlur}
                       />
                       {formik.touched.roleName && formik.errors.roleName && (
-                        <div className="invalid-feedback">{formik.errors.roleName}</div>
+                        <div className="invalid-feedback">
+                          {formik.errors.roleName}
+                        </div>
                       )}
                     </div>
                   </div>
@@ -88,16 +92,22 @@ function HRMAddRole() {
                       <textarea
                         placeholder={formik.values.roledescription}
                         className={`form-control ${
-                          formik.touched.roledescription && formik.errors.roledescription ? "is-invalid" : ""
+                          formik.touched.roledescription &&
+                          formik.errors.roledescription
+                            ? "is-invalid"
+                            : ""
                         }`}
                         id="roledescription"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         value={formik.values.roledescription}
                       ></textarea>
-                      {formik.touched.roledescription && formik.errors.roledescription && (
-                        <div className="invalid-feedback">{formik.errors.roledescription}</div>
-                      )}
+                      {formik.touched.roledescription &&
+                        formik.errors.roledescription && (
+                          <div className="invalid-feedback">
+                            {formik.errors.roledescription}
+                          </div>
+                        )}
                     </div>
                     <div className="d-grid gap-2 d-md-flex justify-content-md-end">
                       <button className="btn btn-primary" type="submit">

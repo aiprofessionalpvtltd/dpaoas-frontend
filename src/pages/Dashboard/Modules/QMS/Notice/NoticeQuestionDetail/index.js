@@ -7,6 +7,8 @@ import * as Yup from "yup";
 import TimePicker from "react-time-picker";
 import DatePicker from "react-datepicker";
 import { Editor } from "../../../../../../components/CustomComponents/Editor";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 
 const validationSchema = Yup.object({
   sessionNumber: Yup.string().required("Session No is required"),
@@ -24,7 +26,7 @@ const validationSchema = Yup.object({
   ),
   category: Yup.string(),
   englishText: Yup.string(),
-  urduText:Yup.string()
+  urduText: Yup.string(),
 });
 
 function QMSNoticeQuestionDetail() {
@@ -36,8 +38,8 @@ function QMSNoticeQuestionDetail() {
       noticeOfficeDiaryTime: "",
       questionDiaryNumber: "",
       category: "",
-      englishText:"",
-      urduText:""
+      englishText: "",
+      urduText: "",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -149,10 +151,23 @@ function QMSNoticeQuestionDetail() {
                       </div>
                     </div>
                     <div class="col">
-                      <div class="mb-3">
+                      <div class="mb-3" style={{ position: "relative" }}>
                         <label class="form-label">
                           Notice Office Diary Date
                         </label>
+                        <span
+                          style={{
+                            position: "absolute",
+                            right: "15px",
+                            top: "36px",
+                            zIndex: 1,
+                            fontSize: "20px",
+                            zIndex: "1",
+                            color: "#666",
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faCalendarAlt} />
+                        </span>
                         <DatePicker
                           selected={formik.values.noticeOfficeDiaryDate}
                           onChange={(date) =>
@@ -269,8 +284,9 @@ function QMSNoticeQuestionDetail() {
                   <Editor
                     title={"English Text"}
                     onChange={(content) =>
-                      formik.setFieldValue("englishText", content)}
-                      value={formik.values.englishText}
+                      formik.setFieldValue("englishText", content)
+                    }
+                    value={formik.values.englishText}
                   />
                 </div>
 
@@ -278,8 +294,9 @@ function QMSNoticeQuestionDetail() {
                   <Editor
                     title={"Urdu Text"}
                     onChange={(content) =>
-                      formik.setFieldValue("urduText", content)}
-                      value={formik.values.urduText}
+                      formik.setFieldValue("urduText", content)
+                    }
+                    value={formik.values.urduText}
                   />
                 </div>
               </div>

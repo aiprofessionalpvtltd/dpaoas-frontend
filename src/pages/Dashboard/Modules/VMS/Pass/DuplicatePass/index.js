@@ -14,6 +14,8 @@ import {
 import { showSuccessMessage } from "../../../../../../utils/ToastAlert";
 import { useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 
 const validationSchema = Yup.object({
   passdate: Yup.string().required("Pass Date is required"),
@@ -222,8 +224,21 @@ function VMSDuplicatePass() {
             <div class="container-fluid">
               <div class="row">
                 <div class="col">
-                  <div class="mb-3">
+                  <div class="mb-3" style={{ position: "relative" }}>
                     <label class="form-label">Pass Date</label>
+                    <span
+                      style={{
+                        position: "absolute",
+                        right: "15px",
+                        top: "36px",
+                        zIndex: 1,
+                        fontSize: "20px",
+                        zIndex: "1",
+                        color: "#666",
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faCalendarAlt} />
+                    </span>
                     <DatePicker
                       selected={formik.values.passdate}
                       onChange={(date) =>
@@ -324,8 +339,21 @@ function VMSDuplicatePass() {
               </div>
               <div class="row">
                 <div class="col">
-                  <div class="mb-3">
+                  <div class="mb-3" style={{ position: "relative" }}>
                     <label class="form-label">From Date</label>
+                    <span
+                      style={{
+                        position: "absolute",
+                        right: "15px",
+                        top: "36px",
+                        zIndex: 1,
+                        fontSize: "20px",
+                        zIndex: "1",
+                        color: "#666",
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faCalendarAlt} />
+                    </span>
                     <DatePicker
                       selected={formik.values.fromdate}
                       onChange={(date) =>
@@ -346,8 +374,21 @@ function VMSDuplicatePass() {
                   </div>
                 </div>
                 <div class="col">
-                  <div class="mb-3">
+                  <div class="mb-3" style={{ position: "relative" }}>
                     <label class="form-label">To Date</label>
+                    <span
+                      style={{
+                        position: "absolute",
+                        right: "15px",
+                        top: "36px",
+                        zIndex: 1,
+                        fontSize: "20px",
+                        zIndex: "1",
+                        color: "#666",
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faCalendarAlt} />
+                    </span>
                     <DatePicker
                       selected={formik.values.todate}
                       onChange={(date) => formik.setFieldValue("todate", date)}

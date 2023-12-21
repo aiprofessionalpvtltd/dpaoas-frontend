@@ -8,9 +8,14 @@ import DatePicker from "react-datepicker";
 import { useFormik } from "formik";
 import moment from "moment";
 import { searchLeaveHistory } from "../../../../../api/APIs";
-import { showErrorMessage, showSuccessMessage } from "../../../../../utils/ToastAlert";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../utils/ToastAlert";
 import { CustomAlert } from "../../../../../components/CustomComponents/CustomAlert";
 import { ToastContainer } from "react-toastify";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 
 function LMSHistory() {
   const navigate = useNavigate();
@@ -89,9 +94,17 @@ function LMSHistory() {
 
   return (
     <Layout module={true} sidebarItems={LMSsidebarItems} centerlogohide={true}>
-      <Header dashboardLink={"/lms/dashboard"} addLink1={"/lms/history"} title1={"History"} />
+      <Header
+        dashboardLink={"/lms/dashboard"}
+        addLink1={"/lms/history"}
+        title1={"History"}
+      />
       <ToastContainer />
-      <CustomAlert showModal={showModal} handleClose={handleClose} handleOkClick={handleOkClick} />
+      <CustomAlert
+        showModal={showModal}
+        handleClose={handleClose}
+        handleOkClick={handleOkClick}
+      />
       <div className="container-fluid">
         <div class="card">
           <div class="card-header red-bg" style={{ background: "#14ae5c" }}>
@@ -145,27 +158,57 @@ function LMSHistory() {
                   )}
 
                   <div class="col">
-                    <div class="mb-3">
+                    <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label" style={{ display: "block" }}>
                         Start Date
                       </label>
+                      <span
+                        style={{
+                          position: "absolute",
+                          right: "15px",
+                          top: "36px",
+                          zIndex: 1,
+                          fontSize: "20px",
+                          zIndex: "1",
+                          color: "#666",
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faCalendarAlt} />
+                      </span>
                       <DatePicker
                         id="startDate"
                         selected={formik.values.startDate}
-                        onChange={(date) => formik.setFieldValue("startDate", date)}
+                        onChange={(date) =>
+                          formik.setFieldValue("startDate", date)
+                        }
                         className={"form-control"}
                       />
                     </div>
                   </div>
                   <div class="col">
-                    <div class="mb-3">
+                    <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label" style={{ display: "block" }}>
                         End Date
                       </label>
+                      <span
+                        style={{
+                          position: "absolute",
+                          right: "15px",
+                          top: "36px",
+                          zIndex: 1,
+                          fontSize: "20px",
+                          zIndex: "1",
+                          color: "#666",
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faCalendarAlt} />
+                      </span>
                       <DatePicker
                         id="endDate"
                         selected={formik.values.endDate}
-                        onChange={(date) => formik.setFieldValue("endDate", date)}
+                        onChange={(date) =>
+                          formik.setFieldValue("endDate", date)
+                        }
                         className={"form-control"}
                       />
                     </div>
@@ -185,7 +228,9 @@ function LMSHistory() {
                       tableTitle={"Leave History"}
                       headerBgColor={"#666"}
                       hideBtn={true}
-                      handleEdit={() => navigate("/lms/addedit", { state: true })}
+                      handleEdit={() =>
+                        navigate("/lms/addedit", { state: true })
+                      }
                       handlePageChange={handlePageChange}
                       currentPage={currentPage}
                       pageSize={pageSize}
