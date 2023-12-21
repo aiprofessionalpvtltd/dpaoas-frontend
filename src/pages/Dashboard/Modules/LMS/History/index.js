@@ -92,108 +92,109 @@ function LMSHistory() {
       <Header dashboardLink={"/lms/dashboard"} addLink1={"/lms/history"} title1={"History"} />
       <ToastContainer />
       <CustomAlert showModal={showModal} handleClose={handleClose} handleOkClick={handleOkClick} />
-
-      <div class="card">
-        <div class="card-header red-bg" style={{ background: "#14ae5c" }}>
-          <h1>Leave History</h1>
-        </div>
-        <div class="card-body">
-          <form onSubmit={formik.handleSubmit}>
-            <div class="container-fluid">
-              <div class="row">
-                <div class="col">
-                  <div class="mb-3">
-                    <label class="form-label">Department</label>
-                    <select
-                      class="form-select"
-                      placeholder={formik.values.departmentName}
-                      value={formik.values.departmentName}
-                      id="departmentName"
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                    >
-                      <option value={""} selected disabled hidden>
-                        Select
-                      </option>
-                      <option value={1}>IT</option>
-                      <option value={2}>Admin</option>
-                      <option value={3}>Finance</option>
-                    </select>
-                  </div>
-                </div>
-                {formik.values.departmentName && (
+      <div className="container-fluid">
+        <div class="card">
+          <div class="card-header red-bg" style={{ background: "#14ae5c" }}>
+            <h1>Leave History</h1>
+          </div>
+          <div class="card-body">
+            <form onSubmit={formik.handleSubmit}>
+              <div class="container-fluid">
+                <div class="row">
                   <div class="col">
                     <div class="mb-3">
-                      <label class="form-label">Name</label>
+                      <label class="form-label">Department</label>
                       <select
                         class="form-select"
-                        placeholder={formik.values.employeeName}
-                        value={formik.values.employeeName}
-                        id="employeeName"
+                        placeholder={formik.values.departmentName}
+                        value={formik.values.departmentName}
+                        id="departmentName"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       >
                         <option value={""} selected disabled hidden>
-                          select
+                          Select
                         </option>
-                        <option value={1}>Saqib</option>
-                        <option value={2}>Hamid</option>
-                        <option value={3}>Mohsin</option>
+                        <option value={1}>IT</option>
+                        <option value={2}>Admin</option>
+                        <option value={3}>Finance</option>
                       </select>
                     </div>
                   </div>
-                )}
+                  {formik.values.departmentName && (
+                    <div class="col">
+                      <div class="mb-3">
+                        <label class="form-label">Name</label>
+                        <select
+                          class="form-select"
+                          placeholder={formik.values.employeeName}
+                          value={formik.values.employeeName}
+                          id="employeeName"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                        >
+                          <option value={""} selected disabled hidden>
+                            Select
+                          </option>
+                          <option value={1}>Saqib</option>
+                          <option value={2}>Hamid</option>
+                          <option value={3}>Mohsin</option>
+                        </select>
+                      </div>
+                    </div>
+                  )}
 
-                <div class="col">
-                  <div class="mb-3">
-                    <label class="form-label" style={{ display: "block" }}>
-                      Start Date
-                    </label>
-                    <DatePicker
-                      id="startDate"
-                      selected={formik.values.startDate}
-                      onChange={(date) => formik.setFieldValue("startDate", date)}
-                      className={"form-control"}
+                  <div class="col">
+                    <div class="mb-3">
+                      <label class="form-label" style={{ display: "block" }}>
+                        Start Date
+                      </label>
+                      <DatePicker
+                        id="startDate"
+                        selected={formik.values.startDate}
+                        onChange={(date) => formik.setFieldValue("startDate", date)}
+                        className={"form-control"}
+                      />
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="mb-3">
+                      <label class="form-label" style={{ display: "block" }}>
+                        End Date
+                      </label>
+                      <DatePicker
+                        id="endDate"
+                        selected={formik.values.endDate}
+                        onChange={(date) => formik.setFieldValue("endDate", date)}
+                        className={"form-control"}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button class="btn btn-primary" type="submit">
+                      Search
+                    </button>
+                  </div>
+                </div>
+                <div class="row mt-3">
+                  <div class="col-12">
+                    <CustomTable
+                      data={historyData?.length > 0 ? historyData : []}
+                      tableTitle={"Leave History"}
+                      headerBgColor={"#666"}
+                      hideBtn={true}
+                      handleEdit={() => navigate("/lms/addedit", { state: true })}
+                      handlePageChange={handlePageChange}
+                      currentPage={currentPage}
+                      pageSize={pageSize}
                     />
                   </div>
                 </div>
-                <div class="col">
-                  <div class="mb-3">
-                    <label class="form-label" style={{ display: "block" }}>
-                      End Date
-                    </label>
-                    <DatePicker
-                      id="endDate"
-                      selected={formik.values.endDate}
-                      onChange={(date) => formik.setFieldValue("endDate", date)}
-                      className={"form-control"}
-                    />
-                  </div>
-                </div>
               </div>
-              <div class="row">
-                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                  <button class="btn btn-primary" type="submit">
-                    Search
-                  </button>
-                </div>
-              </div>
-              <div class="row mt-3">
-                <div class="col-12">
-                  <CustomTable
-                    data={historyData?.length > 0 ? historyData : []}
-                    tableTitle={"Leave History"}
-                    headerBgColor={"#666"}
-                    hideBtn={true}
-                    handleEdit={() => navigate("/lms/addedit", { state: true })}
-                    handlePageChange={handlePageChange}
-                    currentPage={currentPage}
-                    pageSize={pageSize}
-                  />
-                </div>
-              </div>
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
       </div>
     </Layout>
