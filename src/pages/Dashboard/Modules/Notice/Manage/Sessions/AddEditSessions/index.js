@@ -166,7 +166,7 @@ function SessionsAddEditForm() {
                 </div>
                 <div class="row">
                   <div class="col">
-                    <div class="mb-3" style={{ position: "relative" }}>
+                    <div class="mb-3" style={{position:"relative"}}>
                       <label class="form-label">Date of Birth</label>
                       <span
                         style={{
@@ -189,7 +189,7 @@ function SessionsAddEditForm() {
                     </div>
                   </div>
                   <div class="col">
-                    <div class="mb-3" style={{ position: "relative" }}>
+                    <div class="mb-3" style={{position:"relative"}}>
                       <label class="form-label">Place of Birth</label>
                       <span
                         style={{
@@ -237,8 +237,21 @@ function SessionsAddEditForm() {
                     </div>
                   </div>
                   <div class="col">
-                    <div class="mb-3">
+                    <div class="mb-3" style={{position:"relative"}}>
                       <label class="form-label">CNIC Issue Date</label>
+                      <span
+                        style={{
+                          position: "absolute",
+                          right: "15px",
+                          top: "36px",
+                          zIndex: 1,
+                          fontSize: "20px",
+                          zIndex: "1",
+                          color: "#666",
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faCalendarAlt} />
+                      </span>
                       <DatePicker
                         selected={cnicissue}
                         onChange={(date) => setCnicIssue(date)}
@@ -249,8 +262,21 @@ function SessionsAddEditForm() {
                 </div>
                 <div class="row">
                   <div class="col">
-                    <div class="mb-3">
+                    <div class="mb-3" style={{position:"relative"}}>
                       <label class="form-label">CNIC Exp Date</label>
+                      <span
+                        style={{
+                          position: "absolute",
+                          right: "15px",
+                          top: "36px",
+                          zIndex: 1,
+                          fontSize: "20px",
+                          zIndex: "1",
+                          color: "#666",
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faCalendarAlt} />
+                      </span>
                       <DatePicker
                         selected={cnicexpire}
                         onChange={(date) => setCnicExpire(date)}
