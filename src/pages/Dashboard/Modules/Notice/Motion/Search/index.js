@@ -395,12 +395,11 @@ function SearchMotion() {
                         onChange={(date) =>
                           formik.setFieldValue("fromNoticeDate", date)
                         }
-                        className={`form-control ${
-                          formik.errors.fromNoticeDate &&
-                          formik.touched.fromNoticeDate
+                        className={`form-control ${formik.errors.fromNoticeDate &&
+                            formik.touched.fromNoticeDate
                             ? "is-invalid"
                             : ""
-                        }`}
+                          }`}
                       />
                       {formik.errors.fromNoticeDate &&
                         formik.touched.fromNoticeDate && (
@@ -447,7 +446,7 @@ function SearchMotion() {
                   </div>
                 </div>
                 <div
-                  class="dash-detail-container"
+                  class=""
                   style={{ marginTop: "20px" }}
                 >
                   <CustomTable

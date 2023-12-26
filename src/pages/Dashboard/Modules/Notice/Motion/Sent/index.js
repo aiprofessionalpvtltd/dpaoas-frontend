@@ -26,7 +26,7 @@ import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 
 function SentMotion() {
   const navigate = useNavigate();
-  const { members, sessions } = useContext(AuthContext);
+  const { members, sessions } = useContext(AuthContext)
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
   const [motionStatus, setMotionStatus] = useState([]);
@@ -118,6 +118,8 @@ function SentMotion() {
     }
   };
 
+
+
   const getMotionStatus = async () => {
     try {
       const response = await getallMotionStatus();
@@ -128,6 +130,8 @@ function SentMotion() {
       showErrorMessage(error?.response?.data?.message);
     }
   };
+
+
 
   useEffect(() => {
     getMotionStatus();
@@ -389,12 +393,11 @@ function SentMotion() {
                         onChange={(date) =>
                           formik.setFieldValue("fromNoticeDate", date)
                         }
-                        className={`form-control ${
-                          formik.errors.fromNoticeDate &&
-                          formik.touched.fromNoticeDate
+                        className={`form-control ${formik.errors.fromNoticeDate &&
+                            formik.touched.fromNoticeDate
                             ? "is-invalid"
                             : ""
-                        }`}
+                          }`}
                       />
                       {formik.errors.fromNoticeDate &&
                         formik.touched.fromNoticeDate && (
@@ -405,8 +408,21 @@ function SentMotion() {
                     </div>
                   </div>
                   <div class="col">
-                    <div class="mb-3">
+                    <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label">To Notice Date</label>
+                      <span
+                        style={{
+                          position: "absolute",
+                          right: "15px",
+                          top: "36px",
+                          zIndex: 1,
+                          fontSize: "20px",
+                          zIndex: "1",
+                          color: "#666",
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faCalendarAlt} />
+                      </span>
                       <DatePicker
                         selected={formik.values.toNoticeDate}
                         onChange={(date) =>
@@ -428,7 +444,7 @@ function SentMotion() {
                   </div>
                 </div>
                 <div
-                  class="dash-detail-container"
+                  class=""
                   style={{ marginTop: "20px" }}
                 >
                   <CustomTable
