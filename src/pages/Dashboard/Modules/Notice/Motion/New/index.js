@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { NoticeSidebarItems } from "../../../../../../utils/sideBarItems";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
@@ -17,6 +17,9 @@ import {
   showErrorMessage,
   showSuccessMessage,
 } from "../../../../../../utils/ToastAlert";
+import { AuthContext } from "../../../../../../api/AuthContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 
 const validationSchema = Yup.object({
   sessionNumber: Yup.number().required("Session No is required"),
@@ -37,8 +40,8 @@ const validationSchema = Yup.object({
 
 function NewMotion() {
   const navigate = useNavigate();
+  const { members, sessions } = useContext(AuthContext);
   const [showModal, setShowModal] = useState(false);
-  const [sessions, setSessions] = useState([]);
   const [formValues, setFormValues] = useState([]);
 
   const handleShow = () => setShowModal(true);
@@ -90,21 +93,6 @@ function NewMotion() {
       showErrorMessage(error?.response?.data?.message);
     }
   };
-
-  const getAllSessionsApi = async () => {
-    try {
-      const response = await getAllSessions();
-      if (response?.success) {
-        setSessions(response?.data);
-      }
-    } catch (error) {
-      showErrorMessage(error?.response?.data?.message);
-    }
-  };
-
-  useEffect(() => {
-    getAllSessionsApi();
-  }, []);
 
   const handleProcedureContentChange = (content) => {
     console.log(content);
@@ -219,10 +207,23 @@ function NewMotion() {
 
                   <div class="row">
                     <div className="col">
-                      <div className="mb-3">
+                      <div className="mb-3" style={{ position: "relative" }}>
                         <label className="form-label">
                           Notice Office Diary Date{" "}
                         </label>
+                        <span
+                          style={{
+                            position: "absolute",
+                            right: "15px",
+                            top: "36px",
+                            zIndex: 1,
+                            fontSize: "20px",
+                            zIndex: "1",
+                            color: "#666",
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faCalendarAlt} />
+                        </span>
                         <DatePicker
                           selected={formik.values.noticeOfficeDiaryDate}
                           onChange={(date) =>
@@ -314,11 +315,15 @@ function NewMotion() {
                           value={formik.values.mover || ""}
                           name="mover"
                         >
-                          <option value="" selected disabled hidden>
+                          <option value={""} selected disabled hidden>
                             Select
                           </option>
-                          <option value={"1"}>Motion Type</option>
-                          <option value={"2"}>Adjournment Motion</option>
+                          {members &&
+                            members.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item?.memberName}
+                              </option>
+                            ))}
                         </select>
                         {formik.touched.mover && formik.errors.mover && (
                           <div class="invalid-feedback">
@@ -356,8 +361,9 @@ function NewMotion() {
                     <Editor
                       title={"English Text"}
                       onChange={(content) =>
-                        formik.setFieldValue("englishText", content)}
-                        value={formik.values.englishText}
+                        formik.setFieldValue("englishText", content)
+                      }
+                      value={formik.values.englishText}
                     />
                   </div>
 
@@ -365,8 +371,9 @@ function NewMotion() {
                     <Editor
                       title={"Urdu Text"}
                       onChange={(content) =>
-                        formik.setFieldValue("urduText", content)}
-                        value={formik.values.urduText}
+                        formik.setFieldValue("urduText", content)
+                      }
+                      value={formik.values.urduText}
                     />
                   </div>
 

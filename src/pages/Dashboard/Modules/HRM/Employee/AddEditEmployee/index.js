@@ -7,6 +7,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useLocation } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { Stepper, Step, StepLabel } from "@mui/material";
 import DatePicker from "react-datepicker";
 import { UpdateEmployee, createEmployee } from "../../../../../../api/APIs";
 import { ToastContainer } from "react-toastify";
@@ -14,6 +15,7 @@ import {
   showErrorMessage,
   showSuccessMessage,
 } from "../../../../../../utils/ToastAlert";
+import { Button } from "react-bootstrap";
 
 const validationSchema = Yup.object({
   employeename: Yup.string().required("Employee name is required"),
@@ -28,6 +30,7 @@ function HRMAddEditEmployee() {
   const [placeofbirth, setPlaceOfBirth] = useState(new Date());
   const [cnicissue, setCnicIssue] = useState(new Date());
   const [cnicexpire, setCnicExpire] = useState(new Date());
+  const [activeStep, setActiveStep] = useState(0);
 
   const formik = useFormik({
     initialValues: {
@@ -97,6 +100,28 @@ function HRMAddEditEmployee() {
       showErrorMessage(error.response.data.message);
     }
   };
+
+  const handlePrevStep = () => {
+    setActiveStep((prevStep) => prevStep - 1);
+  };
+
+  const handleNextStep = () => {
+    setActiveStep((prevStep) => prevStep + 1);
+  };
+
+  const handleReset = () => {
+    setActiveStep(0);
+  };
+  const isStepCompleted = (stepIndex) => {
+    return stepIndex < activeStep;
+  };
+  const steps = [
+    {
+      label: "Presonal Detail",
+      component: <Step1 handleNextStep={handleNextStep} />,
+    },
+    { label: "Employee Information", component: <Step2 /> },
+  ];
   return (
     <Layout module={true} sidebarItems={HRMsidebarItems} centerlogohide={true}>
       <Header
@@ -107,348 +132,71 @@ function HRMAddEditEmployee() {
         title2={location && location?.state ? "Edit Employee" : "Add Employee"}
       />
       <ToastContainer />
-      <div class="container-fluid">
-        <div class="card">
-          <div class="card-header red-bg" style={{ background: "#14ae5c" }}>
-            {location && location.state ? (
-              <h1>Edit Employee</h1>
-            ) : (
-              <h1>Add Employee</h1>
-            )}
-          </div>
-          <div class="card-body">
-            <form onSubmit={formik.handleSubmit}>
-              <div class="container-fluid">
-                <div class="row">
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">File Number</label>
-                      <input
-                        type="text"
-                        placeholder={formik.values.filenumber}
-                        className={`form-control ${
-                          formik.touched.filenumber && formik.errors.filenumber
-                            ? "is-invalid"
-                            : ""
-                        }`}
-                        id="filenumber"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                      />
-                      {formik.touched.filenumber &&
-                        formik.errors.filenumber && (
-                          <div className="invalid-feedback">
-                            {formik.errors.filenumber}
-                          </div>
-                        )}
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Employee Name</label>
-                      <input
-                        type="text"
-                        placeholder={formik.values.employeename}
-                        className={`form-control ${
-                          formik.touched.employeename &&
-                          formik.errors.employeename
-                            ? "is-invalid"
-                            : ""
-                        }`}
-                        id="employeename"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                      />
-                      {formik.touched.employeename &&
-                        formik.errors.employeename && (
-                          <div className="invalid-feedback">
-                            {formik.errors.employeename}
-                          </div>
-                        )}
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Gender</label>
-                      <select class="form-select">
-                        <option>Male</option>
-                        <option>Female</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Title</label>
-                      <input class="form-control" type="text" />
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Father/Husband Name</label>
-                      <input
-                        type="text"
-                        placeholder={formik.values.fatherhusbandname}
-                        className={`form-control ${
-                          formik.touched.fatherhusbandname &&
-                          formik.errors.fatherhusbandname
-                            ? "is-invalid"
-                            : ""
-                        }`}
-                        id="fatherhusbandname"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                      />
-                      {formik.touched.fatherhusbandname &&
-                        formik.errors.fatherhusbandname && (
-                          <div className="invalid-feedback">
-                            {formik.errors.fatherhusbandname}
-                          </div>
-                        )}
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Domicile</label>
-                      <select class="form-select">
-                        <option>Federal</option>
-                        <option>Punjab</option>
-                        <option>Sindh</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Date of Birth</label>
-                      <DatePicker
-                        selected={dateofbirth}
-                        onChange={(date) => setDateOfBirth(date)}
-                        className="form-control"
-                      />
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Place of Birth</label>
-                      <DatePicker
-                        selected={placeofbirth}
-                        onChange={(date) => setPlaceOfBirth(date)}
-                        className="form-control"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">CNIC Number</label>
-                      <input
-                        type="text"
-                        placeholder={formik.values.cnicnumber}
-                        className={`form-control ${
-                          formik.touched.cnicnumber && formik.errors.cnicnumber
-                            ? "is-invalid"
-                            : ""
-                        }`}
-                        id="cnicnumber"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                      />
-                      {formik.touched.cnicnumber &&
-                        formik.errors.cnicnumber && (
-                          <div className="invalid-feedback">
-                            {formik.errors.cnicnumber}
-                          </div>
-                        )}
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">CNIC Issue Date</label>
-                      <DatePicker
-                        selected={cnicissue}
-                        onChange={(date) => setCnicIssue(date)}
-                        className="form-control"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">CNIC Exp Date</label>
-                      <DatePicker
-                        selected={cnicexpire}
-                        onChange={(date) => setCnicExpire(date)}
-                        className="form-control"
-                      />
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Place of Issue</label>
-                      <select class="form-select">
-                        <option>Branch</option>
-                        <option>Legislation</option>
-                        <option>IT</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">NTN Number</label>
-                      <input class="form-control" type="text" />
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Religion</label>
-                      <input class="form-control" type="text" />
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Marital Status</label>
-                      <select class="form-select">
-                        <option>Married</option>
-                        <option>Single</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Province</label>
-                      <select class="form-select">
-                        <option>KPK</option>
-                        <option>Punjab</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Permanent Address</label>
-                      <textarea
-                        placeholder={formik.values.permanentaddress}
-                        className={`form-control ${
-                          formik.touched.permanentaddress &&
-                          formik.errors.permanentaddress
-                            ? "is-invalid"
-                            : ""
-                        }`}
-                        id="permanentaddress"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.permanentaddress}
-                      ></textarea>
-                      {formik.touched.permanentaddress &&
-                        formik.errors.permanentaddress && (
-                          <div className="invalid-feedback">
-                            {formik.errors.permanentaddress}
-                          </div>
-                        )}
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">City</label>
-                      <select class="form-select">
-                        <option>Select</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Local Address</label>
-                      <textarea class="form-control"></textarea>
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">City</label>
-                      <select class="form-select">
-                        <option>Select</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Phone Type</label>
-                      <select class="form-select">
-                        <option>Landline</option>
-                        <option>GSM</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Phone Number</label>
-                      <input class="form-control" type="text" />
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="mb-3">
-                      <button
-                        class="btn btn-primary me-md-2"
-                        style={{ marginTop: "31px" }}
-                        type="button"
-                      >
-                        <FontAwesomeIcon icon={faPlus} />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Email</label>
-                      <input class="form-control" type="text" />
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Is Official</label>
-                      <select class="form-select">
-                        <option>Yes</option>
-                        <option>No</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="mb-3">
-                      <button
-                        class="btn btn-primary me-md-2"
-                        style={{ marginTop: "31px" }}
-                        type="button"
-                      >
-                        <FontAwesomeIcon icon={faPlus} />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col">
-                    <button class="btn btn-primary float-end" type="submit">
-                      Submit
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </form>
+
+      <div className="dash-detail-container" style={{ margin: "12px" }}>
+        <div
+          class="dash-card-header p-3"
+          style={{ background: "rgb(20, 174, 92)" }}
+        >
+          <h2 class="float-start mt-2">Employee Detail</h2>
+          <div class="clearfix"></div>
+        </div>
+        <div class="card-body">
+          <div class="container-fluid">
+            <Stepper
+              activeStep={activeStep}
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                textAlign: "center",
+                width: "550px",
+                margin: "0 auto",
+              }}
+            >
+              {steps.map((step, index) => (
+                <Step
+                  key={index}
+                  completed={isStepCompleted(index)}
+                  sx={{ mt: 1 }}
+                >
+                  <StepLabel>{step.label}</StepLabel>
+                </Step>
+              ))}
+            </Stepper>
+
+            {/* Display the current step component */}
+            {steps[activeStep].component}
+
+            {/* Navigation buttons */}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                marginTop: "16px",
+              }}
+            >
+              {activeStep > 0 && (
+                <Button onClick={handlePrevStep} style={{ marginRight: "8px" }}>
+                  Back
+                </Button>
+              )}
+              {activeStep < steps.length - 1 && (
+                <Button
+                  onClick={handleNextStep}
+                  style={{ marginLeft: "8px", marginRight: "0" }}
+                >
+                  Next
+                </Button>
+              )}
+              {activeStep === steps.length - 1 && (
+                <Button
+                  onClick={handleReset}
+                  style={{ marginLeft: "8px", marginRight: "0" }}
+                >
+                  submit
+                </Button>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -457,3 +205,388 @@ function HRMAddEditEmployee() {
 }
 
 export default HRMAddEditEmployee;
+
+const Step1 = () => {
+  return (
+    <div>
+      <section
+        class="p-3 mt-5"
+        style={{ boxShadow: " 1px 2px 12px 2px rgba(156,155,155,0.75" }}
+      >
+        <div class="row">
+          <div class="col">
+            <div class="mb-3">
+              <label for="" class="form-label">
+                Is Active
+              </label>
+              <select class="form-select " placeholder="Is Active">
+                <option value="1">Yes</option>
+                <option value="2">No</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="mb-3">
+              <label for="" class="form-label">
+                Title
+              </label>
+              <input
+                type="email"
+                class="form-control"
+                id=""
+                placeholder="Title"
+              />
+            </div>
+          </div>
+          <div class="col">
+            <div class="mb-3">
+              <label for="" class="form-label">
+                Name
+              </label>
+              <input
+                type="email"
+                class="form-control"
+                id=""
+                placeholder="Name"
+              />
+            </div>
+          </div>
+          <div class="col">
+            <div class="mb-3">
+              <label for="" class="form-label">
+                Father/Husband Name
+              </label>
+              <input
+                type="email"
+                class="form-control"
+                id=""
+                placeholder="Father/Husband Name"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="mb-3">
+              <label for="" class="form-label">
+                Gender
+              </label>
+              <select class="form-select " placeholder="Gender">
+                <option value="1">Male</option>
+                <option value="2">Female</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="mb-3">
+              <label for="" class="form-label">
+                Date of Birth
+              </label>
+              <input
+                type="email"
+                class="form-control"
+                id=""
+                placeholder="Date of Birth"
+              />
+            </div>
+          </div>
+          <div class="col">
+            <div class="mb-3">
+              <label for="" class="form-label">
+                Place of Birth
+              </label>
+              <select class="form-select " placeholder="Place of Birth">
+                <option value="1">Islamabad</option>
+                <option value="2">Lahore</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="mb-3">
+              <label for="" class="form-label">
+                CNIC No
+              </label>
+              <input
+                type="email"
+                class="form-control"
+                id=""
+                placeholder="CNIC No"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="mb-3">
+              <label for="" class="form-label">
+                CNIC Issue Date
+              </label>
+              <input
+                type="email"
+                class="form-control"
+                id=""
+                placeholder="CNIC Issue Date"
+              />
+            </div>
+          </div>
+          <div class="col">
+            <div class="mb-3">
+              <label for="" class="form-label">
+                CNIC Exp Date
+              </label>
+              <input
+                type="email"
+                class="form-control"
+                id=""
+                placeholder="CNIC Exp Date"
+              />
+            </div>
+          </div>
+          <div class="col">
+            <div class="mb-3">
+              <label for="" class="form-label">
+                Place of Issue
+              </label>
+              <select class="form-select " placeholder="Place of Issue">
+                <option value="1">Islamabad</option>
+                <option value="2">Lahore</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="mb-3">
+              <label for="" class="form-label">
+                NTN
+              </label>
+              <input
+                type="email"
+                class="form-control"
+                id=""
+                placeholder="NTN"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="mb-3">
+              <label for="" class="form-label">
+                Religion
+              </label>
+              <select class="form-select " placeholder="Religion">
+                <option value="1">Christianity</option>
+                <option value="2">Hinduism</option>
+                <option value="3">Islam</option>
+                <option value="4">Other</option>
+                <option value="5">Sikh</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="mb-3">
+              <label for="" class="form-label">
+                Marital Status
+              </label>
+              <input
+                type="email"
+                class="form-control"
+                id=""
+                placeholder="Marital Status"
+              />
+            </div>
+          </div>
+          <div class="col">
+            <div class="mb-3">
+              <label for="" class="form-label">
+                Province
+              </label>
+              <input
+                type="email"
+                class="form-control"
+                id=""
+                placeholder="Province"
+              />
+            </div>
+          </div>
+          <div class="col">
+            <div class="mb-3">
+              <label for="" class="form-label">
+                Domicile
+              </label>
+              <input
+                type="email"
+                class="form-control"
+                id=""
+                placeholder="Domicile"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="mb-3">
+              <label class="form-label">Permanent Address</label>
+              <textarea class="form-control"></textarea>
+            </div>
+          </div>
+          <div class="col">
+            <div class="mb-3">
+              <label class="form-label">City</label>
+              <select class="form-select">
+                <option>Select</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="mb-3">
+              <label class="form-label">Local Address</label>
+              <textarea class="form-control"></textarea>
+            </div>
+          </div>
+          <div class="col">
+            <div class="mb-3">
+              <label class="form-label">City</label>
+              <select class="form-select">
+                <option>Select</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+};
+const Step2 = () => {
+  return (
+    <section
+      class="p-3 mt-5"
+      style={{ boxShadow: " 1px 2px 12px 2px rgba(156,155,155,0.75" }}
+    >
+      <div class="row">
+        <div class="col">
+          <div class="mb-3">
+            <label for="" class="form-label">
+              Ref-Id
+            </label>
+            <input
+              type="email"
+              class="form-control"
+              id=""
+              placeholder="Ref-Id"
+            />
+          </div>
+        </div>
+        <div class="col">
+          <div class="mb-3">
+            <label for="" class="form-label">
+              Post
+            </label>
+            <input type="email" class="form-control" id="" placeholder="Post" />
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="mb-3">
+            <label for="" class="form-label">
+              BPS
+            </label>
+            <input type="email" class="form-control" id="" placeholder="BPS" />
+          </div>
+        </div>
+        <div class="col">
+          <div class="mb-3">
+            <label for="" class="form-label">
+              Post Status
+            </label>
+            <select class="form-select " placeholder="Post Status">
+              <option value="1">Permanent</option>
+              <option value="2">Probition</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="mb-3">
+            <label for="" class="form-label">
+              Gazetted
+            </label>
+            <input
+              type="email"
+              class="form-control"
+              id=""
+              placeholder="Gazetted"
+            />
+          </div>
+        </div>
+        <div class="col">
+          <div class="mb-3">
+            <label for="" class="form-label">
+              Appointment Date
+            </label>
+            <input
+              type="email"
+              class="form-control"
+              id=""
+              placeholder="Appointment Date"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="mb-3">
+            <label for="" class="form-label">
+              Current Status
+            </label>
+            <input
+              type="email"
+              class="form-control"
+              id=""
+              placeholder="Current Status"
+            />
+          </div>
+        </div>
+        <div class="col">
+          <div class="mb-3">
+            <label for="" class="form-label">
+              Status Date
+            </label>
+            <input
+              type="email"
+              class="form-control"
+              id=""
+              placeholder="Status Date"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-6">
+          <div class="mb-3">
+            <label for="" class="form-label">
+              Is Current
+            </label>
+            <select class="form-select " placeholder="Is Current">
+              <option value="1">Yes</option>
+              <option value="2">No</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-6">
+          <div class="mb-3">
+            <label for="" class="form-label">
+              Detail
+            </label>
+            <textarea style={{ width: "100%" }} class="form-control"></textarea>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Layout } from "../../../../../components/Layout";
 import Header from "../../../../../components/Header";
 import CustomTable from "../../../../../components/CustomComponents/CustomTable";
@@ -15,12 +15,17 @@ import {
   getAllQuestionStatus,
   searchResolution,
 } from "../../../../../api/APIs";
+import { AuthContext } from "../../../../../api/AuthContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 
 function QMSSerchResolution() {
   const navigate = useNavigate();
+
+  const { members, sessions, resolutionStatus } = useContext(AuthContext);
+
   const [currentPage, setCurrentPage] = useState(0);
   const [searchedData, setSearchedData] = useState([]);
-  const [allResolutionStatus, setAllResolutionStatus] = useState([]);
 
   const pageSize = 4;
 
@@ -98,20 +103,6 @@ function QMSSerchResolution() {
     }
   };
 
-  const GetALlStatus = async () => {
-    try {
-      const response = await getAllQuestionStatus();
-      if (response?.success) {
-        setAllResolutionStatus(response?.data);
-        // showSuccessMessage(response.message)
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  useEffect(() => {
-    GetALlStatus();
-  }, []);
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <Header
@@ -181,14 +172,23 @@ function QMSSerchResolution() {
                     <div className="col">
                       <div className="mb-3">
                         <label className="form-label">Member Name</label>
-                        <input
-                          className="form-control"
-                          type="text"
-                          id="memberName"
+                        <select
+                          class="form-select"
                           placeholder={formik.values.memberName}
                           onChange={formik.handleChange}
+                          id="memberName"
                           onBlur={formik.handleBlur}
-                        />
+                        >
+                          <option selected disabled hidden>
+                            Select
+                          </option>
+                          {members &&
+                            members.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item?.memberName}
+                              </option>
+                            ))}
+                        </select>
                       </div>
                     </div>
                   </div>
@@ -203,10 +203,15 @@ function QMSSerchResolution() {
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                         >
-                          <option>Select</option>
-                          <option>121</option>
-                          <option>122</option>
-                          <option>123</option>
+                          <option selected disabled hidden>
+                            Select
+                          </option>
+                          {sessions &&
+                            sessions.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item?.sessionName}
+                              </option>
+                            ))}
                         </select>
                       </div>
                     </div>
@@ -220,10 +225,15 @@ function QMSSerchResolution() {
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                         >
-                          <option>Select</option>
-                          <option>121</option>
-                          <option>122</option>
-                          <option>123</option>
+                          <option selected disabled hidden>
+                            Select
+                          </option>
+                          {sessions &&
+                            sessions.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item?.sessionName}
+                              </option>
+                            ))}
                         </select>
                       </div>
                     </div>
@@ -260,12 +270,12 @@ function QMSSerchResolution() {
                           onBlur={formik.handleBlur}
                         >
                           <option value="" selected disabled hidden>
-                            select
+                            Select
                           </option>
-                          {allResolutionStatus &&
-                            allResolutionStatus.map((item) => (
+                          {resolutionStatus &&
+                            resolutionStatus.map((item) => (
                               <option key={item.id} value={item.id}>
-                                {item?.questionStatus}
+                                {item?.resolutionStatus}
                               </option>
                             ))}
                         </select>
@@ -274,9 +284,21 @@ function QMSSerchResolution() {
                   </div>
                   <div className="row">
                     <div className="col">
-                      <div className="mb-3">
+                      <div className="mb-3" style={{ position: "relative" }}>
                         <label className="form-label">From Notice Date</label>
-
+                        <span
+                          style={{
+                            position: "absolute",
+                            right: "15px",
+                            top: "36px",
+                            zIndex: 1,
+                            fontSize: "20px",
+                            zIndex: "1",
+                            color: "#666",
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faCalendarAlt} />
+                        </span>
                         <DatePicker
                           selected={formik.values.fromNoticeDate}
                           onChange={(date) =>
@@ -287,9 +309,21 @@ function QMSSerchResolution() {
                       </div>
                     </div>
                     <div className="col">
-                      <div className="mb-3">
+                      <div className="mb-3" style={{ position: "relative" }}>
                         <label className="form-label">To Notice Date</label>
-
+                        <span
+                          style={{
+                            position: "absolute",
+                            right: "15px",
+                            top: "36px",
+                            zIndex: 1,
+                            fontSize: "20px",
+                            zIndex: "1",
+                            color: "#666",
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faCalendarAlt} />
+                        </span>
                         <DatePicker
                           selected={formik.values.toNoticeDate}
                           onChange={(date) =>
@@ -378,18 +412,31 @@ function QMSSerchResolution() {
                       <option selected="selected" value="0" disabled hidden>
                         selected
                       </option>
-                      {allResolutionStatus &&
-                        allResolutionStatus.map((item) => (
+                      {resolutionStatus &&
+                        resolutionStatus.map((item) => (
                           <option key={item.id} value={item.id}>
-                            {item?.questionStatus}
+                            {item?.resolutionStatus}
                           </option>
                         ))}
                     </select>
                   </div>
                 </div>
                 <div class="col">
-                  <div class="mb-3">
+                  <div class="mb-3" style={{ position: "relative" }}>
                     <label class="form-label">Status Date</label>
+                    <span
+                      style={{
+                        position: "absolute",
+                        right: "15px",
+                        top: "36px",
+                        zIndex: 1,
+                        fontSize: "20px",
+                        zIndex: "1",
+                        color: "#666",
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faCalendarAlt} />
+                    </span>
                     <DatePicker
                       // selected={formik.values.fromNoticeDate}
                       // onChange={(date) => formik.setFieldValue("fromNoticeDate", date)}

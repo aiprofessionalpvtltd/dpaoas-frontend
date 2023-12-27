@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Layout } from "../../../../../components/Layout";
 import { useNavigate } from "react-router-dom";
 import CustomTable from "../../../../../components/CustomComponents/CustomTable";
@@ -12,9 +12,13 @@ import {
 import { getAllQuestionStatus, searchQuestion } from "../../../../../api/APIs";
 import { ToastContainer } from "react-toastify";
 import DatePicker from "react-datepicker";
+import { AuthContext } from "../../../../../api/AuthContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 
 function MMSSearchQuestion() {
   const navigate = useNavigate();
+  const { members, sessions } = useContext(AuthContext);
   const [searchedData, setSearchedData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [allquestionStatus, setAllQuestionStatus] = useState([]);
@@ -174,14 +178,23 @@ function MMSSearchQuestion() {
                     <div className="col">
                       <div className="mb-3">
                         <label className="form-label">Member Name</label>
-                        <input
-                          className="form-control"
-                          type="text"
-                          name="memberName"
-                          id="memberName"
+
+                        <select
+                          class="form-select"
+                          placeholder={formik.values.memberName}
                           onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                        />
+                          id="memberName"
+                        >
+                          <option value={""} selected disabled hidden>
+                            select
+                          </option>
+                          {members &&
+                            members.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item?.memberName}
+                              </option>
+                            ))}
+                        </select>
                       </div>
                     </div>
                   </div>
@@ -196,10 +209,15 @@ function MMSSearchQuestion() {
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                         >
-                          <option>Select</option>
-                          <option value={"2"}>121</option>
-                          <option value={"3"}>122</option>
-                          <option value={"4"}>123</option>
+                          <option value="" selected disabled hidden>
+                            Select
+                          </option>
+                          {sessions &&
+                            sessions.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item?.sessionName}
+                              </option>
+                            ))}
                         </select>
                       </div>
                     </div>
@@ -213,10 +231,15 @@ function MMSSearchQuestion() {
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                         >
-                          <option>Select</option>
-                          <option value={"1"}>121</option>
-                          <option>122</option>
-                          <option>123</option>
+                          <option value="" selected disabled hidden>
+                            Select
+                          </option>
+                          {sessions &&
+                            sessions.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item?.sessionName}
+                              </option>
+                            ))}
                         </select>
                       </div>
                     </div>
@@ -266,8 +289,21 @@ function MMSSearchQuestion() {
                   </div>
                   <div className="row">
                     <div className="col">
-                      <div className="mb-3">
+                      <div className="mb-3" style={{ position: "relative" }}>
                         <label className="form-label">From Notice Date</label>
+                        <span
+                          style={{
+                            position: "absolute",
+                            right: "15px",
+                            top: "36px",
+                            zIndex: 1,
+                            fontSize: "20px",
+                            zIndex: "1",
+                            color: "#666",
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faCalendarAlt} />
+                        </span>
                         <DatePicker
                           selected={formik.values.fromNoticeDate}
                           onChange={(date) =>
@@ -278,8 +314,21 @@ function MMSSearchQuestion() {
                       </div>
                     </div>
                     <div className="col">
-                      <div className="mb-3">
+                      <div className="mb-3" style={{ position: "relative" }}>
                         <label className="form-label">To Notice Date</label>
+                        <span
+                          style={{
+                            position: "absolute",
+                            right: "15px",
+                            top: "36px",
+                            zIndex: 1,
+                            fontSize: "20px",
+                            zIndex: "1",
+                            color: "#666",
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faCalendarAlt} />
+                        </span>
                         <DatePicker
                           selected={formik.values.toNoticeDate}
                           onChange={(date) =>
@@ -370,8 +419,21 @@ function MMSSearchQuestion() {
                   </div>
                 </div>
                 <div class="col">
-                  <div class="mb-3">
+                  <div class="mb-3" style={{ position: "relative" }}>
                     <label class="form-label">Status Date</label>
+                    <span
+                      style={{
+                        position: "absolute",
+                        right: "15px",
+                        top: "36px",
+                        zIndex: 1,
+                        fontSize: "20px",
+                        zIndex: "1",
+                        color: "#666",
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faCalendarAlt} />
+                    </span>
                     <DatePicker
                       // selected={formik.values.toNoticeDate}
                       // onChange={(date) => formik.setFieldValue("toNoticeDate", date)}

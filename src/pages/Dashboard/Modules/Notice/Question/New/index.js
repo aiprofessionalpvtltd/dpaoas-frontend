@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { NoticeSidebarItems } from "../../../../../../utils/sideBarItems";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
@@ -20,6 +20,9 @@ import DatePicker from "react-datepicker";
 import Select from "react-select";
 import { Editor } from "../../../../../../components/CustomComponents/Editor";
 import { ToastContainer } from "react-toastify";
+import { AuthContext } from "../../../../../../api/AuthContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 
 const validationSchema = Yup.object({
   // fkSessionId: Yup.number().required("Session No is required"),
@@ -38,8 +41,8 @@ const validationSchema = Yup.object({
 
 function NewQuestion() {
   const navigate = useNavigate();
+  const { members, sessions } = useContext(AuthContext);
   const [showModal, setShowModal] = useState(false);
-  const [sessions, setSessions] = useState([]);
   const [formValues, setFormValues] = useState([]);
 
   const handleShow = () => setShowModal(true);
@@ -92,21 +95,6 @@ function NewQuestion() {
       showErrorMessage(error?.response?.data?.message);
     }
   };
-
-  const getAllSessionsApi = async () => {
-    try {
-      const response = await getAllSessions();
-      if (response?.success) {
-        setSessions(response?.data);
-      }
-    } catch (error) {
-      // showErrorMessage(error?.response?.data?.message);
-    }
-  };
-
-  useEffect(() => {
-    getAllSessionsApi();
-  }, []);
 
   const handleProcedureContentChange = (content) => {
     console.log(content);
@@ -242,20 +230,28 @@ function NewQuestion() {
                     <div class="col">
                       <div class="mb-3">
                         <label class="form-label">Member ID</label>
-                        <input
-                          className={`form-control ${
+
+                        <select
+                          class={`form-select ${
                             formik.touched.fkMemberId &&
                             formik.errors.fkMemberId
                               ? "is-invalid"
                               : ""
                           }`}
-                          type="text"
-                          id="fkMemberId"
-                          value={formik.values.fkMemberId}
-                          name="fkMemberId"
-                          onBlur={formik.handleBlur}
+                          placeholder={formik.values.fkMemberId}
                           onChange={formik.handleChange}
-                        />
+                          id="fkMemberId"
+                        >
+                          <option value={""} selected disabled hidden>
+                            Select
+                          </option>
+                          {members &&
+                            members.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item?.memberName}
+                              </option>
+                            ))}
+                        </select>
                         {formik.touched.fkMemberId &&
                           formik.errors.fkMemberId && (
                             <div class="invalid-feedback">
@@ -268,10 +264,23 @@ function NewQuestion() {
 
                   <div class="row">
                     <div className="col">
-                      <div className="mb-3">
+                      <div className="mb-3" style={{ position: "relative" }}>
                         <label className="form-label">
                           Notice Office Diary Date{" "}
                         </label>
+                        <span
+                          style={{
+                            position: "absolute",
+                            right: "15px",
+                            top: "36px",
+                            zIndex: 1,
+                            fontSize: "20px",
+                            zIndex: "1",
+                            color: "#666",
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faCalendarAlt} />
+                        </span>
                         <DatePicker
                           selected={formik.values.noticeOfficeDiaryDate}
                           onChange={(date) =>
@@ -349,8 +358,9 @@ function NewQuestion() {
                     <Editor
                       title={"English Text"}
                       onChange={(content) =>
-                        formik.setFieldValue("englishText", content)}
-                        value={formik.values.englishText}
+                        formik.setFieldValue("englishText", content)
+                      }
+                      value={formik.values.englishText}
                     />
                   </div>
 
@@ -358,8 +368,9 @@ function NewQuestion() {
                     <Editor
                       title={"Urdu Text"}
                       onChange={(content) =>
-                        formik.setFieldValue("urduText", content)}
-                        value={formik.values.urduText}
+                        formik.setFieldValue("urduText", content)
+                      }
+                      value={formik.values.urduText}
                     />
                   </div>
 

@@ -14,6 +14,8 @@ import { ToastContainer } from "react-toastify";
 import TimePicker from "react-time-picker";
 import DatePicker from "react-datepicker";
 import { Editor } from "../../../../../../components/CustomComponents/Editor";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 
 const validationSchema = Yup.object({
   sessionNo: Yup.number(),
@@ -27,8 +29,8 @@ const validationSchema = Yup.object({
   resolutionType: Yup.string(),
   resolutionStatus: Yup.string(),
   resolutionMovers: Yup.array(),
-  urduText:Yup.string(),
-  englishText:Yup.string()
+  urduText: Yup.string(),
+  englishText: Yup.string(),
 });
 
 function QMSNoticeResolutionDetail() {
@@ -43,8 +45,8 @@ function QMSNoticeResolutionDetail() {
       resolutionType: "",
       resolutionStatus: "",
       resolutionMovers: "",
-      englishText:"",
-      urduText:""
+      englishText: "",
+      urduText: "",
     },
     // validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -64,8 +66,8 @@ function QMSNoticeResolutionDetail() {
       "resolutionDiaryNo",
       location?.state?.noticeDiary?.noticeOfficeDiaryNo,
     );
-    data.append("englishText", values.englishText)
-    data.append("urduText", values.urduText)
+    data.append("englishText", values.englishText);
+    data.append("urduText", values.urduText);
 
     try {
       const response = await UpdateResolution(location.state.id, data);
@@ -136,8 +138,21 @@ function QMSNoticeResolutionDetail() {
                     </div>
                   </div>
                   <div class="col">
-                    <div class="mb-3">
+                    <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label">Notice Office Diary Date</label>
+                      <span
+                        style={{
+                          position: "absolute",
+                          right: "15px",
+                          top: "36px",
+                          zIndex: 1,
+                          fontSize: "20px",
+                          zIndex: "1",
+                          color: "#666",
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faCalendarAlt} />
+                      </span>
                       <DatePicker
                         selected={formik.values.noticeOfficeDiaryDate}
                         onChange={(date) =>
@@ -262,16 +277,18 @@ function QMSNoticeResolutionDetail() {
                 <Editor
                   title={"English Text"}
                   onChange={(content) =>
-                    formik.setFieldValue("englishText", content)}
-                    value={formik.values.englishText}
+                    formik.setFieldValue("englishText", content)
+                  }
+                  value={formik.values.englishText}
                 />
               </div>
               <div style={{ marginTop: 70, marginBottom: 40 }}>
                 <Editor
                   title={"Urdu Text"}
                   onChange={(content) =>
-                    formik.setFieldValue("urduText", content)}
-                    value={formik.values.urduText}
+                    formik.setFieldValue("urduText", content)
+                  }
+                  value={formik.values.urduText}
                 />
               </div>
             </div>

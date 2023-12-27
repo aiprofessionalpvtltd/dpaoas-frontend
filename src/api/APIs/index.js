@@ -382,7 +382,11 @@ export const UpdatePasses = async (data, id) => {
   console.log("data UpData", data);
   try {
     const token = getAuthToken();
-    const response = await axiosClientVMS.put(`/pass/update/${id}`, data);
+    const response = await axiosClientVMS.put(`/pass/update/${id}`, data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -675,6 +679,24 @@ export const getAllResolutions = async (page, pageSize) => {
   }
 };
 
+export const getAllResolutionStatus = async () => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/resolution/resolutionStatuses`,
+      {
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // }
+      },
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
 export const searchResolution = async (searchParams) => {
   try {
     // const token = getAuthToken();
@@ -941,6 +963,15 @@ export const createReviveQuestion = async (id, reviveData) => {
     throw error;
   }
 };
+
+//Question History
+export const questionHistory = () => {
+  return axiosClientMMS.get(``, {
+    // headers: {
+    //   Authorization: `Bearer ${token}`,
+    // }
+  })
+}
 
 // Sessions
 

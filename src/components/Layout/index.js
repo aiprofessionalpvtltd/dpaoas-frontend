@@ -3,7 +3,6 @@ import { CustomNavbar } from "../CustomNavbar";
 import { Sidebar } from "../Sidebar";
 import { useLocation } from "react-router";
 import {
-  getAllMotion,
   getAllQuestion,
   getAllResolutions,
 } from "../../api/APIs";
@@ -97,7 +96,7 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
 
   useEffect(() => {
     const token = getAuthToken();
-    if(token === undefined || token === null) {
+    if (token === undefined || token === null) {
       logout();
       navigation("/login");
     }
@@ -141,10 +140,7 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
                   </>
                 ) : shouldRenderMotion ? (
                   <>
-                    <div
-                      class="tab-right me-4 mt-1 mb-4"
-                      style={{ width: "310px" }}
-                    >
+                    <div class="tab-right me-4 mt-1 mb-4">
                       <button>
                         Translations
                         {count?.question && <span>{count?.question}</span>}
@@ -161,10 +157,7 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
                 ) : (
                   shouldRenderQuestion && (
                     <>
-                      <div
-                        class="tab-right me-4 mt-1 mb-4"
-                        style={{ width: "528px" }}
-                      >
+                      <div class="tab-right me-4 mt-1 mb-4">
                         <button>
                           Translations
                           {count?.motion && <span>{count?.motion}</span>}

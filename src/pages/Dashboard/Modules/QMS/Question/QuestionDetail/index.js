@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
 import { QMSSideBarItems } from "../../../../../../utils/sideBarItems";
@@ -20,6 +20,9 @@ import {
 } from "../../../../../../api/APIs";
 import { ToastContainer } from "react-toastify";
 import { Editor } from "../../../../../../components/CustomComponents/Editor";
+import { AuthContext } from "../../../../../../api/AuthContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 const validationSchema = Yup.object({
   sessionNo: Yup.string(),
   noticeOfficeDiaryNo: Yup.string(),
@@ -38,16 +41,15 @@ const validationSchema = Yup.object({
   urduText: Yup.string(),
   englishText: Yup.string(),
   ammendedText: Yup.string(),
-  originalText: Yup.string()
-
+  originalText: Yup.string(),
 });
 
 function QMSQuestionDetail() {
   const location = useLocation();
-
+  const { members, sessions } = useContext(AuthContext);
   console.log(
     "Question Detail Data",
-    location.state.history.questionStatusHistory,
+    location?.state?.question?.session?.sessionName,
   );
 
   const [showDeferForm, setShowDeferForm] = useState(false);
@@ -73,7 +75,7 @@ function QMSQuestionDetail() {
 
   const formik = useFormik({
     initialValues: {
-      sessionNo: location?.state?.question?.session?.fkSessionId,
+      sessionNo: location?.state?.question?.session?.sessionName,
       noticeOfficeDiaryNo:
         location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryNo,
       noticeOfficeDiaryDate: "",
@@ -93,7 +95,7 @@ function QMSQuestionDetail() {
       englishText: "",
       urduText: "",
       ammendedText: "",
-      originalText: ""
+      originalText: "",
     },
     // validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -203,25 +205,35 @@ function QMSQuestionDetail() {
 
   //History
   const transfrerStatusHistoryData = (apiData) => {
-    return apiData.map((leave, index) => ({
-      SR: `${index + 1}`,
-      sessionNo: leave?.session?.sessionName,
-      status: leave?.questionStatus?.questionStatus,
-      questionDate: leave?.questionStatusDate,
-    }));
+    if (Array.isArray(apiData)) {
+      return apiData?.map((leave, index) => ({
+        SR: `${index + 1}`,
+        sessionNo: leave?.session?.sessionName,
+        status: leave?.questionStatus?.questionStatus,
+        questionDate: leave?.questionStatusDate,
+      }));
+    } else {
+      // Handle the case when apiData is not an array (e.g., "No defer data found")
+      return [];
+    }
   };
   const StatusHistoryData = transfrerStatusHistoryData(
     location?.state?.history?.questionStatusHistory,
   );
   //questionRevival
   const transfrerRevivalHistoryData = (apiData) => {
-    return apiData.map((leave, index) => ({
-      SR: `${index + 1}`,
-      FromSession: leave?.FromSession?.sessionName,
-      ToSession: leave?.ToSession?.sessionName,
-      questionDiary: leave?.questionDiary?.questionDiaryNo,
-      revivalDate: leave?.createdAt,
-    }));
+    if (Array.isArray(apiData)) {
+      return apiData?.map((leave, index) => ({
+        SR: `${index + 1}`,
+        FromSession: leave?.FromSession?.sessionName,
+        ToSession: leave?.ToSession?.sessionName,
+        questionDiary: leave?.questionDiary?.questionDiaryNo,
+        revivalDate: leave?.createdAt,
+      }));
+    } else {
+      // Handle the case when apiData is not an array (e.g., "No defer data found")
+      return [];
+    }
   };
 
   const QuestionRevivalHistoryData = transfrerRevivalHistoryData(
@@ -231,7 +243,7 @@ function QMSQuestionDetail() {
   //Deffer History
   const transfrerDefferHistoryData = (apiData) => {
     if (Array.isArray(apiData)) {
-      return apiData.map((leave, index) => ({
+      return apiData?.map((leave, index) => ({
         SR: `${index + 1}`,
         defferToSession: leave?.session?.sessionName,
         defferOn: leave?.deferredDate,
@@ -250,11 +262,16 @@ function QMSQuestionDetail() {
 
   //File History
   const transfrerFilerHistoryData = (apiData) => {
-    return apiData.map((leave, index) => ({
-      SR: `${index + 1}`,
-      fileStatus: leave?.fileStatus,
-      fileStatusDate: leave?.fileStatusDate,
-    }));
+    if (Array.isArray(apiData)) {
+      return apiData?.map((leave, index) => ({
+        SR: `${index + 1}`,
+        fileStatus: leave?.fileStatus,
+        fileStatusDate: leave?.fileStatusDate,
+      }));
+    } else {
+      // Handle the case when apiData is not an array (e.g., "No defer data found")
+      return [];
+    }
   };
 
   const QuestionFileHistoryData = transfrerFilerHistoryData(
@@ -340,19 +357,34 @@ function QMSQuestionDetail() {
                               })
                             }
                           >
-                            <option value={""} selected disabled hidden>
-                              select
+                            <option value="" selected disabled hidden>
+                              Select
                             </option>
-                            <option value={"1"}>123</option>
-                            <option>12123</option>
-                            <option>45456</option>
+                            {sessions &&
+                              sessions.map((item) => (
+                                <option key={item.id} value={item.id}>
+                                  {item?.sessionName}
+                                </option>
+                              ))}
                           </select>
                         </div>
                       </div>
                       <div class="col">
-                        <div class="mb-3">
+                        <div class="mb-3" style={{ position: "relative" }}>
                           <label class="form-label">Deffer Date</label>
-
+                          <span
+                            style={{
+                              position: "absolute",
+                              right: "15px",
+                              top: "36px",
+                              zIndex: 1,
+                              fontSize: "20px",
+                              zIndex: "1",
+                              color: "#666",
+                            }}
+                          >
+                            <FontAwesomeIcon icon={faCalendarAlt} />
+                          </span>
                           <DatePicker
                             selected={deferState.deferDate}
                             onChange={(date) =>
@@ -399,12 +431,15 @@ function QMSQuestionDetail() {
                               })
                             }
                           >
-                            <option value={""} selected disabled hidden>
-                              select
+                            <option value="" selected disabled hidden>
+                              Select
                             </option>
-                            <option value={"1"}>123</option>
-                            <option>12123</option>
-                            <option>45456</option>
+                            {sessions &&
+                              sessions.map((item) => (
+                                <option key={item.id} value={item.id}>
+                                  {item?.sessionName}
+                                </option>
+                              ))}
                           </select>
                         </div>
                       </div>
@@ -470,9 +505,21 @@ function QMSQuestionDetail() {
                       </div>
 
                       <div class="col">
-                        <div class="mb-3">
+                        <div class="mb-3" style={{ position: "relative" }}>
                           <label class="form-label">Notice Diary Date</label>
-
+                          <span
+                            style={{
+                              position: "absolute",
+                              right: "15px",
+                              top: "36px",
+                              zIndex: 1,
+                              fontSize: "20px",
+                              zIndex: "1",
+                              color: "#666",
+                            }}
+                          >
+                            <FontAwesomeIcon icon={faCalendarAlt} />
+                          </span>
                           <DatePicker
                             selected={reviveState.noticeDiaryDate}
                             onChange={(date) =>
@@ -564,19 +611,30 @@ function QMSQuestionDetail() {
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Session No</label>
-                      <select
+                      {/* <select
                         class="form-select"
                         id="sessionNo"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       >
-                        <option value={""} selected disabled hidden>
-                          select
+                        <option value="" selected disabled hidden>
+                          Select
                         </option>
-                        <option value={"1"}>123</option>
-                        <option>12123</option>
-                        <option>45456</option>
-                      </select>
+                        {sessions &&
+                          sessions.map((item) => (
+                            <option key={item.id} value={item.id}>
+                              {item?.sessionName}
+                            </option>
+                          ))}
+                      </select> */}
+                      <input
+                        placeholder={formik.values.sessionNo}
+                        type="text"
+                        class="form-control"
+                        id="sessionNo"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      />
                     </div>
                   </div>
                   <div class="col">
@@ -593,8 +651,21 @@ function QMSQuestionDetail() {
                     </div>
                   </div>
                   <div class="col">
-                    <div class="mb-3">
+                    <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label">Notice Office Diary Date</label>
+                      <span
+                        style={{
+                          position: "absolute",
+                          right: "15px",
+                          top: "36px",
+                          zIndex: 1,
+                          fontSize: "20px",
+                          zIndex: "1",
+                          color: "#666",
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faCalendarAlt} />
+                      </span>
                       <DatePicker
                         selected={formik.values.noticeOfficeDiaryDate}
                         onChange={(date) =>
@@ -708,7 +779,7 @@ function QMSQuestionDetail() {
                     </div>
                   </div>
                   <div class="col">
-                    <div class="mb-3">
+                    <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label">Reply Date</label>
                       {/* <input
                         type="text"
@@ -718,6 +789,19 @@ function QMSQuestionDetail() {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       /> */}
+                      <span
+                        style={{
+                          position: "absolute",
+                          right: "15px",
+                          top: "36px",
+                          zIndex: 1,
+                          fontSize: "20px",
+                          zIndex: "1",
+                          color: "#666",
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faCalendarAlt} />
+                      </span>
                       <DatePicker
                         selected={formik.values.replyDate}
                         onChange={(date) =>
@@ -726,8 +810,6 @@ function QMSQuestionDetail() {
                         onBlur={formik.handleBlur}
                         className={`form-control`}
                       />
-
-
                     </div>
                   </div>
                   <div class="col">
@@ -740,12 +822,15 @@ function QMSQuestionDetail() {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       >
-                        <option value={""} selected disabled hidden>
+                        <option selected disabled hidden>
                           Select
                         </option>
-                        <option value={"2"}>Saqib khan</option>
-                        <option>Ali Khan</option>
-                        <option>Mohsin Khan</option>
+                        {members &&
+                          members.map((item) => (
+                            <option key={item.id} value={item.id}>
+                              {item?.memberName}
+                            </option>
+                          ))}
                       </select>
                     </div>
                   </div>
@@ -831,7 +916,8 @@ function QMSQuestionDetail() {
                   <Editor
                     title={"Original Text"}
                     onChange={(content) =>
-                      formik.setFieldValue("originalText", content)}
+                      formik.setFieldValue("originalText", content)
+                    }
                     value={formik.values.originalText}
                   />
                 </div>
@@ -839,7 +925,8 @@ function QMSQuestionDetail() {
                   <Editor
                     title={"Ammended Text"}
                     onChange={(content) =>
-                      formik.setFieldValue("ammendedText", content)}
+                      formik.setFieldValue("ammendedText", content)
+                    }
                     value={formik.values.ammendedText}
                   />
                 </div>
@@ -847,11 +934,15 @@ function QMSQuestionDetail() {
                   <Editor
                     title={"Urdu Text"}
                     onChange={(content) =>
-                      formik.setFieldValue("urduText", content)}
+                      formik.setFieldValue("urduText", content)
+                    }
                     value={formik.values.urduText}
                   />
                 </div>
-                <div class="d-grid gap-2 d-md-flex" style={{ marginTop: 70, marginBottom: 40 }}>
+                <div
+                  class="d-grid gap-2 d-md-flex"
+                  style={{ marginTop: 70, marginBottom: 40 }}
+                >
                   <button class="btn btn-primary" type="submit">
                     Update
                   </button>
@@ -873,11 +964,15 @@ function QMSQuestionDetail() {
                 <Editor
                   title={"English Text"}
                   onChange={(content) =>
-                    formik.setFieldValue("englishText", content)}
+                    formik.setFieldValue("englishText", content)
+                  }
                   value={formik.values.englishText}
                 />
               </div>
-              <div class="dash-detail-container" style={{ marginTop: 70, marginBottom: 40 }}>
+              <div
+                class="dash-detail-container"
+                style={{ marginTop: 70, marginBottom: 40 }}
+              >
                 <table class="table red-bg-head th">
                   <thead>
                     <tr>

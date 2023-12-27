@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { NoticeSidebarItems } from "../../../../../../utils/sideBarItems";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
@@ -18,9 +18,13 @@ import { Field, Form, Formik, useFormik } from "formik";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import { ToastContainer } from "react-toastify";
 import DatePicker from "react-datepicker";
+import { AuthContext } from "../../../../../../api/AuthContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 
 function SentQuestion() {
   const navigate = useNavigate();
+  const { members, sessions } = useContext(AuthContext);
   const [searchedData, setSearchedData] = useState([]);
   const [resData, setResData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
@@ -202,14 +206,22 @@ function SentQuestion() {
                       <div className="col">
                         <div className="mb-3">
                           <label className="form-label">Member Name</label>
-                          <input
-                            className="form-control"
-                            type="text"
-                            name="memberName"
-                            id="memberName"
+                          <select
+                            class="form-select"
+                            placeholder={formik.values.memberName}
                             onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                          />
+                            id="memberName"
+                          >
+                            <option value={""} selected disabled hidden>
+                              select
+                            </option>
+                            {members &&
+                              members.map((item) => (
+                                <option key={item.id} value={item.id}>
+                                  {item?.memberName}
+                                </option>
+                              ))}
+                          </select>
                         </div>
                       </div>
                     </div>
@@ -224,10 +236,15 @@ function SentQuestion() {
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                           >
-                            <option>Select</option>
-                            <option value={"2"}>121</option>
-                            <option value={"3"}>122</option>
-                            <option value={"4"}>123</option>
+                            <option value="" selected disabled hidden>
+                              Select
+                            </option>
+                            {sessions &&
+                              sessions.map((item) => (
+                                <option key={item.id} value={item.id}>
+                                  {item?.sessionName}
+                                </option>
+                              ))}
                           </select>
                         </div>
                       </div>
@@ -241,10 +258,15 @@ function SentQuestion() {
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                           >
-                            <option>Select</option>
-                            <option value={"1"}>121</option>
-                            <option>122</option>
-                            <option>123</option>
+                            <option value="" selected disabled hidden>
+                              Select
+                            </option>
+                            {sessions &&
+                              sessions.map((item) => (
+                                <option key={item.id} value={item.id}>
+                                  {item?.sessionName}
+                                </option>
+                              ))}
                           </select>
                         </div>
                       </div>
@@ -294,8 +316,21 @@ function SentQuestion() {
                     </div>
                     <div className="row">
                       <div className="col">
-                        <div className="mb-3">
+                        <div className="mb-3" style={{ position: "relative" }}>
                           <label className="form-label">From Notice Date</label>
+                          <span
+                            style={{
+                              position: "absolute",
+                              right: "15px",
+                              top: "36px",
+                              zIndex: 1,
+                              fontSize: "20px",
+                              zIndex: "1",
+                              color: "#666",
+                            }}
+                          >
+                            <FontAwesomeIcon icon={faCalendarAlt} />
+                          </span>
                           <DatePicker
                             selected={formik.values.fromNoticeDate}
                             onChange={(date) =>
@@ -306,8 +341,21 @@ function SentQuestion() {
                         </div>
                       </div>
                       <div className="col">
-                        <div className="mb-3">
+                        <div className="mb-3" style={{ position: "relative" }}>
                           <label className="form-label">To Notice Date</label>
+                          <span
+                            style={{
+                              position: "absolute",
+                              right: "15px",
+                              top: "36px",
+                              zIndex: 1,
+                              fontSize: "20px",
+                              zIndex: "1",
+                              color: "#666",
+                            }}
+                          >
+                            <FontAwesomeIcon icon={faCalendarAlt} />
+                          </span>
                           <DatePicker
                             selected={formik.values.toNoticeDate}
                             onChange={(date) =>
@@ -343,10 +391,13 @@ function SentQuestion() {
                     tableTitle="Questions"
                     handlePageChange={handlePageChange}
                     currentPage={currentPage}
-                    showPrint={true}
+                    showPrint={false}
+                    ActionHide={true}
+                    hideEditIcon={true}
                     pageSize={pageSize}
                     handleAdd={(item) => navigate("/")}
                     handleEdit={(item) => navigate("/")}
+
                     totalCount={count}
                   />
                 </div>

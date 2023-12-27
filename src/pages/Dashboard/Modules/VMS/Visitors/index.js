@@ -113,16 +113,17 @@ function VMSVisitors() {
             handleEdit={(item) =>
               navigate("/vms/addeditvisitor", { state: item })
             }
-            seachBarShow={true}
+            seachBarShow={false}
             handlePageChange={handlePageChange}
             currentPage={currentPage}
             pageSize={pageSize}
             headertitlebgColor={"#666"}
             headertitletextColor={"#FFF"}
             handleDelete={(item) => handleDelete(item.id)}
-            // handlePrint={}
-            // handleUser={}
-            // handleDelete={(item) => handleDelete(item.id)}
+
+          // handlePrint={}
+          // handleUser={}
+          // handleDelete={(item) => handleDelete(item.id)}
           />
         </div>
       </div>

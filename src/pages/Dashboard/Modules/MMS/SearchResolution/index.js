@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Layout } from "../../../../../components/Layout";
 import { useNavigate } from "react-router-dom";
 import CustomTable from "../../../../../components/CustomComponents/CustomTable";
@@ -15,9 +15,13 @@ import {
   searchResolution,
 } from "../../../../../api/APIs";
 import DatePicker from "react-datepicker";
+import { AuthContext } from "../../../../../api/AuthContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 
 function MMSSearchResolution() {
   const navigate = useNavigate();
+  const { members, sessions } = useContext(AuthContext);
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
   const [searchedData, setSearchedData] = useState([]);
@@ -184,14 +188,22 @@ function MMSSearchResolution() {
                     <div className="col">
                       <div className="mb-3">
                         <label className="form-label">Member Name</label>
-                        <input
-                          className="form-control"
-                          type="text"
-                          id="memberName"
+                        <select
+                          class="form-select"
                           placeholder={formik.values.memberName}
                           onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                        />
+                          id="memberName"
+                        >
+                          <option value={""} selected disabled hidden>
+                            Select
+                          </option>
+                          {members &&
+                            members.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item?.memberName}
+                              </option>
+                            ))}
+                        </select>
                       </div>
                     </div>
                   </div>
@@ -206,10 +218,15 @@ function MMSSearchResolution() {
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                         >
-                          <option>Select</option>
-                          <option>121</option>
-                          <option>122</option>
-                          <option>123</option>
+                          <option value="" selected disabled hidden>
+                            Select
+                          </option>
+                          {sessions &&
+                            sessions.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item?.sessionName}
+                              </option>
+                            ))}
                         </select>
                       </div>
                     </div>
@@ -223,10 +240,15 @@ function MMSSearchResolution() {
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                         >
-                          <option>Select</option>
-                          <option>121</option>
-                          <option>122</option>
-                          <option>123</option>
+                          <option value="" selected disabled hidden>
+                            Select
+                          </option>
+                          {sessions &&
+                            sessions.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item?.sessionName}
+                              </option>
+                            ))}
                         </select>
                       </div>
                     </div>
@@ -263,7 +285,7 @@ function MMSSearchResolution() {
                           onBlur={formik.handleBlur}
                         >
                           <option value="" selected disabled hidden>
-                            select
+                            Select
                           </option>
                           {allResolutionStatus &&
                             allResolutionStatus.map((item) => (
@@ -277,9 +299,21 @@ function MMSSearchResolution() {
                   </div>
                   <div className="row">
                     <div className="col">
-                      <div className="mb-3">
+                      <div className="mb-3" style={{ position: "relative" }}>
                         <label className="form-label">From Notice Date</label>
-
+                        <span
+                          style={{
+                            position: "absolute",
+                            right: "15px",
+                            top: "36px",
+                            zIndex: 1,
+                            fontSize: "20px",
+                            zIndex: "1",
+                            color: "#666",
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faCalendarAlt} />
+                        </span>
                         <DatePicker
                           selected={formik.values.fromNoticeDate}
                           onChange={(date) =>
@@ -290,9 +324,21 @@ function MMSSearchResolution() {
                       </div>
                     </div>
                     <div className="col">
-                      <div className="mb-3">
+                      <div className="mb-3" style={{ position: "relative" }}>
                         <label className="form-label">To Notice Date</label>
-
+                        <span
+                          style={{
+                            position: "absolute",
+                            right: "15px",
+                            top: "36px",
+                            zIndex: 1,
+                            fontSize: "20px",
+                            zIndex: "1",
+                            color: "#666",
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faCalendarAlt} />
+                        </span>
                         <DatePicker
                           selected={formik.values.toNoticeDate}
                           onChange={(date) =>

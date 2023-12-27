@@ -14,13 +14,16 @@ import { AuthContext } from "../../api/AuthContext";
 import {
   getPermissionsData,
   getUserData,
+  logout,
   setPermissionsData,
   setRolesData,
 } from "../../api/Auth";
 import { getRoles } from "../../api/APIs";
 import { CheckPermission } from "../../utils/permissionsConfig";
+import { useNavigate } from "react-router";
 
 function Dashboard() {
+  const navigation = useNavigate()
   const [roles, setRoles] = useState([]);
   const { permissions } = useContext(AuthContext);
   const [permissionsLocal, setPermissionsLocal] = useState([]);
@@ -32,7 +35,11 @@ function Dashboard() {
         const response = await getRoles();
         setRoles(response.data);
       } catch (error) {
-        console.log(error);
+        // alert(error.response.data)
+        if (error?.response?.data?.error === "Token has expired!") {
+          logout();
+          navigation("/login");
+        }
       }
     };
 

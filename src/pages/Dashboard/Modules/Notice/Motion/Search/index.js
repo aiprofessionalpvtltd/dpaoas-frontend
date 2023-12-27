@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { NoticeSidebarItems } from "../../../../../../utils/sideBarItems";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
@@ -20,15 +20,16 @@ import {
 import { ToastContainer } from "react-toastify";
 import { useFormik } from "formik";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
+import { AuthContext } from "../../../../../../api/AuthContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 
 function SearchMotion() {
   const navigate = useNavigate();
+  const { ministryData, members, sessions } = useContext(AuthContext);
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
-  const [sessions, setSessions] = useState([]);
-  const [ministryData, setMinistryData] = useState([]);
   const [motionStatus, setMotionStatus] = useState([]);
-  const [members, setMembers] = useState([]);
   const [motionData, setMotionData] = useState([]);
   const pageSize = 4; // Set your desired page size
 
@@ -119,17 +120,6 @@ function SearchMotion() {
     }
   };
 
-  const getAllSessionsApi = async () => {
-    try {
-      const response = await getAllSessions();
-      if (response?.success) {
-        setSessions(response?.data);
-      }
-    } catch (error) {
-      showErrorMessage(error?.response?.data?.message);
-    }
-  };
-
   const getMotionStatus = async () => {
     try {
       const response = await getallMotionStatus();
@@ -141,36 +131,7 @@ function SearchMotion() {
     }
   };
 
-  const AllMinistryData = async () => {
-    try {
-      const response = await getAllMinistry();
-      if (response?.success) {
-        // showSuccessMessage(response?.message);
-        setMinistryData(response?.data);
-      }
-    } catch (error) {
-      console.log(error);
-      showErrorMessage(error?.response?.data?.error);
-    }
-  };
-
-  const AllMembersData = async () => {
-    try {
-      const response = await getallMembers(currentPage, pageSize);
-      if (response?.success) {
-        // showSuccessMessage(response?.message);
-        setMembers(response?.data?.rows);
-      }
-    } catch (error) {
-      console.log(error);
-      showErrorMessage(error?.response?.data?.error);
-    }
-  };
-
   useEffect(() => {
-    AllMembersData();
-    AllMinistryData();
-    getAllSessionsApi();
     getMotionStatus();
   }, []);
 
@@ -380,7 +341,7 @@ function SearchMotion() {
                         class="form-control"
                       >
                         <option value={""} selected disabled hidden>
-                          select
+                          Select
                         </option>
                         {ministryData &&
                           ministryData.map((item) => (
@@ -414,19 +375,31 @@ function SearchMotion() {
                 </div>
                 <div class="row">
                   <div class="col">
-                    <div class="mb-3">
+                    <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label">From Notice Date</label>
+                      <span
+                        style={{
+                          position: "absolute",
+                          right: "15px",
+                          top: "36px",
+                          zIndex: 1,
+                          fontSize: "20px",
+                          zIndex: "1",
+                          color: "#666",
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faCalendarAlt} />
+                      </span>
                       <DatePicker
                         selected={formik.values.fromNoticeDate}
                         onChange={(date) =>
                           formik.setFieldValue("fromNoticeDate", date)
                         }
-                        className={`form-control ${
-                          formik.errors.fromNoticeDate &&
-                          formik.touched.fromNoticeDate
+                        className={`form-control ${formik.errors.fromNoticeDate &&
+                            formik.touched.fromNoticeDate
                             ? "is-invalid"
                             : ""
-                        }`}
+                          }`}
                       />
                       {formik.errors.fromNoticeDate &&
                         formik.touched.fromNoticeDate && (
@@ -437,8 +410,21 @@ function SearchMotion() {
                     </div>
                   </div>
                   <div class="col">
-                    <div class="mb-3">
+                    <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label">To Notice Date</label>
+                      <span
+                        style={{
+                          position: "absolute",
+                          right: "15px",
+                          top: "36px",
+                          zIndex: 1,
+                          fontSize: "20px",
+                          zIndex: "1",
+                          color: "#666",
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faCalendarAlt} />
+                      </span>
                       <DatePicker
                         selected={formik.values.toNoticeDate}
                         onChange={(date) =>
@@ -460,7 +446,7 @@ function SearchMotion() {
                   </div>
                 </div>
                 <div
-                  class="dash-detail-container"
+                  class=""
                   style={{ marginTop: "20px" }}
                 >
                   <CustomTable

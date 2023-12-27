@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { NoticeSidebarItems } from "../../../../../../utils/sideBarItems";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
@@ -20,14 +20,16 @@ import {
   getallMotionStatus,
   searchMotion,
 } from "../../../../../../api/APIs";
+import { AuthContext } from "../../../../../../api/AuthContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 
 function SentMotion() {
   const navigate = useNavigate();
+  const { members, sessions } = useContext(AuthContext)
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
-  const [sessions, setSessions] = useState([]);
   const [motionStatus, setMotionStatus] = useState([]);
-  const [members, setMembers] = useState([]);
   const [motionData, setMotionData] = useState([]);
   const pageSize = 4; // Set your desired page size
 
@@ -116,16 +118,7 @@ function SentMotion() {
     }
   };
 
-  const getAllSessionsApi = async () => {
-    try {
-      const response = await getAllSessions();
-      if (response?.success) {
-        setSessions(response?.data);
-      }
-    } catch (error) {
-      showErrorMessage(error?.response?.data?.message);
-    }
-  };
+
 
   const getMotionStatus = async () => {
     try {
@@ -138,22 +131,9 @@ function SentMotion() {
     }
   };
 
-  const AllMembersData = async () => {
-    try {
-      const response = await getallMembers(currentPage, pageSize);
-      if (response?.success) {
-        // showSuccessMessage(response?.message);
-        setMembers(response?.data?.rows);
-      }
-    } catch (error) {
-      console.log(error);
-      showErrorMessage(error?.response?.data?.error);
-    }
-  };
+
 
   useEffect(() => {
-    AllMembersData();
-    getAllSessionsApi();
     getMotionStatus();
   }, []);
 
@@ -393,19 +373,31 @@ function SentMotion() {
                 </div>
                 <div class="row">
                   <div class="col">
-                    <div class="mb-3">
+                    <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label">From Notice Date</label>
+                      <span
+                        style={{
+                          position: "absolute",
+                          right: "15px",
+                          top: "36px",
+                          zIndex: 1,
+                          fontSize: "20px",
+                          zIndex: "1",
+                          color: "#666",
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faCalendarAlt} />
+                      </span>
                       <DatePicker
                         selected={formik.values.fromNoticeDate}
                         onChange={(date) =>
                           formik.setFieldValue("fromNoticeDate", date)
                         }
-                        className={`form-control ${
-                          formik.errors.fromNoticeDate &&
-                          formik.touched.fromNoticeDate
+                        className={`form-control ${formik.errors.fromNoticeDate &&
+                            formik.touched.fromNoticeDate
                             ? "is-invalid"
                             : ""
-                        }`}
+                          }`}
                       />
                       {formik.errors.fromNoticeDate &&
                         formik.touched.fromNoticeDate && (
@@ -416,8 +408,21 @@ function SentMotion() {
                     </div>
                   </div>
                   <div class="col">
-                    <div class="mb-3">
+                    <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label">To Notice Date</label>
+                      <span
+                        style={{
+                          position: "absolute",
+                          right: "15px",
+                          top: "36px",
+                          zIndex: 1,
+                          fontSize: "20px",
+                          zIndex: "1",
+                          color: "#666",
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faCalendarAlt} />
+                      </span>
                       <DatePicker
                         selected={formik.values.toNoticeDate}
                         onChange={(date) =>
@@ -439,7 +444,7 @@ function SentMotion() {
                   </div>
                 </div>
                 <div
-                  class="dash-detail-container"
+                  class=""
                   style={{ marginTop: "20px" }}
                 >
                   <CustomTable
