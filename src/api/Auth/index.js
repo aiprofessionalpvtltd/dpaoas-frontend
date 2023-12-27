@@ -1,3 +1,34 @@
+// // Function to set token and its expiration time in localStorage
+// export const setToken = (token) => {
+//   const expirationTime = new Date().getTime() + 2 * 60 * 60 * 1000; // 2 hours in milliseconds
+//   localStorage.setItem('token', token);
+//   localStorage.setItem('tokenExpiration', expirationTime);
+// };
+
+// // Function to get the token from localStorage
+// export const getToken = () => {
+//   const token = localStorage.getItem('token');
+//   const expirationTime = localStorage.getItem('tokenExpiration');
+  
+//   if (!token || !expirationTime) {
+//     return null; // No token or expiration time found
+//   }
+
+//   // Check if the token is expired
+//   if (new Date().getTime() > parseInt(expirationTime, 10)) {
+//     // Token is expired
+//     return null;
+//   }
+
+//   return token;
+// };
+
+// // Function to remove token and its expiration time from localStorage
+// export const removeToken = () => {
+//   localStorage.removeItem('token');
+//   localStorage.removeItem('tokenExpiration');
+// };
+
 export const setAuthToken = (token) => {
   localStorage.setItem("userToken", JSON.stringify(token));
 };
