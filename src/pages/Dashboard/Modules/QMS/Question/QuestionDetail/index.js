@@ -49,7 +49,7 @@ function QMSQuestionDetail() {
   const { members, sessions } = useContext(AuthContext);
   console.log(
     "Question Detail Data",
-    location.state.history.questionStatusHistory,
+    location?.state?.question?.session?.sessionName,
   );
 
   const [showDeferForm, setShowDeferForm] = useState(false);
@@ -75,7 +75,7 @@ function QMSQuestionDetail() {
 
   const formik = useFormik({
     initialValues: {
-      sessionNo: location?.state?.question?.session?.fkSessionId,
+      sessionNo: location?.state?.question?.session?.sessionName,
       noticeOfficeDiaryNo:
         location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryNo,
       noticeOfficeDiaryDate: "",
@@ -611,7 +611,7 @@ function QMSQuestionDetail() {
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Session No</label>
-                      <select
+                      {/* <select
                         class="form-select"
                         id="sessionNo"
                         onChange={formik.handleChange}
@@ -626,7 +626,15 @@ function QMSQuestionDetail() {
                               {item?.sessionName}
                             </option>
                           ))}
-                      </select>
+                      </select> */}
+                      <input
+                        placeholder={formik.values.sessionNo}
+                        type="text"
+                        class="form-control"
+                        id="sessionNo"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      />
                     </div>
                   </div>
                   <div class="col">

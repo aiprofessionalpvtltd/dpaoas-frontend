@@ -391,10 +391,13 @@ function SentQuestion() {
                     tableTitle="Questions"
                     handlePageChange={handlePageChange}
                     currentPage={currentPage}
-                    showPrint={true}
+                    showPrint={false}
+                    ActionHide={true}
+                    hideEditIcon={true}
                     pageSize={pageSize}
                     handleAdd={(item) => navigate("/")}
                     handleEdit={(item) => navigate("/")}
+
                     totalCount={count}
                   />
                 </div>

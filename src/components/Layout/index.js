@@ -3,7 +3,6 @@ import { CustomNavbar } from "../CustomNavbar";
 import { Sidebar } from "../Sidebar";
 import { useLocation } from "react-router";
 import {
-  getAllMotion,
   getAllQuestion,
   getAllResolutions,
 } from "../../api/APIs";

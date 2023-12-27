@@ -366,7 +366,7 @@ function SearchQuestion() {
                 </form>
 
                 <div
-                  class="dash-detail-container"
+                  class=""
                   style={{ marginTop: "20px" }}
                 >
                   <CustomTable
@@ -376,7 +376,9 @@ function SearchQuestion() {
                     tableTitle="Questions"
                     handlePageChange={handlePageChange}
                     currentPage={currentPage}
-                    showPrint={true}
+                    showPrint={false}
+                    ActionHide={true}
+                    hideEditIcon={true}
                     pageSize={pageSize}
                     handleAdd={(item) => navigate("/")}
                     handleEdit={(item) => navigate("/")}
