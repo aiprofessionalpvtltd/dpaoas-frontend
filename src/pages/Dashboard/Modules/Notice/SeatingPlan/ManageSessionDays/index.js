@@ -1,11 +1,53 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { NoticeSidebarItems } from "../../../../../../utils/sideBarItems";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
 import { useNavigate } from "react-router";
+import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
+import { getAllManageSessions } from "../../../../../../api/APIs";
+import { showSuccessMessage } from "../../../../../../utils/ToastAlert";
 
 function ManageSessionDays() {
   const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState(0);
+  const [resData, setResData] = useState([]);
+  const [count, setCount] = useState(null);
+  const pageSize = 4; // Set your desired page size
+  
+  const handlePageChange = (page) => {
+    // Update currentPage when a page link is clicked
+    setCurrentPage(page);
+  };
+
+  const transformLeavesData = (apiData) => {
+    return apiData.map((item) => {
+      return {
+        SessionId: item?.fkSessionId,
+        SessionAdjourned: item?.sessionAdjourned ? "true" : "false",
+        SittingDate: item?.sittingDate,
+        startTime: item?.startTime,
+        EndTime: item?.endTime,
+        SessionName: item?.session?.sessionName,
+      };
+    });
+  };
+
+  const getAllManageSessionsApi = async () => {
+    try {
+      const response = await getAllManageSessions(currentPage, pageSize);
+      if (response?.success) {
+        setCount(response.data?.count);
+        const transformedData = transformLeavesData(response.data);
+        setResData(transformedData);
+      }
+    } catch (error) {
+      console.log(error?.response?.data?.message);
+    }
+  };
+
+  useEffect(() => {
+    getAllManageSessionsApi();
+  }, [currentPage]);
 
   return (
     <Layout
@@ -31,7 +73,25 @@ function ManageSessionDays() {
             </div>
             <div class="card-body">
               <div class="container-fluid">
-                <div
+                  <div
+                    class="dash-detail-container"
+                    style={{ marginTop: "20px" }}
+                  >
+                    <CustomTable
+                      hideBtn={true}
+                      data={resData}
+                      tableTitle="Resolutions"
+                      handlePageChange={handlePageChange}
+                      currentPage={currentPage}
+                      showPrint={true}
+                      pageSize={pageSize}
+                      handleAdd={(item) => navigate("/")}
+                      handleEdit={(item) => navigate("/")}
+                      totalCount={count}
+                    />
+                  </div>
+
+                {/* <div
                   class="dash-detail-container"
                   style={{ marginTop: "20px" }}
                 >
@@ -77,7 +137,7 @@ function ManageSessionDays() {
                       </tr>
                     </tbody>
                   </table>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
