@@ -54,7 +54,7 @@ function NewResolution() {
 
   const formik = useFormik({
     initialValues: {
-      fkSessionNo: null,
+      fkSessionNo: sessions[0]?.id,
       noticeOfficeDiaryNo: "",
       noticeOfficeDiaryDate: null,
       noticeOfficeDiaryTime: "",
@@ -150,27 +150,21 @@ function NewResolution() {
                       <div class="mb-3">
                         <label class="form-label">Session No</label>
                         <select
-                          class={`form-select ${
-                            formik.touched.fkSessionNo &&
-                            formik.errors.fkSessionNo
+                          class={`form-select ${formik.touched.fkSessionNo &&
+                              formik.errors.fkSessionNo
                               ? "is-invalid"
                               : ""
-                          }`}
+                            }`}
                           placeholder="Session No"
                           value={formik.values.fkSessionNo}
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                           name="fkSessionNo"
                         >
-                          <option value="" selected disabled hidden>
-                            Select
+                          <option value={sessions[0]?.id} selected disabled>
+                            {sessions[0]?.sessionName}
                           </option>
-                          {sessions &&
-                            sessions.map((item) => (
-                              <option key={item.id} value={item.id}>
-                                {item?.sessionName}
-                              </option>
-                            ))}
+
                         </select>
                         {formik.touched.fkSessionNo &&
                           formik.errors.fkSessionNo && (
@@ -206,12 +200,11 @@ function NewResolution() {
                       <div class="mb-3">
                         <label class="form-label">Resolution Type</label>
                         <select
-                          class={`form-select ${
-                            formik.touched.resolutionType &&
-                            formik.errors.resolutionType
+                          class={`form-select ${formik.touched.resolutionType &&
+                              formik.errors.resolutionType
                               ? "is-invalid"
                               : ""
-                          }`}
+                            }`}
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                           value={formik.values.resolutionType || ""}
@@ -241,7 +234,7 @@ function NewResolution() {
 
                     <div class="col">
                       <div class="mb-3">
-                        <label class="form-label">Movers</label>
+                        <label class="form-label">Member Senate</label>
                         <Select
                           options={members.map((item) => ({
                             value: item.id,
@@ -293,12 +286,11 @@ function NewResolution() {
                             formik.setFieldValue("noticeOfficeDiaryDate", date)
                           }
                           onBlur={formik.handleBlur}
-                          className={`form-control ${
-                            formik.touched.noticeOfficeDiaryDate &&
-                            formik.errors.noticeOfficeDiaryDate
+                          className={`form-control ${formik.touched.noticeOfficeDiaryDate &&
+                              formik.errors.noticeOfficeDiaryDate
                               ? "is-invalid"
                               : ""
-                          }`}
+                            }`}
                         />
                         {formik.touched.noticeOfficeDiaryDate &&
                           formik.errors.noticeOfficeDiaryDate && (
