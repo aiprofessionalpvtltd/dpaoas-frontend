@@ -161,7 +161,7 @@ function QMSQuestionDetail() {
 
   const hendleDeffer = async () => {
     const DefferData = {
-      fkSessionId: 1,
+      fkSessionId: deferState.sessionNo,
       deferredDate: deferState.deferDate,
       deferredBy: "login user ID",
     };
@@ -180,7 +180,7 @@ function QMSQuestionDetail() {
 
   const hendleRevive = async () => {
     const reviveData = {
-      fkFromSessionId: reviveState.sessionNo,
+      fkFromSessionId: location?.state?.question?.session?.sessionName,
       fkToSessionId: reviveState.sessionNo,
       fkGroupId: reviveState.qroup,
       fkDivisionId: reviveState.division,
@@ -189,6 +189,7 @@ function QMSQuestionDetail() {
       noticeOfficeDiaryTime: reviveState.noticeDiaryTime,
       questionDiaryNo: reviveState.questionDiaryNo,
       fkQuestionStatus: reviveState.questionStatus,
+      fkSessionId: reviveState.sessionNo
     };
     try {
       const response = await createReviveQuestion(

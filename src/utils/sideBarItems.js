@@ -350,11 +350,11 @@ export const QMSSideBarItems = [
         link: "/qms/notice/notice-question",
         icon: faClipboardList,
       },
-      {
-        itemName: "Notice Question Detail",
-        link: "/qms/notice/notice-question-detail",
-        icon: faClipboardList,
-      },
+      // {
+      //   itemName: "Notice Question Detail",
+      //   link: "/qms/notice/notice-question-detail",
+      //   icon: faClipboardList,
+      // },
       {
         itemName: "Notice Resolution",
         link: "/qms/notice/notice-resolution",

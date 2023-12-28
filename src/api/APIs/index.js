@@ -965,13 +965,29 @@ export const createReviveQuestion = async (id, reviveData) => {
 };
 
 //Question History
-export const questionHistory = () => {
-  return axiosClientMMS.get(``, {
-    // headers: {
-    //   Authorization: `Bearer ${token}`,
-    // }
-  })
-}
+export const allRevivedQuestions = async () => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientMMS.get(`/questions/allRevivedQuestions?currentPage=${0}&pageSize=${100}`)
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const RevivedQuestionsBYID = async (id) => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientMMS.get(`/questions/getReviveQuestion/${id}`)
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+
 
 // Sessions
 

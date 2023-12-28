@@ -2,14 +2,17 @@ import React, { useEffect, useState } from "react";
 import { Layout } from "../../../../../../components/Layout";
 import { QMSSideBarItems } from "../../../../../../utils/sideBarItems";
 import Header from "../../../../../../components/Header";
-import { getAllQuestion, questionHistory } from "../../../../../../api/APIs";
+import { RevivedQuestionsBYID, allRevivedQuestions, getAllQuestion } from "../../../../../../api/APIs";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-bootstrap";
+import { useNavigate } from "react-router";
 
 function QMSNoticeQuestion() {
+  const navigate = useNavigate()
   const [resData, setResData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
+  const [revivedData, setRivivedData] = useState([])
   const [count, setCount] = useState(null);
   const pageSize = 10;
 
@@ -44,7 +47,7 @@ function QMSNoticeQuestion() {
         showSuccessMessage(response?.message);
         setCount(response?.count);
         const transformedData = transformLeavesData(response.data);
-        console.log("Saqib", transformedData);
+        // console.log("Saqib", transformedData);
         setResData(transformedData);
       }
     } catch (error) {
@@ -52,11 +55,13 @@ function QMSNoticeQuestion() {
     }
   };
 
-  const QuestionHistoryApi = async () => {
+  const getallRevivedQuestionsAPI = async () => {
     try {
-      const response = await questionHistory()
+      const response = await allRevivedQuestions()
       if (response?.success) {
         showSuccessMessage(response?.message);
+        setRivivedData(response?.data)
+        console.log("sdasd", response?.data);
         // setCount(response?.count);
         // const transformedData = transformLeavesData(response.data);
         // console.log("Saqib", transformedData);
@@ -67,9 +72,22 @@ function QMSNoticeQuestion() {
     }
   }
 
+  const hendleViewDetail = async (id) => {
+    try {
+      const response = await RevivedQuestionsBYID(id)
+      if (response?.success) {
+        navigate("/qms/notice/notice-question-detail", { state: response?.data })
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   useEffect(() => {
     getAllQuestionsApi()
+    getallRevivedQuestionsAPI()
   }, [])
+
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <ToastContainer />
@@ -139,78 +157,26 @@ function QMSNoticeQuestion() {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td class="text-center green-color">1</td>
-                      <td class="text-center green-color">2648</td>
-                      <td class="text-center green-color">332</td>
-                      <td class="text-center green-color">No English Text</td>
-                      <td class="text-center green-color">23-10-2023</td>
-                      <td class="text-center green-color">4:36pm</td>
-                      <td class="text-center green-color">Starred</td>
-                      <td class="text-center green-color">
-                        Dr. Afnan Ullah Khan{" "}
-                      </td>
-                      <td class="text-center green-color">
-                        <button class="btn btn-primary" type="submit">
-                          View Review
-                        </button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="text-center red-message-color">2</td>
-                      <td class="text-center red-message-color">2648</td>
-                      <td class="text-center red-message-color">332</td>
-                      <td class="text-center red-message-color">
-                        No English Text
-                      </td>
-                      <td class="text-center red-message-color">23-10-2023</td>
-                      <td class="text-center red-message-color">34:36pm</td>
-                      <td class="text-center red-message-color">Starred</td>
-                      <td class="text-center red-message-color">
-                        Dr. Afnan Ullah Khan{" "}
-                      </td>
-                      <td class="text-center green-color">
-                        <button class="btn btn-primary" type="submit">
-                          View Review
-                        </button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="text-center green-color">3</td>
-                      <td class="text-center green-color">2648</td>
-                      <td class="text-center green-color">332</td>
-                      <td class="text-center green-color">No English Text</td>
-                      <td class="text-center green-color">23-10-2023</td>
-                      <td class="text-center green-color">4:36pm</td>
-                      <td class="text-center green-color">Starred</td>
-                      <td class="text-center green-color">
-                        Dr. Afnan Ullah Khan{" "}
-                      </td>
-                      <td class="text-center green-color">
-                        <button class="btn btn-primary" type="submit">
-                          View Review
-                        </button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="text-center red-message-color">4</td>
-                      <td class="text-center red-message-color">2648</td>
-                      <td class="text-center red-message-color">332</td>
-                      <td class="text-center red-message-color">
-                        No English Text
-                      </td>
-                      <td class="text-center red-message-color">23-10-2023</td>
-                      <td class="text-center red-message-color">34:36pm</td>
-                      <td class="text-center red-message-color">Starred</td>
-                      <td class="text-center red-message-color">
-                        Dr. Afnan Ullah Khan{" "}
-                      </td>
-                      <td class="text-center green-color">
-                        <button class="btn btn-primary" type="submit">
-                          View Review
-                        </button>
-                      </td>
-                    </tr>
+                    {revivedData && revivedData.map((item, index) => (
+                      <tr key={index}>
+                        <td class="text-center">{`${index + 1}`}</td>
+                        <td class="text-center">{item?.noticeOfficeDiary?.noticeOfficeDiaryNo}</td>
+                        <td class="text-center">{item?.ToSession?.sessionName}</td>
+                        <td class="text-center">{`${item?.question?.englishText} ${item?.question?.urduText}`}</td>
+                        <td class="text-center">{item?.noticeOfficeDiary?.noticeOfficeDiaryDate}</td>
+                        <td class="text-center">{item?.noticeOfficeDiary?.noticeOfficeDiaryTime}</td>
+                        <td class="text-center">{item?.question?.questionCategory}</td>
+                        <td class="text-center">
+                          {item?.question?.member?.memberName}
+                        </td>
+                        <td class="text-center">
+                          <button class="btn btn-primary" type="button" onClick={() => hendleViewDetail(item?.id)}>
+                            View Review
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+
                   </tbody>
                 </table>
               </div>
