@@ -150,11 +150,12 @@ function NewResolution() {
                       <div class="mb-3">
                         <label class="form-label">Session No</label>
                         <select
-                          class={`form-select ${formik.touched.fkSessionNo &&
-                              formik.errors.fkSessionNo
+                          class={`form-select ${
+                            formik.touched.fkSessionNo &&
+                            formik.errors.fkSessionNo
                               ? "is-invalid"
                               : ""
-                            }`}
+                          }`}
                           placeholder="Session No"
                           value={formik.values.fkSessionNo}
                           onChange={formik.handleChange}
@@ -164,7 +165,6 @@ function NewResolution() {
                           <option value={sessions[0]?.id} selected disabled>
                             {sessions[0]?.sessionName}
                           </option>
-
                         </select>
                         {formik.touched.fkSessionNo &&
                           formik.errors.fkSessionNo && (
@@ -200,11 +200,12 @@ function NewResolution() {
                       <div class="mb-3">
                         <label class="form-label">Resolution Type</label>
                         <select
-                          class={`form-select ${formik.touched.resolutionType &&
-                              formik.errors.resolutionType
+                          class={`form-select ${
+                            formik.touched.resolutionType &&
+                            formik.errors.resolutionType
                               ? "is-invalid"
                               : ""
-                            }`}
+                          }`}
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                           value={formik.values.resolutionType || ""}
@@ -282,15 +283,17 @@ function NewResolution() {
                         </span>
                         <DatePicker
                           selected={formik.values.noticeOfficeDiaryDate}
+                          minDate={new Date()}
                           onChange={(date) =>
                             formik.setFieldValue("noticeOfficeDiaryDate", date)
                           }
                           onBlur={formik.handleBlur}
-                          className={`form-control ${formik.touched.noticeOfficeDiaryDate &&
-                              formik.errors.noticeOfficeDiaryDate
+                          className={`form-control ${
+                            formik.touched.noticeOfficeDiaryDate &&
+                            formik.errors.noticeOfficeDiaryDate
                               ? "is-invalid"
                               : ""
-                            }`}
+                          }`}
                         />
                         {formik.touched.noticeOfficeDiaryDate &&
                           formik.errors.noticeOfficeDiaryDate && (

@@ -9,7 +9,7 @@
 // export const getToken = () => {
 //   const token = localStorage.getItem('token');
 //   const expirationTime = localStorage.getItem('tokenExpiration');
-  
+
 //   if (!token || !expirationTime) {
 //     return null; // No token or expiration time found
 //   }

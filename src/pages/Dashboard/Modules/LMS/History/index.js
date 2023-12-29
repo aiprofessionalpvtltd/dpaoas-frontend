@@ -178,6 +178,7 @@ function LMSHistory() {
                       <DatePicker
                         id="startDate"
                         selected={formik.values.startDate}
+                        minDate={new Date()}
                         onChange={(date) =>
                           formik.setFieldValue("startDate", date)
                         }
@@ -206,6 +207,7 @@ function LMSHistory() {
                       <DatePicker
                         id="endDate"
                         selected={formik.values.endDate}
+                        minDate={new Date()}
                         onChange={(date) =>
                           formik.setFieldValue("endDate", date)
                         }

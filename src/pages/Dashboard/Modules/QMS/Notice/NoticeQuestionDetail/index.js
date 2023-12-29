@@ -11,8 +11,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import { useLocation } from "react-router";
 import { AuthContext } from "../../../../../../api/AuthContext";
-import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
-import { UpdateQuestionById, sendQuestionTranslation } from "../../../../../../api/APIs";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../../utils/ToastAlert";
+import {
+  UpdateQuestionById,
+  sendQuestionTranslation,
+} from "../../../../../../api/APIs";
 import { ToastContainer } from "react-toastify";
 
 const validationSchema = Yup.object({
@@ -32,26 +38,29 @@ const validationSchema = Yup.object({
   category: Yup.string().required("Question Category is required"),
   englishText: Yup.string(),
   urduText: Yup.string(),
-  mover: Yup.string().required("Member Senator is required")
+  mover: Yup.string().required("Member Senator is required"),
 });
 
 function QMSNoticeQuestionDetail() {
-  const { members } = useContext(AuthContext)
-  const location = useLocation()
+  const { members } = useContext(AuthContext);
+  const location = useLocation();
   console.log(location?.state?.fkQuestionId);
   const formik = useFormik({
     initialValues: {
       sessionNumber: location?.state?.fkFromSessionId,
       noticeOfficeDiaryNumber: location?.state?.questionDiary?.questionDiaryNo,
-      noticeOfficeDiaryDate: new Date(location?.state?.noticeOfficeDiary?.noticeOfficeDiaryDate),
-      noticeOfficeDiaryTime: location?.state?.noticeOfficeDiary?.noticeOfficeDiaryTime,
+      noticeOfficeDiaryDate: new Date(
+        location?.state?.noticeOfficeDiary?.noticeOfficeDiaryDate,
+      ),
+      noticeOfficeDiaryTime:
+        location?.state?.noticeOfficeDiary?.noticeOfficeDiaryTime,
       questionDiaryNumber: location?.state?.questionDiary?.questionDiaryNo,
       category: "",
       englishText: "",
       urduText: location?.state?.urduText,
       division: location?.state?.divisions?.divisionName,
       assignedquestionid: location?.state?.questionDiary?.questionID,
-      mover: ""
+      mover: "",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -117,7 +126,11 @@ function QMSNoticeQuestionDetail() {
       <div class="container-fluid">
         <div class="row mt-4">
           <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <button class="btn btn-primary" type="button" onClick={hendleQuestionTranslation}>
+            <button
+              class="btn btn-primary"
+              type="button"
+              onClick={hendleQuestionTranslation}
+            >
               Send for Translation
             </button>
           </div>
@@ -126,7 +139,12 @@ function QMSNoticeQuestionDetail() {
           <div class="row">
             <div class="col-3">
               <div class="mb-3">
-                <input class="form-control" type="text" readOnly placeholder={location?.state?.fkQuestionId} />
+                <input
+                  class="form-control"
+                  type="text"
+                  readOnly
+                  placeholder={location?.state?.fkQuestionId}
+                />
               </div>
             </div>
             <div class="col-6">
@@ -170,7 +188,6 @@ function QMSNoticeQuestionDetail() {
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                         />
-
                       </div>
                     </div>
                     <div class="col">
@@ -181,11 +198,12 @@ function QMSNoticeQuestionDetail() {
                         <input
                           type="text"
                           placeholder={formik.values.noticeOfficeDiaryNumber}
-                          className={`form-control ${formik.touched.noticeOfficeDiaryNumber &&
+                          className={`form-control ${
+                            formik.touched.noticeOfficeDiaryNumber &&
                             formik.errors.noticeOfficeDiaryNumber
-                            ? "is-invalid"
-                            : ""
-                            }`}
+                              ? "is-invalid"
+                              : ""
+                          }`}
                           id="noticeOfficeDiaryNumber"
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
@@ -218,15 +236,17 @@ function QMSNoticeQuestionDetail() {
                         </span>
                         <DatePicker
                           selected={formik.values.noticeOfficeDiaryDate}
+                          minDate={new Date()}
                           onChange={(date) =>
                             formik.setFieldValue("noticeOfficeDiaryDate", date)
                           }
                           onBlur={formik.handleBlur}
-                          className={`form-control ${formik.touched.noticeOfficeDiaryDate &&
+                          className={`form-control ${
+                            formik.touched.noticeOfficeDiaryDate &&
                             formik.errors.noticeOfficeDiaryDate
-                            ? "is-invalid"
-                            : ""
-                            }`}
+                              ? "is-invalid"
+                              : ""
+                          }`}
                         />
                         {formik.touched.noticeOfficeDiaryDate &&
                           formik.errors.noticeOfficeDiaryDate && (
@@ -249,11 +269,12 @@ function QMSNoticeQuestionDetail() {
                           onChange={(time) =>
                             formik.setFieldValue("noticeOfficeDiaryTime", time)
                           }
-                          className={`form-control ${formik.touched.noticeOfficeDiaryTime &&
+                          className={`form-control ${
+                            formik.touched.noticeOfficeDiaryTime &&
                             formik.errors.noticeOfficeDiaryTime
-                            ? "is-invalid"
-                            : ""
-                            }`}
+                              ? "is-invalid"
+                              : ""
+                          }`}
                         />
                         {formik.touched.noticeOfficeDiaryTime &&
                           formik.errors.noticeOfficeDiaryTime && (
@@ -271,11 +292,12 @@ function QMSNoticeQuestionDetail() {
                         <input
                           type="text"
                           placeholder={formik.values.questionDiaryNumber}
-                          className={`form-control ${formik.touched.questionDiaryNumber &&
+                          className={`form-control ${
+                            formik.touched.questionDiaryNumber &&
                             formik.errors.questionDiaryNumber
-                            ? "is-invalid"
-                            : ""
-                            }`}
+                              ? "is-invalid"
+                              : ""
+                          }`}
                           id="questionDiaryNumber"
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
@@ -291,19 +313,25 @@ function QMSNoticeQuestionDetail() {
                     <div class="col">
                       <div class="mb-3">
                         <label class="form-label">Assigned Question ID</label>
-                        <input class="form-control" type="text" placeholder={formik.values.assignedquestionid} id="assignedquestionid"
+                        <input
+                          class="form-control"
+                          type="text"
+                          placeholder={formik.values.assignedquestionid}
+                          id="assignedquestionid"
                           onChange={formik.handleChange}
-                          onBlur={formik.handleBlur} />
+                          onBlur={formik.handleBlur}
+                        />
                       </div>
                     </div>
                     <div class="col">
                       <div class="mb-3">
                         <label class="form-label">Category</label>
                         <select
-                          className={`form-select ${formik.touched.category && formik.errors.category
-                            ? "is-invalid"
-                            : ""
-                            }`}
+                          className={`form-select ${
+                            formik.touched.category && formik.errors.category
+                              ? "is-invalid"
+                              : ""
+                          }`}
                           id="category"
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
@@ -314,11 +342,12 @@ function QMSNoticeQuestionDetail() {
                           <option value={"Starred"}>Starred</option>
                           <option value={"Un-Starred"}>Un-Starred</option>
                           <option value={"Short Notice"}>Short Notice</option>
-                          {formik.touched.category && formik.errors.category && (
-                            <div className="invalid-feedback">
-                              {formik.errors.category}
-                            </div>
-                          )}
+                          {formik.touched.category &&
+                            formik.errors.category && (
+                              <div className="invalid-feedback">
+                                {formik.errors.category}
+                              </div>
+                            )}
                         </select>
                       </div>
                     </div>
@@ -326,10 +355,11 @@ function QMSNoticeQuestionDetail() {
                       <div class="mb-3">
                         <label class="form-label">Member Senator</label>
                         <select
-                          className={`form-select ${formik.touched.mover && formik.errors.mover
-                            ? "is-invalid"
-                            : ""
-                            }`}
+                          className={`form-select ${
+                            formik.touched.mover && formik.errors.mover
+                              ? "is-invalid"
+                              : ""
+                          }`}
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                           id="mover"
@@ -354,9 +384,14 @@ function QMSNoticeQuestionDetail() {
                     <div class="col-3">
                       <div class="mb-3">
                         <label class="form-label">Division</label>
-                        <input class="form-control" type="text" placeholder={formik.values.division} id="division"
+                        <input
+                          class="form-control"
+                          type="text"
+                          placeholder={formik.values.division}
+                          id="division"
                           onChange={formik.handleChange}
-                          onBlur={formik.handleBlur} />
+                          onBlur={formik.handleBlur}
+                        />
                       </div>
                     </div>
                   </div>

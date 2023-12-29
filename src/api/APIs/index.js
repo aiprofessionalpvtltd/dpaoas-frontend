@@ -968,7 +968,9 @@ export const createReviveQuestion = async (id, reviveData) => {
 export const allRevivedQuestions = async () => {
   try {
     const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/questions/allRevivedQuestions?currentPage=${0}&pageSize=${100}`)
+    const response = await axiosClientMMS.get(
+      `/questions/allRevivedQuestions?currentPage=${0}&pageSize=${100}`,
+    );
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -979,15 +981,15 @@ export const allRevivedQuestions = async () => {
 export const RevivedQuestionsBYID = async (id) => {
   try {
     const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/questions/getReviveQuestion/${id}`)
+    const response = await axiosClientMMS.get(
+      `/questions/getReviveQuestion/${id}`,
+    );
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
     throw error;
   }
 };
-
-
 
 // Sessions
 
@@ -1006,18 +1008,21 @@ export const getAllSessions = async () => {
   }
 };
 
-
 // Seating Plan
 
 export const updateSeat = async (seatNo, data) => {
   try {
     const token = getAuthToken();
-    const response = await axiosClientMMS.put(`/seatingPlan/seatAssignment/${seatNo}`, data, {
-      headers: {
-        accept: "application/json",
-        "Content-Type": "multipart/form-data",
+    const response = await axiosClientMMS.put(
+      `/seatingPlan/seatAssignment/${seatNo}`,
+      data,
+      {
+        headers: {
+          accept: "application/json",
+          "Content-Type": "multipart/form-data",
+        },
       },
-    });
+    );
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -1028,14 +1033,11 @@ export const updateSeat = async (seatNo, data) => {
 export const getAllSeats = async () => {
   try {
     const token = getAuthToken();
-    const response = await axiosClientMMS.get(
-      `/seatingPlan/allSeats`,
-      {
-        // headers: {
-        //   Authorization: `Bearer ${token}`,
-        // }
-      },
-    );
+    const response = await axiosClientMMS.get(`/seatingPlan/allSeats`, {
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // }
+    });
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);

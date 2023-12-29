@@ -101,7 +101,7 @@ function ManageSeatingPlan() {
 
   useEffect(() => {
     getAllSeatsApi();
-  }, [])
+  }, []);
 
   return (
     // <Layout
@@ -205,9 +205,7 @@ function ManageSeatingPlan() {
                         onClick={() => openModal(item)}
                       >
                         <div class="sitt-card-left">
-                          <h2>
-                            {item?.member?.memberName}
-                          </h2>
+                          <h2>{item?.member?.memberName}</h2>
                         </div>
                         <p>{item.seatNo}</p>
                       </div>

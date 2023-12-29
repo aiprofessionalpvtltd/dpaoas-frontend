@@ -138,11 +138,12 @@ function NewQuestion() {
                       <div class="mb-3">
                         <label class="form-label">Session No</label>
                         <select
-                          class={`form-select ${formik.touched.fkSessionId &&
-                              formik.errors.fkSessionId
+                          class={`form-select ${
+                            formik.touched.fkSessionId &&
+                            formik.errors.fkSessionId
                               ? "is-invalid"
                               : ""
-                            }`}
+                          }`}
                           placeholder="Session No"
                           value={formik.values.fkSessionId}
                           onChange={formik.handleChange}
@@ -152,7 +153,6 @@ function NewQuestion() {
                           <option value={sessions[0]?.id} selected disabled>
                             {sessions[0]?.sessionName}
                           </option>
-
                         </select>
                         {formik.touched.fkSessionId &&
                           formik.errors.fkSessionId && (
@@ -167,11 +167,12 @@ function NewQuestion() {
                       <div class="mb-3">
                         <label class="form-label">Category</label>
                         <select
-                          class={`form-select ${formik.touched.questionCategory &&
-                              formik.errors.questionCategory
+                          class={`form-select ${
+                            formik.touched.questionCategory &&
+                            formik.errors.questionCategory
                               ? "is-invalid"
                               : ""
-                            }`}
+                          }`}
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                           value={formik.values.questionCategory || ""}
@@ -198,11 +199,12 @@ function NewQuestion() {
                       <div class="mb-3">
                         <label class="form-label">Notice Office Diary No</label>
                         <input
-                          class={`form-control ${formik.touched.noticeOfficeDiaryNo &&
-                              formik.errors.noticeOfficeDiaryNo
+                          class={`form-control ${
+                            formik.touched.noticeOfficeDiaryNo &&
+                            formik.errors.noticeOfficeDiaryNo
                               ? "is-invalid"
                               : ""
-                            }`}
+                          }`}
                           type="number"
                           id="noticeOfficeDiaryNo"
                           value={formik.values.noticeOfficeDiaryNo}
@@ -224,11 +226,12 @@ function NewQuestion() {
                         <label class="form-label">Member ID</label>
 
                         <select
-                          class={`form-select ${formik.touched.fkMemberId &&
-                              formik.errors.fkMemberId
+                          class={`form-select ${
+                            formik.touched.fkMemberId &&
+                            formik.errors.fkMemberId
                               ? "is-invalid"
                               : ""
-                            }`}
+                          }`}
                           placeholder={formik.values.fkMemberId}
                           onChange={formik.handleChange}
                           id="fkMemberId"
@@ -274,15 +277,17 @@ function NewQuestion() {
                         </span>
                         <DatePicker
                           selected={formik.values.noticeOfficeDiaryDate}
+                          minDate={new Date()}
                           onChange={(date) =>
                             formik.setFieldValue("noticeOfficeDiaryDate", date)
                           }
                           onBlur={formik.handleBlur}
-                          className={`form-control ${formik.touched.noticeOfficeDiaryDate &&
-                              formik.errors.noticeOfficeDiaryDate
+                          className={`form-control ${
+                            formik.touched.noticeOfficeDiaryDate &&
+                            formik.errors.noticeOfficeDiaryDate
                               ? "is-invalid"
                               : ""
-                            }`}
+                          }`}
                         />
                         {formik.touched.noticeOfficeDiaryDate &&
                           formik.errors.noticeOfficeDiaryDate && (

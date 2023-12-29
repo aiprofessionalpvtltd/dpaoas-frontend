@@ -50,7 +50,7 @@ function HRMDesignation() {
       const response = await DeleteDesignation(id);
       if (response?.success) {
         showSuccessMessage(response.message);
-        getDesignationApi()
+        getDesignationApi();
       }
     } catch (error) {
       showErrorMessage(error.response.data.message);

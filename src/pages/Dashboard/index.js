@@ -23,7 +23,7 @@ import { CheckPermission } from "../../utils/permissionsConfig";
 import { useNavigate } from "react-router";
 
 function Dashboard() {
-  const navigation = useNavigate()
+  const navigation = useNavigate();
   const [roles, setRoles] = useState([]);
   const { permissions } = useContext(AuthContext);
   const [permissionsLocal, setPermissionsLocal] = useState([]);
@@ -68,60 +68,63 @@ function Dashboard() {
 
   const tilesData = [
     {
-      "title": "Leave Management System",
-      "link": "/lms/dashboard",
-      "type": "",
-      "cardbg": "bluebg",
-      "icon": faMailBulk,
-      "permission": null,
+      title: "Leave Management System",
+      link: "/lms/dashboard",
+      type: "",
+      cardbg: "bluebg",
+      icon: faMailBulk,
+      permission: null,
       // "permission": ["Leave", "LeaveHistory"]
     },
     {
-      "title": "Organizational Dashboard",
-      "link": "/hrm/dashboard",
-      "type": "",
-      "cardbg": "greenbg",
-      "icon": faUserCog,
-      "permission": null,
+      title: "Organizational Dashboard",
+      link: "/hrm/dashboard",
+      type: "",
+      cardbg: "greenbg",
+      icon: faUserCog,
+      permission: null,
       // "permission": ["Roles", "Employees", "Departments", "Designation"]
     },
     {
-      "title": "Visitors Management System",
-      "link": "/vms/dashboard",
-      "type": "",
-      "cardbg": "greybg",
-      "icon": faAddressCard,
-      "permission": null
+      title: "Visitors Management System",
+      link: "/vms/dashboard",
+      type: "",
+      cardbg: "greybg",
+      icon: faAddressCard,
+      permission: null,
     },
     {
-      "title": "Notice Management System",
-      "link": "/notice/question/new",
-      "type": "",
-      "cardbg": "darkGreenbg",
-      "icon": faBullhorn,
-      "permission": null
+      title: "Notice Management System",
+      link: "/notice/question/new",
+      type: "",
+      cardbg: "darkGreenbg",
+      icon: faBullhorn,
+      permission: null,
     },
     {
-      "title": "Motion Management System",
-      "link": "/mms/motion/list",
-      "type": "",
-      "cardbg": "lightGreen",
-      "icon": faFileImport,
-      "permission": null
+      title: "Motion Management System",
+      link: "/mms/motion/list",
+      type: "",
+      cardbg: "lightGreen",
+      icon: faFileImport,
+      permission: null,
     },
     {
-      "title": "Question Management System",
-      "link": "/qms/search/question",
-      "type": "",
-      "cardbg": "orangebg",
-      "icon": faClipboardQuestion,
-      "permission": null
-    }
+      title: "Question Management System",
+      link: "/qms/search/question",
+      type: "",
+      cardbg: "orangebg",
+      icon: faClipboardQuestion,
+      permission: null,
+    },
   ];
 
   // Filter tiles based on permissions
-  const filteredTiles = tilesData.filter(tile => {
-    return tile?.permission === null || tile?.permission.some(perm => permissionsLocal?.[perm]?.canView);
+  const filteredTiles = tilesData.filter((tile) => {
+    return (
+      tile?.permission === null ||
+      tile?.permission.some((perm) => permissionsLocal?.[perm]?.canView)
+    );
   });
 
   // Organize tiles into rows with a maximum of 3 tiles per row
@@ -134,7 +137,7 @@ function Dashboard() {
     <Layout>
       <div class="dashboard-content" style={{ marginTop: "100px" }}>
         <div class="clearfix"></div>
-        
+
         {rows.map((row, rowIndex) => (
           <div key={rowIndex} className="row main-dashboard-tiles">
             {row.map((tile, colIndex) => (
@@ -150,7 +153,6 @@ function Dashboard() {
             ))}
           </div>
         ))}
-        
       </div>
     </Layout>
   );
