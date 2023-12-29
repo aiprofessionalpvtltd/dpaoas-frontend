@@ -333,6 +333,7 @@ function SentQuestion() {
                           </span>
                           <DatePicker
                             selected={formik.values.fromNoticeDate}
+                            minDate={new Date()}
                             onChange={(date) =>
                               formik.setFieldValue("fromNoticeDate", date)
                             }
@@ -358,6 +359,7 @@ function SentQuestion() {
                           </span>
                           <DatePicker
                             selected={formik.values.toNoticeDate}
+                            minDate={new Date()}
                             onChange={(date) =>
                               formik.setFieldValue("toNoticeDate", date)
                             }
@@ -397,7 +399,6 @@ function SentQuestion() {
                     pageSize={pageSize}
                     handleAdd={(item) => navigate("/")}
                     handleEdit={(item) => navigate("/")}
-
                     totalCount={count}
                   />
                 </div>

@@ -241,6 +241,7 @@ function VMSDuplicatePass() {
                     </span>
                     <DatePicker
                       selected={formik.values.passdate}
+                      minDate={new Date()}
                       onChange={(date) =>
                         formik.setFieldValue("passdate", date)
                       }
@@ -356,6 +357,7 @@ function VMSDuplicatePass() {
                     </span>
                     <DatePicker
                       selected={formik.values.fromdate}
+                      minDate={new Date()}
                       onChange={(date) =>
                         formik.setFieldValue("fromdate", date)
                       }
@@ -391,6 +393,7 @@ function VMSDuplicatePass() {
                     </span>
                     <DatePicker
                       selected={formik.values.todate}
+                      minDate={new Date()}
                       onChange={(date) => formik.setFieldValue("todate", date)}
                       onBlur={formik.handleBlur}
                       className={`form-control ${

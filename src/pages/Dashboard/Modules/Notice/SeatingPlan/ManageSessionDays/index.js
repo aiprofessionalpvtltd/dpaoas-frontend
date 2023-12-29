@@ -13,7 +13,7 @@ function ManageSessionDays() {
   const [resData, setResData] = useState([]);
   const [count, setCount] = useState(null);
   const pageSize = 4; // Set your desired page size
-  
+
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
     setCurrentPage(page);
@@ -73,23 +73,23 @@ function ManageSessionDays() {
             </div>
             <div class="card-body">
               <div class="container-fluid">
-                  <div
-                    class="dash-detail-container"
-                    style={{ marginTop: "20px" }}
-                  >
-                    <CustomTable
-                      hideBtn={true}
-                      data={resData}
-                      tableTitle="Resolutions"
-                      handlePageChange={handlePageChange}
-                      currentPage={currentPage}
-                      showPrint={true}
-                      pageSize={pageSize}
-                      handleAdd={(item) => navigate("/")}
-                      handleEdit={(item) => navigate("/")}
-                      totalCount={count}
-                    />
-                  </div>
+                <div
+                  class="dash-detail-container"
+                  style={{ marginTop: "20px" }}
+                >
+                  <CustomTable
+                    hideBtn={true}
+                    data={resData}
+                    tableTitle="Resolutions"
+                    handlePageChange={handlePageChange}
+                    currentPage={currentPage}
+                    showPrint={true}
+                    pageSize={pageSize}
+                    handleAdd={(item) => navigate("/")}
+                    handleEdit={(item) => navigate("/")}
+                    totalCount={count}
+                  />
+                </div>
 
                 {/* <div
                   class="dash-detail-container"

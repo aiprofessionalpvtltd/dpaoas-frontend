@@ -306,6 +306,7 @@ function MMSSearchQuestion() {
                         </span>
                         <DatePicker
                           selected={formik.values.fromNoticeDate}
+                          minDate={new Date()}
                           onChange={(date) =>
                             formik.setFieldValue("fromNoticeDate", date)
                           }
@@ -331,6 +332,7 @@ function MMSSearchQuestion() {
                         </span>
                         <DatePicker
                           selected={formik.values.toNoticeDate}
+                          minDate={new Date()}
                           onChange={(date) =>
                             formik.setFieldValue("toNoticeDate", date)
                           }
@@ -435,6 +437,7 @@ function MMSSearchQuestion() {
                       <FontAwesomeIcon icon={faCalendarAlt} />
                     </span>
                     <DatePicker
+                      minDate={new Date()}
                       // selected={formik.values.toNoticeDate}
                       // onChange={(date) => formik.setFieldValue("toNoticeDate", date)}
                       className={"form-control"}

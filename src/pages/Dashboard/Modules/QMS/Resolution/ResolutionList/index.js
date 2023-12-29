@@ -140,6 +140,7 @@ function QMSResolutionList() {
                       <FontAwesomeIcon icon={faCalendarAlt} />
                     </span>
                     <DatePicker
+                      minDate={new Date()}
                       // selected={formik.values.fromNoticeDate}
                       // onChange={(date) =>
                       //   formik.setFieldValue("fromNoticeDate", date)
