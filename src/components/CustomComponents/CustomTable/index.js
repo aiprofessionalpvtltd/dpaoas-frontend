@@ -108,7 +108,6 @@ function CustomTable({
 
   return (
     <div className="container-fluid">
-      <div className="dash-detail-container">
         <div className="dash-card">
           {!headerShown && !headerShown && (
             <div
@@ -443,7 +442,6 @@ function CustomTable({
                 {renderPagination()}
               </div>
             )}
-      </div>
     </div>
   );
 }

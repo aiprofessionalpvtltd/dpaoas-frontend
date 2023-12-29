@@ -66,73 +66,91 @@ function Dashboard() {
     }
   }, [roles, permissions]);
 
+  const tilesData = [
+    {
+      "title": "Leave Management System",
+      "link": "/lms/dashboard",
+      "type": "",
+      "cardbg": "bluebg",
+      "icon": faMailBulk,
+      "permission": null,
+      // "permission": ["Leave", "LeaveHistory"]
+    },
+    {
+      "title": "Organizational Dashboard",
+      "link": "/hrm/dashboard",
+      "type": "",
+      "cardbg": "greenbg",
+      "icon": faUserCog,
+      "permission": null,
+      // "permission": ["Roles", "Employees", "Departments", "Designation"]
+    },
+    {
+      "title": "Visitors Management System",
+      "link": "/vms/dashboard",
+      "type": "",
+      "cardbg": "greybg",
+      "icon": faAddressCard,
+      "permission": null
+    },
+    {
+      "title": "Notice Management System",
+      "link": "/notice/question/new",
+      "type": "",
+      "cardbg": "darkGreenbg",
+      "icon": faBullhorn,
+      "permission": null
+    },
+    {
+      "title": "Motion Management System",
+      "link": "/mms/motion/list",
+      "type": "",
+      "cardbg": "lightGreen",
+      "icon": faFileImport,
+      "permission": null
+    },
+    {
+      "title": "Question Management System",
+      "link": "/qms/search/question",
+      "type": "",
+      "cardbg": "orangebg",
+      "icon": faClipboardQuestion,
+      "permission": null
+    }
+  ];
+
+  // Filter tiles based on permissions
+  const filteredTiles = tilesData.filter(tile => {
+    return tile?.permission === null || tile?.permission.some(perm => permissionsLocal?.[perm]?.canView);
+  });
+
+  // Organize tiles into rows with a maximum of 3 tiles per row
+  const rows = [];
+  for (let i = 0; i < filteredTiles.length; i += 3) {
+    rows.push(filteredTiles.slice(i, i + 3));
+  }
+
   return (
     <Layout>
       <div class="dashboard-content" style={{ marginTop: "100px" }}>
         <div class="clearfix"></div>
-        <div class="row main-dashboard-tiles">
-          {/* {(permissionsLocal?.Leave?.canView || permissionsLocal?.LeaveHistory?.canView) && ( */}
-          <div class="col-4">
-            <Tiles
-              title={"Leave Management System"}
-              link={"/lms/dashboard"}
-              type={""}
-              cardbg={"bluebg"}
-              icon={faMailBulk}
-            />
+        
+        {rows.map((row, rowIndex) => (
+          <div key={rowIndex} className="row main-dashboard-tiles">
+            {row.map((tile, colIndex) => (
+              <div key={colIndex} className="col-4">
+                <Tiles
+                  title={tile.title}
+                  link={tile.link}
+                  type={tile.type}
+                  cardbg={tile.cardbg}
+                  icon={tile.icon}
+                />
+              </div>
+            ))}
           </div>
-          {/* )} */}
-          {/* {(permissionsLocal?.Roles?.canView || permissionsLocal?.Employees?.canView || permissionsLocal?.Departments?.canView || permissionsLocal?.Designation?.canView) && ( */}
-          <div class="col-4">
-            <Tiles
-              title={"Organizational Dashboard"}
-              link={"/hrm/dashboard"}
-              type={""}
-              cardbg={"greenbg"}
-              icon={faUserCog}
-            />
-          </div>
-          {/* )} */}
-          <div class="col-4">
-            <Tiles
-              title={"Visitors Management System"}
-              link={"/vms/dashboard"}
-              type={""}
-              cardbg={"greybg"}
-              icon={faAddressCard}
-            />
-          </div>
-        </div>
-
-        <div class="row main-dashboard-tiles">
-          <div class="col-4">
-            <Tiles
-              title={"Notice Management System"}
-              link={"/notice/question/new"}
-              type={""}
-              cardbg={"darkGreenbg"}
-              icon={faBullhorn}
-            />
-          </div>
-          <div class="col-4">
-            <Tiles
-              title={"Motion Management System"}
-              link={"/mms/motion/list"}
-              type={""}
-              cardbg={"lightGreen"}
-              icon={faFileImport}
-            />
-          </div>
-          <div class="col-4">
-            <Tiles
-              title={"Question Management System"}
-              link={"/qms/search/question"}
-              type={""}
-              cardbg={"orangebg"}
-              icon={faClipboardQuestion}
-            />
-          </div>
-        </div>
+        ))}
+        
       </div>
     </Layout>
   );
