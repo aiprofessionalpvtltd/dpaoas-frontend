@@ -17,6 +17,7 @@ import DatePicker from "react-datepicker";
 import { AuthContext } from "../../../../../../api/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
+import moment from "moment";
 
 const validationSchema = Yup.object({
   sessionNumber: Yup.string(),
@@ -70,7 +71,7 @@ function MMSMotionList() {
       noticeOfficeDiaryNo: leave?.noticeOfficeDairies?.noticeOfficeDiaryNo,
       // ministryName: leave?.motionMinistries?.ministries,
       // ministryIds: leave?.motionMinistries?.fkMinistryId,
-      noticeOfficeDiaryDate: leave?.noticeOfficeDairies?.noticeOfficeDiaryDate,
+      noticeOfficeDiaryDate: moment(leave?.noticeOfficeDairies?.noticeOfficeDiaryDate).format("YYYY/MM/DD"),
       noticeOfficeDiaryTime: leave?.noticeOfficeDairies?.noticeOfficeDiaryTime,
       // memberName:leave?.motionMovers?.members,
       englishText: leave?.englishText,

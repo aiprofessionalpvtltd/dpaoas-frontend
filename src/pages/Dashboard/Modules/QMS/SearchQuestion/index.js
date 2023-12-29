@@ -23,6 +23,7 @@ import {
 import { AuthContext } from "../../../../../api/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
+import moment from "moment";
 
 function QMSSearchQuestion() {
     const navigate = useNavigate();
@@ -69,7 +70,7 @@ function QMSSearchQuestion() {
                 SrNo: index,
                 QID: res?.id,
                 QDN: res?.fkQuestionDiaryId,
-                NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate,
+                NoticeDate: moment(res?.noticeOfficeDiary?.noticeOfficeDiaryDate).format("YYYY/MM/DD"),
                 NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
                 SessionNumber: res?.session?.sessionName,
                 SubjectMatter: [res?.englishText, res?.urduText]
@@ -550,8 +551,21 @@ function QMSSearchQuestion() {
                                     </div>
                                 </div>
                                 <div class="col">
-                                    <div class="mb-3">
+                                    <div class="mb-3" style={{ position: "relative" }}>
                                         <label class="form-label">Status Date</label>
+                                        <span
+                                            style={{
+                                                position: "absolute",
+                                                right: "15px",
+                                                top: "36px",
+                                                zIndex: 1,
+                                                fontSize: "20px",
+                                                zIndex: "1",
+                                                color: "#666",
+                                            }}
+                                        >
+                                            <FontAwesomeIcon icon={faCalendarAlt} />
+                                        </span>
                                         <DatePicker
                                             // selected={formik.values.fromNoticeDate}
                                             // onChange={(date) => formik.setFieldValue("fromNoticeDate", date)}

@@ -7,6 +7,7 @@ import CustomTable from "../../../../../../components/CustomComponents/CustomTab
 import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-bootstrap";
 import { useNavigate } from "react-router";
+import moment from "moment";
 
 function QMSNoticeQuestion() {
   const navigate = useNavigate()
@@ -27,7 +28,7 @@ function QMSNoticeQuestion() {
         SrNo: index,
         QID: res.id,
         QDN: res.fkQuestionDiaryId,
-        NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate,
+        NoticeDate: moment(res?.noticeOfficeDiary?.noticeOfficeDiaryDate).format("YYYY/MM/DD"),
         NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
         SessionNumber: res?.session?.sessionName,
         SubjectMatter: [res?.englishText, res?.urduText]
@@ -163,7 +164,7 @@ function QMSNoticeQuestion() {
                         <td class="text-center">{item?.noticeOfficeDiary?.noticeOfficeDiaryNo}</td>
                         <td class="text-center">{item?.ToSession?.sessionName}</td>
                         <td class="text-center">{`${item?.question?.englishText} ${item?.question?.urduText}`}</td>
-                        <td class="text-center">{item?.noticeOfficeDiary?.noticeOfficeDiaryDate}</td>
+                        <td class="text-center">{moment(item?.noticeOfficeDiary?.noticeOfficeDiaryDate).format("YYYY/MM/DD")}</td>
                         <td class="text-center">{item?.noticeOfficeDiary?.noticeOfficeDiaryTime}</td>
                         <td class="text-center">{item?.question?.questionCategory}</td>
                         <td class="text-center">

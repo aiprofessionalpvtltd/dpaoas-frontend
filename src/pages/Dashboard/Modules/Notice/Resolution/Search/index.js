@@ -65,7 +65,7 @@ function SearchResolution() {
 
       return {
         RID: res.id,
-        ResDN: res.resolutionDiaries,
+        // ResDN: res.resolutionDiaries,
         SessionNumber: res.session?.sessionName,
         ResolutionType: res.resolutionType,
         SubjectMatter: "",

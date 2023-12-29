@@ -20,6 +20,7 @@ import { ToastContainer } from "react-toastify";
 import { AuthContext } from "../../../../../../api/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
+import moment from "moment";
 
 function SearchQuestion() {
   const navigate = useNavigate();
@@ -63,7 +64,7 @@ function SearchQuestion() {
         // SrNo: index,
         QID: res.id,
         // QDN: res.questionDiary.questionDiaryNo,
-        NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate,
+        NoticeDate: moment(res?.noticeOfficeDiary?.noticeOfficeDiaryDate).format("YYYY/MM/DD"),
         NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
         SessionNumber: res?.session?.sessionName,
         SubjectMatter: [res?.englishText, res?.urduText]

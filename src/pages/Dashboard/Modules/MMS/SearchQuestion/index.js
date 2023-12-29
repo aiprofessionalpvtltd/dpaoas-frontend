@@ -15,6 +15,7 @@ import DatePicker from "react-datepicker";
 import { AuthContext } from "../../../../../api/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
+import moment from "moment";
 
 function MMSSearchQuestion() {
   const navigate = useNavigate();
@@ -58,7 +59,7 @@ function MMSSearchQuestion() {
         SrNo: index,
         QID: res?.id,
         QDN: res?.fkQuestionDiaryId,
-        NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate,
+        NoticeDate: moment(res?.noticeOfficeDiary?.noticeOfficeDiaryDate).format("YYYY/MM/DD"),
         NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
         SessionNumber: res?.session?.sessionName,
         SubjectMatter: [res?.englishText, res?.urduText]
@@ -392,7 +393,7 @@ function MMSSearchQuestion() {
                   hideEditIcon={true}
                   ActionHide={true}
                   totalCount={count}
-                  // handleDelete={(item) => handleDelete(item.id)}
+                // handleDelete={(item) => handleDelete(item.id)}
                 />
               </div>
 

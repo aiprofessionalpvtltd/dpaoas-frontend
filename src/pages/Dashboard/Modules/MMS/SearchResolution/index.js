@@ -405,9 +405,9 @@ function MMSSearchResolution() {
                   hideEditIcon={true}
                   ActionHide={true}
                   totalCount={count}
-                  // handlePrint={}
-                  // handleUser={}
-                  // handleDelete={(item) => handleDelete(item.id)}
+                // handlePrint={}
+                // handleUser={}
+                // handleDelete={(item) => handleDelete(item.id)}
                 />
                 <div class="row mt-3">
                   <div class="col">
@@ -443,9 +443,26 @@ function MMSSearchResolution() {
                     </div>
                   </div>
                   <div class="col">
-                    <div class="mb-3">
+                    <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label">Status Date</label>
-                      <input class="form-control" />
+                      <span
+                        style={{
+                          position: "absolute",
+                          right: "15px",
+                          top: "36px",
+                          zIndex: 1,
+                          fontSize: "20px",
+                          zIndex: "1",
+                          color: "#666",
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faCalendarAlt} />
+                      </span>
+                      <DatePicker
+                        // selected={formik.values.toNoticeDate}
+                        // onChange={(date) => formik.setFieldValue("toNoticeDate", date)}
+                        className={"form-control"}
+                      />
                     </div>
                   </div>
                 </div>

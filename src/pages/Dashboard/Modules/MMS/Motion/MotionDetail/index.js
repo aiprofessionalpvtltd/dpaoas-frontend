@@ -9,9 +9,6 @@ import TimePicker from "react-time-picker";
 import Select from "react-select";
 
 import {
-    getAllMinistry,
-    getAllSessions,
-    getallMembers,
     getallMotionStatus,
     sendMotionForTranslation,
     updateNewMotion,
@@ -22,7 +19,6 @@ import {
 } from "../../../../../../utils/ToastAlert";
 import { useLocation } from "react-router";
 import { ToastContainer } from "react-toastify";
-import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import { AuthContext } from "../../../../../../api/AuthContext";
 import { Editor } from "../../../../../../components/CustomComponents/Editor";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -240,8 +236,8 @@ function MMSMotionDetail() {
                                             <input
                                                 type="text"
                                                 className={`form-control ${formik.touched.fileNo && formik.errors.fileNo
-                                                        ? "is-invalid"
-                                                        : ""
+                                                    ? "is-invalid"
+                                                    : ""
                                                     }`}
                                                 id="fileNo"
                                                 placeholder={formik.values.fileNo}
@@ -300,9 +296,9 @@ function MMSMotionDetail() {
                                             <input
                                                 type="text"
                                                 className={`form-control ${formik.touched.noticeOfficeDiaryNo &&
-                                                        formik.errors.noticeOfficeDiaryNo
-                                                        ? "is-invalid"
-                                                        : ""
+                                                    formik.errors.noticeOfficeDiaryNo
+                                                    ? "is-invalid"
+                                                    : ""
                                                     }`}
                                                 id="noticeOfficeDiaryNo"
                                                 placeholder={formik.values.noticeOfficeDiaryNo}
@@ -339,9 +335,9 @@ function MMSMotionDetail() {
                                                     formik.setFieldValue("noticeOfficeDiaryDate", date)
                                                 }
                                                 className={`form-control ${formik.errors.noticeOfficeDiaryDate &&
-                                                        formik.touched.noticeOfficeDiaryDate
-                                                        ? "is-invalid"
-                                                        : ""
+                                                    formik.touched.noticeOfficeDiaryDate
+                                                    ? "is-invalid"
+                                                    : ""
                                                     }`}
                                             />
                                             {formik.errors.noticeOfficeDiaryDate &&
@@ -364,9 +360,9 @@ function MMSMotionDetail() {
                                                     formik.setFieldValue("noticeOfficeDiaryTime", time)
                                                 }
                                                 className={`form-control ${formik.errors.noticeOfficeDiaryTime &&
-                                                        formik.touched.noticeOfficeDiaryTime
-                                                        ? "is-invalid"
-                                                        : ""
+                                                    formik.touched.noticeOfficeDiaryTime
+                                                    ? "is-invalid"
+                                                    : ""
                                                     }`}
                                             />
                                             {formik.errors.noticeOfficeDiaryTime &&
@@ -423,9 +419,9 @@ function MMSMotionDetail() {
                                                     formik.setFieldValue("dateofMovinginHouse", date)
                                                 }
                                                 className={`form-control ${formik.errors.dateofMovinginHouse &&
-                                                        formik.touched.dateofMovinginHouse
-                                                        ? "is-invalid"
-                                                        : ""
+                                                    formik.touched.dateofMovinginHouse
+                                                    ? "is-invalid"
+                                                    : ""
                                                     }`}
                                             />
                                             {formik.errors.dateofMovinginHouse &&
@@ -458,9 +454,9 @@ function MMSMotionDetail() {
                                                     formik.setFieldValue("dateofDiscussion", date)
                                                 }
                                                 className={`form-control ${formik.errors.dateofDiscussion &&
-                                                        formik.touched.dateofDiscussion
-                                                        ? "is-invalid"
-                                                        : ""
+                                                    formik.touched.dateofDiscussion
+                                                    ? "is-invalid"
+                                                    : ""
                                                     }`}
                                             />
                                             {formik.errors.dateofDiscussion &&
@@ -493,9 +489,9 @@ function MMSMotionDetail() {
                                                     formik.setFieldValue("dateofRefferingToSC", date)
                                                 }
                                                 className={`form-control ${formik.errors.dateofRefferingToSC &&
-                                                        formik.touched.dateofRefferingToSC
-                                                        ? "is-invalid"
-                                                        : ""
+                                                    formik.touched.dateofRefferingToSC
+                                                    ? "is-invalid"
+                                                    : ""
                                                     }`}
                                             />
                                             {formik.errors.dateofRefferingToSC &&

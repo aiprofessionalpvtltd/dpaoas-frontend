@@ -17,6 +17,7 @@ import {
 import { AuthContext } from "../../../../../../api/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
+import moment from "moment";
 const validationSchema = Yup.object({
   sessionNumber: Yup.string(),
   category: Yup.string(),
@@ -28,7 +29,7 @@ const validationSchema = Yup.object({
 });
 
 function QMSQuestionList() {
-  const {sessions} = useContext(AuthContext)
+  const { sessions } = useContext(AuthContext)
   const [resData, setResData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
@@ -83,7 +84,7 @@ function QMSQuestionList() {
         SrNo: index,
         QID: res.id,
         QDN: res.fkQuestionDiaryId,
-        NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate,
+        NoticeDate: moment(res?.noticeOfficeDiary?.noticeOfficeDiaryDate).format("YYYY/MM/DD"),
         NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
         SessionNumber: res?.session?.sessionName,
         SubjectMatter: [res?.englishText, res?.urduText]
@@ -172,14 +173,14 @@ function QMSQuestionList() {
                             {formik.errors.sessionNumber}
                           </div>
                         )} */}
-                        <select
-                          class="form-select"
-                          id="sessionNumber"
-                          placeholder={formik.values.sessionNumber}
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                        >
-                         <option selected disabled hidden>
+                      <select
+                        class="form-select"
+                        id="sessionNumber"
+                        placeholder={formik.values.sessionNumber}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      >
+                        <option selected disabled hidden>
                           Select
                         </option>
                         {sessions &&
@@ -188,7 +189,7 @@ function QMSQuestionList() {
                               {item?.sessionName}
                             </option>
                           ))}
-                        </select>
+                      </select>
                     </div>
                   </div>
                   <div class="col">
@@ -245,7 +246,7 @@ function QMSQuestionList() {
                     </div>
                   </div>
                   <div class="col">
-                    <div class="mb-3" style={{position:"relative"}}>
+                    <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label">House Lay Date</label>
                       <span
                         style={{

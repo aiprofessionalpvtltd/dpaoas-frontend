@@ -23,6 +23,7 @@ import CustomTable from "../../../../../../components/CustomComponents/CustomTab
 import { AuthContext } from "../../../../../../api/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
+import moment from "moment";
 
 function SearchMotion() {
   const navigate = useNavigate();
@@ -69,7 +70,7 @@ function SearchMotion() {
       noticeOfficeDiaryNo: leave?.noticeOfficeDairies?.noticeOfficeDiaryNo,
       // ministryName: leave?.motionMinistries?.ministries,
       // ministryIds: leave?.motionMinistries?.fkMinistryId,
-      noticeOfficeDiaryDate: leave?.noticeOfficeDairies?.noticeOfficeDiaryDate,
+      noticeOfficeDiaryDate: moment(leave?.noticeOfficeDairies?.noticeOfficeDiaryDate).format("YYYY/MM/DD"),
       noticeOfficeDiaryTime: leave?.noticeOfficeDairies?.noticeOfficeDiaryTime,
       // memberName:leave?.motionMovers?.members,
       englishText: leave?.englishText,
@@ -396,9 +397,9 @@ function SearchMotion() {
                           formik.setFieldValue("fromNoticeDate", date)
                         }
                         className={`form-control ${formik.errors.fromNoticeDate &&
-                            formik.touched.fromNoticeDate
-                            ? "is-invalid"
-                            : ""
+                          formik.touched.fromNoticeDate
+                          ? "is-invalid"
+                          : ""
                           }`}
                       />
                       {formik.errors.fromNoticeDate &&

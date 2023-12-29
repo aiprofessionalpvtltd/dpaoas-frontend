@@ -7,6 +7,7 @@ import CustomTable from "../../../../components/CustomComponents/CustomTable";
 import { getRolesData } from "../../../../api/Auth";
 import { DeleteRole, getRoles } from "../../../../api/APIs";
 import { showSuccessMessage } from "../../../../utils/ToastAlert";
+import moment from "moment";
 
 const data = [
   {
@@ -39,10 +40,23 @@ function HRMDashboard() {
     setCurrentPage(page);
   };
 
+  const transformLeavesData = (apiData) => {
+    return apiData.map((res) => {
+      return {
+        id: res.id,
+        name: res.name,
+        description: res.description,
+        roleStatus: res.roleStatus,
+        createdAt: moment(res.createdAt).format("YYYY/MM/DD"),
+        updatedAt: moment(res.updatedAt).format("YYYY/MM/DD"),
+      };
+    });
+  };
   const fetchRoles = async () => {
     try {
       const response = await getRoles();
-      setRolesList(response.data);
+      const filterData = transformLeavesData(response.data)
+      setRolesList(filterData);
     } catch (error) {
       console.log(error);
     }
