@@ -101,7 +101,7 @@ function SentResolution() {
     try {
       const response = await getAllResolutions(currentPage, pageSize);
       if (response?.success) {
-        showSuccessMessage(response?.message);
+        // showSuccessMessage(response?.message);
         setCount(response.data?.count);
         const transformedData = transformLeavesData(response.data?.resolution);
         setResData(transformedData);

@@ -290,9 +290,11 @@ function MMSMotionList() {
               <div className="mt-3 mb-3">
                 <CustomTable
                   block={true}
+                hideBtn={true}
+
                   data={motionData}
                   tableTitle="Motion Data"
-                  headerShown={true}
+                  // headerShown={true}
                   handleDelete={(item) => alert(item.id)}
                   handleEdit={(item) => handleEdit(item.id)}
                   headertitlebgColor={"#666"}
@@ -305,7 +307,8 @@ function MMSMotionList() {
               <CustomTable
                 data={ministryData}
                 tableTitle="Ministry Data"
-                headerShown={true}
+                // headerShown={true}
+                hideBtn={true}
                 handleDelete={(item) => alert(item.id)}
                 handleEdit={(item) =>
                   navigate("/mms/motion/detail", { state: item })
@@ -315,6 +318,8 @@ function MMSMotionList() {
                 handlePageChange={handlePageChange}
                 currentPage={currentPage}
                 pageSize={pageSize}
+                hideEditIcon={true}
+                ActionHide={true}
               />
             </div>
           </div>

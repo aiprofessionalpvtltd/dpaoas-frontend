@@ -100,7 +100,7 @@ function QMSQuestionList() {
     try {
       const response = await getAllQuestion(currentPage, pageSize);
       if (response?.success) {
-        showSuccessMessage(response?.message);
+        // showSuccessMessage(response?.message);
         setCount(response?.count);
         const transformedData = transformLeavesData(response.data);
         console.log("Saqib", transformedData);

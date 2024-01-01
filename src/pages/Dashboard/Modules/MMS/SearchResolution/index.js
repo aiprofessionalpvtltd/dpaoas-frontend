@@ -109,7 +109,7 @@ function MMSSearchResolution() {
       const response = await getAllQuestionStatus();
       if (response?.success) {
         setAllResolutionStatus(response?.data);
-        showSuccessMessage(response.message);
+        // showSuccessMessage(response.message);
       }
     } catch (error) {
       console.log(error);

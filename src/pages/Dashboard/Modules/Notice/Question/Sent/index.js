@@ -107,7 +107,7 @@ function SentQuestion() {
     try {
       const response = await getAllQuestion(currentPage, pageSize);
       if (response?.success) {
-        showSuccessMessage(response?.message);
+        // showSuccessMessage(response?.message);s
         setCount(response?.count);
         const transformedData = transformLeavesData(response.data);
         setResData(transformedData);
@@ -122,7 +122,7 @@ function SentQuestion() {
       const response = await getAllQuestionStatus();
       if (response?.success) {
         setAllQuestionStatus(response?.data);
-        showSuccessMessage(response.message);
+        // showSuccessMessage(response.message);
       }
     } catch (error) {
       console.log(error);
