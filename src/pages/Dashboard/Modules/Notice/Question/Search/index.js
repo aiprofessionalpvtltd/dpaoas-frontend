@@ -128,10 +128,8 @@ function SearchQuestion() {
       <ToastContainer />
       <Header
         dashboardLink={"/"}
-        addLink1={"/notice/dashboard"}
-        addLink2={"/notice/question/search"}
-        title1={"Notice"}
-        title2={"Search Question"}
+        addLink1={"/notice/question/search"}
+        title1={"Search Question"}
       />
       <div>
         <div class="container-fluid">

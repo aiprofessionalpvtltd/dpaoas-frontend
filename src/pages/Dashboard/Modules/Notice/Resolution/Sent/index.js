@@ -125,10 +125,8 @@ function SentResolution() {
 
       <Header
         dashboardLink={"/"}
-        addLink1={"/notice/dashboard"}
-        addLink2={"/notice/resolution/sent"}
-        title1={"Notice"}
-        title2={"Sent Resolution"}
+        addLink1={"/notice/resolution/sent"}
+        title1={"Sent Resolution"}
       />
       <div>
         <div class="container-fluid">

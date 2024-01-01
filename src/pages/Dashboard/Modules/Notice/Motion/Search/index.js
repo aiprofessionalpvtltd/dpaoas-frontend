@@ -149,10 +149,8 @@ function SearchMotion() {
       <ToastContainer />
       <Header
         dashboardLink={"/"}
-        addLink1={"/notice/dashboard"}
-        addLink2={"/notice/motion/search"}
-        title1={"Notice"}
-        title2={"Search Motion"}
+        addLink1={"/notice/motion/search"}
+        title1={"Search Motion"}
       />
       <div>
         <div class="container-fluid">

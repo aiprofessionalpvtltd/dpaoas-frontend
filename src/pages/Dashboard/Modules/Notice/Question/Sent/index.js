@@ -143,10 +143,8 @@ function SentQuestion() {
       <ToastContainer />
       <Header
         dashboardLink={"/"}
-        addLink1={"/notice/dashboard"}
-        addLink2={"/notice/question/sent"}
-        title1={"Notice"}
-        title2={"Sent Question"}
+        addLink1={"/notice/question/sent"}
+        title1={"Sent Question"}
       />
       <div>
         <div class="container-fluid">

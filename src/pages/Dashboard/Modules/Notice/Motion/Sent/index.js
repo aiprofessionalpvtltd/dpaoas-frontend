@@ -147,10 +147,8 @@ function SentMotion() {
       <ToastContainer />
       <Header
         dashboardLink={"/"}
-        addLink1={"/notice/dashboard"}
-        addLink2={"/notice/motion/sent"}
-        title1={"Notice"}
-        title2={"Sent Motion"}
+        addLink1={"/notice/motion/sent"}
+        title1={"Sent Motion"}
       />
       <div>
         <div class="container-fluid">
