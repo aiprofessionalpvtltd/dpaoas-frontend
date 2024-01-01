@@ -17,6 +17,7 @@ import {
 import { AuthContext } from "../../../../../../api/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
+import moment from "moment";
 const validationSchema = Yup.object({
   sessionNumber: Yup.string(),
   category: Yup.string(),
@@ -83,7 +84,7 @@ function QMSQuestionList() {
         SrNo: index,
         QID: res.id,
         QDN: res.fkQuestionDiaryId,
-        NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate,
+        NoticeDate: moment(res?.noticeOfficeDiary?.noticeOfficeDiaryDate).format("YYYY/MM/DD"),
         NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
         SessionNumber: res?.session?.sessionName,
         SubjectMatter: [res?.englishText, res?.urduText]
@@ -99,7 +100,7 @@ function QMSQuestionList() {
     try {
       const response = await getAllQuestion(currentPage, pageSize);
       if (response?.success) {
-        showSuccessMessage(response?.message);
+        // showSuccessMessage(response?.message);
         setCount(response?.count);
         const transformedData = transformLeavesData(response.data);
         console.log("Saqib", transformedData);

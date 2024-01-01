@@ -65,7 +65,7 @@ function SearchResolution() {
 
       return {
         RID: res.id,
-        ResDN: res.resolutionDiaries,
+        // ResDN: res.resolutionDiaries,
         SessionNumber: res.session?.sessionName,
         ResolutionType: res.resolutionType,
         SubjectMatter: "",
@@ -109,7 +109,7 @@ function SearchResolution() {
       const response = await getAllQuestionStatus();
       if (response?.success) {
         setAllResolutionStatus(response?.data);
-        showSuccessMessage(response.message);
+        // showSuccessMessage(response.message);
       }
     } catch (error) {
       console.log(error);
@@ -129,10 +129,8 @@ function SearchResolution() {
 
       <Header
         dashboardLink={"/"}
-        addLink1={"/notice/dashboard"}
-        addLink2={"/notice/resolution/search"}
-        title1={"Notice"}
-        title2={"Search Resolution"}
+        addLink1={"/notice/resolution/search"}
+        title1={"Search Resolution"}
       />
       <div>
         <div class="container-fluid">

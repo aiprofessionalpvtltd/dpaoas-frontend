@@ -57,10 +57,8 @@ function ManageSessionDays() {
     >
       <Header
         dashboardLink={"/"}
-        addLink1={"/notice/dashboard"}
-        addLink2={"/notice/seatingplan/manage-session-days"}
-        title1={"Notice"}
-        title2={"Manage Session Days"}
+        addLink1={"/notice/seatingplan/manage-session-days"}
+        title1={"Manage Session Days"}
       />
       <div>
         <div class="container-fluid">

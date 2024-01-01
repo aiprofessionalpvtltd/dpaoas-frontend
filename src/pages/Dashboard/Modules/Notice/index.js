@@ -42,8 +42,6 @@ function NoticeDashboard() {
     >
       <Header
         dashboardLink={"/"}
-        addLink1={"/notice/dashboard"}
-        title1={"Notice"}
       />
       {/*<div class="row">
                 <div class="col-12">

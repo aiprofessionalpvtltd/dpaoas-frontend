@@ -17,6 +17,7 @@ import DatePicker from "react-datepicker";
 import { AuthContext } from "../../../../../../api/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
+import moment from "moment";
 
 const validationSchema = Yup.object({
   sessionNumber: Yup.string(),
@@ -70,7 +71,7 @@ function MMSMotionList() {
       noticeOfficeDiaryNo: leave?.noticeOfficeDairies?.noticeOfficeDiaryNo,
       // ministryName: leave?.motionMinistries?.ministries,
       // ministryIds: leave?.motionMinistries?.fkMinistryId,
-      noticeOfficeDiaryDate: leave?.noticeOfficeDairies?.noticeOfficeDiaryDate,
+      noticeOfficeDiaryDate: moment(leave?.noticeOfficeDairies?.noticeOfficeDiaryDate).format("YYYY/MM/DD"),
       noticeOfficeDiaryTime: leave?.noticeOfficeDairies?.noticeOfficeDiaryTime,
       // memberName:leave?.motionMovers?.members,
       englishText: leave?.englishText,
@@ -289,9 +290,11 @@ function MMSMotionList() {
               <div className="mt-3 mb-3">
                 <CustomTable
                   block={true}
+                hideBtn={true}
+
                   data={motionData}
                   tableTitle="Motion Data"
-                  headerShown={true}
+                  // headerShown={true}
                   handleDelete={(item) => alert(item.id)}
                   handleEdit={(item) => handleEdit(item.id)}
                   headertitlebgColor={"#666"}
@@ -304,7 +307,8 @@ function MMSMotionList() {
               <CustomTable
                 data={ministryData}
                 tableTitle="Ministry Data"
-                headerShown={true}
+                // headerShown={true}
+                hideBtn={true}
                 handleDelete={(item) => alert(item.id)}
                 handleEdit={(item) =>
                   navigate("/mms/motion/detail", { state: item })
@@ -314,6 +318,8 @@ function MMSMotionList() {
                 handlePageChange={handlePageChange}
                 currentPage={currentPage}
                 pageSize={pageSize}
+                hideEditIcon={true}
+                ActionHide={true}
               />
             </div>
           </div>

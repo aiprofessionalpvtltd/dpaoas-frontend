@@ -11,6 +11,7 @@ import {
 import { showSuccessMessage } from "../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 import { getPassID } from "../../../../../api/Auth";
+import moment from "moment";
 
 function VMSVisitors() {
   const location = useLocation();
@@ -54,8 +55,8 @@ function VMSVisitors() {
       cnic: leave.cnic,
       details: leave.details,
       visitorStatus: leave.visitorStatus,
-      createdAt: leave.createdAt,
-      updatedAt: leave.updatedAt,
+      createdAt: moment(leave.createdAt).format("YYYY/MM/DD"),
+      updatedAt: moment(leave.updatedAt).format("YYYY/MM/DD"),
     }));
   };
   const getVisitorsAPi = async () => {

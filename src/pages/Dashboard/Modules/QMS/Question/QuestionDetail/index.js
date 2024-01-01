@@ -78,7 +78,7 @@ function QMSQuestionDetail() {
       sessionNo: location?.state?.question?.session?.sessionName,
       noticeOfficeDiaryNo:
         location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryNo,
-      noticeOfficeDiaryDate: "",
+      noticeOfficeDiaryDate: new Date(location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryDate),
       // location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryDate,
       noticeOfficeDiaryTime:
         location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryTime,
@@ -671,7 +671,7 @@ function QMSQuestionDetail() {
                       </span>
                       <DatePicker
                         selected={formik.values.noticeOfficeDiaryDate}
-                        minDate={new Date()}
+                        // minDate={new Date()}
                         onChange={(date) =>
                           formik.setFieldValue("noticeOfficeDiaryDate", date)
                         }

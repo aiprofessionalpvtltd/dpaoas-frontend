@@ -44,10 +44,8 @@ function Members() {
     >
       <Header
         dashboardLink={"/"}
-        addLink1={"/notice/dashboard"}
-        addLink2={"/notice/manage/members"}
-        title1={"Notice"}
-        title2={"Members"}
+        addLink1={"/notice/manage/members"}
+        title1={"Members"}
       />
       <div class="container-fluid">
         <div class="card">

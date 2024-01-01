@@ -14,6 +14,7 @@ import {
 } from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-bootstrap";
 import { useNavigate } from "react-router";
+import moment from "moment";
 
 function QMSNoticeQuestion() {
   const navigate = useNavigate();
@@ -33,7 +34,7 @@ function QMSNoticeQuestion() {
         SrNo: index,
         QID: res.id,
         QDN: res.fkQuestionDiaryId,
-        NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate,
+        NoticeDate: moment(res?.noticeOfficeDiary?.noticeOfficeDiaryDate).format("YYYY/MM/DD"),
         NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
         SessionNumber: res?.session?.sessionName,
         SubjectMatter: [res?.englishText, res?.urduText]
@@ -50,7 +51,7 @@ function QMSNoticeQuestion() {
     try {
       const response = await getAllQuestion(currentPage, pageSize);
       if (response?.success) {
-        showSuccessMessage(response?.message);
+        // showSuccessMessage(response?.message);
         setCount(response?.count);
         const transformedData = transformLeavesData(response.data);
         // console.log("Saqib", transformedData);
@@ -65,7 +66,7 @@ function QMSNoticeQuestion() {
     try {
       const response = await allRevivedQuestions();
       if (response?.success) {
-        showSuccessMessage(response?.message);
+        // showSuccessMessage(response?.message);
         setRivivedData(response?.data);
         console.log("sdasd", response?.data);
         // setCount(response?.count);
@@ -165,40 +166,26 @@ function QMSNoticeQuestion() {
                     </tr>
                   </thead>
                   <tbody>
-                    {revivedData &&
-                      revivedData.map((item, index) => (
-                        <tr key={index}>
-                          <td class="text-center">{`${index + 1}`}</td>
-                          <td class="text-center">
-                            {item?.noticeOfficeDiary?.noticeOfficeDiaryNo}
-                          </td>
-                          <td class="text-center">
-                            {item?.ToSession?.sessionName}
-                          </td>
-                          <td class="text-center">{`${item?.question?.englishText} ${item?.question?.urduText}`}</td>
-                          <td class="text-center">
-                            {item?.noticeOfficeDiary?.noticeOfficeDiaryDate}
-                          </td>
-                          <td class="text-center">
-                            {item?.noticeOfficeDiary?.noticeOfficeDiaryTime}
-                          </td>
-                          <td class="text-center">
-                            {item?.question?.questionCategory}
-                          </td>
-                          <td class="text-center">
-                            {item?.question?.member?.memberName}
-                          </td>
-                          <td class="text-center">
-                            <button
-                              class="btn btn-primary"
-                              type="button"
-                              onClick={() => hendleViewDetail(item?.id)}
-                            >
-                              View Review
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
+                    {revivedData && revivedData.map((item, index) => (
+                      <tr key={index}>
+                        <td class="text-center">{`${index + 1}`}</td>
+                        <td class="text-center">{item?.noticeOfficeDiary?.noticeOfficeDiaryNo}</td>
+                        <td class="text-center">{item?.ToSession?.sessionName}</td>
+                        <td class="text-center">{`${item?.question?.englishText} ${item?.question?.urduText}`}</td>
+                        <td class="text-center">{moment(item?.noticeOfficeDiary?.noticeOfficeDiaryDate).format("YYYY/MM/DD")}</td>
+                        <td class="text-center">{item?.noticeOfficeDiary?.noticeOfficeDiaryTime}</td>
+                        <td class="text-center">{item?.question?.questionCategory}</td>
+                        <td class="text-center">
+                          {item?.question?.member?.memberName}
+                        </td>
+                        <td class="text-center">
+                          <button class="btn btn-primary" type="button" onClick={() => hendleViewDetail(item?.id)}>
+                            View Review
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+
                   </tbody>
                 </table>
               </div>
