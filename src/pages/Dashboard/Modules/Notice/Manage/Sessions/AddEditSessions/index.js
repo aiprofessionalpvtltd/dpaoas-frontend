@@ -166,7 +166,7 @@ function SessionsAddEditForm() {
                 </div>
                 <div class="row">
                   <div class="col">
-                    <div class="mb-3" style={{position:"relative"}}>
+                    <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label">Date of Birth</label>
                       <span
                         style={{
@@ -183,13 +183,14 @@ function SessionsAddEditForm() {
                       </span>
                       <DatePicker
                         selected={dateofbirth}
+                        minDate={new Date()}
                         onChange={(date) => setDateOfBirth(date)}
                         className="form-control"
                       />
                     </div>
                   </div>
                   <div class="col">
-                    <div class="mb-3" style={{position:"relative"}}>
+                    <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label">Place of Birth</label>
                       <span
                         style={{
@@ -206,6 +207,7 @@ function SessionsAddEditForm() {
                       </span>
                       <DatePicker
                         selected={placeofbirth}
+                        minDate={new Date()}
                         onChange={(date) => setPlaceOfBirth(date)}
                         className="form-control"
                       />
@@ -237,7 +239,7 @@ function SessionsAddEditForm() {
                     </div>
                   </div>
                   <div class="col">
-                    <div class="mb-3" style={{position:"relative"}}>
+                    <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label">CNIC Issue Date</label>
                       <span
                         style={{
@@ -254,6 +256,7 @@ function SessionsAddEditForm() {
                       </span>
                       <DatePicker
                         selected={cnicissue}
+                        minDate={new Date()}
                         onChange={(date) => setCnicIssue(date)}
                         className="form-control"
                       />
@@ -262,7 +265,7 @@ function SessionsAddEditForm() {
                 </div>
                 <div class="row">
                   <div class="col">
-                    <div class="mb-3" style={{position:"relative"}}>
+                    <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label">CNIC Exp Date</label>
                       <span
                         style={{
@@ -279,6 +282,7 @@ function SessionsAddEditForm() {
                       </span>
                       <DatePicker
                         selected={cnicexpire}
+                        minDate={new Date()}
                         onChange={(date) => setCnicExpire(date)}
                         className="form-control"
                       />

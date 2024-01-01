@@ -189,7 +189,7 @@ function QMSQuestionDetail() {
       noticeOfficeDiaryTime: reviveState.noticeDiaryTime,
       questionDiaryNo: reviveState.questionDiaryNo,
       fkQuestionStatus: reviveState.questionStatus,
-      fkSessionId: reviveState.sessionNo
+      fkSessionId: reviveState.sessionNo,
     };
     try {
       const response = await createReviveQuestion(
@@ -388,6 +388,7 @@ function QMSQuestionDetail() {
                           </span>
                           <DatePicker
                             selected={deferState.deferDate}
+                            minDate={new Date()}
                             onChange={(date) =>
                               setDeferState({
                                 ...deferState,
@@ -523,6 +524,7 @@ function QMSQuestionDetail() {
                           </span>
                           <DatePicker
                             selected={reviveState.noticeDiaryDate}
+                            minDate={new Date()}
                             onChange={(date) =>
                               setReviveState({
                                 ...reviveState,
@@ -669,6 +671,7 @@ function QMSQuestionDetail() {
                       </span>
                       <DatePicker
                         selected={formik.values.noticeOfficeDiaryDate}
+                        minDate={new Date()}
                         onChange={(date) =>
                           formik.setFieldValue("noticeOfficeDiaryDate", date)
                         }
@@ -805,6 +808,7 @@ function QMSQuestionDetail() {
                       </span>
                       <DatePicker
                         selected={formik.values.replyDate}
+                        minDate={new Date()}
                         onChange={(date) =>
                           formik.setFieldValue("replyDate", date)
                         }

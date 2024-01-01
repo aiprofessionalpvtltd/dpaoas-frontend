@@ -183,6 +183,7 @@ function MembersAddEditForm() {
                       </span>
                       <DatePicker
                         selected={dateofbirth}
+                        minDate={new Date()}
                         onChange={(date) => setDateOfBirth(date)}
                         className="form-control"
                       />
@@ -206,6 +207,7 @@ function MembersAddEditForm() {
                       </span>
                       <DatePicker
                         selected={placeofbirth}
+                        minDate={new Date()}
                         onChange={(date) => setPlaceOfBirth(date)}
                         className="form-control"
                       />
@@ -254,6 +256,7 @@ function MembersAddEditForm() {
                       </span>
                       <DatePicker
                         selected={cnicissue}
+                        minDate={new Date()}
                         onChange={(date) => setCnicIssue(date)}
                         className="form-control"
                       />
@@ -279,6 +282,7 @@ function MembersAddEditForm() {
                       </span>
                       <DatePicker
                         selected={cnicexpire}
+                        minDate={new Date()}
                         onChange={(date) => setCnicExpire(date)}
                         className="form-control"
                       />

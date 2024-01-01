@@ -2,20 +2,26 @@ import React, { useEffect, useState } from "react";
 import { Layout } from "../../../../../../components/Layout";
 import { QMSSideBarItems } from "../../../../../../utils/sideBarItems";
 import Header from "../../../../../../components/Header";
-import { RevivedQuestionsBYID, allRevivedQuestions, getAllQuestion } from "../../../../../../api/APIs";
+import {
+  RevivedQuestionsBYID,
+  allRevivedQuestions,
+  getAllQuestion,
+} from "../../../../../../api/APIs";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
-import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-bootstrap";
 import { useNavigate } from "react-router";
 
 function QMSNoticeQuestion() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [resData, setResData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
-  const [revivedData, setRivivedData] = useState([])
+  const [revivedData, setRivivedData] = useState([]);
   const [count, setCount] = useState(null);
   const pageSize = 10;
-
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -57,10 +63,10 @@ function QMSNoticeQuestion() {
 
   const getallRevivedQuestionsAPI = async () => {
     try {
-      const response = await allRevivedQuestions()
+      const response = await allRevivedQuestions();
       if (response?.success) {
         showSuccessMessage(response?.message);
-        setRivivedData(response?.data)
+        setRivivedData(response?.data);
         console.log("sdasd", response?.data);
         // setCount(response?.count);
         // const transformedData = transformLeavesData(response.data);
@@ -70,23 +76,25 @@ function QMSNoticeQuestion() {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   const hendleViewDetail = async (id) => {
     try {
-      const response = await RevivedQuestionsBYID(id)
+      const response = await RevivedQuestionsBYID(id);
       if (response?.success) {
-        navigate("/qms/notice/notice-question-detail", { state: response?.data })
+        navigate("/qms/notice/notice-question-detail", {
+          state: response?.data,
+        });
       }
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   useEffect(() => {
-    getAllQuestionsApi()
-    getallRevivedQuestionsAPI()
-  }, [])
+    getAllQuestionsApi();
+    getallRevivedQuestionsAPI();
+  }, []);
 
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
@@ -157,26 +165,40 @@ function QMSNoticeQuestion() {
                     </tr>
                   </thead>
                   <tbody>
-                    {revivedData && revivedData.map((item, index) => (
-                      <tr key={index}>
-                        <td class="text-center">{`${index + 1}`}</td>
-                        <td class="text-center">{item?.noticeOfficeDiary?.noticeOfficeDiaryNo}</td>
-                        <td class="text-center">{item?.ToSession?.sessionName}</td>
-                        <td class="text-center">{`${item?.question?.englishText} ${item?.question?.urduText}`}</td>
-                        <td class="text-center">{item?.noticeOfficeDiary?.noticeOfficeDiaryDate}</td>
-                        <td class="text-center">{item?.noticeOfficeDiary?.noticeOfficeDiaryTime}</td>
-                        <td class="text-center">{item?.question?.questionCategory}</td>
-                        <td class="text-center">
-                          {item?.question?.member?.memberName}
-                        </td>
-                        <td class="text-center">
-                          <button class="btn btn-primary" type="button" onClick={() => hendleViewDetail(item?.id)}>
-                            View Review
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-
+                    {revivedData &&
+                      revivedData.map((item, index) => (
+                        <tr key={index}>
+                          <td class="text-center">{`${index + 1}`}</td>
+                          <td class="text-center">
+                            {item?.noticeOfficeDiary?.noticeOfficeDiaryNo}
+                          </td>
+                          <td class="text-center">
+                            {item?.ToSession?.sessionName}
+                          </td>
+                          <td class="text-center">{`${item?.question?.englishText} ${item?.question?.urduText}`}</td>
+                          <td class="text-center">
+                            {item?.noticeOfficeDiary?.noticeOfficeDiaryDate}
+                          </td>
+                          <td class="text-center">
+                            {item?.noticeOfficeDiary?.noticeOfficeDiaryTime}
+                          </td>
+                          <td class="text-center">
+                            {item?.question?.questionCategory}
+                          </td>
+                          <td class="text-center">
+                            {item?.question?.member?.memberName}
+                          </td>
+                          <td class="text-center">
+                            <button
+                              class="btn btn-primary"
+                              type="button"
+                              onClick={() => hendleViewDetail(item?.id)}
+                            >
+                              View Review
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
                   </tbody>
                 </table>
               </div>

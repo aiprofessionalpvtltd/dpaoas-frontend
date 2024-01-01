@@ -318,6 +318,7 @@ function SearchQuestion() {
                           </span>
                           <DatePicker
                             selected={formik.values.fromNoticeDate}
+                            minDate={new Date()}
                             onChange={(date) =>
                               formik.setFieldValue("fromNoticeDate", date)
                             }
@@ -343,6 +344,7 @@ function SearchQuestion() {
                           </span>
                           <DatePicker
                             selected={formik.values.toNoticeDate}
+                            minDate={new Date()}
                             onChange={(date) =>
                               formik.setFieldValue("toNoticeDate", date)
                             }
@@ -365,10 +367,7 @@ function SearchQuestion() {
                   </div>
                 </form>
 
-                <div
-                  class=""
-                  style={{ marginTop: "20px" }}
-                >
+                <div class="" style={{ marginTop: "20px" }}>
                   <CustomTable
                     block={true}
                     hideBtn={true}
