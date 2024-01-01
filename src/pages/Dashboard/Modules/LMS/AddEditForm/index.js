@@ -461,6 +461,7 @@ function LMSAddEdit() {
                           formik.setFieldValue("startDate", date)
                         }
                         onBlur={formik.handleBlur}
+                        minDate={new Date()}
                         className={`form-control ${
                           formik.touched.startDate && formik.errors.startDate
                             ? "is-invalid"
@@ -497,6 +498,7 @@ function LMSAddEdit() {
                           formik.setFieldValue("endDate", date)
                         }
                         onBlur={formik.handleBlur}
+                        minDate={new Date()}
                         className={`form-control ${
                           formik.touched.endDate && formik.errors.endDate
                             ? "is-invalid"

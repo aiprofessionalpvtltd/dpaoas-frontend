@@ -29,7 +29,7 @@ const validationSchema = Yup.object({
 });
 function MMSMotionList() {
   const navigate = useNavigate();
-  const { sessions } = useContext(AuthContext)
+  const { sessions } = useContext(AuthContext);
 
   const [currentPage, setCurrentPage] = useState(0);
   // const [count, setCount] = useState(null);
@@ -179,7 +179,7 @@ function MMSMotionList() {
                         value={formik.values.sessionNumber}
                         className={
                           formik.errors.sessionNumber &&
-                            formik.touched.sessionNumber
+                          formik.touched.sessionNumber
                             ? "form-select is-invalid"
                             : "form-select"
                         }
@@ -267,6 +267,7 @@ function MMSMotionList() {
                       </span>
                       <DatePicker
                         selected={formik.values.listDate}
+                        minDate={new Date()}
                         onChange={(date) =>
                           formik.setFieldValue("listDate", date)
                         }

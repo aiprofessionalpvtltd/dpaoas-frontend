@@ -26,8 +26,9 @@ export const UncheckedItem = ({
           alt="icon"
           className="rotating-button"
           style={{
-            transition: 'transform 0.3s ease',
-            transform: hiddenItems === item.id ? 'rotate(90deg)' : 'rotate(0deg)',
+            transition: "transform 0.3s ease",
+            transform:
+              hiddenItems === item.id ? "rotate(90deg)" : "rotate(0deg)",
           }}
         />
       </Link>

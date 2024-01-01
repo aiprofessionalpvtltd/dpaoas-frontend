@@ -122,9 +122,9 @@ function VMSVisitors() {
             headertitletextColor={"#FFF"}
             handleDelete={(item) => handleDelete(item.id)}
 
-          // handlePrint={}
-          // handleUser={}
-          // handleDelete={(item) => handleDelete(item.id)}
+            // handlePrint={}
+            // handleUser={}
+            // handleDelete={(item) => handleDelete(item.id)}
           />
         </div>
       </div>

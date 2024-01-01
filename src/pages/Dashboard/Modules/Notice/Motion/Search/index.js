@@ -393,14 +393,16 @@ function SearchMotion() {
                       </span>
                       <DatePicker
                         selected={formik.values.fromNoticeDate}
+                        minDate={new Date()}
                         onChange={(date) =>
                           formik.setFieldValue("fromNoticeDate", date)
                         }
-                        className={`form-control ${formik.errors.fromNoticeDate &&
+                        className={`form-control ${
+                          formik.errors.fromNoticeDate &&
                           formik.touched.fromNoticeDate
-                          ? "is-invalid"
-                          : ""
-                          }`}
+                            ? "is-invalid"
+                            : ""
+                        }`}
                       />
                       {formik.errors.fromNoticeDate &&
                         formik.touched.fromNoticeDate && (
@@ -428,6 +430,7 @@ function SearchMotion() {
                       </span>
                       <DatePicker
                         selected={formik.values.toNoticeDate}
+                        minDate={new Date()}
                         onChange={(date) =>
                           formik.setFieldValue("toNoticeDate", date)
                         }
@@ -446,10 +449,7 @@ function SearchMotion() {
                     </button>
                   </div>
                 </div>
-                <div
-                  class=""
-                  style={{ marginTop: "20px" }}
-                >
+                <div class="" style={{ marginTop: "20px" }}>
                   <CustomTable
                     block={true}
                     data={motionData}

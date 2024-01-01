@@ -2,10 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { CustomNavbar } from "../CustomNavbar";
 import { Sidebar } from "../Sidebar";
 import { useLocation } from "react-router";
-import {
-  getAllQuestion,
-  getAllResolutions,
-} from "../../api/APIs";
+import { getAllQuestion, getAllResolutions } from "../../api/APIs";
 import { getAuthToken, logout } from "../../api/Auth";
 import { useNavigate } from "react-router-dom";
 
@@ -24,14 +21,14 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
     } else {
       // Logic to set notification data based on notificationType
       let data = null;
-      if (notificationType === 'Resolution') {
-        data = [{name: "Resolution"}, {name: "Resolution2"}];
-      } else if (notificationType === 'Translations') {
-        data = [{name: "Translations"}, {name: "Translations2"}];
-      } else if (notificationType === 'Motion') {
-        data = [{name: "Motion"}, {name: "Motion2"}];
-      } else if (notificationType === 'Questions') {
-        data = [{name: "Question"}, {name: "Question2"}];
+      if (notificationType === "Resolution") {
+        data = [{ name: "Resolution" }, { name: "Resolution2" }];
+      } else if (notificationType === "Translations") {
+        data = [{ name: "Translations" }, { name: "Translations2" }];
+      } else if (notificationType === "Motion") {
+        data = [{ name: "Motion" }, { name: "Motion2" }];
+      } else if (notificationType === "Questions") {
+        data = [{ name: "Question" }, { name: "Question2" }];
       }
 
       // Set the notification data
@@ -53,7 +50,7 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
   const handleCloseModal = () => {
     setModal(false);
     setActiveNotificationType(null);
-  }
+  };
 
   useEffect(() => {
     const handleOutsideClick = (e) => {
@@ -167,14 +164,14 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
     <div
       ref={notificationRef}
       style={{
-        position: 'absolute',
-        top: '98px', // Adjust the distance from the buttons
-        right: '3%',
-        backgroundColor: '#fff',
-        boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
-        padding: '20px',
-        borderRadius: '8px',
-        width: '380px', // Adjust the width as needed
+        position: "absolute",
+        top: "98px", // Adjust the distance from the buttons
+        right: "3%",
+        backgroundColor: "#fff",
+        boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+        padding: "20px",
+        borderRadius: "8px",
+        width: "380px", // Adjust the width as needed
         zIndex: 999, // Ensure it's above other elements
       }}
     >
@@ -211,17 +208,17 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
                 {shouldRenderNotice ? (
                   <>
                     <div class="tab-right me-4 mt-1 mb-4">
-                        <button onClick={() => handleButtonClick("Motion")}>
-                          Motion{count?.motion && <span>{count.motion}</span>}
-                        </button>
-                        <button onClick={() => handleButtonClick("Resolution")}>
-                          Resolution
-                          {count?.resolution && <span>{count.resolution}</span>}
-                        </button>
-                        <button onClick={() => handleButtonClick("Questions")}>
-                          Questions
-                          {count?.question && <span>{count.question}</span>}
-                        </button>
+                      <button onClick={() => handleButtonClick("Motion")}>
+                        Motion{count?.motion && <span>{count.motion}</span>}
+                      </button>
+                      <button onClick={() => handleButtonClick("Resolution")}>
+                        Resolution
+                        {count?.resolution && <span>{count.resolution}</span>}
+                      </button>
+                      <button onClick={() => handleButtonClick("Questions")}>
+                        Questions
+                        {count?.question && <span>{count.question}</span>}
+                      </button>
                     </div>
                     <div class="clearfix"></div>
                   </>
@@ -243,15 +240,15 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
                   shouldRenderQuestion && (
                     <>
                       <div class="tab-right me-4 mt-1 mb-4">
-                        <button onClick={() => handleButtonClick("Translations")}>
+                        <button
+                          onClick={() => handleButtonClick("Translations")}
+                        >
                           Translations
                           {count?.motion && <span>{count?.motion}</span>}
                         </button>
                         <button onClick={() => handleButtonClick("Resolution")}>
                           Notice Resolutions
-                          {count?.resolution && (
-                            <span>{count.resolution}</span>
-                          )}
+                          {count?.resolution && <span>{count.resolution}</span>}
                         </button>
                         <button onClick={() => handleButtonClick("Questions")}>
                           Notice Questions

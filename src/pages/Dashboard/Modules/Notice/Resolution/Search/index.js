@@ -334,6 +334,7 @@ function SearchResolution() {
                           </span>
                           <DatePicker
                             selected={formik.values.fromNoticeDate}
+                            minDate={new Date()}
                             onChange={(date) =>
                               formik.setFieldValue("fromNoticeDate", date)
                             }
@@ -359,6 +360,7 @@ function SearchResolution() {
                           </span>
                           <DatePicker
                             selected={formik.values.toNoticeDate}
+                            minDate={new Date()}
                             onChange={(date) =>
                               formik.setFieldValue("toNoticeDate", date)
                             }

@@ -316,6 +316,7 @@ function MMSSearchResolution() {
                         </span>
                         <DatePicker
                           selected={formik.values.fromNoticeDate}
+                          minDate={new Date()}
                           onChange={(date) =>
                             formik.setFieldValue("fromNoticeDate", date)
                           }
@@ -341,6 +342,7 @@ function MMSSearchResolution() {
                         </span>
                         <DatePicker
                           selected={formik.values.toNoticeDate}
+                          minDate={new Date()}
                           onChange={(date) =>
                             formik.setFieldValue("toNoticeDate", date)
                           }

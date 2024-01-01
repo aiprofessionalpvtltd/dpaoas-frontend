@@ -27,7 +27,7 @@ import moment from "moment";
 
 function SentMotion() {
   const navigate = useNavigate();
-  const { members, sessions } = useContext(AuthContext)
+  const { members, sessions } = useContext(AuthContext);
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
   const [motionStatus, setMotionStatus] = useState([]);
@@ -119,8 +119,6 @@ function SentMotion() {
     }
   };
 
-
-
   const getMotionStatus = async () => {
     try {
       const response = await getallMotionStatus();
@@ -131,8 +129,6 @@ function SentMotion() {
       showErrorMessage(error?.response?.data?.message);
     }
   };
-
-
 
   useEffect(() => {
     getMotionStatus();
@@ -394,11 +390,12 @@ function SentMotion() {
                         onChange={(date) =>
                           formik.setFieldValue("fromNoticeDate", date)
                         }
-                        className={`form-control ${formik.errors.fromNoticeDate &&
+                        className={`form-control ${
+                          formik.errors.fromNoticeDate &&
                           formik.touched.fromNoticeDate
-                          ? "is-invalid"
-                          : ""
-                          }`}
+                            ? "is-invalid"
+                            : ""
+                        }`}
                       />
                       {formik.errors.fromNoticeDate &&
                         formik.touched.fromNoticeDate && (
@@ -444,10 +441,7 @@ function SentMotion() {
                     </button>
                   </div>
                 </div>
-                <div
-                  class=""
-                  style={{ marginTop: "20px" }}
-                >
+                <div class="" style={{ marginTop: "20px" }}>
                   <CustomTable
                     block={true}
                     data={motionData}
