@@ -3554,3 +3554,6 @@ textarea {
 .MuiStepLabel-labelContainer span {
     font-size: large;
 }
+.react-datepicker-popper[data-placement^="top"] .react-datepicker__triangle, .react-datepicker-popper[data-placement^="bottom"] .react-datepicker__triangle{
+    margin-left: -22px !important;
+}

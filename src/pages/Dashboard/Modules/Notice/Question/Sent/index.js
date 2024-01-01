@@ -3,10 +3,7 @@ import { NoticeSidebarItems } from "../../../../../../utils/sideBarItems";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
 import { useNavigate } from "react-router";
-import {
-  showErrorMessage,
-  showSuccessMessage,
-} from "../../../../../../utils/ToastAlert";
+import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
 import {
   getAllQuestion,
   getAllQuestionStatus,
@@ -67,9 +64,7 @@ function SentQuestion() {
         NoticeDate: moment(res?.noticeOfficeDiary?.noticeOfficeDiaryDate).format("YYYY/MM/DD"),
         NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
         SessionNumber: res?.session?.sessionName,
-        SubjectMatter: [res?.englishText, res?.urduText]
-          .filter(Boolean)
-          .join(", "),
+        SubjectMatter: [res?.englishText, res?.urduText].filter(Boolean).join(", "),
         Category: res.questionCategory,
         // SubmittedBy: res.category,
         Status: res.questionStatus?.questionStatus,
@@ -135,24 +130,13 @@ function SentQuestion() {
   }, []);
 
   return (
-    <Layout
-      module={true}
-      sidebarItems={NoticeSidebarItems}
-      centerlogohide={true}
-    >
+    <Layout module={true} sidebarItems={NoticeSidebarItems} centerlogohide={true}>
       <ToastContainer />
-      <Header
-        dashboardLink={"/"}
-        addLink1={"/notice/question/sent"}
-        title1={"Sent Question"}
-      />
+      <Header dashboardLink={"/"} addLink1={"/notice/question/sent"} title1={"Sent Question"} />
       <div>
         <div class="container-fluid">
           <div class="card mt-1">
-            <div
-              class="card-header red-bg"
-              style={{ background: "#14ae5c !important" }}
-            >
+            <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
               <h1>SENT QUESTION</h1>
             </div>
             <div class="card-body">
@@ -162,9 +146,7 @@ function SentQuestion() {
                     <div className="row">
                       <div className="col">
                         <div className="mb-3">
-                          <label className="form-label">
-                            Question Diary No
-                          </label>
+                          <label className="form-label">Question Diary No</label>
                           <input
                             className="form-control"
                             type="text"
@@ -333,9 +315,7 @@ function SentQuestion() {
                           <DatePicker
                             selected={formik.values.fromNoticeDate}
                             minDate={new Date()}
-                            onChange={(date) =>
-                              formik.setFieldValue("fromNoticeDate", date)
-                            }
+                            onChange={(date) => formik.setFieldValue("fromNoticeDate", date)}
                             className={"form-control"}
                           />
                         </div>
@@ -359,9 +339,7 @@ function SentQuestion() {
                           <DatePicker
                             selected={formik.values.toNoticeDate}
                             minDate={new Date()}
-                            onChange={(date) =>
-                              formik.setFieldValue("toNoticeDate", date)
-                            }
+                            onChange={(date) => formik.setFieldValue("toNoticeDate", date)}
                             className={"form-control"}
                           />
                         </div>
@@ -381,12 +359,9 @@ function SentQuestion() {
                   </div>
                 </form>
 
-                <div
-                  class="dash-detail-container"
-                  style={{ marginTop: "20px" }}
-                >
+                <div class="dash-detail-container" style={{ marginTop: "20px" }}>
                   <CustomTable
-                    block={true}
+                    block={false}
                     hideBtn={true}
                     data={searchedData.length > 0 ? searchedData : resData}
                     tableTitle="Questions"

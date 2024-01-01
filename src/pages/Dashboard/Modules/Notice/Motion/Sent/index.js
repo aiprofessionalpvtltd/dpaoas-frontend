@@ -5,10 +5,7 @@ import Header from "../../../../../../components/Header";
 import { useNavigate } from "react-router";
 import DatePicker from "react-datepicker";
 
-import {
-  showErrorMessage,
-  showSuccessMessage,
-} from "../../../../../../utils/ToastAlert";
+import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 import { useFormik } from "formik";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
@@ -139,24 +136,13 @@ function SentMotion() {
   }, [currentPage]);
 
   return (
-    <Layout
-      module={true}
-      sidebarItems={NoticeSidebarItems}
-      centerlogohide={true}
-    >
+    <Layout module={true} sidebarItems={NoticeSidebarItems} centerlogohide={true}>
       <ToastContainer />
-      <Header
-        dashboardLink={"/"}
-        addLink1={"/notice/motion/sent"}
-        title1={"Sent Motion"}
-      />
+      <Header dashboardLink={"/"} addLink1={"/notice/motion/sent"} title1={"Sent Motion"} />
       <div>
-        <div class="container-fluid">
+        <div class="container-fluid dash-detail-container">
           <div class="card mt-1">
-            <div
-              class="card-header red-bg"
-              style={{ background: "#14ae5c !important" }}
-            >
+            <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
               <h1>SENT MOTION</h1>
             </div>
             <div class="card-body">
@@ -385,22 +371,14 @@ function SentMotion() {
                       </span>
                       <DatePicker
                         selected={formik.values.fromNoticeDate}
-                        onChange={(date) =>
-                          formik.setFieldValue("fromNoticeDate", date)
-                        }
+                        onChange={(date) => formik.setFieldValue("fromNoticeDate", date)}
                         className={`form-control ${
-                          formik.errors.fromNoticeDate &&
-                          formik.touched.fromNoticeDate
-                            ? "is-invalid"
-                            : ""
+                          formik.errors.fromNoticeDate && formik.touched.fromNoticeDate ? "is-invalid" : ""
                         }`}
                       />
-                      {formik.errors.fromNoticeDate &&
-                        formik.touched.fromNoticeDate && (
-                          <div className="invalid-feedback">
-                            {formik.errors.fromNoticeDate}
-                          </div>
-                        )}
+                      {formik.errors.fromNoticeDate && formik.touched.fromNoticeDate && (
+                        <div className="invalid-feedback">{formik.errors.fromNoticeDate}</div>
+                      )}
                     </div>
                   </div>
                   <div class="col">
@@ -421,9 +399,7 @@ function SentMotion() {
                       </span>
                       <DatePicker
                         selected={formik.values.toNoticeDate}
-                        onChange={(date) =>
-                          formik.setFieldValue("toNoticeDate", date)
-                        }
+                        onChange={(date) => formik.setFieldValue("toNoticeDate", date)}
                         className={"form-control"}
                       />
                     </div>
@@ -445,9 +421,7 @@ function SentMotion() {
                     data={motionData}
                     headerShown={true}
                     handleDelete={(item) => alert(item.id)}
-                    handleEdit={(item) =>
-                      navigate("/mms/motion/new", { state: item })
-                    }
+                    handleEdit={(item) => navigate("/mms/motion/new", { state: item })}
                     headertitlebgColor={"#666"}
                     headertitletextColor={"#FFF"}
                     handlePageChange={handlePageChange}

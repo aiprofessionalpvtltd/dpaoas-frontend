@@ -10,10 +10,7 @@ import DatePicker from "react-datepicker";
 import * as Yup from "yup";
 import { getAllQuestion, getAllQuestionByID } from "../../../../../../api/APIs";
 import { ToastContainer } from "react-toastify";
-import {
-  showErrorMessage,
-  showSuccessMessage,
-} from "../../../../../../utils/ToastAlert";
+import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
 import { AuthContext } from "../../../../../../api/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
@@ -87,9 +84,7 @@ function QMSQuestionList() {
         NoticeDate: moment(res?.noticeOfficeDiary?.noticeOfficeDiaryDate).format("YYYY/MM/DD"),
         NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
         SessionNumber: res?.session?.sessionName,
-        SubjectMatter: [res?.englishText, res?.urduText]
-          .filter(Boolean)
-          .join(", "),
+        SubjectMatter: [res?.englishText, res?.urduText].filter(Boolean).join(", "),
         Category: res.questionCategory,
         // SubmittedBy: res.category,
         Status: res.questionStatus?.questionStatus,
@@ -139,12 +134,9 @@ function QMSQuestionList() {
       />
       <ToastContainer />
 
-      <div class="container-fluid">
+      <div class="container-fluid dash-detail-container">
         <div class="card mt-4">
-          <div
-            class="card-header red-bg"
-            style={{ background: "#14ae5c !important" }}
-          >
+          <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
             <h1>Question List</h1>
           </div>
           <div class="card-body">
@@ -264,9 +256,7 @@ function QMSQuestionList() {
                       <DatePicker
                         selected={formik.values.houseLayDate}
                         minDate={new Date()}
-                        onChange={(date) =>
-                          formik.setFieldValue("houseLayDate", date)
-                        }
+                        onChange={(date) => formik.setFieldValue("houseLayDate", date)}
                         onBlur={formik.handleBlur}
                         className={`form-control`}
                       />
@@ -301,7 +291,7 @@ function QMSQuestionList() {
                 </div>
               </form>
               <CustomTable
-                block={true}
+                block={false}
                 hideBtn={true}
                 data={resData}
                 tableTitle="Questions"

@@ -35,11 +35,7 @@ function Sessions() {
   };
 
   return (
-    <Layout
-      module={true}
-      sidebarItems={NoticeSidebarItems}
-      centerlogohide={true}
-    >
+    <Layout module={true} sidebarItems={NoticeSidebarItems} centerlogohide={true}>
       <Header
         dashboardLink={"/"}
         addLink1={"/notice/dashboard"}
@@ -47,7 +43,7 @@ function Sessions() {
         title1={"Notice"}
         title2={"Sessions"}
       />
-      <div className="container-fluid">
+      <div className="container-fluid dash-detail-container">
         <div class="card">
           <div class="col-12">
             <CustomTable
@@ -55,9 +51,7 @@ function Sessions() {
               tableTitle="Sessions List"
               addBtnText="Add Session"
               handleAdd={() => navigate("/notice/manage/sessions/addedit")}
-              handleEdit={(item) =>
-                navigate("/notice/manage/sessions/addedit", { state: item })
-              }
+              handleEdit={(item) => navigate("/notice/manage/sessions/addedit", { state: item })}
               headertitlebgColor={"#666"}
               headertitletextColor={"#FFF"}
               handlePageChange={handlePageChange}
