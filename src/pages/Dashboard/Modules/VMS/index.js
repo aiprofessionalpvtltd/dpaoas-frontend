@@ -16,6 +16,7 @@ import {
   showSuccessMessage,
 } from "../../../../utils/ToastAlert";
 import { setPassID } from "../../../../api/Auth";
+import moment from "moment";
 
 function VMSDashboard() {
   const navigate = useNavigate();
@@ -33,19 +34,19 @@ function VMSDashboard() {
   const transformLeavesData = (apiData) => {
     return apiData.map((leave) => ({
       id: leave.id,
-      passDate: leave.passDate,
+      passDate: moment(leave.passDate).format("YYYY/MM/DD"),
       requestedBy: leave.requestedBy,
       branch: leave.branch,
       visitPurpose: leave.visitPurpose,
       cardType: leave.cardType,
       companyName: leave.companyName,
-      fromDate: leave.fromDate,
-      toDate: leave.toDate,
+      fromDate: moment(leave.fromDate).format("YYYY/MM/DD"),
+      toDate: moment(leave.toDate).format("YYYY/MM/DD"),
       allowOffDays: leave.allowOffDays,
       remarks: leave.remarks,
       passStatus: leave.passStatus,
-      createdAt: leave.createdAt,
-      updatedAt: leave.updatedAt,
+      createdAt: moment(leave.createdAt).format("YYYY/MM/DD"),
+      updatedAt: moment(leave.updatedAt).format("YYYY/MM/DD"),
     }));
   };
 
@@ -150,9 +151,9 @@ function VMSDashboard() {
             headertitletextColor={"#FFF"}
             handleDelete={(item) => handleDelete(item.id)}
             searchonchange={(e) => searchPassess(e.target.value)}
-            // handlePrint={}
-            // handleUser={}
-            // handleDelete={(item) => handleDelete(item.id)}
+          // handlePrint={}
+          // handleUser={}
+          // handleDelete={(item) => handleDelete(item.id)}
           />
         </div>
       </div>

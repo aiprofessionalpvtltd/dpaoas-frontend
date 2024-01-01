@@ -121,10 +121,8 @@ function NewResolution() {
 
       <Header
         dashboardLink={"/"}
-        addLink1={"/notice/dashboard"}
-        addLink2={"/notice/resolution/new"}
-        title1={"Notice"}
-        title2={"New Resolution"}
+        addLink1={"/notice/resolution/new"}
+        title1={"New Resolution"}
       />
 
       <CustomAlert

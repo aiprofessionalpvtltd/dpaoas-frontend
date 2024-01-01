@@ -23,6 +23,7 @@ import {
 import { AuthContext } from "../../../../../../api/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
+import moment from "moment";
 
 function SentMotion() {
   const navigate = useNavigate();
@@ -67,7 +68,7 @@ function SentMotion() {
       noticeOfficeDiaryNo: leave?.noticeOfficeDairies?.noticeOfficeDiaryNo,
       // ministryName: leave?.motionMinistries?.ministries,
       // ministryIds: leave?.motionMinistries?.fkMinistryId,
-      noticeOfficeDiaryDate: leave?.noticeOfficeDairies?.noticeOfficeDiaryDate,
+      noticeOfficeDiaryDate: moment(leave?.noticeOfficeDairies?.noticeOfficeDiaryDate).format("YYYY/MM/DD"),
       noticeOfficeDiaryTime: leave?.noticeOfficeDairies?.noticeOfficeDiaryTime,
       // memberName:leave?.motionMovers?.members,
       englishText: leave?.englishText,
@@ -146,10 +147,8 @@ function SentMotion() {
       <ToastContainer />
       <Header
         dashboardLink={"/"}
-        addLink1={"/notice/dashboard"}
-        addLink2={"/notice/motion/sent"}
-        title1={"Notice"}
-        title2={"Sent Motion"}
+        addLink1={"/notice/motion/sent"}
+        title1={"Sent Motion"}
       />
       <div>
         <div class="container-fluid">

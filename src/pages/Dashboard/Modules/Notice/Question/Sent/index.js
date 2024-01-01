@@ -21,6 +21,7 @@ import DatePicker from "react-datepicker";
 import { AuthContext } from "../../../../../../api/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
+import moment from "moment";
 
 function SentQuestion() {
   const navigate = useNavigate();
@@ -63,7 +64,7 @@ function SentQuestion() {
         SrNo: index,
         QID: res.id,
         QDN: res.fkQuestionDiaryId,
-        NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate,
+        NoticeDate: moment(res?.noticeOfficeDiary?.noticeOfficeDiaryDate).format("YYYY/MM/DD"),
         NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
         SessionNumber: res?.session?.sessionName,
         SubjectMatter: [res?.englishText, res?.urduText]
@@ -106,7 +107,7 @@ function SentQuestion() {
     try {
       const response = await getAllQuestion(currentPage, pageSize);
       if (response?.success) {
-        showSuccessMessage(response?.message);
+        // showSuccessMessage(response?.message);s
         setCount(response?.count);
         const transformedData = transformLeavesData(response.data);
         setResData(transformedData);
@@ -121,7 +122,7 @@ function SentQuestion() {
       const response = await getAllQuestionStatus();
       if (response?.success) {
         setAllQuestionStatus(response?.data);
-        showSuccessMessage(response.message);
+        // showSuccessMessage(response.message);
       }
     } catch (error) {
       console.log(error);
@@ -142,10 +143,8 @@ function SentQuestion() {
       <ToastContainer />
       <Header
         dashboardLink={"/"}
-        addLink1={"/notice/dashboard"}
-        addLink2={"/notice/question/sent"}
-        title1={"Notice"}
-        title2={"Sent Question"}
+        addLink1={"/notice/question/sent"}
+        title1={"Sent Question"}
       />
       <div>
         <div class="container-fluid">

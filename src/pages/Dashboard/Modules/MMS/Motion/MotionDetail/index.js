@@ -22,7 +22,6 @@ import {
 } from "../../../../../../utils/ToastAlert";
 import { useLocation } from "react-router";
 import { ToastContainer } from "react-toastify";
-import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import { AuthContext } from "../../../../../../api/AuthContext";
 import { Editor } from "../../../../../../components/CustomComponents/Editor";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

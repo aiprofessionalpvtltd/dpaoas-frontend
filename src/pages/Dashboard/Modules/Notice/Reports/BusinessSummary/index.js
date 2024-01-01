@@ -15,10 +15,8 @@ function BusinessSummary() {
     >
       <Header
         dashboardLink={"/"}
-        addLink1={"/notice/dashboard"}
-        addLink2={"/notice/reports/business-summary"}
-        title1={"Notice"}
-        title2={"Business Summary"}
+        addLink1={"/notice/reports/business-summary"}
+        title1={"Business Summary"}
       />
       <div>
         <div class="container-fluid">

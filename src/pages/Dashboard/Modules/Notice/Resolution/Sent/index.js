@@ -101,7 +101,7 @@ function SentResolution() {
     try {
       const response = await getAllResolutions(currentPage, pageSize);
       if (response?.success) {
-        showSuccessMessage(response?.message);
+        // showSuccessMessage(response?.message);
         setCount(response.data?.count);
         const transformedData = transformLeavesData(response.data?.resolution);
         setResData(transformedData);
@@ -125,10 +125,8 @@ function SentResolution() {
 
       <Header
         dashboardLink={"/"}
-        addLink1={"/notice/dashboard"}
-        addLink2={"/notice/resolution/sent"}
-        title1={"Notice"}
-        title2={"Sent Resolution"}
+        addLink1={"/notice/resolution/sent"}
+        title1={"Sent Resolution"}
       />
       <div>
         <div class="container-fluid">
