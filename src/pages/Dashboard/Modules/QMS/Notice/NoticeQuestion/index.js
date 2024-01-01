@@ -118,7 +118,6 @@ function QMSNoticeQuestion() {
           <div class="card-body">
             <div class="container-fluid">
               <CustomTable
-                block={true}
                 hideBtn={true}
                 data={resData}
                 headerShown={true}
@@ -127,7 +126,7 @@ function QMSNoticeQuestion() {
                 pageSize={pageSize}
                 hideEditIcon={true}
                 totalCount={count}
-                ActionHide={true}
+                ActionHide={false}
                 headertitlebgColor={"#666"}
                 headertitletextColor={"#FFF"}
               />
