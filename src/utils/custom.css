@@ -869,7 +869,8 @@ hr.horizontal {
 /* .dashboard-nav {
     background-color: #443ea2;
 } */
-.dashboard-nav {
+.d
+ashboard-nav {
     background: #FFF;
 }
 
@@ -903,6 +904,9 @@ hr.horizontal {
     color: #d2d1d1;
     font-size: 27px;
     margin-right: 10px;
+}
+.brand-logo img{
+    width: 80%;
 }
 
 .dashboard-nav-list {
@@ -3530,7 +3534,7 @@ textarea {
     height: 25px;
     margin-left: 5px;
     display: inline-block;
-    font-size: 14px;
+    /* font-size: 14px; */
     line-height: 24px;
   }
 
