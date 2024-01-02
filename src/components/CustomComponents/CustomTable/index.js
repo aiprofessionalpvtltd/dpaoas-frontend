@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  faEdit,
-  faTrash,
-  faUser,
-  faPrint,
-  faClone,
-} from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faTrash, faUser, faPrint, faClone } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
@@ -46,12 +40,7 @@ function CustomTable({
   };
 
   useEffect(() => {
-    setTotalPages(
-      Math.max(
-        1,
-        Math.ceil((totalCount ? totalCount : data?.length) / pageSize),
-      ),
-    );
+    setTotalPages(Math.max(1, Math.ceil((totalCount ? totalCount : data?.length) / pageSize)));
   }, [data?.length, pageSize]);
 
   const startIndex = currentPage * pageSize;
@@ -68,32 +57,18 @@ function CustomTable({
     <nav aria-label="Page navigation">
       <ul className="pagination">
         <li className={`page-item ${currentPage <= 0 ? "disabled" : ""}`}>
-          <button
-            className="page-link"
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage <= 0}
-          >
+          <button className="page-link" onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage <= 0}>
             Previous
           </button>
         </li>
         {Array.from({ length: totalPages }).map((_, index) => (
-          <li
-            key={index}
-            className={`page-item ${currentPage === index ? "active" : ""}`}
-          >
-            <button
-              className="page-link"
-              onClick={() => handlePageChange(index)}
-            >
+          <li key={index} className={`page-item ${currentPage === index ? "active" : ""}`}>
+            <button className="page-link" onClick={() => handlePageChange(index)}>
               {index + 1}
             </button>
           </li>
         ))}
-        <li
-          className={`page-item ${
-            currentPage >= totalPages - 1 ? "disabled" : ""
-          }`}
-        >
+        <li className={`page-item ${currentPage >= totalPages - 1 ? "disabled" : ""}`}>
           <button
             className="page-link"
             onClick={() => handlePageChange(currentPage + 1)}
@@ -118,11 +93,7 @@ function CustomTable({
           >
             <h2 className="float-start mt-2">{tableTitle}</h2>
             {!hideBtn && (
-              <button
-                className="btn btn-primary float-end"
-                type="button"
-                onClick={handleAdd}
-              >
+              <button className="btn btn-primary float-end" type="button" onClick={handleAdd}>
                 {addBtnText}
               </button>
             )}
@@ -138,12 +109,7 @@ function CustomTable({
               marginBottom: "15px",
             }}
           >
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Search"
-              onChange={searchonchange}
-            />
+            <input type="text" className="form-control" placeholder="Search" onChange={searchonchange} />
             <div className="input-group-btn">
               <button className="btn btn-default" type="submit">
                 <i className="glyphicon glyphicon-search"></i>
@@ -175,9 +141,7 @@ function CustomTable({
                   className="text-center"
                   scope="col"
                   style={{
-                    backgroundColor: headertitlebgColor
-                      ? headertitlebgColor
-                      : "#FFF",
+                    backgroundColor: headertitlebgColor ? headertitlebgColor : "#FFF",
                     color: headertitletextColor ? headertitletextColor : "#666",
                   }}
                 >
@@ -189,9 +153,7 @@ function CustomTable({
                   className="text-center"
                   style={{
                     width: "180px",
-                    backgroundColor: headertitlebgColor
-                      ? headertitlebgColor
-                      : "#FFF",
+                    backgroundColor: headertitlebgColor ? headertitlebgColor : "#FFF",
                     color: headertitletextColor ? headertitletextColor : "#666",
                   }}
                 >
@@ -211,11 +173,7 @@ function CustomTable({
                       <td className="text-center">
                         {item[key] === "active" || item[key] === "inactive" ? (
                           <span
-                            className={`label label-sm ${
-                              item[key] === "active"
-                                ? "label-success"
-                                : "label-danger"
-                            }`}
+                            className={`label label-sm ${item[key] === "active" ? "label-success" : "label-danger"}`}
                           >
                             {item[key]}
                           </span>
@@ -236,10 +194,7 @@ function CustomTable({
                               <FontAwesomeIcon icon={faEdit} />
                             </button>
                           </OverlayTrigger>
-                          <OverlayTrigger
-                            placement="top"
-                            overlay={deleteTooltip}
-                          >
+                          <OverlayTrigger placement="top" overlay={deleteTooltip}>
                             <button
                               onClick={() => handleDelete(item)}
                               className="btn default btn-xs black"
@@ -252,10 +207,7 @@ function CustomTable({
                       )}
                       {hideUserIcon && hideUserIcon && (
                         <>
-                          <OverlayTrigger
-                            placement="top"
-                            overlay={vistorTooltip}
-                          >
+                          <OverlayTrigger placement="top" overlay={vistorTooltip}>
                             <button
                               onClick={() => handleUser(item)}
                               className="btn default btn-xs black"
@@ -264,10 +216,7 @@ function CustomTable({
                               <FontAwesomeIcon icon={faUser} />
                             </button>
                           </OverlayTrigger>
-                          <OverlayTrigger
-                            placement="top"
-                            overlay={printTooltip}
-                          >
+                          <OverlayTrigger placement="top" overlay={printTooltip}>
                             <button
                               onClick={() => handlePrint(item)}
                               className="btn default btn-xs black"
@@ -276,10 +225,7 @@ function CustomTable({
                               <FontAwesomeIcon icon={faPrint} />
                             </button>
                           </OverlayTrigger>
-                          <OverlayTrigger
-                            placement="top"
-                            overlay={duplicateTooltip}
-                          >
+                          <OverlayTrigger placement="top" overlay={duplicateTooltip}>
                             <button
                               onClick={() => handleDuplicate(item)}
                               className="btn default btn-xs black"
@@ -313,11 +259,7 @@ function CustomTable({
                       <td className="text-center">
                         {item[key] === "active" || item[key] === "inactive" ? (
                           <span
-                            className={`label label-sm ${
-                              item[key] === "active"
-                                ? "label-success"
-                                : "label-danger"
-                            }`}
+                            className={`label label-sm ${item[key] === "active" ? "label-success" : "label-danger"}`}
                           >
                             {item[key]}
                           </span>
@@ -330,10 +272,7 @@ function CustomTable({
                       <td className="text-center">
                         {!hideEditIcon && !hideEditIcon && (
                           <>
-                            <OverlayTrigger
-                              placement="top"
-                              overlay={editTooltip}
-                            >
+                            <OverlayTrigger placement="top" overlay={editTooltip}>
                               <button
                                 onClick={() => handleEdit(item)}
                                 className="btn default btn-xs black"
@@ -342,10 +281,7 @@ function CustomTable({
                                 <FontAwesomeIcon icon={faEdit} />
                               </button>
                             </OverlayTrigger>
-                            <OverlayTrigger
-                              placement="top"
-                              overlay={deleteTooltip}
-                            >
+                            <OverlayTrigger placement="top" overlay={deleteTooltip}>
                               <button
                                 onClick={() => handleDelete(item)}
                                 className="btn default btn-xs black"
@@ -358,10 +294,7 @@ function CustomTable({
                         )}
                         {hideUserIcon && hideUserIcon && (
                           <>
-                            <OverlayTrigger
-                              placement="top"
-                              overlay={vistorTooltip}
-                            >
+                            <OverlayTrigger placement="top" overlay={vistorTooltip}>
                               <button
                                 onClick={() => handleUser(item)}
                                 className="btn default btn-xs black"
@@ -370,10 +303,7 @@ function CustomTable({
                                 <FontAwesomeIcon icon={faUser} />
                               </button>
                             </OverlayTrigger>
-                            <OverlayTrigger
-                              placement="top"
-                              overlay={printTooltip}
-                            >
+                            <OverlayTrigger placement="top" overlay={printTooltip}>
                               <button
                                 onClick={() => handlePrint(item)}
                                 className="btn default btn-xs black"
@@ -382,10 +312,7 @@ function CustomTable({
                                 <FontAwesomeIcon icon={faPrint} />
                               </button>
                             </OverlayTrigger>
-                            <OverlayTrigger
-                              placement="top"
-                              overlay={duplicateTooltip}
-                            >
+                            <OverlayTrigger placement="top" overlay={duplicateTooltip}>
                               <button
                                 onClick={() => handleDuplicate(item)}
                                 className="btn default btn-xs black"
@@ -397,10 +324,7 @@ function CustomTable({
                           </>
                         )}
                         {showPrint && (
-                          <OverlayTrigger
-                            placement="top"
-                            overlay={printTooltip}
-                          >
+                          <OverlayTrigger placement="top" overlay={printTooltip}>
                             <button
                               onClick={() => handlePrint(item)}
                               className="btn default btn-xs black"
