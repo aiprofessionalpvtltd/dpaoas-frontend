@@ -3,16 +3,10 @@ import { NoticeSidebarItems } from "../../../../../../utils/sideBarItems";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
 import { useNavigate } from "react-router";
-import {
-  getAllResolutions,
-  searchResolution,
-} from "../../../../../../api/APIs";
+import { getAllResolutions, searchResolution } from "../../../../../../api/APIs";
 import Select from "react-select";
 
-import {
-  showErrorMessage,
-  showSuccessMessage,
-} from "../../../../../../utils/ToastAlert";
+import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import { useFormik } from "formik";
 import DatePicker from "react-datepicker";
@@ -116,25 +110,14 @@ function SentResolution() {
   }, [currentPage]);
 
   return (
-    <Layout
-      module={true}
-      sidebarItems={NoticeSidebarItems}
-      centerlogohide={true}
-    >
+    <Layout module={true} sidebarItems={NoticeSidebarItems} centerlogohide={true}>
       <ToastContainer />
 
-      <Header
-        dashboardLink={"/"}
-        addLink1={"/notice/resolution/sent"}
-        title1={"Sent Resolution"}
-      />
+      <Header dashboardLink={"/"} addLink1={"/notice/resolution/sent"} title1={"Sent Resolution"} />
       <div>
-        <div class="container-fluid">
+        <div class="container-fluid dash-detail-container">
           <div class="card mt-1">
-            <div
-              class="card-header red-bg"
-              style={{ background: "#14ae5c !important" }}
-            >
+            <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
               <h1>SENT RESOLUTION</h1>
             </div>
             <div class="card-body">
@@ -146,10 +129,7 @@ function SentResolution() {
                         <label class="form-label">Notice Diary No</label>
                         <input
                           className={`form-control ${
-                            formik.touched.noticeDiaryNo &&
-                            formik.errors.noticeDiaryNo
-                              ? "is-invalid"
-                              : ""
+                            formik.touched.noticeDiaryNo && formik.errors.noticeDiaryNo ? "is-invalid" : ""
                           }`}
                           type="text"
                           name="noticeDiaryNo"
@@ -164,10 +144,7 @@ function SentResolution() {
                         <label class="form-label">Resolution ID</label>
                         <input
                           className={`form-control ${
-                            formik.touched.resolutionId &&
-                            formik.errors.resolutionId
-                              ? "is-invalid"
-                              : ""
+                            formik.touched.resolutionId && formik.errors.resolutionId ? "is-invalid" : ""
                           }`}
                           type="text"
                           name="resolutionId"
@@ -184,9 +161,7 @@ function SentResolution() {
                         <label class="form-label">Keyword</label>
                         <input
                           className={`form-control ${
-                            formik.touched.keyword && formik.errors.keyword
-                              ? "is-invalid"
-                              : ""
+                            formik.touched.keyword && formik.errors.keyword ? "is-invalid" : ""
                           }`}
                           type="text"
                           name="keyword"
@@ -206,9 +181,7 @@ function SentResolution() {
                             label: item.memberName,
                           }))}
                           isMulti
-                          onChange={(selectedOptions) =>
-                            formik.setFieldValue("memberName", selectedOptions)
-                          }
+                          onChange={(selectedOptions) => formik.setFieldValue("memberName", selectedOptions)}
                           onBlur={formik.handleBlur}
                           value={formik.values.memberName}
                           name="memberName"
@@ -222,10 +195,7 @@ function SentResolution() {
                         <label class="form-label">From Session</label>
                         <select
                           class={`form-select ${
-                            formik.touched.fromSession &&
-                            formik.errors.fromSession
-                              ? "is-invalid"
-                              : ""
+                            formik.touched.fromSession && formik.errors.fromSession ? "is-invalid" : ""
                           }`}
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
@@ -249,9 +219,7 @@ function SentResolution() {
                         <label class="form-label">To Session</label>
                         <select
                           class={`form-select ${
-                            formik.touched.toSession && formik.errors.toSession
-                              ? "is-invalid"
-                              : ""
+                            formik.touched.toSession && formik.errors.toSession ? "is-invalid" : ""
                           }`}
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
@@ -277,10 +245,7 @@ function SentResolution() {
                         <label class="form-label">Resolution Type</label>
                         <select
                           class={`form-select ${
-                            formik.touched.resolutionType &&
-                            formik.errors.resolutionType
-                              ? "is-invalid"
-                              : ""
+                            formik.touched.resolutionType && formik.errors.resolutionType ? "is-invalid" : ""
                           }`}
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
@@ -290,12 +255,8 @@ function SentResolution() {
                           <option value="" selected disabled hidden>
                             Select
                           </option>
-                          <option value="Government Resolution">
-                            Government Resolution
-                          </option>
-                          <option value="Private Member Resolution">
-                            Private Member Resolution
-                          </option>
+                          <option value="Government Resolution">Government Resolution</option>
+                          <option value="Private Member Resolution">Private Member Resolution</option>
                           <option value="Govt. Resolution Supported by others">
                             Govt. Resolution Supported by others
                           </option>
@@ -307,10 +268,7 @@ function SentResolution() {
                         <label class="form-label">Resolution Status</label>
                         <select
                           class={`form-select ${
-                            formik.touched.resolutionStatus &&
-                            formik.errors.resolutionStatus
-                              ? "is-invalid"
-                              : ""
+                            formik.touched.resolutionStatus && formik.errors.resolutionStatus ? "is-invalid" : ""
                           }`}
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
@@ -368,15 +326,10 @@ function SentResolution() {
                         <DatePicker
                           selected={formik.values.fromNoticeDate}
                           minDate={new Date()}
-                          onChange={(date) =>
-                            formik.setFieldValue("fromNoticeDate", date)
-                          }
+                          onChange={(date) => formik.setFieldValue("fromNoticeDate", date)}
                           onBlur={formik.handleBlur}
                           className={`form-control ${
-                            formik.touched.fromNoticeDate &&
-                            formik.errors.fromNoticeDate
-                              ? "is-invalid"
-                              : ""
+                            formik.touched.fromNoticeDate && formik.errors.fromNoticeDate ? "is-invalid" : ""
                           }`}
                         />
                       </div>
@@ -401,15 +354,10 @@ function SentResolution() {
                         <DatePicker
                           selected={formik.values.toNoticeDate}
                           minDate={new Date()}
-                          onChange={(date) =>
-                            formik.setFieldValue("toNoticeDate", date)
-                          }
+                          onChange={(date) => formik.setFieldValue("toNoticeDate", date)}
                           onBlur={formik.handleBlur}
                           className={`form-control ${
-                            formik.touched.toNoticeDate &&
-                            formik.errors.toNoticeDate
-                              ? "is-invalid"
-                              : ""
+                            formik.touched.toNoticeDate && formik.errors.toNoticeDate ? "is-invalid" : ""
                           }`}
                         />
                       </div>
@@ -427,10 +375,7 @@ function SentResolution() {
                     </div>
                   </div>
 
-                  <div
-                    class="dash-detail-container"
-                    style={{ marginTop: "20px" }}
-                  >
+                  <div class="dash-detail-container" style={{ marginTop: "20px" }}>
                     <CustomTable
                       hideBtn={true}
                       data={resData}

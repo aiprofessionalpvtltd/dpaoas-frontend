@@ -904,6 +904,9 @@ hr.horizontal {
     font-size: 27px;
     margin-right: 10px;
 }
+.brand-logo img{
+    width: 80%;
+}
 
 .dashboard-nav-list {
     display: -webkit-box;
@@ -3530,7 +3533,7 @@ textarea {
     height: 25px;
     margin-left: 5px;
     display: inline-block;
-    font-size: 14px;
+    /* font-size: 14px; */
     line-height: 24px;
   }
 
@@ -3550,4 +3553,7 @@ textarea {
 }
 .MuiStepLabel-labelContainer span {
     font-size: large;
+}
+.react-datepicker-popper[data-placement^="top"] .react-datepicker__triangle, .react-datepicker-popper[data-placement^="bottom"] .react-datepicker__triangle{
+    margin-left: -22px !important;
 }
