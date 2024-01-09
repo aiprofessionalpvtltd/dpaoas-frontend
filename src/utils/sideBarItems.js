@@ -383,6 +383,13 @@ export const QMSSideBarItems = [
         link: "/qms/reports/question-summary",
         icon: faClipboardList,
       },
+
+      {
+        itemName: "Question List",
+        link: "/qms/reports/question-list",
+        icon: faClipboardList,
+      },
+
       {
         itemName: "Resolution Annual Reports",
         link: "/qms/reports/resolution-annual-reports",
