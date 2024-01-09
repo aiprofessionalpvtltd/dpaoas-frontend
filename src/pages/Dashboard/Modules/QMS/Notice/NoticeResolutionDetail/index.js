@@ -94,10 +94,8 @@ function QMSNoticeResolutionDetail() {
       <ToastContainer />
       <Header
         dashboardLink={"/"}
-        addLink1={"/qms/dashboard"}
-        title1={"Question"}
-        addLink2={"/qms/notice/notice-resolution-detail"}
-        title2={"Notice Resolution Detail"}
+        addLink1={"/qms/notice/notice-resolution-detail"}
+        title1={"Notice Resolution Detail"}
       />
       <div class="container-fluid">
         <div class="card mt-4">

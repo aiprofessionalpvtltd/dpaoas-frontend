@@ -95,10 +95,8 @@ function QMSNewQuestion() {
       <ToastContainer />
       <Header
         dashboardLink={"/"}
-        addLink1={"/qms/dashboard"}
-        title1={"Question"}
-        addLink2={"/qms/question/new"}
-        title2={"New Question"}
+        addLink1={"/qms/question/new"}
+        title1={"New Question"}
       />
       <CustomAlert
         showModal={showModal}

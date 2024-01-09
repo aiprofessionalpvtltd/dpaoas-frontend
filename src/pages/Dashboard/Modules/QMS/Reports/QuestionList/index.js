@@ -127,10 +127,8 @@ function QMSReportQuestionList() {
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <Header
         dashboardLink={"/"}
-        addLink1={"/qms/dashboard"}
-        title1={"Question"}
-        addLink2={"/qms/reports/question-list"}
-        title2={"Question List"}
+        addLink1={"/qms/reports/question-list"}
+        title1={"Question List"}
       />
       <ToastContainer />
 

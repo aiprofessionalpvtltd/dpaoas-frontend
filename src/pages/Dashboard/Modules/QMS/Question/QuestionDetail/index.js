@@ -286,10 +286,8 @@ function QMSQuestionDetail() {
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <Header
         dashboardLink={"/"}
-        addLink1={"/qms/dashboard"}
-        title1={"Question"}
-        addLink2={"/qms/question/detail"}
-        title2={"Question Detail"}
+        addLink1={"/qms/question/detail"}
+        title1={"Question Detail"}
       />
       <ToastContainer />
       <div class="container-fluid">

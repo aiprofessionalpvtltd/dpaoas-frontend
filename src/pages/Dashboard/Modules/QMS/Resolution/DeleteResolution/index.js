@@ -103,10 +103,8 @@ function QMSDeleteResolution() {
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <Header
         dashboardLink={"/"}
-        addLink1={"/qms/dashboard"}
-        title1={"Question"}
-        addLink2={"/qms/resolution/delete"}
-        title2={"Delete Resolution"}
+        addLink1={"/qms/resolution/delete"}
+        title1={"Delete Resolution"}
       />
       <div class="container-fluid">
         <div class="card mt-4">

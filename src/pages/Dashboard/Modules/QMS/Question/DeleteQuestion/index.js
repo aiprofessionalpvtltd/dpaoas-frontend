@@ -148,10 +148,8 @@ function QMSDeleteQuestion() {
       <ToastContainer />
       <Header
         dashboardLink={"/"}
-        addLink1={"/qms/dashboard"}
-        title1={"Question"}
-        addLink2={"/qms/question/delete"}
-        title2={"Delete Question"}
+        addLink1={"/qms/question/delete"}
+        title1={"Delete Question"}
       />
       <div class="container-fluid">
         <div class="card mt-4">

@@ -102,10 +102,8 @@ function QMSNoticeQuestion() {
       <ToastContainer />
       <Header
         dashboardLink={"/"}
-        addLink1={"/qms/dashboard"}
-        title1={"Question"}
-        addLink2={"/qms/notice/notice-question"}
-        title2={"Notice Question"}
+        addLink1={"/qms/notice/notice-question"}
+        title1={"Notice Question"}
       />
       <div class="container-fluid">
         <div class="card mt-4">

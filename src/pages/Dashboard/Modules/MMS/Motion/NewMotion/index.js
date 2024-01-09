@@ -172,10 +172,8 @@ function MMSNewMotion() {
     <Layout module={true} sidebarItems={MMSSideBarItems} centerlogohide={true}>
       <Header
         dashboardLink={"/"}
-        addLink1={"/mms/dashboard"}
-        title1={"Motion"}
-        addLink2={"/mms/motion/new"}
-        title2={"New Motion"}
+        addLink1={"/mms/motion/new"}
+        title1={"New Motion"}
       />
       <ToastContainer />
       <div class="container-fluid">
