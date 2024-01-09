@@ -122,10 +122,8 @@ function MMSSearchResolution() {
     <Layout module={true} sidebarItems={MMSSideBarItems} centerlogohide={true}>
       <Header
         dashboardLink={"/"}
-        addLink1={"/mms/dashboard"}
-        title1={"Motion"}
-        addLink2={"/mms/resolution/search"}
-        title2={"Search Resolution"}
+        addLink1={"/mms/resolution/search"}
+        title1={"Search Resolution"}
       />
       <ToastContainer />
 

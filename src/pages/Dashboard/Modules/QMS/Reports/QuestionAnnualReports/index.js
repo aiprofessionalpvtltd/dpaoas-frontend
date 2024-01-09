@@ -11,10 +11,8 @@ function QMSQuestionAnnualReports() {
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <Header
         dashboardLink={"/"}
-        addLink1={"/qms/dashboard"}
-        title1={"Question"}
-        addLink2={"/qms/reports/question-annual-reports"}
-        title2={"Question Annual Reports"}
+        addLink1={"/qms/reports/question-annual-reports"}
+        title1={"Question Annual Reports"}
       />
       <div class="container-fluid">
         <div class="card mt-4">

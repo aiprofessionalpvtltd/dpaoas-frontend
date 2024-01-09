@@ -143,10 +143,8 @@ function MMSMotionList() {
     <Layout module={true} sidebarItems={MMSSideBarItems} centerlogohide={true}>
       <Header
         dashboardLink={"/"}
-        addLink1={"/mms/dashboard"}
-        title1={"Motion"}
-        addLink2={"/mms/motion/list"}
-        title2={"Motion List"}
+        addLink1={"/mms/motion/list"}
+        title1={"Motion List"}
       />
       <ToastContainer />
       <div class="container-fluid">

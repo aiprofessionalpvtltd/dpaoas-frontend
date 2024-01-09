@@ -117,10 +117,8 @@ function MMSSearchQuestion() {
     <Layout module={true} sidebarItems={MMSSideBarItems} centerlogohide={true}>
       <Header
         dashboardLink={"/"}
-        addLink1={"/mms/dashboard"}
-        title1={"Motion"}
-        addLink2={"/mms/question/search"}
-        title2={"Search Queston"}
+        addLink1={"/mms/question/search"}
+        title1={"Search Queston"}
       />
       <ToastContainer />
       <div class="container-fluid">

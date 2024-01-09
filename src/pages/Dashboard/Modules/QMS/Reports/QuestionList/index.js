@@ -25,7 +25,7 @@ const validationSchema = Yup.object({
   include: Yup.boolean(),
 });
 
-function QMSQuestionList() {
+function QMSReportQuestionList() {
   const { sessions } = useContext(AuthContext);
   const [resData, setResData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
@@ -127,7 +127,7 @@ function QMSQuestionList() {
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <Header
         dashboardLink={"/"}
-        addLink1={"/qms/question/list"}
+        addLink1={"/qms/reports/question-list"}
         title1={"Question List"}
       />
       <ToastContainer />
@@ -307,4 +307,4 @@ function QMSQuestionList() {
   );
 }
 
-export default QMSQuestionList;
+export default QMSReportQuestionList;
