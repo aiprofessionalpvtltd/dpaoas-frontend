@@ -39,9 +39,15 @@ function CustomTable({
     return key.replace(/([a-z0-9])([A-Z])/g, "$1 $2").toLowerCase();
   };
 
+  // useEffect(() => {
+  //   setTotalPages(Math.max(1, Math.ceil((totalCount ? totalCount : data?.length) / pageSize)));
+  // }, [data?.length, pageSize]);
+
   useEffect(() => {
-    setTotalPages(Math.max(1, Math.ceil((totalCount ? totalCount : data?.length) / pageSize)));
-  }, [data?.length, pageSize]);
+    setTotalPages(prevTotalPages => Math.max(1, Math.ceil((totalCount ? totalCount : data?.length) / pageSize)));
+  }, [data?.length, pageSize, totalCount]);
+  
+
 
   const startIndex = currentPage * pageSize;
   const endIndex = startIndex + pageSize;
