@@ -11,24 +11,6 @@ import {
 } from "../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 
-const data = [
-  {
-    id: 1,
-    name: "Admin Department",
-    description: "Handles Admin Related Work!",
-    departmentStatus: "active",
-    createdAt: "2023-11-21T09:22:13.682Z",
-    updatedAt: "2023-11-24T05:48:16.342Z",
-  },
-  {
-    id: 2,
-    name: "IT Department",
-    description: "Handles IT Related Work!",
-    departmentStatus: "active",
-    createdAt: "2023-11-24T09:49:43.505Z",
-    updatedAt: "2023-11-24T09:49:43.505Z",
-  },
-];
 
 function HRMDepartment() {
   const navigate = useNavigate();

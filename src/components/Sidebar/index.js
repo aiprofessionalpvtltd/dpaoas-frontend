@@ -111,7 +111,7 @@ export const Sidebar = ({ sidebarItems }) => {
           ))}
 
         <div className="nav-item-divider"></div>
-        <a
+        <a href=""
           className="dashboard-nav-item"
           onClick={() => {
             logout();

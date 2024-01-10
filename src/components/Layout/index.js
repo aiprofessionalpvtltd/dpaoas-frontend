@@ -158,7 +158,7 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
       logout();
       navigation("/login");
     }
-  }, []);
+  }, [navigation]);
 
   const notificationModal = () => (
     <div
