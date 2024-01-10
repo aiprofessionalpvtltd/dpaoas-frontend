@@ -20,7 +20,6 @@ import moment from "moment";
 
 function VMSDashboard() {
   const navigate = useNavigate();
-  const [pdfUrl, setPdfUrl] = useState(null);
 
   const [passAllData, setPassAllData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
