@@ -1,10 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Layout } from "../../../../../components/Layout";
-import { useNavigate } from "react-router-dom";
 import CustomTable from "../../../../../components/CustomComponents/CustomTable";
 import { MMSSideBarItems } from "../../../../../utils/sideBarItems";
 import Header from "../../../../../components/Header";
-import { Field, Form, Formik, useFormik } from "formik";
+import { useFormik } from "formik";
 import { ToastContainer } from "react-toastify";
 import {
   showErrorMessage,
@@ -20,7 +19,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 
 function MMSSearchResolution() {
-  const navigate = useNavigate();
   const { members, sessions } = useContext(AuthContext);
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
@@ -306,7 +304,6 @@ function MMSSearchResolution() {
                             top: "36px",
                             zIndex: 1,
                             fontSize: "20px",
-                            zIndex: "1",
                             color: "#666",
                           }}
                         >
@@ -332,7 +329,6 @@ function MMSSearchResolution() {
                             top: "36px",
                             zIndex: 1,
                             fontSize: "20px",
-                            zIndex: "1",
                             color: "#666",
                           }}
                         >
@@ -452,7 +448,6 @@ function MMSSearchResolution() {
                           top: "36px",
                           zIndex: 1,
                           fontSize: "20px",
-                          zIndex: "1",
                           color: "#666",
                         }}
                       >
