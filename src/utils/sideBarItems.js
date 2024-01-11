@@ -339,7 +339,6 @@ export const QMSSideBarItems = [
       },
     ],
   },
-
   {
     itemName: "Notice",
     link: "/qms/notice",
@@ -403,6 +402,32 @@ export const QMSSideBarItems = [
       {
         itemName: "Defer Question Reports",
         link: "/qms/reports/defer-question-reports",
+        icon: faClipboardList,
+      },
+    ],
+  },
+];
+
+// SMS Sidebar
+export const SMSsidebarItems = [
+  {
+    itemName: "Home",
+    link: "/sms/dashboard",
+    icon: faHome,
+  },
+  {
+    itemName: "Send SMS",
+    link: "/sms/send-sms",
+    icon: faClipboardList,
+    subItems: [
+      {
+        itemName: "Instant SMS",
+        link: "/sms/send-sms/instant",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Advanced SMS",
+        link: "/sms/send-sms/advanced",
         icon: faClipboardList,
       },
     ],
