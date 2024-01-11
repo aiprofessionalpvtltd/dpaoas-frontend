@@ -4,29 +4,9 @@ import { HRMsidebarItems } from "../../../../utils/sideBarItems";
 import { useNavigate } from "react-router-dom";
 import Header from "../../../../components/Header";
 import CustomTable from "../../../../components/CustomComponents/CustomTable";
-import { getRolesData } from "../../../../api/Auth";
 import { DeleteRole, getRoles } from "../../../../api/APIs";
 import { showSuccessMessage } from "../../../../utils/ToastAlert";
 import moment from "moment";
-
-const data = [
-  {
-    id: 1,
-    name: "IT",
-    description: "IT Things",
-    roleStatus: "active",
-    createdAt: "2023-11-17T07:44:24.020Z",
-    updatedAt: "2023-11-17T07:44:24.020Z",
-  },
-  {
-    id: 2,
-    name: "HRM",
-    description: "Human Resource Management",
-    roleStatus: "active",
-    createdAt: "2023-11-24T09:58:14.137Z",
-    updatedAt: "2023-11-24T09:58:14.137Z",
-  },
-];
 
 function HRMDashboard() {
   const navigate = useNavigate();

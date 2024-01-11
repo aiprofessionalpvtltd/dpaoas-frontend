@@ -89,6 +89,7 @@ function LMSHistory() {
   };
 
   useEffect(() => {
+     // eslint-disable-next-line react-hooks/exhaustive-deps
     searchHistoryApi();
   }, [currentPage]);
 
@@ -169,7 +170,6 @@ function LMSHistory() {
                           top: "36px",
                           zIndex: 1,
                           fontSize: "20px",
-                          zIndex: "1",
                           color: "#666",
                         }}
                       >
@@ -198,7 +198,6 @@ function LMSHistory() {
                           top: "36px",
                           zIndex: 1,
                           fontSize: "20px",
-                          zIndex: "1",
                           color: "#666",
                         }}
                       >

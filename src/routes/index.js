@@ -6,8 +6,8 @@ import { getAuthToken } from "../api/Auth";
 import { AuthContext } from "../api/AuthContext";
 
 function RequireAuth({ children }) {
-  // const token = getAuthToken();
-  let token = "hshsh";
+  const token = getAuthToken();
+  // let token = "hshsh";
   return token ? children : <Navigate to="/login" replace />;
 }
 
