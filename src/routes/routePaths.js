@@ -47,6 +47,7 @@ import QMSQuestionDetail from "../pages/Dashboard/Modules/QMS/Question/QuestionD
 import QMSQuestionList from "../pages/Dashboard/Modules/QMS/Question/QuestionList";
 import QMSDeferQuestionReports from "../pages/Dashboard/Modules/QMS/Reports/DeferQuestionReports";
 import QMSQuestionAnnualReports from "../pages/Dashboard/Modules/QMS/Reports/QuestionAnnualReports";
+import QMSReportQuestionList from "../pages/Dashboard/Modules/QMS/Reports/QuestionList";
 import QMSQuestionSummary from "../pages/Dashboard/Modules/QMS/Reports/QuestionSummary";
 import QMSResolutionAnnualReports from "../pages/Dashboard/Modules/QMS/Reports/ResolutionAnnualReports";
 import QMSResolutionSummary from "../pages/Dashboard/Modules/QMS/Reports/ResolutionSummary";
@@ -169,6 +170,10 @@ export const ProtectedRoutes = [
   {
     path: "/qms/reports/defer-question-reports",
     element: <QMSDeferQuestionReports />,
+  },
+  {
+    path: "/qms/reports/question-list",
+    element: <QMSReportQuestionList />,
   },
 
   //QMS Module

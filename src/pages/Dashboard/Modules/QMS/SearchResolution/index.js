@@ -107,10 +107,8 @@ function QMSSerchResolution() {
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <Header
         dashboardLink={"/"}
-        addLink1={"/qms/dashboard"}
-        title1={"Question"}
-        addLink2={"/qms/resolution/search"}
-        title2={"Search Resolution"}
+        addLink1={"/qms/resolution/search"}
+        title1={"Search Resolution"}
       />
       <ToastContainer />
       <div class="container-fluid">

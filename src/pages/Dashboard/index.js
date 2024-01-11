@@ -9,16 +9,11 @@ import {
   faBullhorn,
   faFileImport,
   faClipboardQuestion,
-  faSms
+  faSms,
+  faBuilding,
 } from "@fortawesome/free-solid-svg-icons";
 import { AuthContext } from "../../api/AuthContext";
-import {
-  getPermissionsData,
-  getUserData,
-  logout,
-  setPermissionsData,
-  setRolesData,
-} from "../../api/Auth";
+import { getPermissionsData, getUserData, logout, setPermissionsData, setRolesData } from "../../api/Auth";
 import { getRoles } from "../../api/APIs";
 import { CheckPermission } from "../../utils/permissionsConfig";
 import { useNavigate } from "react-router";
@@ -82,7 +77,7 @@ function Dashboard() {
       link: "/hrm/dashboard",
       type: "",
       cardbg: "greenbg",
-      icon: faUserCog,
+      icon: faBuilding,
       permission: null,
       // "permission": ["Roles", "Employees", "Departments", "Designation"]
     },
@@ -126,14 +121,19 @@ function Dashboard() {
       icon: faSms,
       permission: null,
     },
+    {
+      title: "Human Resource Management System",
+      link: "/qms/search/question",
+      type: "",
+      cardbg: "mehroonBg",
+      icon: faUserCog,
+      permission: null,
+    },
   ];
 
   // Filter tiles based on permissions
   const filteredTiles = tilesData.filter((tile) => {
-    return (
-      tile?.permission === null ||
-      tile?.permission.some((perm) => permissionsLocal?.[perm]?.canView)
-    );
+    return tile?.permission === null || tile?.permission.some((perm) => permissionsLocal?.[perm]?.canView);
   });
 
   // Organize tiles into rows with a maximum of 3 tiles per row
@@ -151,13 +151,7 @@ function Dashboard() {
           <div key={rowIndex} className="row main-dashboard-tiles">
             {row.map((tile, colIndex) => (
               <div key={colIndex} className="col-4">
-                <Tiles
-                  title={tile.title}
-                  link={tile.link}
-                  type={tile.type}
-                  cardbg={tile.cardbg}
-                  icon={tile.icon}
-                />
+                <Tiles title={tile.title} link={tile.link} type={tile.type} cardbg={tile.cardbg} icon={tile.icon} />
               </div>
             ))}
           </div>

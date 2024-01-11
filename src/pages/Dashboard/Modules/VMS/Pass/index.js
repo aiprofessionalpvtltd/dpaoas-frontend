@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { Layout } from "../../../../../components/Layout";
 import { VMSsidebarItems } from "../../../../../utils/sideBarItems";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useFormik } from "formik";
-import * as Yup from "yup";
+// import * as Yup from "yup";
 import Header from "../../../../../components/Header";
 import DatePicker from "react-datepicker";
 import { UpdatePasses, createPasses } from "../../../../../api/APIs";
@@ -12,25 +12,25 @@ import { ToastContainer } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 
-const validationSchema = Yup.object({
-  passdate: Yup.string().required("Pass Date is required"),
-  requestby: Yup.string().required("Request By is required"),
-  branch: Yup.string(),
-  visitpurpose: Yup.string(),
-  cardtype: Yup.string(),
-  companyname: Yup.string(),
-  companyname: Yup.string(),
-  fromdate: Yup.string().required("From Date is required"),
-  todate: Yup.string().required("To Date is required"),
-  passstatus: Yup.string(),
-  passstatus: Yup.string(),
-  allowoffdays: Yup.string(),
-  remarks: Yup.string().required("Remarks is required"),
-});
+// const validationSchema = Yup.object({
+//   passdate: Yup.string().required("Pass Date is required"),
+//   requestby: Yup.string().required("Request By is required"),
+//   branch: Yup.string(),
+//   visitpurpose: Yup.string(),
+//   cardtype: Yup.string(),
+//   companyname: Yup.string(),
+//   companyname: Yup.string(),
+//   fromdate: Yup.string().required("From Date is required"),
+//   todate: Yup.string().required("To Date is required"),
+//   passstatus: Yup.string(),
+//   passstatus: Yup.string(),
+//   allowoffdays: Yup.string(),
+//   remarks: Yup.string().required("Remarks is required"),
+// });
 function VMSAddEditPass() {
   const location = useLocation();
   console.log("Pass Edit From data", location?.state?.id);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const passDate = location?.state?.passDate
     ? new Date(location?.state?.passDate)
     : null;
@@ -168,7 +168,6 @@ function VMSAddEditPass() {
                           top: "36px",
                           zIndex: 1,
                           fontSize: "20px",
-                          zIndex: "1",
                           color: "#666",
                         }}
                       >
@@ -284,7 +283,6 @@ function VMSAddEditPass() {
                           top: "36px",
                           zIndex: 1,
                           fontSize: "20px",
-                          zIndex: "1",
                           color: "#666",
                         }}
                       >
@@ -320,7 +318,6 @@ function VMSAddEditPass() {
                           top: "36px",
                           zIndex: 1,
                           fontSize: "20px",
-                          zIndex: "1",
                           color: "#666",
                         }}
                       >

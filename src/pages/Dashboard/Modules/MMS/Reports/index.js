@@ -8,10 +8,8 @@ function MMSMotionSummery() {
     <Layout module={true} sidebarItems={MMSSideBarItems} centerlogohide={true}>
       <Header
         dashboardLink={"/"}
-        addLink1={"/mms/dashboard"}
-        title1={"Motion"}
-        addLink2={"/mms/reports/motion-summary"}
-        title2={"Motion Summary"}
+        addLink1={"/mms/reports/motion-summary"}
+        title1={"Motion Summary"}
       />
       <div class="container-fluid">
         <div class="card mt-1">

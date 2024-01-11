@@ -74,10 +74,8 @@ function QMSResolutionList() {
       <ToastContainer />
       <Header
         dashboardLink={"/"}
-        addLink1={"/qms/dashboard"}
-        title1={"Question"}
-        addLink2={"/qms/rsolution/list"}
-        title2={"Resolution List"}
+        addLink1={"/qms/rsolution/list"}
+        title1={"Resolution List"}
       />
       <div class="container-fluid dash-detail-container">
         <div class="card mt-4">

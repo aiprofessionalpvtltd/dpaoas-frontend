@@ -159,10 +159,8 @@ function MMSSearchMotion() {
     <Layout module={true} sidebarItems={MMSSideBarItems} centerlogohide={true}>
       <Header
         dashboardLink={"/"}
-        addLink1={"/mms/dashboard"}
-        title1={"Motion"}
-        addLink2={"/mms/motion/search"}
-        title2={"Search Motion"}
+        addLink1={"/mms/motion/search"}
+        title1={"Search Motion"}
       />
       <ToastContainer />
       <div class="container-fluid">

@@ -5,7 +5,7 @@ import Header from "../../../../../components/Header";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { createRole } from "../../../../../api/APIs";
-import { useNavigate } from "react-router";
+// import { useNavigate } from "react-router";
 import { showSuccessMessage } from "../../../../../utils/ToastAlert";
 
 const validationSchema = Yup.object({
@@ -13,7 +13,7 @@ const validationSchema = Yup.object({
   roledescription: Yup.string().required("Description is required"),
 });
 function HRMAddRole() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const initialValues = {
     roleName: "",
     roledescription: "",

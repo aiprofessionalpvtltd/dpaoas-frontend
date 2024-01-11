@@ -145,10 +145,8 @@ function QMSSearchQuestion() {
         <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
             <Header
                 dashboardLink={"/"}
-                addLink1={"/qms/dashboard"}
-                title1={"Question"}
-                addLink2={"/qms/question/search"}
-                title2={"Search Queston"}
+                addLink1={"/qms/question/search"}
+                title1={"Search Queston"}
             />
             <ToastContainer />
             <div class="container-fluid">
