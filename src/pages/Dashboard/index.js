@@ -9,6 +9,7 @@ import {
   faBullhorn,
   faFileImport,
   faClipboardQuestion,
+  faSms,
   faBuilding,
 } from "@fortawesome/free-solid-svg-icons";
 import { AuthContext } from "../../api/AuthContext";
@@ -110,6 +111,14 @@ function Dashboard() {
       type: "",
       cardbg: "orangebg",
       icon: faClipboardQuestion,
+      permission: null,
+    },
+    {
+      title: "SMS Constituent Outreach System",
+      link: "/sms/dashboard",
+      type: "",
+      cardbg: "greybg",
+      icon: faSms,
       permission: null,
     },
     {

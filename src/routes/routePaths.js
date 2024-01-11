@@ -55,6 +55,7 @@ import QMSDeleteResolution from "../pages/Dashboard/Modules/QMS/Resolution/Delet
 import QMSResolutionList from "../pages/Dashboard/Modules/QMS/Resolution/ResolutionList";
 import QMSSearchQuestion from "../pages/Dashboard/Modules/QMS/SearchQuestion";
 import QMSSerchResolution from "../pages/Dashboard/Modules/QMS/SearchResolution";
+import SMSDashboard from "../pages/Dashboard/Modules/SMS";
 import VMSDashboard from "../pages/Dashboard/Modules/VMS";
 import VMSAddEditPass from "../pages/Dashboard/Modules/VMS/Pass";
 import VMSDuplicatePass from "../pages/Dashboard/Modules/VMS/Pass/DuplicatePass";
@@ -205,4 +206,7 @@ export const ProtectedRoutes = [
     path: "/qms/notice/notice-resolution-detail",
     element: <QMSNoticeResolutionDetail />,
   },
+
+  //SMS Module routes
+  { path: "/sms/dashboard", element: <SMSDashboard /> }
 ];
