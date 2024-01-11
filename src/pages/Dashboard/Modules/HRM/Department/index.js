@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Layout } from "../../../../../components/Layout";
 import { HRMsidebarItems } from "../../../../../utils/sideBarItems";
 import Header from "../../../../../components/Header";
@@ -32,20 +32,18 @@ function HRMDepartment() {
       departmentStatus: leave?.departmentStatus,
     }));
   };
-  const getDepartmentData = async () => {
+  const getDepartmentData = useCallback(async () => {
     try {
       const response = await getDepartment(currentPage, pageSize);
       if (response?.success) {
         const transformedData = transformDepartmentData(response?.data);
-        console.log("lsdflsdjljfkl", transformedData);
         setCount(response?.count);
-
         setDepartmentData(transformedData);
       }
     } catch (error) {
       console.log(error);
     }
-  };
+  }, [currentPage, pageSize, setCount, setDepartmentData]);
 
   const handleDelete = async (id) => {
     try {
@@ -60,7 +58,7 @@ function HRMDepartment() {
   };
   useEffect(() => {
     getDepartmentData();
-  }, []);
+  }, [getDepartmentData]);
   return (
     <Layout module={true} sidebarItems={HRMsidebarItems} centerlogohide={true}>
       <Header
