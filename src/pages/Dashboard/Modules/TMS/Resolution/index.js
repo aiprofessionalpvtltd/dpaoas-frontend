@@ -1,16 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Layout } from "../../../../../components/Layout";
 import Header from "../../../../../components/Header";
-import {
-  RevivedQuestionsBYID,
-  allRevivedQuestions,
-  getAllQuestion,
-} from "../../../../../api/APIs";
+import { RevivedQuestionsBYID, allRevivedQuestions, getAllQuestion } from "../../../../../api/APIs";
 import CustomTable from "../../../../../components/CustomComponents/CustomTable";
-import {
-  showErrorMessage,
-  showSuccessMessage,
-} from "../../../../../utils/ToastAlert";
+import { showErrorMessage, showSuccessMessage } from "../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-bootstrap";
 import { useNavigate } from "react-router";
 import moment from "moment";
@@ -26,51 +19,30 @@ function TMSResolution() {
 
   const data = [
     {
-      id: 1,
-      name: "Saqib Khan",
-      leaveType: "Sick",
-      startDate: "11/02/2023",
-      endDate: "11/02/2023",
-      totalDays: "30",
-      reason: "Feeling Not Good",
-      leaveStatus: "Approved",
-      submittedTo: "Mohsin",
-    },
-    {
-      id: 2,
-      name: "Mohsin Khan",
-      leaveType: "Sick",
-      startDate: "11/02/2023",
-      endDate: "11/02/2023",
-      totalDays: "30",
-      reason: "Feeling Not Good",
-      leaveStatus: "Approved",
-      submittedTo: "Mohsin",
-    },
-    {
-      id: 3,
-      name: "Saqib Khan",
-      leaveType: "Sick",
-      startDate: "11/02/2023",
-      endDate: "11/02/2023",
-      totalDays: "30",
-      reason: "Feeling Not Good",
-      leaveStatus: "Approved",
-      submittedTo: "Mohsin",
-    },
-    {
-      id: 4,
-      name: "Hamid Khan",
-      leaveType: "Sick",
-      startDate: "11/02/2023",
-      endDate: "11/02/2023",
-      totalDays: "30",
-      reason: "Feeling Not Good",
-      leaveStatus: "Approved",
-      submittedTo: "Mohsin",
+      "Sr#": 1,
+      RID: "454654",
+      SessionNumber: "55",
+      SubjectMatter: "Translation",
+      NoticeDate: "8/25/2023 ",
+      NoticeTime: "12:00 AM",
+      Category: "Starred",
+      SentForTranslationOn: "12/10/2024",
+      TranlatedOn: "Naeem Malik",
     },
   ];
-
+  const translatedData = [
+    {
+      "Sr#": 1,
+      RID: "454654",
+      SessionNumber: "55",
+      SubjectMatter: "Translation",
+      NoticeDate: "8/25/2023 ",
+      NoticeTime: "12:00 AM",
+      Category: "Starred",
+      SentForTranslationOn: "12/10/2024",
+      TranlatedBy: "Abbas Khan",
+    },
+  ];
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
@@ -84,9 +56,7 @@ function TMSResolution() {
         NoticeDate: moment(res?.noticeOfficeDiary?.noticeOfficeDiaryDate).format("YYYY/MM/DD"),
         NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
         SessionNumber: res?.session?.sessionName,
-        SubjectMatter: [res?.englishText, res?.urduText]
-          .filter(Boolean)
-          .join(", "),
+        SubjectMatter: [res?.englishText, res?.urduText].filter(Boolean).join(", "),
         Category: res.questionCategory,
         // SubmittedBy: res.category,
         Status: res.questionStatus?.questionStatus,
@@ -147,21 +117,15 @@ function TMSResolution() {
   return (
     <Layout module={true} sidebarItems={TMSsidebarItems} centerlogohide={true}>
       <ToastContainer />
-      <Header
-        dashboardLink={"/tms/dashboard"}
-        title1={"Resolution"}
-      />
+      <Header dashboardLink={"/tms/dashboard"} title1={"Resolution"} />
       <div class="container-fluid">
         <div class="card mt-4">
-          <div
-            class="card-header red-bg"
-            style={{ background: "#14ae5c !important" }}
-          >
-            <h1>Question Received from Notice Office</h1>
+          <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
+            <h1>RESOLUTION SENT FROM QUESTION BRANCH</h1>
           </div>
           <div class="card-body">
             <div class="container-fluid">
-            <CustomTable
+              <CustomTable
                 hideBtn={true}
                 data={data}
                 headerShown={true}
@@ -178,17 +142,14 @@ function TMSResolution() {
         </div>
 
         <div class="card mt-4">
-          <div
-            class="card-header red-bg"
-            style={{ background: "#14ae5c !important" }}
-          >
-            <h1>Question Received from Notice Office</h1>
+          <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
+            <h1>TRANSLATED RESOLUTION</h1>
           </div>
           <div class="card-body">
             <div class="container-fluid">
               <CustomTable
                 hideBtn={true}
-                data={data}
+                data={translatedData}
                 headerShown={true}
                 handlePageChange={handlePageChange}
                 currentPage={currentPage}

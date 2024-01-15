@@ -2,6 +2,7 @@ import React from "react";
 import { Layout } from "../../../../components/Layout";
 import LeaveCard from "../../../../components/CustomComponents/LeaveCard";
 import { TMSsidebarItems } from "../../../../utils/sideBarItems";
+import StatsCard from "../../../../components/CustomComponents/StatsCard";
 
 function TMSDashboard() {
   return (
@@ -10,53 +11,16 @@ function TMSDashboard() {
         <div class="col-md-12">
           <div class="mt-5 mb-4">
             <div class="row">
-              <LeaveCard
-                available={"06"}
-                used={"05"}
-                title={"Approved Leaves"}
-                percentage={"60"}
-                value={"10"}
-              />
-              <LeaveCard
-                available={"05"}
-                used={"04"}
-                title={"Submitted Leaves"}
-                percentage={"80"}
-                value={"09"}
-              />
-              <LeaveCard
-                available={"05"}
-                used={"04"}
-                title={"Remaining Leaves"}
-                percentage={"100"}
-                value={"07"}
-              />
+              <StatsCard name={"Question"} InprogressVal={35} completedVal={25} link={"/tms/dashboard"} />
+              <StatsCard name={"Motion"} InprogressVal={15} completedVal={13} link={"/tms/dashboard"} />
+              <StatsCard name={"Resolution"} InprogressVal={25} completedVal={18} link={"/tms/dashboard"} />
+              <StatsCard name={"Legislation"} InprogressVal={13} completedVal={10} link={"/tms/dashboard"} />
             </div>
-          </div>
-
-          <div class="mt-5 mb-4">
-            <div class="row">
-              <LeaveCard
-                available={"06"}
-                used={"05"}
-                title={"Approved Leaves"}
-                percentage={"60"}
-                value={"10"}
-              />
-              <LeaveCard
-                available={"05"}
-                used={"04"}
-                title={"Submitted Leaves"}
-                percentage={"80"}
-                value={"09"}
-              />
-              <LeaveCard
-                available={"05"}
-                used={"04"}
-                title={"Remaining Leaves"}
-                percentage={"100"}
-                value={"07"}
-              />
+            <div className="mt-4">
+              <div className="row">
+                <StatsCard name={"House Business"} InprogressVal={45} completedVal={50} link={"/tms/dashboard"} />
+                <StatsCard name={"Members"} InprogressVal={17} completedVal={34} link={"/tms/dashboard"} />
+              </div>
             </div>
           </div>
         </div>

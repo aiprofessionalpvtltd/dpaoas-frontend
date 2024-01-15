@@ -1,16 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Layout } from "../../../../../components/Layout";
 import Header from "../../../../../components/Header";
-import {
-  RevivedQuestionsBYID,
-  allRevivedQuestions,
-  getAllQuestion,
-} from "../../../../../api/APIs";
+import { RevivedQuestionsBYID, allRevivedQuestions, getAllQuestion } from "../../../../../api/APIs";
 import CustomTable from "../../../../../components/CustomComponents/CustomTable";
-import {
-  showErrorMessage,
-  showSuccessMessage,
-} from "../../../../../utils/ToastAlert";
+import { showErrorMessage, showSuccessMessage } from "../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-bootstrap";
 import { useNavigate } from "react-router";
 import moment from "moment";
@@ -26,48 +19,32 @@ function TMSQuestion() {
 
   const data = [
     {
-      id: 1,
-      name: "Saqib Khan",
-      leaveType: "Sick",
-      startDate: "11/02/2023",
-      endDate: "11/02/2023",
-      totalDays: "30",
-      reason: "Feeling Not Good",
-      leaveStatus: "Approved",
-      submittedTo: "Mohsin",
+      "Sr#": 1,
+      QID: "41465",
+      SessionNumber: "332",
+      SubjectMatter: "Translated Question 123",
+      NoticeNo: "2132 ",
+      NoticeDate: "8/25/2023 ",
+      NoticeTime: "12:00 AM",
+      Category: "Starred",
+      SubmittedBy: "Mohsin",
+      Status: "Defferd",
+      SentOn: "12/12/2023",
+      ReturnedOn: "1/12/2024",
     },
+  ];
+  const translatedData = [
     {
-      id: 2,
-      name: "Mohsin Khan",
-      leaveType: "Sick",
-      startDate: "11/02/2023",
-      endDate: "11/02/2023",
-      totalDays: "30",
-      reason: "Feeling Not Good",
-      leaveStatus: "Approved",
-      submittedTo: "Mohsin",
-    },
-    {
-      id: 3,
-      name: "Saqib Khan",
-      leaveType: "Sick",
-      startDate: "11/02/2023",
-      endDate: "11/02/2023",
-      totalDays: "30",
-      reason: "Feeling Not Good",
-      leaveStatus: "Approved",
-      submittedTo: "Mohsin",
-    },
-    {
-      id: 4,
-      name: "Hamid Khan",
-      leaveType: "Sick",
-      startDate: "11/02/2023",
-      endDate: "11/02/2023",
-      totalDays: "30",
-      reason: "Feeling Not Good",
-      leaveStatus: "Approved",
-      submittedTo: "Mohsin",
+      "Sr#": 1,
+      QID: "41465",
+      SessionNumber: "332",
+      NoticeDate: "8/25/2023 ",
+      NoticeTime: "12:00 AM",
+      Category: "Starred",
+      SubmittedBy: "Mohsin",
+      Status: "Defferd",
+      SentOn: "12/12/2023",
+      ReturnedOn: "1/12/2024",
     },
   ];
 
@@ -84,9 +61,7 @@ function TMSQuestion() {
         NoticeDate: moment(res?.noticeOfficeDiary?.noticeOfficeDiaryDate).format("YYYY/MM/DD"),
         NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
         SessionNumber: res?.session?.sessionName,
-        SubjectMatter: [res?.englishText, res?.urduText]
-          .filter(Boolean)
-          .join(", "),
+        SubjectMatter: [res?.englishText, res?.urduText].filter(Boolean).join(", "),
         Category: res.questionCategory,
         // SubmittedBy: res.category,
         Status: res.questionStatus?.questionStatus,
@@ -147,21 +122,15 @@ function TMSQuestion() {
   return (
     <Layout module={true} sidebarItems={TMSsidebarItems} centerlogohide={true}>
       <ToastContainer />
-      <Header
-        dashboardLink={"/tms/dashboard"}
-        title1={"Question"}
-      />
+      <Header dashboardLink={"/tms/dashboard"} title1={"Question"} />
       <div class="container-fluid">
         <div class="card mt-4">
-          <div
-            class="card-header red-bg"
-            style={{ background: "#14ae5c !important" }}
-          >
-            <h1>Question Received from Notice Office</h1>
+          <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
+            <h1>QUESTION SENT FROM QUESTION BRANCH</h1>
           </div>
           <div class="card-body">
             <div class="container-fluid">
-            <CustomTable
+              <CustomTable
                 hideBtn={true}
                 data={data}
                 headerShown={true}
@@ -178,17 +147,14 @@ function TMSQuestion() {
         </div>
 
         <div class="card mt-4">
-          <div
-            class="card-header red-bg"
-            style={{ background: "#14ae5c !important" }}
-          >
-            <h1>Question Received from Notice Office</h1>
+          <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
+            <h1>TRANSLATED QUESTION</h1>
           </div>
           <div class="card-body">
             <div class="container-fluid">
               <CustomTable
                 hideBtn={true}
-                data={data}
+                data={translatedData}
                 headerShown={true}
                 handlePageChange={handlePageChange}
                 currentPage={currentPage}
