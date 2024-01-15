@@ -14,10 +14,10 @@ function TMSDashboard() {
               <StatsCard name={"Question"} InprogressVal={35} completedVal={25} link={"/tms/dashboard"} />
               <StatsCard name={"Motion"} InprogressVal={15} completedVal={13} link={"/tms/dashboard"} />
               <StatsCard name={"Resolution"} InprogressVal={25} completedVal={18} link={"/tms/dashboard"} />
-              <StatsCard name={"Legislation"} InprogressVal={13} completedVal={10} link={"/tms/dashboard"} />
             </div>
             <div className="mt-4">
               <div className="row">
+                <StatsCard name={"Legislation"} InprogressVal={13} completedVal={10} link={"/tms/dashboard"} />
                 <StatsCard name={"House Business"} InprogressVal={45} completedVal={50} link={"/tms/dashboard"} />
                 <StatsCard name={"Members"} InprogressVal={17} completedVal={34} link={"/tms/dashboard"} />
               </div>

@@ -133,7 +133,8 @@ function TMSResolution() {
                 currentPage={currentPage}
                 pageSize={pageSize}
                 // totalCount={count}
-                ActionHide={false}
+                hideEditIcon={true}
+                assignBtn={true}
                 headertitlebgColor={"#666"}
                 headertitletextColor={"#FFF"}
               />
@@ -155,7 +156,7 @@ function TMSResolution() {
                 currentPage={currentPage}
                 pageSize={pageSize}
                 // totalCount={count}
-                ActionHide={false}
+                ActionHide={true}
                 headertitlebgColor={"#666"}
                 headertitletextColor={"#FFF"}
               />

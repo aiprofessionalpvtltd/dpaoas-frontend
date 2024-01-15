@@ -55,7 +55,7 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
   useEffect(() => {
     const handleOutsideClick = (e) => {
       if (!notificationRef?.current?.contains(e.target)) {
-        console.log("This one gets called because of the button click", e);
+        // console.log("This one gets called because of the button click", e);
         handleCloseModal();
       }
     };

@@ -5,7 +5,7 @@ import "react-circular-progressbar/dist/styles.css";
 function StatsCard({ name, completedVal, InprogressVal, link }) {
   return (
     <>
-      <div class="col-3">
+      <div class="col-4">
         <div class="card custom-card">
           <div class="card-header justify-content-between" style={{ background: "#14ae5c" }}>
             <div class="card-title" style={{ textAlign: "center", fontSize: "20px", fontWeight: "bold" }}>
