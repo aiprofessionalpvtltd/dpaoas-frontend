@@ -3577,7 +3577,7 @@ margin-inline-start: 1rem;
 position: relative;
 }
 .crm-deals-status li.primary::before {
-background-color: #845adf;
+background-color: #14ae5c;
 }
   
 .crm-deals-status li.info::before {

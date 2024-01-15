@@ -7,7 +7,7 @@ function StatsCard({ name, completedVal, InprogressVal, link }) {
     <>
       <div class="col-4">
         <div class="card custom-card">
-          <div class="card-header justify-content-between" style={{ background: "#14ae5c" }}>
+          <div class="card-header justify-content-between" style={{ background: "#686868" }}>
             <div class="card-title" style={{ textAlign: "center", fontSize: "20px", fontWeight: "bold" }}>
               {name}
             </div>
