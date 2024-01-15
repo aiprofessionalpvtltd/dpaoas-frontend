@@ -129,6 +129,14 @@ function Dashboard() {
       icon: faUserCog,
       permission: null,
     },
+    {
+      title: "Translation Management System",
+      link: "/tms/dashboard",
+      type: "",
+      cardbg: "bluebg",
+      icon: faMailBulk,
+      permission: null,
+    },
   ];
 
   // Filter tiles based on permissions
