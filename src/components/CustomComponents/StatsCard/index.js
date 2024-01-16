@@ -2,7 +2,7 @@ import React from "react";
 // import { CircularProgressbar } from 'react-circular-progressbar';
 import "react-circular-progressbar/dist/styles.css";
 
-function StatsCard({ name, completedVal, InprogressVal, link }) {
+function StatsCard({ name, freshVal, completedVal, InprogressVal, handleClick , subCat}) {
   return (
     <>
       <div class="col-4">
@@ -14,11 +14,11 @@ function StatsCard({ name, completedVal, InprogressVal, link }) {
           </div>
           <div class="card-body">
             <ul class="list-unstyled mb-0 pt-2 crm-deals-status">
-              <li class="primary">
+              <li class="fresh">
                 <div class="d-flex align-items-center justify-content-between">
-                  <div>Completed</div>
+                  <div>Fresh Received</div>
                   <div class="fs-12 text-muted">
-                    <strong>{completedVal}</strong>
+                    <strong>{freshVal}</strong>
                   </div>
                 </div>
               </li>
@@ -30,9 +30,21 @@ function StatsCard({ name, completedVal, InprogressVal, link }) {
                   </div>
                 </div>
               </li>
-              <a className="view-more" href={link}>
-                View More
-              </a>
+              <li class="primary">
+                <div class="d-flex align-items-center justify-content-between">
+                  <div>Completed</div>
+                  <div class="fs-12 text-muted">
+                    <strong>{completedVal}</strong>
+                  </div>
+                </div>
+              </li>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', borderTop: '2px solid #ccc', paddingTop: '15px' }}>
+                {subCat && (
+                  <button className="btn default btn-xs black" onClick={handleClick}>
+                    {"View More"}
+                  </button>
+                )}
+              </div>
             </ul>
           </div>
         </div>

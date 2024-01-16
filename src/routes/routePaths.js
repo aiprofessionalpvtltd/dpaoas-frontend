@@ -60,6 +60,7 @@ import TMSDashboard from "../pages/Dashboard/Modules/TMS";
 import TMSMotion from "../pages/Dashboard/Modules/TMS/Motion";
 import TMSQuestion from "../pages/Dashboard/Modules/TMS/Question";
 import TMSResolution from "../pages/Dashboard/Modules/TMS/Resolution";
+import TMSDashboardDetail from "../pages/Dashboard/Modules/TMS/TMSDashboardDetail";
 import VMSDashboard from "../pages/Dashboard/Modules/VMS";
 import VMSAddEditPass from "../pages/Dashboard/Modules/VMS/Pass";
 import VMSDuplicatePass from "../pages/Dashboard/Modules/VMS/Pass/DuplicatePass";
@@ -216,6 +217,7 @@ export const ProtectedRoutes = [
 
   //TMS Module routes
   { path: "/tms/dashboard", element: <TMSDashboard /> },
+  { path: "/tms/dashboard/detail", element: <TMSDashboardDetail /> },
   { path: "/tms/question", element: <TMSQuestion /> },
   { path: "/tms/motion", element: <TMSMotion /> },
   { path: "/tms/resolution", element: <TMSResolution /> },

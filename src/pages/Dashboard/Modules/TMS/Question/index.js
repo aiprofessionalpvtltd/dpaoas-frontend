@@ -162,7 +162,7 @@ function TMSQuestion() {
             <div className="row">
               <div className="col-12">
                 <div className="mb-3">
-                  <label className="form-label">Comment</label>
+                  <label className="form-label">Remarks</label>
                   <textarea
                     type="text"
                     className={`form-control`}
