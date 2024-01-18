@@ -432,4 +432,60 @@ export const SMSsidebarItems = [
       },
     ],
   },
+  {
+    itemName: "Phone Book",
+    link: "/sms/phone-book",
+    icon: faClipboardList,
+    subItems: [
+      {
+        itemName: "ADD List",
+        link: "/sms/phone-book/add",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Manage List",
+        link: "/sms/phone-book/manage",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Import Contacts",
+        link: "/sms/phone-book/import",
+        icon: faClipboardList,
+      },
+    ],
+  },
+  {
+    itemName: "Templates",
+    link: "/sms/template",
+    icon: faClipboardList,
+    subItems: [
+      {
+        itemName: "ADD Template",
+        link: "/sms/template/add",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Manage Template",
+        link: "/sms/template/manage",
+        icon: faClipboardList,
+      },
+    ],
+  },
+  {
+    itemName: "Message Log",
+    link: "/sms/messagelog",
+    icon: faClipboardList,
+    subItems: [
+      {
+        itemName: "Summary",
+        link: "/sms/messagelog/summary",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Detailed Message Log",
+        link: "/sms/messagelog/detailed",
+        icon: faClipboardList,
+      },
+    ],
+  },
 ];
