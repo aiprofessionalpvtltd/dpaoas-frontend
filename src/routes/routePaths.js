@@ -61,6 +61,15 @@ import TMSMotion from "../pages/Dashboard/Modules/TMS/Motion";
 import TMSQuestion from "../pages/Dashboard/Modules/TMS/Question";
 import TMSResolution from "../pages/Dashboard/Modules/TMS/Resolution";
 import TMSDashboardDetail from "../pages/Dashboard/Modules/TMS/TMSDashboardDetail";
+import SMSDetailedMessageLog from "../pages/Dashboard/Modules/SMS/MessageLog/Detailed";
+import SMSMessageSummary from "../pages/Dashboard/Modules/SMS/MessageLog/Summary";
+import SMSAddList from "../pages/Dashboard/Modules/SMS/PhoneBook/AddList";
+import SMSImportContact from "../pages/Dashboard/Modules/SMS/PhoneBook/ImportContacts";
+import SMSManageList from "../pages/Dashboard/Modules/SMS/PhoneBook/ManageList";
+import SMSAdvancedSMS from "../pages/Dashboard/Modules/SMS/SendSMS/AdvancedSMS";
+import SMSInstantSMS from "../pages/Dashboard/Modules/SMS/SendSMS/InstantSMS";
+import SMSAddEditTemplate from "../pages/Dashboard/Modules/SMS/Templates/AddTemplates";
+import SMSMAnageTemplate from "../pages/Dashboard/Modules/SMS/Templates/ManageTemplate";
 import VMSDashboard from "../pages/Dashboard/Modules/VMS";
 import VMSAddEditPass from "../pages/Dashboard/Modules/VMS/Pass";
 import VMSDuplicatePass from "../pages/Dashboard/Modules/VMS/Pass/DuplicatePass";
@@ -221,4 +230,22 @@ export const ProtectedRoutes = [
   { path: "/tms/question", element: <TMSQuestion /> },
   { path: "/tms/motion", element: <TMSMotion /> },
   { path: "/tms/resolution", element: <TMSResolution /> },
+  { path: "/sms/send-sms", element: <SMSDashboard /> },
+  { path: "/sms/send-sms/instant", element: <SMSInstantSMS /> },
+  { path: "/sms/send-sms/advanced", element: <SMSAdvancedSMS /> },
+
+  { path: "/sms/phone-book", element: <SMSDashboard /> },
+  { path: "/sms/phone-book/add", element: <SMSAddList /> },
+  { path: "/sms/phone-book/manage", element: <SMSManageList /> },
+  { path: "/sms/phone-book/import", element: <SMSImportContact /> },
+
+  { path: "/sms/template", element: <SMSDashboard /> },
+  { path: "/sms/template/add", element: <SMSAddEditTemplate /> },
+  { path: "/sms/template/manage", element: <SMSMAnageTemplate /> },
+
+  { path: "/sms/messagelog", element: <SMSDashboard /> },
+  { path: "/sms/messagelog/summary", element: <SMSMessageSummary /> },
+  { path: "/sms/messagelog/detailed", element: <SMSDetailedMessageLog /> },
+
+
 ];
