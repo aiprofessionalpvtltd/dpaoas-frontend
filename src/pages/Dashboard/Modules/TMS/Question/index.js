@@ -20,7 +20,7 @@ const customStyles = {
     transform: "translate(-50%, -50%)",
     width: "30%", // Adjust the width as needed, for example '80%',
     border: "none",
-    background: "transparent"
+    background: "transparent",
   },
 };
 
@@ -32,7 +32,6 @@ function TMSQuestion() {
   const [revivedData, setRivivedData] = useState([]);
   const [count, setCount] = useState(null);
   const pageSize = 10;
-
 
   const openModal = () => {
     setIsOpen(true);
@@ -152,10 +151,7 @@ function TMSQuestion() {
         contentLabel="Example Modal"
       >
         <div class="card">
-          <div
-            class="card-header red-bg"
-            style={{ background: "#14ae5c !important" }}
-          >
+          <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
             <h1>Assign Question</h1>
           </div>
           <div class="card-body">
@@ -208,7 +204,7 @@ function TMSQuestion() {
       <div class="container-fluid">
         <div class="card mt-4">
           <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
-            <h1>QUESTION SENT FROM QUESTION BRANCH</h1>
+            <h1>Fresh Received</h1>
           </div>
           <div class="card-body">
             <div class="container-fluid">
@@ -232,7 +228,31 @@ function TMSQuestion() {
 
         <div class="card mt-4">
           <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
-            <h1>TRANSLATED QUESTION</h1>
+            <h1>In Progress</h1>
+          </div>
+          <div class="card-body">
+            <div class="container-fluid">
+              <CustomTable
+                hideBtn={true}
+                data={data}
+                headerShown={true}
+                handlePageChange={handlePageChange}
+                currentPage={currentPage}
+                pageSize={pageSize}
+                // totalCount={count}
+                hideEditIcon={true}
+                assignBtn={true}
+                assignClick={openModal}
+                headertitlebgColor={"#666"}
+                headertitletextColor={"#FFF"}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="card mt-4">
+          <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
+            <h1>Completed</h1>
           </div>
           <div class="card-body">
             <div class="container-fluid">

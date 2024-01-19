@@ -121,7 +121,7 @@ function TMSResolution() {
       <div class="container-fluid">
         <div class="card mt-4">
           <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
-            <h1>RESOLUTION SENT FROM QUESTION BRANCH</h1>
+            <h1>Fresh Received</h1>
           </div>
           <div class="card-body">
             <div class="container-fluid">
@@ -144,7 +144,30 @@ function TMSResolution() {
 
         <div class="card mt-4">
           <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
-            <h1>TRANSLATED RESOLUTION</h1>
+            <h1>In Progress</h1>
+          </div>
+          <div class="card-body">
+            <div class="container-fluid">
+              <CustomTable
+                hideBtn={true}
+                data={data}
+                headerShown={true}
+                handlePageChange={handlePageChange}
+                currentPage={currentPage}
+                pageSize={pageSize}
+                // totalCount={count}
+                hideEditIcon={true}
+                assignBtn={true}
+                headertitlebgColor={"#666"}
+                headertitletextColor={"#FFF"}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="card mt-4">
+          <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
+            <h1>Completed</h1>
           </div>
           <div class="card-body">
             <div class="container-fluid">

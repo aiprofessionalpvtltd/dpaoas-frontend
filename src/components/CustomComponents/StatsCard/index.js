@@ -2,12 +2,12 @@ import React from "react";
 // import { CircularProgressbar } from 'react-circular-progressbar';
 import "react-circular-progressbar/dist/styles.css";
 
-function StatsCard({ name, freshVal, completedVal, InprogressVal, handleClick , subCat}) {
+function StatsCard({ name, freshVal, completedVal, InprogressVal, handleClick, subCat }) {
   return (
     <>
       <div class="col-4">
         <div class="card custom-card">
-          <div class="card-header justify-content-between" style={{ background: "#686868" }}>
+          <div class="card-header justify-content-between" style={{ background: "#6b7c8f" }}>
             <div class="card-title" style={{ textAlign: "center", fontSize: "20px", fontWeight: "bold" }}>
               {name}
             </div>
@@ -38,9 +38,21 @@ function StatsCard({ name, freshVal, completedVal, InprogressVal, handleClick , 
                   </div>
                 </div>
               </li>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', borderTop: '2px solid #ccc', paddingTop: '15px' }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderTop: "2px solid #ccc",
+                  paddingTop: "15px",
+                }}
+              >
                 {subCat && (
-                  <button className="btn default btn-xs black" onClick={handleClick}>
+                  <button
+                    style={{ background: "#6b7c8f", color: "#FFF", padding: "5px 10px" }}
+                    className="btn default btn-xs black"
+                    onClick={handleClick}
+                  >
                     {"View More"}
                   </button>
                 )}

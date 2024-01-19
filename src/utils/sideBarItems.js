@@ -462,13 +462,13 @@ export const TMSsidebarItems = [
     icon: faHome,
   },
   {
-    itemName: "House Business",
+    itemName: "Research Branch",
     link: "/tms/house-business",
     icon: faHome,
   },
-  {
-    itemName: "Members",
-    link: "/tms/members",
-    icon: faHome,
-  },
+  // {
+  //   itemName: "Members",
+  //   link: "/tms/members",
+  //   icon: faHome,
+  // },
 ];
