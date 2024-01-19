@@ -452,7 +452,7 @@ export const QMSSideBarItems = [
       },
       {
         itemName: "Parliamentary Year",
-        link: "/qms/manage/political-party",
+        link: "/qms/manage/parliamentary-year",
         icon: faClipboardList,
       },
     ],

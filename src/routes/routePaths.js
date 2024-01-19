@@ -76,6 +76,15 @@ import VMSDuplicatePass from "../pages/Dashboard/Modules/VMS/Pass/DuplicatePass"
 import VMSVisitors from "../pages/Dashboard/Modules/VMS/Visitors";
 import VMSAddEditVisitors from "../pages/Dashboard/Modules/VMS/Visitors/AddEditVisitors";
 import { Login } from "../pages/Login";
+import QMSSessions from "../pages/Dashboard/Modules/QMS/Manage/Sessions";
+import QMSTerms from "../pages/Dashboard/Modules/QMS/Manage/Terms";
+import QMSTenures from "../pages/Dashboard/Modules/QMS/Manage/Tenures";
+import QMSMembers from "../pages/Dashboard/Modules/QMS/Manage/Members";
+import QMSSittingsDays from "../pages/Dashboard/Modules/QMS/Manage/SittingDays";
+import QMSMinistries from "../pages/Dashboard/Modules/QMS/Manage/Ministries";
+import QMSDivisions from "../pages/Dashboard/Modules/QMS/Manage/Divisions";
+import QMSPoliticalParty from "../pages/Dashboard/Modules/QMS/Manage/PoliticalParty";
+import QMSParliamentaryYear from "../pages/Dashboard/Modules/QMS/Manage/ParliamentaryYear";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -220,6 +229,17 @@ export const ProtectedRoutes = [
     path: "/qms/notice/notice-resolution-detail",
     element: <QMSNoticeResolutionDetail />,
   },
+
+  { path: "/qms/manage", element: <QMSQuestionDashboard /> },
+  { path: "/qms/manage/sessions", element: <QMSSessions /> },
+  { path: "/qms/manage/terms", element: <QMSTerms /> },
+  { path: "/qms/manage/tenures", element: <QMSTenures /> },
+  { path: "/qms/manage/members", element: <QMSMembers /> },
+  { path: "/qms/manage/sitting-days", element: <QMSSittingsDays /> },
+  { path: "/qms/manage/ministries", element: <QMSMinistries /> },
+  { path: "/qms/manage/divisions", element: <QMSDivisions /> },
+  { path: "/qms/manage/political-party", element: <QMSPoliticalParty /> },
+  { path: "/qms/manage/parliamentary-year", element: <QMSParliamentaryYear /> },
 
   //SMS Module routes
   { path: "/sms/dashboard", element: <SMSDashboard /> },
