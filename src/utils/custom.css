@@ -3561,3 +3561,40 @@ textarea {
 .react-datepicker-popper[data-placement^="top"] .react-datepicker__triangle, .react-datepicker-popper[data-placement^="bottom"] .react-datepicker__triangle{
     margin-left: -22px !important;
 }
+.crm-deals-status li::before {
+    border-radius: 50%;
+    content: "";
+    height: 10px;
+    inset-block-start: .375rem;
+    inset-inline-start: -1rem;
+    position: absolute;
+    width: 10px;
+    top: 7px;
+  }
+.crm-deals-status li {
+margin-block-end: 1rem;
+margin-inline-start: 1rem;
+position: relative;
+}
+
+.crm-deals-status li.fresh::before {
+    background-color: #f6b80d;
+}
+
+.crm-deals-status li.primary::before {
+background-color: #14ae5c;
+}
+  
+.crm-deals-status li.info::before {
+    background-color: #49b6f5;
+  
+  }
+.view-more {
+    text-align: center;
+    display: block;
+    font-style: italic;
+    border-top: #cccc solid 2px;
+    padding-top: 11px;
+    font-size: 15px;
+    color: #820001;
+  }

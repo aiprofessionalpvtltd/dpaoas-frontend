@@ -56,6 +56,11 @@ import QMSResolutionList from "../pages/Dashboard/Modules/QMS/Resolution/Resolut
 import QMSSearchQuestion from "../pages/Dashboard/Modules/QMS/SearchQuestion";
 import QMSSerchResolution from "../pages/Dashboard/Modules/QMS/SearchResolution";
 import SMSDashboard from "../pages/Dashboard/Modules/SMS";
+import TMSDashboard from "../pages/Dashboard/Modules/TMS";
+import TMSMotion from "../pages/Dashboard/Modules/TMS/Motion";
+import TMSQuestion from "../pages/Dashboard/Modules/TMS/Question";
+import TMSResolution from "../pages/Dashboard/Modules/TMS/Resolution";
+import TMSDashboardDetail from "../pages/Dashboard/Modules/TMS/TMSDashboardDetail";
 import SMSDetailedMessageLog from "../pages/Dashboard/Modules/SMS/MessageLog/Detailed";
 import SMSMessageSummary from "../pages/Dashboard/Modules/SMS/MessageLog/Summary";
 import SMSAddList from "../pages/Dashboard/Modules/SMS/PhoneBook/AddList";
@@ -219,6 +224,12 @@ export const ProtectedRoutes = [
   //SMS Module routes
   { path: "/sms/dashboard", element: <SMSDashboard /> },
 
+  //TMS Module routes
+  { path: "/tms/dashboard", element: <TMSDashboard /> },
+  { path: "/tms/dashboard/detail", element: <TMSDashboardDetail /> },
+  { path: "/tms/question", element: <TMSQuestion /> },
+  { path: "/tms/motion", element: <TMSMotion /> },
+  { path: "/tms/resolution", element: <TMSResolution /> },
   { path: "/sms/send-sms", element: <SMSDashboard /> },
   { path: "/sms/send-sms/instant", element: <SMSInstantSMS /> },
   { path: "/sms/send-sms/advanced", element: <SMSAdvancedSMS /> },

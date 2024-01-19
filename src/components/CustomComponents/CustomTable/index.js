@@ -30,6 +30,8 @@ function CustomTable({
   ActionHide,
   totalCount,
   hidePagination,
+  assignBtn,
+  assignClick
 }) {
   const keys = data?.length > 0 ? Object.keys(data[0]) : [];
   const [totalPages, setTotalPages] = useState(0);
@@ -296,6 +298,16 @@ function CustomTable({
                                 <FontAwesomeIcon icon={faTrash} />
                               </button>
                             </OverlayTrigger>
+                          </>
+                        )}
+                        {assignBtn && (
+                          <>
+                          <button class="btn btn-primary" type="submit" onClick={assignClick} style={{
+                                padding: "3px 8px",
+                                fontSize: "13px",
+                          }}>
+                            Assign
+                          </button>
                           </>
                         )}
                         {hideUserIcon && hideUserIcon && (
