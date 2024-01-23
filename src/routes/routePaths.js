@@ -76,6 +76,28 @@ import VMSDuplicatePass from "../pages/Dashboard/Modules/VMS/Pass/DuplicatePass"
 import VMSVisitors from "../pages/Dashboard/Modules/VMS/Visitors";
 import VMSAddEditVisitors from "../pages/Dashboard/Modules/VMS/Visitors/AddEditVisitors";
 import { Login } from "../pages/Login";
+import QMSSessions from "../pages/Dashboard/Modules/QMS/Manage/Sessions";
+import QMSTerms from "../pages/Dashboard/Modules/QMS/Manage/Terms";
+import QMSTenures from "../pages/Dashboard/Modules/QMS/Manage/Tenures";
+import QMSMembers from "../pages/Dashboard/Modules/QMS/Manage/Members";
+import QMSSittingsDays from "../pages/Dashboard/Modules/QMS/Manage/SittingDays";
+import QMSMinistries from "../pages/Dashboard/Modules/QMS/Manage/Ministries";
+import QMSDivisions from "../pages/Dashboard/Modules/QMS/Manage/Divisions";
+import QMSPoliticalParty from "../pages/Dashboard/Modules/QMS/Manage/PoliticalParty";
+import QMSParliamentaryYear from "../pages/Dashboard/Modules/QMS/Manage/ParliamentaryYear";
+import QMSMembersAddEditForm from "../pages/Dashboard/Modules/QMS/Manage/Members/AddEditMembers";
+import QMSAddEditSittingDaysForm from "../pages/Dashboard/Modules/QMS/Manage/SittingDays/AddEditSittingDays";
+import QMSAddEditMinistriesForm from "../pages/Dashboard/Modules/QMS/Manage/Ministries/AddEditMinistries";
+import QMSAddEditDivisionsForm from "../pages/Dashboard/Modules/QMS/Manage/Divisions/AddEditDivisions";
+import QMSAddEditPoliticalPartyForm from "../pages/Dashboard/Modules/QMS/Manage/PoliticalParty/AddEditPoliticalParty";
+import QMSAddEditParliamentaryYearForm from "../pages/Dashboard/Modules/QMS/Manage/ParliamentaryYear/AddEditParliamentaryYear";
+import QMSAddEditSessionsForm from "../pages/Dashboard/Modules/QMS/Manage/Sessions/AddEditSessions";
+import QMSAddEditTermsForm from "../pages/Dashboard/Modules/QMS/Manage/Terms/AddEditTerms";
+import QMSAddEditTenuresForm from "../pages/Dashboard/Modules/QMS/Manage/Tenures/AddEditTenures";
+import CMSUserDashboard from "../pages/Dashboard/Modules/CMS/UserCMS";
+import CMSAddEditUserComplaint from "../pages/Dashboard/Modules/CMS/UserCMS/AddEditUserComplaint";
+import CMSAdminDashboard from "../pages/Dashboard/Modules/CMS/AdminCMS";
+import CMSAdminEditComplaint from "../pages/Dashboard/Modules/CMS/AdminCMS/AdminEdit";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -221,6 +243,38 @@ export const ProtectedRoutes = [
     element: <QMSNoticeResolutionDetail />,
   },
 
+  { path: "/qms/manage", element: <QMSQuestionDashboard /> },
+
+  { path: "/qms/manage/sessions", element: <QMSSessions /> },
+  { path: "/qms/manage/sessions/addedit", element: <QMSAddEditSessionsForm /> },
+
+  { path: "/qms/manage/terms", element: <QMSTerms /> },
+  { path: "/qms/manage/terms/addedit", element: <QMSAddEditTermsForm /> },
+
+  { path: "/qms/manage/tenures", element: <QMSTenures /> },
+  { path: "/qms/manage/tenures/addedit", element: <QMSAddEditTenuresForm /> },
+
+
+  { path: "/qms/manage/members", element: <QMSMembers /> },
+  { path: "/qms/manage/members/addedit", element: <QMSMembersAddEditForm /> },
+
+  
+  { path: "/qms/manage/sitting-days", element: <QMSSittingsDays /> },
+  { path: "/qms/manage/sitting-days/addedit", element: <QMSAddEditSittingDaysForm /> },
+
+  { path: "/qms/manage/ministries", element: <QMSMinistries /> },
+  { path: "/qms/manage/ministries/addedit", element: <QMSAddEditMinistriesForm /> },
+
+  { path: "/qms/manage/divisions", element: <QMSDivisions /> },
+  { path: "/qms/manage/divisions/addedit", element: <QMSAddEditDivisionsForm /> },
+
+  { path: "/qms/manage/political-party", element: <QMSPoliticalParty /> },
+  { path: "/qms/manage/political-party/addedit", element: <QMSAddEditPoliticalPartyForm /> },
+
+  { path: "/qms/manage/parliamentary-year", element: <QMSParliamentaryYear /> },
+  { path: "/qms/manage/parliamentary-year/addedit", element: <QMSAddEditParliamentaryYearForm /> },
+
+
   //SMS Module routes
   { path: "/sms/dashboard", element: <SMSDashboard /> },
 
@@ -246,6 +300,13 @@ export const ProtectedRoutes = [
   { path: "/sms/messagelog", element: <SMSDashboard /> },
   { path: "/sms/messagelog/summary", element: <SMSMessageSummary /> },
   { path: "/sms/messagelog/detailed", element: <SMSDetailedMessageLog /> },
+
+  //CMS Module routes
+  { path: "/cms/dashboard", element: <CMSUserDashboard /> },
+  { path: "/cms/dashboard/addedit", element: <CMSAddEditUserComplaint /> },
+
+  { path: "/cms/admin/dashboard", element: <CMSAdminDashboard /> },
+  { path: "/cms/admin/dashboard/addedit", element: <CMSAdminEditComplaint /> },
 
 
 ];

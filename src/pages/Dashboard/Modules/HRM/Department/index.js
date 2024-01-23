@@ -67,6 +67,7 @@ function HRMDepartment() {
         title1={"Department"}
       />
       <ToastContainer />
+      <div class="container-fluid dash-detail-container card">
       <div class="row">
         <div class="col-12">
           <CustomTable
@@ -88,6 +89,7 @@ function HRMDepartment() {
             handleDelete={(item) => handleDelete(item.id)}
           />
         </div>
+      </div>
       </div>
     </Layout>
   );

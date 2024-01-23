@@ -1,6 +1,5 @@
 import React from "react";
 import { Layout } from "../../../../components/Layout";
-import LeaveCard from "../../../../components/CustomComponents/LeaveCard";
 import { TMSsidebarItems } from "../../../../utils/sideBarItems";
 import StatsCard from "../../../../components/CustomComponents/StatsCard";
 import { useNavigate } from "react-router-dom";

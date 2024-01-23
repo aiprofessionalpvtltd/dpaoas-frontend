@@ -366,7 +366,6 @@ export const QMSSideBarItems = [
       // },
     ],
   },
-
   {
     itemName: "Reports",
     link: "/qms/reports",
@@ -402,6 +401,58 @@ export const QMSSideBarItems = [
       {
         itemName: "Defer Question Reports",
         link: "/qms/reports/defer-question-reports",
+        icon: faClipboardList,
+      },
+    ],
+  },
+  {
+    itemName: "Manage",
+    link: "/qms/manage",
+    icon: faClipboardList,
+    subItems: [
+      {
+        itemName: "Sessions",
+        link: "/qms/manage/sessions",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Terms",
+        link: "/qms/manage/terms",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Tenures",
+        link: "/qms/manage/tenures",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Members",
+        link: "/qms/manage/members",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Sitting Days",
+        link: "/qms/manage/sitting-days",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Ministries",
+        link: "/qms/manage/ministries",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Divisions",
+        link: "/qms/manage/divisions",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Political Party",
+        link: "/qms/manage/political-party",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Parliamentary Year",
+        link: "/qms/manage/parliamentary-year",
         icon: faClipboardList,
       },
     ],
@@ -528,3 +579,18 @@ export const TMSsidebarItems = [
   //   icon: faHome,
   // },
 ];
+
+//CMS SideBar
+export const CMSsidebarItems = [
+  {
+    itemName: "User Complaint",
+    link: "/cms/dashboard",
+    icon: faHome,
+  },
+  
+  {
+    itemName: "Admin Complaint",
+    link: "/cms/admin/dashboard",
+    icon: faHome,
+  },
+]

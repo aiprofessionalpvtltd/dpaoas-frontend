@@ -137,6 +137,14 @@ function Dashboard() {
       icon: faMailBulk,
       permission: null,
     },
+    {
+      title: "Complaint Management System",
+      link: "/cms/dashboard",
+      type: "",
+      cardbg: "bluebg",
+      icon: faMailBulk,
+      permission: null,
+    }
   ];
 
   // Filter tiles based on permissions
