@@ -94,6 +94,10 @@ import QMSAddEditParliamentaryYearForm from "../pages/Dashboard/Modules/QMS/Mana
 import QMSAddEditSessionsForm from "../pages/Dashboard/Modules/QMS/Manage/Sessions/AddEditSessions";
 import QMSAddEditTermsForm from "../pages/Dashboard/Modules/QMS/Manage/Terms/AddEditTerms";
 import QMSAddEditTenuresForm from "../pages/Dashboard/Modules/QMS/Manage/Tenures/AddEditTenures";
+import CMSUserDashboard from "../pages/Dashboard/Modules/CMS/UserCMS";
+import CMSAddEditUserComplaint from "../pages/Dashboard/Modules/CMS/UserCMS/AddEditUserComplaint";
+import CMSAdminDashboard from "../pages/Dashboard/Modules/CMS/AdminCMS";
+import CMSAdminEditComplaint from "../pages/Dashboard/Modules/CMS/AdminCMS/AdminEdit";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -296,6 +300,13 @@ export const ProtectedRoutes = [
   { path: "/sms/messagelog", element: <SMSDashboard /> },
   { path: "/sms/messagelog/summary", element: <SMSMessageSummary /> },
   { path: "/sms/messagelog/detailed", element: <SMSDetailedMessageLog /> },
+
+  //CMS Module routes
+  { path: "/cms/dashboard", element: <CMSUserDashboard /> },
+  { path: "/cms/dashboard/addedit", element: <CMSAddEditUserComplaint /> },
+
+  { path: "/cms/admin/dashboard", element: <CMSAdminDashboard /> },
+  { path: "/cms/admin/dashboard/addedit", element: <CMSAdminEditComplaint /> },
 
 
 ];

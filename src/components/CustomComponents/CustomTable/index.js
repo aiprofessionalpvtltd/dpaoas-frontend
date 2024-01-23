@@ -31,7 +31,8 @@ function CustomTable({
   totalCount,
   hidePagination,
   assignBtn,
-  assignClick
+  assignClick,
+  hideDeleteIcon
 }) {
   const keys = data?.length > 0 ? Object.keys(data[0]) : [];
   const [totalPages, setTotalPages] = useState(0);
@@ -202,7 +203,8 @@ function CustomTable({
                               <FontAwesomeIcon icon={faEdit} />
                             </button>
                           </OverlayTrigger>
-                          <OverlayTrigger placement="top" overlay={deleteTooltip}>
+                          {!hideDeleteIcon && !hideDeleteIcon && (
+                            <OverlayTrigger placement="top" overlay={deleteTooltip}>
                             <button
                               onClick={() => handleDelete(item)}
                               className="btn default btn-xs black"
@@ -211,6 +213,7 @@ function CustomTable({
                               <FontAwesomeIcon icon={faTrash} />
                             </button>
                           </OverlayTrigger>
+                          )}
                         </>
                       )}
                       {hideUserIcon && hideUserIcon && (

@@ -579,3 +579,18 @@ export const TMSsidebarItems = [
   //   icon: faHome,
   // },
 ];
+
+//CMS SideBar
+export const CMSsidebarItems = [
+  {
+    itemName: "User Complaint",
+    link: "/cms/dashboard",
+    icon: faHome,
+  },
+  
+  {
+    itemName: "Admin Complaint",
+    link: "/cms/admin/dashboard",
+    icon: faHome,
+  },
+]
