@@ -25,11 +25,10 @@ function QMSAddEditTenuresForm() {
 
   const formik = useFormik({
     initialValues: {
-      employeename: "",
-      filenumber: "",
-      fatherhusbandname: "",
-      cnicnumber: "",
-      permanentaddress: "",
+      tenure: "",
+      tenureId: "",
+      startDate: "",
+      endDate: "",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -60,16 +59,16 @@ function QMSAddEditTenuresForm() {
                       <label class="form-label">Tenure</label>
                       <input
                         type="text"
-                        placeholder={formik.values.filenumber}
+                        placeholder={formik.values.tenure}
                         className={`form-control ${
-                          formik.touched.filenumber && formik.errors.filenumber ? "is-invalid" : ""
+                          formik.touched.tenure && formik.errors.tenure ? "is-invalid" : ""
                         }`}
-                        id="filenumber"
+                        id="tenure"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
-                      {formik.touched.filenumber && formik.errors.filenumber && (
-                        <div className="invalid-feedback">{formik.errors.filenumber}</div>
+                      {formik.touched.tenure && formik.errors.tenure && (
+                        <div className="invalid-feedback">{formik.errors.tenure}</div>
                       )}
                     </div>
                   </div>
@@ -78,24 +77,25 @@ function QMSAddEditTenuresForm() {
                       <label class="form-label">Tenure ID</label>
                       <input
                         type="text"
-                        placeholder={formik.values.employeename}
+                        placeholder={formik.values.tenureId}
                         className={`form-control ${
-                          formik.touched.employeename && formik.errors.employeename ? "is-invalid" : ""
+                          formik.touched.tenureId && formik.errors.tenureId ? "is-invalid" : ""
                         }`}
-                        id="employeename"
+                        id="tenureId"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
-                      {formik.touched.employeename && formik.errors.employeename && (
-                        <div className="invalid-feedback">{formik.errors.employeename}</div>
+                      {formik.touched.tenureId && formik.errors.tenureId && (
+                        <div className="invalid-feedback">{formik.errors.tenureId}</div>
                       )}
                     </div>
                   </div>
                 </div>
-                <div class="row">
-                  <div class="col">
-                    <div class="mb-3" style={{ position: "relative" }}>
-                      <label class="form-label">From Date</label>
+
+                 <div class="row">
+                  <div className="col">
+                    <div className="mb-3" style={{ position: "relative" }}>
+                      <label className="form-label">From Date</label>
                       <span
                         style={{
                           position: "absolute",
@@ -110,16 +110,29 @@ function QMSAddEditTenuresForm() {
                         <FontAwesomeIcon icon={faCalendarAlt} />
                       </span>
                       <DatePicker
-                        selected={dateofbirth}
+                        selected={formik.values.fromDate}
+                        onChange={(date) =>
+                          formik.setFieldValue("fromDate", date)
+                        }
+                        onBlur={formik.handleBlur}
                         minDate={new Date()}
-                        onChange={(date) => setDateOfBirth(date)}
-                        className="form-control"
+                        className={`form-control ${
+                          formik.touched.fromDate && formik.errors.fromDate
+                            ? "is-invalid"
+                            : ""
+                        }`}
                       />
+                      {formik.touched.fromDate && formik.errors.fromDate && (
+                        <div className="invalid-feedback">
+                          {formik.errors.fromDate}
+                        </div>
+                      )}
                     </div>
                   </div>
-                  <div class="col">
-                    <div class="mb-3" style={{ position: "relative" }}>
-                      <label class="form-label">To Date</label>
+                  
+                  <div className="col">
+                    <div className="mb-3" style={{ position: "relative" }}>
+                      <label className="form-label">To Date</label>
                       <span
                         style={{
                           position: "absolute",
@@ -134,23 +147,23 @@ function QMSAddEditTenuresForm() {
                         <FontAwesomeIcon icon={faCalendarAlt} />
                       </span>
                       <DatePicker
-                        selected={placeofbirth}
+                        selected={formik.values.toDate}
+                        onChange={(date) =>
+                          formik.setFieldValue("toDate", date)
+                        }
+                        onBlur={formik.handleBlur}
                         minDate={new Date()}
-                        onChange={(date) => setPlaceOfBirth(date)}
-                        className="form-control"
+                        className={`form-control ${
+                          formik.touched.toDate && formik.errors.toDate
+                            ? "is-invalid"
+                            : ""
+                        }`}
                       />
-                    </div>
-                  </div>
-                </div>
-                <div className="row">
-                  <div class="col-6">
-                    <div class="mb-3" style={{ position: "relative" }}>
-                      <label class="form-label">Terms</label>
-                      <select class="form-select">
-                        <option>Select</option>
-                        <option>Option 1</option>
-                        <option>Option 2</option>
-                      </select>
+                      {formik.touched.toDate && formik.errors.toDate && (
+                        <div className="invalid-feedback">
+                          {formik.errors.toDate}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

@@ -25,11 +25,11 @@ function QMSAddEditTermsForm() {
 
   const formik = useFormik({
     initialValues: {
-      employeename: "",
-      filenumber: "",
-      fatherhusbandname: "",
-      cnicnumber: "",
-      permanentaddress: "",
+      termName: "",
+      termId: "",
+      startDate: "",
+      endDate: "",
+      tenureId: ""
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -60,16 +60,16 @@ function QMSAddEditTermsForm() {
                       <label class="form-label">Term Name</label>
                       <input
                         type="text"
-                        placeholder={formik.values.filenumber}
+                        placeholder={formik.values.termName}
                         className={`form-control ${
-                          formik.touched.filenumber && formik.errors.filenumber ? "is-invalid" : ""
+                          formik.touched.termName && formik.errors.termName ? "is-invalid" : ""
                         }`}
-                        id="filenumber"
+                        id="termName"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
-                      {formik.touched.filenumber && formik.errors.filenumber && (
-                        <div className="invalid-feedback">{formik.errors.filenumber}</div>
+                      {formik.touched.termName && formik.errors.termName && (
+                        <div className="invalid-feedback">{formik.errors.termName}</div>
                       )}
                     </div>
                   </div>
@@ -78,24 +78,24 @@ function QMSAddEditTermsForm() {
                       <label class="form-label">Term ID</label>
                       <input
                         type="text"
-                        placeholder={formik.values.employeename}
+                        placeholder={formik.values.termId}
                         className={`form-control ${
-                          formik.touched.employeename && formik.errors.employeename ? "is-invalid" : ""
+                          formik.touched.termId && formik.errors.termId ? "is-invalid" : ""
                         }`}
-                        id="employeename"
+                        id="termId"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
-                      {formik.touched.employeename && formik.errors.employeename && (
-                        <div className="invalid-feedback">{formik.errors.employeename}</div>
+                      {formik.touched.termId && formik.errors.termId && (
+                        <div className="invalid-feedback">{formik.errors.termId}</div>
                       )}
                     </div>
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col">
-                    <div class="mb-3" style={{ position: "relative" }}>
-                      <label class="form-label">Start Date</label>
+                  <div className="col">
+                    <div className="mb-3" style={{ position: "relative" }}>
+                      <label className="form-label">Start Date</label>
                       <span
                         style={{
                           position: "absolute",
@@ -110,16 +110,29 @@ function QMSAddEditTermsForm() {
                         <FontAwesomeIcon icon={faCalendarAlt} />
                       </span>
                       <DatePicker
-                        selected={dateofbirth}
+                        selected={formik.values.startDate}
+                        onChange={(date) =>
+                          formik.setFieldValue("startDate", date)
+                        }
+                        onBlur={formik.handleBlur}
                         minDate={new Date()}
-                        onChange={(date) => setDateOfBirth(date)}
-                        className="form-control"
+                        className={`form-control ${
+                          formik.touched.startDate && formik.errors.startDate
+                            ? "is-invalid"
+                            : ""
+                        }`}
                       />
+                      {formik.touched.startDate && formik.errors.startDate && (
+                        <div className="invalid-feedback">
+                          {formik.errors.startDate}
+                        </div>
+                      )}
                     </div>
                   </div>
-                  <div class="col">
-                    <div class="mb-3" style={{ position: "relative" }}>
-                      <label class="form-label">End Date</label>
+                  
+                  <div className="col">
+                    <div className="mb-3" style={{ position: "relative" }}>
+                      <label className="form-label">End Date</label>
                       <span
                         style={{
                           position: "absolute",
@@ -134,13 +147,46 @@ function QMSAddEditTermsForm() {
                         <FontAwesomeIcon icon={faCalendarAlt} />
                       </span>
                       <DatePicker
-                        selected={placeofbirth}
+                        selected={formik.values.endDate}
+                        onChange={(date) =>
+                          formik.setFieldValue("endDate", date)
+                        }
+                        onBlur={formik.handleBlur}
                         minDate={new Date()}
-                        onChange={(date) => setPlaceOfBirth(date)}
-                        className="form-control"
+                        className={`form-control ${
+                          formik.touched.endDate && formik.errors.endDate
+                            ? "is-invalid"
+                            : ""
+                        }`}
                       />
+                      {formik.touched.endDate && formik.errors.endDate && (
+                        <div className="invalid-feedback">
+                          {formik.errors.endDate}
+                        </div>
+                      )}
                     </div>
                   </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-6">
+                      <div class="mb-3">
+                        <label class="form-label">Tenure ID</label>
+                        <select class="form-select"
+                          id="tenureId"
+                          name="tenureId"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.tenureId}
+                        >
+                          <option value={""} selected disabled hidden>
+                            select
+                          </option>
+                            <option value="2023">2023</option>
+                            <option value="2024">2024</option>
+                        </select>
+                      </div>
+                    </div>
                 </div>
 
                 <div class="row">

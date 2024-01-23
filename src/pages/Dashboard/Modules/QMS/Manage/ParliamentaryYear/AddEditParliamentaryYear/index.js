@@ -25,11 +25,12 @@ function QMSAddEditParliamentaryYearForm() {
 
   const formik = useFormik({
     initialValues: {
-      employeename: "",
-      filenumber: "",
-      fatherhusbandname: "",
-      cnicnumber: "",
-      permanentaddress: "",
+      parliamentaryId: "",
+      tenureId: "",
+      startDate: "",
+      endDate: "",
+      active: "",
+      description: "",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -60,42 +61,43 @@ function QMSAddEditParliamentaryYearForm() {
                       <label class="form-label">ID</label>
                       <input
                         type="text"
-                        placeholder={formik.values.filenumber}
+                        placeholder={formik.values.parliamentaryId}
                         className={`form-control ${
-                          formik.touched.filenumber && formik.errors.filenumber ? "is-invalid" : ""
+                          formik.touched.parliamentaryId && formik.errors.parliamentaryId ? "is-invalid" : ""
                         }`}
-                        id="filenumber"
+                        id="parliamentaryId"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
-                      {formik.touched.filenumber && formik.errors.filenumber && (
-                        <div className="invalid-feedback">{formik.errors.filenumber}</div>
+                      {formik.touched.parliamentaryId && formik.errors.parliamentaryId && (
+                        <div className="invalid-feedback">{formik.errors.parliamentaryId}</div>
                       )}
                     </div>
                   </div>
                   <div class="col">
                     <div class="mb-3">
-                      <label class="form-label">Tenoure ID</label>
+                      <label class="form-label">Tenure ID</label>
                       <input
                         type="text"
-                        placeholder={formik.values.employeename}
+                        placeholder={formik.values.tenureId}
                         className={`form-control ${
-                          formik.touched.employeename && formik.errors.employeename ? "is-invalid" : ""
+                          formik.touched.tenureId && formik.errors.tenureId ? "is-invalid" : ""
                         }`}
-                        id="employeename"
+                        id="tenureId"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
-                      {formik.touched.employeename && formik.errors.employeename && (
-                        <div className="invalid-feedback">{formik.errors.employeename}</div>
+                      {formik.touched.tenureId && formik.errors.tenureId && (
+                        <div className="invalid-feedback">{formik.errors.tenureId}</div>
                       )}
                     </div>
                   </div>
                 </div>
+
                 <div class="row">
-                  <div class="col">
-                    <div class="mb-3" style={{ position: "relative" }}>
-                      <label class="form-label">Start Date</label>
+                  <div className="col">
+                    <div className="mb-3" style={{ position: "relative" }}>
+                      <label className="form-label">Start Date</label>
                       <span
                         style={{
                           position: "absolute",
@@ -110,16 +112,29 @@ function QMSAddEditParliamentaryYearForm() {
                         <FontAwesomeIcon icon={faCalendarAlt} />
                       </span>
                       <DatePicker
-                        selected={dateofbirth}
+                        selected={formik.values.startDate}
+                        onChange={(date) =>
+                          formik.setFieldValue("startDate", date)
+                        }
+                        onBlur={formik.handleBlur}
                         minDate={new Date()}
-                        onChange={(date) => setDateOfBirth(date)}
-                        className="form-control"
+                        className={`form-control ${
+                          formik.touched.startDate && formik.errors.startDate
+                            ? "is-invalid"
+                            : ""
+                        }`}
                       />
+                      {formik.touched.startDate && formik.errors.startDate && (
+                        <div className="invalid-feedback">
+                          {formik.errors.startDate}
+                        </div>
+                      )}
                     </div>
                   </div>
-                  <div class="col">
-                    <div class="mb-3" style={{ position: "relative" }}>
-                      <label class="form-label">End Date</label>
+                  
+                  <div className="col">
+                    <div className="mb-3" style={{ position: "relative" }}>
+                      <label className="form-label">End Date</label>
                       <span
                         style={{
                           position: "absolute",
@@ -134,19 +149,65 @@ function QMSAddEditParliamentaryYearForm() {
                         <FontAwesomeIcon icon={faCalendarAlt} />
                       </span>
                       <DatePicker
-                        selected={placeofbirth}
+                        selected={formik.values.endDate}
+                        onChange={(date) =>
+                          formik.setFieldValue("endDate", date)
+                        }
+                        onBlur={formik.handleBlur}
                         minDate={new Date()}
-                        onChange={(date) => setPlaceOfBirth(date)}
-                        className="form-control"
+                        className={`form-control ${
+                          formik.touched.endDate && formik.errors.endDate
+                            ? "is-invalid"
+                            : ""
+                        }`}
                       />
+                      {formik.touched.endDate && formik.errors.endDate && (
+                        <div className="invalid-feedback">
+                          {formik.errors.endDate}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
+
+                <div class="row">
+                  <div class="col-6">
+                    <div class="mb-3">
+                      <label class="form-label">Active</label>
+                      <select class="form-select"
+                        id="active"
+                        name="active"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.active}
+                      >
+                        <option value={""} selected disabled hidden>
+                          select
+                        </option>
+                          <option value="yes">Yes</option>
+                          <option value="no">No</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
                 <div className="row">
-                  <div className="col">
-                    <div className="mb-3">
+                  <div class="col">
+                    <div class="mb-3">
                       <label class="form-label">Description</label>
-                      <textarea className="form-control"></textarea>
+                      <input
+                        type="text"
+                        placeholder={formik.values.description}
+                        className={`form-control ${
+                          formik.touched.description && formik.errors.description ? "is-invalid" : ""
+                        }`}
+                        id="description"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      />
+                      {formik.touched.description && formik.errors.description && (
+                        <div className="invalid-feedback">{formik.errors.description}</div>
+                      )}
                     </div>
                   </div>
                 </div>

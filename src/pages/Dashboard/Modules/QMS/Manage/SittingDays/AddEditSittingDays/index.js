@@ -25,11 +25,11 @@ function QMSAddEditSittingDaysForm() {
 
   const formik = useFormik({
     initialValues: {
-      employeename: "",
-      filenumber: "",
-      fatherhusbandname: "",
-      cnicnumber: "",
-      permanentaddress: "",
+      fkSessionId: "",
+      sittingDate: "",
+      startDate: "",
+      endDate: "",
+      isAdjourned: ""
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -65,109 +65,25 @@ function QMSAddEditSittingDaysForm() {
                 <div class="row">
                   <div class="col">
                     <div class="mb-3">
-                      <label class="form-label">File Number</label>
+                      <label class="form-label">Session ID</label>
                       <input
                         type="text"
-                        placeholder={formik.values.filenumber}
+                        placeholder={formik.values.fkSessionId}
                         className={`form-control ${
-                          formik.touched.filenumber && formik.errors.filenumber
-                            ? "is-invalid"
-                            : ""
+                          formik.touched.fkSessionId && formik.errors.fkSessionId ? "is-invalid" : ""
                         }`}
-                        id="filenumber"
+                        id="fkSessionId"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
-                      {formik.touched.filenumber &&
-                        formik.errors.filenumber && (
-                          <div className="invalid-feedback">
-                            {formik.errors.filenumber}
-                          </div>
-                        )}
+                      {formik.touched.fkSessionId && formik.errors.fkSessionId && (
+                        <div className="invalid-feedback">{formik.errors.fkSessionId}</div>
+                      )}
                     </div>
                   </div>
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Employee Name</label>
-                      <input
-                        type="text"
-                        placeholder={formik.values.employeename}
-                        className={`form-control ${
-                          formik.touched.employeename &&
-                          formik.errors.employeename
-                            ? "is-invalid"
-                            : ""
-                        }`}
-                        id="employeename"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                      />
-                      {formik.touched.employeename &&
-                        formik.errors.employeename && (
-                          <div className="invalid-feedback">
-                            {formik.errors.employeename}
-                          </div>
-                        )}
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Gender</label>
-                      <select class="form-select">
-                        <option>Male</option>
-                        <option>Female</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Title</label>
-                      <input class="form-control" type="text" />
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Father/Husband Name</label>
-                      <input
-                        type="text"
-                        placeholder={formik.values.fatherhusbandname}
-                        className={`form-control ${
-                          formik.touched.fatherhusbandname &&
-                          formik.errors.fatherhusbandname
-                            ? "is-invalid"
-                            : ""
-                        }`}
-                        id="fatherhusbandname"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                      />
-                      {formik.touched.fatherhusbandname &&
-                        formik.errors.fatherhusbandname && (
-                          <div className="invalid-feedback">
-                            {formik.errors.fatherhusbandname}
-                          </div>
-                        )}
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Domicile</label>
-                      <select class="form-select">
-                        <option>Federal</option>
-                        <option>Punjab</option>
-                        <option>Sindh</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col">
-                    <div class="mb-3" style={{ position: "relative" }}>
-                      <label class="form-label">Date of Birth</label>
+                  <div className="col">
+                    <div className="mb-3" style={{ position: "relative" }}>
+                      <label className="form-label">Sitting Date</label>
                       <span
                         style={{
                           position: "absolute",
@@ -182,16 +98,31 @@ function QMSAddEditSittingDaysForm() {
                         <FontAwesomeIcon icon={faCalendarAlt} />
                       </span>
                       <DatePicker
-                        selected={dateofbirth}
+                        selected={formik.values.sittingDate}
+                        onChange={(date) =>
+                          formik.setFieldValue("sittingDate", date)
+                        }
+                        onBlur={formik.handleBlur}
                         minDate={new Date()}
-                        onChange={(date) => setDateOfBirth(date)}
-                        className="form-control"
+                        className={`form-control ${
+                          formik.touched.sittingDate && formik.errors.sittingDate
+                            ? "is-invalid"
+                            : ""
+                        }`}
                       />
+                      {formik.touched.sittingDate && formik.errors.sittingDate && (
+                        <div className="invalid-feedback">
+                          {formik.errors.sittingDate}
+                        </div>
+                      )}
                     </div>
                   </div>
-                  <div class="col">
-                    <div class="mb-3" style={{ position: "relative" }}>
-                      <label class="form-label">Place of Birth</label>
+                </div>
+
+                <div class="row">
+                  <div className="col">
+                    <div className="mb-3" style={{ position: "relative" }}>
+                      <label className="form-label">Start Date</label>
                       <span
                         style={{
                           position: "absolute",
@@ -206,11 +137,95 @@ function QMSAddEditSittingDaysForm() {
                         <FontAwesomeIcon icon={faCalendarAlt} />
                       </span>
                       <DatePicker
-                        selected={placeofbirth}
+                        selected={formik.values.startDate}
+                        onChange={(date) =>
+                          formik.setFieldValue("startDate", date)
+                        }
+                        onBlur={formik.handleBlur}
                         minDate={new Date()}
-                        onChange={(date) => setPlaceOfBirth(date)}
-                        className="form-control"
+                        className={`form-control ${
+                          formik.touched.startDate && formik.errors.startDate
+                            ? "is-invalid"
+                            : ""
+                        }`}
                       />
+                      {formik.touched.startDate && formik.errors.startDate && (
+                        <div className="invalid-feedback">
+                          {formik.errors.startDate}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <div className="col">
+                    <div className="mb-3" style={{ position: "relative" }}>
+                      <label className="form-label">End Date</label>
+                      <span
+                        style={{
+                          position: "absolute",
+                          right: "15px",
+                          top: "36px",
+                          zIndex: 1,
+                          fontSize: "20px",
+                          zIndex: "1",
+                          color: "#666",
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faCalendarAlt} />
+                      </span>
+                      <DatePicker
+                        selected={formik.values.endDate}
+                        onChange={(date) =>
+                          formik.setFieldValue("endDate", date)
+                        }
+                        onBlur={formik.handleBlur}
+                        minDate={new Date()}
+                        className={`form-control ${
+                          formik.touched.endDate && formik.errors.endDate
+                            ? "is-invalid"
+                            : ""
+                        }`}
+                      />
+                      {formik.touched.endDate && formik.errors.endDate && (
+                        <div className="invalid-feedback">
+                          {formik.errors.endDate}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                <div class="col-6">
+                    <div class="mb-3">
+                      <div class="form-check">
+                        <input
+                          class={`form-check-input ${
+                            formik.touched.isAdjourned &&
+                            formik.errors.isAdjourned
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                          type="checkbox"
+                          id="flexCheckDefault"
+                          checked={formik.values.isAdjourned}
+                          onChange={() =>
+                            formik.setFieldValue(
+                              "isAdjourned",
+                              !formik.values.isAdjourned,
+                            )
+                          }
+                        />
+                        <label class="form-check-label" for="flexCheckDefault">
+                          Is Session Adjourned
+                        </label>
+                        {formik.touched.isAdjourned &&
+                          formik.errors.isAdjourned && (
+                            <div className="invalid-feedback">
+                              {formik.errors.isAdjourned}
+                            </div>
+                          )}
+                      </div>
                     </div>
                   </div>
                 </div>
