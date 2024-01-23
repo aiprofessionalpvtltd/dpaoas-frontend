@@ -18,18 +18,12 @@ const validationSchema = Yup.object({
 });
 function QMSAddEditDivisionsForm() {
   const location = useLocation();
-  const [dateofbirth, setDateOfBirth] = useState(new Date());
-  const [placeofbirth, setPlaceOfBirth] = useState(new Date());
-  const [cnicissue, setCnicIssue] = useState(new Date());
-  const [cnicexpire, setCnicExpire] = useState(new Date());
 
   const formik = useFormik({
     initialValues: {
-      employeename: "",
-      filenumber: "",
-      fatherhusbandname: "",
-      cnicnumber: "",
-      permanentaddress: "",
+      ministry: '',
+      division: '',
+      active: ''
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -65,152 +59,58 @@ function QMSAddEditDivisionsForm() {
                 <div class="row">
                   <div class="col">
                     <div class="mb-3">
-                      <label class="form-label">File Number</label>
+                      <label class="form-label">Division</label>
                       <input
                         type="text"
-                        placeholder={formik.values.filenumber}
+                        placeholder={formik.values.division}
                         className={`form-control ${
-                          formik.touched.filenumber && formik.errors.filenumber
-                            ? "is-invalid"
-                            : ""
+                          formik.touched.division && formik.errors.division ? "is-invalid" : ""
                         }`}
-                        id="filenumber"
+                        id="division"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
-                      {formik.touched.filenumber &&
-                        formik.errors.filenumber && (
-                          <div className="invalid-feedback">
-                            {formik.errors.filenumber}
-                          </div>
-                        )}
+                      {formik.touched.division && formik.errors.division && (
+                        <div className="invalid-feedback">{formik.errors.division}</div>
+                      )}
                     </div>
                   </div>
                   <div class="col">
                     <div class="mb-3">
-                      <label class="form-label">Employee Name</label>
-                      <input
-                        type="text"
-                        placeholder={formik.values.employeename}
-                        className={`form-control ${
-                          formik.touched.employeename &&
-                          formik.errors.employeename
-                            ? "is-invalid"
-                            : ""
-                        }`}
-                        id="employeename"
+                      <label class="form-label">Ministry</label>
+                      <select class="form-select"
+                        id="ministry"
+                        name="ministry"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                      />
-                      {formik.touched.employeename &&
-                        formik.errors.employeename && (
-                          <div className="invalid-feedback">
-                            {formik.errors.employeename}
-                          </div>
-                        )}
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Gender</label>
-                      <select class="form-select">
-                        <option>Male</option>
-                        <option>Female</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Title</label>
-                      <input class="form-control" type="text" />
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Father/Husband Name</label>
-                      <input
-                        type="text"
-                        placeholder={formik.values.fatherhusbandname}
-                        className={`form-control ${
-                          formik.touched.fatherhusbandname &&
-                          formik.errors.fatherhusbandname
-                            ? "is-invalid"
-                            : ""
-                        }`}
-                        id="fatherhusbandname"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                      />
-                      {formik.touched.fatherhusbandname &&
-                        formik.errors.fatherhusbandname && (
-                          <div className="invalid-feedback">
-                            {formik.errors.fatherhusbandname}
-                          </div>
-                        )}
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Domicile</label>
-                      <select class="form-select">
-                        <option>Federal</option>
-                        <option>Punjab</option>
-                        <option>Sindh</option>
+                        value={formik.values.ministry}
+                      >
+                        <option value={""} selected disabled hidden>
+                          select
+                        </option>
+                          <option value="1">Ministry1</option>
+                          <option value="2">Ministry2</option>
                       </select>
                     </div>
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col">
-                    <div class="mb-3" style={{ position: "relative" }}>
-                      <label class="form-label">Date of Birth</label>
-                      <span
-                        style={{
-                          position: "absolute",
-                          right: "15px",
-                          top: "36px",
-                          zIndex: 1,
-                          fontSize: "20px",
-                          zIndex: "1",
-                          color: "#666",
-                        }}
+                  <div class="col-6">
+                    <div class="mb-3">
+                      <label class="form-label">Active</label>
+                      <select class="form-select"
+                        id="active"
+                        name="active"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.active}
                       >
-                        <FontAwesomeIcon icon={faCalendarAlt} />
-                      </span>
-                      <DatePicker
-                        selected={dateofbirth}
-                        minDate={new Date()}
-                        onChange={(date) => setDateOfBirth(date)}
-                        className="form-control"
-                      />
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="mb-3" style={{ position: "relative" }}>
-                      <label class="form-label">Place of Birth</label>
-                      <span
-                        style={{
-                          position: "absolute",
-                          right: "15px",
-                          top: "36px",
-                          zIndex: 1,
-                          fontSize: "20px",
-                          zIndex: "1",
-                          color: "#666",
-                        }}
-                      >
-                        <FontAwesomeIcon icon={faCalendarAlt} />
-                      </span>
-                      <DatePicker
-                        selected={placeofbirth}
-                        minDate={new Date()}
-                        onChange={(date) => setPlaceOfBirth(date)}
-                        className="form-control"
-                      />
+                        <option value={""} selected disabled hidden>
+                          select
+                        </option>
+                          <option value="yes">Yes</option>
+                          <option value="no">No</option>
+                      </select>
                     </div>
                   </div>
                 </div>

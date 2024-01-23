@@ -208,6 +208,7 @@ function QMSAddEditSessionsForm() {
                     </div>
                   </div>
                 </div>
+                
                 <div class="row">
                   <div class="col">
                     <div class="mb-3" style={{ position: "relative" }}>
@@ -310,17 +311,6 @@ function QMSAddEditSessionsForm() {
                     <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label">Joint Session Purpose</label>
                       <textarea class="form-control"></textarea>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col">
-                  <div class="mb-3">
-                    <div class="form-check" style={{ marginTop: "5px" }}>
-                      <input class="form-check-input " type="checkbox" id="flexCheckDefault" />
-                      <label class="form-check-label" for="flexCheckDefault">
-                        Is Quoraum Adjourned
-                      </label>
                     </div>
                   </div>
                 </div>
