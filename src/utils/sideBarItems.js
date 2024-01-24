@@ -416,6 +416,11 @@ export const QMSSideBarItems = [
         icon: faClipboardList,
       },
       {
+        itemName: "Groups",
+        link: "/qms/manage/groups",
+        icon: faClipboardList,
+      },
+      {
         itemName: "Terms",
         link: "/qms/manage/terms",
         icon: faClipboardList,
