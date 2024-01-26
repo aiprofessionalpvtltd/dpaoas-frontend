@@ -98,6 +98,8 @@ import CMSUserDashboard from "../pages/Dashboard/Modules/CMS/UserCMS";
 import CMSAddEditUserComplaint from "../pages/Dashboard/Modules/CMS/UserCMS/AddEditUserComplaint";
 import CMSAdminDashboard from "../pages/Dashboard/Modules/CMS/AdminCMS";
 import CMSAdminEditComplaint from "../pages/Dashboard/Modules/CMS/AdminCMS/AdminEdit";
+import SMSInventoryDashboard from "../pages/Dashboard/Modules/CMS/InventoryDashboard";
+import CMSAddInventory from "../pages/Dashboard/Modules/CMS/InventoryDashboard/AddInventory";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -307,6 +309,11 @@ export const ProtectedRoutes = [
 
   { path: "/cms/admin/dashboard", element: <CMSAdminDashboard /> },
   { path: "/cms/admin/dashboard/addedit", element: <CMSAdminEditComplaint /> },
+
+  { path: "/cms/admin/inventory/dashboard", element: <SMSInventoryDashboard /> },
+  { path: "/cms/admin/inventory/dashboard/add", element: <CMSAddInventory /> },
+
+
 
 
 ];

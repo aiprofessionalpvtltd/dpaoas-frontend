@@ -4,10 +4,11 @@ import { SMSsidebarItems } from '../../../../../../utils/sideBarItems'
 import Header from '../../../../../../components/Header'
 import { Button } from 'react-bootstrap'
 import CustomTable from '../../../../../../components/CustomComponents/CustomTable'
-import { createContactTemplate, getContactList, getContactTemplate, getSignalContactListByid, getSignalContactTemplateByid } from '../../../../../../api/APIs'
+import { createContactTemplate, createSendSMS, getContactList, getContactTemplate, getSignalContactListByid, getSignalContactTemplateByid } from '../../../../../../api/APIs'
 import { showErrorMessage, showSuccessMessage } from '../../../../../../utils/ToastAlert'
 import { ToastContainer } from 'react-toastify'
 import { getUserData } from '../../../../../../api/Auth'
+import moment from 'moment'
 
 function SMSAdvancedSMS() {
     const userData = getUserData();
@@ -26,7 +27,7 @@ function SMSAdvancedSMS() {
 
     const [allListData, setAllListData] = useState([])
 
-console.log("sadsd",textareaInput);
+    console.log("sadsd", textareaInput);
 
     const handleTextInputChange = (event) => {
         setTextInput(event.target.value);
@@ -43,22 +44,18 @@ console.log("sadsd",textareaInput);
         setCurrentPage(page);
     };
     const transformDepartmentData = (apiData) => {
-        return apiData.map((leave) => ({
-            id: leave?.id,
-            listName: leave?.listName,
-            listDescription: leave?.listDescription,
-            listActive: leave?.listActive,
-            //   UserEmail:leave.user.email,
-            isPublicList: JSON.stringify(leave?.isPublicList),
-            createdAt: leave?.createdAt,
-            updatedAt: leave?.updatedAt,
-            //   contactMembers: leave?.contactMembers[0]?.member.memberName
-        }));
-    };
+        return  apiData.map((leave, index) => ({
+            Sr:`${index + 1}`,
+            memberName: leave?.member?.memberName,
+            phoneNo: leave?.member?.phoneNo,
+            gender: leave?.member?.gender,
+          }));
+        };
 
     const hendleListId = (event) => {
         const selectedValue = event.target.value;
         setListId(selectedValue);
+        HandleSignalListData(event.target.value)
     };
 
     const handleTemplate = (event) => {
@@ -79,12 +76,12 @@ console.log("sadsd",textareaInput);
         }
     }
 
-    const HandleSignalListData = async () => {
+    const HandleSignalListData = async (id) => {
 
         try {
-            const response = await getSignalContactListByid(listId)
+            const response = await getSignalContactListByid(id)
             if (response?.success) {
-                const transformedData = transformDepartmentData(response?.data);
+                const transformedData = transformDepartmentData(response?.data[0]?.contactMembers);
                 setCount(response?.data?.count);
                 setAllListData(transformedData);
             }
@@ -106,16 +103,23 @@ console.log("sadsd",textareaInput);
         }
     }
 
-    const CreateContactTemplateApi = async () => {
+
+    const ClearFiled = () => {
+            setTextareaInput('')
+            settemplateId(null)
+    }
+    const HendleSendSms = async () => {
         const data = {
-            templateName: textInput,
             msgText: textareaInput,
-            fkUserId: userData?.id,
-            isActive: true
+            RecieverNo: [],
+            fkUserId: userData?.fkUserId,
+            fkListId: JSON.parse(templateId),
+            isSent: "pending"
         };
         try {
-            const response = await createContactTemplate(data);
+            const response = await createSendSMS(data);
             if (response.success) {
+                ClearFiled()
                 showSuccessMessage(response.message);
             }
         } catch (error) {
@@ -130,7 +134,7 @@ console.log("sadsd",textareaInput);
         try {
             const response = await getSignalContactTemplateByid(event.target.value)
             if (response?.success) {
-                console.log("saquib;k",response?.data?.msgText);
+                console.log("saquib;k", response?.data?.msgText);
                 setTextareaInput(response?.data[0]?.msgText)
             }
         } catch (error) {
@@ -176,7 +180,7 @@ console.log("sadsd",textareaInput);
                     </div>
                 </div>
 
-                <div
+                {/* <div
                     style={{
                         display: "flex",
                         justifyContent: "flex-end",
@@ -186,8 +190,8 @@ console.log("sadsd",textareaInput);
                     <Button style={{ marginRight: "8px" }} onClick={() => HandleSignalListData()}>
                         Submit
                     </Button>
-                </div>
-                <div class="row">
+                </div> */}
+                <div class="row mt-5">
                     <div class="col-12">
                         <CustomTable
                             data={allListData}
@@ -206,11 +210,11 @@ console.log("sadsd",textareaInput);
                 </div>
 
 
-                
+
                 <div class="row">
                     <div class="col-6">
                         <div class="mb-3">
-                            <label class="form-label">Preview</label>
+                            <label class="form-label">Message Text</label>
                             <textarea
                                 className="form-control"
                                 style={{ width: "100%" }}
@@ -224,7 +228,7 @@ console.log("sadsd",textareaInput);
 
                 </div>
                 <div class="row">
-                    <div class="col">
+                    <div class="col-6">
                         <div class="mb-3">
                             <label class="form-label">Message Template</label>
                             <select class="form-select"
@@ -243,7 +247,7 @@ console.log("sadsd",textareaInput);
                             </select>
                         </div>
                     </div>
-                    <div class="col">
+                    {/* <div class="col">
                         <div class="mb-3">
                             <label for="" class="form-label">
                                 Template Name
@@ -257,7 +261,7 @@ console.log("sadsd",textareaInput);
                                 onChange={handleTextInputChange}
                             />
                         </div>
-                    </div>
+                    </div> */}
                 </div>
                 <div
                     style={{
@@ -266,8 +270,8 @@ console.log("sadsd",textareaInput);
                         marginTop: "16px",
                     }}
                 >
-                    <Button style={{ marginRight: "8px" }} onClick={() => CreateContactTemplateApi()}>
-                        Save
+                    <Button style={{ marginRight: "8px" }} onClick={() => HendleSendSms()}>
+                        Send
                     </Button>
                 </div>
             </div>

@@ -7,11 +7,17 @@ import { SMSsidebarItems } from '../../../../../../utils/sideBarItems';
 import { DeleteContactTemplate, getContactTemplate } from '../../../../../../api/APIs';
 import { showErrorMessage, showSuccessMessage } from '../../../../../../utils/ToastAlert';
 import { ToastContainer } from 'react-toastify';
+import moment from 'moment';
+import SMSAddEditTemplate from '../AddTemplates';
 
 function SMSMAnageTemplate() {
     const navigate = useNavigate()
     const [currentPage, setCurrentPage] = useState(0);
     const [templateData, setTemplateData] = useState([]);
+
+    const [modalisOpan, setModalisOpan] = useState(false)
+    const [selecteditem, setSelecteditem] = useState([])
+
     const [count, setCount] = useState()
     const pageSize = 4; // Set your desired page size
 
@@ -27,8 +33,8 @@ function SMSMAnageTemplate() {
             templateName: leave?.templateName,
             description: leave?.msgText,
             Status: JSON.stringify(leave?.isActive),
-            createdAt: leave?.createdAt,
-            updatedAt: leave?.updatedAt
+            createdAt: moment(leave?.createdAt).format("YYYY/MM/DD"),
+            updatedAt: moment(leave?.updatedAt).format("YYYY/MM/DD")
         }));
     };
     const getTemplate = useCallback(async () => {
@@ -36,13 +42,13 @@ function SMSMAnageTemplate() {
             const response = await getContactTemplate(currentPage, pageSize);
             if (response?.success) {
                 const transformedData = transformDepartmentData(response?.data?.contactTemplate);
-                setCount(response?.count);
+                setCount(response?.data?.count);
                 setTemplateData(transformedData);
             }
         } catch (error) {
             console.log(error);
         }
-    }, [currentPage, pageSize, setCount, setTemplateData]);
+    }, [currentPage, pageSize, setCount, setTemplateData, setModalisOpan, modalisOpan]);
 
     const handleDelete = async (id) => {
         try {
@@ -66,16 +72,38 @@ function SMSMAnageTemplate() {
                 title1={"Manage Template"}
                 addLink1={"/sms/template/manage"}
             />
+
             <ToastContainer />
+            {modalisOpan ? (
+                <SMSAddEditTemplate modalisOpan={modalisOpan} hendleModal={() => setModalisOpan(!modalisOpan)} selectedData={selecteditem} getTemplate={getTemplate}/>
+            ) : null}
             <div class="row">
                 <div class="col-12">
                     <CustomTable
                         data={templateData}
+                        singleDataCard={true}
+
                         tableTitle="Manage Template"
                         addBtnText="Add Template"
-                        handleAdd={() => navigate("/sms/template/add")}
-                        handleEdit={(item) =>
-                            navigate("/sms/template/add", { state: item })
+                        handleAdd={() => {
+                            setSelecteditem([
+                                {
+                                    id: null,
+                                    templateName: "",
+                                    msgText: ""
+                                }
+                            ])
+                            setModalisOpan(true)
+                        }
+
+                            // navigate("/sms/template/add")
+                        }
+                        handleEdit={(item) => {
+                            setSelecteditem(item)
+                            setModalisOpan(true)
+                        }
+                            // navigate("/sms/template/add", { state: item })
+
                         }
                         headertitlebgColor={"#666"}
                         headertitletextColor={"#FFF"}
