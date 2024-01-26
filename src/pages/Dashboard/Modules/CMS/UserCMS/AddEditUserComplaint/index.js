@@ -1,5 +1,5 @@
 import { useFormik } from 'formik';
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom';
 import { Layout } from '../../../../../../components/Layout';
 import { CMSsidebarItems } from '../../../../../../utils/sideBarItems';
@@ -8,9 +8,13 @@ import { ToastContainer } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 import DatePicker from "react-datepicker";
-import { UpdateComplaint, createComplaint, getallcomplaintCategories, getallcomplaintTypes } from '../../../../../../api/APIs';
+import { UpdateComplaint, createComplaint, getInventoryRecordByUserId, getallcomplaintCategories, getallcomplaintTypes } from '../../../../../../api/APIs';
 import { showErrorMessage, showSuccessMessage } from '../../../../../../utils/ToastAlert';
 import { getUserData } from '../../../../../../api/Auth';
+import { AuthContext } from '../../../../../../api/AuthContext';
+import Select from "react-select";
+import CustomTable from '../../../../../../components/CustomComponents/CustomTable';
+import moment from 'moment';
 
 
 
@@ -18,9 +22,11 @@ import { getUserData } from '../../../../../../api/Auth';
 function CMSAddEditUserComplaint() {
   const location = useLocation()
   const userData = getUserData();
-  console.log("asdlsa", userData);
+  const { employeeData } = useContext(AuthContext)
+  console.log("UserInfo", userData);
   const [complaintType, setComplaintType] = useState([])
   const [complaintCategories, setComplaintCategories] = useState([])
+  const [userinventoryData, setUserInventoryData] = useState([])
 
 
 
@@ -45,17 +51,31 @@ function CMSAddEditUserComplaint() {
     },
   });
 
-  const CreateComplaintApi = async (values) => {
-    const formData = new FormData()
-    formData.append("fkComplaineeUserId", userData?.id)
-    formData.append("fkComplaintTypeId", values.fkComplaintTypeId)
-    formData.append("fkComplaintCategoryId", values.fkComplaintCategoryId)
-    formData.append("complaintDescription", values.complaintDescription)
-    formData.append('complaintIssuedDate', values.complaintIssuedDate)
-    formData.append('complaintAttachment', values.complaintAttachment)
+  const transformDepartmentData = (apiData) => {
+    return apiData.map((leave) => ({
+      id: leave?.id,
+      // complaineeUser: `${leave?.complaineeUser?.employee?.firstName}${leave?.complaineeUser?.employee?.lastName}`,
+      // complaintType: leave?.complaintType?.complaintTypeName,
+      // complaintCategory: leave?.complaintCategory?.complaintCategoryName,
+      productName: leave?.productName,
+      serialNo: leave?.serialNo,
+      description: leave?.description,
+      assignedDate: moment(leave?.assignedDate).format("YYYY/MM/DD"),
+      status: JSON.stringify(leave?.status),
+    }));
+  };
 
+  const CreateComplaintApi = async (values) => {
+
+    const Data = {
+      fkComplaineeUserId: userData?.fkUserId,
+      fkComplaintTypeId: values.fkComplaintTypeId,
+      fkComplaintCategoryId: values.fkComplaintCategoryId,
+      complaintDescription: values.complaintDescription,
+      complaintIssuedDate: values?.complaintIssuedDate
+    }
     try {
-      const response = await createComplaint(formData);
+      const response = await createComplaint(Data);
       if (response.success) {
         showSuccessMessage(response.message);
       }
@@ -111,6 +131,21 @@ function CMSAddEditUserComplaint() {
     }
   };
 
+  const getInventoryRecordById = async (selectedOptions) => {
+    try {
+      const response = await getInventoryRecordByUserId(selectedOptions.value);
+      if (response?.success) {
+        const transformedData = transformDepartmentData(response?.data);
+        setUserInventoryData(transformedData);
+      }
+    } catch (error) {
+      console.log(error);
+      showErrorMessage(error?.response?.data?.error);
+    }
+  };
+
+
+
   useEffect(() => {
     AllComplaintTypeApi()
     AllComplaintCategoriesApi()
@@ -127,6 +162,8 @@ function CMSAddEditUserComplaint() {
       />
       <ToastContainer />
       <div className="container-fluid">
+
+
         <div className="card">
           <div className="card-header red-bg" style={{ background: "#666" }}>
             {location && location?.state ? (
@@ -136,13 +173,14 @@ function CMSAddEditUserComplaint() {
             )}
           </div>
           <div className="card-body">
+
             <form onSubmit={formik.handleSubmit}>
               <div className="container-fluid">
                 <div className="row">
                   <div className="col-6">
                     <div className="mb-3">
-                      <label className="form-label">User name</label>
-                      <input
+                      <label className="form-label">Complainee</label>
+                      {/* <input
                         type="text"
                         className={`form-control`}
                         id="fkComplaineeUserId"
@@ -150,6 +188,22 @@ function CMSAddEditUserComplaint() {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         readOnly
+                      /> */}
+                      <Select
+                        options={employeeData && employeeData?.map((item) => ({
+                          value: item.fkUserId,
+                          label: `${item.firstName}${item.lastName}`,
+                        }))}
+
+                        onChange={(selectedOptions) => {
+                          formik.setFieldValue("fkComplaineeUserId", selectedOptions)
+                          getInventoryRecordById(selectedOptions)
+                        }
+                        }
+                        onBlur={formik.handleBlur}
+                        value={formik.values.fkComplaineeUserId}
+                        name="fkComplaineeUserId"
+                        isClearable={true}
                       />
                     </div>
                   </div>
@@ -225,7 +279,7 @@ function CMSAddEditUserComplaint() {
                 </div>
 
                 <div class="row">
-                  <div className="col-6">
+                  {/* <div className="col-6">
                     <div className="mb-3">
                       <label htmlFor="formFile" className="form-label">
                         Question Image
@@ -244,7 +298,7 @@ function CMSAddEditUserComplaint() {
                         }}
                       />
                     </div>
-                  </div>
+                  </div> */}
 
                   <div className="col-6">
                     <div className="mb-3" style={{ position: "relative" }}>
@@ -288,6 +342,46 @@ function CMSAddEditUserComplaint() {
             </form>
           </div>
         </div>
+        {userinventoryData.length > 0 && (
+          <div class="row mt-5">
+            <div class="col-12">
+              <table class="table red-bg-head th">
+                <thead>
+                  <tr>
+                    <th class="text-center" scope="col">
+                      productName
+                    </th>
+                    <th class="text-center" scope="col">
+                      Serial No
+                    </th>
+                    <th class="text-center" scope="col">
+                      Description
+                    </th>
+
+                    <th class="text-center" scope="col">
+                      Status
+                    </th>
+                    <th class="text-center" scope="col">
+                      AssignedDate
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {userinventoryData && userinventoryData?.length > 0 &&
+                    userinventoryData.map((item, index) => (
+                      <tr>
+                        <td class="text-center">{item?.productName}</td>
+                        <td class="text-center">{item.serialNo}</td>
+                        <td class="text-center">{item.description}</td>
+                        <td class="text-center">{item.status}</td>
+                        <td class="text-center">{item.assignedDate}</td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
       </div>
     </Layout>
   )

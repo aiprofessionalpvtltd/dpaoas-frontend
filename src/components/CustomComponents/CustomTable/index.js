@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { faEdit, faTrash, faUser, faPrint, faClone } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faTrash, faUser, faPrint, faClone, faCheck, faFileExport } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 function CustomTable({
+  hendleAssigned,
+  showAssigned,
+  showResolve, 
+  hendleResolve,
   data,
   handleEdit,
   handleDelete,
@@ -32,7 +36,8 @@ function CustomTable({
   hidePagination,
   assignBtn,
   assignClick,
-  hideDeleteIcon
+  hideDeleteIcon,
+  singleDataCard
 }) {
   const keys = data?.length > 0 ? Object.keys(data[0]) : [];
   const [totalPages, setTotalPages] = useState(0);
@@ -61,6 +66,11 @@ function CustomTable({
   const vistorTooltip = <Tooltip id="visitor-tooltip">Visitors</Tooltip>;
   const printTooltip = <Tooltip id="print-tooltip">Print</Tooltip>;
   const duplicateTooltip = <Tooltip id="duplicate-tooltip">Duplicate</Tooltip>;
+  const resolveTooltip = <Tooltip id="print-tooltip">Resolve</Tooltip>;
+  const assignedTooltip = <Tooltip id="print-tooltip">Assigne</Tooltip>;
+
+  
+
 
   const renderPagination = () => (
     <nav aria-label="Page navigation">
@@ -92,6 +102,8 @@ function CustomTable({
 
   return (
     <div className="container-fluid">
+      
+      <div className={`${singleDataCard ? 'card' : ''}`}>
       <div className="dash-card">
         {!headerShown && !headerShown && (
           <div
@@ -128,15 +140,18 @@ function CustomTable({
         )}
 
         {data.length <= 0 && (
-          <div
-            style={{
-              textAlign: "center",
-              marginTop: "30px",
-              fontSize: "20px",
-            }}
-          >
-            No data found :(
-          </div>
+          // <div
+          //   style={{
+          //     textAlign: "center",
+          //     marginTop: "30px",
+          //     fontSize: "20px",
+          //   }}
+          // >
+          //   No data found :(
+          // </div>
+           <div class="alert alert-danger mt-5" role="alert" style={{width:"350px", margin:"0 auto", textAlign:"center"}}>
+             No Record Found
+           </div>
         )}
         <table
           className="table table-striped table-responsive red-bg-head"
@@ -191,6 +206,7 @@ function CustomTable({
                         )}
                       </td>
                     ))}
+                    {!ActionHide && (
                     <td className="text-center">
                       {!hideEditIcon && !hideEditIcon && (
                         <>
@@ -258,7 +274,30 @@ function CustomTable({
                           </button>
                         </OverlayTrigger>
                       )}
+                      {showResolve && (
+                        <OverlayTrigger placement="top" overlay={resolveTooltip}>
+                          <button
+                            onClick={() => hendleResolve(item)}
+                            className="btn default btn-xs black"
+                            data-id={item.id}
+                          >
+                            <FontAwesomeIcon icon={faCheck} />
+                          </button>
+                        </OverlayTrigger>
+                      )}
+                      {showAssigned && (
+                        <OverlayTrigger placement="top" overlay={assignedTooltip}>
+                          <button
+                            onClick={() => hendleAssigned(item)}
+                            className="btn default btn-xs black"
+                            data-id={item.id}
+                          >
+                            <FontAwesomeIcon icon={faFileExport} />
+                          </button>
+                        </OverlayTrigger>
+                      )}
                     </td>
+                    )}
                   </tr>
                 ))
               : displayedData.map((item, rowIndex) => (
@@ -292,15 +331,17 @@ function CustomTable({
                                 <FontAwesomeIcon icon={faEdit} />
                               </button>
                             </OverlayTrigger>
+                            {!hideDeleteIcon && !hideDeleteIcon && (
                             <OverlayTrigger placement="top" overlay={deleteTooltip}>
-                              <button
-                                onClick={() => handleDelete(item)}
-                                className="btn default btn-xs black"
-                                data-id={item.id}
-                              >
-                                <FontAwesomeIcon icon={faTrash} />
-                              </button>
-                            </OverlayTrigger>
+                            <button
+                              onClick={() => handleDelete(item)}
+                              className="btn default btn-xs black"
+                              data-id={item.id}
+                            >
+                              <FontAwesomeIcon icon={faTrash} />
+                            </button>
+                          </OverlayTrigger>
+                          )}
                           </>
                         )}
                         {assignBtn && (
@@ -355,6 +396,28 @@ function CustomTable({
                             </button>
                           </OverlayTrigger>
                         )}
+                        {showResolve && (
+                        <OverlayTrigger placement="top" overlay={resolveTooltip}>
+                          <button
+                            onClick={() => hendleResolve(item)}
+                            className="btn default btn-xs black"
+                            data-id={item.id}
+                          >
+                            <FontAwesomeIcon icon={faCheck} />
+                          </button>
+                        </OverlayTrigger>
+                      )}
+                      {showAssigned && (
+                        <OverlayTrigger placement="top" overlay={assignedTooltip}>
+                          <button
+                            onClick={() => hendleAssigned(item)}
+                            className="btn default btn-xs black"
+                            data-id={item.id}
+                          >
+                            <FontAwesomeIcon icon={faFileExport} />
+                          </button>
+                        </OverlayTrigger>
+                      )}
                       </td>
                     )}
                   </tr>
@@ -375,6 +438,7 @@ function CustomTable({
               {renderPagination()}
             </div>
           )}
+    </div>
     </div>
   );
 }

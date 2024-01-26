@@ -4,6 +4,7 @@ import Header from '../../../../../../components/Header'
 import { SMSsidebarItems } from '../../../../../../utils/sideBarItems'
 import CustomTable from '../../../../../../components/CustomComponents/CustomTable'
 import { getSMSLog } from '../../../../../../api/APIs'
+import moment from 'moment'
 
 function SMSDetailedMessageLog() {
      const [count, setCount] = useState(null);
@@ -25,8 +26,8 @@ function SMSDetailedMessageLog() {
         memberName:leave.contactList?.contactMembers[0]?.member?.memberName,
         phoneNo:leave.contactList?.contactMembers[0]?.member.phoneNo,
         Status: leave?.isSent,
-        createdAt: leave?.createdAt,
-        updatedAt: leave?.updatedAt
+        createdAt: moment(leave?.createdAt).format("YYYY/MM/DD"),
+        updatedAt: moment(leave?.updatedAt).format("YYYY/MM/DD")
     }));
 };
 
@@ -60,6 +61,8 @@ useEffect(() => {
       <div class="col-12">
         <CustomTable
           data={smsLogData}
+          singleDataCard={true}
+
           tableTitle={"Detailed"}
           hideBtn={true}
         //   headerShown={true}

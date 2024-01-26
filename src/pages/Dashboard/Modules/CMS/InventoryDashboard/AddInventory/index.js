@@ -9,45 +9,48 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 import DatePicker from "react-datepicker";
 import { showErrorMessage, showSuccessMessage } from '../../../../../../utils/ToastAlert';
-import { UpdateComplaintByAdmin } from '../../../../../../api/APIs';
+import { UpdateComplaintByAdmin, createInventory } from '../../../../../../api/APIs';
 import { getUserData } from '../../../../../../api/Auth';
 import { AuthContext } from '../../../../../../api/AuthContext';
 import Select from "react-select";
 
 
-function CMSAdminEditComplaint() {
-    const location = useLocation();
-    const userData = getUserData();
+function CMSAddInventory() {
     const { employeeData } = useContext(AuthContext)
 
     const formik = useFormik({
         initialValues: {
-            fkResolverUserId: location.state ? location.state.fkComplaineeUserId : `${userData?.firstName} ${userData?.lastName}`,
-            complaintRemark: "",
-            complaintStatus: "",
-            complaintResolvedDate: "",
-            complaintAttachmentFromResolver: ""
+            fkAssignedToUser: "",
+            description: "",
+            status: "",
+            assignedDate: "",
+            quantity: "",
+            serialNo:"",
+            productName:""
         },
 
         onSubmit: (values) => {
             // Handle form submission here
             // console.log(values);
-            UpdateComplaintAPi(values)
+            hendleAddInventory(values)
 
         },
     });
 
-    const UpdateComplaintAPi = async (values) => {
-        const formData = new FormData()
+    const hendleAddInventory = async (values) => {
 
-        formData.append("fkResolverUserId", values?.fkResolverUserId?.value)
-        formData.append("complaintResolvedDate", values.complaintResolvedDate)
-        formData.append("complaintRemark", values.complaintRemark)
-        formData.append("complaintStatus", values.complaintStatus)
-        formData.append('complaintAttachmentFromResolver', values.complaintAttachmentFromResolver)
+        const Data = {
+            fkAssignedToUser: values?.fkAssignedToUser?.value,
+            description:  values.description,
+            status:  values.status,
+            assignedDate: values.assignedDate,
+            quantity: values.quantity,
+            serialNo:values.serialNo,
+            productName:values.productName
+        }
 
         try {
-            const response = await UpdateComplaintByAdmin(location.state.id, formData);
+            const response = await createInventory(Data);
             if (response.success) {
                 showSuccessMessage(response.message);
             }
@@ -59,17 +62,17 @@ function CMSAdminEditComplaint() {
     return (
         <Layout module={true} sidebarItems={CMSsidebarItems} centerlogohide={true}>
             <Header
-                dashboardLink={"/cms/admin/dashboard"}
-                addLink1={"/cms/admin/dashboard/addedit"}
+                dashboardLink={"/cms/admin/inventory/dashboard"}
+                addLink1={"/cms/admin/inventory/dashboard/add"}
                 title1={
-                    "Edit Admin Complaint"
+                    "Add Inventory"
                 }
             />
             <ToastContainer />
             <div className="container-fluid">
                 <div className="card">
                     <div className="card-header red-bg" style={{ background: "#666" }}>
-                        <h1>Resolved Admin Complaint</h1>
+                        <h1>Add Inventory</h1>
                     </div>
                     <div className="card-body">
                         <form onSubmit={formik.handleSubmit}>
@@ -81,8 +84,8 @@ function CMSAdminEditComplaint() {
                                             {/* <input
                                                 type="text"
                                                 className={`form-control`}
-                                                id="fkResolverUserId"
-                                                placeholder={formik.values.fkResolverUserId}
+                                                id="fkAssignedToUser"
+                                                placeholder={formik.values.fkAssignedToUser}
                                                 onChange={formik.handleChange}
                                                 onBlur={formik.handleBlur}
 
@@ -94,11 +97,11 @@ function CMSAdminEditComplaint() {
                                                 }))}
 
                                                 onChange={(selectedOptions) =>
-                                                    formik.setFieldValue("fkResolverUserId", selectedOptions)
+                                                    formik.setFieldValue("fkAssignedToUser", selectedOptions)
                                                 }
                                                 onBlur={formik.handleBlur}
-                                                value={formik.values.fkResolverUserId}
-                                                name="fkResolverUserId"
+                                                value={formik.values.fkAssignedToUser}
+                                                name="fkAssignedToUser"
                                                 isClearable={true}
                                             />
                                         </div>
@@ -107,7 +110,7 @@ function CMSAdminEditComplaint() {
                                     <div className="col-6">
                                         <div className="mb-3" style={{ position: "relative" }}>
                                             <label className="form-label">
-                                                Complaint Resolved Date
+                                                Assigned Date
                                             </label>
                                             <span
                                                 style={{
@@ -123,10 +126,10 @@ function CMSAdminEditComplaint() {
                                                 <FontAwesomeIcon icon={faCalendarAlt} />
                                             </span>
                                             <DatePicker
-                                                selected={formik.values.complaintResolvedDate}
+                                                selected={formik.values.assignedDate}
                                                 minDate={new Date()}
                                                 onChange={(date) =>
-                                                    formik.setFieldValue("complaintResolvedDate", date)
+                                                    formik.setFieldValue("assignedDate", date)
                                                 }
                                                 onBlur={formik.handleBlur}
                                                 className={`form-control`}
@@ -139,32 +142,31 @@ function CMSAdminEditComplaint() {
                                 <div className="row">
                                     <div className="col-6">
                                         <div className="mb-3">
-                                            <label className="form-label">Complaint Remarks</label>
+                                            <label className="form-label">Description</label>
                                             <textarea
                                                 className={`form-control`}
-                                                id="complaintRemark"
+                                                id="description"
                                                 onChange={formik.handleChange}
                                                 onBlur={formik.handleBlur}
-                                                value={formik.values.complaintRemark}
+                                                value={formik.values.description}
                                             ></textarea>
                                         </div>
                                     </div>
                                     <div className="col-6">
                                         <div className="mb-3">
-                                            <label className="form-label">Complaint Status</label>
+                                            <label className="form-label">Assigned</label>
                                             <select class="form-select"
-                                                id="complaintStatus"
-                                                name="complaintStatus"
+                                                id="status"
+                                                name="status"
                                                 onChange={formik.handleChange}
                                                 onBlur={formik.handleBlur}
-                                                value={formik.values.complaintStatus}
+                                                value={formik.values.status}
                                             >
                                                 <option value={""} selected disabled hidden>
                                                     select
                                                 </option>
-                                                <option value="pending">pending</option>
-                                                <option value="in-progress">in-progress</option>
-                                                <option value="resolved">resolved</option>
+                                                <option value="true">true</option>
+                                                <option value="false">false</option>
                                             </select>
                                         </div>
                                     </div>
@@ -174,25 +176,55 @@ function CMSAdminEditComplaint() {
                                     <div className="col-6">
                                         <div className="mb-3">
                                             <label htmlFor="formFile" className="form-label">
-                                                Attachment
+                                                Quantity
                                             </label>
                                             <input
-                                                className="form-control"
-                                                type="file"
-                                                accept=".pdf, .jpg, .jpeg, .png"
-                                                id="complaintAttachmentFromResolver"
-                                                name="complaintAttachmentFromResolver"
-                                                onChange={(event) => {
-                                                    formik.setFieldValue(
-                                                        "complaintAttachmentFromResolver",
-                                                        event.currentTarget.files[0],
-                                                    );
-                                                }}
+                                                type="text"
+                                                className={`form-control`}
+                                                id="quantity"
+                                                placeholder={formik.values.quantity}
+                                                onChange={formik.handleChange}
+                                                onBlur={formik.handleBlur}
+
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col-6">
+                                        <div className="mb-3">
+                                            <label htmlFor="formFile" className="form-label">
+                                                Serial No
+                                            </label>
+                                            <input
+                                                type="text"
+                                                className={`form-control`}
+                                                id="serialNo"
+                                                placeholder={formik.values.serialNo}
+                                                onChange={formik.handleChange}
+                                                onBlur={formik.handleBlur}
+
                                             />
                                         </div>
                                     </div>
                                 </div>
+                                <div className='row'>
+                                <div className="col-6">
+                                        <div className="mb-3">
+                                            <label htmlFor="formFile" className="form-label">
+                                                Product Name
+                                            </label>
+                                            <input
+                                                type="text"
+                                                className={`form-control`}
+                                                id="productName"
+                                                placeholder={formik.values.productName}
+                                                onChange={formik.handleChange}
+                                                onBlur={formik.handleBlur}
 
+                                            />
+                                        </div>
+                                    </div>
+
+                                </div>
                                 <div className="d-grid gap-2 d-md-flex justify-content-md-end">
                                     <button className="btn btn-primary" type="submit">
                                         Submit
@@ -207,4 +239,4 @@ function CMSAdminEditComplaint() {
     )
 }
 
-export default CMSAdminEditComplaint
+export default CMSAddInventory
