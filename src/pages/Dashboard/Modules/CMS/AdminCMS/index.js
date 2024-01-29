@@ -533,7 +533,7 @@ function CMSAdminDashboard() {
                                     headertitlebgColor={"#666"}
                                     headertitletextColor={"#FFF"}
                                     totalCount={count}
-                                    hideEditIcon={false}
+                                    hideEditIcon={true}
                                     // hideEditIcon={true}
                                     // showPrint={true}
                                     handlePrint={(item) => HandlePrint(item.id)}
