@@ -493,11 +493,11 @@ export const SMSsidebarItems = [
     link: "/sms/phone-book",
     icon: faClipboardList,
     subItems: [
-      {
-        itemName: "ADD List",
-        link: "/sms/phone-book/add",
-        icon: faClipboardList,
-      },
+      // {
+      //   itemName: "Add List",
+      //   link: "/sms/phone-book/add",
+      //   icon: faClipboardList,
+      // },
       {
         itemName: "Manage List",
         link: "/sms/phone-book/manage",
@@ -515,11 +515,11 @@ export const SMSsidebarItems = [
     link: "/sms/template",
     icon: faClipboardList,
     subItems: [
-      {
-        itemName: "ADD Template",
-        link: "/sms/template/add",
-        icon: faClipboardList,
-      },
+      // {
+      //   itemName: "Add Template",
+      //   link: "/sms/template/add",
+      //   icon: faClipboardList,
+      // },
       {
         itemName: "Manage Template",
         link: "/sms/template/manage",
@@ -592,10 +592,16 @@ export const CMSsidebarItems = [
     link: "/cms/dashboard",
     icon: faHome,
   },
-  
+
   {
     itemName: "Admin Complaint",
     link: "/cms/admin/dashboard",
+    icon: faHome,
+  },
+
+  {
+    itemName: "Inventory",
+    link: "/cms/admin/inventory/dashboard",
     icon: faHome,
   },
 ]

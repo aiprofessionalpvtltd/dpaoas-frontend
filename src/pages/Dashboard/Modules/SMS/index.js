@@ -4,6 +4,7 @@ import { SMSsidebarItems } from "../../../../utils/sideBarItems";
 import Header from "../../../../components/Header";
 import CustomTable from "../../../../components/CustomComponents/CustomTable";
 import { getContactList } from "../../../../api/APIs";
+import moment from "moment";
 
 function SMSDashboard() {
 
@@ -25,9 +26,9 @@ function SMSDashboard() {
       listDescription: leave?.listDescription,
       listActive: leave?.listActive,
       UserEmail:leave.user.email,
-      isPublicList:JSON.stringify(leave?.isPublicList),
-      createdAt: leave?.createdAt,
-      updatedAt:leave?.updatedAt,
+      PublicList:JSON.stringify(leave?.isPublicList),
+      createdAt: moment(leave?.createdAt).format("YYYY/MM/DD"),
+      updatedAt: moment(leave?.updatedAt).format("YYYY/MM/DD")
     //   contactMembers: leave?.contactMembers[0]?.member.memberName
     }));
   };
@@ -51,26 +52,27 @@ function SMSDashboard() {
     <Layout module={true} sidebarItems={SMSsidebarItems} centerlogohide={true}>
       <Header
         dashboardLink={"/sms/dashboard"}
-        // addLink1={"/sms/dashboard"}
-        // title1={"Home"}
       />
       <div class="row">
         <div class="col-12">
-          <CustomTable
-            data={contactList}
-            headerShown={true}
-            ActionHide={true}
-            hideEditIcon={true}
-            headertitlebgColor={"#666"}
-            headertitletextColor={"#FFF"}
-            handlePageChange={handlePageChange}
-            currentPage={currentPage}
-            pageSize={pageSize}
-            totalCount={count}
-            
+        <CustomTable
+          data={contactList}
+          tableTitle={"Account Information"}
+          hideBtn={true}
+          singleDataCard={true}
+          ActionHide={true}
+          hideDeleteIcon={true}
+          hideEditIcon={true}
+          headertitlebgColor={"#666"}
+          headertitletextColor={"#FFF"}
+          handlePageChange={handlePageChange}
+          currentPage={currentPage}
+          pageSize={pageSize}
+          totalCount={count}
           />
         </div>
       </div>
+      
     </Layout>
   );
 }

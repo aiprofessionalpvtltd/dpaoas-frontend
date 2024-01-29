@@ -8,6 +8,7 @@ import { createContactTemplate, createSendSMS, getContactList, getContactTemplat
 import { showErrorMessage, showSuccessMessage } from '../../../../../../utils/ToastAlert';
 import { ToastContainer } from 'react-toastify';
 import { getUserData } from '../../../../../../api/Auth';
+import { TagsInput } from "react-tag-input-component";
 
 
 function SMSInstantSMS() {
@@ -19,19 +20,18 @@ function SMSInstantSMS() {
   const [templateId, settemplateId] = useState(null)
 
   const [textInput, setTextInput] = useState('');
-  const [textareaInput, setTextareaInput] = useState('');
+  const [textareaInput, setTextareaInput] = useState(null);
+  const [groupData, setGroupData] = useState([])
 
-  console.log("sadsd", textareaInput);
 
-  const [selectedTemplate, setSelectedTemplate] = useState('');
+  const [selectedTemplate, setSelectedTemplate] = useState(null);
+  console.log("selectedTemplate", selectedTemplate);
 
   const [numbers, setNumbers] = useState([]);
 
   const handleInputChange = (e) => {
-    const inputValue = e.target.value;
-    // Split the input string into an array of numbers
-    const newNumbers = inputValue.split(',').map((num) => num.trim());
-    setNumbers(newNumbers);
+    // const inputValue = e;
+    setNumbers(e);
   };
 
   const handleInputFocus = (e) => {
@@ -46,10 +46,11 @@ function SMSInstantSMS() {
     const data = {
       msgText: textareaInput,
       RecieverNo: numbers,
-      fkUserId: userData?.id,
-      fkListId: selectedTemplate,
+      fkUserId: userData?.fkUserId,
+      // fkListId: JSON.parse(selectedTemplate),
       isSent: "pending"
     };
+    console.log("sensms", data);
     try {
       const response = await createSendSMS(data);
       if (response.success) {
@@ -76,7 +77,8 @@ function SMSInstantSMS() {
     try {
       const response = await getContactList(currentPage, pageSize)
       if (response?.success) {
-        setContactList(response?.data?.contactList);
+        const filterpublicList = response?.data?.contactList.filter(item => item.isPublicList === true)
+        setContactList(filterpublicList);
       }
     } catch (error) {
       console.log(error);
@@ -101,7 +103,7 @@ function SMSInstantSMS() {
     const data = {
       templateName: textInput,
       msgText: textareaInput,
-      fkUserId: userData?.id,
+      fkUserId: userData?.fkUserId,
       isActive: true
     };
     try {
@@ -129,6 +131,28 @@ function SMSInstantSMS() {
     }
   }
 
+  const transfrerListData = (apiData) => {
+    return apiData.map((leave, index) => ({
+      memberName: leave?.member?.memberName,
+      phoneNo: leave?.member?.phoneNo,
+      gender: leave?.member?.gender,
+    }));
+  };
+  const HandleSignalListData = async (e) => {
+
+    try {
+        const response = await getSignalContactListByid(e.target.value)
+        if (response?.success) {
+            const transformedData = transfrerListData(response?.data[0]?.contactMembers);
+            console.log("my signel DAta",response?.data[0]?.contactMembers);
+            setGroupData(transformedData)
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
   useEffect(() => {
     getTemplateData()
     getListDataAPi()
@@ -148,6 +172,11 @@ function SMSInstantSMS() {
 
   const handleReset = () => {
     setActiveStep(0);
+    setNumbers([])
+    setTextInput('')
+    setTextareaInput(null)
+    settemplateId(null)
+
   };
   const isStepCompleted = (stepIndex) => {
     return stepIndex < activeStep;
@@ -157,7 +186,7 @@ function SMSInstantSMS() {
       label: "Step 1",
       component: <Step1 handleNextStep={handleNextStep} textareaInput={textareaInput} templateId={templateId} handleTextareaChange={handleTextareaChange} templateList={templateList} textInput={textInput} handleTextInputChange={handleTextInputChange} CreateContactTemplateApi={CreateContactTemplateApi} HandleSignalTemplateData={HandleSignalTemplateData} />,
     },
-    { label: "Step 2", component: <Step2 templateList={templateList} handleInputChange={handleInputChange} handleInputFocus={handleInputFocus} handleTemplateChange={handleTemplateChange} numbers={numbers} selectedTemplate={selectedTemplate} /> },
+    { label: "Step 2", component: <Step2 contactList={contactList} handleInputChange={handleInputChange} handleInputFocus={handleInputFocus} HandleSignalListData={HandleSignalListData} numbers={numbers} selectedTemplate={selectedTemplate} groupData={groupData} setNumbers={setNumbers}/> },
   ];
   return (
     <Layout module={true} sidebarItems={SMSsidebarItems} centerlogohide={true}>
@@ -219,6 +248,7 @@ function SMSInstantSMS() {
                 <Button
                   onClick={handleNextStep}
                   style={{ marginLeft: "8px", marginRight: "0" }}
+                  disabled={textareaInput ? false : true}
                 >
                   Next
                 </Button>
@@ -230,10 +260,11 @@ function SMSInstantSMS() {
                   }}
                   style={{ marginLeft: "8px", marginRight: "0" }}
                 >
-                  submit
+                  Send
                 </Button>
               )}
             </div>
+
           </div>
         </div>
       </div>
@@ -271,7 +302,7 @@ const Step1 = ({ textareaInput, templateId, handleTextareaChange, templateList, 
 
         </div>
         <div class="row">
-          <div class="col">
+          <div class="col-6">
             <div class="mb-3">
               <label class="form-label">Message Template</label>
               <select class="form-select"
@@ -290,7 +321,7 @@ const Step1 = ({ textareaInput, templateId, handleTextareaChange, templateList, 
               </select>
             </div>
           </div>
-          <div class="col">
+          {/* <div class="col">
             <div class="mb-3">
               <label for="" class="form-label">
                 Template Name
@@ -304,9 +335,9 @@ const Step1 = ({ textareaInput, templateId, handleTextareaChange, templateList, 
                 onChange={handleTextInputChange}
               />
             </div>
-          </div>
+          </div> */}
         </div>
-        <div
+        {/* <div
           style={{
             display: "flex",
             justifyContent: "flex-end",
@@ -316,12 +347,12 @@ const Step1 = ({ textareaInput, templateId, handleTextareaChange, templateList, 
           <Button style={{ marginRight: "8px" }} onClick={() => CreateContactTemplateApi()}>
             Save
           </Button>
-        </div>
+        </div> */}
       </section>
     </div>
   );
 };
-const Step2 = ({ templateList, handleInputChange, handleInputFocus, handleTemplateChange, numbers, selectedTemplate }) => {
+const Step2 = ({ contactList, handleInputChange, handleInputFocus, HandleSignalListData, numbers, setNumbers, selectedTemplate, groupData }) => {
 
 
   return (
@@ -336,13 +367,19 @@ const Step2 = ({ templateList, handleInputChange, handleInputFocus, handleTempla
             <label for="" class="form-label">
               Number
             </label>
-            <input
+            {/* <input
               class="form-control"
               type="text"  // Use text type to allow multiple numbers separated by commas
               value={numbers.join(', ')}  // Display numbers as a comma-separated string
               onChange={handleInputChange}
               onFocus={handleInputFocus}
               placeholder="Type numbers (e.g., 1, 2, 3)"
+            /> */}
+            <TagsInput
+              value={numbers}
+              onChange={handleInputChange}
+              name="Numbers"
+              placeHolder="Number"
             />
           </div>
         </div>
@@ -353,20 +390,50 @@ const Step2 = ({ templateList, handleInputChange, handleInputFocus, handleTempla
             </label>
             <select class="form-select " placeholder="Contact List" id="templateSelect"
               value={selectedTemplate}
-              onChange={handleTemplateChange}>
+              onChange={HandleSignalListData}>
               <option value={""} selected disabled hidden>
                 Select
               </option>
-              {templateList &&
-                templateList.map((item) => (
+              {contactList &&
+                contactList.map((item) => (
                   <option key={item.id} value={item.id}>
-                    {item?.templateName}
+                    {item?.listName}
                   </option>
                 ))}
             </select>
           </div>
         </div>
       </div>
+      <div
+                  class="dash-detail-container"
+                  style={{ marginTop: "20px" }}
+                >
+                  <table class="table red-bg-head th">
+                    <thead>
+                      <tr>
+                        <th class="text-center" scope="col">
+                          Mamber Name
+                        </th>
+                        <th class="text-center" scope="col">
+                          Phone No
+                        </th>
+                        <th class="text-center" scope="col">
+                          Gender
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {groupData?.length > 0 &&
+                        groupData.map((item, index) => (
+                          <tr>
+                            <td class="text-center">{item?.memberName}</td>
+                            <td class="text-center" onClick={() => setNumbers([...numbers, item.phoneNo])}>{item.phoneNo}</td>
+                            <td class="text-center">{item.gender}</td>
+                          </tr>
+                        ))}
+                    </tbody>
+                  </table>
+                </div>
     </section>
   );
 };
