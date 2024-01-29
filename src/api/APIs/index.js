@@ -1853,6 +1853,27 @@ export const searchInventory = async (data) => {
   }
 };
 
+export const getInventoryRecordByUserId = async (id) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/inventory/getInventoryOfUser/${id}`,
+      // {
+      //   headers: {
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // },
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+
+// Tenures API's
+
 export const getTenureByID = async (id) => {
   try {
     // const token = getAuthToken();
@@ -2261,18 +2282,6 @@ export const updateSessions = async (id, data) => {
         "Content-Type": "application/json",
       },
     });
-
-export const getInventoryRecordByUserId = async (id) => {
-  try {
-    // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
-      `/inventory/getInventoryOfUser/${id}`,
-      // {
-      //   headers: {
-      //     Authorization: `Bearer ${token}`,
-      //   },
-      // },
-    );
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);

@@ -34,7 +34,7 @@ function QMSTerms() {
         const response = await getAllTerms(currentPage, pageSize);
         if (response?.success) {
           setCount(response?.count);
-          const transformedData = transformData(response.data);
+          const transformedData = transformData(response.data?.terms);
           setTerms(transformedData);
         }
       } catch (error) {

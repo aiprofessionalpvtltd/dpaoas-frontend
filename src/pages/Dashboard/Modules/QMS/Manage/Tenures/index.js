@@ -35,7 +35,7 @@ function QMSTenures() {
         const response = await getAllTenures(currentPage, pageSize);
         if (response?.success) {
           setCount(response?.count);
-          const transformedData = transformData(response.data);
+          const transformedData = transformData(response.data?.tenures);
           setTenures(transformedData);
         }
       } catch (error) {

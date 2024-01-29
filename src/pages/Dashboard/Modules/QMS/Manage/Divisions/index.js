@@ -33,7 +33,7 @@ function QMSDivisions() {
         if (response?.success) {
           console.log(response);
           setCount(response?.count);
-          const transformedData = transformData(response.data);
+          const transformedData = transformData(response.data?.divisions);
           setDivisions(transformedData);
         }
       } catch (error) {
