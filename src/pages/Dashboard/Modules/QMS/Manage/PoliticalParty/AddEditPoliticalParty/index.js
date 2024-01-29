@@ -8,35 +8,69 @@ import DatePicker from "react-datepicker";
 import Header from "../../../../../../../components/Header";
 import { Layout } from "../../../../../../../components/Layout";
 import { QMSSideBarItems } from "../../../../../../../utils/sideBarItems";
+import { showErrorMessage, showSuccessMessage } from "../../../../../../../utils/ToastAlert";
+import { createPoliticalParties, updatePoliticalParties } from "../../../../../../../api/APIs";
+import { ToastContainer } from "react-toastify";
 
 const validationSchema = Yup.object({
-  employeename: Yup.string().required("Employee name is required"),
-  filenumber: Yup.string().required("File Number is required"),
-  fatherhusbandname: Yup.string().required("Father/Husband Name is required"),
-  cnicnumber: Yup.string().required("CNIC Number is required"),
-  permanentaddress: Yup.string().required("Permanent Address is required"),
+  partyName: Yup.string().required("Party name is required"),
+  shortName: Yup.string().required("Short name is required"),
+  description: Yup.string().required("Description is required"),
 });
 function QMSAddEditPoliticalPartyForm() {
   const location = useLocation();
-  const [dateofbirth, setDateOfBirth] = useState(new Date());
-  const [placeofbirth, setPlaceOfBirth] = useState(new Date());
-  const [cnicissue, setCnicIssue] = useState(new Date());
-  const [cnicexpire, setCnicExpire] = useState(new Date());
 
   const formik = useFormik({
     initialValues: {
-      politicalPartyId: "",
-      partyName: "",
-      shortName: "",
-      status: "",
-      description: "",
+      partyName: location?.state ? location.state?.partyName : "",
+      shortName: location?.state ? location.state?.shortName : "",
+      description: location?.state ? location.state?.description : "",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       // Handle form submission here
-      console.log(values);
+      if (location?.state) {
+        handleEditPoliticalParty(values);
+      } else {
+        handleCreatePoliticalParty(values);
+      }
     },
   });
+
+  const handleCreatePoliticalParty = async (values) => {
+    const data = {
+      partyName: values.partyName,
+      shortName: values.shortName,
+      description: values.description,
+    }
+
+    try {
+      const response = await createPoliticalParties(data);
+      if (response?.success) {
+        showSuccessMessage(response?.message);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  }
+
+  const handleEditPoliticalParty = async (values) => {
+    const data = {
+      partyName: values.partyName,
+      shortName: values.shortName,
+      description: values.description,
+    }
+
+    try {
+      const response = await updatePoliticalParties(location?.state?.id, data);
+      if (response?.success) {
+        showSuccessMessage(response?.message);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  }
+
   return (
     <Layout
       module={true}
@@ -50,6 +84,8 @@ function QMSAddEditPoliticalPartyForm() {
         addLink2={"/qms/manage/political-party/addedit"}
         title2={location && location?.state ? "Edit Political Party" : "Add Political Party"}
       />
+      <ToastContainer />
+
       <div class="container-fluid">
         <div class="card">
           <div class="card-header red-bg" style={{ background: "#14ae5c" }}>
@@ -65,28 +101,11 @@ function QMSAddEditPoliticalPartyForm() {
                 <div class="row">
                   <div class="col">
                     <div class="mb-3">
-                      <label class="form-label">Political Party ID</label>
-                      <input
-                        type="text"
-                        placeholder={formik.values.politicalPartyId}
-                        className={`form-control ${
-                          formik.touched.politicalPartyId && formik.errors.politicalPartyId ? "is-invalid" : ""
-                        }`}
-                        id="politicalPartyId"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                      />
-                      {formik.touched.politicalPartyId && formik.errors.politicalPartyId && (
-                        <div className="invalid-feedback">{formik.errors.politicalPartyId}</div>
-                      )}
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="mb-3">
                       <label class="form-label">Party Name</label>
                       <input
                         type="text"
-                        placeholder={formik.values.partyName}
+                        placeholder={"Party Name"}
+                        value={formik.values.partyName}
                         className={`form-control ${
                           formik.touched.partyName && formik.errors.partyName ? "is-invalid" : ""
                         }`}
@@ -99,9 +118,7 @@ function QMSAddEditPoliticalPartyForm() {
                       )}
                     </div>
                   </div>
-                </div>
 
-                <div class="row">
                   <div class="col-6">
                     <div class="mb-3">
                       <label class="form-label">Short Name</label>
@@ -121,24 +138,6 @@ function QMSAddEditPoliticalPartyForm() {
                     </div>
                   </div>
 
-                    <div class="col-6">
-                      <div class="mb-3">
-                        <label class="form-label">Status</label>
-                        <select class="form-select"
-                          id="status"
-                          name="status"
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          value={formik.values.status}
-                        >
-                          <option value={""} selected disabled hidden>
-                            select
-                          </option>
-                            <option>Pending</option>
-                            <option>Approved</option>
-                        </select>
-                      </div>
-                    </div>
                 </div>
 
                 <div class="row">

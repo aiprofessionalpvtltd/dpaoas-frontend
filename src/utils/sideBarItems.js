@@ -440,11 +440,11 @@ export const QMSSideBarItems = [
         link: "/qms/manage/sitting-days",
         icon: faClipboardList,
       },
-      {
-        itemName: "Ministries",
-        link: "/qms/manage/ministries",
-        icon: faClipboardList,
-      },
+      // {
+      //   itemName: "Ministries",
+      //   link: "/qms/manage/ministries",
+      //   icon: faClipboardList,
+      // },
       {
         itemName: "Divisions",
         link: "/qms/manage/divisions",

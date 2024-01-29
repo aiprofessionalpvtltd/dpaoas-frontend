@@ -19,10 +19,6 @@ const validationSchema = Yup.object({
 });
 function QMSAddEditSessionsForm() {
   const location = useLocation();
-  const [dateofbirth, setDateOfBirth] = useState(new Date());
-  const [placeofbirth, setPlaceOfBirth] = useState(new Date());
-  const [cnicissue, setCnicIssue] = useState(new Date());
-  const [cnicexpire, setCnicExpire] = useState(new Date());
 
   const formik = useFormik({
     initialValues: {

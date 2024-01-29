@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useLocation } from "react-router-dom";
@@ -8,35 +8,109 @@ import DatePicker from "react-datepicker";
 import Header from "../../../../../../../components/Header";
 import { Layout } from "../../../../../../../components/Layout";
 import { QMSSideBarItems } from "../../../../../../../utils/sideBarItems";
+import { showErrorMessage, showSuccessMessage } from "../../../../../../../utils/ToastAlert";
+import { createManageSession, getManageSessionById, updateManageSession } from "../../../../../../../api/APIs";
+import { ToastContainer } from "react-toastify";
 
 const validationSchema = Yup.object({
-  employeename: Yup.string().required("Employee name is required"),
-  filenumber: Yup.string().required("File Number is required"),
-  fatherhusbandname: Yup.string().required("Father/Husband Name is required"),
-  cnicnumber: Yup.string().required("CNIC Number is required"),
-  permanentaddress: Yup.string().required("Permanent Address is required"),
+  fkSessionId: Yup.string().required("Session is required"),
+  sittingDate: Yup.string().required("Sitting date is required"),
+  startTime: Yup.string().required("Start time is required"),
+  endTime: Yup.string().required("End time is required"),
+  isAdjourned: Yup.boolean()
 });
 function QMSAddEditSittingDaysForm() {
   const location = useLocation();
-  const [dateofbirth, setDateOfBirth] = useState(new Date());
-  const [placeofbirth, setPlaceOfBirth] = useState(new Date());
-  const [cnicissue, setCnicIssue] = useState(new Date());
-  const [cnicexpire, setCnicExpire] = useState(new Date());
+  const [sessionId, setSessionId] = useState();
 
   const formik = useFormik({
     initialValues: {
       fkSessionId: "",
       sittingDate: "",
-      startDate: "",
-      endDate: "",
-      isAdjourned: ""
+      startTime: "",
+      endTime: "",
+      isAdjourned: false
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       // Handle form submission here
-      console.log(values);
+      if (location?.state) {
+        handleEditSittingDays(values);
+      } else {
+        handleCreateSittingDays(values);
+      }
     },
   });
+
+  const handleCreateSittingDays = async (values) => {
+    const data = {
+      fkSessionId: values.fkSessionId,
+      sittingDate: values.sittingDate,
+      startTime: values.startTime,
+      endTime: values.endTime,
+      sessionAdjourned: values.isAdjourned,
+    }
+
+    try {
+      const response = await createManageSession(data);
+      if (response?.success) {
+        showSuccessMessage(response?.message);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  }
+
+  const handleEditSittingDays = async (values) => {
+    const data = {
+      fkSessionId: values.fkSessionId,
+      sittingDate: values.sittingDate,
+      startTime: values.startTime,
+      endTime: values.endTime,
+      sessionAdjourned: values.isAdjourned,
+    }
+
+    try {
+      const response = await updateManageSession(location?.state?.id, data);
+      if (response?.success) {
+        showSuccessMessage(response?.message);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  }
+
+  const getSessionsByIdApi = async () => {
+    try {
+      const response = await getManageSessionById(location.state?.id);
+      if (response?.success) {
+        setSessionId(response?.data);
+      }
+    } catch (error) {
+      // showErrorMessage(error?.response?.data?.message);
+    }
+  };
+
+  useEffect(() => {
+    if (location.state?.id) {
+      getSessionsByIdApi();
+    }
+  }, [])
+
+  useEffect(() => {
+    // Update form values when termsById changes
+    console.log(sessionId?.sessionAdjourned);
+    if (sessionId) {
+      formik.setValues({
+        fkSessionId: sessionId.fkSessionId || "",
+        sittingDate: new Date(sessionId.sittingDate) || "",
+        startTime: sessionId.startTime || "",
+        endTime: sessionId.endTime || "",
+        isAdjourned: sessionId.sessionAdjourned || false
+      });
+    }
+  }, [sessionId, formik.setValues]);
+
   return (
     <Layout
       module={true}
@@ -50,6 +124,8 @@ function QMSAddEditSittingDaysForm() {
         addLink2={"/qms/manage/sitting-days/addedit"}
         title2={location && location?.state ? "Edit Sitting Days" : "Add Sitting Days"}
       />
+      <ToastContainer />
+
       <div class="container-fluid">
         <div class="card">
           <div class="card-header red-bg" style={{ background: "#14ae5c" }}>
@@ -68,7 +144,8 @@ function QMSAddEditSittingDaysForm() {
                       <label class="form-label">Session ID</label>
                       <input
                         type="text"
-                        placeholder={formik.values.fkSessionId}
+                        placeholder={"Session ID"}
+                        value={formik.values.fkSessionId}
                         className={`form-control ${
                           formik.touched.fkSessionId && formik.errors.fkSessionId ? "is-invalid" : ""
                         }`}
@@ -120,76 +197,42 @@ function QMSAddEditSittingDaysForm() {
                 </div>
 
                 <div class="row">
-                  <div className="col">
-                    <div className="mb-3" style={{ position: "relative" }}>
-                      <label className="form-label">Start Date</label>
-                      <span
-                        style={{
-                          position: "absolute",
-                          right: "15px",
-                          top: "36px",
-                          zIndex: 1,
-                          fontSize: "20px",
-                          zIndex: "1",
-                          color: "#666",
-                        }}
-                      >
-                        <FontAwesomeIcon icon={faCalendarAlt} />
-                      </span>
-                      <DatePicker
-                        selected={formik.values.startDate}
-                        onChange={(date) =>
-                          formik.setFieldValue("startDate", date)
-                        }
-                        onBlur={formik.handleBlur}
-                        minDate={new Date()}
+                <div class="col">
+                    <div class="mb-3">
+                      <label class="form-label">Start Time</label>
+                      <input
+                        type="text"
+                        placeholder={"Session ID"}
+                        value={formik.values.startTime}
                         className={`form-control ${
-                          formik.touched.startDate && formik.errors.startDate
-                            ? "is-invalid"
-                            : ""
+                          formik.touched.startTime && formik.errors.startTime ? "is-invalid" : ""
                         }`}
+                        id="startTime"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
                       />
-                      {formik.touched.startDate && formik.errors.startDate && (
-                        <div className="invalid-feedback">
-                          {formik.errors.startDate}
-                        </div>
+                      {formik.touched.startTime && formik.errors.startTime && (
+                        <div className="invalid-feedback">{formik.errors.startTime}</div>
                       )}
                     </div>
                   </div>
-                  
-                  <div className="col">
-                    <div className="mb-3" style={{ position: "relative" }}>
-                      <label className="form-label">End Date</label>
-                      <span
-                        style={{
-                          position: "absolute",
-                          right: "15px",
-                          top: "36px",
-                          zIndex: 1,
-                          fontSize: "20px",
-                          zIndex: "1",
-                          color: "#666",
-                        }}
-                      >
-                        <FontAwesomeIcon icon={faCalendarAlt} />
-                      </span>
-                      <DatePicker
-                        selected={formik.values.endDate}
-                        onChange={(date) =>
-                          formik.setFieldValue("endDate", date)
-                        }
-                        onBlur={formik.handleBlur}
-                        minDate={new Date()}
+
+                  <div class="col">
+                    <div class="mb-3">
+                      <label class="form-label">End Time</label>
+                      <input
+                        type="text"
+                        placeholder={"Session ID"}
+                        value={formik.values.endTime}
                         className={`form-control ${
-                          formik.touched.endDate && formik.errors.endDate
-                            ? "is-invalid"
-                            : ""
+                          formik.touched.endTime && formik.errors.endTime ? "is-invalid" : ""
                         }`}
+                        id="endTime"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
                       />
-                      {formik.touched.endDate && formik.errors.endDate && (
-                        <div className="invalid-feedback">
-                          {formik.errors.endDate}
-                        </div>
+                      {formik.touched.endTime && formik.errors.endTime && (
+                        <div className="invalid-feedback">{formik.errors.endTime}</div>
                       )}
                     </div>
                   </div>

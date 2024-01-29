@@ -8,34 +8,69 @@ import DatePicker from "react-datepicker";
 import Header from "../../../../../../../components/Header";
 import { Layout } from "../../../../../../../components/Layout";
 import { QMSSideBarItems } from "../../../../../../../utils/sideBarItems";
+import { createTenure, updateTenure } from "../../../../../../../api/APIs";
+import { showErrorMessage, showSuccessMessage } from "../../../../../../../utils/ToastAlert";
+import { ToastContainer } from "react-toastify";
 
 const validationSchema = Yup.object({
-  employeename: Yup.string().required("Employee name is required"),
-  filenumber: Yup.string().required("File Number is required"),
-  fatherhusbandname: Yup.string().required("Father/Husband Name is required"),
-  cnicnumber: Yup.string().required("CNIC Number is required"),
-  permanentaddress: Yup.string().required("Permanent Address is required"),
+  tenure: Yup.string().required("Tenure name is required"),
+  fromDate: Yup.string().required("Start date name is required"),
+  toDate: Yup.string().required("End date is required"),
 });
 function QMSAddEditTenuresForm() {
   const location = useLocation();
-  const [dateofbirth, setDateOfBirth] = useState(new Date());
-  const [placeofbirth, setPlaceOfBirth] = useState(new Date());
-  const [cnicissue, setCnicIssue] = useState(new Date());
-  const [cnicexpire, setCnicExpire] = useState(new Date());
 
   const formik = useFormik({
     initialValues: {
-      tenure: "",
-      tenureId: "",
-      startDate: "",
-      endDate: "",
+      tenure: location.state ? location.state?.tenureName : "",
+      fromDate: location.state ? new Date(location.state?.fromDate) : "",
+      toDate: location.state ? new Date(location.state?.toDate) : "",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       // Handle form submission here
-      console.log(values);
+      if (location?.state) {
+        handleEditTenures(values);
+      } else {
+        handleCreateTenures(values);
+      }
     },
   });
+
+  const handleCreateTenures = async (values) => {
+    const data = {
+      tenureName: values?.tenure,
+      fromDate: values?.fromDate,
+      toDate: values?.toDate
+    }
+
+    try {
+      const response = await createTenure(data);
+      if (response?.success) {
+        showSuccessMessage(response?.message);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  }
+
+  const handleEditTenures = async (values) => {
+    const data = {
+      tenureName: values?.tenure,
+      fromDate: values?.fromDate,
+      toDate: values?.toDate
+    }
+
+    try {
+      const response = await updateTenure(location?.state?.id, data);
+      if (response?.success) {
+        showSuccessMessage(response?.message);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  }
+
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <Header
@@ -45,6 +80,8 @@ function QMSAddEditTenuresForm() {
         addLink2={"/qms/manage/tenures/addedit"}
         title2={location && location?.state ? "Edit Tenures" : "Add Tenures"}
       />
+    <ToastContainer />
+
       <div class="container-fluid">
         <div class="card">
           <div class="card-header red-bg" style={{ background: "#14ae5c" }}>
@@ -59,7 +96,8 @@ function QMSAddEditTenuresForm() {
                       <label class="form-label">Tenure</label>
                       <input
                         type="text"
-                        placeholder={formik.values.tenure}
+                        placeholder={"Tenure Name"}
+                        value={formik.values.tenure}
                         className={`form-control ${
                           formik.touched.tenure && formik.errors.tenure ? "is-invalid" : ""
                         }`}
@@ -72,27 +110,7 @@ function QMSAddEditTenuresForm() {
                       )}
                     </div>
                   </div>
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Tenure ID</label>
-                      <input
-                        type="text"
-                        placeholder={formik.values.tenureId}
-                        className={`form-control ${
-                          formik.touched.tenureId && formik.errors.tenureId ? "is-invalid" : ""
-                        }`}
-                        id="tenureId"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                      />
-                      {formik.touched.tenureId && formik.errors.tenureId && (
-                        <div className="invalid-feedback">{formik.errors.tenureId}</div>
-                      )}
-                    </div>
-                  </div>
-                </div>
 
-                 <div class="row">
                   <div className="col">
                     <div className="mb-3" style={{ position: "relative" }}>
                       <label className="form-label">From Date</label>
@@ -129,8 +147,11 @@ function QMSAddEditTenuresForm() {
                       )}
                     </div>
                   </div>
-                  
-                  <div className="col">
+
+                </div>
+
+                 <div class="row">
+                  <div className="col-6">
                     <div className="mb-3" style={{ position: "relative" }}>
                       <label className="form-label">To Date</label>
                       <span

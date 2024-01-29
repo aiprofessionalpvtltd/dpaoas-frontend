@@ -8,36 +8,77 @@ import DatePicker from "react-datepicker";
 import Header from "../../../../../../../components/Header";
 import { Layout } from "../../../../../../../components/Layout";
 import { QMSSideBarItems } from "../../../../../../../utils/sideBarItems";
+import { createParliamentaryYears, updateParliamentaryYears } from "../../../../../../../api/APIs";
+import { showErrorMessage, showSuccessMessage } from "../../../../../../../utils/ToastAlert";
+import { ToastContainer } from "react-toastify";
 
 const validationSchema = Yup.object({
-  employeename: Yup.string().required("Employee name is required"),
-  filenumber: Yup.string().required("File Number is required"),
-  fatherhusbandname: Yup.string().required("Father/Husband Name is required"),
-  cnicnumber: Yup.string().required("CNIC Number is required"),
-  permanentaddress: Yup.string().required("Permanent Address is required"),
+  parliamentaryTenure: Yup.string().required("Tenure is required"),
+  fkTenureId: Yup.string().required("Tenure ID is required"),
+  fromDate: Yup.string().required("From Date is required"),
+  toDate: Yup.string().required("To Date is required"),
+  description: Yup.string().required("Description is required"),
 });
 function QMSAddEditParliamentaryYearForm() {
   const location = useLocation();
-  const [dateofbirth, setDateOfBirth] = useState(new Date());
-  const [placeofbirth, setPlaceOfBirth] = useState(new Date());
-  const [cnicissue, setCnicIssue] = useState(new Date());
-  const [cnicexpire, setCnicExpire] = useState(new Date());
 
   const formik = useFormik({
     initialValues: {
-      parliamentaryId: "",
-      tenureId: "",
-      startDate: "",
-      endDate: "",
-      active: "",
-      description: "",
+      parliamentaryTenure: location.state ? location.state?.parliamentaryTenure : "",
+      fkTenureId: location.state ? 1 : "",
+      fromDate: location.state ? new Date(location.state?.fromDate) : "",
+      toDate: location.state ? new Date(location.state?.toDate) : "",
+      description: location.state ? location.state?.description : "",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       // Handle form submission here
-      console.log(values);
+      if (location?.state) {
+        handleEditParliamentaryYear(values);
+      } else {
+        handleCreateParliamentaryYear(values);
+      }
     },
   });
+
+  const handleCreateParliamentaryYear = async (values) => {
+    const data = {
+      parliamentaryTenure: values.parliamentaryTenure,
+      fkTenureId: values.fkTenureId,
+      fromDate: values.fromDate,
+      toDate: values.toDate,
+      description: values.description
+    }
+
+    try {
+      const response = await createParliamentaryYears(data);
+      if (response?.success) {
+        showSuccessMessage(response?.message);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  }
+
+  const handleEditParliamentaryYear = async (values) => {
+    const data = {
+      parliamentaryTenure: values.parliamentaryTenure,
+      fkTenureId: values.fkTenureId,
+      fromDate: values.fromDate,
+      toDate: values.toDate,
+      description: values.description
+    }
+
+    try {
+      const response = await updateParliamentaryYears(location?.state?.id, data);
+      if (response?.success) {
+        showSuccessMessage(response?.message);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  }
+
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <Header
@@ -47,6 +88,8 @@ function QMSAddEditParliamentaryYearForm() {
         addLink2={"/qms/manage/parliamentary-year/addedit"}
         title2={location && location?.state ? "Edit Parliamentary Year" : "Add Parliamentary Year"}
       />
+      <ToastContainer />
+
       <div class="container-fluid">
         <div class="card">
           <div class="card-header red-bg" style={{ background: "#14ae5c" }}>
@@ -58,19 +101,19 @@ function QMSAddEditParliamentaryYearForm() {
                 <div class="row">
                   <div class="col">
                     <div class="mb-3">
-                      <label class="form-label">ID</label>
+                      <label class="form-label">Parliamentary Tenure</label>
                       <input
                         type="text"
-                        placeholder={formik.values.parliamentaryId}
+                        placeholder={formik.values.parliamentaryTenure}
                         className={`form-control ${
-                          formik.touched.parliamentaryId && formik.errors.parliamentaryId ? "is-invalid" : ""
+                          formik.touched.parliamentaryTenure && formik.errors.parliamentaryTenure ? "is-invalid" : ""
                         }`}
-                        id="parliamentaryId"
+                        id="parliamentaryTenure"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
-                      {formik.touched.parliamentaryId && formik.errors.parliamentaryId && (
-                        <div className="invalid-feedback">{formik.errors.parliamentaryId}</div>
+                      {formik.touched.parliamentaryTenure && formik.errors.parliamentaryTenure && (
+                        <div className="invalid-feedback">{formik.errors.parliamentaryTenure}</div>
                       )}
                     </div>
                   </div>
@@ -79,16 +122,16 @@ function QMSAddEditParliamentaryYearForm() {
                       <label class="form-label">Tenure ID</label>
                       <input
                         type="text"
-                        placeholder={formik.values.tenureId}
+                        placeholder={formik.values.fkTenureId}
                         className={`form-control ${
-                          formik.touched.tenureId && formik.errors.tenureId ? "is-invalid" : ""
+                          formik.touched.fkTenureId && formik.errors.fkTenureId ? "is-invalid" : ""
                         }`}
-                        id="tenureId"
+                        id="fkTenureId"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
-                      {formik.touched.tenureId && formik.errors.tenureId && (
-                        <div className="invalid-feedback">{formik.errors.tenureId}</div>
+                      {formik.touched.fkTenureId && formik.errors.fkTenureId && (
+                        <div className="invalid-feedback">{formik.errors.fkTenureId}</div>
                       )}
                     </div>
                   </div>
@@ -112,21 +155,21 @@ function QMSAddEditParliamentaryYearForm() {
                         <FontAwesomeIcon icon={faCalendarAlt} />
                       </span>
                       <DatePicker
-                        selected={formik.values.startDate}
+                        selected={formik.values.fromDate}
                         onChange={(date) =>
-                          formik.setFieldValue("startDate", date)
+                          formik.setFieldValue("fromDate", date)
                         }
                         onBlur={formik.handleBlur}
                         minDate={new Date()}
                         className={`form-control ${
-                          formik.touched.startDate && formik.errors.startDate
+                          formik.touched.fromDate && formik.errors.fromDate
                             ? "is-invalid"
                             : ""
                         }`}
                       />
-                      {formik.touched.startDate && formik.errors.startDate && (
+                      {formik.touched.fromDate && formik.errors.fromDate && (
                         <div className="invalid-feedback">
-                          {formik.errors.startDate}
+                          {formik.errors.fromDate}
                         </div>
                       )}
                     </div>
@@ -149,21 +192,21 @@ function QMSAddEditParliamentaryYearForm() {
                         <FontAwesomeIcon icon={faCalendarAlt} />
                       </span>
                       <DatePicker
-                        selected={formik.values.endDate}
+                        selected={formik.values.toDate}
                         onChange={(date) =>
-                          formik.setFieldValue("endDate", date)
+                          formik.setFieldValue("toDate", date)
                         }
                         onBlur={formik.handleBlur}
                         minDate={new Date()}
                         className={`form-control ${
-                          formik.touched.endDate && formik.errors.endDate
+                          formik.touched.toDate && formik.errors.toDate
                             ? "is-invalid"
                             : ""
                         }`}
                       />
-                      {formik.touched.endDate && formik.errors.endDate && (
+                      {formik.touched.toDate && formik.errors.toDate && (
                         <div className="invalid-feedback">
-                          {formik.errors.endDate}
+                          {formik.errors.toDate}
                         </div>
                       )}
                     </div>
@@ -171,43 +214,16 @@ function QMSAddEditParliamentaryYearForm() {
                 </div>
 
                 <div class="row">
-                  <div class="col-6">
-                    <div class="mb-3">
-                      <label class="form-label">Active</label>
-                      <select class="form-select"
-                        id="active"
-                        name="active"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.active}
-                      >
-                        <option value={""} selected disabled hidden>
-                          select
-                        </option>
-                          <option value="yes">Yes</option>
-                          <option value="no">No</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="row">
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Description</label>
-                      <input
-                        type="text"
-                        placeholder={formik.values.description}
-                        className={`form-control ${
-                          formik.touched.description && formik.errors.description ? "is-invalid" : ""
-                        }`}
+                  <div className="col">
+                    <div className="mb-3">
+                      <label className="form-label">Description</label>
+                      <textarea
+                        className={`form-control`}
                         id="description"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                      />
-                      {formik.touched.description && formik.errors.description && (
-                        <div className="invalid-feedback">{formik.errors.description}</div>
-                      )}
+                        value={formik.values.description}
+                      ></textarea>
                     </div>
                   </div>
                 </div>
