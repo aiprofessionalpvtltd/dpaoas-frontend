@@ -98,6 +98,7 @@ import CMSUserDashboard from "../pages/Dashboard/Modules/CMS/UserCMS";
 import CMSAddEditUserComplaint from "../pages/Dashboard/Modules/CMS/UserCMS/AddEditUserComplaint";
 import CMSAdminDashboard from "../pages/Dashboard/Modules/CMS/AdminCMS";
 import CMSAdminEditComplaint from "../pages/Dashboard/Modules/CMS/AdminCMS/AdminEdit";
+import QMSGroups from "../pages/Dashboard/Modules/QMS/Manage/Groups";
 import SMSInventoryDashboard from "../pages/Dashboard/Modules/CMS/InventoryDashboard";
 import CMSAddInventory from "../pages/Dashboard/Modules/CMS/InventoryDashboard/AddInventory";
 // import { Register } from "../pages/Register";
@@ -248,6 +249,7 @@ export const ProtectedRoutes = [
   { path: "/qms/manage", element: <QMSQuestionDashboard /> },
 
   { path: "/qms/manage/sessions", element: <QMSSessions /> },
+  { path: "/qms/manage/groups", element: <QMSGroups /> },
   { path: "/qms/manage/sessions/addedit", element: <QMSAddEditSessionsForm /> },
 
   { path: "/qms/manage/terms", element: <QMSTerms /> },

@@ -416,6 +416,11 @@ export const QMSSideBarItems = [
         icon: faClipboardList,
       },
       {
+        itemName: "Groups",
+        link: "/qms/manage/groups",
+        icon: faClipboardList,
+      },
+      {
         itemName: "Terms",
         link: "/qms/manage/terms",
         icon: faClipboardList,
@@ -435,11 +440,11 @@ export const QMSSideBarItems = [
         link: "/qms/manage/sitting-days",
         icon: faClipboardList,
       },
-      {
-        itemName: "Ministries",
-        link: "/qms/manage/ministries",
-        icon: faClipboardList,
-      },
+      // {
+      //   itemName: "Ministries",
+      //   link: "/qms/manage/ministries",
+      //   icon: faClipboardList,
+      // },
       {
         itemName: "Divisions",
         link: "/qms/manage/divisions",

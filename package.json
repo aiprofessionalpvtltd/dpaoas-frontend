@@ -23,6 +23,7 @@
     "pdfjs-dist": "2.7.570",
     "quill-image-resize-module-react": "^3.0.0",
     "react": "^18.2.0",
+    "react-beautiful-dnd": "^13.1.1",
     "react-bootstrap": "^2.9.1",
     "react-circular-progressbar": "^2.1.0",
     "react-datepicker": "^4.23.0",

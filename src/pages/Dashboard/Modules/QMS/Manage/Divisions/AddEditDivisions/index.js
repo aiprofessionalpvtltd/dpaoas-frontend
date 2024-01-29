@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useLocation } from "react-router-dom";
@@ -8,29 +8,98 @@ import DatePicker from "react-datepicker";
 import Header from "../../../../../../../components/Header";
 import { Layout } from "../../../../../../../components/Layout";
 import { QMSSideBarItems } from "../../../../../../../utils/sideBarItems";
+import { createDivision, getDivisionsByID, updateDivisions } from "../../../../../../../api/APIs";
+import { showErrorMessage, showSuccessMessage } from "../../../../../../../utils/ToastAlert";
+import { ToastContainer } from "react-toastify";
 
 const validationSchema = Yup.object({
-  employeename: Yup.string().required("Employee name is required"),
-  filenumber: Yup.string().required("File Number is required"),
-  fatherhusbandname: Yup.string().required("Father/Husband Name is required"),
-  cnicnumber: Yup.string().required("CNIC Number is required"),
-  permanentaddress: Yup.string().required("Permanent Address is required"),
+  ministry: Yup.string().required("Ministry is required"),
+  division: Yup.string().required("Division is required"),
+  active: Yup.boolean().required("Status is required"),
 });
 function QMSAddEditDivisionsForm() {
   const location = useLocation();
+  const [divisionById, setDivisionById] = useState();
 
   const formik = useFormik({
     initialValues: {
       ministry: '',
       division: '',
-      active: ''
+      active: false
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       // Handle form submission here
-      console.log(values);
+      if (location?.state) {
+        handleEditDivision(values);
+      } else {
+        handleCreateDivision(values);
+      }
     },
   });
+
+  const handleCreateDivision = async (values) => {
+    const data = {
+      fkMinistryId: Number(values.ministry),
+      divisionName: values.division,
+      divisionStatus: values.active
+    }
+
+    try {
+      const response = await createDivision(data);
+      if (response?.success) {
+        showSuccessMessage(response?.message);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  }
+
+  const handleEditDivision = async (values) => {
+    const data = {
+      fkMinistryId: Number(values.ministry),
+      divisionName: values.division,
+      divisionStatus: values.active
+    }
+
+    try {
+      const response = await updateDivisions(location?.state?.id, data);
+      if (response?.success) {
+        showSuccessMessage(response?.message);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  }
+
+  const getDivisionByIdApi = async () => {
+    try {
+      const response = await getDivisionsByID(location.state?.id);
+      if (response?.success) {
+        setDivisionById(response?.data);
+      }
+    } catch (error) {
+      // showErrorMessage(error?.response?.data?.message);
+    }
+  };
+
+  useEffect(() => {
+    if (location.state?.id) {
+      getDivisionByIdApi();
+    }
+  }, [])
+
+  useEffect(() => {
+    // Update form values when termsById changes
+    if (divisionById) {
+      formik.setValues({
+        ministry: divisionById.fkMinistryId || "",
+        division: divisionById.divisionName || "",
+        active: divisionById.divisionStatus || false,
+      });
+    }
+  }, [divisionById, formik.setValues]);
+
   return (
     <Layout
       module={true}
@@ -44,6 +113,8 @@ function QMSAddEditDivisionsForm() {
         addLink2={"/qms/manage/divisions/addedit"}
         title2={location && location?.state ? "Edit Divisions" : "Add Divisions"}
       />
+      <ToastContainer />
+
       <div class="container-fluid">
         <div class="card">
           <div class="card-header red-bg" style={{ background: "#14ae5c" }}>
@@ -62,7 +133,8 @@ function QMSAddEditDivisionsForm() {
                       <label class="form-label">Division</label>
                       <input
                         type="text"
-                        placeholder={formik.values.division}
+                        placeholder={"Division"}
+                        value={formik.values.division}
                         className={`form-control ${
                           formik.touched.division && formik.errors.division ? "is-invalid" : ""
                         }`}
@@ -108,8 +180,8 @@ function QMSAddEditDivisionsForm() {
                         <option value={""} selected disabled hidden>
                           select
                         </option>
-                          <option value="yes">Yes</option>
-                          <option value="no">No</option>
+                          <option value={true}>Yes</option>
+                          <option value={false}>No</option>
                       </select>
                     </div>
                   </div>
