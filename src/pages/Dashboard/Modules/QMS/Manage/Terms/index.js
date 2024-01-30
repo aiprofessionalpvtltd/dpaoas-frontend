@@ -4,8 +4,10 @@ import { Layout } from '../../../../../../components/Layout'
 import { QMSSideBarItems } from '../../../../../../utils/sideBarItems'
 import Header from '../../../../../../components/Header'
 import CustomTable from '../../../../../../components/CustomComponents/CustomTable'
-import { getAllTerms } from '../../../../../../api/APIs'
+import { deleteTerms, getAllTerms } from '../../../../../../api/APIs'
 import moment from 'moment'
+import { showErrorMessage, showSuccessMessage } from '../../../../../../utils/ToastAlert'
+import { ToastContainer } from 'react-toastify'
 
 function QMSTerms() {
     const navigate = useNavigate();
@@ -26,6 +28,7 @@ function QMSTerms() {
         tenure: `${item?.tenure?.tenureName}`,
         fromDate: moment(item.fromDate).format("YYYY/MM/DD"),
         toDate: moment(item.toDate).format("YYYY/MM/DD"),
+        status: `${item.status}`,
       }));
     };
 
@@ -46,6 +49,18 @@ function QMSTerms() {
       handleTerms();
     }, [])
 
+    const handleDelete = async (id) => {
+      try {
+        const response = await deleteTerms(id);
+        if (response?.success) {
+          showSuccessMessage(response.message);
+          handleTerms();
+        }
+      } catch (error) {
+        showErrorMessage(error.response.data.message);
+      }
+    };
+
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
     <Header
@@ -53,7 +68,8 @@ function QMSTerms() {
       addLink1={"/qms/manage/terms"}
       title1={"Terms"}
     />
-    {/* <ToastContainer /> */}
+    <ToastContainer />
+
     <div class="container-fluid dash-detail-container card">
     <div class="row">
       <div class="col-12">
@@ -65,6 +81,7 @@ function QMSTerms() {
           handleEdit={(item) =>
             navigate("/qms/manage/terms/addedit", { state: item })
           }
+          handleDelete={(item) => handleDelete(item.id)}
           headertitlebgColor={"#666"}
           headertitletextColor={"#FFF"}
           handlePageChange={handlePageChange}
