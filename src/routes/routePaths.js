@@ -101,6 +101,7 @@ import CMSAdminEditComplaint from "../pages/Dashboard/Modules/CMS/AdminCMS/Admin
 import QMSGroups from "../pages/Dashboard/Modules/QMS/Manage/Groups";
 import SMSInventoryDashboard from "../pages/Dashboard/Modules/CMS/InventoryDashboard";
 import CMSAddInventory from "../pages/Dashboard/Modules/CMS/InventoryDashboard/AddInventory";
+import EFilingDashboard from "../pages/Dashboard/Modules/EFiling";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -316,6 +317,8 @@ export const ProtectedRoutes = [
   { path: "/cms/admin/inventory/dashboard/add", element: <CMSAddInventory /> },
 
 
+  // E-Filing 
+  { path: "/efiling/dashboard", element: <EFilingDashboard /> },
 
 
 ];
