@@ -144,7 +144,16 @@ function Dashboard() {
       cardbg: "bluebg",
       icon: faMailBulk,
       permission: null,
-    }
+    },
+    {
+      title: "E-Filing System",
+      link: "/efiling/dashboard",
+      type: "",
+      cardbg: "greenbg",
+      icon: faBuilding,
+      permission: null,
+      // "permission": ["Roles", "Employees", "Departments", "Designation"]
+    },
   ];
 
   // Filter tiles based on permissions
