@@ -3242,11 +3242,11 @@ textarea {
 
 .widget-visitor-card i {
     color: #fff;
-    font-size: 80px;
+    font-size: 52px;
     position: absolute;
-    top: 48px;
+    top: 96px;
     opacity: 0.3;
-    left: -10px;
+    left: 0px;
     -webkit-transform: rotate(15deg);
     transform: rotate(15deg);
     -webkit-transition: all 0.3s ease-in-out;
@@ -3261,7 +3261,7 @@ textarea {
     filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#2ab2e3', endColorstr='#03a8e4', GradientType=0);
 }
 
-.widget-visitor-card i {
+/* .widget-visitor-card i {
     color: #fff;
     font-size: 70px;
     position: absolute;
@@ -3272,7 +3272,7 @@ textarea {
     transform: rotate(15deg);
     -webkit-transition: all 0.3s ease-in-out;
     transition: all 0.3s ease-in-out;
-}
+} */
 
 .widget-visitor-card:hover i {
     -webkit-transform: rotate(0deg) scale(1.4);
@@ -3598,3 +3598,5 @@ background-color: #14ae5c;
     font-size: 15px;
     color: #820001;
   }
+
+.main-dashboard-tiles .card h2{font-size: 24px;}
