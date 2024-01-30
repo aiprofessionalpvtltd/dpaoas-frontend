@@ -4,7 +4,9 @@ import { QMSSideBarItems } from '../../../../../../utils/sideBarItems'
 import CustomTable from '../../../../../../components/CustomComponents/CustomTable'
 import { useNavigate } from 'react-router-dom'
 import Header from '../../../../../../components/Header'
-import { getAllPoliticalParties } from '../../../../../../api/APIs'
+import { deletePoliticalParties, getAllPoliticalParties } from '../../../../../../api/APIs'
+import { showErrorMessage, showSuccessMessage } from '../../../../../../utils/ToastAlert'
+import { ToastContainer } from 'react-toastify'
 
 function QMSPoliticalParty() {
     const navigate = useNavigate()
@@ -45,6 +47,18 @@ function QMSPoliticalParty() {
       handlePoliticalParty();
     }, [])
 
+    const handleDelete = async (id) => {
+      try {
+        const response = await deletePoliticalParties(id);
+        if (response?.success) {
+          showSuccessMessage(response.message);
+          handlePoliticalParty();
+        }
+      } catch (error) {
+        showErrorMessage(error.response.data.message);
+      }
+    };
+
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
     <Header
@@ -52,7 +66,8 @@ function QMSPoliticalParty() {
       addLink1={"/qms/manage/political-party"}
       title1={"Political Party"}
     />
-    {/* <ToastContainer /> */}
+    <ToastContainer />
+
     <div class="container-fluid dash-detail-container card">
     <div class="row">
       <div class="col-12">
@@ -64,6 +79,7 @@ function QMSPoliticalParty() {
           handleEdit={(item) =>
             navigate("/qms/manage/political-party/addedit", { state: item })
           }
+          handleDelete={(item) => handleDelete(item.id)}
           headertitlebgColor={"#666"}
           headertitletextColor={"#FFF"}
           handlePageChange={handlePageChange}
