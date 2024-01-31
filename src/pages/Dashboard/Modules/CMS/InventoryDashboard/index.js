@@ -77,7 +77,7 @@ function SMSInventoryDashboard() {
       const response = await searchInventory(Data);
       if (response?.success) {
         const transformedData = transformInventoryData(response?.data);
-        setCount(response?.count);
+        setCount(1);
         setInventoryData(transformedData);
         showSuccessMessage(response?.message);
         console.log("Datattattata", response?.message);

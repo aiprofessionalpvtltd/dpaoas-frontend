@@ -68,10 +68,10 @@ function CMSAddInventory() {
         try {
             const response = await createInventory(Data);
             if (response.success) {
-                showSuccessMessage(response.message);
+                showSuccessMessage(response?.message);
             }
         } catch (error) {
-            showErrorMessage(error.response.data.message);
+            showErrorMessage(error?.response?.data?.message);
         }
     };
 
@@ -93,10 +93,10 @@ function CMSAddInventory() {
         try {
             const response = await UpdateInventoryById(location.state.id, Data);
             if (response.success) {
-                showSuccessMessage(response.message);
+                showSuccessMessage(response?.message);
             }
         } catch (error) {
-            showErrorMessage(error.response.data.message);
+            showErrorMessage(error?.response?.data?.message);
         }
     };
 

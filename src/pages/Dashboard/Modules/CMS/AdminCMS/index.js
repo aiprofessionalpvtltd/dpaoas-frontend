@@ -220,7 +220,7 @@ function CMSAdminDashboard() {
             const response = await SearchComplaint(Data);
             if (response?.success) {
                 const transformedData = transformDepartmentData(response?.data);
-                setCount(response?.count);
+                setCount(1);
                 setComplaintData(transformedData);
                 showSuccessMessage(response.message);
             }
@@ -421,7 +421,7 @@ function CMSAdminDashboard() {
                             <LeaveCard
                                 available={"05"}
                                 used={"04"}
-                                title={"Repairing Items"}
+                                title={"Send For Repairing"}
                                 percentage={"80"}
                                 value={repairing < 10 ? `0${repairing}` : repairing}
                                 bgblue={true}
