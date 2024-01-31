@@ -11,7 +11,7 @@ export const axiosClientVMS = axios.create({
 });
 
 export const axiosClientMMS = axios.create({
-  baseURL: "http://192.168.18.71:5152/api",
+  baseURL: "http://172.16.170.8:5252/api",
 });
 
 export const loginUser = async (data) => {
