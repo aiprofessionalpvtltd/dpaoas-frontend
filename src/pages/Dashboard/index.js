@@ -163,8 +163,8 @@ function Dashboard() {
 
   // Organize tiles into rows with a maximum of 3 tiles per row
   const rows = [];
-  for (let i = 0; i < filteredTiles.length; i += 3) {
-    rows.push(filteredTiles.slice(i, i + 3));
+  for (let i = 0; i < filteredTiles.length; i += 4) {
+    rows.push(filteredTiles.slice(i, i + 4));
   }
 
   return (
@@ -175,7 +175,7 @@ function Dashboard() {
         {rows.map((row, rowIndex) => (
           <div key={rowIndex} className="row main-dashboard-tiles">
             {row.map((tile, colIndex) => (
-              <div key={colIndex} className="col-4">
+              <div key={colIndex} className="col-3">
                 <Tiles title={tile.title} link={tile.link} type={tile.type} cardbg={tile.cardbg} icon={tile.icon} />
               </div>
             ))}

@@ -109,6 +109,8 @@ import CMSVendorList from "../pages/Dashboard/Modules/CMS/InventoryDashboard/Ven
 import CMSEditVendor from "../pages/Dashboard/Modules/CMS/InventoryDashboard/Vendor/EditVendor";
 import CMSTonerInstallationReports from "../pages/Dashboard/Modules/CMS/AdminCMS/TonerInstallationReports";
 import EFilingDashboard from "../pages/Dashboard/Modules/EFiling";
+import FileDetail from "../pages/Dashboard/Modules/EFiling/FileDetail";
+import AddEditFileForm from "../pages/Dashboard/Modules/EFiling/AddEditFileForm";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -266,11 +268,9 @@ export const ProtectedRoutes = [
   { path: "/qms/manage/tenures", element: <QMSTenures /> },
   { path: "/qms/manage/tenures/addedit", element: <QMSAddEditTenuresForm /> },
 
-
   { path: "/qms/manage/members", element: <QMSMembers /> },
   { path: "/qms/manage/members/addedit", element: <QMSMembersAddEditForm /> },
 
-  
   { path: "/qms/manage/sitting-days", element: <QMSSittingsDays /> },
   { path: "/qms/manage/sitting-days/addedit", element: <QMSAddEditSittingDaysForm /> },
 
@@ -285,7 +285,6 @@ export const ProtectedRoutes = [
 
   { path: "/qms/manage/parliamentary-year", element: <QMSParliamentaryYear /> },
   { path: "/qms/manage/parliamentary-year/addedit", element: <QMSAddEditParliamentaryYearForm /> },
-
 
   //SMS Module routes
   { path: "/sms/dashboard", element: <SMSDashboard /> },
@@ -336,9 +335,8 @@ export const ProtectedRoutes = [
 
 
 
-
-  // E-Filing 
+  // E-Filing
   { path: "/efiling/dashboard", element: <EFilingDashboard /> },
-
-
+  { path: "/efiling/dashboard/fileDetail", element: <FileDetail /> },
+  { path: "/efiling/dashboard/addedit", element: <AddEditFileForm /> },
 ];
