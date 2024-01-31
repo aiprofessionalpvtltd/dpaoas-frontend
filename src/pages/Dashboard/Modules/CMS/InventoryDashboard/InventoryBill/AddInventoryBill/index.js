@@ -7,7 +7,7 @@ import { AuthContext } from '../../../../../../../api/AuthContext'
 import DatePicker from "react-datepicker";
 import { useFormik } from 'formik'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCalendarAlt, faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faCalendarAlt,  faPlusSquare } from '@fortawesome/free-solid-svg-icons'
 import { UpdateInventoryBill, createInventoryBill, getAllVendor } from '../../../../../../../api/APIs'
 import { showErrorMessage, showSuccessMessage } from '../../../../../../../utils/ToastAlert'
 import { useLocation } from 'react-router'
@@ -18,7 +18,6 @@ import Select from "react-select";
 
 function CMSAddInventoryBill() {
     const location = useLocation()
-    console.log("itemmmm", location.state.vendorName);
     const [modaisOpan, setModalIsOpan] = useState(false)
     const [vendorData, setVendorData] = useState([])
     console.log("vendorData", vendorData);
@@ -143,7 +142,7 @@ function CMSAddInventoryBill() {
                                             />
                                         </div>
                                     </div>
-                                    <div className="col-6">
+                                    <div className="col-5">
                                         <div className="mb-3">
                                             <label htmlFor="formFile" className="form-label">
                                                 Vendor
@@ -166,8 +165,8 @@ function CMSAddInventoryBill() {
                                                 
                                             />
                                         </div>
-                                        <div className="ms-2" onClick={() => setModalIsOpan(!modaisOpan)}>
-                                            <FontAwesomeIcon icon={faPlus} />
+                                        <div className="ms-2" style={{position:"relative"}} onClick={() => setModalIsOpan(!modaisOpan)}>
+                                            <FontAwesomeIcon icon={faPlusSquare} style={{position:"absolute", top:"-55px", right:"-50px",fontSize:"41px", color:"#14ae5c"}}/>
                                         </div>
                                     </div>
                                 </div>
