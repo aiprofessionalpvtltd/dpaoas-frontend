@@ -5,7 +5,9 @@ import { QMSSideBarItems } from '../../../../../../utils/sideBarItems'
 import Header from '../../../../../../components/Header'
 import CustomTable from '../../../../../../components/CustomComponents/CustomTable'
 import moment from 'moment'
-import { getAllTenures } from '../../../../../../api/APIs'
+import { deleteTenures, getAllTenures } from '../../../../../../api/APIs'
+import { showErrorMessage, showSuccessMessage } from '../../../../../../utils/ToastAlert'
+import { ToastContainer } from 'react-toastify'
 
 function QMSTenures() {
     const navigate = useNavigate();
@@ -47,6 +49,18 @@ function QMSTenures() {
       handleTenures();
     }, [])
 
+    const handleDelete = async (id) => {
+      try {
+        const response = await deleteTenures(id);
+        if (response?.success) {
+          showSuccessMessage(response.message);
+          handleTenures();
+        }
+      } catch (error) {
+        showErrorMessage(error.response.data.message);
+      }
+    };
+
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
     <Header
@@ -54,7 +68,8 @@ function QMSTenures() {
       addLink1={"/qms/manage/tenures"}
       title1={"Tenures"}
     />
-    {/* <ToastContainer /> */}
+    <ToastContainer />
+
     <div class="container-fluid dash-detail-container card">
     <div class="row">
       <div class="col-12">
@@ -66,6 +81,7 @@ function QMSTenures() {
           handleEdit={(item) =>
             navigate("/qms/manage/tenures/addedit", { state: item })
           }
+          handleDelete={(item) => handleDelete(item.id)}
           headertitlebgColor={"#666"}
           headertitletextColor={"#FFF"}
           handlePageChange={handlePageChange}

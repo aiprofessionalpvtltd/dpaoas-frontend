@@ -1050,7 +1050,7 @@ export const updateManageSession = async (id, data) => {
     const response = await axiosClientMMS.put(`/manageSession/update/${id}`, data, {
       headers: {
         accept: "application/json",
-        "Content-Type": "multipart/form-data",
+        "Content-Type": "application/json",
       },
     });
 
@@ -1740,7 +1740,24 @@ export const complaintDelete = async (id) => {
     throw error;
   }
 };
-
+//retriveEmployeesAsEngineers
+export const retriveEmployeesAsEngineers = async (id) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/complaints/retrieveEmployeesAsEngineers?currentPage=${0}&pageSize=${100}`,
+      // {
+      //   headers: {
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // },
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
 export const updateTerm = async (id, data) => {
   try {
     // const token = getAuthToken();
@@ -1776,7 +1793,25 @@ export const getAllInventory = async (currentPage, pageSize) => {
   }
 };
 
-//Terms Management System
+export const deleteTerms = async (id) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.delete(
+      `/terms/delete/${id}`,
+      // {
+      //   headers: {
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // },
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+//Tenures Management System
 export const createTenure = async (data) => {
   try {
     // const token = getAuthToken();
@@ -1857,7 +1892,7 @@ export const getInventoryRecordByUserId = async (id) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClientMMS.get(
-      `/inventory/getInventoryOfUser/${id}`,
+      `/userInventory/inventoryOfUser/${id}`,
       // {
       //   headers: {
       //     Authorization: `Bearer ${token}`,
@@ -1872,6 +1907,25 @@ export const getInventoryRecordByUserId = async (id) => {
 };
 
 
+//Invoice Bill 
+export const createInventoryBill = async (Data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.post(
+      `/inventoryBills/create`,
+      Data
+      // {
+      //   headers: {
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // },
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
 // Tenures API's
 
 export const getTenureByID = async (id) => {
@@ -1890,6 +1944,76 @@ export const getTenureByID = async (id) => {
   }
 };
 
+export const getAllInvoiceBill = async (currentPage, pageSize) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/inventoryBills?currentPage=${currentPage}&pageSize=${pageSize}`,
+      // {
+      //   headers: {
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // },
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const SearchInvoiceBill = async (search) => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/inventoryBills/searchBill?invoiceNumber=${search}`,
+      // {
+      //   headers: {
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // },
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const invoiceBillDelete = async (id) => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientMMS.delete(
+      `/inventoryBills/delete/${id}`,
+      // {
+      //   headers: {
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // },
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const UpdateInventoryBill = async (id, data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.put(`/inventoryBills/update/${id}`, data, {
+      headers: {
+        accept: "application/json",
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+  
 export const updateTenure = async (id, data) => {
   try {
     // const token = getAuthToken();
@@ -1900,6 +2024,59 @@ export const updateTenure = async (id, data) => {
       },
     });
 
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const getInventoryBillsById = async (id) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.get(`/inventoryBills/${id}`)
+   
+
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const inventoryDelete = async (id) => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientMMS.delete(
+      `/inventory/delete/${id}`);
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+export const deleteTenures = async (id) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.delete(
+      `/tenures/delete/${id}`,
+      // {
+      //   headers: {
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // },
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const getInventoryById = async (id) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.get(`/inventory/${id}`)
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -1925,6 +2102,23 @@ export const createMember = async (data) => {
   }
 };
 
+export const UpdateInventoryById = async (id, data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.put(`/inventory/update/${id}`, data)
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
 export const getAllMembers = async (currentPage, pageSize) => {
   try {
     // const token = getAuthToken();
@@ -1941,6 +2135,39 @@ export const getAllMembers = async (currentPage, pageSize) => {
   }
 };
 
+//
+export const SearchInventoryBySerailNo = async (search) => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/userInventory/searchInventory?serialNo=${search}`,
+      // {
+      //   headers: {
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // },
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const createIssueProduct = async (id, Data) => {
+  console.log("ddd", Data);
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.post(
+      `/userInventory/issueProduct/${id}`,
+      Data
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
 export const getMembersByID = async (id) => {
   try {
     // const token = getAuthToken();
@@ -1957,6 +2184,34 @@ export const getMembersByID = async (id) => {
   }
 };
 
+export const updateInventoryreturnDate = async (id, Data) => {
+  console.log("Data", Data);
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.put(
+      `/userInventory/returnProduct/${id}`,
+      Data
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+//Vendor CRUD
+export const createVandor = async (data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.post(
+      `/vendors/create`,
+      data
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
 export const updateMembers = async (id, data) => {
   try {
     // const token = getAuthToken();
@@ -1967,6 +2222,75 @@ export const updateMembers = async (id, data) => {
       },
     });
 
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const getAllVendor = async (currentPage, pageSize) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/vendors?currentPage=${currentPage}&pageSize=${pageSize}`,
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const DeleteVendor = async (id) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.delete(
+      `/vendors/delete/${id}`,
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const UpdateVendor = async (id, data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.put(
+      `/vendors/update/${id}`,
+      data
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const searchVendor = async (search) => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/vendors/searchVendor?vendorName=${search}`)
+      return response?.data;
+    } catch (error) {
+      console.error("Error fetching API endpoint:", error);
+      throw error;
+    }
+  };
+export const deleteMembers = async (id) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.delete(
+      `/members/delete/${id}`,
+      // {
+      //   headers: {
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // },
+    );
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -2041,6 +2365,23 @@ export const updateDivisions = async (id, data) => {
   }
 };
 
+export const deleteDivisions = async (id) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.delete(
+      `/divisions/delete/${id}`,
+      // {
+      //   headers: {
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // },
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
 
 //PoliticalParties API's
 export const createPoliticalParties = async (data) => {
@@ -2108,6 +2449,24 @@ export const updatePoliticalParties = async (id, data) => {
   }
 };
 
+export const deletePoliticalParties = async (id) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.delete(
+      `/politicalParties/delete/${id}`,
+      // {
+      //   headers: {
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // },
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
 
 //ParliamentaryYears API's
 export const createParliamentaryYears = async (data) => {
@@ -2168,6 +2527,24 @@ export const updateParliamentaryYears = async (id, data) => {
       },
     });
 
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const deleteParliamentaryYears = async (id) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.delete(
+      `/parliamentaryYears/delete/${id}`,
+      // {
+      //   headers: {
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // },
+    );
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -2282,6 +2659,24 @@ export const updateSessions = async (id, data) => {
         "Content-Type": "application/json",
       },
     });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const deleteSessions = async (id) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.delete(
+      `/sessions/delete/${id}`,
+      // {
+      //   headers: {
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // },
+    );
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);

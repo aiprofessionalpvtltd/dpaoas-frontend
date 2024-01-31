@@ -9,6 +9,7 @@ import { showErrorMessage, showSuccessMessage } from '../../../../../../utils/To
 import { ToastContainer } from 'react-toastify'
 import moment from 'moment'
 import SMSAddList from '../AddList'
+import { CustomAlert } from '../../../../../../components/CustomComponents/CustomAlert'
 
 function SMSManageList() {
   const [currentPage, setCurrentPage] = useState(0);
@@ -63,7 +64,6 @@ function SMSManageList() {
   };
 
   const hendleSingleListRecord = async (id) => {
-
     try {
       const response = await getSignalContactListByid(id)
       if (response?.success) {
@@ -80,7 +80,7 @@ function SMSManageList() {
   const hendleAdd = () => {
     setSelecteditem([
       {
-        id:null,
+        id: null,
         listName: "",
         listDescription: "",
         contactMembers: []
@@ -88,19 +88,61 @@ function SMSManageList() {
     ])
     setModalisOpan(true)
   }
+
+  const [showModal, setShowModal] = useState(false);
+  const [listId, setListId] = useState(null);
+  const [alertMessage, setalertmessage] = useState(null)
+
+  const handleShow = () => setShowModal(true);
+  const handleClose = () => setShowModal(false);
+  const handleOkClick = () => {
+    if (alertMessage === "Members already exist on the list.") {
+      handleClose()
+    } else {
+      handleDelete(listId);
+      handleClose();
+    }
+
+  };
+
+  const hendleSingleList = async (id) => {
+    try {
+      const response = await getSignalContactListByid(id)
+      if (response?.success) {
+        // navigate("/sms/phone-book/add", { state: response?.data })
+        if (response?.data[0]?.contactMembers?.length) {
+          setalertmessage("Members already exist on the list.")
+          handleShow()
+        } else {
+          setalertmessage("Are you sure you want to proceed?")
+          handleShow()
+        }
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  }
+
   useEffect(() => {
     getContactListApi();
   }, [getContactListApi]);
   return (
     <Layout module={true} sidebarItems={SMSsidebarItems} centerlogohide={true}>
       <ToastContainer />
+
       <Header
         dashboardLink={"/sms/dashboard"}
         title1={"Manage List"}
         addLink1={"/sms/phone-book/manage"}
       />
+      <CustomAlert
+        title={alertMessage}
+        showModal={showModal}
+        handleClose={handleClose}
+        handleOkClick={handleOkClick}
+      />
       {modalisOpan ? (
-        <SMSAddList modalisOpan={modalisOpan} hendleModal={() => setModalisOpan(!modalisOpan)} Data={selecteditem} getContactListApi={getContactListApi}/>
+        <SMSAddList modalisOpan={modalisOpan} hendleModal={() => setModalisOpan(!modalisOpan)} Data={selecteditem} getContactListApi={getContactListApi} />
       ) : null}
       <div class="row">
         <div class="col-12">
@@ -120,7 +162,10 @@ function SMSManageList() {
             // handlePrint={}
             // handleUser={}
             totalCount={count}
-            handleDelete={(item) => handleDelete(item.id)}
+            handleDelete={(item) => {
+              setListId(item.id)
+              hendleSingleList(item.id)
+            }}
           />
         </div>
       </div>

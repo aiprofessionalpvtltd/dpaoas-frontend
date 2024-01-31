@@ -4,8 +4,10 @@ import { QMSSideBarItems } from '../../../../../../utils/sideBarItems'
 import Header from '../../../../../../components/Header'
 import CustomTable from '../../../../../../components/CustomComponents/CustomTable'
 import { useNavigate } from 'react-router-dom'
-import { getAllMembers } from '../../../../../../api/APIs'
+import { deleteMembers, getAllMembers } from '../../../../../../api/APIs'
 import moment from 'moment'
+import { showErrorMessage, showSuccessMessage } from '../../../../../../utils/ToastAlert'
+import { ToastContainer } from 'react-toastify'
 
 function QMSMembers() {
     const navigate = useNavigate()
@@ -28,9 +30,9 @@ function QMSMembers() {
         tenure: item?.tenures?.tenureName,
         phoneNo: item?.phoneNo,
         gender: item?.gender,
-        memberStatus: item?.memberStatus,
         fromDate: moment(item.fromDate).format("YYYY/MM/DD"),
         toDate: moment(item.toDate).format("YYYY/MM/DD"),
+        memberStatus: item?.memberStatus
       }));
     };
 
@@ -51,6 +53,18 @@ function QMSMembers() {
       handleMembers();
     }, [])
 
+    const handleDelete = async (id) => {
+      try {
+        const response = await deleteMembers(id);
+        if (response?.success) {
+          showSuccessMessage(response.message);
+          handleMembers();
+        }
+      } catch (error) {
+        showErrorMessage(error.response.data.message);
+      }
+    };
+
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
     <Header
@@ -58,7 +72,8 @@ function QMSMembers() {
       addLink1={"/qms/manage/members"}
       title1={"Members"}
     />
-    {/* <ToastContainer /> */}
+    <ToastContainer />
+
     <div class="container-fluid dash-detail-container card">
     <div class="row">
       <div class="col-12">
@@ -70,6 +85,7 @@ function QMSMembers() {
           handleEdit={(item) =>
             navigate("/qms/manage/members/addedit", { state: item })
           }
+          handleDelete={(item) => handleDelete(item.id)}
           headertitlebgColor={"#666"}
           headertitletextColor={"#FFF"}
           handlePageChange={handlePageChange}

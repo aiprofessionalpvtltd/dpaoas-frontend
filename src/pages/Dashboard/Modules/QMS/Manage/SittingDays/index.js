@@ -66,6 +66,7 @@ function QMSSittingsDays() {
           handleEdit={(item) =>
             navigate("/qms/manage/sitting-days/addedit", { state: item })
           }
+          hideDeleteIcon={true}
           headertitlebgColor={"#666"}
           headertitletextColor={"#FFF"}
           handlePageChange={handlePageChange}

@@ -4,7 +4,9 @@ import { Layout } from '../../../../../../components/Layout'
 import { QMSSideBarItems } from '../../../../../../utils/sideBarItems'
 import CustomTable from '../../../../../../components/CustomComponents/CustomTable'
 import Header from '../../../../../../components/Header'
-import { getAllDivisions } from '../../../../../../api/APIs'
+import { deleteDivisions, getAllDivisions } from '../../../../../../api/APIs'
+import { showErrorMessage, showSuccessMessage } from '../../../../../../utils/ToastAlert'
+import { ToastContainer } from 'react-toastify'
 
 function QMSDivisions() {
     const navigate = useNavigate()
@@ -45,6 +47,18 @@ function QMSDivisions() {
       handleDivisions();
     }, [])
 
+    const handleDelete = async (id) => {
+      try {
+        const response = await deleteDivisions(id);
+        if (response?.success) {
+          showSuccessMessage(response.message);
+          handleDivisions();
+        }
+      } catch (error) {
+        showErrorMessage(error.response.data.message);
+      }
+    };
+
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
     <Header
@@ -52,7 +66,8 @@ function QMSDivisions() {
       addLink1={"/qms/manage/divisions"}
       title1={"Divisions"}
     />
-    {/* <ToastContainer /> */}
+    <ToastContainer />
+
     <div class="container-fluid dash-detail-container card">
     <div class="row">
       <div class="col-12">
@@ -64,6 +79,7 @@ function QMSDivisions() {
           handleEdit={(item) =>
             navigate("/qms/manage/divisions/addedit", { state: item })
           }
+          handleDelete={(item) => handleDelete(item.id)}
           headertitlebgColor={"#666"}
           headertitletextColor={"#FFF"}
           handlePageChange={handlePageChange}
