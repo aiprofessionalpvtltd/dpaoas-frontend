@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { faEdit, faTrash, faUser, faPrint, faClone, faCheck, faFileExport } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEdit,
+  faTrash,
+  faUser,
+  faPrint,
+  faClone,
+  faCheck,
+  faFileExport,
+  faEye,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
@@ -10,6 +19,8 @@ function CustomTable({
   hendleResolve,
   data,
   handleEdit,
+  handleView,
+  showView,
   handleDelete,
   handlePageChange,
   tableTitle,
@@ -60,6 +71,7 @@ function CustomTable({
   const displayedData = data?.slice(startIndex, endIndex);
 
   const editTooltip = <Tooltip id="edit-tooltip">Edit</Tooltip>;
+  const viewTooltip = <Tooltip id="edit-tooltip">View</Tooltip>;
   const deleteTooltip = <Tooltip id="delete-tooltip">Delete</Tooltip>;
   const vistorTooltip = <Tooltip id="visitor-tooltip">Visitors</Tooltip>;
   const printTooltip = <Tooltip id="print-tooltip">Print</Tooltip>;
@@ -217,6 +229,17 @@ function CustomTable({
                                   <FontAwesomeIcon icon={faEdit} />
                                 </button>
                               </OverlayTrigger>
+                              {showView && handleView && (
+                                <OverlayTrigger placement="top" overlay={viewTooltip}>
+                                  <button
+                                    onClick={() => handleView(item)}
+                                    className="btn default btn-xs black"
+                                    data-id={item.id}
+                                  >
+                                    <FontAwesomeIcon icon={faEye} />
+                                  </button>
+                                </OverlayTrigger>
+                              )}
                               {!hideDeleteIcon && !hideDeleteIcon && (
                                 <OverlayTrigger placement="top" overlay={deleteTooltip}>
                                   <button
@@ -329,6 +352,17 @@ function CustomTable({
                                   <FontAwesomeIcon icon={faEdit} />
                                 </button>
                               </OverlayTrigger>
+                              {showView && handleView && (
+                                <OverlayTrigger placement="top" overlay={viewTooltip}>
+                                  <button
+                                    onClick={() => handleView(item)}
+                                    className="btn default btn-xs black"
+                                    data-id={item.id}
+                                  >
+                                    <FontAwesomeIcon icon={faEye} />
+                                  </button>
+                                </OverlayTrigger>
+                              )}
                               {!hideDeleteIcon && !hideDeleteIcon && (
                                 <OverlayTrigger placement="top" overlay={deleteTooltip}>
                                   <button

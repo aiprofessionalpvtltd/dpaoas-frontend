@@ -3,7 +3,7 @@ import { Spinner } from "react-bootstrap";
 
 const Editor = lazy(() => import("@tinymce/tinymce-react").then((module) => ({ default: module.Editor })));
 
-export const TinyEditor = ({ initialContent, setEditorContent, editorContent }) => {
+export const TinyEditor = ({ initialContent, setEditorContent, editorContent, multiLanguage }) => {
   const [loading, setLoading] = useState(true);
   const [type, setType] = useState("ltr");
   const [key, setKey] = useState(0);
@@ -22,25 +22,28 @@ export const TinyEditor = ({ initialContent, setEditorContent, editorContent }) 
           </div>
         )}
 
-        <div class="row">
-          <div class="col">
-            <div class="mb-3">
-              <label class="form-label">Change Language</label>
-              <select class="form-select" onChange={handleTypeChange}>
-                <option selected disabled>
-                  Select
-                </option>
-                <option value={"ltr"}>English</option>
-                <option value={"rtl"}>Urdu</option>
-              </select>
+        {multiLanguage && (
+          <div class="row">
+            <div class="col">
+              <div class="mb-3">
+                <label class="form-label">Change Language</label>
+                <select class="form-select" onChange={handleTypeChange}>
+                  <option selected disabled>
+                    Select
+                  </option>
+                  <option value={"ltr"}>English</option>
+                  <option value={"rtl"}>Urdu</option>
+                </select>
+              </div>
             </div>
           </div>
-        </div>
+        )}
+
         <Editor
           key={key}
           apiKey={process.env.REACT_APP_TINY_EDITOR_API_KEY}
           onInit={() => setLoading(false)}
-          initialValue={type === "ltr" ? "<p>Hello there! Write something new</p>" : "سنو ذرا! کچھ نیا لکھیں۔"}
+          initialValue={""} // type === "ltr" ? "<p>Hello there! Write something new</p>" : "سنو ذرا! کچھ نیا لکھیں۔"
           value={editorContent && editorContent}
           onEditorChange={(content) => setEditorContent(content)}
           init={{
