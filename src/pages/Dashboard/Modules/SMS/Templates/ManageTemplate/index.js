@@ -9,6 +9,7 @@ import { showErrorMessage, showSuccessMessage } from '../../../../../../utils/To
 import { ToastContainer } from 'react-toastify';
 import moment from 'moment';
 import SMSAddEditTemplate from '../AddTemplates';
+import { CustomAlert } from '../../../../../../components/CustomComponents/CustomAlert';
 
 function SMSMAnageTemplate() {
     const navigate = useNavigate()
@@ -62,6 +63,16 @@ function SMSMAnageTemplate() {
         }
     };
 
+    const [showModal, setShowModal] = useState(false);
+    const [templateid, setTemplateId] = useState(null);
+
+    const handleShow = () => setShowModal(true);
+    const handleClose = () => setShowModal(false);
+    const handleOkClick = () => {
+        handleDelete(templateid);
+        handleClose();
+    };
+
     useEffect(() => {
         getTemplate();
     }, [getTemplate]);
@@ -74,6 +85,11 @@ function SMSMAnageTemplate() {
             />
 
             <ToastContainer />
+            <CustomAlert
+                showModal={showModal}
+                handleClose={handleClose}
+                handleOkClick={handleOkClick}
+            />
             {modalisOpan ? (
                 <SMSAddEditTemplate modalisOpan={modalisOpan} hendleModal={() => setModalisOpan(!modalisOpan)} selectedData={selecteditem} getTemplate={getTemplate}/>
             ) : null}
@@ -113,7 +129,10 @@ function SMSMAnageTemplate() {
                         // handlePrint={}
                         // handleUser={}
                         totalCount={count}
-                        handleDelete={(item) => handleDelete(item.id)}
+                        handleDelete={(item) => {
+                            setTemplateId(item.id)
+                            handleShow()
+                        }}
                     />
                 </div>
             </div>

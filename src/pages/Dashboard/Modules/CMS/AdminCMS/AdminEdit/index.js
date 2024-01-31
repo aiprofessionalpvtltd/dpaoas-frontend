@@ -13,6 +13,7 @@ import { UpdateComplaintByAdmin } from '../../../../../../api/APIs';
 import { getUserData } from '../../../../../../api/Auth';
 import { AuthContext } from '../../../../../../api/AuthContext';
 import Select from "react-select";
+import moment from 'moment';
 
 
 function CMSAdminEditComplaint() {
@@ -20,9 +21,10 @@ function CMSAdminEditComplaint() {
     const userData = getUserData();
     const { employeeData } = useContext(AuthContext)
 
+    console.log("location", location.state);
     const formik = useFormik({
         initialValues: {
-            fkResolverUserId: location.state ? location.state.fkComplaineeUserId : `${userData?.firstName} ${userData?.lastName}`,
+            fkResolverUserId: '',
             complaintRemark: "",
             complaintStatus: "",
             complaintResolvedDate: "",
@@ -40,7 +42,7 @@ function CMSAdminEditComplaint() {
     const UpdateComplaintAPi = async (values) => {
         const formData = new FormData()
 
-        formData.append("fkResolverUserId", values?.fkResolverUserId?.value)
+        formData.append("fkResolverUserId", location?.state?.complaineeUser.id)
         formData.append("complaintResolvedDate", values.complaintResolvedDate)
         formData.append("complaintRemark", values.complaintRemark)
         formData.append("complaintStatus", values.complaintStatus)
@@ -74,36 +76,89 @@ function CMSAdminEditComplaint() {
                     <div className="card-body">
                         <form onSubmit={formik.handleSubmit}>
                             <div className="container-fluid">
+                            <div style={{background:"#f2f2f2", padding:"15px", marginBottom:"15px"}}>
                                 <div className="row">
                                     <div className="col-6">
                                         <div className="mb-3">
                                             <label className="form-label">Complainee</label>
-                                            {/* <input
+                                            <input
                                                 type="text"
                                                 className={`form-control`}
-                                                id="fkResolverUserId"
-                                                placeholder={formik.values.fkResolverUserId}
-                                                onChange={formik.handleChange}
-                                                onBlur={formik.handleBlur}
-
-                                            /> */}
-                                            <Select
-                                                options={employeeData && employeeData?.map((item) => ({
-                                                    value: item.fkUserId,
-                                                    label: `${item.firstName}${item.lastName}`,
-                                                }))}
-
-                                                onChange={(selectedOptions) =>
-                                                    formik.setFieldValue("fkResolverUserId", selectedOptions)
-                                                }
-                                                onBlur={formik.handleBlur}
-                                                value={formik.values.fkResolverUserId}
-                                                name="fkResolverUserId"
-                                                isClearable={true}
+                                                id="productName"
+                                                placeholder={`${location?.state?.complaineeUser?.employee?.firstName} ${location?.state?.complaineeUser?.employee?.lastName}`}
+                                                readOnly
                                             />
                                         </div>
                                     </div>
 
+                                    <div className="col-6">
+                                        <div className="mb-3">
+                                            <label className="form-label">Complaint Issued Date</label>
+                                            <input
+                                                type="text"
+                                                className={`form-control`}
+                                                id="productName"
+                                                placeholder={moment(location?.state?.complaintIssuedDate).format("MM/DD/YYYY")}
+                                                readOnly
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-6">
+                                        <div className="mb-3">
+                                            <label className="form-label">Branch/Office</label>
+                                            <input
+                                                type="text"
+                                                className={`form-control`}
+                                                id="productName"
+                                                placeholder={location?.state?.complaintType?.complaintTypeName}
+                                                readOnly
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="col-6">
+                                        <div className="mb-3">
+                                            <label className="form-label">Nature Of Complaint</label>
+                                            <input
+                                                type="text"
+                                                className={`form-control`}
+                                                id="productName"
+                                                placeholder={location?.state?.complaintCategory?.complaintCategoryName}
+                                                readOnly
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col-6">
+                                        <div className="mb-3">
+                                            <label className="form-label">Assigned To (IT Engineer)</label>
+                                            <input
+                                                type="text"
+                                                className={`form-control`}
+                                                id="productName"
+                                                placeholder={ location?.state.resolverUser &&`${location?.state.resolverUser?.employee?.firstName} ${location?.state?.resolverUser?.employee?.lastName}`}
+                                                readOnly
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                                </div>
+
+                                {/* Add similar validation logic for other fields */}
+                                <div className="row">
+                                    <div className="col-6">
+                                        <div className="mb-3">
+                                            <label className="form-label">Complaint Remarks</label>
+                                            <textarea
+                                                className={`form-control`}
+                                                id="complaintRemark"
+                                                onChange={formik.handleChange}
+                                                onBlur={formik.handleBlur}
+                                                value={formik.values.complaintRemark}
+                                            ></textarea>
+                                        </div>
+                                    </div>
                                     <div className="col-6">
                                         <div className="mb-3" style={{ position: "relative" }}>
                                             <label className="form-label">
@@ -134,42 +189,8 @@ function CMSAdminEditComplaint() {
 
                                         </div>
                                     </div>
-                                </div>
-                                {/* Add similar validation logic for other fields */}
-                                <div className="row">
-                                    <div className="col-6">
-                                        <div className="mb-3">
-                                            <label className="form-label">Complaint Remarks</label>
-                                            <textarea
-                                                className={`form-control`}
-                                                id="complaintRemark"
-                                                onChange={formik.handleChange}
-                                                onBlur={formik.handleBlur}
-                                                value={formik.values.complaintRemark}
-                                            ></textarea>
-                                        </div>
-                                    </div>
-                                    <div className="col-6">
-                                        <div className="mb-3">
-                                            <label className="form-label">Complaint Status</label>
-                                            <select class="form-select"
-                                                id="complaintStatus"
-                                                name="complaintStatus"
-                                                onChange={formik.handleChange}
-                                                onBlur={formik.handleBlur}
-                                                value={formik.values.complaintStatus}
-                                            >
-                                                <option value={""} selected disabled hidden>
-                                                    select
-                                                </option>
-                                                <option value="pending">pending</option>
-                                                <option value="in-progress">in-progress</option>
-                                                <option value="resolved">resolved</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
 
+                                </div>
                                 <div class="row">
                                     <div className="col-6">
                                         <div className="mb-3">
@@ -189,6 +210,26 @@ function CMSAdminEditComplaint() {
                                                     );
                                                 }}
                                             />
+                                        </div>
+                                    </div>
+                                    <div className="col-6">
+                                        <div className="mb-3">
+                                            <label className="form-label">Complaint Status</label>
+                                            <select class="form-select"
+                                                id="complaintStatus"
+                                                name="complaintStatus"
+                                                onChange={formik.handleChange}
+                                                onBlur={formik.handleBlur}
+                                                value={formik.values.complaintStatus}
+                                            >
+                                                <option value={""} selected disabled hidden>
+                                                    select
+                                                </option>
+                                                <option value="pending">Pending</option>
+                                                <option value="in-progress">In Progress</option>
+                                                <option value="closed">Resolved</option>
+
+                                            </select>
                                         </div>
                                     </div>
                                 </div>

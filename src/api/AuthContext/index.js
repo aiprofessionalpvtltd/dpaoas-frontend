@@ -6,6 +6,7 @@ import {
   getAllSessions,
   getallMembers,
   loginUser,
+  retriveEmployeesAsEngineers,
 } from "../APIs";
 import { setAuthToken, setUserData } from "../Auth";
 import { showErrorMessage } from "../../utils/ToastAlert";
@@ -18,6 +19,8 @@ export const AuthProvider = ({ children }) => {
   const [sessions, setSessions] = useState([]);
   const [employeeData, setEmployeeData] = useState([])
   const [resolutionStatus, setResolutionStatus] = useState([]);
+  const [employeesAsEngineersData, setemployeesAsEngineersData] = useState([]);
+
 
   const [members, setMembers] = useState([]);
 
@@ -97,12 +100,24 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const getretriveEmployeesAsEngineers = async () => {
+    try {
+      const response = await retriveEmployeesAsEngineers();
+      if (response?.success) {
+        setemployeesAsEngineersData(response?.data?.employees);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     getAllResolutionStatusApi();
     AllMembersData();
     AllMinistryData();
-    getAllSessionsApi();
+    // getAllSessionsApi();
     getEmployeeData()
+    getretriveEmployeesAsEngineers()
   }, []);
 
   return (
@@ -116,6 +131,7 @@ export const AuthProvider = ({ children }) => {
         sessions,
         employeeData,
         resolutionStatus,
+        employeesAsEngineersData
       }}
     >
       {children}

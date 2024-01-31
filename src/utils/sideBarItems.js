@@ -597,11 +597,51 @@ export const CMSsidebarItems = [
     itemName: "Admin Complaint",
     link: "/cms/admin/dashboard",
     icon: faHome,
+    subItems: [
+      {
+        itemName: "Admin Complaint",
+        link: "/cms/admin/dashboard",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Toner Installation Report",
+        link: "/cms/admin/toner-installation-report",
+        icon: faClipboardList,
+      }
+    ]
   },
-
+  
   {
     itemName: "Inventory",
     link: "/cms/admin/inventory/dashboard",
     icon: faHome,
-  },
+    subItems: [
+      {
+        itemName: "Invoice Bill",
+        link: "/cms/admin/inventory/inventory-bill",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Inventory Item",
+        link: "/cms/admin/inventory/dashboard",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Issue Equipment",
+        link: "/cms/admin/inventory/issue-date",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Return Equipment",
+        link: "/cms/admin/inventory/return-date",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Vendor List",
+        link: "/cms/admin/inventory/vendor-list",
+        icon: faClipboardList,
+      },
+     
+    ],
+  }
 ]
