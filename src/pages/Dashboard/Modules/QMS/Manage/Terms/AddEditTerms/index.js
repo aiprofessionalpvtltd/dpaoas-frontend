@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useLocation } from "react-router-dom";
@@ -8,35 +8,115 @@ import DatePicker from "react-datepicker";
 import Header from "../../../../../../../components/Header";
 import { Layout } from "../../../../../../../components/Layout";
 import { QMSSideBarItems } from "../../../../../../../utils/sideBarItems";
+import { createTerm, getAllTenures, getTermByID, updateTerm } from "../../../../../../../api/APIs";
+import { showErrorMessage, showSuccessMessage } from "../../../../../../../utils/ToastAlert";
+import { ToastContainer } from "react-toastify";
 
 const validationSchema = Yup.object({
-  employeename: Yup.string().required("Employee name is required"),
-  filenumber: Yup.string().required("File Number is required"),
-  fatherhusbandname: Yup.string().required("Father/Husband Name is required"),
-  cnicnumber: Yup.string().required("CNIC Number is required"),
-  permanentaddress: Yup.string().required("Permanent Address is required"),
+  termName: Yup.string().required("Term name is required"),
+  startDate: Yup.string().required("Start date is required"),
+  endDate: Yup.string().required("End date is required"),
+  tenureId: Yup.string().required("Tenure ID is required"),
 });
 function QMSAddEditTermsForm() {
   const location = useLocation();
-  const [dateofbirth, setDateOfBirth] = useState(new Date());
-  const [placeofbirth, setPlaceOfBirth] = useState(new Date());
-  const [cnicissue, setCnicIssue] = useState(new Date());
-  const [cnicexpire, setCnicExpire] = useState(new Date());
+  const [tenures, setTenures] = useState([]);
+  const [termsById, setTermsById] = useState();
 
   const formik = useFormik({
     initialValues: {
-      employeename: "",
-      filenumber: "",
-      fatherhusbandname: "",
-      cnicnumber: "",
-      permanentaddress: "",
+      termName: "",
+      startDate: "",
+      endDate: "",
+      tenureId: ""
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       // Handle form submission here
-      console.log(values);
+      if (location?.state) {
+        handleEditTerms(values);
+      } else {
+        handleCreateTerms(values);
+      }
     },
   });
+
+  const handleCreateTerms = async (values) => {
+    const data = {
+      termName: values?.termName,
+      fkTenureId: Number(values?.tenureId),
+      fromDate: values?.startDate,
+      toDate: values?.endDate
+    }
+
+    try {
+      const response = await createTerm(data);
+      if (response?.success) {
+        showSuccessMessage(response?.message);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  }
+
+  const handleEditTerms = async (values) => {
+    const data = {
+      termName: values?.termName,
+      fkTenureId: Number(values?.tenureId),
+      fromDate: values?.startDate,
+      toDate: values?.endDate
+    }
+    try {
+      const response = await updateTerm(location?.state?.id, data);
+      if (response?.success) {
+        showSuccessMessage(response?.message);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  }
+
+  const handleTenures = async () => {
+    try {
+      const response = await getAllTenures(0, 100);
+      if (response?.success) {
+        setTenures(response?.data);
+      }
+    } catch (error) {
+      console.log(error?.response?.data?.message);
+    }
+  }
+
+  const getTermByIdApi = async () => {
+    try {
+      const response = await getTermByID(location.state?.id);
+      if (response?.success) {
+        setTermsById(response?.data);
+      }
+    } catch (error) {
+      // showErrorMessage(error?.response?.data?.message);
+    }
+  };
+
+  useEffect(() => {
+    handleTenures();
+    if (location.state?.id) {
+      getTermByIdApi();
+    }
+  }, [])
+
+  useEffect(() => {
+    // Update form values when termsById changes
+    if (termsById) {
+      formik.setValues({
+        termName: termsById.termName || "",
+        startDate: new Date(termsById.fromDate) || "",
+        endDate: new Date(termsById.toDate) || "",
+        tenureId: termsById.fkTenureId || ""
+      });
+    }
+  }, [termsById, formik.setValues]);
+
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <Header
@@ -46,6 +126,8 @@ function QMSAddEditTermsForm() {
         addLink2={"/qms/manage/terms/addedit"}
         title2={location && location?.state ? "Edit Terms" : "Add Terms"}
       />
+      <ToastContainer />
+
       <div class="container-fluid">
         <div class="card">
           <div class="card-header red-bg" style={{ background: "#14ae5c" }}>
@@ -60,42 +142,45 @@ function QMSAddEditTermsForm() {
                       <label class="form-label">Term Name</label>
                       <input
                         type="text"
-                        placeholder={formik.values.filenumber}
+                        placeholder={"Term Name"}
+                        value={formik.values.termName}
                         className={`form-control ${
-                          formik.touched.filenumber && formik.errors.filenumber ? "is-invalid" : ""
+                          formik.touched.termName && formik.errors.termName ? "is-invalid" : ""
                         }`}
-                        id="filenumber"
+                        id="termName"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
-                      {formik.touched.filenumber && formik.errors.filenumber && (
-                        <div className="invalid-feedback">{formik.errors.filenumber}</div>
+                      {formik.touched.termName && formik.errors.termName && (
+                        <div className="invalid-feedback">{formik.errors.termName}</div>
                       )}
                     </div>
                   </div>
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Term ID</label>
-                      <input
-                        type="text"
-                        placeholder={formik.values.employeename}
-                        className={`form-control ${
-                          formik.touched.employeename && formik.errors.employeename ? "is-invalid" : ""
-                        }`}
-                        id="employeename"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                      />
-                      {formik.touched.employeename && formik.errors.employeename && (
-                        <div className="invalid-feedback">{formik.errors.employeename}</div>
-                      )}
+
+                  <div class="col-6">
+                      <div class="mb-3">
+                        <label class="form-label">Tenure ID</label>
+                        <select class="form-select"
+                          id="tenureId"
+                          name="tenureId"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.tenureId}
+                        >
+                          <option value={""} selected disabled hidden>
+                            select
+                          </option>
+                            {tenures.length > 0 && tenures.map((tenure) => (
+                              <option value={tenure?.id}>{tenure?.tenureName}</option>
+                            ))}
+                        </select>
+                      </div>
                     </div>
-                  </div>
                 </div>
                 <div class="row">
-                  <div class="col">
-                    <div class="mb-3" style={{ position: "relative" }}>
-                      <label class="form-label">Start Date</label>
+                  <div className="col">
+                    <div className="mb-3" style={{ position: "relative" }}>
+                      <label className="form-label">Start Date</label>
                       <span
                         style={{
                           position: "absolute",
@@ -110,16 +195,29 @@ function QMSAddEditTermsForm() {
                         <FontAwesomeIcon icon={faCalendarAlt} />
                       </span>
                       <DatePicker
-                        selected={dateofbirth}
+                        selected={formik.values.startDate}
+                        onChange={(date) =>
+                          formik.setFieldValue("startDate", date)
+                        }
+                        onBlur={formik.handleBlur}
                         minDate={new Date()}
-                        onChange={(date) => setDateOfBirth(date)}
-                        className="form-control"
+                        className={`form-control ${
+                          formik.touched.startDate && formik.errors.startDate
+                            ? "is-invalid"
+                            : ""
+                        }`}
                       />
+                      {formik.touched.startDate && formik.errors.startDate && (
+                        <div className="invalid-feedback">
+                          {formik.errors.startDate}
+                        </div>
+                      )}
                     </div>
                   </div>
-                  <div class="col">
-                    <div class="mb-3" style={{ position: "relative" }}>
-                      <label class="form-label">End Date</label>
+                  
+                  <div className="col">
+                    <div className="mb-3" style={{ position: "relative" }}>
+                      <label className="form-label">End Date</label>
                       <span
                         style={{
                           position: "absolute",
@@ -134,11 +232,23 @@ function QMSAddEditTermsForm() {
                         <FontAwesomeIcon icon={faCalendarAlt} />
                       </span>
                       <DatePicker
-                        selected={placeofbirth}
+                        selected={formik.values.endDate}
+                        onChange={(date) =>
+                          formik.setFieldValue("endDate", date)
+                        }
+                        onBlur={formik.handleBlur}
                         minDate={new Date()}
-                        onChange={(date) => setPlaceOfBirth(date)}
-                        className="form-control"
+                        className={`form-control ${
+                          formik.touched.endDate && formik.errors.endDate
+                            ? "is-invalid"
+                            : ""
+                        }`}
                       />
+                      {formik.touched.endDate && formik.errors.endDate && (
+                        <div className="invalid-feedback">
+                          {formik.errors.endDate}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

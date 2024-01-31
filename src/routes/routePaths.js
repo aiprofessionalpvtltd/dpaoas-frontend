@@ -98,6 +98,7 @@ import CMSUserDashboard from "../pages/Dashboard/Modules/CMS/UserCMS";
 import CMSAddEditUserComplaint from "../pages/Dashboard/Modules/CMS/UserCMS/AddEditUserComplaint";
 import CMSAdminDashboard from "../pages/Dashboard/Modules/CMS/AdminCMS";
 import CMSAdminEditComplaint from "../pages/Dashboard/Modules/CMS/AdminCMS/AdminEdit";
+import QMSGroups from "../pages/Dashboard/Modules/QMS/Manage/Groups";
 import SMSInventoryDashboard from "../pages/Dashboard/Modules/CMS/InventoryDashboard";
 import CMSAddInventory from "../pages/Dashboard/Modules/CMS/InventoryDashboard/AddInventory";
 import CMSInventoryBill from "../pages/Dashboard/Modules/CMS/InventoryDashboard/InventoryBill";
@@ -107,6 +108,7 @@ import InventoryReturnDate from "../pages/Dashboard/Modules/CMS/InventoryDashboa
 import CMSVendorList from "../pages/Dashboard/Modules/CMS/InventoryDashboard/Vendor";
 import CMSEditVendor from "../pages/Dashboard/Modules/CMS/InventoryDashboard/Vendor/EditVendor";
 import CMSTonerInstallationReports from "../pages/Dashboard/Modules/CMS/AdminCMS/TonerInstallationReports";
+import EFilingDashboard from "../pages/Dashboard/Modules/EFiling";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -255,6 +257,7 @@ export const ProtectedRoutes = [
   { path: "/qms/manage", element: <QMSQuestionDashboard /> },
 
   { path: "/qms/manage/sessions", element: <QMSSessions /> },
+  { path: "/qms/manage/groups", element: <QMSGroups /> },
   { path: "/qms/manage/sessions/addedit", element: <QMSAddEditSessionsForm /> },
 
   { path: "/qms/manage/terms", element: <QMSTerms /> },
@@ -326,7 +329,7 @@ export const ProtectedRoutes = [
   {path:"/cms/admin/inventory/issue-date", element: <InventoryIssueDate />},
   {path:"/cms/admin/inventory/return-date", element: <InventoryReturnDate />},
   {path:"/cms/admin/inventory/vendor-list", element: <CMSVendorList />},
-  {path:"/cms/admin/inventory/vendor-list/edit", element: <CMSEditVendor />}
+  {path:"/cms/admin/inventory/vendor-list/edit", element: <CMSEditVendor />},
 
 
 
@@ -334,6 +337,8 @@ export const ProtectedRoutes = [
 
 
 
+  // E-Filing 
+  { path: "/efiling/dashboard", element: <EFilingDashboard /> },
 
 
 ];
