@@ -14,7 +14,7 @@ function CMSInventoryBill() {
     const [count, setCount] = useState(null);
     const [currentPage, setCurrentPage] = useState(0);
     const [inventoryBill,setInventoryBill] = useState([])
-    const pageSize = 4; // Set your desired page size
+    const pageSize = 5; // Set your desired page size
   
     const handlePageChange = (page) => {
       // Update currentPage when a page link is clicked
@@ -54,6 +54,7 @@ function CMSInventoryBill() {
           const response = await SearchInvoiceBill(data); // Add await here
           if (response?.success) {
             const transformedData = transformInventoryBillData(response?.data);
+            setCount(1)
             setInventoryBill(transformedData);
           }
         } catch (error) {
@@ -86,7 +87,7 @@ function CMSInventoryBill() {
 
     useEffect(() => {
       getAllInvoiceBillApi()
-    },{getAllInvoiceBillApi})
+    },[getAllInvoiceBillApi])
   return (
     <Layout module={true} sidebarItems={CMSsidebarItems} centerlogohide={true}>
     <Header

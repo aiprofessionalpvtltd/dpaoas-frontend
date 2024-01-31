@@ -18,23 +18,24 @@ function CMSTonerInstallationReports() {
     };
 
     const transformDepartmentData = (apiData) => {
-        return apiData.map((leave) => ({
-            id: leave?.id,
-            complaineeUser: `${leave?.complaineeUser?.employee?.firstName}${leave?.complaineeUser?.employee?.lastName}`,
-            BranchOffice: leave?.complaintType?.complaintTypeName,
-            NatureofComplaint: leave?.complaintCategory?.complaintCategoryName,
-            AssigneTo: leave?.resolverUser && `${leave?.resolverUser?.employee?.firstName}${leave?.resolverUser?.employee?.lastName}`,
-            complaintDate: moment(leave?.complaintIssuedDate).format("DD/MM/YYYY"),
-            ResolvedDate: leave?.complaintResolvedDate && moment(leave?.complaintResolvedDate).format("DD/MM/YYY"),
-            complaintStatus: leave?.complaintStatus,
-            status: leave?.status,
+        return apiData.map((item) => ({
+            SR: item?.id,
+            complaineeUser: `${item?.complaineeUser?.employee?.firstName}${item?.complaineeUser?.employee?.lastName}`,
+            BranchOffice: item?.complaintType?.complaintTypeName,
+            NatureofComplaint: item?.complaintCategory?.complaintCategoryName,
+            AssigneTo: item?.resolverUser && `${item?.resolverUser?.employee?.firstName}${item?.resolverUser?.employee?.lastName}`,
+            complaintDate: moment(item?.complaintIssuedDate).format("DD/MM/YYYY"),
+            ResolvedDate: item?.complaintResolvedDate && moment(item?.complaintResolvedDate).format("DD/MM/YYY"),
+            complaintStatus: item?.complaintStatus,
+            status: item?.status,
         }));
     };
     const getComplaint = useCallback(async () => {
         try {
-            const response = await getallComplaint(currentPage, pageSize);
+            const response = await getallComplaint(0, 100);
             if (response?.success) {
-                const filterData = response?.data?.complaints.filter((item) => item.complaintCategory?.complaintCategoryName === "saqib")
+                const filterData = response?.data?.complaints.filter((item) => item.complaintCategory?.complaintCategoryName === "Toner Installation")
+                console.log("filterData",filterData);
                 const transformedData = transformDepartmentData(filterData);
                 setCount(response?.data?.count);
                 setComplaintData(transformedData);

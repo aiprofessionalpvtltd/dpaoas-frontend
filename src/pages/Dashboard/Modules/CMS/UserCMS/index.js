@@ -164,7 +164,7 @@ function CMSUserDashboard() {
             const response = await SearchComplaint(Data);
             if (response?.success) {
                 const transformedData = transformDepartmentData(response?.data);
-                setCount(response?.count);
+                setCount(1);
                 setComplaintData(transformedData);
                 showSuccessMessage(response.message);
             }

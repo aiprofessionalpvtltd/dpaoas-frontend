@@ -67,7 +67,7 @@ function ComplaintAssignedEmployee({ assignModalOpan, hendleModal, ComplaintUser
             class="card-header red-bg"
             style={{ background: "#14ae5c !important" }}
           >
-            <h1>Assigned Employee</h1>
+            <h1>Assign</h1>
           </div>
           <div class="card-body">
             <form onSubmit={formikAssigned.handleSubmit}>

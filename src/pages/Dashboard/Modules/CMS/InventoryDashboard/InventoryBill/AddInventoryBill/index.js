@@ -7,7 +7,7 @@ import { AuthContext } from '../../../../../../../api/AuthContext'
 import DatePicker from "react-datepicker";
 import { useFormik } from 'formik'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCalendarAlt,  faPlusSquare } from '@fortawesome/free-solid-svg-icons'
+import { faCalendarAlt, faPlusSquare } from '@fortawesome/free-solid-svg-icons'
 import { UpdateInventoryBill, createInventoryBill, getAllVendor } from '../../../../../../../api/APIs'
 import { showErrorMessage, showSuccessMessage } from '../../../../../../../utils/ToastAlert'
 import { useLocation } from 'react-router'
@@ -22,16 +22,16 @@ function CMSAddInventoryBill() {
     const [vendorData, setVendorData] = useState([])
     console.log("vendorData", vendorData);
 
-  
+
     const formik = useFormik({
         initialValues: {
             invioceNumber: location?.state ? location?.state?.invoiceNumber : "",
-            vendor: location?.state ? {value : location?.state?.vendor?.id, label: location?.state?.vendor?.vendorName} : "",
+            vendor: location?.state ? { value: location?.state?.vendor?.id, label: location?.state?.vendor?.vendorName } : "",
             quantity: location?.state ? location?.state?.quantity : "",
             assignedDate: location?.state ? new Date(location?.state?.invoiceDate) : "",
             description: location?.state ? location?.state?.description : "",
             billAttachment: "",
-            status:location?.state ? location?.state?.status : ""
+            status: location?.state ? location?.state?.status : ""
         },
 
         onSubmit: (values) => {
@@ -74,7 +74,7 @@ function CMSAddInventoryBill() {
         formData.append("fkVendorId", values?.vendor?.value)
         formData.append("quantity", values.quantity)
         formData.append("description", values.description)
-        formData.append("invoiceAttachment", values.billAttachment)
+        formData.append("invoiceAttachment", values?.billAttachment)
         formData.append("invoiceDate", values.assignedDate)
         formData.append("status", values.status)
 
@@ -88,10 +88,10 @@ function CMSAddInventoryBill() {
         }
     };
 
-    const GetAllVendor =async () => {
+    const GetAllVendor = async () => {
         try {
-            const response = await getAllVendor(0,100)
-            if(response.success){
+            const response = await getAllVendor(0, 100)
+            if (response.success) {
                 setVendorData(response?.data?.vendors)
             }
         } catch (error) {
@@ -100,7 +100,7 @@ function CMSAddInventoryBill() {
     }
     useEffect(() => {
         GetAllVendor()
-    },[modaisOpan])
+    }, [modaisOpan])
     return (
         <Layout module={true} sidebarItems={CMSsidebarItems} centerlogohide={true}>
             <Header
@@ -115,7 +115,7 @@ function CMSAddInventoryBill() {
                     modaisOpan={modaisOpan}
                     hendleModal={() => setModalIsOpan(!modaisOpan)}
                 />
-            ) }
+            )}
             <ToastContainer />
             <div className="container-fluid">
                 <div className="card">
@@ -147,26 +147,26 @@ function CMSAddInventoryBill() {
                                             <label htmlFor="formFile" className="form-label">
                                                 Vendor
                                             </label>
-                                            
-                                             <Select
+
+                                            <Select
                                                 options={vendorData.map((item) => ({
                                                     value: item.id,
                                                     label: item.vendorName,
                                                 }))}
-                                                
+
                                                 onChange={(selectedOptions) =>
                                                     formik.setFieldValue("vendor", selectedOptions)
                                                 }
                                                 onBlur={formik.handleBlur}
                                                 value={formik.values.vendor}
                                                 name="vendor"
-                                            isClearable={true}
+                                                isClearable={true}
 
-                                                
+
                                             />
                                         </div>
-                                        <div className="ms-2" style={{position:"relative"}} onClick={() => setModalIsOpan(!modaisOpan)}>
-                                            <FontAwesomeIcon icon={faPlusSquare} style={{position:"absolute", top:"-55px", right:"-50px",fontSize:"41px", color:"#14ae5c"}}/>
+                                        <div className="ms-2" style={{ position: "relative" }} onClick={() => setModalIsOpan(!modaisOpan)}>
+                                            <FontAwesomeIcon icon={faPlusSquare} style={{ position: "absolute", top: "-55px", right: "-50px", fontSize: "41px", color: "#14ae5c" }} />
                                         </div>
                                     </div>
                                 </div>
@@ -245,32 +245,32 @@ function CMSAddInventoryBill() {
                                     </div>
                                     {location?.state?.id && (
                                         <div className="col-6">
-                                        <div className="mb-3">
-                                            <label htmlFor="formFile" className="form-label">
-                                                Status
-                                            </label>
-                                            <select class="form-select"
-                                                id="status"
-                                                name="status"
-                                                onChange={formik.handleChange}
-                                                onBlur={formik.handleBlur}
-                                                value={formik.values.status}
-                                            >
-                                                <option value={""} selected disabled hidden>
-                                                    Select
-                                                </option>
-                                               
+                                            <div className="mb-3">
+                                                <label htmlFor="formFile" className="form-label">
+                                                    Status
+                                                </label>
+                                                <select class="form-select"
+                                                    id="status"
+                                                    name="status"
+                                                    onChange={formik.handleChange}
+                                                    onBlur={formik.handleBlur}
+                                                    value={formik.values.status}
+                                                >
+                                                    <option value={""} selected disabled hidden>
+                                                        Select
+                                                    </option>
+
                                                     <option value="active">Active</option>
                                                     <option value="inactive">In Active</option>
 
-                                                
-                                               
 
-                                            </select>
-                                        </div>
+
+
+                                                </select>
+                                            </div>
                                         </div>
                                     )}
-                                    
+
                                 </div>
 
                                 <div className="d-grid gap-2 d-md-flex justify-content-md-end">
