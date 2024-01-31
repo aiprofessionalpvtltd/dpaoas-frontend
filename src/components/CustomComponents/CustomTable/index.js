@@ -49,7 +49,7 @@ function CustomTable({
   assignClick,
   hideDeleteIcon,
   singleDataCard,
-  showEditIcon
+  showEditIcon,
 }) {
   const keys = data?.length > 0 ? Object.keys(data[0]) : [];
   const [totalPages, setTotalPages] = useState(0);
@@ -221,17 +221,17 @@ function CustomTable({
                         <td className="text-center">
                           {!hideEditIcon && !hideEditIcon && (
                             <>
-                              {
-                              !showEditIcon && !showEditIcon && (
+                              {!showEditIcon && !showEditIcon && (
                                 <OverlayTrigger placement="top" overlay={editTooltip}>
-                                <button
-                                  onClick={() => handleEdit(item)}
-                                  className="btn default btn-xs black"
-                                  data-id={item.id}
-                                >
-                                  <FontAwesomeIcon icon={faEdit} />
-                                </button>
-                              </OverlayTrigger>
+                                  <button
+                                    onClick={() => handleEdit(item)}
+                                    className="btn default btn-xs black"
+                                    data-id={item.id}
+                                  >
+                                    <FontAwesomeIcon icon={faEdit} />
+                                  </button>
+                                </OverlayTrigger>
+                              )}
                               {showView && handleView && (
                                 <OverlayTrigger placement="top" overlay={viewTooltip}>
                                   <button
@@ -243,6 +243,7 @@ function CustomTable({
                                   </button>
                                 </OverlayTrigger>
                               )}
+
                               {!hideDeleteIcon && !hideDeleteIcon && (
                                 <OverlayTrigger placement="top" overlay={deleteTooltip}>
                                   <button
@@ -345,17 +346,18 @@ function CustomTable({
                       {!ActionHide && (
                         <td className="text-center">
                           {!hideEditIcon && !hideEditIcon && (
-                            <>{
-                              !showEditIcon && !showEditIcon && (
+                            <>
+                              {!showEditIcon && !showEditIcon && (
                                 <OverlayTrigger placement="top" overlay={editTooltip}>
-                                <button
-                                  onClick={() => handleEdit(item)}
-                                  className="btn default btn-xs black"
-                                  data-id={item.id}
-                                >
-                                  <FontAwesomeIcon icon={faEdit} />
-                                </button>
-                              </OverlayTrigger>
+                                  <button
+                                    onClick={() => handleEdit(item)}
+                                    className="btn default btn-xs black"
+                                    data-id={item.id}
+                                  >
+                                    <FontAwesomeIcon icon={faEdit} />
+                                  </button>
+                                </OverlayTrigger>
+                              )}
                               {showView && handleView && (
                                 <OverlayTrigger placement="top" overlay={viewTooltip}>
                                   <button
@@ -367,6 +369,7 @@ function CustomTable({
                                   </button>
                                 </OverlayTrigger>
                               )}
+
                               {!hideDeleteIcon && !hideDeleteIcon && (
                                 <OverlayTrigger placement="top" overlay={deleteTooltip}>
                                   <button
