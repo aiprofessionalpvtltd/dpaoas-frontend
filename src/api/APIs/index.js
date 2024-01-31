@@ -11,7 +11,7 @@ export const axiosClientVMS = axios.create({
 });
 
 export const axiosClientMMS = axios.create({
-  baseURL: "http://172.16.170.8:5252/api",
+  baseURL: "http://192.168.18.71:5152/api",
 });
 
 export const loginUser = async (data) => {
@@ -1674,7 +1674,24 @@ export const complaintDelete = async (id) => {
     throw error;
   }
 };
-
+//retriveEmployeesAsEngineers
+export const retriveEmployeesAsEngineers = async (id) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/complaints/retrieveEmployeesAsEngineers?currentPage=${0}&pageSize=${100}`,
+      // {
+      //   headers: {
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // },
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
 //Inventory
 export const getAllInventory = async (currentPage, pageSize) => {
   try {
@@ -1742,7 +1759,7 @@ export const getInventoryRecordByUserId = async (id) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClientMMS.get(
-      `/inventory/getInventoryOfUser/${id}`,
+      `/userInventory/inventoryOfUser/${id}`,
       // {
       //   headers: {
       //     Authorization: `Bearer ${token}`,
@@ -1755,3 +1772,280 @@ export const getInventoryRecordByUserId = async (id) => {
     throw error;
   }
 };
+
+
+//Invoice Bill 
+export const createInventoryBill = async (Data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.post(
+      `/inventoryBills/create`,
+      Data
+      // {
+      //   headers: {
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // },
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const getAllInvoiceBill = async (currentPage, pageSize) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/inventoryBills?currentPage=${currentPage}&pageSize=${pageSize}`,
+      // {
+      //   headers: {
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // },
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const SearchInvoiceBill = async (search) => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/inventoryBills/searchBill?invoiceNumber=${search}`,
+      // {
+      //   headers: {
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // },
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const invoiceBillDelete = async (id) => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientMMS.delete(
+      `/inventoryBills/delete/${id}`,
+      // {
+      //   headers: {
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // },
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const UpdateInventoryBill = async (id, data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.put(`/inventoryBills/update/${id}`, data,
+    {
+      headers: {
+        accept: "application/json",
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const getInventoryBillsById = async (id) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.get(`/inventoryBills/${id}`)
+   
+
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const inventoryDelete = async (id) => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientMMS.delete(
+      `/inventory/delete/${id}`,
+      // {
+      //   headers: {
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // },
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const getInventoryById = async (id) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.get(`/inventory/${id}`)
+   
+
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const UpdateInventoryById = async (id, data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.put(`/inventory/update/${id}`, data)
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+//
+export const SearchInventoryBySerailNo = async (search) => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/userInventory/searchInventory?serialNo=${search}`,
+      // {
+      //   headers: {
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // },
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const createIssueProduct = async (id, Data) => {
+  console.log("ddd", Data);
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.post(
+      `/userInventory/issueProduct/${id}`,
+      Data
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const updateInventoryreturnDate = async (id, Data) => {
+  console.log("Data", Data);
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.put(
+      `/userInventory/returnProduct/${id}`,
+      Data
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+//Vendor CRUD
+export const createVandor = async (data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.post(
+      `/vendors/create`,
+      data
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const getAllVendor = async (currentPage, pageSize) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/vendors?currentPage=${currentPage}&pageSize=${pageSize}`,
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const DeleteVendor = async (id) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.delete(
+      `/vendors/delete/${id}`,
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const UpdateVendor = async (id, data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.put(
+      `/vendors/update/${id}`,
+      data
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const searchVendor = async (search) => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/vendors/searchVendor?vendorName=${search}`,
+      // {
+      //   headers: {
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // },
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+

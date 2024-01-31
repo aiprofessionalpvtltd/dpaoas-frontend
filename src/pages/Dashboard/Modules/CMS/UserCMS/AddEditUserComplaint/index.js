@@ -22,12 +22,11 @@ import moment from 'moment';
 function CMSAddEditUserComplaint() {
   const location = useLocation()
   const userData = getUserData();
-  const { employeeData } = useContext(AuthContext)
+  const { employeeData, employeesAsEngineersData } = useContext(AuthContext)
   console.log("UserInfo", userData);
   const [complaintType, setComplaintType] = useState([])
   const [complaintCategories, setComplaintCategories] = useState([])
   const [userinventoryData, setUserInventoryData] = useState([])
-
 
 
   const formik = useFormik({
@@ -37,6 +36,7 @@ function CMSAddEditUserComplaint() {
       fkComplaintCategoryId: "",
       complaintDescription: location.state ? location?.state?.complaintDescription : "",
       complaintIssuedDate: "",
+      fkAssignedResolverId:"",
       complaintAttachment: ""
     },
 
@@ -68,11 +68,12 @@ function CMSAddEditUserComplaint() {
   const CreateComplaintApi = async (values) => {
 
     const Data = {
-      fkComplaineeUserId: userData?.fkUserId,
+      fkComplaineeUserId: values?.fkComplaineeUserId?.value,
       fkComplaintTypeId: values.fkComplaintTypeId,
       fkComplaintCategoryId: values.fkComplaintCategoryId,
       complaintDescription: values.complaintDescription,
-      complaintIssuedDate: values?.complaintIssuedDate
+      complaintIssuedDate: values?.complaintIssuedDate,
+      fkAssignedResolverId:values?.fkAssignedResolverId?.value
     }
     try {
       const response = await createComplaint(Data);
@@ -80,7 +81,7 @@ function CMSAddEditUserComplaint() {
         showSuccessMessage(response.message);
       }
     } catch (error) {
-      showErrorMessage(error.response.data.message);
+      showErrorMessage(error?.response?.data?.message);
     }
   };
 
@@ -135,8 +136,8 @@ function CMSAddEditUserComplaint() {
     try {
       const response = await getInventoryRecordByUserId(selectedOptions.value);
       if (response?.success) {
-        const transformedData = transformDepartmentData(response?.data);
-        setUserInventoryData(transformedData);
+        // const transformedData = transformDepartmentData(response?.data);
+        setUserInventoryData(response?.data);
       }
     } catch (error) {
       console.log(error);
@@ -209,7 +210,7 @@ function CMSAddEditUserComplaint() {
                   </div>
                   <div class="col-6">
                     <div class="mb-3">
-                      <label class="form-label">Complaint Type</label>
+                      <label class="form-label">Branch/Office</label>
                       <select class="form-select"
                         id="fkComplaintTypeId"
                         name="fkComplaintTypeId"
@@ -258,7 +259,7 @@ function CMSAddEditUserComplaint() {
                   </div>
                   <div class="col-6">
                     <div class="mb-3">
-                      <label class="form-label">Complaint Category</label>
+                      <label class="form-label">Nature of Complaint</label>
                       <select class="form-select"
                         id="fkComplaintCategoryId"
                         name="fkComplaintCategoryId"
@@ -330,6 +331,26 @@ function CMSAddEditUserComplaint() {
 
                     </div>
                   </div>
+                  <div class="col">
+                  <div class="mb-3">
+                    <label class="form-label">Assign To (IT Engineer)</label>
+
+                    <Select
+                      options={
+                        employeesAsEngineersData &&
+                        employeesAsEngineersData?.map((item) => ({
+                          value: item.id,
+                          label: `${item.firstName}${item.lastName}`,
+                        }))
+                      }
+                      onChange={(selectedOptions) => formik.setFieldValue("fkAssignedResolverId", selectedOptions)}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.fkAssignedResolverId}
+                      name="fkAssignedResolverId"
+                      isClearable={true}
+                    />
+                  </div>
+                </div>
                 </div>
 
 
@@ -355,14 +376,14 @@ function CMSAddEditUserComplaint() {
                       Serial No
                     </th>
                     <th class="text-center" scope="col">
-                      Description
+                      manufacturer
                     </th>
 
                     <th class="text-center" scope="col">
                       Status
                     </th>
                     <th class="text-center" scope="col">
-                      AssignedDate
+                      issuedDate
                     </th>
                   </tr>
                 </thead>
@@ -370,11 +391,11 @@ function CMSAddEditUserComplaint() {
                   {userinventoryData && userinventoryData?.length > 0 &&
                     userinventoryData.map((item, index) => (
                       <tr>
-                        <td class="text-center">{item?.productName}</td>
-                        <td class="text-center">{item.serialNo}</td>
-                        <td class="text-center">{item.description}</td>
-                        <td class="text-center">{item.status}</td>
-                        <td class="text-center">{item.assignedDate}</td>
+                        <td class="text-center">{item?.assignedInventory?.productName}</td>
+                        <td class="text-center">{item?.assignedInventory?.serialNo}</td>
+                        <td class="text-center">{item?.assignedInventory?.manufacturer}</td>
+                        <td class="text-center">{item?.assignedInventory?.status}</td>
+                        <td class="text-center">{item?.issuedDate}</td>
                       </tr>
                     ))}
                 </tbody>

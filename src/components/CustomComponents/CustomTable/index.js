@@ -38,6 +38,7 @@ function CustomTable({
   assignClick,
   hideDeleteIcon,
   singleDataCard,
+  showEditIcon
 }) {
   const keys = data?.length > 0 ? Object.keys(data[0]) : [];
   const [totalPages, setTotalPages] = useState(0);
@@ -208,7 +209,9 @@ function CustomTable({
                         <td className="text-center">
                           {!hideEditIcon && !hideEditIcon && (
                             <>
-                              <OverlayTrigger placement="top" overlay={editTooltip}>
+                              {
+                              !showEditIcon && !showEditIcon && (
+                                <OverlayTrigger placement="top" overlay={editTooltip}>
                                 <button
                                   onClick={() => handleEdit(item)}
                                   className="btn default btn-xs black"
@@ -217,6 +220,8 @@ function CustomTable({
                                   <FontAwesomeIcon icon={faEdit} />
                                 </button>
                               </OverlayTrigger>
+                              )
+                            }
                               {!hideDeleteIcon && !hideDeleteIcon && (
                                 <OverlayTrigger placement="top" overlay={deleteTooltip}>
                                   <button
@@ -319,8 +324,9 @@ function CustomTable({
                       {!ActionHide && (
                         <td className="text-center">
                           {!hideEditIcon && !hideEditIcon && (
-                            <>
-                              <OverlayTrigger placement="top" overlay={editTooltip}>
+                            <>{
+                              !showEditIcon && !showEditIcon && (
+                                <OverlayTrigger placement="top" overlay={editTooltip}>
                                 <button
                                   onClick={() => handleEdit(item)}
                                   className="btn default btn-xs black"
@@ -329,6 +335,9 @@ function CustomTable({
                                   <FontAwesomeIcon icon={faEdit} />
                                 </button>
                               </OverlayTrigger>
+                              )
+                            }
+                              
                               {!hideDeleteIcon && !hideDeleteIcon && (
                                 <OverlayTrigger placement="top" overlay={deleteTooltip}>
                                   <button

@@ -10,6 +10,7 @@ function LeaveCard({
   percentage,
   name,
   value,
+  bgblue
 }) {
   return (
     <div class="col-4">
@@ -74,7 +75,7 @@ function LeaveCard({
         <div class="card-block-small">
           <i
             class="icofont icofont-pie-chart bg-c-green card1-icon"
-            style={{ fontSize: "24px" }}
+            style={{ fontSize: "24px",background:  bgblue ? "#279ef8":"" }}
           >
             {value}
           </i>

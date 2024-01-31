@@ -1,6 +1,5 @@
 import { useFormik } from 'formik';
-import React, { useContext, useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react'
 import { Layout } from '../../../../../../components/Layout';
 import { CMSsidebarItems } from '../../../../../../utils/sideBarItems';
 import Header from '../../../../../../components/Header';
@@ -9,46 +8,63 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 import DatePicker from "react-datepicker";
 import { showErrorMessage, showSuccessMessage } from '../../../../../../utils/ToastAlert';
-import { UpdateComplaintByAdmin, createInventory } from '../../../../../../api/APIs';
-import { getUserData } from '../../../../../../api/Auth';
+import { UpdateInventoryById, createInventory, getAllInvoiceBill, getInventoryBillsById } from '../../../../../../api/APIs';
 import { AuthContext } from '../../../../../../api/AuthContext';
-import Select from "react-select";
+import { useLocation } from 'react-router';
 
 
 function CMSAddInventory() {
-    const { employeeData } = useContext(AuthContext)
+    const location = useLocation()
+    console.log("loccatt",location?.state);
+    const [inventoryBill, setInventoryBill] = useState([])
+    const [inventoryBillData, setInventoryBillData] = useState(null)
+    const [inventoryBillid, setInventoryBillid] = useState(null)
+
 
     const formik = useFormik({
         initialValues: {
-            fkAssignedToUser: "",
-            description: "",
-            status: "",
-            assignedDate: "",
-            quantity: "",
-            serialNo:"",
-            productName:""
+            serialNo: location?.state ? location?.state.serialNo:"",
+            productName: location?.state ? location?.state.productName:"",
+            manufacturer: location?.state ? location?.state.manufacturer:"",
+            barcodeLabel: location?.state ? location?.state.barCodeLable  :"",
+            categories: location?.state ? location?.state.productCategories:"",
+            status: location?.state ? location?.state.status:"",
+            purchasedDate: location?.state ? new Date(location?.state?.purchasedDate) : "",
+            warrantyExpireDate:location?.state ?  new Date(location?.state?.warrantyExpiredDate) : ""
         },
 
         onSubmit: (values) => {
             // Handle form submission here
             // console.log(values);
-            hendleAddInventory(values)
+            // if(location.state.id){
+            //     hendleUpdateInventory(values)
+            // }else{
+                
+            // }
 
+            if(location?.state?.id){
+                hendleUpdateInventory(values)
+            }else{
+                hendleAddInventory(values)
+            }
         },
     });
 
     const hendleAddInventory = async (values) => {
-
         const Data = {
-            fkAssignedToUser: values?.fkAssignedToUser?.value,
-            description:  values.description,
-            status:  values.status,
-            assignedDate: values.assignedDate,
-            quantity: values.quantity,
-            serialNo:values.serialNo,
-            productName:values.productName
+            productName: values.productName,
+            fkInventoryBillId: inventoryBillid,
+            manufacturer: values.manufacturer,
+            quantity: 0,
+            productCategories: values.categories,
+            serialNo: values.serialNo,
+            barCodeLable: values.barcodeLabel,
+            description: values.description,
+            purchasedDate: values.purchasedDate,
+            warrantyExpiredDate: values.warrantyExpireDate,
+            status: "in-stock/store"
         }
-
+      console.log("Daaaa",Data);
         try {
             const response = await createInventory(Data);
             if (response.success) {
@@ -58,6 +74,62 @@ function CMSAddInventory() {
             showErrorMessage(error.response.data.message);
         }
     };
+
+    const hendleUpdateInventory = async (values) => {
+        const Data = {
+            productName: values.productName,
+            fkInventoryBillId: location.state.id ? location.state.fkInventoryBillId : inventoryBillid,
+            manufacturer: values.manufacturer,
+            quantity: 0,
+            productCategories: values.categories,
+            serialNo: values.serialNo,
+            barCodeLable: values.barcodeLabel,
+            description: values.description,
+            purchasedDate: values.purchasedDate,
+            warrantyExpiredDate: values.warrantyExpireDate,
+            status: values.status
+        }
+
+        try {
+            const response = await UpdateInventoryById(location.state.id, Data);
+            if (response.success) {
+                showSuccessMessage(response.message);
+            }
+        } catch (error) {
+            showErrorMessage(error.response.data.message);
+        }
+    };
+
+    const getAllInvoiceBillApi = async () => {
+        try {
+            const response = await getAllInvoiceBill(0, 100);
+            if (response?.success) {
+                console.log("inventory", response?.data?.inventoryBills);
+                setInventoryBill(response?.data?.inventoryBills);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const getSingleRecordById = async (event) => {
+        setInventoryBillid(event.target.value)
+    
+        try {
+            const response = await getInventoryBillsById(event.target.value);
+            if (response?.success) {
+                console.log("inventory", response?.data);
+                setInventoryBillData(response?.data)
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+
+    useEffect(() => {
+        getAllInvoiceBillApi()
+    }, [])
 
     return (
         <Layout module={true} sidebarItems={CMSsidebarItems} centerlogohide={true}>
@@ -77,118 +149,77 @@ function CMSAddInventory() {
                     <div className="card-body">
                         <form onSubmit={formik.handleSubmit}>
                             <div className="container-fluid">
-                                <div className="row">
+                                <div style={{background:"#f2f2f2", padding:"15px", marginBottom:"15px"}}>
+                                <div className='row'>
                                     <div className="col-6">
                                         <div className="mb-3">
-                                            <label className="form-label">Complainee</label>
-                                            {/* <input
+                                            <label className="form-label">Invioce Number</label>
+                                            {location?.state?.id ? (
+                                                <input
                                                 type="text"
                                                 className={`form-control`}
-                                                id="fkAssignedToUser"
-                                                placeholder={formik.values.fkAssignedToUser}
-                                                onChange={formik.handleChange}
-                                                onBlur={formik.handleBlur}
-
-                                            /> */}
-                                            <Select
-                                                options={employeeData && employeeData?.map((item) => ({
-                                                    value: item.fkUserId,
-                                                    label: `${item.firstName}${item.lastName}`,
-                                                }))}
-
-                                                onChange={(selectedOptions) =>
-                                                    formik.setFieldValue("fkAssignedToUser", selectedOptions)
-                                                }
-                                                onBlur={formik.handleBlur}
-                                                value={formik.values.fkAssignedToUser}
-                                                name="fkAssignedToUser"
-                                                isClearable={true}
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div className="col-6">
-                                        <div className="mb-3" style={{ position: "relative" }}>
-                                            <label className="form-label">
-                                                Assigned Date
-                                            </label>
-                                            <span
-                                                style={{
-                                                    position: "absolute",
-                                                    right: "15px",
-                                                    top: "36px",
-                                                    zIndex: 1,
-                                                    fontSize: "20px",
-                                                    zIndex: "1",
-                                                    color: "#666",
-                                                }}
-                                            >
-                                                <FontAwesomeIcon icon={faCalendarAlt} />
-                                            </span>
-                                            <DatePicker
-                                                selected={formik.values.assignedDate}
-                                                minDate={new Date()}
-                                                onChange={(date) =>
-                                                    formik.setFieldValue("assignedDate", date)
-                                                }
-                                                onBlur={formik.handleBlur}
-                                                className={`form-control`}
-                                            />
-
-                                        </div>
-                                    </div>
-                                </div>
-                                {/* Add similar validation logic for other fields */}
-                                <div className="row">
-                                    <div className="col-6">
-                                        <div className="mb-3">
-                                            <label className="form-label">Description</label>
-                                            <textarea
-                                                className={`form-control`}
-                                                id="description"
-                                                onChange={formik.handleChange}
-                                                onBlur={formik.handleBlur}
-                                                value={formik.values.description}
-                                            ></textarea>
-                                        </div>
-                                    </div>
-                                    <div className="col-6">
-                                        <div className="mb-3">
-                                            <label className="form-label">Assigned</label>
-                                            <select class="form-select"
+                                                id="productName"
+                                                placeholder={location?.state?.invoiceNumber?.invoiceNumber}
+                                               readOnly
+                                            /> 
+                                            ) : (
+                                                <select class="form-select"
                                                 id="status"
-                                                name="status"
-                                                onChange={formik.handleChange}
-                                                onBlur={formik.handleBlur}
-                                                value={formik.values.status}
+                                                name="serialNo"
+                                                onChange={getSingleRecordById}
                                             >
                                                 <option value={""} selected disabled hidden>
                                                     select
                                                 </option>
-                                                <option value="true">true</option>
-                                                <option value="false">false</option>
+                                                {inventoryBill?.map((item) => (
+                                                    <option value={item.id}>{item.invoiceNumber}</option>
+                                                ))}
                                             </select>
+                                            )}
+                                            
+                                             
                                         </div>
                                     </div>
                                 </div>
-
-                                <div class="row">
-                                    <div className="col-6">
-                                        <div className="mb-3">
-                                            <label htmlFor="formFile" className="form-label">
-                                                Quantity
-                                            </label>
-                                            <input
-                                                type="text"
-                                                className={`form-control`}
-                                                id="quantity"
-                                                placeholder={formik.values.quantity}
-                                                onChange={formik.handleChange}
-                                                onBlur={formik.handleBlur}
-
-                                            />
+                                {inventoryBillData && (
+                                    <div className='row'>
+                                        <div className="col">
+                                            <div className="mb-3">
+                                                <label htmlFor="formFile" className="form-label">
+                                                    Vendor
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    className={`form-control`}
+                                                    id="productName"
+                                                    placeholder={inventoryBillData?.vendor?.vendorName}
+                                                    // onChange={formik.handleChange}
+                                                    // onBlur={formik.handleBlur}
+                                                    readOnly
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="col">
+                                            <div className="mb-3">
+                                                <label htmlFor="formFile" className="form-label">
+                                                    Quantity
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    className={`form-control`}
+                                                    id="productName"
+                                                    placeholder={inventoryBillData?.quantity}
+                                                    // onChange={formik.handleChange}
+                                                    // onBlur={formik.handleBlur}
+                                                    readOnly
+                                                />
+                                            </div>
                                         </div>
                                     </div>
+                                )}
+                                </div>
+
+                                <div className="row">
                                     <div className="col-6">
                                         <div className="mb-3">
                                             <label htmlFor="formFile" className="form-label">
@@ -205,9 +236,7 @@ function CMSAddInventory() {
                                             />
                                         </div>
                                     </div>
-                                </div>
-                                <div className='row'>
-                                <div className="col-6">
+                                    <div className="col-6">
                                         <div className="mb-3">
                                             <label htmlFor="formFile" className="form-label">
                                                 Product Name
@@ -224,6 +253,144 @@ function CMSAddInventory() {
                                         </div>
                                     </div>
 
+                                </div>
+                                <div className="row">
+                                    <div className="col-6">
+                                        <div className="mb-3">
+                                            <label className="form-label">Manufacturer/OEM</label>
+                                            <input
+                                                type="text"
+                                                className={`form-control`}
+                                                id="manufacturer"
+                                                placeholder={formik.values.manufacturer}
+                                                onChange={formik.handleChange}
+                                                onBlur={formik.handleBlur}
+
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col-6">
+                                        <div className="mb-3">
+                                            <label className="form-label">Barcode Label</label>
+                                            <input
+                                                type="text"
+                                                className={`form-control`}
+                                                id="barcodeLabel"
+                                                placeholder={formik.values.barcodeLabel}
+                                                onChange={formik.handleChange}
+                                                onBlur={formik.handleBlur}
+                                            />
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div className='row'>
+
+                                    <div className="col-6">
+                                        <div className="mb-3">
+                                            <label htmlFor="formFile" className="form-label">
+                                                Categories
+                                            </label>
+                                            <select class="form-select"
+                                                id="categories"
+                                                name="categories"
+                                                onChange={formik.handleChange}
+                                                onBlur={formik.handleBlur}
+                                                value={formik.values.categories}
+                                            >
+                                                <option value={""} selected disabled hidden>
+                                                    select
+                                                </option>
+                                                <option value="Laptop">Laptop</option>
+                                                <option value="Printer">Printer</option>
+                                                <option value="Mouse">Mouse</option>
+                                                <option value="Keyboard">Keyboard</option>
+
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                    {location?.state?.id && (
+                                        <div className="col-6">
+                                        <div className="mb-3">
+                                            <label htmlFor="formFile" className="form-label">
+                                                Status
+                                            </label>
+                                            <select class="form-select"
+                                                id="status"
+                                                name="status"
+                                                onChange={formik.handleChange}
+                                                onBlur={formik.handleBlur}
+                                                value={formik.values.status}
+                                            >
+                                                <option value={""} selected disabled hidden>
+                                                    select
+                                                </option>
+                                                <option value="in-stock/store">In-Stock/Store</option>
+                                                <option value="issued">Issued</option>
+                                                <option value="disposed of">Disposed Of</option>
+                                                <option value="repairing">Repairing</option>
+                                                <option value="out of order">Out OF Order</option>
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                    )}
+                                    
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="mb-3" style={{ position: "relative" }}>
+                                            <label class="form-label">Purchased Date</label>
+                                            <span
+                                                style={{
+                                                    position: "absolute",
+                                                    right: "15px",
+                                                    top: "36px",
+                                                    zIndex: 1,
+                                                    fontSize: "20px",
+                                                    zIndex: "1",
+                                                    color: "#666",
+                                                }}
+                                            >
+                                                <FontAwesomeIcon icon={faCalendarAlt} />
+                                            </span>
+                                            <DatePicker
+                                                minDate={new Date()}
+                                                selected={formik.values.purchasedDate}
+                                                onChange={(date) => formik.setFieldValue("purchasedDate", date)}
+                                                className={"form-control"}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="mb-3" style={{ position: "relative" }}>
+                                            <label class="form-label">Warranty Expire Date</label>
+                                            <span
+                                                style={{
+                                                    position: "absolute",
+                                                    right: "15px",
+                                                    top: "36px",
+                                                    zIndex: 1,
+                                                    fontSize: "20px",
+                                                    zIndex: "1",
+                                                    color: "#666",
+                                                }}
+                                            >
+                                                <FontAwesomeIcon icon={faCalendarAlt} />
+                                            </span>
+                                            <DatePicker
+                                                minDate={new Date()}
+                                                selected={formik.values.warrantyExpireDate}
+                                                onChange={(date) => formik.setFieldValue("warrantyExpireDate", date)}
+                                                className={"form-control"}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className='row'>
                                 </div>
                                 <div className="d-grid gap-2 d-md-flex justify-content-md-end">
                                     <button className="btn btn-primary" type="submit">

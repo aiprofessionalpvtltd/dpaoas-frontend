@@ -100,6 +100,13 @@ import CMSAdminDashboard from "../pages/Dashboard/Modules/CMS/AdminCMS";
 import CMSAdminEditComplaint from "../pages/Dashboard/Modules/CMS/AdminCMS/AdminEdit";
 import SMSInventoryDashboard from "../pages/Dashboard/Modules/CMS/InventoryDashboard";
 import CMSAddInventory from "../pages/Dashboard/Modules/CMS/InventoryDashboard/AddInventory";
+import CMSInventoryBill from "../pages/Dashboard/Modules/CMS/InventoryDashboard/InventoryBill";
+import CMSAddInventoryBill from "../pages/Dashboard/Modules/CMS/InventoryDashboard/InventoryBill/AddInventoryBill";
+import InventoryIssueDate from "../pages/Dashboard/Modules/CMS/InventoryDashboard/InventoryIssueDate";
+import InventoryReturnDate from "../pages/Dashboard/Modules/CMS/InventoryDashboard/InventoryReturnDate";
+import CMSVendorList from "../pages/Dashboard/Modules/CMS/InventoryDashboard/Vendor";
+import CMSEditVendor from "../pages/Dashboard/Modules/CMS/InventoryDashboard/Vendor/EditVendor";
+import CMSTonerInstallationReports from "../pages/Dashboard/Modules/CMS/AdminCMS/TonerInstallationReports";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -309,9 +316,22 @@ export const ProtectedRoutes = [
 
   { path: "/cms/admin/dashboard", element: <CMSAdminDashboard /> },
   { path: "/cms/admin/dashboard/addedit", element: <CMSAdminEditComplaint /> },
+  { path: "/cms/admin/toner-installation-report", element: <CMSTonerInstallationReports /> },
+
 
   { path: "/cms/admin/inventory/dashboard", element: <SMSInventoryDashboard /> },
   { path: "/cms/admin/inventory/dashboard/add", element: <CMSAddInventory /> },
+  { path: "/cms/admin/inventory/inventory-bill", element: <CMSInventoryBill /> },
+  { path: "/cms/admin/inventory/inventory-bill/add", element: <CMSAddInventoryBill /> },
+  {path:"/cms/admin/inventory/issue-date", element: <InventoryIssueDate />},
+  {path:"/cms/admin/inventory/return-date", element: <InventoryReturnDate />},
+  {path:"/cms/admin/inventory/vendor-list", element: <CMSVendorList />},
+  {path:"/cms/admin/inventory/vendor-list/edit", element: <CMSEditVendor />}
+
+
+
+
+
 
 
 
