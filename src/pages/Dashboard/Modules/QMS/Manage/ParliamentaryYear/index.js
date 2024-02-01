@@ -4,8 +4,10 @@ import { QMSSideBarItems } from '../../../../../../utils/sideBarItems'
 import Header from '../../../../../../components/Header'
 import CustomTable from '../../../../../../components/CustomComponents/CustomTable'
 import { useNavigate } from 'react-router-dom'
-import { getAllParliamentaryYears } from '../../../../../../api/APIs'
+import { deleteParliamentaryYears, getAllParliamentaryYears } from '../../../../../../api/APIs'
 import moment from 'moment'
+import { showErrorMessage, showSuccessMessage } from '../../../../../../utils/ToastAlert'
+import { ToastContainer } from 'react-toastify'
 
 function QMSParliamentaryYear() {
     const navigate = useNavigate()
@@ -31,7 +33,7 @@ function QMSParliamentaryYear() {
       }));
     };
 
-    const handleDivisions = async () => {
+    const handleParliamentaryYears = async () => {
       try {
         const response = await getAllParliamentaryYears(currentPage, pageSize);
         if (response?.success) {
@@ -45,8 +47,20 @@ function QMSParliamentaryYear() {
     }    
   
     useEffect(() => {
-      handleDivisions();
+      handleParliamentaryYears();
     }, [])
+
+    const handleDelete = async (id) => {
+      try {
+        const response = await deleteParliamentaryYears(id);
+        if (response?.success) {
+          showSuccessMessage(response.message);
+          handleParliamentaryYears();
+        }
+      } catch (error) {
+        showErrorMessage(error.response.data.message);
+      }
+    };
 
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
@@ -55,7 +69,8 @@ function QMSParliamentaryYear() {
       addLink1={"/qms/manage/parliamentary-year"}
       title1={"Parliamentary Year"}
     />
-    {/* <ToastContainer /> */}
+    <ToastContainer />
+
     <div class="container-fluid dash-detail-container card">
     <div class="row">
       <div class="col-12">
@@ -67,6 +82,7 @@ function QMSParliamentaryYear() {
           handleEdit={(item) =>
             navigate("/qms/manage/parliamentary-year/addedit", { state: item })
           }
+          handleDelete={(item) => handleDelete(item.id)}
           headertitlebgColor={"#666"}
           headertitletextColor={"#FFF"}
           handlePageChange={handlePageChange}

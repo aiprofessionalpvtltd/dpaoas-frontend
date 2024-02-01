@@ -2,7 +2,7 @@ import { useFormik } from 'formik';
 import React, { useContext } from 'react'
 import Modal from "react-modal";
 import Select from "react-select";
-import { assignedComplaintByAdmin } from '../../api/APIs';
+import { assignedComplaintByAdmin, createVandor } from '../../api/APIs';
 import { AuthContext } from '../../api/AuthContext';
 import { getUserData } from '../../api/Auth';
 import { showSuccessMessage } from '../../utils/ToastAlert';
@@ -20,32 +20,30 @@ const customStyles = {
   },
 };
 
-function ComplaintAssignedEmployee({ assignModalOpan, hendleModal, ComplaintUserData }) {
-  const { employeesAsEngineersData } = useContext(AuthContext)
-  const UserData = getUserData()
+function AddVendorModal({ modaisOpan, hendleModal }) {
 
   const formikAssigned = useFormik({
     initialValues: {
-      fkAssignedResolverId: "",
-      assignmentRemarks: ""
+        description: "",
+        vendorName: "",
     },
 
     onSubmit: (values) => {
       // Handle form submission here
-      hendleAssigned(values)
+      hendleVandor(values)
     },
 
   })
 
-  const hendleAssigned = async (values) => {
+  const hendleVandor = async (values) => {
     const Data = {
-      fkAssignedById: UserData?.fkUserId,
-      fkAssignedResolverId: values?.fkAssignedResolverId?.value,
-      assignmentRemarks: values?.assignmentRemarks,
+        vendorName: values?.vendorName,
+        description: values?.description,
+        staus:"active"
 
     }
     try {
-      const response = await assignedComplaintByAdmin(ComplaintUserData?.id, Data)
+      const response = await createVandor(Data)
       if (response?.success) {
         showSuccessMessage(response?.message)
         hendleModal()
@@ -57,7 +55,7 @@ function ComplaintAssignedEmployee({ assignModalOpan, hendleModal, ComplaintUser
   return (
     <div>
       <Modal
-        isOpen={assignModalOpan}
+        isOpen={modaisOpan}
         onRequestClose={() => hendleModal()}
         style={customStyles}
         contentLabel="Example Modal"
@@ -67,7 +65,7 @@ function ComplaintAssignedEmployee({ assignModalOpan, hendleModal, ComplaintUser
             class="card-header red-bg"
             style={{ background: "#14ae5c !important" }}
           >
-            <h1>Assign</h1>
+            <h1>Add Vendor</h1>
           </div>
           <div class="card-body">
             <form onSubmit={formikAssigned.handleSubmit}>
@@ -75,21 +73,13 @@ function ComplaintAssignedEmployee({ assignModalOpan, hendleModal, ComplaintUser
               <div className="row">
                 <div className="col">
                   <div className="mb-3">
-                    <label className="form-label">Engineer Name</label>
-                    <Select
-                      options={employeesAsEngineersData && employeesAsEngineersData?.map((item) => ({
-                        value: item.id,
-                        label: `${item.firstName}${item.lastName}`,
-                      }))}
-
-                      onChange={(selectedOptions) =>
-                        formikAssigned.setFieldValue("fkAssignedResolverId", selectedOptions)
-                      }
-                      // onBlur={formikAssigned.handleBlur}
-                      value={formikAssigned.values.fkAssignedResolverId}
-                      name="fkAssignedResolverId"
-                      isClearable={true}
-
+                    <label className="form-label">Vendor Name</label>
+                    <input
+                      className={`form-control`}
+                      id='vendorName'
+                      onChange={formikAssigned.handleChange}
+                      onBlur={formikAssigned.handleBlur}
+                      value={formikAssigned.values.vendorName}
                     />
                   </div>
                 </div>
@@ -98,14 +88,14 @@ function ComplaintAssignedEmployee({ assignModalOpan, hendleModal, ComplaintUser
               <div className="row">
                 <div className="col">
                   <div>
-                    <label className="form-label">Remarks</label>
-                    <input
+                    <label className="form-label">Description</label>
+                    <textarea
                       className={`form-control`}
-                      id='assignmentRemarks'
+                      id='description'
                       onChange={formikAssigned.handleChange}
                       onBlur={formikAssigned.handleBlur}
-                      value={formikAssigned.values.assignmentRemarks}
-                    />
+                      value={formikAssigned.values.description}
+                    ></textarea>
                   </div>
                 </div>
               </div>
@@ -131,4 +121,4 @@ function ComplaintAssignedEmployee({ assignModalOpan, hendleModal, ComplaintUser
   )
 }
 
-export default ComplaintAssignedEmployee
+export default AddVendorModal

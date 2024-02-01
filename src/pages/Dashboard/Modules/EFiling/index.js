@@ -1,59 +1,39 @@
 import React, { useState } from "react";
 import { Layout } from "../../../../components/Layout";
 import Header from "../../../../components/Header";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import thumbnail from "./../../../../assets/profile-img.jpg";
-import {
-    MDBBtn,
-    MDBModal,
-    MDBModalDialog,
-    MDBModalContent,
-    MDBModalHeader,
-    MDBModalTitle,
-    MDBModalBody,
-    MDBModalFooter,
-  } from "mdb-react-ui-kit";
-import { TinyEditor } from "../../../../components/CustomComponents/Editor/TinyEditor";
-
-  const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
-    return (
-      <MDBModal open={isOpen} setopen={toggleModal} tabIndex="-1">
-        <MDBModalDialog centered>
-          <MDBModalContent>
-            <MDBModalHeader>
-              <MDBModalTitle>{title}</MDBModalTitle>
-              <MDBBtn className="btn-close" color="none" onClick={toggleModal}></MDBBtn>
-            </MDBModalHeader>
-            <MDBModalBody className="justify-content-center align-items-center">{children}</MDBModalBody>
-  
-            <MDBModalFooter>
-              <MDBBtn color="secondary" onClick={toggleModal}>
-                Close
-              </MDBBtn>
-              <MDBBtn>Submit</MDBBtn>
-            </MDBModalFooter>
-          </MDBModalContent>
-        </MDBModalDialog>
-      </MDBModal>
-    );
-  };
+import CustomTable from "../../../../components/CustomComponents/CustomTable";
+import { useNavigate } from "react-router-dom";
 
 function EFilingDashboard() {
-    const [editorContent, setEditorContent] = useState();
-    const [isModalOpen, setIsModalOpen] = useState(false);
-  
-    const toggleModal = () => setIsModalOpen(!isModalOpen);
+  const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState(0);
+  const [count, setCount] = useState(null);
+  const pageSize = 7; // Set your desired page size
 
-  // use it (editorContent) when submitting whole file content
-  console.log("Editor content", editorContent);
+  const handlePageChange = (page) => {
+    // Update currentPage when a page link is clicked
+    setCurrentPage(page);
+  };
+
+  const data = [
+    {
+      id: 1,
+      fileNumber: "8(14)/2022/IT",
+      subject: "Testing doc",
+      branch: "IT",
+    },
+    {
+      id: 2,
+      fileNumber: "8(14)/2022/Legis",
+      subject: "Testing doc legislation",
+      branch: "Legislation",
+    },
+  ];
+
   return (
     <Layout centerlogohide={true}>
-      <Header
-        dashboardLink={"/"}
-        addLink1={"/efiling/dashboard"}
-        title1={"E-Filing"}
-      />
+      <div className="dashboard-content" style={{ marginTop: 80 }}>
+        <Header dashboardLink={"/"} addLink1={"/efiling/dashboard"} title1={"E-Filing"} width={"500px"} />
 
         <div class="container-fluid dash-detail-container card" style={{ margin: "0 10px" }}>
           <div class="row">
@@ -78,7 +58,7 @@ function EFilingDashboard() {
             </div>
           </div>
         </div>
-
+      </div>
     </Layout>
   );
 }

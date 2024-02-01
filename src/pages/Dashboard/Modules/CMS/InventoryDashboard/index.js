@@ -11,22 +11,20 @@ import { showErrorMessage, showSuccessMessage } from "../../../../../utils/Toast
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import DatePicker from "react-datepicker";
-import { getAllInventory, searchInventory } from "../../../../../api/APIs";
+import { getAllInventory, getInventoryById, inventoryDelete, searchInventory } from "../../../../../api/APIs";
 
 function SMSInventoryDashboard() {
   const navigation = useNavigate();
   const [count, setCount] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
+  console.log(currentPage);
   const [inventoryData, setInventoryData] = useState([]);
   const pageSize = 4; // Set your desired page size
 
   const formik = useFormik({
     initialValues: {
       productName: "",
-      assignedToUser: "",
-      keyword: "",
       labelNo: "",
-      assignedDate: "",
     },
     onSubmit: (values) => {
       SearchInventoryApi(values);
@@ -40,45 +38,46 @@ function SMSInventoryDashboard() {
 
   const transformInventoryData = (apiData) => {
     console.log(apiData);
-    return apiData.map((leave) => ({
-      id: leave?.id,
-      productName: leave?.productName,
-      serialNo: leave?.serialNo,
-      assignedToUser: `${leave?.assignedToUser?.employee?.firstName}${leave?.assignedToUser?.employee?.lastName}`,
-      description: leave?.description,
-      quantity: leave?.quantity,
-      status: JSON.stringify(leave?.status),
-      assignedDate: moment(leave?.assignedDate).format("YYYY/MM/DD"),
-      //   contactMembers: leave?.contactMembers[0]?.member.memberName
+    return apiData.map((item) => ({
+      id: item?.id,
+      productName: item?.productName,
+      serialNo: item?.serialNo,
+      invoiceNumber: item?.invoiceNumber?.invoiceNumber,
+      manufacturer: item?.manufacturer,
+      productCategories: item?.productCategories,
+      barCodeLable: item?.barCodeLable,
+      barCodeLable: item?.barCodeLable,
+      purchasedDate: moment(item?.purchasedDate).format("MM/DD/YYYY"),
+      warrantyExpiredDate: moment(item?.warrantyExpiredDate).format("MM/DD/YYYY"),
+      status: item?.status,
     }));
   };
 
-  const getInventoryApi = useCallback(async () => {
+  const getInventoryList = useCallback(async () => {
     try {
-      const response = await getAllInventory(currentPage, pageSize);
-      if (response?.success) {
-        const transformedData = transformInventoryData(response?.data?.inventories);
-        setCount(response?.data?.count);
-        setInventoryData(transformedData);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }, [currentPage, pageSize, setCount, setInventoryData]);
+          const response = await getAllInventory(currentPage, pageSize);
+          if (response?.success) {
+            setCount(response?.data?.count);
+            const transformedData = transformInventoryData(response?.data?.inventories);
+            setInventoryData(transformedData);
+          }
+        } catch (error) {
+          console.log(error);
+        }
+}, [currentPage, pageSize, setCount, setInventoryData]);
 
+ 
   const SearchInventoryApi = async (values) => {
     const Data = {
       productName: values.productName,
-      assignedToUser: values.assignedToUser.value,
-      keyword: values.keyword,
       serialNo: values.labelNo,
-      assignedDate: values.assignedDate,
     };
+    console.log("Data",Data);
     try {
       const response = await searchInventory(Data);
       if (response?.success) {
         const transformedData = transformInventoryData(response?.data);
-        setCount(response?.count);
+        setCount(1);
         setInventoryData(transformedData);
         showSuccessMessage(response?.message);
         console.log("Datattattata", response?.message);
@@ -88,13 +87,35 @@ function SMSInventoryDashboard() {
       showErrorMessage(error?.response?.data?.error);
     }
   };
+  
+  const hendleDelete = async (id) => {
+    try {
+      const response = await inventoryDelete(id); // Add await here
+      if (response?.success) {
+        showSuccessMessage(response?.message)
+        getInventoryList()
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message)
+    }
+  };
 
-  useEffect(
-    () => {
-      getInventoryApi();
-    },
-    { getInventoryApi }
-  );
+  const hendleEdit = async (id) => {
+    try {
+      const response = await getInventoryById(id); // Add await here
+      if (response?.success) {
+        navigation("/cms/admin/inventory/dashboard/add", {state: response.data})
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message)
+    }
+  };
+
+  
+
+  useEffect(() => {
+    getInventoryList();
+}, [getInventoryList]);
   return (
     <Layout module={true} sidebarItems={CMSsidebarItems} centerlogohide={true}>
       <Header dashboardLink={"/sms/dashboard"} />
@@ -110,7 +131,7 @@ function SMSInventoryDashboard() {
                     <input
                       type="text"
                       className={"form-control"}
-                      id="productName "
+                      id="productName"
                       placeholder={formik.values.productName}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
@@ -118,61 +139,6 @@ function SMSInventoryDashboard() {
                   </div>
                 </div>
                 <div class="col">
-                  <div class="mb-3">
-                    <label class="form-label">Assigned User</label>
-                    <input
-                      class="form-control"
-                      type="text"
-                      placeholder={formik.values.assignedToUser}
-                      className={"form-control"}
-                      id="assignedToUser "
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                    />
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="mb-3">
-                    <label class="form-label">Keyword</label>
-                    <input
-                      class="form-control"
-                      type="text"
-                      placeholder={formik.values.keyword}
-                      className={"form-control"}
-                      id="keyword"
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="col-4">
-                  <div class="mb-3" style={{ position: "relative" }}>
-                    <label class="form-label">Assigned Date</label>
-                    <span
-                      style={{
-                        position: "absolute",
-                        right: "15px",
-                        top: "36px",
-                        zIndex: 1,
-                        fontSize: "20px",
-                        zIndex: "1",
-                        color: "#666",
-                      }}
-                    >
-                      <FontAwesomeIcon icon={faCalendarAlt} />
-                    </span>
-                    <DatePicker
-                      minDate={new Date()}
-                      selected={formik.values.assignedDate}
-                      onChange={(date) => formik.setFieldValue("assignedDate", date)}
-                      className={"form-control"}
-                    />
-                  </div>
-                </div>
-                <div class="col-4">
                   <div class="mb-3">
                     <label class="form-label">Serial No</label>
                     <input
@@ -186,14 +152,16 @@ function SMSInventoryDashboard() {
                     />
                   </div>
                 </div>
-              </div>
-              <div class="row">
-                <div class="d-grid gap-2 d-md-flex justify-content-md-end col">
-                  <button class="btn btn-primary" type="submit">
+                <div className="col-6 d-flex justify-content-center align-items-center">
+                  <button className="btn btn-primary" type="submit">
                     Search
                   </button>
                 </div>
+
               </div>
+
+
+
             </form>
 
             <div class="row mt-5">
@@ -203,10 +171,8 @@ function SMSInventoryDashboard() {
                   tableTitle={"Inventory Information"}
                   //   hideBtn={true}
                   addBtnText={"Add Inventory"}
-                  singleDataCard={true}
-                  ActionHide={true}
-                  hideDeleteIcon={true}
-                  hideEditIcon={true}
+                  hideDeleteIcon={false}
+                  hideEditIcon={false}
                   headertitlebgColor={"#666"}
                   headertitletextColor={"#FFF"}
                   handlePageChange={handlePageChange}
@@ -214,6 +180,8 @@ function SMSInventoryDashboard() {
                   pageSize={pageSize}
                   totalCount={count}
                   handleAdd={() => navigation("/cms/admin/inventory/dashboard/add")}
+                  handleDelete={(item) => hendleDelete(item.id)}
+                  handleEdit={(item) => hendleEdit(item.id)}
                 />
               </div>
             </div>
