@@ -55,156 +55,29 @@ function EFilingDashboard() {
         title1={"E-Filing"}
       />
 
-    <EFilingModal title={"Add Remarks"} isOpen={isModalOpen} toggleModal={toggleModal}>
-        <label>Remarks</label>
-        <textarea style={{ display: "block", width: "100%" }} className="form-control"></textarea>
-        <div className="clearfix"></div>
-        <label className=" mt-3">Assign</label>
-        <select class="form-control">
-          <option>Superintendent</option>
-          <option>SO</option>
-          <option>DG</option>
-        </select>
-      </EFilingModal>
-
-      <div className="custom-editor">
-        <div className="row">
-          <div className="col-md-2">
-            <div class="noting">
-              <p style={{ marginTop: "70px", marginBottom: "0px", fontWeight: "bold" }}>It Directorate</p>
-              <p style={{ marginBottom: "0" }}>15-01-2024</p>
-              <p>4:03pm</p>
-            </div>
-          </div>
-          <div className="col-md-7 mt-5">
-            {/* <QuillEditor onChange={handleProcedureContentChange} /> */}
-            <TinyEditor initialContent={"Hello there! Write something new"} setEditorContent={setEditorContent} editorContent={editorContent} />
-            <div className="clearfix"></div>
-            <div className="m-2 mt-5">
-              <div className="row">
-                <div className="col">
-                  <div class="mt-3">
-                    <label class="form-label mt-3">File Number</label>
-                    <input class="form-control" type="text" />
-                    <div className="clearfix"></div>
-                  </div>
-                </div>
-                <div className="col">
-                  <div class="mt-3">
-                    <label for="formFile" class="form-label mt-3">
-                      Diary Number
-                    </label>
-                    <input class="form-control" type="text" />
-                    <div className="clearfix"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="m-2">
-              <div>
-                <label for="formFile" class="form-label mt-3">
-                  Upload Signature
-                </label>
-                <input class="form-control" type="file" id="formFile" />
-                <div className="clearfix"></div>
-              </div>
-            </div>
-            <div className="m-2">
-              <div class="mb-3 mt-3">
-                <label for="formFile" class="form-label mt-3">
-                  Attach File
-                </label>
-                <input class="form-control" type="file" id="formFile" />
-                <div className="clearfix"></div>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-3">
-            <div className="custom-editor-main">
-              <div className="comment-heading">
-                <h2>Remarks</h2>
-                <a onClick={toggleModal}>
-                  <button class="btn add-btn">
-                    <FontAwesomeIcon style={{ marginRight: "-5px" }} icon={faPlus} size="md" width={24} /> Add
-                  </button>
-                </a>
-              </div>
-              <div class="d-flex flex-row p-3">
-                <img
-                  style={{ marginBottom: "30px", marginRight: "15px" }}
-                  src={thumbnail}
-                  width="40"
-                  height="40"
-                  class="rounded-circle mr-3"
-                />
-                <div class="w-100">
-                  <div class="d-flex justify-content-between align-items-center">
-                    <div class="d-flex flex-row align-items-center">
-                      <span class="mr-2">SO</span>
-                      <small style={{ marginLeft: "8px" }} class="c-badge">
-                        Top Comment
-                      </small>
-                    </div>
-                    <small>12h ago</small>
-                  </div>
-                  <p class="text-justify comment-text mb-0">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
-                    et dolore magna aliqua. Ut enim ad minim veniam
-                  </p>
-                </div>
-              </div>
-              <div class="d-flex flex-row p-3">
-                <img
-                  style={{ marginBottom: "30px", marginRight: "15px" }}
-                  src={thumbnail}
-                  width="40"
-                  height="40"
-                  class="rounded-circle mr-3"
-                />
-                <div class="w-100">
-                  <div class="d-flex justify-content-between align-items-center">
-                    <div class="d-flex flex-row align-items-center">
-                      <span class="mr-2">Director</span>
-                      <small style={{ marginLeft: "8px" }} class="c-badge">
-                        Top Comment
-                      </small>
-                    </div>
-                    <small>12h ago</small>
-                  </div>
-                  <p class="text-justify comment-text mb-0">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
-                    et dolore magna aliqua. Ut enim ad minim veniam
-                  </p>
-                </div>
-              </div>
-              <div class="d-flex flex-row p-3">
-                <img
-                  style={{ marginBottom: "30px", marginRight: "15px" }}
-                  src={thumbnail}
-                  width="40"
-                  height="40"
-                  class="rounded-circle mr-3"
-                />
-                <div class="w-100">
-                  <div class="d-flex justify-content-between align-items-center">
-                    <div class="d-flex flex-row align-items-center">
-                      <span class="mr-2">DG</span>
-                      <small style={{ marginLeft: "8px" }} class="c-badge">
-                        Top Comment
-                      </small>
-                    </div>
-                    <small>12h ago</small>
-                  </div>
-                  <p class="text-justify comment-text mb-0">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
-                    et dolore magna aliqua. Ut enim ad minim veniam
-                  </p>
-                </div>
-              </div>
+        <div class="container-fluid dash-detail-container card" style={{ margin: "0 10px" }}>
+          <div class="row">
+            <div class="col-12">
+              <CustomTable
+                data={data}
+                tableTitle="Files List"
+                addBtnText="Create Case"
+                addBtnText2="Create File"
+                handleAdd={() => navigate("/efiling/dashboard/addeditcase")}
+                handleAdd2={() => navigate("/efiling/dashboard/addedit")}
+                handleEdit={(item) => navigate("/efiling/dashboard/fileDetail", { state: item })}
+                handleView={(item) => navigate("/efiling/dashboard/fileDetail", { state: { view: true } })}
+                showView={true}
+                headertitlebgColor={"#666"}
+                headertitletextColor={"#FFF"}
+                handlePageChange={handlePageChange}
+                currentPage={currentPage}
+                pageSize={pageSize}
+                totalCount={count}
+              />
             </div>
           </div>
         </div>
-      </div>
 
     </Layout>
   );

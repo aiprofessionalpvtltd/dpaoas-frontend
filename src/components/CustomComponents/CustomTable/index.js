@@ -16,8 +16,10 @@ function CustomTable({
   headerBgColor,
   hideBtn,
   addBtnText,
+  addBtnText2,
   showPrint,
   handleAdd,
+  handleAdd2,
   handlePrint,
   handleUser,
   handleDuplicate,
@@ -108,9 +110,16 @@ function CustomTable({
             >
               <h2 className="float-start mt-2">{tableTitle}</h2>
               {!hideBtn && (
-                <button className="btn btn-primary float-end" type="button" onClick={handleAdd}>
-                  {addBtnText}
-                </button>
+                <>
+                  {handleAdd2 && (
+                  <button className="btn btn-primary float-end ms-2" type="button" onClick={handleAdd2}>
+                    {addBtnText2}
+                  </button>
+                  )}
+                  <button className="btn btn-primary float-end" type="button" onClick={handleAdd}>
+                    {addBtnText}
+                  </button>
+                </>
               )}
               <div className="clearfix"></div>
             </div>

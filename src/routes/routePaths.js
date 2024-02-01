@@ -102,6 +102,9 @@ import QMSGroups from "../pages/Dashboard/Modules/QMS/Manage/Groups";
 import SMSInventoryDashboard from "../pages/Dashboard/Modules/CMS/InventoryDashboard";
 import CMSAddInventory from "../pages/Dashboard/Modules/CMS/InventoryDashboard/AddInventory";
 import EFilingDashboard from "../pages/Dashboard/Modules/EFiling";
+import FileDetail from "../pages/Dashboard/Modules/EFiling/FileDetail";
+import AddEditFileForm from "../pages/Dashboard/Modules/EFiling/AddEditFileForm";
+import AddEditCaseForm from "../pages/Dashboard/Modules/EFiling/AddEditCaseForm";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -319,6 +322,7 @@ export const ProtectedRoutes = [
 
   // E-Filing 
   { path: "/efiling/dashboard", element: <EFilingDashboard /> },
-
-
+  { path: "/efiling/dashboard/fileDetail", element: <FileDetail /> },
+  { path: "/efiling/dashboard/addedit", element: <AddEditFileForm /> },
+  { path: "/efiling/dashboard/addeditcase", element: <AddEditCaseForm /> },
 ];

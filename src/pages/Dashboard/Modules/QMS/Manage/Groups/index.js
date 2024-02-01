@@ -4,7 +4,7 @@ import { Layout } from "../../../../../../components/Layout";
 import { QMSSideBarItems } from "../../../../../../utils/sideBarItems";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 const validationSchema = Yup.object({
   employeename: Yup.string().required("Employee name is required"),
@@ -15,17 +15,17 @@ const validationSchema = Yup.object({
 });
 
 const columnStyle = {
-  display: 'grid',
-  gridTemplateColumns: '1fr 1fr 1fr',
-  margin: '10vh auto',
-  width: '80%',
-  height: '80vh',
-  gap: '8px',
+  display: "grid",
+  gridTemplateColumns: "1fr 1fr 1fr",
+  margin: "10vh auto",
+  width: "80%",
+  height: "80vh",
+  gap: "8px",
 };
 
 const col6Style = {
-  flex: '0 0 50%',
-  maxWidth: '50%',
+  flex: "0 0 50%",
+  maxWidth: "50%",
 };
 
 function QMSGroups() {
@@ -42,27 +42,31 @@ function QMSGroups() {
 
   const initialColumns = {
     ministries: {
-      id: 'ministries',
-      list: ['Ministry 1', 'Ministry 2', 'Ministry 3'],
+      id: "ministries",
+      list: [
+        { id: 0, divisionName: "Ministry 1" },
+        { id: 1, divisionName: "Ministry 2" },
+        { id: 2, divisionName: "Ministry 3" },
+      ],
     },
     group1: {
-      id: 'group1',
+      id: "group1",
       list: [],
     },
     group2: {
-      id: 'group2',
+      id: "group2",
       list: [],
     },
     group3: {
-      id: 'group3',
+      id: "group3",
       list: [],
     },
     group4: {
-      id: 'group4',
+      id: "group4",
       list: [],
     },
     group5: {
-      id: 'group5',
+      id: "group5",
       list: [],
     },
   };
@@ -72,7 +76,10 @@ function QMSGroups() {
   const onDragEnd = ({ source, destination }) => {
     if (!destination) return null;
 
-    if (source.droppableId === destination.droppableId && destination.index === source.index) {
+    if (
+      source.droppableId === destination.droppableId &&
+      destination.index === source.index
+    ) {
       return null;
     }
 
@@ -117,6 +124,12 @@ function QMSGroups() {
     return null;
   };
 
+  const handleSessionChange = (e) => {
+    console.log(e.target.value);
+  };
+
+  console.log(columns);
+
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <Header
@@ -141,15 +154,15 @@ function QMSGroups() {
                         class="form-select"
                         id="sessionNo"
                         name="sessionNo"
-                        onChange={formik.handleChange}
+                        onChange={handleSessionChange}
                         onBlur={formik.handleBlur}
                         value={formik.values.sessionNo}
                       >
                         <option value={""} selected disabled hidden>
                           Select
                         </option>
-                        <option>Pending</option>
-                        <option>Approved</option>
+                        <option value={"1"}>2022</option>
+                        <option value={"2"}>2023</option>
                       </select>
                     </div>
                   </div>
@@ -167,30 +180,35 @@ function QMSGroups() {
                             {...provided.droppableProps}
                             className="col-12"
                             style={{
-                              border: '1px solid #dee2e6',
+                              border: "1px solid #dee2e6",
                               padding: 10,
-                              height: '720px',
-                              borderRadius: '10px',
-                              overflow: 'auto',
+                              height: "720px",
+                              borderRadius: "10px",
+                              overflow: "auto",
                             }}
                           >
                             {columns.ministries.list.map((item, index) => (
-                              <Draggable key={item} draggableId={item} index={index}>
+                              <Draggable
+                                key={item?.id.toString()}
+                                draggableId={item?.id.toString()}
+                                index={index}
+                              >
                                 {(provided, snapshot) => (
                                   <div
                                     ref={provided.innerRef}
                                     {...provided.draggableProps}
                                     {...provided.dragHandleProps}
                                   >
-                                    <div 
-                                    style={{
-                                      backgroundColor: '#f0f0f0',
-                                      width: '100%',
-                                      padding: '4px',
-                                      marginBottom: '5px',
-                                      borderRadius: '5px',
-                                    }}>
-                                    <span>{item}</span>
+                                    <div
+                                      style={{
+                                        backgroundColor: "#f0f0f0",
+                                        width: "100%",
+                                        padding: "4px",
+                                        marginBottom: "5px",
+                                        borderRadius: "5px",
+                                      }}
+                                    >
+                                      <span>{item?.divisionName}</span>
                                     </div>
                                   </div>
                                 )}
@@ -202,234 +220,64 @@ function QMSGroups() {
                       </Droppable>
                     </div>
                     <div class="col-6">
-
                       {/* Draggable and Droppable for the second column */}
-                      <div>
-                        <label class="form-label">Group 1</label>
-                        <Droppable droppableId="group1">
-                          {(provided, snapshot) => (
-                            <div
-                              ref={provided.innerRef}
-                              {...provided.droppableProps}
-                              className="col-12"
-                              style={{
-                                border: '1px solid #dee2e6',
-                                padding: 10,
-                                height: '110px',
-                                borderRadius: '10px',
-                                overflow: 'auto',
-                              }}
-                            >
-                              {columns.group1.list.map((item, index) => (
-                                <Draggable key={item} draggableId={item} index={index}>
-                                  {(provided, snapshot) => (
-                                    <div
-                                      ref={provided.innerRef}
-                                      {...provided.draggableProps}
-                                      {...provided.dragHandleProps}
-                                    >
-                                    <div 
-                                      style={{
-                                      backgroundColor: '#f0f0f0',
-                                      width: '100%',
-                                      padding: '4px',
-                                      marginBottom: '5px',
-                                      borderRadius: '5px',
-                                    }}>
-                                      <span>{item}</span>
-                                      </div>
-                                    </div>
+                      {Object.keys(columns)
+                        .filter((colId) => colId !== "ministries") // Exclude 'ministries' column
+                        .map((groupId, groupIndex) => (
+                          <div style={{ marginTop: groupIndex === 0 ? '0px' : '10px' }}>
+                            <label class="form-label">
+                              Group {groupIndex + 1}
+                            </label>
+                            <Droppable droppableId={groupId}>
+                              {(provided, snapshot) => (
+                                <div
+                                  ref={provided.innerRef}
+                                  {...provided.droppableProps}
+                                  className="col-12"
+                                  style={{
+                                    border: "1px solid #dee2e6",
+                                    padding: 10,
+                                    height: "110px",
+                                    borderRadius: "10px",
+                                    overflow: "auto",
+                                  }}
+                                >
+                                  {columns[groupId]?.list?.map(
+                                    (item, index) => (
+                                      <Draggable
+                                        key={item?.id.toString()}
+                                        draggableId={item?.id.toString()}
+                                        index={index}
+                                      >
+                                        {(provided, snapshot) => (
+                                          <div
+                                            ref={provided.innerRef}
+                                            {...provided.draggableProps}
+                                            {...provided.dragHandleProps}
+                                          >
+                                            <div
+                                              style={{
+                                                backgroundColor: "#f0f0f0",
+                                                width: "100%",
+                                                padding: "4px",
+                                                marginBottom: "5px",
+                                                borderRadius: "5px",
+                                              }}
+                                            >
+                                              <span>{item?.divisionName}</span>
+                                            </div>
+                                          </div>
+                                        )}
+                                      </Draggable>
+                                    )
                                   )}
-                                </Draggable>
-                              ))}
-                              {provided.placeholder}
-                            </div>
-                          )}
-                        </Droppable>
-                      </div>
-
-                        {/* Draggable and Droppable for the group2 column */}
-                        <div>
-                          <label class="form-label mt-2">Group 2</label>
-                          <Droppable droppableId="group2">
-                            {(provided, snapshot) => (
-                              <div
-                                ref={provided.innerRef}
-                                {...provided.droppableProps}
-                                className="col-12"
-                                style={{
-                                  border: '1px solid #dee2e6',
-                                  padding: 10,
-                                  height: '110px',
-                                  borderRadius: '10px',
-                                  overflow: 'auto',
-                                }}
-                              >
-                                {columns.group2.list.map((item, index) => (
-                                  <Draggable key={item} draggableId={item} index={index}>
-                                    {(provided, snapshot) => (
-                                      <div
-                                        ref={provided.innerRef}
-                                        {...provided.draggableProps}
-                                        {...provided.dragHandleProps}
-                                      >
-                                      <div 
-                                        style={{
-                                        backgroundColor: '#f0f0f0',
-                                        width: '100%',
-                                        padding: '4px',
-                                        marginBottom: '5px',
-                                        borderRadius: '5px',
-                                      }}>
-                                        <span>{item}</span>
-                                        </div>
-                                      </div>
-                                    )}
-                                  </Draggable>
-                                ))}
-                                {provided.placeholder}
-                              </div>
-                            )}
-                          </Droppable>
-                        </div>
-
-                        {/* Draggable and Droppable for the group3 column */}
-                        <div>
-                          <label class="form-label mt-2">Group 3</label>
-                          <Droppable droppableId="group3">
-                            {(provided, snapshot) => (
-                              <div
-                                ref={provided.innerRef}
-                                {...provided.droppableProps}
-                                className="col-12"
-                                style={{
-                                  border: '1px solid #dee2e6',
-                                  padding: 10,
-                                  height: '110px',
-                                  borderRadius: '10px',
-                                  overflow: 'auto',
-                                }}
-                              >
-                                {columns.group3.list.map((item, index) => (
-                                  <Draggable key={item} draggableId={item} index={index}>
-                                    {(provided, snapshot) => (
-                                      <div
-                                        ref={provided.innerRef}
-                                        {...provided.draggableProps}
-                                        {...provided.dragHandleProps}
-                                      >
-                                      <div 
-                                        style={{
-                                        backgroundColor: '#f0f0f0',
-                                        width: '100%',
-                                        padding: '4px',
-                                        marginBottom: '5px',
-                                        borderRadius: '5px',
-                                      }}>
-                                        <span>{item}</span>
-                                        </div>
-                                      </div>
-                                    )}
-                                  </Draggable>
-                                ))}
-                                {provided.placeholder}
-                              </div>
-                            )}
-                          </Droppable>
-                        </div>
-
-                          {/* Draggable and Droppable for the group4 column */}
-                          <div>
-                          <label class="form-label mt-2">Group 4</label>
-                          <Droppable droppableId="group4">
-                            {(provided, snapshot) => (
-                              <div
-                                ref={provided.innerRef}
-                                {...provided.droppableProps}
-                                className="col-12"
-                                style={{
-                                  border: '1px solid #dee2e6',
-                                  padding: 10,
-                                  height: '110px',
-                                  borderRadius: '10px',
-                                  overflow: 'auto',
-                                }}
-                              >
-                                {columns.group4.list.map((item, index) => (
-                                  <Draggable key={item} draggableId={item} index={index}>
-                                    {(provided, snapshot) => (
-                                      <div
-                                        ref={provided.innerRef}
-                                        {...provided.draggableProps}
-                                        {...provided.dragHandleProps}
-                                      >
-                                      <div 
-                                        style={{
-                                        backgroundColor: '#f0f0f0',
-                                        width: '100%',
-                                        padding: '4px',
-                                        marginBottom: '5px',
-                                        borderRadius: '5px',
-                                      }}>
-                                        <span>{item}</span>
-                                        </div>
-                                      </div>
-                                    )}
-                                  </Draggable>
-                                ))}
-                                {provided.placeholder}
-                              </div>
-                            )}
-                          </Droppable>
-                        </div>
-
-                        {/* Draggable and Droppable for the group5 column */}
-                        <div>
-                          <label class="form-label mt-2">Group 5</label>
-                          <Droppable droppableId="group5">
-                            {(provided, snapshot) => (
-                              <div
-                                ref={provided.innerRef}
-                                {...provided.droppableProps}
-                                className="col-12"
-                                style={{
-                                  border: '1px solid #dee2e6',
-                                  padding: 10,
-                                  height: '110px',
-                                  borderRadius: '10px',
-                                  overflow: 'auto',
-                                }}
-                              >
-                                {columns.group5.list.map((item, index) => (
-                                  <Draggable key={item} draggableId={item} index={index}>
-                                    {(provided, snapshot) => (
-                                      <div
-                                        ref={provided.innerRef}
-                                        {...provided.draggableProps}
-                                        {...provided.dragHandleProps}
-                                      >
-                                      <div 
-                                        style={{
-                                        backgroundColor: '#f0f0f0',
-                                        width: '100%',
-                                        padding: '4px',
-                                        marginBottom: '5px',
-                                        borderRadius: '5px',
-                                      }}>
-                                        <span>{item}</span>
-                                        </div>
-                                      </div>
-                                    )}
-                                  </Draggable>
-                                ))}
-                                {provided.placeholder}
-                              </div>
-                            )}
-                          </Droppable>
-                        </div>
-
-                      </div>
-                    
+                                  {provided.placeholder}
+                                </div>
+                              )}
+                            </Droppable>
+                          </div>
+                        ))}
+                    </div>
                   </DragDropContext>
                 </div>
 
@@ -439,10 +287,8 @@ function QMSGroups() {
                       Submit
                     </button>
                   </div>
+                </div>
               </div>
-
-              </div>
-
             </form>
           </div>
         </div>
