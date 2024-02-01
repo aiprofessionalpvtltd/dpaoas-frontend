@@ -11,24 +11,7 @@ import {
   showSuccessMessage,
 } from "../../../../../utils/ToastAlert";
 
-const data = [
-  {
-    name: "Admin",
-    status: "Active",
-  },
-  {
-    name: "Editor",
-    status: "InActive",
-  },
-  {
-    name: "Manager",
-    status: "Active",
-  },
-  {
-    name: "Employee",
-    status: "Active",
-  },
-];
+
 function HRMEmployeeDashboard() {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(0);

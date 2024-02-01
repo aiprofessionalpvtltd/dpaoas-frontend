@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
 import { QMSSideBarItems } from "../../../../../../utils/sideBarItems";
@@ -9,6 +9,17 @@ import DatePicker from "react-datepicker";
 import { Editor } from "../../../../../../components/CustomComponents/Editor";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
+import { useLocation } from "react-router";
+import { AuthContext } from "../../../../../../api/AuthContext";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../../utils/ToastAlert";
+import {
+  UpdateQuestionById,
+  sendQuestionTranslation,
+} from "../../../../../../api/APIs";
+import { ToastContainer } from "react-toastify";
 
 const validationSchema = Yup.object({
   sessionNumber: Yup.string().required("Session No is required"),
@@ -24,42 +35,100 @@ const validationSchema = Yup.object({
   questionDiaryNumber: Yup.string().required(
     "Question Diary Number is required",
   ),
-  category: Yup.string(),
+  category: Yup.string().required("Question Category is required"),
   englishText: Yup.string(),
   urduText: Yup.string(),
+  mover: Yup.string().required("Member Senator is required"),
 });
 
 function QMSNoticeQuestionDetail() {
+  const { members } = useContext(AuthContext);
+  const location = useLocation();
+  console.log(location?.state?.fkQuestionId);
   const formik = useFormik({
     initialValues: {
-      sessionNumber: "",
-      noticeOfficeDiaryNumber: "",
-      noticeOfficeDiaryDate: "",
-      noticeOfficeDiaryTime: "",
-      questionDiaryNumber: "",
+      sessionNumber: location?.state?.fkFromSessionId,
+      noticeOfficeDiaryNumber: location?.state?.questionDiary?.questionDiaryNo,
+      noticeOfficeDiaryDate: new Date(
+        location?.state?.noticeOfficeDiary?.noticeOfficeDiaryDate,
+      ),
+      noticeOfficeDiaryTime:
+        location?.state?.noticeOfficeDiary?.noticeOfficeDiaryTime,
+      questionDiaryNumber: location?.state?.questionDiary?.questionDiaryNo,
       category: "",
       englishText: "",
-      urduText: "",
+      urduText: location?.state?.urduText,
+      division: location?.state?.divisions?.divisionName,
+      assignedquestionid: location?.state?.questionDiary?.questionID,
+      mover: "",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       // Handle form submission here
-      console.log(values);
+      updateQuestion(values);
     },
   });
+
+  const updateQuestion = async (values) => {
+    const formData = new FormData();
+    formData.append("fkSessionId", values?.sessionNumber);
+    formData.append("noticeOfficeDiaryNo", values?.noticeOfficeDiaryNumber);
+    formData.append("noticeOfficeDiaryDate", values?.noticeOfficeDiaryDate);
+    formData.append("noticeOfficeDiaryTime", values?.noticeOfficeDiaryTime);
+    formData.append("questionCategory", values?.category);
+    formData.append("questionDiaryNo", values?.questionDiaryNumber);
+    formData.append("fkMemberId", values?.mover);
+    // formData.append("fkGroupId", values?.group);
+    formData.append("fkDivisionId", location?.state?.fkDivisionId);
+    // formData.append("fileStatus", values?.fileStatus);
+    // formData.append("replyDate", values?.replyDate);
+
+    // formData.append("ammendedText", values.ammendedText);
+    formData.append("urduText", values.urduText);
+    formData.append("englishText", values.englishText);
+    // formData.append("originalText", values.originalText);
+    try {
+      const response = await UpdateQuestionById(
+        location?.state?.fkQuestionId,
+        formData,
+      );
+      if (response?.success) {
+        showSuccessMessage(response?.message);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  };
+
+  const hendleQuestionTranslation = async () => {
+    try {
+      const response = await sendQuestionTranslation(
+        location?.state?.fkQuestionId,
+      );
+      if (response?.success) {
+        showSuccessMessage(response.message);
+      }
+    } catch (error) {
+      showErrorMessage(error.response.data.message);
+    }
+  };
+
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
+      <ToastContainer />
       <Header
         dashboardLink={"/"}
-        addLink1={"/qms/dashboard"}
-        title1={"Question"}
-        addLink2={"/qms/notice/notice-question-detail"}
-        title2={"Notice Question Detail"}
+        addLink1={"/qms/notice/notice-question-detail"}
+        title1={"Notice Question Detail"}
       />
       <div class="container-fluid">
         <div class="row mt-4">
           <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <button class="btn btn-primary" type="submit">
+            <button
+              class="btn btn-primary"
+              type="button"
+              onClick={hendleQuestionTranslation}
+            >
               Send for Translation
             </button>
           </div>
@@ -68,7 +137,12 @@ function QMSNoticeQuestionDetail() {
           <div class="row">
             <div class="col-3">
               <div class="mb-3">
-                <input class="form-control" type="text" />
+                <input
+                  class="form-control"
+                  type="text"
+                  readOnly
+                  placeholder={location?.state?.fkQuestionId}
+                />
               </div>
             </div>
             <div class="col-6">
@@ -104,24 +178,14 @@ function QMSNoticeQuestionDetail() {
                       <div class="mb-3">
                         <label class="form-label">Session No</label>
                         <input
+                          readOnly={true}
                           type="text"
                           placeholder={formik.values.sessionNumber}
-                          className={`form-control ${
-                            formik.touched.sessionNumber &&
-                            formik.errors.sessionNumber
-                              ? "is-invalid"
-                              : ""
-                          }`}
+                          className={`form-control`}
                           id="sessionNumber"
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                         />
-                        {formik.touched.sessionNumber &&
-                          formik.errors.sessionNumber && (
-                            <div className="invalid-feedback">
-                              {formik.errors.sessionNumber}
-                            </div>
-                          )}
                       </div>
                     </div>
                     <div class="col">
@@ -170,6 +234,7 @@ function QMSNoticeQuestionDetail() {
                         </span>
                         <DatePicker
                           selected={formik.values.noticeOfficeDiaryDate}
+                          minDate={new Date()}
                           onChange={(date) =>
                             formik.setFieldValue("noticeOfficeDiaryDate", date)
                           }
@@ -246,36 +311,85 @@ function QMSNoticeQuestionDetail() {
                     <div class="col">
                       <div class="mb-3">
                         <label class="form-label">Assigned Question ID</label>
-                        <input class="form-control" type="text" />
+                        <input
+                          class="form-control"
+                          type="text"
+                          placeholder={formik.values.assignedquestionid}
+                          id="assignedquestionid"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                        />
                       </div>
                     </div>
                     <div class="col">
                       <div class="mb-3">
                         <label class="form-label">Category</label>
                         <select
-                          class="form-select"
+                          className={`form-select ${
+                            formik.touched.category && formik.errors.category
+                              ? "is-invalid"
+                              : ""
+                          }`}
                           id="category"
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                         >
-                          <option>Starred</option>
-                          <option>Un-Starred</option>
-                          <option>Short Notice</option>
+                          <option value={""} selected disabled hidden>
+                            Select
+                          </option>
+                          <option value={"Starred"}>Starred</option>
+                          <option value={"Un-Starred"}>Un-Starred</option>
+                          <option value={"Short Notice"}>Short Notice</option>
+                          {formik.touched.category &&
+                            formik.errors.category && (
+                              <div className="invalid-feedback">
+                                {formik.errors.category}
+                              </div>
+                            )}
                         </select>
                       </div>
                     </div>
                     <div class="col">
                       <div class="mb-3">
-                        <label class="form-label">Senator</label>
-                        <select class="form-select">
-                          <option></option>
+                        <label class="form-label">Member Senator</label>
+                        <select
+                          className={`form-select ${
+                            formik.touched.mover && formik.errors.mover
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          id="mover"
+                        >
+                          <option value={""} selected disabled hidden>
+                            select
+                          </option>
+                          {members &&
+                            members.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item?.memberName}
+                              </option>
+                            ))}
+                          {formik.touched.mover && formik.errors.mover && (
+                            <div className="invalid-feedback">
+                              {formik.errors.mover}
+                            </div>
+                          )}
                         </select>
                       </div>
                     </div>
                     <div class="col-3">
                       <div class="mb-3">
                         <label class="form-label">Division</label>
-                        <input class="form-control" type="text" />
+                        <input
+                          class="form-control"
+                          type="text"
+                          placeholder={formik.values.division}
+                          id="division"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                        />
                       </div>
                     </div>
                   </div>

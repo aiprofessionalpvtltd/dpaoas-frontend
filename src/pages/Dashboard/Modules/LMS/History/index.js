@@ -89,6 +89,7 @@ function LMSHistory() {
   };
 
   useEffect(() => {
+     // eslint-disable-next-line react-hooks/exhaustive-deps
     searchHistoryApi();
   }, [currentPage]);
 
@@ -169,7 +170,6 @@ function LMSHistory() {
                           top: "36px",
                           zIndex: 1,
                           fontSize: "20px",
-                          zIndex: "1",
                           color: "#666",
                         }}
                       >
@@ -178,6 +178,7 @@ function LMSHistory() {
                       <DatePicker
                         id="startDate"
                         selected={formik.values.startDate}
+                        minDate={new Date()}
                         onChange={(date) =>
                           formik.setFieldValue("startDate", date)
                         }
@@ -197,7 +198,6 @@ function LMSHistory() {
                           top: "36px",
                           zIndex: 1,
                           fontSize: "20px",
-                          zIndex: "1",
                           color: "#666",
                         }}
                       >
@@ -206,6 +206,7 @@ function LMSHistory() {
                       <DatePicker
                         id="endDate"
                         selected={formik.values.endDate}
+                        minDate={new Date()}
                         onChange={(date) =>
                           formik.setFieldValue("endDate", date)
                         }

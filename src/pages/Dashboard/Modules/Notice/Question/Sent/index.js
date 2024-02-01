@@ -3,10 +3,7 @@ import { NoticeSidebarItems } from "../../../../../../utils/sideBarItems";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
 import { useNavigate } from "react-router";
-import {
-  showErrorMessage,
-  showSuccessMessage,
-} from "../../../../../../utils/ToastAlert";
+import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
 import {
   getAllQuestion,
   getAllQuestionStatus,
@@ -21,6 +18,7 @@ import DatePicker from "react-datepicker";
 import { AuthContext } from "../../../../../../api/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
+import moment from "moment";
 
 function SentQuestion() {
   const navigate = useNavigate();
@@ -63,12 +61,10 @@ function SentQuestion() {
         SrNo: index,
         QID: res.id,
         QDN: res.fkQuestionDiaryId,
-        NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate,
+        NoticeDate: moment(res?.noticeOfficeDiary?.noticeOfficeDiaryDate).format("YYYY/MM/DD"),
         NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
         SessionNumber: res?.session?.sessionName,
-        SubjectMatter: [res?.englishText, res?.urduText]
-          .filter(Boolean)
-          .join(", "),
+        SubjectMatter: [res?.englishText, res?.urduText].filter(Boolean).join(", "),
         Category: res.questionCategory,
         // SubmittedBy: res.category,
         Status: res.questionStatus?.questionStatus,
@@ -106,7 +102,7 @@ function SentQuestion() {
     try {
       const response = await getAllQuestion(currentPage, pageSize);
       if (response?.success) {
-        showSuccessMessage(response?.message);
+        // showSuccessMessage(response?.message);s
         setCount(response?.count);
         const transformedData = transformLeavesData(response.data);
         setResData(transformedData);
@@ -121,7 +117,7 @@ function SentQuestion() {
       const response = await getAllQuestionStatus();
       if (response?.success) {
         setAllQuestionStatus(response?.data);
-        showSuccessMessage(response.message);
+        // showSuccessMessage(response.message);
       }
     } catch (error) {
       console.log(error);
@@ -134,26 +130,13 @@ function SentQuestion() {
   }, []);
 
   return (
-    <Layout
-      module={true}
-      sidebarItems={NoticeSidebarItems}
-      centerlogohide={true}
-    >
+    <Layout module={true} sidebarItems={NoticeSidebarItems} centerlogohide={true}>
       <ToastContainer />
-      <Header
-        dashboardLink={"/"}
-        addLink1={"/notice/dashboard"}
-        addLink2={"/notice/question/sent"}
-        title1={"Notice"}
-        title2={"Sent Question"}
-      />
+      <Header dashboardLink={"/"} addLink1={"/notice/question/sent"} title1={"Sent Question"} />
       <div>
         <div class="container-fluid">
           <div class="card mt-1">
-            <div
-              class="card-header red-bg"
-              style={{ background: "#14ae5c !important" }}
-            >
+            <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
               <h1>SENT QUESTION</h1>
             </div>
             <div class="card-body">
@@ -163,9 +146,7 @@ function SentQuestion() {
                     <div className="row">
                       <div className="col">
                         <div className="mb-3">
-                          <label className="form-label">
-                            Question Diary No
-                          </label>
+                          <label className="form-label">Question Diary No</label>
                           <input
                             className="form-control"
                             type="text"
@@ -333,9 +314,8 @@ function SentQuestion() {
                           </span>
                           <DatePicker
                             selected={formik.values.fromNoticeDate}
-                            onChange={(date) =>
-                              formik.setFieldValue("fromNoticeDate", date)
-                            }
+                            minDate={new Date()}
+                            onChange={(date) => formik.setFieldValue("fromNoticeDate", date)}
                             className={"form-control"}
                           />
                         </div>
@@ -358,9 +338,8 @@ function SentQuestion() {
                           </span>
                           <DatePicker
                             selected={formik.values.toNoticeDate}
-                            onChange={(date) =>
-                              formik.setFieldValue("toNoticeDate", date)
-                            }
+                            minDate={new Date()}
+                            onChange={(date) => formik.setFieldValue("toNoticeDate", date)}
                             className={"form-control"}
                           />
                         </div>
@@ -380,18 +359,17 @@ function SentQuestion() {
                   </div>
                 </form>
 
-                <div
-                  class="dash-detail-container"
-                  style={{ marginTop: "20px" }}
-                >
+                <div class="dash-detail-container" style={{ marginTop: "20px" }}>
                   <CustomTable
-                    block={true}
+                    block={false}
                     hideBtn={true}
                     data={searchedData.length > 0 ? searchedData : resData}
                     tableTitle="Questions"
                     handlePageChange={handlePageChange}
                     currentPage={currentPage}
-                    showPrint={true}
+                    showPrint={false}
+                    ActionHide={true}
+                    hideEditIcon={true}
                     pageSize={pageSize}
                     handleAdd={(item) => navigate("/")}
                     handleEdit={(item) => navigate("/")}

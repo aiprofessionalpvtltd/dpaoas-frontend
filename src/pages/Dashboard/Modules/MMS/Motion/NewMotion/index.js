@@ -12,6 +12,7 @@ import {
   getallMotionStatus,
   updateNewMotion,
 } from "../../../../../../api/APIs";
+import Select from "react-select";
 import DatePicker from "react-datepicker";
 import TimePicker from "react-time-picker";
 import {
@@ -26,7 +27,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 
 const validationSchema = Yup.object({
-  sessionNumber: Yup.string().required("Session No is required"),
+  sessionNumber: Yup.string(),
   fileNo: Yup.string().required("File No is required"),
   motionType: Yup.string().required("Motion Type is required"),
   motionWeek: Yup.string().required("Motion Week is required"),
@@ -40,8 +41,8 @@ const validationSchema = Yup.object({
     "Notice Office Diary Time is required",
   ),
   motionStatus: Yup.string().required("Motion Status is required"),
-  mover: Yup.string().required("Mover is required"),
-  ministry: Yup.string().required("Ministry is required"),
+  mover: Yup.array().required("Mover is required"),
+  ministry: Yup.array().required("Ministry is required"),
   englishText: Yup.string(),
   // Add more fields and validations as needed
 });
@@ -67,7 +68,7 @@ function MMSNewMotion() {
     : getCurrentTime();
   const formik = useFormik({
     initialValues: {
-      sessionNumber: location.state ? location.state.sessionNumber : "",
+      sessionNumber: sessions[0]?.id,
       fileNo: location.state ? location.state.fileNumber : "",
       motionType: location.state ? location.state.motionType : "",
       motionWeek: location.state ? location.state.motionWeek : "",
@@ -77,8 +78,8 @@ function MMSNewMotion() {
       noticeOfficeDiaryDate: noticeOfficeDiaryDate,
       noticeOfficeDiaryTime: noticeOfficeDiaryTime,
       motionStatus: location.state ? location.state.motionStatus : "",
-      mover: location.state ? location.state.mover : "",
-      ministry: location.state ? location.state.ministry : "",
+      mover: location.state ? location.state.mover : [],
+      ministry: location.state ? location.state.ministry : [],
       englishText: "",
       // Add more fields as needed
     },
@@ -94,13 +95,19 @@ function MMSNewMotion() {
   });
   const handleAddNewMotion = async (values) => {
     const formData = new FormData();
-    formData.append("fkSessionId", values?.sessionNumber);
+    formData.append("fkSessionId", sessions[0]?.id);
     formData.append("fileNumber", values?.fileNo);
     formData.append("motionType", values?.motionType);
     formData.append("motionWeek", values?.motionWeek);
     formData.append("noticeOfficeDiaryNo", values?.noticeOfficeDiaryNo);
-    formData.append("moverIds[]", values?.mover);
-    formData.append("ministryIds[]", values?.ministry);
+    // formData.append("moverIds[]", values?.mover);
+    values.mover.forEach((mover, index) => {
+      formData.append(`moverIds[${index}]`, mover.value);
+    });
+    // formData.append("ministryIds[]", values?.ministry);
+    values.ministry.forEach((mover, index) => {
+      formData.append(`ministryIds[${index}]`, mover.value);
+    });
     formData.append("noticeOfficeDiaryDate", values?.noticeOfficeDiaryDate);
     formData.append("noticeOfficeDiaryTime", values?.noticeOfficeDiaryTime);
     formData.append("businessType", "Motion");
@@ -119,13 +126,19 @@ function MMSNewMotion() {
 
   const handleEditMotion = async (values) => {
     const formData = new FormData();
-    formData.append("fkSessionId", values?.sessionNumber);
+    formData.append("fkSessionId", sessions[0]?.id);
     formData.append("fileNumber", values?.fileNo);
     formData.append("motionType", values?.motionType);
     formData.append("motionWeek", values?.motionWeek);
     formData.append("noticeOfficeDiaryNo", values?.noticeOfficeDiaryNo);
-    formData.append("moverIds[]", values?.mover);
-    formData.append("ministryIds[]", values?.ministry);
+    // formData.append("moverIds[]", values?.mover);
+    values.mover.forEach((mover, index) => {
+      formData.append(`moverIds[${index}]`, mover.value);
+    });
+    // formData.append("ministryIds[]", values?.ministry);
+    values.ministry.forEach((mover, index) => {
+      formData.append(`ministryIds[${index}]`, mover.value);
+    });
     formData.append("noticeOfficeDiaryDate", values?.noticeOfficeDiaryDate);
     formData.append("noticeOfficeDiaryTime", values?.noticeOfficeDiaryTime);
     formData.append("businessType", "Motion");
@@ -159,10 +172,8 @@ function MMSNewMotion() {
     <Layout module={true} sidebarItems={MMSSideBarItems} centerlogohide={true}>
       <Header
         dashboardLink={"/"}
-        addLink1={"/mms/dashboard"}
-        title1={"Motion"}
-        addLink2={"/mms/motion/new"}
-        title2={"New Motion"}
+        addLink1={"/mms/motion/new"}
+        title1={"New Motion"}
       />
       <ToastContainer />
       <div class="container-fluid">
@@ -186,29 +197,12 @@ function MMSNewMotion() {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         value={formik.values.sessionNumber}
-                        className={
-                          formik.errors.sessionNumber &&
-                          formik.touched.sessionNumber
-                            ? "form-select is-invalid"
-                            : "form-select"
-                        }
+                        className={"form-select"}
                       >
-                        <option value="" selected disabled hidden>
-                          Select
+                        <option value={sessions[0]?.id} selected disabled>
+                          {sessions[0]?.sessionName}
                         </option>
-                        {sessions &&
-                          sessions.map((item) => (
-                            <option key={item.id} value={item.id}>
-                              {item?.sessionName}
-                            </option>
-                          ))}
                       </select>
-                      {formik.errors.sessionNumber &&
-                        formik.touched.sessionNumber && (
-                          <div className="invalid-feedback">
-                            {formik.errors.sessionNumber}
-                          </div>
-                        )}
                     </div>
                   </div>
                   <div className="col">
@@ -359,6 +353,7 @@ function MMSNewMotion() {
                       </span>
                       <DatePicker
                         selected={formik.values.noticeOfficeDiaryDate}
+                        minDate={new Date()}
                         onChange={(date) =>
                           formik.setFieldValue("noticeOfficeDiaryDate", date)
                         }
@@ -454,8 +449,8 @@ function MMSNewMotion() {
                 <div className="row">
                   <div className="col">
                     <div className="mb-3">
-                      <label className="form-label">Mover</label>
-                      <select
+                      <label className="form-label">Member Senate</label>
+                      {/* <select
                         className="form-select"
                         id="mover"
                         name="mover"
@@ -477,7 +472,20 @@ function MMSNewMotion() {
                               {item?.memberName}
                             </option>
                           ))}
-                      </select>
+                      </select> */}
+                      <Select
+                        options={members.map((item) => ({
+                          value: item.id,
+                          label: item.memberName,
+                        }))}
+                        isMulti
+                        onChange={(selectedOptions) =>
+                          formik.setFieldValue("mover", selectedOptions)
+                        }
+                        onBlur={formik.handleBlur}
+                        value={formik.values.mover}
+                        name="mover"
+                      />
                       {formik.errors.mover && formik.touched.mover && (
                         <div className="invalid-feedback">
                           {formik.errors.mover}
@@ -489,7 +497,7 @@ function MMSNewMotion() {
                   <div className="col">
                     <div className="mb-3">
                       <label className="form-label">Ministry</label>
-                      <select
+                      {/* <select
                         className="form-select"
                         id="ministry"
                         name="ministry"
@@ -509,7 +517,20 @@ function MMSNewMotion() {
                           ministryData.map((item) => (
                             <option value={item.id}>{item.ministryName}</option>
                           ))}
-                      </select>
+                      </select> */}
+                      <Select
+                        options={ministryData.map((item) => ({
+                          value: item.id,
+                          label: item.ministryName,
+                        }))}
+                        isMulti
+                        onChange={(selectedOptions) =>
+                          formik.setFieldValue("ministry", selectedOptions)
+                        }
+                        onBlur={formik.handleBlur}
+                        value={formik.values.ministry}
+                        name="ministry"
+                      />
                       {formik.errors.ministry && formik.touched.ministry && (
                         <div className="invalid-feedback">
                           {formik.errors.ministry}

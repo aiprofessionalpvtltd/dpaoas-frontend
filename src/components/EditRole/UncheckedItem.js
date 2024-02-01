@@ -14,8 +14,10 @@ export const UncheckedItem = ({
     <div key={item.id}>
       <Link
         className="hideDetailsButton primaryButton2"
-        style={{ backgroundColor: bgColor }}
         onClick={() => handleHideShow(item.id)}
+        style={{
+          backgroundColor: bgColor,
+        }}
       >
         {item.label}
         <img
@@ -23,6 +25,11 @@ export const UncheckedItem = ({
           src={arrowLeft}
           alt="icon"
           className="rotating-button"
+          style={{
+            transition: "transform 0.3s ease",
+            transform:
+              hiddenItems === item.id ? "rotate(90deg)" : "rotate(0deg)",
+          }}
         />
       </Link>
       {hiddenItems === item.id && (

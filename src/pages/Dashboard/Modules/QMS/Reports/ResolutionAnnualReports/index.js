@@ -2,16 +2,17 @@ import React from "react";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
 import { QMSSideBarItems } from "../../../../../../utils/sideBarItems";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
+import DatePicker from "react-datepicker";
 
 function QMSResolutionAnnualReports() {
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <Header
         dashboardLink={"/"}
-        addLink1={"/qms/dashboard"}
-        title1={"Question"}
-        addLink2={"/qms/reports/resolution-annual-reports"}
-        title2={"Resolution Annual Reports"}
+        addLink1={"/qms/reports/resolution-annual-reports"}
+        title1={"Resolution Annual Reports"}
       />
       <div class="container-fluid">
         <div class="card mt-4">
@@ -103,15 +104,51 @@ function QMSResolutionAnnualReports() {
                   </div>
                 </div>
                 <div class="col">
-                  <div class="mb-3">
+                  <div class="mb-3" style={{ position: "relative" }}>
                     <label class="form-label">From Notice Date</label>
-                    <input class="form-control" type="text" />
+                    <span
+                      style={{
+                        position: "absolute",
+                        right: "15px",
+                        top: "36px",
+                        zIndex: 1,
+                        fontSize: "20px",
+                        zIndex: "1",
+                        color: "#666",
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faCalendarAlt} />
+                    </span>
+                    <DatePicker
+                      minDate={new Date()}
+                      // selected={formik.values.fromNoticeDate}
+                      // onChange={(date) => formik.setFieldValue("fromNoticeDate", date)}
+                      className={"form-control"}
+                    />
                   </div>
                 </div>
                 <div class="col">
-                  <div class="mb-3">
+                  <div class="mb-3" style={{ position: "relative" }}>
                     <label class="form-label">To Notice Date</label>
-                    <input class="form-control" type="text" />
+                    <span
+                      style={{
+                        position: "absolute",
+                        right: "15px",
+                        top: "36px",
+                        zIndex: 1,
+                        fontSize: "20px",
+                        zIndex: "1",
+                        color: "#666",
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faCalendarAlt} />
+                    </span>
+                    <DatePicker
+                      minDate={new Date()}
+                      // selected={formik.values.fromNoticeDate}
+                      // onChange={(date) => formik.setFieldValue("fromNoticeDate", date)}
+                      className={"form-control"}
+                    />
                   </div>
                 </div>
               </div>

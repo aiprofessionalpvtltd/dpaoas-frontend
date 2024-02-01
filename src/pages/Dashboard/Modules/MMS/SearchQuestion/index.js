@@ -15,6 +15,7 @@ import DatePicker from "react-datepicker";
 import { AuthContext } from "../../../../../api/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
+import moment from "moment";
 
 function MMSSearchQuestion() {
   const navigate = useNavigate();
@@ -58,7 +59,7 @@ function MMSSearchQuestion() {
         SrNo: index,
         QID: res?.id,
         QDN: res?.fkQuestionDiaryId,
-        NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate,
+        NoticeDate: moment(res?.noticeOfficeDiary?.noticeOfficeDiaryDate).format("YYYY/MM/DD"),
         NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
         SessionNumber: res?.session?.sessionName,
         SubjectMatter: [res?.englishText, res?.urduText]
@@ -102,7 +103,7 @@ function MMSSearchQuestion() {
       const response = await getAllQuestionStatus();
       if (response?.success) {
         setAllQuestionStatus(response?.data);
-        showSuccessMessage(response.message);
+        // showSuccessMessage(response.message);
       }
     } catch (error) {
       console.log(error);
@@ -116,10 +117,8 @@ function MMSSearchQuestion() {
     <Layout module={true} sidebarItems={MMSSideBarItems} centerlogohide={true}>
       <Header
         dashboardLink={"/"}
-        addLink1={"/mms/dashboard"}
-        title1={"Motion"}
-        addLink2={"/mms/question/search"}
-        title2={"Search Queston"}
+        addLink1={"/mms/question/search"}
+        title1={"Search Queston"}
       />
       <ToastContainer />
       <div class="container-fluid">
@@ -306,6 +305,7 @@ function MMSSearchQuestion() {
                         </span>
                         <DatePicker
                           selected={formik.values.fromNoticeDate}
+                          minDate={new Date()}
                           onChange={(date) =>
                             formik.setFieldValue("fromNoticeDate", date)
                           }
@@ -331,6 +331,7 @@ function MMSSearchQuestion() {
                         </span>
                         <DatePicker
                           selected={formik.values.toNoticeDate}
+                          minDate={new Date()}
                           onChange={(date) =>
                             formik.setFieldValue("toNoticeDate", date)
                           }
@@ -392,7 +393,7 @@ function MMSSearchQuestion() {
                   hideEditIcon={true}
                   ActionHide={true}
                   totalCount={count}
-                  // handleDelete={(item) => handleDelete(item.id)}
+                // handleDelete={(item) => handleDelete(item.id)}
                 />
               </div>
 
@@ -435,6 +436,7 @@ function MMSSearchQuestion() {
                       <FontAwesomeIcon icon={faCalendarAlt} />
                     </span>
                     <DatePicker
+                      minDate={new Date()}
                       // selected={formik.values.toNoticeDate}
                       // onChange={(date) => formik.setFieldValue("toNoticeDate", date)}
                       className={"form-control"}

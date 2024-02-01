@@ -4,14 +4,8 @@ import { QMSSideBarItems } from "../../../../../../utils/sideBarItems";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import { useNavigate } from "react-router-dom";
 import Header from "../../../../../../components/Header";
-import {
-  DeleteResolution,
-  getAllResolutions,
-} from "../../../../../../api/APIs";
-import {
-  showErrorMessage,
-  showSuccessMessage,
-} from "../../../../../../utils/ToastAlert";
+import { DeleteResolution, getAllResolutions } from "../../../../../../api/APIs";
+import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 import DatePicker from "react-datepicker";
 import { AuthContext } from "../../../../../../api/AuthContext";
@@ -80,17 +74,12 @@ function QMSResolutionList() {
       <ToastContainer />
       <Header
         dashboardLink={"/"}
-        addLink1={"/qms/dashboard"}
-        title1={"Question"}
-        addLink2={"/qms/rsolution/list"}
-        title2={"Resolution List"}
+        addLink1={"/qms/rsolution/list"}
+        title1={"Resolution List"}
       />
-      <div class="container-fluid">
+      <div class="container-fluid dash-detail-container">
         <div class="card mt-4">
-          <div
-            class="card-header red-bg"
-            style={{ background: "#14ae5c !important" }}
-          >
+          <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
             <h1>Resolution List</h1>
           </div>
           <div class="card-body">
@@ -140,6 +129,7 @@ function QMSResolutionList() {
                       <FontAwesomeIcon icon={faCalendarAlt} />
                     </span>
                     <DatePicker
+                      minDate={new Date()}
                       // selected={formik.values.fromNoticeDate}
                       // onChange={(date) =>
                       //   formik.setFieldValue("fromNoticeDate", date)

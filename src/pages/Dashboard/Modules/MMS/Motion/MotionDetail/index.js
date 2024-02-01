@@ -6,6 +6,8 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import DatePicker from "react-datepicker";
 import TimePicker from "react-time-picker";
+import Select from "react-select";
+
 import {
   getAllMinistry,
   getAllSessions,
@@ -20,15 +22,14 @@ import {
 } from "../../../../../../utils/ToastAlert";
 import { useLocation } from "react-router";
 import { ToastContainer } from "react-toastify";
-import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import { AuthContext } from "../../../../../../api/AuthContext";
 import { Editor } from "../../../../../../components/CustomComponents/Editor";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 
 const validationSchema = Yup.object({
-  sessionNumber: Yup.number().required("Session No is required"),
-  motionID: Yup.number(),
+  //   sessionNumber: Yup.number(),
+  //   motionID: Yup.number(),
   fileNo: Yup.number().required("File No is required"),
   motionType: Yup.string(),
   motionWeek: Yup.string(),
@@ -42,8 +43,8 @@ const validationSchema = Yup.object({
     "Notice Office Diary Time is required",
   ),
   motionStatus: Yup.string(),
-  mover: Yup.string(),
-  ministry: Yup.string(),
+  mover: Yup.array(),
+  ministry: Yup.array(),
   dateofMovinginHouse: Yup.date().required(
     "Date Of Moving in House is required",
   ),
@@ -63,7 +64,7 @@ function MMSMotionDetail() {
   const [motionStatusData, setMotionStatusData] = useState([]);
   const formik = useFormik({
     initialValues: {
-      sessionNumber: location?.state?.fkSessionId,
+      sessionNumber: sessions[0]?.id,
       motionID:
         location?.state?.motionMovers.length > 0 ??
         location?.state?.motionMovers[0]?.fkMotionId,
@@ -77,12 +78,8 @@ function MMSMotionDetail() {
       dateofMovinginHouse: new Date(location?.state?.dateOfMovingHouse),
       dateofDiscussion: new Date(location?.state?.dateOfDiscussion),
       dateofRefferingToSC: new Date(location?.state?.dateOfReferringToSc),
-      mover:
-        location?.state?.motionMovers.length > 0 ??
-        location?.state?.motionoMvers[0]?.fkMemberId,
-      ministry:
-        location?.state?.motionMinistries.length > 0 ??
-        location?.state?.motionMinistries[0]?.fkMinistryId,
+      mover: [],
+      ministry: [],
       urduText: "",
       englishText: "",
       motionText: "",
@@ -101,8 +98,14 @@ function MMSMotionDetail() {
     formData.append("motionType", values?.motionType);
     formData.append("motionWeek", values?.motionWeek);
     formData.append("noticeOfficeDiaryNo", values?.noticeOfficeDiaryNo);
-    formData.append("moverIds[]", values?.mover);
-    formData.append("ministryIds[]", values?.ministry);
+    // formData.append("moverIds[]", values?.mover);
+    values.mover.forEach((mover, index) => {
+      formData.append(`moverIds[${index}]`, mover.value);
+    });
+    // formData.append("ministryIds[]", values?.ministry);
+    values.ministry.forEach((mover, index) => {
+      formData.append(`ministryIds[${index}]`, mover.value);
+    });
     formData.append("noticeOfficeDiaryDate", values?.noticeOfficeDiaryDate);
     formData.append("noticeOfficeDiaryTime", values?.noticeOfficeDiaryTime);
     formData.append("businessType", "Motion");
@@ -157,10 +160,8 @@ function MMSMotionDetail() {
     <Layout module={true} sidebarItems={MMSSideBarItems} centerlogohide={true}>
       <Header
         dashboardLink={"/"}
-        addLink1={"/mms/dashboard"}
-        title1={"Motion"}
-        addLink2={"/mms/motion/detail"}
-        title2={"Motion Detail"}
+        addLink1={"/mms/motion/detail"}
+        title1={"Motion Detail"}
       />
       <ToastContainer />
       <div class="container-fluid">
@@ -207,29 +208,12 @@ function MMSMotionDetail() {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         value={formik.values.sessionNumber}
-                        className={
-                          formik.errors.sessionNumber &&
-                          formik.touched.sessionNumber
-                            ? "form-select is-invalid"
-                            : "form-select"
-                        }
+                        className={"form-select"}
                       >
-                        <option value="" selected disabled hidden>
-                          Select
+                        <option value={sessions[0]?.id} selected disabled>
+                          {sessions[0]?.sessionName}
                         </option>
-                        {sessions &&
-                          sessions.map((item) => (
-                            <option key={item.id} value={item.id}>
-                              {item?.sessionName}
-                            </option>
-                          ))}
                       </select>
-                      {formik.errors.sessionNumber &&
-                        formik.touched.sessionNumber && (
-                          <div className="invalid-feedback">
-                            {formik.errors.sessionNumber}
-                          </div>
-                        )}
                     </div>
                   </div>
                   <div class="col">
@@ -352,6 +336,7 @@ function MMSMotionDetail() {
                         onChange={(date) =>
                           formik.setFieldValue("noticeOfficeDiaryDate", date)
                         }
+                        minDate={new Date()}
                         className={`form-control ${
                           formik.errors.noticeOfficeDiaryDate &&
                           formik.touched.noticeOfficeDiaryDate
@@ -435,6 +420,7 @@ function MMSMotionDetail() {
                       </span>
                       <DatePicker
                         selected={formik.values.dateofMovinginHouse}
+                        minDate={new Date()}
                         onChange={(date) =>
                           formik.setFieldValue("dateofMovinginHouse", date)
                         }
@@ -471,6 +457,7 @@ function MMSMotionDetail() {
                       </span>
                       <DatePicker
                         selected={formik.values.dateofDiscussion}
+                        minDate={new Date()}
                         onChange={(date) =>
                           formik.setFieldValue("dateofDiscussion", date)
                         }
@@ -507,6 +494,7 @@ function MMSMotionDetail() {
                       </span>
                       <DatePicker
                         selected={formik.values.dateofRefferingToSC}
+                        minDate={new Date()}
                         onChange={(date) =>
                           formik.setFieldValue("dateofRefferingToSC", date)
                         }
@@ -530,8 +518,8 @@ function MMSMotionDetail() {
                 <div class="row">
                   <div class="col-6">
                     <div class="mb-3">
-                      <label class="form-label">Movers</label>
-                      <select
+                      <label class="form-label">Members Senator</label>
+                      {/* <select
                         class="form-select"
                         placeholder={formik.values.mover}
                         onChange={formik.handleChange}
@@ -546,26 +534,38 @@ function MMSMotionDetail() {
                               {item?.memberName}
                             </option>
                           ))}
-                      </select>
+                      </select> */}
+                      <Select
+                        options={members.map((item) => ({
+                          value: item.id,
+                          label: item.memberName,
+                        }))}
+                        isMulti
+                        onChange={(selectedOptions) =>
+                          formik.setFieldValue("mover", selectedOptions)
+                        }
+                        onBlur={formik.handleBlur}
+                        value={formik.values.mover}
+                        name="mover"
+                      />
                     </div>
                   </div>
                   <div class="col-6">
                     <div class="mb-3">
                       <label class="form-label">Ministries</label>
-                      <select
-                        class="form-select"
-                        placeholder={formik.values.ministry}
-                        onChange={formik.handleChange}
-                        id="ministry"
-                      >
-                        <option value={""} selected disabled hidden>
-                          select
-                        </option>
-                        {ministryData &&
-                          ministryData.map((item) => (
-                            <option value={item.id}>{item.ministryName}</option>
-                          ))}
-                      </select>
+                      <Select
+                        options={ministryData.map((item) => ({
+                          value: item.id,
+                          label: item.ministryName,
+                        }))}
+                        isMulti
+                        onChange={(selectedOptions) =>
+                          formik.setFieldValue("ministry", selectedOptions)
+                        }
+                        onBlur={formik.handleBlur}
+                        value={formik.values.ministry}
+                        name="ministry"
+                      />
                     </div>
                   </div>
                 </div>

@@ -2,7 +2,7 @@ import React from "react";
 import Header from "../../../../../../components/Header";
 import { Layout } from "../../../../../../components/Layout";
 import { HRMsidebarItems } from "../../../../../../utils/sideBarItems";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { UpdateDepartment, createDepartment } from "../../../../../../api/APIs";
@@ -19,7 +19,7 @@ const validationSchema = Yup.object({
 });
 function HRMAddEditDepartment() {
   const location = useLocation();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: {

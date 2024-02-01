@@ -1,17 +1,74 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { CustomNavbar } from "../CustomNavbar";
 import { Sidebar } from "../Sidebar";
 import { useLocation } from "react-router";
-import {
-  getAllMotion,
-  getAllQuestion,
-  getAllResolutions,
-} from "../../api/APIs";
+import { getAllQuestion, getAllResolutions } from "../../api/APIs";
 import { getAuthToken, logout } from "../../api/Auth";
 import { useNavigate } from "react-router-dom";
 
 export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
   const [sidebarVisible, setSidebarVisible] = useState(true);
+  const [modal, setModal] = useState(false);
+  const [notificationData, setNotificationData] = useState([]);
+  const [activeNotificationType, setActiveNotificationType] = useState(null);
+  const notificationRef = useRef();
+
+  const openNotificationModal = (notificationType) => {
+    if (modal && activeNotificationType === notificationType) {
+      // If yes, close the modal
+      setModal(false);
+      setActiveNotificationType(null);
+    } else {
+      // Logic to set notification data based on notificationType
+      let data = null;
+      if (notificationType === "Resolution") {
+        data = [{ name: "Resolution" }, { name: "Resolution2" }];
+      } else if (notificationType === "Translations") {
+        data = [{ name: "Translations" }, { name: "Translations2" }];
+      } else if (notificationType === "Motion") {
+        data = [{ name: "Motion" }, { name: "Motion2" }];
+      } else if (notificationType === "Questions") {
+        data = [{ name: "Question" }, { name: "Question2" }];
+      }
+
+      // Set the notification data
+      setNotificationData(data);
+
+      // Set the active notification type
+      setActiveNotificationType(notificationType);
+
+      // Open the modal
+      setModal(true);
+    }
+  };
+
+  const handleButtonClick = (notificationType) => {
+    // Handle the button click and open the notification modal
+    openNotificationModal(notificationType);
+  };
+
+  const handleCloseModal = () => {
+    setModal(false);
+    setActiveNotificationType(null);
+  };
+
+  useEffect(() => {
+    const handleOutsideClick = (e) => {
+      if (!notificationRef?.current?.contains(e.target)) {
+        // console.log("This one gets called because of the button click", e);
+        handleCloseModal();
+      }
+    };
+
+    const timeoutId = setTimeout(() => {
+      document.addEventListener("click", handleOutsideClick, false);
+    }, 0);
+    return () => {
+      clearTimeout(timeoutId);
+      document.removeEventListener("click", handleOutsideClick, false);
+    };
+  });
+
   const navigation = useNavigate();
   const [count, setCount] = useState({
     motion: null,
@@ -101,7 +158,39 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
       logout();
       navigation("/login");
     }
-  }, []);
+  }, [navigation]);
+
+  const notificationModal = () => (
+    <div
+      ref={notificationRef}
+      style={{
+        position: "absolute",
+        top: "98px", // Adjust the distance from the buttons
+        right: "3%",
+        backgroundColor: "#fff",
+        boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+        padding: "20px",
+        borderRadius: "8px",
+        width: "380px", // Adjust the width as needed
+        zIndex: 999, // Ensure it's above other elements
+      }}
+    >
+      {notificationData.map((item, index) => (
+        <ul key={index}>
+          <li>
+            <span>
+              {item.name}
+              <br />
+              <span className="text-sm">
+                <i>25/10/2023</i>
+              </span>
+              <span className="float-end text-sm">10:25pm</span>
+            </span>
+          </li>
+        </ul>
+      ))}
+    </div>
+  );
 
   return (
     <>
@@ -119,39 +208,31 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
                 {shouldRenderNotice ? (
                   <>
                     <div class="tab-right me-4 mt-1 mb-4">
-                      <a href={"/notice/motion/sent"}>
-                        <button>
-                          Motion{count?.motion && <span>{count.motion}</span>}
-                        </button>
-                      </a>
-                      <a href={"/notice/resolution/sent"}>
-                        <button>
-                          Resolution
-                          {count?.resolution && <span>{count.resolution}</span>}
-                        </button>
-                      </a>
-                      <a href={"/notice/question/sent"}>
-                        <button>
-                          Questions
-                          {count?.question && <span>{count.question}</span>}
-                        </button>
-                      </a>
+                      <button onClick={() => handleButtonClick("Motion")}>
+                        Motion{count?.motion && <span>{count.motion}</span>}
+                      </button>
+                      <button onClick={() => handleButtonClick("Resolution")}>
+                        Resolution
+                        {count?.resolution && <span>{count.resolution}</span>}
+                      </button>
+                      <button onClick={() => handleButtonClick("Questions")}>
+                        Questions
+                        {count?.question && <span>{count.question}</span>}
+                      </button>
                     </div>
                     <div class="clearfix"></div>
                   </>
                 ) : shouldRenderMotion ? (
                   <>
                     <div class="tab-right me-4 mt-1 mb-4">
-                      <button>
+                      <button onClick={() => handleButtonClick("Translations")}>
                         Translations
                         {count?.question && <span>{count?.question}</span>}
                       </button>
-                      <a href={"/mms/motion/list"}>
-                        <button>
-                          Notice Motions
-                          {count?.motion && <span>{count.motion}</span>}
-                        </button>
-                      </a>
+                      <button onClick={() => handleButtonClick("Motion")}>
+                        Notice Motions
+                        {count?.motion && <span>{count.motion}</span>}
+                      </button>
                     </div>
                     <div class="clearfix"></div>
                   </>
@@ -159,29 +240,26 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
                   shouldRenderQuestion && (
                     <>
                       <div class="tab-right me-4 mt-1 mb-4">
-                        <button>
+                        <button
+                          onClick={() => handleButtonClick("Translations")}
+                        >
                           Translations
                           {count?.motion && <span>{count?.motion}</span>}
                         </button>
-                        <a href={"/qms/resolution/list"}>
-                          <button>
-                            Notice Resolutions
-                            {count?.resolution && (
-                              <span>{count.resolution}</span>
-                            )}
-                          </button>
-                        </a>
-                        <a href={"/qms/question/list"}>
-                          <button>
-                            Notice Questions
-                            {count?.question && <span>{count.question}</span>}
-                          </button>
-                        </a>
+                        <button onClick={() => handleButtonClick("Resolution")}>
+                          Notice Resolutions
+                          {count?.resolution && <span>{count.resolution}</span>}
+                        </button>
+                        <button onClick={() => handleButtonClick("Questions")}>
+                          Notice Questions
+                          {count?.question && <span>{count.question}</span>}
+                        </button>
                       </div>
                       <div class="clearfix"></div>
                     </>
                   )
                 )}
+                {modal && notificationModal()}
                 <div className="container-fluid">{children}</div>
               </div>
             </main>

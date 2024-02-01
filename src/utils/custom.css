@@ -904,6 +904,9 @@ hr.horizontal {
     font-size: 27px;
     margin-right: 10px;
 }
+.brand-logo img{
+    width: 80%;
+}
 
 .dashboard-nav-list {
     display: -webkit-box;
@@ -2594,6 +2597,10 @@ textarea {
     background: #53d769;
 }
 
+.mehroonBg {
+    background: #bf2022;
+}
+
 .redBG {
     background: #fd3d3a;
 }
@@ -3235,11 +3242,11 @@ textarea {
 
 .widget-visitor-card i {
     color: #fff;
-    font-size: 80px;
+    font-size: 52px;
     position: absolute;
-    top: 48px;
+    top: 96px;
     opacity: 0.3;
-    left: -10px;
+    left: 0px;
     -webkit-transform: rotate(15deg);
     transform: rotate(15deg);
     -webkit-transition: all 0.3s ease-in-out;
@@ -3254,7 +3261,7 @@ textarea {
     filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#2ab2e3', endColorstr='#03a8e4', GradientType=0);
 }
 
-.widget-visitor-card i {
+/* .widget-visitor-card i {
     color: #fff;
     font-size: 70px;
     position: absolute;
@@ -3265,7 +3272,7 @@ textarea {
     transform: rotate(15deg);
     -webkit-transition: all 0.3s ease-in-out;
     transition: all 0.3s ease-in-out;
-}
+} */
 
 .widget-visitor-card:hover i {
     -webkit-transform: rotate(0deg) scale(1.4);
@@ -3530,7 +3537,7 @@ textarea {
     height: 25px;
     margin-left: 5px;
     display: inline-block;
-    font-size: 14px;
+    /* font-size: 14px; */
     line-height: 24px;
   }
 
@@ -3551,3 +3558,45 @@ textarea {
 .MuiStepLabel-labelContainer span {
     font-size: large;
 }
+.react-datepicker-popper[data-placement^="top"] .react-datepicker__triangle, .react-datepicker-popper[data-placement^="bottom"] .react-datepicker__triangle{
+    margin-left: -22px !important;
+}
+.crm-deals-status li::before {
+    border-radius: 50%;
+    content: "";
+    height: 10px;
+    inset-block-start: .375rem;
+    inset-inline-start: -1rem;
+    position: absolute;
+    width: 10px;
+    top: 7px;
+  }
+.crm-deals-status li {
+margin-block-end: 1rem;
+margin-inline-start: 1rem;
+position: relative;
+}
+
+.crm-deals-status li.fresh::before {
+    background-color: #f6b80d;
+}
+
+.crm-deals-status li.primary::before {
+background-color: #14ae5c;
+}
+  
+.crm-deals-status li.info::before {
+    background-color: #49b6f5;
+  
+  }
+.view-more {
+    text-align: center;
+    display: block;
+    font-style: italic;
+    border-top: #cccc solid 2px;
+    padding-top: 11px;
+    font-size: 15px;
+    color: #820001;
+  }
+
+.main-dashboard-tiles .card h2{font-size: 24px;}

@@ -8,10 +8,8 @@ function QMSQuestionSummary() {
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <Header
         dashboardLink={"/"}
-        addLink1={"/qms/dashboard"}
-        title1={"Question"}
-        addLink2={"/qms/reports/question-summary"}
-        title2={"Question Summary"}
+        addLink1={"/qms/reports/question-summary"}
+        title1={"Question Summary"}
       />
       <div class="container-fluid">
         <div class="card mt-4">

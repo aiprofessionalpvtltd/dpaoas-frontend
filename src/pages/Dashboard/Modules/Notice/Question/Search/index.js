@@ -20,6 +20,7 @@ import { ToastContainer } from "react-toastify";
 import { AuthContext } from "../../../../../../api/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
+import moment from "moment";
 
 function SearchQuestion() {
   const navigate = useNavigate();
@@ -63,7 +64,7 @@ function SearchQuestion() {
         // SrNo: index,
         QID: res.id,
         // QDN: res.questionDiary.questionDiaryNo,
-        NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate,
+        NoticeDate: moment(res?.noticeOfficeDiary?.noticeOfficeDiaryDate).format("YYYY/MM/DD"),
         NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
         SessionNumber: res?.session?.sessionName,
         SubjectMatter: [res?.englishText, res?.urduText]
@@ -108,7 +109,7 @@ function SearchQuestion() {
       const response = await getAllQuestionStatus();
       if (response?.success) {
         setAllQuestionStatus(response?.data);
-        showSuccessMessage(response.message);
+        // showSuccessMessage(response.message);
       }
     } catch (error) {
       console.log(error);
@@ -127,10 +128,8 @@ function SearchQuestion() {
       <ToastContainer />
       <Header
         dashboardLink={"/"}
-        addLink1={"/notice/dashboard"}
-        addLink2={"/notice/question/search"}
-        title1={"Notice"}
-        title2={"Search Question"}
+        addLink1={"/notice/question/search"}
+        title1={"Search Question"}
       />
       <div>
         <div class="container-fluid">
@@ -318,6 +317,7 @@ function SearchQuestion() {
                           </span>
                           <DatePicker
                             selected={formik.values.fromNoticeDate}
+                            minDate={new Date()}
                             onChange={(date) =>
                               formik.setFieldValue("fromNoticeDate", date)
                             }
@@ -343,6 +343,7 @@ function SearchQuestion() {
                           </span>
                           <DatePicker
                             selected={formik.values.toNoticeDate}
+                            minDate={new Date()}
                             onChange={(date) =>
                               formik.setFieldValue("toNoticeDate", date)
                             }
@@ -365,10 +366,7 @@ function SearchQuestion() {
                   </div>
                 </form>
 
-                <div
-                  class="dash-detail-container"
-                  style={{ marginTop: "20px" }}
-                >
+                <div class="" style={{ marginTop: "20px" }}>
                   <CustomTable
                     block={true}
                     hideBtn={true}
@@ -376,7 +374,9 @@ function SearchQuestion() {
                     tableTitle="Questions"
                     handlePageChange={handlePageChange}
                     currentPage={currentPage}
-                    showPrint={true}
+                    showPrint={false}
+                    ActionHide={true}
+                    hideEditIcon={true}
                     pageSize={pageSize}
                     handleAdd={(item) => navigate("/")}
                     handleEdit={(item) => navigate("/")}

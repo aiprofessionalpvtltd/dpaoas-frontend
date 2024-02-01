@@ -1,10 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Layout } from "../../../../../components/Layout";
-import { useNavigate } from "react-router-dom";
 import CustomTable from "../../../../../components/CustomComponents/CustomTable";
 import { MMSSideBarItems } from "../../../../../utils/sideBarItems";
 import Header from "../../../../../components/Header";
-import { Field, Form, Formik, useFormik } from "formik";
+import { useFormik } from "formik";
 import { ToastContainer } from "react-toastify";
 import {
   showErrorMessage,
@@ -20,7 +19,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 
 function MMSSearchResolution() {
-  const navigate = useNavigate();
   const { members, sessions } = useContext(AuthContext);
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
@@ -109,7 +107,7 @@ function MMSSearchResolution() {
       const response = await getAllQuestionStatus();
       if (response?.success) {
         setAllResolutionStatus(response?.data);
-        showSuccessMessage(response.message);
+        // showSuccessMessage(response.message);
       }
     } catch (error) {
       console.log(error);
@@ -122,10 +120,8 @@ function MMSSearchResolution() {
     <Layout module={true} sidebarItems={MMSSideBarItems} centerlogohide={true}>
       <Header
         dashboardLink={"/"}
-        addLink1={"/mms/dashboard"}
-        title1={"Motion"}
-        addLink2={"/mms/resolution/search"}
-        title2={"Search Resolution"}
+        addLink1={"/mms/resolution/search"}
+        title1={"Search Resolution"}
       />
       <ToastContainer />
 
@@ -308,7 +304,6 @@ function MMSSearchResolution() {
                             top: "36px",
                             zIndex: 1,
                             fontSize: "20px",
-                            zIndex: "1",
                             color: "#666",
                           }}
                         >
@@ -316,6 +311,7 @@ function MMSSearchResolution() {
                         </span>
                         <DatePicker
                           selected={formik.values.fromNoticeDate}
+                          minDate={new Date()}
                           onChange={(date) =>
                             formik.setFieldValue("fromNoticeDate", date)
                           }
@@ -333,7 +329,6 @@ function MMSSearchResolution() {
                             top: "36px",
                             zIndex: 1,
                             fontSize: "20px",
-                            zIndex: "1",
                             color: "#666",
                           }}
                         >
@@ -341,6 +336,7 @@ function MMSSearchResolution() {
                         </span>
                         <DatePicker
                           selected={formik.values.toNoticeDate}
+                          minDate={new Date()}
                           onChange={(date) =>
                             formik.setFieldValue("toNoticeDate", date)
                           }
@@ -405,9 +401,9 @@ function MMSSearchResolution() {
                   hideEditIcon={true}
                   ActionHide={true}
                   totalCount={count}
-                  // handlePrint={}
-                  // handleUser={}
-                  // handleDelete={(item) => handleDelete(item.id)}
+                // handlePrint={}
+                // handleUser={}
+                // handleDelete={(item) => handleDelete(item.id)}
                 />
                 <div class="row mt-3">
                   <div class="col">
@@ -443,9 +439,25 @@ function MMSSearchResolution() {
                     </div>
                   </div>
                   <div class="col">
-                    <div class="mb-3">
+                    <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label">Status Date</label>
-                      <input class="form-control" />
+                      <span
+                        style={{
+                          position: "absolute",
+                          right: "15px",
+                          top: "36px",
+                          zIndex: 1,
+                          fontSize: "20px",
+                          color: "#666",
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faCalendarAlt} />
+                      </span>
+                      <DatePicker
+                        // selected={formik.values.toNoticeDate}
+                        // onChange={(date) => formik.setFieldValue("toNoticeDate", date)}
+                        className={"form-control"}
+                      />
                     </div>
                   </div>
                 </div>

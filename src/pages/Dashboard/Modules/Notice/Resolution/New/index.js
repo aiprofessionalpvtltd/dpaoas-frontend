@@ -54,7 +54,7 @@ function NewResolution() {
 
   const formik = useFormik({
     initialValues: {
-      fkSessionNo: null,
+      fkSessionNo: sessions[0]?.id,
       noticeOfficeDiaryNo: "",
       noticeOfficeDiaryDate: null,
       noticeOfficeDiaryTime: "",
@@ -121,10 +121,8 @@ function NewResolution() {
 
       <Header
         dashboardLink={"/"}
-        addLink1={"/notice/dashboard"}
-        addLink2={"/notice/resolution/new"}
-        title1={"Notice"}
-        title2={"New Resolution"}
+        addLink1={"/notice/resolution/new"}
+        title1={"New Resolution"}
       />
 
       <CustomAlert
@@ -162,15 +160,9 @@ function NewResolution() {
                           onBlur={formik.handleBlur}
                           name="fkSessionNo"
                         >
-                          <option value="" selected disabled hidden>
-                            Select
+                          <option value={sessions[0]?.id} selected disabled>
+                            {sessions[0]?.sessionName}
                           </option>
-                          {sessions &&
-                            sessions.map((item) => (
-                              <option key={item.id} value={item.id}>
-                                {item?.sessionName}
-                              </option>
-                            ))}
                         </select>
                         {formik.touched.fkSessionNo &&
                           formik.errors.fkSessionNo && (
@@ -241,7 +233,7 @@ function NewResolution() {
 
                     <div class="col">
                       <div class="mb-3">
-                        <label class="form-label">Movers</label>
+                        <label class="form-label">Member Senate</label>
                         <Select
                           options={members.map((item) => ({
                             value: item.id,
@@ -289,6 +281,7 @@ function NewResolution() {
                         </span>
                         <DatePicker
                           selected={formik.values.noticeOfficeDiaryDate}
+                          minDate={new Date()}
                           onChange={(date) =>
                             formik.setFieldValue("noticeOfficeDiaryDate", date)
                           }

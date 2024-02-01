@@ -54,7 +54,7 @@ function NewQuestion() {
 
   const formik = useFormik({
     initialValues: {
-      fkSessionId: null,
+      fkSessionId: sessions[0]?.id,
       questionCategory: "",
       noticeOfficeDiaryNo: null,
       fkMemberId: null,
@@ -74,7 +74,7 @@ function NewQuestion() {
 
   const CreateQuestionApi = async (values) => {
     const formData = new FormData();
-    formData.append("fkSessionId", 1);
+    formData.append("fkSessionId", values?.fkSessionId);
     formData.append("noticeOfficeDiaryNo", Number(values.noticeOfficeDiaryNo));
     formData.append("noticeOfficeDiaryDate", values.noticeOfficeDiaryDate);
     formData.append("noticeOfficeDiaryTime", "11:40am");
@@ -109,10 +109,8 @@ function NewQuestion() {
       <ToastContainer />
       <Header
         dashboardLink={"/"}
-        addLink1={"/notice/dashboard"}
-        addLink2={"/notice/question/new"}
-        title1={"Notice"}
-        title2={"New Question"}
+        addLink1={"/notice/question/new"}
+        title1={"New Question"}
       />
 
       <CustomAlert
@@ -150,15 +148,9 @@ function NewQuestion() {
                           onBlur={formik.handleBlur}
                           name="fkSessionId"
                         >
-                          <option value="" selected disabled hidden>
-                            Select
+                          <option value={sessions[0]?.id} selected disabled>
+                            {sessions[0]?.sessionName}
                           </option>
-                          {sessions &&
-                            sessions.map((item) => (
-                              <option key={item.id} value={item.id}>
-                                {item?.sessionName}
-                              </option>
-                            ))}
                         </select>
                         {formik.touched.fkSessionId &&
                           formik.errors.fkSessionId && (
@@ -283,6 +275,7 @@ function NewQuestion() {
                         </span>
                         <DatePicker
                           selected={formik.values.noticeOfficeDiaryDate}
+                          minDate={new Date()}
                           onChange={(date) =>
                             formik.setFieldValue("noticeOfficeDiaryDate", date)
                           }

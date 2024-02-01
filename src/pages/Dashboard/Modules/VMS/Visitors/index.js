@@ -11,6 +11,7 @@ import {
 import { showSuccessMessage } from "../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 import { getPassID } from "../../../../../api/Auth";
+import moment from "moment";
 
 function VMSVisitors() {
   const location = useLocation();
@@ -19,7 +20,7 @@ function VMSVisitors() {
   const navigate = useNavigate();
   const [allvisitorData, setAllVisitorData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
-  const [count, setCount] = useState(null);
+  // const [count, setCount] = useState(null);
   const pageSize = 7; // Set your desired page size
 
   const handlePageChange = (page) => {
@@ -54,8 +55,8 @@ function VMSVisitors() {
       cnic: leave.cnic,
       details: leave.details,
       visitorStatus: leave.visitorStatus,
-      createdAt: leave.createdAt,
-      updatedAt: leave.updatedAt,
+      createdAt: moment(leave.createdAt).format("YYYY/MM/DD"),
+      updatedAt: moment(leave.updatedAt).format("YYYY/MM/DD"),
     }));
   };
   const getVisitorsAPi = async () => {
@@ -113,13 +114,14 @@ function VMSVisitors() {
             handleEdit={(item) =>
               navigate("/vms/addeditvisitor", { state: item })
             }
-            seachBarShow={true}
+            seachBarShow={false}
             handlePageChange={handlePageChange}
             currentPage={currentPage}
             pageSize={pageSize}
             headertitlebgColor={"#666"}
             headertitletextColor={"#FFF"}
             handleDelete={(item) => handleDelete(item.id)}
+
             // handlePrint={}
             // handleUser={}
             // handleDelete={(item) => handleDelete(item.id)}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Layout } from "../../../../../components/Layout";
 import { HRMsidebarItems } from "../../../../../utils/sideBarItems";
 import Header from "../../../../../components/Header";
@@ -11,24 +11,6 @@ import {
 } from "../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 
-const data = [
-  {
-    id: 1,
-    name: "Admin Department",
-    description: "Handles Admin Related Work!",
-    departmentStatus: "active",
-    createdAt: "2023-11-21T09:22:13.682Z",
-    updatedAt: "2023-11-24T05:48:16.342Z",
-  },
-  {
-    id: 2,
-    name: "IT Department",
-    description: "Handles IT Related Work!",
-    departmentStatus: "active",
-    createdAt: "2023-11-24T09:49:43.505Z",
-    updatedAt: "2023-11-24T09:49:43.505Z",
-  },
-];
 
 function HRMDepartment() {
   const navigate = useNavigate();
@@ -50,20 +32,18 @@ function HRMDepartment() {
       departmentStatus: leave?.departmentStatus,
     }));
   };
-  const getDepartmentData = async () => {
+  const getDepartmentData = useCallback(async () => {
     try {
       const response = await getDepartment(currentPage, pageSize);
       if (response?.success) {
         const transformedData = transformDepartmentData(response?.data);
-        console.log("lsdflsdjljfkl", transformedData);
         setCount(response?.count);
-
         setDepartmentData(transformedData);
       }
     } catch (error) {
       console.log(error);
     }
-  };
+  }, [currentPage, pageSize, setCount, setDepartmentData]);
 
   const handleDelete = async (id) => {
     try {
@@ -78,7 +58,7 @@ function HRMDepartment() {
   };
   useEffect(() => {
     getDepartmentData();
-  }, []);
+  }, [getDepartmentData]);
   return (
     <Layout module={true} sidebarItems={HRMsidebarItems} centerlogohide={true}>
       <Header
@@ -87,6 +67,7 @@ function HRMDepartment() {
         title1={"Department"}
       />
       <ToastContainer />
+      <div class="container-fluid dash-detail-container card">
       <div class="row">
         <div class="col-12">
           <CustomTable
@@ -108,6 +89,7 @@ function HRMDepartment() {
             handleDelete={(item) => handleDelete(item.id)}
           />
         </div>
+      </div>
       </div>
     </Layout>
   );

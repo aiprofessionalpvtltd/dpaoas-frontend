@@ -5,10 +5,7 @@ import Header from "../../../../../../components/Header";
 import { useNavigate } from "react-router";
 import DatePicker from "react-datepicker";
 
-import {
-  showErrorMessage,
-  showSuccessMessage,
-} from "../../../../../../utils/ToastAlert";
+import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 import { useFormik } from "formik";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
@@ -23,6 +20,7 @@ import {
 import { AuthContext } from "../../../../../../api/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
+import moment from "moment";
 
 function SentMotion() {
   const navigate = useNavigate();
@@ -67,7 +65,7 @@ function SentMotion() {
       noticeOfficeDiaryNo: leave?.noticeOfficeDairies?.noticeOfficeDiaryNo,
       // ministryName: leave?.motionMinistries?.ministries,
       // ministryIds: leave?.motionMinistries?.fkMinistryId,
-      noticeOfficeDiaryDate: leave?.noticeOfficeDairies?.noticeOfficeDiaryDate,
+      noticeOfficeDiaryDate: moment(leave?.noticeOfficeDairies?.noticeOfficeDiaryDate).format("YYYY/MM/DD"),
       noticeOfficeDiaryTime: leave?.noticeOfficeDairies?.noticeOfficeDiaryTime,
       // memberName:leave?.motionMovers?.members,
       englishText: leave?.englishText,
@@ -138,26 +136,13 @@ function SentMotion() {
   }, [currentPage]);
 
   return (
-    <Layout
-      module={true}
-      sidebarItems={NoticeSidebarItems}
-      centerlogohide={true}
-    >
+    <Layout module={true} sidebarItems={NoticeSidebarItems} centerlogohide={true}>
       <ToastContainer />
-      <Header
-        dashboardLink={"/"}
-        addLink1={"/notice/dashboard"}
-        addLink2={"/notice/motion/sent"}
-        title1={"Notice"}
-        title2={"Sent Motion"}
-      />
+      <Header dashboardLink={"/"} addLink1={"/notice/motion/sent"} title1={"Sent Motion"} />
       <div>
-        <div class="container-fluid">
+        <div class="container-fluid dash-detail-container">
           <div class="card mt-1">
-            <div
-              class="card-header red-bg"
-              style={{ background: "#14ae5c !important" }}
-            >
+            <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
               <h1>SENT MOTION</h1>
             </div>
             <div class="card-body">
@@ -386,32 +371,35 @@ function SentMotion() {
                       </span>
                       <DatePicker
                         selected={formik.values.fromNoticeDate}
-                        onChange={(date) =>
-                          formik.setFieldValue("fromNoticeDate", date)
-                        }
+                        onChange={(date) => formik.setFieldValue("fromNoticeDate", date)}
                         className={`form-control ${
-                          formik.errors.fromNoticeDate &&
-                          formik.touched.fromNoticeDate
-                            ? "is-invalid"
-                            : ""
+                          formik.errors.fromNoticeDate && formik.touched.fromNoticeDate ? "is-invalid" : ""
                         }`}
                       />
-                      {formik.errors.fromNoticeDate &&
-                        formik.touched.fromNoticeDate && (
-                          <div className="invalid-feedback">
-                            {formik.errors.fromNoticeDate}
-                          </div>
-                        )}
+                      {formik.errors.fromNoticeDate && formik.touched.fromNoticeDate && (
+                        <div className="invalid-feedback">{formik.errors.fromNoticeDate}</div>
+                      )}
                     </div>
                   </div>
                   <div class="col">
-                    <div class="mb-3">
+                    <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label">To Notice Date</label>
+                      <span
+                        style={{
+                          position: "absolute",
+                          right: "15px",
+                          top: "36px",
+                          zIndex: 1,
+                          fontSize: "20px",
+                          zIndex: "1",
+                          color: "#666",
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faCalendarAlt} />
+                      </span>
                       <DatePicker
                         selected={formik.values.toNoticeDate}
-                        onChange={(date) =>
-                          formik.setFieldValue("toNoticeDate", date)
-                        }
+                        onChange={(date) => formik.setFieldValue("toNoticeDate", date)}
                         className={"form-control"}
                       />
                     </div>
@@ -427,18 +415,13 @@ function SentMotion() {
                     </button>
                   </div>
                 </div>
-                <div
-                  class="dash-detail-container"
-                  style={{ marginTop: "20px" }}
-                >
+                <div class="" style={{ marginTop: "20px" }}>
                   <CustomTable
                     block={true}
                     data={motionData}
                     headerShown={true}
                     handleDelete={(item) => alert(item.id)}
-                    handleEdit={(item) =>
-                      navigate("/mms/motion/new", { state: item })
-                    }
+                    handleEdit={(item) => navigate("/mms/motion/new", { state: item })}
                     headertitlebgColor={"#666"}
                     headertitletextColor={"#FFF"}
                     handlePageChange={handlePageChange}

@@ -47,6 +47,7 @@ import QMSQuestionDetail from "../pages/Dashboard/Modules/QMS/Question/QuestionD
 import QMSQuestionList from "../pages/Dashboard/Modules/QMS/Question/QuestionList";
 import QMSDeferQuestionReports from "../pages/Dashboard/Modules/QMS/Reports/DeferQuestionReports";
 import QMSQuestionAnnualReports from "../pages/Dashboard/Modules/QMS/Reports/QuestionAnnualReports";
+import QMSReportQuestionList from "../pages/Dashboard/Modules/QMS/Reports/QuestionList";
 import QMSQuestionSummary from "../pages/Dashboard/Modules/QMS/Reports/QuestionSummary";
 import QMSResolutionAnnualReports from "../pages/Dashboard/Modules/QMS/Reports/ResolutionAnnualReports";
 import QMSResolutionSummary from "../pages/Dashboard/Modules/QMS/Reports/ResolutionSummary";
@@ -54,12 +55,62 @@ import QMSDeleteResolution from "../pages/Dashboard/Modules/QMS/Resolution/Delet
 import QMSResolutionList from "../pages/Dashboard/Modules/QMS/Resolution/ResolutionList";
 import QMSSearchQuestion from "../pages/Dashboard/Modules/QMS/SearchQuestion";
 import QMSSerchResolution from "../pages/Dashboard/Modules/QMS/SearchResolution";
+import SMSDashboard from "../pages/Dashboard/Modules/SMS";
+import TMSDashboard from "../pages/Dashboard/Modules/TMS";
+import TMSMotion from "../pages/Dashboard/Modules/TMS/Motion";
+import TMSQuestion from "../pages/Dashboard/Modules/TMS/Question";
+import TMSResolution from "../pages/Dashboard/Modules/TMS/Resolution";
+import TMSDashboardDetail from "../pages/Dashboard/Modules/TMS/TMSDashboardDetail";
+import SMSDetailedMessageLog from "../pages/Dashboard/Modules/SMS/MessageLog/Detailed";
+import SMSMessageSummary from "../pages/Dashboard/Modules/SMS/MessageLog/Summary";
+import SMSAddList from "../pages/Dashboard/Modules/SMS/PhoneBook/AddList";
+import SMSImportContact from "../pages/Dashboard/Modules/SMS/PhoneBook/ImportContacts";
+import SMSManageList from "../pages/Dashboard/Modules/SMS/PhoneBook/ManageList";
+import SMSAdvancedSMS from "../pages/Dashboard/Modules/SMS/SendSMS/AdvancedSMS";
+import SMSInstantSMS from "../pages/Dashboard/Modules/SMS/SendSMS/InstantSMS";
+import SMSAddEditTemplate from "../pages/Dashboard/Modules/SMS/Templates/AddTemplates";
+import SMSMAnageTemplate from "../pages/Dashboard/Modules/SMS/Templates/ManageTemplate";
 import VMSDashboard from "../pages/Dashboard/Modules/VMS";
 import VMSAddEditPass from "../pages/Dashboard/Modules/VMS/Pass";
 import VMSDuplicatePass from "../pages/Dashboard/Modules/VMS/Pass/DuplicatePass";
 import VMSVisitors from "../pages/Dashboard/Modules/VMS/Visitors";
 import VMSAddEditVisitors from "../pages/Dashboard/Modules/VMS/Visitors/AddEditVisitors";
 import { Login } from "../pages/Login";
+import QMSSessions from "../pages/Dashboard/Modules/QMS/Manage/Sessions";
+import QMSTerms from "../pages/Dashboard/Modules/QMS/Manage/Terms";
+import QMSTenures from "../pages/Dashboard/Modules/QMS/Manage/Tenures";
+import QMSMembers from "../pages/Dashboard/Modules/QMS/Manage/Members";
+import QMSSittingsDays from "../pages/Dashboard/Modules/QMS/Manage/SittingDays";
+import QMSMinistries from "../pages/Dashboard/Modules/QMS/Manage/Ministries";
+import QMSDivisions from "../pages/Dashboard/Modules/QMS/Manage/Divisions";
+import QMSPoliticalParty from "../pages/Dashboard/Modules/QMS/Manage/PoliticalParty";
+import QMSParliamentaryYear from "../pages/Dashboard/Modules/QMS/Manage/ParliamentaryYear";
+import QMSMembersAddEditForm from "../pages/Dashboard/Modules/QMS/Manage/Members/AddEditMembers";
+import QMSAddEditSittingDaysForm from "../pages/Dashboard/Modules/QMS/Manage/SittingDays/AddEditSittingDays";
+import QMSAddEditMinistriesForm from "../pages/Dashboard/Modules/QMS/Manage/Ministries/AddEditMinistries";
+import QMSAddEditDivisionsForm from "../pages/Dashboard/Modules/QMS/Manage/Divisions/AddEditDivisions";
+import QMSAddEditPoliticalPartyForm from "../pages/Dashboard/Modules/QMS/Manage/PoliticalParty/AddEditPoliticalParty";
+import QMSAddEditParliamentaryYearForm from "../pages/Dashboard/Modules/QMS/Manage/ParliamentaryYear/AddEditParliamentaryYear";
+import QMSAddEditSessionsForm from "../pages/Dashboard/Modules/QMS/Manage/Sessions/AddEditSessions";
+import QMSAddEditTermsForm from "../pages/Dashboard/Modules/QMS/Manage/Terms/AddEditTerms";
+import QMSAddEditTenuresForm from "../pages/Dashboard/Modules/QMS/Manage/Tenures/AddEditTenures";
+import CMSUserDashboard from "../pages/Dashboard/Modules/CMS/UserCMS";
+import CMSAddEditUserComplaint from "../pages/Dashboard/Modules/CMS/UserCMS/AddEditUserComplaint";
+import CMSAdminDashboard from "../pages/Dashboard/Modules/CMS/AdminCMS";
+import CMSAdminEditComplaint from "../pages/Dashboard/Modules/CMS/AdminCMS/AdminEdit";
+import QMSGroups from "../pages/Dashboard/Modules/QMS/Manage/Groups";
+import SMSInventoryDashboard from "../pages/Dashboard/Modules/CMS/InventoryDashboard";
+import CMSAddInventory from "../pages/Dashboard/Modules/CMS/InventoryDashboard/AddInventory";
+import CMSInventoryBill from "../pages/Dashboard/Modules/CMS/InventoryDashboard/InventoryBill";
+import CMSAddInventoryBill from "../pages/Dashboard/Modules/CMS/InventoryDashboard/InventoryBill/AddInventoryBill";
+import InventoryIssueDate from "../pages/Dashboard/Modules/CMS/InventoryDashboard/InventoryIssueDate";
+import InventoryReturnDate from "../pages/Dashboard/Modules/CMS/InventoryDashboard/InventoryReturnDate";
+import CMSVendorList from "../pages/Dashboard/Modules/CMS/InventoryDashboard/Vendor";
+import CMSEditVendor from "../pages/Dashboard/Modules/CMS/InventoryDashboard/Vendor/EditVendor";
+import CMSTonerInstallationReports from "../pages/Dashboard/Modules/CMS/AdminCMS/TonerInstallationReports";
+import EFilingDashboard from "../pages/Dashboard/Modules/EFiling";
+import FileDetail from "../pages/Dashboard/Modules/EFiling/FileDetail";
+import AddEditFileForm from "../pages/Dashboard/Modules/EFiling/AddEditFileForm";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -169,6 +220,10 @@ export const ProtectedRoutes = [
     path: "/qms/reports/defer-question-reports",
     element: <QMSDeferQuestionReports />,
   },
+  {
+    path: "/qms/reports/question-list",
+    element: <QMSReportQuestionList />,
+  },
 
   //QMS Module
   { path: "/qms/dashboard", element: <QMSQuestionDashboard /> },
@@ -200,4 +255,88 @@ export const ProtectedRoutes = [
     path: "/qms/notice/notice-resolution-detail",
     element: <QMSNoticeResolutionDetail />,
   },
+
+  { path: "/qms/manage", element: <QMSQuestionDashboard /> },
+
+  { path: "/qms/manage/sessions", element: <QMSSessions /> },
+  { path: "/qms/manage/groups", element: <QMSGroups /> },
+  { path: "/qms/manage/sessions/addedit", element: <QMSAddEditSessionsForm /> },
+
+  { path: "/qms/manage/terms", element: <QMSTerms /> },
+  { path: "/qms/manage/terms/addedit", element: <QMSAddEditTermsForm /> },
+
+  { path: "/qms/manage/tenures", element: <QMSTenures /> },
+  { path: "/qms/manage/tenures/addedit", element: <QMSAddEditTenuresForm /> },
+
+  { path: "/qms/manage/members", element: <QMSMembers /> },
+  { path: "/qms/manage/members/addedit", element: <QMSMembersAddEditForm /> },
+
+  { path: "/qms/manage/sitting-days", element: <QMSSittingsDays /> },
+  { path: "/qms/manage/sitting-days/addedit", element: <QMSAddEditSittingDaysForm /> },
+
+  { path: "/qms/manage/ministries", element: <QMSMinistries /> },
+  { path: "/qms/manage/ministries/addedit", element: <QMSAddEditMinistriesForm /> },
+
+  { path: "/qms/manage/divisions", element: <QMSDivisions /> },
+  { path: "/qms/manage/divisions/addedit", element: <QMSAddEditDivisionsForm /> },
+
+  { path: "/qms/manage/political-party", element: <QMSPoliticalParty /> },
+  { path: "/qms/manage/political-party/addedit", element: <QMSAddEditPoliticalPartyForm /> },
+
+  { path: "/qms/manage/parliamentary-year", element: <QMSParliamentaryYear /> },
+  { path: "/qms/manage/parliamentary-year/addedit", element: <QMSAddEditParliamentaryYearForm /> },
+
+  //SMS Module routes
+  { path: "/sms/dashboard", element: <SMSDashboard /> },
+
+  //TMS Module routes
+  { path: "/tms/dashboard", element: <TMSDashboard /> },
+  { path: "/tms/dashboard/detail", element: <TMSDashboardDetail /> },
+  { path: "/tms/question", element: <TMSQuestion /> },
+  { path: "/tms/motion", element: <TMSMotion /> },
+  { path: "/tms/resolution", element: <TMSResolution /> },
+  { path: "/sms/send-sms", element: <SMSDashboard /> },
+  { path: "/sms/send-sms/instant", element: <SMSInstantSMS /> },
+  { path: "/sms/send-sms/advanced", element: <SMSAdvancedSMS /> },
+
+  { path: "/sms/phone-book", element: <SMSDashboard /> },
+  { path: "/sms/phone-book/add", element: <SMSAddList /> },
+  { path: "/sms/phone-book/manage", element: <SMSManageList /> },
+  { path: "/sms/phone-book/import", element: <SMSImportContact /> },
+
+  { path: "/sms/template", element: <SMSDashboard /> },
+  { path: "/sms/template/add", element: <SMSAddEditTemplate /> },
+  { path: "/sms/template/manage", element: <SMSMAnageTemplate /> },
+
+  { path: "/sms/messagelog", element: <SMSDashboard /> },
+  { path: "/sms/messagelog/summary", element: <SMSMessageSummary /> },
+  { path: "/sms/messagelog/detailed", element: <SMSDetailedMessageLog /> },
+
+  //CMS Module routes
+  { path: "/cms/dashboard", element: <CMSUserDashboard /> },
+  { path: "/cms/dashboard/addedit", element: <CMSAddEditUserComplaint /> },
+
+  { path: "/cms/admin/dashboard", element: <CMSAdminDashboard /> },
+  { path: "/cms/admin/dashboard/addedit", element: <CMSAdminEditComplaint /> },
+  { path: "/cms/admin/toner-installation-report", element: <CMSTonerInstallationReports /> },
+
+
+  { path: "/cms/admin/inventory/dashboard", element: <SMSInventoryDashboard /> },
+  { path: "/cms/admin/inventory/dashboard/add", element: <CMSAddInventory /> },
+  { path: "/cms/admin/inventory/inventory-bill", element: <CMSInventoryBill /> },
+  { path: "/cms/admin/inventory/inventory-bill/add", element: <CMSAddInventoryBill /> },
+  {path:"/cms/admin/inventory/issue-date", element: <InventoryIssueDate />},
+  {path:"/cms/admin/inventory/return-date", element: <InventoryReturnDate />},
+  {path:"/cms/admin/inventory/vendor-list", element: <CMSVendorList />},
+  {path:"/cms/admin/inventory/vendor-list/edit", element: <CMSEditVendor />},
+
+
+
+
+
+
+  // E-Filing
+  { path: "/efiling/dashboard", element: <EFilingDashboard /> },
+  { path: "/efiling/dashboard/fileDetail", element: <FileDetail /> },
+  { path: "/efiling/dashboard/addedit", element: <AddEditFileForm /> },
 ];

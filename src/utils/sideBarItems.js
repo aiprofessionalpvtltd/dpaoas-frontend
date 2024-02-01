@@ -339,7 +339,6 @@ export const QMSSideBarItems = [
       },
     ],
   },
-
   {
     itemName: "Notice",
     link: "/qms/notice",
@@ -350,11 +349,11 @@ export const QMSSideBarItems = [
         link: "/qms/notice/notice-question",
         icon: faClipboardList,
       },
-      {
-        itemName: "Notice Question Detail",
-        link: "/qms/notice/notice-question-detail",
-        icon: faClipboardList,
-      },
+      // {
+      //   itemName: "Notice Question Detail",
+      //   link: "/qms/notice/notice-question-detail",
+      //   icon: faClipboardList,
+      // },
       {
         itemName: "Notice Resolution",
         link: "/qms/notice/notice-resolution",
@@ -367,7 +366,6 @@ export const QMSSideBarItems = [
       // },
     ],
   },
-
   {
     itemName: "Reports",
     link: "/qms/reports",
@@ -383,6 +381,13 @@ export const QMSSideBarItems = [
         link: "/qms/reports/question-summary",
         icon: faClipboardList,
       },
+
+      {
+        itemName: "Question List",
+        link: "/qms/reports/question-list",
+        icon: faClipboardList,
+      },
+
       {
         itemName: "Resolution Annual Reports",
         link: "/qms/reports/resolution-annual-reports",
@@ -400,4 +405,243 @@ export const QMSSideBarItems = [
       },
     ],
   },
+  {
+    itemName: "Manage",
+    link: "/qms/manage",
+    icon: faClipboardList,
+    subItems: [
+      {
+        itemName: "Sessions",
+        link: "/qms/manage/sessions",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Groups",
+        link: "/qms/manage/groups",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Terms",
+        link: "/qms/manage/terms",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Tenures",
+        link: "/qms/manage/tenures",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Members",
+        link: "/qms/manage/members",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Sitting Days",
+        link: "/qms/manage/sitting-days",
+        icon: faClipboardList,
+      },
+      // {
+      //   itemName: "Ministries",
+      //   link: "/qms/manage/ministries",
+      //   icon: faClipboardList,
+      // },
+      {
+        itemName: "Divisions",
+        link: "/qms/manage/divisions",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Political Party",
+        link: "/qms/manage/political-party",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Parliamentary Year",
+        link: "/qms/manage/parliamentary-year",
+        icon: faClipboardList,
+      },
+    ],
+  },
 ];
+
+// SMS Sidebar
+export const SMSsidebarItems = [
+  {
+    itemName: "Home",
+    link: "/sms/dashboard",
+    icon: faHome,
+  },
+  {
+    itemName: "Send SMS",
+    link: "/sms/send-sms",
+    icon: faClipboardList,
+    subItems: [
+      {
+        itemName: "Instant SMS",
+        link: "/sms/send-sms/instant",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Advanced SMS",
+        link: "/sms/send-sms/advanced",
+        icon: faClipboardList,
+      },
+    ],
+  },
+  {
+    itemName: "Phone Book",
+    link: "/sms/phone-book",
+    icon: faClipboardList,
+    subItems: [
+      // {
+      //   itemName: "Add List",
+      //   link: "/sms/phone-book/add",
+      //   icon: faClipboardList,
+      // },
+      {
+        itemName: "Manage List",
+        link: "/sms/phone-book/manage",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Import Contacts",
+        link: "/sms/phone-book/import",
+        icon: faClipboardList,
+      },
+    ],
+  },
+  {
+    itemName: "Templates",
+    link: "/sms/template",
+    icon: faClipboardList,
+    subItems: [
+      // {
+      //   itemName: "Add Template",
+      //   link: "/sms/template/add",
+      //   icon: faClipboardList,
+      // },
+      {
+        itemName: "Manage Template",
+        link: "/sms/template/manage",
+        icon: faClipboardList,
+      },
+    ],
+  },
+  {
+    itemName: "Message Log",
+    link: "/sms/messagelog",
+    icon: faClipboardList,
+    subItems: [
+      {
+        itemName: "Summary",
+        link: "/sms/messagelog/summary",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Detailed Message Log",
+        link: "/sms/messagelog/detailed",
+        icon: faClipboardList,
+      },
+    ],
+  },
+];
+
+// TMS Sidebar
+export const TMSsidebarItems = [
+  {
+    itemName: "Dashboard",
+    link: "/tms/dashboard",
+    icon: faHome,
+  },
+  {
+    itemName: "Question",
+    link: "/tms/question",
+    icon: faHome,
+  },
+  {
+    itemName: "Motion",
+    link: "/tms/motion",
+    icon: faHome,
+  },
+  {
+    itemName: "Resolution",
+    link: "/tms/resolution",
+    icon: faHome,
+  },
+  {
+    itemName: "Legislation",
+    link: "/tms/legislation",
+    icon: faHome,
+  },
+  {
+    itemName: "Research Branch",
+    link: "/tms/house-business",
+    icon: faHome,
+  },
+  // {
+  //   itemName: "Members",
+  //   link: "/tms/members",
+  //   icon: faHome,
+  // },
+];
+
+//CMS SideBar
+export const CMSsidebarItems = [
+  {
+    itemName: "User Complaint",
+    link: "/cms/dashboard",
+    icon: faHome,
+  },
+
+  {
+    itemName: "Admin Complaint",
+    link: "/cms/admin/dashboard",
+    icon: faHome,
+    subItems: [
+      {
+        itemName: "Admin Complaint",
+        link: "/cms/admin/dashboard",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Toner Installation Report",
+        link: "/cms/admin/toner-installation-report",
+        icon: faClipboardList,
+      }
+    ]
+  },
+  
+  {
+    itemName: "Inventory",
+    link: "/cms/admin/inventory/dashboard",
+    icon: faHome,
+    subItems: [
+      {
+        itemName: "Invoice Bill",
+        link: "/cms/admin/inventory/inventory-bill",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Inventory Item",
+        link: "/cms/admin/inventory/dashboard",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Issue Equipment",
+        link: "/cms/admin/inventory/issue-date",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Return Equipment",
+        link: "/cms/admin/inventory/return-date",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Vendor List",
+        link: "/cms/admin/inventory/vendor-list",
+        icon: faClipboardList,
+      },
+     
+    ],
+  }
+]

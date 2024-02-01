@@ -49,7 +49,7 @@ function QMSQuestionDetail() {
   const { members, sessions } = useContext(AuthContext);
   console.log(
     "Question Detail Data",
-    location.state.history.questionStatusHistory,
+    location?.state?.question?.session?.sessionName,
   );
 
   const [showDeferForm, setShowDeferForm] = useState(false);
@@ -75,10 +75,10 @@ function QMSQuestionDetail() {
 
   const formik = useFormik({
     initialValues: {
-      sessionNo: location?.state?.question?.session?.fkSessionId,
+      sessionNo: location?.state?.question?.session?.sessionName,
       noticeOfficeDiaryNo:
         location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryNo,
-      noticeOfficeDiaryDate: "",
+      noticeOfficeDiaryDate: new Date(location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryDate),
       // location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryDate,
       noticeOfficeDiaryTime:
         location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryTime,
@@ -161,7 +161,7 @@ function QMSQuestionDetail() {
 
   const hendleDeffer = async () => {
     const DefferData = {
-      fkSessionId: 1,
+      fkSessionId: deferState.sessionNo,
       deferredDate: deferState.deferDate,
       deferredBy: "login user ID",
     };
@@ -180,7 +180,7 @@ function QMSQuestionDetail() {
 
   const hendleRevive = async () => {
     const reviveData = {
-      fkFromSessionId: reviveState.sessionNo,
+      fkFromSessionId: location?.state?.question?.session?.sessionName,
       fkToSessionId: reviveState.sessionNo,
       fkGroupId: reviveState.qroup,
       fkDivisionId: reviveState.division,
@@ -189,6 +189,7 @@ function QMSQuestionDetail() {
       noticeOfficeDiaryTime: reviveState.noticeDiaryTime,
       questionDiaryNo: reviveState.questionDiaryNo,
       fkQuestionStatus: reviveState.questionStatus,
+      fkSessionId: reviveState.sessionNo,
     };
     try {
       const response = await createReviveQuestion(
@@ -285,10 +286,8 @@ function QMSQuestionDetail() {
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <Header
         dashboardLink={"/"}
-        addLink1={"/qms/dashboard"}
-        title1={"Question"}
-        addLink2={"/qms/question/detail"}
-        title2={"Question Detail"}
+        addLink1={"/qms/question/detail"}
+        title1={"Question Detail"}
       />
       <ToastContainer />
       <div class="container-fluid">
@@ -387,6 +386,7 @@ function QMSQuestionDetail() {
                           </span>
                           <DatePicker
                             selected={deferState.deferDate}
+                            minDate={new Date()}
                             onChange={(date) =>
                               setDeferState({
                                 ...deferState,
@@ -522,6 +522,7 @@ function QMSQuestionDetail() {
                           </span>
                           <DatePicker
                             selected={reviveState.noticeDiaryDate}
+                            minDate={new Date()}
                             onChange={(date) =>
                               setReviveState({
                                 ...reviveState,
@@ -611,7 +612,7 @@ function QMSQuestionDetail() {
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Session No</label>
-                      <select
+                      {/* <select
                         class="form-select"
                         id="sessionNo"
                         onChange={formik.handleChange}
@@ -626,7 +627,15 @@ function QMSQuestionDetail() {
                               {item?.sessionName}
                             </option>
                           ))}
-                      </select>
+                      </select> */}
+                      <input
+                        placeholder={formik.values.sessionNo}
+                        type="text"
+                        class="form-control"
+                        id="sessionNo"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      />
                     </div>
                   </div>
                   <div class="col">
@@ -660,6 +669,7 @@ function QMSQuestionDetail() {
                       </span>
                       <DatePicker
                         selected={formik.values.noticeOfficeDiaryDate}
+                        // minDate={new Date()}
                         onChange={(date) =>
                           formik.setFieldValue("noticeOfficeDiaryDate", date)
                         }
@@ -796,6 +806,7 @@ function QMSQuestionDetail() {
                       </span>
                       <DatePicker
                         selected={formik.values.replyDate}
+                        minDate={new Date()}
                         onChange={(date) =>
                           formik.setFieldValue("replyDate", date)
                         }

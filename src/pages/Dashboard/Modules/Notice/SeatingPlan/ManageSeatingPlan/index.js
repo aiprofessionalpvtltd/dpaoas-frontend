@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { NoticeSidebarItems } from "../../../../../../utils/sideBarItems";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
 import { useNavigate } from "react-router";
-import { FullScreen } from "@chiragrupani/fullscreen-react";
 import Modal from "react-modal";
 import { Button, FormControl, InputGroup } from "react-bootstrap";
+import { getAllSeats } from "../../../../../../api/APIs";
 
 const customStyles = {
   content: {
@@ -21,7 +21,7 @@ const customStyles = {
 
 function ManageSeatingPlan() {
   const navigate = useNavigate();
-  const [isFullScreen, setFullScreen] = useState(false);
+  const [seats, setSeats] = useState([]);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState({
     id: 0,
@@ -39,53 +39,68 @@ function ManageSeatingPlan() {
     setIsOpen(true);
   };
 
-  const seats = [
-    {
-      id: 1,
-      name: "انور لال دین",
-      seatNo: 109,
-    },
-    {
-      id: 2,
-      name: "انور لال دین",
-      seatNo: 108,
-    },
-    {
-      id: 3,
-      name: "انور لال دین",
-      seatNo: 107,
-    },
-    {
-      id: 4,
-      name: "انور لال دین",
-      seatNo: 106,
-    },
-    {
-      id: 5,
-      name: "انور لال دین",
-      seatNo: 105,
-    },
-    {
-      id: 6,
-      name: "انور لال دین",
-      seatNo: 104,
-    },
-    {
-      id: 7,
-      name: "انور لال دین",
-      seatNo: 103,
-    },
-    {
-      id: 8,
-      name: "انور لال دین",
-      seatNo: 102,
-    },
-    {
-      id: 9,
-      name: "انور لال دین",
-      seatNo: 101,
-    },
-  ];
+  // const seats = [
+  //   {
+  //     id: 1,
+  //     name: "انور لال دین",
+  //     seatNo: 109,
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "انور لال دین",
+  //     seatNo: 108,
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "انور لال دین",
+  //     seatNo: 107,
+  //   },
+  //   {
+  //     id: 4,
+  //     name: "انور لال دین",
+  //     seatNo: 106,
+  //   },
+  //   {
+  //     id: 5,
+  //     name: "انور لال دین",
+  //     seatNo: 105,
+  //   },
+  //   {
+  //     id: 6,
+  //     name: "انور لال دین",
+  //     seatNo: 104,
+  //   },
+  //   {
+  //     id: 7,
+  //     name: "انور لال دین",
+  //     seatNo: 103,
+  //   },
+  //   {
+  //     id: 8,
+  //     name: "انور لال دین",
+  //     seatNo: 102,
+  //   },
+  //   {
+  //     id: 9,
+  //     name: "انور لال دین",
+  //     seatNo: 101,
+  //   },
+  // ];
+
+  const getAllSeatsApi = async () => {
+    try {
+      const response = await getAllSeats();
+      if (response?.success) {
+        setSeats(response?.data);
+      }
+    } catch (error) {
+      // Handle error
+    }
+  };
+
+  useEffect(() => {
+    getAllSeatsApi();
+  }, []);
 
   return (
     // <Layout
@@ -189,11 +204,7 @@ function ManageSeatingPlan() {
                         onClick={() => openModal(item)}
                       >
                         <div class="sitt-card-left">
-                          <h2>
-                            {selectedItem && selectedItem.id === index + 1
-                              ? selectedItem?.name
-                              : item.name}
-                          </h2>
+                          <h2>{item?.member?.memberName}</h2>
                         </div>
                         <p>{item.seatNo}</p>
                       </div>

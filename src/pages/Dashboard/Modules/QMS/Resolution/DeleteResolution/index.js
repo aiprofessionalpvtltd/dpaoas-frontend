@@ -86,7 +86,7 @@ function QMSDeleteResolution() {
     try {
       const response = await getAllResolutions(currentPage, pageSize);
       if (response?.success) {
-        showSuccessMessage(response?.message);
+        // showSuccessMessage(response?.message);
         const transformedData = transformLeavesData(response.data?.resolution);
         setResData(transformedData);
       }
@@ -103,10 +103,8 @@ function QMSDeleteResolution() {
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <Header
         dashboardLink={"/"}
-        addLink1={"/qms/dashboard"}
-        title1={"Question"}
-        addLink2={"/qms/resolution/delete"}
-        title2={"Delete Resolution"}
+        addLink1={"/qms/resolution/delete"}
+        title1={"Delete Resolution"}
       />
       <div class="container-fluid">
         <div class="card mt-4">
@@ -359,6 +357,7 @@ function QMSDeleteResolution() {
                       </span>
                       <DatePicker
                         selected={formik.values.fromNoticeDate}
+                        minDate={new Date()}
                         onChange={(date) =>
                           formik.setFieldValue("fromNoticeDate", date)
                         }
@@ -396,6 +395,7 @@ function QMSDeleteResolution() {
                       </span>
                       <DatePicker
                         selected={formik.values.toNoticeDate}
+                        minDate={new Date()}
                         onChange={(date) =>
                           formik.setFieldValue("toNoticeDate", date)
                         }

@@ -1,10 +1,12 @@
 import React, { createContext, useEffect, useState } from "react";
 import {
+  getAllEmployee,
   getAllMinistry,
   getAllResolutionStatus,
   getAllSessions,
   getallMembers,
   loginUser,
+  retriveEmployeesAsEngineers,
 } from "../APIs";
 import { setAuthToken, setUserData } from "../Auth";
 import { showErrorMessage } from "../../utils/ToastAlert";
@@ -15,7 +17,10 @@ export const AuthProvider = ({ children }) => {
   const [permissions, setPermissions] = useState([]);
   const [ministryData, setMinistryData] = useState([]);
   const [sessions, setSessions] = useState([]);
+  const [employeeData, setEmployeeData] = useState([])
   const [resolutionStatus, setResolutionStatus] = useState([]);
+  const [employeesAsEngineersData, setemployeesAsEngineersData] = useState([]);
+
 
   const [members, setMembers] = useState([]);
 
@@ -45,6 +50,19 @@ export const AuthProvider = ({ children }) => {
       showErrorMessage(error?.response?.data?.error);
     }
   };
+
+  const getEmployeeData = async () => {
+    try {
+      const response = await getAllEmployee(0, 1000);
+      if (response?.success) {
+        setEmployeeData(response?.data);
+        console.log("response?.data, Dataa", response?.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const getAllSessionsApi = async () => {
     try {
       const response = await getAllSessions();
@@ -82,11 +100,24 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const getretriveEmployeesAsEngineers = async () => {
+    try {
+      const response = await retriveEmployeesAsEngineers();
+      if (response?.success) {
+        setemployeesAsEngineersData(response?.data?.employees);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     getAllResolutionStatusApi();
     AllMembersData();
     AllMinistryData();
-    getAllSessionsApi();
+    // getAllSessionsApi();
+    getEmployeeData()
+    getretriveEmployeesAsEngineers()
   }, []);
 
   return (
@@ -98,7 +129,9 @@ export const AuthProvider = ({ children }) => {
         ministryData,
         members,
         sessions,
+        employeeData,
         resolutionStatus,
+        employeesAsEngineersData
       }}
     >
       {children}

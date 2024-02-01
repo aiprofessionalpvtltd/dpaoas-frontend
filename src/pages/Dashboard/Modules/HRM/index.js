@@ -4,28 +4,9 @@ import { HRMsidebarItems } from "../../../../utils/sideBarItems";
 import { useNavigate } from "react-router-dom";
 import Header from "../../../../components/Header";
 import CustomTable from "../../../../components/CustomComponents/CustomTable";
-import { getRolesData } from "../../../../api/Auth";
 import { DeleteRole, getRoles } from "../../../../api/APIs";
 import { showSuccessMessage } from "../../../../utils/ToastAlert";
-
-const data = [
-  {
-    id: 1,
-    name: "IT",
-    description: "IT Things",
-    roleStatus: "active",
-    createdAt: "2023-11-17T07:44:24.020Z",
-    updatedAt: "2023-11-17T07:44:24.020Z",
-  },
-  {
-    id: 2,
-    name: "HRM",
-    description: "Human Resource Management",
-    roleStatus: "active",
-    createdAt: "2023-11-24T09:58:14.137Z",
-    updatedAt: "2023-11-24T09:58:14.137Z",
-  },
-];
+import moment from "moment";
 
 function HRMDashboard() {
   const navigate = useNavigate();
@@ -39,10 +20,23 @@ function HRMDashboard() {
     setCurrentPage(page);
   };
 
+  const transformLeavesData = (apiData) => {
+    return apiData.map((res) => {
+      return {
+        id: res.id,
+        name: res.name,
+        description: res.description,
+        roleStatus: res.roleStatus,
+        createdAt: moment(res.createdAt).format("YYYY/MM/DD"),
+        updatedAt: moment(res.updatedAt).format("YYYY/MM/DD"),
+      };
+    });
+  };
   const fetchRoles = async () => {
     try {
       const response = await getRoles();
-      setRolesList(response.data);
+      const filterData = transformLeavesData(response.data)
+      setRolesList(filterData);
     } catch (error) {
       console.log(error);
     }

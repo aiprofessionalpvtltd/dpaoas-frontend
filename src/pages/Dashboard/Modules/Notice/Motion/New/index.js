@@ -22,7 +22,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 
 const validationSchema = Yup.object({
-  sessionNumber: Yup.number().required("Session No is required"),
+  sessionNumber: Yup.number(),
   motionType: Yup.string().required("Motion Type is required"),
   noticeOfficeDiaryNo: Yup.number().required(
     "Notice Office Diary No is required",
@@ -33,7 +33,7 @@ const validationSchema = Yup.object({
   noticeOfficeDiaryTime: Yup.string().required(
     "Notice Office Diary Time is required",
   ),
-  mover: Yup.string().required("Mover is required"),
+  mover: Yup.array().required("Mover is required"),
   //   englishText: Yup.string().required("English Text is required"),
   //   urduText: Yup.string().required("Urdu Text is required"),
 });
@@ -53,10 +53,10 @@ function NewMotion() {
 
   const formik = useFormik({
     initialValues: {
-      sessionNumber: null,
+      sessionNumber: sessions[0]?.id,
       motionType: "",
       noticeOfficeDiaryNo: null,
-      mover: "",
+      mover: [],
       noticeOfficeDiaryDate: "",
       noticeOfficeDiaryTime: "",
       englishText: "",
@@ -76,7 +76,10 @@ function NewMotion() {
     formData.append("fkSessionId", values?.sessionNumber);
     formData.append("motionType", values?.motionType);
     formData.append("noticeOfficeDiaryNo", values?.noticeOfficeDiaryNo);
-    formData.append("moverIds[]", values?.mover);
+    // formData.append("moverIds[]", values?.mover);
+    values?.mover.forEach((mover, index) => {
+      formData.append(`moverIds[${index}]`, mover.value);
+    });
     formData.append("noticeOfficeDiaryDate", values?.noticeOfficeDiaryDate);
     formData.append("noticeOfficeDiaryTime", values?.noticeOfficeDiaryTime);
     formData.append("businessType", "Motion");
@@ -107,10 +110,8 @@ function NewMotion() {
       <ToastContainer />
       <Header
         dashboardLink={"/"}
-        addLink1={"/notice/dashboard"}
-        addLink2={"/notice/motion/new"}
-        title1={"Notice"}
-        title2={"New Motion"}
+        addLink1={"/notice/motion/new"}
+        title1={"New Motion"}
       />
 
       <CustomAlert
@@ -136,34 +137,17 @@ function NewMotion() {
                       <div class="mb-3">
                         <label class="form-label">Session No</label>
                         <select
-                          class={`form-select ${
-                            formik.touched.sessionNumber &&
-                            formik.errors.sessionNumber
-                              ? "is-invalid"
-                              : ""
-                          }`}
+                          class={`form-select`}
                           placeholder="Session No"
                           value={formik.values.sessionNumber}
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                           name="sessionNumber"
                         >
-                          <option value="" selected disabled hidden>
-                            Select
+                          <option value={sessions[0]?.id} selected disabled>
+                            {sessions[0]?.sessionName}
                           </option>
-                          {sessions &&
-                            sessions.map((item) => (
-                              <option key={item.id} value={item.id}>
-                                {item?.sessionName}
-                              </option>
-                            ))}
                         </select>
-                        {formik.touched.sessionNumber &&
-                          formik.errors.sessionNumber && (
-                            <div className="invalid-feedback">
-                              {formik.errors.sessionNumber}
-                            </div>
-                          )}
                       </div>
                     </div>
 
@@ -226,6 +210,7 @@ function NewMotion() {
                         </span>
                         <DatePicker
                           selected={formik.values.noticeOfficeDiaryDate}
+                          minDate={new Date()}
                           onChange={(date) =>
                             formik.setFieldValue("noticeOfficeDiaryDate", date)
                           }
@@ -303,7 +288,7 @@ function NewMotion() {
 
                     <div class="col">
                       <div class="mb-3">
-                        <label class="form-label">Movers</label>
+                        {/* <label class="form-label">Movers</label>
                         <select
                           class={`form-select ${
                             formik.touched.mover && formik.errors.mover
@@ -324,7 +309,21 @@ function NewMotion() {
                                 {item?.memberName}
                               </option>
                             ))}
-                        </select>
+                        </select> */}
+                        <label class="form-label">Member Senate</label>
+                        <Select
+                          options={members.map((item) => ({
+                            value: item.id,
+                            label: item.memberName,
+                          }))}
+                          isMulti
+                          onChange={(selectedOptions) =>
+                            formik.setFieldValue("mover", selectedOptions)
+                          }
+                          onBlur={formik.handleBlur}
+                          value={formik.values.mover}
+                          name="mover"
+                        />
                         {formik.touched.mover && formik.errors.mover && (
                           <div class="invalid-feedback">
                             {formik.errors.mover}

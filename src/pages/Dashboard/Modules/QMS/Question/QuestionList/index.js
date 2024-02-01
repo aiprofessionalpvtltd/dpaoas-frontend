@@ -10,11 +10,11 @@ import DatePicker from "react-datepicker";
 import * as Yup from "yup";
 import { getAllQuestion, getAllQuestionByID } from "../../../../../../api/APIs";
 import { ToastContainer } from "react-toastify";
-import {
-  showErrorMessage,
-  showSuccessMessage,
-} from "../../../../../../utils/ToastAlert";
+import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
 import { AuthContext } from "../../../../../../api/AuthContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
+import moment from "moment";
 const validationSchema = Yup.object({
   sessionNumber: Yup.string(),
   category: Yup.string(),
@@ -81,12 +81,10 @@ function QMSQuestionList() {
         SrNo: index,
         QID: res.id,
         QDN: res.fkQuestionDiaryId,
-        NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate,
+        NoticeDate: moment(res?.noticeOfficeDiary?.noticeOfficeDiaryDate).format("YYYY/MM/DD"),
         NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
         SessionNumber: res?.session?.sessionName,
-        SubjectMatter: [res?.englishText, res?.urduText]
-          .filter(Boolean)
-          .join(", "),
+        SubjectMatter: [res?.englishText, res?.urduText].filter(Boolean).join(", "),
         Category: res.questionCategory,
         // SubmittedBy: res.category,
         Status: res.questionStatus?.questionStatus,
@@ -97,7 +95,7 @@ function QMSQuestionList() {
     try {
       const response = await getAllQuestion(currentPage, pageSize);
       if (response?.success) {
-        showSuccessMessage(response?.message);
+        // showSuccessMessage(response?.message);
         setCount(response?.count);
         const transformedData = transformLeavesData(response.data);
         console.log("Saqib", transformedData);
@@ -129,19 +127,14 @@ function QMSQuestionList() {
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <Header
         dashboardLink={"/"}
-        addLink1={"/qms/dashboard"}
-        title1={"Question"}
-        addLink2={"/qms/question/list"}
-        title2={"Question List"}
+        addLink1={"/qms/question/list"}
+        title1={"Question List"}
       />
       <ToastContainer />
 
-      <div class="container-fluid">
+      <div class="container-fluid dash-detail-container">
         <div class="card mt-4">
-          <div
-            class="card-header red-bg"
-            style={{ background: "#14ae5c !important" }}
-          >
+          <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
             <h1>Question List</h1>
           </div>
           <div class="card-body">
@@ -243,13 +236,25 @@ function QMSQuestionList() {
                     </div>
                   </div>
                   <div class="col">
-                    <div class="mb-3">
+                    <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label">House Lay Date</label>
+                      <span
+                        style={{
+                          position: "absolute",
+                          right: "15px",
+                          top: "36px",
+                          zIndex: 1,
+                          fontSize: "20px",
+                          zIndex: "1",
+                          color: "#666",
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faCalendarAlt} />
+                      </span>
                       <DatePicker
                         selected={formik.values.houseLayDate}
-                        onChange={(date) =>
-                          formik.setFieldValue("houseLayDate", date)
-                        }
+                        minDate={new Date()}
+                        onChange={(date) => formik.setFieldValue("houseLayDate", date)}
                         onBlur={formik.handleBlur}
                         className={`form-control`}
                       />
@@ -284,7 +289,7 @@ function QMSQuestionList() {
                 </div>
               </form>
               <CustomTable
-                block={true}
+                block={false}
                 hideBtn={true}
                 data={resData}
                 tableTitle="Questions"
