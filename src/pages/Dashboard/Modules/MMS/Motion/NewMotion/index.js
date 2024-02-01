@@ -450,29 +450,6 @@ function MMSNewMotion() {
                   <div className="col">
                     <div className="mb-3">
                       <label className="form-label">Member Senate</label>
-                      {/* <select
-                        className="form-select"
-                        id="mover"
-                        name="mover"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.mover}
-                        class={
-                          formik.errors.mover && formik.touched.mover
-                            ? "form-select is-invalid"
-                            : "form-select"
-                        }
-                      >
-                        <option value={""} selected disabled hidden>
-                          select
-                        </option>
-                        {members &&
-                          members.map((item) => (
-                            <option key={item.id} value={item.id}>
-                              {item?.memberName}
-                            </option>
-                          ))}
-                      </select> */}
                       <Select
                         options={members.map((item) => ({
                           value: item.id,
@@ -497,27 +474,7 @@ function MMSNewMotion() {
                   <div className="col">
                     <div className="mb-3">
                       <label className="form-label">Ministry</label>
-                      {/* <select
-                        className="form-select"
-                        id="ministry"
-                        name="ministry"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.ministry}
-                        class={
-                          formik.errors.ministry && formik.touched.ministry
-                            ? "form-select is-invalid"
-                            : "form-select"
-                        }
-                      >
-                        <option value={""} selected disabled hidden>
-                          select
-                        </option>
-                        {ministryData &&
-                          ministryData.map((item) => (
-                            <option value={item.id}>{item.ministryName}</option>
-                          ))}
-                      </select> */}
+                      
                       <Select
                         options={ministryData.map((item) => ({
                           value: item.id,

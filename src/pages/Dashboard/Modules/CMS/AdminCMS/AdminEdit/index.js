@@ -223,7 +223,7 @@ function CMSAdminEditComplaint() {
                                                 value={formik.values.complaintStatus}
                                             >
                                                 <option value={""} selected disabled hidden>
-                                                    select
+                                                    Select
                                                 </option>
                                                 <option value="pending">Pending</option>
                                                 <option value="in-progress">In Progress</option>

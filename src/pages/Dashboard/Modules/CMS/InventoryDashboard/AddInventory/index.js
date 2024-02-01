@@ -169,7 +169,7 @@ function CMSAddInventory() {
                                                 onChange={getSingleRecordById}
                                             >
                                                 <option value={""} selected disabled hidden>
-                                                    select
+                                                    Select
                                                 </option>
                                                 {inventoryBill?.map((item) => (
                                                     <option value={item.id}>{item.invoiceNumber}</option>
@@ -300,7 +300,7 @@ function CMSAddInventory() {
                                                 value={formik.values.categories}
                                             >
                                                 <option value={""} selected disabled hidden>
-                                                    select
+                                                    Select
                                                 </option>
                                                 <option value="Laptop">Laptop</option>
                                                 <option value="Printer">Printer</option>
@@ -325,7 +325,7 @@ function CMSAddInventory() {
                                                 value={formik.values.status}
                                             >
                                                 <option value={""} selected disabled hidden>
-                                                    select
+                                                    Select
                                                 </option>
                                                 <option value="in-stock/store">In-Stock/Store</option>
                                                 <option value="issued">Issued</option>

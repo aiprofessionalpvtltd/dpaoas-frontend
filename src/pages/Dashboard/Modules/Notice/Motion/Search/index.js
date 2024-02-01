@@ -60,7 +60,7 @@ function SearchMotion() {
   const transformMotionData = (apiData) => {
     return apiData?.map((leave) => ({
       id: leave?.id,
-      fkSessionId: leave?.sessions?.id,
+      SessionName: leave?.sessions?.sessionName,
       fileNumber: leave?.fileNumber,
       motionType: leave?.motionType,
       motionWeek: leave?.motionWeek,

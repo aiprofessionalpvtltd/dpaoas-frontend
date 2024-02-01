@@ -158,7 +158,7 @@ function QMSAddEditDivisionsForm() {
                         value={formik.values.ministry}
                       >
                         <option value={""} selected disabled hidden>
-                          select
+                          Select
                         </option>
                           <option value="1">Ministry1</option>
                           <option value="2">Ministry2</option>

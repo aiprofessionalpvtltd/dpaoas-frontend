@@ -81,7 +81,10 @@ function CMSVendorList() {
                     <CustomTable
                         data={vendorData}
                         tableTitle={"Vendor List"}
-                        hideBtn={true}
+
+                        // hideBtn={true}
+                        addBtnText={"Add Vendor"}
+                        handleAdd={() => navigate("/cms/admin/inventory/vendor-list/add")}
                         singleDataCard={true}
                         hideDeleteIcon={false}
                         hideEditIcon={false}

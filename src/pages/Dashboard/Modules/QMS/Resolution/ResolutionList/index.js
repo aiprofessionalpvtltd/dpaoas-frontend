@@ -4,7 +4,7 @@ import { QMSSideBarItems } from "../../../../../../utils/sideBarItems";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import { useNavigate } from "react-router-dom";
 import Header from "../../../../../../components/Header";
-import { DeleteResolution, getAllResolutions } from "../../../../../../api/APIs";
+import { DeleteResolution, getAllResolutions, getResolutionBYID } from "../../../../../../api/APIs";
 import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 import DatePicker from "react-datepicker";
@@ -66,6 +66,18 @@ function QMSResolutionList() {
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
+    }
+  };
+  const handleEdit = async (id) => {
+    try {
+      const response = await getResolutionBYID(id);
+      if (response?.success) {
+        navigate("/qms/notice/notice-resolution-detail", {
+          state: response?.data,
+        });
+      }
+    } catch (error) {
+      showErrorMessage(error.response.data.message);
     }
   };
 
@@ -161,7 +173,7 @@ function QMSResolutionList() {
                 pageSize={pageSize}
                 handleDelete={(item) => deleteResolutionApi(item.SrNo)}
                 handleAdd={(item) => navigate("/")}
-                handleEdit={(item) => navigate("/")}
+                handleEdit={(item) => handleEdit(item.SrNo)}
                 totalCount={count}
               />
             </div>

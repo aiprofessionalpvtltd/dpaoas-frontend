@@ -519,22 +519,6 @@ function MMSMotionDetail() {
                   <div class="col-6">
                     <div class="mb-3">
                       <label class="form-label">Members Senator</label>
-                      {/* <select
-                        class="form-select"
-                        placeholder={formik.values.mover}
-                        onChange={formik.handleChange}
-                        id="mover"
-                      >
-                        <option value={""} selected disabled hidden>
-                          select
-                        </option>
-                        {members &&
-                          members.map((item) => (
-                            <option key={item.id} value={item.id}>
-                              {item?.memberName}
-                            </option>
-                          ))}
-                      </select> */}
                       <Select
                         options={members.map((item) => ({
                           value: item.id,

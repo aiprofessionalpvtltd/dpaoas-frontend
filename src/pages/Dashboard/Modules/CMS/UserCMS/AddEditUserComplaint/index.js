@@ -219,7 +219,7 @@ function CMSAddEditUserComplaint() {
                         value={formik.values.fkComplaintTypeId}
                       >
                         <option value={""} selected disabled hidden>
-                          select
+                          Select
                         </option>
                         {complaintType &&
                           complaintType.map((item) => (
@@ -268,7 +268,7 @@ function CMSAddEditUserComplaint() {
                         value={formik.values.fkComplaintCategoryId}
                       >
                         <option value={""} selected disabled hidden>
-                          select
+                          Select
                         </option>
                         {complaintCategories &&
                           complaintCategories.map((item) => (
