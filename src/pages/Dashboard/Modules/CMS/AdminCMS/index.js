@@ -48,7 +48,6 @@ function CMSAdminDashboard() {
     const navigate = useNavigate();
     const { employeeData, employeesAsEngineersData } = useContext(AuthContext);
 
-    const UserData = getUserData();
     const [complaintType, setComplaintType] = useState([]);
     const [inprogressCount, setInprogressCount] = useState(0);
     const [pendingCount, setPendingCount] = useState(0);
@@ -126,34 +125,26 @@ function CMSAdminDashboard() {
         setCurrentPage(page);
     };
 
-    const transformDepartmentData = (apiData) => {
-        return apiData.map((leave) => ({
-            id: leave?.id,
-            complaineeUser: `${leave?.complaineeUser?.employee?.firstName}${leave?.complaineeUser?.employee?.lastName}`,
-            BranchOffice: leave?.complaintType?.complaintTypeName,
-            NatureofComplaint: leave?.complaintCategory?.complaintCategoryName,
-            AssigneTo: leave?.resolverUser && `${leave?.resolverUser?.employee?.firstName}${leave?.resolverUser?.employee?.lastName}`,
-            complaintDate: moment(leave?.complaintIssuedDate).format("DD/MM/YYYY"),
-            ResolvedDate: leave?.complaintResolvedDate && moment(leave?.complaintResolvedDate).format("DD/MM/YYY"),
-            complaintStatus: leave?.complaintStatus,
-            status: leave?.status,
+    const transformComplaintData = (apiData) => {
+        return apiData.map((item) => ({
+            id: item?.id,
+            complaineeUser: `${item?.complaineeUser?.employee?.firstName}${item?.complaineeUser?.employee?.lastName}`,
+            BranchOffice: item?.complaintType?.complaintTypeName,
+            NatureofComplaint: item?.complaintCategory?.complaintCategoryName,
+            AssigneTo: item?.resolverUser && `${item?.resolverUser?.employee?.firstName}${item?.resolverUser?.employee?.lastName}`,
+            complaintDate: moment(item?.complaintIssuedDate).format("DD/MM/YYYY"),
+            ResolvedDate: item?.complaintResolvedDate && moment(item?.complaintResolvedDate).format("DD/MM/YYY"),
+            complaintStatus: item?.complaintStatus,
+            status: item?.status,
         }));
     };
     const getComplaint = useCallback(async () => {
         try {
             const response = await getallComplaint(currentPage, pageSize);
             if (response?.success) {
-                const transformedData = transformDepartmentData(response?.data?.complaints);
+                const transformedData = transformComplaintData(response?.data?.complaints);
                 setCount(response?.data?.count);
                 setComplaintData(transformedData);
-                // const countInProgress = response?.data?.complaints.filter(
-                //     (item) => item.complaintStatus === "in-progress"
-                // ).length;
-                // const countPending = response?.data?.complaints.filter((item) => item.complaintStatus === "pending").length;
-                // const countresolved = response?.data?.complaints.filter((item) => item.complaintStatus === "resolved").length;
-                // setInprogressCount(countInProgress);
-                // setPendingCount(countPending);
-                // setResolvedCount(countresolved);
             }
         } catch (error) {
             console.log(error);
@@ -219,7 +210,7 @@ function CMSAdminDashboard() {
         try {
             const response = await SearchComplaint(Data);
             if (response?.success) {
-                const transformedData = transformDepartmentData(response?.data);
+                const transformedData = transformComplaintData(response?.data);
                 setCount(1);
                 setComplaintData(transformedData);
                 showSuccessMessage(response.message);

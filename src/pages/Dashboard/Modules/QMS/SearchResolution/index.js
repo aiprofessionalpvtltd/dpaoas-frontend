@@ -387,7 +387,7 @@ function QMSSerchResolution() {
                 </div>
               </div>
               <CustomTable
-                block={true}
+                block={false}
                 data={searchedData}
                 tableTitle=""
                 addBtnText="Print Resolution"

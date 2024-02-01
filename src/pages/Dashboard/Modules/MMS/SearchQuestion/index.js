@@ -185,7 +185,7 @@ function MMSSearchQuestion() {
                           id="memberName"
                         >
                           <option value={""} selected disabled hidden>
-                            select
+                            Select
                           </option>
                           {members &&
                             members.map((item) => (
@@ -255,7 +255,7 @@ function MMSSearchQuestion() {
                           onBlur={formik.handleBlur}
                         >
                           <option value={" "} selected disabled hidden>
-                            select
+                            Select
                           </option>
                           <option value={"Starred"}>Starred</option>
                           <option value={"Un-Starred"}>Un-Starred</option>
@@ -274,7 +274,7 @@ function MMSSearchQuestion() {
                           onBlur={formik.handleBlur}
                         >
                           <option value={""} selected disabled hidden>
-                            select
+                            Select
                           </option>
                           {allquestionStatus &&
                             allquestionStatus.map((item) => (

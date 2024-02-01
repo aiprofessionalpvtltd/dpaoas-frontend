@@ -124,7 +124,7 @@ function HRMAddEditDepartment() {
                   {location && location?.state && (
                     <div className="col-6">
                       <div className="mb-3">
-                        <label className="form-label">Staus</label>
+                        <label className="form-label">Status</label>
                         <input
                           type="text"
                           className={`form-control`}

@@ -25,7 +25,7 @@ const customStyles = {
 };
 
 
-function SMSAddList({modalisOpan, hendleModal, Data, getContactListApi}) {
+function SMSAddList({ modalisOpan, hendleModal, Data, getContactListApi }) {
     // const location = useLocation()
     // const Data = [{listName:"",listDescription:"",contactMembers:[]}]
     const userData = getUserData();
@@ -34,9 +34,10 @@ function SMSAddList({modalisOpan, hendleModal, Data, getContactListApi}) {
 
     const { members } = useContext(AuthContext)
 
-   
+    console.log("Data ? Data[0]?.listActive", Data[0]?.isPublicList);
 
-    const [isChecked, setChecked] = useState(false)
+
+    const [isChecked, setChecked] = useState(Data ? Data[0]?.isPublicList : false)
     const handleCheckboxChange = () => {
         setChecked(!isChecked);
     };
@@ -51,7 +52,7 @@ function SMSAddList({modalisOpan, hendleModal, Data, getContactListApi}) {
                     label: contact.member.memberName,
                 }))
                 : [],
-              status: Data ? Data[0]?.listActive  : "",
+            status: Data ? Data[0]?.listActive : "",
         },
 
         // validationSchema: validationSchema,
@@ -99,7 +100,7 @@ function SMSAddList({modalisOpan, hendleModal, Data, getContactListApi}) {
             contactMembers: values?.contactMembers?.map(mover => ({
                 fkMemberId: mover.value
             })),
-            listActive:values?.status
+            listActive: values?.status
         };
         try {
             const response = await UpdateContactList(Data[0]?.id, data);
@@ -125,12 +126,12 @@ function SMSAddList({modalisOpan, hendleModal, Data, getContactListApi}) {
         //         }
         //         addLink1={"/sms/phone-book/add"}
         //     />
-            <Modal
-                isOpen={modalisOpan}
-                onRequestClose={() => hendleModal()}
-                style={customStyles}
-                contentLabel="Example Modal"
-            >
+        <Modal
+            isOpen={modalisOpan}
+            onRequestClose={() => hendleModal()}
+            style={customStyles}
+            contentLabel="Example Modal"
+        >
             <div className="container-fluid">
                 <div className="card">
                     <div className="card-header red-bg" style={{ background: "#666" }}>
@@ -193,28 +194,28 @@ function SMSAddList({modalisOpan, hendleModal, Data, getContactListApi}) {
                                     </div>
                                     {Data[0]?.id && (
                                         <div class="col-6">
-                                        <div class="mb-3">
-                                            <label class="form-label">Status</label>
-                                            <select
-                                                class="form-select"
-                                                placeholder={formik.values.status}
-                                                onChange={formik.handleChange}
-                                                id="status"
-                                                onBlur={formik.handleBlur}
-                                            >
-                                                <option selected disabled hidden>
-                                                   {Data ? Data[0]?.listActive  : "Select"} 
-                                                </option>
-                                                <option value={"active"}>
-                                                    Active
-                                                </option>
-                                                <option value={"inactive"}>
-                                                    Inactive
-                                                </option>
-                                                
-                                            </select>
+                                            <div class="mb-3">
+                                                <label class="form-label">Status</label>
+                                                <select
+                                                    class="form-select"
+                                                    placeholder={formik.values.status}
+                                                    onChange={formik.handleChange}
+                                                    id="status"
+                                                    onBlur={formik.handleBlur}
+                                                >
+                                                    <option selected disabled hidden>
+                                                        {Data ? Data[0]?.listActive : "Select"}
+                                                    </option>
+                                                    <option value={"active"}>
+                                                        Active
+                                                    </option>
+                                                    <option value={"inactive"}>
+                                                        Inactive
+                                                    </option>
+
+                                                </select>
+                                            </div>
                                         </div>
-                                    </div>
                                     )}
                                 </div>
                                 <div className='row'>
@@ -238,7 +239,7 @@ function SMSAddList({modalisOpan, hendleModal, Data, getContactListApi}) {
                                 </div>
                                 <div className="d-grid gap-2 d-md-flex justify-content-md-end">
                                     <button className="btn btn-primary" type="submit">
-                                        Submit
+                                        Save
                                     </button>
                                 </div>
                             </div>
@@ -246,7 +247,7 @@ function SMSAddList({modalisOpan, hendleModal, Data, getContactListApi}) {
                     </div>
                 </div>
             </div>
-            </Modal>
+        </Modal>
         // </Layout>
     )
 }

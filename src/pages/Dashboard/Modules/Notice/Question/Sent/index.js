@@ -264,7 +264,7 @@ function SentQuestion() {
                             onBlur={formik.handleBlur}
                           >
                             <option value={" "} selected disabled hidden>
-                              select
+                              Select
                             </option>
                             <option value={"Starred"}>Starred</option>
                             <option value={"Un-Starred"}>Un-Starred</option>
@@ -283,7 +283,7 @@ function SentQuestion() {
                             onBlur={formik.handleBlur}
                           >
                             <option value={""} selected disabled hidden>
-                              select
+                              Select
                             </option>
                             {allquestionStatus &&
                               allquestionStatus.map((item) => (

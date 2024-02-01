@@ -44,13 +44,13 @@ function SMSAdvancedSMS() {
         setCurrentPage(page);
     };
     const transformDepartmentData = (apiData) => {
-        return  apiData.map((leave, index) => ({
-            Sr:`${index + 1}`,
+        return apiData.map((leave, index) => ({
+            Sr: `${index + 1}`,
             memberName: leave?.member?.memberName,
             phoneNo: leave?.member?.phoneNo,
             gender: leave?.member?.gender,
-          }));
-        };
+        }));
+    };
 
     const hendleListId = (event) => {
         const selectedValue = event.target.value;
@@ -105,8 +105,8 @@ function SMSAdvancedSMS() {
 
 
     const ClearFiled = () => {
-            setTextareaInput('')
-            settemplateId(null)
+        setTextareaInput('')
+        settemplateId(null)
     }
     const HendleSendSms = async () => {
         const data = {
@@ -214,22 +214,6 @@ function SMSAdvancedSMS() {
                 <div class="row">
                     <div class="col-6">
                         <div class="mb-3">
-                            <label class="form-label">Message Text</label>
-                            <textarea
-                                className="form-control"
-                                style={{ width: "100%" }}
-                                id="textareaInput"
-                                placeholder="Enter text"
-                                value={textareaInput}
-                                onChange={handleTextareaChange}
-                            ></textarea>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="row">
-                    <div class="col-6">
-                        <div class="mb-3">
                             <label class="form-label">Message Template</label>
                             <select class="form-select"
                                 id="employeeName"
@@ -247,21 +231,19 @@ function SMSAdvancedSMS() {
                             </select>
                         </div>
                     </div>
-                    {/* <div class="col">
+                    <div class="col-6">
                         <div class="mb-3">
-                            <label for="" class="form-label">
-                                Template Name
-                            </label>
-                            <input
-                                type="text"
+                            <label class="form-label">Preview</label>
+                            <textarea
                                 className="form-control"
-                                id="textInput"
-                                placeholder=""
-                                value={textInput}
-                                onChange={handleTextInputChange}
-                            />
+                                style={{ width: "100%" }}
+                                id="textareaInput"
+                                placeholder="Enter text"
+                                value={textareaInput}
+                                onChange={handleTextareaChange}
+                            ></textarea>
                         </div>
-                    </div> */}
+                    </div>
                 </div>
                 <div
                     style={{

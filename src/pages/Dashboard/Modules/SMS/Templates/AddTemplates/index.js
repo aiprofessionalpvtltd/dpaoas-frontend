@@ -26,15 +26,14 @@ const customStyles = {
 function SMSAddEditTemplate({ modalisOpan, hendleModal, selectedData, getTemplate }) {
     // const location = useLocation()
     const userData = getUserData();
-    console.log("Manage Template", userData?.fkUserId);
+    console.log("selectedData.Status",selectedData.Status);
 
 
     const formik = useFormik({
         initialValues: {
             templateName: selectedData ? selectedData.templateName : "",
             msgText: selectedData ? selectedData.description : "",
-            status: ""
-            //   status: selectedData ? selectedData.departmentStatus : "",
+            status:  selectedData ? selectedData.Status :""
         },
 
         // validationSchema: validationSchema,
@@ -132,7 +131,7 @@ function SMSAddEditTemplate({ modalisOpan, hendleModal, selectedData, getTemplat
                                                 onBlur={formik.handleBlur}
                                             >
                                                 <option selected disabled hidden>
-                                                    Select
+                                                   {selectedData ? selectedData.Status : "Select"}
                                                 </option>
                                                 <option value={"true"}>
                                                     True
