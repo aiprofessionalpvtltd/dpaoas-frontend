@@ -41,8 +41,10 @@ function EFilingDashboard() {
               <CustomTable
                 data={data}
                 tableTitle="Files List"
-                addBtnText="Create new file"
-                handleAdd={() => navigate("/efiling/dashboard/addedit")}
+                addBtnText="Create Case"
+                addBtnText2="Create File"
+                handleAdd={() => navigate("/efiling/dashboard/addeditcase")}
+                handleAdd2={() => navigate("/efiling/dashboard/addedit")}
                 handleEdit={(item) => navigate("/efiling/dashboard/fileDetail", { state: item })}
                 handleView={(item) => navigate("/efiling/dashboard/fileDetail", { state: { view: true } })}
                 showView={true}

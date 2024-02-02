@@ -1,15 +1,16 @@
 import React from "react";
+import { Link } from "react-router-dom";
 function Header({ dashboardLink, addLink1, addLink2, title1, title2, width }) {
   return (
     <div className="bredcrumb-container" style={{ width: width ? width : "500px" }}>
       <div className="bredcrumb">
         <ul className="breadcrumb">
           <li>
-            <a href={dashboardLink}>Dashboard</a>
+            <Link to={dashboardLink}>Dashboard</Link>
           </li>
           {addLink2 && title2 ? (
             <li>
-              <a href={addLink1}>{title1}</a>
+              <Link to={addLink1}>{title1}</Link>
             </li>
           ) : (
             <li>

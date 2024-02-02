@@ -67,22 +67,22 @@ function AddEditFileForm() {
               <form onSubmit={formik.handleSubmit}>
                 <div class="container-fluid">
                   <div class="row">
-                    <div class="col">
+                    <div class="col-6">
                       <div class="mb-3">
                         <label class="form-label">File Number</label>
-                        <Select
-                          options={files.map((item) => ({
-                            value: item.id,
-                            label: item.fileName,
-                          }))}
-                          isMulti
-                          onChange={(selectedOptions) => formik.setFieldValue("mover", selectedOptions)}
+                        <input
+                          type="text"
+                          placeholder={"File Number"}
+                          value={formik.values.fileNumber}
+                          className={`form-control ${
+                            formik.touched.fileNumber && formik.errors.fileNumber ? "is-invalid" : ""
+                          }`}
+                          id="fileNumber"
+                          onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
-                          value={formik.values.mover}
-                          name="mover"
                         />
-                        {formik.touched.mover && formik.errors.mover && (
-                          <div class="invalid-feedback">{formik.errors.mover}</div>
+                        {formik.touched.fileNumber && formik.errors.fileNumber && (
+                          <div className="invalid-feedback">{formik.errors.fileNumber}</div>
                         )}
                       </div>
                     </div>

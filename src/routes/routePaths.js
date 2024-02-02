@@ -111,6 +111,7 @@ import CMSTonerInstallationReports from "../pages/Dashboard/Modules/CMS/AdminCMS
 import EFilingDashboard from "../pages/Dashboard/Modules/EFiling";
 import FileDetail from "../pages/Dashboard/Modules/EFiling/FileDetail";
 import AddEditFileForm from "../pages/Dashboard/Modules/EFiling/AddEditFileForm";
+import AddEditCaseForm from "../pages/Dashboard/Modules/EFiling/AddEditCaseForm";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -341,4 +342,5 @@ export const ProtectedRoutes = [
   { path: "/efiling/dashboard", element: <EFilingDashboard /> },
   { path: "/efiling/dashboard/fileDetail", element: <FileDetail /> },
   { path: "/efiling/dashboard/addedit", element: <AddEditFileForm /> },
+  { path: "/efiling/dashboard/addeditcase", element: <AddEditCaseForm /> },
 ];

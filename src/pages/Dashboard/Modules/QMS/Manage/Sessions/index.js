@@ -33,8 +33,8 @@ function QMSSessions() {
       try {
         const response = await getAllSessions(currentPage, pageSize);
         if (response?.success) {
-          setCount(response?.count);
-          const transformedData = transformData(response.data);
+          setCount(response?.data?.count);
+          const transformedData = transformData(response.data?.sessions);
           setSessions(transformedData);
         }
       } catch (error) {

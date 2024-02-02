@@ -1,33 +1,38 @@
-import { useFormik } from 'formik';
-import React, { useEffect, useState } from 'react'
-import { Layout } from '../../../../../../components/Layout';
-import { CMSsidebarItems } from '../../../../../../utils/sideBarItems';
-import Header from '../../../../../../components/Header';
-import { ToastContainer } from 'react-toastify';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
+import { useFormik } from "formik";
+import React, { useEffect, useState } from "react";
+import { Layout } from "../../../../../../components/Layout";
+import { CMSsidebarItems } from "../../../../../../utils/sideBarItems";
+import Header from "../../../../../../components/Header";
+import { ToastContainer } from "react-toastify";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import DatePicker from "react-datepicker";
-import { showErrorMessage, showSuccessMessage } from '../../../../../../utils/ToastAlert';
-import { UpdateInventoryById, createInventory, getAllInvoiceBill, getInventoryBillsById } from '../../../../../../api/APIs';
-import { AuthContext } from '../../../../../../api/AuthContext';
-import { useLocation } from 'react-router';
+import {
+    showErrorMessage,
+    showSuccessMessage,
+} from "../../../../../../utils/ToastAlert";
+import {
+    UpdateInventoryById,
+    createInventory,
+    getAllInvoiceBill,
+    getInventoryBillsById,
+} from "../../../../../../api/APIs";
+import { useLocation } from "react-router";
 import * as Yup from "yup";
 
 const validationSchema = Yup.object({
-    serialNo: Yup.string().required("SerialNo is required"),
-    productName: Yup.string().required("Product Name is required"),
+    serialNo: Yup.string().required("serialNo is required"),
+    productName: Yup.string().required("ProductName is required"),
     manufacturer: Yup.string().required("Manufacturer is required"),
     barcodeLabel: Yup.string().required("Barcode Label is required"),
-    categories: Yup.string().required("Categories is required")
-
+    categories: Yup.string().required("Categories is required"),
 });
 
 function CMSAddInventory() {
-    const location = useLocation()
-    console.log("loccatt", location?.state);
-    const [inventoryBill, setInventoryBill] = useState([])
-    const [inventoryBillData, setInventoryBillData] = useState(null)
-    const [inventoryBillid, setInventoryBillid] = useState(null)
+    const location = useLocation();
+    const [inventoryBill, setInventoryBill] = useState([]);
+    const [inventoryBillData, setInventoryBillData] = useState(null);
+    const [inventoryBillid, setInventoryBillid] = useState(null);
 
     const formik = useFormik({
         initialValues: {
@@ -37,17 +42,20 @@ function CMSAddInventory() {
             barcodeLabel: location?.state ? location?.state.barCodeLable : "",
             categories: location?.state ? location?.state.productCategories : "",
             status: location?.state ? location?.state.status : "",
-            purchasedDate: location?.state ? new Date(location?.state?.purchasedDate) : "",
-            warrantyExpireDate: location?.state ? new Date(location?.state?.warrantyExpiredDate) : ""
+            purchasedDate: location?.state
+                ? new Date(location?.state?.purchasedDate)
+                : "",
+            warrantyExpireDate: location?.state
+                ? new Date(location?.state?.warrantyExpiredDate)
+                : "",
         },
 
         validationSchema: validationSchema,
         onSubmit: (values) => {
-
             if (location?.state?.id) {
-                hendleUpdateInventory(values)
+                hendleUpdateInventory(values);
             } else {
-                hendleAddInventory(values)
+                hendleAddInventory(values);
             }
         },
     });
@@ -64,14 +72,12 @@ function CMSAddInventory() {
             description: values.description,
             purchasedDate: values.purchasedDate,
             warrantyExpiredDate: values.warrantyExpireDate,
-            status: "in-stock/store"
-        }
-        console.log("Daaaa", Data);
+            status: "in-stock/store",
+        };
         try {
             const response = await createInventory(Data);
             if (response.success) {
                 showSuccessMessage(response?.message);
-                formik.resetForm()
             }
         } catch (error) {
             showErrorMessage(error?.response?.data?.message);
@@ -81,7 +87,9 @@ function CMSAddInventory() {
     const hendleUpdateInventory = async (values) => {
         const Data = {
             productName: values.productName,
-            fkInventoryBillId: location.state.id ? location.state.fkInventoryBillId : inventoryBillid,
+            fkInventoryBillId: location.state.id
+                ? location.state.fkInventoryBillId
+                : inventoryBillid,
             manufacturer: values.manufacturer,
             quantity: 0,
             productCategories: values.categories,
@@ -90,14 +98,13 @@ function CMSAddInventory() {
             description: values.description,
             purchasedDate: values.purchasedDate,
             warrantyExpiredDate: values.warrantyExpireDate,
-            status: values.status
-        }
+            status: values.status,
+        };
 
         try {
             const response = await UpdateInventoryById(location.state.id, Data);
             if (response.success) {
                 showSuccessMessage(response?.message);
-                formik.resetForm()
             }
         } catch (error) {
             showErrorMessage(error?.response?.data?.message);
@@ -108,41 +115,36 @@ function CMSAddInventory() {
         try {
             const response = await getAllInvoiceBill(0, 100);
             if (response?.success) {
-                console.log("inventory", response?.data?.inventoryBills);
                 setInventoryBill(response?.data?.inventoryBills);
             }
         } catch (error) {
             console.log(error);
         }
-    }
+    };
 
     const getSingleRecordById = async (event) => {
-        setInventoryBillid(event.target.value)
+        setInventoryBillid(event.target.value);
 
         try {
             const response = await getInventoryBillsById(event.target.value);
             if (response?.success) {
-                console.log("inventory", response?.data);
-                setInventoryBillData(response?.data)
+                setInventoryBillData(response?.data);
             }
         } catch (error) {
             console.log(error);
         }
-    }
-
+    };
 
     useEffect(() => {
-        getAllInvoiceBillApi()
-    }, [])
+        getAllInvoiceBillApi();
+    }, []);
 
     return (
         <Layout module={true} sidebarItems={CMSsidebarItems} centerlogohide={true}>
             <Header
                 dashboardLink={"/cms/admin/inventory/dashboard"}
                 addLink1={"/cms/admin/inventory/dashboard/add"}
-                title1={
-                    "Add Inventory"
-                }
+                title1={"Add Inventory"}
             />
             <ToastContainer />
             <div className="container-fluid">
@@ -153,8 +155,14 @@ function CMSAddInventory() {
                     <div className="card-body">
                         <form onSubmit={formik.handleSubmit}>
                             <div className="container-fluid">
-                                <div style={{ background: "#f2f2f2", padding: "15px", marginBottom: "15px" }}>
-                                    <div className='row'>
+                                <div
+                                    style={{
+                                        background: "#f2f2f2",
+                                        padding: "15px",
+                                        marginBottom: "15px",
+                                    }}
+                                >
+                                    <div className="row">
                                         <div className="col-6">
                                             <div className="mb-3">
                                                 <label className="form-label">Invioce Number</label>
@@ -163,11 +171,14 @@ function CMSAddInventory() {
                                                         type="text"
                                                         className={`form-control`}
                                                         id="productName"
-                                                        placeholder={location?.state?.invoiceNumber?.invoiceNumber}
+                                                        placeholder={
+                                                            location?.state?.invoiceNumber?.invoiceNumber
+                                                        }
                                                         readOnly
                                                     />
                                                 ) : (
-                                                    <select class="form-select"
+                                                    <select
+                                                        class="form-select"
                                                         id="status"
                                                         name="serialNo"
                                                         onChange={getSingleRecordById}
@@ -176,18 +187,17 @@ function CMSAddInventory() {
                                                             Select
                                                         </option>
                                                         {inventoryBill?.map((item) => (
-                                                            <option value={item.id}>{item.invoiceNumber}</option>
+                                                            <option value={item.id}>
+                                                                {item.invoiceNumber}
+                                                            </option>
                                                         ))}
                                                     </select>
-
                                                 )}
-
-
                                             </div>
                                         </div>
                                     </div>
                                     {inventoryBillData && (
-                                        <div className='row'>
+                                        <div className="row">
                                             <div className="col">
                                                 <div className="mb-3">
                                                     <label htmlFor="formFile" className="form-label">
@@ -198,8 +208,6 @@ function CMSAddInventory() {
                                                         className={`form-control`}
                                                         id="productName"
                                                         placeholder={inventoryBillData?.vendor?.vendorName}
-                                                        // onChange={formik.handleChange}
-                                                        // onBlur={formik.handleBlur}
                                                         readOnly
                                                     />
                                                 </div>
@@ -214,8 +222,6 @@ function CMSAddInventory() {
                                                         className={`form-control`}
                                                         id="productName"
                                                         placeholder={inventoryBillData?.quantity}
-                                                        // onChange={formik.handleChange}
-                                                        // onBlur={formik.handleBlur}
                                                         readOnly
                                                     />
                                                 </div>
@@ -238,7 +244,7 @@ function CMSAddInventory() {
                                                     : ""
                                                     }`}
                                                 id="serialNo"
-                                                value={formik.values.serialNo}
+                                                placeholder={formik.values.serialNo}
                                                 onChange={formik.handleChange}
                                                 onBlur={formik.handleBlur}
                                             />
@@ -263,7 +269,7 @@ function CMSAddInventory() {
                                                     : ""
                                                     }`}
                                                 id="productName"
-                                                value={formik.values.productName}
+                                                placeholder={formik.values.productName}
                                                 onChange={formik.handleChange}
                                                 onBlur={formik.handleBlur}
                                             />
@@ -275,7 +281,6 @@ function CMSAddInventory() {
                                                 )}
                                         </div>
                                     </div>
-
                                 </div>
                                 <div className="row">
                                     <div className="col-6">
@@ -289,7 +294,7 @@ function CMSAddInventory() {
                                                     : ""
                                                     }`}
                                                 id="manufacturer"
-                                                value={formik.values.manufacturer}
+                                                placeholder={formik.values.manufacturer}
                                                 onChange={formik.handleChange}
                                                 onBlur={formik.handleBlur}
                                             />
@@ -312,7 +317,7 @@ function CMSAddInventory() {
                                                     : ""
                                                     }`}
                                                 id="barcodeLabel"
-                                                value={formik.values.barcodeLabel}
+                                                placeholder={formik.values.barcodeLabel}
                                                 onChange={formik.handleChange}
                                                 onBlur={formik.handleBlur}
                                             />
@@ -324,19 +329,16 @@ function CMSAddInventory() {
                                                 )}
                                         </div>
                                     </div>
-
                                 </div>
 
-                                <div className='row'>
-
+                                <div className="row">
                                     <div className="col-6">
                                         <div className="mb-3">
                                             <label htmlFor="formFile" className="form-label">
                                                 Categories
                                             </label>
-                                            {/* form-select */}
                                             <select
-                                                className={`form-select ${formik.touched.categories &&
+                                                class={`form-select ${formik.touched.categories &&
                                                     formik.errors.categories
                                                     ? "is-invalid"
                                                     : ""
@@ -369,7 +371,8 @@ function CMSAddInventory() {
                                                 <label htmlFor="formFile" className="form-label">
                                                     Status
                                                 </label>
-                                                <select class="form-select"
+                                                <select
+                                                    class="form-select"
                                                     id="status"
                                                     name="status"
                                                     onChange={formik.handleChange}
@@ -384,12 +387,10 @@ function CMSAddInventory() {
                                                     <option value="disposed of">Disposed Of</option>
                                                     <option value="repairing">Repairing</option>
                                                     <option value="out of order">Out OF Order</option>
-
                                                 </select>
                                             </div>
                                         </div>
                                     )}
-
                                 </div>
 
                                 <div class="row">
@@ -403,7 +404,7 @@ function CMSAddInventory() {
                                                     top: "36px",
                                                     zIndex: 1,
                                                     fontSize: "20px",
-                                                    zIndex: "1",
+
                                                     color: "#666",
                                                 }}
                                             >
@@ -412,7 +413,9 @@ function CMSAddInventory() {
                                             <DatePicker
                                                 minDate={new Date()}
                                                 selected={formik.values.purchasedDate}
-                                                onChange={(date) => formik.setFieldValue("purchasedDate", date)}
+                                                onChange={(date) =>
+                                                    formik.setFieldValue("purchasedDate", date)
+                                                }
                                                 className={"form-control"}
                                             />
                                         </div>
@@ -427,7 +430,7 @@ function CMSAddInventory() {
                                                     top: "36px",
                                                     zIndex: 1,
                                                     fontSize: "20px",
-                                                    zIndex: "1",
+
                                                     color: "#666",
                                                 }}
                                             >
@@ -436,14 +439,15 @@ function CMSAddInventory() {
                                             <DatePicker
                                                 minDate={new Date()}
                                                 selected={formik.values.warrantyExpireDate}
-                                                onChange={(date) => formik.setFieldValue("warrantyExpireDate", date)}
+                                                onChange={(date) =>
+                                                    formik.setFieldValue("warrantyExpireDate", date)
+                                                }
                                                 className={"form-control"}
                                             />
                                         </div>
                                     </div>
                                 </div>
-                                <div className='row'>
-                                </div>
+                                <div className="row"></div>
                                 <div className="d-grid gap-2 d-md-flex justify-content-md-end">
                                     <button className="btn btn-primary" type="submit">
                                         Submit
@@ -455,7 +459,7 @@ function CMSAddInventory() {
                 </div>
             </div>
         </Layout>
-    )
+    );
 }
 
-export default CMSAddInventory
+export default CMSAddInventory;

@@ -2569,23 +2569,7 @@ export const createGroup = async (data) => {
   }
 };
 
-export const addDivisionsToGroup = async (data) => {
-  try {
-    // const token = getAuthToken();
-    const response = await axiosClientMMS.post(`/groups/manageDivisionInGroup`, data, {
-      headers: {
-        accept: "application/json",
-        "Content-Type": "application/json", 
-      },
-    });
-    return response?.data;
-  } catch (error) {
-    console.error("Error fetching API endpoint:", error);
-    throw error;
-  }
-};
-
-export const getDivisionsForGroups = async (id,currentPage, pageSize) => {
+export const getDivisionsBySessionId = async (id) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClientMMS.get(`/groups/retrieveDivisionForGroup/${id}`);
@@ -2594,6 +2578,22 @@ export const getDivisionsForGroups = async (id,currentPage, pageSize) => {
     //     Authorization: `Bearer ${token}`,
     //   }
     // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const updateDivisionsAndGroups = async (id, data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.put(`/groups/manageDivisionInGroup/${id}`, data, {
+      headers: {
+        accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
