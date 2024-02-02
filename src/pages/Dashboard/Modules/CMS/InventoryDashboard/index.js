@@ -1,23 +1,27 @@
 import React, { useCallback, useEffect, useState } from "react";
 import moment from "moment";
 import { Layout } from "../../../../../components/Layout";
-import { CMSsidebarItems, SMSsidebarItems } from "../../../../../utils/sideBarItems";
+import { CMSsidebarItems } from "../../../../../utils/sideBarItems";
 import Header from "../../../../../components/Header";
 import CustomTable from "../../../../../components/CustomComponents/CustomTable";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { ToastContainer } from "react-toastify";
-import { showErrorMessage, showSuccessMessage } from "../../../../../utils/ToastAlert";
-import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import DatePicker from "react-datepicker";
-import { getAllInventory, getInventoryById, inventoryDelete, searchInventory } from "../../../../../api/APIs";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../utils/ToastAlert";
+import {
+  getAllInventory,
+  getInventoryById,
+  inventoryDelete,
+  searchInventory,
+} from "../../../../../api/APIs";
 
 function SMSInventoryDashboard() {
   const navigation = useNavigate();
   const [count, setCount] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
-  console.log(currentPage);
   const [inventoryData, setInventoryData] = useState([]);
   const pageSize = 4; // Set your desired page size
 
@@ -37,7 +41,6 @@ function SMSInventoryDashboard() {
   };
 
   const transformInventoryData = (apiData) => {
-    console.log(apiData);
     return apiData.map((item) => ({
       id: item?.id,
       productName: item?.productName,
@@ -48,31 +51,33 @@ function SMSInventoryDashboard() {
       barCodeLable: item?.barCodeLable,
       barCodeLable: item?.barCodeLable,
       purchasedDate: moment(item?.purchasedDate).format("MM/DD/YYYY"),
-      warrantyExpiredDate: moment(item?.warrantyExpiredDate).format("MM/DD/YYYY"),
+      warrantyExpiredDate: moment(item?.warrantyExpiredDate).format(
+        "MM/DD/YYYY"
+      ),
       status: item?.status,
     }));
   };
 
   const getInventoryList = useCallback(async () => {
     try {
-          const response = await getAllInventory(currentPage, pageSize);
-          if (response?.success) {
-            setCount(response?.data?.count);
-            const transformedData = transformInventoryData(response?.data?.inventories);
-            setInventoryData(transformedData);
-          }
-        } catch (error) {
-          console.log(error);
-        }
-}, [currentPage, pageSize, setCount, setInventoryData]);
+      const response = await getAllInventory(currentPage, pageSize);
+      if (response?.success) {
+        setCount(response?.data?.count);
+        const transformedData = transformInventoryData(
+          response?.data?.inventories
+        );
+        setInventoryData(transformedData);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, [currentPage, pageSize, setCount, setInventoryData]);
 
- 
   const SearchInventoryApi = async (values) => {
     const Data = {
       productName: values.productName,
       serialNo: values.labelNo,
     };
-    console.log("Data",Data);
     try {
       const response = await searchInventory(Data);
       if (response?.success) {
@@ -87,35 +92,35 @@ function SMSInventoryDashboard() {
       showErrorMessage(error?.response?.data?.error);
     }
   };
-  
+
   const hendleDelete = async (id) => {
     try {
-      const response = await inventoryDelete(id); // Add await here
+      const response = await inventoryDelete(id);
       if (response?.success) {
-        showSuccessMessage(response?.message)
-        getInventoryList()
+        showSuccessMessage(response?.message);
+        getInventoryList();
       }
     } catch (error) {
-      showErrorMessage(error?.response?.data?.message)
+      showErrorMessage(error?.response?.data?.message);
     }
   };
 
   const hendleEdit = async (id) => {
     try {
-      const response = await getInventoryById(id); // Add await here
+      const response = await getInventoryById(id);
       if (response?.success) {
-        navigation("/cms/admin/inventory/dashboard/add", {state: response.data})
+        navigation("/cms/admin/inventory/dashboard/add", {
+          state: response.data,
+        });
       }
     } catch (error) {
-      showErrorMessage(error?.response?.data?.message)
+      showErrorMessage(error?.response?.data?.message);
     }
   };
 
-  
-
   useEffect(() => {
     getInventoryList();
-}, [getInventoryList]);
+  }, [getInventoryList]);
   return (
     <Layout module={true} sidebarItems={CMSsidebarItems} centerlogohide={true}>
       <Header dashboardLink={"/sms/dashboard"} />
@@ -157,11 +162,7 @@ function SMSInventoryDashboard() {
                     Search
                   </button>
                 </div>
-
               </div>
-
-
-
             </form>
 
             <div class="row mt-5">
@@ -169,7 +170,6 @@ function SMSInventoryDashboard() {
                 <CustomTable
                   data={inventoryData}
                   tableTitle={"Inventory Information"}
-                  //   hideBtn={true}
                   addBtnText={"Add Inventory"}
                   hideDeleteIcon={false}
                   hideEditIcon={false}
@@ -179,7 +179,9 @@ function SMSInventoryDashboard() {
                   currentPage={currentPage}
                   pageSize={pageSize}
                   totalCount={count}
-                  handleAdd={() => navigation("/cms/admin/inventory/dashboard/add")}
+                  handleAdd={() =>
+                    navigation("/cms/admin/inventory/dashboard/add")
+                  }
                   handleDelete={(item) => hendleDelete(item.id)}
                   handleEdit={(item) => hendleEdit(item.id)}
                 />
