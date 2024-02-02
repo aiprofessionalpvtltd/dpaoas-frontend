@@ -1,5 +1,6 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Link } from "react-router-dom";
 
 export const Tiles = ({ title, value, link, cardbg, icon, type }) => {
   return (
@@ -19,7 +20,7 @@ export const Tiles = ({ title, value, link, cardbg, icon, type }) => {
           </div>
         </div>
       ) : (
-        <a href={link}>
+        <Link to={link}>
           <div
             class={`card ${cardbg} text-white widget-visitor-card`}
             style={{ overflow: "hidden" }}
@@ -34,7 +35,7 @@ export const Tiles = ({ title, value, link, cardbg, icon, type }) => {
               </i>
             </div>
           </div>
-        </a>
+        </Link>
       )}
     </>
   );
