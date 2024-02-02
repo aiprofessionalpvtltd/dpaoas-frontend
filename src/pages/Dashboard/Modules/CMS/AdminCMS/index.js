@@ -216,6 +216,7 @@ function CMSAdminDashboard() {
         setCount(1);
         setComplaintData(transformedData);
         showSuccessMessage(response.message);
+        formik.resetForm()
       }
     } catch (error) {
       console.log(error);

@@ -14,33 +14,45 @@ import moment from 'moment'
 import { CustomAlert } from '../../../../../../components/CustomComponents/CustomAlert'
 import { useNavigate } from 'react-router'
 import CustomTable from '../../../../../../components/CustomComponents/CustomTable'
+import { useFormik } from 'formik'
+import * as Yup from "yup";
 
+const validationSchema = Yup.object({
+    serialNo: Yup.string().required("Serial No is required"),
+});
 
 function InventoryIssueDate() {
-    const [complaintType, setComplaintType] = useState([]);
     const Navigate = useNavigate()
+    const { employeeData } = useContext(AuthContext);
 
-    const { employeeData, employeesAsEngineersData } = useContext(AuthContext);
-
-    const [serailNo, setSerailNo] = useState(null)
+    const [showModal, setShowModal] = useState(false)
+    const [complaintType, setComplaintType] = useState([]);
     const [issuedDate, setIssuedDate] = useState(null)
     const [branch, setBranch] = useState(null)
     const [employee, setEmployee] = useState(null)
     const [searchData, setSearchData] = useState([])
     const [allIssuedData, setAllIssuedData] = useState([])
-
     const [count, setCount] = useState(null);
     const [currentPage, setCurrentPage] = useState(0);
-    const pageSize = 4; // Set your desired page size
-  
+    const pageSize = 4;
+
+    const formik = useFormik({
+        initialValues: {
+            serialNo: "",
+        },
+        validationSchema: validationSchema,
+        onSubmit: (values) => {
+            SearchInventoryAPi(values)
+        },
+    });
+
     const handlePageChange = (page) => {
-      // Update currentPage when a page link is clicked
-      setCurrentPage(page);
+        // Update currentPage when a page link is clicked
+        setCurrentPage(page);
     };
 
 
 
-    const [showModal, setShowModal] = useState(false)
 
     const handleShow = () => setShowModal(true);
     const handleClose = () => setShowModal(false);
@@ -49,53 +61,51 @@ function InventoryIssueDate() {
         handleClose();
     };
 
-
     const tranformissuedData = (apiData) => {
         return apiData.map((item) => ({
             assignedToUser: item?.assignedToUser && `${item?.assignedToUser?.employee.firstName} ${item?.assignedToUser?.employee?.lastName}`,
             assignedToBranch: item?.assignedToBranch && item?.assignedToBranch?.complaintTypeName,
-            issuedDate:item.issuedDate && moment(item.issuedDate).format("MM/DD/YYYY"),
-            returnDate:item.returnDate && moment(item.returnDate).format("MM/DD/YYYY"),
-            
+            issuedDate: item.issuedDate && moment(item.issuedDate).format("MM/DD/YYYY"),
+            returnDate: item.returnDate && moment(item.returnDate).format("MM/DD/YYYY"),
+
         }));
     };
 
-    const SearchInventoryAPi = async () => {
+    const SearchInventoryAPi = async (values) => {
         try {
-            const response = await SearchInventoryBySerailNo(serailNo); // Add await here
+            const response = await SearchInventoryBySerailNo(values.serialNo); // Add await here
             if (response?.success) {
-                // const transformedData = transformInventoryBillData(response?.data);
-                // setInventoryData(transformedData);
                 showSuccessMessage(response?.message)
-                    const filterData = response?.data?.filter((item)=> item?.assignedInventory?.status === "issued" || item?.issuedDate === null || item?.assignedInventory?.status === "in-stock/store")
-                    // const historyData = response?.data?.filter((item)=> item?.assignedInventory?.status === "issued" || item?.assignedInventory?.status === "in-stock/store")
-                    // setSearchData(filterData)
-                    console.log("uuuuu", filterData)
-                    const updatedFilterData = filterData?.filter((item)=>  item?.issuedDate === null && item?.returnDate === null && item?.assignedInventory?.status === "in-stock/store" );
-                    console.log("check8778768",updatedFilterData)
-                    if(updatedFilterData.length !== 0){ 
-                        console.log("897878989")
-                        setSearchData(updatedFilterData)
-                    }
-                    else{
-                        if(filterData){
-                            console.log("check--->>",filterData)
-                            const secondFilter = filterData?.filter((item)=>  item?.issuedDate !== null && item?.returnDate === null
-                            )
-                            console.log("second filere", secondFilter)
-                            setSearchData(secondFilter)
-                            if(secondFilter.length === 0){
-                                console.log("agyee")
-                                const secondFilterr = filterData?.filter((item)=> item?.issuedDate !== null && item?.returnDate !== null )
-                                console.log("secondddd",secondFilterr )
+                formik.resetForm()
+                const filterData = response?.data?.filter((item) => item?.assignedInventory?.status === "issued" || item?.issuedDate === null || item?.assignedInventory?.status === "in-stock/store")
+                // const historyData = response?.data?.filter((item)=> item?.assignedInventory?.status === "issued" || item?.assignedInventory?.status === "in-stock/store")
+                // setSearchData(filterData)
+                console.log("uuuuu", filterData)
+                const updatedFilterData = filterData?.filter((item) => item?.issuedDate === null && item?.returnDate === null && item?.assignedInventory?.status === "in-stock/store");
+                console.log("check8778768", updatedFilterData)
+                if (updatedFilterData.length !== 0) {
+                    console.log("897878989")
+                    setSearchData(updatedFilterData)
+                }
+                else {
+                    if (filterData) {
+                        console.log("check--->>", filterData)
+                        const secondFilter = filterData?.filter((item) => item?.issuedDate !== null && item?.returnDate === null
+                        )
+                        console.log("second filere", secondFilter)
+                        setSearchData(secondFilter)
+                        if (secondFilter.length === 0) {
+                            console.log("agyee")
+                            const secondFilterr = filterData?.filter((item) => item?.issuedDate !== null && item?.returnDate !== null)
+                            console.log("secondddd", secondFilterr)
                             setSearchData([secondFilterr[secondFilterr.length - 1]])
-    
-                            }
-                    
+
                         }
+
                     }
-                    
-                    // console.log("filterData", filterData);
+                }
+
+                // console.log("filterData", filterData);
                 const historyDataTransfer = tranformissuedData(response?.data)
                 setAllIssuedData(historyDataTransfer)
 
@@ -105,6 +115,7 @@ function InventoryIssueDate() {
             showErrorMessage(error?.response?.data?.message)
         }
     };
+
 
     const AllComplaintTypeApi = async () => {
         try {
@@ -118,7 +129,7 @@ function InventoryIssueDate() {
             showErrorMessage(error?.response?.data?.error);
         }
     };
-    const hendleAddInventory = async (values) => {
+    const hendleIssueDate = async (values) => {
         const Data = {
             fkAssignedToUserId: employee ? employee?.value : null,
             fkAssignedToBranchId: JSON.parse(branch),
@@ -129,13 +140,16 @@ function InventoryIssueDate() {
             const response = await createIssueProduct(searchData[0]?.assignedInventory?.id, Data);
             if (response.success) {
                 showSuccessMessage(response.message);
+                setEmployee(null)
+                setBranch(null)
+                setIssuedDate(null)
             }
         } catch (error) {
             showErrorMessage(error.response.data.message);
         }
     };
 
-  
+
 
 
     useEffect(() => {
@@ -160,28 +174,40 @@ function InventoryIssueDate() {
                     </div>
                     <div className="card-body">
                         <div className="container-fluid">
-                            <div className="row">
-                                <div className="col-6">
-                                    <div className="mb-3">
-                                        <label htmlFor="formFile" className="form-label">
-                                            Serial Number
-                                        </label>
-                                        <input
-                                            type="text"
-                                            className={`form-control`}
-                                            id="serialNo"
-                                            placeholder={serailNo}
-                                            onChange={(e) => setSerailNo(e.target.value)}
-                                        />
+                            <form onSubmit={formik.handleSubmit}>
+                                <div className="row">
+                                    <div className="col-6">
+                                        <div className="mb-3">
+                                            <label htmlFor="formFile" className="form-label">
+                                                Serial Number
+                                            </label>
+                                            <input
+                                                type="text"
+                                                className={`form-control ${formik.touched.serialNo &&
+                                                    formik.errors.serialNo
+                                                    ? "is-invalid"
+                                                    : ""
+                                                    }`}
+                                                id="serialNo"
+                                                // placeholder={serailNo}
+                                                value={formik.values.serialNo}
+                                                onChange={formik.handleChange}
+                                            />
+                                            {formik.touched.serialNo &&
+                                                formik.errors.serialNo && (
+                                                    <div className="invalid-feedback">
+                                                        {formik.errors.serialNo}
+                                                    </div>
+                                                )}
+                                        </div>
+                                    </div>
+                                    <div className="col-6 d-flex justify-content-center align-items-center">
+                                        <button className="btn btn-primary" type="submit">
+                                            Search
+                                        </button>
                                     </div>
                                 </div>
-                                <div className="col-6 d-flex justify-content-center align-items-center">
-                                    <button className="btn btn-primary" type="button" onClick={() => SearchInventoryAPi()}>
-                                        Search
-                                    </button>
-                                </div>
-                            </div>
-
+                            </form>
 
                             {searchData && searchData.length > 0 && (
                                 <div class="dash-detail-container"
@@ -324,7 +350,7 @@ function InventoryIssueDate() {
                                         if (searchData[0]?.issuedDate && !searchData[0]?.returnDate) {
                                             handleShow()
                                         } else {
-                                            hendleAddInventory()
+                                            hendleIssueDate()
                                         }
                                     }}>
                                         Submit
@@ -346,10 +372,10 @@ function InventoryIssueDate() {
                             hideEditIcon={true}
                             headertitlebgColor={"#666"}
                             headertitletextColor={"#FFF"}
-                          handlePageChange={handlePageChange}
-                          currentPage={currentPage}
-                          pageSize={pageSize}
-                          totalCount={count}
+                            handlePageChange={handlePageChange}
+                            currentPage={currentPage}
+                            pageSize={pageSize}
+                            totalCount={count}
                         />
                     </div>
                 </div>
