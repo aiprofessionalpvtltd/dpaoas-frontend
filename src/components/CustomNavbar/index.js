@@ -3,7 +3,7 @@ import Logo from "../../assets/logo.png";
 import Profile from "../../assets/profile-img.jpg";
 import { Dropdown } from "react-bootstrap";
 import { logout } from "../../api/Auth";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export const CustomNavbar = ({ toggleSidebar, module, centerlogohide }) => {
   const navigation = useNavigate();
@@ -20,14 +20,14 @@ export const CustomNavbar = ({ toggleSidebar, module, centerlogohide }) => {
           <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
               <li class="nav-item">
-                <a
+                <Link
                   style={{ fontWeight: "bold" }}
                   class="nav-link"
                   aria-current="page"
-                  href="/"
+                  to="/"
                 >
                   Dashboard
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
