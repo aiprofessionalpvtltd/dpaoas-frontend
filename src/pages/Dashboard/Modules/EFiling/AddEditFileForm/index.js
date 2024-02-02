@@ -120,7 +120,7 @@ function AddEditFileForm() {
                           value={formik.values.active}
                         >
                           <option value={""} selected disabled hidden>
-                            select
+                            Select
                           </option>
                           <option value={true}>Legislation</option>
                           <option value={false}>IT</option>
@@ -140,7 +140,7 @@ function AddEditFileForm() {
                           value={formik.values.active}
                         >
                           <option value={""} selected disabled hidden>
-                            select
+                            Select
                           </option>
                           <option value={true}>2021</option>
                           <option value={false}>2023</option>
@@ -162,7 +162,7 @@ function AddEditFileForm() {
                           value={formik.values.active}
                         >
                           <option value={""} selected disabled hidden>
-                            select
+                            Select
                           </option>
                           <option value={true}>Normal</option>
                           <option value={false}>Immediate</option>
@@ -182,7 +182,7 @@ function AddEditFileForm() {
                           value={formik.values.active}
                         >
                           <option value={""} selected disabled hidden>
-                            select
+                            Select
                           </option>
                           <option value={true}>A</option>
                           <option value={false}>B</option>
@@ -204,7 +204,7 @@ function AddEditFileForm() {
                           value={formik.values.active}
                         >
                           <option value={""} selected disabled hidden>
-                            select
+                            Select
                           </option>
                           <option value={true}>Internal</option>
                           <option value={false}>External</option>

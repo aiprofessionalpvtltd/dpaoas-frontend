@@ -28,26 +28,6 @@ function VMSVisitors() {
     setCurrentPage(page);
   };
 
-  const data = [
-    {
-      id: 1,
-      name: "Umar",
-      cnic: "61101-",
-      details: "Senate Visit 2023",
-      visitorStatus: "active",
-      createdAt: "2023-11-21T10:47:24.052Z",
-      updatedAt: "2023-11-21T10:47:24.052Z",
-    },
-    {
-      id: 2,
-      name: "Saqib khan",
-      cnic: "61101-",
-      details: "Senate Visit 2023",
-      visitorStatus: "inactive",
-      createdAt: "2023-11-21T10:47:24.052Z",
-      updatedAt: "2023-11-21T10:47:24.052Z",
-    },
-  ];
   const transformLeavesData = (apiData) => {
     return apiData.map((leave) => ({
       id: leave.id,

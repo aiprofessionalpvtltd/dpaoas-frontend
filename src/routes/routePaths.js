@@ -330,6 +330,8 @@ export const ProtectedRoutes = [
   {path:"/cms/admin/inventory/return-date", element: <InventoryReturnDate />},
   {path:"/cms/admin/inventory/vendor-list", element: <CMSVendorList />},
   {path:"/cms/admin/inventory/vendor-list/edit", element: <CMSEditVendor />},
+  {path:"/cms/admin/inventory/vendor-list/add", element: <CMSEditVendor />},
+
 
 
 
