@@ -11,40 +11,42 @@ import { showErrorMessage, showSuccessMessage } from '../../../../../../utils/To
 import { UpdateInventoryById, createInventory, getAllInvoiceBill, getInventoryBillsById } from '../../../../../../api/APIs';
 import { AuthContext } from '../../../../../../api/AuthContext';
 import { useLocation } from 'react-router';
+import * as Yup from "yup";
 
+const validationSchema = Yup.object({
+    serialNo: Yup.string().required("SerialNo is required"),
+    productName: Yup.string().required("Product Name is required"),
+    manufacturer: Yup.string().required("Manufacturer is required"),
+    barcodeLabel: Yup.string().required("Barcode Label is required"),
+    categories: Yup.string().required("Categories is required")
+
+});
 
 function CMSAddInventory() {
     const location = useLocation()
-    console.log("loccatt",location?.state);
+    console.log("loccatt", location?.state);
     const [inventoryBill, setInventoryBill] = useState([])
     const [inventoryBillData, setInventoryBillData] = useState(null)
     const [inventoryBillid, setInventoryBillid] = useState(null)
 
-
     const formik = useFormik({
         initialValues: {
-            serialNo: location?.state ? location?.state.serialNo:"",
-            productName: location?.state ? location?.state.productName:"",
-            manufacturer: location?.state ? location?.state.manufacturer:"",
-            barcodeLabel: location?.state ? location?.state.barCodeLable  :"",
-            categories: location?.state ? location?.state.productCategories:"",
-            status: location?.state ? location?.state.status:"",
+            serialNo: location?.state ? location?.state.serialNo : "",
+            productName: location?.state ? location?.state.productName : "",
+            manufacturer: location?.state ? location?.state.manufacturer : "",
+            barcodeLabel: location?.state ? location?.state.barCodeLable : "",
+            categories: location?.state ? location?.state.productCategories : "",
+            status: location?.state ? location?.state.status : "",
             purchasedDate: location?.state ? new Date(location?.state?.purchasedDate) : "",
-            warrantyExpireDate:location?.state ?  new Date(location?.state?.warrantyExpiredDate) : ""
+            warrantyExpireDate: location?.state ? new Date(location?.state?.warrantyExpiredDate) : ""
         },
 
+        validationSchema: validationSchema,
         onSubmit: (values) => {
-            // Handle form submission here
-            // console.log(values);
-            // if(location.state.id){
-            //     hendleUpdateInventory(values)
-            // }else{
-                
-            // }
 
-            if(location?.state?.id){
+            if (location?.state?.id) {
                 hendleUpdateInventory(values)
-            }else{
+            } else {
                 hendleAddInventory(values)
             }
         },
@@ -64,11 +66,12 @@ function CMSAddInventory() {
             warrantyExpiredDate: values.warrantyExpireDate,
             status: "in-stock/store"
         }
-      console.log("Daaaa",Data);
+        console.log("Daaaa", Data);
         try {
             const response = await createInventory(Data);
             if (response.success) {
                 showSuccessMessage(response?.message);
+                formik.resetForm()
             }
         } catch (error) {
             showErrorMessage(error?.response?.data?.message);
@@ -94,6 +97,7 @@ function CMSAddInventory() {
             const response = await UpdateInventoryById(location.state.id, Data);
             if (response.success) {
                 showSuccessMessage(response?.message);
+                formik.resetForm()
             }
         } catch (error) {
             showErrorMessage(error?.response?.data?.message);
@@ -114,7 +118,7 @@ function CMSAddInventory() {
 
     const getSingleRecordById = async (event) => {
         setInventoryBillid(event.target.value)
-    
+
         try {
             const response = await getInventoryBillsById(event.target.value);
             if (response?.success) {
@@ -149,74 +153,75 @@ function CMSAddInventory() {
                     <div className="card-body">
                         <form onSubmit={formik.handleSubmit}>
                             <div className="container-fluid">
-                                <div style={{background:"#f2f2f2", padding:"15px", marginBottom:"15px"}}>
-                                <div className='row'>
-                                    <div className="col-6">
-                                        <div className="mb-3">
-                                            <label className="form-label">Invioce Number</label>
-                                            {location?.state?.id ? (
-                                                <input
-                                                type="text"
-                                                className={`form-control`}
-                                                id="productName"
-                                                placeholder={location?.state?.invoiceNumber?.invoiceNumber}
-                                               readOnly
-                                            /> 
-                                            ) : (
-                                                <select class="form-select"
-                                                id="status"
-                                                name="serialNo"
-                                                onChange={getSingleRecordById}
-                                            >
-                                                <option value={""} selected disabled hidden>
-                                                    Select
-                                                </option>
-                                                {inventoryBill?.map((item) => (
-                                                    <option value={item.id}>{item.invoiceNumber}</option>
-                                                ))}
-                                            </select>
-                                            )}
-                                            
-                                             
-                                        </div>
-                                    </div>
-                                </div>
-                                {inventoryBillData && (
+                                <div style={{ background: "#f2f2f2", padding: "15px", marginBottom: "15px" }}>
                                     <div className='row'>
-                                        <div className="col">
+                                        <div className="col-6">
                                             <div className="mb-3">
-                                                <label htmlFor="formFile" className="form-label">
-                                                    Vendor
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    className={`form-control`}
-                                                    id="productName"
-                                                    placeholder={inventoryBillData?.vendor?.vendorName}
-                                                    // onChange={formik.handleChange}
-                                                    // onBlur={formik.handleBlur}
-                                                    readOnly
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="col">
-                                            <div className="mb-3">
-                                                <label htmlFor="formFile" className="form-label">
-                                                    Quantity
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    className={`form-control`}
-                                                    id="productName"
-                                                    placeholder={inventoryBillData?.quantity}
-                                                    // onChange={formik.handleChange}
-                                                    // onBlur={formik.handleBlur}
-                                                    readOnly
-                                                />
+                                                <label className="form-label">Invioce Number</label>
+                                                {location?.state?.id ? (
+                                                    <input
+                                                        type="text"
+                                                        className={`form-control`}
+                                                        id="productName"
+                                                        placeholder={location?.state?.invoiceNumber?.invoiceNumber}
+                                                        readOnly
+                                                    />
+                                                ) : (
+                                                    <select class="form-select"
+                                                        id="status"
+                                                        name="serialNo"
+                                                        onChange={getSingleRecordById}
+                                                    >
+                                                        <option value={""} selected disabled hidden>
+                                                            Select
+                                                        </option>
+                                                        {inventoryBill?.map((item) => (
+                                                            <option value={item.id}>{item.invoiceNumber}</option>
+                                                        ))}
+                                                    </select>
+
+                                                )}
+
+
                                             </div>
                                         </div>
                                     </div>
-                                )}
+                                    {inventoryBillData && (
+                                        <div className='row'>
+                                            <div className="col">
+                                                <div className="mb-3">
+                                                    <label htmlFor="formFile" className="form-label">
+                                                        Vendor
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        className={`form-control`}
+                                                        id="productName"
+                                                        placeholder={inventoryBillData?.vendor?.vendorName}
+                                                        // onChange={formik.handleChange}
+                                                        // onBlur={formik.handleBlur}
+                                                        readOnly
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="col">
+                                                <div className="mb-3">
+                                                    <label htmlFor="formFile" className="form-label">
+                                                        Quantity
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        className={`form-control`}
+                                                        id="productName"
+                                                        placeholder={inventoryBillData?.quantity}
+                                                        // onChange={formik.handleChange}
+                                                        // onBlur={formik.handleBlur}
+                                                        readOnly
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div className="row">
@@ -227,13 +232,22 @@ function CMSAddInventory() {
                                             </label>
                                             <input
                                                 type="text"
-                                                className={`form-control`}
+                                                className={`form-control ${formik.touched.serialNo &&
+                                                    formik.errors.serialNo
+                                                    ? "is-invalid"
+                                                    : ""
+                                                    }`}
                                                 id="serialNo"
-                                                placeholder={formik.values.serialNo}
+                                                value={formik.values.serialNo}
                                                 onChange={formik.handleChange}
                                                 onBlur={formik.handleBlur}
-
                                             />
+                                            {formik.touched.serialNo &&
+                                                formik.errors.serialNo && (
+                                                    <div className="invalid-feedback">
+                                                        {formik.errors.serialNo}
+                                                    </div>
+                                                )}
                                         </div>
                                     </div>
                                     <div className="col-6">
@@ -243,13 +257,22 @@ function CMSAddInventory() {
                                             </label>
                                             <input
                                                 type="text"
-                                                className={`form-control`}
+                                                className={`form-control ${formik.touched.productName &&
+                                                    formik.errors.productName
+                                                    ? "is-invalid"
+                                                    : ""
+                                                    }`}
                                                 id="productName"
-                                                placeholder={formik.values.productName}
+                                                value={formik.values.productName}
                                                 onChange={formik.handleChange}
                                                 onBlur={formik.handleBlur}
-
                                             />
+                                            {formik.touched.productName &&
+                                                formik.errors.productName && (
+                                                    <div className="invalid-feedback">
+                                                        {formik.errors.productName}
+                                                    </div>
+                                                )}
                                         </div>
                                     </div>
 
@@ -260,13 +283,22 @@ function CMSAddInventory() {
                                             <label className="form-label">Manufacturer/OEM</label>
                                             <input
                                                 type="text"
-                                                className={`form-control`}
+                                                className={`form-control ${formik.touched.manufacturer &&
+                                                    formik.errors.manufacturer
+                                                    ? "is-invalid"
+                                                    : ""
+                                                    }`}
                                                 id="manufacturer"
-                                                placeholder={formik.values.manufacturer}
+                                                value={formik.values.manufacturer}
                                                 onChange={formik.handleChange}
                                                 onBlur={formik.handleBlur}
-
                                             />
+                                            {formik.touched.manufacturer &&
+                                                formik.errors.manufacturer && (
+                                                    <div className="invalid-feedback">
+                                                        {formik.errors.manufacturer}
+                                                    </div>
+                                                )}
                                         </div>
                                     </div>
                                     <div className="col-6">
@@ -274,12 +306,22 @@ function CMSAddInventory() {
                                             <label className="form-label">Barcode Label</label>
                                             <input
                                                 type="text"
-                                                className={`form-control`}
+                                                className={`form-control ${formik.touched.barcodeLabel &&
+                                                    formik.errors.barcodeLabel
+                                                    ? "is-invalid"
+                                                    : ""
+                                                    }`}
                                                 id="barcodeLabel"
-                                                placeholder={formik.values.barcodeLabel}
+                                                value={formik.values.barcodeLabel}
                                                 onChange={formik.handleChange}
                                                 onBlur={formik.handleBlur}
                                             />
+                                            {formik.touched.barcodeLabel &&
+                                                formik.errors.barcodeLabel && (
+                                                    <div className="invalid-feedback">
+                                                        {formik.errors.barcodeLabel}
+                                                    </div>
+                                                )}
                                         </div>
                                     </div>
 
@@ -292,7 +334,13 @@ function CMSAddInventory() {
                                             <label htmlFor="formFile" className="form-label">
                                                 Categories
                                             </label>
-                                            <select class="form-select"
+                                            {/* form-select */}
+                                            <select
+                                                className={`form-select ${formik.touched.categories &&
+                                                    formik.errors.categories
+                                                    ? "is-invalid"
+                                                    : ""
+                                                    }`}
                                                 id="categories"
                                                 name="categories"
                                                 onChange={formik.handleChange}
@@ -306,38 +354,42 @@ function CMSAddInventory() {
                                                 <option value="Printer">Printer</option>
                                                 <option value="Mouse">Mouse</option>
                                                 <option value="Keyboard">Keyboard</option>
-
-
                                             </select>
+                                            {formik.touched.categories &&
+                                                formik.errors.categories && (
+                                                    <div className="invalid-feedback">
+                                                        {formik.errors.categories}
+                                                    </div>
+                                                )}
                                         </div>
                                     </div>
                                     {location?.state?.id && (
                                         <div className="col-6">
-                                        <div className="mb-3">
-                                            <label htmlFor="formFile" className="form-label">
-                                                Status
-                                            </label>
-                                            <select class="form-select"
-                                                id="status"
-                                                name="status"
-                                                onChange={formik.handleChange}
-                                                onBlur={formik.handleBlur}
-                                                value={formik.values.status}
-                                            >
-                                                <option value={""} selected disabled hidden>
-                                                    Select
-                                                </option>
-                                                <option value="in-stock/store">In-Stock/Store</option>
-                                                <option value="issued">Issued</option>
-                                                <option value="disposed of">Disposed Of</option>
-                                                <option value="repairing">Repairing</option>
-                                                <option value="out of order">Out OF Order</option>
+                                            <div className="mb-3">
+                                                <label htmlFor="formFile" className="form-label">
+                                                    Status
+                                                </label>
+                                                <select class="form-select"
+                                                    id="status"
+                                                    name="status"
+                                                    onChange={formik.handleChange}
+                                                    onBlur={formik.handleBlur}
+                                                    value={formik.values.status}
+                                                >
+                                                    <option value={""} selected disabled hidden>
+                                                        Select
+                                                    </option>
+                                                    <option value="in-stock/store">In-Stock/Store</option>
+                                                    <option value="issued">Issued</option>
+                                                    <option value="disposed of">Disposed Of</option>
+                                                    <option value="repairing">Repairing</option>
+                                                    <option value="out of order">Out OF Order</option>
 
-                                            </select>
+                                                </select>
+                                            </div>
                                         </div>
-                                    </div>
                                     )}
-                                    
+
                                 </div>
 
                                 <div class="row">

@@ -8,7 +8,6 @@ import Header from "../../../../../components/Header";
 import { useNavigate } from "react-router-dom";
 import {
     SearchComplaint,
-    getallComplaint,
     getallcomplaintCategories,
     getallcomplaintRecordById,
     getallcomplaintRecordByUserId,
@@ -61,9 +60,9 @@ function CMSUserDashboard() {
             complaintIssuedDate: "",
             complaintResolvedDate: "",
         },
-        onSubmit: (values) => {
+        onSubmit: async (values, { resetForm }) => {
             // Handle form submission here
-            SearchComplaintApi(values);
+            await SearchComplaintApi(values, { resetForm });
         },
     });
 
@@ -135,21 +134,16 @@ function CMSUserDashboard() {
     const HandlePrint = async (id) => {
         try {
             const response = await getallcomplaintRecordById(id);
-            // console.log("response", response?.data?.complaintAttachment);
             if (response.success) {
                 setPrintData(response?.data);
                 setIsOpen(true);
             }
-
-            // const url = `http://172.16.170.8:5252${response?.data?.complaintAttachment}`;
-            // window.open(url, "_blank");
-            // setPdfUrl(url)
         } catch (error) {
             console.log(error);
         }
     };
 
-    const SearchComplaintApi = async (values) => {
+    const SearchComplaintApi = async (values, { resetForm }) => {
         const Data = {
             complaineeUser: values.complaineeUser.value,
             resolverUser: values.resolverUser.value,
@@ -159,7 +153,6 @@ function CMSUserDashboard() {
             complaintIssuedDate: values.complaintIssuedDate,
             complaintResolvedDate: values.complaintResolvedDate,
         };
-        console.log(Data);
         try {
             const response = await SearchComplaint(Data);
             if (response?.success) {
@@ -167,6 +160,7 @@ function CMSUserDashboard() {
                 setCount(1);
                 setComplaintData(transformedData);
                 showSuccessMessage(response.message);
+                formik.resetForm();
             }
         } catch (error) {
             console.log(error);
@@ -404,7 +398,7 @@ function CMSUserDashboard() {
                                 </div>
                             </div>
                             <div class="row">
-                                
+
                                 <div class="d-grid gap-2 d-md-flex justify-content-md-end col">
                                     <button class="btn btn-primary" type="submit">
                                         Search

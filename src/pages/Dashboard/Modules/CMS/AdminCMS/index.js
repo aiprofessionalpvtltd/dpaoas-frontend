@@ -114,10 +114,14 @@ function CMSAdminDashboard() {
             complaintIssuedDate: "",
             complaintResolvedDate: "",
         },
-        onSubmit: (values) => {
+        onSubmit: async (values, { resetForm }) => {
             // Handle form submission here
-            SearchComplaintApi(values);
+            await SearchComplaintApi(values, { resetForm });
         },
+        // onSubmit: (values) => {
+        //     // Handle form submission here
+        //     SearchComplaintApi(values);
+        // },
     });
 
     const handlePageChange = (page) => {
@@ -151,7 +155,7 @@ function CMSAdminDashboard() {
         }
     }, [currentPage, pageSize, setCount, setComplaintData]);
 
-    const CountComplaints =async () => {
+    const CountComplaints = async () => {
         try {
             const response = await getallComplaint(0, 100);
             if (response?.success) {
@@ -197,7 +201,7 @@ function CMSAdminDashboard() {
         }
     };
 
-    const SearchComplaintApi = async (values) => {
+    const SearchComplaintApi = async (values, { resetForm }) => {
         const Data = {
             complaineeUser: values?.complaineeUser?.value,
             resolverUser: values?.resolverUser?.value,
@@ -214,6 +218,7 @@ function CMSAdminDashboard() {
                 setCount(1);
                 setComplaintData(transformedData);
                 showSuccessMessage(response.message);
+                formik.resetForm()
             }
         } catch (error) {
             console.log(error);
@@ -451,7 +456,7 @@ function CMSAdminDashboard() {
                                 value={disposeOf < 10 ? `0${disposeOf}` : disposeOf}
                                 bgblue={true}
                             />
-                            
+
 
                         </div>
                     </div>

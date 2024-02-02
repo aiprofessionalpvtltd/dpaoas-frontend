@@ -14,7 +14,13 @@ import { getUserData } from '../../../../../../api/Auth';
 import { AuthContext } from '../../../../../../api/AuthContext';
 import Select from "react-select";
 import moment from 'moment';
+import * as Yup from "yup";
 
+
+const validationSchema = Yup.object({
+    complaintRemark: Yup.string().required("Complaint Remark is required"),
+    complaintStatus: Yup.string().required("Complaint Status is required")
+});
 
 function CMSAdminEditComplaint() {
     const location = useLocation();
@@ -27,19 +33,25 @@ function CMSAdminEditComplaint() {
             fkResolverUserId: '',
             complaintRemark: "",
             complaintStatus: "",
-            complaintResolvedDate: "",
+            complaintResolvedDate: new Date(),
             complaintAttachmentFromResolver: ""
         },
 
-        onSubmit: (values) => {
-            // Handle form submission here
-            // console.log(values);
-            UpdateComplaintAPi(values)
+        validationSchema: validationSchema,
 
+        onSubmit: async (values, { resetForm }) => {
+            // Handle form submission here
+            await UpdateComplaintAPi(values, { resetForm });
         },
+        // onSubmit: (values) => {
+        //     // Handle form submission here
+        //     // console.log(values);
+        //     UpdateComplaintAPi(values)
+
+        // },
     });
 
-    const UpdateComplaintAPi = async (values) => {
+    const UpdateComplaintAPi = async (values, { resetForm }) => {
         const formData = new FormData()
 
         formData.append("fkResolverUserId", location?.state?.complaineeUser.id)
@@ -52,6 +64,7 @@ function CMSAdminEditComplaint() {
             const response = await UpdateComplaintByAdmin(location.state.id, formData);
             if (response.success) {
                 showSuccessMessage(response.message);
+                formik.resetForm()
             }
         } catch (error) {
             showErrorMessage(error.response.data.message);
@@ -64,7 +77,7 @@ function CMSAdminEditComplaint() {
                 dashboardLink={"/cms/admin/dashboard"}
                 addLink1={"/cms/admin/dashboard/addedit"}
                 title1={
-                    "Edit Admin Complaint"
+                    "Resolved Admin Complaint"
                 }
             />
             <ToastContainer />
@@ -76,73 +89,73 @@ function CMSAdminEditComplaint() {
                     <div className="card-body">
                         <form onSubmit={formik.handleSubmit}>
                             <div className="container-fluid">
-                            <div style={{background:"#f2f2f2", padding:"15px", marginBottom:"15px"}}>
-                                <div className="row">
-                                    <div className="col-6">
-                                        <div className="mb-3">
-                                            <label className="form-label">Complainee</label>
-                                            <input
-                                                type="text"
-                                                className={`form-control`}
-                                                id="productName"
-                                                placeholder={`${location?.state?.complaineeUser?.employee?.firstName} ${location?.state?.complaineeUser?.employee?.lastName}`}
-                                                readOnly
-                                            />
+                                <div style={{ background: "#f2f2f2", padding: "15px", marginBottom: "15px" }}>
+                                    <div className="row">
+                                        <div className="col-6">
+                                            <div className="mb-3">
+                                                <label className="form-label">Complainee</label>
+                                                <input
+                                                    type="text"
+                                                    className={`form-control`}
+                                                    id="productName"
+                                                    placeholder={`${location?.state?.complaineeUser?.employee?.firstName} ${location?.state?.complaineeUser?.employee?.lastName}`}
+                                                    readOnly
+                                                />
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div className="col-6">
-                                        <div className="mb-3">
-                                            <label className="form-label">Complaint Issued Date</label>
-                                            <input
-                                                type="text"
-                                                className={`form-control`}
-                                                id="productName"
-                                                placeholder={moment(location?.state?.complaintIssuedDate).format("MM/DD/YYYY")}
-                                                readOnly
-                                            />
+                                        <div className="col-6">
+                                            <div className="mb-3">
+                                                <label className="form-label">Complaint Issued Date</label>
+                                                <input
+                                                    type="text"
+                                                    className={`form-control`}
+                                                    id="productName"
+                                                    placeholder={moment(location?.state?.complaintIssuedDate).format("MM/DD/YYYY")}
+                                                    readOnly
+                                                />
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div className="row">
-                                    <div className="col-6">
-                                        <div className="mb-3">
-                                            <label className="form-label">Branch/Office</label>
-                                            <input
-                                                type="text"
-                                                className={`form-control`}
-                                                id="productName"
-                                                placeholder={location?.state?.complaintType?.complaintTypeName}
-                                                readOnly
-                                            />
+                                    <div className="row">
+                                        <div className="col-6">
+                                            <div className="mb-3">
+                                                <label className="form-label">Branch/Office</label>
+                                                <input
+                                                    type="text"
+                                                    className={`form-control`}
+                                                    id="productName"
+                                                    placeholder={location?.state?.complaintType?.complaintTypeName}
+                                                    readOnly
+                                                />
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div className="col-6">
-                                        <div className="mb-3">
-                                            <label className="form-label">Nature Of Complaint</label>
-                                            <input
-                                                type="text"
-                                                className={`form-control`}
-                                                id="productName"
-                                                placeholder={location?.state?.complaintCategory?.complaintCategoryName}
-                                                readOnly
-                                            />
+                                        <div className="col-6">
+                                            <div className="mb-3">
+                                                <label className="form-label">Nature Of Complaint</label>
+                                                <input
+                                                    type="text"
+                                                    className={`form-control`}
+                                                    id="productName"
+                                                    placeholder={location?.state?.complaintCategory?.complaintCategoryName}
+                                                    readOnly
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="col-6">
+                                            <div className="mb-3">
+                                                <label className="form-label">Assigned To (IT Engineer)</label>
+                                                <input
+                                                    type="text"
+                                                    className={`form-control`}
+                                                    id="productName"
+                                                    placeholder={location?.state.resolverUser && `${location?.state.resolverUser?.employee?.firstName} ${location?.state?.resolverUser?.employee?.lastName}`}
+                                                    readOnly
+                                                />
+                                            </div>
                                         </div>
                                     </div>
-                                    <div className="col-6">
-                                        <div className="mb-3">
-                                            <label className="form-label">Assigned To (IT Engineer)</label>
-                                            <input
-                                                type="text"
-                                                className={`form-control`}
-                                                id="productName"
-                                                placeholder={ location?.state.resolverUser &&`${location?.state.resolverUser?.employee?.firstName} ${location?.state?.resolverUser?.employee?.lastName}`}
-                                                readOnly
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
                                 </div>
 
                                 {/* Add similar validation logic for other fields */}
@@ -151,12 +164,22 @@ function CMSAdminEditComplaint() {
                                         <div className="mb-3">
                                             <label className="form-label">Complaint Remarks</label>
                                             <textarea
-                                                className={`form-control`}
+                                                className={`form-control ${formik.touched.complaintRemark &&
+                                                    formik.errors.complaintRemark
+                                                    ? "is-invalid"
+                                                    : ""
+                                                    }`}
                                                 id="complaintRemark"
                                                 onChange={formik.handleChange}
                                                 onBlur={formik.handleBlur}
                                                 value={formik.values.complaintRemark}
                                             ></textarea>
+                                            {formik.touched.complaintRemark &&
+                                                formik.errors.complaintRemark && (
+                                                    <div className="invalid-feedback">
+                                                        {formik.errors.complaintRemark}
+                                                    </div>
+                                                )}
                                         </div>
                                     </div>
                                     <div className="col-6">
@@ -215,7 +238,11 @@ function CMSAdminEditComplaint() {
                                     <div className="col-6">
                                         <div className="mb-3">
                                             <label className="form-label">Complaint Status</label>
-                                            <select class="form-select"
+                                            <select className={`form-control ${formik.touched.complaintStatus &&
+                                                formik.errors.complaintStatus
+                                                ? "is-invalid"
+                                                : ""
+                                                }`}
                                                 id="complaintStatus"
                                                 name="complaintStatus"
                                                 onChange={formik.handleChange}
@@ -230,6 +257,12 @@ function CMSAdminEditComplaint() {
                                                 <option value="closed">Resolved</option>
 
                                             </select>
+                                            {formik.touched.complaintStatus &&
+                                                formik.errors.complaintStatus && (
+                                                    <div className="invalid-feedback">
+                                                        {formik.errors.complaintStatus}
+                                                    </div>
+                                                )}
                                         </div>
                                     </div>
                                 </div>

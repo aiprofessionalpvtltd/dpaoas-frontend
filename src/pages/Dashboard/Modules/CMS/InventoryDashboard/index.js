@@ -26,8 +26,9 @@ function SMSInventoryDashboard() {
       productName: "",
       labelNo: "",
     },
-    onSubmit: (values) => {
-      SearchInventoryApi(values);
+    onSubmit: async (values, { resetForm }) => {
+      // Handle form submission here
+      await SearchInventoryApi(values, { resetForm });
     },
   });
 
@@ -55,24 +56,23 @@ function SMSInventoryDashboard() {
 
   const getInventoryList = useCallback(async () => {
     try {
-          const response = await getAllInventory(currentPage, pageSize);
-          if (response?.success) {
-            setCount(response?.data?.count);
-            const transformedData = transformInventoryData(response?.data?.inventories);
-            setInventoryData(transformedData);
-          }
-        } catch (error) {
-          console.log(error);
-        }
-}, [currentPage, pageSize, setCount, setInventoryData]);
+      const response = await getAllInventory(currentPage, pageSize);
+      if (response?.success) {
+        setCount(response?.data?.count);
+        const transformedData = transformInventoryData(response?.data?.inventories);
+        setInventoryData(transformedData);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, [currentPage, pageSize, setCount, setInventoryData]);
 
- 
-  const SearchInventoryApi = async (values) => {
+
+  const SearchInventoryApi = async (values, { resetForm }) => {
     const Data = {
       productName: values.productName,
       serialNo: values.labelNo,
     };
-    console.log("Data",Data);
     try {
       const response = await searchInventory(Data);
       if (response?.success) {
@@ -80,14 +80,14 @@ function SMSInventoryDashboard() {
         setCount(1);
         setInventoryData(transformedData);
         showSuccessMessage(response?.message);
-        console.log("Datattattata", response?.message);
+        formik.resetForm();
       }
     } catch (error) {
       console.log(error);
       showErrorMessage(error?.response?.data?.error);
     }
   };
-  
+
   const hendleDelete = async (id) => {
     try {
       const response = await inventoryDelete(id); // Add await here
@@ -104,18 +104,18 @@ function SMSInventoryDashboard() {
     try {
       const response = await getInventoryById(id); // Add await here
       if (response?.success) {
-        navigation("/cms/admin/inventory/dashboard/add", {state: response.data})
+        navigation("/cms/admin/inventory/dashboard/add", { state: response.data })
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message)
     }
   };
 
-  
+
 
   useEffect(() => {
     getInventoryList();
-}, [getInventoryList]);
+  }, [getInventoryList]);
   return (
     <Layout module={true} sidebarItems={CMSsidebarItems} centerlogohide={true}>
       <Header dashboardLink={"/sms/dashboard"} />
@@ -132,7 +132,7 @@ function SMSInventoryDashboard() {
                       type="text"
                       className={"form-control"}
                       id="productName"
-                      placeholder={formik.values.productName}
+                      value={formik.values.productName}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                     />
@@ -144,7 +144,7 @@ function SMSInventoryDashboard() {
                     <input
                       class="form-control"
                       type="text"
-                      placeholder={formik.values.labelNo}
+                      value={formik.values.labelNo}
                       className={"form-control"}
                       id="labelNo"
                       onChange={formik.handleChange}
@@ -159,8 +159,6 @@ function SMSInventoryDashboard() {
                 </div>
 
               </div>
-
-
 
             </form>
 
