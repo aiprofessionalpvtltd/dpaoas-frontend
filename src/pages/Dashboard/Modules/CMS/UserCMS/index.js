@@ -24,6 +24,8 @@ import moment from "moment";
 import { getUserData } from "../../../../../api/Auth";
 import { AuthContext } from "../../../../../api/AuthContext";
 import Select from "react-select";
+import * as XLSX from 'xlsx';
+
 
 const customStyles = {
     content: {
@@ -193,6 +195,24 @@ function CMSUserDashboard() {
             showErrorMessage(error?.response?.data?.error);
         }
     };
+
+    
+    const hendleExportExcel = async () => {
+        try {
+            const response = await getallcomplaintRecordByUserId(userData.fkUserId, 0, 100);
+            if (response?.success) {
+                // Export to Excel logic
+                const worksheet = XLSX.utils.json_to_sheet(response?.data?.complaints);
+                const workbook = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+                //let buffer = XLSX.write(workbook, { bookType: "xlsx", type: "buffer" });
+                //XLSX.write(workbook, { bookType: "xlsx", type: "binary" });
+                XLSX.writeFile(workbook, "DataSheet.xlsx");
+            }
+        } catch (error) {
+            showErrorMessage(error?.response?.data?.message);
+        }
+    }
 
     useEffect(() => {
         AllComplaintTypeApi();
@@ -428,7 +448,7 @@ function CMSUserDashboard() {
                                     handlePrint={(item) => HandlePrint(item.id)}
                                 />
                                 <div class="d-grid gap-2 d-md-flex justify-content-md-start col">
-                                    <button class="btn btn-primary" type="button">
+                                    <button class="btn btn-primary" type="button" onClick={() => hendleExportExcel()}>
                                         Export Excel
                                     </button>
                                 </div>
