@@ -51,7 +51,7 @@ function QMSAddEditSessionsForm() {
       // Handle form submission here
       console.log(values);
       if (location.state) {
-        UpdateSessionsApi();
+        UpdateSessionsApi(values);
       } else {
         CreateSessionsApi(values);
       }
@@ -103,7 +103,6 @@ function QMSAddEditSessionsForm() {
       summonNoticeTime: values.summonTime,
       jointSessionPurpose: values.jointSessionPurpose,
     };
-    
     try {
       const response = await updateSessions(location.state.id, data);
       if (response.success) {
@@ -206,8 +205,8 @@ function QMSAddEditSessionsForm() {
                           <option value={""} selected disabled hidden>
                             select
                           </option>
-                            <option value="2023">2023</option>
-                            <option value="2024">2024</option>
+                            <option value="President">2023</option>
+                            <option value="Chairman">2024</option>
                         </select>
                       </div>
                     </div>
@@ -396,8 +395,8 @@ function QMSAddEditSessionsForm() {
                             select
                           </option>
                             <option>Select</option>
-                            <option>Pending</option>
-                            <option>Approved</option>
+                            <option value={"Carry Forward"}>Pending</option>
+                            <option value={"Lapsed"}>Approved</option>
                         </select>
                       </div>
                     </div>
@@ -416,8 +415,8 @@ function QMSAddEditSessionsForm() {
                             select
                           </option>
                             <option>Federal</option>
-                            <option>Punjab</option>
-                            <option>Sindh</option>
+                            <option value={"1"}>Punjab</option>
+                            <option value={"2"}>Sindh</option>
                         </select>
                       </div>
                     </div>
@@ -437,9 +436,9 @@ function QMSAddEditSessionsForm() {
                           <option value={""} selected disabled hidden>
                             select
                           </option>
-                            <option>Federal</option>
-                            <option>Punjab</option>
-                            <option>Sindh</option>
+                            <option value={"1"}>Federal</option>
+                            <option value={"2"}>Punjab</option>
+                            <option value={"3"}>Sindh</option>
                         </select>
                       </div>
                     </div>
