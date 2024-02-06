@@ -112,6 +112,8 @@ import EFilingDashboard from "../pages/Dashboard/Modules/EFiling";
 import FileDetail from "../pages/Dashboard/Modules/EFiling/FileDetail";
 import AddEditFileForm from "../pages/Dashboard/Modules/EFiling/AddEditFileForm";
 import AddEditCaseForm from "../pages/Dashboard/Modules/EFiling/AddEditCaseForm";
+import HRMBranches from "../pages/Dashboard/Modules/HRM/Branches";
+import HRMAddEditBranch from "../pages/Dashboard/Modules/HRM/Branches/AddEditBranch";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -126,7 +128,9 @@ export const ProtectedRoutes = [
   { path: "/hrm/dashboard", element: <HRMDashboard /> },
   { path: "/hrm/addrole", element: <HRMAddRole /> },
   { path: "/hrm/editrole", element: <HRMEditRole /> },
+  { path: "/hrm/branches", element: <HRMBranches /> },
   { path: "/hrm/department", element: <HRMDepartment /> },
+  { path: "/hrm/addeditbranches", element: <HRMAddEditBranch /> },
   { path: "/hrm/addeditdepartment", element: <HRMAddEditDepartment /> },
   { path: "/hrm/employee", element: <HRMEmployeeDashboard /> },
   { path: "/hrm/addeditemployee", element: <HRMAddEditEmployee /> },
