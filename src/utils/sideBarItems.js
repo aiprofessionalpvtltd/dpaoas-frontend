@@ -6,6 +6,7 @@ import {
   faAddressCard,
   faUser,
   faClipboardList,
+  faCodeBranch
 } from "@fortawesome/free-solid-svg-icons";
 
 // LMS Sidebar
@@ -29,7 +30,11 @@ export const HRMsidebarItems = [
     link: "/hrm/dashboard",
     icon: faUserTag,
   },
-
+  {
+    itemName: "Branches",
+    link: "/hrm/branches",
+    icon: faCodeBranch,
+  },
   {
     itemName: "Department",
     link: "/hrm/department",

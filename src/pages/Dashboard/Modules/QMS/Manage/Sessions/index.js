@@ -7,6 +7,7 @@ import CustomTable from "../../../../../../components/CustomComponents/CustomTab
 import { deleteSessions, getAllSessions } from "../../../../../../api/APIs";
 import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
+import moment from "moment";
 
 function QMSSessions() {
   const navigate = useNavigate();
@@ -23,9 +24,19 @@ function QMSSessions() {
     const transformData = (apiData) => {
       return apiData?.map((item) => ({
         id: item.id,
-        divisionName: `${item.divisionName}`,
-        ministry: `${item?.ministry?.ministryName}`,
-        divisionStatus: String(item?.divisionStatus),
+        sessionName: `${item.sessionName}`,
+        calledBy: `${item?.calledBy}`,
+        startDate: moment(item.startDate).format("YYYY/MM/DD"),
+        endDate: moment(item.endDate).format("YYYY/MM/DD"),
+        legislationDiaryDate: moment(item.legislationDiaryDate).format("YYYY/MM/DD"),
+        // businessSessions: String(item?.businessSessions[0]?.sessionName),
+        // businessStatus: `${item?.businessStatus}`,
+        // isQuoraumAdjourned: `${item?.isQuoraumAdjourned}`,
+        summonNoticeDate: moment(item.summonNoticeDate).format("YYYY/MM/DD"),
+        summonNoticeTime: `${item?.summonNoticeTime}`,
+        parliamentaryYear: `${item?.parliamentaryYear?.parliamentaryTenure}`,
+        jointSessionPurpose: `${item?.jointSessionPurpose}`,
+        sessionStatus: `${item?.sessionStatus}`,
       }));
     };
 
@@ -67,6 +78,7 @@ function QMSSessions() {
         <div class="row">
           <div class="col-12">
             <CustomTable
+              block={true}
               data={sessions}
               tableTitle="Sessions List"
               addBtnText="Add Sessions"

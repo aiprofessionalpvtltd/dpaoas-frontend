@@ -79,7 +79,7 @@ function QMSGroups() {
   //   },
   // };
 
-  const [columns, setColumns] = useState([]);
+  const [columns, setColumns] = useState({});
   const [sessionId, setSessionId] = useState();
   const [draggedItemDivision, setDraggedItemDivision] = useState();
 
@@ -188,12 +188,12 @@ function QMSGroups() {
   };
 
   const handleUpdate = async () => {
-    const updatedDivisions = columns?.availableDivisions?.list.map(item => ({ id: item.id }));
-    const updatedGroup1 = columns?.group1?.list.map(item => ({ id: item.id }));
-    const updatedGroup2 = columns?.group2?.list.map(item => ({ id: item.id }));
-    const updatedGroup3 = columns?.group3?.list.map(item => ({ id: item.id }));
-    const updatedGroup4 = columns?.group4?.list.map(item => ({ id: item.id }));
-    const updatedGroup5 = columns?.group5?.list.map(item => ({ id: item.id }));
+    const updatedDivisions = columns?.availableDivisions?.list?.map(item => ({ id: item.id }));
+    const updatedGroup1 = columns?.group1?.list?.map(item => ({ id: item.id }));
+    const updatedGroup2 = columns?.group2?.list?.map(item => ({ id: item.id }));
+    const updatedGroup3 = columns?.group3?.list?.map(item => ({ id: item.id }));
+    const updatedGroup4 = columns?.group4?.list?.map(item => ({ id: item.id }));
+    const updatedGroup5 = columns?.group5?.list?.map(item => ({ id: item.id }));
 
     const updatedColumns = {
       availableDivisions: updatedDivisions,
@@ -286,7 +286,7 @@ function QMSGroups() {
                               overflow: "auto",
                             }}
                           >
-                            {columns?.availableDivisions?.list.map((item, index) => (
+                            {columns?.availableDivisions?.list?.map((item, index) => (
                               <Draggable
                                 key={item?.id?.toString()}  // Use index as a fallback if id is undefined
                                 draggableId={item?.id?.toString()} 
@@ -321,8 +321,8 @@ function QMSGroups() {
                     <div class="col-6">
                       {/* Draggable and Droppable for the second column */}
                       {Object.keys(columns)
-                        .filter((colId) => colId !== "availableDivisions") // Exclude 'ministries' column
-                        .map((groupColId, groupIndex) => (
+                        ?.filter((colId) => colId !== "availableDivisions") // Exclude 'ministries' column
+                        ?.map((groupColId, groupIndex) => (
                           <div style={{ marginTop: groupIndex === 0 ? '0px' : '10px' }}>
                             <label class="form-label">
                               Group {groupIndex + 1}
