@@ -8,7 +8,7 @@ import { useLocation } from "react-router";
 import {
   UpdateResolution,
   sendResolutionForTranslation,
-} from "../../../../../../api/APIs";
+} from "../../../../../../api/APIs/Services/Resolution.service";
 import { showSuccessMessage } from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 import TimePicker from "react-time-picker";

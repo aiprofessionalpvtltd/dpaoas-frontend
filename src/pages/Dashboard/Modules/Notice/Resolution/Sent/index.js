@@ -3,7 +3,7 @@ import { NoticeSidebarItems } from "../../../../../../utils/sideBarItems";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
 import { useNavigate } from "react-router";
-import { DeleteResolution, getAllResolutions, getResolutionBYID, searchResolution } from "../../../../../../api/APIs";
+import { DeleteResolution, getAllResolutions, getResolutionBYID, searchResolution } from "../../../../../../api/APIs/Services/Resolution.service";
 import Select from "react-select";
 
 import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";

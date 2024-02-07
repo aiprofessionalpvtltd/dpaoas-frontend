@@ -3,7 +3,7 @@ import { NoticeSidebarItems } from "../../../../../../utils/sideBarItems";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
 import { useNavigate } from "react-router";
-import { createResolution, getAllSessions } from "../../../../../../api/APIs";
+import { createResolution } from "../../../../../../api/APIs/Services/Resolution.service";
 import TimePicker from "react-time-picker";
 
 import {

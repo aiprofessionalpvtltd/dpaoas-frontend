@@ -5,7 +5,7 @@ import { Layout } from '../../../../../../../components/Layout'
 import Header from '../../../../../../../components/Header'
 import { ToastContainer } from 'react-toastify'
 import { useFormik } from 'formik'
-import { UpdateVendor, createVandor } from '../../../../../../../api/APIs'
+import { UpdateVendor, createVandor } from '../../../../../../../api/APIs/Services/Complaint.service'
 import { showErrorMessage, showSuccessMessage } from '../../../../../../../utils/ToastAlert'
 import * as Yup from "yup";
 

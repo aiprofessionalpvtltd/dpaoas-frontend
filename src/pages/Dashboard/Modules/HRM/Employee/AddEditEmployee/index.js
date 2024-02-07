@@ -9,7 +9,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Stepper, Step, StepLabel } from "@mui/material";
 import DatePicker from "react-datepicker";
-import { UpdateEmployee, createEmployee } from "../../../../../../api/APIs";
+import { UpdateEmployee, createEmployee } from "../../../../../../api/APIs/Services/organizational.service";
 import { ToastContainer } from "react-toastify";
 import {
   showErrorMessage,

@@ -10,7 +10,7 @@ import DatePicker from "react-datepicker";
 import {
   createDuplicatePass,
   getDuplicatePassByPassId,
-} from "../../../../../../api/APIs";
+} from "../../../../../../api/APIs/Services/VisitorsManagementSystem.service";
 import { showSuccessMessage } from "../../../../../../utils/ToastAlert";
 import { useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";

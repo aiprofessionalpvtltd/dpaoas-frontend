@@ -7,10 +7,8 @@ import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/To
 import {
   getAllQuestion,
   getAllQuestionStatus,
-  getAllResolutions,
   searchQuestion,
-  searchResolution,
-} from "../../../../../../api/APIs";
+} from "../../../../../../api/APIs/Services/Question.service";
 import { Field, Form, Formik, useFormik } from "formik";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import { ToastContainer } from "react-toastify";

@@ -2,7 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { CustomNavbar } from "../CustomNavbar";
 import { Sidebar } from "../Sidebar";
 import { useLocation } from "react-router";
-import { getAllQuestion, getAllResolutions } from "../../api/APIs";
+import { getAllQuestion} from "../../api/APIs/Services/Question.service";
+import { getAllResolutions } from "../../api/APIs/Services/Resolution.service";
 import { getAuthToken, logout } from "../../api/Auth";
 import { useNavigate } from "react-router-dom";
 

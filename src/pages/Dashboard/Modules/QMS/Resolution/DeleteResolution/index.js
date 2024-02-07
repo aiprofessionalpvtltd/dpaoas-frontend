@@ -7,7 +7,7 @@ import CustomTable from "../../../../../../components/CustomComponents/CustomTab
 import { useFormik } from "formik";
 import DatePicker from "react-datepicker";
 import * as Yup from "yup";
-import { getAllResolutions } from "../../../../../../api/APIs";
+import { getAllResolutions } from "../../../../../../api/APIs/Services/Resolution.service";
 import {
   showErrorMessage,
   showSuccessMessage,

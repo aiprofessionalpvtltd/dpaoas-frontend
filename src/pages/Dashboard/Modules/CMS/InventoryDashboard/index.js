@@ -16,7 +16,7 @@ import {
   getInventoryById,
   inventoryDelete,
   searchInventory,
-} from "../../../../../api/APIs";
+} from "../../../../../api/APIs/Services/Complaint.service";
 
 function SMSInventoryDashboard() {
   const navigation = useNavigate();

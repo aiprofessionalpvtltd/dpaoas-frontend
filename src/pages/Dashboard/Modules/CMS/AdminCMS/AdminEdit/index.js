@@ -12,7 +12,7 @@ import {
   showErrorMessage,
   showSuccessMessage,
 } from "../../../../../../utils/ToastAlert";
-import { UpdateComplaintByAdmin } from "../../../../../../api/APIs";
+import { UpdateComplaintByAdmin } from "../../../../../../api/APIs/Services/Complaint.service";
 import moment from "moment";
 import * as Yup from "yup";
 

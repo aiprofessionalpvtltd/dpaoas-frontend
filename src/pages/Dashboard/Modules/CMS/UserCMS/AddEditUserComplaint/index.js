@@ -8,7 +8,7 @@ import { ToastContainer } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 import DatePicker from "react-datepicker";
-import { UpdateComplaint, createComplaint, getInventoryRecordByUserId, getallcomplaintCategories, getallcomplaintTypes } from '../../../../../../api/APIs';
+import { UpdateComplaint, createComplaint, getInventoryRecordByUserId, getallcomplaintCategories, getallcomplaintTypes } from '../../../../../../api/APIs/Services/Complaint.service';
 import { showErrorMessage, showSuccessMessage } from '../../../../../../utils/ToastAlert';
 import { getUserData } from '../../../../../../api/Auth';
 import { AuthContext } from '../../../../../../api/AuthContext';

@@ -4,7 +4,7 @@ import { Layout } from '../../../../../../components/Layout'
 import CustomTable from '../../../../../../components/CustomComponents/CustomTable'
 import Header from '../../../../../../components/Header';
 import { useNavigate } from 'react-router';
-import { SearchInvoiceBill, getAllInvoiceBill, getInventoryBillsById, invoiceBillDelete } from '../../../../../../api/APIs';
+import { SearchInvoiceBill, getAllInvoiceBill, getInventoryBillsById, invoiceBillDelete } from '../../../../../../api/APIs/Services/Complaint.service';
 import moment from 'moment';
 import { showErrorMessage, showSuccessMessage } from '../../../../../../utils/ToastAlert';
 import { ToastContainer } from 'react-toastify';

@@ -10,13 +10,10 @@ import { ToastContainer } from "react-toastify";
 import { useFormik } from "formik";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import {
-  getAllMinistry,
   getAllMotion,
-  getAllSessions,
-  getallMembers,
   getallMotionStatus,
   searchMotion,
-} from "../../../../../../api/APIs";
+} from "../../../../../../api/APIs/Services/Motion.service";
 import { AuthContext } from "../../../../../../api/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";

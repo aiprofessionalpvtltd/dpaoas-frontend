@@ -4,7 +4,7 @@ import { Layout } from '../../../../../../components/Layout';
 import Header from '../../../../../../components/Header';
 import CustomTable from '../../../../../../components/CustomComponents/CustomTable';
 import { SMSsidebarItems } from '../../../../../../utils/sideBarItems';
-import { DeleteContactTemplate, getContactTemplate } from '../../../../../../api/APIs';
+import { DeleteContactTemplate, getContactTemplate } from '../../../../../../api/APIs/Services/SMS.service';
 import { showErrorMessage, showSuccessMessage } from '../../../../../../utils/ToastAlert';
 import { ToastContainer } from 'react-toastify';
 import moment from 'moment';

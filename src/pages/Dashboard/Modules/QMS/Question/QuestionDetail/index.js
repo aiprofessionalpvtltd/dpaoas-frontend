@@ -17,7 +17,7 @@ import {
   createReviveQuestion,
   getAllQuestionStatus,
   sendQuestionTranslation,
-} from "../../../../../../api/APIs";
+} from "../../../../../../api/APIs/Services/Question.service";
 import { ToastContainer } from "react-toastify";
 import { Editor } from "../../../../../../components/CustomComponents/Editor";
 import { AuthContext } from "../../../../../../api/AuthContext";

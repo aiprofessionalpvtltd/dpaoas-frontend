@@ -8,7 +8,7 @@ import * as Yup from "yup";
 import {
   UpdateDesignation,
   createDesignation,
-} from "../../../../../../api/APIs";
+} from "../../../../../../api/APIs/Services/organizational.service";
 import { showSuccessMessage } from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 

@@ -16,7 +16,7 @@ import {
     createInventory,
     getAllInvoiceBill,
     getInventoryBillsById,
-} from "../../../../../../api/APIs";
+} from "../../../../../../api/APIs/Services/Complaint.service";
 import { useLocation } from "react-router";
 import * as Yup from "yup";
 

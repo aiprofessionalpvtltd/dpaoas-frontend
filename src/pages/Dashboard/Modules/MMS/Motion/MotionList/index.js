@@ -10,7 +10,7 @@ import {
   getAllMotion,
   getMotionByID,
   searchMotion,
-} from "../../../../../../api/APIs";
+} from "../../../../../../api/APIs/Services/Motion.service";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import DatePicker from "react-datepicker";

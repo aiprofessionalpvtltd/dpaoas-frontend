@@ -13,7 +13,7 @@ import {
   createLeave,
   getAllLeaveTypes,
   getLeaveById,
-} from "../../../../../api/APIs";
+} from "../../../../../api/APIs/Services/LeaveManagementSystem.service";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import moment from "moment";

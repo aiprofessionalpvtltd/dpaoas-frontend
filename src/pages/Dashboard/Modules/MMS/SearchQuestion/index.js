@@ -9,7 +9,7 @@ import {
   showErrorMessage,
   showSuccessMessage,
 } from "../../../../../utils/ToastAlert";
-import { getAllQuestionStatus, searchQuestion } from "../../../../../api/APIs";
+import { getAllQuestionStatus, searchQuestion } from "../../../../../api/APIs/Services/Question.service";
 import { ToastContainer } from "react-toastify";
 import DatePicker from "react-datepicker";
 import { AuthContext } from "../../../../../api/AuthContext";

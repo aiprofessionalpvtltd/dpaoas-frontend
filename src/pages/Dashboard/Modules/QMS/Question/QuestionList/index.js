@@ -8,7 +8,7 @@ import { useFormik } from "formik";
 import DatePicker from "react-datepicker";
 
 import * as Yup from "yup";
-import { getAllQuestion, getAllQuestionByID } from "../../../../../../api/APIs";
+import { getAllQuestion, getAllQuestionByID } from "../../../../../../api/APIs/Services/Question.service";
 import { ToastContainer } from "react-toastify";
 import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
 import { AuthContext } from "../../../../../../api/AuthContext";
