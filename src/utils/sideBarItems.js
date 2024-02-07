@@ -508,11 +508,11 @@ export const SMSsidebarItems = [
         link: "/sms/phone-book/manage",
         icon: faClipboardList,
       },
-      {
-        itemName: "Import Contacts",
-        link: "/sms/phone-book/import",
-        icon: faClipboardList,
-      },
+      // {
+      //   itemName: "Import Contacts",
+      //   link: "/sms/phone-book/import",
+      //   icon: faClipboardList,
+      // },
     ],
   },
   {
@@ -537,11 +537,11 @@ export const SMSsidebarItems = [
     link: "/sms/messagelog",
     icon: faClipboardList,
     subItems: [
-      {
-        itemName: "Summary",
-        link: "/sms/messagelog/summary",
-        icon: faClipboardList,
-      },
+      // {
+      //   itemName: "Summary",
+      //   link: "/sms/messagelog/summary",
+      //   icon: faClipboardList,
+      // },
       {
         itemName: "Detailed Message Log",
         link: "/sms/messagelog/detailed",
