@@ -9,7 +9,7 @@ import Header from "../../../../../../../components/Header";
 import { Layout } from "../../../../../../../components/Layout";
 import { QMSSideBarItems } from "../../../../../../../utils/sideBarItems";
 import TimePicker from "react-time-picker";
-import { createSession, getSessionByID, updateSessions } from "../../../../../../../api/APIs";
+import { createSession, getSessionByID, updateSessions } from "../../../../../../../api/APIs/Services/ManageQMS.service";
 import { showErrorMessage, showSuccessMessage } from "../../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 

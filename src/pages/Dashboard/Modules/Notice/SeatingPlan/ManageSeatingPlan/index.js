@@ -5,7 +5,7 @@ import Header from "../../../../../../components/Header";
 import { useNavigate } from "react-router";
 import Modal from "react-modal";
 import { Button, FormControl, InputGroup } from "react-bootstrap";
-import { getAllSeats } from "../../../../../../api/APIs";
+import { getAllSeats } from "../../../../../../api/APIs/Services/SeatingPlan.service";
 
 const customStyles = {
   content: {

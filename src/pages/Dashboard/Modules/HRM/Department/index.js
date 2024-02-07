@@ -4,12 +4,12 @@ import { HRMsidebarItems } from "../../../../../utils/sideBarItems";
 import Header from "../../../../../components/Header";
 import { useNavigate } from "react-router-dom";
 import CustomTable from "../../../../../components/CustomComponents/CustomTable";
-import { DeleteDepartment, getDepartment } from "../../../../../api/APIs";
 import {
   showErrorMessage,
   showSuccessMessage,
 } from "../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
+import { DeleteDepartment, getDepartment } from "../../../../../api/APIs/Services/organizational.service";
 
 
 function HRMDepartment() {

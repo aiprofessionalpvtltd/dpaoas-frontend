@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { HRMsidebarItems } from "../../../../../utils/sideBarItems";
 import CustomTable from "../../../../../components/CustomComponents/CustomTable";
 import { ToastContainer } from "react-toastify";
-import { DeleteEmployee, getAllEmployee } from "../../../../../api/APIs";
+import { DeleteEmployee, getAllEmployee } from "../../../../../api/APIs/Services/organizational.service";
 import {
   showErrorMessage,
   showSuccessMessage,

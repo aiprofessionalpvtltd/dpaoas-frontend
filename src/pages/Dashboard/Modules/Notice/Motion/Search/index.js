@@ -4,14 +4,10 @@ import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
 import { useNavigate } from "react-router";
 import {
-  getAllMinistry,
   getAllMotion,
-  getAllSessions,
-  getallMembers,
   getallMotionStatus,
   searchMotion,
-  searchQuestion,
-} from "../../../../../../api/APIs";
+} from "../../../../../../api/APIs/Services/Motion.service";
 import DatePicker from "react-datepicker";
 import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";

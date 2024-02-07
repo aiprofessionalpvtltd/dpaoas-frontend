@@ -8,7 +8,7 @@ import DatePicker from "react-datepicker";
 import { useFormik } from 'formik'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCalendarAlt, faPlusSquare } from '@fortawesome/free-solid-svg-icons'
-import { UpdateInventoryBill, createInventoryBill, getAllVendor } from '../../../../../../../api/APIs'
+import { UpdateInventoryBill, createInventoryBill, getAllVendor } from '../../../../../../../api/APIs/Services/Complaint.service'
 import { showErrorMessage, showSuccessMessage } from '../../../../../../../utils/ToastAlert'
 import { useLocation } from 'react-router'
 import AddVendorModal from '../../../../../../../components/AddVendorModal'

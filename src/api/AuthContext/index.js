@@ -1,15 +1,14 @@
 import React, { createContext, useEffect, useState } from "react";
 import {
-  getAllEmployee,
-  getAllMinistry,
-  getAllResolutionStatus,
   getAllSessions,
-  getallMembers,
-  loginUser,
   retriveEmployeesAsEngineers,
-} from "../APIs";
+} from "../APIs/Services/ManageQMS.service";
+import { getallMembers, getAllMinistry } from "../APIs/Services/Motion.service";
+import { getAllResolutionStatus } from "../APIs/Services/Resolution.service";
+import { getAllEmployee } from "../APIs/Services/organizational.service";
 import { setAuthToken, setUserData } from "../Auth";
 import { showErrorMessage } from "../../utils/ToastAlert";
+import { loginUser } from "../APIs/Services/basicAuth.service";
 
 export const AuthContext = createContext();
 

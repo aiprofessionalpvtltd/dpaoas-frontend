@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import DatePicker from "react-datepicker";
-import { getAllQuestion } from "../../../../../../api/APIs";
+import { getAllQuestion } from "../../../../../../api/APIs/Services/Question.service";
 import {
   showErrorMessage,
   showSuccessMessage,

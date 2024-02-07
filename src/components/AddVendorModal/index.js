@@ -2,7 +2,7 @@ import { useFormik } from 'formik';
 import React, { useContext } from 'react'
 import Modal from "react-modal";
 import Select from "react-select";
-import { assignedComplaintByAdmin, createVandor } from '../../api/APIs';
+import { createVandor } from '../../api/APIs/Services/Complaint.service';
 import { AuthContext } from '../../api/AuthContext';
 import { getUserData } from '../../api/Auth';
 import { showSuccessMessage } from '../../utils/ToastAlert';

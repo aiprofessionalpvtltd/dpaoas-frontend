@@ -8,7 +8,7 @@ import DatePicker from "react-datepicker";
 import Header from "../../../../../../../components/Header";
 import { Layout } from "../../../../../../../components/Layout";
 import { QMSSideBarItems } from "../../../../../../../utils/sideBarItems";
-import { createDivision, getDivisionsByID, updateDivisions } from "../../../../../../../api/APIs";
+import { createDivision, getDivisionsByID, updateDivisions } from "../../../../../../../api/APIs/Services/ManageQMS.service";
 import { showErrorMessage, showSuccessMessage } from "../../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 

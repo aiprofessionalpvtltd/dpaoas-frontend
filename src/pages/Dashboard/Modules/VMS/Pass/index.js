@@ -6,11 +6,11 @@ import { useFormik } from "formik";
 // import * as Yup from "yup";
 import Header from "../../../../../components/Header";
 import DatePicker from "react-datepicker";
-import { UpdatePasses, createPasses } from "../../../../../api/APIs";
 import { showSuccessMessage } from "../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
+import { UpdatePasses, createPasses } from "../../../../../api/APIs/Services/VisitorsManagementSystem.service";
 
 // const validationSchema = Yup.object({
 //   passdate: Yup.string().required("Pass Date is required"),

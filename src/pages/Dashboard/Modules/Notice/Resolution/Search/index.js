@@ -11,9 +11,8 @@ import {
 } from "../../../../../../utils/ToastAlert";
 import {
   getAllQuestionStatus,
-  getResolutionBYID,
-  searchResolution,
-} from "../../../../../../api/APIs";
+} from "../../../../../../api/APIs/Services/Question.service";
+import { getResolutionBYID, searchResolution } from "../../../../../../api/APIs/Services/Resolution.service";
 import { useFormik } from "formik";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import { ToastContainer } from "react-toastify";
@@ -128,7 +127,7 @@ function SearchResolution() {
       showErrorMessage(error.response.data.message);
     }
   };
-  
+
   useEffect(() => {
     GetALlStatus();
   }, []);
@@ -407,7 +406,7 @@ function SearchResolution() {
                     currentPage={currentPage}
                     showPrint={false}
                     pageSize={pageSize}
-                   hideDeleteIcon={true}
+                    hideDeleteIcon={true}
                     handleEdit={(item) => handleEdit(item.RID)}
                   />
                 </div>

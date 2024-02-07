@@ -5,7 +5,7 @@ import { QMSSideBarItems } from "../../../../../../utils/sideBarItems";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { getDivisionsBySessionId, updateDivisionsAndGroups } from "../../../../../../api/APIs";
+import { getDivisionsBySessionId, updateDivisionsAndGroups } from "../../../../../../api/APIs/Services/ManageQMS.service";
 import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 

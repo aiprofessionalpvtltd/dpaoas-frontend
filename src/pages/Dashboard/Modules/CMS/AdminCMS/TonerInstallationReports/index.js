@@ -4,7 +4,7 @@ import { CMSsidebarItems } from "../../../../../../utils/sideBarItems";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import Header from "../../../../../../components/Header";
 import moment from "moment";
-import { getallComplaint } from "../../../../../../api/APIs";
+import { getallComplaint } from "../../../../../../api/APIs/Services/Complaint.service";
 
 function CMSTonerInstallationReports() {
   const [complaintData, setComplaintData] = useState([]);

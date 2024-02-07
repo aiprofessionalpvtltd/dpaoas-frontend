@@ -9,7 +9,7 @@ import Header from "../../../../../../../components/Header";
 import { Layout } from "../../../../../../../components/Layout";
 import { QMSSideBarItems } from "../../../../../../../utils/sideBarItems";
 import { showErrorMessage, showSuccessMessage } from "../../../../../../../utils/ToastAlert";
-import { createPoliticalParties, updatePoliticalParties } from "../../../../../../../api/APIs";
+import { createPoliticalParties, updatePoliticalParties } from "../../../../../../../api/APIs/Services/ManageQMS.service";
 import { ToastContainer } from "react-toastify";
 
 const validationSchema = Yup.object({

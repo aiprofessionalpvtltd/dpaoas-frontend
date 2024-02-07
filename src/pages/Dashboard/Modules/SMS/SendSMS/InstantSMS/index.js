@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Layout } from '../../../../../../components/Layout'
 import { SMSsidebarItems } from '../../../../../../utils/sideBarItems'
 import Header from '../../../../../../components/Header'
-import { createSendSMS, getContactList, getContactTemplate, getSignalContactListByid, getSignalContactTemplateByid } from '../../../../../../api/APIs';
+import { createSendSMS, getContactList, getContactTemplate, getSignalContactListByid, getSignalContactTemplateByid } from '../../../../../../api/APIs/Services/SMS.service';
 import { showErrorMessage, showSuccessMessage } from '../../../../../../utils/ToastAlert';
 import { ToastContainer } from 'react-toastify';
 import { getUserData } from '../../../../../../api/Auth';

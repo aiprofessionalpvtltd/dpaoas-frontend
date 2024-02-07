@@ -5,11 +5,11 @@ import { Layout } from "../../../../../components/Layout";
 import { HRMsidebarItems } from "../../../../../utils/sideBarItems";
 import { CheckedItem } from "../../../../../components/EditRole/CheckedItem";
 import { UncheckedItem } from "../../../../../components/EditRole/UncheckedItem";
-import { getModules, getRoleById, updateRole } from "../../../../../api/APIs";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { showSuccessMessage } from "../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
+import { updateRole, getModules, getRoleById } from "../../../../../api/APIs/Services/organizational.service";
 
 const validationSchema = Yup.object({
   roleName: Yup.string().required("Role name is required"),

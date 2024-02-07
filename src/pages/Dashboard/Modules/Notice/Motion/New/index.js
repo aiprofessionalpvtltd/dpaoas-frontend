@@ -12,7 +12,8 @@ import TimePicker from "react-time-picker";
 import Select from "react-select";
 import { Editor } from "../../../../../../components/CustomComponents/Editor";
 import { ToastContainer } from "react-toastify";
-import { createNewMotion, getAllSessions } from "../../../../../../api/APIs";
+import { getAllSessions } from "../../../../../../api/APIs";
+import { createNewMotion } from "../../../../../../api/APIs/Services/Motion.service";
 import {
   showErrorMessage,
   showSuccessMessage,

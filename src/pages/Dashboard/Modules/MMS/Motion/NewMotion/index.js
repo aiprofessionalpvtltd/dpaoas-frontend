@@ -6,12 +6,9 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import {
   createNewMotion,
-  getAllMinistry,
-  getAllSessions,
-  getallMembers,
   getallMotionStatus,
   updateNewMotion,
-} from "../../../../../../api/APIs";
+} from "../../../../../../api/APIs/Services/Motion.service";
 import Select from "react-select";
 import DatePicker from "react-datepicker";
 import TimePicker from "react-time-picker";

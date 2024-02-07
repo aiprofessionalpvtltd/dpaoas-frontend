@@ -15,7 +15,7 @@ import {
   getallcomplaintCategories,
   getallcomplaintRecordById,
   getallcomplaintTypes,
-} from "../../../../../api/APIs";
+} from "../../../../../api/APIs/Services/Complaint.service";
 import { useFormik } from "formik";
 import DatePicker from "react-datepicker";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
