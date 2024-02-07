@@ -5,11 +5,11 @@ import {
   getAllResolutionStatus,
   getAllSessions,
   getallMembers,
-  loginUser,
   retriveEmployeesAsEngineers,
 } from "../APIs";
 import { setAuthToken, setUserData } from "../Auth";
 import { showErrorMessage } from "../../utils/ToastAlert";
+import { loginUser } from "../APIs/Services/basicAuth.service";
 
 export const AuthContext = createContext();
 

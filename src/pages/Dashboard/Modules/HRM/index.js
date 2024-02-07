@@ -4,9 +4,9 @@ import { HRMsidebarItems } from "../../../../utils/sideBarItems";
 import { useNavigate } from "react-router-dom";
 import Header from "../../../../components/Header";
 import CustomTable from "../../../../components/CustomComponents/CustomTable";
-import { DeleteRole, getRoles } from "../../../../api/APIs";
 import { showSuccessMessage } from "../../../../utils/ToastAlert";
 import moment from "moment";
+import { DeleteRole, getRoles } from "../../../../api/APIs/Services/organizational.service";
 
 function HRMDashboard() {
   const navigate = useNavigate();
