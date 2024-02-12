@@ -13,7 +13,6 @@ import {
   UpdateTonner,
   createTonar,
   getAllTonerModels,
-  getallcomplaintTypes,
 } from "../../../../../../../api/APIs";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import DatePicker from "react-datepicker";
@@ -23,6 +22,7 @@ import {
   showSuccessMessage,
 } from "../../../../../../../utils/ToastAlert";
 import { AuthContext } from "../../../../../../../api/AuthContext";
+import { getallcomplaintTypes } from "../../../../../../../api/APIs/Services/Complaint.service";
 function CMSAddEditTonerInstallation() {
   const location = useLocation();
   const { employeeData } = useContext(AuthContext);

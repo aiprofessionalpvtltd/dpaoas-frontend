@@ -115,6 +115,8 @@ import AddEditFileForm from "../pages/Dashboard/Modules/EFiling/AddEditFileForm"
 import AddEditCaseForm from "../pages/Dashboard/Modules/EFiling/AddEditCaseForm";
 import CMSTonerModels from "../pages/Dashboard/Modules/CMS/AdminCMS/TonerModel";
 import AddEditTonerModel from "../pages/Dashboard/Modules/CMS/AdminCMS/TonerModel/AddEditTonerModels";
+import HRMBranches from "../pages/Dashboard/Modules/HRM/Branches";
+import HRMAddEditBranch from "../pages/Dashboard/Modules/HRM/Branches/AddEditBranch";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [

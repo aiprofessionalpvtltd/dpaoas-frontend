@@ -11,7 +11,6 @@ import {
   getAllTonerModels,
   getTonersById,
   getallToners,
-  getallcomplaintTypes,
   tonerDelete,
 } from "../../../../../../api/APIs";
 import { useNavigate } from "react-router-dom";
@@ -25,6 +24,7 @@ import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import Select from "react-select";
 import { AuthContext } from "../../../../../../api/AuthContext";
 import { ToastContainer } from "react-toastify";
+import { getallcomplaintTypes } from "../../../../../../api/APIs/Services/Complaint.service";
 
 function CMSTonerInstallationReports() {
   const navigate = useNavigate();
