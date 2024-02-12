@@ -6,7 +6,7 @@ import {
   RevivedQuestionsBYID,
   allRevivedQuestions,
   getAllQuestion,
-} from "../../../../../../api/APIs";
+} from "../../../../../../api/APIs/Services/Question.service";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import {
   showErrorMessage,

@@ -18,7 +18,7 @@ import {
 import {
   UpdateQuestionById,
   sendQuestionTranslation,
-} from "../../../../../../api/APIs";
+} from "../../../../../../api/APIs/Services/Question.service";
 import { ToastContainer } from "react-toastify";
 
 const validationSchema = Yup.object({

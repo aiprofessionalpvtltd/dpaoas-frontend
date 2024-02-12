@@ -9,7 +9,7 @@ import {
   showErrorMessage,
   showSuccessMessage,
 } from "../../../../../../utils/ToastAlert";
-import { createQuestion, getAllSessions } from "../../../../../../api/APIs";
+import { createQuestion } from "../../../../../../api/APIs/Services/Question.service";
 import { CustomAlert } from "../../../../../../components/CustomComponents/CustomAlert";
 import { ToastContainer } from "react-toastify";
 import DatePicker from "react-datepicker";

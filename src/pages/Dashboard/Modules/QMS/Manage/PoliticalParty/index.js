@@ -4,7 +4,7 @@ import { QMSSideBarItems } from '../../../../../../utils/sideBarItems'
 import CustomTable from '../../../../../../components/CustomComponents/CustomTable'
 import { useNavigate } from 'react-router-dom'
 import Header from '../../../../../../components/Header'
-import { deletePoliticalParties, getAllPoliticalParties } from '../../../../../../api/APIs'
+import { deletePoliticalParties, getAllPoliticalParties } from '../../../../../../api/APIs/Services/ManageQMS.service'
 import { showErrorMessage, showSuccessMessage } from '../../../../../../utils/ToastAlert'
 import { ToastContainer } from 'react-toastify'
 

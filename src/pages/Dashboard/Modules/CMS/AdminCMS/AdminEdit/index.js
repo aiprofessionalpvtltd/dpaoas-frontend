@@ -12,8 +12,15 @@ import {
   showErrorMessage,
   showSuccessMessage,
 } from "../../../../../../utils/ToastAlert";
-import { UpdateComplaintByAdmin } from "../../../../../../api/APIs";
+import { UpdateComplaintByAdmin } from "../../../../../../api/APIs/Services/Complaint.service";
 import moment from "moment";
+import * as Yup from "yup";
+
+
+const validationSchema = Yup.object({
+    complaintRemark: Yup.string().required("Complaint Remark is required"),
+    complaintStatus: Yup.string().required("Complaint Status is required")
+});
 
 function CMSAdminEditComplaint() {
   const location = useLocation();
@@ -22,10 +29,11 @@ function CMSAdminEditComplaint() {
       fkResolverUserId: "",
       complaintRemark: "",
       complaintStatus: "",
-      complaintResolvedDate: "",
+      complaintResolvedDate: new Date(),
       complaintAttachmentFromResolver: "",
     },
 
+    validationSchema:validationSchema,
     onSubmit: (values) => {
       // Handle form submission here
       UpdateComplaintAPi(values);
@@ -51,6 +59,7 @@ function CMSAdminEditComplaint() {
       );
       if (response.success) {
         showSuccessMessage(response.message);
+        formik.resetForm()
       }
     } catch (error) {
       showErrorMessage(error.response.data.message);
@@ -62,7 +71,7 @@ function CMSAdminEditComplaint() {
       <Header
         dashboardLink={"/cms/admin/dashboard"}
         addLink1={"/cms/admin/dashboard/addedit"}
-        title1={"Edit Admin Complaint"}
+        title1={"Resolved Admin Complaint"}
       />
       <ToastContainer />
       <div className="container-fluid">
@@ -168,12 +177,22 @@ function CMSAdminEditComplaint() {
                     <div className="mb-3">
                       <label className="form-label">Complaint Remarks</label>
                       <textarea
-                        className={`form-control`}
+                        className={`form-control ${formik.touched.complaintRemark &&
+                            formik.errors.complaintRemark
+                            ? "is-invalid"
+                            : ""
+                            }`}
                         id="complaintRemark"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         value={formik.values.complaintRemark}
                       ></textarea>
+                      {formik.touched.complaintRemark &&
+                        formik.errors.complaintRemark && (
+                          <div className="invalid-feedback">
+                            {formik.errors.complaintRemark}
+                          </div>
+                        )}
                     </div>
                   </div>
                   <div className="col-6">
@@ -230,7 +249,11 @@ function CMSAdminEditComplaint() {
                     <div className="mb-3">
                       <label className="form-label">Complaint Status</label>
                       <select
-                        class="form-select"
+                        class={`form-select ${formik.touched.complaintStatus &&
+                            formik.errors.complaintStatus
+                            ? "is-invalid"
+                            : ""
+                            }`}
                         id="complaintStatus"
                         name="complaintStatus"
                         onChange={formik.handleChange}
@@ -244,6 +267,12 @@ function CMSAdminEditComplaint() {
                         <option value="in-progress">In Progress</option>
                         <option value="closed">Resolved</option>
                       </select>
+                      {formik.touched.complaintStatus &&
+                        formik.errors.complaintStatus && (
+                          <div className="invalid-feedback">
+                            {formik.errors.complaintStatus}
+                          </div>
+                        )}
                     </div>
                   </div>
                 </div>

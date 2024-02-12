@@ -15,7 +15,7 @@ import {
     getAllQuestionByID,
     getAllQuestionStatus,
     searchQuestion,
-} from "../../../../../api/APIs";
+} from "../../../../../api/APIs/Services/Question.service";
 import {
     showErrorMessage,
     showSuccessMessage,

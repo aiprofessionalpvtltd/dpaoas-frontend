@@ -5,7 +5,7 @@ import { QMSSideBarItems } from '../../../../../../utils/sideBarItems'
 import Header from '../../../../../../components/Header'
 import CustomTable from '../../../../../../components/CustomComponents/CustomTable'
 import moment from 'moment'
-import { deleteTenures, getAllTenures } from '../../../../../../api/APIs'
+import { deleteTenures, getAllTenures } from '../../../../../../api/APIs/Services/ManageQMS.service'
 import { showErrorMessage, showSuccessMessage } from '../../../../../../utils/ToastAlert'
 import { ToastContainer } from 'react-toastify'
 

@@ -11,8 +11,8 @@ import {
 } from "../../../../../utils/ToastAlert";
 import {
   getAllQuestionStatus,
-  searchResolution,
-} from "../../../../../api/APIs";
+} from "../../../../../api/APIs/Services/Question.service";
+import { searchResolution } from "../../../../../api/APIs/Services/Resolution.service";
 import DatePicker from "react-datepicker";
 import { AuthContext } from "../../../../../api/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

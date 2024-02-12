@@ -4,7 +4,7 @@ import { QMSSideBarItems } from "../../../../../../utils/sideBarItems";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import { useNavigate } from "react-router-dom";
 import Header from "../../../../../../components/Header";
-import { DeleteResolution, getAllResolutions, getResolutionBYID } from "../../../../../../api/APIs";
+import { DeleteResolution, getAllResolutions, getResolutionBYID } from "../../../../../../api/APIs/Services/Resolution.service";
 import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 import DatePicker from "react-datepicker";

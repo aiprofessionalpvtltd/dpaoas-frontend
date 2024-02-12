@@ -4,7 +4,7 @@ import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
 import { useNavigate } from "react-router";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
-import { getAllManageSessions } from "../../../../../../api/APIs";
+import { getAllManageSessions } from "../../../../../../api/APIs/Services/SeatingPlan.service";
 import { showSuccessMessage } from "../../../../../../utils/ToastAlert";
 
 function ManageSessionDays() {

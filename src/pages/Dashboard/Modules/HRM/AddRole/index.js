@@ -4,9 +4,9 @@ import { Layout } from "../../../../../components/Layout";
 import Header from "../../../../../components/Header";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { createRole } from "../../../../../api/APIs";
 // import { useNavigate } from "react-router";
 import { showSuccessMessage } from "../../../../../utils/ToastAlert";
+import { createRole } from "../../../../../api/APIs/Services/organizational.service";
 
 const validationSchema = Yup.object({
   roleName: Yup.string().required("Role name is required"),

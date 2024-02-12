@@ -1,15 +1,19 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router';
 import { Layout } from '../../../../../../components/Layout';
 import Header from '../../../../../../components/Header';
 import CustomTable from '../../../../../../components/CustomComponents/CustomTable';
 import { SMSsidebarItems } from '../../../../../../utils/sideBarItems';
-import { DeleteContactTemplate, getContactTemplate } from '../../../../../../api/APIs';
+import { DeleteContactTemplate, getContactTemplate } from '../../../../../../api/APIs/Services/SMS.service';
 import { showErrorMessage, showSuccessMessage } from '../../../../../../utils/ToastAlert';
 import { ToastContainer } from 'react-toastify';
 import moment from 'moment';
 import SMSAddEditTemplate from '../AddTemplates';
 import { CustomAlert } from '../../../../../../components/CustomComponents/CustomAlert';
+import { getPermissionsData, getUserData, setPermissionsData, setRolesData } from '../../../../../../api/Auth';
+import { CheckPermission } from '../../../../../../utils/permissionsConfig';
+import { AuthContext } from '../../../../../../api/AuthContext';
+import { getRoles } from '../../../../../../api/APIs/Services/organizational.service';
 
 function SMSMAnageTemplate() {
     const navigate = useNavigate()
@@ -21,6 +25,12 @@ function SMSMAnageTemplate() {
 
     const [count, setCount] = useState()
     const pageSize = 4; // Set your desired page size
+
+    const { permissions } = useContext(AuthContext);
+    const [permissionsLocal, setPermissionsLocal] = useState([]);
+    const [roles, setRoles] = useState([]);
+  
+    const userRole = getUserData();
 
     const handlePageChange = (page) => {
         // Update currentPage when a page link is clicked
@@ -74,6 +84,42 @@ function SMSMAnageTemplate() {
     };
 
     useEffect(() => {
+        const fetchRoles = async () => {
+          try {
+            const response = await getRoles();
+            setRoles(response.data);
+          } catch (error) {
+            alert(error?.response?.data)
+            // if (error?.response?.data?.error === "Token has expired!") {
+            //   logout();
+            //   navigation("/login");
+            // }
+          }
+        };
+    
+        fetchRoles();
+      }, []);
+      useEffect(() => {
+        if (roles) {
+          setRolesData(roles);
+          const localPermissionsData = getPermissionsData();
+          setPermissionsLocal(localPermissionsData);
+    
+          // Check if permissions exist and has length
+          if (permissions && permissions.length > 0) {
+            const res = CheckPermission(userRole?.role?.name, roles, permissions);
+            setPermissionsData(res?.permissions);
+            setPermissionsLocal(res?.permissions);
+          } else {
+            // Handle the case when permissions are empty or undefined
+            // For example, set default permissions
+            setPermissionsData(localPermissionsData);
+            setPermissionsLocal(localPermissionsData);
+          }
+        }
+      }, [roles, permissions]);
+
+    useEffect(() => {
         getTemplate();
     }, [getTemplate]);
     return (
@@ -98,7 +144,7 @@ function SMSMAnageTemplate() {
                     <CustomTable
                         data={templateData}
                         singleDataCard={true}
-
+                        hideBtn={permissionsLocal?.SMS?.canCreate ? false : true}
                         tableTitle="Manage Template"
                         addBtnText="Add Template"
                         handleAdd={() => {
@@ -133,6 +179,9 @@ function SMSMAnageTemplate() {
                             setTemplateId(item.id)
                             handleShow()
                         }}
+                        hideDeleteIcon={permissionsLocal?.SMS?.canDelete ? false : true}
+                         hideEditIcon={permissionsLocal?.SMS?.canEdit ? false : true}
+                         ActionHide={permissionsLocal?.SMS?.canDelete || permissionsLocal?.SMS?.canEdit ? false : true}
                     />
                 </div>
             </div>

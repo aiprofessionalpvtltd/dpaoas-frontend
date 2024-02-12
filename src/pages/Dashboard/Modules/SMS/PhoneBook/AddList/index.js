@@ -3,7 +3,7 @@ import { SMSsidebarItems } from '../../../../../../utils/sideBarItems'
 import { Layout } from '../../../../../../components/Layout'
 import Header from '../../../../../../components/Header'
 import { useLocation } from 'react-router'
-import { UpdateContactList, createContactList, getallMembers } from '../../../../../../api/APIs'
+import { UpdateContactList, createContactList } from '../../../../../../api/APIs/Services/SMS.service'
 import { ToastContainer } from 'react-toastify'
 import { showErrorMessage, showSuccessMessage } from '../../../../../../utils/ToastAlert'
 import { useFormik } from 'formik'
@@ -237,11 +237,21 @@ function SMSAddList({ modalisOpan, hendleModal, Data, getContactListApi }) {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="d-grid gap-2 d-md-flex justify-content-md-end">
-                                    <button className="btn btn-primary" type="submit">
-                                        Save
-                                    </button>
+
+                                <div className="d-flex row justify-content-center align-items-center">
+                                    <div className="col-4" style={{ marginTop: "30px" }}>
+                                        <button className="btn btn-primary" type="button" onClick={() => hendleModal()}>
+                                            Cancel
+                                        </button>
+                                    </div>
+                                    <div className="col-4" style={{ marginTop: "30px" }}>
+                                        <button className="btn btn-primary" type="submit">
+                                            Save
+                                        </button>
+                                    </div>
                                 </div>
+
+
                             </div>
                         </form>
                     </div>

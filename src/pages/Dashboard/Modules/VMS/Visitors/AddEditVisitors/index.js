@@ -5,10 +5,7 @@ import { useLocation } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Header from "../../../../../../components/Header";
-import {
-  UpdateVisitorsByVisitorId,
-  createVisitorsByPassId,
-} from "../../../../../../api/APIs";
+import { UpdateVisitorsByVisitorId, createVisitorsByPassId } from "../../../../../../api/APIs/Services/VisitorsManagementSystem.service";
 import { showSuccessMessage } from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 import { getPassID } from "../../../../../../api/Auth";

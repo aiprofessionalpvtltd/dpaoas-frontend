@@ -2,7 +2,7 @@ import { useFormik } from 'formik';
 import React, { useContext } from 'react'
 import Modal from "react-modal";
 import Select from "react-select";
-import { assignedComplaintByAdmin } from '../../api/APIs';
+import { assignedComplaintByAdmin } from '../../api/APIs/Services/Complaint.service';
 import { AuthContext } from '../../api/AuthContext';
 import { getUserData } from '../../api/Auth';
 import { showSuccessMessage } from '../../utils/ToastAlert';
@@ -30,14 +30,18 @@ function ComplaintAssignedEmployee({ assignModalOpan, hendleModal, ComplaintUser
       assignmentRemarks: ""
     },
 
-    onSubmit: (values) => {
+    onSubmit: async (values, { resetForm }) => {
       // Handle form submission here
-      hendleAssigned(values)
+      await hendleAssigned(values, { resetForm });
     },
+    // onSubmit: (values) => {
+    //   // Handle form submission here
+    //   hendleAssigned(values)
+    // },
 
   })
 
-  const hendleAssigned = async (values) => {
+  const hendleAssigned = async (values, { resetForm }) => {
     const Data = {
       fkAssignedById: UserData?.fkUserId,
       fkAssignedResolverId: values?.fkAssignedResolverId?.value,
@@ -48,7 +52,9 @@ function ComplaintAssignedEmployee({ assignModalOpan, hendleModal, ComplaintUser
       const response = await assignedComplaintByAdmin(ComplaintUserData?.id, Data)
       if (response?.success) {
         showSuccessMessage(response?.message)
+        formikAssigned.resetForm()
         hendleModal()
+
       }
     } catch (error) {
       console.log(error);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useLocation } from "react-router-dom";
@@ -9,23 +9,31 @@ import Header from "../../../../../../../components/Header";
 import { Layout } from "../../../../../../../components/Layout";
 import { QMSSideBarItems } from "../../../../../../../utils/sideBarItems";
 import TimePicker from "react-time-picker";
+import { createSession, getSessionByID, updateSessions } from "../../../../../../../api/APIs/Services/ManageQMS.service";
+import { showErrorMessage, showSuccessMessage } from "../../../../../../../utils/ToastAlert";
+import { ToastContainer } from "react-toastify";
 
 const validationSchema = Yup.object({
-  employeename: Yup.string().required("Employee name is required"),
-  filenumber: Yup.string().required("File Number is required"),
-  fatherhusbandname: Yup.string().required("Father/Husband Name is required"),
-  cnicnumber: Yup.string().required("CNIC Number is required"),
-  permanentaddress: Yup.string().required("Permanent Address is required"),
+  sessionNo: Yup.string().required("Sesison no is required"),
+  CalledBy: Yup.string().required("Session called by is required"),
+  startDate: Yup.date().required("Start Date is required"),
+  endDate: Yup.date().required("End Date is required"),
+  legislationDiaryNo: Yup.string().required("Legislation Diary Number is required"),
+  legislationDiaryDate: Yup.date().required("Legislation Diary Date is required"),
+  businessStatus: Yup.string().required("Business Status is required"),
+  businessSession: Yup.string().required("Business Session is required"),
+  parliamentaryYear: Yup.string().required("Parliamentary Year is required"),
+  jointSessionPurpose: Yup.string().required("Parliamentary Year is required"),
 });
 function QMSAddEditSessionsForm() {
   const location = useLocation();
+  const [sessionByIdData, setSessionByIdData] = useState();
 
   const formik = useFormik({
     initialValues: {
       sessionNo: "",
-      sessionId: "",
       CalledBy: "",
-      isJoint: "",
+      isJoint: false,
       startDate: "",
       endDate: "",
       legislationDiaryNo: "",
@@ -33,7 +41,7 @@ function QMSAddEditSessionsForm() {
       businessStatus: "",
       businessSession: "",
       parliamentaryYear: "",
-      isAdjourned: "",
+      isAdjourned: false,
       summonDate: "",
       summonTime: "",
       jointSessionPurpose: "",
@@ -42,8 +50,107 @@ function QMSAddEditSessionsForm() {
     onSubmit: (values) => {
       // Handle form submission here
       console.log(values);
+      if (location.state) {
+        UpdateSessionsApi(values);
+      } else {
+        CreateSessionsApi(values);
+      }
     },
   });
+
+  const CreateSessionsApi = async (values) => {
+    const data = {
+      sessionName: Number(values?.sessionNo),
+      calledBy: values.CalledBy,
+      isJointSession: Boolean(values.isJoint),
+      startDate: values.startDate,
+      endDate: values.endDate,
+      legislationDiaryNo: values.legislationDiaryNo,
+      legislationDiaryDate: values.legislationDiaryDate,
+      businessStatus: values.businessStatus,
+      businessSessions: [Number(values.businessSession)],
+      fkParliamentaryYearId: Number(values.parliamentaryYear),
+      isQuoraumAdjourned: Boolean(values.isAdjourned),
+      summonNoticeDate: values.summonDate,
+      summonNoticeTime: values.summonTime,
+      jointSessionPurpose: values.jointSessionPurpose,
+    };
+
+    try {
+      const response = await createSession(data);
+      if (response.success) {
+        showSuccessMessage(response.message);
+      }
+    } catch (error) {
+      showErrorMessage(error.response.data.message);
+    }
+  };
+
+  const UpdateSessionsApi = async (values) => {
+    const data = {
+      sessionName: Number(values?.sessionNo),
+      calledBy: values.CalledBy,
+      isJointSession: Boolean(values.isJoint),
+      startDate: values.startDate,
+      endDate: values.endDate,
+      legislationDiaryNo: values.legislationDiaryNo,
+      legislationDiaryDate: values.legislationDiaryDate,
+      businessStatus: values.businessStatus,
+      businessSessions: [Number(values.businessSession)],
+      fkParliamentaryYearId: Number(values.parliamentaryYear),
+      isQuoraumAdjourned: Boolean(values.isAdjourned),
+      summonNoticeDate: values.summonDate,
+      summonNoticeTime: values.summonTime,
+      jointSessionPurpose: values.jointSessionPurpose,
+    };
+    try {
+      const response = await updateSessions(location.state.id, data);
+      if (response.success) {
+        showSuccessMessage(response.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getSessionByIdApi = async () => {
+    try {
+      const response = await getSessionByID(location.state?.id);
+      if (response?.success) {
+        setSessionByIdData(response?.data);
+      }
+    } catch (error) {
+      // showErrorMessage(error?.response?.data?.message);
+    }
+  };
+
+  useEffect(() => {
+    if (location.state?.id) {
+      getSessionByIdApi();
+    }
+  }, [])
+
+  useEffect(() => {
+    // Update form values when termsById changes
+    if (sessionByIdData) {
+      formik.setValues({
+        sessionNo: Number(sessionByIdData.sessionName) || "",
+        CalledBy: sessionByIdData.calledBy || "",
+        isJoint: sessionByIdData.isJointSession || "",
+        startDate: new Date(sessionByIdData.startDate) || "",
+        endDate: new Date(sessionByIdData.endDate) || "",
+        legislationDiaryNo: sessionByIdData.legislationDiaryNo || "",
+        legislationDiaryDate: new Date(sessionByIdData.legislationDiaryDate) || "",
+        businessStatus: sessionByIdData.businessStatus || "",
+        businessSession: sessionByIdData.businessSessions[0]?.sessionName || "",
+        parliamentaryYear: sessionByIdData.fkParliamentaryYearId || "",
+        isAdjourned: sessionByIdData.isQuoraumAdjourned || "",
+        summonDate: new Date(sessionByIdData.summonNoticeDate) || "",
+        jointSessionPurpose: sessionByIdData.jointSessionPurpose || "",
+      });
+    }
+  }, [sessionByIdData, formik.setValues]);
+  
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <Header
@@ -53,6 +160,8 @@ function QMSAddEditSessionsForm() {
         addLink2={"/qms/manage/sessions/addedit"}
         title2={location && location?.state ? "Edit Sessions" : "Add Sessions"}
       />
+      <ToastContainer />
+
       <div class="container-fluid">
         <div class="card">
           <div class="card-header red-bg" style={{ background: "#14ae5c" }}>
@@ -66,8 +175,9 @@ function QMSAddEditSessionsForm() {
                     <div class="mb-3">
                       <label class="form-label">Session No</label>
                       <input
-                        type="text"
-                        placeholder={formik.values.sessionNo}
+                        type="number"
+                        placeholder={"Session No"}
+                        value={formik.values.sessionNo}
                         className={`form-control ${
                           formik.touched.sessionNo && formik.errors.sessionNo ? "is-invalid" : ""
                         }`}
@@ -77,24 +187,6 @@ function QMSAddEditSessionsForm() {
                       />
                       {formik.touched.sessionNo && formik.errors.sessionNo && (
                         <div className="invalid-feedback">{formik.errors.sessionNo}</div>
-                      )}
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Sessoin ID</label>
-                      <input
-                        type="text"
-                        placeholder={formik.values.sessionId}
-                        className={`form-control ${
-                          formik.touched.sessionId && formik.errors.sessionId ? "is-invalid" : ""
-                        }`}
-                        id="sessionId"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                      />
-                      {formik.touched.sessionId && formik.errors.sessionId && (
-                        <div className="invalid-feedback">{formik.errors.sessionId}</div>
                       )}
                     </div>
                   </div>
@@ -113,8 +205,8 @@ function QMSAddEditSessionsForm() {
                           <option value={""} selected disabled hidden>
                             select
                           </option>
-                            <option value="2023">2023</option>
-                            <option value="2024">2024</option>
+                            <option value="President">2023</option>
+                            <option value="Chairman">2024</option>
                         </select>
                       </div>
                     </div>
@@ -235,7 +327,8 @@ function QMSAddEditSessionsForm() {
                       <label class="form-label">Legislation Diary No</label>
                       <input
                         type="text"
-                        placeholder={formik.values.legislationDiaryNo}
+                        placeholder={"Legislation Diary No"}
+                        value={formik.values.legislationDiaryNo}
                         className={`form-control ${
                           formik.touched.legislationDiaryNo && formik.errors.legislationDiaryNo ? "is-invalid" : ""
                         }`}
@@ -302,8 +395,8 @@ function QMSAddEditSessionsForm() {
                             select
                           </option>
                             <option>Select</option>
-                            <option>Pending</option>
-                            <option>Approved</option>
+                            <option value={"Carry Forward"}>Pending</option>
+                            <option value={"Lapsed"}>Approved</option>
                         </select>
                       </div>
                     </div>
@@ -322,8 +415,8 @@ function QMSAddEditSessionsForm() {
                             select
                           </option>
                             <option>Federal</option>
-                            <option>Punjab</option>
-                            <option>Sindh</option>
+                            <option value={"1"}>Punjab</option>
+                            <option value={"2"}>Sindh</option>
                         </select>
                       </div>
                     </div>
@@ -343,9 +436,9 @@ function QMSAddEditSessionsForm() {
                           <option value={""} selected disabled hidden>
                             select
                           </option>
-                            <option>Federal</option>
-                            <option>Punjab</option>
-                            <option>Sindh</option>
+                            <option value={"1"}>Federal</option>
+                            <option value={"2"}>Punjab</option>
+                            <option value={"3"}>Sindh</option>
                         </select>
                       </div>
                     </div>

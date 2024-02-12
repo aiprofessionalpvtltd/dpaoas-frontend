@@ -4,10 +4,7 @@ import CustomTable from "../../../../../components/CustomComponents/CustomTable"
 import { Layout } from "../../../../../components/Layout";
 import { VMSsidebarItems } from "../../../../../utils/sideBarItems";
 import Header from "../../../../../components/Header";
-import {
-  DeleteVisitorsByVisitorId,
-  getVisirorsByPassId,
-} from "../../../../../api/APIs";
+import { DeleteVisitorsByVisitorId, getVisirorsByPassId } from "../../../../../api/APIs/Services/VisitorsManagementSystem.service";
 import { showSuccessMessage } from "../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 import { getPassID } from "../../../../../api/Auth";

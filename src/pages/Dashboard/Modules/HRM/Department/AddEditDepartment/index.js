@@ -5,12 +5,12 @@ import { HRMsidebarItems } from "../../../../../../utils/sideBarItems";
 import { useLocation } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { UpdateDepartment, createDepartment } from "../../../../../../api/APIs";
 import {
   showErrorMessage,
   showSuccessMessage,
 } from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
+import { UpdateDepartment, createDepartment } from "../../../../../../api/APIs/Services/organizational.service";
 
 const validationSchema = Yup.object({
   departmentName: Yup.string().required("Department name is required"),

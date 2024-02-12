@@ -6,6 +6,7 @@ import {
   faAddressCard,
   faUser,
   faClipboardList,
+  faCodeBranch
 } from "@fortawesome/free-solid-svg-icons";
 
 // LMS Sidebar
@@ -29,7 +30,11 @@ export const HRMsidebarItems = [
     link: "/hrm/dashboard",
     icon: faUserTag,
   },
-
+  {
+    itemName: "Branches",
+    link: "/hrm/branches",
+    icon: faCodeBranch,
+  },
   {
     itemName: "Department",
     link: "/hrm/department",
@@ -503,11 +508,11 @@ export const SMSsidebarItems = [
         link: "/sms/phone-book/manage",
         icon: faClipboardList,
       },
-      {
-        itemName: "Import Contacts",
-        link: "/sms/phone-book/import",
-        icon: faClipboardList,
-      },
+      // {
+      //   itemName: "Import Contacts",
+      //   link: "/sms/phone-book/import",
+      //   icon: faClipboardList,
+      // },
     ],
   },
   {
@@ -532,11 +537,11 @@ export const SMSsidebarItems = [
     link: "/sms/messagelog",
     icon: faClipboardList,
     subItems: [
-      {
-        itemName: "Summary",
-        link: "/sms/messagelog/summary",
-        icon: faClipboardList,
-      },
+      // {
+      //   itemName: "Summary",
+      //   link: "/sms/messagelog/summary",
+      //   icon: faClipboardList,
+      // },
       {
         itemName: "Detailed Message Log",
         link: "/sms/messagelog/detailed",

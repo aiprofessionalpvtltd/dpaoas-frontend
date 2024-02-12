@@ -3,7 +3,7 @@ import { Layout } from "../../../../components/Layout";
 import { SMSsidebarItems } from "../../../../utils/sideBarItems";
 import Header from "../../../../components/Header";
 import CustomTable from "../../../../components/CustomComponents/CustomTable";
-import { getContactList } from "../../../../api/APIs";
+import { getContactList } from "../../../../api/APIs/Services/SMS.service";
 import moment from "moment";
 
 function SMSDashboard() {

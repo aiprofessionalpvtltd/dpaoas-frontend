@@ -14,9 +14,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { AuthContext } from "../../api/AuthContext";
 import { getPermissionsData, getUserData, logout, setPermissionsData, setRolesData } from "../../api/Auth";
-import { getRoles } from "../../api/APIs";
 import { CheckPermission } from "../../utils/permissionsConfig";
 import { useNavigate } from "react-router";
+import { getRoles } from "../../api/APIs/Services/organizational.service";
 
 function Dashboard() {
   const navigation = useNavigate();

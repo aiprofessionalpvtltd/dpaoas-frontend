@@ -12,9 +12,8 @@ import {
 import { ToastContainer } from "react-toastify";
 import { useFormik } from "formik";
 import {
-  getAllQuestionStatus,
   searchResolution,
-} from "../../../../../api/APIs";
+} from "../../../../../api/APIs/Services/Resolution.service";
 import { AuthContext } from "../../../../../api/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";

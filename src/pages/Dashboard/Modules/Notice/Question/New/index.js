@@ -6,9 +6,7 @@ import { useNavigate } from "react-router";
 import TimePicker from "react-time-picker";
 import {
   createQuestion,
-  createResolution,
-  getAllSessions,
-} from "../../../../../../api/APIs";
+} from "../../../../../../api/APIs/Services/Question.service";
 import {
   showErrorMessage,
   showSuccessMessage,

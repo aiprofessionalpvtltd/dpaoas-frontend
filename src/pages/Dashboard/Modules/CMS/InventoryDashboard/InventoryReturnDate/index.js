@@ -3,7 +3,7 @@ import { ToastContainer } from 'react-toastify'
 import Header from '../../../../../../components/Header'
 import { Layout } from '../../../../../../components/Layout'
 import { CMSsidebarItems } from '../../../../../../utils/sideBarItems'
-import { SearchInventoryBySerailNo, createIssueProduct, getallcomplaintTypes, updateInventoryreturnDate } from '../../../../../../api/APIs'
+import { SearchInventoryBySerailNo, getallcomplaintTypes, updateInventoryreturnDate } from '../../../../../../api/APIs/Services/Complaint.service'
 import { showErrorMessage, showSuccessMessage } from '../../../../../../utils/ToastAlert'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons'
@@ -16,7 +16,6 @@ import moment from 'moment'
 function InventoryReturnDate() {
     const [complaintType, setComplaintType] = useState([]);
 
-    const { employeeData, employeesAsEngineersData } = useContext(AuthContext);
 
     const [serailNo, setSerailNo] = useState(null)
     const [issuedDate, setIssuedDate] = useState(null)
@@ -33,16 +32,16 @@ function InventoryReturnDate() {
         try {
             const response = await SearchInventoryBySerailNo(serailNo); // Add await here
             if (response?.success) {
+                showSuccessMessage(response?.message)
                 // const transformedData = transformInventoryBillData(response?.data);
                 // setInventoryData(transformedData);
                 // setSearchData(response?.data)
                 // showSuccessMessage(response?.data)
 
-                const filterData = response?.data?.filter((item)=>  item?.issuedDate !== null && item?.returnDate === null
+                const filterData = response?.data?.filter((item) => item?.issuedDate !== null && item?.returnDate === null
                 )
                 console.log("second filere", filterData)
                 setSearchData(filterData)
-                showSuccessMessage(response?.data)
 
             }
         } catch (error) {
@@ -120,55 +119,55 @@ function InventoryReturnDate() {
                                 </div>
                             </div>
 
-                           
-                                {searchData && searchData.length > 0 && (
-                                     <div class="dash-detail-container"
-                                     style={{ marginTop: "20px" }}
-                                 >
-                                    <table class="table red-bg-head th">
-                                    <thead>
-                                        <tr>
-                                            <th class="text-center" scope="col">
-                                                Name
-                                            </th>
-                                            <th class="text-center" scope="col">
-                                                Categories
-                                            </th>
-                                            {searchData[0]?.assignedToUser && (
-                                                <th class="text-center" scope="col">
-                                                Assigin To User
-                                            </th>
-                                            )}
-                                            {
-                                              searchData[0]?.assignedToBranch && (
-                                                <th class="text-center" scope="col">
-                                                Assigin To Branch
-                                            </th>
-                                              )  
-                                            }
-                                            
-                                            <th class="text-center" scope="col">
-                                                Issued Date
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td class="text-center">{searchData[0]?.assignedInventory?.productName}</td>
-                                            <td class="text-center">{searchData[0]?.assignedInventory?.productCategories}</td>
-                                            {searchData[0]?.assignedToUser && (
-                                            <td class="text-center">{`${searchData[0]?.assignedToUser?.employee?.firstName} ${searchData[0]?.assignedToUser?.employee?.lastName}`}</td>
-                                            )}
-                                            {searchData[0]?.assignedToBranch && (
-                                            <td class="text-center">{searchData[0]?.assignedToBranch?.complaintTypeName}</td>
-                                            )}
-                                            <td class="text-center">{moment(searchData[0]?.issuedDate).format("MM/DD/YYYY")}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
 
-                                )}
+                            {searchData && searchData.length > 0 && (
+                                <div class="dash-detail-container"
+                                    style={{ marginTop: "20px" }}
+                                >
+                                    <table class="table red-bg-head th">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center" scope="col">
+                                                    Name
+                                                </th>
+                                                <th class="text-center" scope="col">
+                                                    Categories
+                                                </th>
+                                                {searchData[0]?.assignedToUser && (
+                                                    <th class="text-center" scope="col">
+                                                        Assigin To User
+                                                    </th>
+                                                )}
+                                                {
+                                                    searchData[0]?.assignedToBranch && (
+                                                        <th class="text-center" scope="col">
+                                                            Assigin To Branch
+                                                        </th>
+                                                    )
+                                                }
+
+                                                <th class="text-center" scope="col">
+                                                    Issued Date
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="text-center">{searchData[0]?.assignedInventory?.productName}</td>
+                                                <td class="text-center">{searchData[0]?.assignedInventory?.productCategories}</td>
+                                                {searchData[0]?.assignedToUser && (
+                                                    <td class="text-center">{`${searchData[0]?.assignedToUser?.employee?.firstName} ${searchData[0]?.assignedToUser?.employee?.lastName}`}</td>
+                                                )}
+                                                {searchData[0]?.assignedToBranch && (
+                                                    <td class="text-center">{searchData[0]?.assignedToBranch?.complaintTypeName}</td>
+                                                )}
+                                                <td class="text-center">{moment(searchData[0]?.issuedDate).format("MM/DD/YYYY")}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            )}
 
                             <div className='row mt-4'>
                                 <div className="col-6">

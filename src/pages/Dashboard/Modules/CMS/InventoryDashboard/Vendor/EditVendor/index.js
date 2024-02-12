@@ -5,9 +5,16 @@ import { Layout } from '../../../../../../../components/Layout'
 import Header from '../../../../../../../components/Header'
 import { ToastContainer } from 'react-toastify'
 import { useFormik } from 'formik'
-import { UpdateVendor, createVandor } from '../../../../../../../api/APIs'
+import { UpdateVendor, createVandor } from '../../../../../../../api/APIs/Services/Complaint.service'
 import { showErrorMessage, showSuccessMessage } from '../../../../../../../utils/ToastAlert'
+import * as Yup from "yup";
 
+
+const validationSchema = Yup.object({
+    vendorName: Yup.string().required("Vendor Name is required"),
+    description: Yup.string().required("Description is required"),
+
+});
 function CMSEditVendor() {
     const location = useLocation()
     const formik = useFormik({
@@ -17,7 +24,7 @@ function CMSEditVendor() {
             status: location.state ? location.state.status : "",
         },
 
-        // validationSchema: validationSchema,
+        validationSchema: validationSchema,
         onSubmit: (values) => {
             if (location?.state?.id) {
                 UpdateVendorApi(values)
@@ -37,6 +44,7 @@ function CMSEditVendor() {
             const response = await createVandor(Data)
             if (response?.success) {
                 showSuccessMessage(response?.message)
+                formik.resetForm()
             }
         } catch (error) {
             showErrorMessage(error?.response?.data?.message);
@@ -53,6 +61,7 @@ function CMSEditVendor() {
             const response = await UpdateVendor(location?.state?.id, data);
             if (response.success) {
                 showSuccessMessage(response.message);
+                formik.resetForm()
             }
         } catch (error) {
             showErrorMessage(error?.response?.data?.message);
@@ -88,7 +97,7 @@ function CMSEditVendor() {
                                                     : ""
                                                     }`}
                                                 id="vendorName"
-                                                placeholder={formik.values.vendorName}
+                                                value={formik.values.vendorName}
                                                 onChange={formik.handleChange}
                                                 onBlur={formik.handleBlur}
                                             />

@@ -16,7 +16,7 @@ import {
   getInventoryById,
   inventoryDelete,
   searchInventory,
-} from "../../../../../api/APIs";
+} from "../../../../../api/APIs/Services/Complaint.service";
 
 function SMSInventoryDashboard() {
   const navigation = useNavigate();
@@ -30,8 +30,9 @@ function SMSInventoryDashboard() {
       productName: "",
       labelNo: "",
     },
-    onSubmit: (values) => {
-      SearchInventoryApi(values);
+    onSubmit: async (values, { resetForm }) => {
+      // Handle form submission here
+      await SearchInventoryApi(values, { resetForm });
     },
   });
 
@@ -85,7 +86,7 @@ function SMSInventoryDashboard() {
         setCount(1);
         setInventoryData(transformedData);
         showSuccessMessage(response?.message);
-        console.log("Datattattata", response?.message);
+        formik.resetForm();
       }
     } catch (error) {
       console.log(error);
@@ -137,7 +138,7 @@ function SMSInventoryDashboard() {
                       type="text"
                       className={"form-control"}
                       id="productName"
-                      placeholder={formik.values.productName}
+                      value={formik.values.productName}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                     />
@@ -149,7 +150,7 @@ function SMSInventoryDashboard() {
                     <input
                       class="form-control"
                       type="text"
-                      placeholder={formik.values.labelNo}
+                      value={formik.values.labelNo}
                       className={"form-control"}
                       id="labelNo"
                       onChange={formik.handleChange}

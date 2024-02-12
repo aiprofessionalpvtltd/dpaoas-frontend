@@ -9,13 +9,10 @@ import TimePicker from "react-time-picker";
 import Select from "react-select";
 
 import {
-  getAllMinistry,
-  getAllSessions,
-  getallMembers,
   getallMotionStatus,
   sendMotionForTranslation,
   updateNewMotion,
-} from "../../../../../../api/APIs";
+} from "../../../../../../api/APIs/Services/Motion.service";
 import {
   showErrorMessage,
   showSuccessMessage,
