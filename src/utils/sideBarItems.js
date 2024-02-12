@@ -612,10 +612,15 @@ export const CMSsidebarItems = [
         itemName: "Toner Installation Report",
         link: "/cms/admin/toner-installation-report",
         icon: faClipboardList,
-      }
-    ]
+      },
+      {
+        itemName: "Toner Models",
+        link: "/cms/admin/toner-models",
+        icon: faClipboardList,
+      },
+    ],
   },
-  
+
   {
     itemName: "Inventory",
     link: "/cms/admin/inventory/dashboard",
@@ -646,7 +651,6 @@ export const CMSsidebarItems = [
         link: "/cms/admin/inventory/vendor-list",
         icon: faClipboardList,
       },
-     
     ],
-  }
-]
+  },
+];

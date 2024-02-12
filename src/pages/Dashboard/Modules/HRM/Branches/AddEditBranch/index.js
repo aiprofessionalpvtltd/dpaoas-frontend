@@ -79,9 +79,7 @@ function HRMAddEditBranch() {
         addLink1={"/hrm/branches"}
         title1={"Branches"}
         addLink2={"/hrm/addeditbranches"}
-        title2={
-          location && location?.state ? "Edit Branch" : "Add Branch"
-        }
+        title2={location && location?.state ? "Edit Branch" : "Add Branch"}
       />
       <ToastContainer />
       <div className="container-fluid">
@@ -103,8 +101,7 @@ function HRMAddEditBranch() {
                       <input
                         type="text"
                         className={`form-control ${
-                          formik.touched.branchName &&
-                          formik.errors.branchName
+                          formik.touched.branchName && formik.errors.branchName
                             ? "is-invalid"
                             : ""
                         }`}
@@ -122,25 +119,26 @@ function HRMAddEditBranch() {
                     </div>
                   </div>
                   {/* {location && location?.state && ( */}
-                    <div class="col-6">
-                      <div class="mb-3">
-                        <label class="form-label">Status</label>
-                        <select class="form-select"
-                          id="status"
-                          name="status"
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          value={formik.values.status}
-                        >
-                          <option value={""} selected disabled hidden>
-                            select
-                          </option>
-                            <option>Select</option>
-                            <option>Pending</option>
-                            <option>Approved</option>
-                        </select>
-                      </div>
+                  <div class="col-6">
+                    <div class="mb-3">
+                      <label class="form-label">Status</label>
+                      <select
+                        class="form-select"
+                        id="status"
+                        name="status"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.status}
+                      >
+                        <option value={""} selected disabled hidden>
+                          select
+                        </option>
+                        <option>Select</option>
+                        <option>Pending</option>
+                        <option>Approved</option>
+                      </select>
                     </div>
+                  </div>
                   {/* )} */}
                 </div>
                 {/* Add similar validation logic for other fields */}

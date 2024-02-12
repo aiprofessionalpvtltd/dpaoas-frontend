@@ -108,10 +108,13 @@ import InventoryReturnDate from "../pages/Dashboard/Modules/CMS/InventoryDashboa
 import CMSVendorList from "../pages/Dashboard/Modules/CMS/InventoryDashboard/Vendor";
 import CMSEditVendor from "../pages/Dashboard/Modules/CMS/InventoryDashboard/Vendor/EditVendor";
 import CMSTonerInstallationReports from "../pages/Dashboard/Modules/CMS/AdminCMS/TonerInstallationReports";
+import CMSAddEditTonerInstallation from "../pages/Dashboard/Modules/CMS/AdminCMS/TonerInstallationReports/AddEditTonerInstallation";
 import EFilingDashboard from "../pages/Dashboard/Modules/EFiling";
 import FileDetail from "../pages/Dashboard/Modules/EFiling/FileDetail";
 import AddEditFileForm from "../pages/Dashboard/Modules/EFiling/AddEditFileForm";
 import AddEditCaseForm from "../pages/Dashboard/Modules/EFiling/AddEditCaseForm";
+import CMSTonerModels from "../pages/Dashboard/Modules/CMS/AdminCMS/TonerModel";
+import AddEditTonerModel from "../pages/Dashboard/Modules/CMS/AdminCMS/TonerModel/AddEditTonerModels";
 import HRMBranches from "../pages/Dashboard/Modules/HRM/Branches";
 import HRMAddEditBranch from "../pages/Dashboard/Modules/HRM/Branches/AddEditBranch";
 // import { Register } from "../pages/Register";
@@ -277,19 +280,34 @@ export const ProtectedRoutes = [
   { path: "/qms/manage/members/addedit", element: <QMSMembersAddEditForm /> },
 
   { path: "/qms/manage/sitting-days", element: <QMSSittingsDays /> },
-  { path: "/qms/manage/sitting-days/addedit", element: <QMSAddEditSittingDaysForm /> },
+  {
+    path: "/qms/manage/sitting-days/addedit",
+    element: <QMSAddEditSittingDaysForm />,
+  },
 
   { path: "/qms/manage/ministries", element: <QMSMinistries /> },
-  { path: "/qms/manage/ministries/addedit", element: <QMSAddEditMinistriesForm /> },
+  {
+    path: "/qms/manage/ministries/addedit",
+    element: <QMSAddEditMinistriesForm />,
+  },
 
   { path: "/qms/manage/divisions", element: <QMSDivisions /> },
-  { path: "/qms/manage/divisions/addedit", element: <QMSAddEditDivisionsForm /> },
+  {
+    path: "/qms/manage/divisions/addedit",
+    element: <QMSAddEditDivisionsForm />,
+  },
 
   { path: "/qms/manage/political-party", element: <QMSPoliticalParty /> },
-  { path: "/qms/manage/political-party/addedit", element: <QMSAddEditPoliticalPartyForm /> },
+  {
+    path: "/qms/manage/political-party/addedit",
+    element: <QMSAddEditPoliticalPartyForm />,
+  },
 
   { path: "/qms/manage/parliamentary-year", element: <QMSParliamentaryYear /> },
-  { path: "/qms/manage/parliamentary-year/addedit", element: <QMSAddEditParliamentaryYearForm /> },
+  {
+    path: "/qms/manage/parliamentary-year/addedit",
+    element: <QMSAddEditParliamentaryYearForm />,
+  },
 
   //SMS Module routes
   { path: "/sms/dashboard", element: <SMSDashboard /> },
@@ -319,28 +337,50 @@ export const ProtectedRoutes = [
 
   //CMS Module routes
   { path: "/cms/dashboard", element: <CMSUserDashboard /> },
-  { path: "/cms/dashboard/addedit", element: <CMSAddEditUserComplaint /> },
+  { path: "cms/dashboard/addedit", element: <CMSAddEditUserComplaint /> },
 
   { path: "/cms/admin/dashboard", element: <CMSAdminDashboard /> },
   { path: "/cms/admin/dashboard/addedit", element: <CMSAdminEditComplaint /> },
-  { path: "/cms/admin/toner-installation-report", element: <CMSTonerInstallationReports /> },
+  {
+    path: "/cms/admin/toner-installation-report",
+    element: <CMSTonerInstallationReports />,
+  },
 
+  {
+    path: "/cms/dashboard/toner/addedit",
+    element: <CMSAddEditTonerInstallation />,
+  },
 
-  { path: "/cms/admin/inventory/dashboard", element: <SMSInventoryDashboard /> },
+  {
+    path: "/cms/admin/toner-models",
+    element: <CMSTonerModels />,
+  },
+  {
+    path: "/cms/admin/toner-models/addedit",
+    element: <AddEditTonerModel />,
+  },
+
+  {
+    path: "/cms/admin/inventory/dashboard",
+    element: <SMSInventoryDashboard />,
+  },
   { path: "/cms/admin/inventory/dashboard/add", element: <CMSAddInventory /> },
-  { path: "/cms/admin/inventory/inventory-bill", element: <CMSInventoryBill /> },
-  { path: "/cms/admin/inventory/inventory-bill/add", element: <CMSAddInventoryBill /> },
-  {path:"/cms/admin/inventory/issue-date", element: <InventoryIssueDate />},
-  {path:"/cms/admin/inventory/return-date", element: <InventoryReturnDate />},
-  {path:"/cms/admin/inventory/vendor-list", element: <CMSVendorList />},
-  {path:"/cms/admin/inventory/vendor-list/edit", element: <CMSEditVendor />},
-  {path:"/cms/admin/inventory/vendor-list/add", element: <CMSEditVendor />},
-
-
-
-
-
-
+  {
+    path: "/cms/admin/inventory/inventory-bill",
+    element: <CMSInventoryBill />,
+  },
+  {
+    path: "/cms/admin/inventory/inventory-bill/add",
+    element: <CMSAddInventoryBill />,
+  },
+  { path: "/cms/admin/inventory/issue-date", element: <InventoryIssueDate /> },
+  {
+    path: "/cms/admin/inventory/return-date",
+    element: <InventoryReturnDate />,
+  },
+  { path: "/cms/admin/inventory/vendor-list", element: <CMSVendorList /> },
+  { path: "/cms/admin/inventory/vendor-list/edit", element: <CMSEditVendor /> },
+  { path: "/cms/admin/inventory/vendor-list/add", element: <CMSEditVendor /> },
 
   // E-Filing
   { path: "/efiling/dashboard", element: <EFilingDashboard /> },
