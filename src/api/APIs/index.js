@@ -41,7 +41,7 @@ export const getRoles = async () => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      },
+      }
     );
     return response?.data;
   } catch (error) {
@@ -119,7 +119,7 @@ export const getModules = async () => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      },
+      }
     );
     return response?.data;
   } catch (error) {
@@ -138,7 +138,7 @@ export const getDepartment = async (currentPage, pageSize) => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      },
+      }
     );
     return response?.data;
   } catch (error) {
@@ -172,7 +172,7 @@ export const UpdateDepartment = async (id, data) => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      },
+      }
     );
     return response?.data;
   } catch (error) {
@@ -206,7 +206,7 @@ export const getDesignations = async (currentPage, pageSize) => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      },
+      }
     );
     return response?.data;
   } catch (error) {
@@ -240,7 +240,7 @@ export const UpdateDesignation = async (id, data) => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      },
+      }
     );
     return response?.data;
   } catch (error) {
@@ -289,7 +289,7 @@ export const getAllEmployee = async (currentPage, pageSize) => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      },
+      }
     );
     return response?.data;
   } catch (error) {
@@ -338,7 +338,7 @@ export const getPasses = async (currentPage, pageSize) => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      },
+      }
     );
     return response?.data;
   } catch (error) {
@@ -379,7 +379,7 @@ export const createPasses = async (data) => {
 };
 
 export const UpdatePasses = async (data, id) => {
-  console.log("data UpData", data);
+  // console.log("data UpData", data);
   try {
     const token = getAuthToken();
     const response = await axiosClientVMS.put(`/pass/update/${id}`, data, {
@@ -403,7 +403,7 @@ export const SearchPasses = async (search) => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      },
+      }
     );
     return response?.data;
   } catch (error) {
@@ -531,7 +531,7 @@ export const getAllLeaves = async (page, pageSize) => {
         // headers: {
         //   Authorization: `Bearer ${token}`,
         // }
-      },
+      }
     );
     return response?.data;
   } catch (error) {
@@ -610,7 +610,7 @@ export const getWhosOnLeave = async (startDate, endDate, dept) => {
         // headers: {
         //   Authorization: `Bearer ${token}`,
         // }
-      },
+      }
     );
     return response?.data;
   } catch (error) {
@@ -625,7 +625,7 @@ export const searchLeaveHistory = async (searchParams) => {
 
     // Filter out empty values
     const filteredSearchParams = Object.fromEntries(
-      Object.entries(searchParams).filter(([_, value]) => value !== ""),
+      Object.entries(searchParams).filter(([_, value]) => value !== "")
     );
 
     const response = await axiosClient.get(`/leave/search`, {
@@ -670,7 +670,7 @@ export const getAllResolutions = async (page, pageSize) => {
         // headers: {
         //   Authorization: `Bearer ${token}`,
         // }
-      },
+      }
     );
     return response?.data;
   } catch (error) {
@@ -688,7 +688,7 @@ export const getAllResolutionStatus = async () => {
         // headers: {
         //   Authorization: `Bearer ${token}`,
         // }
-      },
+      }
     );
     return response?.data;
   } catch (error) {
@@ -703,7 +703,7 @@ export const searchResolution = async (searchParams) => {
 
     // Filter out empty values
     const filteredSearchParams = Object.fromEntries(
-      Object.entries(searchParams).filter(([_, value]) => value !== ""),
+      Object.entries(searchParams).filter(([_, value]) => value !== "")
     );
 
     const response = await axiosClientMMS.get(`/resolution/searchQuery`, {
@@ -762,7 +762,7 @@ export const UpdateResolution = async (id, data) => {
           accept: "application/json",
           "Content-Type": "multipart/form-data",
         },
-      },
+      }
     );
     return response?.data;
   } catch (error) {
@@ -775,7 +775,7 @@ export const sendResolutionForTranslation = async (id) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClientMMS.put(
-      `/resolution/sendTranslation/${id}`,
+      `/resolution/sendTranslation/${id}`
     );
     //  {
     //   headers: {
@@ -816,7 +816,7 @@ export const getAllQuestion = async (page, pageSize) => {
         // headers: {
         //   Authorization: `Bearer ${token}`,
         // }
-      },
+      }
     );
     return response?.data;
   } catch (error) {
@@ -831,7 +831,7 @@ export const searchQuestion = async (searchParams) => {
 
     // Filter out empty values
     const filteredSearchParams = Object.fromEntries(
-      Object.entries(searchParams).filter(([_, value]) => value !== ""),
+      Object.entries(searchParams).filter(([_, value]) => value !== "")
     );
 
     const response = await axiosClientMMS.get(`/questions/searchQuestion`, {
@@ -873,7 +873,7 @@ export const sendQuestionTranslation = async (id) => {
         // headers: {
         //   Authorization: `Bearer ${token}`,
         // }
-      },
+      }
     );
     return response?.data;
   } catch (error) {
@@ -909,7 +909,7 @@ export const getAllQuestionByID = async (id) => {
 };
 
 export const UpdateQuestionById = async (id, data) => {
-  console.log("weioweoeo", id);
+  // console.log("weioweoeo", id);
   try {
     // const token = getAuthToken();
     const response = await axiosClientMMS.put(`/questions/update/${id}`, data, {
@@ -925,7 +925,7 @@ export const UpdateQuestionById = async (id, data) => {
 };
 //Daffer Question
 export const createDefferQuestion = async (id, DefferData) => {
-  console.log("iwefjiouios".DefferData);
+  // console.log("iwefjiouios".DefferData);
   try {
     // const token = getAuthToken();
     const response = await axiosClientMMS.post(
@@ -935,7 +935,7 @@ export const createDefferQuestion = async (id, DefferData) => {
         // headers: {
         //   Authorization: `Bearer ${token}`,
         // }
-      },
+      }
     );
     return response?.data;
   } catch (error) {
@@ -955,7 +955,7 @@ export const createReviveQuestion = async (id, reviveData) => {
         // headers: {
         //   Authorization: `Bearer ${token}`,
         // }
-      },
+      }
     );
     return response?.data;
   } catch (error) {
@@ -969,7 +969,7 @@ export const allRevivedQuestions = async () => {
   try {
     // const token = getAuthToken();
     const response = await axiosClientMMS.get(
-      `/questions/allRevivedQuestions?currentPage=${0}&pageSize=${100}`,
+      `/questions/allRevivedQuestions?currentPage=${0}&pageSize=${100}`
     );
     return response?.data;
   } catch (error) {
@@ -982,7 +982,7 @@ export const RevivedQuestionsBYID = async (id) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClientMMS.get(
-      `/questions/getReviveQuestion/${id}`,
+      `/questions/getReviveQuestion/${id}`
     );
     return response?.data;
   } catch (error) {
@@ -1004,7 +1004,7 @@ export const updateSeat = async (seatNo, data) => {
           accept: "application/json",
           "Content-Type": "multipart/form-data",
         },
-      },
+      }
     );
     return response?.data;
   } catch (error) {
@@ -1047,12 +1047,16 @@ export const createManageSession = async (data) => {
 export const updateManageSession = async (id, data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.put(`/manageSession/update/${id}`, data, {
-      headers: {
-        accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await axiosClientMMS.put(
+      `/manageSession/update/${id}`,
+      data,
+      {
+        headers: {
+          accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     return response?.data;
   } catch (error) {
@@ -1070,7 +1074,7 @@ export const getAllManageSessions = async (page, pageSize) => {
         // headers: {
         //   Authorization: `Bearer ${token}`,
         // }
-      },
+      }
     );
     return response?.data;
   } catch (error) {
@@ -1082,14 +1086,11 @@ export const getAllManageSessions = async (page, pageSize) => {
 export const getManageSessionById = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
-      `/manageSession/${id}`,
-      {
-        // headers: {
-        //   Authorization: `Bearer ${token}`,
-        // }
-      },
-    );
+    const response = await axiosClientMMS.get(`/manageSession/${id}`, {
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // }
+    });
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -1106,7 +1107,7 @@ export const getSeatById = async (seatNo) => {
         // headers: {
         //   Authorization: `Bearer ${token}`,
         // }
-      },
+      }
     );
     return response?.data;
   } catch (error) {
@@ -1168,7 +1169,7 @@ export const getAllMotion = async (currentPage, pageSize) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClientMMS.get(
-      `/motion/all?page=${currentPage}&pageSize=${pageSize}`,
+      `/motion/all?page=${currentPage}&pageSize=${pageSize}`
     );
     // {
     //   headers: {
@@ -1204,7 +1205,7 @@ export const searchMotion = async (currentPage, pageSize, data) => {
   try {
     // const token = getAuthToken();
     const filteredSearchParams = Object.fromEntries(
-      Object.entries(data).filter(([_, value]) => value !== ""),
+      Object.entries(data).filter(([_, value]) => value !== "")
     );
     const response = await axiosClientMMS.get(
       `/motion/all?page=${currentPage}&pageSize=${pageSize}`,
@@ -1213,7 +1214,7 @@ export const searchMotion = async (currentPage, pageSize, data) => {
         // headers: {
         //   Authorization: `Bearer ${token}`,
         // },
-      },
+      }
     );
     return response?.data;
   } catch (error) {
@@ -1247,7 +1248,7 @@ export const getallMembers = async (currentPage, pageSize) => {
         // headers: {
         //   Authorization: `Bearer ${token}`,
         // }
-      },
+      }
     );
     return response?.data;
   } catch (error) {
@@ -1265,7 +1266,7 @@ export const sendMotionForTranslation = async (id) => {
         // headers: {
         //   Authorization: `Bearer ${token}`,
         // }
-      },
+      }
     );
     return response?.data;
   } catch (error) {
@@ -1279,7 +1280,7 @@ export const getContactTemplate = async (currentPage, pageSize) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClientMMS.get(
-      `/contactTemplate?currentPage=${currentPage}&pageSize=${pageSize}`,
+      `/contactTemplate?currentPage=${currentPage}&pageSize=${pageSize}`
       // {
       //   headers: {
       //     Authorization: `Bearer ${token}`,
@@ -1297,7 +1298,7 @@ export const getSignalContactTemplateByid = async (id) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClientMMS.get(
-      `contactTemplate/${id}`,
+      `contactTemplate/${id}`
       // {
       //   headers: {
       //     Authorization: `Bearer ${token}`,
@@ -1314,7 +1315,7 @@ export const getSignalContactTemplateByid = async (id) => {
 export const createContactTemplate = async (data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.post(`/contactTemplate/create`, data)
+    const response = await axiosClientMMS.post(`/contactTemplate/create`, data);
     // {
     //   headers: {
     //     Authorization: `Bearer ${token}`,
@@ -1332,7 +1333,7 @@ export const UpdateContactTemplate = async (id, data) => {
     // const token = getAuthToken();
     const response = await axiosClientMMS.put(
       `/contactTemplate/update/${id}`,
-      data,
+      data
       // {
       //   headers: {
       //     Authorization: `Bearer ${token}`,
@@ -1349,11 +1350,14 @@ export const UpdateContactTemplate = async (id, data) => {
 export const DeleteContactTemplate = async (id) => {
   try {
     const token = getAuthToken();
-    const response = await axiosClientMMS.delete(`/contactTemplate/delete/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await axiosClientMMS.delete(
+      `/contactTemplate/delete/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -1361,13 +1365,12 @@ export const DeleteContactTemplate = async (id) => {
   }
 };
 
-
 //Contact
 export const getContactList = async (currentPage, pageSize) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClientMMS.get(
-      `/contactList?currentPage=${currentPage}&pageSize=${pageSize}`,
+      `/contactList?currentPage=${currentPage}&pageSize=${pageSize}`
       // {
       //   headers: {
       //     Authorization: `Bearer ${token}`,
@@ -1385,7 +1388,7 @@ export const getSignalContactListByid = async (id) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClientMMS.get(
-      `/contactList/${id}`,
+      `/contactList/${id}`
       // {
       //   headers: {
       //     Authorization: `Bearer ${token}`,
@@ -1402,7 +1405,7 @@ export const getSignalContactListByid = async (id) => {
 export const createContactList = async (data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.post(`/contactList/create`, data)
+    const response = await axiosClientMMS.post(`/contactList/create`, data);
     // {
     //   headers: {
     //     Authorization: `Bearer ${token}`,
@@ -1420,7 +1423,7 @@ export const UpdateContactList = async (id, data) => {
     // const token = getAuthToken();
     const response = await axiosClientMMS.put(
       `/contactList/update/${id}`,
-      data,
+      data
       // {
       //   headers: {
       //     Authorization: `Bearer ${token}`,
@@ -1437,7 +1440,7 @@ export const UpdateContactList = async (id, data) => {
 export const DeleteContactList = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.delete(`/contactList/delete/${id}`)
+    const response = await axiosClientMMS.delete(`/contactList/delete/${id}`);
     //  {
     //   headers: {
     //     Authorization: `Bearer ${token}`,
@@ -1455,7 +1458,7 @@ export const getSMSLog = async (currentPage, pageSize) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClientMMS.get(
-      `/sms?currentPage=${currentPage}&pageSize=${pageSize}`,
+      `/sms?currentPage=${currentPage}&pageSize=${pageSize}`
       // {
       //   headers: {
       //     Authorization: `Bearer ${token}`,
@@ -1472,7 +1475,7 @@ export const getSMSLog = async (currentPage, pageSize) => {
 export const createSendSMS = async (data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.post(`sms/create`, data)
+    const response = await axiosClientMMS.post(`sms/create`, data);
     // {
     //   headers: {
     //     Authorization: `Bearer ${token}`,
@@ -1490,7 +1493,7 @@ export const getallComplaint = async (currentPage, pageSize) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClientMMS.get(
-      `/complaints/?currentPage=${currentPage}&pageSize=${pageSize}`,
+      `/complaints/?currentPage=${currentPage}&pageSize=${pageSize}`
       // {
       //   headers: {
       //     Authorization: `Bearer ${token}`,
@@ -1508,7 +1511,7 @@ export const getallcomplaintTypes = async () => {
   try {
     // const token = getAuthToken();
     const response = await axiosClientMMS.get(
-      `/complaints/complaintTypes/?currentPage=${0}&pageSize=${1000}`,
+      `/complaints/complaintTypes/?currentPage=${0}&pageSize=${1000}`
       // {
       //   headers: {
       //     Authorization: `Bearer ${token}`,
@@ -1526,7 +1529,7 @@ export const getallcomplaintCategories = async () => {
   try {
     // const token = getAuthToken();
     const response = await axiosClientMMS.get(
-      `/complaints/complaintCategories/?currentPage=${0}&pageSize=${1000}`,
+      `/complaints/complaintCategories/?currentPage=${0}&pageSize=${1000}`
       // {
       //   headers: {
       //     Authorization: `Bearer ${token}`,
@@ -1543,7 +1546,10 @@ export const getallcomplaintCategories = async () => {
 export const createComplaint = async (data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.post(`/complaints/issueComplaint`, data) 
+    const response = await axiosClientMMS.post(
+      `/complaints/issueComplaint`,
+      data
+    );
     // {
     //   headers: {
     //     accept: "application/json",
@@ -1568,7 +1574,8 @@ export const UpdateComplaint = async (id, data) => {
           accept: "application/json",
           "Content-Type": "multipart/form-data",
         },
-      });
+      }
+    );
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -1579,13 +1586,16 @@ export const UpdateComplaint = async (id, data) => {
 export const UpdateComplaintByAdmin = async (id, data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.put(`/complaints/resolveComplaint/${id}`, data,
-    {
-      headers: {
-        accept: "application/json",
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    const response = await axiosClientMMS.put(
+      `/complaints/resolveComplaint/${id}`,
+      data,
+      {
+        headers: {
+          accept: "application/json",
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
 
     return response?.data;
   } catch (error) {
@@ -1617,7 +1627,7 @@ export const getallcomplaintRecordById = async (id) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClientMMS.get(
-      `/complaints/${id}`,
+      `/complaints/${id}`
       // {
       //   headers: {
       //     Authorization: `Bearer ${token}`,
@@ -1638,7 +1648,7 @@ export const createTerm = async (data) => {
     const response = await axiosClientMMS.post(`/terms/create`, data, {
       headers: {
         accept: "application/json",
-        "Content-Type": "application/json", 
+        "Content-Type": "application/json",
       },
     });
     return response?.data;
@@ -1648,11 +1658,15 @@ export const createTerm = async (data) => {
   }
 };
 
-export const getallcomplaintRecordByUserId = async (id, currentPage, pageSize) => {
+export const getallcomplaintRecordByUserId = async (
+  id,
+  currentPage,
+  pageSize
+) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClientMMS.get(
-      `/complaints/ByComplainee/${id}?currentPage=${currentPage}&pageSize=${pageSize}`,
+      `/complaints/ByComplainee/${id}?currentPage=${currentPage}&pageSize=${pageSize}`
       // {
       //   headers: {
       //     Authorization: `Bearer ${token}`,
@@ -1669,7 +1683,9 @@ export const getallcomplaintRecordByUserId = async (id, currentPage, pageSize) =
 export const getAllTerms = async (currentPage, pageSize) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/terms?currentPage=${currentPage}&pageSize=${pageSize}`);
+    const response = await axiosClientMMS.get(
+      `/terms?currentPage=${currentPage}&pageSize=${pageSize}`
+    );
     // {
     //   headers: {
     //     Authorization: `Bearer ${token}`,
@@ -1684,15 +1700,15 @@ export const getAllTerms = async (currentPage, pageSize) => {
 
 export const SearchComplaint = async (data) => {
   const filteredSearchParams = Object.fromEntries(
-    Object.entries(data).filter(([_, value]) => value !== ""),
+    Object.entries(data).filter(([_, value]) => value !== "")
   );
   try {
     const token = getAuthToken();
     const response = await axiosClientMMS.get(
-      `/complaints/searchComplaint`, {
-      params: filteredSearchParams,
-
-    }
+      `/complaints/searchComplaint`,
+      {
+        params: filteredSearchParams,
+      }
 
       // {
       //   headers: {
@@ -1716,18 +1732,18 @@ export const getTermByID = async (id) => {
     //     Authorization: `Bearer ${token}`,
     //   }
     // });
-return response?.data;
-} catch (error) {
-  console.error("Error fetching API endpoint:", error);
-  throw error;
-}
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
 };
 
 export const complaintDelete = async (id) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClientMMS.delete(
-      `/complaints/delete/${id}`,
+      `/complaints/delete/${id}`
       // {
       //   headers: {
       //     Authorization: `Bearer ${token}`,
@@ -1745,7 +1761,7 @@ export const retriveEmployeesAsEngineers = async (id) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClientMMS.get(
-      `/complaints/retrieveEmployeesAsEngineers?currentPage=${0}&pageSize=${100}`,
+      `/complaints/retrieveEmployeesAsEngineers?currentPage=${0}&pageSize=${100}`
       // {
       //   headers: {
       //     Authorization: `Bearer ${token}`,
@@ -1779,7 +1795,7 @@ export const getAllInventory = async (currentPage, pageSize) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClientMMS.get(
-      `/inventory/?currentPage=${currentPage}&pageSize=${pageSize}`,
+      `/inventory/?currentPage=${currentPage}&pageSize=${pageSize}`
       // {
       //   headers: {
       //     Authorization: `Bearer ${token}`,
@@ -1797,7 +1813,7 @@ export const deleteTerms = async (id) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClientMMS.delete(
-      `/terms/delete/${id}`,
+      `/terms/delete/${id}`
       // {
       //   headers: {
       //     Authorization: `Bearer ${token}`,
@@ -1818,7 +1834,7 @@ export const createTenure = async (data) => {
     const response = await axiosClientMMS.post(`/tenures/create`, data, {
       headers: {
         accept: "application/json",
-        "Content-Type": "application/json", 
+        "Content-Type": "application/json",
       },
     });
     return response?.data;
@@ -1850,7 +1866,9 @@ export const createInventory = async (Data) => {
 export const getAllTenures = async (currentPage, pageSize) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/tenures?currentPage=${currentPage}&pageSize=${pageSize}`);
+    const response = await axiosClientMMS.get(
+      `/tenures?currentPage=${currentPage}&pageSize=${pageSize}`
+    );
     // {
     //   headers: {
     //     Authorization: `Bearer ${token}`,
@@ -1865,15 +1883,15 @@ export const getAllTenures = async (currentPage, pageSize) => {
 
 export const searchInventory = async (data) => {
   const filteredSearchParams = Object.fromEntries(
-    Object.entries(data).filter(([_, value]) => value !== ""),
+    Object.entries(data).filter(([_, value]) => value !== "")
   );
   try {
     const token = getAuthToken();
     const response = await axiosClientMMS.get(
-      `/inventory/searchInventory`, {
-      params: filteredSearchParams,
-
-    }
+      `/inventory/searchInventory`,
+      {
+        params: filteredSearchParams,
+      }
 
       // {
       //   headers: {
@@ -1892,7 +1910,7 @@ export const getInventoryRecordByUserId = async (id) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClientMMS.get(
-      `/userInventory/inventoryOfUser/${id}`,
+      `/userInventory/inventoryOfUser/${id}`
       // {
       //   headers: {
       //     Authorization: `Bearer ${token}`,
@@ -1906,8 +1924,7 @@ export const getInventoryRecordByUserId = async (id) => {
   }
 };
 
-
-//Invoice Bill 
+//Invoice Bill
 export const createInventoryBill = async (Data) => {
   try {
     // const token = getAuthToken();
@@ -1948,7 +1965,7 @@ export const getAllInvoiceBill = async (currentPage, pageSize) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClientMMS.get(
-      `/inventoryBills?currentPage=${currentPage}&pageSize=${pageSize}`,
+      `/inventoryBills?currentPage=${currentPage}&pageSize=${pageSize}`
       // {
       //   headers: {
       //     Authorization: `Bearer ${token}`,
@@ -1966,7 +1983,7 @@ export const SearchInvoiceBill = async (search) => {
   try {
     const token = getAuthToken();
     const response = await axiosClientMMS.get(
-      `/inventoryBills/searchBill?invoiceNumber=${search}`,
+      `/inventoryBills/searchBill?invoiceNumber=${search}`
       // {
       //   headers: {
       //     Authorization: `Bearer ${token}`,
@@ -1984,7 +2001,7 @@ export const invoiceBillDelete = async (id) => {
   try {
     const token = getAuthToken();
     const response = await axiosClientMMS.delete(
-      `/inventoryBills/delete/${id}`,
+      `/inventoryBills/delete/${id}`
       // {
       //   headers: {
       //     Authorization: `Bearer ${token}`,
@@ -2001,19 +2018,23 @@ export const invoiceBillDelete = async (id) => {
 export const UpdateInventoryBill = async (id, data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.put(`/inventoryBills/update/${id}`, data, {
-      headers: {
-        accept: "application/json",
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    const response = await axiosClientMMS.put(
+      `/inventoryBills/update/${id}`,
+      data,
+      {
+        headers: {
+          accept: "application/json",
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
     throw error;
   }
 };
-  
+
 export const updateTenure = async (id, data) => {
   try {
     // const token = getAuthToken();
@@ -2034,8 +2055,7 @@ export const updateTenure = async (id, data) => {
 export const getInventoryBillsById = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/inventoryBills/${id}`)
-   
+    const response = await axiosClientMMS.get(`/inventoryBills/${id}`);
 
     return response?.data;
   } catch (error) {
@@ -2047,8 +2067,7 @@ export const getInventoryBillsById = async (id) => {
 export const inventoryDelete = async (id) => {
   try {
     const token = getAuthToken();
-    const response = await axiosClientMMS.delete(
-      `/inventory/delete/${id}`);
+    const response = await axiosClientMMS.delete(`/inventory/delete/${id}`);
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -2059,7 +2078,7 @@ export const deleteTenures = async (id) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClientMMS.delete(
-      `/tenures/delete/${id}`,
+      `/tenures/delete/${id}`
       // {
       //   headers: {
       //     Authorization: `Bearer ${token}`,
@@ -2076,14 +2095,13 @@ export const deleteTenures = async (id) => {
 export const getInventoryById = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/inventory/${id}`)
+    const response = await axiosClientMMS.get(`/inventory/${id}`);
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
     throw error;
   }
 };
-
 
 //Members API's
 export const createMember = async (data) => {
@@ -2092,7 +2110,7 @@ export const createMember = async (data) => {
     const response = await axiosClientMMS.post(`/members/create`, data, {
       headers: {
         accept: "application/json",
-        "Content-Type": "application/json", 
+        "Content-Type": "application/json",
       },
     });
     return response?.data;
@@ -2105,7 +2123,7 @@ export const createMember = async (data) => {
 export const UpdateInventoryById = async (id, data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.put(`/inventory/update/${id}`, data)
+    const response = await axiosClientMMS.put(`/inventory/update/${id}`, data);
     // {
     //   headers: {
     //     accept: "application/json",
@@ -2122,7 +2140,9 @@ export const UpdateInventoryById = async (id, data) => {
 export const getAllMembers = async (currentPage, pageSize) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/members/all?currentPage=${currentPage}&pageSize=${pageSize}`);
+    const response = await axiosClientMMS.get(
+      `/members/all?currentPage=${currentPage}&pageSize=${pageSize}`
+    );
     // {
     //   headers: {
     //     Authorization: `Bearer ${token}`,
@@ -2140,7 +2160,7 @@ export const SearchInventoryBySerailNo = async (search) => {
   try {
     const token = getAuthToken();
     const response = await axiosClientMMS.get(
-      `/userInventory/searchInventory?serialNo=${search}`,
+      `/userInventory/searchInventory?serialNo=${search}`
       // {
       //   headers: {
       //     Authorization: `Bearer ${token}`,
@@ -2155,7 +2175,7 @@ export const SearchInventoryBySerailNo = async (search) => {
 };
 
 export const createIssueProduct = async (id, Data) => {
-  console.log("ddd", Data);
+  // console.log("ddd", Data);
   try {
     // const token = getAuthToken();
     const response = await axiosClientMMS.post(
@@ -2185,7 +2205,7 @@ export const getMembersByID = async (id) => {
 };
 
 export const updateInventoryreturnDate = async (id, Data) => {
-  console.log("Data", Data);
+  // console.log("Data", Data);
   try {
     // const token = getAuthToken();
     const response = await axiosClientMMS.put(
@@ -2202,10 +2222,7 @@ export const updateInventoryreturnDate = async (id, Data) => {
 export const createVandor = async (data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.post(
-      `/vendors/create`,
-      data
-    );
+    const response = await axiosClientMMS.post(`/vendors/create`, data);
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -2233,7 +2250,7 @@ export const getAllVendor = async (currentPage, pageSize) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClientMMS.get(
-      `/vendors?currentPage=${currentPage}&pageSize=${pageSize}`,
+      `/vendors?currentPage=${currentPage}&pageSize=${pageSize}`
     );
     return response?.data;
   } catch (error) {
@@ -2245,9 +2262,7 @@ export const getAllVendor = async (currentPage, pageSize) => {
 export const DeleteVendor = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.delete(
-      `/vendors/delete/${id}`,
-    );
+    const response = await axiosClientMMS.delete(`/vendors/delete/${id}`);
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -2258,10 +2273,7 @@ export const DeleteVendor = async (id) => {
 export const UpdateVendor = async (id, data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.put(
-      `/vendors/update/${id}`,
-      data
-    );
+    const response = await axiosClientMMS.put(`/vendors/update/${id}`, data);
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -2273,18 +2285,19 @@ export const searchVendor = async (search) => {
   try {
     const token = getAuthToken();
     const response = await axiosClientMMS.get(
-      `/vendors/searchVendor?vendorName=${search}`)
-      return response?.data;
-    } catch (error) {
-      console.error("Error fetching API endpoint:", error);
-      throw error;
-    }
-  };
+      `/vendors/searchVendor?vendorName=${search}`
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
 export const deleteMembers = async (id) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClientMMS.delete(
-      `/members/delete/${id}`,
+      `/members/delete/${id}`
       // {
       //   headers: {
       //     Authorization: `Bearer ${token}`,
@@ -2298,7 +2311,6 @@ export const deleteMembers = async (id) => {
   }
 };
 
-
 //Divisions API's
 export const createDivision = async (data) => {
   try {
@@ -2306,7 +2318,7 @@ export const createDivision = async (data) => {
     const response = await axiosClientMMS.post(`/divisions/create`, data, {
       headers: {
         accept: "application/json",
-        "Content-Type": "application/json", 
+        "Content-Type": "application/json",
       },
     });
     return response?.data;
@@ -2319,7 +2331,9 @@ export const createDivision = async (data) => {
 export const getAllDivisions = async (currentPage, pageSize) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/divisions?currentPage=${currentPage}&pageSize=${pageSize}`);
+    const response = await axiosClientMMS.get(
+      `/divisions?currentPage=${currentPage}&pageSize=${pageSize}`
+    );
     // {
     //   headers: {
     //     Authorization: `Bearer ${token}`,
@@ -2369,7 +2383,7 @@ export const deleteDivisions = async (id) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClientMMS.delete(
-      `/divisions/delete/${id}`,
+      `/divisions/delete/${id}`
       // {
       //   headers: {
       //     Authorization: `Bearer ${token}`,
@@ -2387,12 +2401,16 @@ export const deleteDivisions = async (id) => {
 export const createPoliticalParties = async (data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.post(`/politicalParties/create`, data, {
-      headers: {
-        accept: "application/json",
-        "Content-Type": "application/json", 
-      },
-    });
+    const response = await axiosClientMMS.post(
+      `/politicalParties/create`,
+      data,
+      {
+        headers: {
+          accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }
+    );
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -2403,7 +2421,9 @@ export const createPoliticalParties = async (data) => {
 export const getAllPoliticalParties = async (currentPage, pageSize) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/politicalParties?currentPage=${currentPage}&pageSize=${pageSize}`);
+    const response = await axiosClientMMS.get(
+      `/politicalParties?currentPage=${currentPage}&pageSize=${pageSize}`
+    );
     // {
     //   headers: {
     //     Authorization: `Bearer ${token}`,
@@ -2435,12 +2455,16 @@ export const getPoliticalPartiesByID = async (id) => {
 export const updatePoliticalParties = async (id, data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.put(`/politicalParties/update/${id}`, data, {
-      headers: {
-        accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await axiosClientMMS.put(
+      `/politicalParties/update/${id}`,
+      data,
+      {
+        headers: {
+          accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     return response?.data;
   } catch (error) {
@@ -2453,7 +2477,7 @@ export const deletePoliticalParties = async (id) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClientMMS.delete(
-      `/politicalParties/delete/${id}`,
+      `/politicalParties/delete/${id}`
       // {
       //   headers: {
       //     Authorization: `Bearer ${token}`,
@@ -2467,17 +2491,20 @@ export const deletePoliticalParties = async (id) => {
   }
 };
 
-
 //ParliamentaryYears API's
 export const createParliamentaryYears = async (data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.post(`/parliamentaryYears/create`, data, {
-      headers: {
-        accept: "application/json",
-        "Content-Type": "application/json", 
-      },
-    });
+    const response = await axiosClientMMS.post(
+      `/parliamentaryYears/create`,
+      data,
+      {
+        headers: {
+          accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }
+    );
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -2488,7 +2515,9 @@ export const createParliamentaryYears = async (data) => {
 export const getAllParliamentaryYears = async (currentPage, pageSize) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/parliamentaryYears?currentPage=${currentPage}&pageSize=${pageSize}`);
+    const response = await axiosClientMMS.get(
+      `/parliamentaryYears?currentPage=${currentPage}&pageSize=${pageSize}`
+    );
     // {
     //   headers: {
     //     Authorization: `Bearer ${token}`,
@@ -2520,12 +2549,16 @@ export const getParliamentaryYearsByID = async (id) => {
 export const updateParliamentaryYears = async (id, data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.put(`/parliamentaryYears/update/${id}`, data, {
-      headers: {
-        accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await axiosClientMMS.put(
+      `/parliamentaryYears/update/${id}`,
+      data,
+      {
+        headers: {
+          accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     return response?.data;
   } catch (error) {
@@ -2538,7 +2571,7 @@ export const deleteParliamentaryYears = async (id) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClientMMS.delete(
-      `/parliamentaryYears/delete/${id}`,
+      `/parliamentaryYears/delete/${id}`
       // {
       //   headers: {
       //     Authorization: `Bearer ${token}`,
@@ -2559,7 +2592,7 @@ export const createGroup = async (data) => {
     const response = await axiosClientMMS.post(`/groups/create`, data, {
       headers: {
         accept: "application/json",
-        "Content-Type": "application/json", 
+        "Content-Type": "application/json",
       },
     });
     return response?.data;
@@ -2572,7 +2605,9 @@ export const createGroup = async (data) => {
 export const getDivisionsBySessionId = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/groups/retrieveDivisionForGroup/${id}`);
+    const response = await axiosClientMMS.get(
+      `/groups/retrieveDivisionForGroup/${id}`
+    );
     // {
     //   headers: {
     //     Authorization: `Bearer ${token}`,
@@ -2588,7 +2623,28 @@ export const getDivisionsBySessionId = async (id) => {
 export const updateDivisionsAndGroups = async (id, data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.put(`/groups/manageDivisionInGroup/${id}`, data, {
+    const response = await axiosClientMMS.put(
+      `/groups/manageDivisionInGroup/${id}`,
+      data,
+      {
+        headers: {
+          accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+//Sessions API's
+export const createSession = async (data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.post(`/sessions/create`, data, {
       headers: {
         accept: "application/json",
         "Content-Type": "application/json",
@@ -2601,32 +2657,19 @@ export const updateDivisionsAndGroups = async (id, data) => {
   }
 };
 
-
-//Sessions API's
-export const createSession = async (data) => {
-  try {
-    // const token = getAuthToken();
-    const response = await axiosClientMMS.post(`/sessions/create`, data, {
-      headers: {
-        accept: "application/json",
-        "Content-Type": "application/json", 
-      },
-    });
-    return response?.data;
-  } catch (error) {
-    console.error("Error fetching API endpoint:", error);
-    throw error;
-  }
-};
-
 export const getAllSessions = async (currentPage, pageSize) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/sessions?currentPage=${currentPage ? currentPage : 0}&pageSize=${pageSize ? pageSize : 100}`, {
-      // headers: {
-      //   Authorization: `Bearer ${token}`,
-      // }
-    });
+    const response = await axiosClientMMS.get(
+      `/sessions?currentPage=${currentPage ? currentPage : 0}&pageSize=${
+        pageSize ? pageSize : 100
+      }`,
+      {
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // }
+      }
+    );
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -2670,7 +2713,187 @@ export const deleteSessions = async (id) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClientMMS.delete(
-      `/sessions/delete/${id}`,
+      `/sessions/delete/${id}`
+      // {
+      //   headers: {
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // },
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+// Create Tonar Modal
+export const createTonarModal = async (data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.post(`/tonerModel/create`, data);
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+// Get All Tonar Models
+export const getAllTonerModels = async (currentPage, pageSize) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/tonerModel?currentPage=${currentPage}&pageSize=${pageSize}`
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+// Get Single TonerModels By ID
+export const getTonersModelById = async (id) => {
+  try {
+    const response = await axiosClientMMS.get(`/tonerModel/${id}`);
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+// Update Tonar Modal
+export const UpdateTonnerModel = async (id, data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.put(
+      `/tonerModel/update/${id}`,
+      data,
+      {
+        headers: {
+          accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+// Get By Search  TonerModels
+export const searchTonerModels = async (search) => {
+  try {
+    const response = await axiosClientMMS.get(
+      `/tonerModel/searchTonerModel?tonerModel=${search}`
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+// Delete Toner Model
+export const tonerModelDelete = async (id) => {
+  try {
+    const response = await axiosClientMMS.delete(`/tonerModel/delete/${id}`);
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+// Create Tonar Installation
+export const createTonar = async (data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.post(
+      `/tonerInstallation/create`,
+      data
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+// Get All Toner
+export const getallToners = async (currentPage, pageSize) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/tonerInstallation/?currentPage=${currentPage}&pageSize=${pageSize}`
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+// Get Single Toner By ID
+export const getTonersById = async (id) => {
+  try {
+    const response = await axiosClientMMS.get(`/tonerInstallation/${id}`);
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+// Update Tonner Data
+
+export const UpdateTonner = async (id, data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.put(
+      `/tonerInstallation/update/${id}`,
+      data,
+      {
+        headers: {
+          accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const tonerDelete = async (id) => {
+  try {
+    const response = await axiosClientMMS.delete(
+      `/tonerInstallation/delete/${id}`
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+// Searching For Toner
+
+export const SearchToner = async (data) => {
+  const filteredSearchParams = Object.fromEntries(
+    Object.entries(data).filter(([_, value]) => value !== "")
+  );
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/tonerInstallation/searchTonerInstallation`,
+      {
+        params: filteredSearchParams,
+      }
+
       // {
       //   headers: {
       //     Authorization: `Bearer ${token}`,
