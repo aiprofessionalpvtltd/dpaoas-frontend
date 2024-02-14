@@ -9,11 +9,6 @@ import * as Yup from "yup";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlusSquare } from "@fortawesome/free-solid-svg-icons";
 import { useContext, useEffect, useState } from "react";
-import {
-  UpdateTonner,
-  createTonar,
-  getAllTonerModels,
-} from "../../../../../../../api/APIs";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import DatePicker from "react-datepicker";
 import AddTonarModal from "../../../../../../../components/AddTonerModal";
@@ -23,6 +18,11 @@ import {
 } from "../../../../../../../utils/ToastAlert";
 import { AuthContext } from "../../../../../../../api/AuthContext";
 import { getallcomplaintTypes } from "../../../../../../../api/APIs/Services/Complaint.service";
+import {
+  UpdateTonner,
+  createTonar,
+  getAllTonerModels,
+} from "../../../../../../../api/APIs/Services/TonerInstallation.service";
 function CMSAddEditTonerInstallation() {
   const location = useLocation();
   const { employeeData } = useContext(AuthContext);

@@ -5,11 +5,11 @@ import { Layout } from "../../../../../../../components/Layout";
 import { CMSsidebarItems } from "../../../../../../../utils/sideBarItems";
 import Header from "../../../../../../../components/Header";
 import { ToastContainer } from "react-toastify";
+import { showSuccessMessage } from "../../../../../../../utils/ToastAlert";
 import {
   UpdateTonnerModel,
   createTonarModal,
-} from "../../../../../../../api/APIs";
-import { showSuccessMessage } from "../../../../../../../utils/ToastAlert";
+} from "../../../../../../../api/APIs/Services/TonerInstallation.service";
 
 function AddEditTonerModel() {
   const validationSchema = Yup.object({
@@ -37,7 +37,6 @@ function AddEditTonerModel() {
     },
   });
 
-  
   // Creating Tonar Model
   const handleTonerModel = async (values) => {
     const Data = {
