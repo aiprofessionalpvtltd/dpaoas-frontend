@@ -35,7 +35,7 @@ function QMSSittingsDays() {
         const response = await getAllManageSessions(currentPage, pageSize);
         if (response?.success) {
           setCount(response?.count);
-          const transformedData = transformData(response.data);
+          const transformedData = transformData(response.data?.sessionSittings);
           setSittingDays(transformedData);
         }
       } catch (error) {

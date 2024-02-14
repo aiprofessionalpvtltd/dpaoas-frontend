@@ -37,7 +37,7 @@ function HRMDesignation() {
       const response = await getDesignations(currentPage, pageSize);
       if (response?.success) {
         setCount(response?.count);
-        const transformedData = transformDesignationData(response?.data);
+        const transformedData = transformDesignationData(response?.data?.designations);
         setDesignationData(transformedData);
       }
     } catch (error) {
