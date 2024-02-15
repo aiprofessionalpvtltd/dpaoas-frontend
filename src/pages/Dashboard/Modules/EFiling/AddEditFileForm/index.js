@@ -9,6 +9,8 @@ import { ToastContainer } from "react-toastify";
 import Header from "../../../../../components/Header";
 import { Layout } from "../../../../../components/Layout";
 import Select from "react-select";
+import { showErrorMessage, showSuccessMessage } from "../../../../../utils/ToastAlert";
+import { createEfiling } from "../../../../../api/APIs/Services/efiling.service";
 
 const validationSchema = Yup.object({});
 
@@ -19,16 +21,52 @@ function AddEditFileForm() {
 
   const formik = useFormik({
     initialValues: {
-      ministry: "",
-      division: "",
-      active: false,
+      fileNumber: "",
+      submittedBy: "",
+      assignedTo: "",
+      receivedOn: "",
+      fileType: "",
+      fkBranchId: "",
+      fkdepartmentId: "",
+      fkMinistryId: "",
+      fileSubject: "",
+      notingDescription: "",
+      correspondingDescription: "",
+      year: "",
+      priority: "",
+      fileStatus: "",
+      comment: "",
+      commentBy: "",
+      fkFileId: "",
+      CommentStatus: "",
+
+      documentType:""
     },
-    validationSchema: validationSchema,
+    // validationSchema: validationSchema,
     onSubmit: (values) => {
       // Handle form submission here
-      navigate("/efiling/dashboard");
+     console.log('====================================');
+     console.log(values);
+     console.log('====================================');
     },
   });
+
+  const CreateEfilingApi = async (values) => {
+    const Data = {
+        vendorName: values?.vendorName,
+        description: values?.description,
+        staus: "active"
+    }
+    try {
+        const response = await createEfiling(Data)
+        if (response?.success) {
+            showSuccessMessage(response?.message)
+            formik.resetForm()
+        }
+    } catch (error) {
+        showErrorMessage(error?.response?.data?.message);
+    }
+}
 
   const files = [
     {
@@ -50,7 +88,7 @@ function AddEditFileForm() {
       <div className="dashboard-content" style={{ marginTop: 80 }}>
         <Header
           dashboardLink={"/efiling/dashboard"}
-          addLink1={"/efiling/dashboard"}
+          addLink1={"/efiling/dashboard/files"}
           title1={"E-Filing"}
           addLink2={"/efiling/dashboard/addedit"}
           title2={location && location?.state ? "Edit File" : "Create File"}
@@ -91,18 +129,14 @@ function AddEditFileForm() {
                         <label class="form-label">Subject</label>
                         <input
                           type="text"
-                          placeholder={"Subject"}
-                          value={formik.values.subject}
-                          className={`form-control ${
-                            formik.touched.subject && formik.errors.subject ? "is-invalid" : ""
-                          }`}
-                          id="subject"
+                          placeholder={"fileSubject"}
+                          value={formik.values.fileSubject}
+                          className={`form-control`}
+                          id="fileSubject"
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                         />
-                        {formik.touched.subject && formik.errors.subject && (
-                          <div className="invalid-feedback">{formik.errors.subject}</div>
-                        )}
+                       
                       </div>
                     </div>
                   </div>
@@ -113,11 +147,11 @@ function AddEditFileForm() {
                         <label class="form-label">Branch</label>
                         <select
                           class="form-select"
-                          id="active"
-                          name="active"
+                          id="fkBranchId"
+                          name="fkBranchId"
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
-                          value={formik.values.active}
+                          value={formik.values.fkBranchId}
                         >
                           <option value={""} selected disabled hidden>
                             Select
@@ -133,11 +167,11 @@ function AddEditFileForm() {
                         <label class="form-label">Year</label>
                         <select
                           class="form-select"
-                          id="active"
-                          name="active"
+                          id="year"
+                          name="year"
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
-                          value={formik.values.active}
+                          value={formik.values.year}
                         >
                           <option value={""} selected disabled hidden>
                             Select
@@ -155,17 +189,17 @@ function AddEditFileForm() {
                         <label class="form-label">Priority</label>
                         <select
                           class="form-select"
-                          id="active"
-                          name="active"
+                          id="priority"
+                          name="priority"
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
-                          value={formik.values.active}
+                          value={formik.values.priority}
                         >
                           <option value={""} selected disabled hidden>
                             Select
                           </option>
-                          <option value={true}>Normal</option>
-                          <option value={false}>Immediate</option>
+                          <option value={"Normal"}>Normal</option>
+                          <option value={"Immediate"}>Immediate</option>
                         </select>
                       </div>
                     </div>
@@ -175,17 +209,17 @@ function AddEditFileForm() {
                         <label class="form-label">File Category</label>
                         <select
                           class="form-select"
-                          id="active"
-                          name="active"
+                          id="fileStatus"
+                          name="fileStatus"
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
-                          value={formik.values.active}
+                          value={formik.values.fileStatus}
                         >
                           <option value={""} selected disabled hidden>
                             Select
                           </option>
-                          <option value={true}>A</option>
-                          <option value={false}>B</option>
+                          <option value={"A"}>A</option>
+                          <option value={"B"}>B</option>
                         </select>
                       </div>
                     </div>
@@ -197,11 +231,11 @@ function AddEditFileForm() {
                         <label class="form-label">Document Type</label>
                         <select
                           class="form-select"
-                          id="active"
-                          name="active"
+                          id="documentType"
+                          name="documentType"
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
-                          value={formik.values.active}
+                          value={formik.values.documentType}
                         >
                           <option value={""} selected disabled hidden>
                             Select

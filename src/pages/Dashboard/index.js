@@ -147,7 +147,7 @@ function Dashboard() {
     },
     {
       title: "E-Filing System",
-      link: "/efiling/dashboard",
+      link: "/efiling/dashboard/files",
       type: "",
       cardbg: "greenbg",
       icon: faBuilding,

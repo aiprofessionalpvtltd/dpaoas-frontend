@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { Layout } from "../../../../components/Layout";
-import Header from "../../../../components/Header";
-import CustomTable from "../../../../components/CustomComponents/CustomTable";
 import { useNavigate } from "react-router-dom";
+import { Layout } from "../../../../../components/Layout";
+import CustomTable from "../../../../../components/CustomComponents/CustomTable";
+import Header from "../../../../../components/Header";
 
-function EFilingDashboard() {
+function Files() {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
@@ -39,12 +39,14 @@ function EFilingDashboard() {
           <div class="row">
             <div class="col-12">
               <CustomTable
+                hidebtn1={true}
+                
                 data={data}
-                tableTitle="Cases List"
-                addBtnText="Create Case"
-                handleAdd={() => navigate("/efiling/dashboard/addeditcase")}
-                handleEdit={(item) => navigate("/efiling/dashboard/addeditcase", { state: item })}
-                handleView={() => navigate("/efiling/dashboard/files")}
+                tableTitle="Files List"
+                addBtnText2="Create File"
+                handleAdd2={() => navigate("/efiling/dashboard/addedit")}
+                handleEdit={(item) => navigate("/efiling/dashboard/fileDetail", { state: {view : false} })}
+                handleView={(item) => navigate("/efiling/dashboard/fileDetail", { state: { view: true } })}
                 showView={true}
                 headertitlebgColor={"#666"}
                 headertitletextColor={"#FFF"}
@@ -61,4 +63,4 @@ function EFilingDashboard() {
   );
 }
 
-export default EFilingDashboard;
+export default Files;
