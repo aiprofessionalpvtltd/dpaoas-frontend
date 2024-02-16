@@ -34,7 +34,7 @@ function Files() {
   };
   const getAllFilesAPi = useCallback(async () => {
     try {
-      const response = await getAllEfiling(UserData?.fkUserId, currentPage, pageSize);
+      const response = await getAllEfiling(currentPage, pageSize, UserData?.fkUserId);
       if (response?.success) {
         const transformedData = transformFilesdata(response?.data?.rows);
         setCount(response?.data?.count);
