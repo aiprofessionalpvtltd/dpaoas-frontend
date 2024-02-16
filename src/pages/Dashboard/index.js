@@ -29,7 +29,7 @@ function Dashboard() {
     const fetchRoles = async () => {
       try {
         const response = await getRoles();
-        setRoles(response.data);
+        setRoles(response.data?.roles);
       } catch (error) {
         // alert(error.response.data)
         if (error?.response?.data?.error === "Token has expired!") {
@@ -47,9 +47,12 @@ function Dashboard() {
       setRolesData(roles);
       const localPermissionsData = getPermissionsData();
       setPermissionsLocal(localPermissionsData);
+      console.log('====================================');
+      console.log(roles);
+      console.log('====================================');
 
       // Check if permissions exist and has length
-      if (permissions && permissions.length > 0) {
+      if (permissions && permissions.length > 0 && roles) {
         const res = CheckPermission(userRole?.role?.name, roles, permissions);
         setPermissionsData(res?.permissions);
         setPermissionsLocal(res?.permissions);
