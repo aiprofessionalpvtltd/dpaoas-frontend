@@ -5,7 +5,7 @@ import CustomTable from "../../../../components/CustomComponents/CustomTable";
 import profileimage from "../../../../assets/profile-img.jpg";
 import { LMSsidebarItems } from "../../../../utils/sideBarItems";
 import { useNavigate } from "react-router-dom";
-import { getAllLeaves, getWhosOnLeave } from "../../../../api/APIs";
+import { getAllLeaves, getWhosOnLeave } from "../../../../api/APIs/Services/LeaveManagementSystem.service";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {

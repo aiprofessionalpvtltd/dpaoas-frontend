@@ -8,13 +8,10 @@ import { useFormik } from "formik";
 import DatePicker from "react-datepicker";
 import * as Yup from "yup";
 import {
-  getAllMinistry,
   getAllMotion,
-  getAllSessions,
-  getallMembers,
   getallMotionStatus,
   searchMotion,
-} from "../../../../../../api/APIs";
+} from "../../../../../../api/APIs/Services/Motion.service";
 import { showErrorMessage } from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 import { AuthContext } from "../../../../../../api/AuthContext";
@@ -78,7 +75,7 @@ function MMSSearchMotion() {
   const transformMotionData = (apiData) => {
     return apiData?.map((leave) => ({
       id: leave?.id,
-      fkSessionId: leave?.sessions?.id,
+      SessionName: leave?.sessions?.sessionName,
       fileNumber: leave?.fileNumber,
       motionType: leave?.motionType,
       motionWeek: leave?.motionWeek,
@@ -351,7 +348,7 @@ function MMSSearchMotion() {
                         class="form-control"
                       >
                         <option value={""} selected disabled hidden>
-                          select
+                          Select
                         </option>
                         {ministryData &&
                           ministryData.map((item) => (

@@ -5,11 +5,11 @@ import { Layout } from "../../../../../components/Layout";
 import { HRMsidebarItems } from "../../../../../utils/sideBarItems";
 import { CheckedItem } from "../../../../../components/EditRole/CheckedItem";
 import { UncheckedItem } from "../../../../../components/EditRole/UncheckedItem";
-import { getModules, getRoleById, updateRole } from "../../../../../api/APIs";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { showSuccessMessage } from "../../../../../utils/ToastAlert";
+import { showErrorMessage, showSuccessMessage } from "../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
+import { updateRole, getModules, getRoleById } from "../../../../../api/APIs/Services/organizational.service";
 
 const validationSchema = Yup.object({
   roleName: Yup.string().required("Role name is required"),
@@ -28,6 +28,7 @@ function HRMEditRole() {
 
   const initialValues = {
     roleName: location.state?.name ? location.state?.name : "",
+    status: location.state?.roleStatus ? location.state?.roleStatus : "",
     roledescription: location.state?.description
       ? location.state?.description
       : "",
@@ -193,6 +194,7 @@ function HRMEditRole() {
       name: values?.roleName,
       description: values?.roledescription,
       permissionsToUpdate: permissionOptionIds,
+      roleStatus: values?.status
     };
 
     try {
@@ -201,7 +203,7 @@ function HRMEditRole() {
         showSuccessMessage(response?.message);
       }
     } catch (error) {
-      console.log(error);
+      showErrorMessage(error?.response?.data?.message);
     }
   };
 
@@ -310,6 +312,35 @@ function HRMEditRole() {
                           </div>
                         )}
                     </div>
+                    <div className="col">
+                    <div className="mb-3">
+                      <label className="form-label">Role Status</label>
+                      <select
+                        class={`form-select ${formik.touched.status &&
+                            formik.errors.status
+                            ? "is-invalid"
+                            : ""
+                            }`}
+                        id="status"
+                        name="status"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.status}
+                      >
+                        <option value={""} selected disabled hidden>
+                          Select
+                        </option>
+                        <option value="active">Active</option>
+                        <option value="inactive">InActive</option>
+                      </select>
+                      {formik.touched.status &&
+                        formik.errors.status && (
+                          <div className="invalid-feedback">
+                            {formik.errors.status}
+                          </div>
+                        )}
+                    </div>
+                  </div>
                     {checkedItems
                       .sort((a, b) => {
                         const itemIdA = String(a?.itemId || ""); // Convert to string
@@ -320,7 +351,7 @@ function HRMEditRole() {
                         <CheckedItem
                           key={index}
                           checked={checked}
-                          bgColor={colors[index]}
+                          bgColor={colors[checked?.itemId]}
                           handleCheckboxChange={handleCheckboxChange}
                         />
                       ))}
@@ -339,7 +370,7 @@ function HRMEditRole() {
                           item={item}
                           handleHideShow={handleHideShow}
                           hiddenItems={hiddenItems}
-                          bgColor={colors[index]}
+                          bgColor={colors[item.id]}
                           handleCheckboxChange={handleCheckboxChange}
                           checkedItems={checkedItems}
                         />

@@ -8,8 +8,8 @@ import * as Yup from "yup";
 import {
   UpdateDesignation,
   createDesignation,
-} from "../../../../../../api/APIs";
-import { showSuccessMessage } from "../../../../../../utils/ToastAlert";
+} from "../../../../../../api/APIs/Services/organizational.service";
+import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 
 const validationSchema = Yup.object({
@@ -25,7 +25,7 @@ function HRMAddEditDesignation() {
     initialValues: {
       designationname: location.state ? location.state.designationName : "",
       designationdescription: location.state ? location.state.description : "",
-      designationstatus: location.state ? location.state.designationStatus : "",
+      status: location.state ? location.state.designationStatus : "",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -42,7 +42,6 @@ function HRMAddEditDesignation() {
     const data = {
       designationName: values?.designationname,
       description: values?.designationdescription,
-      designationStatus: "active",
     };
     try {
       const response = await createDesignation(data);
@@ -58,7 +57,7 @@ function HRMAddEditDesignation() {
     const data = {
       designationName: values?.designationname,
       description: values?.designationdescription,
-      desginationStatus: values.designationstatus,
+      designationStatus: values.status,
     };
     try {
       const response = await UpdateDesignation(location?.state?.id, data);
@@ -66,6 +65,7 @@ function HRMAddEditDesignation() {
         showSuccessMessage(response.message);
       }
     } catch (error) {
+      showErrorMessage(error?.response?.data?.message)
       console.log(error);
     }
   };
@@ -100,7 +100,8 @@ function HRMAddEditDesignation() {
                       <label className="form-label">Designation name * </label>
                       <input
                         type="text"
-                        placeholder={formik.values.designationname}
+                        placeholder={"Designation Name"}
+                        value={formik.values.designationname}
                         className={`form-control ${
                           formik.touched.designationname &&
                           formik.errors.designationname
@@ -121,18 +122,33 @@ function HRMAddEditDesignation() {
                   </div>
                   {location && location?.state && (
                     <div className="col-6">
-                      <div className="mb-3">
-                        <label className="form-label">Staus</label>
-                        <input
-                          type="text"
-                          className={`form-control`}
-                          id="designationstatus"
-                          placeholder={formik.values.designationstatus}
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          value={formik.values.designationstatus}
-                        />
-                      </div>
+                    <div className="mb-3">
+                      <label className="form-label">Status</label>
+                      <select
+                        class={`form-select ${formik.touched.status &&
+                            formik.errors.status
+                            ? "is-invalid"
+                            : ""
+                            }`}
+                        id="status"
+                        name="status"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.status}
+                      >
+                        <option value={""} selected disabled hidden>
+                          Select
+                        </option>
+                        <option value="active">Active</option>
+                        <option value="inactive">InActive</option>
+                      </select>
+                      {formik.touched.status &&
+                        formik.errors.status && (
+                          <div className="invalid-feedback">
+                            {formik.errors.status}
+                          </div>
+                        )}
+                    </div>
                     </div>
                   )}
                 </div>

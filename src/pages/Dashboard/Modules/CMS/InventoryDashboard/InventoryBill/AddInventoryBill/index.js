@@ -8,19 +8,24 @@ import DatePicker from "react-datepicker";
 import { useFormik } from 'formik'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCalendarAlt, faPlusSquare } from '@fortawesome/free-solid-svg-icons'
-import { UpdateInventoryBill, createInventoryBill, getAllVendor } from '../../../../../../../api/APIs'
+import { UpdateInventoryBill, createInventoryBill, getAllVendor } from '../../../../../../../api/APIs/Services/Complaint.service'
 import { showErrorMessage, showSuccessMessage } from '../../../../../../../utils/ToastAlert'
 import { useLocation } from 'react-router'
 import AddVendorModal from '../../../../../../../components/AddVendorModal'
 import Select from "react-select";
+import * as Yup from "yup";
 
 
+const validationSchema = Yup.object({
+    invioceNumber: Yup.string().required("InvioceNumber is required"),
+    quantity: Yup.string().required("Quantity is required"),
+    description: Yup.string().required("Description is required")
+});
 
 function CMSAddInventoryBill() {
     const location = useLocation()
     const [modaisOpan, setModalIsOpan] = useState(false)
     const [vendorData, setVendorData] = useState([])
-    console.log("vendorData", vendorData);
 
 
     const formik = useFormik({
@@ -28,16 +33,14 @@ function CMSAddInventoryBill() {
             invioceNumber: location?.state ? location?.state?.invoiceNumber : "",
             vendor: location?.state ? { value: location?.state?.vendor?.id, label: location?.state?.vendor?.vendorName } : "",
             quantity: location?.state ? location?.state?.quantity : "",
-            assignedDate: location?.state ? new Date(location?.state?.invoiceDate) : "",
+            assignedDate: location?.state ? new Date(location?.state?.invoiceDate) : new Date(),
             description: location?.state ? location?.state?.description : "",
             billAttachment: "",
             status: location?.state ? location?.state?.status : ""
         },
 
+        validationSchema: validationSchema,
         onSubmit: (values) => {
-            // Handle form submission here
-            // console.log(values);
-            // hendleAddInventory(values)
             if (location?.state?.id) {
                 handleUpdateInventoryBill(values)
             } else {
@@ -61,6 +64,7 @@ function CMSAddInventoryBill() {
             const response = await createInventoryBill(formData);
             if (response.success) {
                 showSuccessMessage(response.message);
+                formik.resetForm()
             }
         } catch (error) {
             showErrorMessage(error.response.data.message);
@@ -74,7 +78,7 @@ function CMSAddInventoryBill() {
         formData.append("fkVendorId", values?.vendor?.value)
         formData.append("quantity", values.quantity)
         formData.append("description", values.description)
-        formData.append("invoiceAttachment", values?.billAttachment)
+        formData.append("invoiceAttachment", values.billAttachment)
         formData.append("invoiceDate", values.assignedDate)
         formData.append("status", values.status)
 
@@ -82,6 +86,7 @@ function CMSAddInventoryBill() {
             const response = await UpdateInventoryBill(location?.state?.id, formData);
             if (response.success) {
                 showSuccessMessage(response.message);
+                formik.resetForm()
             }
         } catch (error) {
             showErrorMessage(error.response.data.message);
@@ -133,13 +138,23 @@ function CMSAddInventoryBill() {
                                             </label>
                                             <input
                                                 type="text"
-                                                className={`form-control`}
+                                                className={`form-control ${formik.touched.invioceNumber &&
+                                                    formik.errors.invioceNumber
+                                                    ? "is-invalid"
+                                                    : ""
+                                                    }`}
                                                 id="invioceNumber"
-                                                placeholder={formik.values.invioceNumber}
+                                                value={formik.values.invioceNumber}
                                                 onChange={formik.handleChange}
                                                 onBlur={formik.handleBlur}
-
                                             />
+                                            {formik.touched.invioceNumber &&
+                                                formik.errors.invioceNumber && (
+                                                    <div className="invalid-feedback">
+                                                        {formik.errors.invioceNumber}
+                                                    </div>
+                                                )}
+
                                         </div>
                                     </div>
                                     <div className="col-5">
@@ -176,23 +191,43 @@ function CMSAddInventoryBill() {
                                             <label className="form-label">Quantity</label>
                                             <input
                                                 type="text"
-                                                className={`form-control`}
+                                                className={`form-control ${formik.touched.quantity &&
+                                                    formik.errors.quantity
+                                                    ? "is-invalid"
+                                                    : ""
+                                                    }`}
                                                 id="quantity"
-                                                placeholder={formik.values.quantity}
+                                                value={formik.values.quantity}
                                                 onChange={formik.handleChange}
                                                 onBlur={formik.handleBlur}
 
                                             />
+                                            {formik.touched.quantity &&
+                                                formik.errors.quantity && (
+                                                    <div className="invalid-feedback">
+                                                        {formik.errors.quantity}
+                                                    </div>
+                                                )}
                                         </div>
                                     </div>
                                     <div className="col-6">
                                         <div className="mb-3">
                                             <label className="form-label">Description</label>
-                                            <textarea class="form-control"
+                                            <textarea class={`form-control ${formik.touched.description &&
+                                                formik.errors.description
+                                                ? "is-invalid"
+                                                : ""
+                                                }`}
                                                 id="description"
-                                                placeholder={formik.values.description}
+                                                value={formik.values.description}
                                                 onChange={formik.handleChange}
                                                 onBlur={formik.handleBlur}></textarea>
+                                            {formik.touched.description &&
+                                                formik.errors.description && (
+                                                    <div className="invalid-feedback">
+                                                        {formik.errors.description}
+                                                    </div>
+                                                )}
                                         </div>
                                     </div>
 

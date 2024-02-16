@@ -14,9 +14,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { AuthContext } from "../../api/AuthContext";
 import { getPermissionsData, getUserData, logout, setPermissionsData, setRolesData } from "../../api/Auth";
-import { getRoles } from "../../api/APIs";
 import { CheckPermission } from "../../utils/permissionsConfig";
 import { useNavigate } from "react-router";
+import { getRoles } from "../../api/APIs/Services/organizational.service";
 
 function Dashboard() {
   const navigation = useNavigate();
@@ -29,7 +29,7 @@ function Dashboard() {
     const fetchRoles = async () => {
       try {
         const response = await getRoles();
-        setRoles(response.data);
+        setRoles(response.data?.roles);
       } catch (error) {
         // alert(error.response.data)
         if (error?.response?.data?.error === "Token has expired!") {
@@ -46,12 +46,12 @@ function Dashboard() {
     if (roles) {
       setRolesData(roles);
       const localPermissionsData = getPermissionsData();
-      setPermissionsLocal(localPermissionsData);
+            setPermissionsLocal(localPermissionsData);
 
       // Check if permissions exist and has length
-      if (permissions && permissions.length > 0) {
+      if (permissions && permissions.length > 0 && roles) {
         const res = CheckPermission(userRole?.role?.name, roles, permissions);
-        setPermissionsData(res?.permissions);
+                setPermissionsData(res?.permissions);
         setPermissionsLocal(res?.permissions);
       } else {
         // Handle the case when permissions are empty or undefined
@@ -69,8 +69,8 @@ function Dashboard() {
       type: "",
       cardbg: "bluebg",
       icon: faMailBulk,
-      permission: null,
-      // "permission": ["Leave", "LeaveHistory"]
+      // permission: null,
+      permission: ["LeaveManagement"]
     },
     {
       title: "Organizational Dashboard",
@@ -78,8 +78,8 @@ function Dashboard() {
       type: "",
       cardbg: "greenbg",
       icon: faBuilding,
-      permission: null,
-      // "permission": ["Roles", "Employees", "Departments", "Designation"]
+      // permission: null,
+      permission: ["Roles"]
     },
     {
       title: "Visitors Management System",
@@ -87,7 +87,7 @@ function Dashboard() {
       type: "",
       cardbg: "greybg",
       icon: faAddressCard,
-      permission: null,
+      permission: ["Visitors Management"],
     },
     {
       title: "Notice Management System",
@@ -95,7 +95,7 @@ function Dashboard() {
       type: "",
       cardbg: "darkGreenbg",
       icon: faBullhorn,
-      permission: null,
+      permission: ["Notice Office"],
     },
     {
       title: "Motion Management System",
@@ -103,7 +103,7 @@ function Dashboard() {
       type: "",
       cardbg: "lightGreen",
       icon: faFileImport,
-      permission: null,
+      permission: ["Motion Management"],
     },
     {
       title: "Question Management System",
@@ -111,7 +111,7 @@ function Dashboard() {
       type: "",
       cardbg: "orangebg",
       icon: faClipboardQuestion,
-      permission: null,
+      permission: ["Question Management"],
     },
     {
       title: "SMS Constituent Outreach System",
@@ -119,7 +119,7 @@ function Dashboard() {
       type: "",
       cardbg: "greybg",
       icon: faSms,
-      permission: null,
+      permission: ["Constituent Outreach"],
     },
     {
       title: "Human Resource Management System",
@@ -127,7 +127,7 @@ function Dashboard() {
       type: "",
       cardbg: "mehroonBg",
       icon: faUserCog,
-      permission: null,
+      permission: ["Human Resource Management"],
     },
     {
       title: "Translation Management System",
@@ -135,7 +135,7 @@ function Dashboard() {
       type: "",
       cardbg: "bluebg",
       icon: faMailBulk,
-      permission: null,
+      permission: ["Translation Management"],
     },
     {
       title: "Complaint Management System",
@@ -143,16 +143,15 @@ function Dashboard() {
       type: "",
       cardbg: "bluebg",
       icon: faMailBulk,
-      permission: null,
+      permission: ["Complaint Management"],
     },
     {
       title: "E-Filing System",
-      link: "/efiling/dashboard",
+      link: "/efiling/dashboard/files",
       type: "",
       cardbg: "greenbg",
       icon: faBuilding,
-      permission: null,
-      // "permission": ["Roles", "Employees", "Departments", "Designation"]
+      permission: ["E-Filing"],
     },
   ];
 

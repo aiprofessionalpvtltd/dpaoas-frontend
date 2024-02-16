@@ -4,10 +4,7 @@ import CustomTable from "../../../../../components/CustomComponents/CustomTable"
 import { Layout } from "../../../../../components/Layout";
 import { VMSsidebarItems } from "../../../../../utils/sideBarItems";
 import Header from "../../../../../components/Header";
-import {
-  DeleteVisitorsByVisitorId,
-  getVisirorsByPassId,
-} from "../../../../../api/APIs";
+import { DeleteVisitorsByVisitorId, getVisirorsByPassId } from "../../../../../api/APIs/Services/VisitorsManagementSystem.service";
 import { showSuccessMessage } from "../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 import { getPassID } from "../../../../../api/Auth";
@@ -28,26 +25,6 @@ function VMSVisitors() {
     setCurrentPage(page);
   };
 
-  const data = [
-    {
-      id: 1,
-      name: "Umar",
-      cnic: "61101-",
-      details: "Senate Visit 2023",
-      visitorStatus: "active",
-      createdAt: "2023-11-21T10:47:24.052Z",
-      updatedAt: "2023-11-21T10:47:24.052Z",
-    },
-    {
-      id: 2,
-      name: "Saqib khan",
-      cnic: "61101-",
-      details: "Senate Visit 2023",
-      visitorStatus: "inactive",
-      createdAt: "2023-11-21T10:47:24.052Z",
-      updatedAt: "2023-11-21T10:47:24.052Z",
-    },
-  ];
   const transformLeavesData = (apiData) => {
     return apiData.map((leave) => ({
       id: leave.id,

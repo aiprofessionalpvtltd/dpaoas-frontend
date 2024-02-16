@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Logo from "../../assets/logo.png";
 import "./sidebar.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 import { Dropdown } from "react-bootstrap";
 import { logout } from "../../api/Auth";
@@ -12,7 +12,7 @@ export const Sidebar = ({ sidebarItems }) => {
   const location = useLocation();
   const basePath = location.pathname.substring(
     0,
-    location.pathname.lastIndexOf("/"),
+    location.pathname.lastIndexOf("/")
   ); // For dropdowns
   const navigation = useNavigate();
 
@@ -30,12 +30,12 @@ export const Sidebar = ({ sidebarItems }) => {
   return (
     <nav id="sidebar" className="dashboard-nav" style={{ width: "240px" }}>
       <header>
-        <a href="/" className="menu-toggle">
+        <Link to="/" className="menu-toggle">
           <i className="fas fa-bars"></i>
-        </a>
-        <a href="/" className="brand-logo mt-3">
+        </Link>
+        <Link to="/" className="brand-logo mt-3">
           <img src={Logo} alt="" srcSet="" />
-        </a>
+        </Link>
       </header>
       <nav className="dashboard-nav-list">
         {sidebarItems &&
@@ -77,12 +77,13 @@ export const Sidebar = ({ sidebarItems }) => {
                         key={subIndex}
                         style={{ display: "flex", flexDirection: "row" }}
                       >
-                        <Dropdown.Item
+                        <Link
                           className={`dashboard-nav-dropdown-item ${
                             location.pathname === sub.link ? "active" : ""
                           }`}
-                          href={sub.link}
+                          to={sub.link}
                           target={sub?.target}
+                          style={{ width: "100%", display: "block" }} // Set width to 100%
                         >
                           <FontAwesomeIcon
                             icon={sub.icon}
@@ -91,37 +92,38 @@ export const Sidebar = ({ sidebarItems }) => {
                             style={{ marginRight: 10 }}
                           />
                           {sub.itemName}
-                        </Dropdown.Item>
+                        </Link>
                       </div>
                     ))}
                   </Dropdown.Menu>
                 </Dropdown>
               ) : (
-                <a
-                  href={item.link}
+                <Link
+                  to={item.link}
                   className={`dashboard-nav-item ${
                     location.pathname === item.link ? "active" : ""
                   }`}
                 >
                   <FontAwesomeIcon icon={item.icon} size="lg" width={24} />
                   <span className="text">{item.itemName}</span>
-                </a>
+                </Link>
               )}
             </React.Fragment>
           ))}
 
         <div className="nav-item-divider"></div>
-        <a href="/"
+        <Link
+          to="/"
           className="dashboard-nav-item"
           onClick={(e) => {
-            e.preventDefault()
+            e.preventDefault();
             logout();
             navigation("/login");
           }}
         >
           <FontAwesomeIcon icon={faSignOutAlt} size="lg" width={24} />
           <span className="text">Logout</span>
-        </a>
+        </Link>
       </nav>
     </nav>
   );

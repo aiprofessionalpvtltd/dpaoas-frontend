@@ -9,7 +9,7 @@ import Header from "../../../../../../../components/Header";
 import { Layout } from "../../../../../../../components/Layout";
 import { QMSSideBarItems } from "../../../../../../../utils/sideBarItems";
 import { showErrorMessage, showSuccessMessage } from "../../../../../../../utils/ToastAlert";
-import { createMember, getAllTenures, getMembersByID, updateMembers } from "../../../../../../../api/APIs";
+import { createMember, getAllTenures, getMembersByID, updateMembers } from "../../../../../../../api/APIs/Services/ManageQMS.service";
 import { ToastContainer } from "react-toastify";
 
 const validationSchema = Yup.object({
@@ -201,7 +201,7 @@ function QMSMembersAddEditForm() {
                           value={formik.values.memberTenure}
                         >
                           <option value={""} selected disabled hidden>
-                            select
+                            Select
                           </option>
                             {tenures.length > 0 && tenures.map((tenure) => (
                               <option value={tenure?.id}>{tenure?.tenureName}</option>
@@ -223,7 +223,7 @@ function QMSMembersAddEditForm() {
                           value={formik.values.memberStatus}
                         >
                           <option value={""} selected disabled hidden>
-                            select
+                            Select
                           </option>
                             <option value="Active">Active</option>
                             <option value="Active/Oath Not Administered">Active/Oath Not Administered</option>
@@ -247,7 +247,7 @@ function QMSMembersAddEditForm() {
                           value={formik.values.politicalParty}
                         >
                           <option value={""} selected disabled hidden>
-                            select
+                            Select
                           </option>
                             <option value="1">PTI</option>
                             <option value="2">PMLN</option>
@@ -269,7 +269,7 @@ function QMSMembersAddEditForm() {
                           value={formik.values.electionType}
                         >
                           <option value={""} selected disabled hidden>
-                            select
+                            Select
                           </option>
                             <option value="Bye Election">Bye Election</option>
                             <option value="Scheduled Election">Scheduled Election</option>

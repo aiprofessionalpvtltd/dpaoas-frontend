@@ -11,8 +11,8 @@ import {
 } from "../../../../../../utils/ToastAlert";
 import {
   getAllQuestionStatus,
-  searchResolution,
-} from "../../../../../../api/APIs";
+} from "../../../../../../api/APIs/Services/Question.service";
+import { getResolutionBYID, searchResolution } from "../../../../../../api/APIs/Services/Resolution.service";
 import { useFormik } from "formik";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import { ToastContainer } from "react-toastify";
@@ -115,6 +115,19 @@ function SearchResolution() {
       console.log(error);
     }
   };
+  const handleEdit = async (id) => {
+    try {
+      const response = await getResolutionBYID(id);
+      if (response?.success) {
+        navigate("/qms/notice/notice-resolution-detail", {
+          state: response?.data,
+        });
+      }
+    } catch (error) {
+      showErrorMessage(error.response.data.message);
+    }
+  };
+
   useEffect(() => {
     GetALlStatus();
   }, []);
@@ -385,16 +398,16 @@ function SearchResolution() {
                   style={{ marginTop: "20px" }}
                 >
                   <CustomTable
-                    block={true}
+                    block={false}
                     hideBtn={true}
                     data={searchedData}
                     tableTitle="Resolutions"
                     handlePageChange={handlePageChange}
                     currentPage={currentPage}
-                    showPrint={true}
+                    showPrint={false}
                     pageSize={pageSize}
-                    handleAdd={(item) => navigate("/")}
-                    handleEdit={(item) => navigate("/")}
+                    hideDeleteIcon={true}
+                    handleEdit={(item) => handleEdit(item.RID)}
                   />
                 </div>
               </div>

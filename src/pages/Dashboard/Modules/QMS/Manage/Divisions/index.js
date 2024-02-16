@@ -4,7 +4,7 @@ import { Layout } from '../../../../../../components/Layout'
 import { QMSSideBarItems } from '../../../../../../utils/sideBarItems'
 import CustomTable from '../../../../../../components/CustomComponents/CustomTable'
 import Header from '../../../../../../components/Header'
-import { deleteDivisions, getAllDivisions } from '../../../../../../api/APIs'
+import { deleteDivisions, getAllDivisions } from '../../../../../../api/APIs/Services/ManageQMS.service'
 import { showErrorMessage, showSuccessMessage } from '../../../../../../utils/ToastAlert'
 import { ToastContainer } from 'react-toastify'
 

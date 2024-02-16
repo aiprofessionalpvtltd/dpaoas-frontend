@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { Layout } from '../../../../../../components/Layout'
 import { SMSsidebarItems } from '../../../../../../utils/sideBarItems'
 import Header from '../../../../../../components/Header'
-import {  createSendSMS, getContactList, getContactTemplate, getSignalContactListByid, getSignalContactTemplateByid } from '../../../../../../api/APIs';
+import { createSendSMS, getContactList, getContactTemplate, getSignalContactListByid, getSignalContactTemplateByid } from '../../../../../../api/APIs/Services/SMS.service';
 import { showErrorMessage, showSuccessMessage } from '../../../../../../utils/ToastAlert';
 import { ToastContainer } from 'react-toastify';
 import { getUserData } from '../../../../../../api/Auth';
 import { TagsInput } from "react-tag-input-component";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 
 function SMSInstantSMS() {
   const userData = getUserData();
@@ -20,6 +22,16 @@ function SMSInstantSMS() {
 
   const handleInputChange = (e) => {
     setNumbers(e);
+  };
+
+  const handlePhoneNumberClick = (phoneNo) => {
+    const isPresent = numbers.includes(phoneNo);
+
+    if (isPresent) {
+      setNumbers(numbers.filter((number) => number !== phoneNo));
+    } else {
+      setNumbers([...numbers, phoneNo]);
+    }
   };
 
   const HendleSendSms = async () => {
@@ -228,10 +240,22 @@ function SMSInstantSMS() {
                   <tbody>
                     {groupData?.length > 0 &&
                       groupData.map((item, index) => (
-                        <tr>
-                          <td class="text-center">{item?.memberName}</td>
-                          <td class="text-center" onClick={() => setNumbers([...numbers, item.phoneNo])}>{item.phoneNo}</td>
-                          <td class="text-center">{item.gender}</td>
+                        <tr key={index}>
+                          <td className="text-center">{item?.memberName}</td>
+                          <td
+                            className="text-center"
+                            onClick={() => handlePhoneNumberClick(item.phoneNo)}
+                            style={{ cursor: 'pointer' }}
+                          >
+                            {item.phoneNo}
+                            {' '}
+                            {numbers.includes(item.phoneNo) ? (
+                              <FontAwesomeIcon icon={faCheck} style={{ color: 'green', marginLeft: '5px' }} />
+                            ) : (
+                              <FontAwesomeIcon icon={faTimes} style={{ color: 'red', marginLeft: '5px' }} />
+                            )}
+                          </td>
+                          <td className="text-center">{item.gender}</td>
                         </tr>
                       ))}
                   </tbody>

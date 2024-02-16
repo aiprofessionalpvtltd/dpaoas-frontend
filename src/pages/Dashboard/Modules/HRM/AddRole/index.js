@@ -4,9 +4,10 @@ import { Layout } from "../../../../../components/Layout";
 import Header from "../../../../../components/Header";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { createRole } from "../../../../../api/APIs";
 // import { useNavigate } from "react-router";
 import { showSuccessMessage } from "../../../../../utils/ToastAlert";
+import { createRole } from "../../../../../api/APIs/Services/organizational.service";
+import { ToastContainer } from "react-toastify";
 
 const validationSchema = Yup.object({
   roleName: Yup.string().required("Role name is required"),
@@ -53,6 +54,8 @@ function HRMAddRole() {
         title1={"Roles"}
         title2={"Add Role"}
       />
+      <ToastContainer />
+      
       <div className="container-fluid">
         <div className="card">
           <div className="card-header red-bg" style={{ background: "#666" }}>

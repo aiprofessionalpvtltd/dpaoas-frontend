@@ -8,22 +8,24 @@ import { ToastContainer } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 import DatePicker from "react-datepicker";
-import { UpdateComplaint, createComplaint, getInventoryRecordByUserId, getallcomplaintCategories, getallcomplaintTypes } from '../../../../../../api/APIs';
+import { UpdateComplaint, createComplaint, getInventoryRecordByUserId, getallcomplaintCategories, getallcomplaintTypes } from '../../../../../../api/APIs/Services/Complaint.service';
 import { showErrorMessage, showSuccessMessage } from '../../../../../../utils/ToastAlert';
 import { getUserData } from '../../../../../../api/Auth';
 import { AuthContext } from '../../../../../../api/AuthContext';
 import Select from "react-select";
 import CustomTable from '../../../../../../components/CustomComponents/CustomTable';
 import moment from 'moment';
+import * as Yup from "yup";
 
-
-
+const validationSchema = Yup.object({
+  fkComplaintTypeId: Yup.string().required("Branch/Office is required"),
+  complaintDescription: Yup.string().required("Complaint Description is required")
+});
 
 function CMSAddEditUserComplaint() {
   const location = useLocation()
   const userData = getUserData();
   const { employeeData, employeesAsEngineersData } = useContext(AuthContext)
-  console.log("UserInfo", userData);
   const [complaintType, setComplaintType] = useState([])
   const [complaintCategories, setComplaintCategories] = useState([])
   const [userinventoryData, setUserInventoryData] = useState([])
@@ -35,71 +37,75 @@ function CMSAddEditUserComplaint() {
       fkComplaintTypeId: "",
       fkComplaintCategoryId: "",
       complaintDescription: location.state ? location?.state?.complaintDescription : "",
-      complaintIssuedDate: "",
-      fkAssignedResolverId:"",
+      complaintIssuedDate: new Date(),
+      fkAssignedResolverId: "",
       complaintAttachment: ""
     },
-
-    onSubmit: (values) => {
+    validationSchema: validationSchema,
+    onSubmit: async (values, { resetForm }) => {
       // Handle form submission here
-      // console.log(values);
-      if (location.state) {
-        UpdateComplaintAPi();
-      } else {
-        CreateComplaintApi(values);
-      }
+      await CreateComplaintApi(values, { resetForm });
     },
+    // onSubmit: (values) => {
+    //   // Handle form submission here
+    //   // console.log(values);
+    //   if (location.state) {
+    //     UpdateComplaintAPi();
+    //   } else {
+    //     CreateComplaintApi(values);
+    //   }
+    // },
   });
 
-  const transformDepartmentData = (apiData) => {
-    return apiData.map((leave) => ({
-      id: leave?.id,
-      // complaineeUser: `${leave?.complaineeUser?.employee?.firstName}${leave?.complaineeUser?.employee?.lastName}`,
-      // complaintType: leave?.complaintType?.complaintTypeName,
-      // complaintCategory: leave?.complaintCategory?.complaintCategoryName,
-      productName: leave?.productName,
-      serialNo: leave?.serialNo,
-      description: leave?.description,
-      assignedDate: moment(leave?.assignedDate).format("YYYY/MM/DD"),
-      status: JSON.stringify(leave?.status),
-    }));
-  };
+  // const transformDepartmentData = (apiData) => {
+  //   return apiData.map((leave) => ({
+  //     id: leave?.id,
+  //     // complaineeUser: `${leave?.complaineeUser?.employee?.firstName}${leave?.complaineeUser?.employee?.lastName}`,
+  //     // complaintType: leave?.complaintType?.complaintTypeName,
+  //     // complaintCategory: leave?.complaintCategory?.complaintCategoryName,
+  //     productName: leave?.productName,
+  //     serialNo: leave?.serialNo,
+  //     description: leave?.description,
+  //     assignedDate: moment(leave?.assignedDate).format("YYYY/MM/DD"),
+  //     status: JSON.stringify(leave?.status),
+  //   }));
+  // };
 
-  const CreateComplaintApi = async (values) => {
-
+  const CreateComplaintApi = async (values, { resetForm }) => {
     const Data = {
       fkComplaineeUserId: values?.fkComplaineeUserId?.value,
       fkComplaintTypeId: values.fkComplaintTypeId,
       fkComplaintCategoryId: values.fkComplaintCategoryId,
       complaintDescription: values.complaintDescription,
       complaintIssuedDate: values?.complaintIssuedDate,
-      fkAssignedResolverId:values?.fkAssignedResolverId?.value
+      fkAssignedResolverId: values?.fkAssignedResolverId?.value
     }
     try {
       const response = await createComplaint(Data);
       if (response.success) {
         showSuccessMessage(response.message);
+        formik.resetForm()
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
     }
   };
 
-  const UpdateComplaintAPi = async (values) => {
-    const data = {
-      departmentName: values?.departmentName,
-      description: values?.description,
-      departmentStatus: values?.status,
-    };
-    try {
-      const response = await UpdateComplaint(location.state.id, data);
-      if (response.success) {
-        showSuccessMessage(response.message);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const UpdateComplaintAPi = async (values) => {
+  //   const data = {
+  //     departmentName: values?.departmentName,
+  //     description: values?.description,
+  //     departmentStatus: values?.status,
+  //   };
+  //   try {
+  //     const response = await UpdateComplaint(location.state.id, data);
+  //     if (response.success) {
+  //       showSuccessMessage(response.message);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
 
 
@@ -136,7 +142,6 @@ function CMSAddEditUserComplaint() {
     try {
       const response = await getInventoryRecordByUserId(selectedOptions.value);
       if (response?.success) {
-        // const transformedData = transformDepartmentData(response?.data);
         setUserInventoryData(response?.data);
       }
     } catch (error) {
@@ -211,7 +216,11 @@ function CMSAddEditUserComplaint() {
                   <div class="col-6">
                     <div class="mb-3">
                       <label class="form-label">Branch/Office</label>
-                      <select class="form-select"
+                      <select class={`form-control ${formik.touched.fkComplaintTypeId &&
+                        formik.errors.fkComplaintTypeId
+                        ? "is-invalid"
+                        : ""
+                        }`}
                         id="fkComplaintTypeId"
                         name="fkComplaintTypeId"
                         onChange={formik.handleChange}
@@ -219,13 +228,19 @@ function CMSAddEditUserComplaint() {
                         value={formik.values.fkComplaintTypeId}
                       >
                         <option value={""} selected disabled hidden>
-                          select
+                          Select
                         </option>
                         {complaintType &&
                           complaintType.map((item) => (
                             <option value={item.id}>{item.complaintTypeName}</option>
                           ))}
                       </select>
+                      {formik.touched.fkComplaintTypeId &&
+                        formik.errors.fkComplaintTypeId && (
+                          <div className="invalid-feedback">
+                            {formik.errors.fkComplaintTypeId}
+                          </div>
+                        )}
                     </div>
                   </div>
                   {/* <div className="col-6">
@@ -249,12 +264,22 @@ function CMSAddEditUserComplaint() {
                     <div className="mb-3">
                       <label className="form-label">Complaint Description</label>
                       <textarea
-                        className={`form-control`}
+                        className={`form-control ${formik.touched.complaintDescription &&
+                          formik.errors.complaintDescription
+                          ? "is-invalid"
+                          : ""
+                          }`}
                         id="complaintDescription"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         value={formik.values.complaintDescription}
                       ></textarea>
+                      {formik.touched.complaintDescription &&
+                        formik.errors.complaintDescription && (
+                          <div className="invalid-feedback">
+                            {formik.errors.complaintDescription}
+                          </div>
+                        )}
                     </div>
                   </div>
                   <div class="col-6">
@@ -268,7 +293,7 @@ function CMSAddEditUserComplaint() {
                         value={formik.values.fkComplaintCategoryId}
                       >
                         <option value={""} selected disabled hidden>
-                          select
+                          Select
                         </option>
                         {complaintCategories &&
                           complaintCategories.map((item) => (
@@ -280,27 +305,6 @@ function CMSAddEditUserComplaint() {
                 </div>
 
                 <div class="row">
-                  {/* <div className="col-6">
-                    <div className="mb-3">
-                      <label htmlFor="formFile" className="form-label">
-                        Question Image
-                      </label>
-                      <input
-                        className="form-control"
-                        type="file"
-                        accept=".pdf, .jpg, .jpeg, .png"
-                        id="formFile"
-                        name="complaintAttachment"
-                        onChange={(event) => {
-                          formik.setFieldValue(
-                            "complaintAttachment",
-                            event.currentTarget.files[0],
-                          );
-                        }}
-                      />
-                    </div>
-                  </div> */}
-
                   <div className="col-6">
                     <div className="mb-3" style={{ position: "relative" }}>
                       <label className="form-label">
@@ -332,28 +336,25 @@ function CMSAddEditUserComplaint() {
                     </div>
                   </div>
                   <div class="col">
-                  <div class="mb-3">
-                    <label class="form-label">Assign To (IT Engineer)</label>
-
-                    <Select
-                      options={
-                        employeesAsEngineersData &&
-                        employeesAsEngineersData?.map((item) => ({
-                          value: item.id,
-                          label: `${item.firstName}${item.lastName}`,
-                        }))
-                      }
-                      onChange={(selectedOptions) => formik.setFieldValue("fkAssignedResolverId", selectedOptions)}
-                      onBlur={formik.handleBlur}
-                      value={formik.values.fkAssignedResolverId}
-                      name="fkAssignedResolverId"
-                      isClearable={true}
-                    />
+                    <div class="mb-3">
+                      <label class="form-label">Assign To (IT Engineer)</label>
+                      <Select
+                        options={
+                          employeesAsEngineersData &&
+                          employeesAsEngineersData?.map((item) => ({
+                            value: item.id,
+                            label: `${item.firstName}${item.lastName}`,
+                          }))
+                        }
+                        onChange={(selectedOptions) => formik.setFieldValue("fkAssignedResolverId", selectedOptions)}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.fkAssignedResolverId}
+                        name="fkAssignedResolverId"
+                        isClearable={true}
+                      />
+                    </div>
                   </div>
                 </div>
-                </div>
-
-
                 <div className="d-grid gap-2 d-md-flex justify-content-md-end">
                   <button className="btn btn-primary" type="submit">
                     Submit

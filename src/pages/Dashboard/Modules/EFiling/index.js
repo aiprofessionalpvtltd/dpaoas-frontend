@@ -40,11 +40,11 @@ function EFilingDashboard() {
             <div class="col-12">
               <CustomTable
                 data={data}
-                tableTitle="Files List"
-                addBtnText="Create new file"
-                handleAdd={() => navigate("/efiling/dashboard/addedit")}
-                handleEdit={(item) => navigate("/efiling/dashboard/fileDetail", { state: item })}
-                handleView={(item) => navigate("/efiling/dashboard/fileDetail", { state: { view: true } })}
+                tableTitle="Cases List"
+                addBtnText="Create Case"
+                handleAdd={() => navigate("/efiling/dashboard/addeditcase")}
+                handleEdit={(item) => navigate("/efiling/dashboard/addeditcase", { state: item })}
+                handleView={() => navigate("/efiling/dashboard/files")}
                 showView={true}
                 headertitlebgColor={"#666"}
                 headertitletextColor={"#FFF"}

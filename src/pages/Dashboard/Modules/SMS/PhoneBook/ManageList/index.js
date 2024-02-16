@@ -1,15 +1,19 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import CustomTable from '../../../../../../components/CustomComponents/CustomTable'
 import Header from '../../../../../../components/Header'
 import { Layout } from '../../../../../../components/Layout'
 import { SMSsidebarItems } from '../../../../../../utils/sideBarItems'
 import { useNavigate } from 'react-router'
-import { DeleteContactList, getContactList, getSignalContactListByid } from '../../../../../../api/APIs'
+import { DeleteContactList, getContactList, getSignalContactListByid } from '../../../../../../api/APIs/Services/SMS.service'
 import { showErrorMessage, showSuccessMessage } from '../../../../../../utils/ToastAlert'
 import { ToastContainer } from 'react-toastify'
 import moment from 'moment'
 import SMSAddList from '../AddList'
 import { CustomAlert } from '../../../../../../components/CustomComponents/CustomAlert'
+import { getPermissionsData, getUserData, setPermissionsData, setRolesData } from '../../../../../../api/Auth'
+import { AuthContext } from '../../../../../../api/AuthContext'
+import { CheckPermission } from '../../../../../../utils/permissionsConfig'
+import { getRoles } from '../../../../../../api/APIs/Services/organizational.service'
 
 function SMSManageList() {
   const [currentPage, setCurrentPage] = useState(0);
@@ -19,6 +23,12 @@ function SMSManageList() {
   const [selecteditem, setSelecteditem] = useState([])
   const [contactList, setContactList] = useState([])
   const pageSize = 4; // Set your desired page size
+
+  const { permissions } = useContext(AuthContext);
+  const [permissionsLocal, setPermissionsLocal] = useState([]);
+  const [roles, setRoles] = useState([]);
+
+  const userRole = getUserData();
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
@@ -123,6 +133,43 @@ function SMSManageList() {
     }
   }
 
+  
+  useEffect(() => {
+    const fetchRoles = async () => {
+      try {
+        const response = await getRoles();
+        setRoles(response.data);
+      } catch (error) {
+        alert(error?.response?.data)
+        // if (error?.response?.data?.error === "Token has expired!") {
+        //   logout();
+        //   navigation("/login");
+        // }
+      }
+    };
+
+    fetchRoles();
+  }, []);
+  useEffect(() => {
+    if (roles) {
+      setRolesData(roles);
+      const localPermissionsData = getPermissionsData();
+      setPermissionsLocal(localPermissionsData);
+
+      // Check if permissions exist and has length
+      if (permissions && permissions.length > 0) {
+        const res = CheckPermission(userRole?.role?.name, roles, permissions);
+        setPermissionsData(res?.permissions);
+        setPermissionsLocal(res?.permissions);
+      } else {
+        // Handle the case when permissions are empty or undefined
+        // For example, set default permissions
+        setPermissionsData(localPermissionsData);
+        setPermissionsLocal(localPermissionsData);
+      }
+    }
+  }, [roles, permissions]);
+
   useEffect(() => {
     getContactListApi();
   }, [getContactListApi]);
@@ -151,6 +198,7 @@ function SMSManageList() {
             singleDataCard={true}
             tableTitle="Manage List"
             addBtnText="Add List"
+            hideBtn={permissionsLocal?.SMS?.canCreate ? false : true}
             handleAdd={() => hendleAdd()}
             handleEdit={(item) => hendleSingleListRecord(item.id)
             }
@@ -161,11 +209,14 @@ function SMSManageList() {
             pageSize={pageSize}
             // handlePrint={}
             // handleUser={}
+            ActionHide={permissionsLocal?.SMS?.canDelete || permissionsLocal?.SMS?.canEdit ? false : true}
             totalCount={count}
             handleDelete={(item) => {
               setListId(item.id)
               hendleSingleList(item.id)
             }}
+            hideDeleteIcon={permissionsLocal?.SMS?.canDelete ? false : true}
+            hideEditIcon={permissionsLocal?.SMS?.canEdit ? false : true}
           />
         </div>
       </div>

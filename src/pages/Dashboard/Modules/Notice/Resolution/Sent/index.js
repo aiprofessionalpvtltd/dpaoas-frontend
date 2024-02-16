@@ -3,7 +3,7 @@ import { NoticeSidebarItems } from "../../../../../../utils/sideBarItems";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
 import { useNavigate } from "react-router";
-import { getAllResolutions, searchResolution } from "../../../../../../api/APIs";
+import { DeleteResolution, getAllResolutions, getResolutionBYID, searchResolution } from "../../../../../../api/APIs/Services/Resolution.service";
 import Select from "react-select";
 
 import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
@@ -50,6 +50,7 @@ function SentResolution() {
         SubjectMatter: "",
         NoticeNo: leave?.noticeDiary?.noticeOfficeDiaryNo,
         ResolutionStatus: leave?.resolutionStatus?.resolutionStatus,
+        Status: leave?.resolutionActive,
       };
     });
   };
@@ -105,6 +106,30 @@ function SentResolution() {
     }
   };
 
+  const handleEdit = async (id) => {
+    try {
+      const response = await getResolutionBYID(id);
+      if (response?.success) {
+        navigate("/qms/notice/notice-resolution-detail", {
+          state: response?.data,
+        });
+      }
+    } catch (error) {
+      showErrorMessage(error.response.data.message);
+    }
+  };
+
+  const deleteResolutionApi = async (id) => {
+    try {
+      const response = await DeleteResolution(id);
+      if (response?.success) {
+        showSuccessMessage(response?.message);
+        getAllResolutionsApi();
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  };
   useEffect(() => {
     getAllResolutionsApi();
   }, [currentPage]);
@@ -128,9 +153,8 @@ function SentResolution() {
                       <div class="mb-3">
                         <label class="form-label">Notice Diary No</label>
                         <input
-                          className={`form-control ${
-                            formik.touched.noticeDiaryNo && formik.errors.noticeDiaryNo ? "is-invalid" : ""
-                          }`}
+                          className={`form-control ${formik.touched.noticeDiaryNo && formik.errors.noticeDiaryNo ? "is-invalid" : ""
+                            }`}
                           type="text"
                           name="noticeDiaryNo"
                           onChange={formik.handleChange}
@@ -143,9 +167,8 @@ function SentResolution() {
                       <div class="mb-3">
                         <label class="form-label">Resolution ID</label>
                         <input
-                          className={`form-control ${
-                            formik.touched.resolutionId && formik.errors.resolutionId ? "is-invalid" : ""
-                          }`}
+                          className={`form-control ${formik.touched.resolutionId && formik.errors.resolutionId ? "is-invalid" : ""
+                            }`}
                           type="text"
                           name="resolutionId"
                           onChange={formik.handleChange}
@@ -160,9 +183,8 @@ function SentResolution() {
                       <div class="mb-3">
                         <label class="form-label">Keyword</label>
                         <input
-                          className={`form-control ${
-                            formik.touched.keyword && formik.errors.keyword ? "is-invalid" : ""
-                          }`}
+                          className={`form-control ${formik.touched.keyword && formik.errors.keyword ? "is-invalid" : ""
+                            }`}
                           type="text"
                           name="keyword"
                           onChange={formik.handleChange}
@@ -194,9 +216,8 @@ function SentResolution() {
                       <div class="mb-3">
                         <label class="form-label">From Session</label>
                         <select
-                          class={`form-select ${
-                            formik.touched.fromSession && formik.errors.fromSession ? "is-invalid" : ""
-                          }`}
+                          class={`form-select ${formik.touched.fromSession && formik.errors.fromSession ? "is-invalid" : ""
+                            }`}
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                           value={formik.values.fromSession || ""}
@@ -218,9 +239,8 @@ function SentResolution() {
                       <div class="mb-3">
                         <label class="form-label">To Session</label>
                         <select
-                          class={`form-select ${
-                            formik.touched.toSession && formik.errors.toSession ? "is-invalid" : ""
-                          }`}
+                          class={`form-select ${formik.touched.toSession && formik.errors.toSession ? "is-invalid" : ""
+                            }`}
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                           value={formik.values.toSession || ""}
@@ -244,9 +264,8 @@ function SentResolution() {
                       <div class="mb-3">
                         <label class="form-label">Resolution Type</label>
                         <select
-                          class={`form-select ${
-                            formik.touched.resolutionType && formik.errors.resolutionType ? "is-invalid" : ""
-                          }`}
+                          class={`form-select ${formik.touched.resolutionType && formik.errors.resolutionType ? "is-invalid" : ""
+                            }`}
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                           value={formik.values.resolutionType || ""}
@@ -267,9 +286,8 @@ function SentResolution() {
                       <div class="mb-3">
                         <label class="form-label">Resolution Status</label>
                         <select
-                          class={`form-select ${
-                            formik.touched.resolutionStatus && formik.errors.resolutionStatus ? "is-invalid" : ""
-                          }`}
+                          class={`form-select ${formik.touched.resolutionStatus && formik.errors.resolutionStatus ? "is-invalid" : ""
+                            }`}
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                           value={formik.values.resolutionStatus || ""}
@@ -328,9 +346,8 @@ function SentResolution() {
                           minDate={new Date()}
                           onChange={(date) => formik.setFieldValue("fromNoticeDate", date)}
                           onBlur={formik.handleBlur}
-                          className={`form-control ${
-                            formik.touched.fromNoticeDate && formik.errors.fromNoticeDate ? "is-invalid" : ""
-                          }`}
+                          className={`form-control ${formik.touched.fromNoticeDate && formik.errors.fromNoticeDate ? "is-invalid" : ""
+                            }`}
                         />
                       </div>
                     </div>
@@ -356,9 +373,8 @@ function SentResolution() {
                           minDate={new Date()}
                           onChange={(date) => formik.setFieldValue("toNoticeDate", date)}
                           onBlur={formik.handleBlur}
-                          className={`form-control ${
-                            formik.touched.toNoticeDate && formik.errors.toNoticeDate ? "is-invalid" : ""
-                          }`}
+                          className={`form-control ${formik.touched.toNoticeDate && formik.errors.toNoticeDate ? "is-invalid" : ""
+                            }`}
                         />
                       </div>
                     </div>
@@ -382,10 +398,10 @@ function SentResolution() {
                       tableTitle="Resolutions"
                       handlePageChange={handlePageChange}
                       currentPage={currentPage}
-                      showPrint={true}
+                      showPrint={false}
                       pageSize={pageSize}
-                      handleAdd={(item) => navigate("/")}
-                      handleEdit={(item) => navigate("/")}
+                      handleDelete={(item) => deleteResolutionApi(item.SrNo)}
+                      handleEdit={(item) => handleEdit(item.SrNo)}
                       totalCount={count}
                     />
                   </div>

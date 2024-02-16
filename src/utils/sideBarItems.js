@@ -6,6 +6,7 @@ import {
   faAddressCard,
   faUser,
   faClipboardList,
+  faCodeBranch
 } from "@fortawesome/free-solid-svg-icons";
 
 // LMS Sidebar
@@ -29,7 +30,11 @@ export const HRMsidebarItems = [
     link: "/hrm/dashboard",
     icon: faUserTag,
   },
-
+  {
+    itemName: "Branches",
+    link: "/hrm/branches",
+    icon: faCodeBranch,
+  },
   {
     itemName: "Department",
     link: "/hrm/department",
@@ -124,83 +129,83 @@ export const NoticeSidebarItems = [
       },
     ],
   },
-  {
-    itemName: "Manage",
-    link: "/notice/manage",
-    icon: faClipboardList,
-    subItems: [
-      {
-        itemName: "Members",
-        link: "/notice/manage/members",
-        icon: faClipboardList,
-      },
-      // {
-      //     itemName: "Deleted Questions",
-      //     link: "/notice/manage/deleted-questions",
-      //     icon: faClipboardList
-      // },
-      // {
-      //     itemName: "Divisions",
-      //     link: "/notice/manage/divisions",
-      //     icon: faClipboardList
-      // },
-      // {
-      //     itemName: "Groups",
-      //     link: "/notice/manage/groups",
-      //     icon: faClipboardList
-      // },
-      // {
-      //     itemName: "Members",
-      //     link: "/notice/manage/members",
-      //     icon: faClipboardList
-      // },
-      // {
-      //     itemName: "Parliamentary Years",
-      //     link: "/notice/manage/parliamentary-years",
-      //     icon: faClipboardList
-      // },
-      // {
-      //     itemName: "Question Categories",
-      //     link: "/notice/manage/question-categories",
-      //     icon: faClipboardList
-      // },
-      // {
-      //     itemName: "Question Status",
-      //     link: "/notice/manage/groups/question-status",
-      //     icon: faClipboardList
-      // },
-      // {
-      //     itemName: "Remove Questions from List",
-      //     link: "/notice/manage/remove-questions",
-      //     icon: faClipboardList
-      // },
-      // {
-      //     itemName: "Rota",
-      //     link: "/notice/manage/rota",
-      //     icon: faClipboardList
-      // },
-      // {
-      //     itemName: "Session Sittings",
-      //     link: "/notice/manage/session-sittings",
-      //     icon: faClipboardList
-      // },
-      {
-        itemName: "Sessions",
-        link: "/notice/manage/sessions",
-        icon: faClipboardList,
-      },
-      // {
-      //     itemName: "Sitting Types",
-      //     link: "/notice/manage/sitting-types",
-      //     icon: faClipboardList
-      // },
-      // {
-      //     itemName: "Swap Question",
-      //     link: "/notice/manage/swap-question",
-      //     icon: faClipboardList
-      // },
-    ],
-  },
+  // {
+  //   itemName: "Manage",
+  //   link: "/notice/manage",
+  //   icon: faClipboardList,
+  //   subItems: [
+  //     {
+  //       itemName: "Members",
+  //       link: "/notice/manage/members",
+  //       icon: faClipboardList,
+  //     },
+  //     // {
+  //     //     itemName: "Deleted Questions",
+  //     //     link: "/notice/manage/deleted-questions",
+  //     //     icon: faClipboardList
+  //     // },
+  //     // {
+  //     //     itemName: "Divisions",
+  //     //     link: "/notice/manage/divisions",
+  //     //     icon: faClipboardList
+  //     // },
+  //     // {
+  //     //     itemName: "Groups",
+  //     //     link: "/notice/manage/groups",
+  //     //     icon: faClipboardList
+  //     // },
+  //     // {
+  //     //     itemName: "Members",
+  //     //     link: "/notice/manage/members",
+  //     //     icon: faClipboardList
+  //     // },
+  //     // {
+  //     //     itemName: "Parliamentary Years",
+  //     //     link: "/notice/manage/parliamentary-years",
+  //     //     icon: faClipboardList
+  //     // },
+  //     // {
+  //     //     itemName: "Question Categories",
+  //     //     link: "/notice/manage/question-categories",
+  //     //     icon: faClipboardList
+  //     // },
+  //     // {
+  //     //     itemName: "Question Status",
+  //     //     link: "/notice/manage/groups/question-status",
+  //     //     icon: faClipboardList
+  //     // },
+  //     // {
+  //     //     itemName: "Remove Questions from List",
+  //     //     link: "/notice/manage/remove-questions",
+  //     //     icon: faClipboardList
+  //     // },
+  //     // {
+  //     //     itemName: "Rota",
+  //     //     link: "/notice/manage/rota",
+  //     //     icon: faClipboardList
+  //     // },
+  //     // {
+  //     //     itemName: "Session Sittings",
+  //     //     link: "/notice/manage/session-sittings",
+  //     //     icon: faClipboardList
+  //     // },
+  //     {
+  //       itemName: "Sessions",
+  //       link: "/notice/manage/sessions",
+  //       icon: faClipboardList,
+  //     },
+  //     // {
+  //     //     itemName: "Sitting Types",
+  //     //     link: "/notice/manage/sitting-types",
+  //     //     icon: faClipboardList
+  //     // },
+  //     // {
+  //     //     itemName: "Swap Question",
+  //     //     link: "/notice/manage/swap-question",
+  //     //     icon: faClipboardList
+  //     // },
+  //   ],
+  // },
   {
     itemName: "Seating Plan",
     link: "/notice/seatingplan",
@@ -503,11 +508,11 @@ export const SMSsidebarItems = [
         link: "/sms/phone-book/manage",
         icon: faClipboardList,
       },
-      {
-        itemName: "Import Contacts",
-        link: "/sms/phone-book/import",
-        icon: faClipboardList,
-      },
+      // {
+      //   itemName: "Import Contacts",
+      //   link: "/sms/phone-book/import",
+      //   icon: faClipboardList,
+      // },
     ],
   },
   {
@@ -532,11 +537,11 @@ export const SMSsidebarItems = [
     link: "/sms/messagelog",
     icon: faClipboardList,
     subItems: [
-      {
-        itemName: "Summary",
-        link: "/sms/messagelog/summary",
-        icon: faClipboardList,
-      },
+      // {
+      //   itemName: "Summary",
+      //   link: "/sms/messagelog/summary",
+      //   icon: faClipboardList,
+      // },
       {
         itemName: "Detailed Message Log",
         link: "/sms/messagelog/detailed",
@@ -607,10 +612,15 @@ export const CMSsidebarItems = [
         itemName: "Toner Installation Report",
         link: "/cms/admin/toner-installation-report",
         icon: faClipboardList,
-      }
-    ]
+      },
+      {
+        itemName: "Toner Models",
+        link: "/cms/admin/toner-models",
+        icon: faClipboardList,
+      },
+    ],
   },
-  
+
   {
     itemName: "Inventory",
     link: "/cms/admin/inventory/dashboard",
@@ -641,7 +651,6 @@ export const CMSsidebarItems = [
         link: "/cms/admin/inventory/vendor-list",
         icon: faClipboardList,
       },
-     
     ],
-  }
-]
+  },
+];

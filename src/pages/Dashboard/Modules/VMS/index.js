@@ -4,12 +4,7 @@ import { VMSsidebarItems } from "../../../../utils/sideBarItems";
 import CustomTable from "../../../../components/CustomComponents/CustomTable";
 import { useNavigate } from "react-router-dom";
 import Header from "../../../../components/Header";
-import {
-  DeletePasses,
-  SearchPasses,
-  getPassPdfBYPassID,
-  getPasses,
-} from "../../../../api/APIs";
+import { DeletePasses, SearchPasses, getPassPdfBYPassID,  getPasses} from "../../../../api/APIs/Services/VisitorsManagementSystem.service";
 import { ToastContainer } from "react-toastify";
 import {
   showErrorMessage,

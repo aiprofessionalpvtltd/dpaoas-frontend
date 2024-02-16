@@ -6,10 +6,9 @@ import { useFormik } from "formik";
 import { ToastContainer } from "react-toastify";
 import DatePicker from "react-datepicker";
 import {
-  getAllQuestionStatus,
   getResolutionBYID,
   searchResolution,
-} from "../../../../../../api/APIs";
+} from "../../../../../../api/APIs/Services/Resolution.service";
 import {
   showErrorMessage,
   showSuccessMessage,

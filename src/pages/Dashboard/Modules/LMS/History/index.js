@@ -7,7 +7,7 @@ import Header from "../../../../../components/Header";
 import DatePicker from "react-datepicker";
 import { useFormik } from "formik";
 import moment from "moment";
-import { searchLeaveHistory } from "../../../../../api/APIs";
+import { searchLeaveHistory } from "../../../../../api/APIs/Services/LeaveManagementSystem.service";
 import {
   showErrorMessage,
   showSuccessMessage,

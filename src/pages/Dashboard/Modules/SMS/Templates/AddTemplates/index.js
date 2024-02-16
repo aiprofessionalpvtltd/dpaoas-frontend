@@ -4,7 +4,7 @@ import { SMSsidebarItems } from '../../../../../../utils/sideBarItems'
 import Header from '../../../../../../components/Header'
 import { useLocation } from 'react-router'
 import { useFormik } from 'formik'
-import { UpdateContactTemplate, createContactTemplate } from '../../../../../../api/APIs'
+import { UpdateContactTemplate, createContactTemplate } from '../../../../../../api/APIs/Services/SMS.service'
 import { ToastContainer } from 'react-toastify'
 import { showErrorMessage, showSuccessMessage } from '../../../../../../utils/ToastAlert'
 import { getUserData } from '../../../../../../api/Auth'
@@ -26,15 +26,14 @@ const customStyles = {
 function SMSAddEditTemplate({ modalisOpan, hendleModal, selectedData, getTemplate }) {
     // const location = useLocation()
     const userData = getUserData();
-    console.log("Manage Template", userData?.fkUserId);
+    console.log("selectedData.Status", selectedData.Status);
 
 
     const formik = useFormik({
         initialValues: {
             templateName: selectedData ? selectedData.templateName : "",
             msgText: selectedData ? selectedData.description : "",
-            status: ""
-            //   status: selectedData ? selectedData.departmentStatus : "",
+            status: selectedData ? selectedData.Status : ""
         },
 
         // validationSchema: validationSchema,
@@ -122,29 +121,29 @@ function SMSAddEditTemplate({ modalisOpan, hendleModal, selectedData, getTemplat
                                     </div>
                                     {selectedData?.id && (
                                         <div class="col-6">
-                                        <div class="mb-3">
-                                            <label class="form-label">Status</label>
-                                            <select
-                                                class="form-select"
-                                                placeholder={formik.values.status}
-                                                onChange={formik.handleChange}
-                                                id="status"
-                                                onBlur={formik.handleBlur}
-                                            >
-                                                <option selected disabled hidden>
-                                                    Select
-                                                </option>
-                                                <option value={"true"}>
-                                                    True
-                                                </option>
-                                                <option value={"false"}>
-                                                    False
-                                                </option>
-                                            </select>
+                                            <div class="mb-3">
+                                                <label class="form-label">Status</label>
+                                                <select
+                                                    class="form-select"
+                                                    placeholder={formik.values.status}
+                                                    onChange={formik.handleChange}
+                                                    id="status"
+                                                    onBlur={formik.handleBlur}
+                                                >
+                                                    <option selected disabled hidden>
+                                                        {selectedData ? selectedData.Status : "Select"}
+                                                    </option>
+                                                    <option value={"true"}>
+                                                        True
+                                                    </option>
+                                                    <option value={"false"}>
+                                                        False
+                                                    </option>
+                                                </select>
+                                            </div>
                                         </div>
-                                    </div>
                                     )}
-                                    
+
                                 </div>
                                 {/* Add similar validation logic for other fields */}
                                 <div className="row">
@@ -166,10 +165,17 @@ function SMSAddEditTemplate({ modalisOpan, hendleModal, selectedData, getTemplat
                                     </div>
                                 </div>
 
-                                <div className="d-grid gap-2 d-md-flex justify-content-md-end">
-                                    <button className="btn btn-primary" type="submit">
-                                        Save
-                                    </button>
+                                <div className="d-flex row justify-content-center align-items-center">
+                                    <div className="col-4" style={{ marginTop: "30px" }}>
+                                        <button className="btn btn-primary" type="button" onClick={() => hendleModal()}>
+                                            Cancel
+                                        </button>
+                                    </div>
+                                    <div className="col-4" style={{ marginTop: "30px" }}>
+                                        <button className="btn btn-primary" type="submit">
+                                            Save
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </form>

@@ -4,12 +4,12 @@ import Header from "../../../../../components/Header";
 import { useNavigate } from "react-router-dom";
 import { HRMsidebarItems } from "../../../../../utils/sideBarItems";
 import CustomTable from "../../../../../components/CustomComponents/CustomTable";
-import { DeleteDesignation, getDesignations } from "../../../../../api/APIs";
 import {
   showErrorMessage,
   showSuccessMessage,
 } from "../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
+import { DeleteDesignation, getDesignations } from "../../../../../api/APIs/Services/organizational.service";
 
 function HRMDesignation() {
   const navigate = useNavigate();
@@ -37,7 +37,7 @@ function HRMDesignation() {
       const response = await getDesignations(currentPage, pageSize);
       if (response?.success) {
         setCount(response?.count);
-        const transformedData = transformDesignationData(response?.data);
+        const transformedData = transformDesignationData(response?.data?.designations);
         setDesignationData(transformedData);
       }
     } catch (error) {

@@ -4,7 +4,7 @@ import Header from '../../../../../../components/Header'
 import { QMSSideBarItems } from '../../../../../../utils/sideBarItems'
 import { Layout } from '../../../../../../components/Layout'
 import { useNavigate } from 'react-router-dom'
-import { getAllManageSessions } from '../../../../../../api/APIs'
+import { getAllManageSessions } from '../../../../../../api/APIs/Services/SeatingPlan.service'
 import moment from "moment";
 
 function QMSSittingsDays() {
@@ -35,7 +35,7 @@ function QMSSittingsDays() {
         const response = await getAllManageSessions(currentPage, pageSize);
         if (response?.success) {
           setCount(response?.count);
-          const transformedData = transformData(response.data);
+          const transformedData = transformData(response.data?.sessionSittings);
           setSittingDays(transformedData);
         }
       } catch (error) {
