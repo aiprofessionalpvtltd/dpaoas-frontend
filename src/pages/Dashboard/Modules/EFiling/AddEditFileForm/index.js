@@ -15,6 +15,7 @@ import { useContext } from "react";
 import { AuthContext } from "../../../../../api/AuthContext";
 import { getDepartment } from "../../../../../api/APIs/Services/organizational.service";
 import { getBranches } from "../../../../../api/APIs/Services/Branches.services";
+import { getUserData } from "../../../../../api/Auth";
 
 const validationSchema = Yup.object({});
 
@@ -25,6 +26,8 @@ function AddEditFileForm() {
   const { ministryData } = useContext(AuthContext)
   const [departmentData, setDepartmentData] = useState([])
   const [branchesData, setBranchesData] = useState([])
+
+  const UserData = getUserData()
 
   // const [divisionById, setDivisionById] = useState();
 
@@ -57,6 +60,7 @@ function AddEditFileForm() {
     formData.append('fileCategory', values?.fileCategory);
     formData.append('fileType', documentTypeVal);
     formData.append('attachment', values?.attachment)
+    formData.append('assignedTo',UserData?.fkUserId)
     if (values?.fkBranchId) {
       formData.append('fkBranchId', values?.fkBranchId);
     }
