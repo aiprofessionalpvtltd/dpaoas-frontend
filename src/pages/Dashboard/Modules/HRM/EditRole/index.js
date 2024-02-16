@@ -351,7 +351,7 @@ function HRMEditRole() {
                         <CheckedItem
                           key={index}
                           checked={checked}
-                          bgColor={colors[index]}
+                          bgColor={colors[checked?.itemId]}
                           handleCheckboxChange={handleCheckboxChange}
                         />
                       ))}
@@ -370,7 +370,7 @@ function HRMEditRole() {
                           item={item}
                           handleHideShow={handleHideShow}
                           hiddenItems={hiddenItems}
-                          bgColor={colors[index]}
+                          bgColor={colors[item.id]}
                           handleCheckboxChange={handleCheckboxChange}
                           checkedItems={checkedItems}
                         />
