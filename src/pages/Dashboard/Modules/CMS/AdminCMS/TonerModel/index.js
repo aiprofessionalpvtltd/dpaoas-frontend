@@ -3,14 +3,7 @@ import CustomTable from "../../../../../../components/CustomComponents/CustomTab
 import Header from "../../../../../../components/Header";
 import { Layout } from "../../../../../../components/Layout";
 import { CMSsidebarItems } from "../../../../../../utils/sideBarItems";
-import {
-  getAllTonerModels,
-  getTonersModelById,
-  searchTonerModels,
-  tonerModelDelete,
-} from "../../../../../../api/APIs";
 import { useNavigate } from "react-router-dom";
-
 import { ToastContainer } from "react-toastify";
 import {
   showErrorMessage,
@@ -18,6 +11,12 @@ import {
 } from "../../../../../../utils/ToastAlert";
 import { useFormik } from "formik";
 import { date } from "yup";
+import {
+  getAllTonerModels,
+  getTonersModelById,
+  searchTonerModels,
+  tonerModelDelete,
+} from "../../../../../../api/APIs/Services/TonerInstallation.service";
 
 function CMSTonerModels() {
   const navigate = useNavigate();

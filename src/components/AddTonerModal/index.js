@@ -3,7 +3,8 @@ import React from "react";
 import Modal from "react-modal";
 import * as Yup from "yup";
 import { showSuccessMessage } from "../../utils/ToastAlert";
-import { createTonarModal } from "../../api/APIs";
+import { createTonarModal } from "../../api/APIs/Services/TonerInstallation.service";
+// import { createTonarModal } from "../../api/APIs";
 
 const customStyles = {
   content: {

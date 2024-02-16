@@ -91,7 +91,7 @@ function CustomTable({
             Previous
           </button>
         </li>
-        {Array.from({ length: totalPages }).map((_, index) => (
+        {Array.from({ length: totalPages })?.map((_, index) => (
           <li key={index} className={`page-item ${currentPage === index ? "active" : ""}`}>
             <button className="page-link" onClick={() => handlePageChange(index)}>
               {index + 1}
@@ -159,7 +159,7 @@ function CustomTable({
             </div>
           )}
 
-          {data.length <= 0 && (
+          {data?.length <= 0 && (
             // <div
             //   style={{
             //     textAlign: "center",
@@ -183,7 +183,7 @@ function CustomTable({
           >
             <thead>
               <tr>
-                {keys.map((key, index) => (
+                {keys?.map((key, index) => (
                   <th
                     key={index}
                     className="text-center"
@@ -196,7 +196,7 @@ function CustomTable({
                     {formatHeader(key)}
                   </th>
                 ))}
-                {data.length > 0 && !ActionHide && (
+                {data?.length > 0 && !ActionHide && (
                   <th
                     className="text-center"
                     style={{
@@ -212,9 +212,9 @@ function CustomTable({
             </thead>
             <tbody>
               {totalCount || hidePagination
-                ? data.map((item, rowIndex) => (
+                ? data?.map((item, rowIndex) => (
                     <tr key={rowIndex}>
-                      {keys.map((key, colIndex) => (
+                      {keys?.map((key, colIndex) => (
                         // <td key={colIndex} className="text-center">
                         //     {item[key]}
                         // </td>
@@ -338,9 +338,9 @@ function CustomTable({
                       )}
                     </tr>
                   ))
-                : displayedData.map((item, rowIndex) => (
+                : displayedData?.map((item, rowIndex) => (
                     <tr key={rowIndex}>
-                      {keys.map((key, colIndex) => (
+                      {keys?.map((key, colIndex) => (
                         // <td key={colIndex} className="text-center">
                         //     {item[key]}
                         // </td>
@@ -484,7 +484,7 @@ function CustomTable({
         </div>
         {hidePagination
           ? null
-          : data.length > 0 && (
+          : data?.length > 0 && (
               <div
                 style={{
                   display: "flex",

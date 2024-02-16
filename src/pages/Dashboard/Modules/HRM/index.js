@@ -27,15 +27,13 @@ function HRMDashboard() {
         name: res.name,
         description: res.description,
         roleStatus: res.roleStatus,
-        createdAt: moment(res.createdAt).format("YYYY/MM/DD"),
-        updatedAt: moment(res.updatedAt).format("YYYY/MM/DD"),
       };
     });
   };
   const fetchRoles = async () => {
     try {
       const response = await getRoles();
-      const filterData = transformLeavesData(response.data)
+      const filterData = transformLeavesData(response.data?.roles)
       setRolesList(filterData);
     } catch (error) {
       console.log(error);

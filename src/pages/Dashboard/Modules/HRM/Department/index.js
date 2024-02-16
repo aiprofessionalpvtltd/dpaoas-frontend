@@ -36,7 +36,7 @@ function HRMDepartment() {
     try {
       const response = await getDepartment(currentPage, pageSize);
       if (response?.success) {
-        const transformedData = transformDepartmentData(response?.data);
+        const transformedData = transformDepartmentData(response?.data?.departments);
         setCount(response?.count);
         setDepartmentData(transformedData);
       }

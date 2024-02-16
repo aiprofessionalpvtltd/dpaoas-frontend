@@ -19,6 +19,7 @@ const validationSchema = Yup.object({
 });
 function HRMAddEditDepartment() {
   const location = useLocation();
+  console.log(location.state);
   // const navigate = useNavigate();
 
   const formik = useFormik({
@@ -30,10 +31,8 @@ function HRMAddEditDepartment() {
 
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      // Handle form submission here
-      // console.log(values);
       if (location.state) {
-        UpdateDepartmentApi();
+        UpdateDepartmentApi(values);
       } else {
         CreateDepartmentApi(values);
       }
@@ -109,7 +108,8 @@ function HRMAddEditDepartment() {
                             : ""
                         }`}
                         id="departmentName"
-                        placeholder={formik.values.departmentName}
+                        placeholder={"Department Name"}
+                        value={formik.values.departmentName}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
@@ -123,18 +123,33 @@ function HRMAddEditDepartment() {
                   </div>
                   {location && location?.state && (
                     <div className="col-6">
-                      <div className="mb-3">
-                        <label className="form-label">Status</label>
-                        <input
-                          type="text"
-                          className={`form-control`}
-                          id="exampleFormControlInput1"
-                          placeholder={formik.values.status}
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          value={formik.values.status}
-                        />
-                      </div>
+                    <div className="mb-3">
+                      <label className="form-label">Status</label>
+                      <select
+                        class={`form-select ${formik.touched.status &&
+                            formik.errors.status
+                            ? "is-invalid"
+                            : ""
+                            }`}
+                        id="status"
+                        name="status"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.status}
+                      >
+                        <option value={""} selected disabled hidden>
+                          Select
+                        </option>
+                        <option value="active">Active</option>
+                        <option value="inactive">InActive</option>
+                      </select>
+                      {formik.touched.status &&
+                        formik.errors.status && (
+                          <div className="invalid-feedback">
+                            {formik.errors.status}
+                          </div>
+                        )}
+                    </div>
                     </div>
                   )}
                 </div>

@@ -5,14 +5,7 @@ import { CMSsidebarItems } from "../../../../../../utils/sideBarItems";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import Header from "../../../../../../components/Header";
 import moment from "moment";
-import * as Yup from "yup";
-import {
-  SearchToner,
-  getAllTonerModels,
-  getTonersById,
-  getallToners,
-  tonerDelete,
-} from "../../../../../../api/APIs";
+import * as XLSX from "xlsx";
 import { useNavigate } from "react-router-dom";
 import {
   showErrorMessage,
@@ -25,6 +18,13 @@ import Select from "react-select";
 import { AuthContext } from "../../../../../../api/AuthContext";
 import { ToastContainer } from "react-toastify";
 import { getallcomplaintTypes } from "../../../../../../api/APIs/Services/Complaint.service";
+import {
+  SearchToner,
+  getAllTonerModels,
+  getTonersById,
+  getallToners,
+  tonerDelete,
+} from "../../../../../../api/APIs/Services/TonerInstallation.service";
 
 function CMSTonerInstallationReports() {
   const navigate = useNavigate();
@@ -68,6 +68,7 @@ function CMSTonerInstallationReports() {
       status: item?.status,
     }));
   };
+
   const getToner = useCallback(async () => {
     try {
       const response = await getallToners(currentPage, pageSize);
@@ -75,6 +76,7 @@ function CMSTonerInstallationReports() {
         const transformedData = transformTonerData(
           response?.data?.tonerInstallations
         );
+
         setCount(response?.data?.count);
         setTonerData(transformedData);
       }
@@ -165,6 +167,40 @@ function CMSTonerInstallationReports() {
     } catch (error) {
       console.log(error);
       showErrorMessage(error?.response?.data?.error);
+    }
+  };
+  // Handle Export xls File
+
+  const hendleExportExcel = async () => {
+    try {
+      const response = await getallToners(currentPage, pageSize);
+
+      if (response?.success) {
+        const DataArray = response?.data?.tonerInstallations;
+        console.log(DataArray);
+        const Data = DataArray.map((item) => ({
+          SR: item.id,
+          RequestDate: item.requestDate
+            ? moment(item.requestDate).format("DD/MM/YYYY")
+            : "",
+          UserRequest: `${item?.requestUser?.employee?.firstName} ${item?.requestUser?.employee?.lastName}`,
+          BranchRequest: item?.requestBranch?.complaintTypeName,
+          TonerModel: item?.tonerModel?.tonerModel,
+          Qty: item?.quantity,
+          status: item?.status,
+          CreatedAt: item?.createdAt,
+          updatedAt: item?.updatedAt,
+        }));
+
+        const worksheet = XLSX.utils.json_to_sheet(Data);
+
+        const workbook = XLSX.utils.book_new();
+
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+        XLSX.writeFile(workbook, "DataSheet.xlsx");
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
     }
   };
   return (
@@ -290,26 +326,26 @@ function CMSTonerInstallationReports() {
                   data={tonarData}
                   tableTitle="Toner Installation Reports"
                   handlePageChange={handlePageChange}
-                  singleDataCard={true}
-                  // hideEditIcon={true}
                   currentPage={currentPage}
                   pageSize={pageSize}
                   headertitlebgColor={"#666"}
                   headertitletextColor={"#FFF"}
                   totalCount={count}
-                  // hideDeleteIcon={true}
                   showPrint={false}
-                  // ActionHide={true}
                   addBtnText={"Add Toner Installation"}
                   handleAdd={() => navigate("/cms/dashboard/toner/addedit")}
                   handleEdit={(item) => hendleEdit(item.SR)}
                   handleDelete={(item) => handleDelete(item.SR)}
                 />
-                {/* <div class="d-grid gap-2 d-md-flex justify-content-md-start col mt-5">
-                  <button class="btn btn-primary" type="button">
-                    Print Report
+                <div class="d-grid gap-2 d-md-flex justify-content-md-start col">
+                  <button
+                    class="btn btn-primary"
+                    type="button"
+                    onClick={() => hendleExportExcel()}
+                  >
+                    Export Excel
                   </button>
-                </div> */}
+                </div>
               </div>
             </div>
           </div>
