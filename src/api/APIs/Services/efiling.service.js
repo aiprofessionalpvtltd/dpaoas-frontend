@@ -19,11 +19,11 @@ export const createEfiling = async (data) => {
     throw error;
   }
 };
-export const getAllEfiling = async (userId, currentPage, pageSize) => {
+export const getAllEfiling = async (currentPage, pageSize, userId) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClientMMS.get(
-      `/files/?currentPage=${currentPage}&pageSize=${pageSize}?userId=${userId}`,
+      `/files?page=${currentPage}&pageSize=${pageSize}&userId=${userId}`,
     );
     return response?.data;
   } catch (error) {
