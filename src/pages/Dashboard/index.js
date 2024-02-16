@@ -49,7 +49,7 @@ function Dashboard() {
             setPermissionsLocal(localPermissionsData);
 
       // Check if permissions exist and has length
-      if (permissions && permissions.length > 0) {
+      if (permissions && permissions.length > 0 && roles) {
         const res = CheckPermission(userRole?.role?.name, roles, permissions);
                 setPermissionsData(res?.permissions);
         setPermissionsLocal(res?.permissions);
@@ -147,7 +147,7 @@ function Dashboard() {
     },
     {
       title: "E-Filing System",
-      link: "/efiling/dashboard",
+      link: "/efiling/dashboard/files",
       type: "",
       cardbg: "greenbg",
       icon: faBuilding,

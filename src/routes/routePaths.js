@@ -117,6 +117,7 @@ import CMSTonerModels from "../pages/Dashboard/Modules/CMS/AdminCMS/TonerModel";
 import AddEditTonerModel from "../pages/Dashboard/Modules/CMS/AdminCMS/TonerModel/AddEditTonerModels";
 import HRMBranches from "../pages/Dashboard/Modules/HRM/Branches";
 import HRMAddEditBranch from "../pages/Dashboard/Modules/HRM/Branches/AddEditBranch";
+import Files from "../pages/Dashboard/Modules/EFiling/Files";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -387,4 +388,6 @@ export const ProtectedRoutes = [
   { path: "/efiling/dashboard/fileDetail", element: <FileDetail /> },
   { path: "/efiling/dashboard/addedit", element: <AddEditFileForm /> },
   { path: "/efiling/dashboard/addeditcase", element: <AddEditCaseForm /> },
+  { path: "/efiling/dashboard/files", element: <Files /> },
+
 ];
