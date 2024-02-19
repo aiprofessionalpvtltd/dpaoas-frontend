@@ -30,6 +30,7 @@ function Files() {
       fileNumber: item?.fileNumber,
       subject: item?.fileSubject,
       branch: item?.branches?.branchName,
+      fileStatus:item?.fileStatus
     }));
   };
   const getAllFilesAPi = useCallback(async () => {
@@ -51,6 +52,7 @@ function Files() {
       const response = await DeleteEfiling(id)
       if (response.success) {
         showSuccessMessage(response?.message)
+        getAllFilesAPi()
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message)
