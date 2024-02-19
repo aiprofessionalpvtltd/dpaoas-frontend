@@ -185,7 +185,7 @@ function FileDetail() {
         fkBranchId: filesData?.fkBranchId || "",
         fkdepartmentId: filesData?.fkdepartmentId || "",
         fkMinistryId: filesData?.fkMinistryId || "",
-        receivedOn: new Date(filesData?.receivedOn) || "",
+        receivedOn: filesData?.receivedOn ? new Date(filesData?.receivedOn) : new Date(),
         year: filesData?.year || "",
         // notingDescription: filesData?.notingDescription || "",
         // correspondingDescription: filesData?.correspondingDescription || "",
@@ -351,49 +351,21 @@ function FileDetail() {
                       </div>
                     </div>
                     <div class="row">
-                      {/* <div class="col">
+                    <div class="col">
                         <div class="mb-3">
-                          <label class="form-label">Case Number</label>
-                          <input
-                            type="email"
-                            class="form-control"
-                            placeholder="Case Number"
-                            disabled={viewPage ? true : false}
-                            id="caseNumber"
-                            name="caseNumber"
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            value={formik.values.caseNumber}
-                          />
-                        </div>
-                      </div> */}
-                      <div className="col">
-                        <div className="mb-3" style={{ position: "relative" }}>
-                          <label className="form-label">Received On</label>
-                          <span
-                            style={{
-                              position: "absolute",
-                              right: "15px",
-                              top: "36px",
-                              zIndex: 1,
-                              fontSize: "20px",
-                              zIndex: "1",
-                              color: "#666",
-                            }}
-                          >
-                            <FontAwesomeIcon icon={faCalendarAlt} />
-                          </span>
-                          <DatePicker
-                            selected={formik.values.receivedOn}
-                            disabled={viewPage ? true : false}
-                            onChange={(date) =>
-                              formik.setFieldValue("receivedOn", date)
-                            }
-                            onBlur={formik.handleBlur}
-                            minDate={new Date()}
-                            className={`form-control`}
-                          />
+                          <div class="mb-3">
+                            <label class="form-label">Priority</label>
+                            <select class="form-select" disabled={viewPage ? true : false}
+                              id="priority"
 
+                              name="priority"
+                              onChange={formik.handleChange}
+                              onBlur={formik.handleBlur}
+                              value={formik.values.priority}>
+                              <option value={"Normal"}>Normal</option>
+                              <option value={"Immediate"}>Immediate</option>
+                            </select>
+                          </div>
                         </div>
                       </div>
                       <div class="col-6">
@@ -419,24 +391,7 @@ function FileDetail() {
 
                     </div>
                     <div class="row">
-                      <div class="col">
-                        <div class="mb-3">
-                          <div class="mb-3">
-                            <label class="form-label">Priority</label>
-                            <select class="form-select" disabled={viewPage ? true : false}
-                              id="priority"
-
-                              name="priority"
-                              onChange={formik.handleChange}
-                              onBlur={formik.handleBlur}
-                              value={formik.values.priority}>
-                              <option value={"Normal"}>Normal</option>
-                              <option value={"Immediate"}>Immediate</option>
-                            </select>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col">
+                      <div class="col-6">
                         <div class="mb-3">
                           <label for="exampleFormControlInput1" class="form-label" >
                             File Type
@@ -539,7 +494,6 @@ function FileDetail() {
                                 top: "36px",
                                 zIndex: 1,
                                 fontSize: "20px",
-                                zIndex: "1",
                                 color: "#666",
                               }}
                             >
@@ -552,17 +506,10 @@ function FileDetail() {
                                 formik.setFieldValue("receivedOn", date)
                               }
                               onBlur={formik.handleBlur}
-                              minDate={new Date()}
-                              className={`form-control ${formik.touched.receivedOn && formik.errors.receivedOn
-                                ? "is-invalid"
-                                : ""
-                                }`}
+                              // minDate={new Date()}
+                              className={`form-control`}
                             />
-                            {formik.touched.receivedOn && formik.errors.receivedOn && (
-                              <div className="invalid-feedback">
-                                {formik.errors.receivedOn}
-                              </div>
-                            )}
+                            
                           </div>
                         </div>
                       </>
