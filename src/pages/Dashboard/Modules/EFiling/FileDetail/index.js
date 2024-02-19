@@ -280,8 +280,8 @@ function FileDetail() {
 
                 {directorData.length > 0 ? directorData.map((item) => (
                   <div key={item.id}>
-                    <p style={{ marginBottom: "0px", fontWeight: "bold" }}>{item?.employees?.departments?.departmentName}</p>
-                    <p style={{ marginBottom: "0" }}>{item?.fileInDairyNumber}</p>
+                    <p style={{ marginBottom: "0px", fontWeight: "bold" }}>{`${item?.employees?.firstName} ${item?.employees?.lastName} (${item?.employees?.departments?.departmentName})`}</p>
+                    <p style={{ marginBottom: "0" }}>{`Diary Number : ${item?.fileInDairyNumber}`}</p>
                     <p style={{ marginBottom: "0" }}>{moment(item?.createdAt).format("DD/MM/YYYY")}</p>
                     <p>{moment(item?.createdAt).format("hh:mm A")}</p>
                   </div>
@@ -780,12 +780,12 @@ function FileDetail() {
                             height="40"
                             class="rounded-circle mr-3"
                           />
-                          <div class="w-100" style={{position:"relative"}}>
+                          <div class="w-100" style={{ position: "relative" }}>
                             <div class="d-flex justify-content-between align-items-center">
                               <div class="d-flex flex-row align-items-center">
                                 <div style={{ float: "left" }}>
                                   <span class="mr-2">{`${item?.employees?.firstName}  ${item?.employees?.lastName}`}</span>
-                                  <small style={{ marginLeft: "0px", position:"absolute", top:"-21px" }} class="c-badge">
+                                  <small style={{ marginLeft: "0px", position: "absolute", top: "-21px" }} class="c-badge">
                                     {item?.employees?.employeeDesignation?.designationName}
                                   </small>
                                 </div>
@@ -800,7 +800,7 @@ function FileDetail() {
                             <p class="text-justify comment-text mb-0">
                               {item?.comment}
                             </p>
-                            <small style={{marginBottom:"20px",  background: item?.CommentStatus === "Approved" ? "green" :item?.CommentStatus === "Rejected" ? "red":"grey" }} class="c-badge">
+                            <small style={{ marginBottom: "20px", background: item?.CommentStatus === "Approved" ? "green" : item?.CommentStatus === "Rejected" ? "red" : "grey" }} class="c-badge">
                               {item?.CommentStatus}
                             </small>
                           </div>
