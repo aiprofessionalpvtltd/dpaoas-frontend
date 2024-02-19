@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Header from "../../../../../../components/Header";
 import { Layout } from "../../../../../../components/Layout";
 import { HRMsidebarItems } from "../../../../../../utils/sideBarItems";
@@ -9,13 +9,14 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Stepper, Step, StepLabel } from "@mui/material";
 import DatePicker from "react-datepicker";
-import { UpdateEmployee, createEmployee } from "../../../../../../api/APIs/Services/organizational.service";
+import { UpdateEmployee, createEmployee, getDepartment, getDesignations, getRoles } from "../../../../../../api/APIs/Services/organizational.service";
 import { ToastContainer } from "react-toastify";
 import {
   showErrorMessage,
   showSuccessMessage,
 } from "../../../../../../utils/ToastAlert";
 import { Button } from "react-bootstrap";
+import { AuthContext } from "../../../../../../api/AuthContext";
 
 const validationSchema = Yup.object({
   employeename: Yup.string().required("Employee name is required"),
@@ -26,21 +27,28 @@ const validationSchema = Yup.object({
 });
 function HRMAddEditEmployee() {
   const location = useLocation();
-  const [dateofbirth, setDateOfBirth] = useState(new Date());
-  const [placeofbirth, setPlaceOfBirth] = useState(new Date());
-  const [cnicissue, setCnicIssue] = useState(new Date());
-  const [cnicexpire, setCnicExpire] = useState(new Date());
-  const [activeStep, setActiveStep] = useState(0);
+  const { employeeData } = useContext(AuthContext)
+  const [rolesList, setRolesList] = useState([])
+  const [departmentData, setDepartmentData] = useState([])
+  const [designationData, setDesignationData] = useState([])
+
 
   const formik = useFormik({
     initialValues: {
-      employeename: "",
-      filenumber: "",
-      fatherhusbandname: "",
-      cnicnumber: "",
-      permanentaddress: "",
+      firstName: "",
+      lastName: "",
+      userName: "",
+      phoneNo: "",
+      gender: "",
+      email: "",
+      password: "",
+      fileNumber: "",
+      supervisor: "",
+      fkRoleId: "",
+      fkDepartmentId: "",
+      fkDesignationId: "",
     },
-    validationSchema: validationSchema,
+    // validationSchema: validationSchema,
     onSubmit: (values) => {
       // Handle form submission here
       if (location.state) {
@@ -53,18 +61,18 @@ function HRMAddEditEmployee() {
 
   const CreateEmployeeApi = async (values) => {
     const data = {
-      firstName: values.fatherhusbandname,
-      lastName: "string",
-      userName: values.employeename,
-      phoneNo: values.permanentaddress,
-      gender: "string",
-      email: values.cnicnumber,
-      password: "string",
+      firstName: values.firstName,
+      lastName: values?.lastName,
+      userName: values.userName,
+      phoneNo: values.phoneNo,
+      gender: values.gender,
+      email: values.email,
+      password: values.password,
       fileNumber: values.filenumber,
-      supervisor: 0,
-      fkRoleId: 0,
-      fkDepartmentId: 0,
-      fkDesignationId: 0,
+      supervisor: values?.supervisor,
+      fkRoleId: values?.fkRoleId,
+      fkDepartmentId: values?.fkDepartmentId,
+      fkDesignationId: values?.fkDesignationId,
     };
     try {
       const response = await createEmployee(data);
@@ -78,18 +86,18 @@ function HRMAddEditEmployee() {
 
   const UpdateEmployeeApi = async (values) => {
     const data = {
-      firstName: values.fatherhusbandname,
-      lastName: "string",
-      userName: values.employeename,
-      phoneNo: values.permanentaddress,
-      gender: "string",
-      email: "test@test.com",
-      password: "string",
+      firstName: values.firstName,
+      lastName: values?.lastName,
+      userName: values.userName,
+      phoneNo: values.phoneNo,
+      gender: values.gender,
+      email: values.email,
+      password: values.password,
       fileNumber: values.filenumber,
-      supervisor: 0,
-      fkRoleId: 0,
-      fkDepartmentId: 0,
-      fkDesignationId: 0,
+      supervisor: values?.supervisor,
+      fkRoleId: values?.fkRoleId,
+      fkDepartmentId: values?.fkDepartmentId,
+      fkDesignationId: values?.fkDesignationId,
     };
     try {
       const response = await UpdateEmployee(location?.state?.id, data);
@@ -101,27 +109,49 @@ function HRMAddEditEmployee() {
     }
   };
 
-  const handlePrevStep = () => {
-    setActiveStep((prevStep) => prevStep - 1);
+
+  const fetchRoles = async () => {
+    try {
+      const response = await getRoles();
+      if (response.success) {
+        setRolesList(response?.data?.roles)
+      }
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const getDepartmentData = async () => {
+    try {
+      const response = await getDepartment(0, 50);
+      if (response?.success) {
+        setDepartmentData(response?.data?.departments);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
+  }
+
+  const getDesignationApi = async () => {
+    try {
+      const response = await getDesignations(0, 50);
+      if (response?.success) {
+        setDesignationData(response?.data?.designations);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const handleNextStep = () => {
-    setActiveStep((prevStep) => prevStep + 1);
-  };
+  useEffect(() => {
+    getDesignationApi()
+    getDepartmentData()
+    fetchRoles();
+  }, []);
 
-  const handleReset = () => {
-    setActiveStep(0);
-  };
-  const isStepCompleted = (stepIndex) => {
-    return stepIndex < activeStep;
-  };
-  const steps = [
-    {
-      label: "Presonal Detail",
-      component: <Step1 handleNextStep={handleNextStep} />,
-    },
-    { label: "Employee Information", component: <Step2 /> },
-  ];
+
+
   return (
     <Layout module={true} sidebarItems={HRMsidebarItems} centerlogohide={true}>
       <Header
@@ -138,65 +168,225 @@ function HRMAddEditEmployee() {
           class="dash-card-header p-3"
           style={{ background: "rgb(20, 174, 92)" }}
         >
-          <h2 class="float-start mt-2">Employee Detail</h2>
+          <h2 class="float-start mt-2">Add Employee</h2>
           <div class="clearfix"></div>
         </div>
         <div class="card-body">
           <div class="container-fluid">
-            <Stepper
-              activeStep={activeStep}
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                textAlign: "center",
-                width: "550px",
-                margin: "0 auto",
-              }}
-            >
-              {steps.map((step, index) => (
-                <Step
-                  key={index}
-                  completed={isStepCompleted(index)}
-                  sx={{ mt: 1 }}
-                >
-                  <StepLabel>{step.label}</StepLabel>
-                </Step>
-              ))}
-            </Stepper>
+            <form onSubmit={formik.handleSubmit}>
+              <div class="row">
 
-            {/* Display the current step component */}
-            {steps[activeStep].component}
-
-            {/* Navigation buttons */}
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "flex-end",
-                marginTop: "16px",
-              }}
-            >
-              {activeStep > 0 && (
-                <Button onClick={handlePrevStep} style={{ marginRight: "8px" }}>
-                  Back
-                </Button>
-              )}
-              {activeStep < steps.length - 1 && (
-                <Button
-                  onClick={handleNextStep}
-                  style={{ marginLeft: "8px", marginRight: "0" }}
-                >
-                  Next
-                </Button>
-              )}
-              {activeStep === steps.length - 1 && (
-                <Button
-                  onClick={handleReset}
-                  style={{ marginLeft: "8px", marginRight: "0" }}
-                >
-                  submit
-                </Button>
-              )}
-            </div>
+                <div class="col">
+                  <div class="mb-3">
+                    <label for="" class="form-label">
+                      First Name
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="firstName"
+                      placeholder={"firstName"}
+                      value={formik.values.firstName}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                    />
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="mb-3">
+                    <label for="" class="form-label">
+                      Last Name
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="lastName"
+                      placeholder={"lastName"}
+                      value={formik.values.lastName}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                    />
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="mb-3">
+                    <label for="" class="form-label">
+                      User Name
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="userName"
+                      placeholder={"userName"}
+                      value={formik.values.userName}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                    />
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="mb-3">
+                    <label for="" class="form-label">
+                      Phone No
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="phoneNo"
+                      placeholder={"Phone No"}
+                      value={formik.values.phoneNo}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <div class="mb-3">
+                    <label for="" class="form-label">
+                      Gender
+                    </label>
+                    <select class="form-select"
+                      id="gender"
+                      value={formik.values.gender}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}>
+                      <option value="" disabled hidden>Select</option>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="mb-3">
+                    <label for="" class="form-label">
+                      Email
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="email"
+                      placeholder={"Email"}
+                      value={formik.values.email}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                    />
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="mb-3">
+                    <label for="" class="form-label">
+                      Password
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="password"
+                      placeholder={"Password"}
+                      value={formik.values.password}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                    />
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="mb-3">
+                    <label for="" class="form-label">
+                      File Number
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="fileNumber"
+                      placeholder={"File Number"}
+                      value={formik.values.fileNumber}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <div class="mb-3">
+                    <label for="" class="form-label">
+                      Supervisor
+                    </label>
+                    <select class="form-select " id="supervisor"
+                      value={formik.values.supervisor}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}>
+                      <option value="" disabled hidden>Select</option>
+                      {employeeData &&
+                        employeeData?.map((item) => (
+                          <option value={item.id}>{`${item.firstName}${item.lastName}`}</option>
+                        ))}
+                    </select>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="mb-3">
+                    <label for="" class="form-label">
+                      Roles
+                    </label>
+                    <select class="form-select " id="fkRoleId"
+                      value={formik.values.fkRoleId}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}>
+                      <option value="" disabled hidden>Select</option>
+                      {rolesList &&
+                        rolesList?.map((item) => (
+                          <option value={item.id}>{item.name}</option>
+                        ))}
+                    </select>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="mb-3">
+                    <label for="" class="form-label">
+                      Department
+                    </label>
+                    <select class="form-select " id="fkDepartmentId"
+                      value={formik.values.fkDepartmentId}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}>
+                      <option value={""} selected disabled hidden>
+                        Select
+                      </option>
+                      {departmentData &&
+                        departmentData?.map((item) => (
+                          <option value={item.id}>{item.departmentName}</option>
+                        ))}
+                    </select>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="mb-3">
+                    <label for="" class="form-label">
+                      Designation
+                    </label>
+                    <select class="form-select " id="fkDesignationId"
+                      value={formik.values.fkDesignationId}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}>
+                      <option value={""} selected disabled hidden>
+                        Select
+                      </option>
+                      {designationData &&
+                        designationData?.map((item) => (
+                          <option value={item.id}>{item.designationName}</option>
+                        ))}
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div className="d-grid gap-2 d-md-flex justify-content-md-end">
+                <button className="btn btn-primary" type="submit">
+                  Submit
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
@@ -206,387 +396,3 @@ function HRMAddEditEmployee() {
 
 export default HRMAddEditEmployee;
 
-const Step1 = () => {
-  return (
-    <div>
-      <section
-        class="p-3 mt-5"
-        style={{ boxShadow: " 1px 2px 12px 2px rgba(156,155,155,0.75" }}
-      >
-        <div class="row">
-          <div class="col">
-            <div class="mb-3">
-              <label for="" class="form-label">
-                Is Active
-              </label>
-              <select class="form-select " placeholder="Is Active">
-                <option value="1">Yes</option>
-                <option value="2">No</option>
-              </select>
-            </div>
-          </div>
-          <div class="col">
-            <div class="mb-3">
-              <label for="" class="form-label">
-                Title
-              </label>
-              <input
-                type="email"
-                class="form-control"
-                id=""
-                placeholder="Title"
-              />
-            </div>
-          </div>
-          <div class="col">
-            <div class="mb-3">
-              <label for="" class="form-label">
-                Name
-              </label>
-              <input
-                type="email"
-                class="form-control"
-                id=""
-                placeholder="Name"
-              />
-            </div>
-          </div>
-          <div class="col">
-            <div class="mb-3">
-              <label for="" class="form-label">
-                Father/Husband Name
-              </label>
-              <input
-                type="email"
-                class="form-control"
-                id=""
-                placeholder="Father/Husband Name"
-              />
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col">
-            <div class="mb-3">
-              <label for="" class="form-label">
-                Gender
-              </label>
-              <select class="form-select " placeholder="Gender">
-                <option value="1">Male</option>
-                <option value="2">Female</option>
-              </select>
-            </div>
-          </div>
-          <div class="col">
-            <div class="mb-3">
-              <label for="" class="form-label">
-                Date of Birth
-              </label>
-              <input
-                type="email"
-                class="form-control"
-                id=""
-                placeholder="Date of Birth"
-              />
-            </div>
-          </div>
-          <div class="col">
-            <div class="mb-3">
-              <label for="" class="form-label">
-                Place of Birth
-              </label>
-              <select class="form-select " placeholder="Place of Birth">
-                <option value="1">Islamabad</option>
-                <option value="2">Lahore</option>
-              </select>
-            </div>
-          </div>
-          <div class="col">
-            <div class="mb-3">
-              <label for="" class="form-label">
-                CNIC No
-              </label>
-              <input
-                type="email"
-                class="form-control"
-                id=""
-                placeholder="CNIC No"
-              />
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col">
-            <div class="mb-3">
-              <label for="" class="form-label">
-                CNIC Issue Date
-              </label>
-              <input
-                type="email"
-                class="form-control"
-                id=""
-                placeholder="CNIC Issue Date"
-              />
-            </div>
-          </div>
-          <div class="col">
-            <div class="mb-3">
-              <label for="" class="form-label">
-                CNIC Exp Date
-              </label>
-              <input
-                type="email"
-                class="form-control"
-                id=""
-                placeholder="CNIC Exp Date"
-              />
-            </div>
-          </div>
-          <div class="col">
-            <div class="mb-3">
-              <label for="" class="form-label">
-                Place of Issue
-              </label>
-              <select class="form-select " placeholder="Place of Issue">
-                <option value="1">Islamabad</option>
-                <option value="2">Lahore</option>
-              </select>
-            </div>
-          </div>
-          <div class="col">
-            <div class="mb-3">
-              <label for="" class="form-label">
-                NTN
-              </label>
-              <input
-                type="email"
-                class="form-control"
-                id=""
-                placeholder="NTN"
-              />
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col">
-            <div class="mb-3">
-              <label for="" class="form-label">
-                Religion
-              </label>
-              <select class="form-select " placeholder="Religion">
-                <option value="1">Christianity</option>
-                <option value="2">Hinduism</option>
-                <option value="3">Islam</option>
-                <option value="4">Other</option>
-                <option value="5">Sikh</option>
-              </select>
-            </div>
-          </div>
-          <div class="col">
-            <div class="mb-3">
-              <label for="" class="form-label">
-                Marital Status
-              </label>
-              <input
-                type="email"
-                class="form-control"
-                id=""
-                placeholder="Marital Status"
-              />
-            </div>
-          </div>
-          <div class="col">
-            <div class="mb-3">
-              <label for="" class="form-label">
-                Province
-              </label>
-              <input
-                type="email"
-                class="form-control"
-                id=""
-                placeholder="Province"
-              />
-            </div>
-          </div>
-          <div class="col">
-            <div class="mb-3">
-              <label for="" class="form-label">
-                Domicile
-              </label>
-              <input
-                type="email"
-                class="form-control"
-                id=""
-                placeholder="Domicile"
-              />
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col">
-            <div class="mb-3">
-              <label class="form-label">Permanent Address</label>
-              <textarea class="form-control"></textarea>
-            </div>
-          </div>
-          <div class="col">
-            <div class="mb-3">
-              <label class="form-label">City</label>
-              <select class="form-select">
-                <option>Select</option>
-              </select>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col">
-            <div class="mb-3">
-              <label class="form-label">Local Address</label>
-              <textarea class="form-control"></textarea>
-            </div>
-          </div>
-          <div class="col">
-            <div class="mb-3">
-              <label class="form-label">City</label>
-              <select class="form-select">
-                <option>Select</option>
-              </select>
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
-  );
-};
-const Step2 = () => {
-  return (
-    <section
-      class="p-3 mt-5"
-      style={{ boxShadow: " 1px 2px 12px 2px rgba(156,155,155,0.75" }}
-    >
-      <div class="row">
-        <div class="col">
-          <div class="mb-3">
-            <label for="" class="form-label">
-              Ref-Id
-            </label>
-            <input
-              type="email"
-              class="form-control"
-              id=""
-              placeholder="Ref-Id"
-            />
-          </div>
-        </div>
-        <div class="col">
-          <div class="mb-3">
-            <label for="" class="form-label">
-              Post
-            </label>
-            <input type="email" class="form-control" id="" placeholder="Post" />
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          <div class="mb-3">
-            <label for="" class="form-label">
-              BPS
-            </label>
-            <input type="email" class="form-control" id="" placeholder="BPS" />
-          </div>
-        </div>
-        <div class="col">
-          <div class="mb-3">
-            <label for="" class="form-label">
-              Post Status
-            </label>
-            <select class="form-select " placeholder="Post Status">
-              <option value="1">Permanent</option>
-              <option value="2">Probition</option>
-            </select>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          <div class="mb-3">
-            <label for="" class="form-label">
-              Gazetted
-            </label>
-            <input
-              type="email"
-              class="form-control"
-              id=""
-              placeholder="Gazetted"
-            />
-          </div>
-        </div>
-        <div class="col">
-          <div class="mb-3">
-            <label for="" class="form-label">
-              Appointment Date
-            </label>
-            <input
-              type="email"
-              class="form-control"
-              id=""
-              placeholder="Appointment Date"
-            />
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          <div class="mb-3">
-            <label for="" class="form-label">
-              Current Status
-            </label>
-            <input
-              type="email"
-              class="form-control"
-              id=""
-              placeholder="Current Status"
-            />
-          </div>
-        </div>
-        <div class="col">
-          <div class="mb-3">
-            <label for="" class="form-label">
-              Status Date
-            </label>
-            <input
-              type="email"
-              class="form-control"
-              id=""
-              placeholder="Status Date"
-            />
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-6">
-          <div class="mb-3">
-            <label for="" class="form-label">
-              Is Current
-            </label>
-            <select class="form-select " placeholder="Is Current">
-              <option value="1">Yes</option>
-              <option value="2">No</option>
-            </select>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-6">
-          <div class="mb-3">
-            <label for="" class="form-label">
-              Detail
-            </label>
-            <textarea style={{ width: "100%" }} class="form-control"></textarea>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-};
