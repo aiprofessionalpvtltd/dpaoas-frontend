@@ -17,7 +17,7 @@ import {
 } from "mdb-react-ui-kit";
 import { TinyEditor } from "../../../../../components/CustomComponents/Editor/TinyEditor";
 import NewCaseEfilling from "../AddEditFileForm";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { getUserData } from "../../../../../api/Auth";
 import { UpdateEfiling, UploadEfilingAttechment, getEFilesByID } from "../../../../../api/APIs/Services/efiling.service";
@@ -63,6 +63,11 @@ function FileDetail() {
 
   const [filesData, setFilesData] = useState();
   const [remarksData, setRemarksData] = useState([]);
+  const navigate = useNavigate()
+
+  console.log('====================================');
+  console.log("filesData?.fileRemarks[0]?.CommentStatus", filesData?.fileRemarks);
+  console.log('====================================');
 
   const formik = useFormik({
     initialValues: {
@@ -79,7 +84,7 @@ function FileDetail() {
       // notingDescription: "",
       // correspondingDescription: "",
       assignedTo: "",
-      CommentStatus: "",
+      CommentStatus: filesData ? filesData?.fileRemarks[0]?.CommentStatus : "",
       comment: "",
     },
     // validationSchema: validationSchema,
@@ -116,7 +121,8 @@ function FileDetail() {
       const response = await UpdateEfiling(fileId, Data)
       if (response?.success) {
         showSuccessMessage(response?.message)
-        formik.resetForm()
+        // formik.resetForm()
+        // navigate("/efiling/dashboard/files")
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -439,6 +445,7 @@ function FileDetail() {
                                   onChange={formik.handleChange}
                                   onBlur={formik.handleBlur}
                                   value={formik.values.CommentStatus}>
+                                  <option value="" selected disabled hidden>Approve</option>
                                   <option value={"Approved"}>Approve</option>
                                   <option value={"Disapproved"}>Disapprove</option>
                                 </select>
