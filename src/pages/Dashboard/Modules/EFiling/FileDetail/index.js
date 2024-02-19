@@ -621,7 +621,7 @@ function FileDetail() {
                                   onChange={formik.handleChange}
                                   onBlur={formik.handleBlur}
                                   value={formik.values.CommentStatus}>
-                                  <option value="" selected disabled hidden>Approve</option>
+                                  <option value="" selected disabled hidden>Select</option>
                                   <option value={"Approved"}>Approved</option>
                                   <option value={"Rejected"}>Rejected</option>
                                   <option value={"Discuss"}>Discuss</option>
