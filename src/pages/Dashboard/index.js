@@ -11,6 +11,7 @@ import {
   faClipboardQuestion,
   faSms,
   faBuilding,
+  faFileAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { AuthContext } from "../../api/AuthContext";
 import { getPermissionsData, getUserData, logout, setPermissionsData, setRolesData } from "../../api/Auth";
@@ -103,7 +104,7 @@ function Dashboard() {
       type: "",
       cardbg: "lightGreen",
       icon: faFileImport,
-      permission: ["Motion Management"],
+      permission: ["Motion"],
     },
     {
       title: "Question Management System",
@@ -111,7 +112,7 @@ function Dashboard() {
       type: "",
       cardbg: "orangebg",
       icon: faClipboardQuestion,
-      permission: ["Question Management"],
+      permission: ["Question"],
     },
     {
       title: "SMS Constituent Outreach System",
@@ -119,7 +120,7 @@ function Dashboard() {
       type: "",
       cardbg: "greybg",
       icon: faSms,
-      permission: ["Constituent Outreach"],
+      permission: ["SMS"],
     },
     {
       title: "Human Resource Management System",
@@ -135,7 +136,7 @@ function Dashboard() {
       type: "",
       cardbg: "bluebg",
       icon: faMailBulk,
-      permission: ["Translation Management"],
+      permission: ["Translation"],
     },
     {
       title: "Complaint Management System",
@@ -143,14 +144,14 @@ function Dashboard() {
       type: "",
       cardbg: "bluebg",
       icon: faMailBulk,
-      permission: ["Complaint Management"],
+      permission: ["Complaint"],
     },
     {
       title: "E-Filing System",
       link: "/efiling/dashboard/files",
       type: "",
       cardbg: "greenbg",
-      icon: faBuilding,
+      icon: faFileAlt,
       permission: ["E-Filing"],
     },
   ];
@@ -165,20 +166,18 @@ function Dashboard() {
   for (let i = 0; i < filteredTiles.length; i += 4) {
     rows.push(filteredTiles.slice(i, i + 4));
   }
+  const filteredRows = rows.flatMap(row => row.filter(item => item.title !== "Organizational Dashboard"));
 
+  console.log("filteredRows:", filteredRows);
   return (
     <Layout>
       <div class="dashboard-content" style={{ marginTop: "100px" }}>
         <div class="clearfix"></div>
 
-        {rows.map((row, rowIndex) => (
-          <div key={rowIndex} className="row main-dashboard-tiles">
-            {row.map((tile, colIndex) => (
-              <div key={colIndex} className="col-3">
-                <Tiles title={tile.title} link={tile.link} type={tile.type} cardbg={tile.cardbg} icon={tile.icon} />
-              </div>
-            ))}
-          </div>
+        {filteredRows.map((row, rowIndex) => (
+         <div key={rowIndex} className="col-3">
+         <Tiles title={row.title} link={row.link} type={row.type} cardbg={row.cardbg} icon={row.icon} />
+       </div>
         ))}
       </div>
     </Layout>

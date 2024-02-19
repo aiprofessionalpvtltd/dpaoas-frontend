@@ -25,6 +25,8 @@ import { ToastContainer } from "react-toastify";
 import { showErrorMessage, showSuccessMessage } from "../../../../../utils/ToastAlert";
 import moment from "moment";
 import { AuthContext } from "../../../../../api/AuthContext";
+import { getDepartment } from "../../../../../api/APIs/Services/organizational.service";
+import { getBranches } from "../../../../../api/APIs/Services/Branches.services";
 
 const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
   return (
@@ -55,13 +57,22 @@ function FileDetail() {
   const [editorContent1, setEditorContent1] = useState();
   const { employeeData } = useContext(AuthContext)
   const UserData = getUserData()
+  const [filesData, setFilesData] = useState();
 
+  const [documentTypeVal, setDocumentTypeVal] = useState('');
+
+  const { ministryData } = useContext(AuthContext)
+  const [departmentData, setDepartmentData] = useState([])
+  const [branchesData, setBranchesData] = useState([])
+
+  console.log('====================================');
+  console.log("filesData?.fileType", filesData?.fileType);
+  console.log('====================================');
   const [fileId, setFIleId] = useState(location?.state?.id)
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [togleOpan, setTogleOpan] = useState(true);
 
-  const [filesData, setFilesData] = useState();
   const [remarksData, setRemarksData] = useState([]);
   const navigate = useNavigate()
 
@@ -102,11 +113,11 @@ function FileDetail() {
       fileSubject: values?.fileSubject,
       priority: values?.priority,
       fileCategory: values?.fileCategory,
-      fileType: values?.fileType,
-      // fkBranchId: values?.fkBranchId,
-      // fkdepartmentId: values?.fkdepartmentId,
-
-      receivedOn: values?.receivedOn,
+      fileType: documentTypeVal,
+      ...(values?.fkBranchId && { fkBranchId: values?.fkBranchId }),
+      ...(values?.fkdepartmentId && { fkdepartmentId: values?.fkdepartmentId }),
+      ...(values?.fkMinistryId && { fkMinistryId: values?.fkMinistryId }),
+      ...(values?.receivedOn && { receivedOn: values?.receivedOn }),
       year: values?.year,
       notingDescription: editorContent,
       correspondingDescription: editorContent1,
@@ -115,7 +126,8 @@ function FileDetail() {
       CommentStatus: values?.CommentStatus,
       comment: values?.comment,
       commentBy: UserData?.fkUserId
-    }
+    };
+
 
     try {
       const response = await UpdateEfiling(fileId, Data)
@@ -135,11 +147,15 @@ function FileDetail() {
   // use it (editorContent) when submitting whole file content
   console.log("Editor content", editorContent);
 
-
+  const [directorData, setDirectorData] = useState([])
+  console.log('====================================');
+  console.log("directorData", directorData);
+  console.log('====================================');
   const getFilesByID = async () => {
     try {
       const response = await getEFilesByID(fileId);
       if (response?.success) {
+        setDirectorData(response?.data?.filedairies)
         setRemarksData(response?.data?.fileRemarks)
         setFilesData(response?.data);
       }
@@ -174,8 +190,9 @@ function FileDetail() {
         // correspondingDescription: filesData?.correspondingDescription || "",
         assignedTo: filesData?.assignedTo || "",
         CommentStatus: filesData?.fileRemarks[0]?.CommentStatus || "",
-        comment: filesData?.fileRemarks[0]?.comment || "",
+        comment: "",
       });
+      setDocumentTypeVal(filesData?.fileType)
     }
   }, [filesData, formik.setValues]);
 
@@ -199,6 +216,37 @@ function FileDetail() {
     }
   }
 
+  const handleDocumentType = (e) => {
+    setDocumentTypeVal(e.target.value);
+  }
+  const getDepartmentData = async () => {
+    try {
+      const response = await getDepartment(0, 50);
+      if (response?.success) {
+        setDepartmentData(response?.data?.departments);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
+  }
+
+  const getBranchesapi = async () => {
+    try {
+      const response = await getBranches(0, 50);
+      if (response?.success) {
+        setBranchesData(response?.data?.rows);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
+  }
+
+  useEffect(() => {
+    getBranchesapi()
+    getDepartmentData();
+  }, [])
   return (
     <Layout centerlogohide={true}>
       <div className="dashboard-content" style={{ marginTop: 80 }}>
@@ -227,11 +275,29 @@ function FileDetail() {
         <div className="custom-editor">
           <div className="row">
             <div className="col-md-2">
-              <div class="noting">
-                <p style={{ marginBottom: "0px", fontWeight: "bold" }}>IT Directorate</p>
-                <p style={{ marginBottom: "0" }}>31-01-2024</p>
-                <p>4:03pm</p>
+              <div className="noting">
+
+
+                {directorData.length > 0 ? directorData.map((item) => (
+                  <div key={item.id}>
+                    <p style={{ marginBottom: "0px", fontWeight: "bold" }}>{item?.employees?.departments?.departmentName}</p>
+                    <p style={{ marginBottom: "0" }}>{item?.fileInDairyNumber}</p>
+                    <p style={{ marginBottom: "0" }}>{moment(item?.createdAt).format("DD/MM/YYYY")}</p>
+                    <p>{moment(item?.createdAt).format("hh:mm A")}</p>
+                  </div>
+                )) : (
+                  <div
+                    className="alert alert-danger mt-2"
+                    role="alert"
+                    style={{ width: "208px", margin: "0 auto", textAlign: "center" }}
+                  >
+                    No data found
+                  </div>
+                )}
               </div>
+
+
+
             </div>
             <div className="col-md-7">
               <form onSubmit={formik.handleSubmit}>
@@ -377,15 +443,125 @@ function FileDetail() {
                           <select class="form-select" disabled={location?.state?.view ? true : false}
                             id="fileType"
                             name="fileType"
-                            onChange={formik.handleChange}
+                            onChange={handleDocumentType}
                             onBlur={formik.handleBlur}
-                            value={formik.values.fileType}>
+                            value={documentTypeVal}>
+                            <option value={""} selected disabled hidden>Select</option>
+
                             <option value={"Internal"}>Internal</option>
                             <option value={"External"}>External</option>
                           </select>
                         </div>
                       </div>
                     </div>
+                  </div>
+                  <div className="row">
+                    {documentTypeVal === "Internal" ? (
+                      <>
+                        <div class="col-6">
+                          <div class="mb-3">
+                            <label class="form-label">Branch</label>
+                            <select
+                              class="form-select"
+                              id="fkBranchId"
+                              name="fkBranchId"
+                              onChange={formik.handleChange}
+                              onBlur={formik.handleBlur}
+                              value={formik.values.fkBranchId}
+                            >
+                              <option value={""} selected disabled hidden>
+                                Select
+                              </option>
+                              {branchesData &&
+                                branchesData?.map((item) => (
+                                  <option value={item.id}>{item.branchName}</option>
+                                ))}
+                            </select>
+                          </div>
+                        </div>
+
+                        <div class="col-6">
+                          <div class="mb-3">
+                            <label class="form-label">Department</label>
+                            <select
+                              class="form-select"
+                              id="fkdepartmentId"
+                              name="fkdepartmentId"
+                              onChange={formik.handleChange}
+                              onBlur={formik.handleBlur}
+                              value={formik.values.fkdepartmentId}
+                            >
+                              <option value={""} selected disabled hidden>
+                                Select
+                              </option>
+                              {departmentData &&
+                                departmentData?.map((item) => (
+                                  <option value={item.id}>{item.departmentName}</option>
+                                ))}
+                            </select>
+                          </div>
+                        </div>
+                      </>
+                    ) : documentTypeVal === "External" ? (
+                      <>
+                        <div class="col-6">
+                          <div class="mb-3">
+                            <label class="form-label">Ministries</label>
+                            <select
+                              class="form-select"
+                              id="fkMinistryId"
+                              name="fkMinistryId"
+                              onChange={formik.handleChange}
+                              onBlur={formik.handleBlur}
+                              value={formik.values.fkMinistryId}
+                            >
+                              <option value={""} selected disabled hidden>
+                                Select
+                              </option>
+                              {ministryData &&
+                                ministryData.map((item) => (
+                                  <option value={item.id}>{item.ministryName}</option>
+                                ))}
+                            </select>
+                          </div>
+                        </div>
+                        <div className="col-6">
+                          <div className="mb-3" style={{ position: "relative" }}>
+                            <label className="form-label">Received On</label>
+                            <span
+                              style={{
+                                position: "absolute",
+                                right: "15px",
+                                top: "36px",
+                                zIndex: 1,
+                                fontSize: "20px",
+                                zIndex: "1",
+                                color: "#666",
+                              }}
+                            >
+                              <FontAwesomeIcon icon={faCalendarAlt} />
+                            </span>
+                            <DatePicker
+                              selected={formik.values.receivedOn}
+                              onChange={(date) =>
+                                formik.setFieldValue("receivedOn", date)
+                              }
+                              onBlur={formik.handleBlur}
+                              minDate={new Date()}
+                              className={`form-control ${formik.touched.receivedOn && formik.errors.receivedOn
+                                ? "is-invalid"
+                                : ""
+                                }`}
+                            />
+                            {formik.touched.receivedOn && formik.errors.receivedOn && (
+                              <div className="invalid-feedback">
+                                {formik.errors.receivedOn}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </>
+                    ) : null}
                   </div>
 
                   <div class="shadow" style={{ padding: "25px" }}>
@@ -527,14 +703,14 @@ function FileDetail() {
                                     </div>
                                     {filesData && filesData?.fileAttachments?.map((item) => (
                                       <div class="MultiFile-label mt-3">
-                                        <a href={`http://172.16.170.8:5252/api${item.filename}`}>
+                                        <a href={`http://172.16.170.8:5252${item.filename}`}>
                                           <i class="fas fa-download"></i>
                                         </a>
                                         <a class="MultiFile-remove" href="#T7">
                                           x
                                         </a>
                                         <span class="MultiFile-label" title={item.filename?.split('\\').pop().split('/').pop()}>
-                                          <span class="MultiFile-title"><a href={`http://172.16.170.8:5252/api${item.filename}`}>{item.filename?.split('\\').pop().split('/').pop()}</a></span>
+                                          <span class="MultiFile-title"><a href={`http://172.16.170.8:5252${item.filename}`}>{item.filename?.split('\\').pop().split('/').pop()}</a></span>
                                         </span>
                                       </div>
                                     ))}
@@ -602,19 +778,29 @@ function FileDetail() {
                             height="40"
                             class="rounded-circle mr-3"
                           />
-                          <div class="w-100">
+                          <div class="w-100" style={{position:"relative"}}>
                             <div class="d-flex justify-content-between align-items-center">
                               <div class="d-flex flex-row align-items-center">
-                                <span class="mr-2">{`${item?.employees?.firstName}  ${item?.employees?.lastName}`}</span>
-                                <small style={{ marginLeft: "8px" }} class="c-badge">
-                                  {item?.employees?.employeeDesignation?.designationName}
-                                </small>
+                                <div style={{ float: "left" }}>
+                                  <span class="mr-2">{`${item?.employees?.firstName}  ${item?.employees?.lastName}`}</span>
+                                  <small style={{ marginLeft: "0px", position:"absolute", top:"-21px" }} class="c-badge">
+                                    {item?.employees?.employeeDesignation?.designationName}
+                                  </small>
+                                </div>
+
                               </div>
-                              <small>{moment(item?.createdAt).format("DD/MM/YYYY")}</small>
+                              <div style={{ float: "right" }}>
+
+                                <small>{moment(item?.createdAt).format("DD/MM/YYYY")}</small>
+                                <small className="ms-2">{moment(item?.createdAt).format("hh:mm A")}</small>
+                              </div>
                             </div>
                             <p class="text-justify comment-text mb-0">
                               {item?.comment}
                             </p>
+                            <small style={{marginBottom:"20px",  background: item?.CommentStatus === "Approved" ? "green" : "red" }} class="c-badge">
+                              {item?.CommentStatus}
+                            </small>
                           </div>
                         </>
                       </div>
