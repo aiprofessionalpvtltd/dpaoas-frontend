@@ -622,8 +622,10 @@ function FileDetail() {
                                   onBlur={formik.handleBlur}
                                   value={formik.values.CommentStatus}>
                                   <option value="" selected disabled hidden>Approve</option>
-                                  <option value={"Approved"}>Approve</option>
-                                  <option value={"Disapproved"}>Disapprove</option>
+                                  <option value={"Approved"}>Approved</option>
+                                  <option value={"Rejected"}>Rejected</option>
+                                  <option value={"Discuss"}>Discuss</option>
+
                                 </select>
                               </div>
                             </div>
@@ -798,7 +800,7 @@ function FileDetail() {
                             <p class="text-justify comment-text mb-0">
                               {item?.comment}
                             </p>
-                            <small style={{marginBottom:"20px",  background: item?.CommentStatus === "Approved" ? "green" : "red" }} class="c-badge">
+                            <small style={{marginBottom:"20px",  background: item?.CommentStatus === "Approved" ? "green" :item?.CommentStatus === "Rejected" ? "red":"grey" }} class="c-badge">
                               {item?.CommentStatus}
                             </small>
                           </div>
