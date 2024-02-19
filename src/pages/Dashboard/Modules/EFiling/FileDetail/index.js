@@ -58,6 +58,7 @@ function FileDetail() {
   const { employeeData } = useContext(AuthContext)
   const UserData = getUserData()
   const [filesData, setFilesData] = useState();
+  const [viewPage, setViewPage] = useState(location?.state?.view)
 
   const [documentTypeVal, setDocumentTypeVal] = useState('');
 
@@ -256,7 +257,7 @@ function FileDetail() {
           addLink1={"/efiling/dashboard/files"}
           title1={"E-Filing"}
           addLink2={"/efiling/dashboard/addedit"}
-          title2={location && location?.state?.view ? "File Detail" : "Edit File"}
+          title2={location && viewPage ? "File Detail" : "Edit File"}
           width={"500px"}
         />
 
@@ -311,14 +312,14 @@ function FileDetail() {
                             type="text"
                             class="form-control"
                             placeholder="fileNumber"
-                            disabled={location?.state?.view ? true : false}
+                            disabled={viewPage ? true : false}
                             id="fileNumber"
                             name="fileNumber"
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             value={formik.values.fileNumber}
                           />
-                          {/* <select class="form-select" disabled={location?.state?.view ? true : false}
+                          {/* <select class="form-select" disabled={viewPage ? true : false}
                             id="fileNumber"
                             name="fileNumber"
                             onChange={formik.handleChange}
@@ -339,7 +340,7 @@ function FileDetail() {
                             type="text"
                             class="form-control"
                             placeholder="Subject"
-                            disabled={location?.state?.view ? true : false}
+                            disabled={viewPage ? true : false}
                             id="fileSubject"
                             name="fileSubject"
                             onChange={formik.handleChange}
@@ -357,7 +358,7 @@ function FileDetail() {
                             type="email"
                             class="form-control"
                             placeholder="Case Number"
-                            disabled={location?.state?.view ? true : false}
+                            disabled={viewPage ? true : false}
                             id="caseNumber"
                             name="caseNumber"
                             onChange={formik.handleChange}
@@ -384,7 +385,7 @@ function FileDetail() {
                           </span>
                           <DatePicker
                             selected={formik.values.receivedOn}
-                            disabled={location?.state?.view ? true : false}
+                            disabled={viewPage ? true : false}
                             onChange={(date) =>
                               formik.setFieldValue("receivedOn", date)
                             }
@@ -399,7 +400,7 @@ function FileDetail() {
                         <div class="mb-3">
                           <label class="form-label">Year</label>
                           <select
-                            disabled={location?.state?.view ? true : false}
+                            disabled={viewPage ? true : false}
                             class="form-select"
                             id="year"
                             name="year"
@@ -422,7 +423,7 @@ function FileDetail() {
                         <div class="mb-3">
                           <div class="mb-3">
                             <label class="form-label">Priority</label>
-                            <select class="form-select" disabled={location?.state?.view ? true : false}
+                            <select class="form-select" disabled={viewPage ? true : false}
                               id="priority"
 
                               name="priority"
@@ -440,7 +441,7 @@ function FileDetail() {
                           <label for="exampleFormControlInput1" class="form-label" >
                             File Type
                           </label>
-                          <select class="form-select" disabled={location?.state?.view ? true : false}
+                          <select class="form-select" disabled={viewPage ? true : false}
                             id="fileType"
                             name="fileType"
                             onChange={handleDocumentType}
@@ -465,6 +466,7 @@ function FileDetail() {
                               class="form-select"
                               id="fkBranchId"
                               name="fkBranchId"
+                              disabled={viewPage ? true : false}
                               onChange={formik.handleChange}
                               onBlur={formik.handleBlur}
                               value={formik.values.fkBranchId}
@@ -488,6 +490,7 @@ function FileDetail() {
                               id="fkdepartmentId"
                               name="fkdepartmentId"
                               onChange={formik.handleChange}
+                              disabled={viewPage ? true : false}
                               onBlur={formik.handleBlur}
                               value={formik.values.fkdepartmentId}
                             >
@@ -508,6 +511,7 @@ function FileDetail() {
                           <div class="mb-3">
                             <label class="form-label">Ministries</label>
                             <select
+                              disabled={viewPage ? true : false}
                               class="form-select"
                               id="fkMinistryId"
                               name="fkMinistryId"
@@ -542,6 +546,7 @@ function FileDetail() {
                               <FontAwesomeIcon icon={faCalendarAlt} />
                             </span>
                             <DatePicker
+                              disabled={viewPage ? true : false}
                               selected={formik.values.receivedOn}
                               onChange={(date) =>
                                 formik.setFieldValue("receivedOn", date)
@@ -606,6 +611,7 @@ function FileDetail() {
                                   setEditorContent={setEditorContent}
                                   editorContent={editorContent}
                                   multiLanguage={false}
+                                  disabled={viewPage ? true : false}
                                 />
                               </div>
                             </div>
@@ -617,7 +623,7 @@ function FileDetail() {
                                 <select class="form-select"
                                   id="CommentStatus"
                                   name="CommentStatus"
-                                  disabled={location?.state?.view ? true : false}
+                                  disabled={viewPage ? true : false}
                                   onChange={formik.handleChange}
                                   onBlur={formik.handleBlur}
                                   value={formik.values.CommentStatus}>
@@ -635,7 +641,7 @@ function FileDetail() {
                                 <select class="form-select"
                                   id="assignedTo"
                                   name="assignedTo"
-                                  disabled={location?.state?.view ? true : false}
+                                  disabled={viewPage ? true : false}
                                   onChange={formik.handleChange}
                                   onBlur={formik.handleBlur}
                                   value={formik.values.assignedTo}>
@@ -657,7 +663,7 @@ function FileDetail() {
                                 <textarea class="form-control"
                                   id="comment"
                                   name="comment"
-                                  disabled={location?.state?.view ? true : false}
+                                  disabled={viewPage ? true : false}
                                   onChange={formik.handleChange}
                                   onBlur={formik.handleBlur}
                                   value={formik.values.comment}></textarea>
@@ -666,7 +672,7 @@ function FileDetail() {
                           </div>
                           <div class="row">
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                              <button class="btn btn-primary" type="submit" disabled={location?.state?.view ? true : false}>
+                              <button class="btn btn-primary" type="submit" disabled={viewPage ? true : false}>
                                 Submit
                               </button>
                             </div>
@@ -685,6 +691,7 @@ function FileDetail() {
                                   setEditorContent={setEditorContent1}
                                   editorContent={editorContent1}
                                   multiLanguage={false}
+                                  disabled={viewPage ? true : false}
                                 />
                               </div>
                             </div>
@@ -700,7 +707,7 @@ function FileDetail() {
 
                                     <div class="col">
                                       <div class="MultiFile-wrap" id="T7">
-                                        <input class="form-control" type="file" id="formFile" onChange={handleUploadFile} />
+                                        <input disabled={viewPage ? true : false} class="form-control" type="file" id="formFile" onChange={handleUploadFile} />
                                       </div>
                                     </div>
                                     {filesData && filesData?.fileAttachments?.map((item) => (
