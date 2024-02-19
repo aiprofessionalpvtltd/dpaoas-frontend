@@ -3,7 +3,7 @@ import { Spinner } from "react-bootstrap";
 
 const Editor = lazy(() => import("@tinymce/tinymce-react").then((module) => ({ default: module.Editor })));
 
-export const TinyEditor = ({ initialContent, setEditorContent, editorContent, multiLanguage }) => {
+export const TinyEditor = ({ initialContent, setEditorContent, editorContent, multiLanguage, disabled }) => {
   const [loading, setLoading] = useState(true);
   const [type, setType] = useState("ltr");
   const [key, setKey] = useState(0);
@@ -40,6 +40,7 @@ export const TinyEditor = ({ initialContent, setEditorContent, editorContent, mu
         )}
 
         <Editor
+        disabled = {disabled}
           key={key}
           apiKey={process.env.REACT_APP_TINY_EDITOR_API_KEY}
           onInit={() => setLoading(false)}
