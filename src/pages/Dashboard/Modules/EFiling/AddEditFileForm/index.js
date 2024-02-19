@@ -138,7 +138,7 @@ function AddEditFileForm() {
     <Layout centerlogohide={true}>
       <div className="dashboard-content" style={{ marginTop: 80 }}>
         <Header
-          dashboardLink={"/efiling/dashboard"}
+          dashboardLink={"/"}
           addLink1={"/efiling/dashboard/files"}
           title1={"E-Filing"}
           addLink2={"/efiling/dashboard/addedit"}
