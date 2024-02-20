@@ -3597,3 +3597,7 @@ button span {
 .main-dashboard-tiles .card h2 {
   font-size: 24px;
 }
+.tox .tox-editor-header{
+  z-index: 0 !important;
+}
+
