@@ -79,7 +79,7 @@ function Dashboard() {
       cardbg: "greenbg",
       icon: faBuilding,
       // permission: null,
-      permission: ["Organizational Dashboard"]
+      permission:  [userRole?.role?.name == "Super Admin" ? "Roles" :"Organizational Dashboard"]
     },
     {
       title: "Visitors Management System",

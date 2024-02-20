@@ -220,7 +220,7 @@ function CMSTonerInstallationReports() {
                       options={
                         employeeData &&
                         employeeData?.map((item) => ({
-                          value: item.id,
+                          value: item.fkUserId,
                           label: `${item.firstName}${item.lastName}`,
                         }))
                       }

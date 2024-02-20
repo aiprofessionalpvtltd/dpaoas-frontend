@@ -10,12 +10,13 @@ import {
   showSuccessMessage,
 } from "../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
+import { getBranches } from "../../../../../api/APIs/Services/Branches.services";
 
 
 function HRMBranches() {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(0);
-  const [departmentData, setDepartmentData] = useState([]);
+  const [branchesData, setBranchesData] = useState([]);
   const [count, setCount] = useState(null);
   const pageSize = 4; // Set your desired page size
 
@@ -24,41 +25,41 @@ function HRMBranches() {
     setCurrentPage(page);
   };
 
-  const transformDepartmentData = (apiData) => {
-    return apiData.map((leave) => ({
-      id: leave?.id,
-      departmentName: leave?.departmentName,
-      description: leave?.description,
-      departmentStatus: leave?.departmentStatus,
+  const transformBranchesData = (apiData) => {
+    return apiData.map((item) => ({
+      id: item?.id,
+      branchName: item?.branchName,
+      description: item?.description,
+      branchStatus: item?.branchStatus,
     }));
   };
-  // const getDepartmentData = useCallback(async () => {
-  //   try {
-  //     const response = await getDepartment(currentPage, pageSize);
-  //     if (response?.success) {
-  //       const transformedData = transformDepartmentData(response?.data);
-  //       setCount(response?.count);
-  //       setDepartmentData(transformedData);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }, [currentPage, pageSize, setCount, setDepartmentData]);
+  const getBranchesapi = useCallback(async () => {
+    try {
+      const response = await getBranches(currentPage, pageSize);
+      if (response?.success) {
+        const transformedData = transformBranchesData(response?.data?.rows);
+        setCount(response?.data?.count);
+        setBranchesData(transformedData);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, [currentPage, pageSize, setCount, setBranchesData]);
 
   // const handleDelete = async (id) => {
   //   try {
   //     const response = await DeleteDepartment(id);
   //     if (response?.success) {
   //       showSuccessMessage(response.message);
-  //       getDepartmentData();
+  //       getBranchesapi();
   //     }
   //   } catch (error) {
   //     showErrorMessage(error.response.data.message);
   //   }
   // };
-  // useEffect(() => {
-  //   getDepartmentData();
-  // }, [getDepartmentData]);
+  useEffect(() => {
+    getBranchesapi();
+  }, [getBranchesapi]);
   return (
     <Layout module={true} sidebarItems={HRMsidebarItems} centerlogohide={true}>
       <Header
@@ -71,7 +72,7 @@ function HRMBranches() {
       <div class="row">
         <div class="col-12">
           <CustomTable
-            data={departmentData}
+            data={branchesData}
             tableTitle="Branches List"
             addBtnText="Add Branches"
             handleAdd={() => navigate("/hrm/addeditbranches")}

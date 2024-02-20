@@ -66,9 +66,7 @@ function FileDetail() {
   const [departmentData, setDepartmentData] = useState([])
   const [branchesData, setBranchesData] = useState([])
 
-  console.log('====================================');
-  console.log("filesData?.fileType", filesData?.fileType);
-  console.log('====================================');
+ 
   const [fileId, setFIleId] = useState(location?.state?.id)
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -597,7 +595,7 @@ function FileDetail() {
                                   </option>
                                   {employeeData &&
                                     employeeData?.map((item) => (
-                                      <option value={item.id}>{`${item.firstName}${item.lastName}`}</option>
+                                      <option value={item.fkUserId}>{`${item.firstName}${item.lastName}`}</option>
                                     ))}
                                 </select>
                               </div>
