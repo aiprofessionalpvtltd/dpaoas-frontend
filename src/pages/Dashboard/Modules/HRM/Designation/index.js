@@ -36,7 +36,7 @@ function HRMDesignation() {
     try {
       const response = await getDesignations(currentPage, pageSize);
       if (response?.success) {
-        setCount(response?.count);
+        setCount(response?.data?.count);
         const transformedData = transformDesignationData(response?.data?.designations);
         setDesignationData(transformedData);
       }
@@ -58,7 +58,7 @@ function HRMDesignation() {
   };
   useEffect(() => {
     getDesignationApi();
-  }, []);
+  }, [currentPage]);
   return (
     <Layout module={true} sidebarItems={HRMsidebarItems} centerlogohide={true}>
       <Header

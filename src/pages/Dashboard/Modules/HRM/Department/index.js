@@ -37,7 +37,7 @@ function HRMDepartment() {
       const response = await getDepartment(currentPage, pageSize);
       if (response?.success) {
         const transformedData = transformDepartmentData(response?.data?.departments);
-        setCount(response?.count);
+        setCount(response?.data.count);
         setDepartmentData(transformedData);
       }
     } catch (error) {

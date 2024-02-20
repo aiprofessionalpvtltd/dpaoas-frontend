@@ -78,6 +78,7 @@ function HRMAddEditEmployee() {
       const response = await createEmployee(data);
       if (response.success) {
         showSuccessMessage(response.message);
+        formik.resetForm()
       }
     } catch (error) {
       console.log(error);
@@ -103,6 +104,7 @@ function HRMAddEditEmployee() {
       const response = await UpdateEmployee(location?.state?.id, data);
       if (response.success) {
         showSuccessMessage(response.message);
+        formik.resetForm()
       }
     } catch (error) {
       showErrorMessage(error.response.data.message);
@@ -320,7 +322,7 @@ function HRMAddEditEmployee() {
                       <option value="" disabled hidden>Select</option>
                       {employeeData &&
                         employeeData?.map((item) => (
-                          <option value={item.id}>{`${item.firstName}${item.lastName}`}</option>
+                          <option value={item.fkUserId}>{`${item.firstName}${item.lastName}`}</option>
                         ))}
                     </select>
                   </div>

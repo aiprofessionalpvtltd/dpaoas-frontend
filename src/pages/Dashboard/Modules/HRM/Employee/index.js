@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Layout } from "../../../../../components/Layout";
 import Header from "../../../../../components/Header";
 import { useNavigate } from "react-router-dom";
@@ -18,7 +18,7 @@ function HRMEmployeeDashboard() {
   const [employeeData, setEmployeeData] = useState([]);
 
   const [count, setCount] = useState(null);
-  const pageSize = 4; // Set your desired page size
+  const pageSize = 5; // Set your desired page size
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
@@ -38,7 +38,8 @@ function HRMEmployeeDashboard() {
       designation: leave.designation.designationName,
     }));
   };
-  const getEmployeeData = async () => {
+
+  const getEmployeeData = useCallback(async () => {
     try {
       const response = await getAllEmployee(currentPage, pageSize);
       if (response?.success) {
@@ -49,7 +50,7 @@ function HRMEmployeeDashboard() {
     } catch (error) {
       console.log(error);
     }
-  };
+  }, [currentPage, pageSize, setCount, setEmployeeData]);
 
   const handleDelete = async (id) => {
     try {
@@ -64,7 +65,7 @@ function HRMEmployeeDashboard() {
   };
   useEffect(() => {
     getEmployeeData();
-  }, []);
+  }, [currentPage]);
   return (
     <Layout module={true} sidebarItems={HRMsidebarItems} centerlogohide={true}>
       <Header
