@@ -11,11 +11,12 @@ import {
   showSuccessMessage,
 } from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
+import { createBranches, updateBranches } from "../../../../../../api/APIs/Services/Branches.services";
 
 const validationSchema = Yup.object({
   branchName: Yup.string().required("Branch name is required"),
   description: Yup.string().required("description is required"),
-  status: Yup.string(),
+  branchStatus: Yup.string(),
 });
 function HRMAddEditBranch() {
   const location = useLocation();
@@ -25,52 +26,54 @@ function HRMAddEditBranch() {
     initialValues: {
       branchName: location.state ? location.state.branchName : "",
       description: location.state ? location.state.description : "",
-      status: location.state ? location.state.departmentStatus : "",
+      branchStatus: location.state ? location.state.branchStatus : "",
     },
 
     validationSchema: validationSchema,
     onSubmit: (values) => {
       // Handle form submission here
-      console.log(values);
-      // if (location.state) {
-      //   UpdateDepartmentApi();
-      // } else {
-      //   CreateDepartmentApi(values);
-      // }
+      if (location.state) {
+        UpdateBranchApi(values);
+      } else {
+        CreateBranchApi(values);
+      }
     },
   });
 
-  // const CreateDepartmentApi = async (values) => {
-  //   const data = {
-  //     departmentName: values?.departmentName,
-  //     description: values?.description,
-  //     departmentStatus: "active",
-  //   };
-  //   try {
-  //     const response = await createDepartment(data);
-  //     if (response.success) {
-  //       showSuccessMessage(response.message);
-  //     }
-  //   } catch (error) {
-  //     showErrorMessage(error.response.data.message);
-  //   }
-  // };
+  const CreateBranchApi = async (values) => {
+    const data = {
+      branchName: values?.branchName,
+      description: values?.description,
+      branchStatus: "active",
+    };
+    try {
+      const response = await createBranches(data);
+      if (response.success) {
+        showSuccessMessage(response.message);
+        formik.resetForm()
+      }
+    } catch (error) {
+      showErrorMessage(error.response.data.message);
+    }
+  };
 
-  // const UpdateDepartmentApi = async (values) => {
-  //   const data = {
-  //     departmentName: values?.departmentName,
-  //     description: values?.description,
-  //     departmentStatus: values?.status,
-  //   };
-  //   try {
-  //     const response = await UpdateDepartment(location.state.id, data);
-  //     if (response.success) {
-  //       showSuccessMessage(response.message);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+  const UpdateBranchApi = async (values) => {
+    const data = {
+      branchName: values?.branchName,
+      description: values?.description,
+      branchStatus: values?.branchStatus,
+    };
+
+    try {
+      const response = await updateBranches(location.state.id, data);
+      if (response.success) {
+        showSuccessMessage(response.message);
+        formik.resetForm()
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <Layout module={true} sidebarItems={HRMsidebarItems} centerlogohide={true}>
@@ -100,11 +103,10 @@ function HRMAddEditBranch() {
                       <label className="form-label">Branch name * </label>
                       <input
                         type="text"
-                        className={`form-control ${
-                          formik.touched.branchName && formik.errors.branchName
+                        className={`form-control ${formik.touched.branchName && formik.errors.branchName
                             ? "is-invalid"
                             : ""
-                        }`}
+                          }`}
                         id="branchName"
                         placeholder={formik.values.branchName}
                         onChange={formik.handleChange}
@@ -118,28 +120,28 @@ function HRMAddEditBranch() {
                         )}
                     </div>
                   </div>
-                  {/* {location && location?.state && ( */}
-                  <div class="col-6">
-                    <div class="mb-3">
-                      <label class="form-label">Status</label>
-                      <select
-                        class="form-select"
-                        id="status"
-                        name="status"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.status}
-                      >
-                        <option value={""} selected disabled hidden>
-                          select
-                        </option>
-                        <option>Select</option>
-                        <option>Pending</option>
-                        <option>Approved</option>
-                      </select>
+                  {location && location?.state && (
+                    <div class="col-6">
+                      <div class="mb-3">
+                        <label class="form-label">branchStatus</label>
+                        <select
+                          class="form-select"
+                          id="branchStatus"
+                          name="branchStatus"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.branchStatus}
+                        >
+                          <option value={""} selected disabled hidden>
+                            select
+                          </option>
+                          <option>Select</option>
+                          <option value={"active"}>Active</option>
+                          <option value={"inactive"}>In Active</option>
+                        </select>
+                      </div>
                     </div>
-                  </div>
-                  {/* )} */}
+                  )}
                 </div>
                 {/* Add similar validation logic for other fields */}
                 <div className="row">
@@ -148,12 +150,11 @@ function HRMAddEditBranch() {
                       <label className="form-label">Description</label>
                       <textarea
                         placeholder={formik.values.description}
-                        className={`form-control ${
-                          formik.touched.description &&
-                          formik.errors.description
+                        className={`form-control ${formik.touched.description &&
+                            formik.errors.description
                             ? "is-invalid"
                             : ""
-                        }`}
+                          }`}
                         id="description"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}

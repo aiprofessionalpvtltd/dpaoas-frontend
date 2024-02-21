@@ -28,7 +28,37 @@ function AddEditFileForm() {
   const [branchesData, setBranchesData] = useState([])
 
   const UserData = getUserData()
-
+  const yaerData = [
+    {
+      name: "2024"
+    },
+    {
+      name: "2023"
+    },
+    {
+      name: "2022"
+    },
+    {
+      name: "2021"
+    }, {
+      name: "2020"
+    },
+    {
+      name: "2019"
+    },
+    {
+      name: "2018"
+    },
+    {
+      name: "2017"
+    },
+    {
+      name: "2016"
+    },
+    {
+      name: "2015"
+    }
+  ]
   // const [divisionById, setDivisionById] = useState();
 
   const formik = useFormik({
@@ -60,7 +90,7 @@ function AddEditFileForm() {
     formData.append('fileCategory', values?.fileCategory);
     formData.append('fileType', documentTypeVal);
     formData.append('attachment', values?.attachment)
-    formData.append('assignedTo',UserData?.fkUserId)
+    formData.append('assignedTo', UserData?.fkUserId)
     if (values?.fkBranchId) {
       formData.append('fkBranchId', values?.fkBranchId);
     }
@@ -346,8 +376,8 @@ function AddEditFileForm() {
                               onBlur={formik.handleBlur}
                               minDate={new Date()}
                               className={`form-control ${formik.touched.receivedOn && formik.errors.receivedOn
-                                  ? "is-invalid"
-                                  : ""
+                                ? "is-invalid"
+                                : ""
                                 }`}
                             />
                             {formik.touched.receivedOn && formik.errors.receivedOn && (
@@ -376,8 +406,11 @@ function AddEditFileForm() {
                           <option value={""} selected disabled hidden>
                             Select
                           </option>
-                          <option value={"2021"}>2021</option>
-                          <option value={"2023"}>2023</option>
+
+                          {yaerData &&
+                            yaerData?.map((item) => (
+                              <option value={item.name}>{item.name}</option>
+                            ))}
                         </select>
                       </div>
                     </div>

@@ -16,6 +16,8 @@ function Files() {
   const pageSize = 5; // Set your desired page size
   const UserData = getUserData()
 
+  console.log("Login User", UserData);
+
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
     setCurrentPage(page);
@@ -30,7 +32,7 @@ function Files() {
       fileNumber: item?.fileNumber,
       subject: item?.fileSubject,
       branch: item?.branches?.branchName,
-      fileStatus:item?.fileStatus
+      fileStatus: item?.fileStatus
     }));
   };
   const getAllFilesAPi = useCallback(async () => {
