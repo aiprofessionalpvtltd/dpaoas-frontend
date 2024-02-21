@@ -10,7 +10,7 @@ import {
   showSuccessMessage,
 } from "../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
-import { getBranches } from "../../../../../api/APIs/Services/Branches.services";
+import { deleteBranches, getBranches } from "../../../../../api/APIs/Services/Branches.services";
 
 
 function HRMBranches() {
@@ -46,17 +46,17 @@ function HRMBranches() {
     }
   }, [currentPage, pageSize, setCount, setBranchesData]);
 
-  // const handleDelete = async (id) => {
-  //   try {
-  //     const response = await DeleteDepartment(id);
-  //     if (response?.success) {
-  //       showSuccessMessage(response.message);
-  //       getBranchesapi();
-  //     }
-  //   } catch (error) {
-  //     showErrorMessage(error.response.data.message);
-  //   }
-  // };
+  const handleDelete = async (id) => {
+    try {
+      const response = await deleteBranches(id);
+      if (response?.success) {
+        showSuccessMessage(response.message);
+        getBranchesapi();
+      }
+    } catch (error) {
+      showErrorMessage(error.response.data.message);
+    }
+  };
   useEffect(() => {
     getBranchesapi();
   }, [getBranchesapi]);
@@ -69,28 +69,28 @@ function HRMBranches() {
       />
       <ToastContainer />
       <div class="container-fluid dash-detail-container card">
-      <div class="row">
-        <div class="col-12">
-          <CustomTable
-            data={branchesData}
-            tableTitle="Branches List"
-            addBtnText="Add Branches"
-            handleAdd={() => navigate("/hrm/addeditbranches")}
-            handleEdit={(item) =>
-              navigate("/hrm/addeditbranches", { state: item })
-            }
-            headertitlebgColor={"#666"}
-            headertitletextColor={"#FFF"}
-            handlePageChange={handlePageChange}
-            currentPage={currentPage}
-            pageSize={pageSize}
-            // handlePrint={}
-            // handleUser={}
-            totalCount={count}
-            // handleDelete={(item) => handleDelete(item.id)}
-          />
+        <div class="row">
+          <div class="col-12">
+            <CustomTable
+              data={branchesData}
+              tableTitle="Branches List"
+              addBtnText="Add Branches"
+              handleAdd={() => navigate("/hrm/addeditbranches")}
+              handleEdit={(item) =>
+                navigate("/hrm/addeditbranches", { state: item })
+              }
+              headertitlebgColor={"#666"}
+              headertitletextColor={"#FFF"}
+              handlePageChange={handlePageChange}
+              currentPage={currentPage}
+              pageSize={pageSize}
+              // handlePrint={}
+              // handleUser={}
+              totalCount={count}
+              handleDelete={(item) => handleDelete(item.id)}
+            />
+          </div>
         </div>
-      </div>
       </div>
     </Layout>
   );
