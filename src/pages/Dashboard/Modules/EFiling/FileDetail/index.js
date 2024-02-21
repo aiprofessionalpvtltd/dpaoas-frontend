@@ -25,7 +25,7 @@ import { ToastContainer } from "react-toastify";
 import { showErrorMessage, showSuccessMessage } from "../../../../../utils/ToastAlert";
 import moment from "moment";
 import { AuthContext } from "../../../../../api/AuthContext";
-import { getDepartment } from "../../../../../api/APIs/Services/organizational.service";
+import { getAllEmployee, getDepartment } from "../../../../../api/APIs/Services/organizational.service";
 import { getBranches } from "../../../../../api/APIs/Services/Branches.services";
 
 const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
@@ -55,7 +55,7 @@ function FileDetail() {
   const location = useLocation();
   const [editorContent, setEditorContent] = useState();
   const [editorContent1, setEditorContent1] = useState();
-  const { employeeData } = useContext(AuthContext)
+  const [employeeData, setEmployeeData] = useState([])
   const UserData = getUserData()
   const [filesData, setFilesData] = useState();
   const [viewPage, setViewPage] = useState(location?.state?.view)
@@ -66,7 +66,7 @@ function FileDetail() {
   const [departmentData, setDepartmentData] = useState([])
   const [branchesData, setBranchesData] = useState([])
 
- 
+
   const [fileId, setFIleId] = useState(location?.state?.id)
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -75,9 +75,37 @@ function FileDetail() {
   const [remarksData, setRemarksData] = useState([]);
   const navigate = useNavigate()
 
-  console.log('====================================');
-  console.log("filesData?.fileRemarks[0]?.CommentStatus", filesData?.fileRemarks);
-  console.log('====================================');
+  const yaerData = [
+    {
+      name: "2024"
+    },
+    {
+      name: "2023"
+    },
+    {
+      name: "2022"
+    },
+    {
+      name: "2021"
+    }, {
+      name: "2020"
+    },
+    {
+      name: "2019"
+    },
+    {
+      name: "2018"
+    },
+    {
+      name: "2017"
+    },
+    {
+      name: "2016"
+    },
+    {
+      name: "2015"
+    }
+  ]
 
   const formik = useFormik({
     initialValues: {
@@ -242,7 +270,20 @@ function FileDetail() {
 
   }
 
+  const getEmployeeData = async () => {
+    try {
+      const response = await getAllEmployee(0, 1000);
+      if (response?.success) {
+        setEmployeeData(response?.data);
+        console.log("response?.data, Dataa", response?.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
+    getEmployeeData()
     getBranchesapi()
     getDepartmentData();
   }, [])
@@ -279,7 +320,7 @@ function FileDetail() {
 
                 {directorData.length > 0 ? directorData.map((item) => (
                   <div key={item.id}>
-                    <p style={{ marginBottom: "0px", fontWeight: "bold" }}>{`${item?.employees?.firstName} ${item?.employees?.lastName} (${item?.employees?.departments?.departmentName})`}</p>
+                    <p style={{ marginBottom: "0px", fontWeight: "bold" }}>{`${item?.users?.employee?.firstName} ${item?.users?.employee?.lastName} (${item?.users?.employee?.departments?.departmentName})`}</p>
                     <p style={{ marginBottom: "0" }}>{`Diary Number : ${item?.fileInDairyNumber}`}</p>
                     <p style={{ marginBottom: "0" }}>{moment(item?.createdAt).format("DD/MM/YYYY")}</p>
                     <p>{moment(item?.createdAt).format("hh:mm A")}</p>
@@ -349,7 +390,7 @@ function FileDetail() {
                       </div>
                     </div>
                     <div class="row">
-                    <div class="col">
+                      <div class="col">
                         <div class="mb-3">
                           <div class="mb-3">
                             <label class="form-label">Priority</label>
@@ -381,8 +422,10 @@ function FileDetail() {
                             <option value={""} selected disabled hidden>
                               Select
                             </option>
-                            <option value={"2021"}>2021</option>
-                            <option value={"2023"}>2023</option>
+                            {yaerData &&
+                              yaerData?.map((item) => (
+                                <option value={item.name}>{item.name}</option>
+                              ))}
                           </select>
                         </div>
                       </div>
@@ -507,7 +550,7 @@ function FileDetail() {
                               // minDate={new Date()}
                               className={`form-control`}
                             />
-                            
+
                           </div>
                         </div>
                       </>
@@ -736,9 +779,9 @@ function FileDetail() {
                             <div class="d-flex justify-content-between align-items-center">
                               <div class="d-flex flex-row align-items-center">
                                 <div style={{ float: "left" }}>
-                                  <span class="mr-2">{`${item?.employees?.firstName}  ${item?.employees?.lastName}`}</span>
+                                  <span class="mr-2">{`${item?.users?.employee?.firstName}  ${item?.users?.employee?.lastName}`}</span>
                                   <small style={{ marginLeft: "0px", position: "absolute", top: "-21px" }} class="c-badge">
-                                    {item?.employees?.employeeDesignation?.designationName}
+                                    {item?.users?.employee?.employeeDesignation?.designationName}
                                   </small>
                                 </div>
 
