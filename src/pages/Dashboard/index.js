@@ -70,7 +70,7 @@ function Dashboard() {
       cardbg: "bluebg",
       icon: faMailBulk,
       // permission: null,
-      permission: ["LeaveManagement"]
+      permission: ["Leave"]
     },
     {
       title: "Organizational Dashboard",
@@ -87,7 +87,7 @@ function Dashboard() {
       type: "",
       cardbg: "greybg",
       icon: faAddressCard,
-      permission: ["Visitors Management"],
+      permission: ["VMS"],
     },
     {
       title: "Notice Management System",
