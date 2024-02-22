@@ -9,12 +9,12 @@ export const updateSeat = async (seatNo, data) => {
       const response = await axiosClientMMS.put(
         `/seatingPlan/seatAssignment/${seatNo}`,
         data,
-        {
-          headers: {
-            accept: "application/json",
-            "Content-Type": "multipart/form-data",
-          },
-        },
+        // {
+        //   headers: {
+        //     accept: "application/json",
+        //     "Content-Type": "multipart/form-data",
+        //   },
+        // },
       );
       return response?.data;
     } catch (error) {

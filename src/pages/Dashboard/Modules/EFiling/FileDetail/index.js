@@ -558,34 +558,33 @@ function FileDetail() {
                   </div>
 
                   <div class="shadow" style={{ padding: "25px" }}>
-                    <ul class="nav nav-tabs mb-3 mt-3" id="ex1" role="tablist">
-                      <li class="nav-item" role="presentation" onClick={() => setTogleOpan(!togleOpan)}>
-                        <a
-                          class={togleOpan ? "nav-link active" : "nav-link"}
-                          id="ex1-tab-1"
-                          data-bs-toggle="tab"
-                          href="#ex1-tabs-1"
-                          role="tab"
-                          aria-controls="ex1-tabs-1"
-                          aria-selected="true"
-                        >
-                          Noting
-                        </a>
-                      </li>
-                      <li class="nav-item" role="presentation" onClick={() => setTogleOpan(!togleOpan)}>
-                        <a
-                          class={!togleOpan ? "nav-link active" : "nav-link"}
-                          id="ex1-tab-2"
-                          data-bs-toggle="tab"
-                          href="#ex1-tabs-2"
-                          role="tab"
-                          aria-controls="ex1-tabs-2"
-                          aria-selected="false"
-                        >
-                          Correspondence
-                        </a>
-                      </li>
-                    </ul>
+                  <ul class="nav nav-tabs mb-3 mt-3" id="ex1" role="tablist">
+  <li class="nav-item" role="presentation" onClick={() => setTogleOpan(!togleOpan)}>
+    <button
+      type="button"
+      class={togleOpan ? "nav-link active" : "nav-link"}
+      data-bs-toggle="tab"
+      role="tab"
+      aria-controls="ex1-tabs-1"
+      aria-selected={togleOpan ? "true" : "false"}
+    >
+      Noting
+    </button>
+  </li>
+  <li class="nav-item" role="presentation" onClick={() => setTogleOpan(!togleOpan)}>
+    <button
+      type="button"
+      class={!togleOpan ? "nav-link active" : "nav-link"}
+      data-bs-toggle="tab"
+      role="tab"
+      aria-controls="ex1-tabs-2"
+      aria-selected={!togleOpan ? "true" : "false"}
+    >
+      Correspondence
+    </button>
+  </li>
+</ul>
+
                     <div class="tab-content" id="ex1-content">
                       {togleOpan ? (
                         // <div class="tab-pane fade show active" id="ex1-tabs-1" role="tabpanel" aria-labelledby="ex1-tab-1">
