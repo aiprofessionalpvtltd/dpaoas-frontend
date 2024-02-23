@@ -16,10 +16,9 @@ export const AuthProvider = ({ children }) => {
   const [permissions, setPermissions] = useState([]);
   const [ministryData, setMinistryData] = useState([]);
   const [sessions, setSessions] = useState([]);
-  const [employeeData, setEmployeeData] = useState([])
+  const [employeeData, setEmployeeData] = useState([]);
   const [resolutionStatus, setResolutionStatus] = useState([]);
   const [employeesAsEngineersData, setemployeesAsEngineersData] = useState([]);
-
 
   const [members, setMembers] = useState([]);
 
@@ -66,7 +65,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await getAllSessions();
       if (response?.success) {
-        setSessions(response?.data);
+        setSessions(response?.data?.sessions);
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -114,9 +113,9 @@ export const AuthProvider = ({ children }) => {
     getAllResolutionStatusApi();
     AllMembersData();
     AllMinistryData();
-    // getAllSessionsApi();
-    getEmployeeData()
-    getretriveEmployeesAsEngineers()
+    getAllSessionsApi();
+    getEmployeeData();
+    getretriveEmployeesAsEngineers();
   }, []);
 
   return (
@@ -130,7 +129,7 @@ export const AuthProvider = ({ children }) => {
         sessions,
         employeeData,
         resolutionStatus,
-        employeesAsEngineersData
+        employeesAsEngineersData,
       }}
     >
       {children}

@@ -31,22 +31,22 @@ const validationSchema = Yup.object({
   motionType: Yup.string(),
   motionWeek: Yup.string(),
   noticeOfficeDiaryNo: Yup.number().required(
-    "Notice Office Diary No is required",
+    "Notice Office Diary No is required"
   ),
   noticeOfficeDiaryDate: Yup.date().required(
-    "Notice Office Diary Date is required",
+    "Notice Office Diary Date is required"
   ),
   noticeOfficeDiaryTime: Yup.string().required(
-    "Notice Office Diary Time is required",
+    "Notice Office Diary Time is required"
   ),
   motionStatus: Yup.string(),
   mover: Yup.array(),
   ministry: Yup.array(),
   dateofMovinginHouse: Yup.date().required(
-    "Date Of Moving in House is required",
+    "Date Of Moving in House is required"
   ),
   dateofRefferingToSC: Yup.date().required(
-    "Date Of Reffering To SC is required",
+    "Date Of Reffering To SC is required"
   ),
   dateofDiscussion: Yup.date().required("Date Of Discussion is required"),
   urduText: Yup.string(),
@@ -61,7 +61,7 @@ function MMSMotionDetail() {
   const [motionStatusData, setMotionStatusData] = useState([]);
   const formik = useFormik({
     initialValues: {
-      sessionNumber: sessions[0]?.id,
+      sessionNumber: location?.state ? location.state?.sessionNumber : "",
       motionID:
         location?.state?.motionMovers.length > 0 ??
         location?.state?.motionMovers[0]?.fkMotionId,
@@ -137,7 +137,7 @@ function MMSMotionDetail() {
     }));
   };
   const StatusHistoryData = transfrerMinistryData(
-    location?.state?.motionStatusHistories,
+    location?.state?.motionStatusHistories
   );
   console.log("sadkajhhhhhhh", StatusHistoryData);
   const hendlesendMotionForTranslation = async () => {

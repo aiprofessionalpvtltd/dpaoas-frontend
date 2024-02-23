@@ -9,7 +9,10 @@ import {
   searchMotion,
 } from "../../../../../../api/APIs/Services/Motion.service";
 import DatePicker from "react-datepicker";
-import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 import { useFormik } from "formik";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
@@ -25,7 +28,7 @@ function SearchMotion() {
   const [count, setCount] = useState(null);
   const [motionStatus, setMotionStatus] = useState([]);
   const [motionData, setMotionData] = useState([]);
-  const pageSize = 4; // Set your desired page size
+  const pageSize = 5; // Set your desired page size
 
   const formik = useFormik({
     initialValues: {
@@ -54,26 +57,41 @@ function SearchMotion() {
   };
 
   const transformMotionData = (apiData) => {
-    return apiData?.map((leave) => ({
-      id: leave?.id,
-      SessionName: leave?.sessions?.sessionName,
-      fileNumber: leave?.fileNumber,
-      motionType: leave?.motionType,
-      motionWeek: leave?.motionWeek,
-      noticeOfficeDiaryNo: leave?.noticeOfficeDairies?.noticeOfficeDiaryNo,
-      // ministryName: leave?.motionMinistries?.ministries,
-      // ministryIds: leave?.motionMinistries?.fkMinistryId,
-      noticeOfficeDiaryDate: moment(leave?.noticeOfficeDairies?.noticeOfficeDiaryDate).format("YYYY/MM/DD"),
-      noticeOfficeDiaryTime: leave?.noticeOfficeDairies?.noticeOfficeDiaryTime,
-      // memberName:leave?.motionMovers?.members,
-      englishText: leave?.englishText,
-      urduText: leave?.urduText,
-      fkMotionStatus: leave?.motionStatuses?.statusName,
-    }));
+    return apiData.map((leave, index) => {
+      const English = [leave?.englishText].filter(Boolean).join(", ");
+      const EnglishText = English.replace(/(<([^>]+)>)/gi, "");
+
+      const Urdu = [leave?.urduText].filter(Boolean).join(", ");
+      const UrduText = Urdu.replace(/(<([^>]+)>)/gi, "");
+
+      return {
+        id: leave?.id,
+        SessionName: leave?.sessions?.sessionName,
+        fileNumber: leave?.fileNumber,
+        motionType: leave?.motionType,
+        motionWeek: leave?.motionWeek,
+        noticeOfficeDiaryNo: leave?.noticeOfficeDairies?.noticeOfficeDiaryNo,
+        // ministryName: leave?.motionMinistries?.ministries,
+        // ministryIds: leave?.motionMinistries?.fkMinistryId,
+        noticeOfficeDiaryDate: moment(
+          leave?.noticeOfficeDairies?.noticeOfficeDiaryDate
+        ).format("YYYY/MM/DD"),
+        noticeOfficeDiaryTime: moment(
+          leave?.noticeOfficeDairies?.noticeOfficeDiaryTime,
+          "hh:ss:a"
+        ).format("hh:ss:a"),
+        // memberName:leave?.motionMovers?.members,
+        // englishText: leave?.englishText,
+        englishText: EnglishText,
+        urduText: UrduText,
+        fkMotionStatus: leave?.motionStatuses?.statusName,
+      };
+    });
   };
   const getMotionListData = async () => {
     try {
       const response = await getAllMotion(currentPage, pageSize);
+
       if (response?.success) {
         // showSuccessMessage(response?.message);
         setCount(response?.data?.count);
@@ -102,12 +120,18 @@ function SearchMotion() {
       motionWeek: values?.motionWeek,
       motionType: values?.motionType,
     };
+    setCount(null);
+
     try {
       const response = await searchMotion(currentPage, pageSize, data); // Add await here
+
+      console.log(response);
       if (response?.success) {
-        showSuccessMessage(response?.message);
+        // showSuccessMessage(response?.message);
         const transformedData = transformMotionData(response?.data?.rows);
         setMotionData(transformedData);
+        showSuccessMessage(response?.message);
+        setCount(response?.data?.count);
       }
     } catch (error) {
       console.log(error);
@@ -132,15 +156,28 @@ function SearchMotion() {
   useEffect(() => {
     getMotionListData();
   }, [currentPage]);
-
+  const handleResetForm = () => {
+    formik.resetForm();
+  };
   return (
-    <Layout module={true} sidebarItems={NoticeSidebarItems} centerlogohide={true}>
+    <Layout
+      module={true}
+      sidebarItems={NoticeSidebarItems}
+      centerlogohide={true}
+    >
       <ToastContainer />
-      <Header dashboardLink={"/"} addLink1={"/notice/motion/search"} title1={"Search Motion"} />
+      <Header
+        dashboardLink={"/"}
+        addLink1={"/notice/motion/search"}
+        title1={"Search Motion"}
+      />
       <div>
         <div class="container-fluid dash-detail-container">
           <div class="card mt-1">
-            <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
+            <div
+              class="card-header red-bg"
+              style={{ background: "#14ae5c !important" }}
+            >
               <h1>SEARCH MOTION</h1>
             </div>
             <div class="card-body">
@@ -150,10 +187,11 @@ function SearchMotion() {
                     <div class="mb-3">
                       <label class="form-label">Notice Office Diary No</label>
                       <input
-                        type="text"
+                        type="number"
                         className={"form-control"}
                         id="motionDiaryNo"
-                        placeholder={formik.values.motionDiaryNo}
+                        // placeholder={formik.values.motionDiaryNo}
+                        value={formik.values.motionDiaryNo}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
@@ -164,8 +202,9 @@ function SearchMotion() {
                       <label class="form-label">Motion ID</label>
                       <input
                         class="form-control"
-                        type="text"
-                        placeholder={formik.values.motionID}
+                        type="number"
+                        // placeholder={formik.values.motionID}
+                        value={formik.values.motionID}
                         onChange={formik.handleChange}
                         id="motionID"
                         onBlur={formik.handleBlur}
@@ -180,7 +219,8 @@ function SearchMotion() {
                       <input
                         class="form-control"
                         type="text"
-                        placeholder={formik.values.keyword}
+                        // placeholder={formik.values.keyword}
+                        value={formik.values.keyword}
                         onChange={formik.handleChange}
                         id="keyword"
                         onBlur={formik.handleBlur}
@@ -200,12 +240,13 @@ function SearchMotion() {
                                             /> */}
                       <select
                         class="form-select"
-                        placeholder={formik.values.memberName}
+                        // placeholder={formik.values.memberName}
+                        value={formik.values.memberName}
                         onChange={formik.handleChange}
                         id="memberName"
                         onBlur={formik.handleBlur}
                       >
-                        <option selected disabled hidden>
+                        <option value={""} selected disabled hidden>
                           Select
                         </option>
                         {members &&
@@ -224,12 +265,13 @@ function SearchMotion() {
                       <label class="form-label">From Session</label>
                       <select
                         class="form-select"
-                        placeholder={formik.values.fromSession}
+                        // placeholder={formik.values.fromSession}
+                        value={formik.values.fromSession}
                         onChange={formik.handleChange}
                         id="fromSession"
                         onBlur={formik.handleBlur}
                       >
-                        <option selected disabled hidden>
+                        <option value={""} selected disabled hidden>
                           Select
                         </option>
                         {sessions &&
@@ -246,12 +288,13 @@ function SearchMotion() {
                       <label class="form-label">To Session</label>
                       <select
                         class="form-select"
-                        placeholder={formik.values.toSession}
+                        // placeholder={formik.values.toSession}
+                        value={formik.values.toSession}
                         onChange={formik.handleChange}
                         id="toSession"
                         onBlur={formik.handleBlur}
                       >
-                        <option selected disabled hidden>
+                        <option value={""} selected disabled hidden>
                           Select
                         </option>
                         {sessions &&
@@ -270,15 +313,16 @@ function SearchMotion() {
                       <label class="form-label">Motion Type</label>
                       <select
                         class="form-select"
-                        placeholder={formik.values.motionType}
+                        // placeholder={formik.values.motionType}
+                        value={formik.values.motionType}
                         onChange={formik.handleChange}
                         id="motionType"
                         onBlur={formik.handleBlur}
                       >
-                        <option selected disabled hidden>
-                          Select motion Type
+                        <option value={""} selected disabled hidden>
+                          Select
                         </option>
-                        <option>Motion Type</option>
+
                         <option>Adjournment Motion</option>
                         <option>Call Attention Notice</option>
                         <option>Privilege Motion</option>
@@ -292,13 +336,17 @@ function SearchMotion() {
                       <label class="form-label">Motion Week</label>
                       <select
                         class="form-select"
-                        placeholder={formik.values.motionWeek}
+                        // placeholder={formik.values.motionWeek}
+                        value={formik.values.motionWeek}
                         onChange={formik.handleChange}
                         id="motionWeek"
                         onBlur={formik.handleBlur}
                       >
-                        <option>Motion Week</option>
-                        <option>Not Applicable</option>
+                        <option value={""} selected disabled hidden>
+                          Select
+                        </option>
+                        {/* <option>Motion Week</option>
+                        <option>Not Applicable</option> */}
                         <option>1st Week</option>
                         <option>2nd Week</option>
                         <option>3rd Week</option>
@@ -325,7 +373,9 @@ function SearchMotion() {
                           Select
                         </option>
                         {ministryData &&
-                          ministryData.map((item) => <option value={item.id}>{item.ministryName}</option>)}
+                          ministryData.map((item) => (
+                            <option value={item.id}>{item.ministryName}</option>
+                          ))}
                       </select>
                     </div>
                   </div>
@@ -334,12 +384,13 @@ function SearchMotion() {
                       <label class="form-label">Motion Status</label>
                       <select
                         class="form-select"
-                        placeholder={formik.values.motionStatus}
+                        // placeholder={formik.values.motionStatus}
+                        value={formik.values.motionStatus}
                         onChange={formik.handleChange}
                         id="motionStatus"
                         onBlur={formik.handleBlur}
                       >
-                        <option selected disabled hidden>
+                        <option value={""} selected disabled hidden>
                           Select
                         </option>
                         {motionStatus &&
@@ -371,15 +422,23 @@ function SearchMotion() {
                       </span>
                       <DatePicker
                         selected={formik.values.fromNoticeDate}
-                        minDate={new Date()}
-                        onChange={(date) => formik.setFieldValue("fromNoticeDate", date)}
+                        // minDate={new Date()}
+                        onChange={(date) =>
+                          formik.setFieldValue("fromNoticeDate", date)
+                        }
                         className={`form-control ${
-                          formik.errors.fromNoticeDate && formik.touched.fromNoticeDate ? "is-invalid" : ""
+                          formik.errors.fromNoticeDate &&
+                          formik.touched.fromNoticeDate
+                            ? "is-invalid"
+                            : ""
                         }`}
                       />
-                      {formik.errors.fromNoticeDate && formik.touched.fromNoticeDate && (
-                        <div className="invalid-feedback">{formik.errors.fromNoticeDate}</div>
-                      )}
+                      {formik.errors.fromNoticeDate &&
+                        formik.touched.fromNoticeDate && (
+                          <div className="invalid-feedback">
+                            {formik.errors.fromNoticeDate}
+                          </div>
+                        )}
                     </div>
                   </div>
                   <div class="col">
@@ -401,7 +460,9 @@ function SearchMotion() {
                       <DatePicker
                         selected={formik.values.toNoticeDate}
                         minDate={new Date()}
-                        onChange={(date) => formik.setFieldValue("toNoticeDate", date)}
+                        onChange={(date) =>
+                          formik.setFieldValue("toNoticeDate", date)
+                        }
                         className={"form-control"}
                       />
                     </div>
@@ -412,7 +473,11 @@ function SearchMotion() {
                     <button class="btn btn-primary" type="submit">
                       Search
                     </button>
-                    <button class="btn btn-primary" type="">
+                    <button
+                      class="btn btn-primary"
+                      type="button"
+                      onClick={handleResetForm}
+                    >
                       Reset
                     </button>
                   </div>
@@ -423,7 +488,9 @@ function SearchMotion() {
                     data={motionData}
                     headerShown={true}
                     handleDelete={(item) => alert(item.id)}
-                    handleEdit={(item) => navigate("/mms/motion/new", { state: item })}
+                    handleEdit={(item) =>
+                      navigate("/mms/motion/new", { state: item })
+                    }
                     headertitlebgColor={"#666"}
                     headertitletextColor={"#FFF"}
                     handlePageChange={handlePageChange}

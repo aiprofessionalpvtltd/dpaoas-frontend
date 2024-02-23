@@ -26,13 +26,13 @@ const validationSchema = Yup.object({
   sessionNumber: Yup.number(),
   motionType: Yup.string().required("Motion Type is required"),
   noticeOfficeDiaryNo: Yup.number().required(
-    "Notice Office Diary No is required",
+    "Notice Office Diary No is required"
   ),
   noticeOfficeDiaryDate: Yup.string().required(
-    "Notice Office Diary Date is required",
+    "Notice Office Diary Date is required"
   ),
   noticeOfficeDiaryTime: Yup.string().required(
-    "Notice Office Diary Time is required",
+    "Notice Office Diary Time is required"
   ),
   mover: Yup.array().required("Mover is required"),
   //   englishText: Yup.string().required("English Text is required"),
@@ -45,6 +45,7 @@ function NewMotion() {
   const [showModal, setShowModal] = useState(false);
   const [formValues, setFormValues] = useState([]);
 
+  // const sessionId = sessions && sessions.map((item) => item?.id);
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
   const handleOkClick = () => {
@@ -54,7 +55,7 @@ function NewMotion() {
 
   const formik = useFormik({
     initialValues: {
-      sessionNumber: sessions[0]?.id,
+      sessionNumber: "",
       motionType: "",
       noticeOfficeDiaryNo: null,
       mover: [],
@@ -137,26 +138,64 @@ function NewMotion() {
                     <div class="col">
                       <div class="mb-3">
                         <label class="form-label">Session No</label>
+
                         <select
-                          class={`form-select`}
+                          className={`form-select ${
+                            formik.touched.fkSessionId &&
+                            formik.errors.fkSessionId
+                              ? "is-invalid"
+                              : ""
+                          }`}
                           placeholder="Session No"
                           value={formik.values.sessionNumber}
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                           name="sessionNumber"
                         >
-                          <option value={sessions[0]?.id} selected disabled>
-                            {sessions[0]?.sessionName}
+                          <option value={""} selected disabled hidden>
+                            Select
                           </option>
+
+                          {sessions &&
+                            sessions.length > 0 &&
+                            sessions.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item.sessionName}
+                              </option>
+                            ))}
                         </select>
                       </div>
                     </div>
-
-                    <div class="col">
+                    {/* <div class="col">
                       <div class="mb-3">
-                        <label class="form-label">Motion Type</label>
+                        <label class="form-label">Group</label>
                         <select
                           class={`form-select ${
+                            formik.touched.motionType &&
+                            formik.errors.motionType
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.motionWeek || ""}
+                          name="motionWeek"
+                        >
+                          <option value={""} selected disabled hidden>
+                            Select
+                          </option>
+                          <option value="1">1st Week</option>
+                          <option value="2">2nd Week</option>
+                          <option value="3">3rd Week</option>
+                          <option value="4">4th Week</option>
+                        </select>
+                      </div>
+                    </div> */}
+                    <div className="col">
+                      <div className="mb-3">
+                        <label className="form-label">Motion Type</label>
+                        <select
+                          className={`form-select ${
                             formik.touched.motionType &&
                             formik.errors.motionType
                               ? "is-invalid"
@@ -349,7 +388,7 @@ function NewMotion() {
                           onChange={(event) => {
                             formik.setFieldValue(
                               "attachment",
-                              event.currentTarget.files[0],
+                              event.currentTarget.files[0]
                             );
                           }}
                         />

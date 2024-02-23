@@ -4,9 +4,7 @@ import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
 import { useNavigate } from "react-router";
 import TimePicker from "react-time-picker";
-import {
-  createQuestion,
-} from "../../../../../../api/APIs/Services/Question.service";
+import { createQuestion } from "../../../../../../api/APIs/Services/Question.service";
 import {
   showErrorMessage,
   showSuccessMessage,
@@ -26,11 +24,11 @@ const validationSchema = Yup.object({
   // fkSessionId: Yup.number().required("Session No is required"),
   questionCategory: Yup.string().required("Category is required"),
   noticeOfficeDiaryNo: Yup.number().required(
-    "Notice office diary No is required",
+    "Notice office diary No is required"
   ),
   fkMemberId: Yup.number().required("Member id is required"),
   noticeOfficeDiaryDate: Yup.string().required(
-    "Notice Office Diary Date is required",
+    "Notice Office Diary Date is required"
   ),
   //   noticeOfficeDiaryTime: Yup.string().required('Notice Office Diary Time is required'),
   // englishText: Yup.string().required('English Text is required'),
@@ -42,7 +40,11 @@ function NewQuestion() {
   const { members, sessions } = useContext(AuthContext);
   const [showModal, setShowModal] = useState(false);
   const [formValues, setFormValues] = useState([]);
-
+  const sessionId = sessions && sessions.map((item) => item?.id);
+  console.log(
+    "sessions",
+    sessions.map((item) => item?.sessionName)
+  );
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
   const handleOkClick = () => {
@@ -52,7 +54,7 @@ function NewQuestion() {
 
   const formik = useFormik({
     initialValues: {
-      fkSessionId: sessions[0]?.id,
+      fkSessionId: "",
       questionCategory: "",
       noticeOfficeDiaryNo: null,
       fkMemberId: null,
@@ -75,7 +77,7 @@ function NewQuestion() {
     formData.append("fkSessionId", values?.fkSessionId);
     formData.append("noticeOfficeDiaryNo", Number(values.noticeOfficeDiaryNo));
     formData.append("noticeOfficeDiaryDate", values.noticeOfficeDiaryDate);
-    formData.append("noticeOfficeDiaryTime", "11:40am");
+    formData.append("noticeOfficeDiaryTime", values?.noticeOfficeDiaryTime);
     formData.append("questionCategory", values.questionCategory);
     formData.append("fkQuestionStatus", 3);
     formData.append("fkMemberId", values.fkMemberId);
@@ -88,6 +90,7 @@ function NewQuestion() {
       const response = await createQuestion(formData);
       if (response?.success) {
         showSuccessMessage(response?.message);
+        formik.resetForm();
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -133,6 +136,23 @@ function NewQuestion() {
                     <div class="col">
                       <div class="mb-3">
                         <label class="form-label">Session No</label>
+                        {/* <select
+                          class="form-select"
+                          placeholder={formik.values.fkSessionId}
+                          onChange={formik.handleChange}
+                          id="fkSessionId"
+                          onBlur={formik.handleBlur}
+                        >
+                          <option selected disabled hidden>
+                            Select
+                          </option>
+                          {sessions &&
+                            sessions.map((item) => (
+                              <option value={item.id}>
+                                {item.sessionName}
+                              </option>
+                            ))}
+                        </select> */}
                         <select
                           class={`form-select ${
                             formik.touched.fkSessionId &&
@@ -140,15 +160,22 @@ function NewQuestion() {
                               ? "is-invalid"
                               : ""
                           }`}
-                          placeholder="Session No"
+                          // placeholder="Session No"
                           value={formik.values.fkSessionId}
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                           name="fkSessionId"
                         >
-                          <option value={sessions[0]?.id} selected disabled>
-                            {sessions[0]?.sessionName}
+                          <option value="" selected disabled hidden>
+                            Select
                           </option>
+                          {sessions &&
+                            sessions.length > 0 &&
+                            sessions.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item.sessionName}
+                              </option>
+                            ))}
                         </select>
                         {formik.touched.fkSessionId &&
                           formik.errors.fkSessionId && (
@@ -219,16 +246,17 @@ function NewQuestion() {
 
                     <div class="col">
                       <div class="mb-3">
-                        <label class="form-label">Member ID</label>
+                        <label class="form-label">Member Name</label>
 
                         <select
-                          class={`form-select ${
+                          className={`form-select ${
                             formik.touched.fkMemberId &&
                             formik.errors.fkMemberId
                               ? "is-invalid"
                               : ""
                           }`}
-                          placeholder={formik.values.fkMemberId}
+                          // placeholder={formik.values.fkMemberId}
+                          value={formik.values.fkMemberId}
                           onChange={formik.handleChange}
                           id="fkMemberId"
                         >
@@ -337,7 +365,7 @@ function NewQuestion() {
                           onChange={(event) => {
                             formik.setFieldValue(
                               "questionImage",
-                              event.currentTarget.files[0],
+                              event.currentTarget.files[0]
                             );
                           }}
                         />

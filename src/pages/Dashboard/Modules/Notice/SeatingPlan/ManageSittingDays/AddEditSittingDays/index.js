@@ -11,7 +11,10 @@ import * as Yup from "yup";
 import DatePicker from "react-datepicker";
 import Header from "../../../../../../../components/Header";
 import { Layout } from "../../../../../../../components/Layout";
-import { QMSSideBarItems } from "../../../../../../../utils/sideBarItems";
+import {
+  NoticeSidebarItems,
+  QMSSideBarItems,
+} from "../../../../../../../utils/sideBarItems";
 import {
   showErrorMessage,
   showSuccessMessage,
@@ -34,7 +37,7 @@ const validationSchema = Yup.object({
   isAdjourned: Yup.boolean(),
 });
 
-function QMSAddEditSittingDaysForm() {
+function NMSAddEditSittingDaysForm() {
   const location = useLocation();
   const { members, sessions } = useContext(AuthContext);
   const [sessionId, setSessionId] = useState();
@@ -51,9 +54,9 @@ function QMSAddEditSittingDaysForm() {
       formik.setFieldValue("sessionMembers", newSessionMembers);
       // setFormCount(formCount - 1);
       setFormCount(formCount - 1);
-      formik.setFieldValue(`sessionMembers[${formCount - 1}].fkMemberId`, "");
-      formik.setFieldValue(`sessionMembers[${formCount - 1}].startTime`, "");
-      formik.setFieldValue(`sessionMembers[${formCount - 1}].endTime`, "");
+      //   formik.setFieldValue(`sessionMembers[${formCount - 1}].fkMemberId`, "");
+      //   formik.setFieldValue(`sessionMembers[${formCount - 1}].startTime`, "");
+      //   formik.setFieldValue(`sessionMembers[${formCount - 1}].endTime`, "");
     }
   };
   const updateSessionMembers = (index, fieldName, value) => {
@@ -63,6 +66,7 @@ function QMSAddEditSittingDaysForm() {
     }
     newSessionMembers[index][fieldName] = value;
     formik.setFieldValue("sessionMembers", newSessionMembers);
+    // formik.setFieldValue(`sessionMembers[${index}].${fieldName}`, value);
   };
 
   const renderForms = () => {
@@ -108,14 +112,14 @@ function QMSAddEditSittingDaysForm() {
                   <option value="" disabled hidden>
                     Select
                   </option>
-                  <option value="1">Test 1</option>
-                  <option value="2">Test 2</option>
-                  {/* {members &&
+                  {/* <option value="1">Test 1</option>
+                  <option value="2">Test 2</option> */}
+                  {members &&
                     members.map((item) => (
                       <option key={item.id} value={item.id}>
                         {item?.memberName}
                       </option>
-                    ))} */}
+                    ))}
                 </select>
                 {formik.touched[`sessionMembers[${i}].fkMemberId`] &&
                   formik.errors[`sessionMembers[${i}].fkMemberId`] && (
@@ -351,12 +355,16 @@ function QMSAddEditSittingDaysForm() {
   }, [sessionId, formik.setValues]);
 
   return (
-    <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
+    <Layout
+      module={true}
+      sidebarItems={NoticeSidebarItems}
+      centerlogohide={true}
+    >
       <Header
-        dashboardLink={"/qms/dashboard"}
-        addLink1={"/qms/manage/sitting-days"}
+        dashboardLink={"/"}
+        addLink1={"/notice/seatingplan/manage-session-days"}
         title1={"Sitting Days"}
-        addLink2={"/qms/manage/sitting-days/addedit"}
+        addLink2={"/notice/seatingplan/manage-session-days/addedit"}
         title2={
           location && location?.state ? "Edit Sitting Days" : "Add Sitting Days"
         }
@@ -434,8 +442,17 @@ function QMSAddEditSittingDaysForm() {
                         onBlur={formik.handleBlur}
                         name="fkSessionId"
                       >
-                        <option value="2">400</option>
-                        <option value="3">500</option>
+                        <option value="" selected disabled hidden>
+                          Select
+                        </option>
+                        {sessions &&
+                          sessions.length > 0 &&
+                          sessions.map((item) => (
+                            <option key={item.id} value={item.id}>
+                              {item.sessionName}
+                            </option>
+                          ))}
+                        ;
                       </select>
                     </div>
                   </div>
@@ -797,4 +814,4 @@ function QMSAddEditSittingDaysForm() {
   );
 }
 
-export default QMSAddEditSittingDaysForm;
+export default NMSAddEditSittingDaysForm;

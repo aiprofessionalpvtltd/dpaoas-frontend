@@ -1,7 +1,10 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import Header from "../../../../../../components/Header";
-import { QMSSideBarItems } from "../../../../../../utils/sideBarItems";
+import {
+  NoticeSidebarItems,
+  QMSSideBarItems,
+} from "../../../../../../utils/sideBarItems";
 import { Layout } from "../../../../../../components/Layout";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getAllManageSessions } from "../../../../../../api/APIs/Services/SeatingPlan.service";
@@ -18,7 +21,7 @@ import {
 } from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 
-function QMSSittingsDays() {
+function ManageSittingsDays() {
   const navigate = useNavigate();
   const { sessions } = useContext(AuthContext);
   const location = useLocation();
@@ -31,7 +34,7 @@ function QMSSittingsDays() {
     // Update currentPage when a page link is clicked
     setCurrentPage(page);
   };
-  console.log("sessting", sittingDays);
+
   // formik
   const formik = useFormik({
     initialValues: {
@@ -48,12 +51,8 @@ function QMSSittingsDays() {
       id: item?.id,
       session: `${item.session?.sessionName}`,
       sittingDate: moment(item?.sittingDate).format("YYYY/MM/DD"),
-      sittingStartTime: moment(item?.sittingStartTime, "hh:mm:ss a").format(
-        "hh:mm:ss a"
-      ),
-      sittingEndTime: moment(item?.sittingEndTime, "hh:mm:ss a").format(
-        "hh:mm:ss a"
-      ),
+      sittingStartTime: item?.sittingStartTime,
+      sittingEndTime: item?.sittingEndTime,
       breakStartTime: item?.breakStartTime,
       breakEndTime: item?.breakEndTime,
       AsWholeCommittee: String(item?.committeeWhole),
@@ -105,8 +104,7 @@ function QMSSittingsDays() {
           setCount(response?.data?.count);
         }
       } catch (error) {
-        // showErrorMessage(error);
-        console.log(error?.message);
+        console.log(error);
       }
     },
     [currentPage, pageSize, setCount]
@@ -147,13 +145,19 @@ function QMSSittingsDays() {
   };
 
   const handleAssign = (id) => {
-    navigate(`/qms/manage/attendence`, { state: id });
+    navigate(`/notice/seatingplan/manage-session/member-attendence`, {
+      state: id,
+    });
   };
   return (
-    <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
+    <Layout
+      module={true}
+      sidebarItems={NoticeSidebarItems}
+      centerlogohide={true}
+    >
       <Header
-        dashboardLink={"/qms/manage"}
-        addLink1={"/qms/manage/sitting-days"}
+        dashboardLink={"/"}
+        addLink1={"/notice/seatingplan/manage-session-days"}
         title1={"Sitting Days"}
       />
       <ToastContainer />
@@ -186,13 +190,13 @@ function QMSSittingsDays() {
                             <option value="" selected disabled hidden>
                               Select
                             </option>
-                            <option value="3">session 1</option>
-                            {/* {sessions &&
+                            {/* <option value="3">session 1</option> */}
+                            {sessions &&
                               sessions.map((item) => (
                                 <option value={item.id}>
                                   {item.sessionName}
                                 </option>
-                              ))} */}
+                              ))}
                           </select>
                         </div>
                       </div>
@@ -218,12 +222,17 @@ function QMSSittingsDays() {
                     tableTitle="Sitting Days List"
                     addBtnText="Add Sitting Days"
                     handleAdd={() =>
-                      navigate("/qms/manage/sitting-days/addedit")
+                      navigate(
+                        "/notice/seatingplan/manage-session-days/addedit"
+                      )
                     }
                     handleEdit={(item) =>
-                      navigate("/qms/manage/sitting-days/addedit", {
-                        state: item,
-                      })
+                      navigate(
+                        "/notice/seatingplan/manage-session-days/addedit",
+                        {
+                          state: item,
+                        }
+                      )
                     }
                     // hideDeleteIcon={true}
                     headertitlebgColor={"#666"}
@@ -269,4 +278,4 @@ function QMSSittingsDays() {
   );
 }
 
-export default QMSSittingsDays;
+export default ManageSittingsDays;

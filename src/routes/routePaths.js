@@ -117,6 +117,11 @@ import CMSTonerModels from "../pages/Dashboard/Modules/CMS/AdminCMS/TonerModel";
 import AddEditTonerModel from "../pages/Dashboard/Modules/CMS/AdminCMS/TonerModel/AddEditTonerModels";
 import HRMBranches from "../pages/Dashboard/Modules/HRM/Branches";
 import HRMAddEditBranch from "../pages/Dashboard/Modules/HRM/Branches/AddEditBranch";
+import QMSAttendence from "../pages/Dashboard/Modules/QMS/Manage/Attendence";
+import ManageSittingDays from "../pages/Dashboard/Modules/Notice/SeatingPlan/ManageSittingDays";
+import NMSAddEditSittingDaysForm from "../pages/Dashboard/Modules/Notice/SeatingPlan/ManageSittingDays/AddEditSittingDays";
+import NMSSessionAttendence from "../pages/Dashboard/Modules/Notice/SeatingPlan/ManageSittingDays/SessionAttendence";
+import NoticeQuestionDetail from "../pages/Dashboard/Modules/Notice/Question/NoticeQuestionDetail";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -159,6 +164,7 @@ export const ProtectedRoutes = [
   { path: "/notice/question/new", element: <NewQuestion /> },
   { path: "/notice/question/search", element: <SearchQuestion /> },
   { path: "/notice/question/sent", element: <SentQuestion /> },
+  { path: "/notice/question/detail", element: <NoticeQuestionDetail /> },
 
   { path: "/notice/motion", element: <NoticeDashboard /> },
   { path: "/notice/motion/new", element: <NewMotion /> },
@@ -178,9 +184,21 @@ export const ProtectedRoutes = [
   { path: "/notice/manage/sessions/addedit", element: <SessionsAddEditForm /> },
 
   { path: "/notice/seatingplan", element: <NoticeDashboard /> },
+  // {
+  //   path: "/notice/seatingplan/manage-session-days",
+  //   element: <ManageSessionDays />,
+  // },
   {
     path: "/notice/seatingplan/manage-session-days",
-    element: <ManageSessionDays />,
+    element: <ManageSittingDays />,
+  },
+  {
+    path: "/notice/seatingplan/manage-session-days/addedit",
+    element: <NMSAddEditSittingDaysForm />,
+  },
+  {
+    path: "/notice/seatingplan/manage-session/member-attendence",
+    element: <NMSSessionAttendence />,
   },
   {
     path: "/notice/seatingplan/manage-seating-plan",
@@ -284,6 +302,8 @@ export const ProtectedRoutes = [
     path: "/qms/manage/sitting-days/addedit",
     element: <QMSAddEditSittingDaysForm />,
   },
+
+  { path: "/qms/manage/attendence", element: <QMSAttendence /> },
 
   { path: "/qms/manage/ministries", element: <QMSMinistries /> },
   {
