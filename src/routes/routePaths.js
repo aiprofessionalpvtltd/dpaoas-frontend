@@ -122,6 +122,7 @@ import ManageSittingDays from "../pages/Dashboard/Modules/Notice/SeatingPlan/Man
 import NMSAddEditSittingDaysForm from "../pages/Dashboard/Modules/Notice/SeatingPlan/ManageSittingDays/AddEditSittingDays";
 import NMSSessionAttendence from "../pages/Dashboard/Modules/Notice/SeatingPlan/ManageSittingDays/SessionAttendence";
 import NoticeQuestionDetail from "../pages/Dashboard/Modules/Notice/Question/NoticeQuestionDetail";
+import Files from "../pages/Dashboard/Modules/EFiling/Files";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -407,4 +408,5 @@ export const ProtectedRoutes = [
   { path: "/efiling/dashboard/fileDetail", element: <FileDetail /> },
   { path: "/efiling/dashboard/addedit", element: <AddEditFileForm /> },
   { path: "/efiling/dashboard/addeditcase", element: <AddEditCaseForm /> },
+  { path: "/efiling/dashboard/files", element: <Files /> },
 ];

@@ -49,7 +49,7 @@ function Dashboard() {
             setPermissionsLocal(localPermissionsData);
 
       // Check if permissions exist and has length
-      if (permissions && permissions.length > 0) {
+      if (permissions && permissions.length > 0 && roles) {
         const res = CheckPermission(userRole?.role?.name, roles, permissions);
                 setPermissionsData(res?.permissions);
         setPermissionsLocal(res?.permissions);
@@ -69,8 +69,8 @@ function Dashboard() {
       type: "",
       cardbg: "bluebg",
       icon: faMailBulk,
-      permission: null,
-      // "permission": ["Leave", "LeaveHistory"]
+      // permission: null,
+      permission: ["Leave"]
     },
     {
       title: "Organizational Dashboard",
@@ -78,8 +78,8 @@ function Dashboard() {
       type: "",
       cardbg: "greenbg",
       icon: faBuilding,
-      permission: null,
-      // "permission": ["Roles", "Employees", "Departments", "Designation"]
+      // permission: null,
+      permission:  [userRole?.role?.name == "Super Admin" ? "Roles" :"Organizational Dashboard"]
     },
     {
       title: "Visitors Management System",
@@ -87,7 +87,7 @@ function Dashboard() {
       type: "",
       cardbg: "greybg",
       icon: faAddressCard,
-      permission: null,
+      permission: ["VMS"],
     },
     {
       title: "Notice Management System",
@@ -95,7 +95,7 @@ function Dashboard() {
       type: "",
       cardbg: "darkGreenbg",
       icon: faBullhorn,
-      permission: null,
+      permission: ["Notice Office"],
     },
     {
       title: "Motion Management System",
@@ -103,7 +103,7 @@ function Dashboard() {
       type: "",
       cardbg: "lightGreen",
       icon: faFileImport,
-      permission: null,
+      permission: ["Motion"],
     },
     {
       title: "Question Management System",
@@ -111,7 +111,7 @@ function Dashboard() {
       type: "",
       cardbg: "orangebg",
       icon: faClipboardQuestion,
-      permission: null,
+      permission: ["Question"],
     },
     {
       title: "SMS Constituent Outreach System",
@@ -119,7 +119,7 @@ function Dashboard() {
       type: "",
       cardbg: "greybg",
       icon: faSms,
-      permission: null,
+      permission: ["SMS"],
     },
     {
       title: "Human Resource Management System",
@@ -127,7 +127,7 @@ function Dashboard() {
       type: "",
       cardbg: "mehroonBg",
       icon: faUserCog,
-      permission: null,
+      permission: ["Human Resource Management"],
     },
     {
       title: "Translation Management System",
@@ -135,7 +135,7 @@ function Dashboard() {
       type: "",
       cardbg: "bluebg",
       icon: faMailBulk,
-      permission: null,
+      permission: ["Translation"],
     },
     {
       title: "Complaint Management System",
@@ -143,16 +143,15 @@ function Dashboard() {
       type: "",
       cardbg: "bluebg",
       icon: faMailBulk,
-      permission: null,
+      permission: ["Complaint"],
     },
     {
       title: "E-Filing System",
-      link: "/efiling/dashboard",
+      link: "/efiling/dashboard/files",
       type: "",
       cardbg: "greenbg",
       icon: faBuilding,
-      permission: null,
-      // "permission": ["Roles", "Employees", "Departments", "Designation"]
+      permission: ["E-Filing"],
     },
   ];
 
@@ -166,7 +165,6 @@ function Dashboard() {
   for (let i = 0; i < filteredTiles.length; i += 4) {
     rows.push(filteredTiles.slice(i, i + 4));
   }
-
   return (
     <Layout>
       <div class="dashboard-content" style={{ marginTop: "100px" }}>

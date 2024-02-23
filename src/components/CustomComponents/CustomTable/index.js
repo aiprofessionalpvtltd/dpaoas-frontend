@@ -52,6 +52,7 @@ function CustomTable({
   hideDeleteIcon,
   singleDataCard,
   showEditIcon,
+  hidebtn1
 }) {
   const keys = data?.length > 0 ? Object.keys(data[0]) : [];
   const [totalPages, setTotalPages] = useState(0);
@@ -129,10 +130,13 @@ function CustomTable({
                     {addBtnText2}
                   </button>
                   )}
-                  <button className="btn btn-primary float-end" type="button" onClick={handleAdd}>
-                    {addBtnText}
-                  </button>
+                  
                 </>
+              )}
+              {!hidebtn1 && (
+                <button className="btn btn-primary float-end" type="button" onClick={handleAdd}>
+                {addBtnText}
+              </button>
               )}
               <div className="clearfix"></div>
             </div>

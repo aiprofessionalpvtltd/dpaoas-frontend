@@ -2,11 +2,12 @@ import React from "react";
 import Logo from "../../assets/logo.png";
 import Profile from "../../assets/profile-img.jpg";
 import { Dropdown } from "react-bootstrap";
-import { logout } from "../../api/Auth";
+import { getUserData, logout } from "../../api/Auth";
 import { Link, useNavigate } from "react-router-dom";
 
 export const CustomNavbar = ({ toggleSidebar, module, centerlogohide }) => {
   const navigation = useNavigate();
+  const userData = getUserData()
   return (
     <header
       class="dashboard-toolbar"
@@ -43,8 +44,8 @@ export const CustomNavbar = ({ toggleSidebar, module, centerlogohide }) => {
           >
             <img src={Profile} className="user-img" alt="user avatar" />
             <div className="user-info">
-              <p className="user-name mb-0">Muhammad</p>
-              <p className="designation mb-0">Director</p>
+              <p className="user-name mb-0">{userData && `${userData?.firstName} ${userData?.lastName}`}</p>
+              <p className="designation mb-0">{userData && userData?.designation?.designationName}</p>
             </div>
           </Dropdown.Toggle>
           <div className="clearfix"></div>

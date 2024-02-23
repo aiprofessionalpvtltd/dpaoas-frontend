@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 
 import { Layout } from "../../../../../../../components/Layout";
 import { NoticeSidebarItems } from "../../../../../../../utils/sideBarItems";
@@ -56,6 +56,7 @@ function NMSSessionAttendance() {
     }));
     try {
       const response = updateMemberattendace(sessionID, formattedData);
+      console.log(response);
       if (response?.success) {
         showSuccessMessage(response?.message);
         GetSessionMembersWithStatus();
@@ -129,7 +130,13 @@ function NMSSessionAttendance() {
                       ))}
                     </tbody>
                   </table>
-                  <button type="submit">Submit</button>
+                  <div class="row mt-2">
+                    <div class="col">
+                      <button class="btn btn-primary float-end" type="submit">
+                        Submit
+                      </button>
+                    </div>
+                  </div>
                 </Form>
               )}
             </Formik>

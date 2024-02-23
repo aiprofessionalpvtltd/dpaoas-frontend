@@ -8,13 +8,13 @@ export const updateSeat = async (seatNo, data) => {
     //   const token = getAuthToken();
     const response = await axiosClientMMS.put(
       `/seatingPlan/seatAssignment/${seatNo}`,
-      data,
-      {
-        headers: {
-          accept: "application/json",
-          "Content-Type": "multipart/form-data",
-        },
-      }
+      data
+      // {
+      //   headers: {
+      //     accept: "application/json",
+      //     "Content-Type": "multipart/form-data",
+      //   },
+      // }
     );
     return response?.data;
   } catch (error) {
