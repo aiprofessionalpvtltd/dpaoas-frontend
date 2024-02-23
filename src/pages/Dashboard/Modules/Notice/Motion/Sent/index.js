@@ -5,7 +5,10 @@ import Header from "../../../../../../components/Header";
 import { useNavigate } from "react-router";
 import DatePicker from "react-datepicker";
 
-import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 import { useFormik } from "formik";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
@@ -53,23 +56,51 @@ function SentMotion() {
   };
 
   const transformMotionData = (apiData) => {
-    return apiData?.map((leave) => ({
-      id: leave?.id,
-      fkSessionId: leave?.sessions?.id,
-      fileNumber: leave?.fileNumber,
-      motionType: leave?.motionType,
-      motionWeek: "",
-      noticeOfficeDiaryNo: leave?.noticeOfficeDairies?.noticeOfficeDiaryNo,
-      // ministryName: leave?.motionMinistries?.ministries,
-      // ministryIds: leave?.motionMinistries?.fkMinistryId,
-      noticeOfficeDiaryDate: moment(leave?.noticeOfficeDairies?.noticeOfficeDiaryDate).format("YYYY/MM/DD"),
-      noticeOfficeDiaryTime: leave?.noticeOfficeDairies?.noticeOfficeDiaryTime,
-      // memberName:leave?.motionMovers?.members,
-      englishText: leave?.englishText,
-      urduText: leave?.urduText,
-      fkMotionStatus: leave?.motionStatuses?.statusName,
-    }));
+    return apiData.map((res, index) => {
+      const english = [res?.englishText].filter(Boolean).join(", ");
+      const EnglishText = english.replace(/(<([^>]+)>)/gi, "");
+
+      const urdu = [res?.urduText].filter(Boolean).join(", ");
+      const UrduText = urdu.replace(/(<([^>]+)>)/gi, "");
+
+      return {
+        id: res?.id,
+        fkSessionId: res?.sessions?.id,
+        fileNumber: res?.fileNumber,
+        motionType: res?.motionType,
+        motionWeek: "",
+        noticeOfficeDiaryNo: res?.noticeOfficeDairies?.noticeOfficeDiaryNo,
+        // ministryName: leave?.motionMinistries?.ministries,
+        // ministryIds: leave?.motionMinistries?.fkMinistryId,
+        noticeOfficeDiaryDate: moment(
+          res?.noticeOfficeDairies?.noticeOfficeDiaryDate
+        ).format("YYYY/MM/DD"),
+        noticeOfficeDiaryTime: res?.noticeOfficeDairies?.noticeOfficeDiaryTime,
+        // memberName:leave?.motionMovers?.members,
+        englishText: EnglishText,
+        urduText: UrduText,
+        fkMotionStatus: res?.motionStatuses?.statusName,
+      };
+    });
   };
+
+  // return apiData?.map((leave) => ({
+  //   id: leave?.id,
+  //   fkSessionId: leave?.sessions?.id,
+  //   fileNumber: leave?.fileNumber,
+  //   motionType: leave?.motionType,
+  //   motionWeek: "",
+  //   noticeOfficeDiaryNo: leave?.noticeOfficeDairies?.noticeOfficeDiaryNo,
+  //   // ministryName: leave?.motionMinistries?.ministries,
+  //   // ministryIds: leave?.motionMinistries?.fkMinistryId,
+  //   noticeOfficeDiaryDate: moment(leave?.noticeOfficeDairies?.noticeOfficeDiaryDate).format("YYYY/MM/DD"),
+  //   noticeOfficeDiaryTime: leave?.noticeOfficeDairies?.noticeOfficeDiaryTime,
+  //   // memberName:leave?.motionMovers?.members,
+  //   englishText: leave?.englishText,
+  //   urduText: leave?.urduText,
+  //   fkMotionStatus: leave?.motionStatuses?.statusName,
+  // }));
+
   const getMotionListData = async () => {
     try {
       const response = await getAllMotion(currentPage, pageSize);
@@ -133,13 +164,24 @@ function SentMotion() {
   }, [currentPage]);
 
   return (
-    <Layout module={true} sidebarItems={NoticeSidebarItems} centerlogohide={true}>
+    <Layout
+      module={true}
+      sidebarItems={NoticeSidebarItems}
+      centerlogohide={true}
+    >
       <ToastContainer />
-      <Header dashboardLink={"/"} addLink1={"/notice/motion/sent"} title1={"Sent Motion"} />
+      <Header
+        dashboardLink={"/"}
+        addLink1={"/notice/motion/sent"}
+        title1={"Sent Motion"}
+      />
       <div>
         <div class="container-fluid dash-detail-container">
           <div class="card mt-1">
-            <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
+            <div
+              class="card-header red-bg"
+              style={{ background: "#14ae5c !important" }}
+            >
               <h1>SENT MOTION</h1>
             </div>
             <div class="card-body">
@@ -368,14 +410,22 @@ function SentMotion() {
                       </span>
                       <DatePicker
                         selected={formik.values.fromNoticeDate}
-                        onChange={(date) => formik.setFieldValue("fromNoticeDate", date)}
+                        onChange={(date) =>
+                          formik.setFieldValue("fromNoticeDate", date)
+                        }
                         className={`form-control ${
-                          formik.errors.fromNoticeDate && formik.touched.fromNoticeDate ? "is-invalid" : ""
+                          formik.errors.fromNoticeDate &&
+                          formik.touched.fromNoticeDate
+                            ? "is-invalid"
+                            : ""
                         }`}
                       />
-                      {formik.errors.fromNoticeDate && formik.touched.fromNoticeDate && (
-                        <div className="invalid-feedback">{formik.errors.fromNoticeDate}</div>
-                      )}
+                      {formik.errors.fromNoticeDate &&
+                        formik.touched.fromNoticeDate && (
+                          <div className="invalid-feedback">
+                            {formik.errors.fromNoticeDate}
+                          </div>
+                        )}
                     </div>
                   </div>
                   <div class="col">
@@ -396,7 +446,9 @@ function SentMotion() {
                       </span>
                       <DatePicker
                         selected={formik.values.toNoticeDate}
-                        onChange={(date) => formik.setFieldValue("toNoticeDate", date)}
+                        onChange={(date) =>
+                          formik.setFieldValue("toNoticeDate", date)
+                        }
                         className={"form-control"}
                       />
                     </div>
@@ -418,7 +470,9 @@ function SentMotion() {
                     data={motionData}
                     headerShown={true}
                     handleDelete={(item) => alert(item.id)}
-                    handleEdit={(item) => navigate("/mms/motion/new", { state: item })}
+                    handleEdit={(item) =>
+                      navigate("/mms/motion/new", { state: item })
+                    }
                     headertitlebgColor={"#666"}
                     headertitletextColor={"#FFF"}
                     handlePageChange={handlePageChange}

@@ -4,7 +4,10 @@ import { Layout } from "../../../../../../components/Layout";
 import { MMSSideBarItems } from "../../../../../../utils/sideBarItems";
 import { useNavigate } from "react-router-dom";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
-import { showErrorMessage } from "../../../../../../utils/ToastAlert";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 import {
   getAllMotion,
@@ -71,7 +74,9 @@ function MMSMotionList() {
       noticeOfficeDiaryNo: leave?.noticeOfficeDairies?.noticeOfficeDiaryNo,
       // ministryName: leave?.motionMinistries?.ministries,
       // ministryIds: leave?.motionMinistries?.fkMinistryId,
-      noticeOfficeDiaryDate: moment(leave?.noticeOfficeDairies?.noticeOfficeDiaryDate).format("YYYY/MM/DD"),
+      noticeOfficeDiaryDate: moment(
+        leave?.noticeOfficeDairies?.noticeOfficeDiaryDate
+      ).format("YYYY/MM/DD"),
       noticeOfficeDiaryTime: leave?.noticeOfficeDairies?.noticeOfficeDiaryTime,
       // memberName:leave?.motionMovers?.members,
       englishText: leave?.englishText,
@@ -120,6 +125,7 @@ function MMSMotionList() {
         const ministryData = transfrerMinistryData(response?.data?.rows);
         setMotionData(transformedData);
         setMinistryData(ministryData);
+        showSuccessMessage(response?.message);
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.error);
@@ -277,10 +283,10 @@ function MMSMotionList() {
                 <div class="row">
                   <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                     <button class="btn btn-primary" type="submit">
-                      Generate
+                      Search
                     </button>
                     <button class="btn btn-primary" type="">
-                      Save
+                      Reset
                     </button>
                   </div>
                 </div>
@@ -288,8 +294,7 @@ function MMSMotionList() {
               <div className="mt-3 mb-3">
                 <CustomTable
                   block={true}
-                hideBtn={true}
-
+                  hideBtn={true}
                   data={motionData}
                   tableTitle="Motion Data"
                   // headerShown={true}

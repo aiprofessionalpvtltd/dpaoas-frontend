@@ -1,11 +1,15 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { NoticeSidebarItems } from "../../../../../../utils/sideBarItems";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
 import { useNavigate } from "react-router";
-import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../../utils/ToastAlert";
 import {
   getAllQuestion,
+  getAllQuestionByID,
   getAllQuestionStatus,
   searchQuestion,
 } from "../../../../../../api/APIs/Services/Question.service";
@@ -25,9 +29,8 @@ function SentQuestion() {
   const [resData, setResData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [allquestionStatus, setAllQuestionStatus] = useState([]);
-
   const [count, setCount] = useState(null);
-  const pageSize = 10; // Set your desired page size
+  const pageSize = 5; // Set your desired page size
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
@@ -55,14 +58,23 @@ function SentQuestion() {
 
   const transformLeavesData = (apiData) => {
     return apiData.map((res, index) => {
+      const subjectMatter = [res?.englishText, res?.urduText]
+        .filter(Boolean)
+        .join(", ");
+      const cleanedSubjectMatter = subjectMatter.replace(/(<([^>]+)>)/gi, "");
       return {
-        SrNo: index,
+        SrNo: index + 1,
         QID: res.id,
         QDN: res.fkQuestionDiaryId,
-        NoticeDate: moment(res?.noticeOfficeDiary?.noticeOfficeDiaryDate).format("YYYY/MM/DD"),
+        NoticeDate: moment(
+          res?.noticeOfficeDiary?.noticeOfficeDiaryDate
+        ).format("YYYY/MM/DD"),
         NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
         SessionNumber: res?.session?.sessionName,
-        SubjectMatter: [res?.englishText, res?.urduText].filter(Boolean).join(", "),
+        // SubjectMatter: [res?.englishText, res?.urduText]
+        //   .filter(Boolean)
+        //   .join(", "),
+        SubjectMatter: cleanedSubjectMatter,
         Category: res.questionCategory,
         // SubmittedBy: res.category,
         Status: res.questionStatus?.questionStatus,
@@ -78,7 +90,7 @@ function SentQuestion() {
       questionCategory: values.category,
       keyword: values.keyword,
       questionID: values.questionID,
-      questionStatus: values.resolutionStatus,
+      questionStatus: values.questionStatus,
       questionDiaryNo: values.questionDiaryNo,
       noticeOfficeDiaryDateFrom: values.fromNoticeDate,
       noticeOfficeDiaryDateTo: values.toNoticeDate,
@@ -86,9 +98,12 @@ function SentQuestion() {
 
     try {
       const response = await searchQuestion(searchParams);
+      console.log(response);
+
       if (response?.success) {
-        const transformedData = transformLeavesData(response.data);
+        const transformedData = transformLeavesData(response?.data);
         setSearchedData(transformedData);
+        setCount(response?.data?.count);
         showSuccessMessage(response?.message);
       }
     } catch (error) {
@@ -96,19 +111,51 @@ function SentQuestion() {
     }
   };
 
-  const getAllQuestionsApi = async () => {
+  // HandleEdit
+  const handleEdit = async (id) => {
+    try {
+      const { question, history } = await getAllQuestionByID(id);
+
+      if (question?.success) {
+        navigate("/notice/question/detail", {
+          state: { question: question?.data, history: history?.data },
+        });
+      }
+    } catch (error) {
+      showErrorMessage(error.response?.data?.message);
+    }
+  };
+
+  // const getAllQuestionsApi = async () => {
+  //   // setCount(null);
+  //   try {
+  //     const response = await getAllQuestion(currentPage, pageSize);
+  //     if (response?.success) {
+  //       // showSuccessMessage(response?.message);s
+  //       console.log("response", response);
+  //       console.log("count consle", response?.count);
+  //       const transformedData = transformLeavesData(response?.data);
+  //       setResData(transformedData);
+  //       setCount(response?.count);
+  //     }
+  //   } catch (error) {
+  //     showErrorMessage(error?.response?.data?.message);
+  //   }
+  // };
+
+  const getAllQuestionsApi = useCallback(async () => {
     try {
       const response = await getAllQuestion(currentPage, pageSize);
       if (response?.success) {
-        // showSuccessMessage(response?.message);s
+        const transformedData = transformLeavesData(response?.data);
+
         setCount(response?.count);
-        const transformedData = transformLeavesData(response.data);
         setResData(transformedData);
       }
     } catch (error) {
-      showErrorMessage(error?.response?.data?.message);
+      console.log(error);
     }
-  };
+  }, [currentPage, pageSize, setCount, setResData]);
 
   const GetALlStatus = async () => {
     try {
@@ -123,18 +170,48 @@ function SentQuestion() {
   };
 
   useEffect(() => {
-    getAllQuestionsApi();
+    // getAllQuestionsApi();
     GetALlStatus();
   }, []);
 
+  useEffect(() => {
+    getAllQuestionsApi();
+  }, [getAllQuestionsApi]);
+  // Handle Reset Form
+  const handleResetForm = () => {
+    formik.resetForm({
+      // Reset the form to initial values
+      questionDiaryNo: "",
+      questionID: "",
+      keyword: "",
+      memberName: "",
+      fromSession: "",
+      toSession: "",
+      category: "",
+      questionStatus: "",
+      fromNoticeDate: null, // Reset date fields to null or a default date
+      toNoticeDate: null,
+    });
+  };
   return (
-    <Layout module={true} sidebarItems={NoticeSidebarItems} centerlogohide={true}>
+    <Layout
+      module={true}
+      sidebarItems={NoticeSidebarItems}
+      centerlogohide={true}
+    >
       <ToastContainer />
-      <Header dashboardLink={"/"} addLink1={"/notice/question/sent"} title1={"Sent Question"} />
+      <Header
+        dashboardLink={"/"}
+        addLink1={"/notice/question/sent"}
+        title1={"Sent Question"}
+      />
       <div>
         <div class="container-fluid">
           <div class="card mt-1">
-            <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
+            <div
+              class="card-header red-bg"
+              style={{ background: "#14ae5c !important" }}
+            >
               <h1>SENT QUESTION</h1>
             </div>
             <div class="card-body">
@@ -144,12 +221,15 @@ function SentQuestion() {
                     <div className="row">
                       <div className="col">
                         <div className="mb-3">
-                          <label className="form-label">Question Diary No</label>
+                          <label className="form-label">
+                            Question Diary No
+                          </label>
                           <input
                             className="form-control"
                             type="text"
                             id="questionDiaryNo"
-                            placeholder={formik.values.questionDiaryNo}
+                            // placeholder={formik.values.questionDiaryNo}
+                            value={formik.values.questionDiaryNo}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                           />
@@ -161,6 +241,8 @@ function SentQuestion() {
                           <input
                             className="form-control"
                             type="number"
+                            min={"1"}
+                            value={formik.values.questionID}
                             id="questionID"
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
@@ -175,6 +257,7 @@ function SentQuestion() {
                           <input
                             className="form-control"
                             type="text"
+                            value={formik.values.keyword}
                             name="keyword"
                             id="keyword"
                             onChange={formik.handleChange}
@@ -187,7 +270,8 @@ function SentQuestion() {
                           <label className="form-label">Member Name</label>
                           <select
                             class="form-select"
-                            placeholder={formik.values.memberName}
+                            value={formik.values.memberName}
+                            // placeholder={formik.values.memberName}
                             onChange={formik.handleChange}
                             id="memberName"
                           >
@@ -210,7 +294,8 @@ function SentQuestion() {
                           <label className="form-label">From Session</label>
                           <select
                             class="form-select"
-                            placeholder={formik.values.fromSession}
+                            // placeholder={formik.values.fromSession}
+                            value={formik.values.fromSession}
                             id="fromSession"
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
@@ -232,8 +317,9 @@ function SentQuestion() {
                           <label className="form-label">To Session</label>
                           <select
                             class="form-select"
-                            placeholder={formik.values.toSession}
                             id="toSession"
+                            // placeholder={formik.values.toSession}
+                            value={formik.values.toSession}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                           >
@@ -256,7 +342,8 @@ function SentQuestion() {
                           <label className="form-label">Category</label>
                           <select
                             class="form-select"
-                            placeholder={formik.values.category}
+                            // placeholder={formik.values.category}
+                            value={formik.values.category}
                             id="category"
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
@@ -275,7 +362,8 @@ function SentQuestion() {
                           <label className="form-label">Question Status</label>
                           <select
                             class="form-select"
-                            placeholder={formik.values.questionStatus}
+                            // placeholder={formik.values.questionStatus}
+                            value={formik.values.questionStatus}
                             id="questionStatus"
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
@@ -312,8 +400,10 @@ function SentQuestion() {
                           </span>
                           <DatePicker
                             selected={formik.values.fromNoticeDate}
-                            minDate={new Date()}
-                            onChange={(date) => formik.setFieldValue("fromNoticeDate", date)}
+                            // minDate={new Date()}
+                            onChange={(date) =>
+                              formik.setFieldValue("fromNoticeDate", date)
+                            }
                             className={"form-control"}
                           />
                         </div>
@@ -336,8 +426,10 @@ function SentQuestion() {
                           </span>
                           <DatePicker
                             selected={formik.values.toNoticeDate}
-                            minDate={new Date()}
-                            onChange={(date) => formik.setFieldValue("toNoticeDate", date)}
+                            // minDate={new Date()}
+                            onChange={(date) =>
+                              formik.setFieldValue("toNoticeDate", date)
+                            }
                             className={"form-control"}
                           />
                         </div>
@@ -349,7 +441,11 @@ function SentQuestion() {
                         <button className="btn btn-primary" type="submit">
                           Search
                         </button>
-                        <button className="btn btn-primary" type="reset">
+                        <button
+                          className="btn btn-primary"
+                          type="button"
+                          onClick={handleResetForm}
+                        >
                           Reset
                         </button>
                       </div>
@@ -357,21 +453,26 @@ function SentQuestion() {
                   </div>
                 </form>
 
-                <div class="dash-detail-container" style={{ marginTop: "20px" }}>
+                <div
+                  class="dash-detail-container"
+                  style={{ marginTop: "20px" }}
+                >
                   <CustomTable
-                    block={false}
+                    block={true}
                     hideBtn={true}
+                    // data={searchedData}
                     data={searchedData.length > 0 ? searchedData : resData}
                     tableTitle="Questions"
                     handlePageChange={handlePageChange}
                     currentPage={currentPage}
-                    showPrint={false}
-                    ActionHide={true}
-                    hideEditIcon={true}
-                    pageSize={pageSize}
-                    handleAdd={(item) => navigate("/")}
-                    handleEdit={(item) => navigate("/")}
                     totalCount={count}
+                    pageSize={pageSize}
+                    showPrint={false}
+                    ActionHide={false}
+                    hideEditIcon={false}
+                    hideDeleteIcon={true}
+                    handleAdd={(item) => navigate("/")}
+                    handleEdit={(item) => handleEdit(item?.QID)}
                   />
                 </div>
               </div>

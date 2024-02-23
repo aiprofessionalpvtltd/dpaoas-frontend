@@ -29,13 +29,13 @@ const validationSchema = Yup.object({
   motionType: Yup.string().required("Motion Type is required"),
   motionWeek: Yup.string().required("Motion Week is required"),
   noticeOfficeDiaryNo: Yup.string().required(
-    "Notice Office Diary No is required",
+    "Notice Office Diary No is required"
   ),
   noticeOfficeDiaryDate: Yup.string().required(
-    "Notice Office Diary Date is required",
+    "Notice Office Diary Date is required"
   ),
   noticeOfficeDiaryTime: Yup.string().required(
-    "Notice Office Diary Time is required",
+    "Notice Office Diary Time is required"
   ),
   motionStatus: Yup.string().required("Motion Status is required"),
   mover: Yup.array().required("Mover is required"),
@@ -65,7 +65,7 @@ function MMSNewMotion() {
     : getCurrentTime();
   const formik = useFormik({
     initialValues: {
-      sessionNumber: sessions[0]?.id,
+      sessionNumber: location.state ? location?.state?.sessionNumber : "",
       fileNo: location.state ? location.state.fileNumber : "",
       motionType: location.state ? location.state.motionType : "",
       motionWeek: location.state ? location.state.motionWeek : "",
@@ -90,9 +90,11 @@ function MMSNewMotion() {
       }
     },
   });
+  console.log("Movers", location?.state ? location?.state.mover : "No Data");
+
   const handleAddNewMotion = async (values) => {
     const formData = new FormData();
-    formData.append("fkSessionId", sessions[0]?.id);
+    formData.append("fkSessionId", values?.sessionNumber);
     formData.append("fileNumber", values?.fileNo);
     formData.append("motionType", values?.motionType);
     formData.append("motionWeek", values?.motionWeek);
@@ -471,7 +473,7 @@ function MMSNewMotion() {
                   <div className="col">
                     <div className="mb-3">
                       <label className="form-label">Ministry</label>
-                      
+
                       <Select
                         options={ministryData.map((item) => ({
                           value: item.id,

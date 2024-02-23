@@ -1,16 +1,16 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
-import { QMSSideBarItems } from "../../../../../../utils/sideBarItems";
+import {
+  NoticeSidebarItems,
+  QMSSideBarItems,
+} from "../../../../../../utils/sideBarItems";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import TimePicker from "react-time-picker";
 import DatePicker from "react-datepicker";
 import { useLocation } from "react-router";
-import {
-  showErrorMessage,
-  showSuccessMessage,
-} from "../../../../../../utils/ToastAlert";
+
 import {
   UpdateQuestionById,
   createDefferQuestion,
@@ -19,11 +19,17 @@ import {
   sendQuestionTranslation,
 } from "../../../../../../api/APIs/Services/Question.service";
 import { ToastContainer } from "react-toastify";
-import { Editor } from "../../../../../../components/CustomComponents/Editor";
-import { AuthContext } from "../../../../../../api/AuthContext";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
+
+import { AuthContext } from "../../../../../../api/AuthContext";
+import { Editor } from "../../../../../../components/CustomComponents/Editor";
 import { getAllDivisions } from "../../../../../../api/APIs/Services/ManageQMS.service";
+import {
+  showSuccessMessage,
+  showErrorMessage,
+} from "../../../../../../utils/ToastAlert";
 const validationSchema = Yup.object({
   sessionNo: Yup.string(),
   noticeOfficeDiaryNo: Yup.string(),
@@ -45,7 +51,7 @@ const validationSchema = Yup.object({
   originalText: Yup.string(),
 });
 
-function QMSQuestionDetail() {
+function NoticeQuestionDetail() {
   const location = useLocation();
   // const English = location?.state && location?.state?.question?.englishText;
   // const Urdu = location?.state && location?.state?.question?.urduText;
@@ -306,10 +312,14 @@ function QMSQuestionDetail() {
     GetALLDivsions();
   }, []);
   return (
-    <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
+    <Layout
+      module={true}
+      sidebarItems={NoticeSidebarItems}
+      centerlogohide={true}
+    >
       <Header
         dashboardLink={"/"}
-        addLink1={"/qms/question/detail"}
+        addLink1={"/notice/question/detail"}
         title1={"Question Detail"}
       />
       <ToastContainer />
@@ -1262,4 +1272,4 @@ function QMSQuestionDetail() {
   );
 }
 
-export default QMSQuestionDetail;
+export default NoticeQuestionDetail;

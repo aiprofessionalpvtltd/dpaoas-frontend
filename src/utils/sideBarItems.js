@@ -6,7 +6,7 @@ import {
   faAddressCard,
   faUser,
   faClipboardList,
-  faCodeBranch
+  faCodeBranch,
 } from "@fortawesome/free-solid-svg-icons";
 
 // LMS Sidebar
@@ -211,8 +211,13 @@ export const NoticeSidebarItems = [
     link: "/notice/seatingplan",
     icon: faClipboardList,
     subItems: [
+      // {
+      //itemName: "Manage Session Days",
+      //  link: "/notice/seatingplan/manage-session-days",
+      // icon: faClipboardList,
+      //  },
       {
-        itemName: "Manage Session Days",
+        itemName: "Manage Sitting Days",
         link: "/notice/seatingplan/manage-session-days",
         icon: faClipboardList,
       },
