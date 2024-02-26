@@ -30,6 +30,7 @@ import {
   showSuccessMessage,
   showErrorMessage,
 } from "../../../../../../utils/ToastAlert";
+import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 const validationSchema = Yup.object({
   sessionNo: Yup.string(),
   noticeOfficeDiaryNo: Yup.string(),
@@ -58,6 +59,13 @@ function NoticeQuestionDetail() {
   // console.log("location states", location?.state?.question?.urduText);
   const { members, sessions } = useContext(AuthContext);
   const [alldivisons, setAllDivisions] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const pageSize = 4;
+
+  const handlePageChange = (page) => {
+    // Update currentPage when a page link is clicked
+    setCurrentPage(page);
+  };
 
   console.log(
     "Question Detail Data",
@@ -73,6 +81,8 @@ function NoticeQuestionDetail() {
     sessionNo: "",
     deferDate: "",
   });
+
+  const [statusHistory, setStatusHistory] = useState();
 
   const [reviveState, setReviveState] = useState({
     sessionNo: "",
@@ -236,6 +246,8 @@ function NoticeQuestionDetail() {
   const StatusHistoryData = transfrerStatusHistoryData(
     location?.state?.history?.questionStatusHistory
   );
+
+  console.log("status", location?.state);
   //questionRevival
   const transfrerRevivalHistoryData = (apiData) => {
     if (Array.isArray(apiData)) {
@@ -335,312 +347,10 @@ function NoticeQuestionDetail() {
             <div class="container-fluid">
               <form onSubmit={formik.handleSubmit}>
                 <div class="row mb-4">
-                  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                    <button class="btn btn-warning" type="">
-                      No File Attached
-                    </button>
-                    <button
-                      class="btn btn-primary"
-                      type="button"
-                      onClick={() => {
-                        setShowRetriveForm(!showRetriveForm);
-                        setShowDeferForm(false);
-                      }}
-                    >
-                      Revive
-                    </button>
-                    <button
-                      class="btn btn-primary"
-                      type="button"
-                      onClick={() => {
-                        setShowDeferForm(!showDeferForm);
-                        setShowRetriveForm(false);
-                      }}
-                    >
-                      Defer
-                    </button>
-                    <button
-                      class="btn btn-primary"
-                      type="button"
-                      onClick={() => hendleQuestionTranslation()}
-                    >
-                      Send for Translation
-                    </button>
-                  </div>
+                  <div class="d-grid gap-2 d-md-flex justify-content-md-end"></div>
                   <div class="clearfix"></div>
                 </div>
-                {showDeferForm && (
-                  <div
-                    class="dash-detail-container"
-                    style={{ marginTop: "20px", marginBottom: "25px" }}
-                  >
-                    <h4>Deffer Question</h4>
-                    <div class="row">
-                      <div class="col">
-                        <div class="mb-3">
-                          <label class="form-label">Session No</label>
-                          <select
-                            class="form-select"
-                            value={deferState.sessionNo}
-                            onChange={(e) =>
-                              setDeferState({
-                                ...deferState,
-                                sessionNo: e.target.value,
-                              })
-                            }
-                          >
-                            <option value="" selected disabled hidden>
-                              Select
-                            </option>
-                            {sessions &&
-                              sessions.map((item) => (
-                                <option key={item.id} value={item.id}>
-                                  {item?.sessionName}
-                                </option>
-                              ))}
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col">
-                        <div class="mb-3" style={{ position: "relative" }}>
-                          <label class="form-label">Deffer Date</label>
-                          <span
-                            style={{
-                              position: "absolute",
-                              right: "15px",
-                              top: "36px",
-                              zIndex: 1,
-                              fontSize: "20px",
-                              zIndex: "1",
-                              color: "#666",
-                            }}
-                          >
-                            <FontAwesomeIcon icon={faCalendarAlt} />
-                          </span>
-                          <DatePicker
-                            selected={deferState.deferDate}
-                            minDate={new Date()}
-                            onChange={(date) =>
-                              setDeferState({
-                                ...deferState,
-                                deferDate: date,
-                              })
-                            }
-                            onBlur={formik.handleBlur}
-                            className={`form-control`}
-                          />
-                        </div>
-                      </div>
-                      <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <button
-                          class="btn btn-primary"
-                          type="button"
-                          onClick={hendleDeffer}
-                        >
-                          Defer
-                        </button>
-                      </div>
-                      <div class="clearfix"></div>
-                    </div>
-                  </div>
-                )}
-                {showRetriveForm && (
-                  <div
-                    class="dash-detail-container"
-                    style={{ marginTop: "20px", marginBottom: "25px" }}
-                  >
-                    <h4>Revive Question</h4>
-                    <div class="row">
-                      <div class="col">
-                        <div class="mb-3">
-                          <label class="form-label">Session No</label>
-                          <select
-                            class="form-select"
-                            value={reviveState.sessionNo}
-                            onChange={(e) =>
-                              setReviveState({
-                                ...reviveState,
-                                sessionNo: e.target.value,
-                              })
-                            }
-                          >
-                            <option value="" selected disabled hidden>
-                              Select
-                            </option>
-                            {sessions &&
-                              sessions.map((item) => (
-                                <option key={item.id} value={item.id}>
-                                  {item?.sessionName}
-                                </option>
-                              ))}
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col">
-                        <div class="mb-3">
-                          <label class="form-label">Group</label>
-                          <select
-                            class="form-select"
-                            value={reviveState.qroup}
-                            onChange={(e) =>
-                              setReviveState({
-                                ...reviveState,
-                                qroup: e.target.value,
-                              })
-                            }
-                          >
-                            <option value={""} selected disabled hidden>
-                              select
-                            </option>
-                            <option value={"1"}>123</option>
-                            <option>Qroup 1</option>
-                            <option>45456</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col">
-                        <div class="mb-3">
-                          <label class="form-label">Division</label>
-                          <select
-                            class="form-select"
-                            value={reviveState.division}
-                            onChange={(e) =>
-                              setReviveState({
-                                ...reviveState,
-                                division: e.target.value,
-                              })
-                            }
-                          >
-                            <option value={""} selected disabled hidden>
-                              select
-                            </option>
-                            <option value={"1"}>Division 1</option>
-                            <option>12123</option>
-                            <option>45456</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col">
-                        <div class="mb-3">
-                          <label class="form-label">Notice Diary No</label>
-                          <input
-                            class="form-control"
-                            type="text"
-                            value={reviveState.noticeDiaryNo}
-                            onChange={(e) =>
-                              setReviveState({
-                                ...reviveState,
-                                noticeDiaryNo: e.target.value,
-                              })
-                            }
-                          />
-                        </div>
-                      </div>
 
-                      <div class="col">
-                        <div class="mb-3" style={{ position: "relative" }}>
-                          <label class="form-label">Notice Diary Date</label>
-                          <span
-                            style={{
-                              position: "absolute",
-                              right: "15px",
-                              top: "36px",
-                              zIndex: 1,
-                              fontSize: "20px",
-                              zIndex: "1",
-                              color: "#666",
-                            }}
-                          >
-                            <FontAwesomeIcon icon={faCalendarAlt} />
-                          </span>
-                          <DatePicker
-                            selected={reviveState.noticeDiaryDate}
-                            minDate={new Date()}
-                            onChange={(date) =>
-                              setReviveState({
-                                ...reviveState,
-                                noticeDiaryDate: date,
-                              })
-                            }
-                            onBlur={formik.handleBlur}
-                            className={`form-control`}
-                          />
-                        </div>
-                      </div>
-
-                      <div className="row">
-                        <div class="col">
-                          <div class="mb-3">
-                            <label class="form-label">Notice Diary Time</label>
-
-                            <TimePicker
-                              value={reviveState.noticeDiaryTime}
-                              clockIcon={null} // Disable clock view
-                              openClockOnFocus={false}
-                              format="hh:mm a"
-                              onChange={(time) =>
-                                setReviveState({
-                                  ...reviveState,
-                                  noticeDiaryTime: time,
-                                })
-                              }
-                              className={`form-control`}
-                            />
-                          </div>
-                        </div>
-                        <div class="col">
-                          <div class="mb-3">
-                            <label class="form-label">Question Status</label>
-                            <select
-                              class="form-select"
-                              value={reviveState.questionStatus}
-                              onChange={(e) =>
-                                setReviveState({
-                                  ...reviveState,
-                                  questionStatus: e.target.value,
-                                })
-                              }
-                            >
-                              <option value={""} selected disabled hidden>
-                                select
-                              </option>
-                              <option value={"1"}>Defferd</option>
-                              <option value={"2"}>Qroup 1</option>
-                              <option value={"3"}>45456</option>
-                            </select>
-                          </div>
-                        </div>
-                        <div class="col">
-                          <div class="mb-3">
-                            <label class="form-label">Question Diary No</label>
-                            <input
-                              class="form-control"
-                              type="text"
-                              value={reviveState.questionDiaryNo}
-                              onChange={(e) =>
-                                setReviveState({
-                                  ...reviveState,
-                                  questionDiaryNo: e.target.value,
-                                })
-                              }
-                            />
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <button
-                          class="btn btn-primary"
-                          type="button"
-                          onClick={hendleRevive}
-                        >
-                          Revive
-                        </button>
-                      </div>
-                      <div class="clearfix"></div>
-                    </div>
-                  </div>
-                )}
                 <div class="row">
                   <div class="col">
                     <div class="mb-3">
@@ -729,7 +439,7 @@ function NoticeQuestionDetail() {
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col">
+                  {/* <div class="col">
                     <div class="mb-3">
                       <div class="form-check" style={{ marginTop: "25px" }}>
                         <input
@@ -745,7 +455,7 @@ function NoticeQuestionDetail() {
                         </label>
                       </div>
                     </div>
-                  </div>
+                  </div> */}
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Question ID</label>
@@ -755,19 +465,6 @@ function NoticeQuestionDetail() {
                         placeholder={formik.values.questionId}
                         className={"form-control"}
                         id="questionId"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                      />
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Question Diary No</label>
-                      <input
-                        type="text"
-                        placeholder={formik.values.questionDiaryNo}
-                        className={"form-control"}
-                        id="questionDiaryNo"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
@@ -790,65 +487,6 @@ function NoticeQuestionDetail() {
                         <option value="Un-Starred">Un-Starred</option>
                         <option value="Short Notice">Short Notice</option>
                       </select>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Question Status</label>
-                      <select
-                        class="form-control"
-                        id="questionStatus"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.questionStatus}
-                      >
-                        <option selected disabled hidden>
-                          select
-                        </option>
-                        {allquestionStatus &&
-                          allquestionStatus.map((item) => (
-                            <option key={item.id} value={item.id}>
-                              {item?.questionStatus}
-                            </option>
-                          ))}
-                      </select>
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="mb-3" style={{ position: "relative" }}>
-                      <label class="form-label">Reply Date</label>
-                      {/* <input
-                        type="text"
-                        placeholder={formik.values.replyDate}
-                        className={`form-control`}
-                        id="replyDate"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                      /> */}
-                      <span
-                        style={{
-                          position: "absolute",
-                          right: "15px",
-                          top: "36px",
-                          zIndex: 1,
-                          fontSize: "20px",
-                          zIndex: "1",
-                          color: "#666",
-                        }}
-                      >
-                        <FontAwesomeIcon icon={faCalendarAlt} />
-                      </span>
-                      <DatePicker
-                        selected={formik.values.replyDate}
-                        minDate={new Date()}
-                        onChange={(date) =>
-                          formik.setFieldValue("replyDate", date)
-                        }
-                        onBlur={formik.handleBlur}
-                        className={`form-control`}
-                      />
                     </div>
                   </div>
                   <div class="col">
@@ -874,112 +512,9 @@ function NoticeQuestionDetail() {
                       </select>
                     </div>
                   </div>
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Group</label>
-                      <select
-                        class="form-control small-control"
-                        id="group"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                      >
-                        <option value={""} selected disabled hidden>
-                          Select
-                        </option>
-                        <option value="1">1st Group</option>
-                        <option>2nd Group</option>
-                        <option>3rd Group</option>
-                        <option>4th Group</option>
-                        <option>5th Group</option>
-                      </select>
-                    </div>
-                  </div>
                 </div>
-                <div class="row">
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Division</label>
-                      <select
-                        class="form-select"
-                        placeholder={formik.values.tonerModel}
-                        id="division"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                      >
-                        <option selected disabled hidden>
-                          Select
-                        </option>
-                        {alldivisons &&
-                          alldivisons.map((item, index) => (
-                            <option value={item.id} key={index}>
-                              {item?.divisionName}
-                            </option>
-                          ))}
-                      </select>
-                      {/* <select
-                        class="form-control small-control"
-                        id="division"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.division}
-                        name="division"
-                      >
-                        <option value={""} selected disabled hidden>
-                          Select
-                        </option>
-                        {alldivisons &&
-                          alldivisons.map((item) => (
-                            <option key={item.id} value={item.id}>
-                              {item?.divisionname}
-                            </option>
-                          ))}
-                      </select> */}
-                      {/* <option value={"1"}>Aviation Division</option>
-                        <option>Cabinet Division</option>
-                        <option>
-                          Capital Administration &amp; Development Div.
-                        </option>
-                        <option>
-                          Climate Change and Environmental Coordination
-                        </option>
-                        <option>Establishment Division</option>
-                        <option>Housing and Works Division</option>
-                        <option>
-                          Information Technology &amp; Telecommunications
-                          Division
-                        </option>
-                        <option>National Security Division</option>
-                        <option>
-                          Poverty Alleviation and Social Safety Division
-                        </option>
-                        <option>Textile Division</option> */}
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">File Status</label>
-                      <select
-                        class="form-control small-control"
-                        id="fileStatus"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                      >
-                        <option value={""} selected disabled hidden>
-                          select
-                        </option>
-                        <option value={"Available"}>Available</option>
-                        <option value={"Missing"}>Missing</option>
-                        <option value={"Moved for Approval"}>
-                          Moved for Approval
-                        </option>
-                        <option value={"Moved for Advance Copy"}>
-                          Moved for Advance Copy
-                        </option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                <div style={{ marginTop: 10 }}>
+
+                {/* <div style={{ marginTop: 10 }}>
                   <Editor
                     title={"Original Text"}
                     onChange={(content) =>
@@ -987,16 +522,18 @@ function NoticeQuestionDetail() {
                     }
                     value={formik.values.originalText}
                   />
-                </div>
-                <div style={{ marginTop: 70, marginBottom: 40 }}>
+                </div> */}
+
+                <div style={{ marginTop: 10 }}>
                   <Editor
-                    title={"Ammended Text"}
+                    title={"English Text"}
                     onChange={(content) =>
-                      formik.setFieldValue("ammendedText", content)
+                      formik.setFieldValue("englishText", content)
                     }
-                    value={formik.values.ammendedText}
+                    value={formik.values.englishText}
                   />
                 </div>
+
                 <div style={{ marginTop: 70, marginBottom: 40 }}>
                   <Editor
                     title={"Urdu Text"}
@@ -1014,99 +551,25 @@ function NoticeQuestionDetail() {
                     Update
                   </button>
                   <button class="btn btn-primary" type="">
-                    Print Ammended Question
-                  </button>
-                  <button class="btn btn-primary" type="">
-                    Print Original Question
-                  </button>
-                  <button class="btn btn-primary" type="">
-                    Print Urdu
+                    Upload File
                   </button>
                   <button class="btn btn-danger" type="">
                     Delete
                   </button>
                 </div>
               </form>
-              <div style={{ marginTop: 10 }}>
-                <Editor
-                  title={"English Text"}
-                  onChange={(content) =>
-                    formik.setFieldValue("englishText", content)
-                  }
-                  value={formik.values.englishText}
-                />
-              </div>
-              <div
-                class="dash-detail-container"
-                style={{ marginTop: 70, marginBottom: 40 }}
-              >
-                <table class="table red-bg-head th">
-                  <thead>
-                    <tr>
-                      <th class="text-left" scope="col">
-                        Action
-                      </th>
-                      <th class="text-left" scope="col">
-                        User
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td class="text-left" style={{ paddingLeft: "23px" }}>
-                        Inserted By
-                      </td>
-                      <td class="text-left" style={{ paddingLeft: "23px" }}>
-                        on 17/07/2023 1:40:14 PM
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="text-left" style={{ paddingLeft: "23px" }}>
-                        Updated By
-                      </td>
-                      <td class="text-left" style={{ paddingLeft: "23px" }}>
-                        Muneeb Hussain on 19/07/2023 12:11:46 PM
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="text-left" style={{ paddingLeft: "23px" }}>
-                        Sent for translation By
-                      </td>
-                      <td
-                        class="text-left"
-                        style={{ paddingLeft: "23px" }}
-                      ></td>
-                    </tr>
-                    <tr>
-                      <td class="text-left" style={{ paddingLeft: "23px" }}>
-                        Translation Approved By{" "}
-                      </td>
-                      <td
-                        class="text-left"
-                        style={{ paddingLeft: "23px" }}
-                      ></td>
-                    </tr>
-                    <tr>
-                      <td class="text-left" style={{ paddingLeft: "23px" }}>
-                        Deleted By
-                      </td>
-                      <td class="text-left" style={{ paddingLeft: "23px" }}>
-                        Muneeb Hussain on 19/07/2023 12:11:49 PM
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="text-left" style={{ paddingLeft: "23px" }}>
-                        Recovered By{" "}
-                      </td>
-                      <td
-                        class="text-left"
-                        style={{ paddingLeft: "23px" }}
-                      ></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <h2
+              <CustomTable
+                block={false}
+                hidebtn1={true}
+                ActionHide={true}
+                data={StatusHistoryData}
+                tableTitle="Status History"
+                pageSize={pageSize}
+                currentPage={currentPage}
+                handlePageChange={handlePageChange}
+              />
+
+              {/* <h2
                 style={{ color: "#666", fontSize: "24px", marginTop: "30px" }}
               >
                 Status History
@@ -1141,8 +604,8 @@ function NoticeQuestionDetail() {
                       ))}
                   </tbody>
                 </table>
-              </div>
-              <h2
+              </div> */}
+              {/* <h2
                 style={{ color: "#666", marginTop: "25px", fontSize: "24px" }}
               >
                 Revival History
@@ -1184,9 +647,18 @@ function NoticeQuestionDetail() {
                       ))}
                   </tbody>
                 </table>
-              </div>
+              </div> */}
 
-              <h2
+              <CustomTable
+                block={false}
+                hidebtn1={true}
+                ActionHide={true}
+                data={QuestionRevivalHistoryData}
+                tableTitle="Revival  History"
+                pageSize={pageSize}
+                currentPage={currentPage}
+              />
+              {/* <h2
                 style={{ color: "#666", marginTop: "25px", fontSize: "24px" }}
               >
                 Defer History
@@ -1228,42 +700,16 @@ function NoticeQuestionDetail() {
                       ))}
                   </tbody>
                 </table>
-              </div>
-              <h2
-                style={{ color: " #666", marginTop: "25px", fontSize: "24px" }}
-              >
-                File Status History
-              </h2>
-              <div class="dash-detail-container" style={{ marginTop: "20px" }}>
-                <table class="table red-bg-head th">
-                  <thead>
-                    <tr>
-                      <th class="text-center" scope="col">
-                        Sr#
-                      </th>
-                      <th class="text-center" scope="col">
-                        File Status
-                      </th>
-                      <th class="text-center" scope="col">
-                        Date
-                      </th>
-                      <th class="text-center" scope="col">
-                        User
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {QuestionFileHistoryData.length > 0 &&
-                      QuestionFileHistoryData.map((item, index) => (
-                        <tr>
-                          <td class="text-center">{item.SR}</td>
-                          <td class="text-center">{item.fileStatus}</td>
-                          <td class="text-center">{item.fileStatusDate}</td>
-                        </tr>
-                      ))}
-                  </tbody>
-                </table>
-              </div>
+              </div> */}
+              <CustomTable
+                block={false}
+                hidebtn1={true}
+                ActionHide={true}
+                data={QuestionDefferHistoryData}
+                tableTitle="Defer  History"
+                pageSize={pageSize}
+                currentPage={currentPage}
+              />
             </div>
           </div>
         </div>
