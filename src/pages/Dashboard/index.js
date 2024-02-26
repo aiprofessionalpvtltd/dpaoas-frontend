@@ -91,7 +91,7 @@ function Dashboard() {
     },
     {
       title: "Notice Management System",
-      link: "/notice/question/new",
+      link: "/notice/dashboard",
       type: "",
       cardbg: "darkGreenbg",
       icon: faBullhorn,
