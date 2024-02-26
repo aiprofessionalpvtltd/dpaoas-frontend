@@ -64,6 +64,11 @@ export const VMSsidebarItems = [
 // Notice Sidebar
 export const NoticeSidebarItems = [
   {
+    itemName: "Dashboard",
+    link: "/notice/dashboard",
+    icon: faClipboardList,
+  },
+  {
     itemName: "Question",
     link: "/notice/question",
     icon: faClipboardList,
