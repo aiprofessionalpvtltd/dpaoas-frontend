@@ -79,9 +79,10 @@ function QMSQuestionDetail() {
     questionDiaryNo: "",
   });
 
+  console.log("location", location?.state?.question?.member?.id);
   const formik = useFormik({
     initialValues: {
-      sessionNo: location?.state?.question?.session?.sessionName,
+      sessionNo: location?.state?.question?.session?.id,
       noticeOfficeDiaryNo:
         location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryNo,
       noticeOfficeDiaryDate: new Date(
@@ -97,7 +98,7 @@ function QMSQuestionDetail() {
       questionStatus: location?.state?.question?.fkQuestionStatus,
       // replyDate: location?.state?.question?.replyDate,
       replyDate: new Date(location?.state?.question?.replyDate),
-      senator: "",
+      senator: location?.state ? location?.state?.question?.member?.id : "",
       group: location?.state?.question?.groups,
       division: location?.state?.question?.divisions,
       fileStatus: location?.state?.question?.fileStatus,
@@ -845,7 +846,8 @@ function QMSQuestionDetail() {
                     <div class="mb-3">
                       <label class="form-label">Senator</label>
                       <select
-                        placeholder={formik.values.senator}
+                        values={formik.values.senator}
+                        // placeholder={formik.values.senator}
                         className={`form-control`}
                         id="senator"
                         onChange={formik.handleChange}

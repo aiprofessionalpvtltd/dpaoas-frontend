@@ -73,7 +73,7 @@ function QMSQuestionList() {
       Catagory: "AI Professionals Pvt Limited",
       "Start Number": "21-11-2023",
     },
-  ];
+  ];  
 
   const transformLeavesData = (apiData) => {
     return apiData.map((res, index) => {
