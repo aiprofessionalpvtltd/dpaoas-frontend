@@ -41,10 +41,7 @@ function NewQuestion() {
   const [showModal, setShowModal] = useState(false);
   const [formValues, setFormValues] = useState([]);
   const sessionId = sessions && sessions.map((item) => item?.id);
-  console.log(
-    "sessions",
-    sessions.map((item) => item?.sessionName)
-  );
+
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
   const handleOkClick = () => {
@@ -79,7 +76,7 @@ function NewQuestion() {
     formData.append("noticeOfficeDiaryDate", values.noticeOfficeDiaryDate);
     formData.append("noticeOfficeDiaryTime", values?.noticeOfficeDiaryTime);
     formData.append("questionCategory", values.questionCategory);
-    formData.append("fkQuestionStatus", 3);
+    formData.append("fkQuestionStatus", 12);
     formData.append("fkMemberId", values.fkMemberId);
 
     formData.append("englishText", values.englishText);

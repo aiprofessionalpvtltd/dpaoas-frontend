@@ -217,7 +217,7 @@ export const NoticeSidebarItems = [
       // icon: faClipboardList,
       //  },
       {
-        itemName: "Manage Sitting Days",
+        itemName: "Manage Session Days",
         link: "/notice/seatingplan/manage-session-days",
         icon: faClipboardList,
       },

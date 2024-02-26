@@ -51,13 +51,19 @@ function ManageSittingsDays() {
       id: item?.id,
       session: `${item.session?.sessionName}`,
       sittingDate: moment(item?.sittingDate).format("YYYY/MM/DD"),
-      sittingStartTime: item?.sittingStartTime,
-      sittingEndTime: item?.sittingEndTime,
-      breakStartTime: item?.breakStartTime,
-      breakEndTime: item?.breakEndTime,
+      sittingStartTime: moment(item?.sittingStartTime, "hh:ss:a").format(
+        "hh:ss:a"
+      ),
+      sittingEndTime: moment(item?.sittingEndTime, "hh:ss:a").format("hh:ss:a"),
+      breakStartTime: moment(item?.breakStartTime, "hh:ss:a").format("hh:ss:a"),
+      breakEndTime: moment(item?.breakEndTime, "hh:ss:a").format("hh:ss:a"),
       AsWholeCommittee: String(item?.committeeWhole),
-      committeeStartTime: item?.committeeStartTime,
-      committeeEndTime: item?.committeeEndTime,
+      committeeStartTime: moment(item?.committeeStartTime, "hh:ss:a").format(
+        "hh:ss:a"
+      ),
+      committeeEndTime: moment(item?.committeeEndTime, "hh:ss:a").format(
+        "hh:ss:a"
+      ),
       sessionAdjourned: String(item?.sessionAdjourned),
       status: item?.status,
     }));
@@ -144,7 +150,7 @@ function ManageSittingsDays() {
     }
   };
 
-  const handleAssign = (id) => {
+  const handleAttendance = (id) => {
     navigate(`/notice/seatingplan/manage-session/member-attendence`, {
       state: id,
     });
@@ -158,7 +164,7 @@ function ManageSittingsDays() {
       <Header
         dashboardLink={"/"}
         addLink1={"/notice/seatingplan/manage-session-days"}
-        title1={"Sitting Days"}
+        title1={"Session Days"}
       />
       <ToastContainer />
 
@@ -190,7 +196,7 @@ function ManageSittingsDays() {
                             <option value="" selected disabled hidden>
                               Select
                             </option>
-                            {/* <option value="3">session 1</option> */}
+
                             {sessions &&
                               sessions.map((item) => (
                                 <option value={item.id}>
@@ -200,16 +206,15 @@ function ManageSittingsDays() {
                           </select>
                         </div>
                       </div>
-                    </div>
-
-                    <div className="row">
-                      <div className="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <button className="btn btn-primary" type="submit">
-                          Search
-                        </button>
-                        {/* <button className="btn btn-primary" type="reset">
-                          Reset
-                        </button> */}
+                      <div className="col-3">
+                        <div className="d-grid gap-2 d-md-flex  my-4">
+                          <button
+                            className="btn btn-primary my-2"
+                            type="submit"
+                          >
+                            Search
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -217,10 +222,10 @@ function ManageSittingsDays() {
 
                 <div class="" style={{ marginTop: "20px" }}>
                   <CustomTable
-                    block={true}
+                    // block={true}
                     data={sittingDays}
-                    tableTitle="Sitting Days List"
-                    addBtnText="Add Sitting Days"
+                    tableTitle="Session Days List"
+                    addBtnText="Add Session Days"
                     handleAdd={() =>
                       navigate(
                         "/notice/seatingplan/manage-session-days/addedit"
@@ -242,8 +247,9 @@ function ManageSittingsDays() {
                     pageSize={pageSize}
                     totalCount={count}
                     handleDelete={(item) => handleDelete(item.id)}
-                    showAssigned={true}
-                    hendleAssigned={(item) => handleAssign(item.id)}
+                    showAttendance={true}
+                    hendleAttendance={(item) => handleAttendance(item.id)}
+                    // showAssigned={true}
                   />
                 </div>
               </div>
