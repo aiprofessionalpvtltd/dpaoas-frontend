@@ -43,8 +43,8 @@ export const AttendanceCard = () => {
                 <span style={{ float: "left" }} class="current">
                   Attendance
                 </span>
-                <span className="tag" style={{ float: "right" }}>
-                  Present
+                <span className="tag" style={{ float: "right", background: "#820001", color: "#FFF" }}>
+                  Absent
                 </span>
                 <div className="clearfix"></div>
               </div>
@@ -66,7 +66,7 @@ export const AttendanceCard = () => {
                   Attendance
                 </span>
                 <span className="tag" style={{ float: "right" }}>
-                  Present
+                  Absent
                 </span>
                 <div className="clearfix"></div>
               </div>
@@ -165,8 +165,8 @@ export const AttendanceCard = () => {
                 <span style={{ float: "left" }} class="current">
                   Attendance
                 </span>
-                <span className="tag" style={{ float: "right" }}>
-                  Present
+                <span className="tag" style={{ float: "right", background: "#125cc7" }}>
+                  Leave
                 </span>
                 <div className="clearfix"></div>
               </div>
