@@ -156,7 +156,6 @@ export const AttendanceCard = () => {
               <img src={logo} alt="Image" style={{ width: "80px" }} />
               <i class="bx bx-heart"></i>
             </div>
-
             <h3> Anwar Lal Dean</h3>
             <span style={{ marginBottom: "10px", display: "block" }}>PPPP</span>
 
