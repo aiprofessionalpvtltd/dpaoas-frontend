@@ -55,8 +55,8 @@ function NMSSessionAttendance() {
       attendanceStatus: member.attendanceStatus,
     }));
     try {
-      const response = updateMemberattendace(sessionID, formattedData);
-      console.log(response);
+      const response = await updateMemberattendace(sessionID, formattedData);
+      console.log("response", response);
       if (response?.success) {
         showSuccessMessage(response?.message);
         GetSessionMembersWithStatus();

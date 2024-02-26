@@ -72,7 +72,10 @@ function SearchQuestion() {
         NoticeDate: moment(
           res?.noticeOfficeDiary?.noticeOfficeDiaryDate
         ).format("YYYY/MM/DD"),
-        NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
+        NoticeTime: moment(
+          res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
+          "hh:ss:a"
+        ).format("hh:ss:a"),
         SessionNumber: res?.session?.sessionName,
         SubjectMatter: cleanedSubjectMatter,
         // SubjectMatter: [res?.englishText, res?.urduText]
@@ -426,8 +429,9 @@ function SearchQuestion() {
 
                 <div class="" style={{ marginTop: "20px" }}>
                   <CustomTable
-                    block={true}
+                    // block={true}
                     hideBtn={true}
+                    hidebtn1={true}
                     data={searchedData}
                     tableTitle="Questions"
                     handlePageChange={handlePageChange}

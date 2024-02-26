@@ -458,8 +458,9 @@ function SentQuestion() {
                   style={{ marginTop: "20px" }}
                 >
                   <CustomTable
-                    block={true}
+                    // block={true}
                     hideBtn={true}
+                    hidebtn1={true}
                     // data={searchedData}
                     data={searchedData.length > 0 ? searchedData : resData}
                     tableTitle="Questions"
