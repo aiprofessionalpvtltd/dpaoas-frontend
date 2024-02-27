@@ -5,7 +5,7 @@ import { useLocation } from "react-router";
 import { getAllQuestion} from "../../api/APIs/Services/Question.service";
 import { getAllResolutions } from "../../api/APIs/Services/Resolution.service";
 import { getAuthToken, logout } from "../../api/Auth";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
   const [sidebarVisible, setSidebarVisible] = useState(true);
@@ -209,7 +209,7 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
                 {shouldRenderNotice ? (
                   <>
                     <div class="tab-right me-4 mt-1 mb-4">
-                      <button onClick={() => handleButtonClick("Motion")}>
+                      {/* <button onClick={() => handleButtonClick("Motion")}>
                         Motion{count?.motion && <span>{count.motion}</span>}
                       </button>
                       <button onClick={() => handleButtonClick("Resolution")}>
@@ -219,7 +219,24 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
                       <button onClick={() => handleButtonClick("Questions")}>
                         Questions
                         {count?.question && <span>{count.question}</span>}
+                      </button> */}
+                      <Link to={"/notice/motion/sent"}>
+                      <button style={{ backgroundColor: location.pathname === "/notice/motion/sent" ? 'white' : '' }}>
+                        Motion{count?.motion ? <span>{count.motion}</span> : <span>{0}</span>}
                       </button>
+                      </Link>
+                      <Link to={"/notice/resolution/sent"}>
+                      <button style={{ backgroundColor: location.pathname === "/notice/resolution/sent" ? 'white' : '' }}>
+                        Resolution
+                        {count?.resolution ? <span>{count.resolution}</span> : <span>{0}</span>}
+                      </button>
+                      </Link>
+                      <Link to={"/notice/question/sent"}>
+                      <button style={{ backgroundColor: location.pathname === "/notice/question/sent" ? 'white' : '' }}>
+                        Questions
+                        {count?.question ? <span>{count.question}</span> : <span>{0}</span>}
+                      </button>
+                      </Link>
                     </div>
                     <div class="clearfix"></div>
                   </>

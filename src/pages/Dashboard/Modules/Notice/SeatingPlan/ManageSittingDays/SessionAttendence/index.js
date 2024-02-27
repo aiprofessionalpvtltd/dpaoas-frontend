@@ -6,19 +6,13 @@ import { NoticeSidebarItems } from "../../../../../../../utils/sideBarItems";
 import Header from "../../../../../../../components/Header";
 import { useLocation } from "react-router-dom";
 import { AuthContext } from "../../../../../../../api/AuthContext";
-import {
-  Formik,
-  Form,
-  Field,
-  FieldArray,
-  useFormikContext,
-  useFormik,
-} from "formik";
+import { Formik, Form, Field, FieldArray, useFormikContext, useFormik } from "formik";
 import {
   getAllMemberAttendence,
   updateMemberattendace,
 } from "../../../../../../../api/APIs/Services/SeatingPlan.service";
 import { showSuccessMessage } from "../../../../../../../utils/ToastAlert";
+import { AttendanceCard } from "../../../../../../../components/CustomComponents/AttendanceCard";
 
 function NMSSessionAttendance() {
   const location = useLocation();
@@ -46,8 +40,7 @@ function NMSSessionAttendance() {
 
   const onSubmit = async (values) => {
     const changedValues = values.sessionMembers.filter(
-      (member, index) =>
-        member.attendanceStatus !== attendenceMemberData[index].attendanceStatus
+      (member, index) => member.attendanceStatus !== attendenceMemberData[index].attendanceStatus
     );
 
     const formattedData = changedValues.map((member) => ({
@@ -76,20 +69,29 @@ function NMSSessionAttendance() {
   // };
 
   return (
-    <Layout
-      module={true}
-      sidebarItems={NoticeSidebarItems}
-      centerlogohide={true}
-    >
+    <Layout module={true} sidebarItems={NoticeSidebarItems} centerlogohide={true}>
       <Header dashboardLink={"/"} title1={"Attendance"} />
       <ToastContainer />
+
+      <div class="row">
+            <div className="col">
+            <AttendanceCard memberName={"Anwar Lal"} memberParty={"PMLN"} view={"true"} attendance={"Leave"} />
+            </div>
+            <div className="col">
+            <AttendanceCard />
+            </div>
+            <div className="col">
+            <AttendanceCard />
+            </div>
+            <div className="col">
+            <AttendanceCard />
+            </div>
+      </div>
+
       <div className="container-fluid">
         <div class="dash-detail-container" style={{ marginTop: "20px" }}>
           {attendenceMemberData.length > 0 && (
-            <Formik
-              initialValues={{ sessionMembers: attendenceMemberData }}
-              onSubmit={onSubmit}
-            >
+            <Formik initialValues={{ sessionMembers: attendenceMemberData }} onSubmit={onSubmit}>
               {({ values }) => (
                 <Form>
                   <table class="table red-bg-head th">
@@ -120,9 +122,7 @@ function NMSSessionAttendance() {
                               <option value="Present">Present</option>
                               <option value="Absent">Absent</option>
                               <option value="Leave">Leave</option>
-                              <option value="Oath Not Taken">
-                                Oath Not Taken
-                              </option>
+                              <option value="Oath Not Taken">Oath Not Taken</option>
                               <option value="Suspended">Suspended</option>
                             </Field>
                           </td>

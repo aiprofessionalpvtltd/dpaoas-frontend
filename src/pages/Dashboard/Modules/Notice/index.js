@@ -4,6 +4,7 @@ import { NoticeSidebarItems } from "../../../../utils/sideBarItems";
 import { useNavigate } from "react-router-dom";
 import Header from "../../../../components/Header";
 import CustomTable from "../../../../components/CustomComponents/CustomTable";
+import LeaveCard from "../../../../components/CustomComponents/LeaveCard";
 
 const data = [
   {
@@ -42,26 +43,69 @@ function NoticeDashboard() {
     >
       <Header
         dashboardLink={"/"}
+        title1={"Notice"}
       />
-      {/*<div class="row">
-                <div class="col-12">
-                    <CustomTable
-                        data={data}
-                        tableTitle="Roles List"
-                        addBtnText="Add Roles"
-                        handleAdd={() => navigate('/hrm/addrole')}
-                        handleEdit={(item) => navigate('/hrm/editrole', { state: item })}
-                        headertitlebgColor={"#666"}
-                        headertitletextColor={"#FFF"}
-                        handlePageChange={handlePageChange}
-                        currentPage={currentPage}
-                        pageSize={pageSize}
-                    // handlePrint={}
-                    // handleUser={}
-                    // handleDelete={(item) => handleDelete(item.id)}
-                    />
-                </div>
-            </div> */}
+        <h2>Daily Stats</h2>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="mt-2 mb-5">
+              <div class="row">
+                <LeaveCard
+                  available={"06"}
+                  used={"05"}
+                  title={"Question"}
+                  percentage={"60"}
+                  value={"10"}
+                />
+                <LeaveCard
+                  available={"05"}
+                  used={"04"}
+                  title={"Motion"}
+                  percentage={"80"}
+                  value={"09"}
+                />
+                <LeaveCard
+                  available={"05"}
+                  used={"04"}
+                  title={"Legislation"}
+                  percentage={"100"}
+                  value={"07"}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h2>Overall Stats</h2>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="mt-2 mb-4">
+              <div class="row">
+                <LeaveCard
+                  available={"06"}
+                  used={"05"}
+                  title={"Question"}
+                  percentage={"60"}
+                  value={"10"}
+                />
+                <LeaveCard
+                  available={"05"}
+                  used={"04"}
+                  title={"Motion"}
+                  percentage={"80"}
+                  value={"09"}
+                />
+                <LeaveCard
+                  available={"05"}
+                  used={"04"}
+                  title={"Legislation"}
+                  percentage={"100"}
+                  value={"07"}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
     </Layout>
   );
 }
