@@ -136,8 +136,8 @@ export const AttendanceCard = () => {
                 <span style={{ float: "left" }} class="current">
                   Attendance
                 </span>
-                <span style={{ float: "right", width: "164px" }}>
-                  <select name="sessionMembers.0.attendanceStatus" class="form-select">
+                <span style={{ float: "right", width: "100px" }}>
+                  <select name="sessionMembers.0.attendanceStatus" class="form-select" style={{ fontSize: '14px' }}>
                     <option value="Present">Present</option>
                     <option value="Absent">Absent</option>
                     <option value="Leave">Leave</option>
