@@ -439,6 +439,8 @@ function SearchQuestion() {
                     currentPage={currentPage}
                     showPrint={false}
                     ActionHide={false}
+                    headertitlebgColor={"#666"}
+                headertitletextColor={"#FFF"}
                     // hideEditIcon={true}
                     hideDeleteIcon={true}
                     pageSize={pageSize}

@@ -400,6 +400,8 @@ function SentResolution() {
                       currentPage={currentPage}
                       showPrint={false}
                       pageSize={pageSize}
+                      headertitlebgColor={"#666"}
+                      headertitletextColor={"#FFF"}
                       handleDelete={(item) => deleteResolutionApi(item.SrNo)}
                       handleEdit={(item) => handleEdit(item.SrNo)}
                       totalCount={count}

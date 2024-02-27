@@ -406,6 +406,8 @@ function SearchResolution() {
                     tableTitle="Resolutions"
                     handlePageChange={handlePageChange}
                     currentPage={currentPage}
+                    headertitlebgColor={"#666"}
+                headertitletextColor={"#FFF"}
                     showPrint={false}
                     pageSize={pageSize}
                     hideDeleteIcon={true}

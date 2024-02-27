@@ -470,6 +470,8 @@ function SentQuestion() {
                     currentPage={currentPage}
                     totalCount={count}
                     pageSize={pageSize}
+                    headertitlebgColor={"#666"}
+                headertitletextColor={"#FFF"}
                     showPrint={false}
                     ActionHide={false}
                     hideEditIcon={false}
