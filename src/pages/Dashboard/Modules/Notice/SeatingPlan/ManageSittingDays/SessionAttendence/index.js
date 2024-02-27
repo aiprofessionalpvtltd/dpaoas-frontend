@@ -72,8 +72,23 @@ function NMSSessionAttendance() {
     <Layout module={true} sidebarItems={NoticeSidebarItems} centerlogohide={true}>
       <Header dashboardLink={"/"} title1={"Attendance"} />
       <ToastContainer />
+
+      <div class="row">
+            <div className="col">
+            <AttendanceCard memberName={"Anwar Lal"} memberParty={"PMLN"} view={"true"} attendance={"Leave"} />
+            </div>
+            <div className="col">
+            <AttendanceCard />
+            </div>
+            <div className="col">
+            <AttendanceCard />
+            </div>
+            <div className="col">
+            <AttendanceCard />
+            </div>
+      </div>
+
       <div className="container-fluid">
-        <AttendanceCard />
         <div class="dash-detail-container" style={{ marginTop: "20px" }}>
           {attendenceMemberData.length > 0 && (
             <Formik initialValues={{ sessionMembers: attendenceMemberData }} onSubmit={onSubmit}>

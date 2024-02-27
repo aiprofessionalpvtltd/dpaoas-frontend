@@ -1,245 +1,57 @@
 import React from "react";
 import logo from "./../../../assets/profile-img.jpg";
 
-export const AttendanceCard = () => {
+export const AttendanceCard = ({ memberName, memberParty, attendance, view }) => {
   return (
     <>
-      <div className="row">
-        <div className="col">
-          <div class="single-professionals">
-            <div class="professionals-img">
-              <img src={logo} alt="Image" style={{ width: "80px" }} />
-              <i class="bx bx-heart"></i>
-            </div>
-
-            <h3> Anwar Lal Dean</h3>
-            <span style={{ marginBottom: "10px", display: "block" }}>PPPP</span>
-
-            <form>
-              <div class="nice-select" tabindex="0">
-                <span style={{ float: "left" }} class="current">
-                  Attendance
-                </span>
-                <span className="tag" style={{ float: "right" }}>
-                  Present
-                </span>
-                <div className="clearfix"></div>
-              </div>
-            </form>
-          </div>
+      <div class="single-professionals">
+        <div class="professionals-img">
+          <img src={logo} alt="Image" style={{ width: "80px" }} />
+          <i class="bx bx-heart"></i>
         </div>
-        <div className="col">
-          <div class="single-professionals">
-            <div class="professionals-img">
-              <img src={logo} alt="Image" style={{ width: "80px" }} />
-              <i class="bx bx-heart"></i>
-            </div>
 
-            <h3> Anwar Lal Dean</h3>
-            <span style={{ marginBottom: "10px", display: "block" }}>PPPP</span>
+        <h3>{memberName ? memberName : "Anwar Lal Dean"}</h3>
+        <span style={{ marginBottom: "10px", display: "block" }}>
+          {memberParty ? memberParty : "PPPP"}
+        </span>
 
-            <form>
-              <div class="nice-select" tabindex="0">
-                <span style={{ float: "left" }} class="current">
-                  Attendance
-                </span>
-                <span className="tag" style={{ float: "right", background: "#820001", color: "#FFF" }}>
-                  Absent
-                </span>
-                <div className="clearfix"></div>
-              </div>
-            </form>
+        <form>
+          <div class="nice-select" tabindex="0">
+            <span style={{ float: "left" }} class="current">
+              Attendance
+            </span>
+            {view ? (
+              <span
+                className="tag"
+                style={{
+                  float: "right",
+                  background:
+                    attendance === "Present"
+                      ? "#820001"
+                      : attendance === "Leave"
+                        ? "#125cc7"
+                        : "",
+                  color: "#FFF",
+                }}
+              >
+                {attendance ? attendance : "Absent"}
+              </span>
+            ) : (
+              <span style={{ float: "right", width: "100px" }}>
+                <select
+                  name="sessionMembers.0.attendanceStatus"
+                  class="form-select"
+                  style={{ fontSize: "14px" }}
+                >
+                  <option value="Present">Present</option>
+                  <option value="Absent">Absent</option>
+                  <option value="Leave">Leave</option>
+                </select>
+              </span>
+            )}
+            <div className="clearfix"></div>
           </div>
-        </div>
-        <div className="col">
-          <div class="single-professionals">
-            <div class="professionals-img">
-              <img src={logo} alt="Image" style={{ width: "80px" }} />
-              <i class="bx bx-heart"></i>
-            </div>
-
-            <h3> Anwar Lal Dean</h3>
-            <span style={{ marginBottom: "10px", display: "block" }}>PPPP</span>
-            <form>
-              <div class="nice-select" tabindex="0">
-                <span style={{ float: "left" }} class="current">
-                  Attendance
-                </span>
-                <span className="tag" style={{ float: "right" }}>
-                  Absent
-                </span>
-                <div className="clearfix"></div>
-              </div>
-            </form>
-          </div>
-        </div>
-        <div className="col">
-          <div class="single-professionals">
-            <div class="professionals-img">
-              <img src={logo} alt="Image" style={{ width: "80px" }} />
-              <i class="bx bx-heart"></i>
-            </div>
-
-            <h3> Anwar Lal Dean</h3>
-            <span style={{ marginBottom: "10px", display: "block" }}>PPPP</span>
-
-            <form>
-              <div class="nice-select" tabindex="0">
-                <span style={{ float: "left" }} class="current">
-                  Attendance
-                </span>
-                <span className="tag" style={{ float: "right" }}>
-                  Present
-                </span>
-                <div className="clearfix"></div>
-              </div>
-            </form>
-          </div>
-        </div>
-        <div className="col">
-          <div class="single-professionals">
-            <div class="professionals-img">
-              <img src={logo} alt="Image" style={{ width: "80px" }} />
-              <i class="bx bx-heart"></i>
-            </div>
-
-            <h3> Anwar Lal Dean</h3>
-            <span style={{ marginBottom: "10px", display: "block" }}>PPPP</span>
-
-            <form>
-              <div class="nice-select" tabindex="0">
-                <span style={{ float: "left" }} class="current">
-                  Attendance
-                </span>
-                <span className="tag" style={{ float: "right" }}>
-                  Present
-                </span>
-                <div className="clearfix"></div>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-      <div className="row">
-        <div className="col">
-          <div class="single-professionals">
-            <div class="professionals-img">
-              <img src={logo} alt="Image" style={{ width: "80px" }} />
-              <i class="bx bx-heart"></i>
-            </div>
-
-            <h3> Anwar Lal Dean</h3>
-            <span style={{ marginBottom: "10px", display: "block" }}>PPPP</span>
-
-            <form>
-              <div class="nice-select" tabindex="0">
-                <span style={{ float: "left" }} class="current">
-                  Attendance
-                </span>
-                <span style={{ float: "right", width: "100px" }}>
-                  <select name="sessionMembers.0.attendanceStatus" class="form-select" style={{ fontSize: '14px' }}>
-                    <option value="Present">Present</option>
-                    <option value="Absent">Absent</option>
-                    <option value="Leave">Leave</option>
-                    <option value="Oath Not Taken">Oath Not Taken</option>
-                    <option value="Suspended">Suspended</option>
-                  </select>
-                </span>
-                <div className="clearfix"></div>
-              </div>
-            </form>
-          </div>
-        </div>
-        <div className="col">
-          <div class="single-professionals">
-            <div class="professionals-img">
-              <img src={logo} alt="Image" style={{ width: "80px" }} />
-              <i class="bx bx-heart"></i>
-            </div>
-            <h3> Anwar Lal Dean</h3>
-            <span style={{ marginBottom: "10px", display: "block" }}>PPPP</span>
-
-            <form>
-              <div class="nice-select" tabindex="0">
-                <span style={{ float: "left" }} class="current">
-                  Attendance
-                </span>
-                <span className="tag" style={{ float: "right", background: "#125cc7" }}>
-                  Leave
-                </span>
-                <div className="clearfix"></div>
-              </div>
-            </form>
-          </div>
-        </div>
-        <div className="col">
-          <div class="single-professionals">
-            <div class="professionals-img">
-              <img src={logo} alt="Image" style={{ width: "80px" }} />
-              <i class="bx bx-heart"></i>
-            </div>
-
-            <h3> Anwar Lal Dean</h3>
-            <span style={{ marginBottom: "10px", display: "block" }}>PPPP</span>
-
-            <form>
-              <div class="nice-select" tabindex="0">
-                <span style={{ float: "left" }} class="current">
-                  Attendance
-                </span>
-                <span className="tag" style={{ float: "right" }}>
-                  Present
-                </span>
-                <div className="clearfix"></div>
-              </div>
-            </form>
-          </div>
-        </div>
-        <div className="col">
-          <div class="single-professionals">
-            <div class="professionals-img">
-              <img src={logo} alt="Image" style={{ width: "80px" }} />
-              <i class="bx bx-heart"></i>
-            </div>
-
-            <h3> Anwar Lal Dean</h3>
-            <span style={{ marginBottom: "10px", display: "block" }}>PPPP</span>
-            <form>
-              <div class="nice-select" tabindex="0">
-                <span style={{ float: "left" }} class="current">
-                  Attendance
-                </span>
-                <span className="tag" style={{ float: "right" }}>
-                  Present
-                </span>
-                <div className="clearfix"></div>
-              </div>
-            </form>
-          </div>
-        </div>
-        <div className="col">
-          <div class="single-professionals">
-            <div class="professionals-img">
-              <img src={logo} alt="Image" style={{ width: "80px" }} />
-              <i class="bx bx-heart"></i>
-            </div>
-
-            <h3> Anwar Lal Dean</h3>
-            <span style={{ marginBottom: "10px", display: "block" }}>PPPP</span>
-
-            <form>
-              <div class="nice-select" tabindex="0">
-                <span style={{ float: "left" }} class="current">
-                  Attendance
-                </span>
-                <span className="tag" style={{ float: "right" }}>
-                  Present
-                </span>
-                <div className="clearfix"></div>
-              </div>
-            </form>
-          </div>
-        </div>
+        </form>
       </div>
     </>
   );
