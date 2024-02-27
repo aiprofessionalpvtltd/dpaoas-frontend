@@ -698,7 +698,7 @@ function NMSAddEditSittingDaysForm() {
                           }
                         />
                         <label class="form-check-label" for="flexCheckDefault">
-                          Committee is Whole
+                          Committee As Whole
                         </label>
                         {formik.touched.committeeWhole &&
                           formik.errors.committeeWhole && (

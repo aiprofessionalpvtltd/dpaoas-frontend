@@ -90,9 +90,7 @@ function CustomTable({
   const duplicateTooltip = <Tooltip id="duplicate-tooltip">Duplicate</Tooltip>;
   const resolveTooltip = <Tooltip id="print-tooltip">Resolve</Tooltip>;
   const assignedTooltip = <Tooltip id="print-tooltip">Assigne</Tooltip>;
-  const attendanceTooltip = (
-    <Tooltip id="attendance-tooltip">Attendance</Tooltip>
-  );
+  const attendanceTooltip = <Tooltip id="attendance-tooltip">Mark </Tooltip>;
 
   const renderPagination = () => (
     <nav aria-label="Page navigation">
