@@ -79,7 +79,7 @@ export const NoticeSidebarItems = [
         icon: faClipboardList,
       },
       {
-        itemName: "Sent Question",
+        itemName: "List Question",
         link: "/notice/question/sent",
         icon: faClipboardList,
       },
@@ -101,7 +101,7 @@ export const NoticeSidebarItems = [
         icon: faClipboardList,
       },
       {
-        itemName: "Sent Motion",
+        itemName: "List Motion",
         link: "/notice/motion/sent",
         icon: faClipboardList,
       },
@@ -123,12 +123,31 @@ export const NoticeSidebarItems = [
         icon: faClipboardList,
       },
       {
-        itemName: "Sent Resolution",
+        itemName: "List Resolution",
         link: "/notice/resolution/sent",
         icon: faClipboardList,
       },
     ],
   },
+  {
+    itemName: "legislation Business",
+    link: "/notice/legislation",
+    icon: faClipboardList,
+    subItems: [
+      {
+        itemName: "Government Bill",
+        link: "/notice/legislation/government-bill",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Private Bill",
+        link: "/notice/legislation/private-bill",
+        icon: faClipboardList,
+      },
+
+    ],
+  },
+
   // {
   //   itemName: "Manage",
   //   link: "/notice/manage",

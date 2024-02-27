@@ -21,6 +21,7 @@ import {
 import { AuthContext } from "../../../../../../api/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
+import { useLocation } from "react-router-dom";
 
 const validationSchema = Yup.object({
   sessionNumber: Yup.number(),
@@ -37,10 +38,13 @@ const validationSchema = Yup.object({
   mover: Yup.array().required("Mover is required"),
   //   englishText: Yup.string().required("English Text is required"),
   //   urduText: Yup.string().required("Urdu Text is required"),
+  englishText: Yup.string().optional(),
+  urduText: Yup.string().optional()
 });
 
-function NewMotion() {
+function EditMotion() {
   const navigate = useNavigate();
+  const location = useLocation()
   const { members, sessions } = useContext(AuthContext);
   const [showModal, setShowModal] = useState(false);
   const [formValues, setFormValues] = useState([]);
@@ -53,14 +57,30 @@ function NewMotion() {
     handleClose();
   };
 
+  const getCurrentTime = () => {
+    const now = new Date();
+    return now.toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    });
+  };
+
+
   const formik = useFormik({
     initialValues: {
-      sessionNumber: "",
-      motionType: "",
-      noticeOfficeDiaryNo: null,
+      sessionNumber: location.state ? location?.state?.sessionNumber : "",
+      motionType: location.state ? location.state.motionType : "",
+      noticeOfficeDiaryNo: location.state
+      ? location.state.noticeOfficeDiaryNo
+      : "",
       mover: [],
-      noticeOfficeDiaryDate: "",
-      noticeOfficeDiaryTime: "",
+      noticeOfficeDiaryDate:location?.state?.noticeOfficeDiaryDate
+      ? new Date(location?.state?.noticeOfficeDiaryDate)
+      : new Date(),
+      noticeOfficeDiaryTime: location?.state?.noticeOfficeDiaryTime
+      ? new Date(location?.state?.noticeOfficeDiaryTime)
+      : getCurrentTime(),
       englishText: "",
       urduText: "",
       attachment: null,
@@ -70,7 +90,7 @@ function NewMotion() {
       handleShow();
       setFormValues(values);
     },
-    enableReinitialize: true,
+    // enableReinitialize: true,
   });
 
   const CreateMotionApi = async (values) => {
@@ -129,7 +149,7 @@ function NewMotion() {
               class="card-header red-bg"
               style={{ background: "#14ae5c !important" }}
             >
-              <h1>NEW MOTION</h1>
+              <h1>Edit MOTION</h1>
             </div>
             <div class="card-body">
               <form onSubmit={formik.handleSubmit}>
@@ -209,7 +229,6 @@ function NewMotion() {
                           <option value="" selected disabled hidden>
                             Select
                           </option>
-                          {/* <option>Motion Type</option> */}
                           <option value={"Adjournment Motion"}>Adjournment Motion</option>
                           <option value={"Call Attention Notice"}>Call Attention Notice</option>
                           
@@ -366,7 +385,7 @@ function NewMotion() {
                         )}
                       </div>
                     </div>
-                    <div class="col-4">
+                    <div class="col-3">
                       <div class="mb-3">
                         <label for="formFile" class="form-label">
                           Attach Image File{" "}
@@ -388,7 +407,7 @@ function NewMotion() {
                     </div>
                     </div>
 
-                  
+                 
 
                   <div style={{ marginTop: 10 }}>
                     <Editor
@@ -427,4 +446,4 @@ function NewMotion() {
   );
 }
 
-export default NewMotion;
+export default EditMotion;

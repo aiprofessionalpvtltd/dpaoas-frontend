@@ -259,10 +259,14 @@ function MMSMotionDetail() {
                         id="motionType"
                         onBlur={formik.handleBlur}
                       >
-                        <option>Select</option>
-                        <option>Motion Under Rule 218</option>
-                        <option></option>
-                        <option></option>
+                        <option value={""} selected disabled hidden>
+                          Select
+                        </option>
+                        <option value={"Adjournment Motion"}>Adjournment Motion</option>
+                          <option value={"Call Attention Notice"}>Call Attention Notice</option>
+                          
+                          <option value={"Motion Under Rule 218"}>Motion Under Rule 218</option>
+                          <option value={"Motion Under Rule 60"}>Motion Under Rule 60</option>
                       </select>
                     </div>
                   </div>

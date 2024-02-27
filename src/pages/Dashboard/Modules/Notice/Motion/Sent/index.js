@@ -182,7 +182,7 @@ function SentMotion() {
               class="card-header red-bg"
               style={{ background: "#14ae5c !important" }}
             >
-              <h1>SENT MOTION</h1>
+              <h1>List MOTION</h1>
             </div>
             <div class="card-body">
               <form onSubmit={formik.handleSubmit}>
@@ -213,8 +213,6 @@ function SentMotion() {
                       />
                     </div>
                   </div>
-                </div>
-                <div class="row">
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Keyword</label>
@@ -260,6 +258,8 @@ function SentMotion() {
                   </div>
                 </div>
                 <div class="row">
+                  
+                 
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">From Session</label>
@@ -304,8 +304,6 @@ function SentMotion() {
                       </select>
                     </div>
                   </div>
-                </div>
-                <div class="row">
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Motion Type</label>
@@ -328,46 +326,7 @@ function SentMotion() {
                       </select>
                     </div>
                   </div>
-                  {/* <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Motion Week</label>
-                      <select
-                        class="form-select"
-                        placeholder={formik.values.motionWeek}
-                        onChange={formik.handleChange}
-                        id="motionWeek"
-                        onBlur={formik.handleBlur}
-                      >
-                        <option>Motion Week</option>
-                        <option>Not Applicable</option>
-                        <option>1st Week</option>
-                        <option>2nd Week</option>
-                        <option>3rd Week</option>
-                        <option>4th Week</option>
-                        <option>5th Week</option>
-                      </select>
-                    </div>
-                  </div> */}
-                  {/* <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Ministry</label>
-                      <select
-                        className="form-select"
-                        id="ministry"
-                        name="ministry"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.ministry}
-                        class="form-control"
-                      >
-                        <option value={""} selected disabled hidden>
-                          select
-                        </option>
-                        {ministryData &&
-                          ministryData.map((item) => <option value={item.id}>{item.ministryName}</option>)}
-                      </select>
-                    </div>
-                  </div> */}
+                 
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Motion Status</label>
@@ -391,8 +350,10 @@ function SentMotion() {
                     </div>
                   </div>
                 </div>
+                
                 <div class="row">
-                  <div class="col">
+                 
+                  <div class="col-3">
                     <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label">From Notice Date</label>
                       <span
@@ -428,7 +389,7 @@ function SentMotion() {
                         )}
                     </div>
                   </div>
-                  <div class="col">
+                  <div class="col-3">
                     <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label">To Notice Date</label>
                       <span
@@ -454,6 +415,7 @@ function SentMotion() {
                     </div>
                   </div>
                 </div>
+                
                 <div class="row">
                   <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                     <button class="btn btn-primary" type="submit">
@@ -469,9 +431,11 @@ function SentMotion() {
                     block={true}
                     data={motionData}
                     headerShown={true}
-                    handleDelete={(item) => alert(item.id)}
+                    hideDeleteIcon={true}
+
+                    // handleDelete={(item) => alert(item.id)}
                     handleEdit={(item) =>
-                      navigate("/mms/motion/new", { state: item })
+                      navigate("/notice/motion/edit", { state: item })
                     }
                     headertitlebgColor={"#666"}
                     headertitletextColor={"#FFF"}
