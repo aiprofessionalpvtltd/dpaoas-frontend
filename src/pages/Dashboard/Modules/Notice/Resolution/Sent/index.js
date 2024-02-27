@@ -143,7 +143,7 @@ function SentResolution() {
         <div class="container-fluid dash-detail-container">
           <div class="card mt-1">
             <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
-              <h1>SENT RESOLUTION</h1>
+              <h1>List RESOLUTION</h1>
             </div>
             <div class="card-body">
               <form onSubmit={formik.handleSubmit}>
@@ -177,8 +177,6 @@ function SentResolution() {
                         />
                       </div>
                     </div>
-                  </div>
-                  <div class="row">
                     <div class="col">
                       <div class="mb-3">
                         <label class="form-label">Keyword</label>
@@ -196,7 +194,6 @@ function SentResolution() {
                     <div class="col">
                       <div class="mb-3">
                         <label class="form-label">Member Name</label>
-
                         <Select
                           options={members.map((item) => ({
                             value: item.id,
@@ -212,6 +209,8 @@ function SentResolution() {
                     </div>
                   </div>
                   <div class="row">
+
+
                     <div class="col">
                       <div class="mb-3">
                         <label class="form-label">From Session</label>
@@ -258,8 +257,6 @@ function SentResolution() {
                         </select>
                       </div>
                     </div>
-                  </div>
-                  <div class="row">
                     <div class="col">
                       <div class="mb-3">
                         <label class="form-label">Resolution Type</label>
@@ -324,8 +321,10 @@ function SentResolution() {
                       </div>
                     </div>
                   </div>
+
                   <div class="row">
-                    <div className="col">
+
+                    <div className="col-3">
                       <div className="mb-3" style={{ position: "relative" }}>
                         <label className="form-label">From Notice Date</label>
                         <span
@@ -351,8 +350,7 @@ function SentResolution() {
                         />
                       </div>
                     </div>
-
-                    <div className="col">
+                    <div className="col-4">
                       <div className="mb-3" style={{ position: "relative" }}>
                         <label className="form-label">To Notice Date</label>
                         <span
@@ -380,6 +378,7 @@ function SentResolution() {
                     </div>
                   </div>
 
+
                   <div class="row">
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                       <button class="btn btn-primary" type="submit">
@@ -395,11 +394,14 @@ function SentResolution() {
                     <CustomTable
                       hideBtn={true}
                       data={resData}
+                      hidebtn1={true}
                       tableTitle="Resolutions"
                       handlePageChange={handlePageChange}
                       currentPage={currentPage}
                       showPrint={false}
                       pageSize={pageSize}
+                      headertitlebgColor={"#666"}
+                      headertitletextColor={"#FFF"}
                       handleDelete={(item) => deleteResolutionApi(item.SrNo)}
                       handleEdit={(item) => handleEdit(item.SrNo)}
                       totalCount={count}

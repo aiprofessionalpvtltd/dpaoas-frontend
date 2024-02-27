@@ -123,6 +123,9 @@ import NMSAddEditSittingDaysForm from "../pages/Dashboard/Modules/Notice/Seating
 import NMSSessionAttendence from "../pages/Dashboard/Modules/Notice/SeatingPlan/ManageSittingDays/SessionAttendence";
 import NoticeQuestionDetail from "../pages/Dashboard/Modules/Notice/Question/NoticeQuestionDetail";
 import Files from "../pages/Dashboard/Modules/EFiling/Files";
+import EditMotion from "../pages/Dashboard/Modules/Notice/Motion/EditMotion";
+import GovernmentBill from "../pages/Dashboard/Modules/Notice/legislationBusiness/GovernmentBill";
+import PrivateBill from "../pages/Dashboard/Modules/Notice/legislationBusiness/PrivateBill";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -169,6 +172,8 @@ export const ProtectedRoutes = [
 
   { path: "/notice/motion", element: <NoticeDashboard /> },
   { path: "/notice/motion/new", element: <NewMotion /> },
+  { path: "/notice/motion/edit", element: <EditMotion /> },
+
   { path: "/notice/motion/search", element: <SearchMotion /> },
   { path: "/notice/motion/sent", element: <SentMotion /> },
 
@@ -176,6 +181,11 @@ export const ProtectedRoutes = [
   { path: "/notice/resolution/new", element: <NewResolution /> },
   { path: "/notice/resolution/search", element: <SearchResolution /> },
   { path: "/notice/resolution/sent", element: <SentResolution /> },
+
+  { path: "/notice/legislation/government-bill", element: <GovernmentBill /> },
+  { path: "/notice/legislation/private-bill", element: <PrivateBill /> },
+
+
 
   { path: "/notice/manage", element: <NoticeDashboard /> },
   { path: "/notice/manage/members", element: <Members /> },

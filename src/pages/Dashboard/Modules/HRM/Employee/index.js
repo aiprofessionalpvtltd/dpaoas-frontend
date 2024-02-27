@@ -78,6 +78,7 @@ function HRMEmployeeDashboard() {
         <div class="col-12">
           <CustomTable
             data={employeeData}
+            singleDataCard={true}
             tableTitle="Employee List"
             addBtnText="Add Employee"
             handleAdd={() => navigate("/hrm/addeditemployee")}

@@ -70,7 +70,6 @@ function Files() {
       <div className="dashboard-content" style={{ marginTop: 80 }}>
         <Header dashboardLink={"/"} addLink1={"/efiling/dashboard"} title1={"E-Filing"} width={"500px"} />
         <ToastContainer />
-        <div class="container-fluid dash-detail-container card" style={{ margin: "0 10px" }}>
           <div class="row">
             <div class="col-12">
               <CustomTable
@@ -89,9 +88,9 @@ function Files() {
                 currentPage={currentPage}
                 pageSize={pageSize}
                 totalCount={count}
+                singleDataCard={true}
                 handleDelete={(item) => handleDelete(item.id)}
               />
-            </div>
           </div>
         </div>
       </div>

@@ -13,7 +13,7 @@ function HRMDashboard() {
   const [currentPage, setCurrentPage] = useState(0);
   const [rolesList, setRolesList] = useState([]);
   // const [count, setCount] = useState(null);
-  const pageSize = 4; // Set your desired page size
+  const pageSize = 5; // Set your desired page size
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
@@ -66,6 +66,7 @@ function HRMDashboard() {
       <div class="row">
         <div class="col-12">
           <CustomTable
+            singleDataCard={true}
             data={rolesList && rolesList.length > 0 ? rolesList : []}
             tableTitle="Roles List"
             addBtnText="Add Roles"
@@ -76,7 +77,7 @@ function HRMDashboard() {
             handlePageChange={handlePageChange}
             currentPage={currentPage}
             pageSize={pageSize}
-            hidePagination={true}
+            // hidePagination={true}
             handleDelete={(item) => handleDelete(item.id)}
           />
         </div>

@@ -35,7 +35,7 @@ function EFilingDashboard() {
       <div className="dashboard-content" style={{ marginTop: 80 }}>
         <Header dashboardLink={"/"} addLink1={"/efiling/dashboard"} title1={"E-Filing"} width={"500px"} />
 
-        <div class="container-fluid dash-detail-container card" style={{ margin: "0 10px" }}>
+        {/* <div class="container-fluid dash-detail-container card" style={{ margin: "0 10px" }}> */}
           <div class="row">
             <div class="col-12">
               <CustomTable
@@ -52,8 +52,9 @@ function EFilingDashboard() {
                 currentPage={currentPage}
                 pageSize={pageSize}
                 totalCount={count}
+                singleDataCard={true}
               />
-            </div>
+            {/* </div> */}
           </div>
         </div>
       </div>
