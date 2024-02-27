@@ -212,7 +212,7 @@ function SentQuestion() {
               class="card-header red-bg"
               style={{ background: "#14ae5c !important" }}
             >
-              <h1>SENT QUESTION</h1>
+              <h1>List QUESTION</h1>
             </div>
             <div class="card-body">
               <div class="container-fluid">
@@ -249,8 +249,6 @@ function SentQuestion() {
                           />
                         </div>
                       </div>
-                    </div>
-                    <div className="row">
                       <div className="col">
                         <div className="mb-3">
                           <label className="form-label">Keyword</label>
@@ -289,6 +287,8 @@ function SentQuestion() {
                       </div>
                     </div>
                     <div className="row">
+                     
+                      
                       <div className="col">
                         <div className="mb-3">
                           <label className="form-label">From Session</label>
@@ -335,8 +335,6 @@ function SentQuestion() {
                           </select>
                         </div>
                       </div>
-                    </div>
-                    <div className="row">
                       <div className="col">
                         <div className="mb-3">
                           <label className="form-label">Category</label>
@@ -381,8 +379,11 @@ function SentQuestion() {
                         </div>
                       </div>
                     </div>
+
+                    
                     <div className="row">
-                      <div className="col">
+                      
+                      <div className="col-3">
                         <div className="mb-3" style={{ position: "relative" }}>
                           <label className="form-label">From Notice Date</label>
                           <span
@@ -408,7 +409,7 @@ function SentQuestion() {
                           />
                         </div>
                       </div>
-                      <div className="col">
+                      <div className="col-3">
                         <div className="mb-3" style={{ position: "relative" }}>
                           <label className="form-label">To Notice Date</label>
                           <span
@@ -435,6 +436,7 @@ function SentQuestion() {
                         </div>
                       </div>
                     </div>
+                    
 
                     <div className="row">
                       <div className="d-grid gap-2 d-md-flex justify-content-md-end">
@@ -468,6 +470,8 @@ function SentQuestion() {
                     currentPage={currentPage}
                     totalCount={count}
                     pageSize={pageSize}
+                    headertitlebgColor={"#666"}
+                headertitletextColor={"#FFF"}
                     showPrint={false}
                     ActionHide={false}
                     hideEditIcon={false}

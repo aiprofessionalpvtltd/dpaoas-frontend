@@ -192,8 +192,6 @@ function NewResolution() {
                           )}
                       </div>
                     </div>
-                  </div>
-                  <div class="row">
                     <div class="col">
                       <div class="mb-3">
                         <label class="form-label">Resolution Type</label>
@@ -230,7 +228,6 @@ function NewResolution() {
                           )}
                       </div>
                     </div>
-
                     <div class="col">
                       <div class="mb-3">
                         <label class="form-label">Member Senate</label>
@@ -259,9 +256,11 @@ function NewResolution() {
                       </div>
                     </div>
                   </div>
-
                   <div class="row">
-                    <div className="col">
+                    
+
+                    
+                    <div className="col-3">
                       <div className="mb-3" style={{ position: "relative" }}>
                         <label className="form-label">
                           Notice Office Diary Date{" "}
@@ -302,7 +301,7 @@ function NewResolution() {
                       </div>
                     </div>
 
-                    <div className="col">
+                    <div className="col-3">
                       <div className="mb-3">
                         <label className="form-label">
                           Notice Office Diary Time
@@ -320,10 +319,7 @@ function NewResolution() {
                         />
                       </div>
                     </div>
-                  </div>
-
-                  <div class="row">
-                    <div className="col-6">
+                    <div className="col-3">
                       <div className="mb-3">
                         <label htmlFor="formFile" className="form-label">
                           Attachment

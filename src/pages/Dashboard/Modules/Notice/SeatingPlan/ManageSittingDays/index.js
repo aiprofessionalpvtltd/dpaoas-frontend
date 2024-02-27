@@ -58,12 +58,12 @@ function ManageSittingsDays() {
       breakStartTime: moment(item?.breakStartTime, "hh:ss:a").format("hh:ss:a"),
       breakEndTime: moment(item?.breakEndTime, "hh:ss:a").format("hh:ss:a"),
       AsWholeCommittee: String(item?.committeeWhole),
-      committeeStartTime: moment(item?.committeeStartTime, "hh:ss:a").format(
-        "hh:ss:a"
-      ),
-      committeeEndTime: moment(item?.committeeEndTime, "hh:ss:a").format(
-        "hh:ss:a"
-      ),
+      committeeStartTime: item?.committeeStartTime
+        ? moment(item?.committeeStartTime, "hh:ss:a").format("hh:ss:a")
+        : "No Start Time",
+      committeeEndTime: item?.committeeEndTime
+        ? moment(item?.committeeEndTime, "hh:ss:a").format("hh:ss:a")
+        : "No End Time",
       sessionAdjourned: String(item?.sessionAdjourned),
       status: item?.status,
     }));
@@ -179,46 +179,39 @@ function ManageSittingsDays() {
             </div> */}
             <div class="card-body">
               <div class="container-fluid">
-                <form onSubmit={formik.handleSubmit}>
-                  <div className="container-fluid">
-                    <div className="row">
-                      <div className="col-6">
-                        <div className="mb-3">
-                          <label class="form-label">Session</label>
-                          <select
-                            className="form-select"
-                            value={formik.values.sessionId}
-                            // placeholder={formik.values.sessionid}
-                            onChange={formik.handleChange}
-                            id="sessionId"
-                            onBlur={formik.handleBlur}
-                          >
-                            <option value="" selected disabled hidden>
-                              Select
-                            </option>
+                <div className="container-fluid">
+                  <div className="row">
+                    <div className="col-3">
+                      <div className="mb-3">
+                        <label class="form-label">Session</label>
+                        <select
+                          className="form-select"
+                          value={formik.values.sessionId}
+                          // placeholder={formik.values.sessionid}
+                          onChange={(e) => {
+                            formik.setFieldValue("sessionId", e.target.value);
+                            SearchSessionSittingApi({
+                              sessionId: e.target.value,
+                            });
+                          }}
+                          id="sessionId"
+                          onBlur={formik.handleBlur}
+                        >
+                          <option value="" selected disabled hidden>
+                            Select
+                          </option>
 
-                            {sessions &&
-                              sessions.map((item) => (
-                                <option value={item.id}>
-                                  {item.sessionName}
-                                </option>
-                              ))}
-                          </select>
-                        </div>
-                      </div>
-                      <div className="col-3">
-                        <div className="d-grid gap-2 d-md-flex  my-4">
-                          <button
-                            className="btn btn-primary my-2"
-                            type="submit"
-                          >
-                            Search
-                          </button>
-                        </div>
+                          {sessions &&
+                            sessions.map((item) => (
+                              <option value={item.id}>
+                                {item.sessionName}
+                              </option>
+                            ))}
+                        </select>
                       </div>
                     </div>
                   </div>
-                </form>
+                </div>
 
                 <div class="" style={{ marginTop: "20px" }}>
                   <CustomTable
@@ -249,6 +242,8 @@ function ManageSittingsDays() {
                     handleDelete={(item) => handleDelete(item.id)}
                     showAttendance={true}
                     hendleAttendance={(item) => handleAttendance(item.id)}
+                    showView={true}
+                    handleView={handleAttendance}
                     // showAssigned={true}
                   />
                 </div>

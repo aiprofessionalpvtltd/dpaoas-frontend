@@ -133,30 +133,12 @@ function NewQuestion() {
                     <div class="col">
                       <div class="mb-3">
                         <label class="form-label">Session No</label>
-                        {/* <select
-                          class="form-select"
-                          placeholder={formik.values.fkSessionId}
-                          onChange={formik.handleChange}
-                          id="fkSessionId"
-                          onBlur={formik.handleBlur}
-                        >
-                          <option selected disabled hidden>
-                            Select
-                          </option>
-                          {sessions &&
-                            sessions.map((item) => (
-                              <option value={item.id}>
-                                {item.sessionName}
-                              </option>
-                            ))}
-                        </select> */}
                         <select
-                          class={`form-select ${
-                            formik.touched.fkSessionId &&
-                            formik.errors.fkSessionId
+                          class={`form-select ${formik.touched.fkSessionId &&
+                              formik.errors.fkSessionId
                               ? "is-invalid"
                               : ""
-                          }`}
+                            }`}
                           // placeholder="Session No"
                           value={formik.values.fkSessionId}
                           onChange={formik.handleChange}
@@ -187,12 +169,11 @@ function NewQuestion() {
                       <div class="mb-3">
                         <label class="form-label">Category</label>
                         <select
-                          class={`form-select ${
-                            formik.touched.questionCategory &&
-                            formik.errors.questionCategory
+                          class={`form-select ${formik.touched.questionCategory &&
+                              formik.errors.questionCategory
                               ? "is-invalid"
                               : ""
-                          }`}
+                            }`}
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                           value={formik.values.questionCategory || ""}
@@ -213,18 +194,15 @@ function NewQuestion() {
                           )}
                       </div>
                     </div>
-                  </div>
-                  <div class="row">
                     <div class="col">
                       <div class="mb-3">
                         <label class="form-label">Notice Office Diary No</label>
                         <input
-                          class={`form-control ${
-                            formik.touched.noticeOfficeDiaryNo &&
-                            formik.errors.noticeOfficeDiaryNo
+                          class={`form-control ${formik.touched.noticeOfficeDiaryNo &&
+                              formik.errors.noticeOfficeDiaryNo
                               ? "is-invalid"
                               : ""
-                          }`}
+                            }`}
                           type="number"
                           id="noticeOfficeDiaryNo"
                           value={formik.values.noticeOfficeDiaryNo}
@@ -240,18 +218,16 @@ function NewQuestion() {
                           )}
                       </div>
                     </div>
-
                     <div class="col">
                       <div class="mb-3">
                         <label class="form-label">Member Name</label>
 
                         <select
-                          className={`form-select ${
-                            formik.touched.fkMemberId &&
-                            formik.errors.fkMemberId
+                          className={`form-select ${formik.touched.fkMemberId &&
+                              formik.errors.fkMemberId
                               ? "is-invalid"
                               : ""
-                          }`}
+                            }`}
                           // placeholder={formik.values.fkMemberId}
                           value={formik.values.fkMemberId}
                           onChange={formik.handleChange}
@@ -276,9 +252,9 @@ function NewQuestion() {
                       </div>
                     </div>
                   </div>
-
                   <div class="row">
-                    <div className="col">
+
+                    <div className="col-3">
                       <div className="mb-3" style={{ position: "relative" }}>
                         <label className="form-label">
                           Notice Office Diary Date{" "}
@@ -303,12 +279,11 @@ function NewQuestion() {
                             formik.setFieldValue("noticeOfficeDiaryDate", date)
                           }
                           onBlur={formik.handleBlur}
-                          className={`form-control ${
-                            formik.touched.noticeOfficeDiaryDate &&
-                            formik.errors.noticeOfficeDiaryDate
+                          className={`form-control ${formik.touched.noticeOfficeDiaryDate &&
+                              formik.errors.noticeOfficeDiaryDate
                               ? "is-invalid"
                               : ""
-                          }`}
+                            }`}
                         />
                         {formik.touched.noticeOfficeDiaryDate &&
                           formik.errors.noticeOfficeDiaryDate && (
@@ -318,21 +293,12 @@ function NewQuestion() {
                           )}
                       </div>
                     </div>
-
-                    <div className="col">
+                    <div className="col-3">
                       <div className="mb-3">
                         <label className="form-label">
                           Notice Office Diary Time
                         </label>
-                        {/* <input
-                          className="form-control"
-                          type="text"
-                          id="noticeOfficeDiaryTime"
-                          value={formik.values.noticeOfficeDiaryTime}
-                          name="noticeOfficeDiaryTime"
-                          onBlur={formik.handleBlur}
-                          onChange={formik.handleChange}
-                        /> */}
+
                         <TimePicker
                           value={formik.values.noticeOfficeDiaryTime}
                           clockIcon={null} // Disable clock view
@@ -345,10 +311,7 @@ function NewQuestion() {
                         />
                       </div>
                     </div>
-                  </div>
-
-                  <div class="row">
-                    <div className="col-6">
+                    <div className="col-3">
                       <div className="mb-3">
                         <label htmlFor="formFile" className="form-label">
                           Question Image
@@ -368,6 +331,12 @@ function NewQuestion() {
                         />
                       </div>
                     </div>
+                  </div>
+
+
+
+                  <div class="row">
+
                   </div>
 
                   <div style={{ marginTop: 10 }}>

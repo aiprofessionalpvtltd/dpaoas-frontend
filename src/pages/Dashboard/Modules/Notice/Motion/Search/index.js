@@ -211,8 +211,6 @@ function SearchMotion() {
                       />
                     </div>
                   </div>
-                </div>
-                <div class="row">
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Keyword</label>
@@ -260,6 +258,8 @@ function SearchMotion() {
                   </div>
                 </div>
                 <div class="row">
+                 
+                  
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">From Session</label>
@@ -306,8 +306,6 @@ function SearchMotion() {
                       </select>
                     </div>
                   </div>
-                </div>
-                <div class="row">
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Motion Type</label>
@@ -323,11 +321,11 @@ function SearchMotion() {
                           Select
                         </option>
 
-                        <option>Adjournment Motion</option>
-                        <option>Call Attention Notice</option>
-                        <option>Privilege Motion</option>
-                        <option>Motion Under Rule 218</option>
-                        <option>Motion Under Rule 60</option>
+                        <option value={"Adjournment Motion"}>Adjournment Motion</option>
+                          <option value={"Call Attention Notice"}>Call Attention Notice</option>
+                          
+                          <option value={"Motion Under Rule 218"}>Motion Under Rule 218</option>
+                          <option value={"Motion Under Rule 60"}>Motion Under Rule 60</option>
                       </select>
                     </div>
                   </div>
@@ -356,7 +354,9 @@ function SearchMotion() {
                     </div>
                   </div>
                 </div>
+                
                 <div class="row">
+                  
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Ministry</label>
@@ -402,8 +402,6 @@ function SearchMotion() {
                       </select>
                     </div>
                   </div>
-                </div>
-                <div class="row">
                   <div class="col">
                     <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label">From Notice Date</label>
@@ -468,6 +466,7 @@ function SearchMotion() {
                     </div>
                   </div>
                 </div>
+                
                 <div class="row">
                   <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                     <button class="btn btn-primary" type="submit">
@@ -489,7 +488,7 @@ function SearchMotion() {
                     headerShown={true}
                     handleDelete={(item) => alert(item.id)}
                     handleEdit={(item) =>
-                      navigate("/mms/motion/new", { state: item })
+                      navigate("/notice/motion/edit", { state: item })
                     }
                     headertitlebgColor={"#666"}
                     headertitletextColor={"#FFF"}

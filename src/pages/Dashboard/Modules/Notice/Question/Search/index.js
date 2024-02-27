@@ -222,8 +222,6 @@ function SearchQuestion() {
                           />
                         </div>
                       </div>
-                    </div>
-                    <div className="row">
                       <div className="col">
                         <div className="mb-3">
                           <label className="form-label">Keyword</label>
@@ -262,6 +260,8 @@ function SearchQuestion() {
                       </div>
                     </div>
                     <div className="row">
+                     
+                      
                       <div className="col">
                         <div className="mb-3">
                           <label className="form-label">From Session</label>
@@ -308,8 +308,6 @@ function SearchQuestion() {
                           </select>
                         </div>
                       </div>
-                    </div>
-                    <div className="row">
                       <div className="col">
                         <div className="mb-3">
                           <label className="form-label">Category</label>
@@ -354,8 +352,10 @@ function SearchQuestion() {
                         </div>
                       </div>
                     </div>
+                    
                     <div className="row">
-                      <div className="col">
+                    
+                      <div className="col-3">
                         <div className="mb-3" style={{ position: "relative" }}>
                           <label className="form-label">From Notice Date</label>
                           <span
@@ -381,7 +381,7 @@ function SearchQuestion() {
                           />
                         </div>
                       </div>
-                      <div className="col">
+                      <div className="col-3">
                         <div className="mb-3" style={{ position: "relative" }}>
                           <label className="form-label">To Notice Date</label>
                           <span
@@ -408,6 +408,7 @@ function SearchQuestion() {
                         </div>
                       </div>
                     </div>
+                    
 
                     <div className="row">
                       <div className="d-grid gap-2 d-md-flex justify-content-md-end">
@@ -438,6 +439,8 @@ function SearchQuestion() {
                     currentPage={currentPage}
                     showPrint={false}
                     ActionHide={false}
+                    headertitlebgColor={"#666"}
+                headertitletextColor={"#FFF"}
                     // hideEditIcon={true}
                     hideDeleteIcon={true}
                     pageSize={pageSize}
