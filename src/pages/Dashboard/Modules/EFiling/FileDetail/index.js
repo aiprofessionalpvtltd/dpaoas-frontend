@@ -478,7 +478,7 @@ function FileDetail() {
                           </div>
                         </div>
 
-                        <div class="col-6">
+                        {/* <div class="col-6">
                           <div class="mb-3">
                             <label class="form-label">Department</label>
                             <select
@@ -499,7 +499,7 @@ function FileDetail() {
                                 ))}
                             </select>
                           </div>
-                        </div>
+                        </div> */}
                       </>
                     ) : documentTypeVal === "External" ? (
                       <>
@@ -556,34 +556,44 @@ function FileDetail() {
                       </>
                     ) : null}
                   </div>
+                  <div className="row">
+                    <div class="col-6">
+                      {/* <div class="mb-3"> */}
+                      <label class="form-label" style={{ display: "block" }}>Attached File</label>
+                      <span class="MultiFile-label" style={{ marginBottom: "18px", display: "block" }} title={filesData?.attachment?.split('\\').pop().split('/').pop()}>
+                        <span class="MultiFile-title"><a href={`http://172.16.170.8:5252${filesData?.attachment}`}>{filesData?.attachment?.split('\\').pop().split('/').pop()}</a></span>
+                      </span>
+                      {/* </div> */}
+                    </div>
+                  </div>
 
                   <div class="shadow" style={{ padding: "25px" }}>
-                  <ul class="nav nav-tabs mb-3 mt-3" id="ex1" role="tablist">
-  <li class="nav-item" role="presentation" onClick={() => setTogleOpan(!togleOpan)}>
-    <button
-      type="button"
-      class={togleOpan ? "nav-link active" : "nav-link"}
-      data-bs-toggle="tab"
-      role="tab"
-      aria-controls="ex1-tabs-1"
-      aria-selected={togleOpan ? "true" : "false"}
-    >
-      Noting
-    </button>
-  </li>
-  <li class="nav-item" role="presentation" onClick={() => setTogleOpan(!togleOpan)}>
-    <button
-      type="button"
-      class={!togleOpan ? "nav-link active" : "nav-link"}
-      data-bs-toggle="tab"
-      role="tab"
-      aria-controls="ex1-tabs-2"
-      aria-selected={!togleOpan ? "true" : "false"}
-    >
-      Correspondence
-    </button>
-  </li>
-</ul>
+                    <ul class="nav nav-tabs mb-3 mt-3" id="ex1" role="tablist">
+                      <li class="nav-item" role="presentation" onClick={() => setTogleOpan(!togleOpan)}>
+                        <button
+                          type="button"
+                          class={togleOpan ? "nav-link active" : "nav-link"}
+                          data-bs-toggle="tab"
+                          role="tab"
+                          aria-controls="ex1-tabs-1"
+                          aria-selected={togleOpan ? "true" : "false"}
+                        >
+                          Noting
+                        </button>
+                      </li>
+                      <li class="nav-item" role="presentation" onClick={() => setTogleOpan(!togleOpan)}>
+                        <button
+                          type="button"
+                          class={!togleOpan ? "nav-link active" : "nav-link"}
+                          data-bs-toggle="tab"
+                          role="tab"
+                          aria-controls="ex1-tabs-2"
+                          aria-selected={!togleOpan ? "true" : "false"}
+                        >
+                          Correspondence
+                        </button>
+                      </li>
+                    </ul>
 
                     <div class="tab-content" id="ex1-content">
                       {togleOpan ? (
