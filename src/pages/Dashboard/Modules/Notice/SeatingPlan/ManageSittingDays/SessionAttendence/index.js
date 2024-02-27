@@ -25,15 +25,11 @@ function NMSSessionAttendance() {
   const location = useLocation();
   const sessionID = location.state ? location?.state?.id : "";
   const [attendenceMemberData, setAttendanceMemberData] = useState([]);
-  const [attendenceData, setAttendanceData] = useState([]);
-  console.log("Member Data", attendenceMemberData);
-  console.log("test", location?.state);
 
   const GetSessionMembersWithStatus = useCallback(async () => {
     try {
       const response = await getAllMemberAttendence(sessionID);
       if (response?.success) {
-        console.log("response", response);
         setAttendanceMemberData(response?.data);
       }
     } catch (error) {
@@ -44,9 +40,8 @@ function NMSSessionAttendance() {
   useEffect(() => {
     GetSessionMembersWithStatus();
   }, []);
-  console.log("Status attendance", location.state?.view);
+
   const onSubmit = async (values) => {
-    return console.log("Yousf", values?.sessionMembers);
     const changedValues = values.sessionMembers.filter(
       (member, index) =>
         member.attendanceStatus !== attendenceMemberData[index].attendanceStatus
@@ -58,7 +53,6 @@ function NMSSessionAttendance() {
     }));
     try {
       const response = await updateMemberattendace(sessionID, formattedData);
-      console.log("response", response);
       if (response?.success) {
         showSuccessMessage(response?.message);
         GetSessionMembersWithStatus();
@@ -76,27 +70,6 @@ function NMSSessionAttendance() {
     >
       <Header dashboardLink={"/"} title1={"Attendance"} />
       <ToastContainer />
-
-      {/* <div class="row">
-        <div className="col">
-          <AttendanceCard
-            memberName={"Anwar Lal"}
-            memberParty={"PMLN"}
-            view={"true"}
-            attendance={"Leave"}
-          />
-        </div>
-        <div className="col">
-          <AttendanceCard />
-        </div>
-        <div className="col">
-          <AttendanceCard />
-        </div>
-        <div className="col">
-          <AttendanceCard />
-        </div>
-      </div> */}
-
       <div className="container-fluid">
         {attendenceMemberData.length > 0 && (
           <Formik
@@ -104,28 +77,6 @@ function NMSSessionAttendance() {
             onSubmit={onSubmit}
           >
             {({ values }) => (
-              // <Form>
-              //   {location?.state && location?.state?.view ? (
-              //     <div className="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
-              //       {values.sessionMembers.map((member, index) => (
-              //         <div key={index} className="col">
-              //           <AttendanceCard
-              //             memberName={member?.memberName}
-              //             memberParty={"PMLN"}
-              //             view={"true"}
-              //             attendance={member?.attendanceStatus}
-              //           />
-              //         </div>
-              //       ))}
-              //     </div>
-              //   ) : (
-              //     <AttendanceCard
-              //       memberName={member?.memberName}
-              //       memberParty={"PMLN"}
-              //       attendance={member?.attendanceStatus}
-              //     />
-              //   )}
-              // </Form>
               <Form>
                 {location?.state && location?.state?.view ? (
                   <div className="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
@@ -150,6 +101,7 @@ function NMSSessionAttendance() {
                             memberName={member?.memberName}
                             memberParty={"PMLN"}
                             attendance={member?.attendanceStatus}
+                            index={index}
                           />
                         </div>
                       ))}
