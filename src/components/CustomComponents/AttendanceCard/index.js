@@ -1,7 +1,14 @@
 import React from "react";
 import logo from "./../../../assets/profile-img.jpg";
+import { Field } from "formik";
 
-export const AttendanceCard = ({ memberName, memberParty, attendance, view }) => {
+export const AttendanceCard = ({
+  memberName,
+  memberParty,
+  attendance,
+  view,
+  index,
+}) => {
   return (
     <>
       <div class="single-professionals">
@@ -38,15 +45,15 @@ export const AttendanceCard = ({ memberName, memberParty, attendance, view }) =>
               </span>
             ) : (
               <span style={{ float: "right", width: "100px" }}>
-                <select
-                  name="sessionMembers.0.attendanceStatus"
-                  class="form-select"
-                  style={{ fontSize: "14px" }}
+                <Field
+                  as="select"
+                  className="form-select"
+                  name={`sessionMembers.${index}.attendanceStatus`}
                 >
                   <option value="Present">Present</option>
                   <option value="Absent">Absent</option>
                   <option value="Leave">Leave</option>
-                </select>
+                </Field>
               </span>
             )}
             <div className="clearfix"></div>

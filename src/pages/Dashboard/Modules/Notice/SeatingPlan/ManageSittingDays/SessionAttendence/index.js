@@ -6,7 +6,14 @@ import { NoticeSidebarItems } from "../../../../../../../utils/sideBarItems";
 import Header from "../../../../../../../components/Header";
 import { useLocation } from "react-router-dom";
 import { AuthContext } from "../../../../../../../api/AuthContext";
-import { Formik, Form, Field, FieldArray, useFormikContext, useFormik } from "formik";
+import {
+  Formik,
+  Form,
+  Field,
+  FieldArray,
+  useFormikContext,
+  useFormik,
+} from "formik";
 import {
   getAllMemberAttendence,
   updateMemberattendace,
@@ -16,17 +23,13 @@ import { AttendanceCard } from "../../../../../../../components/CustomComponents
 
 function NMSSessionAttendance() {
   const location = useLocation();
-  const sessionID = location.state ? location?.state : "";
+  const sessionID = location.state ? location?.state?.id : "";
   const [attendenceMemberData, setAttendanceMemberData] = useState([]);
-  const [attendenceData, setAttendanceData] = useState([]);
-  console.log("Member Data", attendenceMemberData);
-  console.log("test", location?.state);
 
   const GetSessionMembersWithStatus = useCallback(async () => {
     try {
       const response = await getAllMemberAttendence(sessionID);
       if (response?.success) {
-        console.log("response", response);
         setAttendanceMemberData(response?.data);
       }
     } catch (error) {
@@ -40,7 +43,8 @@ function NMSSessionAttendance() {
 
   const onSubmit = async (values) => {
     const changedValues = values.sessionMembers.filter(
-      (member, index) => member.attendanceStatus !== attendenceMemberData[index].attendanceStatus
+      (member, index) =>
+        member.attendanceStatus !== attendenceMemberData[index].attendanceStatus
     );
 
     const formattedData = changedValues.map((member) => ({
@@ -49,7 +53,6 @@ function NMSSessionAttendance() {
     }));
     try {
       const response = await updateMemberattendace(sessionID, formattedData);
-      console.log("response", response);
       if (response?.success) {
         showSuccessMessage(response?.message);
         GetSessionMembersWithStatus();
@@ -59,128 +62,66 @@ function NMSSessionAttendance() {
     }
   };
 
-  // const handleStatusChange = (memberId, newStatus) => {
-  //   const updatedData = attendenceMemberData.map((item) =>
-  //     item.memberId === memberId
-  //       ? { ...item, attendanceStatus: newStatus }
-  //       : item
-  //   );
-  //   setAttendanceMemberData(updatedData);
-  // };
-
   return (
-    <Layout module={true} sidebarItems={NoticeSidebarItems} centerlogohide={true}>
+    <Layout
+      module={true}
+      sidebarItems={NoticeSidebarItems}
+      centerlogohide={true}
+    >
       <Header dashboardLink={"/"} title1={"Attendance"} />
       <ToastContainer />
-
-      <div class="row">
-            <div className="col">
-            <AttendanceCard memberName={"Anwar Lal"} memberParty={"PMLN"} view={"true"} attendance={"Leave"} />
-            </div>
-            <div className="col">
-            <AttendanceCard />
-            </div>
-            <div className="col">
-            <AttendanceCard />
-            </div>
-            <div className="col">
-            <AttendanceCard />
-            </div>
-      </div>
-
       <div className="container-fluid">
-        <div class="dash-detail-container" style={{ marginTop: "20px" }}>
-          {attendenceMemberData.length > 0 && (
-            <Formik initialValues={{ sessionMembers: attendenceMemberData }} onSubmit={onSubmit}>
-              {({ values }) => (
-                <Form>
-                  <table class="table red-bg-head th">
-                    <thead>
-                      <tr>
-                        <th class="text-center" scope="col">
-                          S #
-                        </th>
-                        <th class="text-center" scope="col">
-                          Member Name
-                        </th>
-                        <th class="text-center" scope="col">
-                          Attendance
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {values.sessionMembers.map((member, index) => (
-                        <tr key={index}>
-                          <td className="text-center">{index + 1}</td>
-                          <td className="text-center">{member?.memberName}</td>
-                          <td className="text-center">
-                            <Field
-                              as="select"
-                              className="form-select"
-                              name={`sessionMembers.${index}.attendanceStatus`}
-                            >
-                              <option value="Present">Present</option>
-                              <option value="Absent">Absent</option>
-                              <option value="Leave">Leave</option>
-                              <option value="Oath Not Taken">Oath Not Taken</option>
-                              <option value="Suspended">Suspended</option>
-                            </Field>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                  <div class="row mt-2">
-                    <div class="col">
-                      <button class="btn btn-primary float-end" type="submit">
-                        Submit
-                      </button>
-                    </div>
+        {attendenceMemberData.length > 0 && (
+          <Formik
+            initialValues={{ sessionMembers: attendenceMemberData }}
+            onSubmit={onSubmit}
+          >
+            {({ values }) => (
+              <Form>
+                {location?.state && location?.state?.view ? (
+                  <div className="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
+                    {values.sessionMembers.map((member, index) => (
+                      <div key={index} className="col">
+                        <AttendanceCard
+                          memberName={member?.memberName}
+                          memberParty={"PMLN"}
+                          view={location?.state?.view}
+                          attendance={member?.attendanceStatus}
+                          index={index}
+                        />
+                      </div>
+                    ))}
                   </div>
-                </Form>
-              )}
-            </Formik>
-          )}
-        </div>
+                ) : (
+                  <>
+                    <div className="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
+                      {values.sessionMembers.map((member, index) => (
+                        <div key={index} className="col">
+                          <AttendanceCard
+                            memberName={member?.memberName}
+                            memberParty={"PMLN"}
+                            attendance={member?.attendanceStatus}
+                            index={index}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                    <div class="row mt-2">
+                      <div class="col">
+                        <button class="btn btn-primary float-end" type="submit">
+                          Submit
+                        </button>
+                      </div>
+                    </div>
+                  </>
+                )}
+              </Form>
+            )}
+          </Formik>
+        )}
       </div>
     </Layout>
   );
 }
 
 export default NMSSessionAttendance;
-
-//   const formik = useFormik({
-//     initialValues: {
-//       memberId: "",
-//       memberName: "",
-//       status: "",
-//     },
-//     // validationSchema: validationSchema,
-//     onSubmit: (values) => {
-//       console.log("object", values);
-//       // Handle form submission here
-//       //   console.log(values.sessionMembers);
-//     },
-//   });
-
-//   useEffect(() => {
-//     if (attendenceMemberData.length > 0) {
-//       formik.setValues({
-//         sessionMembers: attendenceMemberData.map((mem) => ({
-//           memberId: mem?.memberId,
-//           memberName: mem?.memberName,
-//           status: mem?.attendanceStatus,
-//         })),
-//       });
-//       console.log("Form values set:", formik.values);
-//     }
-//   }, [attendenceMemberData]);
-
-//   const handleStatusChange = (memberId, newStatus) => {
-//     const updatedData = attendenceMemberData.map((item) =>
-//       item.memberId === memberId
-//         ? { ...item, attendanceStatus: newStatus }
-//         : item
-//     );
-//     attendenceMemberData(updatedData);
-//   };
