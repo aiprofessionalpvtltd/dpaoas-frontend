@@ -2,16 +2,7 @@ import React from "react";
 // import { CircularProgressbar } from 'react-circular-progressbar';
 import "react-circular-progressbar/dist/styles.css";
 
-function LeaveCard({
-  available,
-  used,
-  progressValue,
-  title,
-  percentage,
-  name,
-  value,
-  bgblue
-}) {
+function LeaveCard({ available, used, progressValue, title, percentage, name, value, bgblue }) {
   return (
     <div class="col-4">
       {/* <div class="dash-card">
@@ -75,7 +66,7 @@ function LeaveCard({
         <div class="card-block-small">
           <i
             class="icofont icofont-pie-chart bg-c-green card1-icon"
-            style={{ fontSize: "24px",background:  bgblue ? "#279ef8":"" }}
+            style={{ fontSize: "24px", background: bgblue ? "#279ef8" : "" }}
           >
             {value}
           </i>
