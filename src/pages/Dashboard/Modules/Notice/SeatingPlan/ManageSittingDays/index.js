@@ -152,7 +152,13 @@ function ManageSittingsDays() {
 
   const handleAttendance = (id) => {
     navigate(`/notice/seatingplan/manage-session/member-attendence`, {
-      state: id,
+      state: { id },
+    });
+  };
+
+  const handleViewAttendance = (id) => {
+    navigate(`/notice/seatingplan/manage-session/member-attendence`, {
+      state: { id, view: true },
     });
   };
   return (
@@ -243,7 +249,7 @@ function ManageSittingsDays() {
                     showAttendance={true}
                     hendleAttendance={(item) => handleAttendance(item.id)}
                     showView={true}
-                    handleView={handleAttendance}
+                    handleView={(item) => handleViewAttendance(item.id)}
                     // showAssigned={true}
                   />
                 </div>

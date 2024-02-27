@@ -23,7 +23,7 @@ import { AttendanceCard } from "../../../../../../../components/CustomComponents
 
 function NMSSessionAttendance() {
   const location = useLocation();
-  const sessionID = location.state ? location?.state?.id : "";
+  const sessionID = location.state ? location?.state : "";
   const [attendenceMemberData, setAttendanceMemberData] = useState([]);
   const [attendenceData, setAttendanceData] = useState([]);
   console.log("Member Data", attendenceMemberData);
@@ -44,9 +44,8 @@ function NMSSessionAttendance() {
   useEffect(() => {
     GetSessionMembersWithStatus();
   }, []);
-  console.log("Status attendance", location.state?.view);
+
   const onSubmit = async (values) => {
-    return console.log("Yousf", values?.sessionMembers);
     const changedValues = values.sessionMembers.filter(
       (member, index) =>
         member.attendanceStatus !== attendenceMemberData[index].attendanceStatus
@@ -68,6 +67,15 @@ function NMSSessionAttendance() {
     }
   };
 
+  // const handleStatusChange = (memberId, newStatus) => {
+  //   const updatedData = attendenceMemberData.map((item) =>
+  //     item.memberId === memberId
+  //       ? { ...item, attendanceStatus: newStatus }
+  //       : item
+  //   );
+  //   setAttendanceMemberData(updatedData);
+  // };
+
   return (
     <Layout
       module={true}
@@ -77,7 +85,7 @@ function NMSSessionAttendance() {
       <Header dashboardLink={"/"} title1={"Attendance"} />
       <ToastContainer />
 
-      {/* <div class="row">
+      <div class="row">
         <div className="col">
           <AttendanceCard
             memberName={"Anwar Lal"}
@@ -95,78 +103,67 @@ function NMSSessionAttendance() {
         <div className="col">
           <AttendanceCard />
         </div>
-      </div> */}
+      </div>
 
       <div className="container-fluid">
-        {attendenceMemberData.length > 0 && (
-          <Formik
-            initialValues={{ sessionMembers: attendenceMemberData }}
-            onSubmit={onSubmit}
-          >
-            {({ values }) => (
-              // <Form>
-              //   {location?.state && location?.state?.view ? (
-              //     <div className="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
-              //       {values.sessionMembers.map((member, index) => (
-              //         <div key={index} className="col">
-              //           <AttendanceCard
-              //             memberName={member?.memberName}
-              //             memberParty={"PMLN"}
-              //             view={"true"}
-              //             attendance={member?.attendanceStatus}
-              //           />
-              //         </div>
-              //       ))}
-              //     </div>
-              //   ) : (
-              //     <AttendanceCard
-              //       memberName={member?.memberName}
-              //       memberParty={"PMLN"}
-              //       attendance={member?.attendanceStatus}
-              //     />
-              //   )}
-              // </Form>
-              <Form>
-                {location?.state && location?.state?.view ? (
-                  <div className="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
-                    {values.sessionMembers.map((member, index) => (
-                      <div key={index} className="col">
-                        <AttendanceCard
-                          memberName={member?.memberName}
-                          memberParty={"PMLN"}
-                          view={location?.state?.view}
-                          attendance={member?.attendanceStatus}
-                          index={index}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <>
-                    <div className="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
+        <div class="dash-detail-container" style={{ marginTop: "20px" }}>
+          {attendenceMemberData.length > 0 && (
+            <Formik
+              initialValues={{ sessionMembers: attendenceMemberData }}
+              onSubmit={onSubmit}
+            >
+              {({ values }) => (
+                <Form>
+                  <table class="table red-bg-head th">
+                    <thead>
+                      <tr>
+                        <th class="text-center" scope="col">
+                          S #
+                        </th>
+                        <th class="text-center" scope="col">
+                          Member Name
+                        </th>
+                        <th class="text-center" scope="col">
+                          Attendance
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
                       {values.sessionMembers.map((member, index) => (
-                        <div key={index} className="col">
-                          <AttendanceCard
-                            memberName={member?.memberName}
-                            memberParty={"PMLN"}
-                            attendance={member?.attendanceStatus}
-                          />
-                        </div>
+                        <tr key={index}>
+                          <td className="text-center">{index + 1}</td>
+                          <td className="text-center">{member?.memberName}</td>
+                          <td className="text-center">
+                            <Field
+                              as="select"
+                              className="form-select"
+                              name={`sessionMembers.${index}.attendanceStatus`}
+                            >
+                              <option value="Present">Present</option>
+                              <option value="Absent">Absent</option>
+                              <option value="Leave">Leave</option>
+                              <option value="Oath Not Taken">
+                                Oath Not Taken
+                              </option>
+                              <option value="Suspended">Suspended</option>
+                            </Field>
+                          </td>
+                        </tr>
                       ))}
+                    </tbody>
+                  </table>
+                  <div class="row mt-2">
+                    <div class="col">
+                      <button class="btn btn-primary float-end" type="submit">
+                        Submit
+                      </button>
                     </div>
-                    <div class="row mt-2">
-                      <div class="col">
-                        <button class="btn btn-primary float-end" type="submit">
-                          Submit
-                        </button>
-                      </div>
-                    </div>
-                  </>
-                )}
-              </Form>
-            )}
-          </Formik>
-        )}
+                  </div>
+                </Form>
+              )}
+            </Formik>
+          )}
+        </div>
       </div>
     </Layout>
   );
