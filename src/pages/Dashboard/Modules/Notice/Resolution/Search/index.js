@@ -187,8 +187,6 @@ function SearchResolution() {
                           />
                         </div>
                       </div>
-                    </div>
-                    <div className="row">
                       <div className="col">
                         <div className="mb-3">
                           <label className="form-label">Keyword</label>
@@ -233,6 +231,8 @@ function SearchResolution() {
                       </div>
                     </div>
                     <div className="row">
+                      
+                    
                       <div className="col">
                         <div className="mb-3">
                           <label className="form-label">From Session</label>
@@ -277,8 +277,6 @@ function SearchResolution() {
                           </select>
                         </div>
                       </div>
-                    </div>
-                    <div className="row">
                       <div className="col">
                         <div className="mb-3">
                           <label className="form-label">Resolution Type</label>
@@ -326,8 +324,10 @@ function SearchResolution() {
                         </div>
                       </div>
                     </div>
+                    
                     <div className="row">
-                      <div className="col">
+                     
+                      <div className="col-3">
                         <div className="mb-3" style={{ position: "relative" }}>
                           <label className="form-label">From Notice Date</label>
                           <span
@@ -353,7 +353,7 @@ function SearchResolution() {
                           />
                         </div>
                       </div>
-                      <div className="col">
+                      <div className="col-3">
                         <div className="mb-3" style={{ position: "relative" }}>
                           <label className="form-label">To Notice Date</label>
                           <span
@@ -380,6 +380,7 @@ function SearchResolution() {
                         </div>
                       </div>
                     </div>
+                   
                     <div className="row">
                       <div className="d-grid gap-2 d-md-flex justify-content-md-end">
                         <button className="btn btn-primary" type="submit">
@@ -401,6 +402,7 @@ function SearchResolution() {
                     block={false}
                     hideBtn={true}
                     data={searchedData}
+                    hidebtn1={true}
                     tableTitle="Resolutions"
                     handlePageChange={handlePageChange}
                     currentPage={currentPage}

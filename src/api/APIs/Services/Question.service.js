@@ -201,4 +201,17 @@ export const createQuestion = async (data) => {
       throw error;
     }
   };
+
+  export const noticeBusinessReport = async (fromDate, toDate) => {
+    try {
+      // const token = getAuthToken();
+      const response = await axiosClientMMS.get(
+        `/noticeOfficeReport/?noticeOfficeDiaryDateFrom=${fromDate}&noticeOfficeDiaryDateTo=${toDate}`,
+      );
+      return response?.data;
+    } catch (error) {
+      console.error("Error fetching API endpoint:", error);
+      throw error;
+    }
+  };
   
