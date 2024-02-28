@@ -289,7 +289,7 @@ function CustomTable({
                                 >
                                   <button
                                     onClick={() => handleEdit(item)}
-                                    className="btn default btn-xs black"
+                                    className="btn-xs black circle-btn"
                                     data-id={item.id}
                                   >
                                     <FontAwesomeIcon icon={faEdit} />
@@ -303,8 +303,9 @@ function CustomTable({
                                 >
                                   <button
                                     onClick={() => handleView(item)}
-                                    className="btn default btn-xs black"
+                                    className="btn-xs black circle-btn"
                                     data-id={item.id}
+                                    style={{background:"#2dce89"}}
                                   >
                                     <FontAwesomeIcon icon={faEye} />
                                   </button>
@@ -318,8 +319,9 @@ function CustomTable({
                                 >
                                   <button
                                     onClick={() => handleDelete(item)}
-                                    className="btn default btn-xs black"
+                                    className="btn-xs black circle-btn"
                                     data-id={item.id}
+                                    style={{background:"#fb6340"}}
                                   >
                                     <FontAwesomeIcon icon={faTrash} />
                                   </button>
@@ -335,7 +337,7 @@ function CustomTable({
                               >
                                 <button
                                   onClick={() => handleUser(item)}
-                                  className="btn default btn-xs black"
+                                  className="btn-xs black circle-btn"
                                   data-id={item.id}
                                 >
                                   <FontAwesomeIcon icon={faUser} />
@@ -347,7 +349,7 @@ function CustomTable({
                               >
                                 <button
                                   onClick={() => handlePrint(item)}
-                                  className="btn default btn-xs black"
+                                  className="btn-xs black circle-btn"
                                   data-id={item.id}
                                 >
                                   <FontAwesomeIcon icon={faPrint} />
@@ -359,7 +361,7 @@ function CustomTable({
                               >
                                 <button
                                   onClick={() => handleDuplicate(item)}
-                                  className="btn default btn-xs black"
+                                  className="btn-xs black circle-btn"
                                   data-id={item.id}
                                 >
                                   <FontAwesomeIcon icon={faClone} />
@@ -374,7 +376,7 @@ function CustomTable({
                             >
                               <button
                                 onClick={() => handlePrint(item)}
-                                className="btn default btn-xs black"
+                                className="btn-xs black circle-btn"
                                 data-id={item.id}
                               >
                                 <FontAwesomeIcon icon={faPrint} />
@@ -388,7 +390,7 @@ function CustomTable({
                             >
                               <button
                                 onClick={() => hendleResolve(item)}
-                                className="btn default btn-xs black"
+                                className="btn-xs black circle-btn"
                                 data-id={item.id}
                               >
                                 <FontAwesomeIcon icon={faCheck} />
@@ -402,7 +404,7 @@ function CustomTable({
                             >
                               <button
                                 onClick={() => hendleAssigned(item)}
-                                className="btn default btn-xs black"
+                                className="btn-xs black circle-btn"
                                 data-id={item.id}
                               >
                                 <FontAwesomeIcon icon={faFileExport} />
@@ -416,8 +418,9 @@ function CustomTable({
                             >
                               <button
                                 onClick={() => hendleAttendance(item)}
-                                className="btn default btn-xs black"
+                                className="btn-xs black circle-btn"
                                 data-id={item.id}
+                                style={{background:"#007bff"}}
                               >
                                 <FontAwesomeIcon icon={faUserCheck} />
                               </button>
@@ -461,7 +464,7 @@ function CustomTable({
                                 >
                                   <button
                                     onClick={() => handleEdit(item)}
-                                    className="btn default btn-xs black"
+                                    className="btn-xs black circle-btn"
                                     data-id={item.id}
                                   >
                                     <FontAwesomeIcon icon={faEdit} />
@@ -475,8 +478,9 @@ function CustomTable({
                                 >
                                   <button
                                     onClick={() => handleView(item)}
-                                    className="btn default btn-xs black"
+                                    className="btn-xs black circle-btn"
                                     data-id={item.id}
+                                    style={{background:"#2dce89"}}
                                   >
                                     <FontAwesomeIcon icon={faEye} />
                                   </button>
@@ -490,8 +494,9 @@ function CustomTable({
                                 >
                                   <button
                                     onClick={() => handleDelete(item)}
-                                    className="btn default btn-xs black"
+                                    className="btn-xs black circle-btn"
                                     data-id={item.id}
+                                    style={{background:"#fb6340"}}
                                   >
                                     <FontAwesomeIcon icon={faTrash} />
                                   </button>
@@ -523,7 +528,7 @@ function CustomTable({
                               >
                                 <button
                                   onClick={() => handleUser(item)}
-                                  className="btn default btn-xs black"
+                                  className="btn-xs black circle-btn"
                                   data-id={item.id}
                                 >
                                   <FontAwesomeIcon icon={faUser} />
@@ -535,7 +540,7 @@ function CustomTable({
                               >
                                 <button
                                   onClick={() => handlePrint(item)}
-                                  className="btn default btn-xs black"
+                                  className="btn-xs black circle-btn"
                                   data-id={item.id}
                                 >
                                   <FontAwesomeIcon icon={faPrint} />
@@ -547,7 +552,7 @@ function CustomTable({
                               >
                                 <button
                                   onClick={() => handleDuplicate(item)}
-                                  className="btn default btn-xs black"
+                                  className="btn-xs black circle-btn"
                                   data-id={item.id}
                                 >
                                   <FontAwesomeIcon icon={faClone} />
@@ -562,7 +567,7 @@ function CustomTable({
                             >
                               <button
                                 onClick={() => handlePrint(item)}
-                                className="btn default btn-xs black"
+                                className="btn-xs black circle-btn"
                                 data-id={item.id}
                               >
                                 <FontAwesomeIcon icon={faPrint} />
@@ -576,7 +581,7 @@ function CustomTable({
                             >
                               <button
                                 onClick={() => hendleResolve(item)}
-                                className="btn default btn-xs black"
+                                className="btn-xs black circle-btn"
                                 data-id={item.id}
                               >
                                 <FontAwesomeIcon icon={faCheck} />
