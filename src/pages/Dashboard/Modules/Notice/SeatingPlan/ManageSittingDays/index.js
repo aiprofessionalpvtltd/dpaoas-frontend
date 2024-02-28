@@ -55,15 +55,15 @@ function ManageSittingsDays() {
         "hh:ss:a"
       ),
       sittingEndTime: moment(item?.sittingEndTime, "hh:ss:a").format("hh:ss:a"),
-      breakStartTime: moment(item?.breakStartTime, "hh:ss:a").format("hh:ss:a"),
-      breakEndTime: moment(item?.breakEndTime, "hh:ss:a").format("hh:ss:a"),
-      AsWholeCommittee: String(item?.committeeWhole),
-      committeeStartTime: item?.committeeStartTime
-        ? moment(item?.committeeStartTime, "hh:ss:a").format("hh:ss:a")
-        : "No Start Time",
-      committeeEndTime: item?.committeeEndTime
-        ? moment(item?.committeeEndTime, "hh:ss:a").format("hh:ss:a")
-        : "No End Time",
+      // breakStartTime: moment(item?.breakStartTime, "hh:ss:a").format("hh:ss:a"),
+      // breakEndTime: moment(item?.breakEndTime, "hh:ss:a").format("hh:ss:a"),
+      // AsWholeCommittee: String(item?.committeeWhole),
+      // committeeStartTime: item?.committeeStartTime
+      //   ? moment(item?.committeeStartTime, "hh:ss:a").format("hh:ss:a")
+      //   : "No Start Time",
+      // committeeEndTime: item?.committeeEndTime
+      //   ? moment(item?.committeeEndTime, "hh:ss:a").format("hh:ss:a")
+      //   : "No End Time",
       sessionAdjourned: String(item?.sessionAdjourned),
       status: item?.status,
     }));
@@ -143,7 +143,7 @@ function ManageSittingsDays() {
       const response = await deleteSessionsSitting(id);
       if (response?.success) {
         showSuccessMessage(response?.message);
-        SearchSessionSittingApi();
+        setTimeout(()=>SearchSessionSittingApi({sessionId:formik.values.sessionId}),3000)
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
