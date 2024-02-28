@@ -13,10 +13,7 @@ import { useLocation } from "react-router";
 
 import {
   UpdateQuestionById,
-  createDefferQuestion,
-  createReviveQuestion,
   getAllQuestionStatus,
-  sendQuestionTranslation,
 } from "../../../../../../api/APIs/Services/Question.service";
 import { ToastContainer } from "react-toastify";
 
@@ -31,10 +28,12 @@ import {
   showErrorMessage,
 } from "../../../../../../utils/ToastAlert";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
+import moment from "moment";
+import Select from "react-select";
 const validationSchema = Yup.object({
   sessionNo: Yup.string(),
   noticeOfficeDiaryNo: Yup.string(),
-  noticeOfficeDiaryDate: Yup.string(),
+  noticeOfficeDiaryDate: Yup.date(),
   noticeOfficeDiaryTime: Yup.string(),
   priority: Yup.string(),
   questionId: Yup.string(),
@@ -54,56 +53,27 @@ const validationSchema = Yup.object({
 
 function NoticeQuestionDetail() {
   const location = useLocation();
-  // const English = location?.state && location?.state?.question?.englishText;
-  // const Urdu = location?.state && location?.state?.question?.urduText;
-  // console.log("location states", location?.state?.question?.urduText);
-  const { members, sessions } = useContext(AuthContext);
-  const [alldivisons, setAllDivisions] = useState([]);
+  const { members } = useContext(AuthContext);
+  const [filesData, setFilesData] = useState();
   const [currentPage, setCurrentPage] = useState(0);
   const pageSize = 4;
 
-  const handlePageChange = (page) => {
+  const handleStatusPageChange = (page) => {
     // Update currentPage when a page link is clicked
     setCurrentPage(page);
   };
 
-  console.log(
-    "Question Detail Data",
-    location?.state?.question?.session?.sessionName
-  );
-  // console.log("Divisions", divisons);
-  const [showDeferForm, setShowDeferForm] = useState(false);
-  const [showRetriveForm, setShowRetriveForm] = useState(false);
-
-  const [allquestionStatus, setAllQuestionStatus] = useState([]);
-
-  const [deferState, setDeferState] = useState({
-    sessionNo: "",
-    deferDate: "",
-  });
-
-  const [statusHistory, setStatusHistory] = useState();
-
-  const [reviveState, setReviveState] = useState({
-    sessionNo: "",
-    qroup: "",
-    division: "",
-    noticeDiaryNo: "",
-    noticeDiaryDate: "",
-    noticeDiaryTime: "",
-    questionStatus: "",
-    questionDiaryNo: "",
-  });
-
+  console.log("memeber", location?.state?.question?.member?.id);
+  console.log("SESSIONID", location?.state?.question?.session);
   const formik = useFormik({
     initialValues: {
       sessionNo: location?.state?.question?.session?.sessionName,
       noticeOfficeDiaryNo:
         location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryNo,
-      noticeOfficeDiaryDate: new Date(
-        location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryDate
-      ),
-      // location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryDate,
+      noticeOfficeDiaryDate: moment(
+        location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryDate,
+        "DD-MM-YYYY"
+      ).toDate(),
       noticeOfficeDiaryTime:
         location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryTime,
       priority: "",
@@ -111,9 +81,13 @@ function NoticeQuestionDetail() {
       questionDiaryNo: location?.state?.question?.fkNoticeDiary,
       category: location?.state?.question?.questionCategory,
       questionStatus: location?.state?.question?.fkQuestionStatus,
-      // replyDate: location?.state?.question?.replyDate,
       replyDate: new Date(location?.state?.question?.replyDate),
-      senator: "",
+      senator: location.state
+        ? {
+            value: location?.state?.question?.member?.id,
+            label: location?.state?.question?.member?.memberName,
+          }
+        : "",
       group: location?.state?.question?.groups,
       division: location?.state?.question?.divisions,
       fileStatus: location?.state?.question?.fileStatus,
@@ -131,22 +105,15 @@ function NoticeQuestionDetail() {
 
   const updateQuestion = async (values) => {
     const formData = new FormData();
-    formData.append("fkSessionId", values?.sessionNo);
+    formData.append("fkSessionId", 1);
     formData.append("noticeOfficeDiaryNo", values?.noticeOfficeDiaryNo);
     formData.append("noticeOfficeDiaryDate", values?.noticeOfficeDiaryDate);
     formData.append("noticeOfficeDiaryTime", values?.noticeOfficeDiaryTime);
     formData.append("questionCategory", values?.category);
     formData.append("questionDiaryNo", values?.questionDiaryNo);
-    formData.append("fkMemberId", values?.senator);
-    formData.append("fkGroupId", values?.group);
-    formData.append("fkDivisionId", values?.division);
-    formData.append("fileStatus", values?.fileStatus);
-    formData.append("replyDate", values?.replyDate);
-
-    formData.append("ammendedText", values.ammendedText);
+    formData.append("fkMemberId", values?.senator?.value);
     formData.append("urduText", values.urduText);
     formData.append("englishText", values.englishText);
-    formData.append("originalText", values.originalText);
     try {
       const response = await UpdateQuestionById(
         location?.state?.question?.id,
@@ -157,75 +124,6 @@ function NoticeQuestionDetail() {
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
-    }
-  };
-  const GetALlStatus = async () => {
-    try {
-      const response = await getAllQuestionStatus();
-      if (response?.success) {
-        setAllQuestionStatus(response?.data);
-        // showSuccessMessage(response.message)
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const hendleQuestionTranslation = async () => {
-    try {
-      const response = await sendQuestionTranslation(
-        location?.state?.question?.id
-      );
-      if (response?.success) {
-        showSuccessMessage(response.message);
-      }
-    } catch (error) {
-      showErrorMessage(error.response.data.message);
-    }
-  };
-
-  const hendleDeffer = async () => {
-    const DefferData = {
-      fkSessionId: deferState.sessionNo,
-      deferredDate: deferState.deferDate,
-      deferredBy: "login user ID",
-    };
-    try {
-      const response = await createDefferQuestion(
-        location?.state?.question?.id,
-        DefferData
-      );
-      if (response?.success) {
-        showSuccessMessage(response.message);
-      }
-    } catch (error) {
-      showErrorMessage(error.response.data.message);
-    }
-  };
-
-  const hendleRevive = async () => {
-    const reviveData = {
-      fkFromSessionId: location?.state?.question?.session?.sessionName,
-      fkToSessionId: reviveState.sessionNo,
-      fkGroupId: reviveState.qroup,
-      fkDivisionId: reviveState.division,
-      noticeOfficeDiaryNo: reviveState.noticeDiaryNo,
-      noticeOfficeDiaryDate: reviveState.noticeDiaryDate,
-      noticeOfficeDiaryTime: reviveState.noticeDiaryTime,
-      questionDiaryNo: reviveState.questionDiaryNo,
-      fkQuestionStatus: reviveState.questionStatus,
-      fkSessionId: reviveState.sessionNo,
-    };
-    try {
-      const response = await createReviveQuestion(
-        location?.state?.question?.id,
-        reviveData
-      );
-      if (response?.success) {
-        showSuccessMessage(response.message);
-      }
-    } catch (error) {
-      showErrorMessage(error.response.data.message);
     }
   };
 
@@ -247,7 +145,6 @@ function NoticeQuestionDetail() {
     location?.state?.history?.questionStatusHistory
   );
 
-  console.log("status", location?.state);
   //questionRevival
   const transfrerRevivalHistoryData = (apiData) => {
     if (Array.isArray(apiData)) {
@@ -302,27 +199,6 @@ function NoticeQuestionDetail() {
     }
   };
 
-  const QuestionFileHistoryData = transfrerFilerHistoryData(
-    location?.state?.history?.questionFileHistory
-  );
-  // Getting All Divisions
-  const GetALLDivsions = async () => {
-    try {
-      const response = await getAllDivisions(0, 100);
-      if (response?.success) {
-        setAllDivisions(response?.data?.divisions);
-        // setCount(response?.data?.count);
-        // setTotalPages(rersponse?.data?.totalPages)
-        // showSuccessMessage(response.message)
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  useEffect(() => {
-    GetALlStatus();
-    GetALLDivsions();
-  }, []);
   return (
     <Layout
       module={true}
@@ -372,7 +248,7 @@ function NoticeQuestionDetail() {
                           ))}
                       </select> */}
                       <input
-                        // readOnly={true}
+                        readOnly={true}
                         placeholder={formik.values.sessionNo}
                         type="text"
                         class="form-control"
@@ -413,7 +289,6 @@ function NoticeQuestionDetail() {
                       </span>
                       <DatePicker
                         selected={formik.values.noticeOfficeDiaryDate}
-                        // minDate={new Date()}
                         onChange={(date) =>
                           formik.setFieldValue("noticeOfficeDiaryDate", date)
                         }
@@ -439,23 +314,6 @@ function NoticeQuestionDetail() {
                   </div>
                 </div>
                 <div class="row">
-                  {/* <div class="col">
-                    <div class="mb-3">
-                      <div class="form-check" style={{ marginTop: "25px" }}>
-                        <input
-                          class="form-check-input "
-                          type="checkbox"
-                          id="priority"
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                        />
-                        <label class="form-check-label" for="flexCheckDefault">
-                          {" "}
-                          Priority
-                        </label>
-                      </div>
-                    </div>
-                  </div> */}
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Question ID</label>
@@ -492,15 +350,15 @@ function NoticeQuestionDetail() {
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Senator</label>
-                      <select
-                        placeholder={formik.values.senator}
-                        className={`form-control`}
+                      {/* <select
+                        className={`form-select`}
                         id="senator"
+                        name="senator"
+                        value={formik.values.senator}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                        value={formik.values.senator}
                       >
-                        <option selected disabled hidden>
+                        <option value={""} selected disabled hidden>
                           Select
                         </option>
                         {members &&
@@ -509,7 +367,24 @@ function NoticeQuestionDetail() {
                               {item?.memberName}
                             </option>
                           ))}
-                      </select>
+                      </select> */}
+                      <Select
+                        options={
+                          members &&
+                          members?.map((item) => ({
+                            value: item.id,
+                            label: item?.memberName,
+                          }))
+                        }
+                        onChange={(selectedOptions) => {
+                          formik.setFieldValue("senator", selectedOptions);
+                        }}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.senator}
+                        name="senator"
+                        isClearable={true}
+                        className="form-select"
+                      />
                     </div>
                   </div>
                 </div>
@@ -543,6 +418,33 @@ function NoticeQuestionDetail() {
                     value={formik.values.urduText}
                   />
                 </div>
+                <div className="row">
+                  {location?.state?.question &&
+                    location?.state?.question?.questionImage?.map((item) => (
+                      <div class="MultiFile-label mt-3">
+                        <a href={`http://172.16.170.8:5252${item}`}>
+                          <i class="fas fa-download"></i>
+                        </a>
+                        <a class="MultiFile-remove" href="#T7">
+                          x
+                        </a>
+                        <span
+                          class="MultiFile-label"
+                          title={item.filename
+                            ?.split("\\")
+                            .pop()
+                            .split("/")
+                            .pop()}
+                        >
+                          <span class="MultiFile-title">
+                            <a href={`http://172.16.170.8:5252${item}`}>
+                              {item?.split("\\").pop().split("/").pop()}
+                            </a>
+                          </span>
+                        </span>
+                      </div>
+                    ))}
+                </div>
                 <div
                   class="d-grid gap-2 d-md-flex"
                   style={{ marginTop: 70, marginBottom: 40 }}
@@ -550,9 +452,9 @@ function NoticeQuestionDetail() {
                   <button class="btn btn-primary" type="submit">
                     Update
                   </button>
-                  <button class="btn btn-primary" type="">
+                  {/* <button class="btn btn-primary" type="">
                     Upload File
-                  </button>
+                  </button> */}
                   <button class="btn btn-danger" type="">
                     Delete
                   </button>
@@ -566,149 +468,7 @@ function NoticeQuestionDetail() {
                 tableTitle="Status History"
                 pageSize={pageSize}
                 currentPage={currentPage}
-                handlePageChange={handlePageChange}
-              />
-
-              {/* <h2
-                style={{ color: "#666", fontSize: "24px", marginTop: "30px" }}
-              >
-                Status History
-              </h2>
-              <div class="dash-detail-container" style={{ marginTop: "20px" }}>
-                <table class="table red-bg-head th">
-                  <thead>
-                    <tr>
-                      <th class="text-center" scope="col">
-                        Sr#
-                      </th>
-                      <th class="text-center" scope="col">
-                        Session No
-                      </th>
-                      <th class="text-center" scope="col">
-                        Question Status
-                      </th>
-                      <th class="text-center" scope="col">
-                        Status Date
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {StatusHistoryData.length > 0 &&
-                      StatusHistoryData.map((item, index) => (
-                        <tr>
-                          <td class="text-center">{item.SR}</td>
-                          <td class="text-center">{item.sessionNo}</td>
-                          <td class="text-center">{item.status}</td>
-                          <td class="text-center">{item.questionDate}</td>
-                        </tr>
-                      ))}
-                  </tbody>
-                </table>
-              </div> */}
-              {/* <h2
-                style={{ color: "#666", marginTop: "25px", fontSize: "24px" }}
-              >
-                Revival History
-              </h2>
-              <div class="dash-detail-container" style={{ marginTop: "20px" }}>
-                <table class="table red-bg-head th">
-                  <thead>
-                    <tr>
-                      <th class="text-center" scope="col">
-                        Sr#
-                      </th>
-                      <th class="text-center" scope="col">
-                        From Session Number
-                      </th>
-                      <th class="text-center" scope="col">
-                        To Session Number
-                      </th>
-                      <th class="text-center" scope="col">
-                        Previous Notice Office Diary No
-                      </th>
-                      <th class="text-center" scope="col">
-                        Revival Date
-                      </th>
-                      <th class="text-center" scope="col">
-                        User
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {QuestionRevivalHistoryData.length > 0 &&
-                      QuestionRevivalHistoryData.map((item, index) => (
-                        <tr>
-                          <td class="text-center">{item.SR}</td>
-                          <td class="text-center">{item.FromSession}</td>
-                          <td class="text-center">{item.ToSession}</td>
-                          <td class="text-center">{item.questionDiary}</td>
-                          <td class="text-center">{item.revivalDate}</td>
-                        </tr>
-                      ))}
-                  </tbody>
-                </table>
-              </div> */}
-
-              <CustomTable
-                block={false}
-                hidebtn1={true}
-                ActionHide={true}
-                data={QuestionRevivalHistoryData}
-                tableTitle="Revival  History"
-                pageSize={pageSize}
-                currentPage={currentPage}
-              />
-              {/* <h2
-                style={{ color: "#666", marginTop: "25px", fontSize: "24px" }}
-              >
-                Defer History
-              </h2>
-              <div class="dash-detail-container" style={{ marginTop: "20px" }}>
-                <table class="table red-bg-head th">
-                  <thead>
-                    <tr>
-                      <th class="text-center" scope="col">
-                        Sr#
-                      </th>
-                      <th class="text-center" scope="col">
-                        Defered to Session No
-                      </th>
-                      <th class="text-center" scope="col">
-                        Defered on
-                      </th>
-                      <th class="text-center" scope="col">
-                        Defered by
-                      </th>
-                      <th class="text-center" scope="col">
-                        User
-                      </th>
-                      <th class="text-center" scope="col">
-                        Action
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {QuestionDefferHistoryData.length > 0 &&
-                      QuestionDefferHistoryData.map((item, index) => (
-                        <tr>
-                          <td class="text-center">{item.SR}</td>
-                          <td class="text-center">{item.defferToSession}</td>
-                          <td class="text-center">{item.defferOn}</td>
-                          <td class="text-center">{item.deferredBy}</td>
-                          <td class="text-center">{item.revivalDate}</td>
-                        </tr>
-                      ))}
-                  </tbody>
-                </table>
-              </div> */}
-              <CustomTable
-                block={false}
-                hidebtn1={true}
-                ActionHide={true}
-                data={QuestionDefferHistoryData}
-                tableTitle="Defer  History"
-                pageSize={pageSize}
-                currentPage={currentPage}
+                handlePageChange={handleStatusPageChange}
               />
             </div>
           </div>

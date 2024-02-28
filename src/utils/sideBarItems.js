@@ -149,7 +149,6 @@ export const NoticeSidebarItems = [
         link: "/notice/legislation/private-bill",
         icon: faClipboardList,
       },
-
     ],
   },
 
@@ -261,6 +260,11 @@ export const NoticeSidebarItems = [
       {
         itemName: "Business Summary",
         link: "/notice/reports/business-summary",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Attendence Reports",
+        link: "/notice/reports/attendence-reports",
         icon: faClipboardList,
       },
     ],
