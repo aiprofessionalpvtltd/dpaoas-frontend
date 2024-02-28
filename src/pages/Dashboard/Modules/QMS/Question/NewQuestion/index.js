@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
 import { QMSSideBarItems } from "../../../../../../utils/sideBarItems";
@@ -23,19 +23,17 @@ const validationSchema = Yup.object({
   // fkSessionId: Yup.number().required("Session No is required"),
   questionCategory: Yup.string().required("Category is required"),
   noticeOfficeDiaryNo: Yup.number().required(
-    "Notice office diary No is required",
+    "Notice office diary No is required"
   ),
   fkMemberId: Yup.number().required("Member id is required"),
   noticeOfficeDiaryDate: Yup.string().required(
-    "Notice Office Diary Date is required",
+    "Notice Office Diary Date is required"
   ),
 });
 
 function QMSNewQuestion() {
-  const navigate = useNavigate();
-  const { members, sessions } = useContext(AuthContext);
+  const { members, sessions, allBranchesData } = useContext(AuthContext);
   const [showModal, setShowModal] = useState(false);
-
   const [formValues, setFormValues] = useState([]);
 
   const handleShow = () => setShowModal(true);
@@ -52,6 +50,8 @@ function QMSNewQuestion() {
       noticeOfficeDiaryNo: null,
       fkMemberId: null,
       noticeOfficeDiaryDate: "",
+      initiatedByBranch: "",
+      sentToBranch: "",
       noticeOfficeDiaryTime: "",
       englishText: "",
       urduText: "",
@@ -66,7 +66,7 @@ function QMSNewQuestion() {
 
   const CreateQuestionApi = async (values) => {
     const formData = new FormData();
-    formData.append("fkSessionId", 1);
+    formData.append("fkSessionId", values.fkSessionId);
     formData.append("noticeOfficeDiaryNo", Number(values.noticeOfficeDiaryNo));
     formData.append("noticeOfficeDiaryDate", values.noticeOfficeDiaryDate);
     formData.append("noticeOfficeDiaryTime", values.noticeOfficeDiaryTime);

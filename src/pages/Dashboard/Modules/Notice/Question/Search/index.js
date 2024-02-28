@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { NoticeSidebarItems } from "../../../../../../utils/sideBarItems";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
@@ -30,13 +30,13 @@ function SearchQuestion() {
   const [count, setCount] = useState(null);
   const [allquestionStatus, setAllQuestionStatus] = useState([]);
 
-  const pageSize = 10; // Set your desired page size
+  const pageSize = 4; // Set your desired page size
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
     setCurrentPage(page);
   };
-
+  console.log("COunt", count);
   const formik = useFormik({
     initialValues: {
       questionDiaryNo: "",
@@ -49,8 +49,6 @@ function SearchQuestion() {
       questionStatus: "",
       fromNoticeDate: "",
       toNoticeDate: "",
-      // divisions: "",
-      // noticeOfficeDiaryNo: "",
     },
     onSubmit: (values) => {
       // Handle form submission here
@@ -69,9 +67,7 @@ function SearchQuestion() {
         // SrNo: index,
         QID: res.id,
         // QDN: res.questionDiary.questionDiaryNo,
-        NoticeDate: moment(
-          res?.noticeOfficeDiary?.noticeOfficeDiaryDate
-        ).format("YYYY/MM/DD"),
+        NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate,
         NoticeTime: moment(
           res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
           "hh:ss:a"
@@ -88,34 +84,88 @@ function SearchQuestion() {
     });
   };
 
-  const SearchQuestionApi = async (values) => {
-    const searchParams = {
-      fromSessionNo: values.fromSession,
-      toSessionNo: values.toSession,
-      memberName: values.memberName,
-      questionCategory: values.category,
-      keyword: values.keyword,
-      questionID: values.questionID,
-      questionStatus: values.questionStatus,
-      questionDiaryNo: values.questionDiaryNo,
-      noticeOfficeDiaryDateFrom: values.fromNoticeDate,
-      noticeOfficeDiaryDateTo: values.toNoticeDate,
-    };
+  const SearchQuestionApi = useCallback(
+    async (values) => {
+      const searchParams = {
+        fromSessionNo: values?.fromSession,
+        toSessionNo: values?.toSession,
+        memberName: values?.memberName,
+        questionCategory: values?.category,
+        keyword: values?.keyword,
+        questionID: values?.questionID,
+        questionStatus: values?.questionStatus,
+        questionDiaryNo: values?.questionDiaryNo,
+        noticeOfficeDiaryDateFrom: values?.fromNoticeDate,
+        noticeOfficeDiaryDateTo: values?.toNoticeDate,
+      };
+      try {
+        const response = await searchQuestion(
+          searchParams,
+          currentPage,
+          pageSize
+        );
 
-    try {
-      const response = await searchQuestion(searchParams);
-      console.log(response);
-      if (response?.success) {
-        showSuccessMessage(response?.message);
-        setCount(response?.data?.count);
-        const transformedData = transformLeavesData(response.data);
-        setSearchedData(transformedData);
+        if (response?.success) {
+          showSuccessMessage(response?.message);
+          setCount(response?.data?.count);
+          const transformedData = transformLeavesData(response.data?.questions);
+          setSearchedData(transformedData);
+        }
+        // formik.resetForm();
+      } catch (error) {
+        showErrorMessage(error?.response?.data?.message);
       }
-      // formik.resetForm();
-    } catch (error) {
-      showErrorMessage(error?.response?.data?.message);
+    },
+    [currentPage, pageSize, setCount, setSearchedData]
+  );
+  useEffect(() => {
+    if (
+      formik.values.questionDiaryNo ||
+      formik.values.questionID ||
+      formik.values.keyword ||
+      formik.values.memberName ||
+      formik.values.fromSession ||
+      formik.values.toSession ||
+      formik.values.category ||
+      formik.values.questionStatus ||
+      formik.values.fromNoticeDate ||
+      formik.values.toNoticeDate
+    ) {
+      SearchQuestionApi();
     }
-  };
+  }, [currentPage]);
+  // const SearchQuestionApi = async (values) => {
+  //   const searchParams = {
+  //     fromSessionNo: values.fromSession,
+  //     toSessionNo: values.toSession,
+  //     memberName: values.memberName,
+  //     questionCategory: values.category,
+  //     keyword: values.keyword,
+  //     questionID: values.questionID,
+  //     questionStatus: values.questionStatus,
+  //     questionDiaryNo: values.questionDiaryNo,
+  //     noticeOfficeDiaryDateFrom: values.fromNoticeDate,
+  //     noticeOfficeDiaryDateTo: values.toNoticeDate,
+  //   };
+
+  //   try {
+  //     const response = await searchQuestion(
+  //       searchParams,
+  //       currentPage,
+  //       pageSize
+  //     );
+  //     console.log(response);
+  //     if (response?.success) {
+  //       showSuccessMessage(response?.message);
+  //       setCount(response?.data?.count);
+  //       const transformedData = transformLeavesData(response.data?.questions);
+  //       setSearchedData(transformedData);
+  //     }
+  //     // formik.resetForm();
+  //   } catch (error) {
+  //     showErrorMessage(error?.response?.data?.message);
+  //   }
+  // };
 
   const GetALlStatus = async () => {
     try {
@@ -260,8 +310,6 @@ function SearchQuestion() {
                       </div>
                     </div>
                     <div className="row">
-                     
-                      
                       <div className="col">
                         <div className="mb-3">
                           <label className="form-label">From Session</label>
@@ -352,9 +400,8 @@ function SearchQuestion() {
                         </div>
                       </div>
                     </div>
-                    
+
                     <div className="row">
-                    
                       <div className="col-3">
                         <div className="mb-3" style={{ position: "relative" }}>
                           <label className="form-label">From Notice Date</label>
@@ -408,7 +455,6 @@ function SearchQuestion() {
                         </div>
                       </div>
                     </div>
-                    
 
                     <div className="row">
                       <div className="d-grid gap-2 d-md-flex justify-content-md-end">
@@ -440,13 +486,10 @@ function SearchQuestion() {
                     showPrint={false}
                     ActionHide={false}
                     headertitlebgColor={"#666"}
-                headertitletextColor={"#FFF"}
-                    // hideEditIcon={true}
+                    headertitletextColor={"#FFF"}
                     hideDeleteIcon={true}
                     pageSize={pageSize}
-                    // handleAdd={(item) => navigate("/")}
                     handleEdit={(item) => handleEdit(item?.QID)}
-                    // handleDelete={(item) => handleDelete(item.id)}
                     totalCount={count}
                   />
                 </div>

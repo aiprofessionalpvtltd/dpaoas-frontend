@@ -19,6 +19,8 @@ import { ToastContainer } from "react-toastify";
 import { AuthContext } from "../../../../../../api/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
+import { getUserData } from "../../../../../../api/Auth";
+import moment from "moment";
 
 const validationSchema = Yup.object({
   // fkSessionId: Yup.number().required("Session No is required"),
@@ -37,11 +39,12 @@ const validationSchema = Yup.object({
 
 function NewQuestion() {
   const navigate = useNavigate();
-  const { members, sessions } = useContext(AuthContext);
+  const { members, sessions, allBranchesData } = useContext(AuthContext);
   const [showModal, setShowModal] = useState(false);
   const [formValues, setFormValues] = useState([]);
+  const [filesData, setFilesData] = useState();
   const sessionId = sessions && sessions.map((item) => item?.id);
-
+  const UserData = getUserData();
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
   const handleOkClick = () => {
@@ -59,7 +62,9 @@ function NewQuestion() {
       noticeOfficeDiaryTime: "",
       englishText: "",
       urduText: "",
-      questionImage: null,
+      questionImage: [],
+      initiatedByBranch: "",
+      sentToBranch: "",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -78,10 +83,18 @@ function NewQuestion() {
     formData.append("questionCategory", values.questionCategory);
     formData.append("fkQuestionStatus", 12);
     formData.append("fkMemberId", values.fkMemberId);
-
+    formData.append("initiatedByBranch", values.initiatedByBranch);
+    formData.append("sentToBranch", values.sentToBranch);
+    formData.append("createdByUser", UserData && UserData?.id);
     formData.append("englishText", values.englishText);
     formData.append("urduText", values.urduText);
-    formData.append("questionImage", values.questionImage);
+    // formData.append("questionImage", values.questionImage);
+    // Array.from(values.questionImage).forEach((file, index) => {
+    //   formData.append(`questionImage[${index}]`, file);
+    // });
+    Array.from(values.questionImage).map((file, index) => {
+      formData.append(`questionImage`, file);
+    });
 
     try {
       const response = await createQuestion(formData);
@@ -134,11 +147,12 @@ function NewQuestion() {
                       <div class="mb-3">
                         <label class="form-label">Session No</label>
                         <select
-                          class={`form-select ${formik.touched.fkSessionId &&
-                              formik.errors.fkSessionId
+                          class={`form-select ${
+                            formik.touched.fkSessionId &&
+                            formik.errors.fkSessionId
                               ? "is-invalid"
                               : ""
-                            }`}
+                          }`}
                           // placeholder="Session No"
                           value={formik.values.fkSessionId}
                           onChange={formik.handleChange}
@@ -169,11 +183,12 @@ function NewQuestion() {
                       <div class="mb-3">
                         <label class="form-label">Category</label>
                         <select
-                          class={`form-select ${formik.touched.questionCategory &&
-                              formik.errors.questionCategory
+                          class={`form-select ${
+                            formik.touched.questionCategory &&
+                            formik.errors.questionCategory
                               ? "is-invalid"
                               : ""
-                            }`}
+                          }`}
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                           value={formik.values.questionCategory || ""}
@@ -198,11 +213,12 @@ function NewQuestion() {
                       <div class="mb-3">
                         <label class="form-label">Notice Office Diary No</label>
                         <input
-                          class={`form-control ${formik.touched.noticeOfficeDiaryNo &&
-                              formik.errors.noticeOfficeDiaryNo
+                          className={`form-control ${
+                            formik.touched.noticeOfficeDiaryNo &&
+                            formik.errors.noticeOfficeDiaryNo
                               ? "is-invalid"
                               : ""
-                            }`}
+                          }`}
                           type="number"
                           id="noticeOfficeDiaryNo"
                           value={formik.values.noticeOfficeDiaryNo}
@@ -223,11 +239,12 @@ function NewQuestion() {
                         <label class="form-label">Member Name</label>
 
                         <select
-                          className={`form-select ${formik.touched.fkMemberId &&
-                              formik.errors.fkMemberId
+                          className={`form-select ${
+                            formik.touched.fkMemberId &&
+                            formik.errors.fkMemberId
                               ? "is-invalid"
                               : ""
-                            }`}
+                          }`}
                           // placeholder={formik.values.fkMemberId}
                           value={formik.values.fkMemberId}
                           onChange={formik.handleChange}
@@ -253,7 +270,6 @@ function NewQuestion() {
                     </div>
                   </div>
                   <div class="row">
-
                     <div className="col-3">
                       <div className="mb-3" style={{ position: "relative" }}>
                         <label className="form-label">
@@ -274,16 +290,17 @@ function NewQuestion() {
                         </span>
                         <DatePicker
                           selected={formik.values.noticeOfficeDiaryDate}
-                          minDate={new Date()}
+                          // minDate={new Date()}
                           onChange={(date) =>
                             formik.setFieldValue("noticeOfficeDiaryDate", date)
                           }
                           onBlur={formik.handleBlur}
-                          className={`form-control ${formik.touched.noticeOfficeDiaryDate &&
-                              formik.errors.noticeOfficeDiaryDate
+                          className={`form-control ${
+                            formik.touched.noticeOfficeDiaryDate &&
+                            formik.errors.noticeOfficeDiaryDate
                               ? "is-invalid"
                               : ""
-                            }`}
+                          }`}
                         />
                         {formik.touched.noticeOfficeDiaryDate &&
                           formik.errors.noticeOfficeDiaryDate && (
@@ -293,6 +310,7 @@ function NewQuestion() {
                           )}
                       </div>
                     </div>
+
                     <div className="col-3">
                       <div className="mb-3">
                         <label className="form-label">
@@ -311,6 +329,80 @@ function NewQuestion() {
                         />
                       </div>
                     </div>
+                    <div class="col-3">
+                      <div class="mb-3">
+                        <label class="form-label">From Branch</label>
+                        <select
+                          class={`form-select ${
+                            formik.touched.initiatedByBranch &&
+                            formik.errors.initiatedByBranch
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                          // placeholder="Session No"
+                          value={formik.values.initiatedByBranch}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          name="initiatedByBranch"
+                        >
+                          <option value="" selected disabled hidden>
+                            Select
+                          </option>
+                          {allBranchesData &&
+                            allBranchesData.length > 0 &&
+                            allBranchesData.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item.branchName}
+                              </option>
+                            ))}
+                        </select>
+                        {formik.touched.initiatedByBranch &&
+                          formik.errors.initiatedByBranch && (
+                            <div className="invalid-feedback">
+                              {formik.errors.initiatedByBranch}
+                            </div>
+                          )}
+                      </div>
+                    </div>
+
+                    <div class="col-3">
+                      <div class="mb-3">
+                        <label class="form-label">To Branch</label>
+                        <select
+                          class={`form-select ${
+                            formik.touched.sentToBranch &&
+                            formik.errors.sentToBranch
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                          // placeholder="Session No"
+                          value={formik.values.sentToBranch}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          name="sentToBranch"
+                        >
+                          <option value="" selected disabled hidden>
+                            Select
+                          </option>
+                          {allBranchesData &&
+                            allBranchesData.length > 0 &&
+                            allBranchesData.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item.branchName}
+                              </option>
+                            ))}
+                        </select>
+                        {formik.touched.sentToBranch &&
+                          formik.errors.sentToBranch && (
+                            <div className="invalid-feedback">
+                              {formik.errors.sentToBranch}
+                            </div>
+                          )}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
                     <div className="col-3">
                       <div className="mb-3">
                         <label htmlFor="formFile" className="form-label">
@@ -322,21 +414,16 @@ function NewQuestion() {
                           accept=".pdf, .jpg, .jpeg, .png"
                           id="formFile"
                           name="questionImage"
+                          multiple
                           onChange={(event) => {
                             formik.setFieldValue(
                               "questionImage",
-                              event.currentTarget.files[0]
+                              event.currentTarget.files
                             );
                           }}
                         />
                       </div>
                     </div>
-                  </div>
-
-
-
-                  <div class="row">
-
                   </div>
 
                   <div style={{ marginTop: 10 }}>

@@ -72,9 +72,7 @@ function SentMotion() {
         noticeOfficeDiaryNo: res?.noticeOfficeDairies?.noticeOfficeDiaryNo,
         // ministryName: leave?.motionMinistries?.ministries,
         // ministryIds: leave?.motionMinistries?.fkMinistryId,
-        noticeOfficeDiaryDate: moment(
-          res?.noticeOfficeDairies?.noticeOfficeDiaryDate
-        ).format("YYYY/MM/DD"),
+        noticeOfficeDiaryDate: res?.noticeOfficeDairies?.noticeOfficeDiaryDate,
         noticeOfficeDiaryTime: res?.noticeOfficeDairies?.noticeOfficeDiaryTime,
         // memberName:leave?.motionMovers?.members,
         englishText: EnglishText,
@@ -258,8 +256,6 @@ function SentMotion() {
                   </div>
                 </div>
                 <div class="row">
-                  
-                 
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">From Session</label>
@@ -326,7 +322,7 @@ function SentMotion() {
                       </select>
                     </div>
                   </div>
-                 
+
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Motion Status</label>
@@ -350,9 +346,8 @@ function SentMotion() {
                     </div>
                   </div>
                 </div>
-                
+
                 <div class="row">
-                 
                   <div class="col-3">
                     <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label">From Notice Date</label>
@@ -415,7 +410,7 @@ function SentMotion() {
                     </div>
                   </div>
                 </div>
-                
+
                 <div class="row">
                   <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                     <button class="btn btn-primary" type="submit">
@@ -432,7 +427,6 @@ function SentMotion() {
                     data={motionData}
                     headerShown={true}
                     hideDeleteIcon={true}
-
                     // handleDelete={(item) => alert(item.id)}
                     handleEdit={(item) =>
                       navigate("/notice/motion/edit", { state: item })
