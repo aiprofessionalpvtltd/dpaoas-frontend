@@ -20,7 +20,19 @@ import { getDepartment } from "../../../../../api/APIs/Services/organizational.s
 import { getBranches } from "../../../../../api/APIs/Services/Branches.services";
 import { getUserData } from "../../../../../api/Auth";
 
-const validationSchema = Yup.object({});
+const validationSchema = Yup.object({
+  fileNumber: Yup.string().required("File No is required"),
+  fileSubject: Yup.string().required("File Subject is required"),
+  priority: Yup.string().required("Priority is required"),
+  fileCategory: Yup.string().required("File Category is required"),
+  fileType: Yup.string().required("Document Type is required"),
+  fkBranchId: Yup.string().optional(),
+  fkdepartmentId: Yup.string().optional(),
+  fkMinistryId: Yup.string().optional(),
+  receivedOn: Yup.string().optional(),
+  year: Yup.string().required("Year is required"),
+  attachment: Yup.string().required("Attachment is required"),
+});
 
 function AddEditFileForm() {
   const location = useLocation();
@@ -79,7 +91,7 @@ function AddEditFileForm() {
       year: "",
       attachment: "",
     },
-    // validationSchema: validationSchema,
+    validationSchema: validationSchema,
     onSubmit: (values) => {
       // Handle form submission here
       CreateEfilingApi(values);
@@ -92,7 +104,7 @@ function AddEditFileForm() {
     formData.append("fileSubject", values?.fileSubject);
     formData.append("priority", values?.priority);
     formData.append("fileCategory", values?.fileCategory);
-    formData.append("fileType", documentTypeVal);
+    formData.append("fileType", values?.fileType);
     formData.append("attachment", values?.attachment);
     formData.append("assignedTo", UserData?.fkUserId);
     if (values?.fkBranchId) {
@@ -114,6 +126,9 @@ function AddEditFileForm() {
       if (response?.success) {
         showSuccessMessage(response?.message);
         formik.resetForm();
+        setTimeout(() => {
+          navigate("/efiling/dashboard/files");
+        }, 1000);
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -224,11 +239,22 @@ function AddEditFileForm() {
                           type="text"
                           placeholder={"File Subject"}
                           value={formik.values.fileSubject}
-                          className={`form-control`}
+                          className={`form-control ${
+                            formik.touched.fileSubject &&
+                            formik.errors.fileSubject
+                              ? "is-invalid"
+                              : ""
+                          }`}
                           id="fileSubject"
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                         />
+                        {formik.touched.fileSubject &&
+                          formik.errors.fileSubject && (
+                            <div className="invalid-feedback">
+                              {formik.errors.fileSubject}
+                            </div>
+                          )}
                       </div>
                     </div>
                   </div>
@@ -238,7 +264,11 @@ function AddEditFileForm() {
                       <div class="mb-3">
                         <label class="form-label">Priority</label>
                         <select
-                          class="form-select"
+                          className={`form-select ${
+                            formik.touched.priority && formik.errors.priority
+                              ? "is-invalid"
+                              : ""
+                          }`}
                           id="priority"
                           name="priority"
                           onChange={formik.handleChange}
@@ -251,6 +281,11 @@ function AddEditFileForm() {
                           <option value={"Normal"}>Normal</option>
                           <option value={"Immediate"}>Immediate</option>
                         </select>
+                        {formik.touched.priority && formik.errors.priority && (
+                          <div className="invalid-feedback">
+                            {formik.errors.priority}
+                          </div>
+                        )}
                       </div>
                     </div>
 
@@ -258,7 +293,12 @@ function AddEditFileForm() {
                       <div class="mb-3">
                         <label class="form-label">File Category</label>
                         <select
-                          class="form-select"
+                          className={`form-select ${
+                            formik.touched.fileCategory &&
+                            formik.errors.fileCategory
+                              ? "is-invalid"
+                              : ""
+                          }`}
                           id="fileCategory"
                           name="fileCategory"
                           onChange={formik.handleChange}
@@ -271,6 +311,12 @@ function AddEditFileForm() {
                           <option value={"A"}>A</option>
                           <option value={"B"}>B</option>
                         </select>
+                        {formik.touched.fileCategory &&
+                          formik.errors.fileCategory && (
+                            <div className="invalid-feedback">
+                              {formik.errors.fileCategory}
+                            </div>
+                          )}
                       </div>
                     </div>
                   </div>
@@ -280,11 +326,16 @@ function AddEditFileForm() {
                       <div class="mb-3">
                         <label class="form-label">Document Type</label>
                         <select
-                          class="form-select"
+                          className={`form-select ${
+                            formik.touched.fileType && formik.errors.fileType
+                              ? "is-invalid"
+                              : ""
+                          }`}
                           id="fileType"
                           name="fileType"
-                          onChange={handleDocumentType}
-                          value={documentTypeVal}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.fileType}
                         >
                           <option value={""} selected disabled hidden>
                             Select
@@ -292,12 +343,17 @@ function AddEditFileForm() {
                           <option value={"Internal"}>Internal</option>
                           <option value={"External"}>External</option>
                         </select>
+                        {formik.touched.fileType && formik.errors.fileType && (
+                          <div className="invalid-feedback">
+                            {formik.errors.fileType}
+                          </div>
+                        )}
                       </div>
                     </div>
 
-                    {documentTypeVal === "Internal" ? (
+                    {formik.values.fileType === "Internal" ? (
                       <>
-                        <div class="col-3">
+                        <div class="col-6">
                           <div class="mb-3">
                             <label class="form-label">Branch</label>
                             <select
@@ -321,7 +377,7 @@ function AddEditFileForm() {
                           </div>
                         </div>
 
-                        <div class="col-3">
+                        {/* <div class="col-3">
                           <div class="mb-3">
                             <label class="form-label">Department</label>
                             <select
@@ -343,9 +399,9 @@ function AddEditFileForm() {
                                 ))}
                             </select>
                           </div>
-                        </div>
+                        </div> */}
                       </>
-                    ) : documentTypeVal === "External" ? (
+                    ) : formik.values.fileType === "External" ? (
                       <>
                         <div class="col-3">
                           <div class="mb-3">
@@ -420,7 +476,11 @@ function AddEditFileForm() {
                       <div class="mb-3">
                         <label class="form-label">Year</label>
                         <select
-                          class="form-select"
+                          className={`form-select ${
+                            formik.touched.year && formik.errors.year
+                              ? "is-invalid"
+                              : ""
+                          }`}
                           id="year"
                           name="year"
                           onChange={formik.handleChange}
@@ -436,6 +496,11 @@ function AddEditFileForm() {
                               <option value={item.name}>{item.name}</option>
                             ))}
                         </select>
+                        {formik.touched.year && formik.errors.year && (
+                          <div className="invalid-feedback">
+                            {formik.errors.year}
+                          </div>
+                        )}
                       </div>
                     </div>
                     <div className="col-6">
@@ -444,7 +509,12 @@ function AddEditFileForm() {
                           Attach FIle
                         </label>
                         <input
-                          className="form-control"
+                          className={`form-control ${
+                            formik.touched.attachment &&
+                            formik.errors.attachment
+                              ? "is-invalid"
+                              : ""
+                          }`}
                           type="file"
                           accept=".pdf, .jpg, .jpeg, .png"
                           id="attachment"
@@ -456,6 +526,12 @@ function AddEditFileForm() {
                             );
                           }}
                         />
+                        {formik.touched.attachment &&
+                          formik.errors.attachment && (
+                            <div className="invalid-feedback">
+                              {formik.errors.attachment}
+                            </div>
+                          )}
                       </div>
                     </div>
                   </div>

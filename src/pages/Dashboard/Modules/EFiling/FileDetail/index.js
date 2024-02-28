@@ -522,7 +522,7 @@ function FileDetail() {
                           </div>
                         </div>
 
-                        <div class="col-6">
+                        {/* <div class="col-6">
                           <div class="mb-3">
                             <label class="form-label">Department</label>
                             <select
@@ -545,7 +545,7 @@ function FileDetail() {
                                 ))}
                             </select>
                           </div>
-                        </div>
+                        </div> */}
                       </>
                     ) : documentTypeVal === "External" ? (
                       <>
@@ -605,6 +605,36 @@ function FileDetail() {
                         </div>
                       </>
                     ) : null}
+                  </div>
+                  <div className="row">
+                    <div class="col-6">
+                      {/* <div class="mb-3"> */}
+                      <label class="form-label" style={{ display: "block" }}>
+                        Attached File
+                      </label>
+                      <span
+                        class="MultiFile-label"
+                        style={{ marginBottom: "18px", display: "block" }}
+                        title={filesData?.attachment
+                          ?.split("\\")
+                          .pop()
+                          .split("/")
+                          .pop()}
+                      >
+                        <span class="MultiFile-title">
+                          <a
+                            href={`http://172.16.170.8:5252${filesData?.attachment}`}
+                          >
+                            {filesData?.attachment
+                              ?.split("\\")
+                              .pop()
+                              .split("/")
+                              .pop()}
+                          </a>
+                        </span>
+                      </span>
+                      {/* </div> */}
+                    </div>
                   </div>
 
                   <div class="shadow" style={{ padding: "25px" }}>

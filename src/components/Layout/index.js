@@ -220,21 +220,27 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
                         Questions
                         {count?.question && <span>{count.question}</span>}
                       </button> */}
-                      <Link to={"/notice/motion/sent"}>
-                      <button style={{ backgroundColor: location.pathname === "/notice/motion/sent" ? 'white' : '' }}>
-                        Motion{count?.motion ? <span>{count.motion}</span> : <span>{0}</span>}
-                      </button>
-                      </Link>
-                      <Link to={"/notice/resolution/sent"}>
-                      <button style={{ backgroundColor: location.pathname === "/notice/resolution/sent" ? 'white' : '' }}>
-                        Resolution
-                        {count?.resolution ? <span>{count.resolution}</span> : <span>{0}</span>}
-                      </button>
-                      </Link>
                       <Link to={"/notice/question/sent"}>
                       <button style={{ backgroundColor: location.pathname === "/notice/question/sent" ? 'white' : '' }}>
                         Questions
                         {count?.question ? <span>{count.question}</span> : <span>{0}</span>}
+                      </button>
+                      </Link>
+                      <Link to={"/notice/motion"}>
+                      <button style={{ backgroundColor: location.pathname === "/notice/motion" ? 'white' : '' }}>
+                        Motion{count?.motion ? <span style={{ backgroundColor: "#007bff" }}>{count.motion}</span> : <span style={{ backgroundColor: "#007bff" }}>{0}</span>}
+                      </button>
+                      </Link>
+                      {/* <Link to={"/notice/resolution/sent"}>
+                      <button style={{ backgroundColor: location.pathname === "/notice/resolution/sent" ? 'white' : '' }}>
+                        Resolution
+                        {count?.resolution ? <span>{count.resolution}</span> : <span>{0}</span>}
+                      </button>
+                      </Link> */}
+                      <Link to={"/notice/resolution/sent"}>
+                      <button style={{ backgroundColor: location.pathname === "/notice/resolution/sent" ? 'white' : '' }}>
+                        Legislation
+                        {count?.legislation ? <span style={{ backgroundColor: "#2dce89" }}>{count.legislation}</span> : <span style={{ backgroundColor: "#2dce89" }}>{0}</span>}
                       </button>
                       </Link>
                     </div>

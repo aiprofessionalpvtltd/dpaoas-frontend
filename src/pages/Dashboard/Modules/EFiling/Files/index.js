@@ -63,7 +63,7 @@ function Files() {
 
   useEffect(() => {
     getAllFilesAPi()
-  }, [])
+  }, [getAllFilesAPi])
 
   return (
     <Layout centerlogohide={true}>

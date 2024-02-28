@@ -3400,9 +3400,13 @@ textarea {
 }
 .sitting-card-left h2 {
   font-size: 18px;
+  margin-top: 35px;
+  color: white;
 }
 .sitting-card-right h2 {
   font-size: 18px;
+  margin-top: 35px;
+  color: white;
 }
 .sitting-plan-main {
   margin-top: 40px;
@@ -3456,7 +3460,6 @@ textarea {
   margin-top: -60px;
 }
 .sitt-card-left {
-  border: #666 solid 2px;
   border-radius: 10px;
   width: 85px;
   height: 100px;
@@ -3464,9 +3467,9 @@ textarea {
   text-align: center;
   margin-left: 10px;
   transform: rotate(-5deg);
+  background: url("../assets/seat.png") no-repeat;
 }
 .sitt-card-right {
-  border: #666 solid 2px;
   border-radius: 10px;
   width: 85px;
   height: 100px;
@@ -3474,6 +3477,7 @@ textarea {
   text-align: center;
   margin-left: 10px;
   transform: rotate(5deg);
+  background: url("../assets/seat.png") no-repeat;
 }
 .center-content {
   width: 210px;
@@ -3698,3 +3702,59 @@ button span {
   white-space: nowrap;
   width: auto;
 }
+
+
+
+/* Stats Card */
+.proj-t-card {
+  position: relative;
+  overflow: hidden;
+}
+.proj-t-card .pt-badge {
+  color: #fff;
+  margin-bottom: 0;
+  display: inline-block;
+  padding: 60px 50px 20px 20px;
+  border-radius: 50%;
+  position: absolute;
+  top: -45px;
+  right: -35px;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 5px 7px 0 rgba(62,57,107,0.18);
+}
+.proj-t-card h6 {
+  color: #000;
+}
+.bg-red {
+  background-color: #F22613 !important;
+}
+.mb-30 {
+  margin-bottom: 30px !important;
+}
+.align-items-center {
+  -ms-flex-align: center !important;
+  align-items: center !important;
+}
+.col-auto {
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  width: auto;
+  max-width: 100%;
+}
+.text-red {
+  color: #F22613 !important;
+}
+.f-30 {
+  font-size: 30px;
+}
+.circle-btn{
+  border-radius: 100%;
+  margin-right: 5px;
+  background: black;
+  color: #FFF;
+  width: 30px;
+  height: 30px !important;
+  text-align: center;
+  border: none;
+}
+
