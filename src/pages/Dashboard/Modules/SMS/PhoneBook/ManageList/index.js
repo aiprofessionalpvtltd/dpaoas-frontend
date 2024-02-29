@@ -133,12 +133,12 @@ function SMSManageList() {
     }
   }
 
-  
+
   useEffect(() => {
     const fetchRoles = async () => {
       try {
         const response = await getRoles();
-        setRoles(response.data);
+        setRoles(response?.data?.roles);
       } catch (error) {
         alert(error?.response?.data)
         // if (error?.response?.data?.error === "Token has expired!") {
