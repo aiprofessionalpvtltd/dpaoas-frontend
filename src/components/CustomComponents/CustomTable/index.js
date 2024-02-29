@@ -282,20 +282,6 @@ function CustomTable({
                         <td className="text-center">
                           {!hideEditIcon && !hideEditIcon && (
                             <>
-                              {!showEditIcon && !showEditIcon && (
-                                <OverlayTrigger
-                                  placement="top"
-                                  overlay={editTooltip}
-                                >
-                                  <button
-                                    onClick={() => handleEdit(item)}
-                                    className="btn-xs black circle-btn"
-                                    data-id={item.id}
-                                  >
-                                    <FontAwesomeIcon icon={faEdit} />
-                                  </button>
-                                </OverlayTrigger>
-                              )}
                               {showView && handleView && (
                                 <OverlayTrigger
                                   placement="top"
@@ -308,6 +294,53 @@ function CustomTable({
                                     style={{background:"#2dce89"}}
                                   >
                                     <FontAwesomeIcon icon={faEye} />
+                                  </button>
+                                </OverlayTrigger>
+                              )}
+
+
+                              {showAttendance && (
+                                <OverlayTrigger
+                                  placement="top"
+                                  overlay={attendanceTooltip}
+                                >
+                                  <button
+                                    onClick={() => hendleAttendance(item)}
+                                    className="btn-xs black circle-btn"
+                                    data-id={item.id}
+                                    style={{background:"#007bff"}}
+                                  >
+                                    <FontAwesomeIcon icon={faUserCheck} />
+                                  </button>
+                                </OverlayTrigger>
+                              )}
+
+                              {showPrint && (
+                                <OverlayTrigger
+                                  placement="top"
+                                  overlay={printTooltip}
+                                >
+                                  <button
+                                    onClick={() => handlePrint(item)}
+                                    className="btn-xs black circle-btn"
+                                    data-id={item.id}
+                                  >
+                                    <FontAwesomeIcon icon={faPrint} />
+                                  </button>
+                                </OverlayTrigger>
+                              )}
+
+                              {!showEditIcon && !showEditIcon && (
+                                <OverlayTrigger
+                                  placement="top"
+                                  overlay={editTooltip}
+                                >
+                                  <button
+                                    onClick={() => handleEdit(item)}
+                                    className="btn-xs black circle-btn"
+                                    data-id={item.id}
+                                  >
+                                    <FontAwesomeIcon icon={faEdit} />
                                   </button>
                                 </OverlayTrigger>
                               )}
@@ -369,20 +402,6 @@ function CustomTable({
                               </OverlayTrigger>
                             </>
                           )}
-                          {showPrint && (
-                            <OverlayTrigger
-                              placement="top"
-                              overlay={printTooltip}
-                            >
-                              <button
-                                onClick={() => handlePrint(item)}
-                                className="btn-xs black circle-btn"
-                                data-id={item.id}
-                              >
-                                <FontAwesomeIcon icon={faPrint} />
-                              </button>
-                            </OverlayTrigger>
-                          )}
                           {showResolve && (
                             <OverlayTrigger
                               placement="top"
@@ -408,21 +427,6 @@ function CustomTable({
                                 data-id={item.id}
                               >
                                 <FontAwesomeIcon icon={faFileExport} />
-                              </button>
-                            </OverlayTrigger>
-                          )}
-                          {showAttendance && (
-                            <OverlayTrigger
-                              placement="top"
-                              overlay={attendanceTooltip}
-                            >
-                              <button
-                                onClick={() => hendleAttendance(item)}
-                                className="btn-xs black circle-btn"
-                                data-id={item.id}
-                                style={{background:"#007bff"}}
-                              >
-                                <FontAwesomeIcon icon={faUserCheck} />
                               </button>
                             </OverlayTrigger>
                           )}

@@ -507,9 +507,9 @@ function NMSAddEditSittingDaysForm() {
     >
       <Header
         dashboardLink={"/"}
-        addLink1={"/notice/seatingplan/manage-session-days"}
+        addLink1={"/notice/manage/manage-session-days"}
         title1={"Sitting Days"}
-        addLink2={"/notice/seatingplan/manage-session-days/addedit"}
+        addLink2={"/notice/manage/manage-session-days/addedit"}
         title2={
           location && location?.state ? "Edit Sitting Days" : "Add Sitting Days"
         }
