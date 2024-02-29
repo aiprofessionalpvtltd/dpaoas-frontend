@@ -34,10 +34,10 @@ export const AttendanceCard = ({
                   float: "right",
                   background:
                     attendance === "Present"
-                      ? "#820001"
+                      ? "#19bc28"
                       : attendance === "Leave"
                         ? "#125cc7"
-                        : "",
+                        : attendance === "Absent" ?  "rgb(130, 0, 1)" : "",
                   color: "#FFF",
                 }}
               >

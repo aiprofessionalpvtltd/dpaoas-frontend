@@ -3709,6 +3709,7 @@ button span {
 .proj-t-card {
   position: relative;
   overflow: hidden;
+  cursor: pointer;
 }
 .proj-t-card .pt-badge {
   color: #fff;
@@ -3724,6 +3725,12 @@ button span {
 }
 .proj-t-card h6 {
   color: #000;
+}
+.proj-t-card:hover .pt-badge {
+  padding: 65px 55px 30px 30px;
+  text-shadow: 0 3px 5px rgba(62,57,107,0.5);
+  box-shadow: 0 4px 4px 0 rgba(62,57,107,0.3);
+  transition: all 0.5s ease-in-out;
 }
 .bg-red {
   background-color: #F22613 !important;
@@ -3758,3 +3765,40 @@ button span {
   border: none;
 }
 
+
+
+.comp-card i {
+  color: #fff;
+  width: 50px;
+  height: 50px;
+  border-radius: 5px;
+  text-align: center;
+  padding: 17px 0;
+  font-size: 18px;
+  text-shadow: 0 6px 8px rgba(62,57,107,0.18);
+  transition: all 0.3s ease-in-out;
+}
+.bg-blue {
+  background-color: #19B5FE !important;
+}
+.mb-25 {
+  margin-bottom: 25px !important;
+}
+.text-blue {
+  color: #19B5FE !important;
+}
+.box-thumbnail {
+  width: 50px;
+  height: 50px;
+  background: black;
+  display: flex;
+  align-items: center;
+  justify-content: center
+}
+.comp-card:hover .box-thumbnail {
+  border-radius: 50%;
+  transition: all 0.5s ease-in-out;
+}
+.comp-card:hover {
+  cursor: pointer;
+}

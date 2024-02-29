@@ -7,6 +7,18 @@ import {
   faUser,
   faClipboardList,
   faCodeBranch,
+  faClipboardQuestion,
+  faFilePen,
+  faSearch,
+  faListAlt,
+  faFileImport,
+  faScaleBalanced,
+  faFileInvoice,
+  faBarsProgress,
+  faCalendarDays,
+  faChair,
+  faFileLines,
+  faSquarePollHorizontal,
 } from "@fortawesome/free-solid-svg-icons";
 
 // LMS Sidebar
@@ -66,49 +78,49 @@ export const NoticeSidebarItems = [
   {
     itemName: "Dashboard",
     link: "/notice/dashboard",
-    icon: faClipboardList,
+    icon: faHome,
   },
   {
     itemName: "Question",
     link: "/notice/question",
-    icon: faClipboardList,
+    icon: faClipboardQuestion,
     subItems: [
       {
         itemName: "New Question",
         link: "/notice/question/new",
-        icon: faClipboardList,
+        icon: faFilePen,
       },
       {
         itemName: "Search Question",
         link: "/notice/question/search",
-        icon: faClipboardList,
+        icon: faSearch,
       },
       {
         itemName: "List Question",
         link: "/notice/question/sent",
-        icon: faClipboardList,
+        icon: faListAlt,
       },
     ],
   },
   {
     itemName: "Motion",
     link: "/notice/motion",
-    icon: faClipboardList,
+    icon: faFileImport,
     subItems: [
       {
         itemName: "New Motion",
         link: "/notice/motion/new",
-        icon: faClipboardList,
+        icon: faFilePen,
       },
       {
         itemName: "Search Motion",
         link: "/notice/motion/search",
-        icon: faClipboardList,
+        icon: faSearch,
       },
       {
         itemName: "List Motion",
         link: "/notice/motion/sent",
-        icon: faClipboardList,
+        icon: faListAlt,
       },
     ],
   },
@@ -135,19 +147,14 @@ export const NoticeSidebarItems = [
   //   ],
   // },
   {
-    itemName: "legislation Business",
+    itemName: "Legislation Business",
     link: "/notice/legislation",
-    icon: faClipboardList,
+    icon: faScaleBalanced,
     subItems: [
-      {
-        itemName: "Government Bill",
-        link: "/notice/legislation/government-bill",
-        icon: faClipboardList,
-      },
       {
         itemName: "Private Bill",
         link: "/notice/legislation/private-bill",
-        icon: faClipboardList,
+        icon: faFileInvoice,
       },
 
     ],
@@ -231,37 +238,37 @@ export const NoticeSidebarItems = [
   //   ],
   // },
   {
-    itemName: "Seating Plan",
-    link: "/notice/seatingplan",
-    icon: faClipboardList,
+    itemName: "Manage",
+    link: "/notice/manage",
+    icon: faBarsProgress,
     subItems: [
       // {
       //itemName: "Manage Session Days",
-      //  link: "/notice/seatingplan/manage-session-days",
+      //  link: "/notice/manage/manage-session-days",
       // icon: faClipboardList,
       //  },
       {
-        itemName: "Manage Session Days",
-        link: "/notice/seatingplan/manage-session-days",
-        icon: faClipboardList,
+        itemName: "Session Days",
+        link: "/notice/manage/manage-session-days",
+        icon: faCalendarDays,
       },
       {
-        itemName: "Manage Seating Plan",
-        link: "/notice/seatingplan/manage-seating-plan",
+        itemName: "Seating Plan",
+        link: "/notice/manage/manage-seating-plan",
         target: "blank",
-        icon: faClipboardList,
+        icon: faChair,
       },
     ],
   },
   {
     itemName: "Reports",
     link: "/notice/reports",
-    icon: faClipboardList,
+    icon: faFileLines,
     subItems: [
       {
         itemName: "Business Summary",
         link: "/notice/reports/business-summary",
-        icon: faClipboardList,
+        icon: faSquarePollHorizontal,
       },
     ],
   },

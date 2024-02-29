@@ -64,8 +64,8 @@ function NoticeDashboard() {
           <div class="col-md-12">
             <div class="mt-2 mb-5">
               <div class="row">
-                <NoticeStatsCard title={"Question"} icon={faClipboardQuestion} iconBgColor={"#F22613"} total={`${stats?.questions?.sentToBranchesQ + stats?.questions?.initiatedByBranchesQ}`} sent={stats?.questions?.sentToBranchesQ} received={stats?.questions?.initiatedByBranchesQ} />
-                <NoticeStatsCard title={"Motion"} icon={faFileImport} iconBgColor={"#007bff"} total={`${stats?.motions?.sentToBranchesQ + stats?.motions?.initiatedByBranchesQ}`} sent={stats?.motions?.sentToBranchesQ} received={stats?.motions?.initiatedByBranchesQ} />
+                <NoticeStatsCard title={"Question"} icon={faClipboardQuestion} iconBgColor={"#F22613"} total={`${stats?.questions?.dailySendQuestions + stats?.questions?.dailyRecievedQuestions}`} sent={stats?.questions?.dailySendQuestions} received={stats?.questions?.dailyRecievedQuestions} />
+                <NoticeStatsCard title={"Motion"} icon={faFileImport} iconBgColor={"#007bff"} total={`${stats?.motions?.dailySendMotions + stats?.motions?.dailyRecievedMotions}`} sent={stats?.motions?.dailySendMotions} received={stats?.motions?.dailyRecievedMotions} />
                 <NoticeStatsCard title={"Legislation"} icon={faScaleBalanced} iconBgColor={"#2dce89"} total={`${stats?.legislation?.sentToBranchesQ + stats?.legislation?.initiatedByBranchesQ}`} sent={stats?.legislation?.sentToBranchesQ} received={stats?.legislation?.initiatedByBranchesQ} />
               </div>
             </div>
@@ -77,7 +77,9 @@ function NoticeDashboard() {
           <div class="col-md-12">
             <div class="mt-2 mb-4">
               <div class="row">
-              <NoticeStatsCard title={"Total"} icon={faObjectGroup} overall={true} iconBgColor={"#ffffff"} total={`${stats?.totalSentToBranches + stats?.totalInititated}`} sent={stats?.totalSentToBranches} received={stats?.totalInititated} />
+              <NoticeStatsCard title={"Question"} icon={faClipboardQuestion} overall={true} iconBgColor={"#F22613"} total={`${stats?.totalQuestions}`} />
+              <NoticeStatsCard title={"Motion"} icon={faFileImport} overall={true} iconBgColor={"#007bff"} total={`${stats?.totalMotions}`} />
+              <NoticeStatsCard title={"Legislation"} icon={faScaleBalanced} overall={true} iconBgColor={"#2dce89"} total={`${stats?.totalLegislations}`} />
               </div>
             </div>
           </div>

@@ -99,7 +99,7 @@ const hendleExportExcel = async () => {
 
           // Add worksheets for each category
           addWorksheet(QuestionRecord, 'Question');
-          addWorksheet(ResolutionRecord, 'Resolution');
+          // addWorksheet(ResolutionRecord, 'Resolution');
           addWorksheet(MotionRecord, 'Motion');
 
           // Write the workbook to a file
@@ -305,7 +305,7 @@ const hendleExportExcel = async () => {
                     </tbody>
                   </table>
                 </div>
-                <h2 style={{ color: "#666", marginTop: "30px" }}>
+                {/* <h2 style={{ color: "#666", marginTop: "30px" }}>
                   Resolutions
                 </h2>
                 <div
@@ -364,7 +364,7 @@ const hendleExportExcel = async () => {
                       ))}
                     </tbody>
                   </table>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

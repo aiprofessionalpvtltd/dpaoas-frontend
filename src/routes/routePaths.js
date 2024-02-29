@@ -195,25 +195,25 @@ export const ProtectedRoutes = [
   { path: "/notice/manage/sessions", element: <Sessions /> },
   { path: "/notice/manage/sessions/addedit", element: <SessionsAddEditForm /> },
 
-  { path: "/notice/seatingplan", element: <NoticeDashboard /> },
+  { path: "/notice/manage", element: <NoticeDashboard /> },
   // {
-  //   path: "/notice/seatingplan/manage-session-days",
+  //   path: "/notice/manage/manage-session-days",
   //   element: <ManageSessionDays />,
   // },
   {
-    path: "/notice/seatingplan/manage-session-days",
+    path: "/notice/manage/manage-session-days",
     element: <ManageSittingDays />,
   },
   {
-    path: "/notice/seatingplan/manage-session-days/addedit",
+    path: "/notice/manage/manage-session-days/addedit",
     element: <NMSAddEditSittingDaysForm />,
   },
   {
-    path: "/notice/seatingplan/manage-session/member-attendence",
+    path: "/notice/manage/manage-session/member-attendence",
     element: <NMSSessionAttendence />,
   },
   {
-    path: "/notice/seatingplan/manage-seating-plan",
+    path: "/notice/manage/manage-seating-plan",
     element: <ManageSeatingPlan />,
   },
 
