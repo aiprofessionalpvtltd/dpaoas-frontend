@@ -123,9 +123,11 @@ import NMSAddEditSittingDaysForm from "../pages/Dashboard/Modules/Notice/Seating
 import NMSSessionAttendence from "../pages/Dashboard/Modules/Notice/SeatingPlan/ManageSittingDays/SessionAttendence";
 import NoticeQuestionDetail from "../pages/Dashboard/Modules/Notice/Question/NoticeQuestionDetail";
 import Files from "../pages/Dashboard/Modules/EFiling/Files";
+import { MotionListing } from "../pages/Dashboard/Modules/Notice/Motion";
 import EditMotion from "../pages/Dashboard/Modules/Notice/Motion/EditMotion";
 import GovernmentBill from "../pages/Dashboard/Modules/Notice/legislationBusiness/GovernmentBill";
 import PrivateBill from "../pages/Dashboard/Modules/Notice/legislationBusiness/PrivateBill";
+import AttendenceReports from "../pages/Dashboard/Modules/Notice/AttendanceReport";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -170,7 +172,7 @@ export const ProtectedRoutes = [
   { path: "/notice/question/sent", element: <SentQuestion /> },
   { path: "/notice/question/detail", element: <NoticeQuestionDetail /> },
 
-  { path: "/notice/motion", element: <NoticeDashboard /> },
+  { path: "/notice/motion", element: <MotionListing /> },
   { path: "/notice/motion/new", element: <NewMotion /> },
   { path: "/notice/motion/edit", element: <EditMotion /> },
 
@@ -184,8 +186,6 @@ export const ProtectedRoutes = [
 
   { path: "/notice/legislation/government-bill", element: <GovernmentBill /> },
   { path: "/notice/legislation/private-bill", element: <PrivateBill /> },
-
-
 
   { path: "/notice/manage", element: <NoticeDashboard /> },
   { path: "/notice/manage/members", element: <Members /> },
@@ -218,6 +218,10 @@ export const ProtectedRoutes = [
 
   { path: "/notice/reports", element: <NoticeDashboard /> },
   { path: "/notice/reports/business-summary", element: <BusinessSummary /> },
+  {
+    path: "/notice/reports/attendence-reports",
+    element: <AttendenceReports />,
+  },
 
   //MMS Module
   { path: "/mms/dashboard", element: <MMSMotionDashboard /> },

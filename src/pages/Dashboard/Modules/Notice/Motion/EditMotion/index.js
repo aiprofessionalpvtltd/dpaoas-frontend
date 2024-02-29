@@ -22,6 +22,7 @@ import { AuthContext } from "../../../../../../api/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import { useLocation } from "react-router-dom";
+import moment from "moment";
 
 const validationSchema = Yup.object({
   sessionNumber: Yup.number(),
@@ -39,12 +40,12 @@ const validationSchema = Yup.object({
   //   englishText: Yup.string().required("English Text is required"),
   //   urduText: Yup.string().required("Urdu Text is required"),
   englishText: Yup.string().optional(),
-  urduText: Yup.string().optional()
+  urduText: Yup.string().optional(),
 });
 
 function EditMotion() {
   const navigate = useNavigate();
-  const location = useLocation()
+  const location = useLocation();
   const { members, sessions } = useContext(AuthContext);
   const [showModal, setShowModal] = useState(false);
   const [formValues, setFormValues] = useState([]);
@@ -66,21 +67,25 @@ function EditMotion() {
     });
   };
 
-
+  console.log(
+    "location?.state?.noticeOfficeDairies?.noticeOfficeDiaryDate",
+    location?.state
+  );
   const formik = useFormik({
     initialValues: {
       sessionNumber: location.state ? location?.state?.sessionNumber : "",
       motionType: location.state ? location.state.motionType : "",
       noticeOfficeDiaryNo: location.state
-      ? location.state.noticeOfficeDiaryNo
-      : "",
+        ? location.state.noticeOfficeDiaryNo
+        : "",
       mover: [],
-      noticeOfficeDiaryDate:location?.state?.noticeOfficeDiaryDate
-      ? new Date(location?.state?.noticeOfficeDiaryDate)
-      : new Date(),
+      noticeOfficeDiaryDate: moment(
+        location?.state?.noticeOfficeDiaryDate,
+        "DD-MM-YYYY"
+      ).toDate(),
       noticeOfficeDiaryTime: location?.state?.noticeOfficeDiaryTime
-      ? new Date(location?.state?.noticeOfficeDiaryTime)
-      : getCurrentTime(),
+        ? new Date(location?.state?.noticeOfficeDiaryTime)
+        : getCurrentTime(),
       englishText: "",
       urduText: "",
       attachment: null,
@@ -229,11 +234,19 @@ function EditMotion() {
                           <option value="" selected disabled hidden>
                             Select
                           </option>
-                          <option value={"Adjournment Motion"}>Adjournment Motion</option>
-                          <option value={"Call Attention Notice"}>Call Attention Notice</option>
-                          
-                          <option value={"Motion Under Rule 218"}>Motion Under Rule 218</option>
-                          <option value={"Motion Under Rule 60"}>Motion Under Rule 60</option>
+                          <option value={"Adjournment Motion"}>
+                            Adjournment Motion
+                          </option>
+                          <option value={"Call Attention Notice"}>
+                            Call Attention Notice
+                          </option>
+
+                          <option value={"Motion Under Rule 218"}>
+                            Motion Under Rule 218
+                          </option>
+                          <option value={"Motion Under Rule 60"}>
+                            Motion Under Rule 60
+                          </option>
                         </select>
                         {formik.touched.motionType &&
                           formik.errors.motionType && (
@@ -311,9 +324,7 @@ function EditMotion() {
                     </div>
                   </div>
 
-                  <div class="row">      
-                    
-
+                  <div class="row">
                     <div class="col-3">
                       <div class="mb-3">
                         <label class="form-label">Notice Office Diary No</label>
@@ -405,9 +416,7 @@ function EditMotion() {
                         />
                       </div>
                     </div>
-                    </div>
-
-                 
+                  </div>
 
                   <div style={{ marginTop: 10 }}>
                     <Editor

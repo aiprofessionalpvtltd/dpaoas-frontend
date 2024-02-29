@@ -73,9 +73,8 @@ function SearchMotion() {
         noticeOfficeDiaryNo: leave?.noticeOfficeDairies?.noticeOfficeDiaryNo,
         // ministryName: leave?.motionMinistries?.ministries,
         // ministryIds: leave?.motionMinistries?.fkMinistryId,
-        noticeOfficeDiaryDate: moment(
-          leave?.noticeOfficeDairies?.noticeOfficeDiaryDate
-        ).format("YYYY/MM/DD"),
+        noticeOfficeDiaryDate:
+          leave?.noticeOfficeDairies?.noticeOfficeDiaryDate,
         noticeOfficeDiaryTime: moment(
           leave?.noticeOfficeDairies?.noticeOfficeDiaryTime,
           "hh:ss:a"
@@ -258,8 +257,6 @@ function SearchMotion() {
                   </div>
                 </div>
                 <div class="row">
-                 
-                  
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">From Session</label>
@@ -321,11 +318,19 @@ function SearchMotion() {
                           Select
                         </option>
 
-                        <option value={"Adjournment Motion"}>Adjournment Motion</option>
-                          <option value={"Call Attention Notice"}>Call Attention Notice</option>
-                          
-                          <option value={"Motion Under Rule 218"}>Motion Under Rule 218</option>
-                          <option value={"Motion Under Rule 60"}>Motion Under Rule 60</option>
+                        <option value={"Adjournment Motion"}>
+                          Adjournment Motion
+                        </option>
+                        <option value={"Call Attention Notice"}>
+                          Call Attention Notice
+                        </option>
+
+                        <option value={"Motion Under Rule 218"}>
+                          Motion Under Rule 218
+                        </option>
+                        <option value={"Motion Under Rule 60"}>
+                          Motion Under Rule 60
+                        </option>
                       </select>
                     </div>
                   </div>
@@ -354,9 +359,8 @@ function SearchMotion() {
                     </div>
                   </div>
                 </div>
-                
+
                 <div class="row">
-                  
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Ministry</label>
@@ -466,7 +470,7 @@ function SearchMotion() {
                     </div>
                   </div>
                 </div>
-                
+
                 <div class="row">
                   <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                     <button class="btn btn-primary" type="submit">
