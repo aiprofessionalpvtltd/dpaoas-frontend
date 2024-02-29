@@ -152,16 +152,16 @@ function SentQuestion() {
 
   useEffect(() => {
     if (
-      formik.values.questionDiaryNo ||
-      formik.values.questionID ||
-      formik.values.keyword ||
-      formik.values.memberName ||
-      formik.values.fromSession ||
-      formik.values.toSession ||
-      formik.values.category ||
-      formik.values.questionStatus ||
-      formik.values.fromNoticeDate ||
-      formik.values.toNoticeDate
+      formik?.values?.questionDiaryNo ||
+      formik?.values?.questionID ||
+      formik?.values?.keyword ||
+      formik?.values?.memberName ||
+      formik?.values?.fromSession ||
+      formik?.values?.toSession ||
+      formik?.values?.category ||
+      formik?.values?.questionStatus ||
+      formik?.values?.fromNoticeDate ||
+      formik?.values?.toNoticeDate
     ) {
       SearchQuestionApi();
     }
@@ -456,7 +456,7 @@ function SentQuestion() {
                     hideBtn={true}
                     hidebtn1={true}
                     // data={searchedData}
-                    data={searchedData.length > 0 ? searchedData : resData}
+                    data={resData}
                     tableTitle="Questions"
                     handlePageChange={handlePageChange}
                     currentPage={currentPage}

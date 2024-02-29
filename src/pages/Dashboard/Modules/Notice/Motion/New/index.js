@@ -63,7 +63,7 @@ function NewMotion() {
       noticeOfficeDiaryTime: "",
       englishText: "",
       urduText: "",
-      attachment: null,
+      file: [],
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -87,7 +87,14 @@ function NewMotion() {
     formData.append("businessType", "Motion");
     formData.append("englishText", values.englishText);
     formData.append("urduText", values.urduText);
-    formData.append("file", values?.attachment);
+    formData.append("motionSentStatus", "fromNotice");
+    // formData.append("file", values?.attachment);
+
+    if (values?.file) {
+      Array.from(values?.file).map((file, index) => {
+        formData.append(`file`, file);
+      });
+    }
 
     try {
       const response = await createNewMotion(formData);
@@ -210,11 +217,19 @@ function NewMotion() {
                             Select
                           </option>
                           {/* <option>Motion Type</option> */}
-                          <option value={"Adjournment Motion"}>Adjournment Motion</option>
-                          <option value={"Call Attention Notice"}>Call Attention Notice</option>
-                          
-                          <option value={"Motion Under Rule 218"}>Motion Under Rule 218</option>
-                          <option value={"Motion Under Rule 60"}>Motion Under Rule 60</option>
+                          <option value={"Adjournment Motion"}>
+                            Adjournment Motion
+                          </option>
+                          <option value={"Call Attention Notice"}>
+                            Call Attention Notice
+                          </option>
+
+                          <option value={"Motion Under Rule 218"}>
+                            Motion Under Rule 218
+                          </option>
+                          <option value={"Motion Under Rule 60"}>
+                            Motion Under Rule 60
+                          </option>
                         </select>
                         {formik.touched.motionType &&
                           formik.errors.motionType && (
@@ -292,9 +307,7 @@ function NewMotion() {
                     </div>
                   </div>
 
-                  <div class="row">      
-                    
-
+                  <div class="row">
                     <div class="col-3">
                       <div class="mb-3">
                         <label class="form-label">Notice Office Diary No</label>
@@ -377,18 +390,31 @@ function NewMotion() {
                           accept=".pdf, .jpg, .jpeg, .png"
                           id="formFile"
                           name="attachment"
+                          multiple
                           onChange={(event) => {
                             formik.setFieldValue(
-                              "attachment",
-                              event.currentTarget.files[0]
+                              "file",
+                              event.currentTarget.files
                             );
                           }}
                         />
+                        {/* <input
+                          className="form-control"
+                          type="file"
+                          accept=".pdf, .jpg, .jpeg, .png"
+                          id="formFile"
+                          name="questionImage"
+                          multiple
+                          onChange={(event) => {
+                            formik.setFieldValue(
+                              "questionImage",
+                              event.currentTarget.files
+                            );
+                          }}
+                        /> */}
                       </div>
                     </div>
-                    </div>
-
-                  
+                  </div>
 
                   <div style={{ marginTop: 10 }}>
                     <Editor

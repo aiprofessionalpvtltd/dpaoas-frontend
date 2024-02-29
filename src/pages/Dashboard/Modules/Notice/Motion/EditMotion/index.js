@@ -13,7 +13,10 @@ import Select from "react-select";
 import { Editor } from "../../../../../../components/CustomComponents/Editor";
 import { ToastContainer } from "react-toastify";
 import { getAllSessions } from "../../../../../../api/APIs";
-import { createNewMotion } from "../../../../../../api/APIs/Services/Motion.service";
+import {
+  createNewMotion,
+  updateNewMotion,
+} from "../../../../../../api/APIs/Services/Motion.service";
 import {
   showErrorMessage,
   showSuccessMessage,
@@ -67,30 +70,38 @@ function EditMotion() {
     });
   };
 
+  console.log("location?.state", location?.state);
   console.log(
-    "location?.state?.noticeOfficeDairies?.noticeOfficeDiaryDate",
-    location?.state
+    "location?",
+    location?.state?.motionMovers?.map((mover) => mover?.members?.memberName)
   );
   const formik = useFormik({
     initialValues: {
-      sessionNumber: location.state ? location?.state?.sessionNumber : "",
+      sessionNumber: location.state
+        ? location?.state?.sessions?.sessionName
+        : "",
       motionType: location.state ? location.state.motionType : "",
       noticeOfficeDiaryNo: location.state
-        ? location.state.noticeOfficeDiaryNo
+        ? location.state?.noticeOfficeDairies?.noticeOfficeDiaryNo
         : "",
-      mover: [],
+      mover: location?.state
+        ? location?.state?.motionMovers.map((item) => ({
+            value: item.members?.id,
+            label: item.members?.memberName,
+          }))
+        : [],
       noticeOfficeDiaryDate: moment(
-        location?.state?.noticeOfficeDiaryDate,
+        location?.state?.noticeOfficeDairies?.noticeOfficeDiaryDate,
         "DD-MM-YYYY"
       ).toDate(),
       noticeOfficeDiaryTime: location?.state?.noticeOfficeDiaryTime
         ? new Date(location?.state?.noticeOfficeDiaryTime)
         : getCurrentTime(),
-      englishText: "",
-      urduText: "",
+      englishText: location.state ? location.state?.englishText : "",
+      urduText: location.state ? location?.state?.urduText : "",
       attachment: null,
     },
-    validationSchema: validationSchema,
+    // validationSchema: validationSchema,
     onSubmit: (values) => {
       handleShow();
       setFormValues(values);
@@ -100,11 +111,11 @@ function EditMotion() {
 
   const CreateMotionApi = async (values) => {
     const formData = new FormData();
-    formData.append("fkSessionId", values?.sessionNumber);
+    formData.append("fkSessionId", location?.state?.sessions?.id);
     formData.append("motionType", values?.motionType);
     formData.append("noticeOfficeDiaryNo", values?.noticeOfficeDiaryNo);
     // formData.append("moverIds[]", values?.mover);
-    values?.mover.forEach((mover, index) => {
+    values?.mover?.forEach((mover, index) => {
       formData.append(`moverIds[${index}]`, mover.value);
     });
     formData.append("noticeOfficeDiaryDate", values?.noticeOfficeDiaryDate);
@@ -112,10 +123,16 @@ function EditMotion() {
     formData.append("businessType", "Motion");
     formData.append("englishText", values.englishText);
     formData.append("urduText", values.urduText);
-    formData.append("file", values?.attachment);
+    formData.append("motionSentStatus", "fromNotice");
+    if (values?.file) {
+      Array.from(values?.file).map((file, index) => {
+        formData.append(`file`, file);
+      });
+    }
+    // formData.append("file", values?.attachment);
 
     try {
-      const response = await createNewMotion(formData);
+      const response = await updateNewMotion(location?.state?.id, formData);
       if (response?.success) {
         showSuccessMessage(response?.message);
       }
@@ -164,7 +181,7 @@ function EditMotion() {
                       <div class="mb-3">
                         <label class="form-label">Session No</label>
 
-                        <select
+                        {/* <select
                           className={`form-select ${
                             formik.touched.fkSessionId &&
                             formik.errors.fkSessionId
@@ -188,7 +205,16 @@ function EditMotion() {
                                 {item.sessionName}
                               </option>
                             ))}
-                        </select>
+                        </select> */}
+                        <input
+                          readOnly={true}
+                          placeholder={formik.values.sessionNumber}
+                          type="text"
+                          class="form-control"
+                          id="sessionNumber"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                        />
                       </div>
                     </div>
                     {/* <div class="col">
@@ -376,6 +402,19 @@ function EditMotion() {
                             ))}
                         </select> */}
                         <label class="form-label">Member Senate</label>
+                        {/* <Select
+                          options={members.map((item) => ({
+                            value: item.id,
+                            label: item.memberName,
+                          }))}
+                          isMulti
+                          onChange={(selectedOptions) =>
+                            formik.setFieldValue("mover", selectedOptions)
+                          }
+                          onBlur={formik.handleBlur}
+                          value={formik.values.mover}
+                          name="mover"
+                        /> */}
                         <Select
                           options={members.map((item) => ({
                             value: item.id,
@@ -389,19 +428,12 @@ function EditMotion() {
                           value={formik.values.mover}
                           name="mover"
                         />
-                        {formik.touched.mover && formik.errors.mover && (
-                          <div class="invalid-feedback">
-                            {formik.errors.mover}
-                          </div>
-                        )}
                       </div>
                     </div>
-                    <div class="col-3">
-                      <div class="mb-3">
-                        <label for="formFile" class="form-label">
-                          Attach Image File{" "}
-                        </label>
-                        <input
+                    <div class="col-3"></div>
+                  </div>
+
+                  {/* <input
                           className="form-control"
                           type="file"
                           accept=".pdf, .jpg, .jpeg, .png"
@@ -413,8 +445,63 @@ function EditMotion() {
                               event.currentTarget.files[0]
                             );
                           }}
-                        />
-                      </div>
+                        /> */}
+                  <div className="row">
+                    <div className="col-3">
+                      {location?.state?.file?.length > 0 ? (
+                        location?.state?.file?.map((item) => (
+                          <div class="MultiFile-label mt-3">
+                            <a href={`http://172.16.170.8:5252${item?.path}`}>
+                              <i class="fas fa-download"></i>
+                            </a>
+                            <a class="MultiFile-remove" href="#T7">
+                              x
+                            </a>
+                            <span
+                              class="MultiFile-label"
+                              title={item?.path
+                                ?.split("\\")
+                                .pop()
+                                .split("/")
+                                .pop()}
+                            >
+                              <span class="MultiFile-title">
+                                <a
+                                  href={`http://172.16.170.8:5252${item?.path}`}
+                                >
+                                  {item?.path
+                                    ?.split("\\")
+                                    .pop()
+                                    .split("/")
+                                    .pop()}
+                                </a>
+                              </span>
+                            </span>
+                          </div>
+                        ))
+                      ) : (
+                        <div class="col-12">
+                          <div class="mb-3">
+                            <label for="formFile" class="form-label">
+                              Attach Image File{" "}
+                            </label>
+                            <input
+                              className="form-control"
+                              type="file"
+                              accept=".pdf, .jpg, .jpeg, .png"
+                              id="formFile"
+                              name="attachment"
+                              multiple
+                              onChange={(event) => {
+                                formik.setFieldValue(
+                                  "file",
+                                  event.currentTarget.files
+                                );
+                              }}
+                            />
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
 
