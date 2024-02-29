@@ -225,7 +225,7 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
                       <Link to={"/notice/question/sent"}>
                       <button style={{ backgroundColor: location.pathname === "/notice/question/sent" ? 'white' : '' }}>
                         Questions
-                        {count?.question ? <span>{count.question}</span> : <span>{0}</span>}
+                        {count?.motion ? <span style={{ backgroundColor: "#FFA500" }}>{count.question}</span> : <span style={{ backgroundColor: "#FFA500" }}>{0}</span>}
                       </button>
                       </Link>
                       <Link to={"/notice/motion"}>

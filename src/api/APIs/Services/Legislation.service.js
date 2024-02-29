@@ -1,13 +1,13 @@
 
 // Leave Module
 
-import { axiosClientVMS } from "..";
+import { axiosClientMMS } from "..";
 import { getAuthToken } from "../../Auth";
 
 export const getAllPrivateBill = async (page, pageSize) => {
     try {
         const token = getAuthToken();
-        const response = await axiosClientVMS.get(
+        const response = await axiosClientMMS.get(
             `/privateMemberBills?currentPage=${page}&pageSize=${pageSize}`,
         );
         return response?.data;
@@ -20,7 +20,7 @@ export const getAllPrivateBill = async (page, pageSize) => {
 export const updatePrivateBill = async (id, data) => {
     try {
         const token = getAuthToken();
-        const response = await axiosClientVMS.put(
+        const response = await axiosClientMMS.put(
             `/privateMemberBills/update/${id}`, data
         );
         return response?.data;

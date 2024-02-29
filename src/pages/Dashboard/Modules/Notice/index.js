@@ -64,7 +64,7 @@ function NoticeDashboard() {
           <div class="col-md-12">
             <div class="mt-2 mb-5">
               <div class="row">
-                <NoticeStatsCard title={"Question"} icon={faClipboardQuestion} iconBgColor={"#F22613"} total={`${stats?.questions?.dailySendQuestions + stats?.questions?.dailyRecievedQuestions}`} sent={stats?.questions?.dailySendQuestions} received={stats?.questions?.dailyRecievedQuestions} />
+                <NoticeStatsCard title={"Question"} icon={faClipboardQuestion} iconBgColor={"#FFA500"} total={`${stats?.questions?.dailySendQuestions + stats?.questions?.dailyRecievedQuestions}`} sent={stats?.questions?.dailySendQuestions} received={stats?.questions?.dailyRecievedQuestions} />
                 <NoticeStatsCard title={"Motion"} icon={faFileImport} iconBgColor={"#007bff"} total={`${stats?.motions?.dailySendMotions + stats?.motions?.dailyRecievedMotions}`} sent={stats?.motions?.dailySendMotions} received={stats?.motions?.dailyRecievedMotions} />
                 <NoticeStatsCard title={"Legislation"} icon={faScaleBalanced} iconBgColor={"#2dce89"} total={`${stats?.legislation?.sentToBranchesQ + stats?.legislation?.initiatedByBranchesQ}`} sent={stats?.legislation?.sentToBranchesQ} received={stats?.legislation?.initiatedByBranchesQ} />
               </div>
@@ -77,7 +77,7 @@ function NoticeDashboard() {
           <div class="col-md-12">
             <div class="mt-2 mb-4">
               <div class="row">
-              <NoticeStatsCard title={"Question"} icon={faClipboardQuestion} overall={true} iconBgColor={"#F22613"} total={`${stats?.totalQuestions}`} />
+              <NoticeStatsCard title={"Question"} icon={faClipboardQuestion} overall={true} iconBgColor={"#FFA500"} total={`${stats?.totalQuestions}`} />
               <NoticeStatsCard title={"Motion"} icon={faFileImport} overall={true} iconBgColor={"#007bff"} total={`${stats?.totalMotions}`} />
               <NoticeStatsCard title={"Legislation"} icon={faScaleBalanced} overall={true} iconBgColor={"#2dce89"} total={`${stats?.totalLegislations}`} />
               </div>
