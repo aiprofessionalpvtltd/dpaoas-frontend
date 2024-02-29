@@ -183,6 +183,7 @@ function ManageSeatingPlan() {
         <div class="dashboard-content">
           <div class="container-fluid">
             <div class="sitting-plan-main">
+
               <div class="sitting-row">
                 <div>
                   {['F', 'E', 'D', 'C', 'B', 'A'].map(rowLetter => (
@@ -197,6 +198,7 @@ function ManageSeatingPlan() {
                               onClick={() => openModal(item)}
                             >
                               <div className="sitt-card-left">
+                              <img src={require("../../../../../../assets/seat.png")}/>
                                 <h2>{item?.member?.memberName}</h2>
                               </div>
                               <p>{item.seatNumber}</p>
@@ -216,6 +218,7 @@ function ManageSeatingPlan() {
                               onClick={() => openModal(item)}
                             >
                               <div className="sitt-card-right">
+                              <img src={require("../../../../../../assets/seat.png")}/>
                                 <h2>{item?.member?.memberName}</h2>
                               </div>
                               <p>{item?.seatNumber}</p>
