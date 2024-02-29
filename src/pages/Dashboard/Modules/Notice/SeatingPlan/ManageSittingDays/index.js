@@ -151,13 +151,13 @@ function ManageSittingsDays() {
   };
 
   const handleAttendance = (id) => {
-    navigate(`/notice/seatingplan/manage-session/member-attendence`, {
+    navigate(`/notice/manage/manage-session/member-attendence`, {
       state: { id },
     });
   };
 
   const handleViewAttendance = (id) => {
-    navigate(`/notice/seatingplan/manage-session/member-attendence`, {
+    navigate(`/notice/manage/manage-session/member-attendence`, {
       state: { id, view: true },
     });
   };
@@ -169,7 +169,7 @@ function ManageSittingsDays() {
     >
       <Header
         dashboardLink={"/"}
-        addLink1={"/notice/seatingplan/manage-session-days"}
+        addLink1={"/notice/manage/manage-session-days"}
         title1={"Session Days"}
       />
       <ToastContainer />
@@ -203,7 +203,7 @@ function ManageSittingsDays() {
                           id="sessionId"
                           onBlur={formik.handleBlur}
                         >
-                          <option value="" selected disabled hidden>
+                          <option value="" selected disabled>
                             Select
                           </option>
 
@@ -227,12 +227,12 @@ function ManageSittingsDays() {
                     addBtnText="Add Session Days"
                     handleAdd={() =>
                       navigate(
-                        "/notice/seatingplan/manage-session-days/addedit"
+                        "/notice/manage/manage-session-days/addedit"
                       )
                     }
                     handleEdit={(item) =>
                       navigate(
-                        "/notice/seatingplan/manage-session-days/addedit",
+                        "/notice/manage/manage-session-days/addedit",
                         {
                           state: item,
                         }

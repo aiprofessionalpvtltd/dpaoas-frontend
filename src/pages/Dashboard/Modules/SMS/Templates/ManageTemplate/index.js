@@ -29,7 +29,7 @@ function SMSMAnageTemplate() {
     const { permissions } = useContext(AuthContext);
     const [permissionsLocal, setPermissionsLocal] = useState([]);
     const [roles, setRoles] = useState([]);
-  
+
     const userRole = getUserData();
 
     const handlePageChange = (page) => {
@@ -85,39 +85,39 @@ function SMSMAnageTemplate() {
 
     useEffect(() => {
         const fetchRoles = async () => {
-          try {
-            const response = await getRoles();
-            setRoles(response.data);
-          } catch (error) {
-            alert(error?.response?.data)
-            // if (error?.response?.data?.error === "Token has expired!") {
-            //   logout();
-            //   navigation("/login");
-            // }
-          }
+            try {
+                const response = await getRoles();
+                setRoles(response?.data?.roles);
+            } catch (error) {
+                alert(error?.response?.data)
+                // if (error?.response?.data?.error === "Token has expired!") {
+                //   logout();
+                //   navigation("/login");
+                // }
+            }
         };
-    
+
         fetchRoles();
-      }, []);
-      useEffect(() => {
+    }, []);
+    useEffect(() => {
         if (roles) {
-          setRolesData(roles);
-          const localPermissionsData = getPermissionsData();
-          setPermissionsLocal(localPermissionsData);
-    
-          // Check if permissions exist and has length
-          if (permissions && permissions.length > 0) {
-            const res = CheckPermission(userRole?.role?.name, roles, permissions);
-            setPermissionsData(res?.permissions);
-            setPermissionsLocal(res?.permissions);
-          } else {
-            // Handle the case when permissions are empty or undefined
-            // For example, set default permissions
-            setPermissionsData(localPermissionsData);
+            setRolesData(roles);
+            const localPermissionsData = getPermissionsData();
             setPermissionsLocal(localPermissionsData);
-          }
+
+            // Check if permissions exist and has length
+            if (permissions && permissions.length > 0) {
+                const res = CheckPermission(userRole?.role?.name, roles, permissions);
+                setPermissionsData(res?.permissions);
+                setPermissionsLocal(res?.permissions);
+            } else {
+                // Handle the case when permissions are empty or undefined
+                // For example, set default permissions
+                setPermissionsData(localPermissionsData);
+                setPermissionsLocal(localPermissionsData);
+            }
         }
-      }, [roles, permissions]);
+    }, [roles, permissions]);
 
     useEffect(() => {
         getTemplate();
@@ -137,7 +137,7 @@ function SMSMAnageTemplate() {
                 handleOkClick={handleOkClick}
             />
             {modalisOpan ? (
-                <SMSAddEditTemplate modalisOpan={modalisOpan} hendleModal={() => setModalisOpan(!modalisOpan)} selectedData={selecteditem} getTemplate={getTemplate}/>
+                <SMSAddEditTemplate modalisOpan={modalisOpan} hendleModal={() => setModalisOpan(!modalisOpan)} selectedData={selecteditem} getTemplate={getTemplate} />
             ) : null}
             <div class="row">
                 <div class="col-12">
@@ -180,8 +180,8 @@ function SMSMAnageTemplate() {
                             handleShow()
                         }}
                         hideDeleteIcon={permissionsLocal?.SMS?.canDelete ? false : true}
-                         hideEditIcon={permissionsLocal?.SMS?.canEdit ? false : true}
-                         ActionHide={permissionsLocal?.SMS?.canDelete || permissionsLocal?.SMS?.canEdit ? false : true}
+                        hideEditIcon={permissionsLocal?.SMS?.canEdit ? false : true}
+                        ActionHide={permissionsLocal?.SMS?.canDelete || permissionsLocal?.SMS?.canEdit ? false : true}
                     />
                 </div>
             </div>

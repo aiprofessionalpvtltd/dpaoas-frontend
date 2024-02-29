@@ -6,6 +6,7 @@ import { getAllQuestion} from "../../api/APIs/Services/Question.service";
 import { getAllResolutions } from "../../api/APIs/Services/Resolution.service";
 import { getAuthToken, logout } from "../../api/Auth";
 import { Link, useNavigate } from "react-router-dom";
+import { getAllMotion } from "../../api/APIs/Services/Motion.service";
 
 export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
   const [sidebarVisible, setSidebarVisible] = useState(true);
@@ -99,21 +100,21 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
     setSidebarVisible(!sidebarVisible);
   };
 
-  // const getAllMotionsApi = async () => {
-  //   try {
-  //     const response = await getAllMotion(0, 4);
-  //     if (response?.success) {
-  //       setCount(response?.count);
-  //     }
-  //   } catch (error) {
-  //   }
-  // };
+  const getAllMotionsApi = async () => {
+    try {
+      const response = await getAllMotion(0, 4);
+      if (response?.success) {
+        setCount((prevCount) => ({ ...prevCount, motion: response?.data?.count }));
+      }
+    } catch (error) {
+    }
+  };
 
   const getAllQuestionsApi = async () => {
     try {
       const response = await getAllQuestion(0, 4);
       if (response?.success) {
-        setCount((prevCount) => ({ ...prevCount, question: response?.count }));
+        setCount((prevCount) => ({ ...prevCount, question: response?.data?.count }));
       }
     } catch (error) {
       // Handle error
@@ -140,13 +141,14 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
     if (shouldRenderNotice || shouldRenderQuestion || shouldRenderMotion) {
       apiRequests.push(getAllResolutionsApi());
       apiRequests.push(getAllQuestionsApi());
-      // apiRequests.push(getAllMotionsApi());
+      apiRequests.push(getAllMotionsApi());
     }
 
     // Execute all API requests concurrently
     Promise.all(apiRequests)
       .then(() => {
         // All requests are completed
+        console.log("complete all requests");
       })
       .catch((error) => {
         // Handle error
@@ -223,7 +225,7 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
                       <Link to={"/notice/question/sent"}>
                       <button style={{ backgroundColor: location.pathname === "/notice/question/sent" ? 'white' : '' }}>
                         Questions
-                        {count?.question ? <span>{count.question}</span> : <span>{0}</span>}
+                        {count?.motion ? <span style={{ backgroundColor: "#FFA500" }}>{count.question}</span> : <span style={{ backgroundColor: "#FFA500" }}>{0}</span>}
                       </button>
                       </Link>
                       <Link to={"/notice/motion"}>
