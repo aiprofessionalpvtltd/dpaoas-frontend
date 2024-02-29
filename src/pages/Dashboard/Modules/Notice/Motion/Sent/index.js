@@ -14,6 +14,7 @@ import { useFormik } from "formik";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import {
   getAllMotion,
+  getMotionByID,
   getallMotionStatus,
   searchMotion,
 } from "../../../../../../api/APIs/Services/Motion.service";
@@ -65,7 +66,7 @@ function SentMotion() {
 
       return {
         id: res?.id,
-        fkSessionId: res?.sessions?.id,
+        SessionName: res?.sessions?.sessionName,
         fileNumber: res?.fileNumber,
         motionType: res?.motionType,
         motionWeek: "",
@@ -153,6 +154,22 @@ function SentMotion() {
     }
   };
 
+  const hendleEdit = async (id) => {
+    try {
+      // const { question, history } = await getMotionByID(id);
+      const response = await getMotionByID(id);
+      console.log("response Edit", response?.data);
+      if (response?.success) {
+        navigate("/notice/motion/edit", { state: response?.data });
+        //   navigate("/notice/question/detail", {
+        //     state: { question: question?.data, history: history?.data },
+        //   });
+      }
+    } catch (error) {
+      showErrorMessage(error.response?.data?.message);
+    }
+  };
+
   useEffect(() => {
     getMotionStatus();
   }, []);
@@ -192,7 +209,7 @@ function SentMotion() {
                         type="text"
                         className={"form-control"}
                         id="motionDiaryNo"
-                        placeholder={formik.values.motionDiaryNo}
+                        value={formik.values.motionDiaryNo}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
@@ -204,7 +221,7 @@ function SentMotion() {
                       <input
                         class="form-control"
                         type="text"
-                        placeholder={formik.values.motionID}
+                        value={formik.values.motionID}
                         onChange={formik.handleChange}
                         id="motionID"
                         onBlur={formik.handleBlur}
@@ -217,7 +234,7 @@ function SentMotion() {
                       <input
                         class="form-control"
                         type="text"
-                        placeholder={formik.values.keyword}
+                        value={formik.values.keyword}
                         onChange={formik.handleChange}
                         id="keyword"
                         onBlur={formik.handleBlur}
@@ -229,7 +246,7 @@ function SentMotion() {
                       <label class="form-label">Member Name</label>
                       {/* <input
                                                 type='text'
-                                                placeholder={formik.values.memberName}
+                                                value={formik.values.memberName}
                                                 className={`form-control`}
                                                 id='memberName'
                                                 onChange={formik.handleChange}
@@ -237,12 +254,12 @@ function SentMotion() {
                                             /> */}
                       <select
                         class="form-select"
-                        placeholder={formik.values.memberName}
+                        value={formik.values.memberName}
                         onChange={formik.handleChange}
                         id="memberName"
                         onBlur={formik.handleBlur}
                       >
-                        <option selected disabled hidden>
+                        <option value={""} selected disabled hidden>
                           Select
                         </option>
                         {members &&
@@ -261,12 +278,12 @@ function SentMotion() {
                       <label class="form-label">From Session</label>
                       <select
                         class="form-select"
-                        placeholder={formik.values.fromSession}
+                        value={formik.values.fromSession}
                         onChange={formik.handleChange}
                         id="fromSession"
                         onBlur={formik.handleBlur}
                       >
-                        <option selected disabled hidden>
+                        <option value={""} selected disabled hidden>
                           Select
                         </option>
                         {sessions &&
@@ -283,12 +300,12 @@ function SentMotion() {
                       <label class="form-label">To Session</label>
                       <select
                         class="form-select"
-                        placeholder={formik.values.toSession}
+                        value={formik.values.toSession}
                         onChange={formik.handleChange}
                         id="toSession"
                         onBlur={formik.handleBlur}
                       >
-                        <option selected disabled hidden>
+                        <option value={""} selected disabled hidden>
                           Select
                         </option>
                         {sessions &&
@@ -305,12 +322,12 @@ function SentMotion() {
                       <label class="form-label">Motion Type</label>
                       <select
                         class="form-select"
-                        placeholder={formik.values.motionType}
+                        value={formik.values.motionType}
                         onChange={formik.handleChange}
                         id="motionType"
                         onBlur={formik.handleBlur}
                       >
-                        <option selected disabled hidden>
+                        <option value={""} selected disabled hidden>
                           Select motion Type
                         </option>
                         <option>Motion Type</option>
@@ -328,12 +345,12 @@ function SentMotion() {
                       <label class="form-label">Motion Status</label>
                       <select
                         class="form-select"
-                        placeholder={formik.values.motionStatus}
+                        value={formik.values.motionStatus}
                         onChange={formik.handleChange}
                         id="motionStatus"
                         onBlur={formik.handleBlur}
                       >
-                        <option selected disabled hidden>
+                        <option value={" "} selected disabled hidden>
                           Select
                         </option>
                         {motionStatus &&
@@ -416,7 +433,11 @@ function SentMotion() {
                     <button class="btn btn-primary" type="submit">
                       Search
                     </button>
-                    <button class="btn btn-primary" type="">
+                    <button
+                      class="btn btn-primary"
+                      type="button"
+                      onClick={() => formik.resetForm()}
+                    >
                       Reset
                     </button>
                   </div>
@@ -428,14 +449,12 @@ function SentMotion() {
                     headerShown={true}
                     hideDeleteIcon={true}
                     // handleDelete={(item) => alert(item.id)}
-                    handleEdit={(item) =>
-                      navigate("/notice/motion/edit", { state: item })
-                    }
+                    handleEdit={(item) => hendleEdit(item?.id)}
                     headertitlebgColor={"#666"}
                     headertitletextColor={"#FFF"}
                     handlePageChange={handlePageChange}
                     currentPage={currentPage}
-                    pageSize={pageSize}
+                    pageSize={4}
                     totalCount={count}
                   />
                 </div>

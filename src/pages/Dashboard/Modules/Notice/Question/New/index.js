@@ -83,18 +83,26 @@ function NewQuestion() {
     formData.append("questionCategory", values.questionCategory);
     formData.append("fkQuestionStatus", 12);
     formData.append("fkMemberId", values.fkMemberId);
-    formData.append("initiatedByBranch", values.initiatedByBranch);
-    formData.append("sentToBranch", values.sentToBranch);
+    // formData.append("initiatedByBranch", values.initiatedByBranch);
+    formData.append("initiatedByBranch", 1);
+    // formData.append("sentToBranch", values.sentToBranch);
+    formData.append("sentToBranch", 1);
     formData.append("createdByUser", UserData && UserData?.id);
     formData.append("englishText", values.englishText);
     formData.append("urduText", values.urduText);
+    formData.append("questionSentStatus", "fromNotice");
     // formData.append("questionImage", values.questionImage);
     // Array.from(values.questionImage).forEach((file, index) => {
     //   formData.append(`questionImage[${index}]`, file);
     // });
-    Array.from(values.questionImage).map((file, index) => {
-      formData.append(`questionImage`, file);
-    });
+    // Array.from(values.questionImage).map((file, index) => {
+    //   formData.append(`questionImage`, file);
+    // });
+    if (values?.questionImage) {
+      Array.from(values?.questionImage).map((file, index) => {
+        formData.append(`questionImage`, file);
+      });
+    }
 
     try {
       const response = await createQuestion(formData);
@@ -329,7 +337,8 @@ function NewQuestion() {
                         />
                       </div>
                     </div>
-                    <div class="col-3">
+                    {/* From Notice */}
+                    {/* <div class="col-3">
                       <div class="mb-3">
                         <label class="form-label">From Branch</label>
                         <select
@@ -363,9 +372,9 @@ function NewQuestion() {
                             </div>
                           )}
                       </div>
-                    </div>
-
-                    <div class="col-3">
+                    </div> */}
+                    {/* TO notice */}
+                    {/* <div class="col-3">
                       <div class="mb-3">
                         <label class="form-label">To Branch</label>
                         <select
@@ -399,7 +408,7 @@ function NewQuestion() {
                             </div>
                           )}
                       </div>
-                    </div>
+                    </div> */}
                   </div>
 
                   <div class="row">
