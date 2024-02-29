@@ -66,50 +66,49 @@ function SentQuestion() {
         SrNo: index + 1,
         QID: res.id,
         QDN: res.fkQuestionDiaryId,
-        NoticeDate: moment(
-          res?.noticeOfficeDiary?.noticeOfficeDiaryDate
-        ).format("YYYY/MM/DD"),
+        NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate,
         NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
         SessionNumber: res?.session?.sessionName,
-        // SubjectMatter: [res?.englishText, res?.urduText]
-        //   .filter(Boolean)
-        //   .join(", "),
         SubjectMatter: cleanedSubjectMatter,
         Category: res.questionCategory,
-        // SubmittedBy: res.category,
         Status: res.questionStatus?.questionStatus,
       };
     });
   };
+  const SearchQuestionApi = useCallback(
+    async (values) => {
+      const searchParams = {
+        fromSessionNo: values.fromSession,
+        toSessionNo: values.toSession,
+        memberName: values.memberName,
+        questionCategory: values.category,
+        keyword: values.keyword,
+        questionID: values.questionID,
+        questionStatus: values.questionStatus,
+        questionDiaryNo: values.questionDiaryNo,
+        noticeOfficeDiaryDateFrom: values.fromNoticeDate,
+        noticeOfficeDiaryDateTo: values.toNoticeDate,
+      };
+      try {
+        const response = await searchQuestion(
+          searchParams,
+          currentPage,
+          pageSize
+        );
 
-  const SearchQuestionApi = async (values) => {
-    const searchParams = {
-      fromSessionNo: values.fromSession,
-      toSessionNo: values.toSession,
-      memberName: values.memberName,
-      questionCategory: values.category,
-      keyword: values.keyword,
-      questionID: values.questionID,
-      questionStatus: values.questionStatus,
-      questionDiaryNo: values.questionDiaryNo,
-      noticeOfficeDiaryDateFrom: values.fromNoticeDate,
-      noticeOfficeDiaryDateTo: values.toNoticeDate,
-    };
-
-    try {
-      const response = await searchQuestion(searchParams);
-      console.log(response);
-
-      if (response?.success) {
-        const transformedData = transformLeavesData(response?.data);
-        setSearchedData(transformedData);
-        setCount(response?.data?.count);
-        showSuccessMessage(response?.message);
+        if (response?.success) {
+          showSuccessMessage(response?.message);
+          setCount(response?.data?.count);
+          const transformedData = transformLeavesData(response.data?.questions);
+          setResData(transformedData);
+        }
+        // formik.resetForm();
+      } catch (error) {
+        showErrorMessage(error?.response?.data?.message);
       }
-    } catch (error) {
-      showErrorMessage(error?.response?.data?.message);
-    }
-  };
+    },
+    [currentPage, pageSize, setCount, setResData]
+  );
 
   // HandleEdit
   const handleEdit = async (id) => {
@@ -126,30 +125,12 @@ function SentQuestion() {
     }
   };
 
-  // const getAllQuestionsApi = async () => {
-  //   // setCount(null);
-  //   try {
-  //     const response = await getAllQuestion(currentPage, pageSize);
-  //     if (response?.success) {
-  //       // showSuccessMessage(response?.message);s
-  //       console.log("response", response);
-  //       console.log("count consle", response?.count);
-  //       const transformedData = transformLeavesData(response?.data);
-  //       setResData(transformedData);
-  //       setCount(response?.count);
-  //     }
-  //   } catch (error) {
-  //     showErrorMessage(error?.response?.data?.message);
-  //   }
-  // };
-
   const getAllQuestionsApi = useCallback(async () => {
     try {
       const response = await getAllQuestion(currentPage, pageSize);
       if (response?.success) {
-        const transformedData = transformLeavesData(response?.data);
-
-        setCount(response?.count);
+        const transformedData = transformLeavesData(response?.data?.questions);
+        setCount(response?.data?.count);
         setResData(transformedData);
       }
     } catch (error) {
@@ -169,6 +150,22 @@ function SentQuestion() {
     }
   };
 
+  useEffect(() => {
+    if (
+      formik.values.questionDiaryNo ||
+      formik.values.questionID ||
+      formik.values.keyword ||
+      formik.values.memberName ||
+      formik.values.fromSession ||
+      formik.values.toSession ||
+      formik.values.category ||
+      formik.values.questionStatus ||
+      formik.values.fromNoticeDate ||
+      formik.values.toNoticeDate
+    ) {
+      SearchQuestionApi();
+    }
+  }, [currentPage]);
   useEffect(() => {
     // getAllQuestionsApi();
     GetALlStatus();
@@ -287,8 +284,6 @@ function SentQuestion() {
                       </div>
                     </div>
                     <div className="row">
-                     
-                      
                       <div className="col">
                         <div className="mb-3">
                           <label className="form-label">From Session</label>
@@ -380,9 +375,7 @@ function SentQuestion() {
                       </div>
                     </div>
 
-                    
                     <div className="row">
-                      
                       <div className="col-3">
                         <div className="mb-3" style={{ position: "relative" }}>
                           <label className="form-label">From Notice Date</label>
@@ -436,7 +429,6 @@ function SentQuestion() {
                         </div>
                       </div>
                     </div>
-                    
 
                     <div className="row">
                       <div className="d-grid gap-2 d-md-flex justify-content-md-end">
@@ -471,7 +463,7 @@ function SentQuestion() {
                     totalCount={count}
                     pageSize={pageSize}
                     headertitlebgColor={"#666"}
-                headertitletextColor={"#FFF"}
+                    headertitletextColor={"#FFF"}
                     showPrint={false}
                     ActionHide={false}
                     hideEditIcon={false}

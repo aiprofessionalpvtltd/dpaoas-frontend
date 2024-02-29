@@ -298,20 +298,6 @@ function CustomTable({
                                 </OverlayTrigger>
                               )}
 
-                              {showPrint && (
-                                <OverlayTrigger
-                                  placement="top"
-                                  overlay={printTooltip}
-                                >
-                                  <button
-                                    onClick={() => handlePrint(item)}
-                                    className="btn-xs black circle-btn"
-                                    data-id={item.id}
-                                  >
-                                    <FontAwesomeIcon icon={faPrint} />
-                                  </button>
-                                </OverlayTrigger>
-                              )}
 
                               {showAttendance && (
                                 <OverlayTrigger
@@ -325,6 +311,21 @@ function CustomTable({
                                     style={{background:"#007bff"}}
                                   >
                                     <FontAwesomeIcon icon={faUserCheck} />
+                                  </button>
+                                </OverlayTrigger>
+                              )}
+
+                              {showPrint && (
+                                <OverlayTrigger
+                                  placement="top"
+                                  overlay={printTooltip}
+                                >
+                                  <button
+                                    onClick={() => handlePrint(item)}
+                                    className="btn-xs black circle-btn"
+                                    data-id={item.id}
+                                  >
+                                    <FontAwesomeIcon icon={faPrint} />
                                   </button>
                                 </OverlayTrigger>
                               )}

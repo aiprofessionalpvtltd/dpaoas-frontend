@@ -9,6 +9,7 @@ import { getAllEmployee } from "../APIs/Services/organizational.service";
 import { setAuthToken, setUserData } from "../Auth";
 import { showErrorMessage } from "../../utils/ToastAlert";
 import { loginUser } from "../APIs/Services/basicAuth.service";
+import { getBranches } from "../APIs/Services/Branches.services";
 
 export const AuthContext = createContext();
 
@@ -19,6 +20,7 @@ export const AuthProvider = ({ children }) => {
   const [employeeData, setEmployeeData] = useState([]);
   const [resolutionStatus, setResolutionStatus] = useState([]);
   const [employeesAsEngineersData, setemployeesAsEngineersData] = useState([]);
+  const [allBranchesData, setallBranchesData] = useState([]);
 
   const [members, setMembers] = useState([]);
 
@@ -109,6 +111,19 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const AllBranchesData = async () => {
+    try {
+      const response = await getBranches(0, 200);
+      if (response?.success) {
+        // showSuccessMessage(response?.message);
+        setallBranchesData(response?.data?.rows);
+      }
+    } catch (error) {
+      console.log(error);
+      showErrorMessage(error?.response?.data?.error);
+    }
+  };
+
   useEffect(() => {
     getAllResolutionStatusApi();
     AllMembersData();
@@ -116,6 +131,7 @@ export const AuthProvider = ({ children }) => {
     getAllSessionsApi();
     getEmployeeData();
     getretriveEmployeesAsEngineers();
+    AllBranchesData();
   }, []);
 
   return (
@@ -130,6 +146,7 @@ export const AuthProvider = ({ children }) => {
         employeeData,
         resolutionStatus,
         employeesAsEngineersData,
+        allBranchesData,
       }}
     >
       {children}

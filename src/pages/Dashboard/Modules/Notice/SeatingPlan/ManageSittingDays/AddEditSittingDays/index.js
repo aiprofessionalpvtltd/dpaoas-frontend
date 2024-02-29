@@ -42,11 +42,14 @@ function NMSAddEditSittingDaysForm() {
   const { members, sessions } = useContext(AuthContext);
   const [sessionId, setSessionId] = useState();
   const [formCount, setFormCount] = useState(0);
+  const [breakformCount, setBreakFormCount] = useState(0);
+
 
   const addForm = () => {
     setFormCount(formCount + 1);
     // setFormCount(formCount + 1);
   };
+
   const removeForm = (index) => {
     if (formCount > 0) {
       const newSessionMembers = [...formik.values.sessionMembers];
@@ -74,7 +77,7 @@ function NMSAddEditSittingDaysForm() {
 
     for (let i = 0; i < formCount; i++) {
       sessionMembersForms.push(
-        <div key={i}>
+        <div key={i} style={{ background: "rgb(242, 242, 242)", padding: "5px" }}>
           <div className="row">
             <div className="col">
               {formCount > 0 && (
@@ -95,15 +98,14 @@ function NMSAddEditSittingDaysForm() {
                   />
                 </div>
               )}
-              <div className="mb-3">
+              <div className="mb-3 col-6">
                 <label className="form-label">Member Name</label>
                 <select
-                  className={`form-select ${
-                    formik.touched[`sessionMembers[${i}].fkMemberId`] &&
+                  className={`form-select ${formik.touched[`sessionMembers[${i}].fkMemberId`] &&
                     formik.errors[`sessionMembers[${i}].fkMemberId`]
-                      ? "is-invalid"
-                      : ""
-                  }`}
+                    ? "is-invalid"
+                    : ""
+                    }`}
                   value={formik.values.sessionMembers[i]?.fkMemberId || ""}
                   onChange={(e) =>
                     updateSessionMembers(i, "fkMemberId", e.target.value)
@@ -176,12 +178,12 @@ function NMSAddEditSittingDaysForm() {
                     )
                   }
                   className={`form-control`}
-                  // onChange={(time) =>
-                  //   formik.setFieldValue(
-                  //     "endTime",
-                  //     moment(time, "hh:mm a").format("hh:mm a")
-                  //   )
-                  // }
+                // onChange={(time) =>
+                //   formik.setFieldValue(
+                //     "endTime",
+                //     moment(time, "hh:mm a").format("hh:mm a")
+                //   )
+                // }
                 />
               </div>
             </div>
@@ -193,14 +195,131 @@ function NMSAddEditSittingDaysForm() {
     return sessionMembersForms;
   };
 
+  const addbreakFrom = () => {
+    setBreakFormCount(breakformCount + 1);
+    // setFormCount(formCount + 1);
+  };
+  const removeBreakForms = (index) => {
+    if (breakformCount > 0) {
+      const newSessionBreaks = [...formik.values.sessionBreaks];
+      newSessionBreaks.splice(index, 1);
+      formik.setFieldValue("sessionBreaks", newSessionBreaks);
+      // setFormCount(formCount - 1);
+      setBreakFormCount(breakformCount - 1);
+      //   formik.setFieldValue(`sessionMembers[${formCount - 1}].fkMemberId`, "");
+      //   formik.setFieldValue(`sessionMembers[${formCount - 1}].startTime`, "");
+      //   formik.setFieldValue(`sessionMembers[${formCount - 1}].endTime`, "");
+    }
+  };
+  const updateBreaksSession = (index, fieldName, value) => {
+    const newBreaksSession = [...formik.values.sessionBreaks];
+    if (!newBreaksSession[index]) {
+      newBreaksSession[index] = {};
+    }
+    newBreaksSession[index][fieldName] = value;
+    formik.setFieldValue("sessionBreaks", newBreaksSession);
+    // formik.setFieldValue(`sessionMembers[${index}].${fieldName}`, value);
+  };
+  const renderBreakForms = () => {
+    let breakForms = [];
+
+    for (let i = 0; i < breakformCount; i++) {
+      breakForms.push(
+        <div key={i}>
+          <div className="row">
+            <div className="col">
+              {breakformCount > 0 && (
+                <div className="ms-2" style={{ position: "relative" }}>
+                  <FontAwesomeIcon
+                    icon={faMinusSquare}
+                    style={{
+                      position: "absolute",
+                      top: "-8px",
+                      // left: "-50px",
+                      right: "0px",
+                      fontSize: "30px",
+                      color: "#14ae5c",
+                      color: "#ff0000",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => removeBreakForms(i)}
+                  />
+                </div>
+              )}
+
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-6">
+              <div className="mb-3">
+                <label className="form-label">Break Start Time</label>
+                <TimePicker
+                  value={formik.values.sessionBreaks[i]?.breakStartTime || ""}
+                  clockIcon={null} // Disable clock view
+                  openClockOnFocus={false}
+                  // format="hh:mm a"
+                  onChange={(time) =>
+                    updateBreaksSession(
+                      i,
+                      "breakStartTime",
+                      time
+                      // moment(time, "hh:mm a").format("hh:mm a")
+                    )
+                  }
+                  // onChange={(time) =>
+
+                  //   formik.setFieldValue(
+                  //     "startTime",
+                  //     moment(time, "hh:mm a").format("hh:mm a")
+                  //   )
+                  // }
+                  className={`form-control`}
+                />
+              </div>
+            </div>
+            <div className="col-6">
+              <div className="mb-3">
+                <label className="form-label">Break End Time</label>
+                <TimePicker
+                  value={formik.values.sessionBreaks[i]?.breakEndTime || ""}
+                  clockIcon={null} // Disable clock view
+                  openClockOnFocus={false}
+                  // format="hh:mm a"
+                  onChange={(time) =>
+                    updateBreaksSession(
+                      i,
+
+                      "breakEndTime",
+                      time
+                      // moment(time, "hh:mm a").format("hh:mm a")
+                    )
+                  }
+                  className={`form-control`}
+                // onChange={(time) =>
+                //   formik.setFieldValue(
+                //     "endTime",
+                //     moment(time, "hh:mm a").format("hh:mm a")
+                //   )
+                // }
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    return breakForms;
+  };
+
   const formik = useFormik({
     initialValues: {
       fkSessionId: "",
       sittingDate: "",
       sittingStartTime: "",
       sittingEndTime: "",
-      breakStartTime: "",
-      breakEndTime: "",
+      // breakStartTime: "",
+      // breakEndTime: "",
       committeeWhole: false,
       isAdjourned: false,
       committeeStartTime: "",
@@ -210,6 +329,12 @@ function NMSAddEditSittingDaysForm() {
           fkMemberId: "",
           startTime: "",
           endTime: "",
+        },
+      ],
+      sessionBreaks: [
+        {
+          breakStartTime: "",
+          breakEndTime: "",
         },
       ],
     },
@@ -231,8 +356,8 @@ function NMSAddEditSittingDaysForm() {
       sittingDate: values.sittingDate,
       sittingStartTime: values.sittingStartTime,
       sittingEndTime: values.sittingEndTime,
-      breakStartTime: values.breakStartTime,
-      breakEndTime: values.breakEndTime,
+      // breakStartTime: values.breakStartTime,
+      // breakEndTime: values.breakEndTime,
       committeeStartTime: values.committeeStartTime,
       committeeEndTime: values.committeeEndTime,
       sessionMembers: values.sessionMembers,
@@ -241,14 +366,22 @@ function NMSAddEditSittingDaysForm() {
       //   startTime: member.startTime,
       //   endTime: member.endTime,
       // })),
+
       sessionMembers:
         formCount === 0
           ? []
           : values.sessionMembers.map((member) => ({
-              fkMemberId: member.fkMemberId,
-              startTime: member.startTime,
-              endTime: member.endTime,
-            })),
+            fkMemberId: member.fkMemberId,
+            startTime: member.startTime,
+            endTime: member.endTime,
+          })),
+      sessionBreaks:
+        breakformCount === 0
+          ? []
+          : values.sessionBreaks.map((item) => ({
+            breakStartTime: item.breakStartTime,
+            breakEndTime: item.breakEndTime,
+          })),
 
       committeeWhole: values.committeeWhole,
       sessionAdjourned: values.isAdjourned,
@@ -292,10 +425,17 @@ function NMSAddEditSittingDaysForm() {
         formCount === 0
           ? []
           : values.sessionMembers.map((member) => ({
-              fkMemberId: member.fkMemberId,
-              startTime: member.startTime,
-              endTime: member.endTime,
-            })),
+            fkMemberId: member.fkMemberId,
+            startTime: member.startTime,
+            endTime: member.endTime,
+          })),
+      sessionBreaks:
+        breakformCount === 0
+          ? []
+          : values.sessionBreaks.map((item) => ({
+            breakStartTime: item.breakStartTime,
+            breakEndTime: item.breakEndTime,
+          })),
 
       committeeWhole: values.committeeWhole,
       sessionAdjourned: values.isAdjourned,
@@ -335,8 +475,7 @@ function NMSAddEditSittingDaysForm() {
       formik.setValues({
         fkSessionId: sessionId.fkSessionId || "",
         sittingDate: new Date(sessionId.sittingDate) || "",
-        breakStartTime: sessionId.breakStartTime || "",
-        breakEndTime: sessionId.breakEndTime || "",
+
         sittingStartTime: sessionId.sittingStartTime || "",
         sittingEndTime: sessionId.sittingEndTime || "",
         committeeStartTime: sessionId.committeeStartTime || "",
@@ -349,8 +488,14 @@ function NMSAddEditSittingDaysForm() {
             startTime: member.startTime,
             endTime: member.endTime,
           })) || [],
+        sessionBreaks:
+          sessionId.sessionBreaks.map((item) => ({
+            breakStartTime: item.breakStartTime,
+            breakEndTime: item.breakEndTime,
+          })) || [],
       });
       setFormCount(sessionId.sessionMembers?.length || 0);
+      setBreakFormCount(sessionId.sessionBreaks?.length || 0)
     }
   }, [sessionId, formik.setValues]);
 
@@ -386,7 +531,7 @@ function NMSAddEditSittingDaysForm() {
                 <div class="row">
                   <div class="col">
                     <div class="mb-3">
-                      <label class="form-label">Session ID</label>
+                      <label class="form-label">Session Number</label>
                       {/* <input
                         type="text"
                         placeholder={"Session ID"}
@@ -430,12 +575,11 @@ function NMSAddEditSittingDaysForm() {
                           </div>
                         )} */}
                       <select
-                        class={`form-select ${
-                          formik.touched.fkSessionId &&
+                        class={`form-select ${formik.touched.fkSessionId &&
                           formik.errors.fkSessionId
-                            ? "is-invalid"
-                            : ""
-                        }`}
+                          ? "is-invalid"
+                          : ""
+                          }`}
                         // placeholder="Session No"
                         value={formik.values.fkSessionId}
                         onChange={formik.handleChange}
@@ -479,12 +623,11 @@ function NMSAddEditSittingDaysForm() {
                         }
                         onBlur={formik.handleBlur}
                         minDate={new Date()}
-                        className={`form-control ${
-                          formik.touched.sittingDate &&
+                        className={`form-control ${formik.touched.sittingDate &&
                           formik.errors.sittingDate
-                            ? "is-invalid"
-                            : ""
-                        }`}
+                          ? "is-invalid"
+                          : ""
+                          }`}
                       />
                       {formik.touched.sittingDate &&
                         formik.errors.sittingDate && (
@@ -582,7 +725,7 @@ function NMSAddEditSittingDaysForm() {
                   </div>
                 </div>
 
-                <div class="row">
+                {/* <div class="row">
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Break Start Time</label>
@@ -641,6 +784,34 @@ function NMSAddEditSittingDaysForm() {
                         )}
                     </div>
                   </div>
+                </div> */}
+                <div className="row">
+                  <div className="col-6 ">
+                    <div className="mb-3 mt-4">
+                      <label className="form-label">
+                        Add Session Break Times
+                      </label>
+                    </div>
+                  </div>
+                  <div className="ms-2" style={{ position: "relative" }}>
+                    <FontAwesomeIcon
+                      icon={faPlusSquare}
+                      style={{
+                        position: "absolute",
+                        top: "-55px",
+                        // left: "90px",
+                        right: "60px",
+                        fontSize: "41px",
+                        color: "#14ae5c",
+                        cursor: "pointer",
+                      }}
+                      onClick={addbreakFrom}
+                    />
+                  </div>
+                </div>
+                <div style={{ background: "rgb(242, 242, 242)", padding: "20px" }}>
+
+                  {renderBreakForms()}
                 </div>
 
                 <div class="row">
@@ -648,12 +819,11 @@ function NMSAddEditSittingDaysForm() {
                     <div class="mb-3">
                       <div class="form-check">
                         <input
-                          class={`form-check-input ${
-                            formik.touched.isAdjourned &&
+                          class={`form-check-input ${formik.touched.isAdjourned &&
                             formik.errors.isAdjourned
-                              ? "is-invalid"
-                              : ""
-                          }`}
+                            ? "is-invalid"
+                            : ""
+                            }`}
                           type="checkbox"
                           id="flexCheckDefault"
                           checked={formik.values.isAdjourned}
@@ -681,12 +851,11 @@ function NMSAddEditSittingDaysForm() {
                     <div class="mb-3">
                       <div class="form-check">
                         <input
-                          class={`form-check-input ${
-                            formik.touched.committeeWhole &&
+                          class={`form-check-input ${formik.touched.committeeWhole &&
                             formik.errors.committeeWhole
-                              ? "is-invalid"
-                              : ""
-                          }`}
+                            ? "is-invalid"
+                            : ""
+                            }`}
                           type="checkbox"
                           id="committeeWhole"
                           checked={formik.values.committeeWhole}
@@ -797,7 +966,9 @@ function NMSAddEditSittingDaysForm() {
                   </div>
                 </div>
 
-                {renderForms()}
+                <div style={{ background: "rgb(242, 242, 242)", padding: "20px" }}>
+                  {renderForms()}
+                </div>
                 <div className="row">
                   <div className="col">
                     <button class="btn btn-primary float-end" type="submit">

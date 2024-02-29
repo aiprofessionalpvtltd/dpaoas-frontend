@@ -156,7 +156,6 @@ export const NoticeSidebarItems = [
         link: "/notice/legislation/private-bill",
         icon: faFileInvoice,
       },
-
     ],
   },
 
@@ -269,6 +268,11 @@ export const NoticeSidebarItems = [
         itemName: "Business Summary",
         link: "/notice/reports/business-summary",
         icon: faSquarePollHorizontal,
+      },
+      {
+        itemName: "Attendence Reports",
+        link: "/notice/reports/attendence-reports",
+        icon: faClipboardList,
       },
     ],
   },
@@ -690,4 +694,3 @@ export const CMSsidebarItems = [
     ],
   },
 ];
-

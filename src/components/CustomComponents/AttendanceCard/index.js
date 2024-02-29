@@ -44,7 +44,7 @@ export const AttendanceCard = ({
                 {attendance ? attendance : "Absent"}
               </span>
             ) : (
-              <span style={{ float: "right", width: "100px" }}>
+              <span style={{ float: "right", width: "110px" }}>
                 <Field
                   as="select"
                   className="form-select"
