@@ -19,7 +19,7 @@ const customStyles = {
 };
 
 function ManageSeatingPlan() {
-  const { members } = useContext(AuthContext)
+  const { members } = useContext(AuthContext);
   const [seats, setSeats] = useState([]);
   const [govseat, setGovSeat] = useState([]);
 
@@ -28,7 +28,7 @@ function ManageSeatingPlan() {
     id: 0,
     name: "",
     seatNo: 0,
-    rowNumber: ""
+    rowNumber: "",
   });
 
   const openModal = (item) => {
@@ -37,7 +37,7 @@ function ManageSeatingPlan() {
       id: item?.member?.id,
       name: item?.member?.memberName,
       seatNo: item?.seatNumber,
-      rowNumber: item?.rowNumber
+      rowNumber: item?.rowNumber,
     });
     setIsOpen(true);
   };
@@ -47,7 +47,7 @@ function ManageSeatingPlan() {
       const response = await getAllSeats();
       if (response?.success) {
         setSeats(response?.data?.Opposition);
-        setGovSeat(response?.data?.Government)
+        setGovSeat(response?.data?.Government);
       }
     } catch (error) {
       // Handle error
@@ -63,18 +63,18 @@ function ManageSeatingPlan() {
     const Data = {
       fkMemberId: assigin ? selectedItem?.id : null,
       rowNumber: selectedItem?.rowNumber,
-      assignStatus: assigin ? true : false
-    }
+      assignStatus: assigin ? true : false,
+    };
     try {
       const response = await updateSeat(selectedItem.seatNo, Data);
       if (response?.success) {
-        showSuccessMessage(response.message)
-        getAllSeatsApi()
+        showSuccessMessage(response.message);
+        getAllSeatsApi();
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
     }
-  }
+  };
 
   return (
     <>
@@ -85,10 +85,7 @@ function ManageSeatingPlan() {
         contentLabel="Example Modal"
       >
         <div class="card">
-          <div
-            class="card-header red-bg"
-            style={{ background: "#14ae5c !important" }}
-          >
+          <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
             <h1>Add/Edit Seat</h1>
           </div>
           <div class="card-body">
@@ -114,7 +111,7 @@ function ManageSeatingPlan() {
                     className="form-select"
                     value={selectedItem?.id || ""}
                     onChange={(e) => {
-                      setSelectedItem({ ...selectedItem, id: e.target.value })
+                      setSelectedItem({ ...selectedItem, id: e.target.value });
                     }}
                   >
                     <option value={""} disabled hidden>
@@ -133,12 +130,7 @@ function ManageSeatingPlan() {
 
             <div className="d-flex row justify-content-center align-items-center">
               <div className="col-4" style={{ marginTop: "30px" }}>
-                <Button
-                  variant="primary"
-                  type="submit"
-                  style={{ width: 150 }}
-                  onClick={() => setIsOpen(false)}
-                >
+                <Button variant="primary" type="submit" style={{ width: 150 }} onClick={() => setIsOpen(false)}>
                   Cancel
                 </Button>
               </div>
@@ -148,8 +140,8 @@ function ManageSeatingPlan() {
                   type="submit"
                   style={{ width: 150 }}
                   onClick={() => {
-                    hendleAssiginandUnassigin(true)
-                    setIsOpen(false)
+                    hendleAssiginandUnassigin(true);
+                    setIsOpen(false);
                   }}
                 >
                   Assigin
@@ -161,8 +153,8 @@ function ManageSeatingPlan() {
                   type="submit"
                   style={{ width: 150 }}
                   onClick={() => {
-                    hendleAssiginandUnassigin(false)
-                    setIsOpen(false)
+                    hendleAssiginandUnassigin(false);
+                    setIsOpen(false);
                   }}
                 >
                   Un Assigin
@@ -183,47 +175,48 @@ function ManageSeatingPlan() {
         <div class="dashboard-content">
           <div class="container-fluid">
             <div class="sitting-plan-main">
-
               <div class="sitting-row">
                 <div>
-                  {['F', 'E', 'D', 'C', 'B', 'A'].map(rowLetter => (
+                  {["F", "E", "D", "C", "B", "A"].map((rowLetter) => (
                     <div className="row">
-                      <div className="col">
-                        {seats && seats
-                          .filter(item => item.rowNumber === rowLetter)
-                          .map((item, index) => (
-                            <div
-                              className="sitting-card-left float-start"
-                              key={index}
-                              onClick={() => openModal(item)}
-                            >
-                              <div className="sitt-card-left">
-                              <img src={require("../../../../../../assets/seat.png")}/>
-                                <h2>{item?.member?.memberName}</h2>
+                      <div className="col" style={{ marginBottom: "80px" }}>
+                        {seats &&
+                          seats
+                            .filter((item) => item.rowNumber === rowLetter)
+                            .map((item, index) => (
+                              <div
+                                className="sitting-card-left float-start"
+                                key={index}
+                                onClick={() => openModal(item)}
+                              >
+                                <div className="sitt-card-left">
+                                  <img src={require("../../../../../../assets/seat.png")} />
+                                  <h2>{item?.member?.memberName}</h2>
+                                  <p>{item.seatNumber}</p>
+                                </div>
                               </div>
-                              <p>{item.seatNumber}</p>
-                            </div>
-                          ))}
+                            ))}
                       </div>
                       <div className="col-1 text-center">
-                        <strong>{rowLetter}</strong>
+                        <strong style={{ marginTop: "80px", display: "block" }}>{rowLetter}</strong>
                       </div>
                       <div className="col">
-                        {govseat && govseat
-                          .filter(item => item.rowNumber === rowLetter)
-                          .map((item, index) => (
-                            <div
-                              className="sitting-card-right float-start"
-                              key={index}
-                              onClick={() => openModal(item)}
-                            >
-                              <div className="sitt-card-right">
-                              <img src={require("../../../../../../assets/seat.png")}/>
-                                <h2>{item?.member?.memberName}</h2>
+                        {govseat &&
+                          govseat
+                            .filter((item) => item.rowNumber === rowLetter)
+                            .map((item, index) => (
+                              <div
+                                className="sitting-card-right float-start"
+                                key={index}
+                                onClick={() => openModal(item)}
+                              >
+                                <div className="sitt-card-right">
+                                  <img src={require("../../../../../../assets/seat.png")} />
+                                  <h2>{item?.member?.memberName}</h2>
+                                  <p>{item?.seatNumber}</p>
+                                </div>
                               </div>
-                              <p>{item?.seatNumber}</p>
-                            </div>
-                          ))}
+                            ))}
                       </div>
                     </div>
                   ))}

@@ -46,13 +46,38 @@ function Dashboard() {
     if (roles) {
       setRolesData(roles);
       const localPermissionsData = getPermissionsData();
-            setPermissionsLocal(localPermissionsData);
+      setPermissionsLocal(localPermissionsData);
 
       // Check if permissions exist and has length
       if (permissions && permissions.length > 0 && roles) {
         const res = CheckPermission(userRole?.role?.name, roles, permissions);
-                setPermissionsData(res?.permissions);
+        setPermissionsData(res?.permissions);
         setPermissionsLocal(res?.permissions);
+
+        console.log("Permissions", res?.permissions);
+        console.log("Permissions Count", Object.keys(res?.permissions).length);
+
+        // Check if user has only one permission, and if so, navigate directly
+        const permissionKeys = Object.keys(res.permissions);
+        console.log("Permission keys", permissionKeys);
+
+        // if (permissionKeys.length === 1) {
+        //   const singlePermission = permissions[0].label; // Assuming permissions is an array
+        //   console.log("singlePermission", singlePermission);
+        //   const tileWithSinglePermission = tilesData.find(tile => tile.permission.includes(singlePermission) && permissions.find(permission => permission.label === singlePermission)?.hasAccess.includes('View'));
+        //   if (tileWithSinglePermission) {
+        //     navigation(tileWithSinglePermission.link);
+        //   }
+        // }
+
+        permissionKeys.forEach(singlePermission => {
+          console.log("singlePermission", singlePermission);
+          const tileWithSinglePermission = tilesData.find(tile => tile.permission.includes(singlePermission) && permissions.find(permission => permission.label === singlePermission)?.hasAccess.includes('View'));
+          console.log("tileWithSinglePermission", tileWithSinglePermission);
+          if (tileWithSinglePermission) {
+            navigation(tileWithSinglePermission.link);
+          }
+        });
       } else {
         // Handle the case when permissions are empty or undefined
         // For example, set default permissions

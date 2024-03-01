@@ -67,9 +67,9 @@ function SentMotion() {
       return {
         id: res?.id,
         SessionName: res?.sessions?.sessionName,
-        fileNumber: res?.fileNumber,
+        // fileNumber: res?.fileNumber,
         motionType: res?.motionType,
-        motionWeek: "",
+        // motionWeek: "",
         noticeOfficeDiaryNo: res?.noticeOfficeDairies?.noticeOfficeDiaryNo,
         // ministryName: leave?.motionMinistries?.ministries,
         // ministryIds: leave?.motionMinistries?.fkMinistryId,
@@ -78,27 +78,11 @@ function SentMotion() {
         // memberName:leave?.motionMovers?.members,
         englishText: EnglishText,
         urduText: UrduText,
-        fkMotionStatus: res?.motionStatuses?.statusName,
+        // fkMotionStatus: res?.motionStatuses?.statusName,
       };
     });
   };
 
-  // return apiData?.map((leave) => ({
-  //   id: leave?.id,
-  //   fkSessionId: leave?.sessions?.id,
-  //   fileNumber: leave?.fileNumber,
-  //   motionType: leave?.motionType,
-  //   motionWeek: "",
-  //   noticeOfficeDiaryNo: leave?.noticeOfficeDairies?.noticeOfficeDiaryNo,
-  //   // ministryName: leave?.motionMinistries?.ministries,
-  //   // ministryIds: leave?.motionMinistries?.fkMinistryId,
-  //   noticeOfficeDiaryDate: moment(leave?.noticeOfficeDairies?.noticeOfficeDiaryDate).format("YYYY/MM/DD"),
-  //   noticeOfficeDiaryTime: leave?.noticeOfficeDairies?.noticeOfficeDiaryTime,
-  //   // memberName:leave?.motionMovers?.members,
-  //   englishText: leave?.englishText,
-  //   urduText: leave?.urduText,
-  //   fkMotionStatus: leave?.motionStatuses?.statusName,
-  // }));
 
   const getMotionListData = async () => {
     try {
@@ -386,12 +370,11 @@ function SentMotion() {
                         onChange={(date) =>
                           formik.setFieldValue("fromNoticeDate", date)
                         }
-                        className={`form-control ${
-                          formik.errors.fromNoticeDate &&
-                          formik.touched.fromNoticeDate
+                        className={`form-control ${formik.errors.fromNoticeDate &&
+                            formik.touched.fromNoticeDate
                             ? "is-invalid"
                             : ""
-                        }`}
+                          }`}
                       />
                       {formik.errors.fromNoticeDate &&
                         formik.touched.fromNoticeDate && (
@@ -444,7 +427,6 @@ function SentMotion() {
                 </div>
                 <div class="" style={{ marginTop: "20px" }}>
                   <CustomTable
-                    block={true}
                     data={motionData}
                     headerShown={true}
                     hideDeleteIcon={true}
