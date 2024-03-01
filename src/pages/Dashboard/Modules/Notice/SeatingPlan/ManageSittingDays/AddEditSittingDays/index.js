@@ -77,7 +77,7 @@ function NMSAddEditSittingDaysForm() {
 
     for (let i = 0; i < formCount; i++) {
       sessionMembersForms.push(
-        <div key={i} style={{ background: "rgb(242, 242, 242)", padding: "5px" }}>
+        <div key={i} style={{ background: "rgb(242, 242, 242)", padding: "20px" }}>
           <div className="row">
             <div className="col">
               {formCount > 0 && (
@@ -225,7 +225,7 @@ function NMSAddEditSittingDaysForm() {
 
     for (let i = 0; i < breakformCount; i++) {
       breakForms.push(
-        <div key={i}>
+        <div key={i} style={{ background: "rgb(242, 242, 242)", padding: "20px" }}>
           <div className="row">
             <div className="col">
               {breakformCount > 0 && (
@@ -507,9 +507,9 @@ function NMSAddEditSittingDaysForm() {
     >
       <Header
         dashboardLink={"/"}
-        addLink1={"/notice/seatingplan/manage-session-days"}
+        addLink1={"/notice/manage/manage-session-days"}
         title1={"Sitting Days"}
-        addLink2={"/notice/seatingplan/manage-session-days/addedit"}
+        addLink2={"/notice/manage/manage-session-days/addedit"}
         title2={
           location && location?.state ? "Edit Sitting Days" : "Add Sitting Days"
         }
@@ -809,11 +809,7 @@ function NMSAddEditSittingDaysForm() {
                     />
                   </div>
                 </div>
-                <div style={{ background: "rgb(242, 242, 242)", padding: "20px" }}>
-
-                  {renderBreakForms()}
-                </div>
-
+                {renderBreakForms()}
                 <div class="row">
                   <div class="col-6">
                     <div class="mb-3">
@@ -966,9 +962,9 @@ function NMSAddEditSittingDaysForm() {
                   </div>
                 </div>
 
-                <div style={{ background: "rgb(242, 242, 242)", padding: "20px" }}>
-                  {renderForms()}
-                </div>
+                {/* <div style={{ background: "rgb(242, 242, 242)", padding: "20px" }}> */}
+                {renderForms()}
+                {/* </div> */}
                 <div className="row">
                   <div className="col">
                     <button class="btn btn-primary float-end" type="submit">

@@ -5,6 +5,7 @@ import Header from "../../../../../../components/Header";
 import { useNavigate } from "react-router";
 import {
   getAllMotion,
+  getMotionByID,
   getallMotionStatus,
   searchMotion,
 } from "../../../../../../api/APIs/Services/Motion.service";
@@ -63,13 +64,12 @@ function SearchMotion() {
 
       const Urdu = [leave?.urduText].filter(Boolean).join(", ");
       const UrduText = Urdu.replace(/(<([^>]+)>)/gi, "");
-
       return {
         id: leave?.id,
         SessionName: leave?.sessions?.sessionName,
-        fileNumber: leave?.fileNumber,
+        // fileNumber: leave?.fileNumber,
         motionType: leave?.motionType,
-        motionWeek: leave?.motionWeek,
+        // motionWeek: leave?.motionWeek,
         noticeOfficeDiaryNo: leave?.noticeOfficeDairies?.noticeOfficeDiaryNo,
         // ministryName: leave?.motionMinistries?.ministries,
         // ministryIds: leave?.motionMinistries?.fkMinistryId,
@@ -83,7 +83,7 @@ function SearchMotion() {
         // englishText: leave?.englishText,
         englishText: EnglishText,
         urduText: UrduText,
-        fkMotionStatus: leave?.motionStatuses?.statusName,
+        // fkMotionStatus: leave?.motionStatuses?.statusName,
       };
     });
   };
@@ -92,6 +92,7 @@ function SearchMotion() {
       const response = await getAllMotion(currentPage, pageSize);
 
       if (response?.success) {
+        console.log("response", response);
         // showSuccessMessage(response?.message);
         setCount(response?.data?.count);
         const transformedData = transformMotionData(response?.data?.rows);
@@ -158,6 +159,22 @@ function SearchMotion() {
   const handleResetForm = () => {
     formik.resetForm();
   };
+  const handleEdit = async (id) => {
+    try {
+      // const { question, history } = await getMotionByID(id);
+      const response = await getMotionByID(id);
+      console.log("response Edit", response?.data);
+      if (response?.success) {
+        navigate("/notice/motion/edit", { state: response?.data });
+        //   navigate("/notice/question/detail", {
+        //     state: { question: question?.data, history: history?.data },
+        //   });
+      }
+    } catch (error) {
+      showErrorMessage(error.response?.data?.message);
+    }
+  };
+
   return (
     <Layout
       module={true}
@@ -428,12 +445,11 @@ function SearchMotion() {
                         onChange={(date) =>
                           formik.setFieldValue("fromNoticeDate", date)
                         }
-                        className={`form-control ${
-                          formik.errors.fromNoticeDate &&
-                          formik.touched.fromNoticeDate
+                        className={`form-control ${formik.errors.fromNoticeDate &&
+                            formik.touched.fromNoticeDate
                             ? "is-invalid"
                             : ""
-                        }`}
+                          }`}
                       />
                       {formik.errors.fromNoticeDate &&
                         formik.touched.fromNoticeDate && (
@@ -487,13 +503,10 @@ function SearchMotion() {
                 </div>
                 <div class="" style={{ marginTop: "20px" }}>
                   <CustomTable
-                    block={true}
                     data={motionData}
                     headerShown={true}
-                    handleDelete={(item) => alert(item.id)}
-                    handleEdit={(item) =>
-                      navigate("/notice/motion/edit", { state: item })
-                    }
+                    hideDeleteIcon={true}
+                    handleEdit={(item) => handleEdit(item?.id)}
                     headertitlebgColor={"#666"}
                     headertitletextColor={"#FFF"}
                     handlePageChange={handlePageChange}

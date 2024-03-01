@@ -64,7 +64,7 @@ function NoticeQuestionDetail() {
   };
 
   console.log("memeber", location?.state?.question?.member?.id);
-  console.log("SESSIONID", location?.state?.question?.session);
+  console.log("SESSIONID", location?.state?.question?.session?.id);
   const formik = useFormik({
     initialValues: {
       sessionNo: location?.state?.question?.session?.sessionName,
@@ -105,7 +105,7 @@ function NoticeQuestionDetail() {
 
   const updateQuestion = async (values) => {
     const formData = new FormData();
-    formData.append("fkSessionId", 1);
+    formData.append("fkSessionId", location?.state?.question?.session?.id);
     formData.append("noticeOfficeDiaryNo", values?.noticeOfficeDiaryNo);
     formData.append("noticeOfficeDiaryDate", values?.noticeOfficeDiaryDate);
     formData.append("noticeOfficeDiaryTime", values?.noticeOfficeDiaryTime);
@@ -114,6 +114,11 @@ function NoticeQuestionDetail() {
     formData.append("fkMemberId", values?.senator?.value);
     formData.append("urduText", values.urduText);
     formData.append("englishText", values.englishText);
+    if (values?.questionImage) {
+      Array.from(values?.questionImage).map((file, index) => {
+        formData.append(`questionImage`, file);
+      });
+    }
     try {
       const response = await UpdateQuestionById(
         location?.state?.question?.id,
@@ -372,7 +377,7 @@ function NoticeQuestionDetail() {
                         options={
                           members &&
                           members?.map((item) => ({
-                            value: item.id,
+                            value: item?.id,
                             label: item?.memberName,
                           }))
                         }
@@ -419,10 +424,10 @@ function NoticeQuestionDetail() {
                   />
                 </div>
                 <div className="row">
-                  {location?.state?.question &&
+                  {location?.state?.question?.questionImage?.length > 0 ? (
                     location?.state?.question?.questionImage?.map((item) => (
                       <div class="MultiFile-label mt-3">
-                        <a href={`http://172.16.170.8:5252${item}`}>
+                        <a href={`http://172.16.170.8:5252${item?.path}`}>
                           <i class="fas fa-download"></i>
                         </a>
                         <a class="MultiFile-remove" href="#T7">
@@ -430,21 +435,40 @@ function NoticeQuestionDetail() {
                         </a>
                         <span
                           class="MultiFile-label"
-                          title={item.filename
-                            ?.split("\\")
-                            .pop()
-                            .split("/")
-                            .pop()}
+                          title={item?.path?.split("\\").pop().split("/").pop()}
                         >
                           <span class="MultiFile-title">
-                            <a href={`http://172.16.170.8:5252${item}`}>
-                              {item?.split("\\").pop().split("/").pop()}
+                            <a href={`http://172.16.170.8:5252${item?.path}`}>
+                              {item?.path?.split("\\").pop().split("/").pop()}
                             </a>
                           </span>
                         </span>
                       </div>
-                    ))}
+                    ))
+                  ) : (
+                    <div className="row">
+                      <div className="col-6 ">
+                        <div className="mt-5">
+                          <input
+                            className="form-control"
+                            type="file"
+                            accept=".pdf, .jpg, .jpeg, .png"
+                            id="formFile"
+                            name="questionImage"
+                            multiple
+                            onChange={(event) => {
+                              formik.setFieldValue(
+                                "questionImage",
+                                event.currentTarget.files
+                              );
+                            }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
+
                 <div
                   class="d-grid gap-2 d-md-flex"
                   style={{ marginTop: 70, marginBottom: 40 }}

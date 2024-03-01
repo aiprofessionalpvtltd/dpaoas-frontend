@@ -9,7 +9,29 @@ import "react-circular-progressbar/dist/styles.css";
 function NoticeStatsCard({ title, icon, iconBgColor, total, sent, received, overall }) {
   return (
     <div class="col-4">
-      <div class="card proj-t-card" style={{ backgroundColor: overall && "#2dce89" }}>
+      {overall ? (
+        <>
+          <div class="card comp-card">
+              <div class="card-body">
+                  <div class="row align-items-center">
+                      <div class="col">
+                          <h6 class="mb-25" style={{ color: 'black' }}>{title}</h6>
+                          <h3 class="fw-700" style={{ color: iconBgColor }}>{total === "undefined" ? 0 : total}</h3>
+                      </div>
+                      <div class="col-auto">
+                        <div className="box-thumbnail" style={{ backgroundColor: iconBgColor }}>
+                        <FontAwesomeIcon
+                          icon={icon}
+                          style={{ fontSize: "30px", color: "#fff" }}
+                        />
+                        </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+        </>
+      ) : (
+      <div class="card proj-t-card">
         <div class="card-body">
           <div class="row align-items-center mb-30">
             <div class="col-auto" style={{ paddingRight: 0 }}>
@@ -74,9 +96,10 @@ function NoticeStatsCard({ title, icon, iconBgColor, total, sent, received, over
               </h6>
             </div>
           </div>
-          <h6 class="pt-badge" style={{ backgroundColor: iconBgColor ? iconBgColor : "#F22613", width: '120px', textAlign: 'center', color: overall && "#000000" }}>{total === "NaN" ? 0 : total}</h6>
+          <h6 class="pt-badge" style={{ backgroundColor: iconBgColor ? iconBgColor : "#F22613", width: '120px', textAlign: 'center' }}>{total === "NaN" ? 0 : total}</h6>
         </div>
       </div>
+      )}
     </div>
   );
 }

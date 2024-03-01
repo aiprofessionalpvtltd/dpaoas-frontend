@@ -64,7 +64,7 @@ function SearchQuestion() {
       const cleanedSubjectMatter = subjectMatter.replace(/(<([^>]+)>)/gi, "");
 
       return {
-        // SrNo: index,
+        SrNo: index + 1,
         QID: res.id,
         // QDN: res.questionDiary.questionDiaryNo,
         NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate,
@@ -197,7 +197,10 @@ function SearchQuestion() {
   useEffect(() => {
     GetALlStatus();
   }, []);
-
+  // Handle Delete
+  const handleDelete = (id) => {
+    alert("delete", id);
+  };
   // Handle Reset Form
 
   const handleResetForm = () => {
@@ -490,6 +493,7 @@ function SearchQuestion() {
                     hideDeleteIcon={true}
                     pageSize={pageSize}
                     handleEdit={(item) => handleEdit(item?.QID)}
+                    handleDelete={(item) => handleDelete(item?.QID)}
                     totalCount={count}
                   />
                 </div>
