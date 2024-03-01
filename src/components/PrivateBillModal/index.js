@@ -5,7 +5,7 @@ import Select from "react-select";
 import { assignedComplaintByAdmin } from '../../api/APIs/Services/Complaint.service';
 import { AuthContext } from '../../api/AuthContext';
 import { getUserData } from '../../api/Auth';
-import { showSuccessMessage } from '../../utils/ToastAlert';
+import { showErrorMessage, showSuccessMessage } from '../../utils/ToastAlert';
 import { updatePrivateBill } from '../../api/APIs/Services/Legislation.service';
 import { ToastContainer } from 'react-toastify';
 
@@ -51,6 +51,7 @@ function PrivateBillModal({ assignModalOpan, hendleModal, billData }) {
 
             }
         } catch (error) {
+            showErrorMessage(error.response?.data?.message)
             console.log(error);
         }
     }
