@@ -67,9 +67,9 @@ function SearchMotion() {
       return {
         id: leave?.id,
         SessionName: leave?.sessions?.sessionName,
-        fileNumber: leave?.fileNumber,
+        // fileNumber: leave?.fileNumber,
         motionType: leave?.motionType,
-        motionWeek: leave?.motionWeek,
+        // motionWeek: leave?.motionWeek,
         noticeOfficeDiaryNo: leave?.noticeOfficeDairies?.noticeOfficeDiaryNo,
         // ministryName: leave?.motionMinistries?.ministries,
         // ministryIds: leave?.motionMinistries?.fkMinistryId,
@@ -83,7 +83,7 @@ function SearchMotion() {
         // englishText: leave?.englishText,
         englishText: EnglishText,
         urduText: UrduText,
-        fkMotionStatus: leave?.motionStatuses?.statusName,
+        // fkMotionStatus: leave?.motionStatuses?.statusName,
       };
     });
   };
@@ -445,12 +445,11 @@ function SearchMotion() {
                         onChange={(date) =>
                           formik.setFieldValue("fromNoticeDate", date)
                         }
-                        className={`form-control ${
-                          formik.errors.fromNoticeDate &&
-                          formik.touched.fromNoticeDate
+                        className={`form-control ${formik.errors.fromNoticeDate &&
+                            formik.touched.fromNoticeDate
                             ? "is-invalid"
                             : ""
-                        }`}
+                          }`}
                       />
                       {formik.errors.fromNoticeDate &&
                         formik.touched.fromNoticeDate && (
@@ -504,7 +503,6 @@ function SearchMotion() {
                 </div>
                 <div class="" style={{ marginTop: "20px" }}>
                   <CustomTable
-                    block={true}
                     data={motionData}
                     headerShown={true}
                     hideDeleteIcon={true}

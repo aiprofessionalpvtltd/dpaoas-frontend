@@ -64,7 +64,7 @@ function SearchQuestion() {
       const cleanedSubjectMatter = subjectMatter.replace(/(<([^>]+)>)/gi, "");
 
       return {
-        // SrNo: index,
+        SrNo: index + 1,
         QID: res.id,
         // QDN: res.questionDiary.questionDiaryNo,
         NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate,

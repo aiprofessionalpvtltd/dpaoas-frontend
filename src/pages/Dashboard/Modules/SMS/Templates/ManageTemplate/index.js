@@ -190,3 +190,4 @@ function SMSMAnageTemplate() {
 }
 
 export default SMSMAnageTemplate
+    
