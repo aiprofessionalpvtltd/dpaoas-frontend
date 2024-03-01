@@ -694,3 +694,37 @@ export const CMSsidebarItems = [
     ],
   },
 ];
+
+//Efiling
+export const EfilingSideBarItem = [
+  {
+    itemName: "Dashboard",
+    link: "/efiling/dashboard",
+    icon: faHome,
+  },
+  {
+    itemName: "FIle Registers",
+    link: "/efiling/dashboard/file-register-list",
+    icon: faHome,
+  },
+  {
+    itemName: "Main File",
+    link: "",
+    icon: faHome,
+  },
+  {
+    itemName: "Fresh Recipt",
+    link: "",
+    icon: faHome,
+  },
+  {
+    itemName: "Notifivation",
+    link: "",
+    icon: faHome,
+  },
+  {
+    itemName: "Team information",
+    link: "",
+    icon: faHome,
+  },
+]
