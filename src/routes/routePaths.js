@@ -128,6 +128,7 @@ import AddEditFileRegister from "../pages/Dashboard/Modules/EFiling/FIleRegister
 import ListFileRegister from "../pages/Dashboard/Modules/EFiling/FIleRegister";
 import ListFiles from "../pages/Dashboard/Modules/EFiling/FIleRegister/Files";
 import AddEditFiles from "../pages/Dashboard/Modules/EFiling/FIleRegister/Files/AddEditFiles";
+import AddEditPrivateBill from "../pages/Dashboard/Modules/Notice/legislationBusiness/PrivateBill/AddEditPrivateBill";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -186,6 +187,7 @@ export const ProtectedRoutes = [
 
   { path: "/notice/legislation/government-bill", element: <GovernmentBill /> },
   { path: "/notice/legislation/private-bill", element: <PrivateBill /> },
+  { path: "/notice/legislation/private-bill/addedit", element: <AddEditPrivateBill /> },
 
   { path: "/notice/manage", element: <NoticeDashboard /> },
   { path: "/notice/manage/members", element: <Members /> },
