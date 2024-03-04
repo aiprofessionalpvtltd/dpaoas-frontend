@@ -128,6 +128,8 @@ import AddEditFileRegister from "../pages/Dashboard/Modules/EFiling/FIleRegister
 import ListFileRegister from "../pages/Dashboard/Modules/EFiling/FIleRegister";
 import ListFiles from "../pages/Dashboard/Modules/EFiling/FIleRegister/Files";
 import AddEditFiles from "../pages/Dashboard/Modules/EFiling/FIleRegister/Files/AddEditFiles";
+import FileHeadingList from "../pages/Dashboard/Modules/EFiling/FileHeading";
+import AddEditFIleHeading from "../pages/Dashboard/Modules/EFiling/FileHeading/AddEditFIleHeading";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -427,7 +429,10 @@ export const ProtectedRoutes = [
   { path: "/efiling/dashboard/file-register-list", element: <ListFileRegister /> },
   { path: "/efiling/dashboard/addedit-file-register", element: <AddEditFileRegister /> },
   { path: "/efiling/dashboard/file-register-list/files-list", element: <ListFiles /> },
-  {path:"/efiling/dashboard/file-register-list/files-list/addedit-file", element: <AddEditFiles />}
+  {path:"/efiling/dashboard/file-register-list/files-list/addedit-file", element: <AddEditFiles />},
+
+  { path: "/efiling/dashboard/file-heading-list", element: <FileHeadingList /> },
+  { path: "/efiling/dashboard/addedit-file-heading", element: <AddEditFIleHeading /> },
 
 
 

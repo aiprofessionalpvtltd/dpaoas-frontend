@@ -705,26 +705,32 @@ export const EfilingSideBarItem = [
   {
     itemName: "FIle Registers",
     link: "/efiling/dashboard/file-register-list",
-    icon: faHome,
+    icon: faFileAlt,
+  },
+  {
+    itemName: "File Headings",
+    link: "/efiling/dashboard/file-heading-list",
+    icon: faFileAlt,
   },
   {
     itemName: "Main File",
     link: "",
-    icon: faHome,
+    icon: faFileAlt,
   },
   {
     itemName: "Fresh Recipt",
     link: "",
-    icon: faHome,
+    icon: faFileAlt,
   },
   {
-    itemName: "Notifivation",
+    itemName: "Notification",
     link: "",
-    icon: faHome,
+    icon: faFileAlt,
   },
   {
     itemName: "Team information",
     link: "",
-    icon: faHome,
+    icon: faFileAlt,
   },
+  
 ]

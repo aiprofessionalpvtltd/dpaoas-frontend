@@ -3829,3 +3829,11 @@ button span {
 .react-time-picker__wrapper{
   border: none !important;
 }
+.blueheadbg{
+  background-color: #4285f4 !important;
+  text-align: center;
+  color: #FFF;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 10px;
+}
