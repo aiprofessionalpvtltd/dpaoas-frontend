@@ -13,7 +13,13 @@ import {
   faBuilding,
 } from "@fortawesome/free-solid-svg-icons";
 import { AuthContext } from "../../api/AuthContext";
-import { getPermissionsData, getUserData, logout, setPermissionsData, setRolesData } from "../../api/Auth";
+import {
+  getPermissionsData,
+  getUserData,
+  logout,
+  setPermissionsData,
+  setRolesData,
+} from "../../api/Auth";
 import { CheckPermission } from "../../utils/permissionsConfig";
 import { useNavigate } from "react-router";
 import { getRoles } from "../../api/APIs/Services/organizational.service";
@@ -54,8 +60,8 @@ function Dashboard() {
         setPermissionsData(res?.permissions);
         setPermissionsLocal(res?.permissions);
 
-        console.log("Permissions", res?.permissions);
-        console.log("Permissions Count", Object.keys(res?.permissions).length);
+        // console.log("Permissions", res?.permissions);
+        // console.log("Permissions Count", Object.keys(res?.permissions).length);
 
         // Check if user has only one permission, and if so, navigate directly
         const permissionKeys = Object.keys(res.permissions);
@@ -64,7 +70,13 @@ function Dashboard() {
         if (permissionKeys.length === 1) {
           const singlePermission = permissions[0].label; // Assuming permissions is an array
           console.log("singlePermission", singlePermission);
-          const tileWithSinglePermission = tilesData.find(tile => tile.permission.includes(singlePermission) && permissions.find(permission => permission.label === singlePermission)?.hasAccess.includes('View'));
+          const tileWithSinglePermission = tilesData.find(
+            (tile) =>
+              tile.permission.includes(singlePermission) &&
+              permissions
+                .find((permission) => permission.label === singlePermission)
+                ?.hasAccess.includes("View")
+          );
           if (tileWithSinglePermission) {
             navigation(tileWithSinglePermission.link);
           }
@@ -95,7 +107,7 @@ function Dashboard() {
       cardbg: "bluebg",
       icon: faMailBulk,
       // permission: null,
-      permission: ["Leave"]
+      permission: ["Leave"],
     },
     {
       title: "Organizational Dashboard",
@@ -104,7 +116,11 @@ function Dashboard() {
       cardbg: "greenbg",
       icon: faBuilding,
       // permission: null,
-      permission:  [userRole?.role?.name == "Super Admin" ? "Roles" :"Organizational Dashboard"]
+      permission: [
+        userRole?.role?.name == "Super Admin"
+          ? "Roles"
+          : "Organizational Dashboard",
+      ],
     },
     {
       title: "Visitors Management System",
@@ -182,7 +198,10 @@ function Dashboard() {
 
   // Filter tiles based on permissions
   const filteredTiles = tilesData.filter((tile) => {
-    return tile?.permission === null || tile?.permission.some((perm) => permissionsLocal?.[perm]?.canView);
+    return (
+      tile?.permission === null ||
+      tile?.permission.some((perm) => permissionsLocal?.[perm]?.canView)
+    );
   });
 
   // Organize tiles into rows with a maximum of 3 tiles per row
@@ -201,7 +220,13 @@ function Dashboard() {
           <div key={rowIndex} className="row main-dashboard-tiles">
             {row.map((tile, colIndex) => (
               <div key={colIndex} className="col-3">
-                <Tiles title={tile.title} link={tile.link} type={tile.type} cardbg={tile.cardbg} icon={tile.icon} />
+                <Tiles
+                  title={tile.title}
+                  link={tile.link}
+                  type={tile.type}
+                  cardbg={tile.cardbg}
+                  icon={tile.icon}
+                />
               </div>
             ))}
           </div>

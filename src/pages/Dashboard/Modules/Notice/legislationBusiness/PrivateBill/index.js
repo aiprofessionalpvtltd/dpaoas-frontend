@@ -92,7 +92,11 @@ function PrivateBill() {
           billData={selectedItem}
         />
       )}
-      <Header dashboardLink={"/"} />
+      <Header
+        dashboardLink={"/notice/dashboard"}
+        // addLink1={"/notice/question/sent"}
+        title1={"Private Bill"}
+      />
 
       <div class="row">
         <div class="col-12">

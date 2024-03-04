@@ -183,7 +183,7 @@ function SearchMotion() {
     >
       <ToastContainer />
       <Header
-        dashboardLink={"/"}
+        dashboardLink={"/notice/dashboard"}
         addLink1={"/notice/motion/search"}
         title1={"Search Motion"}
       />
@@ -445,11 +445,12 @@ function SearchMotion() {
                         onChange={(date) =>
                           formik.setFieldValue("fromNoticeDate", date)
                         }
-                        className={`form-control ${formik.errors.fromNoticeDate &&
-                            formik.touched.fromNoticeDate
+                        className={`form-control ${
+                          formik.errors.fromNoticeDate &&
+                          formik.touched.fromNoticeDate
                             ? "is-invalid"
                             : ""
-                          }`}
+                        }`}
                       />
                       {formik.errors.fromNoticeDate &&
                         formik.touched.fromNoticeDate && (

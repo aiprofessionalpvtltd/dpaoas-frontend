@@ -211,7 +211,7 @@ function NoticeQuestionDetail() {
       centerlogohide={true}
     >
       <Header
-        dashboardLink={"/"}
+        dashboardLink={"/notice/dashboard"}
         addLink1={"/notice/question/detail"}
         title1={"Question Detail"}
       />

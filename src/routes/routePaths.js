@@ -123,7 +123,10 @@ import { MotionListing } from "../pages/Dashboard/Modules/Notice/Motion";
 import EditMotion from "../pages/Dashboard/Modules/Notice/Motion/EditMotion";
 import GovernmentBill from "../pages/Dashboard/Modules/Notice/legislationBusiness/GovernmentBill";
 import PrivateBill from "../pages/Dashboard/Modules/Notice/legislationBusiness/PrivateBill";
-import AttendenceReports from "../pages/Dashboard/Modules/Notice/AttendanceReport";
+
+import PartywiseAttendenceReports from "../pages/Dashboard/Modules/Notice/Reports/PartywiseAnnualAttendanceReports";
+import AttendanceReport from "../pages/Dashboard/Modules/Notice/Reports/AttendanceReport";
+
 import AddEditFileRegister from "../pages/Dashboard/Modules/EFiling/FIleRegister/AddEditFileRegister";
 import ListFileRegister from "../pages/Dashboard/Modules/EFiling/FIleRegister";
 import ListFiles from "../pages/Dashboard/Modules/EFiling/FIleRegister/Files";
@@ -189,7 +192,10 @@ export const ProtectedRoutes = [
 
   { path: "/notice/legislation/government-bill", element: <GovernmentBill /> },
   { path: "/notice/legislation/private-bill", element: <PrivateBill /> },
-  { path: "/notice/legislation/private-bill/addedit", element: <AddEditPrivateBill /> },
+  {
+    path: "/notice/legislation/private-bill/addedit",
+    element: <AddEditPrivateBill />,
+  },
 
   { path: "/notice/manage", element: <NoticeDashboard /> },
   { path: "/notice/manage/members", element: <Members /> },
@@ -222,9 +228,15 @@ export const ProtectedRoutes = [
 
   { path: "/notice/reports", element: <NoticeDashboard /> },
   { path: "/notice/reports/business-summary", element: <BusinessSummary /> },
+
   {
     path: "/notice/reports/attendence-reports",
-    element: <AttendenceReports />,
+    element: <AttendanceReport />,
+  },
+
+  {
+    path: "/notice/reports/party-province-annual-attendence-reports",
+    element: <PartywiseAttendenceReports />,
   },
 
   //MMS Module
@@ -428,15 +440,29 @@ export const ProtectedRoutes = [
   // { path: "/efiling/dashboard/addeditcase", element: <AddEditCaseForm /> },
   // { path: "/efiling/dashboard/files", element: <Files /> },
 
-  { path: "/efiling/dashboard/file-register-list", element: <ListFileRegister /> },
-  { path: "/efiling/dashboard/addedit-file-register", element: <AddEditFileRegister /> },
-  { path: "/efiling/dashboard/file-register-list/files-list", element: <ListFiles /> },
-  {path:"/efiling/dashboard/file-register-list/files-list/addedit-file", element: <AddEditFiles />},
+  {
+    path: "/efiling/dashboard/file-register-list",
+    element: <ListFileRegister />,
+  },
+  {
+    path: "/efiling/dashboard/addedit-file-register",
+    element: <AddEditFileRegister />,
+  },
+  {
+    path: "/efiling/dashboard/file-register-list/files-list",
+    element: <ListFiles />,
+  },
+  {
+    path: "/efiling/dashboard/file-register-list/files-list/addedit-file",
+    element: <AddEditFiles />,
+  },
 
-  { path: "/efiling/dashboard/file-heading-list", element: <FileHeadingList /> },
-  { path: "/efiling/dashboard/addedit-file-heading", element: <AddEditFIleHeading /> },
-
-
-
-
+  {
+    path: "/efiling/dashboard/file-heading-list",
+    element: <FileHeadingList />,
+  },
+  {
+    path: "/efiling/dashboard/addedit-file-heading",
+    element: <AddEditFIleHeading />,
+  },
 ];
