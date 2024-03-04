@@ -94,7 +94,7 @@ function AddEditFiles() {
       dateOfRecord: "",
       classification: "",
       movement: "",
-      fileCategory: "",
+      fileCategory: null,
 
     },
     validationSchema: validationSchema,
@@ -118,7 +118,7 @@ function AddEditFiles() {
       dateOfRecording: values?.dateOfRecord,
       fileClassification: values?.classification,
       fileMovement: values?.movement,
-      fileCategory: values?.fileCategory,
+      ...(values?.fileCategory && { fileCategory: values?.fileCategory })
     }
       try {
         const response = await createFiles(registerId, Data)
@@ -186,6 +186,15 @@ function AddEditFiles() {
       <ToastContainer />
 
       <div class="container-fluid">
+            <div className='row'>
+                <div className='col'>
+                <div class="top-head-left" style={{marginLeft:"15px",marginBottom:"15px"}}>
+              <p style={{fontSize: "14px", marginBottom: "5px"}}>S-92</p>
+              <p style={{fontSize: "15px", marginBottom: "5px"}}>(See Appendix E-Instructions)</p>
+              <p style={{fontSize: "15px", marginBottom: "5px"}}>Secretariat Instructions</p>
+            </div>
+                </div>
+            </div>
         <div class="card">
           <div class="card-header red-bg" style={{ background: "#14ae5c" }}>
             {location && location.state ? (
@@ -430,7 +439,7 @@ function AddEditFiles() {
                   </div>
                 </div>
 
-                <div class="row" style={{ background: "rgb(242, 242, 242)", padding: "20px" }}>
+                <div class="row" style={{ background: "rgb(242, 242, 242)", padding: "20px 20px 0 20px" }}>
                   <div class="col-3">
                     <div class="mb-3">
                       <label class="form-label">Data Of Record</label>
@@ -480,7 +489,12 @@ function AddEditFiles() {
                       />
                     </div>
                   </div>
-                  <div class="col-3">
+                 
+                </div>
+                <div className="clearfix"></div>
+
+                <div className="row" style={{ background: "rgb(242, 242, 242)", padding: "0 20px" }}>
+                <div class="col-9">
                     <div class="mb-3">
                       <label className="form-label">Movement</label>
                       <textarea
@@ -499,10 +513,10 @@ function AddEditFiles() {
 
 
 
-                <div class="row">
-                  <div class="col">
+                <div class="row mt-4">
+                  <div class="col p-0">
                     <button class="btn btn-primary float-end" type="submit">
-                      Submit
+                      Create FIle
                     </button>
                   </div>
                 </div>

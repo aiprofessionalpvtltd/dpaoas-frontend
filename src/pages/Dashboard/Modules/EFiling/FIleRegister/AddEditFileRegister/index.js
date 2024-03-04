@@ -14,6 +14,8 @@ const validationSchema = Yup.object({
   registerNumber: Yup.string().required("File No is required"),
   fkBranchId: Yup.string().required("Branch is required"),
   year: Yup.string().required("Year is required"),
+  registerSubject: Yup.string().required("Subject is required"),
+
 });
 function AddEditFileRegister() {
   const { allBranchesData } = useContext(AuthContext)
@@ -24,6 +26,7 @@ function AddEditFileRegister() {
       registerNumber: "",
       fkBranchId: "",
       year: "",
+      registerSubject:"",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -36,7 +39,8 @@ function AddEditFileRegister() {
     const Data = {
       fkBranchId: values?.fkBranchId,
       registerNumber: values?.registerNumber,
-      year: values?.year
+      year: values?.year,
+      registerSubject:values?.registerSubject
     }
     try {
       const response = await createFIleRegister(Data)
@@ -138,8 +142,6 @@ function AddEditFileRegister() {
                 </div>
 
                 <div class="row">
-
-
                   <div class="col-6">
                     <div class="mb-3">
                       <label class="form-label">Year</label>
@@ -172,11 +174,35 @@ function AddEditFileRegister() {
                         )}
                     </div>
                   </div>
+                  <div class="col-6">
+                    <div class="mb-3">
+                      <label class="form-label">Subject</label>
+                      <input
+                        type="text"
+                        placeholder={"Subject"}
+                        value={formik.values.registerSubject}
+                        className={`form-control ${formik.touched.registerSubject &&
+                            formik.errors.registerSubject
+                            ? "is-invalid"
+                            : ""
+                          }`}
+                        id="registerSubject"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      />
+                      {formik.touched.registerSubject &&
+                        formik.errors.registerSubject && (
+                          <div className="invalid-feedback">
+                            {formik.errors.registerSubject}
+                          </div>
+                        )}
+                    </div>
+                  </div>
                 </div>
                 <div class="row">
                   <div class="col">
                     <button class="btn btn-primary float-end" type="submit">
-                      Submit
+                      Create Register
                     </button>
                   </div>
                 </div>
