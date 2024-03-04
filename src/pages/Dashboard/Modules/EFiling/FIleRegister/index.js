@@ -1,15 +1,19 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import CustomTable from '../../../../../components/CustomComponents/CustomTable'
 import { ToastContainer } from 'react-toastify';
 import Header from '../../../../../components/Header';
 import { Layout } from '../../../../../components/Layout';
 import { EfilingSideBarItem } from '../../../../../utils/sideBarItems';
 import { useNavigate } from 'react-router';
+import { getAllFileRegister } from '../../../../../api/APIs/Services/efiling.service';
+import { showErrorMessage, showSuccessMessage } from '../../../../../utils/ToastAlert';
+import { setregisterID } from '../../../../../api/Auth';
 
 function ListFileRegister() {
     const navigate = useNavigate()
     const [currentPage, setCurrentPage] = useState(0);
-    const [count, setCount] = useState(1);
+    const [count, setCount] = useState(null);
+    const [registerData, setRegisterData] = useState([])
     const pageSize = 5; // Set your desired page size
 
 
@@ -17,23 +21,34 @@ function ListFileRegister() {
         // Update currentPage when a page link is clicked
         setCurrentPage(page);
     };
-    const fileData = [
-        {
-            No: "15",
-            MainHeading: "This is Heading",
-            Branch: "IT"
-        },
-        {
-            No: "15",
-            MainHeading: "This is Heading",
-            Branch: "IT"
-        },
-        {
-            No: "15",
-            MainHeading: "This is Heading",
-            Branch: "IT"
+
+
+    const transformFilesRegisterdata = (apiData) => {
+        return apiData.map((item) => ({
+            id: item?.id,
+            registerNumber: item?.registerNumber,
+            branch: item?.branches?.branchName,
+            year: item?.year,
+        }));
+    };
+
+    const getAllRegisterApi = async () => {
+        try {
+            const response = await getAllFileRegister(currentPage, pageSize)
+            if (response.success) {
+                showSuccessMessage(response?.message)
+                const transferData = transformFilesRegisterdata(response?.data?.fileRegisters)
+                setRegisterData(transferData)
+            }
+        } catch (error) {
+            showErrorMessage(error?.response?.data?.message);
         }
-    ]
+    }
+
+    useEffect(() => {
+        getAllRegisterApi()
+    }, [])
+
     return (
         <Layout module={true} sidebarItems={EfilingSideBarItem}>
             <Header dashboardLink={"/efiling/dashboard"} addLink1={"/efiling/dashboard"} width={"500px"} />
@@ -44,7 +59,7 @@ function ListFileRegister() {
                         // hidebtn1={true}
                         hideBtn={false}
                         addBtnText={"Create File Register"}
-                        data={fileData}
+                        data={registerData}
                         tableTitle="List File Registers"
                         addBtnText2="Create File"
                         headertitlebgColor={"#666"}
@@ -58,7 +73,9 @@ function ListFileRegister() {
                         hideDeleteIcon={true}
                         showEditIcon={true}
                         showView={true}
-                        handleView={() => navigate("/efiling/dashboard/file-register-list/files-list")}
+                        handleView={(item) => {
+                            setregisterID(item?.id)
+                            navigate("/efiling/dashboard/file-register-list/files-list")}}
 
                     />
                 </div>
