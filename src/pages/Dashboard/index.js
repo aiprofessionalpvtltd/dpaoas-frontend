@@ -63,18 +63,24 @@ function Dashboard() {
         // console.log("Permissions", res?.permissions);
         // console.log("Permissions Count", Object.keys(res?.permissions).length);
 
-        // // Check if user has only one permission, and if so, navigate directly
-        // const permissionKeys = Object.keys(res.permissions);
-        // console.log("Permission keys", permissionKeys);
+        // Check if user has only one permission, and if so, navigate directly
+        const permissionKeys = Object.keys(res.permissions);
+        console.log("Permission keys", permissionKeys);
 
-        // // if (permissionKeys.length === 1) {
-        // //   const singlePermission = permissions[0].label; // Assuming permissions is an array
-        // //   console.log("singlePermission", singlePermission);
-        // //   const tileWithSinglePermission = tilesData.find(tile => tile.permission.includes(singlePermission) && permissions.find(permission => permission.label === singlePermission)?.hasAccess.includes('View'));
-        // //   if (tileWithSinglePermission) {
-        // //     navigation(tileWithSinglePermission.link);
-        // //   }
-        // // }
+        if (permissionKeys.length === 1) {
+          const singlePermission = permissions[0].label; // Assuming permissions is an array
+          console.log("singlePermission", singlePermission);
+          const tileWithSinglePermission = tilesData.find(
+            (tile) =>
+              tile.permission.includes(singlePermission) &&
+              permissions
+                .find((permission) => permission.label === singlePermission)
+                ?.hasAccess.includes("View")
+          );
+          if (tileWithSinglePermission) {
+            navigation(tileWithSinglePermission.link);
+          }
+        }
 
         // permissionKeys.forEach(singlePermission => {
         //   console.log("singlePermission", singlePermission);
@@ -182,7 +188,7 @@ function Dashboard() {
     },
     {
       title: "E-Filing System",
-      link: "/efiling/dashboard/files",
+      link: "/efiling/dashboard",
       type: "",
       cardbg: "greenbg",
       icon: faBuilding,
@@ -203,6 +209,8 @@ function Dashboard() {
   for (let i = 0; i < filteredTiles.length; i += 4) {
     rows.push(filteredTiles.slice(i, i + 4));
   }
+
+  console.log(rows, "rows");
   return (
     <Layout>
       <div class="dashboard-content" style={{ marginTop: "100px" }}>

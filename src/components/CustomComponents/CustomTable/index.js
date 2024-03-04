@@ -330,6 +330,22 @@ function CustomTable({
                                 </OverlayTrigger>
                               )}
 
+                              {showAssigned && (
+                              <OverlayTrigger
+                                placement="top"
+                                overlay={assignedTooltip}
+                              >
+                                <button
+                                  onClick={() => hendleAssigned(item)}
+                                  className="btn-xs black circle-btn"
+                                  data-id={item.id}
+                                  style={{ backgroundColor: 'green' }}
+                                >
+                                  <FontAwesomeIcon icon={faFileExport} />
+                                </button>
+                              </OverlayTrigger>
+                            )}
+
                               {!showEditIcon && !showEditIcon && (
                                 <OverlayTrigger
                                   placement="top"
@@ -413,20 +429,6 @@ function CustomTable({
                                 data-id={item.id}
                               >
                                 <FontAwesomeIcon icon={faCheck} />
-                              </button>
-                            </OverlayTrigger>
-                          )}
-                          {showAssigned && (
-                            <OverlayTrigger
-                              placement="top"
-                              overlay={assignedTooltip}
-                            >
-                              <button
-                                onClick={() => hendleAssigned(item)}
-                                className="btn-xs black circle-btn"
-                                data-id={item.id}
-                              >
-                                <FontAwesomeIcon icon={faFileExport} />
                               </button>
                             </OverlayTrigger>
                           )}

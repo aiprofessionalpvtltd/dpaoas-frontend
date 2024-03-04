@@ -7,9 +7,10 @@ import {
   showErrorMessage,
   showSuccessMessage,
 } from "../../../../../../utils/ToastAlert";
-import { getAllPrivateBill } from "../../../../../../api/APIs/Services/Legislation.service";
+import { deletePrivateBill, getAllPrivateBill } from "../../../../../../api/APIs/Services/Legislation.service";
 import PrivateBillModal from "../../../../../../components/PrivateBillModal";
 import { ToastContainer } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 function PrivateBill() {
   const [currentPage, setCurrentPage] = useState(0);
@@ -17,6 +18,7 @@ function PrivateBill() {
   const [count, setCount] = useState();
   const [assignModalOpan, setAssignedModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
+  const navigate = useNavigate()
 
   const [data, setData] = useState([]);
 
@@ -34,10 +36,10 @@ function PrivateBill() {
       fromReceived: item?.fromReceived,
       briefSubject: item?.briefSubject,
       remarks: item?.remarks,
-      status: item?.status,
       AssignedTo: item?.branch?.branchName
         ? item?.branch?.branchName
         : "Notice",
+      status: item?.status,
     }));
   };
   const getAllPrivateBillApi = useCallback(async () => {
@@ -57,15 +59,25 @@ function PrivateBill() {
 
   const openModal = (item) => {
     // Inside a function or event handler
-    setSelectedItem({
-      id: item.id,
-    });
+    setSelectedItem(item);
     setAssignedModal(true);
   };
 
   useEffect(() => {
     getAllPrivateBillApi();
   }, [getAllPrivateBillApi]);
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await deletePrivateBill(id);
+      if (response?.success) {
+        showSuccessMessage(response?.message);
+        getAllPrivateBillApi()
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  }
   return (
     <Layout
       module={true}
@@ -92,8 +104,10 @@ function PrivateBill() {
             singleDataCard={true}
             data={data}
             tableTitle="Private Bill"
-            hideBtn={true}
-            hidebtn1={true}
+            addBtnText={"Create Private Bill"}
+            handleAdd={() => navigate("/notice/legislation/private-bill/addedit")}
+            handleEdit={(item) => navigate("/notice/legislation/private-bill/addedit", { state: item })}
+            handleDelete={(item) => handleDelete(item.id)}
             headertitlebgColor={"#666"}
             headertitletextColor={"#FFF"}
             handlePageChange={handlePageChange}
@@ -101,8 +115,6 @@ function PrivateBill() {
             pageSize={pageSize}
             totalCount={count}
             showAssigned={true}
-            hideDeleteIcon={true}
-            hideEditIcon={true}
             hendleAssigned={(item) => openModal(item)}
           />
         </div>

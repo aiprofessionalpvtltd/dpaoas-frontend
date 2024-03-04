@@ -62,7 +62,7 @@ function NoticeDashboard() {
         <h2 style={{ fontSize: '22px', fontWeight: 'bold', marginBottom: '10px' }}>Daily Stats</h2>
         <div class="row">
           <div class="col-md-12">
-            <div class="mt-2 mb-5">
+            <div class="mt-2 mb-4">
               <div class="row">
                 <NoticeStatsCard title={"Question"} icon={faClipboardQuestion} iconBgColor={"#FFA500"} total={`${stats?.questions?.dailySendQuestions + stats?.questions?.dailyRecievedQuestions}`} sent={stats?.questions?.dailySendQuestions} received={stats?.questions?.dailyRecievedQuestions} />
                 <NoticeStatsCard title={"Motion"} icon={faFileImport} iconBgColor={"#007bff"} total={`${stats?.motions?.dailySendMotions + stats?.motions?.dailyRecievedMotions}`} sent={stats?.motions?.dailySendMotions} received={stats?.motions?.dailyRecievedMotions} />
@@ -72,13 +72,26 @@ function NoticeDashboard() {
           </div>
         </div>
 
-        <h2 style={{ fontSize: '22px', fontWeight: 'bold', marginBottom: '10px' }}>Overall Stats</h2>
+        <h2 style={{ fontSize: '22px', fontWeight: 'bold', marginBottom: '10px' }}>Monthly Stats</h2>
         <div class="row">
           <div class="col-md-12">
             <div class="mt-2 mb-4">
               <div class="row">
-              <NoticeStatsCard title={"Question"} icon={faClipboardQuestion} overall={true} iconBgColor={"#FFA500"} total={`${stats?.totalQuestions}`} />
-              <NoticeStatsCard title={"Motion"} icon={faFileImport} overall={true} iconBgColor={"#007bff"} total={`${stats?.totalMotions}`} />
+              <NoticeStatsCard title={"Question"} icon={faClipboardQuestion} overall={true} iconBgColor={"#FFA500"} total={`${stats?.monthlyQuestions}`} />
+              <NoticeStatsCard title={"Motion"} icon={faFileImport} overall={true} iconBgColor={"#007bff"} total={`${stats?.monthlyMotions}`} />
+              <NoticeStatsCard title={"Legislation"} icon={faScaleBalanced} overall={true} iconBgColor={"#2dce89"} total={`${stats?.totalLegislations}`} />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h2 style={{ fontSize: '22px', fontWeight: 'bold', marginBottom: '10px' }}>Upcoming Session Stats</h2>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="mt-2 mb-4">
+              <div class="row">
+              <NoticeStatsCard title={"Question"} icon={faClipboardQuestion} overall={true} iconBgColor={"#FFA500"} total={`${stats?.sessionWiseQuestions}`} />
+              <NoticeStatsCard title={"Motion"} icon={faFileImport} overall={true} iconBgColor={"#007bff"} total={`${stats?.sessionWiseMotions}`} />
               <NoticeStatsCard title={"Legislation"} icon={faScaleBalanced} overall={true} iconBgColor={"#2dce89"} total={`${stats?.totalLegislations}`} />
               </div>
             </div>

@@ -16,6 +16,7 @@ import {
 } from "../../../../../api/APIs/Services/AttendanceReport.service";
 import { Document, Page } from "@react-pdf/renderer";
 import axios from "axios";
+import { ToastContainer } from "react-toastify";
 const AttendenceReports = () => {
   const [showDateField, setShowDateField] = useState(false);
   const [showDateFieldMonthly, setShowDateFieldMonthly] = useState(false);
@@ -226,6 +227,7 @@ const AttendenceReports = () => {
       sidebarItems={NoticeSidebarItems}
       centerlogohide={true}
     >
+      <ToastContainer />
       <Header dashboardLink={"/"} title1={"Attendance Reports"} />
 
       <div class="container-fluid">

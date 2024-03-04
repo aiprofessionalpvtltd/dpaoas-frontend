@@ -110,9 +110,6 @@ import CMSEditVendor from "../pages/Dashboard/Modules/CMS/InventoryDashboard/Ven
 import CMSTonerInstallationReports from "../pages/Dashboard/Modules/CMS/AdminCMS/TonerInstallationReports";
 import CMSAddEditTonerInstallation from "../pages/Dashboard/Modules/CMS/AdminCMS/TonerInstallationReports/AddEditTonerInstallation";
 import EFilingDashboard from "../pages/Dashboard/Modules/EFiling";
-import FileDetail from "../pages/Dashboard/Modules/EFiling/FileDetail";
-import AddEditFileForm from "../pages/Dashboard/Modules/EFiling/AddEditFileForm";
-import AddEditCaseForm from "../pages/Dashboard/Modules/EFiling/AddEditCaseForm";
 import CMSTonerModels from "../pages/Dashboard/Modules/CMS/AdminCMS/TonerModel";
 import AddEditTonerModel from "../pages/Dashboard/Modules/CMS/AdminCMS/TonerModel/AddEditTonerModels";
 import HRMBranches from "../pages/Dashboard/Modules/HRM/Branches";
@@ -122,7 +119,6 @@ import ManageSittingDays from "../pages/Dashboard/Modules/Notice/SeatingPlan/Man
 import NMSAddEditSittingDaysForm from "../pages/Dashboard/Modules/Notice/SeatingPlan/ManageSittingDays/AddEditSittingDays";
 import NMSSessionAttendence from "../pages/Dashboard/Modules/Notice/SeatingPlan/ManageSittingDays/SessionAttendence";
 import NoticeQuestionDetail from "../pages/Dashboard/Modules/Notice/Question/NoticeQuestionDetail";
-import Files from "../pages/Dashboard/Modules/EFiling/Files";
 import { MotionListing } from "../pages/Dashboard/Modules/Notice/Motion";
 import EditMotion from "../pages/Dashboard/Modules/Notice/Motion/EditMotion";
 import GovernmentBill from "../pages/Dashboard/Modules/Notice/legislationBusiness/GovernmentBill";
@@ -131,7 +127,13 @@ import PrivateBill from "../pages/Dashboard/Modules/Notice/legislationBusiness/P
 import PartywiseAttendenceReports from "../pages/Dashboard/Modules/Notice/Reports/PartywiseAnnualAttendanceReports";
 import AttendanceReport from "../pages/Dashboard/Modules/Notice/Reports/AttendanceReport";
 
-// import AttendanceReport from "../pages/Dashboard/Modules/Notice/AttendanceReport";
+import AddEditFileRegister from "../pages/Dashboard/Modules/EFiling/FIleRegister/AddEditFileRegister";
+import ListFileRegister from "../pages/Dashboard/Modules/EFiling/FIleRegister";
+import ListFiles from "../pages/Dashboard/Modules/EFiling/FIleRegister/Files";
+import AddEditFiles from "../pages/Dashboard/Modules/EFiling/FIleRegister/Files/AddEditFiles";
+import AddEditPrivateBill from "../pages/Dashboard/Modules/Notice/legislationBusiness/PrivateBill/AddEditPrivateBill";
+import FileHeadingList from "../pages/Dashboard/Modules/EFiling/FileHeading";
+import AddEditFIleHeading from "../pages/Dashboard/Modules/EFiling/FileHeading/AddEditFIleHeading";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -190,6 +192,10 @@ export const ProtectedRoutes = [
 
   { path: "/notice/legislation/government-bill", element: <GovernmentBill /> },
   { path: "/notice/legislation/private-bill", element: <PrivateBill /> },
+  {
+    path: "/notice/legislation/private-bill/addedit",
+    element: <AddEditPrivateBill />,
+  },
 
   { path: "/notice/manage", element: <NoticeDashboard /> },
   { path: "/notice/manage/members", element: <Members /> },
@@ -429,8 +435,34 @@ export const ProtectedRoutes = [
 
   // E-Filing
   { path: "/efiling/dashboard", element: <EFilingDashboard /> },
-  { path: "/efiling/dashboard/fileDetail", element: <FileDetail /> },
-  { path: "/efiling/dashboard/addedit", element: <AddEditFileForm /> },
-  { path: "/efiling/dashboard/addeditcase", element: <AddEditCaseForm /> },
-  { path: "/efiling/dashboard/files", element: <Files /> },
+  // { path: "/efiling/dashboard/fileDetail", element: <FileDetail /> },
+  // { path: "/efiling/dashboard/addedit", element: <AddEditFileForm /> },
+  // { path: "/efiling/dashboard/addeditcase", element: <AddEditCaseForm /> },
+  // { path: "/efiling/dashboard/files", element: <Files /> },
+
+  {
+    path: "/efiling/dashboard/file-register-list",
+    element: <ListFileRegister />,
+  },
+  {
+    path: "/efiling/dashboard/addedit-file-register",
+    element: <AddEditFileRegister />,
+  },
+  {
+    path: "/efiling/dashboard/file-register-list/files-list",
+    element: <ListFiles />,
+  },
+  {
+    path: "/efiling/dashboard/file-register-list/files-list/addedit-file",
+    element: <AddEditFiles />,
+  },
+
+  {
+    path: "/efiling/dashboard/file-heading-list",
+    element: <FileHeadingList />,
+  },
+  {
+    path: "/efiling/dashboard/addedit-file-heading",
+    element: <AddEditFIleHeading />,
+  },
 ];
