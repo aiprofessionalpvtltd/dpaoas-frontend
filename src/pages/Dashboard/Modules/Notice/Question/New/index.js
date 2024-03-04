@@ -127,7 +127,7 @@ function NewQuestion() {
     >
       <ToastContainer />
       <Header
-        dashboardLink={"/"}
+        dashboardLink={"/notice/dashboard"}
         addLink1={"/notice/question/new"}
         title1={"New Question"}
       />

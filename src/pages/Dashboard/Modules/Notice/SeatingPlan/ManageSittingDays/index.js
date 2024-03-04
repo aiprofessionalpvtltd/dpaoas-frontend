@@ -143,24 +143,46 @@ function ManageSittingsDays() {
       const response = await deleteSessionsSitting(id);
       if (response?.success) {
         showSuccessMessage(response?.message);
-        setTimeout(()=>SearchSessionSittingApi({sessionId:formik.values.sessionId}),3000)
+        setTimeout(
+          () => SearchSessionSittingApi({ sessionId: formik.values.sessionId }),
+          3000
+        );
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
     }
   };
 
+  // const handleAttendance = (id) => {
+  //   navigate(`/notice/manage/manage-session/member-attendence`, {
+  //     state: { id },
+
+  //   });
+  // };
   const handleAttendance = (id) => {
-    navigate(`/notice/manage/manage-session/member-attendence`, {
-      state: { id },
-    });
+    const rowData = sittingDays.filter((item) => item.id === id);
+    if (rowData.length > 0) {
+      navigate(`/notice/manage/manage-session/member-attendence`, {
+        state: { id, data: rowData[0] },
+      });
+    }
   };
 
+  // const handleViewAttendance = (id) => {
+  //   navigate(`/notice/manage/manage-session/member-attendence`, {
+  //     state: { id, view: true, data: sittingDays },
+  //   });
+  // };
+
   const handleViewAttendance = (id) => {
-    navigate(`/notice/manage/manage-session/member-attendence`, {
-      state: { id, view: true },
-    });
+    const rowData = sittingDays.filter((item) => item.id === id);
+    if (rowData.length > 0) {
+      navigate(`/notice/manage/manage-session/member-attendence`, {
+        state: { id, view: true, data: rowData[0] },
+      });
+    }
   };
+
   return (
     <Layout
       module={true}
@@ -168,7 +190,7 @@ function ManageSittingsDays() {
       centerlogohide={true}
     >
       <Header
-        dashboardLink={"/"}
+        dashboardLink={"/notice/dashboard"}
         addLink1={"/notice/manage/manage-session-days"}
         title1={"Session Days"}
       />
@@ -226,17 +248,12 @@ function ManageSittingsDays() {
                     tableTitle="Session Days List"
                     addBtnText="Add Session Days"
                     handleAdd={() =>
-                      navigate(
-                        "/notice/manage/manage-session-days/addedit"
-                      )
+                      navigate("/notice/manage/manage-session-days/addedit")
                     }
                     handleEdit={(item) =>
-                      navigate(
-                        "/notice/manage/manage-session-days/addedit",
-                        {
-                          state: item,
-                        }
-                      )
+                      navigate("/notice/manage/manage-session-days/addedit", {
+                        state: item,
+                      })
                     }
                     // hideDeleteIcon={true}
                     headertitlebgColor={"#666"}

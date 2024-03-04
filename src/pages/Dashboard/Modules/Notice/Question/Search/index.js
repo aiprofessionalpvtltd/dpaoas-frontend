@@ -227,7 +227,7 @@ function SearchQuestion() {
     >
       <ToastContainer />
       <Header
-        dashboardLink={"/"}
+        dashboardLink={"/notice/dashboard"}
         addLink1={"/notice/question/search"}
         title1={"Search Question"}
       />

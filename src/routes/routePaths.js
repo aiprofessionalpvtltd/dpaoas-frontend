@@ -127,7 +127,11 @@ import { MotionListing } from "../pages/Dashboard/Modules/Notice/Motion";
 import EditMotion from "../pages/Dashboard/Modules/Notice/Motion/EditMotion";
 import GovernmentBill from "../pages/Dashboard/Modules/Notice/legislationBusiness/GovernmentBill";
 import PrivateBill from "../pages/Dashboard/Modules/Notice/legislationBusiness/PrivateBill";
-import AttendenceReports from "../pages/Dashboard/Modules/Notice/AttendanceReport";
+
+import PartywiseAttendenceReports from "../pages/Dashboard/Modules/Notice/Reports/PartywiseAnnualAttendanceReports";
+import AttendanceReport from "../pages/Dashboard/Modules/Notice/Reports/AttendanceReport";
+
+// import AttendanceReport from "../pages/Dashboard/Modules/Notice/AttendanceReport";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -218,9 +222,15 @@ export const ProtectedRoutes = [
 
   { path: "/notice/reports", element: <NoticeDashboard /> },
   { path: "/notice/reports/business-summary", element: <BusinessSummary /> },
+
   {
     path: "/notice/reports/attendence-reports",
-    element: <AttendenceReports />,
+    element: <AttendanceReport />,
+  },
+
+  {
+    path: "/notice/reports/party-province-annual-attendence-reports",
+    element: <PartywiseAttendenceReports />,
   },
 
   //MMS Module
