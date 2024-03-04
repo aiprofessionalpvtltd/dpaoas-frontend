@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { NoticeSidebarItems } from "../../../../../../utils/sideBarItems";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
@@ -10,6 +10,7 @@ import {
   showSuccessMessage,
 } from "../../../../../../utils/ToastAlert";
 import {
+  getAllQuestionByID,
   getAllQuestionStatus,
   searchQuestion,
 } from "../../../../../../api/APIs/Services/Question.service";
@@ -29,13 +30,13 @@ function SearchQuestion() {
   const [count, setCount] = useState(null);
   const [allquestionStatus, setAllQuestionStatus] = useState([]);
 
-  const pageSize = 10; // Set your desired page size
+  const pageSize = 4; // Set your desired page size
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
     setCurrentPage(page);
   };
-
+  console.log("COunt", count);
   const formik = useFormik({
     initialValues: {
       questionDiaryNo: "",
@@ -48,8 +49,6 @@ function SearchQuestion() {
       questionStatus: "",
       fromNoticeDate: "",
       toNoticeDate: "",
-      // divisions: "",
-      // noticeOfficeDiaryNo: "",
     },
     onSubmit: (values) => {
       // Handle form submission here
@@ -59,16 +58,25 @@ function SearchQuestion() {
 
   const transformLeavesData = (apiData) => {
     return apiData.map((res, index) => {
+      const subjectMatter = [res?.englishText, res?.urduText]
+        .filter(Boolean)
+        .join(", ");
+      const cleanedSubjectMatter = subjectMatter.replace(/(<([^>]+)>)/gi, "");
+
       return {
-        // SrNo: index,
+        SrNo: index + 1,
         QID: res.id,
         // QDN: res.questionDiary.questionDiaryNo,
-        NoticeDate: moment(res?.noticeOfficeDiary?.noticeOfficeDiaryDate).format("YYYY/MM/DD"),
-        NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
+        NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate,
+        NoticeTime: moment(
+          res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
+          "hh:ss:a"
+        ).format("hh:ss:a"),
         SessionNumber: res?.session?.sessionName,
-        SubjectMatter: [res?.englishText, res?.urduText]
-          .filter(Boolean)
-          .join(", "),
+        SubjectMatter: cleanedSubjectMatter,
+        // SubjectMatter: [res?.englishText, res?.urduText]
+        //   .filter(Boolean)
+        //   .join(", "),
         Category: res.questionCategory,
         // SubmittedBy: res.category,
         Status: res.questionStatus?.questionStatus,
@@ -76,32 +84,88 @@ function SearchQuestion() {
     });
   };
 
-  const SearchQuestionApi = async (values) => {
-    const searchParams = {
-      fromSessionNo: values.fromSession,
-      toSessionNo: values.toSession,
-      memberName: values.memberName,
-      questionCategory: values.category,
-      keyword: values.keyword,
-      questionID: values.questionID,
-      questionStatus: values.resolutionStatus,
-      questionDiaryNo: values.questionDiaryNo,
-      noticeOfficeDiaryDateFrom: values.fromNoticeDate,
-      noticeOfficeDiaryDateTo: values.toNoticeDate,
-    };
+  const SearchQuestionApi = useCallback(
+    async (values) => {
+      const searchParams = {
+        fromSessionNo: values?.fromSession,
+        toSessionNo: values?.toSession,
+        memberName: values?.memberName,
+        questionCategory: values?.category,
+        keyword: values?.keyword,
+        questionID: values?.questionID,
+        questionStatus: values?.questionStatus,
+        questionDiaryNo: values?.questionDiaryNo,
+        noticeOfficeDiaryDateFrom: values?.fromNoticeDate,
+        noticeOfficeDiaryDateTo: values?.toNoticeDate,
+      };
+      try {
+        const response = await searchQuestion(
+          searchParams,
+          currentPage,
+          pageSize
+        );
 
-    try {
-      const response = await searchQuestion(searchParams);
-      if (response?.success) {
-        showSuccessMessage(response?.message);
-        setCount(response?.data?.count);
-        const transformedData = transformLeavesData(response.data);
-        setSearchedData(transformedData);
+        if (response?.success) {
+          showSuccessMessage(response?.message);
+          setCount(response?.data?.count);
+          const transformedData = transformLeavesData(response.data?.questions);
+          setSearchedData(transformedData);
+        }
+        // formik.resetForm();
+      } catch (error) {
+        showErrorMessage(error?.response?.data?.message);
       }
-    } catch (error) {
-      showErrorMessage(error?.response?.data?.message);
+    },
+    [currentPage, pageSize, setCount, setSearchedData]
+  );
+  useEffect(() => {
+    if (
+      formik.values.questionDiaryNo ||
+      formik.values.questionID ||
+      formik.values.keyword ||
+      formik.values.memberName ||
+      formik.values.fromSession ||
+      formik.values.toSession ||
+      formik.values.category ||
+      formik.values.questionStatus ||
+      formik.values.fromNoticeDate ||
+      formik.values.toNoticeDate
+    ) {
+      SearchQuestionApi();
     }
-  };
+  }, [currentPage]);
+  // const SearchQuestionApi = async (values) => {
+  //   const searchParams = {
+  //     fromSessionNo: values.fromSession,
+  //     toSessionNo: values.toSession,
+  //     memberName: values.memberName,
+  //     questionCategory: values.category,
+  //     keyword: values.keyword,
+  //     questionID: values.questionID,
+  //     questionStatus: values.questionStatus,
+  //     questionDiaryNo: values.questionDiaryNo,
+  //     noticeOfficeDiaryDateFrom: values.fromNoticeDate,
+  //     noticeOfficeDiaryDateTo: values.toNoticeDate,
+  //   };
+
+  //   try {
+  //     const response = await searchQuestion(
+  //       searchParams,
+  //       currentPage,
+  //       pageSize
+  //     );
+  //     console.log(response);
+  //     if (response?.success) {
+  //       showSuccessMessage(response?.message);
+  //       setCount(response?.data?.count);
+  //       const transformedData = transformLeavesData(response.data?.questions);
+  //       setSearchedData(transformedData);
+  //     }
+  //     // formik.resetForm();
+  //   } catch (error) {
+  //     showErrorMessage(error?.response?.data?.message);
+  //   }
+  // };
 
   const GetALlStatus = async () => {
     try {
@@ -115,9 +179,46 @@ function SearchQuestion() {
     }
   };
 
+  // HandleEdit
+  const handleEdit = async (id) => {
+    try {
+      const { question, history } = await getAllQuestionByID(id);
+
+      if (question?.success) {
+        navigate("/notice/question/detail", {
+          state: { question: question?.data, history: history?.data },
+        });
+      }
+    } catch (error) {
+      showErrorMessage(error.response?.data?.message);
+    }
+  };
+
   useEffect(() => {
     GetALlStatus();
   }, []);
+  // Handle Delete
+  const handleDelete = (id) => {
+    alert("delete", id);
+  };
+  // Handle Reset Form
+
+  const handleResetForm = () => {
+    formik.setValues({
+      // Reset the form to initial values
+      questionDiaryNo: "",
+      questionID: "",
+      keyword: "",
+      memberName: "",
+      fromSession: "",
+      toSession: "",
+      category: "",
+      questionStatus: "",
+      fromNoticeDate: null, // Reset date fields to null or a default date
+      toNoticeDate: null,
+    });
+  };
+
   return (
     <Layout
       module={true}
@@ -153,7 +254,8 @@ function SearchQuestion() {
                             className="form-control"
                             type="text"
                             id="questionDiaryNo"
-                            placeholder={formik.values.questionDiaryNo}
+                            value={formik.values.questionDiaryNo}
+                            // placeholder={formik.values.questionDiaryNo}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                           />
@@ -166,13 +268,13 @@ function SearchQuestion() {
                             className="form-control"
                             type="number"
                             id="questionID"
+                            min="0"
+                            value={formik.values.questionID}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                           />
                         </div>
                       </div>
-                    </div>
-                    <div className="row">
                       <div className="col">
                         <div className="mb-3">
                           <label className="form-label">Keyword</label>
@@ -181,6 +283,7 @@ function SearchQuestion() {
                             type="text"
                             name="keyword"
                             id="keyword"
+                            value={formik.values.keyword}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                           />
@@ -191,7 +294,8 @@ function SearchQuestion() {
                           <label className="form-label">Member Name</label>
                           <select
                             class="form-select"
-                            placeholder={formik.values.memberName}
+                            // placeholder={formik.values.memberName}
+                            value={formik.values.memberName}
                             onChange={formik.handleChange}
                             id="memberName"
                           >
@@ -214,7 +318,8 @@ function SearchQuestion() {
                           <label className="form-label">From Session</label>
                           <select
                             class="form-select"
-                            placeholder={formik.values.fromSession}
+                            // placeholder={formik.values.fromSession}
+                            value={formik.values.fromSession}
                             id="fromSession"
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
@@ -236,7 +341,8 @@ function SearchQuestion() {
                           <label className="form-label">To Session</label>
                           <select
                             class="form-select"
-                            placeholder={formik.values.toSession}
+                            // placeholder={formik.values.toSession}
+                            value={formik.values.toSession}
                             id="toSession"
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
@@ -253,14 +359,13 @@ function SearchQuestion() {
                           </select>
                         </div>
                       </div>
-                    </div>
-                    <div className="row">
                       <div className="col">
                         <div className="mb-3">
                           <label className="form-label">Category</label>
                           <select
                             class="form-select"
-                            placeholder={formik.values.category}
+                            // placeholder={formik.values.category}
+                            value={formik.values.category}
                             id="category"
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
@@ -279,7 +384,8 @@ function SearchQuestion() {
                           <label className="form-label">Question Status</label>
                           <select
                             class="form-select"
-                            placeholder={formik.values.questionStatus}
+                            value={formik.values.questionStatus}
+                            // placeholder={formik.values.questionStatus}
                             id="questionStatus"
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
@@ -297,8 +403,9 @@ function SearchQuestion() {
                         </div>
                       </div>
                     </div>
+
                     <div className="row">
-                      <div className="col">
+                      <div className="col-3">
                         <div className="mb-3" style={{ position: "relative" }}>
                           <label className="form-label">From Notice Date</label>
                           <span
@@ -316,7 +423,7 @@ function SearchQuestion() {
                           </span>
                           <DatePicker
                             selected={formik.values.fromNoticeDate}
-                            minDate={new Date()}
+                            // minDate={new Date()}
                             onChange={(date) =>
                               formik.setFieldValue("fromNoticeDate", date)
                             }
@@ -324,7 +431,7 @@ function SearchQuestion() {
                           />
                         </div>
                       </div>
-                      <div className="col">
+                      <div className="col-3">
                         <div className="mb-3" style={{ position: "relative" }}>
                           <label className="form-label">To Notice Date</label>
                           <span
@@ -342,7 +449,7 @@ function SearchQuestion() {
                           </span>
                           <DatePicker
                             selected={formik.values.toNoticeDate}
-                            minDate={new Date()}
+                            // minDate={new Date()}
                             onChange={(date) =>
                               formik.setFieldValue("toNoticeDate", date)
                             }
@@ -357,7 +464,12 @@ function SearchQuestion() {
                         <button className="btn btn-primary" type="submit">
                           Search
                         </button>
-                        <button className="btn btn-primary" type="reset">
+                        <button
+                          className="btn btn-primary"
+                          // type="reset"
+                          type="button"
+                          onClick={handleResetForm}
+                        >
                           Reset
                         </button>
                       </div>
@@ -367,19 +479,21 @@ function SearchQuestion() {
 
                 <div class="" style={{ marginTop: "20px" }}>
                   <CustomTable
-                    block={true}
+                    // block={true}
                     hideBtn={true}
+                    hidebtn1={true}
                     data={searchedData}
                     tableTitle="Questions"
                     handlePageChange={handlePageChange}
                     currentPage={currentPage}
                     showPrint={false}
-                    ActionHide={true}
-                    hideEditIcon={true}
+                    ActionHide={false}
+                    headertitlebgColor={"#666"}
+                    headertitletextColor={"#FFF"}
+                    hideDeleteIcon={true}
                     pageSize={pageSize}
-                    handleAdd={(item) => navigate("/")}
-                    handleEdit={(item) => navigate("/")}
-                    // handleDelete={(item) => handleDelete(item.id)}
+                    handleEdit={(item) => handleEdit(item?.QID)}
+                    handleDelete={(item) => handleDelete(item?.QID)}
                     totalCount={count}
                   />
                 </div>

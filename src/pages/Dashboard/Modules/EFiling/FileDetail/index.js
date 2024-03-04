@@ -20,12 +20,22 @@ import NewCaseEfilling from "../AddEditFileForm";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { getUserData } from "../../../../../api/Auth";
-import { UpdateEfiling, UploadEfilingAttechment, getEFilesByID } from "../../../../../api/APIs/Services/efiling.service";
+import {
+  UpdateEfiling,
+  UploadEfilingAttechment,
+  getEFilesByID,
+} from "../../../../../api/APIs/Services/efiling.service";
 import { ToastContainer } from "react-toastify";
-import { showErrorMessage, showSuccessMessage } from "../../../../../utils/ToastAlert";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../utils/ToastAlert";
 import moment from "moment";
 import { AuthContext } from "../../../../../api/AuthContext";
-import { getAllEmployee, getDepartment } from "../../../../../api/APIs/Services/organizational.service";
+import {
+  getAllEmployee,
+  getDepartment,
+} from "../../../../../api/APIs/Services/organizational.service";
 import { getBranches } from "../../../../../api/APIs/Services/Branches.services";
 
 const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
@@ -35,9 +45,15 @@ const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
         <MDBModalContent>
           <MDBModalHeader>
             <MDBModalTitle>{title}</MDBModalTitle>
-            <MDBBtn className="btn-close" color="none" onClick={toggleModal}></MDBBtn>
+            <MDBBtn
+              className="btn-close"
+              color="none"
+              onClick={toggleModal}
+            ></MDBBtn>
           </MDBModalHeader>
-          <MDBModalBody className="justify-content-center align-items-center">{children}</MDBModalBody>
+          <MDBModalBody className="justify-content-center align-items-center">
+            {children}
+          </MDBModalBody>
 
           <MDBModalFooter>
             <MDBBtn color="secondary" onClick={toggleModal}>
@@ -55,57 +71,57 @@ function FileDetail() {
   const location = useLocation();
   const [editorContent, setEditorContent] = useState();
   const [editorContent1, setEditorContent1] = useState();
-  const [employeeData, setEmployeeData] = useState([])
-  const UserData = getUserData()
+  const [employeeData, setEmployeeData] = useState([]);
+  const UserData = getUserData();
   const [filesData, setFilesData] = useState();
-  const [viewPage, setViewPage] = useState(location?.state?.view)
+  const [viewPage, setViewPage] = useState(location?.state?.view);
 
-  const [documentTypeVal, setDocumentTypeVal] = useState('');
+  const [documentTypeVal, setDocumentTypeVal] = useState("");
 
-  const { ministryData } = useContext(AuthContext)
-  const [departmentData, setDepartmentData] = useState([])
-  const [branchesData, setBranchesData] = useState([])
+  const { ministryData } = useContext(AuthContext);
+  const [departmentData, setDepartmentData] = useState([]);
+  const [branchesData, setBranchesData] = useState([]);
 
-
-  const [fileId, setFIleId] = useState(location?.state?.id)
+  const [fileId, setFIleId] = useState(location?.state?.id);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [togleOpan, setTogleOpan] = useState(true);
 
   const [remarksData, setRemarksData] = useState([]);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const yaerData = [
     {
-      name: "2024"
+      name: "2024",
     },
     {
-      name: "2023"
+      name: "2023",
     },
     {
-      name: "2022"
+      name: "2022",
     },
     {
-      name: "2021"
-    }, {
-      name: "2020"
+      name: "2021",
     },
     {
-      name: "2019"
+      name: "2020",
     },
     {
-      name: "2018"
+      name: "2019",
     },
     {
-      name: "2017"
+      name: "2018",
     },
     {
-      name: "2016"
+      name: "2017",
     },
     {
-      name: "2015"
-    }
-  ]
+      name: "2016",
+    },
+    {
+      name: "2015",
+    },
+  ];
 
   const formik = useFormik({
     initialValues: {
@@ -128,13 +144,11 @@ function FileDetail() {
     // validationSchema: validationSchema,
     onSubmit: (values) => {
       // Handle form submission here
-      UpdateEfilingApi(values)
+      UpdateEfilingApi(values);
     },
   });
 
-
   const UpdateEfilingApi = async (values) => {
-
     const Data = {
       fileNumber: values?.fileNumber,
       fileSubject: values?.fileSubject,
@@ -152,38 +166,36 @@ function FileDetail() {
       assignedTo: values?.assignedTo,
       CommentStatus: values?.CommentStatus,
       comment: values?.comment,
-      commentBy: UserData?.fkUserId
+      commentBy: UserData?.fkUserId,
     };
 
-
     try {
-      const response = await UpdateEfiling(fileId, Data)
+      const response = await UpdateEfiling(fileId, Data);
       if (response?.success) {
-        showSuccessMessage(response?.message)
+        showSuccessMessage(response?.message);
         // formik.resetForm()
         // navigate("/efiling/dashboard/files")
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
     }
-  }
-
+  };
 
   const toggleModal = () => setIsModalOpen(!isModalOpen);
 
   // use it (editorContent) when submitting whole file content
   console.log("Editor content", editorContent);
 
-  const [directorData, setDirectorData] = useState([])
-  console.log('====================================');
+  const [directorData, setDirectorData] = useState([]);
+  console.log("====================================");
   console.log("directorData", directorData);
-  console.log('====================================');
+  console.log("====================================");
   const getFilesByID = async () => {
     try {
       const response = await getEFilesByID(fileId);
       if (response?.success) {
-        setDirectorData(response?.data?.filedairies)
-        setRemarksData(response?.data?.fileRemarks)
+        setDirectorData(response?.data?.filedairies);
+        setRemarksData(response?.data?.fileRemarks);
         setFilesData(response?.data);
       }
     } catch (error) {
@@ -195,13 +207,13 @@ function FileDetail() {
     if (location.state?.id) {
       getFilesByID();
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     // Update form values when termsById changes
     if (filesData) {
-      setEditorContent(filesData?.notingDescription || "")
-      setEditorContent1(filesData?.correspondingDescription || "")
+      setEditorContent(filesData?.notingDescription || "");
+      setEditorContent1(filesData?.correspondingDescription || "");
       formik.setValues({
         fileNumber: filesData?.fileNumber || "",
         fileSubject: filesData?.fileSubject || "",
@@ -211,7 +223,9 @@ function FileDetail() {
         fkBranchId: filesData?.fkBranchId || "",
         fkdepartmentId: filesData?.fkdepartmentId || "",
         fkMinistryId: filesData?.fkMinistryId || "",
-        receivedOn: filesData?.receivedOn ? new Date(filesData?.receivedOn) : new Date(),
+        receivedOn: filesData?.receivedOn
+          ? new Date(filesData?.receivedOn)
+          : new Date(),
         year: filesData?.year || "",
         // notingDescription: filesData?.notingDescription || "",
         // correspondingDescription: filesData?.correspondingDescription || "",
@@ -219,7 +233,7 @@ function FileDetail() {
         CommentStatus: filesData?.fileRemarks[0]?.CommentStatus || "",
         comment: "",
       });
-      setDocumentTypeVal(filesData?.fileType)
+      setDocumentTypeVal(filesData?.fileType);
     }
   }, [filesData, formik.setValues]);
 
@@ -231,21 +245,25 @@ function FileDetail() {
     const formData = new FormData();
 
     // Append the file to FormData
-    formData.append('attachment', file);
+    formData.append("attachment", file);
     try {
-      const response = await UploadEfilingAttechment(UserData?.fkUserId, fileId, formData)
-      showSuccessMessage(response?.message)
+      const response = await UploadEfilingAttechment(
+        UserData?.fkUserId,
+        fileId,
+        formData
+      );
+      showSuccessMessage(response?.message);
       if (response.success) {
-        getFilesByID()
+        getFilesByID();
       }
     } catch (error) {
-      showErrorMessage(error?.response?.data?.message)
+      showErrorMessage(error?.response?.data?.message);
     }
-  }
+  };
 
   const handleDocumentType = (e) => {
     setDocumentTypeVal(e.target.value);
-  }
+  };
   const getDepartmentData = async () => {
     try {
       const response = await getDepartment(0, 50);
@@ -255,8 +273,7 @@ function FileDetail() {
     } catch (error) {
       console.log(error);
     }
-
-  }
+  };
 
   const getBranchesapi = async () => {
     try {
@@ -267,8 +284,7 @@ function FileDetail() {
     } catch (error) {
       console.log(error);
     }
-
-  }
+  };
 
   const getEmployeeData = async () => {
     try {
@@ -283,10 +299,10 @@ function FileDetail() {
   };
 
   useEffect(() => {
-    getEmployeeData()
-    getBranchesapi()
+    getEmployeeData();
+    getBranchesapi();
     getDepartmentData();
-  }, [])
+  }, []);
   return (
     <Layout centerlogohide={true}>
       <div className="dashboard-content" style={{ marginTop: 80 }}>
@@ -300,9 +316,16 @@ function FileDetail() {
           width={"500px"}
         />
 
-        <EFilingModal title={"Add Remarks"} isOpen={isModalOpen} toggleModal={toggleModal}>
+        <EFilingModal
+          title={"Add Remarks"}
+          isOpen={isModalOpen}
+          toggleModal={toggleModal}
+        >
           <label>Remarks</label>
-          <textarea style={{ display: "block", width: "100%" }} className="form-control"></textarea>
+          <textarea
+            style={{ display: "block", width: "100%" }}
+            className="form-control"
+          ></textarea>
           <div className="clearfix"></div>
           <label className=" mt-3">Assign</label>
           <select class="form-control">
@@ -316,28 +339,35 @@ function FileDetail() {
           <div className="row">
             <div className="col-md-2">
               <div className="noting">
-
-
-                {directorData.length > 0 ? directorData.map((item) => (
-                  <div key={item.id}>
-                    <p style={{ marginBottom: "0px", fontWeight: "bold" }}>{`${item?.users?.employee?.firstName} ${item?.users?.employee?.lastName} (${item?.users?.employee?.departments?.departmentName})`}</p>
-                    <p style={{ marginBottom: "0" }}>{`Diary Number : ${item?.fileInDairyNumber}`}</p>
-                    <p style={{ marginBottom: "0" }}>{moment(item?.createdAt).format("DD/MM/YYYY")}</p>
-                    <p>{moment(item?.createdAt).format("hh:mm A")}</p>
-                  </div>
-                )) : (
+                {directorData.length > 0 ? (
+                  directorData.map((item) => (
+                    <div key={item.id}>
+                      <p
+                        style={{ marginBottom: "0px", fontWeight: "bold" }}
+                      >{`${item?.users?.employee?.firstName} ${item?.users?.employee?.lastName} (${item?.users?.employee?.departments?.departmentName})`}</p>
+                      <p
+                        style={{ marginBottom: "0" }}
+                      >{`Diary Number : ${item?.fileInDairyNumber}`}</p>
+                      <p style={{ marginBottom: "0" }}>
+                        {moment(item?.createdAt).format("DD/MM/YYYY")}
+                      </p>
+                      <p>{moment(item?.createdAt).format("hh:mm A")}</p>
+                    </div>
+                  ))
+                ) : (
                   <div
                     className="alert alert-danger mt-2"
                     role="alert"
-                    style={{ width: "208px", margin: "0 auto", textAlign: "center" }}
+                    style={{
+                      width: "208px",
+                      margin: "0 auto",
+                      textAlign: "center",
+                    }}
                   >
                     No data found
                   </div>
                 )}
               </div>
-
-
-
             </div>
             <div className="col-md-7">
               <form onSubmit={formik.handleSubmit}>
@@ -372,7 +402,10 @@ function FileDetail() {
 
                       <div class="col">
                         <div class="mb-3">
-                          <label for="exampleFormControlInput1" class="form-label">
+                          <label
+                            for="exampleFormControlInput1"
+                            class="form-label"
+                          >
                             Subject
                           </label>
                           <input
@@ -394,13 +427,15 @@ function FileDetail() {
                         <div class="mb-3">
                           <div class="mb-3">
                             <label class="form-label">Priority</label>
-                            <select class="form-select" disabled={viewPage ? true : false}
+                            <select
+                              class="form-select"
+                              disabled={viewPage ? true : false}
                               id="priority"
-
                               name="priority"
                               onChange={formik.handleChange}
                               onBlur={formik.handleBlur}
-                              value={formik.values.priority}>
+                              value={formik.values.priority}
+                            >
                               <option value={"Normal"}>Normal</option>
                               <option value={"Immediate"}>Immediate</option>
                             </select>
@@ -429,21 +464,28 @@ function FileDetail() {
                           </select>
                         </div>
                       </div>
-
                     </div>
                     <div class="row">
                       <div class="col-6">
                         <div class="mb-3">
-                          <label for="exampleFormControlInput1" class="form-label" >
+                          <label
+                            for="exampleFormControlInput1"
+                            class="form-label"
+                          >
                             File Type
                           </label>
-                          <select class="form-select" disabled={viewPage ? true : false}
+                          <select
+                            class="form-select"
+                            disabled={viewPage ? true : false}
                             id="fileType"
                             name="fileType"
                             onChange={handleDocumentType}
                             onBlur={formik.handleBlur}
-                            value={documentTypeVal}>
-                            <option value={""} selected disabled hidden>Select</option>
+                            value={documentTypeVal}
+                          >
+                            <option value={""} selected disabled hidden>
+                              Select
+                            </option>
 
                             <option value={"Internal"}>Internal</option>
                             <option value={"External"}>External</option>
@@ -472,13 +514,15 @@ function FileDetail() {
                               </option>
                               {branchesData &&
                                 branchesData?.map((item) => (
-                                  <option value={item.id}>{item.branchName}</option>
+                                  <option value={item.id}>
+                                    {item.branchName}
+                                  </option>
                                 ))}
                             </select>
                           </div>
                         </div>
 
-                        <div class="col-6">
+                        {/* <div class="col-6">
                           <div class="mb-3">
                             <label class="form-label">Department</label>
                             <select
@@ -495,11 +539,13 @@ function FileDetail() {
                               </option>
                               {departmentData &&
                                 departmentData?.map((item) => (
-                                  <option value={item.id}>{item.departmentName}</option>
+                                  <option value={item.id}>
+                                    {item.departmentName}
+                                  </option>
                                 ))}
                             </select>
                           </div>
-                        </div>
+                        </div> */}
                       </>
                     ) : documentTypeVal === "External" ? (
                       <>
@@ -520,13 +566,18 @@ function FileDetail() {
                               </option>
                               {ministryData &&
                                 ministryData.map((item) => (
-                                  <option value={item.id}>{item.ministryName}</option>
+                                  <option value={item.id}>
+                                    {item.ministryName}
+                                  </option>
                                 ))}
                             </select>
                           </div>
                         </div>
                         <div className="col-6">
-                          <div className="mb-3" style={{ position: "relative" }}>
+                          <div
+                            className="mb-3"
+                            style={{ position: "relative" }}
+                          >
                             <label className="form-label">Received On</label>
                             <span
                               style={{
@@ -550,42 +601,78 @@ function FileDetail() {
                               // minDate={new Date()}
                               className={`form-control`}
                             />
-
                           </div>
                         </div>
                       </>
                     ) : null}
                   </div>
+                  <div className="row">
+                    <div class="col-6">
+                      {/* <div class="mb-3"> */}
+                      <label class="form-label" style={{ display: "block" }}>
+                        Attached File
+                      </label>
+                      <span
+                        class="MultiFile-label"
+                        style={{ marginBottom: "18px", display: "block" }}
+                        title={filesData?.attachment
+                          ?.split("\\")
+                          .pop()
+                          .split("/")
+                          .pop()}
+                      >
+                        <span class="MultiFile-title">
+                          <a
+                            href={`http://172.16.170.8:5252${filesData?.attachment}`}
+                          >
+                            {filesData?.attachment
+                              ?.split("\\")
+                              .pop()
+                              .split("/")
+                              .pop()}
+                          </a>
+                        </span>
+                      </span>
+                      {/* </div> */}
+                    </div>
+                  </div>
 
                   <div class="shadow" style={{ padding: "25px" }}>
                     <ul class="nav nav-tabs mb-3 mt-3" id="ex1" role="tablist">
-                      <li class="nav-item" role="presentation" onClick={() => setTogleOpan(!togleOpan)}>
-                        <a
+                      <li
+                        class="nav-item"
+                        role="presentation"
+                        onClick={() => setTogleOpan(!togleOpan)}
+                      >
+                        <button
+                          type="button"
                           class={togleOpan ? "nav-link active" : "nav-link"}
-                          id="ex1-tab-1"
                           data-bs-toggle="tab"
-                          href="#ex1-tabs-1"
                           role="tab"
                           aria-controls="ex1-tabs-1"
-                          aria-selected="true"
+                          aria-selected={togleOpan ? "true" : "false"}
                         >
                           Noting
-                        </a>
+                        </button>
                       </li>
-                      <li class="nav-item" role="presentation" onClick={() => setTogleOpan(!togleOpan)}>
-                        <a
+                      <li
+                        class="nav-item"
+                        role="presentation"
+                        onClick={() => setTogleOpan(!togleOpan)}
+                      >
+                        <button
+                          type="button"
                           class={!togleOpan ? "nav-link active" : "nav-link"}
-                          id="ex1-tab-2"
                           data-bs-toggle="tab"
-                          href="#ex1-tabs-2"
                           role="tab"
                           aria-controls="ex1-tabs-2"
-                          aria-selected="false"
+                          aria-selected={!togleOpan ? "true" : "false"}
                         >
                           Correspondence
-                        </a>
+                        </button>
                       </li>
                     </ul>
+
                     <div class="tab-content" id="ex1-content">
                       {togleOpan ? (
                         // <div class="tab-pane fade show active" id="ex1-tabs-1" role="tabpanel" aria-labelledby="ex1-tab-1">
@@ -595,7 +682,9 @@ function FileDetail() {
                               <div class="mb-3">
                                 <label class="form-label">Description</label>
                                 <TinyEditor
-                                  initialContent={"Hello there! Write something new"}
+                                  initialContent={
+                                    "Hello there! Write something new"
+                                  }
                                   setEditorContent={setEditorContent}
                                   editorContent={editorContent}
                                   multiLanguage={false}
@@ -608,37 +697,44 @@ function FileDetail() {
                             <div class="col">
                               <div class="mb-3">
                                 <label class="form-label">Action</label>
-                                <select class="form-select"
+                                <select
+                                  class="form-select"
                                   id="CommentStatus"
                                   name="CommentStatus"
                                   disabled={viewPage ? true : false}
                                   onChange={formik.handleChange}
                                   onBlur={formik.handleBlur}
-                                  value={formik.values.CommentStatus}>
-                                  <option value="" selected disabled hidden>Select</option>
+                                  value={formik.values.CommentStatus}
+                                >
+                                  <option value="" selected disabled hidden>
+                                    Select
+                                  </option>
                                   <option value={"Approved"}>Approved</option>
                                   <option value={"Rejected"}>Rejected</option>
                                   <option value={"Discuss"}>Discuss</option>
-
                                 </select>
                               </div>
                             </div>
                             <div class="col">
                               <div class="mb-3">
                                 <label class="form-label">Mark To</label>
-                                <select class="form-select"
+                                <select
+                                  class="form-select"
                                   id="assignedTo"
                                   name="assignedTo"
                                   disabled={viewPage ? true : false}
                                   onChange={formik.handleChange}
                                   onBlur={formik.handleBlur}
-                                  value={formik.values.assignedTo}>
+                                  value={formik.values.assignedTo}
+                                >
                                   <option value={""} selected disabled hidden>
                                     Select
                                   </option>
                                   {employeeData &&
                                     employeeData?.map((item) => (
-                                      <option value={item.fkUserId}>{`${item.firstName}${item.lastName}`}</option>
+                                      <option
+                                        value={item.fkUserId}
+                                      >{`${item.firstName}${item.lastName}`}</option>
                                     ))}
                                 </select>
                               </div>
@@ -648,19 +744,25 @@ function FileDetail() {
                             <div class="col">
                               <div class="mb-3">
                                 <label class="form-label">Remarks</label>
-                                <textarea class="form-control"
+                                <textarea
+                                  class="form-control"
                                   id="comment"
                                   name="comment"
                                   disabled={viewPage ? true : false}
                                   onChange={formik.handleChange}
                                   onBlur={formik.handleBlur}
-                                  value={formik.values.comment}></textarea>
+                                  value={formik.values.comment}
+                                ></textarea>
                               </div>
                             </div>
                           </div>
                           <div class="row">
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                              <button class="btn btn-primary" type="submit" disabled={viewPage ? true : false}>
+                              <button
+                                class="btn btn-primary"
+                                type="submit"
+                                disabled={viewPage ? true : false}
+                              >
                                 Submit
                               </button>
                             </div>
@@ -675,7 +777,9 @@ function FileDetail() {
                               <div class="mb-3">
                                 <label class="form-label">Description</label>
                                 <TinyEditor
-                                  initialContent={"Hello there! Write something new"}
+                                  initialContent={
+                                    "Hello there! Write something new"
+                                  }
                                   setEditorContent={setEditorContent1}
                                   editorContent={editorContent1}
                                   multiLanguage={false}
@@ -689,29 +793,62 @@ function FileDetail() {
                               <div class="mb-3 mt-3">
                                 <div class="form-group">
                                   <div class="row">
-                                    <label for="formFile" class="form-label mt-3">
+                                    <label
+                                      for="formFile"
+                                      class="form-label mt-3"
+                                    >
                                       Attach File
                                     </label>
 
                                     <div class="col">
                                       <div class="MultiFile-wrap" id="T7">
-                                        <input disabled={viewPage ? true : false} class="form-control" type="file" id="formFile" onChange={handleUploadFile} />
+                                        <input
+                                          disabled={viewPage ? true : false}
+                                          class="form-control"
+                                          type="file"
+                                          id="formFile"
+                                          onChange={handleUploadFile}
+                                        />
                                       </div>
                                     </div>
-                                    {filesData && filesData?.fileAttachments?.map((item) => (
-                                      <div class="MultiFile-label mt-3">
-                                        <a href={`http://172.16.170.8:5252${item.filename}`}>
-                                          <i class="fas fa-download"></i>
-                                        </a>
-                                        <a class="MultiFile-remove" href="#T7">
-                                          x
-                                        </a>
-                                        <span class="MultiFile-label" title={item.filename?.split('\\').pop().split('/').pop()}>
-                                          <span class="MultiFile-title"><a href={`http://172.16.170.8:5252${item.filename}`}>{item.filename?.split('\\').pop().split('/').pop()}</a></span>
-                                        </span>
-                                      </div>
-                                    ))}
-
+                                    {filesData &&
+                                      filesData?.fileAttachments?.map(
+                                        (item) => (
+                                          <div class="MultiFile-label mt-3">
+                                            <a
+                                              href={`http://172.16.170.8:5252${item.filename}`}
+                                            >
+                                              <i class="fas fa-download"></i>
+                                            </a>
+                                            <a
+                                              class="MultiFile-remove"
+                                              href="#T7"
+                                            >
+                                              x
+                                            </a>
+                                            <span
+                                              class="MultiFile-label"
+                                              title={item.filename
+                                                ?.split("\\")
+                                                .pop()
+                                                .split("/")
+                                                .pop()}
+                                            >
+                                              <span class="MultiFile-title">
+                                                <a
+                                                  href={`http://172.16.170.8:5252${item.filename}`}
+                                                >
+                                                  {item.filename
+                                                    ?.split("\\")
+                                                    .pop()
+                                                    .split("/")
+                                                    .pop()}
+                                                </a>
+                                              </span>
+                                            </span>
+                                          </div>
+                                        )
+                                      )}
                                   </div>
                                 </div>
                               </div>
@@ -763,64 +900,101 @@ function FileDetail() {
                     </button>
                   </a> */}
                 </div>
-                {remarksData.length > 0 ? remarksData.map((item) => (
-                  <>
-                    {item?.comment !== null ? (
-                      <div class="d-flex flex-row p-3">
-                        <>
-                          <img
-                            style={{ marginBottom: "30px", marginRight: "15px" }}
-                            src={thumbnail}
-                            width="40"
-                            height="40"
-                            class="rounded-circle mr-3"
-                          />
-                          <div class="w-100" style={{ position: "relative" }}>
-                            <div class="d-flex justify-content-between align-items-center">
-                              <div class="d-flex flex-row align-items-center">
-                                <div style={{ float: "left" }}>
-                                  <span class="mr-2">{`${item?.users?.employee?.firstName}  ${item?.users?.employee?.lastName}`}</span>
-                                  <small style={{ marginLeft: "0px", position: "absolute", top: "-21px" }} class="c-badge">
-                                    {item?.users?.employee?.employeeDesignation?.designationName}
+                {remarksData.length > 0 ? (
+                  remarksData.map((item) => (
+                    <>
+                      {item?.comment !== null ? (
+                        <div class="d-flex flex-row p-3">
+                          <>
+                            <img
+                              style={{
+                                marginBottom: "30px",
+                                marginRight: "15px",
+                              }}
+                              src={thumbnail}
+                              width="40"
+                              height="40"
+                              class="rounded-circle mr-3"
+                            />
+                            <div class="w-100" style={{ position: "relative" }}>
+                              <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex flex-row align-items-center">
+                                  <div style={{ float: "left" }}>
+                                    <span class="mr-2">{`${item?.users?.employee?.firstName}  ${item?.users?.employee?.lastName}`}</span>
+                                    <small
+                                      style={{
+                                        marginLeft: "0px",
+                                        position: "absolute",
+                                        top: "-21px",
+                                      }}
+                                      class="c-badge"
+                                    >
+                                      {
+                                        item?.users?.employee
+                                          ?.employeeDesignation?.designationName
+                                      }
+                                    </small>
+                                  </div>
+                                </div>
+                                <div style={{ float: "right" }}>
+                                  <small>
+                                    {moment(item?.createdAt).format(
+                                      "DD/MM/YYYY"
+                                    )}
+                                  </small>
+                                  <small className="ms-2">
+                                    {moment(item?.createdAt).format("hh:mm A")}
                                   </small>
                                 </div>
-
                               </div>
-                              <div style={{ float: "right" }}>
-
-                                <small>{moment(item?.createdAt).format("DD/MM/YYYY")}</small>
-                                <small className="ms-2">{moment(item?.createdAt).format("hh:mm A")}</small>
-                              </div>
+                              <p class="text-justify comment-text mb-0">
+                                {item?.comment}
+                              </p>
+                              <small
+                                style={{
+                                  marginBottom: "20px",
+                                  background:
+                                    item?.CommentStatus === "Approved"
+                                      ? "green"
+                                      : item?.CommentStatus === "Rejected"
+                                        ? "red"
+                                        : "grey",
+                                }}
+                                class="c-badge"
+                              >
+                                {item?.CommentStatus}
+                              </small>
                             </div>
-                            <p class="text-justify comment-text mb-0">
-                              {item?.comment}
-                            </p>
-                            <small style={{ marginBottom: "20px", background: item?.CommentStatus === "Approved" ? "green" : item?.CommentStatus === "Rejected" ? "red" : "grey" }} class="c-badge">
-                              {item?.CommentStatus}
-                            </small>
-                          </div>
-                        </>
-                      </div>
-                    ) : (
-                      <div
-                        class="alert alert-danger mt-5"
-                        role="alert"
-                        style={{ width: "350px", margin: "0 auto", textAlign: "center" }}
-                      >
-                        No data found
-                      </div>
-                    )}
-                  </>
-                )) : (
+                          </>
+                        </div>
+                      ) : (
+                        <div
+                          class="alert alert-danger mt-5"
+                          role="alert"
+                          style={{
+                            width: "350px",
+                            margin: "0 auto",
+                            textAlign: "center",
+                          }}
+                        >
+                          No data found
+                        </div>
+                      )}
+                    </>
+                  ))
+                ) : (
                   <div
                     class="alert alert-danger mt-5"
                     role="alert"
-                    style={{ width: "350px", margin: "0 auto", textAlign: "center" }}
+                    style={{
+                      width: "350px",
+                      margin: "0 auto",
+                      textAlign: "center",
+                    }}
                   >
                     No data found
                   </div>
                 )}
-
               </div>
             </div>
           </div>

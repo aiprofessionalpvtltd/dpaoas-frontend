@@ -9,6 +9,7 @@ import { getAllEmployee } from "../APIs/Services/organizational.service";
 import { setAuthToken, setUserData } from "../Auth";
 import { showErrorMessage } from "../../utils/ToastAlert";
 import { loginUser } from "../APIs/Services/basicAuth.service";
+import { getBranches } from "../APIs/Services/Branches.services";
 
 export const AuthContext = createContext();
 
@@ -16,10 +17,10 @@ export const AuthProvider = ({ children }) => {
   const [permissions, setPermissions] = useState([]);
   const [ministryData, setMinistryData] = useState([]);
   const [sessions, setSessions] = useState([]);
-  const [employeeData, setEmployeeData] = useState([])
+  const [employeeData, setEmployeeData] = useState([]);
   const [resolutionStatus, setResolutionStatus] = useState([]);
   const [employeesAsEngineersData, setemployeesAsEngineersData] = useState([]);
-
+  const [allBranchesData, setallBranchesData] = useState([]);
 
   const [members, setMembers] = useState([]);
 
@@ -66,7 +67,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await getAllSessions();
       if (response?.success) {
-        setSessions(response?.data);
+        setSessions(response?.data?.sessions);
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -110,13 +111,27 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const AllBranchesData = async () => {
+    try {
+      const response = await getBranches(0, 200);
+      if (response?.success) {
+        // showSuccessMessage(response?.message);
+        setallBranchesData(response?.data?.rows);
+      }
+    } catch (error) {
+      console.log(error);
+      showErrorMessage(error?.response?.data?.error);
+    }
+  };
+
   useEffect(() => {
     getAllResolutionStatusApi();
     AllMembersData();
     AllMinistryData();
-    // getAllSessionsApi();
-    getEmployeeData()
-    getretriveEmployeesAsEngineers()
+    getAllSessionsApi();
+    getEmployeeData();
+    getretriveEmployeesAsEngineers();
+    AllBranchesData();
   }, []);
 
   return (
@@ -130,7 +145,8 @@ export const AuthProvider = ({ children }) => {
         sessions,
         employeeData,
         resolutionStatus,
-        employeesAsEngineersData
+        employeesAsEngineersData,
+        allBranchesData,
       }}
     >
       {children}

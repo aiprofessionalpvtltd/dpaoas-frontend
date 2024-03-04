@@ -5,12 +5,16 @@ import Header from "../../../../../../components/Header";
 import { useNavigate } from "react-router";
 import DatePicker from "react-datepicker";
 
-import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 import { useFormik } from "formik";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import {
   getAllMotion,
+  getMotionByID,
   getallMotionStatus,
   searchMotion,
 } from "../../../../../../api/APIs/Services/Motion.service";
@@ -53,23 +57,33 @@ function SentMotion() {
   };
 
   const transformMotionData = (apiData) => {
-    return apiData?.map((leave) => ({
-      id: leave?.id,
-      fkSessionId: leave?.sessions?.id,
-      fileNumber: leave?.fileNumber,
-      motionType: leave?.motionType,
-      motionWeek: "",
-      noticeOfficeDiaryNo: leave?.noticeOfficeDairies?.noticeOfficeDiaryNo,
-      // ministryName: leave?.motionMinistries?.ministries,
-      // ministryIds: leave?.motionMinistries?.fkMinistryId,
-      noticeOfficeDiaryDate: moment(leave?.noticeOfficeDairies?.noticeOfficeDiaryDate).format("YYYY/MM/DD"),
-      noticeOfficeDiaryTime: leave?.noticeOfficeDairies?.noticeOfficeDiaryTime,
-      // memberName:leave?.motionMovers?.members,
-      englishText: leave?.englishText,
-      urduText: leave?.urduText,
-      fkMotionStatus: leave?.motionStatuses?.statusName,
-    }));
+    return apiData.map((res, index) => {
+      const english = [res?.englishText].filter(Boolean).join(", ");
+      const EnglishText = english.replace(/(<([^>]+)>)/gi, "");
+
+      const urdu = [res?.urduText].filter(Boolean).join(", ");
+      const UrduText = urdu.replace(/(<([^>]+)>)/gi, "");
+
+      return {
+        id: res?.id,
+        SessionName: res?.sessions?.sessionName,
+        // fileNumber: res?.fileNumber,
+        motionType: res?.motionType,
+        // motionWeek: "",
+        noticeOfficeDiaryNo: res?.noticeOfficeDairies?.noticeOfficeDiaryNo,
+        // ministryName: leave?.motionMinistries?.ministries,
+        // ministryIds: leave?.motionMinistries?.fkMinistryId,
+        noticeOfficeDiaryDate: res?.noticeOfficeDairies?.noticeOfficeDiaryDate,
+        noticeOfficeDiaryTime: res?.noticeOfficeDairies?.noticeOfficeDiaryTime,
+        // memberName:leave?.motionMovers?.members,
+        englishText: EnglishText,
+        urduText: UrduText,
+        // fkMotionStatus: res?.motionStatuses?.statusName,
+      };
+    });
   };
+
+
   const getMotionListData = async () => {
     try {
       const response = await getAllMotion(currentPage, pageSize);
@@ -124,6 +138,22 @@ function SentMotion() {
     }
   };
 
+  const hendleEdit = async (id) => {
+    try {
+      // const { question, history } = await getMotionByID(id);
+      const response = await getMotionByID(id);
+      console.log("response Edit", response?.data);
+      if (response?.success) {
+        navigate("/notice/motion/edit", { state: response?.data });
+        //   navigate("/notice/question/detail", {
+        //     state: { question: question?.data, history: history?.data },
+        //   });
+      }
+    } catch (error) {
+      showErrorMessage(error.response?.data?.message);
+    }
+  };
+
   useEffect(() => {
     getMotionStatus();
   }, []);
@@ -133,14 +163,25 @@ function SentMotion() {
   }, [currentPage]);
 
   return (
-    <Layout module={true} sidebarItems={NoticeSidebarItems} centerlogohide={true}>
+    <Layout
+      module={true}
+      sidebarItems={NoticeSidebarItems}
+      centerlogohide={true}
+    >
       <ToastContainer />
-      <Header dashboardLink={"/"} addLink1={"/notice/motion/sent"} title1={"Sent Motion"} />
+      <Header
+        dashboardLink={"/"}
+        addLink1={"/notice/motion/sent"}
+        title1={"Sent Motion"}
+      />
       <div>
         <div class="container-fluid dash-detail-container">
           <div class="card mt-1">
-            <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
-              <h1>SENT MOTION</h1>
+            <div
+              class="card-header red-bg"
+              style={{ background: "#14ae5c !important" }}
+            >
+              <h1>List MOTION</h1>
             </div>
             <div class="card-body">
               <form onSubmit={formik.handleSubmit}>
@@ -152,7 +193,7 @@ function SentMotion() {
                         type="text"
                         className={"form-control"}
                         id="motionDiaryNo"
-                        placeholder={formik.values.motionDiaryNo}
+                        value={formik.values.motionDiaryNo}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
@@ -164,22 +205,20 @@ function SentMotion() {
                       <input
                         class="form-control"
                         type="text"
-                        placeholder={formik.values.motionID}
+                        value={formik.values.motionID}
                         onChange={formik.handleChange}
                         id="motionID"
                         onBlur={formik.handleBlur}
                       />
                     </div>
                   </div>
-                </div>
-                <div class="row">
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Keyword</label>
                       <input
                         class="form-control"
                         type="text"
-                        placeholder={formik.values.keyword}
+                        value={formik.values.keyword}
                         onChange={formik.handleChange}
                         id="keyword"
                         onBlur={formik.handleBlur}
@@ -191,7 +230,7 @@ function SentMotion() {
                       <label class="form-label">Member Name</label>
                       {/* <input
                                                 type='text'
-                                                placeholder={formik.values.memberName}
+                                                value={formik.values.memberName}
                                                 className={`form-control`}
                                                 id='memberName'
                                                 onChange={formik.handleChange}
@@ -199,12 +238,12 @@ function SentMotion() {
                                             /> */}
                       <select
                         class="form-select"
-                        placeholder={formik.values.memberName}
+                        value={formik.values.memberName}
                         onChange={formik.handleChange}
                         id="memberName"
                         onBlur={formik.handleBlur}
                       >
-                        <option selected disabled hidden>
+                        <option value={""} selected disabled hidden>
                           Select
                         </option>
                         {members &&
@@ -223,12 +262,12 @@ function SentMotion() {
                       <label class="form-label">From Session</label>
                       <select
                         class="form-select"
-                        placeholder={formik.values.fromSession}
+                        value={formik.values.fromSession}
                         onChange={formik.handleChange}
                         id="fromSession"
                         onBlur={formik.handleBlur}
                       >
-                        <option selected disabled hidden>
+                        <option value={""} selected disabled hidden>
                           Select
                         </option>
                         {sessions &&
@@ -245,12 +284,12 @@ function SentMotion() {
                       <label class="form-label">To Session</label>
                       <select
                         class="form-select"
-                        placeholder={formik.values.toSession}
+                        value={formik.values.toSession}
                         onChange={formik.handleChange}
                         id="toSession"
                         onBlur={formik.handleBlur}
                       >
-                        <option selected disabled hidden>
+                        <option value={""} selected disabled hidden>
                           Select
                         </option>
                         {sessions &&
@@ -262,19 +301,17 @@ function SentMotion() {
                       </select>
                     </div>
                   </div>
-                </div>
-                <div class="row">
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Motion Type</label>
                       <select
                         class="form-select"
-                        placeholder={formik.values.motionType}
+                        value={formik.values.motionType}
                         onChange={formik.handleChange}
                         id="motionType"
                         onBlur={formik.handleBlur}
                       >
-                        <option selected disabled hidden>
+                        <option value={""} selected disabled hidden>
                           Select motion Type
                         </option>
                         <option>Motion Type</option>
@@ -286,57 +323,18 @@ function SentMotion() {
                       </select>
                     </div>
                   </div>
-                  {/* <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Motion Week</label>
-                      <select
-                        class="form-select"
-                        placeholder={formik.values.motionWeek}
-                        onChange={formik.handleChange}
-                        id="motionWeek"
-                        onBlur={formik.handleBlur}
-                      >
-                        <option>Motion Week</option>
-                        <option>Not Applicable</option>
-                        <option>1st Week</option>
-                        <option>2nd Week</option>
-                        <option>3rd Week</option>
-                        <option>4th Week</option>
-                        <option>5th Week</option>
-                      </select>
-                    </div>
-                  </div> */}
-                  {/* <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Ministry</label>
-                      <select
-                        className="form-select"
-                        id="ministry"
-                        name="ministry"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.ministry}
-                        class="form-control"
-                      >
-                        <option value={""} selected disabled hidden>
-                          select
-                        </option>
-                        {ministryData &&
-                          ministryData.map((item) => <option value={item.id}>{item.ministryName}</option>)}
-                      </select>
-                    </div>
-                  </div> */}
+
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Motion Status</label>
                       <select
                         class="form-select"
-                        placeholder={formik.values.motionStatus}
+                        value={formik.values.motionStatus}
                         onChange={formik.handleChange}
                         id="motionStatus"
                         onBlur={formik.handleBlur}
                       >
-                        <option selected disabled hidden>
+                        <option value={" "} selected disabled hidden>
                           Select
                         </option>
                         {motionStatus &&
@@ -349,8 +347,9 @@ function SentMotion() {
                     </div>
                   </div>
                 </div>
+
                 <div class="row">
-                  <div class="col">
+                  <div class="col-3">
                     <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label">From Notice Date</label>
                       <span
@@ -368,17 +367,24 @@ function SentMotion() {
                       </span>
                       <DatePicker
                         selected={formik.values.fromNoticeDate}
-                        onChange={(date) => formik.setFieldValue("fromNoticeDate", date)}
-                        className={`form-control ${
-                          formik.errors.fromNoticeDate && formik.touched.fromNoticeDate ? "is-invalid" : ""
-                        }`}
+                        onChange={(date) =>
+                          formik.setFieldValue("fromNoticeDate", date)
+                        }
+                        className={`form-control ${formik.errors.fromNoticeDate &&
+                            formik.touched.fromNoticeDate
+                            ? "is-invalid"
+                            : ""
+                          }`}
                       />
-                      {formik.errors.fromNoticeDate && formik.touched.fromNoticeDate && (
-                        <div className="invalid-feedback">{formik.errors.fromNoticeDate}</div>
-                      )}
+                      {formik.errors.fromNoticeDate &&
+                        formik.touched.fromNoticeDate && (
+                          <div className="invalid-feedback">
+                            {formik.errors.fromNoticeDate}
+                          </div>
+                        )}
                     </div>
                   </div>
-                  <div class="col">
+                  <div class="col-3">
                     <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label">To Notice Date</label>
                       <span
@@ -396,34 +402,41 @@ function SentMotion() {
                       </span>
                       <DatePicker
                         selected={formik.values.toNoticeDate}
-                        onChange={(date) => formik.setFieldValue("toNoticeDate", date)}
+                        onChange={(date) =>
+                          formik.setFieldValue("toNoticeDate", date)
+                        }
                         className={"form-control"}
                       />
                     </div>
                   </div>
                 </div>
+
                 <div class="row">
                   <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                     <button class="btn btn-primary" type="submit">
                       Search
                     </button>
-                    <button class="btn btn-primary" type="">
+                    <button
+                      class="btn btn-primary"
+                      type="button"
+                      onClick={() => formik.resetForm()}
+                    >
                       Reset
                     </button>
                   </div>
                 </div>
                 <div class="" style={{ marginTop: "20px" }}>
                   <CustomTable
-                    block={true}
                     data={motionData}
                     headerShown={true}
-                    handleDelete={(item) => alert(item.id)}
-                    handleEdit={(item) => navigate("/mms/motion/new", { state: item })}
+                    hideDeleteIcon={true}
+                    // handleDelete={(item) => alert(item.id)}
+                    handleEdit={(item) => hendleEdit(item?.id)}
                     headertitlebgColor={"#666"}
                     headertitletextColor={"#FFF"}
                     handlePageChange={handlePageChange}
                     currentPage={currentPage}
-                    pageSize={pageSize}
+                    pageSize={4}
                     totalCount={count}
                   />
                 </div>

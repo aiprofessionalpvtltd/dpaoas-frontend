@@ -23,6 +23,7 @@ import { Editor } from "../../../../../../components/CustomComponents/Editor";
 import { AuthContext } from "../../../../../../api/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
+import { getAllDivisions } from "../../../../../../api/APIs/Services/ManageQMS.service";
 const validationSchema = Yup.object({
   sessionNo: Yup.string(),
   noticeOfficeDiaryNo: Yup.string(),
@@ -46,12 +47,17 @@ const validationSchema = Yup.object({
 
 function QMSQuestionDetail() {
   const location = useLocation();
+  // const English = location?.state && location?.state?.question?.englishText;
+  // const Urdu = location?.state && location?.state?.question?.urduText;
+  // console.log("location states", location?.state?.question?.urduText);
   const { members, sessions } = useContext(AuthContext);
+  const [alldivisons, setAllDivisions] = useState([]);
+
   console.log(
     "Question Detail Data",
-    location?.state?.question?.session?.sessionName,
+    location?.state?.question?.session?.sessionName
   );
-
+  // console.log("Divisions", divisons);
   const [showDeferForm, setShowDeferForm] = useState(false);
   const [showRetriveForm, setShowRetriveForm] = useState(false);
 
@@ -73,27 +79,31 @@ function QMSQuestionDetail() {
     questionDiaryNo: "",
   });
 
+  console.log("location", location?.state?.question?.member?.id);
   const formik = useFormik({
     initialValues: {
-      sessionNo: location?.state?.question?.session?.sessionName,
+      sessionNo: location?.state?.question?.session?.id,
       noticeOfficeDiaryNo:
         location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryNo,
-      noticeOfficeDiaryDate: new Date(location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryDate),
+      noticeOfficeDiaryDate: new Date(
+        location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryDate
+      ),
       // location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryDate,
       noticeOfficeDiaryTime:
         location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryTime,
       priority: "",
-      questionId: location?.state?.question?.fkSessionId,
+      questionId: location?.state?.question?.id,
       questionDiaryNo: location?.state?.question?.fkNoticeDiary,
       category: location?.state?.question?.questionCategory,
       questionStatus: location?.state?.question?.fkQuestionStatus,
-      replyDate: location?.state?.question?.replyDate,
-      senator: location?.state?.question?.member.memberName,
+      // replyDate: location?.state?.question?.replyDate,
+      replyDate: new Date(location?.state?.question?.replyDate),
+      senator: location?.state ? location?.state?.question?.member?.id : "",
       group: location?.state?.question?.groups,
       division: location?.state?.question?.divisions,
       fileStatus: location?.state?.question?.fileStatus,
-      englishText: "",
-      urduText: "",
+      englishText: location?.state?.question?.englishText,
+      urduText: location?.state?.question?.urduText,
       ammendedText: "",
       originalText: "",
     },
@@ -125,7 +135,7 @@ function QMSQuestionDetail() {
     try {
       const response = await UpdateQuestionById(
         location?.state?.question?.id,
-        formData,
+        formData
       );
       if (response?.success) {
         showSuccessMessage(response?.message);
@@ -149,7 +159,7 @@ function QMSQuestionDetail() {
   const hendleQuestionTranslation = async () => {
     try {
       const response = await sendQuestionTranslation(
-        location?.state?.question?.id,
+        location?.state?.question?.id
       );
       if (response?.success) {
         showSuccessMessage(response.message);
@@ -168,7 +178,7 @@ function QMSQuestionDetail() {
     try {
       const response = await createDefferQuestion(
         location?.state?.question?.id,
-        DefferData,
+        DefferData
       );
       if (response?.success) {
         showSuccessMessage(response.message);
@@ -194,7 +204,7 @@ function QMSQuestionDetail() {
     try {
       const response = await createReviveQuestion(
         location?.state?.question?.id,
-        reviveData,
+        reviveData
       );
       if (response?.success) {
         showSuccessMessage(response.message);
@@ -219,7 +229,7 @@ function QMSQuestionDetail() {
     }
   };
   const StatusHistoryData = transfrerStatusHistoryData(
-    location?.state?.history?.questionStatusHistory,
+    location?.state?.history?.questionStatusHistory
   );
   //questionRevival
   const transfrerRevivalHistoryData = (apiData) => {
@@ -238,7 +248,7 @@ function QMSQuestionDetail() {
   };
 
   const QuestionRevivalHistoryData = transfrerRevivalHistoryData(
-    location?.state?.history?.questionRevival,
+    location?.state?.history?.questionRevival
   );
 
   //Deffer History
@@ -258,7 +268,7 @@ function QMSQuestionDetail() {
   };
 
   const QuestionDefferHistoryData = transfrerDefferHistoryData(
-    location?.state?.history?.questionDefer,
+    location?.state?.history?.questionDefer
   );
 
   //File History
@@ -276,11 +286,25 @@ function QMSQuestionDetail() {
   };
 
   const QuestionFileHistoryData = transfrerFilerHistoryData(
-    location?.state?.history?.questionFileHistory,
+    location?.state?.history?.questionFileHistory
   );
-
+  // Getting All Divisions
+  const GetALLDivsions = async () => {
+    try {
+      const response = await getAllDivisions(0, 100);
+      if (response?.success) {
+        setAllDivisions(response?.data?.divisions);
+        // setCount(response?.data?.count);
+        // setTotalPages(rersponse?.data?.totalPages)
+        // showSuccessMessage(response.message)
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
     GetALlStatus();
+    GetALLDivsions();
   }, []);
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
@@ -629,6 +653,7 @@ function QMSQuestionDetail() {
                           ))}
                       </select> */}
                       <input
+                        // readOnly={true}
                         placeholder={formik.values.sessionNo}
                         type="text"
                         class="form-control"
@@ -747,13 +772,14 @@ function QMSQuestionDetail() {
                         id="category"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
+                        value={formik.values.category}
                       >
                         <option value={""} selected disabled hidden>
                           Select
                         </option>
-                        <option value={"Starred"}>Starred</option>
-                        <option value={"Un-Starred"}>Un-Starred</option>
-                        <option value={"Short Notice"}>Short Notice</option>
+                        <option value="Starred">Starred</option>
+                        <option value="Un-Starred">Un-Starred</option>
+                        <option value="Short Notice">Short Notice</option>
                       </select>
                     </div>
                   </div>
@@ -767,6 +793,7 @@ function QMSQuestionDetail() {
                         id="questionStatus"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
+                        value={formik.values.questionStatus}
                       >
                         <option selected disabled hidden>
                           select
@@ -819,11 +846,13 @@ function QMSQuestionDetail() {
                     <div class="mb-3">
                       <label class="form-label">Senator</label>
                       <select
-                        placeholder={formik.values.senator}
+                        values={formik.values.senator}
+                        // placeholder={formik.values.senator}
                         className={`form-control`}
                         id="senator"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
+                        value={formik.values.senator}
                       >
                         <option selected disabled hidden>
                           Select
@@ -849,7 +878,7 @@ function QMSQuestionDetail() {
                         <option value={""} selected disabled hidden>
                           Select
                         </option>
-                        <option value={"1"}>1st Group</option>
+                        <option value="1">1st Group</option>
                         <option>2nd Group</option>
                         <option>3rd Group</option>
                         <option>4th Group</option>
@@ -863,13 +892,41 @@ function QMSQuestionDetail() {
                     <div class="mb-3">
                       <label class="form-label">Division</label>
                       <select
-                        class="form-control small-control"
+                        class="form-select"
+                        placeholder={formik.values.tonerModel}
                         id="division"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       >
-                        <option>Select</option>
-                        <option value={"1"}>Aviation Division</option>
+                        <option selected disabled hidden>
+                          Select
+                        </option>
+                        {alldivisons &&
+                          alldivisons.map((item, index) => (
+                            <option value={item.id} key={index}>
+                              {item?.divisionName}
+                            </option>
+                          ))}
+                      </select>
+                      {/* <select
+                        class="form-control small-control"
+                        id="division"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.division}
+                        name="division"
+                      >
+                        <option value={""} selected disabled hidden>
+                          Select
+                        </option>
+                        {alldivisons &&
+                          alldivisons.map((item) => (
+                            <option key={item.id} value={item.id}>
+                              {item?.divisionname}
+                            </option>
+                          ))}
+                      </select> */}
+                      {/* <option value={"1"}>Aviation Division</option>
                         <option>Cabinet Division</option>
                         <option>
                           Capital Administration &amp; Development Div.
@@ -887,8 +944,7 @@ function QMSQuestionDetail() {
                         <option>
                           Poverty Alleviation and Social Safety Division
                         </option>
-                        <option>Textile Division</option>
-                      </select>
+                        <option>Textile Division</option> */}
                     </div>
                   </div>
                   <div class="col">

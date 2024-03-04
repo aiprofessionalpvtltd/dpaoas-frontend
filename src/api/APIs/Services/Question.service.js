@@ -3,202 +3,217 @@ import { getAuthToken } from "../../Auth";
 
 // Question Module
 export const createQuestion = async (data) => {
-    try {
+  try {
     //   const token = getAuthToken()
-      const response = await axiosClientMMS.post(`/questions/create`, data, {
-        headers: {
-          accept: "application/json",
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      return response?.data;
-    } catch (error) {
-      console.error("Error fetching API endpoint:", error);
-      throw error;
-    }
-  };
-  
-  export const getAllQuestion = async (page, pageSize) => {
-    try {
-      // const token = getAuthToken();
-      const response = await axiosClientMMS.get(
-        `/questions/all?currentPage=${page}&pageSize=${pageSize}`,
-        {
-          // headers: {
-          //   Authorization: `Bearer ${token}`,
-          // }
-        },
-      );
-      return response?.data;
-    } catch (error) {
-      console.error("Error fetching API endpoint:", error);
-      throw error;
-    }
-  };
-  
-  export const searchQuestion = async (searchParams) => {
-    try {
-      // const token = getAuthToken();
-  
-      // Filter out empty values
-      const filteredSearchParams = Object.fromEntries(
-        Object.entries(searchParams).filter(([_, value]) => value !== ""),
-      );
-  
-      const response = await axiosClientMMS.get(`/questions/searchQuestion`, {
+    const response = await axiosClientMMS.post(`/questions/create`, data, {
+      headers: {
+        accept: "application/json",
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const getAllQuestion = async (page, pageSize) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/questions/all?currentPage=${page}&pageSize=${pageSize}`,
+      {
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // }
+      }
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const searchQuestion = async (searchParams, currentPage, pageSize) => {
+  try {
+    // const token = getAuthToken();
+
+    // Filter out empty values
+    const filteredSearchParams = Object.fromEntries(
+      Object.entries(searchParams).filter(([_, value]) => value !== "")
+    );
+
+    const response = await axiosClientMMS.get(
+      `/questions/searchQuestion?currentPage=${currentPage}&pageSize=${pageSize}`,
+      {
         params: filteredSearchParams,
         // headers: {
         //   Authorization: `Bearer ${token}`,
         // },
-      });
-      return response?.data;
-    } catch (error) {
-      console.error("Error fetching API endpoint:", error);
-      throw error;
-    }
-  };
-  
-  //Question Status
-  export const getAllQuestionStatus = async () => {
-    try {
-      // const token = getAuthToken();
-      const response = await axiosClientMMS.get(`/questions/quesStatuses`, {
+      }
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+//Question Status
+export const getAllQuestionStatus = async () => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.get(`/questions/quesStatuses`, {
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // }
+    });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+//Send Question Tranlation
+export const sendQuestionTranslation = async (id) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.put(
+      `/questions/sendForTranslation/${id}`,
+      {
         // headers: {
         //   Authorization: `Bearer ${token}`,
         // }
-      });
-      return response?.data;
-    } catch (error) {
-      console.error("Error fetching API endpoint:", error);
-      throw error;
-    }
-  };
-  
-  //Send Question Tranlation
-  export const sendQuestionTranslation = async (id) => {
-    try {
-      // const token = getAuthToken();
-      const response = await axiosClientMMS.put(
-        `/questions/sendForTranslation/${id}`,
-        {
-          // headers: {
-          //   Authorization: `Bearer ${token}`,
-          // }
-        },
-      );
-      return response?.data;
-    } catch (error) {
-      console.error("Error fetching API endpoint:", error);
-      throw error;
-    }
-  };
-  //GetQuestionBYId
-  export const getAllQuestionByID = async (id) => {
-    try {
-      // const token = getAuthToken();
-      const [questionResponse, historyResponse] = await Promise.all([
-        axiosClientMMS.get(`/questions/${id}`, {
-          // headers: {
-          //   Authorization: `Bearer ${token}`,
-          // }
-        }),
-        axiosClientMMS.get(`/questions/getQuestionHistories/${id}`, {
-          // headers: {
-          //   Authorization: `Bearer ${token}`,
-          // }
-        }),
-      ]);
-  
-      return {
-        question: questionResponse?.data,
-        history: historyResponse?.data,
-      };
-    } catch (error) {
-      console.error("Error fetching API endpoints:", error);
-      throw error;
-    }
-  };
-  
-  export const UpdateQuestionById = async (id, data) => {
-    console.log("weioweoeo", id);
-    try {
-      // const token = getAuthToken();
-      const response = await axiosClientMMS.put(`/questions/update/${id}`, data, {
+      }
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+//GetQuestionBYId
+export const getAllQuestionByID = async (id) => {
+  try {
+    // const token = getAuthToken();
+    const [questionResponse, historyResponse] = await Promise.all([
+      axiosClientMMS.get(`/questions/${id}`, {
         // headers: {
         //   Authorization: `Bearer ${token}`,
         // }
-      });
-      return response?.data;
-    } catch (error) {
-      console.error("Error fetching API endpoint:", error);
-      throw error;
-    }
-  };
-  //Daffer Question
-  export const createDefferQuestion = async (id, DefferData) => {
-    console.log("iwefjiouios".DefferData);
-    try {
-      // const token = getAuthToken();
-      const response = await axiosClientMMS.post(
-        `/questions/deferQuestion/${id}`,
-        DefferData,
-        {
-          // headers: {
-          //   Authorization: `Bearer ${token}`,
-          // }
-        },
-      );
-      return response?.data;
-    } catch (error) {
-      console.error("Error fetching API endpoint:", error);
-      throw error;
-    }
-  };
-  
-  // Revive
-  export const createReviveQuestion = async (id, reviveData) => {
-    try {
-      // const token = getAuthToken();
-      const response = await axiosClientMMS.post(
-        `/questions/reviveQuestion/${id}`,
-        reviveData,
-        {
-          // headers: {
-          //   Authorization: `Bearer ${token}`,
-          // }
-        },
-      );
-      return response?.data;
-    } catch (error) {
-      console.error("Error fetching API endpoint:", error);
-      throw error;
-    }
-  };
-  
-  //Question History
-  export const allRevivedQuestions = async () => {
-    try {
-      // const token = getAuthToken();
-      const response = await axiosClientMMS.get(
-        `/questions/allRevivedQuestions?currentPage=${0}&pageSize=${100}`,
-      );
-      return response?.data;
-    } catch (error) {
-      console.error("Error fetching API endpoint:", error);
-      throw error;
-    }
-  };
-  
-  export const RevivedQuestionsBYID = async (id) => {
-    try {
-      // const token = getAuthToken();
-      const response = await axiosClientMMS.get(
-        `/questions/getReviveQuestion/${id}`,
-      );
-      return response?.data;
-    } catch (error) {
-      console.error("Error fetching API endpoint:", error);
-      throw error;
-    }
-  };
-  
+      }),
+      axiosClientMMS.get(`/questions/getQuestionHistories/${id}`, {
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // }
+      }),
+    ]);
+
+    return {
+      question: questionResponse?.data,
+      history: historyResponse?.data,
+    };
+  } catch (error) {
+    console.error("Error fetching API endpoints:", error);
+    throw error;
+  }
+};
+
+export const UpdateQuestionById = async (id, data) => {
+  console.log("weioweoeo", id);
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.put(`/questions/update/${id}`, data, {
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // }
+    });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+//Daffer Question
+export const createDefferQuestion = async (id, DefferData) => {
+  console.log("iwefjiouios".DefferData);
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.post(
+      `/questions/deferQuestion/${id}`,
+      DefferData,
+      {
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // }
+      }
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+// Revive
+export const createReviveQuestion = async (id, reviveData) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.post(
+      `/questions/reviveQuestion/${id}`,
+      reviveData,
+      {
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // }
+      }
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+//Question History
+export const allRevivedQuestions = async () => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/questions/allRevivedQuestions?currentPage=${0}&pageSize=${100}`
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const RevivedQuestionsBYID = async (id) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/questions/getReviveQuestion/${id}`
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const noticeBusinessReport = async (fromDate, toDate) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/noticeOfficeReport/?noticeOfficeDiaryDateFrom=${fromDate}&noticeOfficeDiaryDateTo=${toDate}`
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};

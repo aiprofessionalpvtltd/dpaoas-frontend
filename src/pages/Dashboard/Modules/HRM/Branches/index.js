@@ -68,7 +68,6 @@ function HRMBranches() {
         title1={"Branches"}
       />
       <ToastContainer />
-      <div class="container-fluid dash-detail-container card">
         <div class="row">
           <div class="col-12">
             <CustomTable
@@ -80,6 +79,8 @@ function HRMBranches() {
                 navigate("/hrm/addeditbranches", { state: item })
               }
               headertitlebgColor={"#666"}
+              singleDataCard={true}
+
               headertitletextColor={"#FFF"}
               handlePageChange={handlePageChange}
               currentPage={currentPage}
@@ -90,7 +91,6 @@ function HRMBranches() {
               handleDelete={(item) => handleDelete(item.id)}
             />
           </div>
-        </div>
       </div>
     </Layout>
   );

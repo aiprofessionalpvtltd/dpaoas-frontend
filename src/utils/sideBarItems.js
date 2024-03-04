@@ -6,7 +6,19 @@ import {
   faAddressCard,
   faUser,
   faClipboardList,
-  faCodeBranch
+  faCodeBranch,
+  faClipboardQuestion,
+  faFilePen,
+  faSearch,
+  faListAlt,
+  faFileImport,
+  faScaleBalanced,
+  faFileInvoice,
+  faBarsProgress,
+  faCalendarDays,
+  faChair,
+  faFileLines,
+  faSquarePollHorizontal,
 } from "@fortawesome/free-solid-svg-icons";
 
 // LMS Sidebar
@@ -64,71 +76,89 @@ export const VMSsidebarItems = [
 // Notice Sidebar
 export const NoticeSidebarItems = [
   {
+    itemName: "Dashboard",
+    link: "/notice/dashboard",
+    icon: faHome,
+  },
+  {
     itemName: "Question",
     link: "/notice/question",
-    icon: faClipboardList,
+    icon: faClipboardQuestion,
     subItems: [
       {
         itemName: "New Question",
         link: "/notice/question/new",
-        icon: faClipboardList,
+        icon: faFilePen,
       },
       {
         itemName: "Search Question",
         link: "/notice/question/search",
-        icon: faClipboardList,
+        icon: faSearch,
       },
       {
-        itemName: "Sent Question",
+        itemName: "List Question",
         link: "/notice/question/sent",
-        icon: faClipboardList,
+        icon: faListAlt,
       },
     ],
   },
   {
     itemName: "Motion",
     link: "/notice/motion",
-    icon: faClipboardList,
+    icon: faFileImport,
     subItems: [
       {
         itemName: "New Motion",
         link: "/notice/motion/new",
-        icon: faClipboardList,
+        icon: faFilePen,
       },
       {
         itemName: "Search Motion",
         link: "/notice/motion/search",
-        icon: faClipboardList,
+        icon: faSearch,
       },
       {
-        itemName: "Sent Motion",
+        itemName: "List Motion",
         link: "/notice/motion/sent",
-        icon: faClipboardList,
+        icon: faListAlt,
       },
     ],
   },
+  // {
+  //   itemName: "Resolution",
+  //   link: "/notice/resolution",
+  //   icon: faClipboardList,
+  //   subItems: [
+  //     {
+  //       itemName: "New Resolution",
+  //       link: "/notice/resolution/new",
+  //       icon: faClipboardList,
+  //     },
+  //     {
+  //       itemName: "Search Resolution",
+  //       link: "/notice/resolution/search",
+  //       icon: faClipboardList,
+  //     },
+  //     {
+  //       itemName: "List Resolution",
+  //       link: "/notice/resolution/sent",
+  //       icon: faClipboardList,
+  //     },
+  //   ],
+  // },
   {
-    itemName: "Resolution",
-    link: "/notice/resolution",
-    icon: faClipboardList,
+    itemName: "Legislation Business",
+    link: "/notice/legislation",
+    icon: faScaleBalanced,
     subItems: [
       {
-        itemName: "New Resolution",
-        link: "/notice/resolution/new",
-        icon: faClipboardList,
-      },
-      {
-        itemName: "Search Resolution",
-        link: "/notice/resolution/search",
-        icon: faClipboardList,
-      },
-      {
-        itemName: "Sent Resolution",
-        link: "/notice/resolution/sent",
-        icon: faClipboardList,
+        itemName: "Private Bill",
+        link: "/notice/legislation/private-bill",
+        icon: faFileInvoice,
       },
     ],
   },
+
   // {
   //   itemName: "Manage",
   //   link: "/notice/manage",
@@ -207,31 +237,41 @@ export const NoticeSidebarItems = [
   //   ],
   // },
   {
-    itemName: "Seating Plan",
-    link: "/notice/seatingplan",
-    icon: faClipboardList,
+    itemName: "Manage",
+    link: "/notice/manage",
+    icon: faBarsProgress,
     subItems: [
+      // {
+      //itemName: "Manage Session Days",
+      //  link: "/notice/manage/manage-session-days",
+      // icon: faClipboardList,
+      //  },
       {
-        itemName: "Manage Session Days",
-        link: "/notice/seatingplan/manage-session-days",
-        icon: faClipboardList,
+        itemName: "Session Days",
+        link: "/notice/manage/manage-session-days",
+        icon: faCalendarDays,
       },
       {
-        itemName: "Manage Seating Plan",
-        link: "/notice/seatingplan/manage-seating-plan",
+        itemName: "Seating Plan",
+        link: "/notice/manage/manage-seating-plan",
         target: "blank",
-        icon: faClipboardList,
+        icon: faChair,
       },
     ],
   },
   {
     itemName: "Reports",
     link: "/notice/reports",
-    icon: faClipboardList,
+    icon: faFileLines,
     subItems: [
       {
         itemName: "Business Summary",
         link: "/notice/reports/business-summary",
+        icon: faSquarePollHorizontal,
+      },
+      {
+        itemName: "Attendence Reports",
+        link: "/notice/reports/attendence-reports",
         icon: faClipboardList,
       },
     ],
@@ -654,3 +694,43 @@ export const CMSsidebarItems = [
     ],
   },
 ];
+
+//Efiling
+export const EfilingSideBarItem = [
+  {
+    itemName: "Dashboard",
+    link: "/efiling/dashboard",
+    icon: faHome,
+  },
+  {
+    itemName: "FIle Registers",
+    link: "/efiling/dashboard/file-register-list",
+    icon: faFileAlt,
+  },
+  {
+    itemName: "File Headings",
+    link: "/efiling/dashboard/file-heading-list",
+    icon: faFileAlt,
+  },
+  {
+    itemName: "Main File",
+    link: "",
+    icon: faFileAlt,
+  },
+  {
+    itemName: "Fresh Recipt",
+    link: "",
+    icon: faFileAlt,
+  },
+  {
+    itemName: "Notification",
+    link: "",
+    icon: faFileAlt,
+  },
+  {
+    itemName: "Team information",
+    link: "",
+    icon: faFileAlt,
+  },
+  
+]

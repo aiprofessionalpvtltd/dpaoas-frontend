@@ -84,6 +84,7 @@ function HRMDesignation() {
             pageSize={pageSize}
             // handlePrint={}
             // handleUser={}
+            singleDataCard={true}
             totalCount={count}
             handleDelete={(item) => handleDelete(item.id)}
           />

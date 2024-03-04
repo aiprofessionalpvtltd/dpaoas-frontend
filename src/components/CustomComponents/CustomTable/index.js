@@ -8,11 +8,14 @@ import {
   faCheck,
   faFileExport,
   faEye,
+  faUserCheck,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 function CustomTable({
+  hendleAttendance,
+  showAttendance,
   hendleAssigned,
   showAssigned,
   showResolve,
@@ -52,7 +55,7 @@ function CustomTable({
   hideDeleteIcon,
   singleDataCard,
   showEditIcon,
-  hidebtn1
+  hidebtn1,
 }) {
   const keys = data?.length > 0 ? Object.keys(data[0]) : [];
   const [totalPages, setTotalPages] = useState(0);
@@ -67,7 +70,12 @@ function CustomTable({
   // }, [data?.length, pageSize]);
 
   useEffect(() => {
-    setTotalPages((prevTotalPages) => Math.max(1, Math.ceil((totalCount ? totalCount : data?.length) / pageSize)));
+    setTotalPages((prevTotalPages) =>
+      Math.max(
+        1,
+        Math.ceil((totalCount ? totalCount : data?.length) / pageSize)
+      )
+    );
   }, [data?.length, pageSize, totalCount]);
 
   const startIndex = currentPage * pageSize;
@@ -82,23 +90,38 @@ function CustomTable({
   const duplicateTooltip = <Tooltip id="duplicate-tooltip">Duplicate</Tooltip>;
   const resolveTooltip = <Tooltip id="print-tooltip">Resolve</Tooltip>;
   const assignedTooltip = <Tooltip id="print-tooltip">Assigne</Tooltip>;
+  const attendanceTooltip = <Tooltip id="attendance-tooltip">Mark </Tooltip>;
 
   const renderPagination = () => (
     <nav aria-label="Page navigation">
       <ul className="pagination">
         <li className={`page-item ${currentPage <= 0 ? "disabled" : ""}`}>
-          <button className="page-link" onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage <= 0}>
+          <button
+            className="page-link"
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage <= 0}
+          >
             Previous
           </button>
         </li>
         {Array.from({ length: totalPages })?.map((_, index) => (
-          <li key={index} className={`page-item ${currentPage === index ? "active" : ""}`}>
-            <button className="page-link" onClick={() => handlePageChange(index)}>
+          <li
+            key={index}
+            className={`page-item ${currentPage === index ? "active" : ""}`}
+          >
+            <button
+              className="page-link"
+              onClick={() => handlePageChange(index)}
+            >
               {index + 1}
             </button>
           </li>
         ))}
-        <li className={`page-item ${currentPage >= totalPages - 1 ? "disabled" : ""}`}>
+        <li
+          className={`page-item ${
+            currentPage >= totalPages - 1 ? "disabled" : ""
+          }`}
+        >
           <button
             className="page-link"
             onClick={() => handlePageChange(currentPage + 1)}
@@ -126,17 +149,24 @@ function CustomTable({
               {!hideBtn && (
                 <>
                   {handleAdd2 && (
-                  <button className="btn btn-primary float-end ms-2" type="button" onClick={handleAdd2}>
-                    {addBtnText2}
-                  </button>
+                    <button
+                      className="btn btn-primary float-end ms-2"
+                      type="button"
+                      onClick={handleAdd2}
+                    >
+                      {addBtnText2}
+                    </button>
                   )}
-                  
                 </>
               )}
               {!hidebtn1 && (
-                <button className="btn btn-primary float-end" type="button" onClick={handleAdd}>
-                {addBtnText}
-              </button>
+                <button
+                  className="btn btn-primary float-end"
+                  type="button"
+                  onClick={handleAdd}
+                >
+                  {addBtnText}
+                </button>
               )}
               <div className="clearfix"></div>
             </div>
@@ -150,7 +180,12 @@ function CustomTable({
                 marginBottom: "15px",
               }}
             >
-              <input type="text" className="form-control" placeholder="Search" onChange={searchonchange} />
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Search"
+                onChange={searchonchange}
+              />
               <div className="input-group-btn">
                 <button className="btn btn-default" type="submit">
                   <i className="glyphicon glyphicon-search"></i>
@@ -189,8 +224,12 @@ function CustomTable({
                     className="text-center"
                     scope="col"
                     style={{
-                      backgroundColor: headertitlebgColor ? headertitlebgColor : "#FFF",
-                      color: headertitletextColor ? headertitletextColor : "#666",
+                      backgroundColor: headertitlebgColor
+                        ? headertitlebgColor
+                        : "#FFF",
+                      color: headertitletextColor
+                        ? headertitletextColor
+                        : "#666",
                     }}
                   >
                     {formatHeader(key)}
@@ -201,8 +240,12 @@ function CustomTable({
                     className="text-center"
                     style={{
                       width: "180px",
-                      backgroundColor: headertitlebgColor ? headertitlebgColor : "#FFF",
-                      color: headertitletextColor ? headertitletextColor : "#666",
+                      backgroundColor: headertitlebgColor
+                        ? headertitlebgColor
+                        : "#FFF",
+                      color: headertitletextColor
+                        ? headertitletextColor
+                        : "#666",
                     }}
                   >
                     Actions
@@ -219,9 +262,14 @@ function CustomTable({
                         //     {item[key]}
                         // </td>
                         <td className="text-center">
-                          {item[key] === "active" || item[key] === "inactive" ? (
+                          {item[key] === "active" ||
+                          item[key] === "inactive" ? (
                             <span
-                              className={`label label-sm ${item[key] === "active" ? "label-success" : "label-danger"}`}
+                              className={`label label-sm ${
+                                item[key] === "active"
+                                  ? "label-success"
+                                  : "label-danger"
+                              }`}
                             >
                               {item[key]}
                             </span>
@@ -234,35 +282,95 @@ function CustomTable({
                         <td className="text-center">
                           {!hideEditIcon && !hideEditIcon && (
                             <>
-                              {!showEditIcon && !showEditIcon && (
-                                <OverlayTrigger placement="top" overlay={editTooltip}>
-                                  <button
-                                    onClick={() => handleEdit(item)}
-                                    className="btn default btn-xs black"
-                                    data-id={item.id}
-                                  >
-                                    <FontAwesomeIcon icon={faEdit} />
-                                  </button>
-                                </OverlayTrigger>
-                              )}
                               {showView && handleView && (
-                                <OverlayTrigger placement="top" overlay={viewTooltip}>
+                                <OverlayTrigger
+                                  placement="top"
+                                  overlay={viewTooltip}
+                                >
                                   <button
                                     onClick={() => handleView(item)}
-                                    className="btn default btn-xs black"
+                                    className="btn-xs black circle-btn"
                                     data-id={item.id}
+                                    style={{background:"#2dce89"}}
                                   >
                                     <FontAwesomeIcon icon={faEye} />
                                   </button>
                                 </OverlayTrigger>
                               )}
 
+
+                              {showAttendance && (
+                                <OverlayTrigger
+                                  placement="top"
+                                  overlay={attendanceTooltip}
+                                >
+                                  <button
+                                    onClick={() => hendleAttendance(item)}
+                                    className="btn-xs black circle-btn"
+                                    data-id={item.id}
+                                    style={{background:"#007bff"}}
+                                  >
+                                    <FontAwesomeIcon icon={faUserCheck} />
+                                  </button>
+                                </OverlayTrigger>
+                              )}
+
+                              {showPrint && (
+                                <OverlayTrigger
+                                  placement="top"
+                                  overlay={printTooltip}
+                                >
+                                  <button
+                                    onClick={() => handlePrint(item)}
+                                    className="btn-xs black circle-btn"
+                                    data-id={item.id}
+                                  >
+                                    <FontAwesomeIcon icon={faPrint} />
+                                  </button>
+                                </OverlayTrigger>
+                              )}
+
+                              {showAssigned && (
+                              <OverlayTrigger
+                                placement="top"
+                                overlay={assignedTooltip}
+                              >
+                                <button
+                                  onClick={() => hendleAssigned(item)}
+                                  className="btn-xs black circle-btn"
+                                  data-id={item.id}
+                                  style={{ backgroundColor: 'green' }}
+                                >
+                                  <FontAwesomeIcon icon={faFileExport} />
+                                </button>
+                              </OverlayTrigger>
+                            )}
+
+                              {!showEditIcon && !showEditIcon && (
+                                <OverlayTrigger
+                                  placement="top"
+                                  overlay={editTooltip}
+                                >
+                                  <button
+                                    onClick={() => handleEdit(item)}
+                                    className="btn-xs black circle-btn"
+                                    data-id={item.id}
+                                  >
+                                    <FontAwesomeIcon icon={faEdit} />
+                                  </button>
+                                </OverlayTrigger>
+                              )}
+
                               {!hideDeleteIcon && !hideDeleteIcon && (
-                                <OverlayTrigger placement="top" overlay={deleteTooltip}>
+                                <OverlayTrigger
+                                  placement="top"
+                                  overlay={deleteTooltip}
+                                >
                                   <button
                                     onClick={() => handleDelete(item)}
-                                    className="btn default btn-xs black"
+                                    className="btn-xs black circle-btn"
                                     data-id={item.id}
+                                    style={{background:"#fb6340"}}
                                   >
                                     <FontAwesomeIcon icon={faTrash} />
                                   </button>
@@ -272,28 +380,37 @@ function CustomTable({
                           )}
                           {hideUserIcon && hideUserIcon && (
                             <>
-                              <OverlayTrigger placement="top" overlay={vistorTooltip}>
+                              <OverlayTrigger
+                                placement="top"
+                                overlay={vistorTooltip}
+                              >
                                 <button
                                   onClick={() => handleUser(item)}
-                                  className="btn default btn-xs black"
+                                  className="btn-xs black circle-btn"
                                   data-id={item.id}
                                 >
                                   <FontAwesomeIcon icon={faUser} />
                                 </button>
                               </OverlayTrigger>
-                              <OverlayTrigger placement="top" overlay={printTooltip}>
+                              <OverlayTrigger
+                                placement="top"
+                                overlay={printTooltip}
+                              >
                                 <button
                                   onClick={() => handlePrint(item)}
-                                  className="btn default btn-xs black"
+                                  className="btn-xs black circle-btn"
                                   data-id={item.id}
                                 >
                                   <FontAwesomeIcon icon={faPrint} />
                                 </button>
                               </OverlayTrigger>
-                              <OverlayTrigger placement="top" overlay={duplicateTooltip}>
+                              <OverlayTrigger
+                                placement="top"
+                                overlay={duplicateTooltip}
+                              >
                                 <button
                                   onClick={() => handleDuplicate(item)}
-                                  className="btn default btn-xs black"
+                                  className="btn-xs black circle-btn"
                                   data-id={item.id}
                                 >
                                   <FontAwesomeIcon icon={faClone} />
@@ -301,36 +418,17 @@ function CustomTable({
                               </OverlayTrigger>
                             </>
                           )}
-                          {showPrint && (
-                            <OverlayTrigger placement="top" overlay={printTooltip}>
-                              <button
-                                onClick={() => handlePrint(item)}
-                                className="btn default btn-xs black"
-                                data-id={item.id}
-                              >
-                                <FontAwesomeIcon icon={faPrint} />
-                              </button>
-                            </OverlayTrigger>
-                          )}
                           {showResolve && (
-                            <OverlayTrigger placement="top" overlay={resolveTooltip}>
+                            <OverlayTrigger
+                              placement="top"
+                              overlay={resolveTooltip}
+                            >
                               <button
                                 onClick={() => hendleResolve(item)}
-                                className="btn default btn-xs black"
+                                className="btn-xs black circle-btn"
                                 data-id={item.id}
                               >
                                 <FontAwesomeIcon icon={faCheck} />
-                              </button>
-                            </OverlayTrigger>
-                          )}
-                          {showAssigned && (
-                            <OverlayTrigger placement="top" overlay={assignedTooltip}>
-                              <button
-                                onClick={() => hendleAssigned(item)}
-                                className="btn default btn-xs black"
-                                data-id={item.id}
-                              >
-                                <FontAwesomeIcon icon={faFileExport} />
                               </button>
                             </OverlayTrigger>
                           )}
@@ -345,9 +443,14 @@ function CustomTable({
                         //     {item[key]}
                         // </td>
                         <td className="text-center">
-                          {item[key] === "active" || item[key] === "inactive" ? (
+                          {item[key] === "active" ||
+                          item[key] === "inactive" ? (
                             <span
-                              className={`label label-sm ${item[key] === "active" ? "label-success" : "label-danger"}`}
+                              className={`label label-sm ${
+                                item[key] === "active"
+                                  ? "label-success"
+                                  : "label-danger"
+                              }`}
                             >
                               {item[key]}
                             </span>
@@ -361,10 +464,13 @@ function CustomTable({
                           {!hideEditIcon && !hideEditIcon && (
                             <>
                               {!showEditIcon && !showEditIcon && (
-                                <OverlayTrigger placement="top" overlay={editTooltip}>
+                                <OverlayTrigger
+                                  placement="top"
+                                  overlay={editTooltip}
+                                >
                                   <button
                                     onClick={() => handleEdit(item)}
-                                    className="btn default btn-xs black"
+                                    className="btn-xs black circle-btn"
                                     data-id={item.id}
                                   >
                                     <FontAwesomeIcon icon={faEdit} />
@@ -372,11 +478,15 @@ function CustomTable({
                                 </OverlayTrigger>
                               )}
                               {showView && handleView && (
-                                <OverlayTrigger placement="top" overlay={viewTooltip}>
+                                <OverlayTrigger
+                                  placement="top"
+                                  overlay={viewTooltip}
+                                >
                                   <button
                                     onClick={() => handleView(item)}
-                                    className="btn default btn-xs black"
+                                    className="btn-xs black circle-btn"
                                     data-id={item.id}
+                                    style={{background:"#2dce89"}}
                                   >
                                     <FontAwesomeIcon icon={faEye} />
                                   </button>
@@ -384,11 +494,15 @@ function CustomTable({
                               )}
 
                               {!hideDeleteIcon && !hideDeleteIcon && (
-                                <OverlayTrigger placement="top" overlay={deleteTooltip}>
+                                <OverlayTrigger
+                                  placement="top"
+                                  overlay={deleteTooltip}
+                                >
                                   <button
                                     onClick={() => handleDelete(item)}
-                                    className="btn default btn-xs black"
+                                    className="btn-xs black circle-btn"
                                     data-id={item.id}
+                                    style={{background:"#fb6340"}}
                                   >
                                     <FontAwesomeIcon icon={faTrash} />
                                   </button>
@@ -411,30 +525,40 @@ function CustomTable({
                               </button>
                             </>
                           )}
+
                           {hideUserIcon && hideUserIcon && (
                             <>
-                              <OverlayTrigger placement="top" overlay={vistorTooltip}>
+                              <OverlayTrigger
+                                placement="top"
+                                overlay={vistorTooltip}
+                              >
                                 <button
                                   onClick={() => handleUser(item)}
-                                  className="btn default btn-xs black"
+                                  className="btn-xs black circle-btn"
                                   data-id={item.id}
                                 >
                                   <FontAwesomeIcon icon={faUser} />
                                 </button>
                               </OverlayTrigger>
-                              <OverlayTrigger placement="top" overlay={printTooltip}>
+                              <OverlayTrigger
+                                placement="top"
+                                overlay={printTooltip}
+                              >
                                 <button
                                   onClick={() => handlePrint(item)}
-                                  className="btn default btn-xs black"
+                                  className="btn-xs black circle-btn"
                                   data-id={item.id}
                                 >
                                   <FontAwesomeIcon icon={faPrint} />
                                 </button>
                               </OverlayTrigger>
-                              <OverlayTrigger placement="top" overlay={duplicateTooltip}>
+                              <OverlayTrigger
+                                placement="top"
+                                overlay={duplicateTooltip}
+                              >
                                 <button
                                   onClick={() => handleDuplicate(item)}
-                                  className="btn default btn-xs black"
+                                  className="btn-xs black circle-btn"
                                   data-id={item.id}
                                 >
                                   <FontAwesomeIcon icon={faClone} />
@@ -443,10 +567,13 @@ function CustomTable({
                             </>
                           )}
                           {showPrint && (
-                            <OverlayTrigger placement="top" overlay={printTooltip}>
+                            <OverlayTrigger
+                              placement="top"
+                              overlay={printTooltip}
+                            >
                               <button
                                 onClick={() => handlePrint(item)}
-                                className="btn default btn-xs black"
+                                className="btn-xs black circle-btn"
                                 data-id={item.id}
                               >
                                 <FontAwesomeIcon icon={faPrint} />
@@ -454,24 +581,16 @@ function CustomTable({
                             </OverlayTrigger>
                           )}
                           {showResolve && (
-                            <OverlayTrigger placement="top" overlay={resolveTooltip}>
+                            <OverlayTrigger
+                              placement="top"
+                              overlay={resolveTooltip}
+                            >
                               <button
                                 onClick={() => hendleResolve(item)}
-                                className="btn default btn-xs black"
+                                className="btn-xs black circle-btn"
                                 data-id={item.id}
                               >
                                 <FontAwesomeIcon icon={faCheck} />
-                              </button>
-                            </OverlayTrigger>
-                          )}
-                          {showAssigned && (
-                            <OverlayTrigger placement="top" overlay={assignedTooltip}>
-                              <button
-                                onClick={() => hendleAssigned(item)}
-                                className="btn default btn-xs black"
-                                data-id={item.id}
-                              >
-                                <FontAwesomeIcon icon={faFileExport} />
                               </button>
                             </OverlayTrigger>
                           )}

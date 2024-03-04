@@ -2,10 +2,11 @@ import React, { useEffect, useRef, useState } from "react";
 import { CustomNavbar } from "../CustomNavbar";
 import { Sidebar } from "../Sidebar";
 import { useLocation } from "react-router";
-import { getAllQuestion} from "../../api/APIs/Services/Question.service";
+import { getAllQuestion } from "../../api/APIs/Services/Question.service";
 import { getAllResolutions } from "../../api/APIs/Services/Resolution.service";
 import { getAuthToken, logout } from "../../api/Auth";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { getAllMotion } from "../../api/APIs/Services/Motion.service";
 
 export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
   const [sidebarVisible, setSidebarVisible] = useState(true);
@@ -78,18 +79,9 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
   });
   const location = useLocation();
 
-  const basePathNotice = location.pathname.substring(
-    0,
-    location.pathname.lastIndexOf("/notice") + 7,
-  );
-  const basePathMotion = location.pathname.substring(
-    0,
-    location.pathname.indexOf("/mms") + 4,
-  );
-  const basePathQuestion = location.pathname.substring(
-    0,
-    location.pathname.lastIndexOf("/qms") + 4,
-  );
+  const basePathNotice = location.pathname.substring(0, location.pathname.lastIndexOf("/notice") + 7);
+  const basePathMotion = location.pathname.substring(0, location.pathname.indexOf("/mms") + 4);
+  const basePathQuestion = location.pathname.substring(0, location.pathname.lastIndexOf("/qms") + 4);
 
   const shouldRenderNotice = basePathNotice === "/notice";
   const shouldRenderMotion = basePathMotion === "/mms";
@@ -99,21 +91,20 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
     setSidebarVisible(!sidebarVisible);
   };
 
-  // const getAllMotionsApi = async () => {
-  //   try {
-  //     const response = await getAllMotion(0, 4);
-  //     if (response?.success) {
-  //       setCount(response?.count);
-  //     }
-  //   } catch (error) {
-  //   }
-  // };
+  const getAllMotionsApi = async () => {
+    try {
+      const response = await getAllMotion(0, 4);
+      if (response?.success) {
+        setCount((prevCount) => ({ ...prevCount, motion: response?.data?.count }));
+      }
+    } catch (error) {}
+  };
 
   const getAllQuestionsApi = async () => {
     try {
       const response = await getAllQuestion(0, 4);
       if (response?.success) {
-        setCount((prevCount) => ({ ...prevCount, question: response?.count }));
+        setCount((prevCount) => ({ ...prevCount, question: response?.data?.count }));
       }
     } catch (error) {
       // Handle error
@@ -140,13 +131,14 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
     if (shouldRenderNotice || shouldRenderQuestion || shouldRenderMotion) {
       apiRequests.push(getAllResolutionsApi());
       apiRequests.push(getAllQuestionsApi());
-      // apiRequests.push(getAllMotionsApi());
+      apiRequests.push(getAllMotionsApi());
     }
 
     // Execute all API requests concurrently
     Promise.all(apiRequests)
       .then(() => {
         // All requests are completed
+        console.log("complete all requests");
       })
       .catch((error) => {
         // Handle error
@@ -200,16 +192,12 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
         {module ? (
           <>
             <main className="dashboard-app" style={{ marginLeft: "220px" }}>
-              <CustomNavbar
-                toggleSidebar={toggleSidebar}
-                module={module}
-                centerlogohide={centerlogohide}
-              />
+              <CustomNavbar toggleSidebar={toggleSidebar} module={module} centerlogohide={centerlogohide} />
               <div className="dashboard-content">
                 {shouldRenderNotice ? (
                   <>
                     <div class="tab-right me-4 mt-1 mb-4">
-                      <button onClick={() => handleButtonClick("Motion")}>
+                      {/* <button onClick={() => handleButtonClick("Motion")}>
                         Motion{count?.motion && <span>{count.motion}</span>}
                       </button>
                       <button onClick={() => handleButtonClick("Resolution")}>
@@ -219,7 +207,47 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
                       <button onClick={() => handleButtonClick("Questions")}>
                         Questions
                         {count?.question && <span>{count.question}</span>}
+                      </button> */}
+                      <Link to={"/notice/question/sent"}>
+                        <button
+                          style={{ backgroundColor: location.pathname === "/notice/question/sent" ? "white" : "" }}
+                        >
+                          Questions
+                          {count?.motion ? (
+                            <span style={{ backgroundColor: "#FFA500" }}>{count.question}</span>
+                          ) : (
+                            <span style={{ backgroundColor: "#FFA500" }}>{0}</span>
+                          )}
+                        </button>
+                      </Link>
+                      <Link to={"/notice/motion"}>
+                        <button style={{ backgroundColor: location.pathname === "/notice/motion" ? "white" : "" }}>
+                          Motion
+                          {count?.motion ? (
+                            <span style={{ backgroundColor: "#007bff" }}>{count.motion}</span>
+                          ) : (
+                            <span style={{ backgroundColor: "#007bff" }}>{0}</span>
+                          )}
+                        </button>
+                      </Link>
+                      {/* <Link to={"/notice/resolution/sent"}>
+                      <button style={{ backgroundColor: location.pathname === "/notice/resolution/sent" ? 'white' : '' }}>
+                        Resolution
+                        {count?.resolution ? <span>{count.resolution}</span> : <span>{0}</span>}
                       </button>
+                      </Link> */}
+                      <Link to={"/notice/resolution/sent"}>
+                        <button
+                          style={{ backgroundColor: location.pathname === "/notice/resolution/sent" ? "white" : "" }}
+                        >
+                          Legislation
+                          {count?.legislation ? (
+                            <span style={{ backgroundColor: "#2dce89" }}>{count.legislation}</span>
+                          ) : (
+                            <span style={{ backgroundColor: "#2dce89" }}>{0}</span>
+                          )}
+                        </button>
+                      </Link>
                     </div>
                     <div class="clearfix"></div>
                   </>
@@ -241,9 +269,7 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
                   shouldRenderQuestion && (
                     <>
                       <div class="tab-right me-4 mt-1 mb-4">
-                        <button
-                          onClick={() => handleButtonClick("Translations")}
-                        >
+                        <button onClick={() => handleButtonClick("Translations")}>
                           Translations
                           {count?.motion && <span>{count?.motion}</span>}
                         </button>
@@ -276,7 +302,7 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
           </>
         )}
       </div>
-      <div class="footer">© Copyright AI Professionals</div>
+      <div class="footer">© Copyright Senate Of Pakistan</div>
     </>
   );
 };

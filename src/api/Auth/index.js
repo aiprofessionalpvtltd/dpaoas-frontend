@@ -82,3 +82,11 @@ export const setPassID = (id) => {
 export const getPassID = (id) => {
   return localStorage.getItem("passid", id);
 };
+
+export const setregisterID = (id) => {
+  localStorage.setItem("registerid", id);
+};
+
+export const getRegisterID = (id) => {
+  return localStorage.getItem("registerid", id);
+};

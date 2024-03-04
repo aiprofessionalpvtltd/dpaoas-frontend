@@ -38,7 +38,7 @@ function ManageSessionDays() {
     <Layout module={true} sidebarItems={NoticeSidebarItems} centerlogohide={true}>
       <Header
         dashboardLink={"/"}
-        addLink1={"/notice/seatingplan/manage-session-days"}
+        addLink1={"/notice/manage/manage-session-days"}
         title1={"Manage Session Days"}
       />
       <div className="container-fluid dash-detail-container">

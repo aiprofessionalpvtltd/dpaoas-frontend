@@ -1,0 +1,192 @@
+import React, { useContext, useEffect, useState } from 'react'
+import { Layout } from '../../../../../../components/Layout'
+import { EfilingSideBarItem } from '../../../../../../utils/sideBarItems'
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { AuthContext } from '../../../../../../api/AuthContext';
+import Header from '../../../../../../components/Header';
+import { createFIleRegister, getAllYear } from '../../../../../../api/APIs/Services/efiling.service';
+import { ToastContainer } from 'react-toastify';
+import { showErrorMessage, showSuccessMessage } from '../../../../../../utils/ToastAlert';
+import { useNavigate } from 'react-router-dom';
+
+const validationSchema = Yup.object({
+  registerNumber: Yup.string().required("File No is required"),
+  fkBranchId: Yup.string().required("Branch is required"),
+  year: Yup.string().required("Year is required"),
+});
+function AddEditFileRegister() {
+  const { allBranchesData } = useContext(AuthContext)
+  const navigate = useNavigate()
+  const [yearData, setYearData] = useState([])
+  const formik = useFormik({
+    initialValues: {
+      registerNumber: "",
+      fkBranchId: "",
+      year: "",
+    },
+    validationSchema: validationSchema,
+    onSubmit: (values) => {
+      // Handle form submission here
+      hendleCreateRegister(values);
+    },
+  });
+
+  const hendleCreateRegister = async (values) => {
+    const Data = {
+      fkBranchId: values?.fkBranchId,
+      registerNumber: values?.registerNumber,
+      year: values?.year
+    }
+    try {
+      const response = await createFIleRegister(Data)
+      if (response.success) {
+        showSuccessMessage(response?.message)
+        formik.resetForm()
+        setTimeout(() => {
+          navigate("/efiling/dashboard/file-register-list");
+        }, 1000)
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  }
+
+  const getAllYearApi = async () => {
+    try {
+      const response = await getAllYear()
+      if (response.success) {
+        showSuccessMessage(response?.message)
+        setYearData(response?.data)
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  }
+
+  useEffect(() => {
+    getAllYearApi()
+  }, [])
+
+
+  return (
+    <Layout sidebarItems={EfilingSideBarItem} module={true}>
+      <Header dashboardLink={"/efiling/dashboard/file-register-list"} addLink1={"/efiling/dashboard/addedit-file-register"} title1={"Add File Register"} width={"500px"} />
+      <ToastContainer />
+      <div class="container-fluid">
+        <div class="card">
+          <div class="card-header red-bg" style={{ background: "#14ae5c" }}>
+            <h1>File Register</h1>
+          </div>
+          <div class="card-body">
+            <form onSubmit={formik.handleSubmit}>
+              <div class="container-fluid">
+                <div class="row">
+                  <div class="col-6">
+                    <div class="mb-3">
+                      <label class="form-label">Register Number</label>
+                      <input
+                        type="text"
+                        placeholder={"Register Number"}
+                        value={formik.values.registerNumber}
+                        className={`form-control ${formik.touched.registerNumber &&
+                            formik.errors.registerNumber
+                            ? "is-invalid"
+                            : ""
+                          }`}
+                        id="registerNumber"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      />
+                      {formik.touched.registerNumber &&
+                        formik.errors.registerNumber && (
+                          <div className="invalid-feedback">
+                            {formik.errors.registerNumber}
+                          </div>
+                        )}
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="mb-3">
+                      <label class="form-label">Branch</label>
+                      <select
+                        className={`form-select ${formik.touched.fkBranchId && formik.errors.fkBranchId
+                            ? "is-invalid"
+                            : ""
+                          }`}
+                        id="fkBranchId"
+                        name="fkBranchId"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.fkBranchId}
+                      >
+                        <option value={""} selected disabled hidden>
+                          Select
+                        </option>
+                        {allBranchesData && allBranchesData.map((item) => (
+                          <option value={item?.id}>{item?.branchName}</option>
+                        ))}
+                      </select>
+                      {formik.touched.fkBranchId && formik.errors.fkBranchId && (
+                        <div className="invalid-feedback">
+                          {formik.errors.fkBranchId}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="row">
+
+
+                  <div class="col-6">
+                    <div class="mb-3">
+                      <label class="form-label">Year</label>
+                      <select
+                        className={`form-select ${formik.touched.year &&
+                            formik.errors.year
+                            ? "is-invalid"
+                            : ""
+                          }`}
+                        id="year"
+                        name="year"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.year}
+                      >
+                        <option value={""} selected disabled hidden>
+                          Select
+                        </option>
+                        {yearData && yearData?.map((item) => (
+                          <option value={item?.year}>
+                            {item?.year}
+                          </option>
+                        ))}
+                      </select>
+                      {formik.touched.year &&
+                        formik.errors.year && (
+                          <div className="invalid-feedback">
+                            {formik.errors.year}
+                          </div>
+                        )}
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <button class="btn btn-primary float-end" type="submit">
+                      Submit
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </Layout>
+  )
+}
+
+export default AddEditFileRegister

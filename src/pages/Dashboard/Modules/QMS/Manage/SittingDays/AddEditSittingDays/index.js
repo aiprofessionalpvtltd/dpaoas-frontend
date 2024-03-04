@@ -1,42 +1,221 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCalendarAlt, faPlus } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCalendarAlt,
+  faMinusSquare,
+} from "@fortawesome/free-solid-svg-icons";
 import { useLocation } from "react-router-dom";
 import { useFormik } from "formik";
+import { faPlusSquare } from "@fortawesome/free-solid-svg-icons";
 import * as Yup from "yup";
 import DatePicker from "react-datepicker";
 import Header from "../../../../../../../components/Header";
 import { Layout } from "../../../../../../../components/Layout";
 import { QMSSideBarItems } from "../../../../../../../utils/sideBarItems";
-import { showErrorMessage, showSuccessMessage } from "../../../../../../../utils/ToastAlert";
-import { createManageSession, getManageSessionById, updateManageSession } from "../../../../../../../api/APIs/Services/SeatingPlan.service";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../../../utils/ToastAlert";
+import {
+  createManageSession,
+  getManageSessionById,
+  updateManageSession,
+} from "../../../../../../../api/APIs/Services/SeatingPlan.service";
 import { ToastContainer } from "react-toastify";
+import TimePicker from "react-time-picker";
+import { AuthContext } from "../../../../../../../api/AuthContext";
+import moment from "moment";
 
 const validationSchema = Yup.object({
   fkSessionId: Yup.string().required("Session is required"),
   sittingDate: Yup.string().required("Sitting date is required"),
   startTime: Yup.string().required("Start time is required"),
   endTime: Yup.string().required("End time is required"),
-  isAdjourned: Yup.boolean()
+  isAdjourned: Yup.boolean(),
 });
+
 function QMSAddEditSittingDaysForm() {
   const location = useLocation();
+  const { members, sessions } = useContext(AuthContext);
   const [sessionId, setSessionId] = useState();
+  const [formCount, setFormCount] = useState(0);
+
+  const addForm = () => {
+    setFormCount(formCount + 1);
+    // setFormCount(formCount + 1);
+  };
+  const removeForm = (index) => {
+    if (formCount > 0) {
+      const newSessionMembers = [...formik.values.sessionMembers];
+      newSessionMembers.splice(index, 1);
+      formik.setFieldValue("sessionMembers", newSessionMembers);
+      // setFormCount(formCount - 1);
+      setFormCount(formCount - 1);
+      formik.setFieldValue(`sessionMembers[${formCount - 1}].fkMemberId`, "");
+      formik.setFieldValue(`sessionMembers[${formCount - 1}].startTime`, "");
+      formik.setFieldValue(`sessionMembers[${formCount - 1}].endTime`, "");
+    }
+  };
+  const updateSessionMembers = (index, fieldName, value) => {
+    const newSessionMembers = [...formik.values.sessionMembers];
+    if (!newSessionMembers[index]) {
+      newSessionMembers[index] = {};
+    }
+    newSessionMembers[index][fieldName] = value;
+    formik.setFieldValue("sessionMembers", newSessionMembers);
+  };
+
+  const renderForms = () => {
+    let sessionMembersForms = [];
+
+    for (let i = 0; i < formCount; i++) {
+      sessionMembersForms.push(
+        <div key={i}>
+          <div className="row">
+            <div className="col">
+              {formCount > 0 && (
+                <div className="ms-2" style={{ position: "relative" }}>
+                  <FontAwesomeIcon
+                    icon={faMinusSquare}
+                    style={{
+                      position: "absolute",
+                      top: "-8px",
+                      // left: "-50px",
+                      right: "0px",
+                      fontSize: "30px",
+                      color: "#14ae5c",
+                      color: "#ff0000",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => removeForm(i)}
+                  />
+                </div>
+              )}
+              <div className="mb-3">
+                <label className="form-label">Member Name</label>
+                <select
+                  className={`form-select ${
+                    formik.touched[`sessionMembers[${i}].fkMemberId`] &&
+                    formik.errors[`sessionMembers[${i}].fkMemberId`]
+                      ? "is-invalid"
+                      : ""
+                  }`}
+                  value={formik.values.sessionMembers[i]?.fkMemberId || ""}
+                  onChange={(e) =>
+                    updateSessionMembers(i, "fkMemberId", e.target.value)
+                  }
+                >
+                  <option value="" disabled hidden>
+                    Select
+                  </option>
+                  <option value="1">Test 1</option>
+                  <option value="2">Test 2</option>
+                  {/* {members &&
+                    members.map((item) => (
+                      <option key={item.id} value={item.id}>
+                        {item?.memberName}
+                      </option>
+                    ))} */}
+                </select>
+                {formik.touched[`sessionMembers[${i}].fkMemberId`] &&
+                  formik.errors[`sessionMembers[${i}].fkMemberId`] && (
+                    <div className="invalid-feedback">
+                      {formik.errors[`sessionMembers[${i}].fkMemberId`]}
+                    </div>
+                  )}
+              </div>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-6">
+              <div className="mb-3">
+                <label className="form-label">Start Time</label>
+                <TimePicker
+                  value={formik.values.sessionMembers[i]?.startTime || ""}
+                  clockIcon={null} // Disable clock view
+                  openClockOnFocus={false}
+                  // format="hh:mm a"
+                  onChange={(time) =>
+                    updateSessionMembers(
+                      i,
+                      "startTime",
+                      time
+                      // moment(time, "hh:mm a").format("hh:mm a")
+                    )
+                  }
+                  // onChange={(time) =>
+
+                  //   formik.setFieldValue(
+                  //     "startTime",
+                  //     moment(time, "hh:mm a").format("hh:mm a")
+                  //   )
+                  // }
+                  className={`form-control`}
+                />
+              </div>
+            </div>
+            <div className="col-6">
+              <div className="mb-3">
+                <label className="form-label">End Time</label>
+                <TimePicker
+                  value={formik.values.sessionMembers[i]?.endTime || ""}
+                  clockIcon={null} // Disable clock view
+                  openClockOnFocus={false}
+                  // format="hh:mm a"
+                  onChange={(time) =>
+                    updateSessionMembers(
+                      i,
+
+                      "endTime",
+                      time
+                      // moment(time, "hh:mm a").format("hh:mm a")
+                    )
+                  }
+                  className={`form-control`}
+                  // onChange={(time) =>
+                  //   formik.setFieldValue(
+                  //     "endTime",
+                  //     moment(time, "hh:mm a").format("hh:mm a")
+                  //   )
+                  // }
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    return sessionMembersForms;
+  };
 
   const formik = useFormik({
     initialValues: {
       fkSessionId: "",
       sittingDate: "",
-      startTime: "",
-      endTime: "",
-      isAdjourned: false
+      sittingStartTime: "",
+      sittingEndTime: "",
+      breakStartTime: "",
+      breakEndTime: "",
+      committeeWhole: false,
+      isAdjourned: false,
+      committeeStartTime: "",
+      committeeEndTime: "",
+      sessionMembers: [
+        {
+          fkMemberId: "",
+          startTime: "",
+          endTime: "",
+        },
+      ],
     },
-    validationSchema: validationSchema,
+    // validationSchema: validationSchema,
     onSubmit: (values) => {
       // Handle form submission here
       if (location?.state) {
         handleEditSittingDays(values);
       } else {
+        console.log("values", values);
         handleCreateSittingDays(values);
       }
     },
@@ -44,31 +223,79 @@ function QMSAddEditSittingDaysForm() {
 
   const handleCreateSittingDays = async (values) => {
     const data = {
-      fkSessionId: values.fkSessionId,
+      fkSessionId: parseInt(values.fkSessionId),
       sittingDate: values.sittingDate,
-      startTime: values.startTime,
-      endTime: values.endTime,
-      sessionAdjourned: values.isAdjourned,
-    }
+      sittingStartTime: values.sittingStartTime,
+      sittingEndTime: values.sittingEndTime,
+      breakStartTime: values.breakStartTime,
+      breakEndTime: values.breakEndTime,
+      committeeStartTime: values.committeeStartTime,
+      committeeEndTime: values.committeeEndTime,
+      sessionMembers: values.sessionMembers,
+      // sessionMembers: values.sessionMembers.map((member) => ({
+      //   fkMemberId: member.fkMemberId,
+      //   startTime: member.startTime,
+      //   endTime: member.endTime,
+      // })),
+      sessionMembers:
+        formCount === 0
+          ? []
+          : values.sessionMembers.map((member) => ({
+              fkMemberId: member.fkMemberId,
+              startTime: member.startTime,
+              endTime: member.endTime,
+            })),
 
+      committeeWhole: values.committeeWhole,
+      sessionAdjourned: values.isAdjourned,
+    };
+
+    console.log("Data Going Format", data);
     try {
       const response = await createManageSession(data);
       if (response?.success) {
         showSuccessMessage(response?.message);
       }
     } catch (error) {
+      console.log(error);
+      console.log(error?.response?.data?.message);
       showErrorMessage(error?.response?.data?.message);
     }
-  }
+  };
 
   const handleEditSittingDays = async (values) => {
     const data = {
-      fkSessionId: values.fkSessionId,
+      // fkSessionId: values.fkSessionId,
+      // sittingDate: values.sittingDate,
+      // sittingStartTime: values.sittingStartTime,
+      // sittingEndTime: values.sittingEndTime,
+      // sessionAdjourned: values.isAdjourned,
+      fkSessionId: parseInt(values.fkSessionId),
       sittingDate: values.sittingDate,
-      startTime: values.startTime,
-      endTime: values.endTime,
+      sittingStartTime: values.sittingStartTime,
+      sittingEndTime: values.sittingEndTime,
+      breakStartTime: values.breakStartTime,
+      breakEndTime: values.breakEndTime,
+      committeeStartTime: values.committeeStartTime,
+      committeeEndTime: values.committeeEndTime,
+      sessionMembers: values.sessionMembers,
+      // sessionMembers: values.sessionMembers.map((member) => ({
+      //   fkMemberId: member.fkMemberId,
+      //   startTime: member.startTime,
+      //   endTime: member.endTime,
+      // })),
+      sessionMembers:
+        formCount === 0
+          ? []
+          : values.sessionMembers.map((member) => ({
+              fkMemberId: member.fkMemberId,
+              startTime: member.startTime,
+              endTime: member.endTime,
+            })),
+
+      committeeWhole: values.committeeWhole,
       sessionAdjourned: values.isAdjourned,
-    }
+    };
 
     try {
       const response = await updateManageSession(location?.state?.id, data);
@@ -78,7 +305,7 @@ function QMSAddEditSittingDaysForm() {
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
     }
-  }
+  };
 
   const getSessionsByIdApi = async () => {
     try {
@@ -95,34 +322,44 @@ function QMSAddEditSittingDaysForm() {
     if (location.state?.id) {
       getSessionsByIdApi();
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     // Update form values when termsById changes
-    console.log(sessionId?.sessionAdjourned);
+    console.log(sessionId);
     if (sessionId) {
       formik.setValues({
         fkSessionId: sessionId.fkSessionId || "",
         sittingDate: new Date(sessionId.sittingDate) || "",
-        startTime: sessionId.startTime || "",
-        endTime: sessionId.endTime || "",
-        isAdjourned: sessionId.sessionAdjourned || false
+        breakStartTime: sessionId.breakStartTime || "",
+        breakEndTime: sessionId.breakEndTime || "",
+        sittingStartTime: sessionId.sittingStartTime || "",
+        sittingEndTime: sessionId.sittingEndTime || "",
+        committeeStartTime: sessionId.committeeStartTime || "",
+        committeeEndTime: sessionId.committeeEndTime || "",
+        isAdjourned: sessionId.sessionAdjourned || false,
+        committeeWhole: sessionId.committeeWhole || false,
+        sessionMembers:
+          sessionId.sessionMembers.map((member) => ({
+            fkMemberId: member.fkMemberId,
+            startTime: member.startTime,
+            endTime: member.endTime,
+          })) || [],
       });
+      setFormCount(sessionId.sessionMembers?.length || 0);
     }
   }, [sessionId, formik.setValues]);
 
   return (
-    <Layout
-      module={true}
-      sidebarItems={QMSSideBarItems}
-      centerlogohide={true}
-    >
+    <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <Header
         dashboardLink={"/qms/dashboard"}
         addLink1={"/qms/manage/sitting-days"}
         title1={"Sitting Days"}
         addLink2={"/qms/manage/sitting-days/addedit"}
-        title2={location && location?.state ? "Edit Sitting Days" : "Add Sitting Days"}
+        title2={
+          location && location?.state ? "Edit Sitting Days" : "Add Sitting Days"
+        }
       />
       <ToastContainer />
 
@@ -142,20 +379,64 @@ function QMSAddEditSittingDaysForm() {
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Session ID</label>
-                      <input
+                      {/* <input
                         type="text"
                         placeholder={"Session ID"}
                         value={formik.values.fkSessionId}
                         className={`form-control ${
-                          formik.touched.fkSessionId && formik.errors.fkSessionId ? "is-invalid" : ""
+                          formik.touched.fkSessionId &&
+                          formik.errors.fkSessionId
+                            ? "is-invalid"
+                            : ""
                         }`}
                         id="fkSessionId"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                      />
-                      {formik.touched.fkSessionId && formik.errors.fkSessionId && (
-                        <div className="invalid-feedback">{formik.errors.fkSessionId}</div>
-                      )}
+                      /> */}
+                      {/* <select
+                        class={`form-select ${
+                          formik.touched.fkSessionId &&
+                          formik.errors.fkSessionId
+                            ? "is-invalid"
+                            : ""
+                        }`}
+                        // placeholder="Session No"
+                        value={formik.values.fkSessionId}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        name="fkSessionId"
+                      >
+                        <option value="" selected disabled hidden>
+                          Select
+                        </option>
+                        {sessions && sessions?.length > 0 && (
+                          <option value={sessions.map((item) => item?.id)}>
+                            {sessions.map((item) => item?.sessionName)}
+                          </option>
+                        )}
+                      </select>
+                      {formik.touched.fkSessionId &&
+                        formik.errors.fkSessionId && (
+                          <div className="invalid-feedback">
+                            {formik.errors.fkSessionId}
+                          </div>
+                        )} */}
+                      <select
+                        class={`form-select ${
+                          formik.touched.fkSessionId &&
+                          formik.errors.fkSessionId
+                            ? "is-invalid"
+                            : ""
+                        }`}
+                        // placeholder="Session No"
+                        value={formik.values.fkSessionId}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        name="fkSessionId"
+                      >
+                        <option value="2">400</option>
+                        <option value="3">500</option>
+                      </select>
                     </div>
                   </div>
                   <div className="col">
@@ -182,64 +463,171 @@ function QMSAddEditSittingDaysForm() {
                         onBlur={formik.handleBlur}
                         minDate={new Date()}
                         className={`form-control ${
-                          formik.touched.sittingDate && formik.errors.sittingDate
+                          formik.touched.sittingDate &&
+                          formik.errors.sittingDate
                             ? "is-invalid"
                             : ""
                         }`}
                       />
-                      {formik.touched.sittingDate && formik.errors.sittingDate && (
-                        <div className="invalid-feedback">
-                          {formik.errors.sittingDate}
-                        </div>
-                      )}
+                      {formik.touched.sittingDate &&
+                        formik.errors.sittingDate && (
+                          <div className="invalid-feedback">
+                            {formik.errors.sittingDate}
+                          </div>
+                        )}
                     </div>
                   </div>
                 </div>
 
                 <div class="row">
-                <div class="col">
+                  <div class="col">
                     <div class="mb-3">
-                      <label class="form-label">Start Time</label>
-                      <input
+                      <label class="form-label">Sitting Start Time</label>
+                      {/* <input
                         type="text"
                         placeholder={"Session ID"}
                         value={formik.values.startTime}
                         className={`form-control ${
-                          formik.touched.startTime && formik.errors.startTime ? "is-invalid" : ""
+                          formik.touched.startTime && formik.errors.startTime
+                            ? "is-invalid"
+                            : ""
                         }`}
                         id="startTime"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
+                      /> */}
+                      <TimePicker
+                        value={formik.values.sittingStartTime}
+                        clockIcon={null} // Disable clock view
+                        openClockOnFocus={false}
+                        // format="hh:mm a"
+                        // onChange={(time) =>
+                        //   formik.setFieldValue("sittingStartTime", time)
+                        // }
+                        onChange={(time) =>
+                          formik.setFieldValue(
+                            "sittingStartTime",
+                            time
+                            // moment(time, "hh:mm a").format("hh:mm a")
+                          )
+                        }
+                        className={`form-control`}
                       />
-                      {formik.touched.startTime && formik.errors.startTime && (
-                        <div className="invalid-feedback">{formik.errors.startTime}</div>
-                      )}
+                      {formik.touched.sittingStartTime &&
+                        formik.errors.sittingStartTime && (
+                          <div className="invalid-feedback">
+                            {formik.errors.sittingStartTime}
+                          </div>
+                        )}
                     </div>
                   </div>
 
                   <div class="col">
                     <div class="mb-3">
-                      <label class="form-label">End Time</label>
-                      <input
+                      <label class="form-label">Sitting End Time</label>
+                      {/* <input
                         type="text"
                         placeholder={"Session ID"}
                         value={formik.values.endTime}
                         className={`form-control ${
-                          formik.touched.endTime && formik.errors.endTime ? "is-invalid" : ""
+                          formik.touched.endTime && formik.errors.endTime
+                            ? "is-invalid"
+                            : ""
                         }`}
                         id="endTime"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
+                      /> */}
+                      <TimePicker
+                        value={formik.values.sittingEndTime}
+                        clockIcon={null} // Disable clock view
+                        openClockOnFocus={false}
+                        // format="hh:mm a"
+                        // onChange={(time) =>
+                        //   formik.setFieldValue("sittingEndTime", time)
+                        // }
+                        onChange={(time) =>
+                          formik.setFieldValue(
+                            "sittingEndTime",
+                            time
+                            // moment(time, "hh:mm a").format("hh:mm a")
+                          )
+                        }
+                        className={`form-control`}
                       />
-                      {formik.touched.endTime && formik.errors.endTime && (
-                        <div className="invalid-feedback">{formik.errors.endTime}</div>
-                      )}
+                      {formik.touched.sittingEndTime &&
+                        formik.errors.sittingEndTime && (
+                          <div className="invalid-feedback">
+                            {formik.errors.sittingEndTime}
+                          </div>
+                        )}
                     </div>
                   </div>
                 </div>
 
                 <div class="row">
-                <div class="col-6">
+                  <div class="col">
+                    <div class="mb-3">
+                      <label class="form-label">Break Start Time</label>
+
+                      <TimePicker
+                        value={formik.values.breakStartTime}
+                        clockIcon={null} // Disable clock view
+                        openClockOnFocus={false}
+                        format="hh:mm a"
+                        // onChange={(time) =>
+                        //   formik.setFieldValue("breakStartTime", time)
+                        // }
+                        onChange={(time) =>
+                          formik.setFieldValue(
+                            "breakStartTime",
+                            time
+                            // moment(time, "hh:mm a").format("hh:mm a")
+                          )
+                        }
+                        className={`form-control`}
+                      />
+                      {formik.touched.breakStartTime &&
+                        formik.errors.breakStartTime && (
+                          <div className="invalid-feedback">
+                            {formik.errors.breakStartTime}
+                          </div>
+                        )}
+                    </div>
+                  </div>
+
+                  <div class="col">
+                    <div class="mb-3">
+                      <label class="form-label">Break End Time</label>
+                      <TimePicker
+                        value={formik.values.breakEndTime}
+                        clockIcon={null} // Disable clock view
+                        openClockOnFocus={false}
+                        format="hh:mm a"
+                        // onChange={(time) =>
+                        //   formik.setFieldValue("breakEndTime", time)
+                        // }
+                        onChange={(time) =>
+                          formik.setFieldValue(
+                            "breakEndTime",
+                            time
+                            // moment(time, "hh:mm a").format("hh:mm a")
+                          )
+                        }
+                        className={`form-control`}
+                      />
+                      {formik.touched.breakEndTime &&
+                        formik.errors.breakEndTime && (
+                          <div className="invalid-feedback">
+                            {formik.errors.breakEndTime}
+                          </div>
+                        )}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-6">
                     <div class="mb-3">
                       <div class="form-check">
                         <input
@@ -255,7 +643,7 @@ function QMSAddEditSittingDaysForm() {
                           onChange={() =>
                             formik.setFieldValue(
                               "isAdjourned",
-                              !formik.values.isAdjourned,
+                              !formik.values.isAdjourned
                             )
                           }
                         />
@@ -271,10 +659,130 @@ function QMSAddEditSittingDaysForm() {
                       </div>
                     </div>
                   </div>
+
+                  <div class="col-6">
+                    <div class="mb-3">
+                      <div class="form-check">
+                        <input
+                          class={`form-check-input ${
+                            formik.touched.committeeWhole &&
+                            formik.errors.committeeWhole
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                          type="checkbox"
+                          id="committeeWhole"
+                          checked={formik.values.committeeWhole}
+                          onChange={() =>
+                            formik.setFieldValue(
+                              "committeeWhole",
+                              !formik.values.committeeWhole
+                            )
+                          }
+                        />
+                        <label class="form-check-label" for="flexCheckDefault">
+                          Committee is Whole
+                        </label>
+                        {formik.touched.committeeWhole &&
+                          formik.errors.committeeWhole && (
+                            <div className="invalid-feedback">
+                              {formik.errors.committeeWhole}
+                            </div>
+                          )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {formik.values.committeeWhole && (
+                  <div class="row">
+                    <div class="col">
+                      <div class="mb-3">
+                        <label class="form-label">Committee Start Time</label>
+
+                        <TimePicker
+                          value={formik.values.committeeStartTime}
+                          clockIcon={null} // Disable clock view
+                          openClockOnFocus={false}
+                          format="hh:mm a"
+                          // onChange={(time) =>
+                          //   formik.setFieldValue("CommitteeStartTime", time)
+                          // }
+                          onChange={(time) =>
+                            formik.setFieldValue(
+                              "committeeStartTime",
+                              time
+                              // moment(time, "hh:mm a").format("hh:mm a")
+                            )
+                          }
+                          className={`form-control`}
+                        />
+                        {formik.touched.committeeStartTime &&
+                          formik.errors.committeeStartTime && (
+                            <div className="invalid-feedback">
+                              {formik.errors.committeeStartTime}
+                            </div>
+                          )}
+                      </div>
+                    </div>
+
+                    <div class="col">
+                      <div class="mb-3">
+                        <label class="form-label">Committee End Time</label>
+                        <TimePicker
+                          value={formik.values.committeeEndTime}
+                          clockIcon={null} // Disable clock view
+                          openClockOnFocus={false}
+                          format="hh:mm a"
+                          // onChange={(time) =>
+                          //   formik.setFieldValue("CommitteeEndTime", time)
+                          // }
+                          onChange={(time) =>
+                            formik.setFieldValue(
+                              "committeeEndTime",
+                              time
+                              // moment(time, "hh:mm a").format("hh:mm a")
+                            )
+                          }
+                          className={`form-control`}
+                        />
+                        {formik.touched.committeeEndTime &&
+                          formik.errors.committeeEndTime && (
+                            <div className="invalid-feedback">
+                              {formik.errors.committeeEndTime}
+                            </div>
+                          )}
+                      </div>
+                    </div>
+                  </div>
+                )}
+                <div className="row">
+                  <div className="col-6 ">
+                    <div className="mb-3 mt-4">
+                      <label className="form-label">
+                        Add Session Presiding Members
+                      </label>
+                    </div>
+                  </div>
+                  <div className="ms-2" style={{ position: "relative" }}>
+                    <FontAwesomeIcon
+                      icon={faPlusSquare}
+                      style={{
+                        position: "absolute",
+                        top: "-55px",
+                        // left: "90px",
+                        right: "60px",
+                        fontSize: "41px",
+                        color: "#14ae5c",
+                        cursor: "pointer",
+                      }}
+                      onClick={addForm}
+                    />
+                  </div>
                 </div>
 
-                <div class="row">
-                  <div class="col">
+                {renderForms()}
+                <div className="row">
+                  <div className="col">
                     <button class="btn btn-primary float-end" type="submit">
                       Submit
                     </button>
