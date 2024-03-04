@@ -234,7 +234,7 @@ const AttendenceReports = () => {
             <div class="container-fluid">
               <form onSubmit={formik.handleSubmit}>
                 <div className="container-fluid">
-                  <div className="row">
+                  {/* <div className="row">
                     <div className="col-6">
                       <div className="mb-3">
                         <label class="form-label">Select Province</label>
@@ -286,7 +286,7 @@ const AttendenceReports = () => {
                         </select>
                       </div>
                     </div>
-                  </div>
+                  </div> */}
                   <div className="row">
                     <div className="col-3">
                       <div className="mb-3">
@@ -522,8 +522,8 @@ const AttendenceReports = () => {
                 </div>
               </form>
 
-              <div className="row">
-                <div className="col-3 my-2">
+              <div className="row" style={{alignItems:"center", justifyContent:"center", flex:1}} >
+                <div className="col-3 ">
                   <div className="mt-4">
                     <button
                       disabled={searchedData ? false : true}
@@ -531,11 +531,11 @@ const AttendenceReports = () => {
                       type="button"
                       onClick={() => handlePreview(searchedData)}
                     >
-                      Prieview
+                      Preview Report
                     </button>
                   </div>
                 </div>
-                <div className="col-3 my-2">
+                <div className="col-3 ">
                   <div className="mt-4">
                     <button
                       class="btn btn-primary mb-3"
@@ -543,7 +543,7 @@ const AttendenceReports = () => {
                       disabled={searchedData ? false : true}
                       onClick={() => handleDownload(searchedData)}
                     >
-                      Download
+                      Download Report
                     </button>
                   </div>
                 </div>
