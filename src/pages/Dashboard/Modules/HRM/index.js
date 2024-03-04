@@ -13,7 +13,7 @@ function HRMDashboard() {
   const [currentPage, setCurrentPage] = useState(0);
   const [rolesList, setRolesList] = useState([]);
   // const [count, setCount] = useState(null);
-  const pageSize = 5; // Set your desired page size
+  const pageSize = 10; // Set your desired page size
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked

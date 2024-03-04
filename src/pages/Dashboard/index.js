@@ -61,23 +61,23 @@ function Dashboard() {
         const permissionKeys = Object.keys(res.permissions);
         console.log("Permission keys", permissionKeys);
 
-        // if (permissionKeys.length === 1) {
-        //   const singlePermission = permissions[0].label; // Assuming permissions is an array
-        //   console.log("singlePermission", singlePermission);
-        //   const tileWithSinglePermission = tilesData.find(tile => tile.permission.includes(singlePermission) && permissions.find(permission => permission.label === singlePermission)?.hasAccess.includes('View'));
-        //   if (tileWithSinglePermission) {
-        //     navigation(tileWithSinglePermission.link);
-        //   }
-        // }
-
-        permissionKeys.forEach(singlePermission => {
+        if (permissionKeys.length === 1) {
+          const singlePermission = permissions[0].label; // Assuming permissions is an array
           console.log("singlePermission", singlePermission);
           const tileWithSinglePermission = tilesData.find(tile => tile.permission.includes(singlePermission) && permissions.find(permission => permission.label === singlePermission)?.hasAccess.includes('View'));
-          console.log("tileWithSinglePermission", tileWithSinglePermission);
           if (tileWithSinglePermission) {
             navigation(tileWithSinglePermission.link);
           }
-        });
+        }
+
+        // permissionKeys.forEach(singlePermission => {
+        //   console.log("singlePermission", singlePermission);
+        //   const tileWithSinglePermission = tilesData.find(tile => tile.permission.includes(singlePermission) && permissions.find(permission => permission.label === singlePermission)?.hasAccess.includes('View'));
+        //   console.log("tileWithSinglePermission", tileWithSinglePermission);
+        //   if (tileWithSinglePermission) {
+        //     navigation(tileWithSinglePermission.link);
+        //   }
+        // });
       } else {
         // Handle the case when permissions are empty or undefined
         // For example, set default permissions
@@ -190,6 +190,8 @@ function Dashboard() {
   for (let i = 0; i < filteredTiles.length; i += 4) {
     rows.push(filteredTiles.slice(i, i + 4));
   }
+
+  console.log(rows, "rows");
   return (
     <Layout>
       <div class="dashboard-content" style={{ marginTop: "100px" }}>
