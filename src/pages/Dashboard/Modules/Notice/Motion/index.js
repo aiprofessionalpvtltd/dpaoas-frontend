@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react'
-import CustomTable from '../../../../../components/CustomComponents/CustomTable';
-import { ToastContainer } from 'react-toastify';
-import Header from '../../../../../components/Header';
-import { Layout } from '../../../../../components/Layout';
-import { NoticeSidebarItems } from '../../../../../utils/sideBarItems';
-import { getAllMotion } from '../../../../../api/APIs/Services/Motion.service';
-import moment from 'moment';
-import { useNavigate } from 'react-router-dom';
-import { showErrorMessage } from '../../../../../utils/ToastAlert';
+import React, { useEffect, useState } from "react";
+import CustomTable from "../../../../../components/CustomComponents/CustomTable";
+import { ToastContainer } from "react-toastify";
+import Header from "../../../../../components/Header";
+import { Layout } from "../../../../../components/Layout";
+import { NoticeSidebarItems } from "../../../../../utils/sideBarItems";
+import { getAllMotion } from "../../../../../api/APIs/Services/Motion.service";
+import moment from "moment";
+import { useNavigate } from "react-router-dom";
+import { showErrorMessage } from "../../../../../utils/ToastAlert";
 
 export const MotionListing = () => {
   const navigate = useNavigate();
-    const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
   const [motionData, setMotionData] = useState([]);
   const pageSize = 4; // Set your desired page size
@@ -77,7 +77,7 @@ export const MotionListing = () => {
     >
       <ToastContainer />
       <Header
-        dashboardLink={"/"}
+        dashboardLink={"/notice/dashboard"}
         addLink1={"/notice/motion/sent"}
         title1={"Sent Motion"}
       />
@@ -91,27 +91,27 @@ export const MotionListing = () => {
               <h1>MOTION LISTING</h1>
             </div>
             <div class="card-body">
-                <div class="" style={{ marginTop: "20px" }}>
-                  <CustomTable
-                    block={true}
-                    data={motionData}
-                    headerShown={true}
-                    handleDelete={(item) => alert(item.id)}
-                    handleEdit={(item) =>
-                      navigate("/mms/motion/new", { state: item })
-                    }
-                    headertitlebgColor={"#666"}
-                    headertitletextColor={"#FFF"}
-                    handlePageChange={handlePageChange}
-                    currentPage={currentPage}
-                    pageSize={pageSize}
-                    totalCount={count}
-                  />
-                </div>
+              <div class="" style={{ marginTop: "20px" }}>
+                <CustomTable
+                  block={true}
+                  data={motionData}
+                  headerShown={true}
+                  handleDelete={(item) => alert(item.id)}
+                  handleEdit={(item) =>
+                    navigate("/mms/motion/new", { state: item })
+                  }
+                  headertitlebgColor={"#666"}
+                  headertitletextColor={"#FFF"}
+                  handlePageChange={handlePageChange}
+                  currentPage={currentPage}
+                  pageSize={pageSize}
+                  totalCount={count}
+                />
+              </div>
             </div>
           </div>
         </div>
       </div>
     </Layout>
-  )
-}
+  );
+};

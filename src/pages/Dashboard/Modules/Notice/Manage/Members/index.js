@@ -37,8 +37,16 @@ function Members() {
   };
 
   return (
-    <Layout module={true} sidebarItems={NoticeSidebarItems} centerlogohide={true}>
-      <Header dashboardLink={"/"} addLink1={"/notice/manage/members"} title1={"Members"} />
+    <Layout
+      module={true}
+      sidebarItems={NoticeSidebarItems}
+      centerlogohide={true}
+    >
+      <Header
+        dashboardLink={"/"}
+        addLink1={"/notice/manage/members"}
+        title1={"Members"}
+      />
       <div class="container-fluid dash-detail-container">
         <div class="card">
           <div class="card-header red-bg" style={{ background: "#14ae5c" }}>

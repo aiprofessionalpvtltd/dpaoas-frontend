@@ -274,6 +274,11 @@ export const NoticeSidebarItems = [
         link: "/notice/reports/attendence-reports",
         icon: faClipboardList,
       },
+      {
+        itemName: "Party/Province Reports",
+        link: "/notice/reports/party-province-annual-attendence-reports",
+        icon: faClipboardList,
+      },
     ],
   },
 ];

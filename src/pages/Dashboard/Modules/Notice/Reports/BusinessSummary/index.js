@@ -7,104 +7,114 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import DatePicker from "react-datepicker";
 import { noticeBusinessReport } from "../../../../../../api/APIs/Services/Question.service";
-import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 import moment from "moment";
 import * as XLSX from "xlsx";
 
 function BusinessSummary() {
-  const [fromDate, setFromDate] = useState(null)
-  const [toData, setTodate] = useState(null)
-  const [questionReport, setQuestionReport] = useState([])
-  const [motionReport, setMotionReport] = useState([])
-  const [resolutionReport, setresolutionReport] = useState([])
+  const [fromDate, setFromDate] = useState(null);
+  const [toData, setTodate] = useState(null);
+  const [questionReport, setQuestionReport] = useState([]);
+  const [motionReport, setMotionReport] = useState([]);
+  const [resolutionReport, setresolutionReport] = useState([]);
   const hendleSearch = async () => {
     try {
-      const response = await noticeBusinessReport(moment(fromDate).format("DD-MM-YYYY"), moment(toData).format("DD-MM-YYYY"))
+      const response = await noticeBusinessReport(
+        moment(fromDate).format("DD-MM-YYYY"),
+        moment(toData).format("DD-MM-YYYY")
+      );
       if (response.success) {
         setQuestionReport(response?.data?.questions);
-        setMotionReport(response?.data?.motions)
-        setresolutionReport(response?.data?.resolutions)
-        showSuccessMessage(response.message)
+        setMotionReport(response?.data?.motions);
+        setresolutionReport(response?.data?.resolutions);
+        showSuccessMessage(response.message);
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
     }
-  }
-const damiiiData = {
- questions:[
-    {
-      
-    }
- ],
-}
-const hendleExportExcel = async () => {
-      // const response = await getallcomplaintRecordByUserId(
-      //     userData.fkUserId,
-      //     0,
-      //     100
-      // );
-      // if (response?.success) {
-          // const data = response?.data?.complaints;
+  };
+  const damiiiData = {
+    questions: [{}],
+  };
+  const hendleExportExcel = async () => {
+    // const response = await getallcomplaintRecordByUserId(
+    //     userData.fkUserId,
+    //     0,
+    //     100
+    // );
+    // if (response?.success) {
+    // const data = response?.data?.complaints;
 
-          // Create a new workbook
-          // CleanData
+    // Create a new workbook
+    // CleanData
 
-         const QuestionRecord =questionReport && questionReport.map((item) => ({
-          SR: item?.id,
-          NoticeOfficeDiaryNo: item?.noticeOfficeDiary?.noticeOfficeDiaryNo,
-          noticeOfficeDiaryDate: item?.noticeOfficeDiary?.noticeOfficeDiaryDate,
-          noticeOfficeDiaryTime: item?.noticeOfficeDiary?.noticeOfficeDiaryTime,
-          session: item?.session?.sessionName,
-          MemberName: item?.member?.memberName,
-          questionStatus: item?.questionStatus?.questionStatus,
-          Description: [item?.englishText, item?.urduText]
-            .filter(Boolean)
-            .join(", ").replace(/(<([^>]+)>)/gi, ""),
-        }));
+    const QuestionRecord =
+      questionReport &&
+      questionReport.map((item) => ({
+        SR: item?.id,
+        NoticeOfficeDiaryNo: item?.noticeOfficeDiary?.noticeOfficeDiaryNo,
+        noticeOfficeDiaryDate: item?.noticeOfficeDiary?.noticeOfficeDiaryDate,
+        noticeOfficeDiaryTime: item?.noticeOfficeDiary?.noticeOfficeDiaryTime,
+        session: item?.session?.sessionName,
+        MemberName: item?.member?.memberName,
+        questionStatus: item?.questionStatus?.questionStatus,
+        Description: [item?.englishText, item?.urduText]
+          .filter(Boolean)
+          .join(", ")
+          .replace(/(<([^>]+)>)/gi, ""),
+      }));
 
-        const ResolutionRecord =resolutionReport && resolutionReport.map((item) => ({
-          SR: item?.id,
-          NoticeOfficeDiaryNo: item?.noticeDiary?.noticeOfficeDiaryNo,
-          noticeOfficeDiaryDate: item?.noticeDiary?.noticeOfficeDiaryDate,
-          noticeOfficeDiaryTime: item?.noticeDiary?.noticeOfficeDiaryTime,
-          session: item?.session?.sessionName,
-          resolutionType: item?.resolutionType,
-          resolutionStatus: item?.resolutionStatus?.resolutionStatus,
-          Description: [item?.englishText, item?.urduText]
-            .filter(Boolean)
-            .join(", ").replace(/(<([^>]+)>)/gi, ""),
-        }));
+    const ResolutionRecord =
+      resolutionReport &&
+      resolutionReport.map((item) => ({
+        SR: item?.id,
+        NoticeOfficeDiaryNo: item?.noticeDiary?.noticeOfficeDiaryNo,
+        noticeOfficeDiaryDate: item?.noticeDiary?.noticeOfficeDiaryDate,
+        noticeOfficeDiaryTime: item?.noticeDiary?.noticeOfficeDiaryTime,
+        session: item?.session?.sessionName,
+        resolutionType: item?.resolutionType,
+        resolutionStatus: item?.resolutionStatus?.resolutionStatus,
+        Description: [item?.englishText, item?.urduText]
+          .filter(Boolean)
+          .join(", ")
+          .replace(/(<([^>]+)>)/gi, ""),
+      }));
 
-        const MotionRecord =motionReport && motionReport.map((item) => ({
-          SR: item?.id,
-          NoticeOfficeDiaryNo: item?.noticeOfficeDairies?.noticeOfficeDiaryNo,
-          noticeOfficeDiaryDate: item?.noticeOfficeDairies?.noticeOfficeDiaryDate,
-          noticeOfficeDiaryTime: item?.noticeOfficeDairies?.noticeOfficeDiaryTime,
-          session: item?.sessions?.sessionName,
-          motionType: item?.motionType,
-          Description: [item?.englishText, item?.urduText]
-            .filter(Boolean)
-            .join(", ").replace(/(<([^>]+)>)/gi, ""),
-        }));
+    const MotionRecord =
+      motionReport &&
+      motionReport.map((item) => ({
+        SR: item?.id,
+        NoticeOfficeDiaryNo: item?.noticeOfficeDairies?.noticeOfficeDiaryNo,
+        noticeOfficeDiaryDate: item?.noticeOfficeDairies?.noticeOfficeDiaryDate,
+        noticeOfficeDiaryTime: item?.noticeOfficeDairies?.noticeOfficeDiaryTime,
+        session: item?.sessions?.sessionName,
+        motionType: item?.motionType,
+        Description: [item?.englishText, item?.urduText]
+          .filter(Boolean)
+          .join(", ")
+          .replace(/(<([^>]+)>)/gi, ""),
+      }));
 
+    const workbook = XLSX.utils.book_new();
 
-          const workbook = XLSX.utils.book_new();
+    // Function to add a worksheet with title and list
+    const addWorksheet = (worksheetData, title) => {
+      const worksheet = XLSX.utils.json_to_sheet(worksheetData);
+      XLSX.utils.book_append_sheet(workbook, worksheet, title);
+    };
 
-          // Function to add a worksheet with title and list
-          const addWorksheet = (worksheetData, title) => {
-              const worksheet = XLSX.utils.json_to_sheet(worksheetData);
-              XLSX.utils.book_append_sheet(workbook, worksheet, title);
-          };
+    // Add worksheets for each category
+    addWorksheet(QuestionRecord, "Question");
+    // addWorksheet(ResolutionRecord, 'Resolution');
+    addWorksheet(MotionRecord, "Motion");
 
-          // Add worksheets for each category
-          addWorksheet(QuestionRecord, 'Question');
-          // addWorksheet(ResolutionRecord, 'Resolution');
-          addWorksheet(MotionRecord, 'Motion');
-
-          // Write the workbook to a file
-          XLSX.writeFile(workbook, 'DataSheet.xlsx'); 
-};
+    // Write the workbook to a file
+    XLSX.writeFile(workbook, "DataSheet.xlsx");
+  };
   return (
     <Layout
       module={true}
@@ -113,7 +123,7 @@ const hendleExportExcel = async () => {
     >
       <ToastContainer />
       <Header
-        dashboardLink={"/"}
+        dashboardLink={"/notice/dashboard"}
         addLink1={"/notice/reports/business-summary"}
         title1={"Business Summary"}
       />
@@ -182,10 +192,19 @@ const hendleExportExcel = async () => {
                 </div>
                 <div class="row">
                   <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                    <button class="btn btn-primary" type="button" onClick={() => hendleSearch()}>
+                    <button
+                      class="btn btn-primary"
+                      type="button"
+                      onClick={() => hendleSearch()}
+                    >
                       View Summary
                     </button>
-                    <button class="btn btn-primary" type="button" onClick={hendleExportExcel} disabled = {questionReport?.length > 0 ? false : true}>
+                    <button
+                      class="btn btn-primary"
+                      type="button"
+                      onClick={hendleExportExcel}
+                      disabled={questionReport?.length > 0 ? false : true}
+                    >
                       Print Report
                     </button>
                   </div>
@@ -226,25 +245,39 @@ const hendleExportExcel = async () => {
                         >
                           Description
                         </th>
-
                       </tr>
                     </thead>
                     <tbody>
-                      {questionReport && questionReport?.map((item) => (
-                        <tr>
-                          <td class="text-center">{item?.id}</td>
-                          <td class="text-center">{item?.noticeOfficeDiary?.noticeOfficeDiaryNo}</td>
-                          <td class="text-center">{item.noticeOfficeDiary.noticeOfficeDiaryDate}</td>
-                          <td class="text-center">{item.noticeOfficeDiary.noticeOfficeDiaryTime}</td>
-                          <td class="text-center">{item?.session?.sessionName}</td>
-                          <td class="text-center">{item?.member?.memberName}</td>
-                          <td class="text-center">{item?.questionStatus?.questionStatus}</td>
-                          <td class="text-center">{[item?.englishText, item?.urduText]
-                            .filter(Boolean)
-                            .join(", ").replace(/(<([^>]+)>)/gi, "")}</td>
-
-                        </tr>
-                      ))}
+                      {questionReport &&
+                        questionReport?.map((item) => (
+                          <tr>
+                            <td class="text-center">{item?.id}</td>
+                            <td class="text-center">
+                              {item?.noticeOfficeDiary?.noticeOfficeDiaryNo}
+                            </td>
+                            <td class="text-center">
+                              {item.noticeOfficeDiary.noticeOfficeDiaryDate}
+                            </td>
+                            <td class="text-center">
+                              {item.noticeOfficeDiary.noticeOfficeDiaryTime}
+                            </td>
+                            <td class="text-center">
+                              {item?.session?.sessionName}
+                            </td>
+                            <td class="text-center">
+                              {item?.member?.memberName}
+                            </td>
+                            <td class="text-center">
+                              {item?.questionStatus?.questionStatus}
+                            </td>
+                            <td class="text-center">
+                              {[item?.englishText, item?.urduText]
+                                .filter(Boolean)
+                                .join(", ")
+                                .replace(/(<([^>]+)>)/gi, "")}
+                            </td>
+                          </tr>
+                        ))}
                     </tbody>
                   </table>
                 </div>
@@ -271,7 +304,7 @@ const hendleExportExcel = async () => {
                         <th class="text-center" scope="col">
                           Session Number
                         </th>
-                        
+
                         <th class="text-center" scope="col">
                           Motion Type
                         </th>
@@ -282,26 +315,34 @@ const hendleExportExcel = async () => {
                         >
                           Description
                         </th>
-                        
-                        
                       </tr>
                     </thead>
                     <tbody>
-                      {motionReport && motionReport?.map((item) => (
-                     
-                      <tr>
-                        <td class="text-center">{item?.id}</td>
-                          <td class="text-center">{item?.noticeOfficeDairies?.noticeOfficeDiaryNo}</td>
-                          <td class="text-center">{item?.noticeOfficeDairies?.noticeOfficeDiaryDate}</td>
-                          <td class="text-center">{item?.noticeOfficeDairies?.noticeOfficeDiaryTime}</td>
-                          <td class="text-center">{item?.sessions?.sessionName}</td>
-                          <td class="text-center">{item?.motionType}</td>
-                          <td class="text-center">{[item?.englishText, item?.urduText]
-                            .filter(Boolean)
-                            .join(", ").replace(/(<([^>]+)>)/gi, "")}</td>
-
-                      </tr>
-                       ))}
+                      {motionReport &&
+                        motionReport?.map((item) => (
+                          <tr>
+                            <td class="text-center">{item?.id}</td>
+                            <td class="text-center">
+                              {item?.noticeOfficeDairies?.noticeOfficeDiaryNo}
+                            </td>
+                            <td class="text-center">
+                              {item?.noticeOfficeDairies?.noticeOfficeDiaryDate}
+                            </td>
+                            <td class="text-center">
+                              {item?.noticeOfficeDairies?.noticeOfficeDiaryTime}
+                            </td>
+                            <td class="text-center">
+                              {item?.sessions?.sessionName}
+                            </td>
+                            <td class="text-center">{item?.motionType}</td>
+                            <td class="text-center">
+                              {[item?.englishText, item?.urduText]
+                                .filter(Boolean)
+                                .join(", ")
+                                .replace(/(<([^>]+)>)/gi, "")}
+                            </td>
+                          </tr>
+                        ))}
                     </tbody>
                   </table>
                 </div>

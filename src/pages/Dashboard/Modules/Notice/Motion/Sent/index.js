@@ -83,7 +83,6 @@ function SentMotion() {
     });
   };
 
-
   const getMotionListData = async () => {
     try {
       const response = await getAllMotion(currentPage, pageSize);
@@ -170,7 +169,7 @@ function SentMotion() {
     >
       <ToastContainer />
       <Header
-        dashboardLink={"/"}
+        dashboardLink={"/notice/dashboard"}
         addLink1={"/notice/motion/sent"}
         title1={"Sent Motion"}
       />
@@ -370,11 +369,12 @@ function SentMotion() {
                         onChange={(date) =>
                           formik.setFieldValue("fromNoticeDate", date)
                         }
-                        className={`form-control ${formik.errors.fromNoticeDate &&
-                            formik.touched.fromNoticeDate
+                        className={`form-control ${
+                          formik.errors.fromNoticeDate &&
+                          formik.touched.fromNoticeDate
                             ? "is-invalid"
                             : ""
-                          }`}
+                        }`}
                       />
                       {formik.errors.fromNoticeDate &&
                         formik.touched.fromNoticeDate && (
