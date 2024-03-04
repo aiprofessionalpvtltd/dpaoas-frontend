@@ -240,7 +240,7 @@ function NMSSessionAttendance() {
                           className="btn btn-primary float-end"
                           type="submit"
                         >
-                          Mark
+                          Mark Attendance
                         </button>
                       </div>
                     </div>
