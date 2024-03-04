@@ -28,6 +28,7 @@ function ListFileRegister() {
             id: item?.id,
             registerNumber: item?.registerNumber,
             branch: item?.branches?.branchName,
+            Subject:item?.registerSubject,
             year: item?.year,
         }));
     };
@@ -75,7 +76,7 @@ function ListFileRegister() {
                         showView={true}
                         handleView={(item) => {
                             setregisterID(item?.id)
-                            navigate("/efiling/dashboard/file-register-list/files-list")}}
+                            navigate("/efiling/dashboard/file-register-list/files-list", {state:item})}}
 
                     />
                 </div>

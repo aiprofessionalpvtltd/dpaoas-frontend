@@ -209,7 +209,7 @@ function AddEditFIleHeading() {
               <div class="row">
                 <div class="col">
                   <button class="btn btn-primary float-end" type="submit">
-                    Submit
+                    {fileId ? "Update File Heading" : "Create File Heading"}
                   </button>
                 </div>
               </div>
