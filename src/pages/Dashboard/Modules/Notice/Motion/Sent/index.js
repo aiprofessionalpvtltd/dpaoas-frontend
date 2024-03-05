@@ -22,6 +22,7 @@ import { AuthContext } from "../../../../../../api/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
+import Select from "react-select";
 
 function SentMotion() {
   const navigate = useNavigate();
@@ -227,31 +228,28 @@ function SentMotion() {
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Member Name</label>
-                      {/* <input
-                                                type='text'
-                                                value={formik.values.memberName}
-                                                className={`form-control`}
-                                                id='memberName'
-                                                onChange={formik.handleChange}
-                                                onBlur={formik.handleBlur}
-                                            /> */}
-                      <select
-                        class="form-select"
-                        value={formik.values.memberName}
-                        onChange={formik.handleChange}
-                        id="memberName"
-                        onBlur={formik.handleBlur}
-                      >
-                        <option value={""} selected disabled hidden>
-                          Select
-                        </option>
-                        {members &&
-                          members.map((item) => (
-                            <option key={item.id} value={item.id}>
-                              {item?.memberName}
-                            </option>
-                          ))}
-                      </select>
+                      <Select
+                          options={members.map((item) => ({
+                            value: item.id,
+                            label: item.memberName,
+                          }))}
+                          isMulti
+                          onChange={(selectedOptions) =>
+                            formik.setFieldValue(
+                              "memberName",
+                              selectedOptions,
+                            )
+                          }
+                          onBlur={formik.handleBlur}
+                          value={formik.values.memberName}
+                          name="memberName"
+                        />
+                        {formik.touched.memberName &&
+                          formik.errors.memberName && (
+                            <div class="invalid-feedback">
+                              {formik.errors.memberName}
+                            </div>
+                          )}
                     </div>
                   </div>
                 </div>
