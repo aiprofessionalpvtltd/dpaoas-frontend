@@ -61,7 +61,7 @@ function ListFileRegister() {
                         hideBtn={false}
                         addBtnText={"Create File Register"}
                         data={registerData}
-                        tableTitle="List File Registers"
+                        tableTitle="File Registers"
                         addBtnText2="Create File"
                         headertitlebgColor={"#666"}
                         headertitletextColor={"#FFF"}

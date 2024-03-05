@@ -30,7 +30,7 @@ const validationSchema = Yup.object({
   dateOfRecord: Yup.string().optional(),
   classification: Yup.string().optional(),
   movement: Yup.string().optional(),
-  fileCategory: Yup.string().optional(),
+  // fileCategory: Yup.string().optional(),
 
 });
 
@@ -140,7 +140,7 @@ function AddEditFiles() {
     try {
       const response = await getAllYear()
       if (response.success) {
-        showSuccessMessage(response?.message)
+        // showSuccessMessage(response?.message)
         setYearData(response?.data)
       }
     } catch (error) {
@@ -158,7 +158,7 @@ function AddEditFiles() {
     try {
       const response = await geteHeadingbyBranchId(event?.target?.value)
       if (response.success) {
-        showSuccessMessage(response?.message)
+        // showSuccessMessage(response?.message)
         setMainHeadingData(response?.data)
       }
     } catch (error) {
@@ -173,7 +173,7 @@ function AddEditFiles() {
     try {
       const response = await geteHeadingNumberbyMainHeadingId(event?.target?.value)
       if (response.success) {
-        showSuccessMessage(response?.message)
+        // showSuccessMessage(response?.message)
         setNumberMainHeading(response?.data)
       }
     } catch (error) {
@@ -508,10 +508,6 @@ function AddEditFiles() {
                     </div>
                   </div>
                 </div>
-
-
-
-
 
                 <div class="row mt-4">
                   <div class="col p-0">
