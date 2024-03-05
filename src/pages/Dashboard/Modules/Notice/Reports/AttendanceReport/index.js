@@ -27,7 +27,7 @@ const validationSchema = Yup.object({
 const AttendanceReport = () => {
   const [selectedOption, setSelectedOption] = useState("");
   const [searchedData, setSearchedData] = useState(null);
-
+  console.log("searchedData", searchedData);
   const formik = useFormik({
     initialValues: {
       attendenceReportsId: "",
@@ -251,33 +251,33 @@ const AttendanceReport = () => {
             </div>
           </div>
         );
-      //   case "3 Years":
-      //     return (
-      //       <div className="col-6">
-      //         <div className="mb-3">
-      //           <label class="form-label">Select From Year</label>
-      //           <input
-      //             type="number"
-      //             className={`form-control ${
-      //               formik.touched.selected3YearsReport &&
-      //               formik.errors.selected3YearsReport
-      //                 ? "is-invalid"
-      //                 : ""
-      //             }`}
-      //             value={formik.values.selected3YearsReport}
-      //             onChange={(e) => {
-      //               formik.setFieldValue("selected3YearsReport", e.target.value);
-      //             }}
-      //           />
-      //           {formik.touched.selected3YearsReport &&
-      //             formik.errors.selected3YearsReport && (
-      //               <div className="invalid-feedback">
-      //                 {formik.errors.selected3YearsReport}
-      //               </div>
-      //             )}
-      //         </div>
-      //       </div>
-      //     );
+      case "3 Years":
+        return (
+          <div className="col-6">
+            <div className="mb-3">
+              <label class="form-label">Select From Year</label>
+              <input
+                type="number"
+                className={`form-control ${
+                  formik.touched.selected3YearsReport &&
+                  formik.errors.selected3YearsReport
+                    ? "is-invalid"
+                    : ""
+                }`}
+                value={formik.values.selected3YearsReport}
+                onChange={(e) => {
+                  formik.setFieldValue("selected3YearsReport", e.target.value);
+                }}
+              />
+              {formik.touched.selected3YearsReport &&
+                formik.errors.selected3YearsReport && (
+                  <div className="invalid-feedback">
+                    {formik.errors.selected3YearsReport}
+                  </div>
+                )}
+            </div>
+          </div>
+        );
 
       default:
         return null;
@@ -289,6 +289,7 @@ const AttendanceReport = () => {
     setSelectedOption(value);
     formik.setFieldValue("attendenceReportsId", value);
     formik.resetForm();
+    setSearchedData(null);
   };
 
   const SearchedAttendanceReport = useCallback(
@@ -304,9 +305,13 @@ const AttendanceReport = () => {
           month: values?.selectedMonth,
           year: values?.selectedYear,
         };
-      } else {
+      } else if (selectedOption === "Yearly") {
         searchParams = {
           year: values?.selectedYear,
+        };
+      } else {
+        searchParams = {
+          threeYears: values?.selected3YearsReport,
         };
       }
 
@@ -316,8 +321,12 @@ const AttendanceReport = () => {
         if (response?.success) {
           showSuccessMessage(response?.message);
 
-          const url = `http://172.16.170.8:5252${response?.data?.fileLink}`;
-          setSearchedData(url);
+          if (response?.data?.fileLink) {
+            const url = `http://172.16.170.8:5252${response?.data?.fileLink}`;
+            setSearchedData(url);
+          } else {
+            searchedData(null);
+          }
         }
         // formik.resetForm();
       } catch (error) {
@@ -373,6 +382,13 @@ const AttendanceReport = () => {
       link.click();
     });
   };
+
+  const handleReset = () => {
+    formik.resetForm();
+    setSearchedData(null);
+    setSelectedOption(null);
+  };
+
   return (
     <Layout
       module={true}
@@ -413,7 +429,7 @@ const AttendanceReport = () => {
                           <option value="Weekly">Weekly</option>
                           <option value="Monthly">Monthly</option>
                           <option value="Yearly">Yearly</option>
-                          {/* <option value="3 Years">3 Years</option> */}
+                          <option value="3 Years">3 Years</option>
                         </select>
                         {formik.touched.attendenceReportsId &&
                           formik.errors.attendenceReportsId && (
@@ -424,13 +440,42 @@ const AttendanceReport = () => {
                       </div>
                     </div>
                     {renderFields()}
-                    <div className="col-3 my-2">
+                    <div className="col-1 my-2">
                       <div className="mt-4">
                         <button class="btn btn-primary mb-3" type="submit">
                           Search
                         </button>
                       </div>
                     </div>
+                    <div className="col-1 my-2">
+                    <div className="mt-4">
+                        <button
+                          class="btn btn-primary mb-3"
+                          type="button"
+                          onClick={handleReset}
+                        >
+                          Reset
+                        </button>
+                      </div>
+                      </div>
+                    {/* <div className="row">
+                    <div className="col my-2 d-flex justify-content-end">
+                      <div className="mt-4">
+                        <button class="btn btn-primary mb-3 mx-4" type="submit">
+                          Search
+                        </button>
+                      </div>
+                      <div className="mt-4">
+                        <button
+                          class="btn btn-primary mb-3"
+                          type="button"
+                          // onClick={handleReset}
+                        >
+                          Reset
+                        </button>
+                      </div>
+                    </div>
+                  </div> */}
                   </div>
                   <div className="row">
                     <div className="col-12 my-2 d-flex justify-content-around">
