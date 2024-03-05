@@ -260,6 +260,17 @@ export const NoticeSidebarItems = [
     ],
   },
   {
+    itemName: "Speech On demand",
+    link: "/notice/speech-on-demand",
+    icon: faHome,
+  },
+
+  {
+    itemName: "Research Services",
+    link: "/notice/research-services",
+    icon: faHome,
+  },
+  {
     itemName: "Reports",
     link: "/notice/reports",
     icon: faFileLines,
@@ -737,5 +748,4 @@ export const EfilingSideBarItem = [
     link: "",
     icon: faFileAlt,
   },
-  
-]
+];
