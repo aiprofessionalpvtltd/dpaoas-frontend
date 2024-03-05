@@ -245,29 +245,22 @@ function NewQuestion() {
                     <div class="col">
                       <div class="mb-3">
                         <label class="form-label">Member Name</label>
-
-                        <select
-                          className={`form-select ${
-                            formik.touched.fkMemberId &&
-                            formik.errors.fkMemberId
-                              ? "is-invalid"
-                              : ""
-                          }`}
-                          // placeholder={formik.values.fkMemberId}
+                        <Select
+                          options={members.map((item) => ({
+                            value: item.id,
+                            label: item.memberName,
+                          }))}
+                          isMulti
+                          onChange={(selectedOptions) =>
+                            formik.setFieldValue(
+                              "fkMemberId",
+                              selectedOptions,
+                            )
+                          }
+                          onBlur={formik.handleBlur}
                           value={formik.values.fkMemberId}
-                          onChange={formik.handleChange}
-                          id="fkMemberId"
-                        >
-                          <option value={""} selected disabled hidden>
-                            Select
-                          </option>
-                          {members &&
-                            members.map((item) => (
-                              <option key={item.id} value={item.id}>
-                                {item?.memberName}
-                              </option>
-                            ))}
-                        </select>
+                          name="fkMemberId"
+                        />
                         {formik.touched.fkMemberId &&
                           formik.errors.fkMemberId && (
                             <div class="invalid-feedback">
