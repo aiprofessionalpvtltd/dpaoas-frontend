@@ -80,7 +80,7 @@ const PartywiseAttendenceReports = () => {
             response?.data?.sessionSittings
           );
           setSittingDays(transformedData);
-          showSuccessMessage(response?.message);
+          // showSuccessMessage(response?.message);
           // setCount(response?.data?.count);
         }
       } catch (error) {

@@ -33,7 +33,7 @@ export const CustomAlert = ({ showModal, handleClose, handleOkClick, title }) =>
           }}
           onClick={handleClose}
         >
-          Close
+          No
         </Button>
         <Button
           variant="primary"
@@ -41,7 +41,7 @@ export const CustomAlert = ({ showModal, handleClose, handleOkClick, title }) =>
           style={{ width: "80px", background: "#779ecb", border: "none" }}
           onClick={handleOkClick}
         >
-          OK
+          Yes
         </Button>
       </Modal.Footer>
     </Modal>

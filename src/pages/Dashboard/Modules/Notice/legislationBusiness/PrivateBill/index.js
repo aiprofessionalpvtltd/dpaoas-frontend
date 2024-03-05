@@ -11,6 +11,7 @@ import { deletePrivateBill, getAllPrivateBill } from "../../../../../../api/APIs
 import PrivateBillModal from "../../../../../../components/PrivateBillModal";
 import { ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { CustomAlert } from "../../../../../../components/CustomComponents/CustomAlert";
 
 function PrivateBill() {
   const [currentPage, setCurrentPage] = useState(0);
@@ -18,6 +19,7 @@ function PrivateBill() {
   const [count, setCount] = useState();
   const [assignModalOpan, setAssignedModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
+  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate()
 
   const [data, setData] = useState([]);
@@ -78,6 +80,13 @@ function PrivateBill() {
       showErrorMessage(error?.response?.data?.message);
     }
   }
+
+  const handleClose = () => setShowModal(false);
+  const handleOkClick = () => {
+    handleDelete(selectedItem?.id);
+    handleClose();
+  };
+
   return (
     <Layout
       module={true}
@@ -98,6 +107,12 @@ function PrivateBill() {
         title1={"Private Bill"}
       />
 
+      <CustomAlert
+        showModal={showModal}
+        handleClose={handleClose}
+        handleOkClick={handleOkClick}
+      />
+
       <div class="row">
         <div class="col-12">
           <CustomTable
@@ -107,7 +122,10 @@ function PrivateBill() {
             addBtnText={"Create Private Bill"}
             handleAdd={() => navigate("/notice/legislation/private-bill/addedit")}
             handleEdit={(item) => navigate("/notice/legislation/private-bill/addedit", { state: item })}
-            handleDelete={(item) => handleDelete(item.id)}
+            handleDelete={(item) => {
+              setSelectedItem(item);
+              setShowModal(true);
+            }}
             headertitlebgColor={"#666"}
             headertitletextColor={"#FFF"}
             handlePageChange={handlePageChange}

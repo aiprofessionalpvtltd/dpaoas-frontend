@@ -382,6 +382,13 @@ const AttendanceReport = () => {
       link.click();
     });
   };
+
+  const handleReset = () => {
+    formik.resetForm();
+    setSearchedData(null);
+    setSelectedOption(null);
+  };
+
   return (
     <Layout
       module={true}
@@ -433,13 +440,42 @@ const AttendanceReport = () => {
                       </div>
                     </div>
                     {renderFields()}
-                    <div className="col-3 my-2">
+                    <div className="col-1 my-2">
                       <div className="mt-4">
                         <button class="btn btn-primary mb-3" type="submit">
                           Search
                         </button>
                       </div>
                     </div>
+                    <div className="col-1 my-2">
+                    <div className="mt-4">
+                        <button
+                          class="btn btn-primary mb-3"
+                          type="button"
+                          onClick={handleReset}
+                        >
+                          Reset
+                        </button>
+                      </div>
+                      </div>
+                    {/* <div className="row">
+                    <div className="col my-2 d-flex justify-content-end">
+                      <div className="mt-4">
+                        <button class="btn btn-primary mb-3 mx-4" type="submit">
+                          Search
+                        </button>
+                      </div>
+                      <div className="mt-4">
+                        <button
+                          class="btn btn-primary mb-3"
+                          type="button"
+                          // onClick={handleReset}
+                        >
+                          Reset
+                        </button>
+                      </div>
+                    </div>
+                  </div> */}
                   </div>
                   <div className="row">
                     <div className="col-12 my-2 d-flex justify-content-around">
