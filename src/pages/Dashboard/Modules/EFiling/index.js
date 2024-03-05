@@ -31,9 +31,7 @@ function EFilingDashboard() {
 
   return (
     <Layout module={true} centerlogohide={true} sidebarItems={EfilingSideBarItem}>
-      <div className="dashboard-content" style={{ marginTop: 80 }}>
         <Header dashboardLink={"/"} addLink1={"/efiling/dashboard"} title1={"E-Filing"} width={"500px"} />
-
         <div class="row">
           <div class="col-8">
             <div class="dash-detail-container">
@@ -142,7 +140,6 @@ function EFilingDashboard() {
             </div>
           </div>
         </div>
-      </div>
     </Layout>
   );
 }
