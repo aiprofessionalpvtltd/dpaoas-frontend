@@ -134,6 +134,10 @@ import AddEditFiles from "../pages/Dashboard/Modules/EFiling/FIleRegister/Files/
 import AddEditPrivateBill from "../pages/Dashboard/Modules/Notice/legislationBusiness/PrivateBill/AddEditPrivateBill";
 import FileHeadingList from "../pages/Dashboard/Modules/EFiling/FileHeading";
 import AddEditFIleHeading from "../pages/Dashboard/Modules/EFiling/FileHeading/AddEditFIleHeading";
+import CMSSpeechOnDemandDashboard from "../pages/Dashboard/Modules/Notice/SpeechOnDemand";
+import CMSResearchServicesDashboard from "../pages/Dashboard/Modules/Notice/ResearchServices";
+import CMSAddEditSpeechOnDemand from "../pages/Dashboard/Modules/Notice/SpeechOnDemand/AddEditSpeechOnDemand";
+import CMSAddEditResearchService from "../pages/Dashboard/Modules/Notice/ResearchServices/AddEditResearchService";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -209,6 +213,20 @@ export const ProtectedRoutes = [
   //   path: "/notice/manage/manage-session-days",
   //   element: <ManageSessionDays />,
   // },
+
+  { path: "/notice/speech-on-demand", element: <CMSSpeechOnDemandDashboard /> },
+  {
+    path: "/notice/speech-on-demand/addedit",
+    element: <CMSAddEditSpeechOnDemand />,
+  },
+  {
+    path: "/notice/research-services",
+    element: <CMSResearchServicesDashboard />,
+  },
+  {
+    path: "/notice/research-services/addedit",
+    element: <CMSAddEditResearchService />,
+  },
   {
     path: "/notice/manage/manage-session-days",
     element: <ManageSittingDays />,
