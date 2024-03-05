@@ -21,6 +21,7 @@ import { AuthContext } from "../../../../../../api/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
+import Select from "react-select";
 
 function SearchQuestion() {
   const navigate = useNavigate();
@@ -292,23 +293,28 @@ function SearchQuestion() {
                       <div className="col">
                         <div className="mb-3">
                           <label className="form-label">Member Name</label>
-                          <select
-                            class="form-select"
-                            // placeholder={formik.values.memberName}
-                            value={formik.values.memberName}
-                            onChange={formik.handleChange}
-                            id="memberName"
-                          >
-                            <option value={""} selected disabled hidden>
-                              Select
-                            </option>
-                            {members &&
-                              members.map((item) => (
-                                <option key={item.id} value={item.id}>
-                                  {item?.memberName}
-                                </option>
-                              ))}
-                          </select>
+                          <Select
+                          options={members.map((item) => ({
+                            value: item.id,
+                            label: item.memberName,
+                          }))}
+                          isMulti
+                          onChange={(selectedOptions) =>
+                            formik.setFieldValue(
+                              "memberName",
+                              selectedOptions,
+                            )
+                          }
+                          onBlur={formik.handleBlur}
+                          value={formik.values.memberName}
+                          name="memberName"
+                        />
+                        {formik.touched.memberName &&
+                          formik.errors.memberName && (
+                            <div class="invalid-feedback">
+                              {formik.errors.memberName}
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
