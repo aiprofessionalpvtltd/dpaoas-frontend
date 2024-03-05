@@ -28,6 +28,7 @@ function ListFileRegister() {
             id: item?.id,
             registerNumber: item?.registerNumber,
             branch: item?.branches?.branchName,
+            Subject:item?.registerSubject,
             year: item?.year,
         }));
     };
@@ -60,7 +61,7 @@ function ListFileRegister() {
                         hideBtn={false}
                         addBtnText={"Create File Register"}
                         data={registerData}
-                        tableTitle="List File Registers"
+                        tableTitle="File Registers"
                         addBtnText2="Create File"
                         headertitlebgColor={"#666"}
                         headertitletextColor={"#FFF"}
@@ -75,7 +76,7 @@ function ListFileRegister() {
                         showView={true}
                         handleView={(item) => {
                             setregisterID(item?.id)
-                            navigate("/efiling/dashboard/file-register-list/files-list")}}
+                            navigate("/efiling/dashboard/file-register-list/files-list", {state:item})}}
 
                     />
                 </div>

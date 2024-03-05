@@ -8,9 +8,12 @@ import Header from '../../../../../../components/Header';
 import { getFileByRegisterById } from '../../../../../../api/APIs/Services/efiling.service';
 import { getRegisterID } from '../../../../../../api/Auth';
 import { showErrorMessage, showSuccessMessage } from '../../../../../../utils/ToastAlert';
+import { useLocation } from "react-router-dom";
+
 
 function ListFiles() {
     const navigate = useNavigate()
+    const location = useLocation()
     const [currentPage, setCurrentPage] = useState(0);
     const [count, setCount] = useState(1);
     const pageSize = 5; // Set your desired page size
@@ -37,7 +40,7 @@ function ListFiles() {
     const transformFilesHeadingdata = (apiData) => {
         return apiData.map((item) => ({
           id: item?.id,
-          fileNumber: item?.mainHeading?.mainHeadingNumber,
+          fileNumber: item?.fileNumber,
           fileSubject: item?.fileSubject,
           mainHeading: item?.mainHeading?.mainHeading,
         }));
@@ -62,15 +65,24 @@ function ListFiles() {
     return (
         <Layout module={true} sidebarItems={EfilingSideBarItem}>
             <Header dashboardLink={"/efiling/dashboard"} addLink1={"/efiling/dashboard/file-register-list"} title1={"File Register"} title2={"Register Index"} addLink2={"/efiling/dashboard/file-register-list/files-list"} width={"500px"} />
-            <ToastContainer />
-            <div className='row'>
+           
+            <div>
+                <div style={{float:"left"}}>
                 <div className='col'>
                 <div class="top-head-left" style={{marginLeft:"15px",marginBottom:"15px"}}>
-              <p style={{fontSize: "14px", marginBottom: "5px"}}>S-92</p>
-              <p style={{fontSize: "15px", marginBottom: "5px"}}>(See Appendix E-Instructions)</p>
-              <p style={{fontSize: "15px", marginBottom: "5px"}}>Secretariat Instructions</p>
+              <p style={{fontSize: "14px", marginBottom: "5px", fontWeight:"bold"}}>Branch Name : {location?.state?.branch}</p>
+              <p style={{fontSize: "15px", marginBottom: "5px", fontWeight:"bold"}}>RegisterNumber : {location?.state?.registerNumber}</p>
+              <p style={{fontSize: "15px", marginBottom: "5px", fontWeight:"bold"}}>Year {location?.state?.year} </p>
             </div>
                 </div>
+                </div>
+                <div>
+                <h1 style={{fontSize: "20px", textAlign: "center", marginBottom: "30px"}}>
+              INDEX<br/>of<br/>Main File Headings
+            </h1>
+                </div>
+            
+            <p style={{textAlign: "right", marginRight: "10px"}}>Calendar Year: 20</p>
             </div>
 
             

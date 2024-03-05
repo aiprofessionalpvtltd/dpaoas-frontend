@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 function Header({ dashboardLink, addLink1, addLink2, title1, title2, width }) {
   return (
-    <div className="bredcrumb-container" style={{ width: width ? width : "500px" }}>
+    <div className="bredcrumb-container" style={{ width: width ? width : "500px", marginTop:"25px" }}>
       <div className="bredcrumb">
         <ul className="breadcrumb">
           <li>
