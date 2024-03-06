@@ -14,74 +14,129 @@ import { Layout } from "../../../../../../components/Layout";
 import { NoticeSidebarItems } from "../../../../../../utils/sideBarItems";
 import { AuthContext } from "../../../../../../api/AuthContext";
 import Header from "../../../../../../components/Header";
+import {
+  UpdateSpeachOnDemand,
+  createSpeachOnDemand,
+  getSpeachOnDemandById,
+} from "../../../../../../api/APIs/Services/Notice.service";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../../utils/ToastAlert";
+
+const validationSchema = Yup.object({
+  sessionNo: Yup.string().required("Session No is required"),
+  fromDate: Yup.object().required("From Date is required"),
+  toDate: Yup.string().required("To Date is required"),
+  justification: Yup.object().required("Justification is required"),
+});
 
 function CMSAddEditSpeechOnDemand() {
   const location = useLocation();
-  const { employeeData, sessions } = useContext(AuthContext);
-
-  const validationSchema = Yup.object({
-    sessionNo: Yup.string().required("Session No is required"),
-    fromDate: Yup.object().required("From Date is required"),
-    toDate: Yup.string().required("To Date is required"),
-    justification: Yup.object().required("Justification is required"),
-  });
+  const { sessions } = useContext(AuthContext);
+  const [speachData, setSpeachData] = useState([]);
 
   const formik = useFormik({
     initialValues: {
-      sessionNo: location.state ? new Date(location?.state?.requestDate) : "",
-      fromDate: location.state ? location?.state?.fkBranchRequestId : "",
-      toDate: location.state ? location?.state?.fkBranchRequestId : "",
-      selectType: location.state ? location?.state?.fkBranchRequestId : "",
-      isWhatsapp: location.state ? location?.state?.fkBranchRequestId : false,
-      whatsappno: location.state ? location?.state?.quantity : "",
-      justification: location.state ? location?.state?.quantity : "",
-      //   status: location.state ? location?.state?.status : "",
+      sessionNo: "",
+      fromDate: "",
+      toDate: "",
+      selectType: "",
+      whatsappno: "",
+      justification: "",
     },
     // validationSchema: validationSchema,
     onSubmit: (values) => {
       // Handle form submission here
-      console.log(values);
+      if (location?.state?.id) {
+        UpdateSpeachOnDemandAPi(values);
+      } else {
+        handleCreateSpeachonDemand(values);
+      }
     },
   });
-  // Handle Create Toner Installation
-  //   const hendleAddToner = async (values) => {
-  //     const Data = {
-  //       requestDate: values?.requestDate,
-  //       fkUserRequestId: values?.fkUserRequestId?.value,
-  //       fkBranchRequestId: values?.fkBranchRequestId,
-  //       fkTonerModelId: values?.tonerModels?.value,
-  //       quantity: values?.quantity,
-  //     };
+  // Handle Create Speach On Demand
+  const handleCreateSpeachonDemand = async (values) => {
+    const Data = {
+      fkSessionNo: values?.sessionNo?.value,
+      date_to: values?.toDate,
+      date_from: values?.fromDate,
+      delivery_on: values?.selectType,
+      whatsapp_number: values?.whatsappno,
+      justification: values?.justification,
+      is_certified: true,
+    };
 
-  //     try {
-  //       const response = await createTonar(Data);
-  //       if (response.success) {
-  //         showSuccessMessage(response.message);
-  //       }
-  //     } catch (error) {
-  //       showErrorMessage(error?.response?.data?.message);
-  //     }
-  //   };
+    try {
+      const response = await createSpeachOnDemand(Data);
+      if (response.success) {
+        showSuccessMessage(response.message);
+        formik.resetForm();
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  };
 
-  //Update Toner Installations
-  //   const UpdateTonerAPi = async (values) => {
-  //     const data = {
-  //       requestDate: values?.requestDate,
-  //       fkUserRequestId: values?.fkUserRequestId?.value,
-  //       fkBranchRequestId: values?.fkBranchRequestId,
-  //       fkTonerModelId: values?.tonerModels?.value,
-  //       quantity: values?.quantity,
-  //       status: values?.status,
-  //     };
-  //     try {
-  //       const response = await UpdateTonner(location.state.id, data);
-  //       if (response.success) {
-  //         showSuccessMessage(response.message);
-  //       }
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
+  //Update Speach On Demand
+  const UpdateSpeachOnDemandAPi = async (values) => {
+    const data = {
+      fkSessionNo: values?.sessionNo?.value,
+      date_to: values?.toDate,
+      date_from: values?.fromDate,
+      delivery_on: values?.selectType,
+      whatsapp_number: values?.whatsappno,
+      justification: values?.justification,
+      is_certified: true,
+    };
+    try {
+      const response = await UpdateSpeachOnDemand(location.state.id, data);
+      if (response.success) {
+        showSuccessMessage(response.message);
+        formik.resetForm();
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  };
+
+  const getSpeachOnDemandByIdAPi = async () => {
+    try {
+      const response = await getSpeachOnDemandById(location.state.id);
+      if (response.success) {
+        setSpeachData(response?.data);
+        // showSuccessMessage(response.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (location.state?.id) {
+      getSpeachOnDemandByIdAPi();
+    }
+  }, []);
+  console.log(speachData);
+  useEffect(() => {
+    // Update form values when termsById changes
+    if (speachData) {
+      formik.setValues({
+        sessionNo:
+          {
+            value: speachData[0]?.session?.id,
+            label: speachData[0]?.session?.sessionName,
+          } || "",
+        fromDate: speachData[0]?.date_from
+          ? new Date(speachData[0]?.date_from)
+          : "",
+        toDate: speachData[0]?.date_to ? new Date(speachData[0]?.date_to) : "",
+        selectType: speachData[0]?.delivery_on || "",
+        whatsappno: speachData[0]?.whatsapp_number || "",
+        justification: speachData[0]?.justification || "",
+      });
+    }
+  }, [speachData, formik.setValues]);
 
   return (
     <Layout
@@ -168,7 +223,7 @@ function CMSAddEditSpeechOnDemand() {
                       </span>
                       <DatePicker
                         selected={formik.values.fromDate}
-                        minDate={new Date()}
+                        // minDate={new Date()}
                         onChange={(date) =>
                           formik.setFieldValue("fromDate", date)
                         }
@@ -205,7 +260,7 @@ function CMSAddEditSpeechOnDemand() {
                       </span>
                       <DatePicker
                         selected={formik.values.toDate}
-                        minDate={new Date()}
+                        // minDate={new Date()}
                         onChange={(date) =>
                           formik.setFieldValue("toDate", date)
                         }
@@ -240,7 +295,7 @@ function CMSAddEditSpeechOnDemand() {
                         <option value={""} selected disabled hidden>
                           Select
                         </option>
-                        <option value="CD">CD</option>
+                        <option value="WhatsApp">WhatsApp</option>
                         <option value="DVD">DVD</option>
                       </select>
                       {formik.touched.selectType &&
@@ -253,7 +308,7 @@ function CMSAddEditSpeechOnDemand() {
                   </div>
                   <div class="col-4 mt-3">
                     <div class="mb-3 mt-4">
-                      <div class="form-check">
+                      {/* <div class="form-check">
                         <input
                           class={`form-check-input ${
                             formik.touched.isWhatsapp &&
@@ -280,12 +335,12 @@ function CMSAddEditSpeechOnDemand() {
                               {formik.errors.isWhatsapp}
                             </div>
                           )}
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                   <div className="col-4">
                     <div className="mb-3">
-                      {formik.values.isWhatsapp && (
+                      {formik.values.selectType === "WhatsApp" && (
                         <>
                           <label className="form-label">Whatsapp No</label>
                           <input
@@ -342,7 +397,7 @@ function CMSAddEditSpeechOnDemand() {
 
                 <div className="d-grid gap-2 mt-4 d-md-flex justify-content-md-end">
                   <button className="btn btn-primary" type="submit">
-                    Submit
+                    {location?.state?.id ? "Update Speach" : "Create Speach"}
                   </button>
                 </div>
               </div>
