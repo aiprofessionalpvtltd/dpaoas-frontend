@@ -66,10 +66,11 @@ function NewQuestion() {
       initiatedByBranch: "",
       sentToBranch: "",
     },
-    validationSchema: validationSchema,
+    // validationSchema: validationSchema,
     onSubmit: (values) => {
-      handleShow();
-      setFormValues(values);
+      // handleShow();
+      // setFormValues(values);
+      CreateQuestionApi(values)
     },
     enableReinitialize: true,
   });
@@ -424,8 +425,9 @@ function NewQuestion() {
                       </div>
                     </div>
                   </div>
-
-                  <div style={{ marginTop: 10 }}>
+                  <div className="row">
+                    <div className="col-12">
+                    <div style={{ marginTop: 10 }}>
                     <Editor
                       title={"English Text"}
                       onChange={(content) =>
@@ -434,8 +436,9 @@ function NewQuestion() {
                       value={formik.values.englishText}
                     />
                   </div>
-
-                  <div style={{ marginTop: 70, marginBottom: 40 }}>
+                    </div>
+                    <div className="col-12">
+                    <div style={{ marginTop: 70, marginBottom: 40 }}>
                     <Editor
                       title={"Urdu Text"}
                       onChange={(content) =>
@@ -443,15 +446,22 @@ function NewQuestion() {
                       }
                       value={formik.values.urduText}
                     />
+                   
+                  </div>
+                    </div>
                   </div>
 
-                  <div class="row">
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                  
+
+                  
+                  <div className="row mt-3">
+                       <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                       <button class="btn btn-primary" type="submit">
                         Submit
                       </button>
                     </div>
-                  </div>
+                    </div>
+
                 </div>
               </form>
             </div>

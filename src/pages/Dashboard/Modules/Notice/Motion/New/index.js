@@ -67,8 +67,9 @@ function NewMotion() {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      handleShow();
-      setFormValues(values);
+      // handleShow();
+      // setFormValues(values);
+      CreateMotionApi(values)
     },
     enableReinitialize: true,
   });
@@ -415,7 +416,9 @@ function NewMotion() {
                       </div>
                     </div>
                   </div>
+                  <div className="row">
 
+                      <div className="col-12"> 
                   <div style={{ marginTop: 10 }}>
                     <Editor
                       title={"English Text"}
@@ -425,6 +428,8 @@ function NewMotion() {
                       value={formik.values.englishText}
                     />
                   </div>
+                  </div>   
+                  <div className="col-12"> 
 
                   <div style={{ marginTop: 70, marginBottom: 40 }}>
                     <Editor
@@ -435,8 +440,11 @@ function NewMotion() {
                       value={formik.values.urduText}
                     />
                   </div>
+                  </div>
+                  </div>
 
-                  <div class="row">
+
+                  <div class="row mt-3">
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                       <button class="btn btn-primary" type="submit">
                         Submit

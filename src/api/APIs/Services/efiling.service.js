@@ -365,36 +365,6 @@ export const DeleteHeading = async (id) => {
 };
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // Create Case
 export const createCase = async (id, data) => {
   try {
@@ -411,8 +381,6 @@ export const createCase = async (id, data) => {
     throw error;
   }
 };
-
-
 export const getAllCasesByFileId = async (id, currentPage, pageSize) => {
   try {
     //   const token = getAuthToken();
@@ -431,3 +399,116 @@ export const getAllCasesByFileId = async (id, currentPage, pageSize) => {
     throw error;
   }
 };
+
+//Fresh Recipt
+export const createFreshReceipt = async (data) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClientMMS.post(
+      `/freshReceipt/createFR`,
+      data,
+      {
+        headers: {
+          accept: "application/json",
+          "Content-Type": "multipart/form-data",
+        },
+      });
+    } catch (error) {
+      console.error("Error fetching API endpoint:", error);
+      throw error;
+    }
+  };
+
+export const getAllFreshReceipt = async (currentPage, pageSize) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/freshReceipt/?currentPage=${currentPage}&pageSize=${pageSize}`)
+      // {
+      //   headers: {
+      //     accept: "application/json",
+      //     "Content-Type": "multipart/form-data",
+      //   },
+      // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+
+
+export const getFreshReceiptById = async (id) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/freshReceipt/getFR/${id}`)
+      // {
+      //   headers: {
+      //     accept: "application/json",
+      //     "Content-Type": "multipart/form-data",
+      //   },
+      // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const UpdateFreshReceipt = async (id, data) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClientMMS.put(
+      `/freshReceipt/updateFR/${id}`,
+      data,
+      {
+        headers: {
+          accept: "application/json",
+          "Content-Type": "multipart/form-data",
+        },
+      });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const DeleteFreshReceipt = async (id) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClientMMS.delete(
+      `/freshReceipt/deleteFR/${id}`)
+      // {
+      //   headers: {
+      //     accept: "application/json",
+      //     "Content-Type": "multipart/form-data",
+      //   },
+      // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const DeleteFreahReceptImage = async (id) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClientMMS.delete(
+      `/freshReceipt/deleteAttachment/${id}`)
+      // {
+      //   headers: {
+      //     accept: "application/json",
+      //     "Content-Type": "multipart/form-data",
+      //   },
+      // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
