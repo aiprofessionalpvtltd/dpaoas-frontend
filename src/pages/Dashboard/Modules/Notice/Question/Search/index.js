@@ -99,6 +99,7 @@ function SearchQuestion() {
         noticeOfficeDiaryDateFrom: values?.fromNoticeDate,
         noticeOfficeDiaryDateTo: values?.toNoticeDate,
       };
+
       try {
         const response = await searchQuestion(
           searchParams,
@@ -294,26 +295,26 @@ function SearchQuestion() {
                         <div className="mb-3">
                           <label className="form-label">Member Name</label>
                           <Select
-                          options={members.map((item) => ({
-                            value: item.id,
-                            label: item.memberName,
-                          }))}
-                          onChange={(selectedOptions) =>
-                            formik.setFieldValue(
-                              "memberName",
-                              selectedOptions,
-                            )
-                          }
-                          onBlur={formik.handleBlur}
-                          value={formik.values.memberName}
-                          name="memberName"
-                        />
-                        {formik.touched.memberName &&
-                          formik.errors.memberName && (
-                            <div class="invalid-feedback">
-                              {formik.errors.memberName}
-                            </div>
-                          )}
+                            options={members.map((item) => ({
+                              value: item.id,
+                              label: item.memberName,
+                            }))}
+                            onChange={(selectedOptions) =>
+                              formik.setFieldValue(
+                                "memberName",
+                                selectedOptions
+                              )
+                            }
+                            onBlur={formik.handleBlur}
+                            value={formik.values.memberName}
+                            name="memberName"
+                          />
+                          {formik.touched.memberName &&
+                            formik.errors.memberName && (
+                              <div class="invalid-feedback">
+                                {formik.errors.memberName}
+                              </div>
+                            )}
                         </div>
                       </div>
                     </div>

@@ -52,3 +52,30 @@ export const searchAttendanceReportByPartyProvince = async (searchParams) => {
     throw error;
   }
 };
+
+export const createSingleMemberAttendance = async (data) => {
+  // const { startDay, endDay, sessionId, sittingId, memberId, attendanceStatus } =
+  //   data;
+
+  const filteredSearchParams = Object.fromEntries(
+    Object.entries(data).filter(([_, value]) => value !== "")
+  );
+  try {
+    const queryString = new URLSearchParams(filteredSearchParams).toString();
+    const response = await axiosClientMMS.post(
+      `/manageSession/markAttendanceToLeave?${queryString}`
+
+      // {
+      //   params: filteredSearchParams,
+      //   // headers: {
+      //   //   Authorization: `Bearer ${token}`,
+      //   // },
+      // }
+    );
+
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};

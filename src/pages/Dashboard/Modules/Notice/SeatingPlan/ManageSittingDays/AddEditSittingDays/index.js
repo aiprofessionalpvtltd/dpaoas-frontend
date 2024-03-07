@@ -323,8 +323,7 @@ function NMSAddEditSittingDaysForm() {
       sittingDate: "",
       sittingStartTime: "",
       sittingEndTime: "",
-      // breakStartTime: "",
-      // breakEndTime: "",
+      privateMemberDay: "",
       committeeWhole: false,
       isAdjourned: false,
       committeeStartTime: "",
@@ -818,7 +817,7 @@ function NMSAddEditSittingDaysForm() {
                 </div>
                 {renderBreakForms()}
                 <div class="row">
-                  <div class="col-6">
+                  <div class="col-4">
                     <div class="mb-3">
                       <div class="form-check">
                         <input
@@ -839,7 +838,7 @@ function NMSAddEditSittingDaysForm() {
                           }
                         />
                         <label class="form-check-label" for="flexCheckDefault">
-                          Is Session Adjourned
+                          Is Session Prorogued
                         </label>
                         {formik.touched.isAdjourned &&
                           formik.errors.isAdjourned && (
@@ -850,8 +849,39 @@ function NMSAddEditSittingDaysForm() {
                       </div>
                     </div>
                   </div>
-
-                  <div class="col-6">
+                  <div class="col-4">
+                    <div class="mb-3">
+                      <div class="form-check">
+                        <input
+                          class={`form-check-input ${
+                            formik.touched.privateMemberDay &&
+                            formik.errors.privateMemberDay
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                          type="checkbox"
+                          id="flexCheckDefault"
+                          checked={formik.values.privateMemberDay}
+                          onChange={() =>
+                            formik.setFieldValue(
+                              "privateMemberDay",
+                              !formik.values.privateMemberDay
+                            )
+                          }
+                        />
+                        <label class="form-check-label" for="flexCheckDefault">
+                          Is Private Member Day
+                        </label>
+                        {formik.touched.privateMemberDay &&
+                          formik.errors.privateMemberDay && (
+                            <div className="invalid-feedback">
+                              {formik.errors.privateMemberDay}
+                            </div>
+                          )}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-4">
                     <div class="mb-3">
                       <div class="form-check">
                         <input
