@@ -53,7 +53,7 @@ const validationSchema = Yup.object({
 
 function NoticeQuestionDetail() {
   const location = useLocation();
-  const { members } = useContext(AuthContext);
+  const { members, sessions } = useContext(AuthContext);
   const [filesData, setFilesData] = useState();
   const [currentPage, setCurrentPage] = useState(0);
   const pageSize = 4;
@@ -63,11 +63,9 @@ function NoticeQuestionDetail() {
     setCurrentPage(page);
   };
 
-  console.log("memeber", location?.state?.question?.member?.id);
-  console.log("SESSIONID", location?.state?.question?.session?.id);
   const formik = useFormik({
     initialValues: {
-      sessionNo: location?.state?.question?.session?.sessionName,
+      sessionNo: location?.state?.question?.session?.fkSessionId,
       noticeOfficeDiaryNo:
         location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryNo,
       noticeOfficeDiaryDate: moment(
@@ -236,7 +234,7 @@ function NoticeQuestionDetail() {
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Session No</label>
-                      {/* <select
+                      <select
                         class="form-select"
                         id="sessionNo"
                         onChange={formik.handleChange}
@@ -251,8 +249,8 @@ function NoticeQuestionDetail() {
                               {item?.sessionName}
                             </option>
                           ))}
-                      </select> */}
-                      <input
+                      </select>
+                      {/* <input
                         readOnly={true}
                         placeholder={formik.values.sessionNo}
                         type="text"
@@ -260,7 +258,7 @@ function NoticeQuestionDetail() {
                         id="sessionNo"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                      />
+                      /> */}
                     </div>
                   </div>
                   <div class="col">
