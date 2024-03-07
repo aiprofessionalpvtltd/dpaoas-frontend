@@ -364,7 +364,42 @@ export const DeleteHeading = async (id) => {
   }
 };
 
-<<<<<<< HEAD
+
+// Create Case
+export const createCase = async (id, data) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClientMMS.post(`/cases/createCase/${id}`, data, {
+      headers: {
+        accept: "multipart/form-data",
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+export const getAllCasesByFileId = async (id, currentPage, pageSize) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/cases/getCasesByFileId/${id}?currentPage=${currentPage}&pageSize=${pageSize}`,
+      )
+      // {
+      //   headers: {
+      //     accept: "application/json",
+      //     "Content-Type": "multipart/form-data",
+      //   },
+      // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
 //Fresh Recipt
 export const createFreshReceipt = async (data) => {
   try {
@@ -378,71 +413,17 @@ export const createFreshReceipt = async (data) => {
           "Content-Type": "multipart/form-data",
         },
       });
-=======
+    } catch (error) {
+      console.error("Error fetching API endpoint:", error);
+      throw error;
+    }
+  };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Create Case
-export const createCase = async (id, data) => {
-  try {
-    //   const token = getAuthToken();
-    const response = await axiosClientMMS.post(`/cases/createCase/${id}`, data, {
-      headers: {
-        accept: "multipart/form-data",
-        "Content-Type": "multipart/form-data",
-      },
-    });
->>>>>>> develop
-    return response?.data;
-  } catch (error) {
-    console.error("Error fetching API endpoint:", error);
-    throw error;
-  }
-};
-
-<<<<<<< HEAD
 export const getAllFreshReceipt = async (currentPage, pageSize) => {
   try {
     //   const token = getAuthToken();
     const response = await axiosClientMMS.get(
       `/freshReceipt/?currentPage=${currentPage}&pageSize=${pageSize}`)
-=======
-
-export const getAllCasesByFileId = async (id, currentPage, pageSize) => {
-  try {
-    //   const token = getAuthToken();
-    const response = await axiosClientMMS.get(
-      `/cases/getCasesByFileId/${id}?currentPage=${currentPage}&pageSize=${pageSize}`,
-      )
->>>>>>> develop
       // {
       //   headers: {
       //     accept: "application/json",
@@ -454,8 +435,9 @@ export const getAllCasesByFileId = async (id, currentPage, pageSize) => {
     console.error("Error fetching API endpoint:", error);
     throw error;
   }
-<<<<<<< HEAD
 };
+
+
 
 export const getFreshReceiptById = async (id) => {
   try {
@@ -529,6 +511,4 @@ export const DeleteFreahReceptImage = async (id) => {
     throw error;
   }
 };
-=======
-};
->>>>>>> develop
+
