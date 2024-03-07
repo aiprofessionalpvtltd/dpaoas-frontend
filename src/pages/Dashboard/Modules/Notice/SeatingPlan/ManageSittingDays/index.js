@@ -238,6 +238,20 @@ function ManageSittingsDays() {
                         </select>
                       </div>
                     </div>
+                    <div className="col-5"></div>
+                    <div className="col-4">
+                      <div className="mb-3">
+                        <button
+                          class="btn btn-primary float-end"
+                          type="button"
+                          onClick={() =>
+                            navigate("/notice/manage/view-prorogued-sessions")
+                          }
+                        >
+                          View Prorogued Sessions
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
 

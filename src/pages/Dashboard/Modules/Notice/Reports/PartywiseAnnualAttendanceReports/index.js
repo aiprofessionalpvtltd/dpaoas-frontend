@@ -21,7 +21,7 @@ import { searchAttendanceReportByPartyProvince } from "../../../../../../api/API
 
 const validationSchema = Yup.object({
   sessionId: Yup.string().required("Session is required"),
-  sittingDate: Yup.string().required("Sitting date is required"),
+  // sittingDate: Yup.string().required("Sitting date is required"),
 });
 const PartywiseAttendenceReports = () => {
   const { sessions, members } = useContext(AuthContext);

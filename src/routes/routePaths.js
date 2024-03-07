@@ -138,6 +138,8 @@ import CMSSpeechOnDemandDashboard from "../pages/Dashboard/Modules/Notice/Speech
 import CMSResearchServicesDashboard from "../pages/Dashboard/Modules/Notice/ResearchServices";
 import CMSAddEditSpeechOnDemand from "../pages/Dashboard/Modules/Notice/SpeechOnDemand/AddEditSpeechOnDemand";
 import CMSAddEditResearchService from "../pages/Dashboard/Modules/Notice/ResearchServices/AddEditResearchService";
+import NMSMemberSessionAttendance from "../pages/Dashboard/Modules/Notice/SeatingPlan/MemberSessionAttendance";
+import NMSProroguredSessions from "../pages/Dashboard/Modules/Notice/SeatingPlan/ProroguredSessions";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -209,6 +211,15 @@ export const ProtectedRoutes = [
   { path: "/notice/manage/sessions/addedit", element: <SessionsAddEditForm /> },
 
   { path: "/notice/manage", element: <NoticeDashboard /> },
+  {
+    path: "/notice/manage/single-member-session-attendance",
+    element: <NMSMemberSessionAttendance />,
+  },
+  {
+    path: "/notice/manage/view-prorogued-sessions",
+    element: <NMSProroguredSessions />,
+  },
+
   // {
   //   path: "/notice/manage/manage-session-days",
   //   element: <ManageSessionDays />,

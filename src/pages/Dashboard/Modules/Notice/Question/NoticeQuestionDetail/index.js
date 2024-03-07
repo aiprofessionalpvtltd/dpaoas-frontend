@@ -64,7 +64,7 @@ function NoticeQuestionDetail() {
   };
 
   console.log("memeber", location?.state?.question?.member?.id);
-  console.log("SESSIONID", location?.state?.question?.session?.id);
+  console.log("SESSIONID", location?.state?.question?.session);
   const formik = useFormik({
     initialValues: {
       sessionNo: location?.state?.question?.session?.sessionName,

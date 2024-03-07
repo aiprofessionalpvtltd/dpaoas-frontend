@@ -257,6 +257,11 @@ export const NoticeSidebarItems = [
         target: "blank",
         icon: faChair,
       },
+      {
+        itemName: "Session Attendance",
+        link: "/notice/manage/single-member-session-attendance",
+        icon: faChair,
+      },
     ],
   },
   {
