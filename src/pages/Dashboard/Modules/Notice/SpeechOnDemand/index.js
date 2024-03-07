@@ -3,8 +3,17 @@ import { Layout } from "../../../../../components/Layout";
 import Header from "../../../../../components/Header";
 import { NoticeSidebarItems } from "../../../../../utils/sideBarItems";
 import CustomTable from "../../../../../components/CustomComponents/CustomTable";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../utils/ToastAlert";
+import {
+  DeleteSpeachOnDemand,
+  getAllSpeachOnDemand,
+} from "../../../../../api/APIs/Services/Notice.service";
+import moment from "moment";
 
 function CMSSpeechOnDemandDashboard() {
   const navigate = useNavigate();
@@ -19,13 +28,46 @@ function CMSSpeechOnDemandDashboard() {
   const transformSpeechOnDemandData = (apiData) => {
     return apiData.map((item, index) => ({
       SR: item?.id,
-      sessionno: `${item?.requestUser?.employee?.firstName}${item?.requestUser?.employee?.lastName}`,
-      fromdate: `${item?.requestBranch?.complaintTypeName}`,
-      todate: `${item?.tonerModel?.tonerModel}`,
-      justification: item?.quantity,
-      status: item?.status,
+      sessionno: item?.session?.sessionName,
+      fromdate: moment(item?.date_from).format("DD/MM/YYYY"),
+      todate: moment(item?.date_to).format("DD/MM/YYYY"),
+      deliverOn: item?.delivery_on,
+      whatsappnumber: item?.whatsapp_number,
+      justification: item?.justification,
+      status: item?.isActive,
     }));
   };
+
+  const getAllSpeachOnDemandAPi = useCallback(async () => {
+    try {
+      const response = await getAllSpeachOnDemand(currentPage, pageSize);
+      if (response?.success) {
+        setCount(response?.data?.count);
+        const trensferData = transformSpeechOnDemandData(
+          response?.data?.speechOnDemand
+        );
+        setSpeechOnDemand(trensferData);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  }, [currentPage, pageSize, setCount, setSpeechOnDemand]);
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await DeleteSpeachOnDemand(id);
+      if (response?.success) {
+        showSuccessMessage(response.message);
+        getAllSpeachOnDemandAPi();
+      }
+    } catch (error) {
+      showErrorMessage(error.response.data.message);
+    }
+  };
+
+  useEffect(() => {
+    getAllSpeachOnDemandAPi();
+  }, [currentPage]);
   return (
     <Layout
       module={true}
@@ -43,7 +85,7 @@ function CMSSpeechOnDemandDashboard() {
           <CustomTable
             block={false}
             data={speechOnDemand}
-            addBtnText={"Add Speech On Demand"}
+            addBtnText={"Create Speech On Demand"}
             tableTitle="Speech On Demand"
             handlePageChange={handlePageChange}
             currentPage={currentPage}
@@ -52,8 +94,12 @@ function CMSSpeechOnDemandDashboard() {
             headertitletextColor={"#FFF"}
             totalCount={count}
             handleAdd={() => navigate("/notice/speech-on-demand/addedit")}
-            // handleEdit={(item) => hendleEdit(item.SR)}
-            // handleDelete={(item) => handleDelete(item.SR)}
+            handleEdit={(item) =>
+              navigate("/notice/speech-on-demand/addedit", {
+                state: { id: item?.SR },
+              })
+            }
+            handleDelete={(item) => handleDelete(item.SR)}
           />
         </div>
       </div>

@@ -296,8 +296,8 @@ function SearchQuestion() {
                           <label className="form-label">Member Name</label>
                           <Select
                             options={members.map((item) => ({
-                              value: item?.id,
-                              label: item?.memberName,
+                              value: item.id,
+                              label: item.memberName,
                             }))}
                             onChange={(selectedOptions) =>
                               formik.setFieldValue(
