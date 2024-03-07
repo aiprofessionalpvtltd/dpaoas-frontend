@@ -138,6 +138,11 @@ import CMSSpeechOnDemandDashboard from "../pages/Dashboard/Modules/Notice/Speech
 import CMSResearchServicesDashboard from "../pages/Dashboard/Modules/Notice/ResearchServices";
 import CMSAddEditSpeechOnDemand from "../pages/Dashboard/Modules/Notice/SpeechOnDemand/AddEditSpeechOnDemand";
 import CMSAddEditResearchService from "../pages/Dashboard/Modules/Notice/ResearchServices/AddEditResearchService";
+import FileCases from "../pages/Dashboard/Modules/EFiling/FIleRegister/Files/FileCases";
+import AddEditFileCase from "../pages/Dashboard/Modules/EFiling/FIleRegister/Files/FileCases/AddEditFileCase";
+import { Diary } from "../pages/Dashboard/Modules/EFiling/Diary";
+import FreshReceipt from "../pages/Dashboard/Modules/EFiling/FreshReceipt";
+import AddEditFR from "../pages/Dashboard/Modules/EFiling/FreshReceipt/AddEditFR";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -459,6 +464,10 @@ export const ProtectedRoutes = [
   // { path: "/efiling/dashboard/files", element: <Files /> },
 
   {
+    path: "/efiling/dashboard/diary",
+    element: <Diary />,
+  },
+  {
     path: "/efiling/dashboard/file-register-list",
     element: <ListFileRegister />,
   },
@@ -474,7 +483,22 @@ export const ProtectedRoutes = [
     path: "/efiling/dashboard/file-register-list/files-list/addedit-file",
     element: <AddEditFiles />,
   },
-
+  {
+    path: "/efiling/dashboard/file-register-list/files-list/cases",
+    element: <FileCases />,
+  },
+  {
+    path: "/efiling/dashboard/fresh-receipt",
+    element: <FreshReceipt />,
+  },
+  {
+    path: "/efiling/dashboard/fresh-receipt/addedit",
+    element: <AddEditFR />,
+  },
+  {
+    path: "/efiling/dashboard/file-register-list/files-list/addedit-case",
+    element: <AddEditFileCase />,
+  },
   {
     path: "/efiling/dashboard/file-heading-list",
     element: <FileHeadingList />,

@@ -14,7 +14,7 @@ import { useLocation } from "react-router-dom";
 function ListFiles() {
     const navigate = useNavigate()
     const location = useLocation()
-    const [currentPage, setCurrentPage] = useState(0);
+    const [currentPage, setCurrentPage] = useState(null);
     const [count, setCount] = useState(1);
     const pageSize = 5; // Set your desired page size
     const registerId = getRegisterID()
@@ -40,18 +40,20 @@ function ListFiles() {
     const transformFilesHeadingdata = (apiData) => {
         return apiData.map((item) => ({
           id: item?.id,
+          HeadingNumber: item?.mainHeading?.mainHeadingNumber,
+          mainHeading: item?.mainHeading?.mainHeading,
           fileNumber: item?.fileNumber,
           fileSubject: item?.fileSubject,
-          mainHeading: item?.mainHeading?.mainHeading,
         }));
       };
       const getAllFilesAPi = useCallback(async () => {
         try {
-            const response = await getFileByRegisterById(registerId,currentPage, pageSize)
+            const response = await getFileByRegisterById(registerId,1)
             if (response.success) {
               showSuccessMessage(response?.message)
               setCount(response?.data?.count)
               const transformedData = transformFilesHeadingdata(response?.data?.files)
+              console.log(transformedData, "transformedData");
               setFileData(transformedData)
             }
           } catch (error) {
@@ -61,7 +63,54 @@ function ListFiles() {
 
       useEffect(() => {
         getAllFilesAPi()
-      },[getAllFilesAPi])
+      },[currentPage]);
+
+      const renderPagination = () => {
+        const uniqueHeadingNumbers = [...new Set(fileData.map(item => item.HeadingNumber))];
+        const totalPages = Math.ceil(fileData.length / pageSize);
+        return (
+          <nav aria-label="Page navigation">
+            <ul className="pagination float-end mt-2">
+              <li className={`page-item ${currentPage === 0 ? "disabled" : ""}`}>
+                <button
+                  className="page-link"
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 0}
+                >
+                  Previous
+                </button>
+              </li>
+              {uniqueHeadingNumbers.map((headingNumber, index) => (
+          <li
+            key={index}
+            className={`page-item ${currentPage === index ? "active" : ""}`}
+          >
+            <button
+              className="page-link"
+              onClick={() => handlePageChange(index)}
+            >
+              {headingNumber}
+            </button>
+          </li>
+        ))}
+              <li
+                className={`page-item ${
+                  currentPage >= totalPages - 1 ? "disabled" : ""
+                }`}
+              >
+                <button
+                  className="page-link"
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages - 1}
+                >
+                  Next
+                </button>
+              </li>
+            </ul>
+          </nav>
+        );
+      };
+
     return (
         <Layout module={true} sidebarItems={EfilingSideBarItem}>
             <Header dashboardLink={"/efiling/dashboard"} addLink1={"/efiling/dashboard/file-register-list"} title1={"File Register"} title2={"Register Index"} addLink2={"/efiling/dashboard/file-register-list/files-list"} width={"500px"} />
@@ -90,7 +139,7 @@ function ListFiles() {
                 <div class="col-12">
                     <CustomTable
                         // hidebtn1={true}
-                        ActionHide={true}
+                        ActionHide={false}
                         hideBtn={false}
                         addBtnText={"Create File"}
                         data={fileData}
@@ -98,16 +147,16 @@ function ListFiles() {
                         addBtnText2="Create File"
                         headertitlebgColor={"#666"}
                         headertitletextColor={"#FFF"}
-                        handlePageChange={handlePageChange}
-                        currentPage={currentPage}
                         handleAdd={() => navigate("/efiling/dashboard/file-register-list/files-list/addedit-file")}
-                        pageSize={pageSize}
-                        totalCount={count}
                         singleDataCard={true}
                         hideDeleteIcon={true}
                         showEditIcon={true}
-
+                        showView={true}
+                        hidePagination={true}
+                        handleView={(item) => navigate("/efiling/dashboard/file-register-list/files-list/cases", {state:item})}
                     />
+
+                    {fileData.length > 0 && renderPagination()}
                 </div>
             </div>
         </Layout>

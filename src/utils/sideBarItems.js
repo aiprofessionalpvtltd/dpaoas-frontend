@@ -19,6 +19,12 @@ import {
   faChair,
   faFileLines,
   faSquarePollHorizontal,
+  faBook,
+  faHeading,
+  faBookOpen,
+  faLaptopFile,
+  faReceipt,
+  faPeopleGroup,
 } from "@fortawesome/free-solid-svg-icons";
 
 // LMS Sidebar
@@ -719,33 +725,33 @@ export const EfilingSideBarItem = [
     icon: faHome,
   },
   {
-    itemName: "FIle Registers",
-    link: "/efiling/dashboard/file-register-list",
-    icon: faFileAlt,
+    itemName: "Diary",
+    link: "/efiling/dashboard/diary",
+    icon: faBook,
   },
   {
     itemName: "File Headings",
     link: "/efiling/dashboard/file-heading-list",
-    icon: faFileAlt,
+    icon: faHeading,
+  },
+  {
+    itemName: "FIle Registers",
+    link: "/efiling/dashboard/file-register-list",
+    icon: faBookOpen,
   },
   {
     itemName: "Main File",
     link: "",
-    icon: faFileAlt,
+    icon: faLaptopFile,
   },
   {
     itemName: "Fresh Recipt",
-    link: "",
-    icon: faFileAlt,
-  },
-  {
-    itemName: "Notification",
-    link: "",
-    icon: faFileAlt,
+    link: "/efiling/dashboard/fresh-receipt",
+    icon: faReceipt,
   },
   {
     itemName: "Team information",
     link: "",
-    icon: faFileAlt,
+    icon: faPeopleGroup,
   },
 ];
