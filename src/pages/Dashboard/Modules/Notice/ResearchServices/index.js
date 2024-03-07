@@ -80,7 +80,8 @@ function CMSResearchServicesDashboard() {
           <CustomTable
             block={false}
             data={researchService}
-            addBtnText={"Add Research Service"}
+            // addBtnText={"Add Research Service"}
+            hidebtn1={true}
             tableTitle="Research Services"
             handlePageChange={handlePageChange}
             currentPage={currentPage}
@@ -88,7 +89,7 @@ function CMSResearchServicesDashboard() {
             headertitlebgColor={"#666"}
             headertitletextColor={"#FFF"}
             totalCount={count}
-            handleAdd={() => navigate("/notice/research-services/addedit")}
+            // handleAdd={() => navigate("/notice/research-services/addedit")}
             handleEdit={(item) =>
               navigate("/notice/research-services/addedit", {
                 state: { id: item?.SR },

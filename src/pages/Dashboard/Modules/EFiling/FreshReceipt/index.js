@@ -38,7 +38,7 @@ function FileCases() {
         try {
             const response = await getAllFreshReceipt(currentPage, pageSize)
             if (response.success) {
-              showSuccessMessage(response?.message)
+            //   showSuccessMessage(response?.message)
               setCount(response?.data?.count)
               const transformedData = transformFreshReceiptdata(response?.data?.freshReceipts)
               setFileData(transformedData)
