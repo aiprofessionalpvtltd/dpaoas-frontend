@@ -104,7 +104,7 @@ function SentMotion() {
       // fileNumber: ,
       fkSessionId: values?.fromSession,
       noticeOfficeDiaryNo: values?.motionDiaryNo,
-      fkMemberId: values?.memberName,
+      fkMemberId: values?.memberName?.value,
       fkMinistryId: "",
       motionId: values?.motionID,
       sessionStartRange: values?.fromSession,
@@ -233,7 +233,6 @@ function SentMotion() {
                             value: item.id,
                             label: item.memberName,
                           }))}
-                          isMulti
                           onChange={(selectedOptions) =>
                             formik.setFieldValue(
                               "memberName",

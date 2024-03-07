@@ -90,7 +90,7 @@ function SearchQuestion() {
       const searchParams = {
         fromSessionNo: values?.fromSession,
         toSessionNo: values?.toSession,
-        memberName: values?.memberName,
+        memberName: values?.memberName?.value,
         questionCategory: values?.category,
         keyword: values?.keyword,
         questionID: values?.questionID,
@@ -298,7 +298,6 @@ function SearchQuestion() {
                             value: item.id,
                             label: item.memberName,
                           }))}
-                          isMulti
                           onChange={(selectedOptions) =>
                             formik.setFieldValue(
                               "memberName",

@@ -82,7 +82,7 @@ function NewQuestion() {
     formData.append("noticeOfficeDiaryTime", values?.noticeOfficeDiaryTime);
     formData.append("questionCategory", values.questionCategory);
     formData.append("fkQuestionStatus", 12);
-    formData.append("fkMemberId", values.fkMemberId);
+    formData.append("fkMemberId", values.fkMemberId?.value);
     // formData.append("initiatedByBranch", values.initiatedByBranch);
     formData.append("initiatedByBranch", 1);
     // formData.append("sentToBranch", values.sentToBranch);
@@ -250,17 +250,14 @@ function NewQuestion() {
                             value: item.id,
                             label: item.memberName,
                           }))}
-                          isMulti
-                          onChange={(selectedOptions) =>
-                            formik.setFieldValue(
-                              "fkMemberId",
-                              selectedOptions,
-                            )
+                          onChange={(selectedOption) =>
+                            formik.setFieldValue("fkMemberId", selectedOption)
                           }
                           onBlur={formik.handleBlur}
                           value={formik.values.fkMemberId}
                           name="fkMemberId"
                         />
+
                         {formik.touched.fkMemberId &&
                           formik.errors.fkMemberId && (
                             <div class="invalid-feedback">

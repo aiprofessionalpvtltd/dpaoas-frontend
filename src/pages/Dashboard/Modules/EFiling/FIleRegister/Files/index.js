@@ -5,10 +5,11 @@ import { Layout } from '../../../../../../components/Layout';
 import { EfilingSideBarItem } from '../../../../../../utils/sideBarItems';
 import CustomTable from '../../../../../../components/CustomComponents/CustomTable';
 import Header from '../../../../../../components/Header';
-import { getFileByRegisterById } from '../../../../../../api/APIs/Services/efiling.service';
+import { getAllFileHeading, getFileByRegisterById } from '../../../../../../api/APIs/Services/efiling.service';
 import { getRegisterID } from '../../../../../../api/Auth';
 import { showErrorMessage, showSuccessMessage } from '../../../../../../utils/ToastAlert';
 import { useLocation } from "react-router-dom";
+import Select from "react-select";
 
 
 function ListFiles() {
@@ -19,23 +20,11 @@ function ListFiles() {
     const pageSize = 5; // Set your desired page size
     const registerId = getRegisterID()
     const [fileData, setFileData] = useState([])
+    const [headings, setHeadings] = useState(null);
 
     const handlePageChange = (page) => {
-        // Update currentPage when a page link is clicked
         setCurrentPage(page);
     };
-    // const fileData = [
-    //     {
-    //         FileNo: "15",
-    //         Subject: "This is Heading",
-    //         Heading: "5"
-    //     },
-    //     {
-    //         FileNo: "15",
-    //         Subject: "This is Heading",
-    //         Heading: "5"
-    //     }
-    // ]
 
     const transformFilesHeadingdata = (apiData) => {
         return apiData.map((item) => ({
@@ -46,70 +35,97 @@ function ListFiles() {
           fileSubject: item?.fileSubject,
         }));
       };
-      const getAllFilesAPi = useCallback(async () => {
+
+      const getAllFilesAPi = async () => {
         try {
-            const response = await getFileByRegisterById(registerId,1)
+            const response = await getFileByRegisterById(registerId,currentPage)
             if (response.success) {
-              showSuccessMessage(response?.message)
               setCount(response?.data?.count)
               const transformedData = transformFilesHeadingdata(response?.data?.files)
-              console.log(transformedData, "transformedData");
               setFileData(transformedData)
             }
           } catch (error) {
-            showErrorMessage(error?.response?.data?.message);
+            // showErrorMessage(error?.response?.data?.message);
           }
-      }, [currentPage, pageSize, setCount, setFileData]);
+      }
+
+      const transformFilesHeadings = (apiData) => {
+        console.log(apiData);
+        return apiData.map((item) => ({
+          HeadingNumber: item?.mainHeadingNumber,
+        }));
+      };
+
+      const getAllFileHeadingApi = useCallback(async () => {
+        try {
+            const response = await getAllFileHeading(0, 1000)
+            if (response.success) {
+            //   showSuccessMessage(response?.message)
+              setCount(response?.data?.count)
+              const transformedData = transformFilesHeadings(response?.data?.mainHeadings);
+              setCurrentPage(transformedData[0].HeadingNumber);
+              setHeadings(transformedData)
+            }
+          } catch (error) {
+            // showErrorMessage(error?.response?.data?.message);
+          }
+      }, [currentPage]);
 
       useEffect(() => {
-        getAllFilesAPi()
+        getAllFilesAPi();
       },[currentPage]);
 
-      const renderPagination = () => {
-        const uniqueHeadingNumbers = [...new Set(fileData.map(item => item.HeadingNumber))];
-        const totalPages = Math.ceil(fileData.length / pageSize);
-        return (
-          <nav aria-label="Page navigation">
-            <ul className="pagination float-end mt-2">
-              <li className={`page-item ${currentPage === 0 ? "disabled" : ""}`}>
-                <button
-                  className="page-link"
-                  onClick={() => handlePageChange(currentPage - 1)}
-                  disabled={currentPage === 0}
-                >
-                  Previous
-                </button>
-              </li>
-              {uniqueHeadingNumbers.map((headingNumber, index) => (
-          <li
-            key={index}
-            className={`page-item ${currentPage === index ? "active" : ""}`}
-          >
-            <button
-              className="page-link"
-              onClick={() => handlePageChange(index)}
-            >
-              {headingNumber}
-            </button>
-          </li>
-        ))}
-              <li
-                className={`page-item ${
-                  currentPage >= totalPages - 1 ? "disabled" : ""
-                }`}
-              >
-                <button
-                  className="page-link"
-                  onClick={() => handlePageChange(currentPage + 1)}
-                  disabled={currentPage === totalPages - 1}
-                >
-                  Next
-                </button>
-              </li>
-            </ul>
-          </nav>
-        );
-      };
+      useEffect(() => {
+        getAllFileHeadingApi();
+      }, [])
+    
+
+//       const renderPagination = () => {
+//         const uniqueHeadingNumbers = [...new Set(headings?.map(item => item.HeadingNumber))];
+//         const totalPages = Math.ceil(fileData.length / pageSize);
+//         return (
+//           <nav aria-label="Page navigation">
+//     <ul className="pagination float-end mt-2">
+//         {/* <li className={`page-item ${currentPage === 0 ? "disabled" : ""}`}>
+//             <button
+//                 className="page-link"
+//                 onClick={() => handlePageChange("prev")}
+//                 disabled={currentPage === 0}
+//             >
+//                 Previous
+//             </button>
+//         </li> */}
+//         {uniqueHeadingNumbers.map((headingNumber, index) => (
+//             <li
+//                 key={index}
+//                 className={`page-item ${currentPage === headingNumber ? "active" : ""}`}
+//             >
+//                 <button
+//                     className="page-link"
+//                     onClick={() => handlePageChange(headingNumber)}
+//                 >
+//                     {headingNumber}
+//                 </button>
+//             </li>
+//         ))}
+//         {/* <li
+//             className={`page-item ${
+//                 currentPage >= totalPages - 1 ? "disabled" : ""
+//             }`}
+//         >
+//             <button
+//                 className="page-link"
+//                 onClick={() => handlePageChange("next")}
+//                 disabled={currentPage >= totalPages - 1}
+//             >
+//                 Next
+//             </button>
+//         </li> */}
+//     </ul>
+// </nav>
+
+//         );
+//       };
 
     return (
         <Layout module={true} sidebarItems={EfilingSideBarItem}>
@@ -130,8 +146,33 @@ function ListFiles() {
               INDEX<br/>of<br/>Main File Headings
             </h1>
                 </div>
+
+                <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10 }}>
+                <div class="col-2">
+                  <div class="mb-3">
+                    <label class="form-label">Heading Number</label>
+                    <select
+                      class="form-select"
+                      placeholder={"Select Heading Number"}
+                      onChange={(event) => setCurrentPage(event.target.value)}
+                      id="headings"
+                    >
+                      <option selected disabled hidden>
+                        Select
+                      </option>
+                      {headings &&
+                        headings.map((item) => (
+                          <option value={item.HeadingNumber}>
+                            {item.HeadingNumber}
+                          </option>
+                        ))}
+                    </select>
+                  </div>
+                </div>
+              
+                  <p style={{textAlign: "right", marginRight: "10px"}}>Calendar Year: 20</p>
+                </div>
             
-            <p style={{textAlign: "right", marginRight: "10px"}}>Calendar Year: 20</p>
             </div>
 
             
@@ -156,7 +197,7 @@ function ListFiles() {
                         handleView={(item) => navigate("/efiling/dashboard/file-register-list/files-list/cases", {state:item})}
                     />
 
-                    {fileData.length > 0 && renderPagination()}
+                    {/* {fileData.length > 0 && renderPagination()} */}
                 </div>
             </div>
         </Layout>

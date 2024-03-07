@@ -37,12 +37,12 @@ function ListFileRegister() {
         try {
             const response = await getAllFileRegister(currentPage, pageSize)
             if (response.success) {
-                showSuccessMessage(response?.message)
+                // showSuccessMessage(response?.message)
                 const transferData = transformFilesRegisterdata(response?.data?.fileRegisters)
                 setRegisterData(transferData)
             }
         } catch (error) {
-            showErrorMessage(error?.response?.data?.message);
+            // showErrorMessage(error?.response?.data?.message);
         }
     }
 

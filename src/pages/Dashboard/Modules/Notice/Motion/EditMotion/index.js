@@ -420,13 +420,13 @@ function EditMotion() {
                             value: item.id,
                             label: item.memberName,
                           }))}
-                          isMulti
                           onChange={(selectedOptions) =>
-                            formik.setFieldValue("mover", selectedOptions)
+                            formik.setFieldValue("mover", selectedOptions?.value)
                           }
                           onBlur={formik.handleBlur}
                           value={formik.values.mover}
                           name="mover"
+                          id="mover"
                         />
                       </div>
                     </div>
