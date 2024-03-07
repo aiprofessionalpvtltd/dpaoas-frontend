@@ -363,3 +363,71 @@ export const DeleteHeading = async (id) => {
     throw error;
   }
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Create Case
+export const createCase = async (id, data) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClientMMS.post(`/cases/createCase/${id}`, data, {
+      headers: {
+        accept: "multipart/form-data",
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+
+export const getAllCasesByFileId = async (id, currentPage, pageSize) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/cases/getCasesByFileId/${id}?currentPage=${currentPage}&pageSize=${pageSize}`,
+      )
+      // {
+      //   headers: {
+      //     accept: "application/json",
+      //     "Content-Type": "multipart/form-data",
+      //   },
+      // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};

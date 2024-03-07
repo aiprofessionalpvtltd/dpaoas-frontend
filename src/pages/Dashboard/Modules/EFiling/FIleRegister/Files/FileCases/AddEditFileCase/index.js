@@ -1,26 +1,15 @@
-import React, { useContext, useEffect, useState } from "react";
-import { useFormik } from "formik";
-import * as Yup from "yup";
-import { AuthContext } from "../../../../../../../../api/AuthContext";
+import React, { useState } from "react";
 import { Layout } from "../../../../../../../../components/Layout";
 import { EfilingSideBarItem } from "../../../../../../../../utils/sideBarItems";
 import Header from "../../../../../../../../components/Header";
 import { ToastContainer } from "react-toastify";
 import { useLocation } from "react-router";
-import {
-  createFiles,
-  getAllYear,
-  geteHeadingNumberbyMainHeadingId,
-  geteHeadingbyBranchId,
-} from "../../../../../../../../api/APIs/Services/efiling.service";
-import {
-  showErrorMessage,
-  showSuccessMessage,
-} from "../../../../../../../../utils/ToastAlert";
+import { createCase } from "../../../../../../../../api/APIs/Services/efiling.service";
 import { useNavigate } from "react-router-dom";
 import { Editor } from "../../../../../../../../components/CustomComponents/Editor";
 
 function AddEditFileCase() {
+  const navigate = useNavigate();
   const location = useLocation();
   const [selectedTab, setSelectedTab] = useState("Noting");
   const [notingData, setNotingData] = useState({
@@ -58,6 +47,50 @@ function AddEditFileCase() {
       attachedFiles: fileList,
     }));
   };
+
+  const hendleCreateFileCase = async () => {
+    try {
+      const formData = createFormData();
+      const response = await createCase(location.state?.id, formData);
+      if (response.success) {
+        setTimeout(() => {
+          navigate("/efiling/dashboard/file-register-list/files-list/cases");
+        }, 1000);
+      }
+    } catch (error) {
+      console.error("Error creating case:", error);
+    }
+  };
+
+  const createFormData = () => {
+    const formData = new FormData();
+    formData.append("cases[0][Note][description]", notingData.description);
+    formData.append(
+      "cases[0][Correspondence][description]",
+      correspondenceData.description
+    );
+    formData.append("cases[0][Sanction][description]", sanction.description);
+    formData.append("cases[0][Objection][description]", objection.description);
+    formData.append("cases[0][Letter][description]", letter.description);
+
+    notingData.attachedFiles.forEach((file, index) => {
+      formData.append(`cases[0][Note][freshReceipt][${index}]`, file);
+    });
+    sanction.attachedFiles.forEach((file, index) => {
+      formData.append(`cases[0][Sanction][freshReceipt][${index}]`, file);
+    });
+    letter.attachedFiles.forEach((file, index) => {
+      formData.append(`cases[0][Letter][freshReceipt][${index}]`, file);
+    });
+    correspondenceData.attachedFiles.forEach((file, index) => {
+      formData.append(`cases[0][Correspondence][freshReceipt][${index}]`, file);
+    });
+
+    return formData;
+  };
+
+  console.log("Noting", notingData);
+  console.log("corres", correspondenceData);
 
   return (
     <Layout module={true} sidebarItems={EfilingSideBarItem}>
@@ -215,7 +248,12 @@ function AddEditFileCase() {
                   <section class="mb-5">
                     <Editor
                       title={"Description"}
-                      onChange={(content) => setNotingData((prev) => ({...prev, description: content})) }
+                      onChange={(content) =>
+                        setNotingData((prev) => ({
+                          ...prev,
+                          description: content,
+                        }))
+                      }
                       value={notingData.description}
                     />
                   </section>
@@ -223,7 +261,12 @@ function AddEditFileCase() {
                   <section>
                     <Editor
                       title={"Correspondence Description"}
-                      onChange={(content) => setCorrespondenceData((prev) => ({...prev, description: content})) }
+                      onChange={(content) =>
+                        setCorrespondenceData((prev) => ({
+                          ...prev,
+                          description: content,
+                        }))
+                      }
                       value={correspondenceData.description}
                     />
                     <div class="row">
@@ -243,7 +286,12 @@ function AddEditFileCase() {
                                   id="formFile"
                                   name="attachment"
                                   multiple
-                                  onChange={(event) => handleFileChange(event, setCorrespondenceData)}
+                                  onChange={(event) =>
+                                    handleFileChange(
+                                      event,
+                                      setCorrespondenceData
+                                    )
+                                  }
                                 />
                               </div>
                             </div>
@@ -256,7 +304,12 @@ function AddEditFileCase() {
                   <section>
                     <Editor
                       title={"Sanction Description"}
-                      onChange={(content) => setSanction((prev) => ({...prev, description: content})) }
+                      onChange={(content) =>
+                        setSanction((prev) => ({
+                          ...prev,
+                          description: content,
+                        }))
+                      }
                       value={sanction.description}
                     />
                     <div class="row">
@@ -276,7 +329,9 @@ function AddEditFileCase() {
                                   id="formFile"
                                   name="attachment"
                                   multiple
-                                  onChange={(event) => handleFileChange(event, setSanction)}
+                                  onChange={(event) =>
+                                    handleFileChange(event, setSanction)
+                                  }
                                 />
                               </div>
                             </div>
@@ -289,7 +344,12 @@ function AddEditFileCase() {
                   <section>
                     <Editor
                       title={"Objection Description"}
-                      onChange={(content) => setObjection((prev) => ({...prev, description: content})) }
+                      onChange={(content) =>
+                        setObjection((prev) => ({
+                          ...prev,
+                          description: content,
+                        }))
+                      }
                       value={objection.description}
                     />
                     <div class="row">
@@ -309,7 +369,9 @@ function AddEditFileCase() {
                                   id="formFile"
                                   name="attachment"
                                   multiple
-                                  onChange={(event) => handleFileChange(event, setObjection)}
+                                  onChange={(event) =>
+                                    handleFileChange(event, setObjection)
+                                  }
                                 />
                               </div>
                             </div>
@@ -322,7 +384,9 @@ function AddEditFileCase() {
                   <section>
                     <Editor
                       title={"Letter Description"}
-                      onChange={(content) => setLetter((prev) => ({...prev, description: content})) }
+                      onChange={(content) =>
+                        setLetter((prev) => ({ ...prev, description: content }))
+                      }
                       value={letter.description}
                     />
                     <div class="row">
@@ -342,7 +406,9 @@ function AddEditFileCase() {
                                   id="formFile"
                                   name="attachment"
                                   multiple
-                                  onChange={(event) => handleFileChange(event, setLetter)}
+                                  onChange={(event) =>
+                                    handleFileChange(event, setLetter)
+                                  }
                                 />
                               </div>
                             </div>
@@ -356,13 +422,15 @@ function AddEditFileCase() {
             </div>
 
             <div class="row mt-4">
-                  <div class="col p-0">
-                    <button class="btn btn-primary float-end" type="submit">
-                      Create Case
-                    </button>
-                  </div>
-                </div>
-
+              <div class="col p-0">
+                <button
+                  class="btn btn-primary float-end"
+                  onClick={hendleCreateFileCase}
+                >
+                  Create Case
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

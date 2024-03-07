@@ -110,7 +110,7 @@ function SearchMotion() {
       // fileNumber: ,
       fkSessionId: values?.fromSession,
       noticeOfficeDiaryNo: values?.motionDiaryNo,
-      fkMemberId: values?.memberName,
+      fkMemberId: values?.memberName?.value,
       fkMinistryId: values?.ministry,
       motionId: values?.motionID,
       sessionStartRange: values?.fromSession,
@@ -250,7 +250,6 @@ function SearchMotion() {
                             value: item.id,
                             label: item.memberName,
                           }))}
-                          isMulti
                           onChange={(selectedOptions) =>
                             formik.setFieldValue(
                               "memberName",
