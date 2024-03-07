@@ -291,11 +291,29 @@ export const createFiles = async (id, data) => {
   }
 };
 
-export const getFileByRegisterById = async (id, currentPage, pageSize) => {
+// export const getFileByRegisterById = async (id, currentPage, pageSize) => {
+//   try {
+//     //   const token = getAuthToken();
+//     const response = await axiosClientMMS.get(
+//       `/files/byFileRegister/${id}?currentPage=${currentPage}&pageSize=${pageSize}`)
+//       // {
+//       //   headers: {
+//       //     accept: "application/json",
+//       //     "Content-Type": "multipart/form-data",
+//       //   },
+//       // });
+//     return response?.data;
+//   } catch (error) {
+//     console.error("Error fetching API endpoint:", error);
+//     throw error;
+//   }
+// };
+
+export const getFileByRegisterById = async (id, currentPage) => {
   try {
     //   const token = getAuthToken();
     const response = await axiosClientMMS.get(
-      `/files/byFileRegister/${id}?currentPage=${currentPage}&pageSize=${pageSize}`)
+      `/files/byFileRegister/${id}?mainHeadingNumber=${currentPage}`)
       // {
       //   headers: {
       //     accept: "application/json",
@@ -333,6 +351,74 @@ export const DeleteHeading = async (id) => {
     //   const token = getAuthToken();
     const response = await axiosClientMMS.delete(
       `/mainHeading/delete/${id}`)
+      // {
+      //   headers: {
+      //     accept: "application/json",
+      //     "Content-Type": "multipart/form-data",
+      //   },
+      // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Create Case
+export const createCase = async (id, data) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClientMMS.post(`/cases/createCase/${id}`, data, {
+      headers: {
+        accept: "multipart/form-data",
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+
+export const getAllCasesByFileId = async (id, currentPage, pageSize) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/cases/getCasesByFileId/${id}?currentPage=${currentPage}&pageSize=${pageSize}`,
+      )
       // {
       //   headers: {
       //     accept: "application/json",
