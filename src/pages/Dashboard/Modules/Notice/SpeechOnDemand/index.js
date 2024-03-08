@@ -85,15 +85,17 @@ function CMSSpeechOnDemandDashboard() {
           <CustomTable
             block={false}
             data={speechOnDemand}
-            addBtnText={"Create Speech On Demand"}
+            hidebtn1={true}
+            // addBtnText={"Create Speech On Demand"}
             tableTitle="Speech On Demand"
             handlePageChange={handlePageChange}
+            hideBtn={true}
             currentPage={currentPage}
             pageSize={pageSize}
             headertitlebgColor={"#666"}
             headertitletextColor={"#FFF"}
             totalCount={count}
-            handleAdd={() => navigate("/notice/speech-on-demand/addedit")}
+            // handleAdd={() => navigate("/notice/speech-on-demand/addedit")}
             handleEdit={(item) =>
               navigate("/notice/speech-on-demand/addedit", {
                 state: { id: item?.SR },
