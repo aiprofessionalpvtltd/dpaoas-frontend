@@ -44,7 +44,8 @@ function NewMotion() {
   const { members, sessions } = useContext(AuthContext);
   const [showModal, setShowModal] = useState(false);
   const [formValues, setFormValues] = useState([]);
-
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  const [imageLinks, setImageLinks] = useState([]);
   // const sessionId = sessions && sessions.map((item) => item?.id);
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
@@ -52,7 +53,15 @@ function NewMotion() {
     CreateMotionApi(formValues);
     handleClose();
   };
-
+  // Handle Claneder Toggel
+  const handleCalendarToggle = () => {
+    setIsCalendarOpen(!isCalendarOpen);
+  };
+  // Handale DateCHange
+  const handleDateSelect = (date) => {
+    formik.setFieldValue("noticeOfficeDiaryDate", date);
+    setIsCalendarOpen(false);
+  };
   const formik = useFormik({
     initialValues: {
       sessionNumber: "",
@@ -69,7 +78,7 @@ function NewMotion() {
     onSubmit: (values) => {
       // handleShow();
       // setFormValues(values);
-      CreateMotionApi(values)
+      CreateMotionApi(values);
     },
     enableReinitialize: true,
   });
@@ -111,6 +120,12 @@ function NewMotion() {
     console.log(content);
   };
 
+  const handleFileChange = (event) => {
+    const selectedFiles = Array.from(event.currentTarget.files);
+    const links = selectedFiles.map((file) => URL.createObjectURL(file));
+    setImageLinks(links);
+    formik.setFieldValue("file", event.currentTarget.files);
+  };
   return (
     <Layout
       module={true}
@@ -245,7 +260,7 @@ function NewMotion() {
                         <label className="form-label">
                           Notice Office Diary Date{" "}
                         </label>
-                        <span
+                        {/* <span
                           style={{
                             position: "absolute",
                             right: "15px",
@@ -271,6 +286,37 @@ function NewMotion() {
                               ? "is-invalid"
                               : ""
                           }`}
+                        /> */}
+                        <span
+                          style={{
+                            position: "absolute",
+                            right: "15px",
+                            top: "36px",
+                            zIndex: 1,
+                            fontSize: "20px",
+                            zIndex: "1",
+                            color: "#666",
+                            cursor: "pointer",
+                          }}
+                          onClick={handleCalendarToggle}
+                        >
+                          <FontAwesomeIcon icon={faCalendarAlt} />
+                        </span>
+
+                        <DatePicker
+                          selected={formik.values.noticeOfficeDiaryDate}
+                          onChange={handleDateSelect}
+                          onBlur={formik.handleBlur}
+                          className={`form-control ${
+                            formik.touched.noticeOfficeDiaryDate &&
+                            formik.errors.noticeOfficeDiaryDate
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                          open={isCalendarOpen}
+                          onClickOutside={() => setIsCalendarOpen(false)}
+                          onInputClick={handleCalendarToggle}
+                          // onClick={handleCalendarToggle}
                         />
                         {formik.touched.noticeOfficeDiaryDate &&
                           formik.errors.noticeOfficeDiaryDate && (
@@ -380,7 +426,7 @@ function NewMotion() {
                         )}
                       </div>
                     </div>
-                    <div class="col-4">
+                    <div class="col-3">
                       <div class="mb-3">
                         <label for="formFile" class="form-label">
                           Attach Image File{" "}
@@ -392,13 +438,33 @@ function NewMotion() {
                           id="formFile"
                           name="attachment"
                           multiple
-                          onChange={(event) => {
-                            formik.setFieldValue(
-                              "file",
-                              event.currentTarget.files
-                            );
-                          }}
+                          // onChange={(event) => {
+                          //   formik.setFieldValue(
+                          //     "file",
+                          //     event.currentTarget.files
+                          //   );
+                          // }}
+                          onChange={handleFileChange}
                         />
+
+                        {imageLinks.length > 0 && (
+                          <div>
+                            <div className="col ">
+                              {imageLinks.map((link, index) => (
+                                <a
+                                  key={index}
+                                  href={link}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="mx-1"
+                                >
+                                  Image {index + 1}
+                                </a>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
                         {/* <input
                           className="form-control"
                           type="file"
@@ -417,32 +483,29 @@ function NewMotion() {
                     </div>
                   </div>
                   <div className="row">
-
-                      <div className="col-12"> 
-                  <div style={{ marginTop: 10 }}>
-                    <Editor
-                      title={"English Text"}
-                      onChange={(content) =>
-                        formik.setFieldValue("englishText", content)
-                      }
-                      value={formik.values.englishText}
-                    />
+                    <div className="col-12">
+                      <div style={{ marginTop: 10 }}>
+                        <Editor
+                          title={"English Text"}
+                          onChange={(content) =>
+                            formik.setFieldValue("englishText", content)
+                          }
+                          value={formik.values.englishText}
+                        />
+                      </div>
+                    </div>
+                    <div className="col-12">
+                      <div style={{ marginTop: 70, marginBottom: 40 }}>
+                        <Editor
+                          title={"Urdu Text"}
+                          onChange={(content) =>
+                            formik.setFieldValue("urduText", content)
+                          }
+                          value={formik.values.urduText}
+                        />
+                      </div>
+                    </div>
                   </div>
-                  </div>   
-                  <div className="col-12"> 
-
-                  <div style={{ marginTop: 70, marginBottom: 40 }}>
-                    <Editor
-                      title={"Urdu Text"}
-                      onChange={(content) =>
-                        formik.setFieldValue("urduText", content)
-                      }
-                      value={formik.values.urduText}
-                    />
-                  </div>
-                  </div>
-                  </div>
-
 
                   <div class="row mt-3">
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">

@@ -44,6 +44,8 @@ function NewQuestion() {
   const [formValues, setFormValues] = useState([]);
   const [filesData, setFilesData] = useState();
   const sessionId = sessions && sessions.map((item) => item?.id);
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  const [imageLinks, setImageLinks] = useState([]);
   const UserData = getUserData();
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
@@ -70,11 +72,21 @@ function NewQuestion() {
     onSubmit: (values) => {
       // handleShow();
       // setFormValues(values);
-      CreateQuestionApi(values)
+      CreateQuestionApi(values);
     },
     enableReinitialize: true,
   });
 
+  // Handle Claneder Toggel
+  const handleCalendarToggle = () => {
+    setIsCalendarOpen(!isCalendarOpen);
+  };
+  // Handale DateCHange
+  const handleDateSelect = (date) => {
+    formik.setFieldValue("noticeOfficeDiaryDate", date);
+    console.log("Date", date);
+    setIsCalendarOpen(false);
+  };
   const CreateQuestionApi = async (values) => {
     const formData = new FormData();
     formData.append("fkSessionId", values?.fkSessionId);
@@ -88,7 +100,8 @@ function NewQuestion() {
     formData.append("initiatedByBranch", 1);
     // formData.append("sentToBranch", values.sentToBranch);
     formData.append("sentToBranch", 1);
-    formData.append("createdByUser", UserData && UserData?.id);
+    // formData.append("createdByUser", UserData && UserData?.id);
+    formData.append("createdByUser", 1);
     formData.append("englishText", values.englishText);
     formData.append("urduText", values.urduText);
     formData.append("questionSentStatus", "fromNotice");
@@ -118,6 +131,13 @@ function NewQuestion() {
 
   const handleProcedureContentChange = (content) => {
     console.log(content);
+  };
+
+  const handleFileChange = (event) => {
+    const selectedFiles = Array.from(event.currentTarget.files);
+    const links = selectedFiles.map((file) => URL.createObjectURL(file));
+    setImageLinks(links);
+    formik.setFieldValue("questionImage", event.currentTarget.files);
   };
 
   return (
@@ -283,16 +303,16 @@ function NewQuestion() {
                             fontSize: "20px",
                             zIndex: "1",
                             color: "#666",
+                            cursor: "pointer",
                           }}
+                          onClick={handleCalendarToggle}
                         >
                           <FontAwesomeIcon icon={faCalendarAlt} />
                         </span>
+
                         <DatePicker
                           selected={formik.values.noticeOfficeDiaryDate}
-                          // minDate={new Date()}
-                          onChange={(date) =>
-                            formik.setFieldValue("noticeOfficeDiaryDate", date)
-                          }
+                          onChange={handleDateSelect}
                           onBlur={formik.handleBlur}
                           className={`form-control ${
                             formik.touched.noticeOfficeDiaryDate &&
@@ -300,7 +320,18 @@ function NewQuestion() {
                               ? "is-invalid"
                               : ""
                           }`}
+                          open={isCalendarOpen}
+                          onClickOutside={() => setIsCalendarOpen(false)}
+                          onInputClick={handleCalendarToggle}
+                          // onClick={handleCalendarToggle}
                         />
+
+                        {formik.touched.noticeOfficeDiaryDate &&
+                          formik.errors.noticeOfficeDiaryDate && (
+                            <div className="invalid-feedback">
+                              {formik.errors.noticeOfficeDiaryDate}
+                            </div>
+                          )}
                         {formik.touched.noticeOfficeDiaryDate &&
                           formik.errors.noticeOfficeDiaryDate && (
                             <div className="invalid-feedback">
@@ -406,7 +437,7 @@ function NewQuestion() {
                     <div className="col-3">
                       <div className="mb-3">
                         <label htmlFor="formFile" className="form-label">
-                          Question Image
+                          Select Image Files
                         </label>
                         <input
                           className="form-control"
@@ -415,53 +446,67 @@ function NewQuestion() {
                           id="formFile"
                           name="questionImage"
                           multiple
-                          onChange={(event) => {
-                            formik.setFieldValue(
-                              "questionImage",
-                              event.currentTarget.files
-                            );
-                          }}
+                          // onChange={(event) => {
+                          //   formik.setFieldValue(
+                          //     "questionImage",
+                          //     event.currentTarget.files
+                          //   );
+                          // }}
+                          onChange={handleFileChange}
                         />
                       </div>
+                    </div>
+                    <div>
+                      {imageLinks.length > 0 && (
+                        <div>
+                          {imageLinks.map((link, index) => (
+                            <div className="col-1" key={index}>
+                              <a
+                                key={index}
+                                href={link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                image {index + 1}
+                              </a>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </div>
                   <div className="row">
                     <div className="col-12">
-                    <div style={{ marginTop: 10 }}>
-                    <Editor
-                      title={"English Text"}
-                      onChange={(content) =>
-                        formik.setFieldValue("englishText", content)
-                      }
-                      value={formik.values.englishText}
-                    />
-                  </div>
+                      <div style={{ marginTop: 10 }}>
+                        <Editor
+                          title={"English Text"}
+                          onChange={(content) =>
+                            formik.setFieldValue("englishText", content)
+                          }
+                          value={formik.values.englishText}
+                        />
+                      </div>
                     </div>
                     <div className="col-12">
-                    <div style={{ marginTop: 70, marginBottom: 40 }}>
-                    <Editor
-                      title={"Urdu Text"}
-                      onChange={(content) =>
-                        formik.setFieldValue("urduText", content)
-                      }
-                      value={formik.values.urduText}
-                    />
-                   
-                  </div>
+                      <div style={{ marginTop: 70, marginBottom: 40 }}>
+                        <Editor
+                          title={"Urdu Text"}
+                          onChange={(content) =>
+                            formik.setFieldValue("urduText", content)
+                          }
+                          value={formik.values.urduText}
+                        />
+                      </div>
                     </div>
                   </div>
 
-                  
-
-                  
                   <div className="row mt-3">
-                       <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                       <button class="btn btn-primary" type="submit">
                         Submit
                       </button>
                     </div>
-                    </div>
-
+                  </div>
                 </div>
               </form>
             </div>
