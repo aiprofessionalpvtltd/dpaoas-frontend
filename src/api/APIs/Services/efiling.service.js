@@ -413,6 +413,7 @@ export const createFreshReceipt = async (data) => {
           "Content-Type": "multipart/form-data",
         },
       });
+      return response.data
     } catch (error) {
       console.error("Error fetching API endpoint:", error);
       throw error;
@@ -499,6 +500,24 @@ export const DeleteFreahReceptImage = async (id) => {
     //   const token = getAuthToken();
     const response = await axiosClientMMS.delete(
       `/freshReceipt/deleteAttachment/${id}`)
+      // {
+      //   headers: {
+      //     accept: "application/json",
+      //     "Content-Type": "multipart/form-data",
+      //   },
+      // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+//Diary
+export const getAllFileDiary = async (currentPage,pageSize) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/fileDiary/?currentPage=${currentPage}&pageSize=${pageSize}`)
       // {
       //   headers: {
       //     accept: "application/json",
