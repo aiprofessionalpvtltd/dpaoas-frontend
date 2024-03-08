@@ -7,12 +7,23 @@ import DatePicker from "react-datepicker";
 import Select from "react-select";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
-import { useContext, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../../../../api/AuthContext";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
+import moment from "moment";
+import { getProroguedSession } from "../../../../../../api/APIs/Services/ManageQMS.service";
 function NMSProroguredSessions() {
   const { members, sessions } = useContext(AuthContext);
   const [proroguredSessions, setProroguredSessions] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [count, setCount] = useState(null);
+  const pageSize = 5; // Set your desired page size
+
+  const handlePageChange = (page) => {
+    // Update currentPage when a page link is clicked
+    setCurrentPage(page);
+  };
+
   //   const formik = useFormik({
   //     initialValues: {
   //       memberName: "",
@@ -24,6 +35,37 @@ function NMSProroguredSessions() {
   //       console.log(values);
   //     },
   //   });
+
+  const transformProroguedData = (apiData) => {
+    return apiData.map((item, index) => ({
+      SNo: index + 1,
+      // id: item?.sessionId,
+      session: item?.sessionName,
+      sessionStartDate: moment(item?.sessionStartDate).format("DD-MM-YYYY"),
+      sessionEndDate: moment(item?.sessionEndDate).format("DD-MM-YYYY"),
+      isProrogued: item?.isSessionProrogued.toString(),
+    }));
+  };
+
+  const ProroguedSeeionApi = useCallback(async () => {
+    try {
+      const response = await getProroguedSession(currentPage, pageSize);
+      if (response?.success) {
+        const transformedData = transformProroguedData(
+          response?.data?.sessionSittings
+        );
+        setProroguredSessions(transformedData);
+        // showSuccessMessage(response?.message);
+        // setCount(response?.data?.count);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, [currentPage, pageSize, setCount]);
+
+  useEffect(() => {
+    ProroguedSeeionApi();
+  }, [ProroguedSeeionApi]);
   return (
     <Layout
       module={true}
@@ -203,14 +245,15 @@ function NMSProroguredSessions() {
               hideBtn={true}
               hidebtn1={true}
               data={proroguredSessions}
+              ActionHide={true}
               // addBtnText={"Add Speech On Demand"}
               tableTitle="Prorogued Sessions"
-              // handlePageChange={handlePageChange}
-              // currentPage={currentPage}
-              // pageSize={pageSize}
+              handlePageChange={handlePageChange}
+              currentPage={currentPage}
+              pageSize={pageSize}
               headertitlebgColor={"#666"}
               headertitletextColor={"#FFF"}
-              // totalCount={count}
+              totalCount={count}
               // handleAdd={() => navigate("/notice/speech-on-demand/addedit")}
               // handleEdit={(item) => hendleEdit(item.SR)}
               // handleDelete={(item) => handleDelete(item.SR)}

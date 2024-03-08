@@ -323,9 +323,11 @@ function NMSAddEditSittingDaysForm() {
       sittingDate: "",
       sittingStartTime: "",
       sittingEndTime: "",
-      privateMemberDay: "",
+      privateMemberDay: false,
       committeeWhole: false,
       isAdjourned: false,
+      isProrogued: false,
+
       committeeStartTime: "",
       committeeEndTime: "",
       sessionMembers: [
@@ -389,6 +391,8 @@ function NMSAddEditSittingDaysForm() {
 
       committeeWhole: values.committeeWhole,
       sessionAdjourned: values.isAdjourned,
+      privateMemberDay: values?.privateMemberDay,
+      sessionProrogued: values?.isProrogued,
     };
 
     console.log("Data Going Format", data);
@@ -817,7 +821,7 @@ function NMSAddEditSittingDaysForm() {
                 </div>
                 {renderBreakForms()}
                 <div class="row">
-                  <div class="col-4">
+                  <div class="col-3">
                     <div class="mb-3">
                       <div class="form-check">
                         <input
@@ -838,7 +842,7 @@ function NMSAddEditSittingDaysForm() {
                           }
                         />
                         <label class="form-check-label" for="flexCheckDefault">
-                          Is Session Prorogued
+                          Is Session Adjourned
                         </label>
                         {formik.touched.isAdjourned &&
                           formik.errors.isAdjourned && (
@@ -849,7 +853,39 @@ function NMSAddEditSittingDaysForm() {
                       </div>
                     </div>
                   </div>
-                  <div class="col-4">
+                  <div class="col-3">
+                    <div class="mb-3">
+                      <div class="form-check">
+                        <input
+                          class={`form-check-input ${
+                            formik.touched.isAdjourned &&
+                            formik.errors.isAdjourned
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                          type="checkbox"
+                          id="flexCheckDefault"
+                          checked={formik.values.isProrogued}
+                          onChange={() =>
+                            formik.setFieldValue(
+                              "isProrogued",
+                              !formik.values.isProrogued
+                            )
+                          }
+                        />
+                        <label class="form-check-label" for="flexCheckDefault">
+                          Is Session Prorogued
+                        </label>
+                        {formik.touched.isProrogued &&
+                          formik.errors.isProrogued && (
+                            <div className="invalid-feedback">
+                              {formik.errors.isProrogued}
+                            </div>
+                          )}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-3">
                     <div class="mb-3">
                       <div class="form-check">
                         <input
@@ -881,7 +917,7 @@ function NMSAddEditSittingDaysForm() {
                       </div>
                     </div>
                   </div>
-                  <div class="col-4">
+                  <div class="col-3">
                     <div class="mb-3">
                       <div class="form-check">
                         <input

@@ -55,6 +55,8 @@ function ManageSittingsDays() {
         "hh:ss:a"
       ),
       sittingEndTime: moment(item?.sittingEndTime, "hh:ss:a").format("hh:ss:a"),
+      committeeTotalTime: item?.committeeTotalTime,
+      totalBreakTime: item?.totalBreakTime,
       // breakStartTime: moment(item?.breakStartTime, "hh:ss:a").format("hh:ss:a"),
       // breakEndTime: moment(item?.breakEndTime, "hh:ss:a").format("hh:ss:a"),
       // AsWholeCommittee: String(item?.committeeWhole),
@@ -65,6 +67,7 @@ function ManageSittingsDays() {
       //   ? moment(item?.committeeEndTime, "hh:ss:a").format("hh:ss:a")
       //   : "No End Time",
       sessionAdjourned: String(item?.sessionAdjourned),
+      privateMemberDay: String(item?.privateMemberDay),
       status: item?.status,
     }));
   };

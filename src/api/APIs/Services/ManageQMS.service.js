@@ -646,6 +646,27 @@ export const getAllSessions = async (currentPage, pageSize) => {
   }
 };
 
+// Prorogues Sessions
+export const getProroguedSession = async (currentPage, pageSize) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/manageSession/proroguedSessions?currentPage=${
+        currentPage ? currentPage : 0
+      }&pageSize=${pageSize ? pageSize : 100}`,
+      {
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // }
+      }
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
 export const getSessionByID = async (id) => {
   try {
     // const token = getAuthToken();
