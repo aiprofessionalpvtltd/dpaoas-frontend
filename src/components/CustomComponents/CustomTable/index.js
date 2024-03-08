@@ -93,47 +93,52 @@ function CustomTable({
   const assignedTooltip = <Tooltip id="print-tooltip">Assigne</Tooltip>;
   const attendanceTooltip = <Tooltip id="attendance-tooltip">Mark </Tooltip>;
 
-  const renderPagination = () => (
-    <nav aria-label="Page navigation">
-      <ul className="pagination">
-        <li className={`page-item ${currentPage <= 0 ? "disabled" : ""}`}>
-          <button
-            className="page-link"
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage <= 0}
-          >
-            Previous
-          </button>
-        </li>
-        {Array.from({ length: totalPages })?.map((_, index) => (
+  const renderPagination = () => {
+    if (totalPages <= 1) {
+      return null; // Hide pagination if totalPages is 1 or less
+    }
+    return (
+      <nav aria-label="Page navigation">
+        <ul className="pagination">
+          <li className={`page-item ${currentPage <= 0 ? "disabled" : ""}`}>
+            <button
+              className="page-link"
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage <= 0}
+            >
+              Previous
+            </button>
+          </li>
+          {Array.from({ length: totalPages })?.map((_, index) => (
+            <li
+              key={index}
+              className={`page-item ${currentPage === index ? "active" : ""}`}
+            >
+              <button
+                className="page-link"
+                onClick={() => handlePageChange(index)}
+              >
+                {index + 1}
+              </button>
+            </li>
+          ))}
           <li
-            key={index}
-            className={`page-item ${currentPage === index ? "active" : ""}`}
+            className={`page-item ${
+              currentPage >= totalPages - 1 ? "disabled" : ""
+            }`}
           >
             <button
               className="page-link"
-              onClick={() => handlePageChange(index)}
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage >= totalPages - 1}
             >
-              {index + 1}
+              Next
             </button>
           </li>
-        ))}
-        <li
-          className={`page-item ${
-            currentPage >= totalPages - 1 ? "disabled" : ""
-          }`}
-        >
-          <button
-            className="page-link"
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage >= totalPages - 1}
-          >
-            Next
-          </button>
-        </li>
-      </ul>
-    </nav>
-  );
+        </ul>
+      </nav>
+    );
+  };
 
   return (
     <div className="container-fluid">
@@ -292,13 +297,12 @@ function CustomTable({
                                     onClick={() => handleView(item)}
                                     className="btn-xs black circle-btn"
                                     data-id={item.id}
-                                    style={{background:"#2dce89"}}
+                                    style={{ background: "#2dce89" }}
                                   >
                                     <FontAwesomeIcon icon={faEye} />
                                   </button>
                                 </OverlayTrigger>
                               )}
-
 
                               {showAttendance && (
                                 <OverlayTrigger
@@ -309,7 +313,7 @@ function CustomTable({
                                     onClick={() => hendleAttendance(item)}
                                     className="btn-xs black circle-btn"
                                     data-id={item.id}
-                                    style={{background:"#007bff"}}
+                                    style={{ background: "#007bff" }}
                                   >
                                     <FontAwesomeIcon icon={faUserCheck} />
                                   </button>
@@ -332,20 +336,20 @@ function CustomTable({
                               )}
 
                               {showAssigned && (
-                              <OverlayTrigger
-                                placement="top"
-                                overlay={assignedTooltip}
-                              >
-                                <button
-                                  onClick={() => hendleAssigned(item)}
-                                  className="btn-xs black circle-btn"
-                                  data-id={item.id}
-                                  style={{ backgroundColor: 'green' }}
+                                <OverlayTrigger
+                                  placement="top"
+                                  overlay={assignedTooltip}
                                 >
-                                  <FontAwesomeIcon icon={faFileExport} />
-                                </button>
-                              </OverlayTrigger>
-                            )}
+                                  <button
+                                    onClick={() => hendleAssigned(item)}
+                                    className="btn-xs black circle-btn"
+                                    data-id={item.id}
+                                    style={{ backgroundColor: "green" }}
+                                  >
+                                    <FontAwesomeIcon icon={faFileExport} />
+                                  </button>
+                                </OverlayTrigger>
+                              )}
 
                               {!showEditIcon && !showEditIcon && (
                                 <OverlayTrigger
@@ -371,7 +375,7 @@ function CustomTable({
                                     onClick={() => handleDelete(item)}
                                     className="btn-xs black circle-btn"
                                     data-id={item.id}
-                                    style={{background:"#fb6340"}}
+                                    style={{ background: "#fb6340" }}
                                   >
                                     <FontAwesomeIcon icon={faTrash} />
                                   </button>
@@ -487,7 +491,7 @@ function CustomTable({
                                     onClick={() => handleView(item)}
                                     className="btn-xs black circle-btn"
                                     data-id={item.id}
-                                    style={{background:"#2dce89"}}
+                                    style={{ background: "#2dce89" }}
                                   >
                                     <FontAwesomeIcon icon={faEye} />
                                   </button>
@@ -503,7 +507,7 @@ function CustomTable({
                                     onClick={() => handleDelete(item)}
                                     className="btn-xs black circle-btn"
                                     data-id={item.id}
-                                    style={{background:"#fb6340"}}
+                                    style={{ background: "#fb6340" }}
                                   >
                                     <FontAwesomeIcon icon={faTrash} />
                                   </button>
