@@ -1,22 +1,67 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Layout } from "../../../../../components/Layout";
 import { EfilingSideBarItem } from "../../../../../utils/sideBarItems";
 import Header from "../../../../../components/Header";
 import CustomTable from "../../../../../components/CustomComponents/CustomTable";
 import { useNavigate } from "react-router-dom";
+import { getAllFileDiary } from "../../../../../api/APIs/Services/efiling.service";
+import { showErrorMessage } from "../../../../../utils/ToastAlert";
+import moment from "moment";
 
 export const Diary = () => {
   const [selectedTab, setSelectedTab] = useState("Incoming");
   const navigate = useNavigate()
   const [currentPage, setCurrentPage] = useState(0);
-  const [count, setCount] = useState(1);
+  const [count, setCount] = useState(null);
+  const [outgoingCount, setOutGoingCount] = useState(null)
   const pageSize = 5; // Set your desired page size
-  const [fileData, setFileData] = useState([])
+  const [incomingData, setIncomingData] = useState([])
+  const [outgoingData, setoutgoingData] = useState([])
+
 
   const handlePageChange = (page) => {
       // Update currentPage when a page link is clicked
       setCurrentPage(page);
   };
+
+  const treformFileDiary = (apiData) => {
+    return apiData.map((item, index) => ({
+      SR: item?.id,
+      // diaryType: item?.diaryType,
+      diaryNumber:item?.diaryNumber,
+      diaryDate: moment(item?.diaryDate).format("DD/MM/YYYY"),
+      diaryTime: item?.diaryTime, 
+      frType:item?.freshReceipts?.frType,
+      frDate:moment(item?.freshReceipts?.frDate).format("DD/MM/YYYY")
+    }));
+  };
+
+  const getAllFileDiaryApi = useCallback(async () => {
+    try {
+      const response = await getAllFileDiary(currentPage, pageSize);
+      if (response?.success) {
+        setCount(response?.data?.incoming?.count);
+        const trensferData = treformFileDiary(
+          response?.data?.incoming?.fileDiaries
+        )
+        setIncomingData(trensferData);
+        //
+        setOutGoingCount(response?.data?.incoming?.count);
+        const transferOutGoing = treformFileDiary(
+          response?.data?.outgoing?.fileDiaries
+        )
+        setoutgoingData(transferOutGoing);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  }, [currentPage, pageSize, setCount, setoutgoingData, setIncomingData, setOutGoingCount]);
+
+  
+
+  useEffect(() => {
+    getAllFileDiaryApi();
+  }, [currentPage]);
 
   return (
     <Layout module={true} sidebarItems={EfilingSideBarItem}>
@@ -96,7 +141,7 @@ export const Diary = () => {
                         hidebtn1={true}
                         ActionHide={true}
                         hideBtn={true}
-                        data={[]}
+                        data={incomingData}
                         tableTitle="Incoming FRs"
                         headertitlebgColor={"#666"}
                         headertitletextColor={"#FFF"}
@@ -116,7 +161,7 @@ export const Diary = () => {
                         hidebtn1={true}
                         ActionHide={true}
                         hideBtn={true}
-                        data={[]}
+                        data={outgoingData}
                         tableTitle="Outgoing Files"
                         headertitlebgColor={"#666"}
                         headertitletextColor={"#FFF"}
@@ -124,7 +169,7 @@ export const Diary = () => {
                         currentPage={currentPage}
                         handleAdd={() => navigate("/efiling/dashboard/file-register-list/files-list/addedit-case")}
                         pageSize={pageSize}
-                        totalCount={count}
+                        totalCount={outgoingCount}
                         singleDataCard={true}
                         showView={true}
                         handleView={(item) => navigate("/efiling/dashboard/file-register-list/files-list", {state:item})}

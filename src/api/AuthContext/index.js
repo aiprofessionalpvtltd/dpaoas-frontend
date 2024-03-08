@@ -21,8 +21,8 @@ export const AuthProvider = ({ children }) => {
   const [resolutionStatus, setResolutionStatus] = useState([]);
   const [employeesAsEngineersData, setemployeesAsEngineersData] = useState([]);
   const [allBranchesData, setallBranchesData] = useState([]);
-
   const [members, setMembers] = useState([]);
+  const [fileIdINRegister, setFileIdInRegister] = useState(null);
 
   const login = async (data) => {
     try {
@@ -147,6 +147,9 @@ export const AuthProvider = ({ children }) => {
         resolutionStatus,
         employeesAsEngineersData,
         allBranchesData,
+
+        setFileIdInRegister,
+        fileIdINRegister
       }}
     >
       {children}
