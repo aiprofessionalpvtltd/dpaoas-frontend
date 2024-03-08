@@ -133,7 +133,7 @@ function AddEditFileCase() {
   };
 
   const hendleCreateFileCase = async () => {
-    try {
+        try {
       const formData = createFormData();
       const response = await createCase(fileIdINRegister, formData);
       showSuccessMessage(response?.message);
@@ -172,34 +172,34 @@ function AddEditFileCase() {
     formData.append("cases[0][Sanction][description]", sanction.description);
     formData.append("cases[0][Objection][description]", objection.description);
     formData.append("cases[0][Letter][description]", letter.description);
-
-    if (objection.attachedFiles) {
-      objection.attachedFiles.forEach((file, index) => {
-        formData.append(`cases[0][Objection][sections][${index}]`, file);
-      });
-    }
+  
+if (objection.attachedFiles) {
+    objection.attachedFiles.forEach((file, index) => {
+      formData.append(`cases[0][Objection][sections][${index}]`, file);
+    });
+}
     if (sanction.attachedFiles) {
-      sanction.attachedFiles.forEach((file, index) => {
-        formData.append(`cases[0][Sanction][sections][${index}]`, file);
-      });
-    }
+    sanction.attachedFiles.forEach((file, index) => {
+      formData.append(`cases[0][Sanction][sections][${index}]`, file);
+    });
+}
     if (letter.attachedFiles) {
-      letter.attachedFiles.forEach((file, index) => {
-        formData.append(`cases[0][Letter][sections][${index}]`, file);
-      });
-    }
+    letter.attachedFiles.forEach((file, index) => {
+      formData.append(`cases[0][Letter][sections][${index}]`, file);
+    });
+}
     if (correspondenceData.attachedFiles) {
-      correspondenceData.attachedFiles.forEach((file, index) => {
-        formData.append(
+    correspondenceData.attachedFiles.forEach((file, index) => {
+      formData.append(
           `cases[0][Correspondence][sections][${index}]`,
           file
         );
-      });
-    }
-
+    });
+}
+  
     return formData;
   };
-
+  
   // Function to fetch data based on ID
   const fetchCaseById = async (caseId) => {
     try {
@@ -514,7 +514,7 @@ function AddEditFileCase() {
                                             (file, index) => (
                                               <li key={file?.id}>
                                                 <a
-                                                  href={`http://10.10.140.200:5152${file?.fileName}`}
+                                                  href={`http://172.16.170.8:5252${file?.fileName}`}
                                                   target="_blank"
                                                   rel="noopener noreferrer"
                                                 >
@@ -603,7 +603,7 @@ function AddEditFileCase() {
                                             (file, index) => (
                                               <li key={file?.id}>
                                                 <a
-                                                  href={`http://10.10.140.200:5152${file?.fileName}`}
+                                                  href={`http://172.16.170.8:5252${file?.fileName}`}
                                                   target="_blank"
                                                   rel="noopener noreferrer"
                                                 >
@@ -692,7 +692,7 @@ function AddEditFileCase() {
                                             (file, index) => (
                                               <li key={file?.id}>
                                                 <a
-                                                  href={`http://10.10.140.200:5152${file?.fileName}`}
+                                                  href={`http://172.16.170.8:5252${file?.fileName}`}
                                                   target="_blank"
                                                   rel="noopener noreferrer"
                                                 >
@@ -778,7 +778,7 @@ function AddEditFileCase() {
                                             (file, index) => (
                                               <li key={file?.id}>
                                                 <a
-                                                  href={`http://10.10.140.200:5152${file?.fileName}`}
+                                                  href={`http://172.16.170.8:5252${file?.fileName}`}
                                                   target="_blank"
                                                   rel="noopener noreferrer"
                                                 >
