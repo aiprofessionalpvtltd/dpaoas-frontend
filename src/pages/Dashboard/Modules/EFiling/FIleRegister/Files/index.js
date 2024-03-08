@@ -28,7 +28,7 @@ function ListFiles() {
 
     const transformFilesHeadingdata = (apiData) => {
         return apiData.map((item) => ({
-          id: item?.id,
+          internalId: item?.id,
           HeadingNumber: item?.mainHeading?.mainHeadingNumber,
           mainHeading: item?.mainHeading?.mainHeading,
           fileNumber: item?.fileNumber,

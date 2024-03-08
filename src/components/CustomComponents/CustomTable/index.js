@@ -58,6 +58,7 @@ function CustomTable({
   hidebtn1,
 }) {
   const keys = data?.length > 0 ? Object.keys(data[0]) : [];
+  const filteredKeys = keys?.filter(key => key !== 'internalId');
   const [totalPages, setTotalPages] = useState(0);
 
   const formatHeader = (key) => {
@@ -218,7 +219,7 @@ function CustomTable({
           >
             <thead>
               <tr>
-                {keys?.map((key, index) => (
+                {filteredKeys?.map((key, index) => (
                   <th
                     key={index}
                     className="text-center"
@@ -257,7 +258,7 @@ function CustomTable({
               {totalCount || hidePagination
                 ? data?.map((item, rowIndex) => (
                     <tr key={rowIndex}>
-                      {keys?.map((key, colIndex) => (
+                      {filteredKeys?.map((key, colIndex) => (
                         // <td key={colIndex} className="text-center">
                         //     {item[key]}
                         // </td>
@@ -438,7 +439,7 @@ function CustomTable({
                   ))
                 : displayedData?.map((item, rowIndex) => (
                     <tr key={rowIndex}>
-                      {keys?.map((key, colIndex) => (
+                      {filteredKeys?.map((key, colIndex) => (
                         // <td key={colIndex} className="text-center">
                         //     {item[key]}
                         // </td>
