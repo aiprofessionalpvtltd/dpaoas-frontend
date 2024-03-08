@@ -83,6 +83,7 @@ const AddEditFR = () => {
 
     try {
       const response = await createFreshReceipt(formdata);
+      console.log("response Create", response);
       if (response.success) {
         showSuccessMessage(response.message);
         formik.resetForm();
