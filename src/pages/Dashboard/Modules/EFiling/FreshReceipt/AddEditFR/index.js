@@ -4,6 +4,7 @@ import { Layout } from "../../../../../../components/Layout";
 import { EfilingSideBarItem } from "../../../../../../utils/sideBarItems";
 import Header from "../../../../../../components/Header";
 import { useLocation, useNavigate } from "react-router-dom";
+import * as Yup from "yup";
 import {
   DeleteFreahReceptImage,
   UpdateFreshReceipt,
@@ -22,6 +23,17 @@ import { ToastContainer } from "react-toastify";
 import { AuthContext } from "../../../../../../api/AuthContext";
 import Select from "react-select";
 
+const validationSchema = Yup.object().shape({
+  diaryNumber: Yup.string().required("Diary No is required"),
+  diaryDate: Yup.date().required("Diary Date is required"),
+  diaryTime: Yup.string().required("Diary Time is required"),
+  frType: Yup.string().required("FR Type is required"),
+  frSubject: Yup.string().required("Subject is required"),
+  referenceNumber: Yup.string().required("Ref No is required"),
+  frDate: Yup.date().required("FR Date is required"),
+  // freshReceipt: Yup.string().required("Attachment is required"),
+});
+
 const AddEditFR = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -34,7 +46,6 @@ const AddEditFR = () => {
       diaryDate: "",
       diaryTime: "",
       frType: "",
-      selectedId: "",
       fkBranchId: "",
       fkMinistryId: "",
       frSubject: "",
@@ -43,6 +54,7 @@ const AddEditFR = () => {
       shortDescription: "",
       freshReceipt: "",
     },
+    validationSchema: validationSchema,
     onSubmit: (values) => {
       if (receptId) {
         UpdateFreshReceiptApi(values);
@@ -54,7 +66,6 @@ const AddEditFR = () => {
 
   const handleFrTypeChange = (e) => {
     formik.setFieldValue("frType", e.target.value);
-    // formik.setFieldValue('selectedId', ''); // Reset selected ID when FR type changes
   };
 
   const handleCreateFreshReceipt = async (values) => {
@@ -236,13 +247,23 @@ const AddEditFR = () => {
                       Diary No
                     </label>
                     <input
-                      className="form-control"
+                      className={`form-control ${
+                        formik.touched.diaryNumber && formik.errors.diaryNumber
+                          ? "is-invalid"
+                          : ""
+                      }`}
                       type="text"
                       id="diaryNumber"
                       value={formik.values.diaryNumber}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                     />
+                    {formik.touched.diaryNumber &&
+                      formik.errors.diaryNumber && (
+                        <div className="invalid-feedback">
+                          {formik.errors.diaryNumber}
+                        </div>
+                      )}
                   </div>
                 </div>
 
@@ -268,8 +289,20 @@ const AddEditFR = () => {
                       onChange={(date) =>
                         formik.setFieldValue("diaryDate", date)
                       }
-                      className={"form-control"}
+                      className={`form-control ${
+                        formik.touched.diaryDate && formik.errors.diaryDate
+                          ? "is-invalid"
+                          : ""
+                      }`}
                     />
+                    {formik.touched.diaryDate && formik.errors.diaryDate && (
+                      <div
+                        className="invalid-feedback"
+                        style={{ display: "block" }}
+                      >
+                        {formik.errors.diaryDate}
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -284,8 +317,17 @@ const AddEditFR = () => {
                       onChange={(time) =>
                         formik.setFieldValue("diaryTime", time)
                       }
-                      className={`form-control`}
+                      className={`form-control ${
+                        formik.touched.diaryTime && formik.errors.diaryTime
+                          ? "is-invalid"
+                          : ""
+                      }`}
                     />
+                    {formik.touched.diaryTime && formik.errors.diaryTime && (
+                      <div className="invalid-feedback">
+                        {formik.errors.diaryTime}
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="col-3">
@@ -297,8 +339,19 @@ const AddEditFR = () => {
                     id="referenceNumber"
                     value={formik.values.referenceNumber}
                     onChange={formik.handleChange}
-                    className="form-control"
+                    className={`form-control ${
+                      formik.touched.referenceNumber &&
+                      formik.errors.referenceNumber
+                        ? "is-invalid"
+                        : ""
+                    }`}
                   />
+                  {formik.touched.referenceNumber &&
+                    formik.errors.referenceNumber && (
+                      <div className="invalid-feedback">
+                        {formik.errors.referenceNumber}
+                      </div>
+                    )}
                 </div>
               </div>
 
@@ -309,13 +362,22 @@ const AddEditFR = () => {
                       Subject
                     </label>
                     <input
-                      className="form-control"
+                      className={`form-control ${
+                        formik.touched.frSubject && formik.errors.frSubject
+                          ? "is-invalid"
+                          : ""
+                      }`}
                       type="text"
                       id="frSubject"
                       value={formik.values.frSubject}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                     />
+                    {formik.touched.frSubject && formik.errors.frSubject && (
+                      <div className="invalid-feedback">
+                        {formik.errors.frSubject}
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -339,8 +401,20 @@ const AddEditFR = () => {
                       //   minDate={new Date()}
                       selected={formik.values.frDate}
                       onChange={(date) => formik.setFieldValue("frDate", date)}
-                      className={"form-control"}
+                      className={`form-control ${
+                        formik.touched.frDate && formik.errors.frDate
+                          ? "is-invalid"
+                          : ""
+                      }`}
                     />
+                    {formik.touched.frDate && formik.errors.frDate && (
+                      <div
+                        className="invalid-feedback"
+                        style={{ display: "block" }}
+                      >
+                        {formik.errors.frDate}
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className=" mb-3 col-3">
@@ -349,7 +423,11 @@ const AddEditFR = () => {
                   </label>
                   <select
                     id="frType"
-                    className="form-select"
+                    className={`form-select ${
+                      formik.touched.frType && formik.errors.frType
+                        ? "is-invalid"
+                        : ""
+                    }`}
                     value={formik.values.frType}
                     onChange={handleFrTypeChange}
                   >
@@ -357,6 +435,11 @@ const AddEditFR = () => {
                     <option value="Internal">Internal</option>
                     <option value="External">External</option>
                   </select>
+                  {formik.touched.frType && formik.errors.frType && (
+                    <div className="invalid-feedback">
+                      {formik.errors.frType}
+                    </div>
+                  )}
                 </div>
                 {formik.values.frType === "Internal" && (
                   <div className="mb-3 col-3">
@@ -415,7 +498,7 @@ const AddEditFR = () => {
                       Attachment
                     </label>
                     <input
-                      className="form-control"
+                      className={`form-control`}
                       type="file"
                       accept=".pdf, .jpg, .jpeg, .png"
                       id="freshReceipt"
@@ -428,6 +511,7 @@ const AddEditFR = () => {
                         );
                       }}
                     />
+
                     {receiptData &&
                       receiptData?.freshReceiptsAttachments?.map((item) => (
                         <div class="MultiFile-label mt-3">
