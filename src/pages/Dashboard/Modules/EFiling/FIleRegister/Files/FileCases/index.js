@@ -28,7 +28,7 @@ function FileCases() {
 
     const transformFilesCases = (apiData) => {
         return apiData.map((item, index) => ({
-            caseId: item?.caseId,
+            caseId: item?.fkCaseId,
             Noting: item?.Note?.description ? new DOMParser().parseFromString(item.Note?.description, 'text/html').documentElement.innerText : '',
             Correspondence: item?.Correspondence?.description ? new DOMParser().parseFromString(item.Correspondence?.description, 'text/html').documentElement.innerText : '',
             Sanction: item?.Sanction?.description ? new DOMParser().parseFromString(item.Sanction?.description, 'text/html').documentElement.innerText : '',
@@ -82,6 +82,8 @@ function FileCases() {
                         hideDeleteIcon={true}
                         showView={true}
                         handleView={(item) => navigate("/efiling/dashboard/file-register-list/files-list/addedit-case", {state: {caseId: item.caseId, view: true}})}
+                        showAssigned={true}
+                        hendleAssigned={(item) => navigate("/efiling/dashboard/fileDetail", { state: { view: true, id: item.caseId } })}
                     />
                 </div>
             </div>

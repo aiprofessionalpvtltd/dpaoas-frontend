@@ -130,28 +130,28 @@ export const NoticeSidebarItems = [
       },
     ],
   },
-  // {
-  //   itemName: "Resolution",
-  //   link: "/notice/resolution",
-  //   icon: faClipboardList,
-  //   subItems: [
-  //     {
-  //       itemName: "New Resolution",
-  //       link: "/notice/resolution/new",
-  //       icon: faClipboardList,
-  //     },
-  //     {
-  //       itemName: "Search Resolution",
-  //       link: "/notice/resolution/search",
-  //       icon: faClipboardList,
-  //     },
-  //     {
-  //       itemName: "List Resolution",
-  //       link: "/notice/resolution/sent",
-  //       icon: faClipboardList,
-  //     },
-  //   ],
-  // },
+  {
+    itemName: "Resolution",
+    link: "/notice/resolution",
+    icon: faClipboardList,
+    subItems: [
+      {
+        itemName: "New Resolution",
+        link: "/notice/resolution/new",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Search Resolution",
+        link: "/notice/resolution/search",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "List Resolution",
+        link: "/notice/resolution/sent",
+        icon: faClipboardList,
+      },
+    ],
+  },
   {
     itemName: "Legislation Business",
     link: "/notice/legislation",
@@ -160,6 +160,11 @@ export const NoticeSidebarItems = [
       {
         itemName: "Private Bill",
         link: "/notice/legislation/private-bill",
+        icon: faFileInvoice,
+      },
+      {
+        itemName: "legislative Bill",
+        link: "/notice/legislation/legislative-bill",
         icon: faFileInvoice,
       },
     ],
