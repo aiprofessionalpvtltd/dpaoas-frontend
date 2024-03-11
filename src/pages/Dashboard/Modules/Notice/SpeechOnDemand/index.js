@@ -20,7 +20,7 @@ function CMSSpeechOnDemandDashboard() {
   const [count, setCount] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [speechOnDemand, setSpeechOnDemand] = useState([]);
-  const pageSize = 4;
+  const pageSize = 10;
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -80,29 +80,35 @@ function CMSSpeechOnDemandDashboard() {
         addLink1={"/notice/speech-on-demand/addedit"}
         title1={"Speech On Demand"}
       />
-      <div class="row mt-5">
-        <div class="col-12">
-          <CustomTable
-            block={false}
-            data={speechOnDemand}
-            hidebtn1={true}
-            // addBtnText={"Create Speech On Demand"}
-            tableTitle="Speech On Demand"
-            handlePageChange={handlePageChange}
-            hideBtn={true}
-            currentPage={currentPage}
-            pageSize={pageSize}
-            headertitlebgColor={"#666"}
-            headertitletextColor={"#FFF"}
-            totalCount={count}
-            // handleAdd={() => navigate("/notice/speech-on-demand/addedit")}
-            handleEdit={(item) =>
-              navigate("/notice/speech-on-demand/addedit", {
-                state: { id: item?.SR },
-              })
-            }
-            handleDelete={(item) => handleDelete(item.SR)}
-          />
+      <div>
+        <div class="container-fluid">
+          <div class="card mt-1">
+            <div class="row mt-5">
+              <div class="col-12">
+                <CustomTable
+                  block={false}
+                  data={speechOnDemand}
+                  hidebtn1={true}
+                  // addBtnText={"Create Speech On Demand"}
+                  tableTitle="Speech On Demand"
+                  handlePageChange={handlePageChange}
+                  hideBtn={true}
+                  currentPage={currentPage}
+                  pageSize={pageSize}
+                  headertitlebgColor={"#666"}
+                  headertitletextColor={"#FFF"}
+                  totalCount={count}
+                  // handleAdd={() => navigate("/notice/speech-on-demand/addedit")}
+                  handleEdit={(item) =>
+                    navigate("/notice/speech-on-demand/addedit", {
+                      state: { id: item?.SR },
+                    })
+                  }
+                  handleDelete={(item) => handleDelete(item.SR)}
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </Layout>

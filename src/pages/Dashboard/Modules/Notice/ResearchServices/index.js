@@ -19,7 +19,7 @@ function CMSResearchServicesDashboard() {
   const [count, setCount] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [researchService, setResearchData] = useState([]);
-  const pageSize = 4;
+  const pageSize = 10;
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -75,28 +75,34 @@ function CMSResearchServicesDashboard() {
         // addLink1={"/notice/motion/new"}
         title1={"Research Service"}
       />
-      <div class="row mt-5">
-        <div class="col-12">
-          <CustomTable
-            block={false}
-            data={researchService}
-            // addBtnText={"Add Research Service"}
-            hidebtn1={true}
-            tableTitle="Research Services"
-            handlePageChange={handlePageChange}
-            currentPage={currentPage}
-            pageSize={pageSize}
-            headertitlebgColor={"#666"}
-            headertitletextColor={"#FFF"}
-            totalCount={count}
-            // handleAdd={() => navigate("/notice/research-services/addedit")}
-            handleEdit={(item) =>
-              navigate("/notice/research-services/addedit", {
-                state: { id: item?.SR },
-              })
-            }
-            handleDelete={(item) => handleDelete(item.SR)}
-          />
+      <div>
+        <div class="container-fluid">
+          <div class="card mt-1">
+            <div class="row mt-5">
+              <div class="col-12">
+                <CustomTable
+                  block={false}
+                  data={researchService}
+                  // addBtnText={"Add Research Service"}
+                  hidebtn1={true}
+                  tableTitle="Research Services"
+                  handlePageChange={handlePageChange}
+                  currentPage={currentPage}
+                  pageSize={pageSize}
+                  headertitlebgColor={"#666"}
+                  headertitletextColor={"#FFF"}
+                  totalCount={count}
+                  // handleAdd={() => navigate("/notice/research-services/addedit")}
+                  handleEdit={(item) =>
+                    navigate("/notice/research-services/addedit", {
+                      state: { id: item?.SR },
+                    })
+                  }
+                  handleDelete={(item) => handleDelete(item.SR)}
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </Layout>

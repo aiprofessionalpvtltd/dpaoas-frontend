@@ -32,7 +32,7 @@ function SearchMotion() {
   const [motionData, setMotionData] = useState([]);
   const [isFromNoticeOpen, setIsFromNoticeOpen] = useState(false);
   const [isToNoticeOpen, setIsToNoticeOpen] = useState(false);
-  const pageSize = 5; // Set your desired page size
+  const pageSize = 10; // Set your desired page size
 
   const formik = useFormik({
     initialValues: {
@@ -51,13 +51,29 @@ function SearchMotion() {
     },
     onSubmit: (values) => {
       // Handle form submission here
-      searchMotionList(values);
+      searchMotionList(values, currentPage);
     },
   });
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
     setCurrentPage(page);
+    if (
+      formik?.values?.motionDiaryNo ||
+      formik?.values?.motionID ||
+      formik?.values?.keyword ||
+      formik?.values?.memberName ||
+      formik?.values?.fromSession ||
+      formik?.values?.toSession ||
+      formik?.values?.motionType ||
+      formik?.values?.motionWeek ||
+      formik?.values?.motionStatus ||
+      formik?.values?.ministry ||
+      formik?.values?.fromNoticeDate ||
+      formik?.values?.toNoticeDate
+    ) {
+      searchMotionList(formik?.values, page);
+    }
   };
 
   // Handle From Notice Date Claneder Toggel
@@ -104,23 +120,23 @@ function SearchMotion() {
       };
     });
   };
-  const getMotionListData = async () => {
-    try {
-      const response = await getAllMotion(currentPage, pageSize);
+  // const getMotionListData = async () => {
+  //   try {
+  //     const response = await getAllMotion(currentPage, pageSize);
 
-      if (response?.success) {
-        // showSuccessMessage(response?.message);
-        setCount(response?.data?.count);
-        const transformedData = transformMotionData(response?.data?.rows);
-        setMotionData(transformedData);
-      }
-    } catch (error) {
-      console.log(error);
-      showErrorMessage(error?.response?.data?.error);
-    }
-  };
+  //     if (response?.success) {
+  //       // showSuccessMessage(response?.message);
+  //       setCount(response?.data?.count);
+  //       const transformedData = transformMotionData(response?.data?.rows);
+  //       setMotionData(transformedData);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     showErrorMessage(error?.response?.data?.error);
+  //   }
+  // };
 
-  const searchMotionList = async (values) => {
+  const searchMotionList = async (values, page) => {
     const data = {
       // fileNumber: ,
       fkSessionId: values?.fromSession,
@@ -132,10 +148,10 @@ function SearchMotion() {
       sessionEndRange: values?.toSession,
       noticeStartRange:
         values?.fromNoticeDate &&
-        moment(values?.fromNoticeDate).format("DD-MM-YYYY"),
+        moment(values?.fromNoticeDate).format("YYYY-MM-DD"),
       noticeEndRange:
         values?.toNoticeDate &&
-        moment(values?.toNoticeDate).format("DD-MM-YYYY"),
+        moment(values?.toNoticeDate).format("YYYY-MM-DD"),
       englishText: values?.keyword,
       motionWeek: values?.motionWeek,
       motionType: values?.motionType,
@@ -143,9 +159,7 @@ function SearchMotion() {
     setCount(null);
 
     try {
-      const response = await searchMotion(currentPage, pageSize, data); // Add await here
-
-      console.log(response);
+      const response = await searchMotion(page, pageSize, data); // Add await here
       if (response?.success) {
         // showSuccessMessage(response?.message);
         const transformedData = transformMotionData(response?.data?.rows);
@@ -173,17 +187,14 @@ function SearchMotion() {
     getMotionStatus();
   }, []);
 
-  useEffect(() => {
-    getMotionListData();
-  }, [currentPage]);
   const handleResetForm = () => {
     formik.resetForm();
+    setMotionData([]);
   };
   const handleEdit = async (id) => {
     try {
       // const { question, history } = await getMotionByID(id);
       const response = await getMotionByID(id);
-      console.log("response Edit", response?.data);
       if (response?.success) {
         navigate("/notice/motion/edit", { state: response?.data });
         //   navigate("/notice/question/detail", {

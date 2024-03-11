@@ -166,3 +166,18 @@ export const updateMemberattendace = async (id, data) => {
     throw error;
   }
 };
+
+export const getThreePreseidingMembers = async () => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.get(`/manageSession/getTop3Members`, {
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // }
+    });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};

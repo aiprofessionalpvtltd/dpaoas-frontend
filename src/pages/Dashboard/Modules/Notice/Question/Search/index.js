@@ -32,13 +32,8 @@ function SearchQuestion() {
   const [allquestionStatus, setAllQuestionStatus] = useState([]);
   const [isFromNoticeOpen, setIsFromNoticeOpen] = useState(false);
   const [isToNoticeOpen, setIsToNoticeOpen] = useState(false);
-  const pageSize = 4; // Set your desired page size
+  const pageSize = 10; // Set your desired page size
 
-  const handlePageChange = (page) => {
-    // Update currentPage when a page link is clicked
-    setCurrentPage(page);
-  };
-  console.log("COunt", count);
   const formik = useFormik({
     initialValues: {
       questionDiaryNo: "",
@@ -54,7 +49,7 @@ function SearchQuestion() {
     },
     onSubmit: (values) => {
       // Handle form submission here
-      SearchQuestionApi(values);
+      SearchQuestionApi(values, currentPage);
     },
   });
 
@@ -86,7 +81,9 @@ function SearchQuestion() {
 
       return {
         Id: res.id,
-        NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate,
+        NoticeDate: moment(
+          res?.noticeOfficeDiary?.noticeOfficeDiaryDate
+        ).format("DD-MM-YYYY"),
         NoticeTime: moment(
           res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
           "hh:ss:a"
@@ -99,8 +96,30 @@ function SearchQuestion() {
     });
   };
 
+  const handlePageChange = (page) => {
+    // Update currentPage when a page link is clicked
+    setCurrentPage(page);
+
+    if (
+      formik?.values?.questionDiaryNo ||
+      formik?.values?.questionID ||
+      formik?.values?.keyword ||
+      formik?.values?.memberName ||
+      formik?.values?.fromSession ||
+      formik?.values?.toSession ||
+      formik?.values?.category ||
+      formik?.values?.questionStatus ||
+      formik?.values?.fromNoticeDate ||
+      formik?.values?.toNoticeDate
+    ) {
+      SearchQuestionApi(formik?.values, page);
+    }
+
+    SearchQuestionApi(formik?.values, page);
+  };
+
   const SearchQuestionApi = useCallback(
-    async (values) => {
+    async (values, page) => {
       const searchParams = {
         fromSessionNo: values?.fromSession,
         toSessionNo: values?.toSession,
@@ -111,22 +130,17 @@ function SearchQuestion() {
         questionStatus: values?.questionStatus,
         questionDiaryNo: values?.questionDiaryNo,
 
-        // noticeOfficeDiaryDateFrom:
-        //   values?.fromNoticeDate &&
-        //   moment(values?.fromNoticeDate).format("DD-MM-YYYY"),
-        noticeOfficeDiaryDateFrom: values?.fromNoticeDate,
-        // noticeOfficeDiaryDateTo:
-        //   values?.toNoticeDate &&
-        //   moment(values?.toNoticeDate).format("DD-MM-YYYY"),
-        noticeOfficeDiaryDateTo: values?.toNoticeDate,
+        noticeOfficeDiaryDateFrom:
+          values?.fromNoticeDate &&
+          moment(values?.fromNoticeDate).format("YYYY-MM-DD"),
+
+        noticeOfficeDiaryDateTo:
+          values?.toNoticeDate &&
+          moment(values?.toNoticeDate).format("YYYY-MM-DD"),
       };
 
       try {
-        const response = await searchQuestion(
-          searchParams,
-          currentPage,
-          pageSize
-        );
+        const response = await searchQuestion(searchParams, page, pageSize);
 
         if (response?.success) {
           showSuccessMessage(response?.message);
@@ -141,22 +155,7 @@ function SearchQuestion() {
     },
     [currentPage, pageSize, setCount, setSearchedData]
   );
-  useEffect(() => {
-    if (
-      formik.values.questionDiaryNo ||
-      formik.values.questionID ||
-      formik.values.keyword ||
-      formik.values.memberName ||
-      formik.values.fromSession ||
-      formik.values.toSession ||
-      formik.values.category ||
-      formik.values.questionStatus ||
-      formik.values.fromNoticeDate ||
-      formik.values.toNoticeDate
-    ) {
-      SearchQuestionApi();
-    }
-  }, [currentPage]);
+
   // const SearchQuestionApi = async (values) => {
   //   const searchParams = {
   //     fromSessionNo: values.fromSession,
@@ -220,26 +219,12 @@ function SearchQuestion() {
   useEffect(() => {
     GetALlStatus();
   }, []);
-  // Handle Delete
-  const handleDelete = (id) => {
-    alert("delete", id);
-  };
+
   // Handle Reset Form
 
   const handleResetForm = () => {
-    formik.setValues({
-      // Reset the form to initial values
-      questionDiaryNo: "",
-      questionID: "",
-      keyword: "",
-      memberName: "",
-      fromSession: "",
-      toSession: "",
-      category: "",
-      questionStatus: "",
-      fromNoticeDate: null, // Reset date fields to null or a default date
-      toNoticeDate: null,
-    });
+    formik.resetForm();
+    setSearchedData([]);
   };
 
   return (
@@ -529,6 +514,7 @@ function SearchQuestion() {
                     hidebtn1={true}
                     data={searchedData}
                     tableTitle="Questions"
+                    // handlePageChange={handlePageChange}
                     handlePageChange={handlePageChange}
                     currentPage={currentPage}
                     showPrint={false}
