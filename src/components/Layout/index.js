@@ -138,7 +138,7 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
     Promise.all(apiRequests)
       .then(() => {
         // All requests are completed
-        console.log("complete all requests");
+        // console.log("complete all requests");
       })
       .catch((error) => {
         // Handle error

@@ -56,6 +56,7 @@ import QMSResolutionList from "../pages/Dashboard/Modules/QMS/Resolution/Resolut
 import QMSSearchQuestion from "../pages/Dashboard/Modules/QMS/SearchQuestion";
 import QMSSerchResolution from "../pages/Dashboard/Modules/QMS/SearchResolution";
 import SMSDashboard from "../pages/Dashboard/Modules/SMS";
+import FileDetail from "../pages/Dashboard/Modules/EFiling/FileDetail";
 import TMSDashboard from "../pages/Dashboard/Modules/TMS";
 import TMSMotion from "../pages/Dashboard/Modules/TMS/Motion";
 import TMSQuestion from "../pages/Dashboard/Modules/TMS/Question";
@@ -145,6 +146,8 @@ import AddEditFileCase from "../pages/Dashboard/Modules/EFiling/FIleRegister/Fil
 import { Diary } from "../pages/Dashboard/Modules/EFiling/Diary";
 import FreshReceipt from "../pages/Dashboard/Modules/EFiling/FreshReceipt";
 import AddEditFR from "../pages/Dashboard/Modules/EFiling/FreshReceipt/AddEditFR";
+import LegislativeBillList from "../pages/Dashboard/Modules/Notice/legislationBusiness/LegislativeBill";
+import AddEditLegislativeBill from "../pages/Dashboard/Modules/Notice/legislationBusiness/LegislativeBill/AddEditLegislativeBill";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -207,6 +210,11 @@ export const ProtectedRoutes = [
     path: "/notice/legislation/private-bill/addedit",
     element: <AddEditPrivateBill />,
   },
+
+  { path: "/notice/legislation/legislative-bill", element: <LegislativeBillList /> },
+  { path: "/notice/legislation/legislative-bill/addedit", element: <AddEditLegislativeBill /> },
+
+
 
   { path: "/notice/manage", element: <NoticeDashboard /> },
   { path: "/notice/manage/members", element: <Members /> },
@@ -469,7 +477,7 @@ export const ProtectedRoutes = [
 
   // E-Filing
   { path: "/efiling/dashboard", element: <EFilingDashboard /> },
-  // { path: "/efiling/dashboard/fileDetail", element: <FileDetail /> },
+  { path: "/efiling/dashboard/fileDetail", element: <FileDetail /> },
   // { path: "/efiling/dashboard/addedit", element: <AddEditFileForm /> },
   // { path: "/efiling/dashboard/addeditcase", element: <AddEditCaseForm /> },
   // { path: "/efiling/dashboard/files", element: <Files /> },

@@ -60,7 +60,7 @@ function AddEditFileRegister() {
     try {
       const response = await getAllYear()
       if (response.success) {
-        showSuccessMessage(response?.message)
+        // showSuccessMessage(response?.message)
         setYearData(response?.data)
       }
     } catch (error) {

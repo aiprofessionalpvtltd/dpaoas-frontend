@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import { Layout } from "../../../../../components/Layout";
 import Header from "../../../../../components/Header";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -23,6 +23,8 @@ import { getUserData } from "../../../../../api/Auth";
 import {
   UpdateEfiling,
   UploadEfilingAttechment,
+  assigneCase,
+  getCaseDetailByID,
   getEFilesByID,
 } from "../../../../../api/APIs/Services/efiling.service";
 import { ToastContainer } from "react-toastify";
@@ -35,6 +37,7 @@ import { AuthContext } from "../../../../../api/AuthContext";
 import {
   getAllEmployee,
   getDepartment,
+  getEmployeeByCurrentUserId,
 } from "../../../../../api/APIs/Services/organizational.service";
 import { getBranches } from "../../../../../api/APIs/Services/Branches.services";
 
@@ -69,23 +72,44 @@ const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
 
 function FileDetail() {
   const location = useLocation();
-  const [editorContent, setEditorContent] = useState();
-  const [editorContent1, setEditorContent1] = useState();
+  const fileInputRef = useRef(null);
+
+  const [notingData, setNotingData] = useState({
+    description: "",
+  });
+
+  const [correspondenceData, setCorrespondenceData] = useState({
+    description: "",
+  });
+
+  const [objection, setObjection] = useState({
+    description: "",
+  });
+
+  const [sanction, setSanction] = useState({
+    description: "",
+  });
+
+  const [letter, setLetter] = useState({
+    description: "",
+  });
+
   const [employeeData, setEmployeeData] = useState([]);
   const UserData = getUserData();
-  const [filesData, setFilesData] = useState();
+  const [filesData, setFilesData] = useState(null);
   const [viewPage, setViewPage] = useState(location?.state?.view);
 
   const [documentTypeVal, setDocumentTypeVal] = useState("");
 
-  const { ministryData } = useContext(AuthContext);
+  const { ministryData, fileIdINRegister } = useContext(AuthContext);
   const [departmentData, setDepartmentData] = useState([]);
   const [branchesData, setBranchesData] = useState([]);
 
-  const [fileId, setFIleId] = useState(location?.state?.id);
+  const [caseId, setcaseId] = useState(location?.state?.id);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [togleOpan, setTogleOpan] = useState(true);
+  const [selectedTab, setSelectedTab] = useState("Noting");
 
   const [remarksData, setRemarksData] = useState([]);
   const navigate = useNavigate();
@@ -123,6 +147,11 @@ function FileDetail() {
     },
   ];
 
+  const clearInput = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.value = null; // Reset the value of the input
+    }
+  };
   const formik = useFormik({
     initialValues: {
       fileNumber: "",
@@ -138,7 +167,7 @@ function FileDetail() {
       // notingDescription: "",
       // correspondingDescription: "",
       assignedTo: "",
-      CommentStatus: filesData ? filesData?.fileRemarks[0]?.CommentStatus : "",
+      // CommentStatus: filesData ? filesData?.fileRemarks[0]?.CommentStatus : "",
       comment: "",
     },
     // validationSchema: validationSchema,
@@ -148,29 +177,21 @@ function FileDetail() {
     },
   });
 
+  console.log("Case Id----------------------", location?.state?.id);
   const UpdateEfilingApi = async (values) => {
     const Data = {
-      fileNumber: values?.fileNumber,
-      fileSubject: values?.fileSubject,
-      priority: values?.priority,
-      fileCategory: values?.fileCategory,
-      fileType: documentTypeVal,
-      ...(values?.fkBranchId && { fkBranchId: values?.fkBranchId }),
-      ...(values?.fkdepartmentId && { fkdepartmentId: values?.fkdepartmentId }),
-      ...(values?.fkMinistryId && { fkMinistryId: values?.fkMinistryId }),
-      ...(values?.receivedOn && { receivedOn: values?.receivedOn }),
-      year: values?.year,
-      notingDescription: editorContent,
-      correspondingDescription: editorContent1,
       submittedBy: UserData?.fkUserId,
       assignedTo: values?.assignedTo,
       CommentStatus: values?.CommentStatus,
       comment: values?.comment,
-      commentBy: UserData?.fkUserId,
     };
 
     try {
-      const response = await UpdateEfiling(fileId, Data);
+      const response = await assigneCase(
+        fileIdINRegister,
+        location?.state?.id,
+        Data
+      );
       if (response?.success) {
         showSuccessMessage(response?.message);
         // formik.resetForm()
@@ -184,19 +205,21 @@ function FileDetail() {
   const toggleModal = () => setIsModalOpen(!isModalOpen);
 
   // use it (editorContent) when submitting whole file content
-  console.log("Editor content", editorContent);
 
   const [directorData, setDirectorData] = useState([]);
-  console.log("====================================");
-  console.log("directorData", directorData);
-  console.log("====================================");
+
   const getFilesByID = async () => {
     try {
-      const response = await getEFilesByID(fileId);
+      const response = await getCaseDetailByID(fileIdINRegister, caseId);
       if (response?.success) {
-        setDirectorData(response?.data?.filedairies);
-        setRemarksData(response?.data?.fileRemarks);
-        setFilesData(response?.data);
+        setDirectorData(response?.data?.cases?.fileDiary);
+        setRemarksData(response?.data?.cases?.fileRemarks);
+        // console.log("dataassassasa-------",response?.data?.cases?.fileDetails);
+        setFilesData(response?.data?.cases);
+
+        const noteData = response?.data?.cases?.sections[4].description;
+
+        console.log("_____________________________", noteData);
       }
     } catch (error) {
       // showErrorMessage(error?.response?.data?.message);
@@ -209,57 +232,43 @@ function FileDetail() {
     }
   }, []);
 
+  // console.log("year-----------", filesData?.fileType);
   useEffect(() => {
     // Update form values when termsById changes
     if (filesData) {
-      setEditorContent(filesData?.notingDescription || "");
-      setEditorContent1(filesData?.correspondingDescription || "");
+      setCorrespondenceData((prev) => ({
+        ...prev,
+        description: filesData?.sections[0].description || "",
+      }));
+      setObjection((prev) => ({
+        ...prev,
+        description: filesData?.sections[1].description || "",
+      }));
+      setLetter((prev) => ({
+        ...prev,
+        description: filesData?.sections[2].description || "",
+      }));
+      setSanction((prev) => ({
+        ...prev,
+        description: filesData?.sections[3].description || "",
+      }));
+      setNotingData((prev) => ({
+        ...prev,
+        description: filesData?.sections[4].description || "",
+      }));
+
       formik.setValues({
-        fileNumber: filesData?.fileNumber || "",
-        fileSubject: filesData?.fileSubject || "",
-        priority: filesData?.priority || "",
-        fileCategory: filesData?.fileCategory || "",
-        fileType: filesData?.fileType || "",
-        fkBranchId: filesData?.fkBranchId || "",
-        fkdepartmentId: filesData?.fkdepartmentId || "",
-        fkMinistryId: filesData?.fkMinistryId || "",
-        receivedOn: filesData?.receivedOn
-          ? new Date(filesData?.receivedOn)
-          : new Date(),
-        year: filesData?.year || "",
-        // notingDescription: filesData?.notingDescription || "",
-        // correspondingDescription: filesData?.correspondingDescription || "",
-        assignedTo: filesData?.assignedTo || "",
-        CommentStatus: filesData?.fileRemarks[0]?.CommentStatus || "",
-        comment: "",
+        fileNumber: filesData?.fileDetails?.fileNumber || "",
+        fileSubject: filesData?.fileDetails?.fileSubject || "",
+        // priority: filesData?.fileDetails?.priority || "",
+        fileCategory: filesData?.fileDetails?.fileCategory || "",
+        // fileType: filesData?.fileDetails?.fileType || "",
+        fkBranchId: filesData?.fileDetails?.fkBranchId || "",
+        year: filesData?.fileDetails?.year || "",
       });
-      setDocumentTypeVal(filesData?.fileType);
+      setDocumentTypeVal(filesData?.fileDetails?.fileType);
     }
   }, [filesData, formik.setValues]);
-
-  const handleUploadFile = async (event) => {
-    // Get the selected file
-    const file = event.target.files[0];
-
-    // Create FormData object
-    const formData = new FormData();
-
-    // Append the file to FormData
-    formData.append("attachment", file);
-    try {
-      const response = await UploadEfilingAttechment(
-        UserData?.fkUserId,
-        fileId,
-        formData
-      );
-      showSuccessMessage(response?.message);
-      if (response.success) {
-        getFilesByID();
-      }
-    } catch (error) {
-      showErrorMessage(error?.response?.data?.message);
-    }
-  };
 
   const handleDocumentType = (e) => {
     setDocumentTypeVal(e.target.value);
@@ -288,10 +297,9 @@ function FileDetail() {
 
   const getEmployeeData = async () => {
     try {
-      const response = await getAllEmployee(0, 1000);
+      const response = await getEmployeeByCurrentUserId(UserData?.fkUserId);
       if (response?.success) {
         setEmployeeData(response?.data);
-        console.log("response?.data, Dataa", response?.data);
       }
     } catch (error) {
       console.log(error);
@@ -339,15 +347,15 @@ function FileDetail() {
           <div className="row">
             <div className="col-md-2">
               <div className="noting">
-                {directorData.length > 0 ? (
+                {directorData?.length > 0 ? (
                   directorData.map((item) => (
                     <div key={item.id}>
                       <p
                         style={{ marginBottom: "0px", fontWeight: "bold" }}
-                      >{`${item?.users?.employee?.firstName} ${item?.users?.employee?.lastName} (${item?.users?.employee?.departments?.departmentName})`}</p>
+                      >{`${item?.submittedByUser?.employee?.firstName} ${item?.submittedByUser?.employee?.lastName} (${item?.submittedByUser?.employee?.departments?.departmentName})`}</p>
                       <p
                         style={{ marginBottom: "0" }}
-                      >{`Diary Number : ${item?.fileInDairyNumber}`}</p>
+                      >{`Diary Number : ${item?.diaryNumber}`}</p>
                       <p style={{ marginBottom: "0" }}>
                         {moment(item?.createdAt).format("DD/MM/YYYY")}
                       </p>
@@ -423,7 +431,7 @@ function FileDetail() {
                       </div>
                     </div>
                     <div class="row">
-                      <div class="col">
+                      {/* <div class="col">
                         <div class="mb-3">
                           <div class="mb-3">
                             <label class="form-label">Priority</label>
@@ -441,7 +449,7 @@ function FileDetail() {
                             </select>
                           </div>
                         </div>
-                      </div>
+                      </div> */}
                       <div class="col-6">
                         <div class="mb-3">
                           <label class="form-label">Year</label>
@@ -487,8 +495,10 @@ function FileDetail() {
                               Select
                             </option>
 
-                            <option value={"Internal"}>Internal</option>
-                            <option value={"External"}>External</option>
+                            <option value={"Urgent"}>Urgent</option>
+                            <option value={"Routine"}>Routine</option>
+                            <option value={"Immediate"}>Immediate</option>
+                            <option value={"Priority"}>Immediate</option>
                           </select>
                         </div>
                       </div>
@@ -606,9 +616,77 @@ function FileDetail() {
                       </>
                     ) : null}
                   </div>
-                  <div className="row">
+
+                  <div class="row">
+                    <div class="col">
+                      <div class="mb-3">
+                        <label class="form-label">Action</label>
+                        <select
+                          class="form-select"
+                          id="CommentStatus"
+                          name="CommentStatus"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.CommentStatus}
+                        >
+                          <option value="" selected disabled hidden>
+                            Select
+                          </option>
+                          <option value={"Approved"}>Approved</option>
+                          <option value={"Rejected"}>Rejected</option>
+                          <option value={"Discuss"}>Discuss</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="mb-3">
+                        <label class="form-label">Mark To</label>
+                        <select
+                          class="form-select"
+                          id="assignedTo"
+                          name="assignedTo"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.assignedTo}
+                        >
+                          <option value={""} selected disabled hidden>
+                            Select
+                          </option>
+                          {employeeData &&
+                            employeeData?.map((item) => (
+                              <option
+                                value={item.id}
+                              >{`${item.firstName}${item.lastName}`}</option>
+                            ))}
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col">
+                      <div class="mb-3">
+                        <label class="form-label">Remarks</label>
+                        <textarea
+                          class="form-control"
+                          id="comment"
+                          name="comment"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.comment}
+                        ></textarea>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row mb-4">
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                      <button class="btn btn-primary" type="submit">
+                        Submit
+                      </button>
+                    </div>
+                  </div>
+                  {/* <div className="row">
                     <div class="col-6">
-                      {/* <div class="mb-3"> */}
+                     
                       <label class="form-label" style={{ display: "block" }}>
                         Attached File
                       </label>
@@ -633,164 +711,190 @@ function FileDetail() {
                           </a>
                         </span>
                       </span>
-                      {/* </div> */}
+                      
                     </div>
-                  </div>
+                  </div> */}
 
                   <div class="shadow" style={{ padding: "25px" }}>
-                    <ul class="nav nav-tabs mb-3 mt-3" id="ex1" role="tablist">
+                    <ul
+                      className="nav nav-tabs mb-3 mt-3"
+                      id="ex1"
+                      role="tablist"
+                    >
                       <li
-                        class="nav-item"
+                        className="nav-item"
                         role="presentation"
-                        onClick={() => setTogleOpan(!togleOpan)}
+                        onClick={() => {
+                          clearInput();
+                          setSelectedTab("Noting");
+                        }}
                       >
                         <button
                           type="button"
-                          class={togleOpan ? "nav-link active" : "nav-link"}
+                          className={
+                            selectedTab === "Noting"
+                              ? "nav-link active"
+                              : "nav-link"
+                          }
+                          style={{ width: "140px" }}
                           data-bs-toggle="tab"
                           role="tab"
                           aria-controls="ex1-tabs-1"
-                          aria-selected={togleOpan ? "true" : "false"}
+                          aria-selected={
+                            selectedTab === "Noting" ? "true" : "false"
+                          }
                         >
                           Noting
                         </button>
                       </li>
                       <li
-                        class="nav-item"
+                        className="nav-item"
                         role="presentation"
-                        onClick={() => setTogleOpan(!togleOpan)}
+                        onClick={() => {
+                          clearInput();
+                          setSelectedTab("Correspondence");
+                        }}
                       >
                         <button
                           type="button"
-                          class={!togleOpan ? "nav-link active" : "nav-link"}
+                          className={
+                            selectedTab === "Correspondence"
+                              ? "nav-link active"
+                              : "nav-link"
+                          }
+                          style={{ width: "140px" }}
                           data-bs-toggle="tab"
                           role="tab"
                           aria-controls="ex1-tabs-2"
-                          aria-selected={!togleOpan ? "true" : "false"}
+                          aria-selected={
+                            selectedTab === "Correspondence" ? "true" : "false"
+                          }
                         >
                           Correspondence
+                        </button>
+                      </li>
+                      <li
+                        className="nav-item"
+                        role="presentation"
+                        onClick={() => {
+                          clearInput();
+                          setSelectedTab("Sanction");
+                        }}
+                      >
+                        <button
+                          type="button"
+                          className={
+                            selectedTab === "Sanction"
+                              ? "nav-link active"
+                              : "nav-link"
+                          }
+                          style={{ width: "140px" }}
+                          data-bs-toggle="tab"
+                          role="tab"
+                          aria-controls="ex1-tabs-1"
+                          aria-selected={
+                            selectedTab === "Sanction" ? "true" : "false"
+                          }
+                        >
+                          Sanction
+                        </button>
+                      </li>
+                      <li
+                        className="nav-item"
+                        role="presentation"
+                        onClick={() => {
+                          clearInput();
+                          setSelectedTab("Objection");
+                        }}
+                      >
+                        <button
+                          type="button"
+                          className={
+                            selectedTab === "Objection"
+                              ? "nav-link active"
+                              : "nav-link"
+                          }
+                          style={{ width: "140px" }}
+                          data-bs-toggle="tab"
+                          role="tab"
+                          aria-controls="ex1-tabs-2"
+                          aria-selected={
+                            selectedTab === "Objection" ? "true" : "false"
+                          }
+                        >
+                          Objection
+                        </button>
+                      </li>
+                      <li
+                        className="nav-item"
+                        role="presentation"
+                        onClick={() => {
+                          clearInput();
+                          setSelectedTab("Letter");
+                        }}
+                      >
+                        <button
+                          type="button"
+                          className={
+                            selectedTab === "Letter"
+                              ? "nav-link active"
+                              : "nav-link"
+                          }
+                          style={{ width: "140px" }}
+                          data-bs-toggle="tab"
+                          role="tab"
+                          aria-controls="ex1-tabs-2"
+                          aria-selected={
+                            selectedTab === "Letter" ? "true" : "false"
+                          }
+                        >
+                          Letter
                         </button>
                       </li>
                     </ul>
 
                     <div class="tab-content" id="ex1-content">
-                      {togleOpan ? (
-                        // <div class="tab-pane fade show active" id="ex1-tabs-1" role="tabpanel" aria-labelledby="ex1-tab-1">
-                        <section>
-                          <div class="row">
-                            <div class="col">
-                              <div class="mb-3">
-                                <label class="form-label">Description</label>
-                                <TinyEditor
-                                  initialContent={
-                                    "Hello there! Write something new"
-                                  }
-                                  setEditorContent={setEditorContent}
-                                  editorContent={editorContent}
-                                  multiLanguage={false}
-                                  disabled={viewPage ? true : false}
-                                />
-                              </div>
-                            </div>
-                          </div>
-                          <div class="row">
-                            <div class="col">
-                              <div class="mb-3">
-                                <label class="form-label">Action</label>
-                                <select
-                                  class="form-select"
-                                  id="CommentStatus"
-                                  name="CommentStatus"
-                                  disabled={viewPage ? true : false}
-                                  onChange={formik.handleChange}
-                                  onBlur={formik.handleBlur}
-                                  value={formik.values.CommentStatus}
-                                >
-                                  <option value="" selected disabled hidden>
-                                    Select
-                                  </option>
-                                  <option value={"Approved"}>Approved</option>
-                                  <option value={"Rejected"}>Rejected</option>
-                                  <option value={"Discuss"}>Discuss</option>
-                                </select>
-                              </div>
-                            </div>
-                            <div class="col">
-                              <div class="mb-3">
-                                <label class="form-label">Mark To</label>
-                                <select
-                                  class="form-select"
-                                  id="assignedTo"
-                                  name="assignedTo"
-                                  disabled={viewPage ? true : false}
-                                  onChange={formik.handleChange}
-                                  onBlur={formik.handleBlur}
-                                  value={formik.values.assignedTo}
-                                >
-                                  <option value={""} selected disabled hidden>
-                                    Select
-                                  </option>
-                                  {employeeData &&
-                                    employeeData?.map((item) => (
-                                      <option
-                                        value={item.fkUserId}
-                                      >{`${item.firstName}${item.lastName}`}</option>
-                                    ))}
-                                </select>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="row">
-                            <div class="col">
-                              <div class="mb-3">
-                                <label class="form-label">Remarks</label>
-                                <textarea
-                                  class="form-control"
-                                  id="comment"
-                                  name="comment"
-                                  disabled={viewPage ? true : false}
-                                  onChange={formik.handleChange}
-                                  onBlur={formik.handleBlur}
-                                  value={formik.values.comment}
-                                ></textarea>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="row">
-                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                              <button
-                                class="btn btn-primary"
-                                type="submit"
-                                disabled={viewPage ? true : false}
-                              >
-                                Submit
-                              </button>
-                            </div>
-                          </div>
+                      {selectedTab === "Noting" ? (
+                        // Render content for the 'Noting' tab
+                        <section class="mb-5">
+                          <label for="formFile" class="form-label mt-3">
+                            Description
+                          </label>
+
+                          <TinyEditor
+                            initialContent={""}
+                            setEditorContent={(content) =>
+                              setNotingData((prev) => ({
+                                ...prev,
+                                description: content,
+                              }))
+                            }
+                            editorContent={notingData.description}
+                            multiLanguage={false}
+                            disabled={location.state?.view ? true : false}
+                          />
                         </section>
-                      ) : (
-                        // </div>
-                        // <div class="tab-pane fade" id="ex1-tabs-2" role="tabpanel" aria-labelledby="ex1-tab-2">
+                      ) : selectedTab === "Correspondence" ? (
                         <section>
+                          <label for="formFile" class="form-label mt-3">
+                            Description
+                          </label>
+
+                          <TinyEditor
+                            initialContent={""}
+                            setEditorContent={(content) =>
+                              setCorrespondenceData((prev) => ({
+                                ...prev,
+                                description: content,
+                              }))
+                            }
+                            editorContent={correspondenceData.description}
+                            multiLanguage={false}
+                            disabled={location.state?.view ? true : false}
+                          />
                           <div class="row">
                             <div class="col">
-                              <div class="mb-3">
-                                <label class="form-label">Description</label>
-                                <TinyEditor
-                                  initialContent={
-                                    "Hello there! Write something new"
-                                  }
-                                  setEditorContent={setEditorContent1}
-                                  editorContent={editorContent1}
-                                  multiLanguage={false}
-                                  disabled={viewPage ? true : false}
-                                />
-                              </div>
-                            </div>
-                          </div>
-                          <div class="row">
-                            <div class="col-6">
-                              <div class="mb-3 mt-3">
+                              <div class="mb-3 mt-5">
                                 <div class="form-group">
                                   <div class="row">
                                     <label
@@ -800,35 +904,19 @@ function FileDetail() {
                                       Attach File
                                     </label>
 
-                                    <div class="col">
-                                      <div class="MultiFile-wrap" id="T7">
-                                        <input
-                                          disabled={viewPage ? true : false}
-                                          class="form-control"
-                                          type="file"
-                                          id="formFile"
-                                          onChange={handleUploadFile}
-                                        />
-                                      </div>
-                                    </div>
-                                    {filesData &&
-                                      filesData?.fileAttachments?.map(
+                                    {filesData?.sections &&
+                                      filesData?.sections[0]?.caseAttachments.map(
                                         (item) => (
                                           <div class="MultiFile-label mt-3">
                                             <a
-                                              href={`http://172.16.170.8:5252${item.filename}`}
+                                              href={`http://172.16.170.8:5252${item.fileName}`}
                                             >
                                               <i class="fas fa-download"></i>
                                             </a>
-                                            <a
-                                              class="MultiFile-remove"
-                                              href="#T7"
-                                            >
-                                              x
-                                            </a>
+                                            
                                             <span
                                               class="MultiFile-label"
-                                              title={item.filename
+                                              title={item.fileName
                                                 ?.split("\\")
                                                 .pop()
                                                 .split("/")
@@ -836,9 +924,9 @@ function FileDetail() {
                                             >
                                               <span class="MultiFile-title">
                                                 <a
-                                                  href={`http://172.16.170.8:5252${item.filename}`}
+                                                  href={`http://172.16.170.8:5252${item.fileName}`}
                                                 >
-                                                  {item.filename
+                                                  {item.fileName
                                                     ?.split("\\")
                                                     .pop()
                                                     .split("/")
@@ -855,7 +943,213 @@ function FileDetail() {
                             </div>
                           </div>
                         </section>
-                        // </div>
+                      ) : selectedTab === "Sanction" ? (
+                        <section>
+                          <label for="formFile" class="form-label mt-3">
+                            Description
+                          </label>
+
+                          <TinyEditor
+                            initialContent={""}
+                            setEditorContent={(content) =>
+                              setSanction((prev) => ({
+                                ...prev,
+                                description: content,
+                              }))
+                            }
+                            editorContent={sanction.description}
+                            multiLanguage={false}
+                            disabled={location.state?.view ? true : false}
+                          />
+                          <div class="row">
+                            <div class="col">
+                              <div class="mb-3 mt-5">
+                                <div class="form-group">
+                                  <div class="row">
+                                    <label
+                                      for="formFile"
+                                      class="form-label mt-3"
+                                    >
+                                      Attach File
+                                    </label>
+
+                                    {filesData?.sections &&
+                                      filesData?.sections[3]?.caseAttachments.map(
+                                        (item) => (
+                                          <div class="MultiFile-label mt-3">
+                                            <a
+                                              href={`http://172.16.170.8:5252${item.fileName}`}
+                                            >
+                                              <i class="fas fa-download"></i>
+                                            </a>
+                                            
+                                            <span
+                                              class="MultiFile-label"
+                                              title={item.fileName
+                                                ?.split("\\")
+                                                .pop()
+                                                .split("/")
+                                                .pop()}
+                                            >
+                                              <span class="MultiFile-title">
+                                                <a
+                                                  href={`http://172.16.170.8:5252${item.fileName}`}
+                                                >
+                                                  {item.fileName
+                                                    ?.split("\\")
+                                                    .pop()
+                                                    .split("/")
+                                                    .pop()}
+                                                </a>
+                                              </span>
+                                            </span>
+                                          </div>
+                                        )
+                                      )}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </section>
+                      ) : selectedTab === "Objection" ? (
+                        <section>
+                          <label for="formFile" class="form-label mt-3">
+                            Description
+                          </label>
+
+                          <TinyEditor
+                            initialContent={""}
+                            setEditorContent={(content) =>
+                              setObjection((prev) => ({
+                                ...prev,
+                                description: content,
+                              }))
+                            }
+                            editorContent={objection.description}
+                            multiLanguage={false}
+                            disabled={location.state?.view ? true : false}
+                          />
+                          <div class="row">
+                            <div class="col">
+                              <div class="mb-3 mt-5">
+                                <div class="form-group">
+                                  <div class="row">
+                                    <label
+                                      for="formFile"
+                                      class="form-label mt-3"
+                                    >
+                                      Attach File
+                                    </label>
+
+                                    {filesData?.sections &&
+                                      filesData?.sections[1]?.caseAttachments.map(
+                                        (item) => (
+                                          <div class="MultiFile-label mt-3">
+                                            <a
+                                              href={`http://172.16.170.8:5252${item.fileName}`}
+                                            >
+                                              <i class="fas fa-download"></i>
+                                            </a>
+                                            
+                                            <span
+                                              class="MultiFile-label"
+                                              title={item.fileName
+                                                ?.split("\\")
+                                                .pop()
+                                                .split("/")
+                                                .pop()}
+                                            >
+                                              <span class="MultiFile-title">
+                                                <a
+                                                  href={`http://172.16.170.8:5252${item.fileName}`}
+                                                >
+                                                  {item.fileName
+                                                    ?.split("\\")
+                                                    .pop()
+                                                    .split("/")
+                                                    .pop()}
+                                                </a>
+                                              </span>
+                                            </span>
+                                          </div>
+                                        )
+                                      )}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </section>
+                      ) : (
+                        <section>
+                          <label for="formFile" class="form-label mt-3">
+                            Description
+                          </label>
+
+                          <TinyEditor
+                            initialContent={""}
+                            setEditorContent={(content) =>
+                              setLetter((prev) => ({
+                                ...prev,
+                                description: content,
+                              }))
+                            }
+                            editorContent={letter.description}
+                            multiLanguage={false}
+                            disabled={location.state?.view ? true : false}
+                          />
+                          <div class="row">
+                            <div class="col">
+                              <div class="mb-3 mt-5">
+                                <div class="form-group">
+                                  <div class="row">
+                                    <label
+                                      for="formFile"
+                                      class="form-label mt-3"
+                                    >
+                                      Attach File
+                                    </label>
+
+                                    {filesData?.sections &&
+                                      filesData?.sections[2]?.caseAttachments.map(
+                                        (item) => (
+                                          <div class="MultiFile-label mt-3">
+                                            <a
+                                              href={`http://172.16.170.8:5252${item.fileName}`}
+                                            >
+                                              <i class="fas fa-download"></i>
+                                            </a>
+                                            
+                                            <span
+                                              class="MultiFile-label"
+                                              title={item.fileName
+                                                ?.split("\\")
+                                                .pop()
+                                                .split("/")
+                                                .pop()}
+                                            >
+                                              <span class="MultiFile-title">
+                                                <a
+                                                  href={`http://172.16.170.8:5252${item.fileName}`}
+                                                >
+                                                  {item.fileName
+                                                    ?.split("\\")
+                                                    .pop()
+                                                    .split("/")
+                                                    .pop()}
+                                                </a>
+                                              </span>
+                                            </span>
+                                          </div>
+                                        )
+                                      )}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </section>
                       )}
                     </div>
                   </div>
@@ -900,7 +1194,7 @@ function FileDetail() {
                     </button>
                   </a> */}
                 </div>
-                {remarksData.length > 0 ? (
+                {remarksData?.length > 0 ? (
                   remarksData.map((item) => (
                     <>
                       {item?.comment !== null ? (
@@ -920,7 +1214,7 @@ function FileDetail() {
                               <div class="d-flex justify-content-between align-items-center">
                                 <div class="d-flex flex-row align-items-center">
                                   <div style={{ float: "left" }}>
-                                    <span class="mr-2">{`${item?.users?.employee?.firstName}  ${item?.users?.employee?.lastName}`}</span>
+                                    <span class="mr-2">{`${item?.submittedUser?.employee?.firstName}  ${item?.submittedUser?.employee?.lastName}`}</span>
                                     <small
                                       style={{
                                         marginLeft: "0px",
@@ -930,8 +1224,8 @@ function FileDetail() {
                                       class="c-badge"
                                     >
                                       {
-                                        item?.users?.employee
-                                          ?.employeeDesignation?.designationName
+                                        item?.submittedUser?.employee
+                                          ?.designations?.designationNam
                                       }
                                     </small>
                                   </div>
