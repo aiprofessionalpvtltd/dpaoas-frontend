@@ -118,7 +118,15 @@ function NMSSessionAttendance() {
         style={{ display: "flex", justifyContent: "space-between" }}
       >
         <div class="col-3">
-          <Header dashboardLink={"/notice/dashboard"} title1={"Attendance"} />
+          <Header
+            dashboardLink={"/notice/dashboard"}
+            title1={"Session Days"}
+            title2={
+              location?.state?.view ? "View Attendance" : "Mark Attendance"
+            }
+            addLink2={"/"}
+            addLink1={"/notice/manage/manage-session-days"}
+          />
         </div>
         <div class="col-3">
           <Formik initialValues={{ search: "" }}>

@@ -27,6 +27,8 @@ const validationSchema = Yup.object({
 const AttendanceReport = () => {
   const [selectedOption, setSelectedOption] = useState("");
   const [searchedData, setSearchedData] = useState(null);
+  const [isStartDateOpen, setIsStartDateOpen] = useState(false);
+  const [isEndDateOpen, setIsEndDateOpen] = useState(false);
   console.log("searchedData", searchedData);
   const formik = useFormik({
     initialValues: {
@@ -44,6 +46,28 @@ const AttendanceReport = () => {
     },
   });
 
+  // Handle Claneder Toggel
+  const handleCalendarToggle = () => {
+    setIsStartDateOpen(!isStartDateOpen);
+  };
+  // Handale DateCHange
+  const handleStartDateSelect = (date) => {
+    formik.setFieldValue("weeklyStartDate", date);
+
+    setIsStartDateOpen(false);
+  };
+
+  // Handle End Claneder Toggel
+  const handleEndDateCalendarToggle = () => {
+    setIsEndDateOpen(!isEndDateOpen);
+  };
+
+  // Handale DateCHange
+  const handleEndDateSelect = (date) => {
+    formik.setFieldValue("weeklyEndDate", date);
+
+    setIsEndDateOpen(false);
+  };
   const renderFields = () => {
     switch (selectedOption) {
       case "Weekly":
@@ -62,15 +86,21 @@ const AttendanceReport = () => {
                       fontSize: "20px",
                       zIndex: "1",
                       color: "#666",
+                      cursor: "pointer",
                     }}
+                    onClick={handleCalendarToggle}
                   >
                     <FontAwesomeIcon icon={faCalendarAlt} />
                   </span>
                   <DatePicker
                     selected={formik.values.weeklyStartDate}
-                    onChange={(date) =>
-                      formik.setFieldValue("weeklyStartDate", date)
-                    }
+                    onChange={handleStartDateSelect}
+                    open={isStartDateOpen}
+                    onClickOutside={() => setIsStartDateOpen(false)}
+                    onInputClick={handleCalendarToggle}
+                    // onChange={(date) =>
+                    //   formik.setFieldValue("weeklyStartDate", date)
+                    // }
                     onBlur={formik.handleBlur}
                     className={`form-control ${
                       formik.touched.weeklyStartDate &&
@@ -101,15 +131,18 @@ const AttendanceReport = () => {
                       fontSize: "20px",
                       zIndex: "1",
                       color: "#666",
+                      cursor: "pointer",
                     }}
+                    onClick={handleEndDateCalendarToggle}
                   >
                     <FontAwesomeIcon icon={faCalendarAlt} />
                   </span>
                   <DatePicker
                     selected={formik.values.weeklyEndDate}
-                    onChange={(date) =>
-                      formik.setFieldValue("weeklyEndDate", date)
-                    }
+                    // onChange={(date) =>
+                    //   formik.setFieldValue("weeklyEndDate", date)
+                    // }
+                    onChange={handleEndDateSelect}
                     onBlur={formik.handleBlur}
                     maxDate={new Date()}
                     className={`form-control ${
@@ -118,6 +151,9 @@ const AttendanceReport = () => {
                         ? "is-invalid"
                         : ""
                     }`}
+                    open={isEndDateOpen}
+                    onClickOutside={() => setIsEndDateOpen(false)}
+                    onInputClick={handleEndDateCalendarToggle}
                   />
                   {formik.touched.weeklyEndDate &&
                     formik.errors.weeklyEndDate && (
@@ -448,7 +484,7 @@ const AttendanceReport = () => {
                       </div>
                     </div>
                     <div className="col-1 my-2">
-                    <div className="mt-4">
+                      <div className="mt-4">
                         <button
                           class="btn btn-primary mb-3"
                           type="button"
@@ -457,7 +493,7 @@ const AttendanceReport = () => {
                           Reset
                         </button>
                       </div>
-                      </div>
+                    </div>
                     {/* <div className="row">
                     <div className="col my-2 d-flex justify-content-end">
                       <div className="mt-4">

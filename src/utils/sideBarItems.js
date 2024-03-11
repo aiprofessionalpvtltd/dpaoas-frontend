@@ -264,7 +264,7 @@ export const NoticeSidebarItems = [
         icon: faChair,
       },
       {
-        itemName: "Session Attendance",
+        itemName: "Member Attendance",
         link: "/notice/manage/single-member-session-attendance",
         icon: faChair,
       },
