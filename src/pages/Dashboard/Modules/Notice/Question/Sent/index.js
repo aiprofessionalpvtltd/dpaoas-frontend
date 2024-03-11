@@ -33,11 +33,27 @@ function SentQuestion() {
   const [count, setCount] = useState(null);
   const [isFromNoticeOpen, setIsFromNoticeOpen] = useState(false);
   const [isToNoticeOpen, setIsToNoticeOpen] = useState(false);
-  const pageSize = 5; // Set your desired page size
+  const [searchingFlag, setSearchingFlag] = useState(false);
+  const pageSize = 10; // Set your desired page size
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
     setCurrentPage(page);
+    if (
+      formik?.values?.questionDiaryNo ||
+      formik?.values?.questionID ||
+      formik?.values?.keyword ||
+      formik?.values?.memberName ||
+      formik?.values?.fromSession ||
+      formik?.values?.toSession ||
+      formik?.values?.category ||
+      formik?.values?.questionStatus ||
+      formik?.values?.fromNoticeDate ||
+      formik?.values?.toNoticeDate
+    ) {
+      SearchQuestionApi(formik?.values, page);
+    }
+    // SearchQuestionApi(formik?.values, page);
   };
 
   const formik = useFormik({
@@ -55,7 +71,7 @@ function SentQuestion() {
     },
     onSubmit: (values) => {
       // Handle form submission here
-      SearchQuestionApi(values);
+      SearchQuestionApi(values, currentPage);
     },
   });
 
@@ -81,6 +97,7 @@ function SentQuestion() {
   };
 
   const transformLeavesData = (apiData) => {
+    console.log("api", apiData);
     return apiData.map((res, index) => {
       const subjectMatter = [res?.englishText, res?.urduText]
         .filter(Boolean)
@@ -88,10 +105,15 @@ function SentQuestion() {
       const cleanedSubjectMatter = subjectMatter.replace(/(<([^>]+)>)/gi, "");
       return {
         // SrNo: index + 1,
-        Id: res.id,
-        DiaryNumber: res.fkQuestionDiaryId,
-        NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate,
-        NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
+        Id: res?.id,
+        DiaryNumber: res?.noticeOfficeDiary?.noticeOfficeDiaryNo,
+        NoticeDate: moment(
+          res?.noticeOfficeDiary?.noticeOfficeDiaryDate
+        ).format("DD-MM-YYYY"),
+        NoticeTime: moment(
+          res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
+          "hh:mm A"
+        ).format("hh:mm A"),
         SessionNumber: res?.session?.sessionName,
         SubjectMatter: cleanedSubjectMatter,
         Category: res.questionCategory,
@@ -100,29 +122,26 @@ function SentQuestion() {
     });
   };
   const SearchQuestionApi = useCallback(
-    async (values) => {
+    async (values, page) => {
+      setSearchingFlag(true);
       const searchParams = {
-        fromSessionNo: values.fromSession,
-        toSessionNo: values.toSession,
-        memberName: values.memberName?.value,
-        questionCategory: values.category,
-        keyword: values.keyword,
-        questionID: values.questionID,
-        questionStatus: values.questionStatus,
-        questionDiaryNo: values.questionDiaryNo,
+        fromSessionNo: values?.fromSession,
+        toSessionNo: values?.toSession,
+        memberName: values?.memberName?.value,
+        questionCategory: values?.category,
+        keyword: values?.keyword,
+        questionID: values?.questionID,
+        questionStatus: values?.questionStatus,
+        questionDiaryNo: values?.questionDiaryNo,
         noticeOfficeDiaryDateFrom:
           values?.fromNoticeDate &&
-          moment(values.fromNoticeDate).format("DD-MM-YYYY"),
+          moment(values?.fromNoticeDate).format("YYYY-MM-DD"),
         noticeOfficeDiaryDateTo:
           values?.toNoticeDate &&
-          moment(values.toNoticeDate).format("DD-MM-YYYY"),
+          moment(values?.toNoticeDate).format("YYYY-MM-DD"),
       };
       try {
-        const response = await searchQuestion(
-          searchParams,
-          currentPage,
-          pageSize
-        );
+        const response = await searchQuestion(searchParams, page, pageSize);
 
         if (response?.success) {
           showSuccessMessage(response?.message);
@@ -133,6 +152,8 @@ function SentQuestion() {
         // formik.resetForm();
       } catch (error) {
         showErrorMessage(error?.response?.data?.message);
+      } finally {
+        setSearchingFlag(false); // Set searching flag back to false
       }
     },
     [currentPage, pageSize, setCount, setResData]
@@ -179,6 +200,14 @@ function SentQuestion() {
   };
 
   useEffect(() => {
+    GetALlStatus();
+  }, []);
+
+  // useEffect(() => {
+  //   getAllQuestionsApi();
+  // }, [getAllQuestionsApi]);
+
+  useEffect(() => {
     if (
       formik?.values?.questionDiaryNo ||
       formik?.values?.questionID ||
@@ -191,17 +220,10 @@ function SentQuestion() {
       formik?.values?.fromNoticeDate ||
       formik?.values?.toNoticeDate
     ) {
-      SearchQuestionApi();
+      return;
     }
-  }, [currentPage]);
-  useEffect(() => {
-    // getAllQuestionsApi();
-    GetALlStatus();
-  }, []);
-
-  useEffect(() => {
     getAllQuestionsApi();
-  }, [getAllQuestionsApi]);
+  }, [getAllQuestionsApi, formik?.values]);
   // Handle Reset Form
   const handleResetForm = () => {
     formik.resetForm();

@@ -56,7 +56,7 @@ function NoticeQuestionDetail() {
   const { members, sessions } = useContext(AuthContext);
   const [filesData, setFilesData] = useState();
   const [currentPage, setCurrentPage] = useState(0);
-  const pageSize = 4;
+  const pageSize = 10;
 
   const handleStatusPageChange = (page) => {
     // Update currentPage when a page link is clicked

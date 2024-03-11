@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { NoticeSidebarItems } from "../../../../../../utils/sideBarItems";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
@@ -33,7 +33,7 @@ function SentMotion() {
   const [motionData, setMotionData] = useState([]);
   const [isFromNoticeOpen, setIsFromNoticeOpen] = useState(false);
   const [isToNoticeOpen, setIsToNoticeOpen] = useState(false);
-  const pageSize = 4; // Set your desired page size
+  const pageSize = 10; // Set your desired page size
 
   const formik = useFormik({
     initialValues: {
@@ -50,13 +50,26 @@ function SentMotion() {
     },
     onSubmit: (values) => {
       // Handle form submission here
-      searchMotionList(values);
+      searchMotionList(values, currentPage);
     },
   });
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
     setCurrentPage(page);
+    if (
+      formik?.values?.motionDiaryNo ||
+      formik?.values?.motionID ||
+      formik?.values?.keyword ||
+      formik?.values?.memberName ||
+      formik?.values?.fromSession ||
+      formik?.values?.toSession ||
+      formik?.values?.motionType ||
+      formik?.values?.fromNoticeDate ||
+      formik?.values?.toNoticeDate
+    ) {
+      searchMotionList(formik?.values, page);
+    }
   };
 
   // Handle From Notice Date Claneder Toggel
@@ -76,7 +89,6 @@ function SentMotion() {
   // Handale To Notice DateCHange
   const handleToNoticeDateSelect = (date) => {
     formik.setFieldValue("toNoticeDate", date);
-    console.log("date", date);
     setIsToNoticeOpen(false);
   };
 
@@ -87,13 +99,15 @@ function SentMotion() {
 
       const urdu = [res?.urduText].filter(Boolean).join(", ");
       const UrduText = urdu.replace(/(<([^>]+)>)/gi, "");
-
+      console.log("Api", apiData);
       return {
         id: res?.id,
         SessionName: res?.sessions?.sessionName,
         motionType: res?.motionType,
         noticeOfficeDiaryNo: res?.noticeOfficeDairies?.noticeOfficeDiaryNo,
-        noticeOfficeDiaryDate: res?.noticeOfficeDairies?.noticeOfficeDiaryDate,
+        noticeOfficeDiaryDate: moment(
+          res?.noticeOfficeDairies?.noticeOfficeDiaryDate
+        ).format("DD-MM-YYYY"),
         noticeOfficeDiaryTime: res?.noticeOfficeDairies?.noticeOfficeDiaryTime,
         englishText: EnglishText,
         urduText: UrduText,
@@ -101,25 +115,23 @@ function SentMotion() {
     });
   };
 
-  const getMotionListData = async () => {
+  const getMotionListDataa = useCallback(async () => {
     try {
       const response = await getAllMotion(currentPage, pageSize);
       if (response?.success) {
-        // showSuccessMessage(response?.message);
-        setCount(response?.data?.count);
         const transformedData = transformMotionData(response?.data?.rows);
+        setCount(response?.data?.count);
         setMotionData(transformedData);
       }
     } catch (error) {
       console.log(error);
-      showErrorMessage(error?.response?.data?.error);
     }
-  };
+  }, [currentPage, pageSize, setCount, setMotionData]);
 
-  const searchMotionList = async (values) => {
+  const searchMotionList = async (values, page) => {
     const data = {
       // fileNumber: ,
-      fkSessionId: values?.fromSession,
+      // fkSessionId: values?.fromSession,
       noticeOfficeDiaryNo: values?.motionDiaryNo,
       fkMemberId: values?.memberName?.value,
       fkMinistryId: "",
@@ -128,16 +140,16 @@ function SentMotion() {
       sessionEndRange: values?.toSession,
       noticeStartRange:
         values?.fromNoticeDate &&
-        moment(values?.fromNoticeDate).format("DD-MM-YYYY"),
+        moment(values?.fromNoticeDate).format("YYYY-MM-DD"),
       noticeEndRange:
         values?.toNoticeDate &&
-        moment(values?.toNoticeDate).format("DD-MM-YYYY"),
+        moment(values?.toNoticeDate).format("YYYY-MM-DD"),
       englishText: values?.keyword,
       motionWeek: values?.motionWeek,
       motionType: values?.motionType,
     };
     try {
-      const response = await searchMotion(currentPage, pageSize, data); // Add await here
+      const response = await searchMotion(page, pageSize, data); // Add await here
       if (response?.success) {
         showSuccessMessage(response?.message);
         const transformedData = transformMotionData(response?.data?.rows);
@@ -180,8 +192,21 @@ function SentMotion() {
   }, []);
 
   useEffect(() => {
-    getMotionListData();
-  }, [currentPage]);
+    if (
+      formik?.values?.motionDiaryNo ||
+      formik?.values?.motionID ||
+      formik?.values?.keyword ||
+      formik?.values?.memberName ||
+      formik?.values?.fromSession ||
+      formik?.values?.toSession ||
+      formik?.values?.motionType ||
+      formik?.values?.fromNoticeDate ||
+      formik?.values?.toNoticeDate
+    ) {
+      return;
+    }
+    getMotionListDataa();
+  }, [getMotionListDataa, formik?.values]);
 
   return (
     <Layout
@@ -209,7 +234,7 @@ function SentMotion() {
                 <div class="row">
                   <div class="col">
                     <div class="mb-3">
-                      <label class="form-label">Notice Office Diary No</label>
+                      <label class="form-label">Motion Office Diary No</label>
                       <input
                         type="text"
                         className={"form-control"}

@@ -47,6 +47,7 @@ function ManageSittingsDays() {
     },
   });
   const transformData = (apiData) => {
+    console.log(apiData);
     return apiData?.map((item, index) => ({
       id: item?.id,
       session: `${item.session?.sessionName}`,
@@ -55,19 +56,10 @@ function ManageSittingsDays() {
         "hh:ss:a"
       ),
       sittingEndTime: moment(item?.sittingEndTime, "hh:ss:a").format("hh:ss:a"),
-      committeeTotalTime: item?.committeeTotalTime,
+      committeeAsWholeTime: item?.committeeTotalTime,
       totalBreakTime: item?.totalBreakTime,
-      // breakStartTime: moment(item?.breakStartTime, "hh:ss:a").format("hh:ss:a"),
-      // breakEndTime: moment(item?.breakEndTime, "hh:ss:a").format("hh:ss:a"),
-      // AsWholeCommittee: String(item?.committeeWhole),
-      // committeeStartTime: item?.committeeStartTime
-      //   ? moment(item?.committeeStartTime, "hh:ss:a").format("hh:ss:a")
-      //   : "No Start Time",
-      // committeeEndTime: item?.committeeEndTime
-      //   ? moment(item?.committeeEndTime, "hh:ss:a").format("hh:ss:a")
-      //   : "No End Time",
+      presidingMemberTime: item?.totalMemberTime,
       sessionAdjourned: String(item?.sessionAdjourned),
-      privateMemberDay: String(item?.privateMemberDay),
       status: item?.status,
     }));
   };
@@ -102,7 +94,6 @@ function ManageSittingsDays() {
           currentPage,
           pageSize
         );
-        console.log(response);
 
         if (response?.success) {
           const transformedData = transformData(
@@ -239,20 +230,6 @@ function ManageSittingsDays() {
                               </option>
                             ))}
                         </select>
-                      </div>
-                    </div>
-                    <div className="col-5"></div>
-                    <div className="col-4">
-                      <div className="mb-3">
-                        <button
-                          class="btn btn-primary float-end"
-                          type="button"
-                          onClick={() =>
-                            navigate("/notice/manage/view-prorogued-sessions")
-                          }
-                        >
-                          View Prorogued Sessions
-                        </button>
                       </div>
                     </div>
                   </div>

@@ -26,7 +26,7 @@ export const MotionListing = () => {
 
       return {
         id: res?.id,
-        fkSessionId: res?.sessions?.id,
+        sessionId: res?.sessions?.id,
         fileNumber: res?.fileNumber,
         motionType: res?.motionType,
         motionWeek: "",
@@ -35,12 +35,12 @@ export const MotionListing = () => {
         // ministryIds: leave?.motionMinistries?.fkMinistryId,
         noticeOfficeDiaryDate: moment(
           res?.noticeOfficeDairies?.noticeOfficeDiaryDate
-        ).format("YYYY/MM/DD"),
+        ).format("DD-MM-YYYY"),
         noticeOfficeDiaryTime: res?.noticeOfficeDairies?.noticeOfficeDiaryTime,
         // memberName:leave?.motionMovers?.members,
         englishText: EnglishText,
         urduText: UrduText,
-        fkMotionStatus: res?.motionStatuses?.statusName,
+        motionStatus: res?.motionStatuses?.statusName,
       };
     });
   };

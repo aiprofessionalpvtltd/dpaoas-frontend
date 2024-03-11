@@ -452,6 +452,11 @@ function NMSMemberSessionAttendance() {
         return null;
     }
   };
+
+  const handleReset = () => {
+    formik.resetForm();
+    setSelectedOptions("");
+  };
   return (
     <Layout
       module={true}
@@ -469,7 +474,7 @@ function NMSMemberSessionAttendance() {
             class="card-header red-bg"
             style={{ background: "#14ae5c !important" }}
           >
-            <h1>Add Member Attendeance</h1>
+            <h1> Member Attendeance</h1>
           </div>
           <div class="card-body">
             <form onSubmit={formik.handleSubmit}>
@@ -508,10 +513,32 @@ function NMSMemberSessionAttendance() {
                 {renderFields()}
               </div>
               <div className="row mt-2">
-                <div className="col">
-                  <button className="btn btn-primary float-end" type="submit">
-                    Mark Attendance
-                  </button>
+                {/* <div className="d-flex justify-content-end">
+                  <div className="col-2">
+                    <button className="btn btn-primary " type="submit">
+                      Mark Attendance
+                    </button>
+                  </div>
+                  <div className="col-1">
+                    <button className="btn btn-primary" type="submit">
+                      Reset
+                    </button>
+                  </div>
+                </div> */}
+                <div className="row">
+                  <div className="col-9"></div>
+                  <div className="col-3 d-flex justify-content-end">
+                    <button className="btn btn-primary me-2" type="submit">
+                      Mark Attendance
+                    </button>
+                    <button
+                      className="btn btn-primary"
+                      type="button"
+                      onClick={handleReset}
+                    >
+                      Reset
+                    </button>
+                  </div>
                 </div>
               </div>
             </form>

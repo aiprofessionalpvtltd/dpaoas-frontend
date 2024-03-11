@@ -22,6 +22,7 @@ import {
 import {
   createManageSession,
   getManageSessionById,
+  getThreePreseidingMembers,
   updateManageSession,
 } from "../../../../../../../api/APIs/Services/SeatingPlan.service";
 import { ToastContainer } from "react-toastify";
@@ -43,6 +44,7 @@ function NMSAddEditSittingDaysForm() {
   const [sessionId, setSessionId] = useState();
   const [formCount, setFormCount] = useState(0);
   const [breakformCount, setBreakFormCount] = useState(0);
+  const [presidingMembers, setPresidingMember] = useState([]);
 
   const addForm = () => {
     setFormCount(formCount + 1);
@@ -119,8 +121,8 @@ function NMSAddEditSittingDaysForm() {
                   </option>
                   {/* <option value="1">Test 1</option>
                   <option value="2">Test 2</option> */}
-                  {members &&
-                    members.map((item) => (
+                  {presidingMembers &&
+                    presidingMembers.map((item) => (
                       <option key={item.id} value={item.id}>
                         {item?.memberName}
                       </option>
@@ -356,17 +358,39 @@ function NMSAddEditSittingDaysForm() {
     },
   });
 
+  // Getting Presiding Member Records
+  const getPresidingMembers = async () => {
+    try {
+      const response = await getThreePreseidingMembers();
+      if (response?.success) {
+        setPresidingMember(response?.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getPresidingMembers();
+  }, []);
+
   const handleCreateSittingDays = async (values) => {
     const data = {
       fkSessionId: parseInt(values.fkSessionId),
-      sittingDate: values.sittingDate,
-      sittingStartTime: values.sittingStartTime,
-      sittingEndTime: values.sittingEndTime,
-      // breakStartTime: values.breakStartTime,
-      // breakEndTime: values.breakEndTime,
-      committeeStartTime: values.committeeStartTime,
-      committeeEndTime: values.committeeEndTime,
-      sessionMembers: values.sessionMembers,
+      sittingDate: values?.sittingDate,
+      sittingStartTime: moment(values?.sittingStartTime, "hh:mm A").format(
+        "hh:mm A"
+      ),
+      sittingEndTime: moment(values?.sittingEndTime, "hh:mm A").format(
+        "hh:mm A"
+      ),
+      committeeStartTime: moment(values?.committeeStartTime, "hh:mm A").format(
+        "hh:mm A"
+      ),
+      committeeEndTime: moment(values?.committeeEndTime, "hh:mm A").format(
+        "hh:mm A"
+      ),
+      sessionMembers: values?.sessionMembers,
       // sessionMembers: values.sessionMembers.map((member) => ({
       //   fkMemberId: member.fkMemberId,
       //   startTime: member.startTime,
@@ -378,15 +402,19 @@ function NMSAddEditSittingDaysForm() {
           ? []
           : values.sessionMembers.map((member) => ({
               fkMemberId: member.fkMemberId,
-              startTime: member.startTime,
-              endTime: member.endTime,
+              startTime: moment(member?.startTime, "hh:mm A").format("hh:mm A"),
+              endTime: moment(member?.endTime, "hh:mm A").format("hh:mm A"),
             })),
       sessionBreaks:
         breakformCount === 0
           ? []
           : values.sessionBreaks.map((item) => ({
-              breakStartTime: item.breakStartTime,
-              breakEndTime: item.breakEndTime,
+              breakStartTime: moment(item.breakStartTime, "hh:mm A").format(
+                "hh:mm A"
+              ),
+              breakEndTime: moment(item.breakEndTime, "hh:mm A").format(
+                "hh:mm A"
+              ),
             })),
 
       committeeWhole: values.committeeWhole,
@@ -415,14 +443,24 @@ function NMSAddEditSittingDaysForm() {
       // sittingStartTime: values.sittingStartTime,
       // sittingEndTime: values.sittingEndTime,
       // sessionAdjourned: values.isAdjourned,
-      fkSessionId: parseInt(values.fkSessionId),
-      sittingDate: values.sittingDate,
-      sittingStartTime: values.sittingStartTime,
-      sittingEndTime: values.sittingEndTime,
-      breakStartTime: values.breakStartTime,
-      breakEndTime: values.breakEndTime,
-      committeeStartTime: values.committeeStartTime,
-      committeeEndTime: values.committeeEndTime,
+      fkSessionId: parseInt(values?.fkSessionId),
+      sittingDate: values?.sittingDate,
+      sittingStartTime: moment(values?.sittingStartTime, "hh:mm A").format(
+        "hh:mm A"
+      ),
+      sittingEndTime: moment(values?.sittingEndTime, "hh:mm A").format(
+        "hh:mm A"
+      ),
+      breakStartTime: moment(values?.breakStartTime, "hh:mm A").format(
+        "hh:mm A"
+      ),
+      breakEndTime: moment(values?.breakEndTime, "hh:mm A").format("hh:mm A"),
+      committeeStartTime: moment(values?.committeeStartTime, "hh:mm A").format(
+        "hh:mm A"
+      ),
+      committeeEndTime: moment(values.committeeEndTime, "hh:mm A").format(
+        "hh:mm A"
+      ),
       sessionMembers: values.sessionMembers,
       // sessionMembers: values.sessionMembers.map((member) => ({
       //   fkMemberId: member.fkMemberId,
@@ -434,15 +472,19 @@ function NMSAddEditSittingDaysForm() {
           ? []
           : values.sessionMembers.map((member) => ({
               fkMemberId: member.fkMemberId,
-              startTime: member.startTime,
-              endTime: member.endTime,
+              startTime: moment(member.startTime, "hh:mm A").format("hh:mm A"),
+              endTime: moment(member.endTime, "hh:mm A").format("hh:mm A"),
             })),
       sessionBreaks:
         breakformCount === 0
           ? []
           : values.sessionBreaks.map((item) => ({
-              breakStartTime: item.breakStartTime,
-              breakEndTime: item.breakEndTime,
+              breakStartTime: moment(item.breakStartTime, "hh:mm A").format(
+                "hh:mm A"
+              ),
+              breakEndTime: moment(item.breakEndTime, "hh:mm A").format(
+                "hh:mm A"
+              ),
             })),
 
       committeeWhole: values.committeeWhole,

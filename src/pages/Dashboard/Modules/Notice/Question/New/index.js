@@ -70,6 +70,7 @@ function NewQuestion() {
     },
     // validationSchema: validationSchema,
     onSubmit: (values) => {
+      console.log("Create Question Data", values);
       // handleShow();
       // setFormValues(values);
       CreateQuestionApi(values);
