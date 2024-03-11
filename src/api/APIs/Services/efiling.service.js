@@ -80,6 +80,24 @@ export const getEFilesByID = async (id) => {
   }
 };
 
+//case Detail
+export const getCaseDetailByID = async (fileId, caseId) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.get(`/cases/getCaseDetails/${fileId}/${caseId}`);
+    // {
+    //   headers: {
+    //     Authorization: `Bearer ${token}`,
+    //   }
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+
 export const UploadEfilingAttechment = async (userId, fileId, data) => {
   try {
     // const token = getAuthToken();
@@ -427,6 +445,24 @@ export const getSingleCaseByFileId = async (fileId, caseId) => {
     const response = await axiosClientMMS.get(
       `/cases/getCase/${fileId}/${caseId}`,
       )
+      // {
+      //   headers: {
+      //     accept: "application/json",
+      //     "Content-Type": "multipart/form-data",
+      //   },
+      // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const assigneCase = async (fileId, caseId, data) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClientMMS.post(
+      `/cases/assignCase/${fileId}/${caseId}`, data)
       // {
       //   headers: {
       //     accept: "application/json",
