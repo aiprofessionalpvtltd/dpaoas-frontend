@@ -82,6 +82,8 @@ function FileCases() {
                         hideDeleteIcon={true}
                         showView={true}
                         handleView={(item) => navigate("/efiling/dashboard/file-register-list/files-list/addedit-case", {state: {caseId: item.caseId, view: true}})}
+                        showAssigned={true}
+                        hendleAssigned={(item) => navigate("/efiling/dashboard/fileDetail", { state: { view: false, id: "1" } })}
                     />
                 </div>
             </div>

@@ -221,3 +221,78 @@ export const DeleteResearchServices = async (id) => {
     throw error;
   }
 };
+
+//Legislative Bill Data
+export const getAllLegislativeBill = async (currentPage, pageSize) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/legislativeBills?currentPage=${currentPage}&pageSize=${pageSize}`
+      // {
+      //   // headers: {
+      //   //   Authorization: `Bearer ${token}`,
+      //   // }
+      // },
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const DeleteLegislativeBill = async (id) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.delete(
+      `/legislativeBills/${id}`
+      // {
+      //   // headers: {
+      //   //   Authorization: `Bearer ${token}`,
+      //   // }
+      // },
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+//get By Single Id 
+export const getLegislativeBillById = async (id) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/legislativeBills/${id}`
+      // {
+      //   // headers: {
+      //   //   Authorization: `Bearer ${token}`,
+      //   // }
+      // },
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const UpdateLegislativeBillById = async (id, data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.put(
+      `/legislativeBills/${id}`,
+      data,
+      {
+        headers: {
+          accept: "application/json",
+          "Content-Type": "multipart/form-data",
+        },
+      });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
