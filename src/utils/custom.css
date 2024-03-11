@@ -3837,3 +3837,49 @@ button span {
   font-weight: bold;
   padding: 10px;
 }
+
+
+
+
+.sos-st-card {
+  cursor: pointer;
+}
+.sos-st-card h3 {
+  color: #3b579d;
+  float: left;
+  margin-top: 18px;
+}
+.sos-st-card h3 {
+  color: #3b579d;
+  border-color: #869cd2;
+  float: left;
+}
+.card .card-block {
+  padding: 1.25rem;
+}
+.sos-st-card .card-anim {
+  color: #fff;
+  font-size: 18px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  padding: 12px 0;
+  text-align: center;
+  margin-right: 15px;
+  background-color: #1da1f2;
+  border-color: #96d3f9;
+  border: 10px solid transparent;
+    border-top-color: transparent;
+    border-right-color: transparent;
+    border-bottom-color: transparent;
+    border-left-color: transparent;
+  transition: all 0.3s ease-in-out;
+  float: left;
+}
+.sos-st-card h5 {
+  position: relative;
+}
+.sos-st-card:hover .card-anim {
+  transform: scale(1.2) rotate(35deg) !important;
+  cursor: pointer;
+}

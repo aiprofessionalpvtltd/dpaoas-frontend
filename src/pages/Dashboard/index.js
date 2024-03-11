@@ -65,7 +65,6 @@ function Dashboard() {
 
         // Check if user has only one permission, and if so, navigate directly
         const permissionKeys = Object.keys(res.permissions);
-        console.log("Permission keys", permissionKeys);
 
         if (permissionKeys.length === 1) {
           const singlePermission = permissions[0].label; // Assuming permissions is an array
