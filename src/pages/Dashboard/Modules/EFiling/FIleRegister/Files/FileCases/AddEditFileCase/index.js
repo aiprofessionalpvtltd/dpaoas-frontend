@@ -73,16 +73,18 @@ function AddEditFileCase() {
       ...prevState,
       correspondence: true,
     }));
+  
     // Access the files from the event
     const files = event.target.files;
     // Convert the files object to an array
     const fileList = Array.from(files);
-    // Store the selected files in state
+  
+    // Merge the new files with the existing ones
     setCorrespondenceData((prevState) => ({
       ...prevState,
-      attachedFiles: fileList,
+      attachedFiles: [...prevState.attachedFiles, ...fileList],
     }));
-  };
+  };  
 
   const handleFileChangeSanction = (event) => {
     setObjectUrl((prevState) => ({
@@ -96,7 +98,7 @@ function AddEditFileCase() {
     // Store the selected files in state
     setSanction((prevState) => ({
       ...prevState,
-      attachedFiles: fileList,
+      attachedFiles: [...prevState.attachedFiles, ...fileList],
     }));
   };
 
@@ -112,7 +114,7 @@ function AddEditFileCase() {
     // Store the selected files in state
     setObjection((prevState) => ({
       ...prevState,
-      attachedFiles: fileList,
+      attachedFiles: [...prevState.attachedFiles, ...fileList],
     }));
   };
 
@@ -128,7 +130,7 @@ function AddEditFileCase() {
     // Store the selected files in state
     setLetter((prevState) => ({
       ...prevState,
-      attachedFiles: fileList,
+      attachedFiles: [...prevState.attachedFiles, ...fileList],
     }));
   };
 
@@ -494,35 +496,23 @@ if (objection.attachedFiles) {
                                       Attached Files
                                     </label>
                                     <ul>
-                                      {objectUrl.correspondence
-                                        ? correspondenceData.attachedFiles.map(
-                                            (file, index) => (
+                                      {correspondenceData.attachedFiles?.map(
+                                            (file, index) => {
+                                              return (
                                               <li key={index}>
                                                 <a
-                                                  href={URL.createObjectURL(
+                                                  href={file?.id ? `http://172.16.170.8:5252${file?.fileName}` : URL.createObjectURL(
                                                     file
                                                   )}
                                                   target="_blank"
                                                   rel="noopener noreferrer"
                                                 >
-                                                  {file.name}
+                                                  {file?.id ? file?.fileName?.split("/").pop() : file.name}
                                                 </a>
                                               </li>
-                                            )
-                                          )
-                                        : correspondenceData.attachedFiles.map(
-                                            (file, index) => (
-                                              <li key={file?.id}>
-                                                <a
-                                                  href={`http://172.16.170.8:5252${file?.fileName}`}
-                                                  target="_blank"
-                                                  rel="noopener noreferrer"
-                                                >
-                                                  {file?.fileName?.split("/").pop()}
-                                                </a>
-                                              </li>
-                                            )
-                                          )}
+                                              )
+                                          }
+                                        )}
                                     </ul>
                                   </div>
                                 )}
@@ -583,35 +573,23 @@ if (objection.attachedFiles) {
                                       Attached Files
                                     </label>
                                 <ul>
-                                      {objectUrl.sanction
-                                        ? sanction.attachedFiles.map(
-                                            (file, index) => (
+                                {sanction.attachedFiles?.map(
+                                            (file, index) => {
+                                              return (
                                               <li key={index}>
                                                 <a
-                                                  href={URL.createObjectURL(
+                                                  href={file?.id ? `http://172.16.170.8:5252${file?.fileName}` : URL.createObjectURL(
                                                     file
                                                   )}
                                                   target="_blank"
                                                   rel="noopener noreferrer"
                                                 >
-                                                  {file.name}
+                                                  {file?.id ? file?.fileName?.split("/").pop() : file.name}
                                                 </a>
                                               </li>
-                                            )
-                                          )
-                                        : sanction.attachedFiles.map(
-                                            (file, index) => (
-                                              <li key={file?.id}>
-                                                <a
-                                                  href={`http://172.16.170.8:5252${file?.fileName}`}
-                                                  target="_blank"
-                                                  rel="noopener noreferrer"
-                                                >
-                                                  {file?.fileName?.split("/").pop()}
-                                                </a>
-                                              </li>
-                                            )
-                                          )}
+                                              )
+                                          }
+                                        )}
                                     </ul>
                                     </div>
                                 )}
@@ -672,35 +650,23 @@ if (objection.attachedFiles) {
                                       Attached Files
                                     </label>
                                 <ul>
-                                      {objectUrl.objection
-                                        ? objection.attachedFiles.map(
-                                            (file, index) => (
+                                {objection.attachedFiles?.map(
+                                            (file, index) => {
+                                              return (
                                               <li key={index}>
                                                 <a
-                                                  href={URL.createObjectURL(
+                                                  href={file?.id ? `http://172.16.170.8:5252${file?.fileName}` : URL.createObjectURL(
                                                     file
                                                   )}
                                                   target="_blank"
                                                   rel="noopener noreferrer"
                                                 >
-                                                  {file.name}
+                                                  {file?.id ? file?.fileName?.split("/").pop() : file.name}
                                                 </a>
                                               </li>
-                                            )
-                                          )
-                                        : objection.attachedFiles.map(
-                                            (file, index) => (
-                                              <li key={file?.id}>
-                                                <a
-                                                  href={`http://172.16.170.8:5252${file?.fileName}`}
-                                                  target="_blank"
-                                                  rel="noopener noreferrer"
-                                                >
-                                                  {file?.fileName?.split("/").pop()}
-                                                </a>
-                                              </li>
-                                            )
-                                          )}
+                                              )
+                                          }
+                                        )}
                                     </ul>
                                     </div>
                                 )}
@@ -758,35 +724,23 @@ if (objection.attachedFiles) {
                                       Attached Files
                                     </label>
                                     <ul>
-                                      {objectUrl.letter
-                                        ? letter.attachedFiles.map(
-                                            (file, index) => (
+                                    {letter.attachedFiles?.map(
+                                            (file, index) => {
+                                              return (
                                               <li key={index}>
                                                 <a
-                                                  href={URL.createObjectURL(
+                                                  href={file?.id ? `http://172.16.170.8:5252${file?.fileName}` : URL.createObjectURL(
                                                     file
                                                   )}
                                                   target="_blank"
                                                   rel="noopener noreferrer"
                                                 >
-                                                  {file.name}
+                                                  {file?.id ? file?.fileName?.split("/").pop() : file.name}
                                                 </a>
                                               </li>
-                                            )
-                                          )
-                                        : letter.attachedFiles.map(
-                                            (file, index) => (
-                                              <li key={file?.id}>
-                                                <a
-                                                  href={`http://172.16.170.8:5252${file?.fileName}`}
-                                                  target="_blank"
-                                                  rel="noopener noreferrer"
-                                                >
-                                                  {file?.fileName?.split("/").pop()}
-                                                </a>
-                                              </li>
-                                            )
-                                          )}
+                                              )
+                                          }
+                                        )}
                                     </ul>
                                   </div>
                                 )}
@@ -801,6 +755,7 @@ if (objection.attachedFiles) {
               </div>
             </div>
 
+            {!location.state?.view && (
             <div class="row mt-4">
               <div class="col-11 p-0">
                 <button
@@ -812,6 +767,7 @@ if (objection.attachedFiles) {
                 </button>
               </div>
             </div>
+            )}
           </div>
         </div>
       </div>
