@@ -15,7 +15,7 @@ function FileCases() {
     const navigate = useNavigate()
     const [currentPage, setCurrentPage] = useState(0);
     const [count, setCount] = useState(null);
-    const pageSize = 5; // Set your desired page size
+    const pageSize = 10; // Set your desired page size
     const [fileData, setFileData] = useState([])
 
     const handlePageChange = (page) => {
@@ -38,7 +38,7 @@ function FileCases() {
         try {
             const response = await getAllFreshReceipt(currentPage, pageSize)
             if (response.success) {
-              showSuccessMessage(response?.message)
+            //   showSuccessMessage(response?.message)
               setCount(response?.data?.count)
               const transformedData = transformFreshReceiptdata(response?.data?.freshReceipts)
               setFileData(transformedData)

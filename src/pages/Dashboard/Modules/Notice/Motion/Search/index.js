@@ -30,6 +30,8 @@ function SearchMotion() {
   const [count, setCount] = useState(null);
   const [motionStatus, setMotionStatus] = useState([]);
   const [motionData, setMotionData] = useState([]);
+  const [isFromNoticeOpen, setIsFromNoticeOpen] = useState(false);
+  const [isToNoticeOpen, setIsToNoticeOpen] = useState(false);
   const pageSize = 5; // Set your desired page size
 
   const formik = useFormik({
@@ -58,6 +60,26 @@ function SearchMotion() {
     setCurrentPage(page);
   };
 
+  // Handle From Notice Date Claneder Toggel
+  const handleFromNoticeCalendarToggle = () => {
+    setIsFromNoticeOpen(!isFromNoticeOpen);
+  };
+  // Handale From Notice DateCHange
+  const handleFromNoticeDateSelect = (date) => {
+    formik.setFieldValue("fromNoticeDate", date);
+    setIsFromNoticeOpen(false);
+  };
+
+  // Handle To Notice Date Claneder Toggel
+  const handleToNoticeCalendarToggle = () => {
+    setIsToNoticeOpen(!isToNoticeOpen);
+  };
+  // Handale To Notice DateCHange
+  const handleToNoticeDateSelect = (date) => {
+    formik.setFieldValue("toNoticeDate", date);
+    setIsToNoticeOpen(false);
+  };
+
   const transformMotionData = (apiData) => {
     return apiData.map((leave, index) => {
       const English = [leave?.englishText].filter(Boolean).join(", ");
@@ -68,23 +90,17 @@ function SearchMotion() {
       return {
         id: leave?.id,
         SessionName: leave?.sessions?.sessionName,
-        // fileNumber: leave?.fileNumber,
         motionType: leave?.motionType,
-        // motionWeek: leave?.motionWeek,
         noticeOfficeDiaryNo: leave?.noticeOfficeDairies?.noticeOfficeDiaryNo,
-        // ministryName: leave?.motionMinistries?.ministries,
-        // ministryIds: leave?.motionMinistries?.fkMinistryId,
+
         noticeOfficeDiaryDate:
           leave?.noticeOfficeDairies?.noticeOfficeDiaryDate,
         noticeOfficeDiaryTime: moment(
           leave?.noticeOfficeDairies?.noticeOfficeDiaryTime,
           "hh:ss:a"
         ).format("hh:ss:a"),
-        // memberName:leave?.motionMovers?.members,
-        // englishText: leave?.englishText,
         englishText: EnglishText,
         urduText: UrduText,
-        // fkMotionStatus: leave?.motionStatuses?.statusName,
       };
     });
   };
@@ -93,7 +109,6 @@ function SearchMotion() {
       const response = await getAllMotion(currentPage, pageSize);
 
       if (response?.success) {
-        console.log("response", response);
         // showSuccessMessage(response?.message);
         setCount(response?.data?.count);
         const transformedData = transformMotionData(response?.data?.rows);
@@ -115,8 +130,12 @@ function SearchMotion() {
       motionId: values?.motionID,
       sessionStartRange: values?.fromSession,
       sessionEndRange: values?.toSession,
-      noticeStartRange: values?.fromNoticeDate,
-      noticeEndRange: values?.toNoticeDate,
+      noticeStartRange:
+        values?.fromNoticeDate &&
+        moment(values?.fromNoticeDate).format("DD-MM-YYYY"),
+      noticeEndRange:
+        values?.toNoticeDate &&
+        moment(values?.toNoticeDate).format("DD-MM-YYYY"),
       englishText: values?.keyword,
       motionWeek: values?.motionWeek,
       motionType: values?.motionType,
@@ -246,26 +265,23 @@ function SearchMotion() {
                     <div class="mb-3">
                       <label class="form-label">Member Name</label>
                       <Select
-                          options={members.map((item) => ({
-                            value: item.id,
-                            label: item.memberName,
-                          }))}
-                          onChange={(selectedOptions) =>
-                            formik.setFieldValue(
-                              "memberName",
-                              selectedOptions,
-                            )
-                          }
-                          onBlur={formik.handleBlur}
-                          value={formik.values.memberName}
-                          name="memberName"
-                        />
-                        {formik.touched.memberName &&
-                          formik.errors.memberName && (
-                            <div class="invalid-feedback">
-                              {formik.errors.memberName}
-                            </div>
-                          )}
+                        options={members.map((item) => ({
+                          value: item.id,
+                          label: item.memberName,
+                        }))}
+                        onChange={(selectedOptions) =>
+                          formik.setFieldValue("memberName", selectedOptions)
+                        }
+                        onBlur={formik.handleBlur}
+                        value={formik.values.memberName}
+                        name="memberName"
+                      />
+                      {formik.touched.memberName &&
+                        formik.errors.memberName && (
+                          <div class="invalid-feedback">
+                            {formik.errors.memberName}
+                          </div>
+                        )}
                     </div>
                   </div>
                 </div>
@@ -419,7 +435,7 @@ function SearchMotion() {
                       </select>
                     </div>
                   </div>
-                  <div class="col">
+                  {/* <div class="col">
                     <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label">From Notice Date</label>
                       <span
@@ -479,6 +495,77 @@ function SearchMotion() {
                           formik.setFieldValue("toNoticeDate", date)
                         }
                         className={"form-control"}
+                      />
+                    </div>
+                  </div> */}
+
+                  <div className="col-3">
+                    <div className="mb-3" style={{ position: "relative" }}>
+                      <label className="form-label">From Notice Date</label>
+                      <span
+                        style={{
+                          position: "absolute",
+                          right: "15px",
+                          top: "36px",
+                          zIndex: 1,
+                          fontSize: "20px",
+                          zIndex: "1",
+                          color: "#666",
+                          cursor: "pointer",
+                        }}
+                        onClick={handleFromNoticeCalendarToggle}
+                      >
+                        <FontAwesomeIcon icon={faCalendarAlt} />
+                      </span>
+
+                      <DatePicker
+                        selected={formik.values.fromNoticeDate}
+                        onChange={handleFromNoticeDateSelect}
+                        onBlur={formik.handleBlur}
+                        className={`form-control ${
+                          formik.touched.fromNoticeDate &&
+                          formik.errors.fromNoticeDate
+                            ? "is-invalid"
+                            : ""
+                        }`}
+                        open={isFromNoticeOpen}
+                        onClickOutside={() => setIsFromNoticeOpen(false)}
+                        onInputClick={handleFromNoticeCalendarToggle}
+                      />
+                    </div>
+                  </div>
+                  <div className="col-3">
+                    <div className="mb-3" style={{ position: "relative" }}>
+                      <label className="form-label">To Notice Date</label>
+                      <span
+                        style={{
+                          position: "absolute",
+                          right: "15px",
+                          top: "36px",
+                          zIndex: 1,
+                          fontSize: "20px",
+                          zIndex: "1",
+                          color: "#666",
+                          cursor: "pointer",
+                        }}
+                        onClick={handleToNoticeCalendarToggle}
+                      >
+                        <FontAwesomeIcon icon={faCalendarAlt} />
+                      </span>
+
+                      <DatePicker
+                        selected={formik.values.toNoticeDate}
+                        onChange={handleToNoticeDateSelect}
+                        onBlur={formik.handleBlur}
+                        className={`form-control ${
+                          formik.touched.toNoticeDate &&
+                          formik.errors.toNoticeDate
+                            ? "is-invalid"
+                            : ""
+                        }`}
+                        open={isToNoticeOpen}
+                        onClickOutside={() => setIsToNoticeOpen(false)}
+                        onInputClick={handleToNoticeCalendarToggle}
                       />
                     </div>
                   </div>

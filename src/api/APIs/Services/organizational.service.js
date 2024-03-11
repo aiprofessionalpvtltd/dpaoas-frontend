@@ -1,4 +1,4 @@
-import { axiosClientVMS } from "..";
+import { axiosClientMMS, axiosClientVMS } from "..";
 import { getAuthToken } from "../../Auth";
 
 /* Organizational Management System (APIs) */
@@ -258,6 +258,24 @@ export const getAllEmployee = async (currentPage, pageSize) => {
     const token = getAuthToken();
     const response = await axiosClientVMS.get(
       `/employee/?currentPage=${currentPage}&pageSize=${pageSize}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const getEmployeeByCurrentUserId = async (userId) => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/cases/getEmployees/${userId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

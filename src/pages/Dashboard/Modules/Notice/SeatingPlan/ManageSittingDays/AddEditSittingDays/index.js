@@ -323,10 +323,11 @@ function NMSAddEditSittingDaysForm() {
       sittingDate: "",
       sittingStartTime: "",
       sittingEndTime: "",
-      // breakStartTime: "",
-      // breakEndTime: "",
+      privateMemberDay: false,
       committeeWhole: false,
       isAdjourned: false,
+      isProrogued: false,
+
       committeeStartTime: "",
       committeeEndTime: "",
       sessionMembers: [
@@ -390,6 +391,8 @@ function NMSAddEditSittingDaysForm() {
 
       committeeWhole: values.committeeWhole,
       sessionAdjourned: values.isAdjourned,
+      privateMemberDay: values?.privateMemberDay,
+      sessionProrogued: values?.isProrogued,
     };
 
     console.log("Data Going Format", data);
@@ -818,7 +821,7 @@ function NMSAddEditSittingDaysForm() {
                 </div>
                 {renderBreakForms()}
                 <div class="row">
-                  <div class="col-6">
+                  <div class="col-3">
                     <div class="mb-3">
                       <div class="form-check">
                         <input
@@ -850,8 +853,71 @@ function NMSAddEditSittingDaysForm() {
                       </div>
                     </div>
                   </div>
-
-                  <div class="col-6">
+                  <div class="col-3">
+                    <div class="mb-3">
+                      <div class="form-check">
+                        <input
+                          class={`form-check-input ${
+                            formik.touched.isAdjourned &&
+                            formik.errors.isAdjourned
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                          type="checkbox"
+                          id="flexCheckDefault"
+                          checked={formik.values.isProrogued}
+                          onChange={() =>
+                            formik.setFieldValue(
+                              "isProrogued",
+                              !formik.values.isProrogued
+                            )
+                          }
+                        />
+                        <label class="form-check-label" for="flexCheckDefault">
+                          Is Session Prorogued
+                        </label>
+                        {formik.touched.isProrogued &&
+                          formik.errors.isProrogued && (
+                            <div className="invalid-feedback">
+                              {formik.errors.isProrogued}
+                            </div>
+                          )}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-3">
+                    <div class="mb-3">
+                      <div class="form-check">
+                        <input
+                          class={`form-check-input ${
+                            formik.touched.privateMemberDay &&
+                            formik.errors.privateMemberDay
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                          type="checkbox"
+                          id="flexCheckDefault"
+                          checked={formik.values.privateMemberDay}
+                          onChange={() =>
+                            formik.setFieldValue(
+                              "privateMemberDay",
+                              !formik.values.privateMemberDay
+                            )
+                          }
+                        />
+                        <label class="form-check-label" for="flexCheckDefault">
+                          Is Private Member Day
+                        </label>
+                        {formik.touched.privateMemberDay &&
+                          formik.errors.privateMemberDay && (
+                            <div className="invalid-feedback">
+                              {formik.errors.privateMemberDay}
+                            </div>
+                          )}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-3">
                     <div class="mb-3">
                       <div class="form-check">
                         <input

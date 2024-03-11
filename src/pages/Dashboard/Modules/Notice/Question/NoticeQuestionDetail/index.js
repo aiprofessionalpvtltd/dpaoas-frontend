@@ -65,7 +65,7 @@ function NoticeQuestionDetail() {
 
   const formik = useFormik({
     initialValues: {
-      sessionNo: location?.state?.question?.session?.fkSessionId,
+      sessionNo: location?.state?.question?.session?.sessionName,
       noticeOfficeDiaryNo:
         location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryNo,
       noticeOfficeDiaryDate: moment(
@@ -234,7 +234,7 @@ function NoticeQuestionDetail() {
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Session No</label>
-                      <select
+                      {/* <select
                         class="form-select"
                         id="sessionNo"
                         onChange={formik.handleChange}
@@ -249,8 +249,8 @@ function NoticeQuestionDetail() {
                               {item?.sessionName}
                             </option>
                           ))}
-                      </select>
-                      {/* <input
+                      </select> */}
+                      <input
                         readOnly={true}
                         placeholder={formik.values.sessionNo}
                         type="text"
@@ -258,7 +258,7 @@ function NoticeQuestionDetail() {
                         id="sessionNo"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                      /> */}
+                      />
                     </div>
                   </div>
                   <div class="col">
@@ -391,37 +391,10 @@ function NoticeQuestionDetail() {
                     </div>
                   </div>
                 </div>
-
-                {/* <div style={{ marginTop: 10 }}>
-                  <Editor
-                    title={"Original Text"}
-                    onChange={(content) =>
-                      formik.setFieldValue("originalText", content)
-                    }
-                    value={formik.values.originalText}
-                  />
-                </div> */}
-
-                <div style={{ marginTop: 10 }}>
-                  <Editor
-                    title={"English Text"}
-                    onChange={(content) =>
-                      formik.setFieldValue("englishText", content)
-                    }
-                    value={formik.values.englishText}
-                  />
-                </div>
-
-                <div style={{ marginTop: 70, marginBottom: 40 }}>
-                  <Editor
-                    title={"Urdu Text"}
-                    onChange={(content) =>
-                      formik.setFieldValue("urduText", content)
-                    }
-                    value={formik.values.urduText}
-                  />
-                </div>
                 <div className="row">
+                  <label htmlFor="" className="form-label">
+                    Selected Images
+                  </label>
                   {location?.state?.question?.questionImage?.length > 0 ? (
                     location?.state?.question?.questionImage?.map((item) => (
                       <div class="MultiFile-label mt-3">
@@ -465,6 +438,35 @@ function NoticeQuestionDetail() {
                       </div>
                     </div>
                   )}
+                </div>
+                {/* <div style={{ marginTop: 10 }}>
+                  <Editor
+                    title={"Original Text"}
+                    onChange={(content) =>
+                      formik.setFieldValue("originalText", content)
+                    }
+                    value={formik.values.originalText}
+                  />
+                </div> */}
+
+                <div style={{ marginTop: 10 }}>
+                  <Editor
+                    title={"English Text"}
+                    onChange={(content) =>
+                      formik.setFieldValue("englishText", content)
+                    }
+                    value={formik.values.englishText}
+                  />
+                </div>
+
+                <div style={{ marginTop: 70, marginBottom: 40 }}>
+                  <Editor
+                    title={"Urdu Text"}
+                    onChange={(content) =>
+                      formik.setFieldValue("urduText", content)
+                    }
+                    value={formik.values.urduText}
+                  />
                 </div>
 
                 <div

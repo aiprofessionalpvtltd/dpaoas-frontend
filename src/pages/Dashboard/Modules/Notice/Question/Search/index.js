@@ -30,7 +30,8 @@ function SearchQuestion() {
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
   const [allquestionStatus, setAllQuestionStatus] = useState([]);
-
+  const [isFromNoticeOpen, setIsFromNoticeOpen] = useState(false);
+  const [isToNoticeOpen, setIsToNoticeOpen] = useState(false);
   const pageSize = 4; // Set your desired page size
 
   const handlePageChange = (page) => {
@@ -57,6 +58,25 @@ function SearchQuestion() {
     },
   });
 
+  // Handle From Notice Date Claneder Toggel
+  const handleFromNoticeCalendarToggle = () => {
+    setIsFromNoticeOpen(!isFromNoticeOpen);
+  };
+  // Handale From Notice DateCHange
+  const handleFromNoticeDateSelect = (date) => {
+    formik.setFieldValue("fromNoticeDate", date);
+    setIsFromNoticeOpen(false);
+  };
+
+  // Handle To Notice Date Claneder Toggel
+  const handleToNoticeCalendarToggle = () => {
+    setIsToNoticeOpen(!isToNoticeOpen);
+  };
+  // Handale To Notice DateCHange
+  const handleToNoticeDateSelect = (date) => {
+    formik.setFieldValue("toNoticeDate", date);
+    setIsToNoticeOpen(false);
+  };
   const transformLeavesData = (apiData) => {
     return apiData.map((res, index) => {
       const subjectMatter = [res?.englishText, res?.urduText]
@@ -65,9 +85,7 @@ function SearchQuestion() {
       const cleanedSubjectMatter = subjectMatter.replace(/(<([^>]+)>)/gi, "");
 
       return {
-        SrNo: index + 1,
-        QID: res.id,
-        // QDN: res.questionDiary.questionDiaryNo,
+        Id: res.id,
         NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate,
         NoticeTime: moment(
           res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
@@ -75,11 +93,7 @@ function SearchQuestion() {
         ).format("hh:ss:a"),
         SessionNumber: res?.session?.sessionName,
         SubjectMatter: cleanedSubjectMatter,
-        // SubjectMatter: [res?.englishText, res?.urduText]
-        //   .filter(Boolean)
-        //   .join(", "),
         Category: res.questionCategory,
-        // SubmittedBy: res.category,
         Status: res.questionStatus?.questionStatus,
       };
     });
@@ -96,9 +110,17 @@ function SearchQuestion() {
         questionID: values?.questionID,
         questionStatus: values?.questionStatus,
         questionDiaryNo: values?.questionDiaryNo,
+
+        // noticeOfficeDiaryDateFrom:
+        //   values?.fromNoticeDate &&
+        //   moment(values?.fromNoticeDate).format("DD-MM-YYYY"),
         noticeOfficeDiaryDateFrom: values?.fromNoticeDate,
+        // noticeOfficeDiaryDateTo:
+        //   values?.toNoticeDate &&
+        //   moment(values?.toNoticeDate).format("DD-MM-YYYY"),
         noticeOfficeDiaryDateTo: values?.toNoticeDate,
       };
+
       try {
         const response = await searchQuestion(
           searchParams,
@@ -294,26 +316,26 @@ function SearchQuestion() {
                         <div className="mb-3">
                           <label className="form-label">Member Name</label>
                           <Select
-                          options={members.map((item) => ({
-                            value: item.id,
-                            label: item.memberName,
-                          }))}
-                          onChange={(selectedOptions) =>
-                            formik.setFieldValue(
-                              "memberName",
-                              selectedOptions,
-                            )
-                          }
-                          onBlur={formik.handleBlur}
-                          value={formik.values.memberName}
-                          name="memberName"
-                        />
-                        {formik.touched.memberName &&
-                          formik.errors.memberName && (
-                            <div class="invalid-feedback">
-                              {formik.errors.memberName}
-                            </div>
-                          )}
+                            options={members.map((item) => ({
+                              value: item.id,
+                              label: item.memberName,
+                            }))}
+                            onChange={(selectedOptions) =>
+                              formik.setFieldValue(
+                                "memberName",
+                                selectedOptions
+                              )
+                            }
+                            onBlur={formik.handleBlur}
+                            value={formik.values.memberName}
+                            name="memberName"
+                          />
+                          {formik.touched.memberName &&
+                            formik.errors.memberName && (
+                              <div class="invalid-feedback">
+                                {formik.errors.memberName}
+                              </div>
+                            )}
                         </div>
                       </div>
                     </div>
@@ -422,17 +444,26 @@ function SearchQuestion() {
                               fontSize: "20px",
                               zIndex: "1",
                               color: "#666",
+                              cursor: "pointer",
                             }}
+                            onClick={handleFromNoticeCalendarToggle}
                           >
                             <FontAwesomeIcon icon={faCalendarAlt} />
                           </span>
+
                           <DatePicker
                             selected={formik.values.fromNoticeDate}
-                            // minDate={new Date()}
-                            onChange={(date) =>
-                              formik.setFieldValue("fromNoticeDate", date)
-                            }
-                            className={"form-control"}
+                            onChange={handleFromNoticeDateSelect}
+                            onBlur={formik.handleBlur}
+                            className={`form-control ${
+                              formik.touched.fromNoticeDate &&
+                              formik.errors.fromNoticeDate
+                                ? "is-invalid"
+                                : ""
+                            }`}
+                            open={isFromNoticeOpen}
+                            onClickOutside={() => setIsFromNoticeOpen(false)}
+                            onInputClick={handleFromNoticeCalendarToggle}
                           />
                         </div>
                       </div>
@@ -448,17 +479,26 @@ function SearchQuestion() {
                               fontSize: "20px",
                               zIndex: "1",
                               color: "#666",
+                              cursor: "pointer",
                             }}
+                            onClick={handleToNoticeCalendarToggle}
                           >
                             <FontAwesomeIcon icon={faCalendarAlt} />
                           </span>
+
                           <DatePicker
                             selected={formik.values.toNoticeDate}
-                            // minDate={new Date()}
-                            onChange={(date) =>
-                              formik.setFieldValue("toNoticeDate", date)
-                            }
-                            className={"form-control"}
+                            onChange={handleToNoticeDateSelect}
+                            onBlur={formik.handleBlur}
+                            className={`form-control ${
+                              formik.touched.toNoticeDate &&
+                              formik.errors.toNoticeDate
+                                ? "is-invalid"
+                                : ""
+                            }`}
+                            open={isToNoticeOpen}
+                            onClickOutside={() => setIsToNoticeOpen(false)}
+                            onInputClick={handleToNoticeCalendarToggle}
                           />
                         </div>
                       </div>
@@ -497,8 +537,8 @@ function SearchQuestion() {
                     headertitletextColor={"#FFF"}
                     hideDeleteIcon={true}
                     pageSize={pageSize}
-                    handleEdit={(item) => handleEdit(item?.QID)}
-                    handleDelete={(item) => handleDelete(item?.QID)}
+                    handleEdit={(item) => handleEdit(item?.Id)}
+                    // handleDelete={(item) => handleDelete(item?.QID)}
                     totalCount={count}
                   />
                 </div>

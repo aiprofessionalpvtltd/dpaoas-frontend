@@ -31,6 +31,8 @@ function SentQuestion() {
   const [currentPage, setCurrentPage] = useState(0);
   const [allquestionStatus, setAllQuestionStatus] = useState([]);
   const [count, setCount] = useState(null);
+  const [isFromNoticeOpen, setIsFromNoticeOpen] = useState(false);
+  const [isToNoticeOpen, setIsToNoticeOpen] = useState(false);
   const pageSize = 5; // Set your desired page size
 
   const handlePageChange = (page) => {
@@ -57,6 +59,27 @@ function SentQuestion() {
     },
   });
 
+  // Handle From Notice Date Claneder Toggel
+  const handleFromNoticeCalendarToggle = () => {
+    setIsFromNoticeOpen(!isFromNoticeOpen);
+  };
+  // Handale From Notice DateCHange
+  const handleFromNoticeDateSelect = (date) => {
+    formik.setFieldValue("fromNoticeDate", date);
+    setIsFromNoticeOpen(false);
+  };
+
+  // Handle To Notice Date Claneder Toggel
+  const handleToNoticeCalendarToggle = () => {
+    setIsToNoticeOpen(!isToNoticeOpen);
+  };
+  // Handale To Notice DateCHange
+  const handleToNoticeDateSelect = (date) => {
+    formik.setFieldValue("toNoticeDate", date);
+
+    setIsToNoticeOpen(false);
+  };
+
   const transformLeavesData = (apiData) => {
     return apiData.map((res, index) => {
       const subjectMatter = [res?.englishText, res?.urduText]
@@ -64,9 +87,9 @@ function SentQuestion() {
         .join(", ");
       const cleanedSubjectMatter = subjectMatter.replace(/(<([^>]+)>)/gi, "");
       return {
-        SrNo: index + 1,
-        QID: res.id,
-        QDN: res.fkQuestionDiaryId,
+        // SrNo: index + 1,
+        Id: res.id,
+        DiaryNumber: res.fkQuestionDiaryId,
         NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate,
         NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
         SessionNumber: res?.session?.sessionName,
@@ -87,8 +110,12 @@ function SentQuestion() {
         questionID: values.questionID,
         questionStatus: values.questionStatus,
         questionDiaryNo: values.questionDiaryNo,
-        noticeOfficeDiaryDateFrom: values.fromNoticeDate,
-        noticeOfficeDiaryDateTo: values.toNoticeDate,
+        noticeOfficeDiaryDateFrom:
+          values?.fromNoticeDate &&
+          moment(values.fromNoticeDate).format("DD-MM-YYYY"),
+        noticeOfficeDiaryDateTo:
+          values?.toNoticeDate &&
+          moment(values.toNoticeDate).format("DD-MM-YYYY"),
       };
       try {
         const response = await searchQuestion(
@@ -177,19 +204,8 @@ function SentQuestion() {
   }, [getAllQuestionsApi]);
   // Handle Reset Form
   const handleResetForm = () => {
-    formik.resetForm({
-      // Reset the form to initial values
-      questionDiaryNo: "",
-      questionID: "",
-      keyword: "",
-      memberName: "",
-      fromSession: "",
-      toSession: "",
-      category: "",
-      questionStatus: "",
-      fromNoticeDate: null, // Reset date fields to null or a default date
-      toNoticeDate: null,
-    });
+    formik.resetForm();
+    getAllQuestionsApi();
   };
   return (
     <Layout
@@ -265,26 +281,26 @@ function SentQuestion() {
                         <div className="mb-3">
                           <label className="form-label">Member Name</label>
                           <Select
-                          options={members.map((item) => ({
-                            value: item.id,
-                            label: item.memberName,
-                          }))}
-                          onChange={(selectedOptions) =>
-                            formik.setFieldValue(
-                              "memberName",
-                              selectedOptions,
-                            )
-                          }
-                          onBlur={formik.handleBlur}
-                          value={formik.values.memberName}
-                          name="memberName"
-                        />
-                        {formik.touched.memberName &&
-                          formik.errors.memberName && (
-                            <div class="invalid-feedback">
-                              {formik.errors.memberName}
-                            </div>
-                          )}
+                            options={members.map((item) => ({
+                              value: item.id,
+                              label: item.memberName,
+                            }))}
+                            onChange={(selectedOptions) =>
+                              formik.setFieldValue(
+                                "memberName",
+                                selectedOptions
+                              )
+                            }
+                            onBlur={formik.handleBlur}
+                            value={formik.values.memberName}
+                            name="memberName"
+                          />
+                          {formik.touched.memberName &&
+                            formik.errors.memberName && (
+                              <div class="invalid-feedback">
+                                {formik.errors.memberName}
+                              </div>
+                            )}
                         </div>
                       </div>
                     </div>
@@ -380,7 +396,7 @@ function SentQuestion() {
                       </div>
                     </div>
 
-                    <div className="row">
+                    {/* <div className="row">
                       <div className="col-3">
                         <div className="mb-3" style={{ position: "relative" }}>
                           <label className="form-label">From Notice Date</label>
@@ -433,6 +449,79 @@ function SentQuestion() {
                           />
                         </div>
                       </div>
+                    </div> */}
+
+                    <div className="row">
+                      <div className="col-3">
+                        <div className="mb-3" style={{ position: "relative" }}>
+                          <label className="form-label">From Notice Date</label>
+                          <span
+                            style={{
+                              position: "absolute",
+                              right: "15px",
+                              top: "36px",
+                              zIndex: 1,
+                              fontSize: "20px",
+                              zIndex: "1",
+                              color: "#666",
+                              cursor: "pointer",
+                            }}
+                            onClick={handleFromNoticeCalendarToggle}
+                          >
+                            <FontAwesomeIcon icon={faCalendarAlt} />
+                          </span>
+
+                          <DatePicker
+                            selected={formik.values.fromNoticeDate}
+                            onChange={handleFromNoticeDateSelect}
+                            onBlur={formik.handleBlur}
+                            className={`form-control ${
+                              formik.touched.fromNoticeDate &&
+                              formik.errors.fromNoticeDate
+                                ? "is-invalid"
+                                : ""
+                            }`}
+                            open={isFromNoticeOpen}
+                            onClickOutside={() => setIsFromNoticeOpen(false)}
+                            onInputClick={handleFromNoticeCalendarToggle}
+                          />
+                        </div>
+                      </div>
+                      <div className="col-3">
+                        <div className="mb-3" style={{ position: "relative" }}>
+                          <label className="form-label">To Notice Date</label>
+                          <span
+                            style={{
+                              position: "absolute",
+                              right: "15px",
+                              top: "36px",
+                              zIndex: 1,
+                              fontSize: "20px",
+                              zIndex: "1",
+                              color: "#666",
+                              cursor: "pointer",
+                            }}
+                            onClick={handleToNoticeCalendarToggle}
+                          >
+                            <FontAwesomeIcon icon={faCalendarAlt} />
+                          </span>
+
+                          <DatePicker
+                            selected={formik.values.toNoticeDate}
+                            onChange={handleToNoticeDateSelect}
+                            onBlur={formik.handleBlur}
+                            className={`form-control ${
+                              formik.touched.toNoticeDate &&
+                              formik.errors.toNoticeDate
+                                ? "is-invalid"
+                                : ""
+                            }`}
+                            open={isToNoticeOpen}
+                            onClickOutside={() => setIsToNoticeOpen(false)}
+                            onInputClick={handleToNoticeCalendarToggle}
+                          />
+                        </div>
+                      </div>
                     </div>
 
                     <div className="row">
@@ -474,7 +563,7 @@ function SentQuestion() {
                     hideEditIcon={false}
                     hideDeleteIcon={true}
                     handleAdd={(item) => navigate("/")}
-                    handleEdit={(item) => handleEdit(item?.QID)}
+                    handleEdit={(item) => handleEdit(item?.Id)}
                   />
                 </div>
               </div>

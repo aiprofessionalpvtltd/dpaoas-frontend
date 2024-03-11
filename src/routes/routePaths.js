@@ -56,6 +56,7 @@ import QMSResolutionList from "../pages/Dashboard/Modules/QMS/Resolution/Resolut
 import QMSSearchQuestion from "../pages/Dashboard/Modules/QMS/SearchQuestion";
 import QMSSerchResolution from "../pages/Dashboard/Modules/QMS/SearchResolution";
 import SMSDashboard from "../pages/Dashboard/Modules/SMS";
+import FileDetail from "../pages/Dashboard/Modules/EFiling/FileDetail";
 import TMSDashboard from "../pages/Dashboard/Modules/TMS";
 import TMSMotion from "../pages/Dashboard/Modules/TMS/Motion";
 import TMSQuestion from "../pages/Dashboard/Modules/TMS/Question";
@@ -138,11 +139,15 @@ import CMSSpeechOnDemandDashboard from "../pages/Dashboard/Modules/Notice/Speech
 import CMSResearchServicesDashboard from "../pages/Dashboard/Modules/Notice/ResearchServices";
 import CMSAddEditSpeechOnDemand from "../pages/Dashboard/Modules/Notice/SpeechOnDemand/AddEditSpeechOnDemand";
 import CMSAddEditResearchService from "../pages/Dashboard/Modules/Notice/ResearchServices/AddEditResearchService";
+import NMSMemberSessionAttendance from "../pages/Dashboard/Modules/Notice/SeatingPlan/MemberSessionAttendance";
+import NMSProroguredSessions from "../pages/Dashboard/Modules/Notice/SeatingPlan/ProroguredSessions";
 import FileCases from "../pages/Dashboard/Modules/EFiling/FIleRegister/Files/FileCases";
 import AddEditFileCase from "../pages/Dashboard/Modules/EFiling/FIleRegister/Files/FileCases/AddEditFileCase";
 import { Diary } from "../pages/Dashboard/Modules/EFiling/Diary";
 import FreshReceipt from "../pages/Dashboard/Modules/EFiling/FreshReceipt";
 import AddEditFR from "../pages/Dashboard/Modules/EFiling/FreshReceipt/AddEditFR";
+import LegislativeBillList from "../pages/Dashboard/Modules/Notice/legislationBusiness/LegislativeBill";
+import AddEditLegislativeBill from "../pages/Dashboard/Modules/Notice/legislationBusiness/LegislativeBill/AddEditLegislativeBill";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -206,6 +211,11 @@ export const ProtectedRoutes = [
     element: <AddEditPrivateBill />,
   },
 
+  { path: "/notice/legislation/legislative-bill", element: <LegislativeBillList /> },
+  { path: "/notice/legislation/legislative-bill/addedit", element: <AddEditLegislativeBill /> },
+
+
+
   { path: "/notice/manage", element: <NoticeDashboard /> },
   { path: "/notice/manage/members", element: <Members /> },
   { path: "/notice/manage/members/addedit", element: <MembersAddEditForm /> },
@@ -214,6 +224,15 @@ export const ProtectedRoutes = [
   { path: "/notice/manage/sessions/addedit", element: <SessionsAddEditForm /> },
 
   { path: "/notice/manage", element: <NoticeDashboard /> },
+  {
+    path: "/notice/manage/single-member-session-attendance",
+    element: <NMSMemberSessionAttendance />,
+  },
+  {
+    path: "/notice/manage/view-prorogued-sessions",
+    element: <NMSProroguredSessions />,
+  },
+
   // {
   //   path: "/notice/manage/manage-session-days",
   //   element: <ManageSessionDays />,
@@ -458,7 +477,7 @@ export const ProtectedRoutes = [
 
   // E-Filing
   { path: "/efiling/dashboard", element: <EFilingDashboard /> },
-  // { path: "/efiling/dashboard/fileDetail", element: <FileDetail /> },
+  { path: "/efiling/dashboard/fileDetail", element: <FileDetail /> },
   // { path: "/efiling/dashboard/addedit", element: <AddEditFileForm /> },
   // { path: "/efiling/dashboard/addeditcase", element: <AddEditCaseForm /> },
   // { path: "/efiling/dashboard/files", element: <Files /> },

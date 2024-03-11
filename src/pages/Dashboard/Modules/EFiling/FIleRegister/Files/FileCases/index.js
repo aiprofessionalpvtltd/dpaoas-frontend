@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { ToastContainer } from 'react-toastify';
 import { useNavigate } from 'react-router';
 import { useLocation } from "react-router-dom";
@@ -7,11 +7,13 @@ import Header from '../../../../../../../components/Header';
 import CustomTable from '../../../../../../../components/CustomComponents/CustomTable';
 import { EfilingSideBarItem } from '../../../../../../../utils/sideBarItems';
 import { getAllCasesByFileId } from '../../../../../../../api/APIs/Services/efiling.service';
+import { AuthContext } from '../../../../../../../api/AuthContext';
 
 
 function FileCases() {
-    const navigate = useNavigate()
-    const location = useLocation()
+    const navigate = useNavigate();
+    const { setFileIdInRegister, fileIdINRegister } = useContext(AuthContext);
+    const location = useLocation();
     const [currentPage, setCurrentPage] = useState(0);
     const [count, setCount] = useState(null);
     const [casesData, setCasesData] = useState([])
@@ -25,21 +27,22 @@ function FileCases() {
 
 
     const transformFilesCases = (apiData) => {
-        return apiData.map((item) => ({
-            id: item?.id,
-            registerNumber: item?.registerNumber,
-            branch: item?.branches?.branchName,
-            Subject:item?.registerSubject,
-            year: item?.year,
+        return apiData.map((item, index) => ({
+            caseId: item?.fkCaseId,
+            Noting: item?.Note?.description ? new DOMParser().parseFromString(item.Note?.description, 'text/html').documentElement.innerText : '',
+            Correspondence: item?.Correspondence?.description ? new DOMParser().parseFromString(item.Correspondence?.description, 'text/html').documentElement.innerText : '',
+            Sanction: item?.Sanction?.description ? new DOMParser().parseFromString(item.Sanction?.description, 'text/html').documentElement.innerText : '',
+            Objection: item?.Objection?.description ? new DOMParser().parseFromString(item.Objection?.description, 'text/html').documentElement.innerText : '',
+            Letter: item?.Letter?.description ? new DOMParser().parseFromString(item.Letter?.description, 'text/html').documentElement.innerText : '',
         }));
     };
 
     const getAllCasesApi = async () => {
         try {
-            const response = await getAllCasesByFileId(location.state?.id, currentPage, pageSize)
+            const response = await getAllCasesByFileId(fileIdINRegister, currentPage, pageSize)
             if (response.success) {
                 setCount(response?.data?.count)
-                const transferData = transformFilesCases(response?.data?.fileRegisters)
+                const transferData = transformFilesCases(response?.data?.cases)
                 setCasesData(transferData)
             }
         } catch (error) {
@@ -48,8 +51,11 @@ function FileCases() {
     }
 
     useEffect(() => {
-        getAllCasesApi()
-    }, [])
+        if(location.state?.internalId) {
+            setFileIdInRegister(location.state?.internalId);
+        }
+        getAllCasesApi();
+    }, [fileIdINRegister, setFileIdInRegister, currentPage])
 
     return (
         <Layout module={true} sidebarItems={EfilingSideBarItem}>
@@ -59,7 +65,7 @@ function FileCases() {
                 <div class="col-12">
                     <CustomTable
                         // hidebtn1={true}
-                        ActionHide={true}
+                        ActionHide={false}
                         hideBtn={false}
                         addBtnText={"Create Case"}
                         data={casesData}
@@ -74,8 +80,10 @@ function FileCases() {
                         totalCount={count}
                         singleDataCard={true}
                         hideDeleteIcon={true}
-                        // showView={true}
-                        // handleView={(item) => navigate("/efiling/dashboard/file-register-list/files-list", {state:item})}
+                        showView={true}
+                        handleView={(item) => navigate("/efiling/dashboard/file-register-list/files-list/addedit-case", {state: {caseId: item.caseId, view: true}})}
+                        showAssigned={true}
+                        hendleAssigned={(item) => navigate("/efiling/dashboard/fileDetail", { state: { view: true, id: item.caseId } })}
                     />
                 </div>
             </div>

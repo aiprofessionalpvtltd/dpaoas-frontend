@@ -21,8 +21,8 @@ export const AuthProvider = ({ children }) => {
   const [resolutionStatus, setResolutionStatus] = useState([]);
   const [employeesAsEngineersData, setemployeesAsEngineersData] = useState([]);
   const [allBranchesData, setallBranchesData] = useState([]);
-
   const [members, setMembers] = useState([]);
+  const [fileIdINRegister, setFileIdInRegister] = useState(null);
 
   const login = async (data) => {
     try {
@@ -56,7 +56,6 @@ export const AuthProvider = ({ children }) => {
       const response = await getAllEmployee(0, 1000);
       if (response?.success) {
         setEmployeeData(response?.data);
-        console.log("response?.data, Dataa", response?.data);
       }
     } catch (error) {
       console.log(error);
@@ -147,6 +146,9 @@ export const AuthProvider = ({ children }) => {
         resolutionStatus,
         employeesAsEngineersData,
         allBranchesData,
+
+        setFileIdInRegister,
+        fileIdINRegister
       }}
     >
       {children}
