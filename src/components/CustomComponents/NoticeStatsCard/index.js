@@ -6,7 +6,7 @@ import React from "react";
 // import { CircularProgressbar } from 'react-circular-progressbar';
 import "react-circular-progressbar/dist/styles.css";
 
-function NoticeStatsCard({ title, icon, iconBgColor, total, sent, received, overall, upcoming }) {
+function NoticeStatsCard({ title, icon, iconBgColor, total, sent, received, overall, upcoming, SentText, ReceivedText }) {
   return (
     <div class="col-4">
       {overall ? (
@@ -83,7 +83,7 @@ function NoticeStatsCard({ title, icon, iconBgColor, total, sent, received, over
                     marginBottom: "5px",
                   }}
                 >
-                  Sent
+                  {SentText ? SentText :"Sent"}
                 </span>
                 {sent ? sent : 0}
               </h6>
@@ -111,7 +111,7 @@ function NoticeStatsCard({ title, icon, iconBgColor, total, sent, received, over
                     marginBottom: "5px",
                   }}
                 >
-                  Received
+                  {ReceivedText ? ReceivedText : "Received"}
                 </span>
                 {received ? received : 0}
               </h6>

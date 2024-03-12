@@ -480,8 +480,8 @@ export const DeleteFileCaseImage = async (id) => {
 export const assigneCase = async (fileId, caseId, data) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.post(
-      `/cases/assignCase/${fileId}/${caseId}`, data)
+    const response = await axiosClientMMS.put(
+      `/cases/handleAssignAndUpdate/${fileId}/${caseId}`, data)
       // {
       //   headers: {
       //     accept: "application/json",

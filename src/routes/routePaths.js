@@ -148,6 +148,7 @@ import FreshReceipt from "../pages/Dashboard/Modules/EFiling/FreshReceipt";
 import AddEditFR from "../pages/Dashboard/Modules/EFiling/FreshReceipt/AddEditFR";
 import LegislativeBillList from "../pages/Dashboard/Modules/Notice/legislationBusiness/LegislativeBill";
 import AddEditLegislativeBill from "../pages/Dashboard/Modules/Notice/legislationBusiness/LegislativeBill/AddEditLegislativeBill";
+import DirectorDashboard from "../pages/Dashboard/Modules/EFiling/DirectorDashboard";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -477,6 +478,8 @@ export const ProtectedRoutes = [
 
   // E-Filing
   { path: "/efiling/dashboard", element: <EFilingDashboard /> },
+  { path: "/efiling/director-deshboard", element: <DirectorDashboard /> },
+
   { path: "/efiling/dashboard/fileDetail", element: <FileDetail /> },
   // { path: "/efiling/dashboard/addedit", element: <AddEditFileForm /> },
   // { path: "/efiling/dashboard/addeditcase", element: <AddEditCaseForm /> },
