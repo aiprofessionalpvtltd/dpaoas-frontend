@@ -309,6 +309,12 @@ if (objection.attachedFiles) {
         setDirectorData(response?.data?.cases?.fileDiary);
         setRemarksData(response?.data?.cases?.fileRemarks);
         setFilesData(response?.data?.cases);
+        const noting = response?.data?.cases?.sections.filter((item) => item.sectionType === "Note")
+        const correspondance = response?.data?.cases?.sections.filter((item) => item.sectionType === "Correspondence")
+        const Letter = response?.data?.cases?.sections.filter((item) => item.sectionType === "Letter")
+        const Objection = response?.data?.cases?.sections.filter((item) => item.sectionType === "Objection")
+        const Sanction = response?.data?.cases?.sections.filter((item) => item.sectionType === "Sanction")
+
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -575,7 +581,7 @@ if (objection.attachedFiles) {
                           </select>
                         </div>
                       </div>
-
+{/* 
                       <div class="col-6">
                         <div class="mb-3">
                           <label
@@ -603,7 +609,7 @@ if (objection.attachedFiles) {
                             <option value={"Priority"}>Immediate</option>
                           </select>
                         </div>
-                      </div>
+                      </div> */}
                     </div>
 
                   </div>

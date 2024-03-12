@@ -149,6 +149,7 @@ import AddEditFR from "../pages/Dashboard/Modules/EFiling/FreshReceipt/AddEditFR
 import LegislativeBillList from "../pages/Dashboard/Modules/Notice/legislationBusiness/LegislativeBill";
 import AddEditLegislativeBill from "../pages/Dashboard/Modules/Notice/legislationBusiness/LegislativeBill/AddEditLegislativeBill";
 import DirectorDashboard from "../pages/Dashboard/Modules/EFiling/DirectorDashboard";
+import PreviousCasesHistory from "../pages/Dashboard/Modules/EFiling/FIleRegister/Files/FileCases/PreviousCasesHistory";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -508,6 +509,10 @@ export const ProtectedRoutes = [
   {
     path: "/efiling/dashboard/file-register-list/files-list/cases",
     element: <FileCases />,
+  },
+  {
+    path: "/efiling/dashboard/file-register-list/files-list/cases-history",
+    element: <PreviousCasesHistory />,
   },
   {
     path: "/efiling/dashboard/fresh-receipt",
