@@ -744,19 +744,19 @@ export const EfilingSideBarItem = [
     link: "/efiling/dashboard/file-register-list",
     icon: faBookOpen,
   },
-  {
-    itemName: "Main File",
-    link: "",
-    icon: faLaptopFile,
-  },
+  // {
+  //   itemName: "Main File",
+  //   link: "",
+  //   icon: faLaptopFile,
+  // },
   {
     itemName: "Fresh Recipt",
     link: "/efiling/dashboard/fresh-receipt",
     icon: faReceipt,
   },
-  {
-    itemName: "Team information",
-    link: "",
-    icon: faPeopleGroup,
-  },
+  // {
+  //   itemName: "Team information",
+  //   link: "",
+  //   icon: faPeopleGroup,
+  // },
 ];

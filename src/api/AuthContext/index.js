@@ -56,7 +56,6 @@ export const AuthProvider = ({ children }) => {
       const response = await getAllEmployee(0, 1000);
       if (response?.success) {
         setEmployeeData(response?.data);
-        console.log("response?.data, Dataa", response?.data);
       }
     } catch (error) {
       console.log(error);
