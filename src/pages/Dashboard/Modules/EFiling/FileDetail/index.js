@@ -21,6 +21,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { getUserData } from "../../../../../api/Auth";
 import {
+  DeleteFileCaseImage,
   UpdateEfiling,
   UploadEfilingAttechment,
   assigneCase,
@@ -80,18 +81,22 @@ function FileDetail() {
 
   const [correspondenceData, setCorrespondenceData] = useState({
     description: "",
+    attachedFiles: [],
   });
 
   const [objection, setObjection] = useState({
     description: "",
+    attachedFiles: [],
   });
 
   const [sanction, setSanction] = useState({
     description: "",
+    attachedFiles: [],
   });
 
   const [letter, setLetter] = useState({
     description: "",
+    attachedFiles: [],
   });
 
   const [employeeData, setEmployeeData] = useState([]);
@@ -147,11 +152,13 @@ function FileDetail() {
     },
   ];
 
+
   const clearInput = () => {
     if (fileInputRef.current) {
       fileInputRef.current.value = null; // Reset the value of the input
     }
   };
+
   const formik = useFormik({
     initialValues: {
       fileNumber: "",
@@ -177,20 +184,107 @@ function FileDetail() {
     },
   });
 
+  const handleFileChangeCorrespondance = (event) => {
+    // Access the files from the event
+    const files = event.target.files;
+    // Convert the files object to an array
+    const fileList = Array.from(files);
+  
+    // Merge the new files with the existing ones
+    setCorrespondenceData((prevState) => ({
+      ...prevState,
+      attachedFiles: [...prevState.attachedFiles, ...fileList],
+    }));
+  };  
+
+  const handleFileChangeSanction = (event) => {
+    // Access the files from the event
+    const files = event.target.files;
+    // Convert the files object to an array
+    const fileList = Array.from(files);
+    // Store the selected files in state
+    setSanction((prevState) => ({
+      ...prevState,
+      attachedFiles: [...prevState.attachedFiles, ...fileList],
+    }));
+  };
+
+  const handleFileChangeObjection = (event) => {
+    // Access the files from the event
+    const files = event.target.files;
+    // Convert the files object to an array
+    const fileList = Array.from(files);
+    // Store the selected files in state
+    setObjection((prevState) => ({
+      ...prevState,
+      attachedFiles: [...prevState.attachedFiles, ...fileList],
+    }));
+  };
+
+  const handleFileChangeLetter = (event) => {
+    // Access the files from the event
+    const files = event.target.files;
+    // Convert the files object to an array
+    const fileList = Array.from(files);
+    // Store the selected files in state
+    setLetter((prevState) => ({
+      ...prevState,
+      attachedFiles: [...prevState.attachedFiles, ...fileList],
+    }));
+  };
+
+  
+ 
   console.log("Case Id----------------------", location?.state?.id);
   const UpdateEfilingApi = async (values) => {
-    const Data = {
-      submittedBy: UserData?.fkUserId,
-      assignedTo: values?.assignedTo,
-      CommentStatus: values?.CommentStatus,
-      comment: values?.comment,
-    };
+
+    const formData = new FormData();
+    formData.append("submittedBy", UserData?.fkUserId);
+    formData.append("assignedTo",  values?.assignedTo);
+    formData.append("CommentStatus", values?.CommentStatus);
+    formData.append("comment", values?.comment);
+
+
+
+    formData.append("cases[0][Note][description]", notingData.description);
+    formData.append(
+      "cases[0][Correspondence][description]",
+      correspondenceData.description
+    );
+    formData.append("cases[0][Sanction][description]", sanction.description);
+    formData.append("cases[0][Objection][description]", objection.description);
+    formData.append("cases[0][Letter][description]", letter.description);
+  
+if (objection.attachedFiles) {
+    objection.attachedFiles.forEach((file, index) => {
+      formData.append(`cases[0][Objection][sections][${index}]`, file);
+    });
+}
+    if (sanction.attachedFiles) {
+    sanction.attachedFiles.forEach((file, index) => {
+      formData.append(`cases[0][Sanction][sections][${index}]`, file);
+    });
+}
+    if (letter.attachedFiles) {
+    letter.attachedFiles.forEach((file, index) => {
+      formData.append(`cases[0][Letter][sections][${index}]`, file);
+    });
+}
+    if (correspondenceData.attachedFiles) {
+    correspondenceData.attachedFiles.forEach((file, index) => {
+      formData.append(
+          `cases[0][Correspondence][sections][${index}]`,
+          file
+        );
+    });
+  
+}
 
     try {
       const response = await assigneCase(
         fileIdINRegister,
         location?.state?.id,
-        Data
+        formData
       );
       if (response?.success) {
         showSuccessMessage(response?.message);
@@ -214,15 +308,30 @@ function FileDetail() {
       if (response?.success) {
         setDirectorData(response?.data?.cases?.fileDiary);
         setRemarksData(response?.data?.cases?.fileRemarks);
-        // console.log("dataassassasa-------",response?.data?.cases?.fileDetails);
         setFilesData(response?.data?.cases);
+        const noting = response?.data?.cases?.sections.filter((item) => item.sectionType === "Note")
+        const correspondance = response?.data?.cases?.sections.filter((item) => item.sectionType === "Correspondence")
+        const Letter = response?.data?.cases?.sections.filter((item) => item.sectionType === "Letter")
+        const Objection = response?.data?.cases?.sections.filter((item) => item.sectionType === "Objection")
+        const Sanction = response?.data?.cases?.sections.filter((item) => item.sectionType === "Sanction")
 
-        const noteData = response?.data?.cases?.sections[4].description;
-
-        console.log("_____________________________", noteData);
       }
     } catch (error) {
-      // showErrorMessage(error?.response?.data?.message);
+      showErrorMessage(error?.response?.data?.message);
+    }
+  };
+
+  const hendleRemoveImage = async (id) => {
+    try {
+      const response = await DeleteFileCaseImage(id);
+      if (response?.success) {
+        showSuccessMessage(response.message);
+        // if (caseId) {
+          getFilesByID(fileIdINRegister, caseId);
+        // }
+      }
+    } catch (error) {
+      showErrorMessage(error.response.data.message);
     }
   };
 
@@ -871,7 +980,7 @@ function FileDetail() {
                             }
                             editorContent={notingData.description}
                             multiLanguage={false}
-                            disabled={location.state?.view ? true : false}
+                            // disabled={location.state?.view ? true : false}
                           />
                         </section>
                       ) : selectedTab === "Correspondence" ? (
@@ -890,7 +999,7 @@ function FileDetail() {
                             }
                             editorContent={correspondenceData.description}
                             multiLanguage={false}
-                            disabled={location.state?.view ? true : false}
+                            // disabled={location.state?.view ? true : false}
                           />
                           <div class="row">
                             <div class="col">
@@ -903,40 +1012,65 @@ function FileDetail() {
                                     >
                                       Attach File
                                     </label>
-
-                                    {filesData?.sections &&
+                                    <div class="col-6">
+                                <input
+                                ref={fileInputRef}
+                                  className="form-control"
+                                  type="file"
+                                  accept=".pdf, .jpg, .jpeg, .png"
+                                  id="correspondance"
+                                  name="correspondance"
+                                  multiple
+                                  onChange={(event) =>
+                                    handleFileChangeCorrespondance(event)
+                                  }
+                      // disabled={location.state?.view ? true : false}
+                                />
+                                {filesData?.sections.length >
+                                  0 && (
+                                  <div>
+                                    <label
+                                      for="formFile"
+                                      class="form-label mt-3 mb-0"
+                                    >
+                                      Attached Files
+                                    </label>
+                                    <ul>
+                                      {filesData?.sections &&
                                       filesData?.sections[0]?.caseAttachments.map(
-                                        (item) => (
-                                          <div class="MultiFile-label mt-3">
-                                            <a
-                                              href={`http://172.16.170.8:5252${item.fileName}`}
-                                            >
-                                              <i class="fas fa-download"></i>
-                                            </a>
-                                            
-                                            <span
-                                              class="MultiFile-label"
-                                              title={item.fileName
-                                                ?.split("\\")
-                                                .pop()
-                                                .split("/")
-                                                .pop()}
-                                            >
-                                              <span class="MultiFile-title">
-                                                <a
-                                                  href={`http://172.16.170.8:5252${item.fileName}`}
+                                            (file, index) => {
+                                              return (
+                                              <div key={index}>
+                                              <a
+                                                  class="MultiFile-remove"
+                                                  style={{
+                                                    marginRight: "10px",
+                                                    color: "red",
+                                                    cursor: "pointer",
+                                                  }}
+                                                  onClick={() => hendleRemoveImage(file?.id)}
                                                 >
-                                                  {item.fileName
-                                                    ?.split("\\")
-                                                    .pop()
-                                                    .split("/")
-                                                    .pop()}
+                                                  x
                                                 </a>
-                                              </span>
-                                            </span>
-                                          </div>
-                                        )
-                                      )}
+                                                <a
+                                                  href={file?.id ? `http://172.16.170.8:5252${file?.fileName}` : URL.createObjectURL(
+                                                    file
+                                                  )}
+                                                  target="_blank"
+                                                  rel="noopener noreferrer"
+                                                >
+                                                  {file?.id ? file?.fileName?.split("/").pop() : file.name}
+                                                </a>
+                                              </div>
+                                              )
+                                          }
+                                        )}
+                                    </ul>
+                                  </div>
+                                )}
+
+                                    
+                                      </div>
                                   </div>
                                 </div>
                               </div>
@@ -959,7 +1093,7 @@ function FileDetail() {
                             }
                             editorContent={sanction.description}
                             multiLanguage={false}
-                            disabled={location.state?.view ? true : false}
+                            // disabled={location.state?.view ? true : false}
                           />
                           <div class="row">
                             <div class="col">
@@ -972,6 +1106,20 @@ function FileDetail() {
                                     >
                                       Attach File
                                     </label>
+                                    <div class="col-6">
+                                <input
+                                ref={fileInputRef}
+                                  className="form-control"
+                                  type="file"
+                                  accept=".pdf, .jpg, .jpeg, .png"
+                                  id="correspondance"
+                                  name="correspondance"
+                                  multiple
+                                  onChange={(event) =>
+                                    handleFileChangeSanction(event)
+                                  }
+                      // disabled={location.state?.view ? true : false}
+                                />
 
                                     {filesData?.sections &&
                                       filesData?.sections[3]?.caseAttachments.map(
@@ -1006,6 +1154,7 @@ function FileDetail() {
                                           </div>
                                         )
                                       )}
+                                      </div>
                                   </div>
                                 </div>
                               </div>
@@ -1028,7 +1177,7 @@ function FileDetail() {
                             }
                             editorContent={objection.description}
                             multiLanguage={false}
-                            disabled={location.state?.view ? true : false}
+                            // disabled={location.state?.view ? true : false}
                           />
                           <div class="row">
                             <div class="col">
@@ -1041,6 +1190,20 @@ function FileDetail() {
                                     >
                                       Attach File
                                     </label>
+                                    <div class="col-6">
+                                <input
+                                ref={fileInputRef}
+                                  className="form-control"
+                                  type="file"
+                                  accept=".pdf, .jpg, .jpeg, .png"
+                                  id="correspondance"
+                                  name="correspondance"
+                                  multiple
+                                  onChange={(event) =>
+                                    handleFileChangeObjection(event)
+                                  }
+                      // disabled={location.state?.view ? true : false}
+                                />
 
                                     {filesData?.sections &&
                                       filesData?.sections[1]?.caseAttachments.map(
@@ -1075,6 +1238,7 @@ function FileDetail() {
                                           </div>
                                         )
                                       )}
+                                      </div>
                                   </div>
                                 </div>
                               </div>
@@ -1110,6 +1274,20 @@ function FileDetail() {
                                     >
                                       Attach File
                                     </label>
+                                    <div class="col-6">
+                                <input
+                                ref={fileInputRef}
+                                  className="form-control"
+                                  type="file"
+                                  accept=".pdf, .jpg, .jpeg, .png"
+                                  id="correspondance"
+                                  name="correspondance"
+                                  multiple
+                                  onChange={(event) =>
+                                    handleFileChangeLetter(event)
+                                  }
+                      // disabled={location.state?.view ? true : false}
+                                />
 
                                     {filesData?.sections &&
                                       filesData?.sections[2]?.caseAttachments.map(
@@ -1144,6 +1322,7 @@ function FileDetail() {
                                           </div>
                                         )
                                       )}
+                                      </div>
                                   </div>
                                 </div>
                               </div>
