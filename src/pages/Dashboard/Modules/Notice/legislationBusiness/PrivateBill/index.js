@@ -12,6 +12,7 @@ import PrivateBillModal from "../../../../../../components/PrivateBillModal";
 import { ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { CustomAlert } from "../../../../../../components/CustomComponents/CustomAlert";
+import moment from "moment";
 
 function PrivateBill() {
   const [currentPage, setCurrentPage] = useState(0);
@@ -34,7 +35,7 @@ function PrivateBill() {
       id: item?.id,
       SerialNo: item?.SerialNo,
       fileNo: item?.fileNo,
-      date: item?.date,
+      date: moment(item?.date).format("DD/MM/YYYY"),
       fromReceived: item?.fromReceived,
       briefSubject: item?.briefSubject,
       remarks: item?.remarks,
