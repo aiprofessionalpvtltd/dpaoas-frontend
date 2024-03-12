@@ -14,7 +14,7 @@ export const Diary = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
   const [outgoingCount, setOutGoingCount] = useState(null)
-  const pageSize = 5; // Set your desired page size
+  const pageSize = 10; // Set your desired page size
   const [incomingData, setIncomingData] = useState([])
   const [outgoingData, setoutgoingData] = useState([])
 
@@ -46,7 +46,7 @@ export const Diary = () => {
         )
         setIncomingData(trensferData);
         //
-        setOutGoingCount(response?.data?.incoming?.count);
+        setOutGoingCount(response?.data?.outgoing?.count);
         const transferOutGoing = treformFileDiary(
           response?.data?.outgoing?.fileDiaries
         )

@@ -472,8 +472,7 @@ function FileDetail() {
                           </select>
                         </div>
                       </div>
-                    </div>
-                    <div class="row">
+
                       <div class="col-6">
                         <div class="mb-3">
                           <label
@@ -503,6 +502,7 @@ function FileDetail() {
                         </div>
                       </div>
                     </div>
+
                   </div>
                   <div className="row">
                     {documentTypeVal === "Internal" ? (
