@@ -19,14 +19,13 @@ import { useNavigate } from 'react-router-dom';
 
 
 const validationSchema = Yup.object({
-  // fkBranchId: Yup.string().required("Branch Name is required"),
   mainHeading: Yup.string().required("Main Heading is required"),
   numberOfMainHeading: Yup.string().required("Number Of Main Heading is required"),
   year: Yup.string().required("Year is required"),
   serialNumber: Yup.string().required("Serial Number is required"),
   fileNumber: Yup.string().required("File Number is required"),
   subject: Yup.string().required("Subject is required"),
-  fileType: Yup.string().required("File Type is required"),
+  // fileType: Yup.string().required("File Type is required"),
   dateOfRecord: Yup.string().optional(),
   classification: Yup.string().optional(),
   movement: Yup.string().optional(),
@@ -54,14 +53,13 @@ function AddEditFiles() {
 
   const formik = useFormik({
     initialValues: {
-      // fkBranchId: "",
       mainHeading: "",
       numberOfMainHeading: "",
       year: "",
       serialNumber: "",
       fileNumber: "",
       subject: "",
-      fileType:"",
+      // fileType:"",
       dateOfRecord: "",
       classification: "",
       movement: "",
@@ -85,7 +83,7 @@ function AddEditFiles() {
       serialNumber: values?.serialNumber,
       fileNumber: values?.fileNumber,
       fileSubject: values?.subject,
-      fileType:values?.fileType,
+      fileType:null,
       dateOfRecording: values?.dateOfRecord,
       fileClassification: values?.classification,
       fileMovement: values?.movement,
