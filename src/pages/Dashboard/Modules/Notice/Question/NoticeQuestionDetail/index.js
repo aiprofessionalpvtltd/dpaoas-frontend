@@ -65,7 +65,13 @@ function NoticeQuestionDetail() {
 
   const formik = useFormik({
     initialValues: {
-      sessionNo: location?.state?.question?.session?.sessionName,
+      // sessionNo: location?.state?.question?.session?.sessionName,
+      sessionNo: location.state
+        ? {
+            value: location?.state?.question?.session?.id,
+            label: location?.state?.question?.session?.sessionName,
+          }
+        : "",
       noticeOfficeDiaryNo:
         location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryNo,
       noticeOfficeDiaryDate: moment(
@@ -103,7 +109,7 @@ function NoticeQuestionDetail() {
 
   const updateQuestion = async (values) => {
     const formData = new FormData();
-    formData.append("fkSessionId", location?.state?.question?.session?.id);
+    formData.append("fkSessionId", values?.sessionNo?.value);
     formData.append("noticeOfficeDiaryNo", values?.noticeOfficeDiaryNo);
     formData.append("noticeOfficeDiaryDate", values?.noticeOfficeDiaryDate);
     formData.append("noticeOfficeDiaryTime", values?.noticeOfficeDiaryTime);
@@ -250,14 +256,24 @@ function NoticeQuestionDetail() {
                             </option>
                           ))}
                       </select> */}
-                      <input
-                        readOnly={true}
-                        placeholder={formik.values.sessionNo}
-                        type="text"
-                        class="form-control"
-                        id="sessionNo"
-                        onChange={formik.handleChange}
+
+                      <Select
+                        options={
+                          sessions &&
+                          sessions?.map((item) => ({
+                            value: item?.id,
+                            label: item?.sessionName,
+                          }))
+                        }
+                        onChange={(selectedOptions) => {
+                          formik.setFieldValue("sessionNo", selectedOptions);
+                        }}
                         onBlur={formik.handleBlur}
+                        value={formik.values.sessionNo}
+                        name="sessionNo"
+                        isClearable={true}
+                        // className="form-select"
+                        style={{ border: "none" }}
                       />
                     </div>
                   </div>
@@ -265,7 +281,7 @@ function NoticeQuestionDetail() {
                     <div class="mb-3">
                       <label class="form-label">Notice Office Diary No</label>
                       <input
-                        placeholder={formik.values.noticeOfficeDiaryNo}
+                        value={formik.values.noticeOfficeDiaryNo}
                         type="text"
                         class="form-control"
                         id="noticeOfficeDiaryNo"
@@ -386,7 +402,7 @@ function NoticeQuestionDetail() {
                         value={formik.values.senator}
                         name="senator"
                         isClearable={true}
-                        className="form-select"
+                        // className="form-select"
                       />
                     </div>
                   </div>
@@ -398,7 +414,11 @@ function NoticeQuestionDetail() {
                   {location?.state?.question?.questionImage?.length > 0 ? (
                     location?.state?.question?.questionImage?.map((item) => (
                       <div class="MultiFile-label mt-3">
-                        <a href={`http://172.16.170.8:5252${item?.path}`}>
+                        <a
+                          href={`http://172.16.170.8:5252${item?.path}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
                           <i class="fas fa-download"></i>
                         </a>
                         <a class="MultiFile-remove" href="#T7">
@@ -409,7 +429,11 @@ function NoticeQuestionDetail() {
                           title={item?.path?.split("\\").pop().split("/").pop()}
                         >
                           <span class="MultiFile-title">
-                            <a href={`http://172.16.170.8:5252${item?.path}`}>
+                            <a
+                              href={`http://172.16.170.8:5252${item?.path}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
                               {item?.path?.split("\\").pop().split("/").pop()}
                             </a>
                           </span>

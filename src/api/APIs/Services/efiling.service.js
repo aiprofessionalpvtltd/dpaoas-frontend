@@ -384,10 +384,10 @@ export const DeleteHeading = async (id) => {
 
 
 // Create Case
-export const createCase = async (id, data) => {
+export const createCase = async (id, userId, data) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.post(`/cases/createCase/${id}`, data, {
+    const response = await axiosClientMMS.post(`/cases/createCase/${id}/${userId}`, data, {
       headers: {
         accept: "multipart/form-data",
         "Content-Type": "multipart/form-data",
@@ -400,11 +400,11 @@ export const createCase = async (id, data) => {
   }
 };
 
-export const UpdateCase = async (fileId, caseId, data) => {
+export const UpdateCase = async (fileId, userId, caseId, data) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClientMMS.put(
-      `cases/updateCase/${fileId}/${caseId}`,
+      `cases/updateCase/${fileId}/${userId}/${caseId}`,
       data,
     {
       headers: {
@@ -420,11 +420,11 @@ export const UpdateCase = async (fileId, caseId, data) => {
 };
 
 
-export const getAllCasesByFileId = async (id, currentPage, pageSize) => {
+export const  getAllCasesByFileId = async (fileId, userId, currentPage, pageSize) => {
   try {
     //   const token = getAuthToken();
     const response = await axiosClientMMS.get(
-      `/cases/getCasesByFileId/${id}?currentPage=${currentPage}&pageSize=${pageSize}`,
+      `/cases/getCasesByFileId/${fileId}/${userId}?currentPage=${currentPage}&pageSize=${pageSize}`,
       )
       // {
       //   headers: {
@@ -458,11 +458,30 @@ export const getSingleCaseByFileId = async (fileId, caseId) => {
   }
 };
 
+export const DeleteFileCaseImage = async (id) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClientMMS.delete(
+      `/cases/deleteAttachment/${id}`)
+      // {
+      //   headers: {
+      //     accept: "application/json",
+      //     "Content-Type": "multipart/form-data",
+      //   },
+      // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+
 export const assigneCase = async (fileId, caseId, data) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.post(
-      `/cases/assignCase/${fileId}/${caseId}`, data)
+    const response = await axiosClientMMS.put(
+      `/cases/handleAssignAndUpdate/${fileId}/${caseId}`, data)
       // {
       //   headers: {
       //     accept: "application/json",
