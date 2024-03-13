@@ -86,8 +86,8 @@ function SearchQuestion() {
         ).format("DD-MM-YYYY"),
         NoticeTime: moment(
           res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
-          "hh:ss:a"
-        ).format("hh:ss:a"),
+          "hh:ss A"
+        ).format("hh:ss A"),
         SessionNumber: res?.session?.sessionName,
         SubjectMatter: cleanedSubjectMatter,
         Category: res.questionCategory,

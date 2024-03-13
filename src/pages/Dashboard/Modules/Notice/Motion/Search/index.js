@@ -109,12 +109,15 @@ function SearchMotion() {
         motionType: leave?.motionType,
         noticeOfficeDiaryNo: leave?.noticeOfficeDairies?.noticeOfficeDiaryNo,
 
-        noticeOfficeDiaryDate:
-          leave?.noticeOfficeDairies?.noticeOfficeDiaryDate,
+        noticeOfficeDiaryDate: leave?.noticeOfficeDairies?.noticeOfficeDiaryDate
+          ? moment(leave?.noticeOfficeDairies?.noticeOfficeDiaryDate).format(
+              "DD-MM-YYYY"
+            )
+          : "",
         noticeOfficeDiaryTime: moment(
           leave?.noticeOfficeDairies?.noticeOfficeDiaryTime,
-          "hh:ss:a"
-        ).format("hh:ss:a"),
+          "hh:ss A"
+        ).format("hh:ss A"),
         englishText: EnglishText,
         urduText: UrduText,
       };
@@ -390,11 +393,11 @@ function SearchMotion() {
                         </option>
                         {/* <option>Motion Week</option>
                         <option>Not Applicable</option> */}
-                        <option>1st Week</option>
-                        <option>2nd Week</option>
-                        <option>3rd Week</option>
-                        <option>4th Week</option>
-                        <option>5th Week</option>
+                        <option value={"1st Week"}>1st Week</option>
+                        <option value={"2nd Week"}>2nd Week</option>
+                        <option value={"3rd Week"}>3rd Week</option>
+                        <option value={"4th Week"}>4th Week</option>
+                        <option value={"5th Week"}>5th Week</option>
                       </select>
                     </div>
                   </div>
