@@ -735,6 +735,11 @@ export const EfilingSideBarItem = [
     icon: faHome,
   },
   {
+    itemName: "Director Dashboard",
+    link: "/efiling/director-deshboard",
+    icon: faHome,
+  },
+  {
     itemName: "Diary",
     link: "/efiling/dashboard/diary",
     icon: faBook,

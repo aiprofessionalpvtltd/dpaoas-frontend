@@ -24,6 +24,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { Editor } from "../../../../../../../../components/CustomComponents/Editor";
 import { TinyEditor } from "../../../../../../../../components/CustomComponents/Editor/TinyEditor";
+import { getUserData } from "../../../../../../../../api/Auth";
 
 function AddEditFileCase() {
   const navigate = useNavigate();
@@ -31,6 +32,7 @@ function AddEditFileCase() {
   const { fileIdINRegister } = useContext(AuthContext);
   const [selectedTab, setSelectedTab] = useState("Noting");
   const fileInputRef = useRef(null);
+  const UserData = getUserData();
 
   const [notingData, setNotingData] = useState({
     description: "",
@@ -114,7 +116,7 @@ function AddEditFileCase() {
   const hendleCreateFileCase = async () => {
         try {
       const formData = createFormData();
-      const response = await createCase(fileIdINRegister, formData);
+      const response = await createCase(fileIdINRegister, UserData?.fkUserId, formData);
       showSuccessMessage(response?.message);
       if (response.success) {
         setTimeout(() => {
@@ -129,7 +131,7 @@ function AddEditFileCase() {
   const hendleEditFileCase = async () => {
     try {
       const formData = createFormData();
-      const response = await UpdateCase(fileIdINRegister, location?.state?.caseId, formData);
+      const response = await UpdateCase(fileIdINRegister, UserData?.fkUserId, location?.state?.caseId, formData);
       if (response.success) {
         showSuccessMessage(response?.message);
         setTimeout(() => {
@@ -174,6 +176,7 @@ if (objection.attachedFiles) {
           file
         );
     });
+  
 }
   
     return formData;

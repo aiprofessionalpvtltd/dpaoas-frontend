@@ -2,16 +2,16 @@ import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { ToastContainer } from 'react-toastify';
 import { useNavigate } from 'react-router';
 import { useLocation } from "react-router-dom";
-import { Layout } from '../../../../../../../components/Layout';
-import Header from '../../../../../../../components/Header';
-import CustomTable from '../../../../../../../components/CustomComponents/CustomTable';
-import { EfilingSideBarItem } from '../../../../../../../utils/sideBarItems';
-import { getAllCasesByFileId } from '../../../../../../../api/APIs/Services/efiling.service';
-import { AuthContext } from '../../../../../../../api/AuthContext';
-import { getUserData } from '../../../../../../../api/Auth';
+import { getUserData } from '../../../../../../../../api/Auth';
+import { getAllCasesByFileId } from '../../../../../../../../api/APIs/Services/efiling.service';
+import { EfilingSideBarItem } from '../../../../../../../../utils/sideBarItems';
+import Header from '../../../../../../../../components/Header';
+import { Layout } from '../../../../../../../../components/Layout';
+import CustomTable from '../../../../../../../../components/CustomComponents/CustomTable';
+import { AuthContext } from '../../../../../../../../api/AuthContext';
 
 
-function FileCases() {
+function PreviousCasesHistory() {
     const navigate = useNavigate();
     const { setFileIdInRegister, fileIdINRegister } = useContext(AuthContext);
     const location = useLocation();
@@ -60,38 +60,23 @@ function FileCases() {
 
     return (
         <Layout module={true} sidebarItems={EfilingSideBarItem}>
-            <div class='row'>
-            <Header dashboardLink={"/efiling/dashboard"} addLink1={"/efiling/dashboard/file-register-list/files-list"} title1={"Files"} title2={"File Cases"} addLink2={"/efiling/dashboard/file-register-list/files-list/cases"} width={"500px"} />
-            <div className="col" style={{ marginTop: "30px", float: 'right' }}>
-                  <button className="btn btn-primary" onClick={() => navigate('/efiling/dashboard/file-register-list/files-list/cases-history')} >
-                    View Previous History
-                  </button>
-            </div>
-            </div>
+            <Header dashboardLink={"/efiling/dashboard"} addLink1={"/efiling/dashboard/file-register-list/files-list/cases"} title1={"File Cases"} title2={"Cases History"} addLink2={"/efiling/dashboard/file-register-list/files-list/cases-history"} width={"500px"} />
 
             <div class="row">
                 <div class="col-12">
                     <CustomTable
-                        // hidebtn1={true}
-                        ActionHide={false}
-                        hideBtn={false}
-                        addBtnText={"Create Case"}
+                        hidebtn1={true}
+                        ActionHide={true}
+                        hideBtn={true}
                         data={casesData}
-                        tableTitle="File Cases"
+                        tableTitle="File Cases History"
                         headertitlebgColor={"#666"}
                         headertitletextColor={"#FFF"}
                         handlePageChange={handlePageChange}
                         currentPage={currentPage}
-                        handleAdd={() => navigate("/efiling/dashboard/file-register-list/files-list/addedit-case")}
-                        handleEdit={(item) => navigate("/efiling/dashboard/file-register-list/files-list/addedit-case", { state: item })}
                         pageSize={pageSize}
                         totalCount={count}
                         singleDataCard={true}
-                        hideDeleteIcon={true}
-                        showView={true}
-                        handleView={(item) => navigate("/efiling/dashboard/file-register-list/files-list/addedit-case", {state: {caseId: item.caseId, view: true}})}
-                        showAssigned={true}
-                        hendleAssigned={(item) => navigate("/efiling/dashboard/fileDetail", { state: { view: true, id: item.caseId } })}
                     />
                 </div>
             </div>
@@ -99,4 +84,4 @@ function FileCases() {
     )
 }
 
-export default FileCases;
+export default PreviousCasesHistory;
