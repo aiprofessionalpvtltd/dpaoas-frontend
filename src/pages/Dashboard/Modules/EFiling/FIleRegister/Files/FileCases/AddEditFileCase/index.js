@@ -8,6 +8,7 @@ import Header from "../../../../../../../../components/Header";
 import { ToastContainer } from "react-toastify";
 import { useLocation } from "react-router";
 import {
+  DeleteFileCaseImage,
   UpdateCase,
   createCase,
   createFiles,
@@ -29,13 +30,6 @@ function AddEditFileCase() {
   const location = useLocation();
   const { fileIdINRegister } = useContext(AuthContext);
   const [selectedTab, setSelectedTab] = useState("Noting");
-  const [objectUrl, setObjectUrl] = useState({
-    noting: false,
-    correspondence: false,
-    objection: false,
-    sanction: false,
-    letter: false
-  });
   const fileInputRef = useRef(null);
 
   const [notingData, setNotingData] = useState({
@@ -69,11 +63,6 @@ function AddEditFileCase() {
   };
   
   const handleFileChangeCorrespondance = (event) => {
-    setObjectUrl((prevState) => ({
-      ...prevState,
-      correspondence: true,
-    }));
-  
     // Access the files from the event
     const files = event.target.files;
     // Convert the files object to an array
@@ -87,10 +76,6 @@ function AddEditFileCase() {
   };  
 
   const handleFileChangeSanction = (event) => {
-    setObjectUrl((prevState) => ({
-      ...prevState,
-      sanction: true,
-    }));
     // Access the files from the event
     const files = event.target.files;
     // Convert the files object to an array
@@ -103,10 +88,6 @@ function AddEditFileCase() {
   };
 
   const handleFileChangeObjection = (event) => {
-    setObjectUrl((prevState) => ({
-      ...prevState,
-      objection: true,
-    }));
     // Access the files from the event
     const files = event.target.files;
     // Convert the files object to an array
@@ -119,10 +100,6 @@ function AddEditFileCase() {
   };
 
   const handleFileChangeLetter = (event) => {
-    setObjectUrl((prevState) => ({
-      ...prevState,
-      letter: true,
-    }));
     // Access the files from the event
     const files = event.target.files;
     // Convert the files object to an array
@@ -261,6 +238,20 @@ if (objection.attachedFiles) {
       fetchCaseById(location.state.caseId);
     }
   }, [location.state?.caseId]);
+
+  const hendleRemoveImage = async (item) => {
+    try {
+      const response = await DeleteFileCaseImage(item?.id);
+      if (response?.success) {
+        showSuccessMessage(response.message);
+        if (location.state?.caseId) {
+          fetchCaseById(location.state.caseId);
+        }
+      }
+    } catch (error) {
+      showErrorMessage(error.response.data.message);
+    }
+  };
 
 
   return (
@@ -499,7 +490,18 @@ if (objection.attachedFiles) {
                                       {correspondenceData.attachedFiles?.map(
                                             (file, index) => {
                                               return (
-                                              <li key={index}>
+                                              <div key={index}>
+                                              <a
+                                                  class="MultiFile-remove"
+                                                  style={{
+                                                    marginRight: "10px",
+                                                    color: "red",
+                                                    cursor: "pointer",
+                                                  }}
+                                                  onClick={() => hendleRemoveImage(file)}
+                                                >
+                                                  x
+                                                </a>
                                                 <a
                                                   href={file?.id ? `http://172.16.170.8:5252${file?.fileName}` : URL.createObjectURL(
                                                     file
@@ -509,7 +511,7 @@ if (objection.attachedFiles) {
                                                 >
                                                   {file?.id ? file?.fileName?.split("/").pop() : file.name}
                                                 </a>
-                                              </li>
+                                              </div>
                                               )
                                           }
                                         )}
@@ -576,7 +578,18 @@ if (objection.attachedFiles) {
                                 {sanction.attachedFiles?.map(
                                             (file, index) => {
                                               return (
-                                              <li key={index}>
+                                              <div key={index}>
+                                              <a
+                                                  class="MultiFile-remove"
+                                                  style={{
+                                                    marginRight: "10px",
+                                                    color: "red",
+                                                    cursor: "pointer",
+                                                  }}
+                                                  onClick={() => hendleRemoveImage(file)}
+                                                >
+                                                  x
+                                                </a>
                                                 <a
                                                   href={file?.id ? `http://172.16.170.8:5252${file?.fileName}` : URL.createObjectURL(
                                                     file
@@ -586,7 +599,7 @@ if (objection.attachedFiles) {
                                                 >
                                                   {file?.id ? file?.fileName?.split("/").pop() : file.name}
                                                 </a>
-                                              </li>
+                                              </div>
                                               )
                                           }
                                         )}
@@ -653,7 +666,18 @@ if (objection.attachedFiles) {
                                 {objection.attachedFiles?.map(
                                             (file, index) => {
                                               return (
-                                              <li key={index}>
+                                              <div key={index}>
+                                              <a
+                                                  class="MultiFile-remove"
+                                                  style={{
+                                                    marginRight: "10px",
+                                                    color: "red",
+                                                    cursor: "pointer",
+                                                  }}
+                                                  onClick={() => hendleRemoveImage(file)}
+                                                >
+                                                  x
+                                                </a>
                                                 <a
                                                   href={file?.id ? `http://172.16.170.8:5252${file?.fileName}` : URL.createObjectURL(
                                                     file
@@ -663,7 +687,7 @@ if (objection.attachedFiles) {
                                                 >
                                                   {file?.id ? file?.fileName?.split("/").pop() : file.name}
                                                 </a>
-                                              </li>
+                                              </div>
                                               )
                                           }
                                         )}
@@ -727,7 +751,18 @@ if (objection.attachedFiles) {
                                     {letter.attachedFiles?.map(
                                             (file, index) => {
                                               return (
-                                              <li key={index}>
+                                              <div key={index}>
+                                              <a
+                                                  class="MultiFile-remove"
+                                                  style={{
+                                                    marginRight: "10px",
+                                                    color: "red",
+                                                    cursor: "pointer",
+                                                  }}
+                                                  onClick={() => hendleRemoveImage(file)}
+                                                >
+                                                  x
+                                                </a>
                                                 <a
                                                   href={file?.id ? `http://172.16.170.8:5252${file?.fileName}` : URL.createObjectURL(
                                                     file
@@ -737,7 +772,7 @@ if (objection.attachedFiles) {
                                                 >
                                                   {file?.id ? file?.fileName?.split("/").pop() : file.name}
                                                 </a>
-                                              </li>
+                                              </div>
                                               )
                                           }
                                         )}

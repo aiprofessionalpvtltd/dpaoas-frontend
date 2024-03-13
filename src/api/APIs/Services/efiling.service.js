@@ -458,6 +458,25 @@ export const getSingleCaseByFileId = async (fileId, caseId) => {
   }
 };
 
+export const DeleteFileCaseImage = async (id) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClientMMS.delete(
+      `/cases/deleteAttachment/${id}`)
+      // {
+      //   headers: {
+      //     accept: "application/json",
+      //     "Content-Type": "multipart/form-data",
+      //   },
+      // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+
 export const assigneCase = async (fileId, caseId, data) => {
   try {
     //   const token = getAuthToken();
