@@ -108,7 +108,12 @@ function SentMotion() {
         noticeOfficeDiaryDate: moment(
           res?.noticeOfficeDairies?.noticeOfficeDiaryDate
         ).format("DD-MM-YYYY"),
-        noticeOfficeDiaryTime: res?.noticeOfficeDairies?.noticeOfficeDiaryTime,
+        noticeOfficeDiaryTime: res?.noticeOfficeDairies?.noticeOfficeDiaryTime
+          ? moment(
+              res?.noticeOfficeDairies?.noticeOfficeDiaryTime,
+              "hh:ss A"
+            ).format("hh:ss A")
+          : "",
         englishText: EnglishText,
         urduText: UrduText,
       };
