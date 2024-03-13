@@ -11,7 +11,7 @@ import { showErrorMessage, showSuccessMessage } from '../../../../../../utils/To
 import { useNavigate } from 'react-router-dom';
 
 const validationSchema = Yup.object({
-  registerNumber: Yup.string().required("File No is required"),
+  registerNumber: Yup.string().required("Register Number is required"),
   fkBranchId: Yup.string().required("Branch is required"),
   year: Yup.string().required("Year is required"),
   registerSubject: Yup.string().required("Subject is required"),
