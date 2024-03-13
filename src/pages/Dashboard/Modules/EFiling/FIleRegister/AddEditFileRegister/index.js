@@ -9,22 +9,25 @@ import { createFIleRegister, getAllYear } from '../../../../../../api/APIs/Servi
 import { ToastContainer } from 'react-toastify';
 import { showErrorMessage, showSuccessMessage } from '../../../../../../utils/ToastAlert';
 import { useNavigate } from 'react-router-dom';
+import { getUserData } from '../../../../../../api/Auth';
 
 const validationSchema = Yup.object({
   registerNumber: Yup.string().required("Register Number is required"),
-  fkBranchId: Yup.string().required("Branch is required"),
+  // fkBranchId: Yup.string().required("Branch is required"),
   year: Yup.string().required("Year is required"),
   registerSubject: Yup.string().required("Subject is required"),
 
 });
 function AddEditFileRegister() {
   const { allBranchesData } = useContext(AuthContext)
+  const userData = getUserData()
+  console.log("userData", userData);
   const navigate = useNavigate()
   const [yearData, setYearData] = useState([])
   const formik = useFormik({
     initialValues: {
       registerNumber: "",
-      fkBranchId: "",
+      // fkBranchId: "",
       year: "",
       registerSubject:"",
     },
@@ -37,7 +40,7 @@ function AddEditFileRegister() {
 
   const hendleCreateRegister = async (values) => {
     const Data = {
-      fkBranchId: values?.fkBranchId,
+      fkBranchId: userData?.fkDepartmentId,
       registerNumber: values?.registerNumber,
       year: values?.year,
       registerSubject:values?.registerSubject
@@ -75,12 +78,12 @@ function AddEditFileRegister() {
 
   return (
     <Layout sidebarItems={EfilingSideBarItem} module={true}>
-      <Header dashboardLink={"/efiling/dashboard/file-register-list"} addLink1={"/efiling/dashboard/addedit-file-register"} title1={"Add File Register"} width={"500px"} />
+      <Header dashboardLink={"/efiling/dashboard/file-register-list"} addLink1={"/efiling/dashboard/addedit-file-register"} title1={"Create File Register"} width={"500px"} />
       <ToastContainer />
       <div class="container-fluid">
         <div class="card">
           <div class="card-header red-bg" style={{ background: "#14ae5c" }}>
-            <h1>File Register</h1>
+            <h1>Create File Register</h1>
           </div>
           <div class="card-body">
             <form onSubmit={formik.handleSubmit}>
@@ -110,38 +113,6 @@ function AddEditFileRegister() {
                         )}
                     </div>
                   </div>
-                  <div class="col-6">
-                    <div class="mb-3">
-                      <label class="form-label">Branch</label>
-                      <select
-                        className={`form-select ${formik.touched.fkBranchId && formik.errors.fkBranchId
-                            ? "is-invalid"
-                            : ""
-                          }`}
-                        id="fkBranchId"
-                        name="fkBranchId"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.fkBranchId}
-                      >
-                        <option value={""} selected disabled hidden>
-                          Select
-                        </option>
-                        {allBranchesData && allBranchesData.map((item) => (
-                          <option value={item?.id}>{item?.branchName}</option>
-                        ))}
-                      </select>
-                      {formik.touched.fkBranchId && formik.errors.fkBranchId && (
-                        <div className="invalid-feedback">
-                          {formik.errors.fkBranchId}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                </div>
-
-                <div class="row">
                   <div class="col-6">
                     <div class="mb-3">
                       <label class="form-label">Year</label>
@@ -174,6 +145,11 @@ function AddEditFileRegister() {
                         )}
                     </div>
                   </div>
+
+                </div>
+
+                <div class="row">
+                  
                   <div class="col-6">
                     <div class="mb-3">
                       <label class="form-label">Subject</label>
