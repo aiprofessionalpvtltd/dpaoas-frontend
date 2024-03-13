@@ -100,6 +100,7 @@ function FileDetail() {
   });
 
   const [employeeData, setEmployeeData] = useState([]);
+  console.log("employeeDataemployeeDataemployeeData",employeeData);
   const UserData = getUserData();
   const [filesData, setFilesData] = useState(null);
   const [viewPage, setViewPage] = useState(location?.state?.view);
@@ -770,6 +771,7 @@ if (objection.attachedFiles) {
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                           value={formik.values.assignedTo}
+                          disabled={viewPage ? true : false}
                         >
                           <option value={""} selected disabled hidden>
                             Select
@@ -778,7 +780,7 @@ if (objection.attachedFiles) {
                             employeeData?.map((item) => (
                               <option
                                 value={item.id}
-                              >{`${item.firstName}${item.lastName}`}</option>
+                              >{`${item.designations?.designationName}`}</option>
                             ))}
                         </select>
                       </div>
