@@ -100,6 +100,7 @@ function FileDetail() {
   });
 
   const [employeeData, setEmployeeData] = useState([]);
+  console.log("employeeDataemployeeDataemployeeData",employeeData);
   const UserData = getUserData();
   const [filesData, setFilesData] = useState(null);
   const [viewPage, setViewPage] = useState(location?.state?.view);
@@ -300,7 +301,12 @@ if (objection.attachedFiles) {
 
   // use it (editorContent) when submitting whole file content
 
-  const [directorData, setDirectorData] = useState([]);
+  const [directorData, setDirectorData] = useState();
+  const [notingstore, setNotingStore] = useState();
+  const [correspondancestore, setcorrespondanceStore] = useState();
+  const [letterstore, setLetterStore] = useState();
+  const [objectionstore, setbjectionstore] = useState();
+  const [sectionstore, setsectionstore] = useState();
 
   const getFilesByID = async () => {
     try {
@@ -309,12 +315,7 @@ if (objection.attachedFiles) {
         setDirectorData(response?.data?.cases?.fileDiary);
         setRemarksData(response?.data?.cases?.fileRemarks);
         setFilesData(response?.data?.cases);
-        const noting = response?.data?.cases?.sections.filter((item) => item.sectionType === "Note")
-        const correspondance = response?.data?.cases?.sections.filter((item) => item.sectionType === "Correspondence")
-        const Letter = response?.data?.cases?.sections.filter((item) => item.sectionType === "Letter")
-        const Objection = response?.data?.cases?.sections.filter((item) => item.sectionType === "Objection")
-        const Sanction = response?.data?.cases?.sections.filter((item) => item.sectionType === "Sanction")
-
+       
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -345,25 +346,37 @@ if (objection.attachedFiles) {
   useEffect(() => {
     // Update form values when termsById changes
     if (filesData) {
+      const noting = filesData?.sections.filter((item) => item.sectionType === "Note")
+      const correspondance = filesData?.sections.filter((item) => item.sectionType === "Correspondence")
+      const letter = filesData?.sections.filter((item) => item.sectionType === "Letter")
+      const Objection = filesData?.sections.filter((item) => item.sectionType === "Objection")
+      const Sanction = filesData?.sections.filter((item) => item.sectionType === "Sanction")
+
+      setNotingStore(noting)
+      setcorrespondanceStore(correspondance)
+      setLetterStore(letter)
+      setbjectionstore(Objection)
+      setsectionstore(Sanction)
+
       setCorrespondenceData((prev) => ({
         ...prev,
-        description: filesData?.sections[0].description || "",
+        description: correspondance[0]?.description || "",
       }));
       setObjection((prev) => ({
         ...prev,
-        description: filesData?.sections[1].description || "",
+        description: Objection[0]?.description || "",
       }));
       setLetter((prev) => ({
         ...prev,
-        description: filesData?.sections[2].description || "",
+        description:letter[0]?.description || "",
       }));
       setSanction((prev) => ({
         ...prev,
-        description: filesData?.sections[3].description || "",
+        description: Sanction[0]?.description || "",
       }));
       setNotingData((prev) => ({
         ...prev,
-        description: filesData?.sections[4].description || "",
+        description: noting[0]?.description || "",
       }));
 
       formik.setValues({
@@ -498,7 +511,7 @@ if (objection.attachedFiles) {
                             type="text"
                             class="form-control"
                             placeholder="fileNumber"
-                            disabled={viewPage ? true : false}
+                            disabled={true}
                             id="fileNumber"
                             name="fileNumber"
                             onChange={formik.handleChange}
@@ -529,7 +542,7 @@ if (objection.attachedFiles) {
                             type="text"
                             class="form-control"
                             placeholder="Subject"
-                            disabled={viewPage ? true : false}
+                            disabled={true}
                             id="fileSubject"
                             name="fileSubject"
                             onChange={formik.handleChange}
@@ -563,7 +576,7 @@ if (objection.attachedFiles) {
                         <div class="mb-3">
                           <label class="form-label">Year</label>
                           <select
-                            disabled={viewPage ? true : false}
+                            disabled={true}
                             class="form-select"
                             id="year"
                             name="year"
@@ -623,7 +636,7 @@ if (objection.attachedFiles) {
                               class="form-select"
                               id="fkBranchId"
                               name="fkBranchId"
-                              disabled={viewPage ? true : false}
+                              disabled={true}
                               onChange={formik.handleChange}
                               onBlur={formik.handleBlur}
                               value={formik.values.fkBranchId}
@@ -672,7 +685,7 @@ if (objection.attachedFiles) {
                           <div class="mb-3">
                             <label class="form-label">Ministries</label>
                             <select
-                              disabled={viewPage ? true : false}
+                              disabled={true}
                               class="form-select"
                               id="fkMinistryId"
                               name="fkMinistryId"
@@ -711,7 +724,7 @@ if (objection.attachedFiles) {
                               <FontAwesomeIcon icon={faCalendarAlt} />
                             </span>
                             <DatePicker
-                              disabled={viewPage ? true : false}
+                              disabled={true}
                               selected={formik.values.receivedOn}
                               onChange={(date) =>
                                 formik.setFieldValue("receivedOn", date)
@@ -737,6 +750,7 @@ if (objection.attachedFiles) {
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                           value={formik.values.CommentStatus}
+                          disabled={viewPage ? true : false}
                         >
                           <option value="" selected disabled hidden>
                             Select
@@ -757,6 +771,7 @@ if (objection.attachedFiles) {
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                           value={formik.values.assignedTo}
+                          disabled={viewPage ? true : false}
                         >
                           <option value={""} selected disabled hidden>
                             Select
@@ -765,7 +780,7 @@ if (objection.attachedFiles) {
                             employeeData?.map((item) => (
                               <option
                                 value={item.id}
-                              >{`${item.firstName}${item.lastName}`}</option>
+                              >{`${item.designations?.designationName}`}</option>
                             ))}
                         </select>
                       </div>
@@ -782,13 +797,14 @@ if (objection.attachedFiles) {
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                           value={formik.values.comment}
+                          disabled={viewPage ? true : false}
                         ></textarea>
                       </div>
                     </div>
                   </div>
                   <div class="row mb-4">
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                      <button class="btn btn-primary" type="submit">
+                      <button class="btn btn-primary" type="submit" disabled={viewPage ? true : false}>
                         Submit
                       </button>
                     </div>
@@ -972,6 +988,7 @@ if (objection.attachedFiles) {
 
                           <TinyEditor
                             initialContent={""}
+                            disabled={viewPage ? true : false}
                             setEditorContent={(content) =>
                               setNotingData((prev) => ({
                                 ...prev,
@@ -991,6 +1008,7 @@ if (objection.attachedFiles) {
 
                           <TinyEditor
                             initialContent={""}
+                            disabled={viewPage ? true : false}
                             setEditorContent={(content) =>
                               setCorrespondenceData((prev) => ({
                                 ...prev,
@@ -1037,7 +1055,7 @@ if (objection.attachedFiles) {
                                     </label>
                                     <ul>
                                       {filesData?.sections &&
-                                      filesData?.sections[0]?.caseAttachments.map(
+                                      correspondancestore[0]?.caseAttachments.map(
                                             (file, index) => {
                                               return (
                                               <div key={index}>
@@ -1084,6 +1102,7 @@ if (objection.attachedFiles) {
                           </label>
 
                           <TinyEditor
+                          disabled={viewPage ? true : false}
                             initialContent={""}
                             setEditorContent={(content) =>
                               setSanction((prev) => ({
@@ -1122,7 +1141,7 @@ if (objection.attachedFiles) {
                                 />
 
                                     {filesData?.sections &&
-                                      filesData?.sections[3]?.caseAttachments.map(
+                                      sectionstore[0]?.caseAttachments.map(
                                         (item) => (
                                           <div class="MultiFile-label mt-3">
                                             <a
@@ -1168,6 +1187,7 @@ if (objection.attachedFiles) {
                           </label>
 
                           <TinyEditor
+                          disabled={viewPage ? true : false}
                             initialContent={""}
                             setEditorContent={(content) =>
                               setObjection((prev) => ({
@@ -1206,7 +1226,7 @@ if (objection.attachedFiles) {
                                 />
 
                                     {filesData?.sections &&
-                                      filesData?.sections[1]?.caseAttachments.map(
+                                      objectionstore[0]?.caseAttachments.map(
                                         (item) => (
                                           <div class="MultiFile-label mt-3">
                                             <a
@@ -1290,7 +1310,7 @@ if (objection.attachedFiles) {
                                 />
 
                                     {filesData?.sections &&
-                                      filesData?.sections[2]?.caseAttachments.map(
+                                      letterstore[0]?.caseAttachments.map(
                                         (item) => (
                                           <div class="MultiFile-label mt-3">
                                             <a
