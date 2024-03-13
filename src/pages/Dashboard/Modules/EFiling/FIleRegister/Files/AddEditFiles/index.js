@@ -408,7 +408,7 @@ function AddEditFiles() {
                         )}
                     </div>
                   </div>
-                  <div class="col-3">
+                  {/* <div class="col-3">
                     <div class="mb-3">
                       <label class="form-label">File Type</label>
                       <select
@@ -436,7 +436,7 @@ function AddEditFiles() {
                         </div>
                       )}
                     </div>
-                  </div>
+                  </div> */}
                 </div>
 
                 <div class="row" style={{ background: "rgb(242, 242, 242)", padding: "20px 20px 0 20px" }}>

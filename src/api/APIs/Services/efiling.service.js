@@ -420,11 +420,11 @@ export const UpdateCase = async (fileId, userId, caseId, data) => {
 };
 
 
-export const  getAllCasesByFileId = async (fileId, currentPage, pageSize) => {
+export const  getAllCasesByFileId = async (fileId, userId, currentPage, pageSize) => {
   try {
     //   const token = getAuthToken();
     const response = await axiosClientMMS.get(
-      `/cases/getCasesByFileId/${fileId}?currentPage=${currentPage}&pageSize=${pageSize}`,
+      `/cases/getCasesByFileId/${fileId}/${userId}?currentPage=${currentPage}&pageSize=${pageSize}`,
       )
       // {
       //   headers: {

@@ -472,7 +472,7 @@ function FileDetail() {
                           </select>
                         </div>
                       </div>
-
+{/* 
                       <div class="col-6">
                         <div class="mb-3">
                           <label
@@ -500,7 +500,7 @@ function FileDetail() {
                             <option value={"Priority"}>Immediate</option>
                           </select>
                         </div>
-                      </div>
+                      </div> */}
                     </div>
 
                   </div>
