@@ -260,7 +260,7 @@ function AddEditFiles() {
                         <option value={""} selected disabled hidden>
                           Select
                         </option>
-                        {mainheadingData && mainheadingData.map((item) => (
+                        {mainheadingData && mainheadingData?.filter((filteredItem) => filteredItem?.status === "active")?.map((item) => (
                           <option value={item.id}>
                             {item?.mainHeading}
                           </option>

@@ -384,10 +384,10 @@ export const DeleteHeading = async (id) => {
 
 
 // Create Case
-export const createCase = async (id, data) => {
+export const createCase = async (id, userId, data) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.post(`/cases/createCase/${id}`, data, {
+    const response = await axiosClientMMS.post(`/cases/createCase/${id}/${userId}`, data, {
       headers: {
         accept: "multipart/form-data",
         "Content-Type": "multipart/form-data",
@@ -400,11 +400,11 @@ export const createCase = async (id, data) => {
   }
 };
 
-export const UpdateCase = async (fileId, caseId, data) => {
+export const UpdateCase = async (fileId, userId, caseId, data) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClientMMS.put(
-      `cases/updateCase/${fileId}/${caseId}`,
+      `cases/updateCase/${fileId}/${userId}/${caseId}`,
       data,
     {
       headers: {
@@ -420,11 +420,11 @@ export const UpdateCase = async (fileId, caseId, data) => {
 };
 
 
-export const getAllCasesByFileId = async (id, currentPage, pageSize) => {
+export const  getAllCasesByFileId = async (fileId, currentPage, pageSize) => {
   try {
     //   const token = getAuthToken();
     const response = await axiosClientMMS.get(
-      `/cases/getCasesByFileId/${id}?currentPage=${currentPage}&pageSize=${pageSize}`,
+      `/cases/getCasesByFileId/${fileId}?currentPage=${currentPage}&pageSize=${pageSize}`,
       )
       // {
       //   headers: {
