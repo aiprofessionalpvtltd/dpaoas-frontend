@@ -40,9 +40,14 @@ function ListFiles() {
         try {
             const response = await getFileByRegisterById(registerId,currentPage)
             if (response.success) {
-              setCount(response?.data?.count)
-              const transformedData = transformFilesHeadingdata(response?.data?.files)
-              setFileData(transformedData)
+              if(response?.data?.files){
+                setCount(response?.data?.count)
+                const transformedData = transformFilesHeadingdata(response?.data?.files)
+                setFileData(transformedData)
+              }else{
+                setFileData([]) 
+              }
+             
             }
           } catch (error) {
             // showErrorMessage(error?.response?.data?.message);
