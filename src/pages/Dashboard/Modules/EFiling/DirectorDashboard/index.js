@@ -7,6 +7,7 @@ import { faClipboardQuestion, faFileImport, faScaleBalanced } from '@fortawesome
 import { getApprovelStats, getsentAndRecievedFilesStats } from '../../../../../api/APIs/Services/efiling.service'
 import { getUserData } from '../../../../../api/Auth'
 import { Link } from 'react-router-dom'
+import { EFilingNotifications } from '../../../../../components/NotificationsHeaders/EFilingNotifications'
 
 function DirectorDashboard() {
   const userData = getUserData()
@@ -43,22 +44,10 @@ function DirectorDashboard() {
   },[])
   return (
     <Layout module={true} centerlogohide={true} sidebarItems={EfilingSideBarItem}>
-      <div class="tab-right me-4 mt-1 mb-4" style={{width:"200px"}}>
-                     
-                      <Link to={"/notice/question/sent"}>
-                        <button
-                          // style={{ backgroundColor: location.pathname === "/notice/question/sent" ? "white" : "" }}
-                          style={{width:"100px", margin:"0 auto"}}
-                        >
-                          Files
-                            <span style={{ backgroundColor: "#FFA500" }}>{0}</span>
-                        </button>
-                      </Link>
-                      </div>
-                      <div style={{clear:"both"}}>
-
-                      </div>
+        <EFilingNotifications notificationType="Notifications" />
         <Header dashboardLink={"/"} addLink1={"/efiling/director-deshboard"} title1={"E-Filing"} width={"500px"}  marginTop = {"0px"}/>
+
+        <h2 style={{ marginLeft: 15, marginBottom: 20 }}> Welcome Back {userData && `${userData?.firstName} (${userData?.department?.departmentName})`}</h2>
         <div style={{ marginLeft: 15 }}>
         <h2 style={{ fontSize: '22px', fontWeight: 'bold', marginBottom: '10px', color: "#fb6340" }}>Daily Stats</h2>
         <div class="row">
