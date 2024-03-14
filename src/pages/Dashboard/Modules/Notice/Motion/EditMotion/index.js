@@ -57,7 +57,7 @@ function EditMotion() {
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
   const handleOkClick = () => {
-    CreateMotionApi(formValues);
+    UpdateMotionApi(formValues);
     handleClose();
   };
 
@@ -78,40 +78,55 @@ function EditMotion() {
   const formik = useFormik({
     initialValues: {
       sessionNumber: location.state
-        ? location?.state?.sessions?.sessionName
+        ? {
+            value: location?.state?.sessions?.id,
+            label: location?.state?.sessions?.sessionName,
+          }
         : "",
+      // sessionNumber: location.state
+      //   ? location?.state?.sessions?.sessionName
+      //   : "",
       motionType: location.state ? location.state.motionType : "",
       noticeOfficeDiaryNo: location.state
         ? location.state?.noticeOfficeDairies?.noticeOfficeDiaryNo
         : "",
-      mover: location?.state
-        ? location?.state?.motionMovers.map((item) => ({
-            value: item.members?.id,
-            label: item.members?.memberName,
-          }))
-        : [],
-      noticeOfficeDiaryDate: moment(
-        location?.state?.noticeOfficeDairies?.noticeOfficeDiaryDate,
-        "DD-MM-YYYY"
-      ).toDate(),
-      noticeOfficeDiaryTime: location?.state?.noticeOfficeDiaryTime
-        ? new Date(location?.state?.noticeOfficeDiaryTime)
-        : getCurrentTime(),
+      mover:
+        location?.state?.motionMovers?.length > 0
+          ? location?.state?.motionMovers.map((item) => ({
+              value: item.members?.id,
+              label: item.members?.memberName,
+            }))
+          : [],
+      noticeOfficeDiaryDate: location?.state?.noticeOfficeDairies
+        ?.noticeOfficeDiaryDate
+        ? moment(
+            location?.state?.noticeOfficeDairies?.noticeOfficeDiaryDate,
+            "YYYY-MM-DD"
+          ).toDate()
+        : "",
+      // noticeOfficeDiaryTime: location?.state?.noticeOfficeDiaryTime
+      //   ? new Date(location?.state?.noticeOfficeDiaryTime)
+      //   : "",
+      noticeOfficeDiaryTime: location?.state?.noticeOfficeDairies
+        ?.noticeOfficeDiaryTime
+        ? location?.state?.noticeOfficeDairies?.noticeOfficeDiaryTime
+        : "",
       englishText: location.state ? location.state?.englishText : "",
       urduText: location.state ? location?.state?.urduText : "",
       attachment: null,
     },
     // validationSchema: validationSchema,
     onSubmit: (values) => {
-      handleShow();
-      setFormValues(values);
+      // handleShow();
+      // setFormValues(values);
+      UpdateMotionApi(values);
     },
     // enableReinitialize: true,
   });
 
-  const CreateMotionApi = async (values) => {
+  const UpdateMotionApi = async (values) => {
     const formData = new FormData();
-    formData.append("fkSessionId", location?.state?.sessions?.id);
+    formData.append("fkSessionId", values?.sessionNumber?.value);
     formData.append("motionType", values?.motionType);
     formData.append("noticeOfficeDiaryNo", values?.noticeOfficeDiaryNo);
     // formData.append("moverIds[]", values?.mover);
@@ -155,7 +170,7 @@ function EditMotion() {
       <Header
         dashboardLink={"/notice/dashboard"}
         addLink1={"/notice/motion/new"}
-        title1={"New Motion"}
+        title1={"Edit Motion"}
       />
 
       <CustomAlert
@@ -206,7 +221,7 @@ function EditMotion() {
                               </option>
                             ))}
                         </select> */}
-                        <input
+                        {/* <input
                           readOnly={true}
                           placeholder={formik.values.sessionNumber}
                           type="text"
@@ -214,6 +229,27 @@ function EditMotion() {
                           id="sessionNumber"
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
+                        /> */}
+                        <Select
+                          options={
+                            sessions &&
+                            sessions?.map((item) => ({
+                              value: item?.id,
+                              label: item?.sessionName,
+                            }))
+                          }
+                          onChange={(selectedOptions) => {
+                            formik.setFieldValue(
+                              "sessionNumber",
+                              selectedOptions
+                            );
+                          }}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.sessionNumber}
+                          name="sessionNumber"
+                          isClearable={true}
+                          // className="form-select"
+                          style={{ border: "none" }}
                         />
                       </div>
                     </div>
@@ -402,11 +438,14 @@ function EditMotion() {
                             ))}
                         </select> */}
                         <label class="form-label">Member Senate</label>
-                        {/* <Select
-                          options={members.map((item) => ({
-                            value: item.id,
-                            label: item.memberName,
-                          }))}
+                        <Select
+                          options={
+                            members &&
+                            members.map((item) => ({
+                              value: item.id,
+                              label: item.memberName,
+                            }))
+                          }
                           isMulti
                           onChange={(selectedOptions) =>
                             formik.setFieldValue("mover", selectedOptions)
@@ -414,19 +453,6 @@ function EditMotion() {
                           onBlur={formik.handleBlur}
                           value={formik.values.mover}
                           name="mover"
-                        /> */}
-                        <Select
-                          options={members.map((item) => ({
-                            value: item.id,
-                            label: item.memberName,
-                          }))}
-                          onChange={(selectedOptions) =>
-                            formik.setFieldValue("mover", selectedOptions?.value)
-                          }
-                          onBlur={formik.handleBlur}
-                          value={formik.values.mover}
-                          name="mover"
-                          id="mover"
                         />
                       </div>
                     </div>
@@ -451,12 +477,16 @@ function EditMotion() {
                       {location?.state?.file?.length > 0 ? (
                         location?.state?.file?.map((item) => (
                           <div class="MultiFile-label mt-3">
-                            <a href={`http://172.16.170.8:5252${item?.path}`}>
+                            <a
+                              href={`http://172.16.170.8:5252${item?.path}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
                               <i class="fas fa-download"></i>
                             </a>
-                            <a class="MultiFile-remove" href="#T7">
+                            {/* <a class="MultiFile-remove" href="#T7">
                               x
-                            </a>
+                            </a> */}
                             <span
                               class="MultiFile-label"
                               title={item?.path
@@ -468,6 +498,8 @@ function EditMotion() {
                               <span class="MultiFile-title">
                                 <a
                                   href={`http://172.16.170.8:5252${item?.path}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
                                 >
                                   {item?.path
                                     ?.split("\\")
@@ -482,9 +514,27 @@ function EditMotion() {
                       ) : (
                         <div class="col-12">
                           <div class="mb-3">
-                            <label for="formFile" class="form-label">
-                              Attach Image File{" "}
-                            </label>
+                            {/* {location?.state?.file?.length > 0 &&
+                            location?.state?.file ? (
+                              <label for="formFile" class="form-label">
+                                Selected Images
+                              </label>
+                            ) : (
+                              <label for="formFile" class="form-label">
+                                Attach Image Files
+                              </label>
+                            )} */}
+                            {Array.isArray(location?.state?.file) &&
+                            location?.state?.file.length > 0 ? (
+                              <label htmlFor="formFile" className="form-label">
+                                Selected Images
+                              </label>
+                            ) : (
+                              <label htmlFor="formFile" className="form-label">
+                                Attach Image Files
+                              </label>
+                            )}
+
                             <input
                               className="form-control"
                               type="file"

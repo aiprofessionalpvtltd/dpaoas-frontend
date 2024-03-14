@@ -83,15 +83,15 @@ function FileCases() {
                         handlePageChange={handlePageChange}
                         currentPage={currentPage}
                         handleAdd={() => navigate("/efiling/dashboard/file-register-list/files-list/addedit-case")}
-                        handleEdit={(item) => navigate("/efiling/dashboard/file-register-list/files-list/addedit-case", { state: item })}
+                        handleEdit={(item) => navigate("/efiling/dashboard/fileDetail", { state: { view: false, id: item.caseId } })}
                         pageSize={pageSize}
                         totalCount={count}
                         singleDataCard={true}
                         hideDeleteIcon={true}
                         showView={true}
-                        handleView={(item) => navigate("/efiling/dashboard/file-register-list/files-list/addedit-case", {state: {caseId: item.caseId, view: true}})}
-                        showAssigned={true}
-                        hendleAssigned={(item) => navigate("/efiling/dashboard/fileDetail", { state: { view: true, id: item.caseId } })}
+                        handleView={(item) => navigate("/efiling/dashboard/fileDetail", { state: { view: true, id: item.caseId } })}
+                        showAssigned={false}
+                        // hendleAssigned={(item) => navigate("/efiling/dashboard/fileDetail", { state: { view: true, id: item.caseId } })}
                     />
                 </div>
             </div>

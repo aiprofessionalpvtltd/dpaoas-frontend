@@ -237,27 +237,28 @@ function NMSProroguredSessions() {
             </form>
           </div>
         </div> */}
-
-        <div class="row mt-5">
-          <div class="col-12">
-            <CustomTable
-              block={false}
-              hideBtn={true}
-              hidebtn1={true}
-              data={proroguredSessions}
-              ActionHide={true}
-              // addBtnText={"Add Speech On Demand"}
-              tableTitle="Prorogued Sessions"
-              handlePageChange={handlePageChange}
-              currentPage={currentPage}
-              pageSize={pageSize}
-              headertitlebgColor={"#666"}
-              headertitletextColor={"#FFF"}
-              totalCount={count}
-              // handleAdd={() => navigate("/notice/speech-on-demand/addedit")}
-              // handleEdit={(item) => hendleEdit(item.SR)}
-              // handleDelete={(item) => handleDelete(item.SR)}
-            />
+        <div class="card mt-1">
+          <div class="row mt-2">
+            <div class="col-12">
+              <CustomTable
+                block={false}
+                hideBtn={true}
+                hidebtn1={true}
+                data={proroguredSessions}
+                ActionHide={true}
+                // addBtnText={"Add Speech On Demand"}
+                tableTitle="Prorogued Sessions"
+                handlePageChange={handlePageChange}
+                currentPage={currentPage}
+                pageSize={pageSize}
+                headertitlebgColor={"#666"}
+                headertitletextColor={"#FFF"}
+                totalCount={count}
+                // handleAdd={() => navigate("/notice/speech-on-demand/addedit")}
+                // handleEdit={(item) => hendleEdit(item.SR)}
+                // handleDelete={(item) => handleDelete(item.SR)}
+              />
+            </div>
           </div>
         </div>
       </div>
