@@ -78,7 +78,7 @@ function AddEditFileRegister() {
 
   return (
     <Layout sidebarItems={EfilingSideBarItem} module={true}>
-      <Header dashboardLink={"/efiling/dashboard/file-register-list"} addLink1={"/efiling/dashboard/addedit-file-register"} title1={"Create File Register"} width={"500px"} />
+      <Header dashboardLink={"/efiling/dashboard"} addLink1={"/efiling/dashboard/file-register-list"} title1={"File Registers"} addLink2={"/"} title2={"Create File Register"} width={"500px"} />
       <ToastContainer />
       <div class="container-fluid">
         <div class="card">

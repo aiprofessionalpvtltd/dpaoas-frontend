@@ -52,7 +52,7 @@ function ListFileRegister() {
 
     return (
         <Layout module={true} sidebarItems={EfilingSideBarItem}>
-            <Header dashboardLink={"/efiling/dashboard"} addLink1={"/efiling/dashboard"} width={"500px"} />
+            <Header dashboardLink={"/efiling/dashboard"} addLink1={"/efiling/dashboard"} title1={"File Registers"} width={"500px"} />
             <ToastContainer />
             <div class="row">
                 <div class="col-12">

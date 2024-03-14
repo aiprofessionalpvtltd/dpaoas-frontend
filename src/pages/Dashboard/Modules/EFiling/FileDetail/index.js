@@ -283,14 +283,16 @@ if (objection.attachedFiles) {
 
     try {
       const response = await assigneCase(
-        fileIdINRegister,
+        location?.state?.fileId ? location?.state?.fileId : fileIdINRegister,
         location?.state?.id,
         formData
       );
       if (response?.success) {
         showSuccessMessage(response?.message);
         // formik.resetForm()
-        // navigate("/efiling/dashboard/files")
+        setTimeout(() => {
+          navigate("/efiling/dashboard/file-register-list/files-list/cases")
+        }, 1000)
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -310,7 +312,7 @@ if (objection.attachedFiles) {
 
   const getFilesByID = async () => {
     try {
-      const response = await getCaseDetailByID(fileIdINRegister, caseId);
+      const response = await getCaseDetailByID(location?.state?.fileId ? location?.state?.fileId : fileIdINRegister, caseId);
       if (response?.success) {
         setDirectorData(response?.data?.cases?.fileDiary);
         setRemarksData(response?.data?.cases?.fileRemarks);
@@ -328,7 +330,7 @@ if (objection.attachedFiles) {
       if (response?.success) {
         showSuccessMessage(response.message);
         // if (caseId) {
-          getFilesByID(fileIdINRegister, caseId);
+          getFilesByID(location?.state?.fileId ? location?.state?.fileId : fileIdINRegister, caseId);
         // }
       }
     } catch (error) {
@@ -438,9 +440,9 @@ if (objection.attachedFiles) {
       <div className="dashboard-content" style={{ marginTop: 80 }}>
         <ToastContainer />
         <Header
-          dashboardLink={"/"}
-          addLink1={"/efiling/dashboard/files"}
-          title1={"E-Filing"}
+          dashboardLink={"/efiling/dashboard"}
+          addLink1={"/efiling/dashboard/file-register-list/files-list/cases"}
+          title1={"File Cases"}
           addLink2={"/efiling/dashboard/addedit"}
           title2={location && viewPage ? "File Detail" : "Edit File"}
           width={"500px"}

@@ -40,7 +40,7 @@ function FileCases() {
 
     const getAllCasesApi = async () => {
         try {
-            const response = await getAllCasesByFileId(fileIdINRegister, UserData?.fkUserId, currentPage, pageSize)
+            const response = await getAllCasesByFileId(location.state?.internalId ? location.state?.internalId : fileIdINRegister, UserData?.fkUserId, currentPage, pageSize)
             if (response.success) {
                 setCount(response?.data?.count)
                 const transferData = transformFilesCases(response?.data?.cases)

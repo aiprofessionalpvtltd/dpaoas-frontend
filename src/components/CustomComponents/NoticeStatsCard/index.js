@@ -16,7 +16,7 @@ function NoticeStatsCard({ title, icon, iconBgColor, total, sent, received, over
                   <div class="row align-items-center">
                       <div class="col">
                           <h6 class="mb-25" style={{ color: 'black' }}>{title}</h6>
-                          <h3 class="fw-700" style={{ color: iconBgColor }}>{total === "undefined" ? 0 : total}</h3>
+                          <h3 class="fw-700" style={{ color: iconBgColor }}>{total ? total : 0}</h3>
                       </div>
                       <div class="col-auto">
                         <div className="box-thumbnail" style={{ backgroundColor: iconBgColor }}>
@@ -42,7 +42,7 @@ function NoticeStatsCard({ title, icon, iconBgColor, total, sent, received, over
                         />
                         
                         </div>
-                        <h3 class="mb-0">{total === "undefined" ? 0 : total}</h3>
+                        <h3 class="mb-0">{total ? total : 0}</h3>
                     </div>
                     <div class="col-auto">
                         <h5 class="mb-0" style={{ color: 'black', fontSize: '18px', fontWeight: 'bold' }}>{title}</h5>
@@ -117,7 +117,7 @@ function NoticeStatsCard({ title, icon, iconBgColor, total, sent, received, over
               </h6>
             </div>
           </div>
-          <h6 class="pt-badge" style={{ backgroundColor: iconBgColor ? iconBgColor : "#F22613", width: '120px', textAlign: 'center' }}>{total === "NaN" ? 0 : total}</h6>
+          <h6 class="pt-badge" style={{ backgroundColor: iconBgColor ? iconBgColor : "#F22613", width: '120px', textAlign: 'center' }}>{total ? total : 0}</h6>
         </div>
       </div>
       )}
