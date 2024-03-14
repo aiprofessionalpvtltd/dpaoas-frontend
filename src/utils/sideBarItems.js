@@ -729,14 +729,14 @@ export const CMSsidebarItems = [
 
 //Efiling
 export const EfilingSideBarItem = [
+  // {
+  //   itemName: "Dashboard",
+  //   link: "/efiling/director-dashboard",
+  //   icon: faHome,
+  // },
   {
     itemName: "Dashboard",
     link: "/efiling/dashboard",
-    icon: faHome,
-  },
-  {
-    itemName: "Director Dashboard",
-    link: "/efiling/director-deshboard",
     icon: faHome,
   },
   {

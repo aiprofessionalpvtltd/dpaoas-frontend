@@ -100,6 +100,14 @@ function Dashboard() {
 
   const tilesData = [
     {
+      title: "E-Filing System",
+      link: "/efiling/dashboard",
+      type: "",
+      cardbg: "greenbg",
+      icon: faBuilding,
+      permission: ["E-Filing"],
+    },
+    {
       title: "Leave Management System",
       link: "/lms/dashboard",
       type: "",
@@ -184,14 +192,6 @@ function Dashboard() {
       cardbg: "bluebg",
       icon: faMailBulk,
       permission: ["Complaint"],
-    },
-    {
-      title: "E-Filing System",
-      link: "/efiling/dashboard",
-      type: "",
-      cardbg: "greenbg",
-      icon: faBuilding,
-      permission: ["E-Filing"],
     },
   ];
 

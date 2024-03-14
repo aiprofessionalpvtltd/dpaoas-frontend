@@ -11,7 +11,7 @@ import { EfilingSideBarItem } from "../../../../../../../utils/sideBarItems";
 import Header from "../../../../../../../components/Header";
 import { ToastContainer } from "react-toastify";
 import { useLocation } from "react-router";
-import { getRegisterID } from "../../../../../../../api/Auth";
+import { getRegisterID, getUserData } from "../../../../../../../api/Auth";
 import { createFiles, getAllYear, geteHeadingNumberbyMainHeadingId, geteHeadingbyBranchId } from "../../../../../../../api/APIs/Services/efiling.service";
 import { showErrorMessage, showSuccessMessage } from "../../../../../../../utils/ToastAlert";
 import { useNavigate } from 'react-router-dom';
@@ -19,14 +19,13 @@ import { useNavigate } from 'react-router-dom';
 
 
 const validationSchema = Yup.object({
-  fkBranchId: Yup.string().required("Branch Name is required"),
   mainHeading: Yup.string().required("Main Heading is required"),
   numberOfMainHeading: Yup.string().required("Number Of Main Heading is required"),
   year: Yup.string().required("Year is required"),
   serialNumber: Yup.string().required("Serial Number is required"),
   fileNumber: Yup.string().required("File Number is required"),
   subject: Yup.string().required("Subject is required"),
-  fileType: Yup.string().required("File Type is required"),
+  // fileType: Yup.string().required("File Type is required"),
   dateOfRecord: Yup.string().optional(),
   classification: Yup.string().optional(),
   movement: Yup.string().optional(),
@@ -37,6 +36,8 @@ const validationSchema = Yup.object({
 function AddEditFiles() {
   const { allBranchesData } = useContext(AuthContext);
   const location = useLocation()
+  const userData = getUserData()
+  console.log("kjfkejklflejkljflj",userData);
   const navigate = useNavigate()
   const registerId = getRegisterID()
   const [yearData, setYearData] = useState([])
@@ -47,50 +48,18 @@ function AddEditFiles() {
 
 
 
-  const yaerData = [
-    {
-      name: "2024",
-    },
-    {
-      name: "2023",
-    },
-    {
-      name: "2022",
-    },
-    {
-      name: "2021",
-    },
-    {
-      name: "2020",
-    },
-    {
-      name: "2019",
-    },
-    {
-      name: "2018",
-    },
-    {
-      name: "2017",
-    },
-    {
-      name: "2016",
-    },
-    {
-      name: "2015",
-    },
-  ];
+ 
   // const [divisionById, setDivisionById] = useState();
 
   const formik = useFormik({
     initialValues: {
-      fkBranchId: "",
       mainHeading: "",
       numberOfMainHeading: "",
       year: "",
       serialNumber: "",
       fileNumber: "",
       subject: "",
-      fileType:"",
+      // fileType:"",
       dateOfRecord: "",
       classification: "",
       movement: "",
@@ -108,13 +77,13 @@ function AddEditFiles() {
   const hendleSubmit = async (values) => {
 
     const Data = {
-      fkBranchId: values?.fkBranchId,
+      fkBranchId: userData?.fkDepartmentId,
       fkMainHeadingId: values?.mainHeading,
       year: values?.year,
       serialNumber: values?.serialNumber,
       fileNumber: values?.fileNumber,
       fileSubject: values?.subject,
-      fileType:values?.fileType,
+      fileType:null,
       dateOfRecording: values?.dateOfRecord,
       fileClassification: values?.classification,
       fileMovement: values?.movement,
@@ -156,7 +125,7 @@ function AddEditFiles() {
   const handleBranch = async (event) => {
 
     try {
-      const response = await geteHeadingbyBranchId(event?.target?.value)
+      const response = await geteHeadingbyBranchId(userData?.fkDepartmentId)
       if (response.success) {
         // showSuccessMessage(response?.message)
         setMainHeadingData(response?.data)
@@ -180,9 +149,13 @@ function AddEditFiles() {
       showErrorMessage(error?.response?.data?.message);
     }
   }
+
+  useEffect(() => {
+    handleBranch()
+  },[])
   return (
     <Layout module={true} sidebarItems={EfilingSideBarItem}>
-      <Header dashboardLink={"/efiling/dashboard"} addLink1={"/efiling/dashboard/file-register-list/files-list"} title1={"Register Index"} title2={"Add File"} addLink2={"/efiling/dashboard/file-register-list/files-list/addedit-file"} width={"500px"} />
+      <Header dashboardLink={"/efiling/dashboard"} addLink1={"/efiling/dashboard/file-register-list/files-list"} title1={"Register Index"} title2={"Create File"} addLink2={"/efiling/dashboard/file-register-list/files-list/addedit-file"} width={"500px"} />
       <ToastContainer />
 
       <div class="container-fluid">
@@ -198,48 +171,15 @@ function AddEditFiles() {
         <div class="card">
           <div class="card-header red-bg" style={{ background: "#14ae5c" }}>
             {location && location.state ? (
-              <h1>Edit File</h1>
+              <h1>Update File</h1>
             ) : (
-              <h1>Add File</h1>
+              <h1>Create File</h1>
             )}
           </div>
           <div class="card-body">
             <form onSubmit={formik.handleSubmit}>
               <div class="container-fluid">
                 <div class="row">
-                  <div class="col-3">
-                    <div class="mb-3">
-                      <label class="form-label">Branch Name</label>
-                      <select
-                        className={`form-select ${formik.touched.fkBranchId && formik.errors.fkBranchId
-                            ? "is-invalid"
-                            : ""
-                          }`}
-                        id="fkBranchId"
-                        name="fkBranchId"
-                        onChange={(event) => {
-                          formik.handleChange(event);
-                          handleBranch(event); // Call handleBranch function
-                        }}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.fkBranchId}
-                      >
-                        <option value={""} selected disabled hidden>
-                          Select
-                        </option>
-                        {allBranchesData && allBranchesData.map((item) => (
-                          <option value={item.id}>
-                            {item?.branchName}
-                          </option>
-                        ))}
-                      </select>
-                      {formik.touched.fkBranchId && formik.errors.fkBranchId && (
-                        <div className="invalid-feedback">
-                          {formik.errors.fkBranchId}
-                        </div>
-                      )}
-                    </div>
-                  </div>
                   <div class="col-3">
                     <div class="mb-3">
                       <label class="form-label">Main Heading</label>
@@ -333,9 +273,6 @@ function AddEditFiles() {
                       )}
                     </div>
                   </div>
-                </div>
-
-                <div class="row">
                   <div class="col-3">
                     <div class="mb-3">
                       <label class="form-label">Serial Number</label>
@@ -360,6 +297,10 @@ function AddEditFiles() {
                         )}
                     </div>
                   </div>
+                </div>
+
+                <div class="row">
+                  
                   <div class="col-3">
                     <div class="mb-3">
                       <label class="form-label">File Number</label>

@@ -458,6 +458,25 @@ export const getSingleCaseByFileId = async (fileId, caseId) => {
   }
 };
 
+export const  getUserCaseHistory = async (fileId, userId, currentPage, pageSize) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/cases/getCasesHistory/${fileId}/${userId}?currentPage=${currentPage}&pageSize=${pageSize}`,
+      )
+      // {
+      //   headers: {
+      //     accept: "application/json",
+      //     "Content-Type": "multipart/form-data",
+      //   },
+      // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
 export const DeleteFileCaseImage = async (id) => {
   try {
     //   const token = getAuthToken();
@@ -626,3 +645,64 @@ export const getAllFileDiary = async (currentPage,pageSize) => {
   }
 };
 
+export const getsentAndRecievedFilesStats = async (id) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/filesDashboard/sentAndRecievedFiles/${id}`)
+      // {
+      //   headers: {
+      //     accept: "application/json",
+      //     "Content-Type": "multipart/form-data",
+      //   },
+      // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const getApprovelStats = async (id) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/filesDashboard/approvalStats/${id}`)
+      // {
+      //   headers: {
+      //     accept: "application/json",
+      //     "Content-Type": "multipart/form-data",
+      //   },
+      // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+
+
+
+
+
+
+
+// Notifications
+export const getEfilingNotifications = async (userId) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/filesDashboard/notifiedFiles/${userId}`,
+      {
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // }
+      }
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};

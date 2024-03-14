@@ -9,6 +9,7 @@ import { EfilingSideBarItem } from '../../../../../../../utils/sideBarItems';
 import { getAllCasesByFileId } from '../../../../../../../api/APIs/Services/efiling.service';
 import { AuthContext } from '../../../../../../../api/AuthContext';
 import { getUserData } from '../../../../../../../api/Auth';
+import moment from 'moment';
 
 
 function FileCases() {
@@ -30,17 +31,23 @@ function FileCases() {
     const transformFilesCases = (apiData) => {
         return apiData.map((item, index) => ({
             caseId: item?.fkCaseId,
-            Noting: item?.Note?.description ? new DOMParser().parseFromString(item.Note?.description, 'text/html').documentElement.innerText : '',
-            Correspondence: item?.Correspondence?.description ? new DOMParser().parseFromString(item.Correspondence?.description, 'text/html').documentElement.innerText : '',
-            Sanction: item?.Sanction?.description ? new DOMParser().parseFromString(item.Sanction?.description, 'text/html').documentElement.innerText : '',
-            Objection: item?.Objection?.description ? new DOMParser().parseFromString(item.Objection?.description, 'text/html').documentElement.innerText : '',
-            Letter: item?.Letter?.description ? new DOMParser().parseFromString(item.Letter?.description, 'text/html').documentElement.innerText : '',
+            FileNo: item?.fileData?.fileNumber,
+            Sender: item?.fileRemarksData?.length > 0 ? item?.fileRemarksData[item?.fileRemarksData?.length - 1]?.submittedUser?.employee?.firstName : "---",
+            Receiver: item?.fileRemarksData?.length > 0 ? item?.fileRemarksData[item?.fileRemarksData?.length - 1]?.assignedUser?.employee?.firstName : "---",
+            Status: item?.fileRemarksData?.length > 0 ? item?.fileRemarksData[item?.fileRemarksData?.length - 1]?.CommentStatus : "Draft",
+            MarkedDate: item?.fileRemarksData?.length > 0 ? moment(item?.fileRemarksData[item?.fileRemarksData?.length - 1]?.createdAt).format('DD/MM/YYYY') : "---",
+            MarkedTime: item?.fileRemarksData?.length > 0 ? moment(item?.fileRemarksData[item?.fileRemarksData?.length - 1]?.createdAt).format("hh:mm A") : "---"
+            // Noting: item?.Note?.description ? new DOMParser().parseFromString(item.Note?.description, 'text/html').documentElement.innerText : '',
+            // Correspondence: item?.Correspondence?.description ? new DOMParser().parseFromString(item.Correspondence?.description, 'text/html').documentElement.innerText : '',
+            // Sanction: item?.Sanction?.description ? new DOMParser().parseFromString(item.Sanction?.description, 'text/html').documentElement.innerText : '',
+            // Objection: item?.Objection?.description ? new DOMParser().parseFromString(item.Objection?.description, 'text/html').documentElement.innerText : '',
+            // Letter: item?.Letter?.description ? new DOMParser().parseFromString(item.Letter?.description, 'text/html').documentElement.innerText : '',
         }));
     };
 
     const getAllCasesApi = async () => {
         try {
-            const response = await getAllCasesByFileId(fileIdINRegister, UserData?.fkUserId, currentPage, pageSize)
+            const response = await getAllCasesByFileId(location.state?.internalId ? location.state?.internalId : fileIdINRegister, UserData?.fkUserId, currentPage, pageSize)
             if (response.success) {
                 setCount(response?.data?.count)
                 const transferData = transformFilesCases(response?.data?.cases)
@@ -83,15 +90,15 @@ function FileCases() {
                         handlePageChange={handlePageChange}
                         currentPage={currentPage}
                         handleAdd={() => navigate("/efiling/dashboard/file-register-list/files-list/addedit-case")}
-                        handleEdit={(item) => navigate("/efiling/dashboard/file-register-list/files-list/addedit-case", { state: item })}
+                        handleEdit={(item) => navigate("/efiling/dashboard/fileDetail", { state: { view: false, id: item.caseId } })}
                         pageSize={pageSize}
                         totalCount={count}
                         singleDataCard={true}
                         hideDeleteIcon={true}
                         showView={true}
-                        handleView={(item) => navigate("/efiling/dashboard/file-register-list/files-list/addedit-case", {state: {caseId: item.caseId, view: true}})}
-                        showAssigned={true}
-                        hendleAssigned={(item) => navigate("/efiling/dashboard/fileDetail", { state: { view: true, id: item.caseId } })}
+                        handleView={(item) => navigate("/efiling/dashboard/fileDetail", { state: { view: true, id: item.caseId } })}
+                        showAssigned={false}
+                        // hendleAssigned={(item) => navigate("/efiling/dashboard/fileDetail", { state: { view: true, id: item.caseId } })}
                     />
                 </div>
             </div>
