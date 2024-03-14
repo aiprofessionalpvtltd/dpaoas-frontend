@@ -28,13 +28,13 @@ function CMSSpeechOnDemandDashboard() {
   const transformSpeechOnDemandData = (apiData) => {
     return apiData.map((item, index) => ({
       SR: item?.id,
-      sessionno: item?.session?.sessionName,
-      fromdate: moment(item?.date_from).format("DD/MM/YYYY"),
-      todate: moment(item?.date_to).format("DD/MM/YYYY"),
-      deliverOn: item?.delivery_on,
-      whatsappnumber: item?.whatsapp_number,
-      justification: item?.justification,
-      status: item?.isActive,
+      sessionno: item?.session?.sessionName ? item?.session?.sessionName : "",
+      fromdate: item?.date_from ? item?.date_from : "",
+      todate: item?.date_to ? moment(item?.date_to).format("DD-MM-YYYY") : "",
+      deliverOn: item?.delivery_on ? item?.delivery_on : "",
+      whatsappnumber: item?.whatsapp_number ? item?.whatsapp_number : "",
+      justification: item?.justification ? item?.justification : "",
+      status: item?.isActive ? item?.isActive : "",
     }));
   };
 

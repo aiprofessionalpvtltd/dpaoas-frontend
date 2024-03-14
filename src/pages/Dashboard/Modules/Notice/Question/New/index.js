@@ -84,16 +84,34 @@ function NewQuestion() {
   };
   // Handale DateCHange
   const handleDateSelect = (date) => {
+    console.log("current Date", date);
+
+    const formattedDate = moment(date).format("YYYY-MM-DD");
+    console.log("formattedDate", formattedDate);
+    console.log(typeof formattedDate);
+
     formik.setFieldValue("noticeOfficeDiaryDate", date);
-    console.log("Date", date);
+    // formik.setFieldValue("noticeOfficeDiaryDate", date);
+    // console.log(" Formatted Date", utcFormattedDate);
     setIsCalendarOpen(false);
   };
+
   const CreateQuestionApi = async (values) => {
     const formData = new FormData();
     formData.append("fkSessionId", values?.fkSessionId);
     formData.append("noticeOfficeDiaryNo", Number(values.noticeOfficeDiaryNo));
-    formData.append("noticeOfficeDiaryDate", values.noticeOfficeDiaryDate);
-    formData.append("noticeOfficeDiaryTime", values?.noticeOfficeDiaryTime);
+    // formData.append("noticeOfficeDiaryDate", values.noticeOfficeDiaryDate);
+
+    formData.append(
+      "noticeOfficeDiaryDate",
+      values?.noticeOfficeDiaryDate &&
+        moment(values?.noticeOfficeDiaryDate).format("YYYY-MM-DD")
+    );
+    formData.append(
+      "noticeOfficeDiaryTime",
+      values?.noticeOfficeDiaryTime &&
+        moment(values?.noticeOfficeDiaryTime, "hh:mm A").format("hh:mm A")
+    );
     formData.append("questionCategory", values.questionCategory);
     formData.append("fkQuestionStatus", 12);
     formData.append("fkMemberId", values.fkMemberId?.value);
@@ -325,6 +343,7 @@ function NewQuestion() {
                           onClickOutside={() => setIsCalendarOpen(false)}
                           onInputClick={handleCalendarToggle}
                           // onClick={handleCalendarToggle}
+                          maxDate={new Date()}
                         />
 
                         {formik.touched.noticeOfficeDiaryDate &&

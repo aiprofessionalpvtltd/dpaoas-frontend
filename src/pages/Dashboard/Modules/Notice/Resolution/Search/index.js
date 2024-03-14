@@ -9,10 +9,11 @@ import {
   showErrorMessage,
   showSuccessMessage,
 } from "../../../../../../utils/ToastAlert";
+import { getAllQuestionStatus } from "../../../../../../api/APIs/Services/Question.service";
 import {
-  getAllQuestionStatus,
-} from "../../../../../../api/APIs/Services/Question.service";
-import { getResolutionBYID, searchResolution } from "../../../../../../api/APIs/Services/Resolution.service";
+  getResolutionBYID,
+  searchResolution,
+} from "../../../../../../api/APIs/Services/Resolution.service";
 import { useFormik } from "formik";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import { ToastContainer } from "react-toastify";
@@ -23,7 +24,7 @@ import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 
 function SearchResolution() {
   const navigate = useNavigate();
-  const { members, sessions } = useContext(AuthContext);
+  const { members, sessions, resolutionStatus } = useContext(AuthContext);
   const [searchedData, setSearchedData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [allResolutionStatus, setAllResolutionStatus] = useState([]);
@@ -58,20 +59,28 @@ function SearchResolution() {
 
   const transformLeavesData = (apiData) => {
     return apiData.map((res) => {
+      const subjectMatter = [res?.englishText, res?.urduText]
+        .filter(Boolean)
+        .join(", ");
+      const cleanedSubjectMatter = subjectMatter.replace(/(<([^>]+)>)/gi, "");
       const movers =
         res?.resolutionMoversAssociation.map(
-          (item) => item?.memberAssociation?.memberName,
+          (item) => item?.memberAssociation?.memberName
         ) || [];
 
       return {
         RID: res.id,
         // ResDN: res.resolutionDiaries,
-        SessionNumber: res.session?.sessionName,
-        ResolutionType: res.resolutionType,
-        SubjectMatter: "",
-        NoticeNo: res.noticeDiary?.noticeOfficeDiaryNo,
-        ResolutionStatus: res.resolutionStatus?.resolutionStatus,
-        Movers: movers,
+        SessionNumber: res.session?.sessionName ? res.session?.sessionName : "",
+        ResolutionType: res.resolutionType ? res.resolutionType : "",
+        SubjectMatter: cleanedSubjectMatter ? cleanedSubjectMatter : "",
+        NoticeNo: res.noticeDiary?.noticeOfficeDiaryNo
+          ? res.noticeDiary?.noticeOfficeDiaryNo
+          : "",
+        ResolutionStatus: res.resolutionStatus?.resolutionStatus
+          ? res.resolutionStatus?.resolutionStatus
+          : "",
+        Movers: movers ? movers : "",
       };
     });
   };
@@ -81,23 +90,29 @@ function SearchResolution() {
       fkSessionNoFrom: values.fromSession,
       fkSessionNoTo: values.toSession,
       resolutionType: values.resolutionType,
-      colourResNo: "",
       keyword: values.keyword,
       resolutionId: values.resolutionID,
       resolutionDiaryNo: values.resolutionDiaryNo,
-      fkResolutionStatus: values.resolutionStatus,
+      fkResolutionStatus: values.resolutionStatus?.value,
       noticeOfficeDiaryNo: "",
       noticeOfficeDiaryDateFrom: values.fromNoticeDate,
       noticeOfficeDiaryDateTo: values.toNoticeDate,
-      resolutionMovers: "",
+      resolutionMovers: values?.memberName?.value,
     };
 
     try {
-      const response = await searchResolution(searchParams);
+      const response = await searchResolution(
+        searchParams,
+        currentPage,
+        pageSize
+      );
+
       if (response?.success) {
-        const transformedData = transformLeavesData(response.data);
-        setSearchedData(transformedData);
+        const transformedData = transformLeavesData(
+          response?.data?.resolutions
+        );
         showSuccessMessage(response?.message);
+        setSearchedData(transformedData);
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -113,13 +128,14 @@ function SearchResolution() {
       }
     } catch (error) {
       console.log(error);
+      showErrorMessage(error?.response?.data?.message);
     }
   };
   const handleEdit = async (id) => {
     try {
       const response = await getResolutionBYID(id);
       if (response?.success) {
-        navigate("/qms/notice/notice-resolution-detail", {
+        navigate("/notice/resolution/edit", {
           state: response?.data,
         });
       }
@@ -131,7 +147,10 @@ function SearchResolution() {
   useEffect(() => {
     GetALlStatus();
   }, []);
-
+  const handleResetForm = () => {
+    formik.resetForm();
+    setSearchedData([]);
+  };
   return (
     <Layout
       module={true}
@@ -168,7 +187,7 @@ function SearchResolution() {
                             className="form-control"
                             type="text"
                             id="resolutionDiaryNo"
-                            placeholder={formik.values.resolutionDiaryNo}
+                            value={formik.values.resolutionDiaryNo}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                           />
@@ -181,7 +200,7 @@ function SearchResolution() {
                             className="form-control"
                             type="text"
                             id="resolutionID"
-                            placeholder={formik.values.resolutionID}
+                            value={formik.values.resolutionID}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                           />
@@ -194,7 +213,7 @@ function SearchResolution() {
                             className="form-control"
                             type="text"
                             id="keyword"
-                            placeholder={formik.values.keyword}
+                            value={formik.values.keyword}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                           />
@@ -216,11 +235,10 @@ function SearchResolution() {
                               value: item.id,
                               label: item.memberName,
                             }))}
-                            isMulti
                             onChange={(selectedOptions) =>
                               formik.setFieldValue(
                                 "memberName",
-                                selectedOptions,
+                                selectedOptions
                               )
                             }
                             onBlur={formik.handleBlur}
@@ -231,15 +249,13 @@ function SearchResolution() {
                       </div>
                     </div>
                     <div className="row">
-                      
-                    
                       <div className="col">
                         <div className="mb-3">
                           <label className="form-label">From Session</label>
                           <select
                             class="form-select"
                             id="fromSession"
-                            placeholder={formik.values.fromSession}
+                            value={formik.values.fromSession}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                           >
@@ -261,7 +277,7 @@ function SearchResolution() {
                           <select
                             className="form-select"
                             id="toSession"
-                            placeholder={formik.values.toSession}
+                            value={formik.values.toSession}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                           >
@@ -283,17 +299,22 @@ function SearchResolution() {
                           <select
                             className="form-select"
                             id="resolutionType"
-                            placeholder={formik.values.resolutionType}
+                            value={formik.values.resolutionType}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                           >
                             <option value={""} selected disabled hidden>
-                              Resolution Type
+                              Select
                             </option>
-                            <option>Resolution Type</option>
-                            <option>Government Resolution</option>
-                            <option>Private Member Resolution</option>
-                            <option>
+                            <option value={"Government Resolution"}>
+                              Government Resolution
+                            </option>
+                            <option value={"Private Member Resolution"}>
+                              Private Member Resolution
+                            </option>
+                            <option
+                              value={"Govt. Resolution Supported by others"}
+                            >
                               Govt. Resolution Supported by others
                             </option>
                           </select>
@@ -304,10 +325,10 @@ function SearchResolution() {
                           <label className="form-label">
                             Resolution Status
                           </label>
-                          <select
+                          {/* <select
                             className="form-select"
                             id="resolutionStatus"
-                            placeholder={formik.values.resolutionStatus}
+                            value={formik.values.resolutionStatus}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                           >
@@ -320,13 +341,33 @@ function SearchResolution() {
                                   {item?.questionStatus}
                                 </option>
                               ))}
-                          </select>
+                          </select> */}
+                          <Select
+                            options={
+                              resolutionStatus &&
+                              resolutionStatus?.map((item) => ({
+                                value: item?.id,
+                                label: item?.resolutionStatus,
+                              }))
+                            }
+                            onChange={(selectedOptions) => {
+                              formik.setFieldValue(
+                                "resolutionStatus",
+                                selectedOptions
+                              );
+                            }}
+                            onBlur={formik.handleBlur}
+                            value={formik.values.resolutionStatus}
+                            name="resolutionStatus"
+                            isClearable={true}
+                            // className="form-select"
+                            style={{ border: "none" }}
+                          />
                         </div>
                       </div>
                     </div>
-                    
+
                     <div className="row">
-                     
                       <div className="col-3">
                         <div className="mb-3" style={{ position: "relative" }}>
                           <label className="form-label">From Notice Date</label>
@@ -371,7 +412,7 @@ function SearchResolution() {
                           </span>
                           <DatePicker
                             selected={formik.values.toNoticeDate}
-                            minDate={new Date()}
+                            maxDate={new Date()}
                             onChange={(date) =>
                               formik.setFieldValue("toNoticeDate", date)
                             }
@@ -380,13 +421,17 @@ function SearchResolution() {
                         </div>
                       </div>
                     </div>
-                   
+
                     <div className="row">
                       <div className="d-grid gap-2 d-md-flex justify-content-md-end">
                         <button className="btn btn-primary" type="submit">
                           Search
                         </button>
-                        <button className="btn btn-primary" type="reset">
+                        <button
+                          class="btn btn-primary"
+                          type="button"
+                          onClick={handleResetForm}
+                        >
                           Reset
                         </button>
                       </div>
@@ -407,7 +452,7 @@ function SearchResolution() {
                     handlePageChange={handlePageChange}
                     currentPage={currentPage}
                     headertitlebgColor={"#666"}
-                headertitletextColor={"#FFF"}
+                    headertitletextColor={"#FFF"}
                     showPrint={false}
                     pageSize={pageSize}
                     hideDeleteIcon={true}

@@ -62,7 +62,10 @@ function NoticeQuestionDetail() {
     // Update currentPage when a page link is clicked
     setCurrentPage(page);
   };
-
+  console.log(
+    "location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryDate",
+    location?.state
+  );
   const formik = useFormik({
     initialValues: {
       // sessionNo: location?.state?.question?.session?.sessionName,
@@ -74,12 +77,17 @@ function NoticeQuestionDetail() {
         : "",
       noticeOfficeDiaryNo:
         location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryNo,
-      noticeOfficeDiaryDate: moment(
-        location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryDate,
-        "DD-MM-YYYY"
-      ).toDate(),
-      noticeOfficeDiaryTime:
-        location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryTime,
+      noticeOfficeDiaryDate: location?.state?.question?.noticeOfficeDiary
+        ?.noticeOfficeDiaryDate
+        ? moment(
+            location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryDate,
+            "YYYY-MM-DD"
+          ).toDate()
+        : "",
+      noticeOfficeDiaryTime: location?.state?.question?.noticeOfficeDiary
+        ?.noticeOfficeDiaryTime
+        ? location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryTime
+        : "",
       priority: "",
       questionId: location?.state?.question?.id,
       questionDiaryNo: location?.state?.question?.fkNoticeDiary,
@@ -111,10 +119,17 @@ function NoticeQuestionDetail() {
     const formData = new FormData();
     formData.append("fkSessionId", values?.sessionNo?.value);
     formData.append("noticeOfficeDiaryNo", values?.noticeOfficeDiaryNo);
-    formData.append("noticeOfficeDiaryDate", values?.noticeOfficeDiaryDate);
-    formData.append("noticeOfficeDiaryTime", values?.noticeOfficeDiaryTime);
+    formData.append(
+      "noticeOfficeDiaryDate",
+      values?.noticeOfficeDiaryDate &&
+        moment(values?.noticeOfficeDiaryDate).format("YYYY-MM-DD")
+    );
+    formData.append(
+      "noticeOfficeDiaryTime",
+      values?.noticeOfficeDiaryTime &&
+        moment(values?.noticeOfficeDiaryTime, "hh:mm A").format("hh:mm A")
+    );
     formData.append("questionCategory", values?.category);
-    formData.append("questionDiaryNo", values?.questionDiaryNo);
     formData.append("fkMemberId", values?.senator?.value);
     formData.append("urduText", values.urduText);
     formData.append("englishText", values.englishText);
@@ -313,6 +328,7 @@ function NoticeQuestionDetail() {
                         }
                         onBlur={formik.handleBlur}
                         className={`form-control`}
+                        maxDate={new Date()}
                       />
                     </div>
                   </div>

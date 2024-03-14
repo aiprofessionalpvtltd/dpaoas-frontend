@@ -7,7 +7,10 @@ import {
   showErrorMessage,
   showSuccessMessage,
 } from "../../../../../../utils/ToastAlert";
-import { deletePrivateBill, getAllPrivateBill } from "../../../../../../api/APIs/Services/Legislation.service";
+import {
+  deletePrivateBill,
+  getAllPrivateBill,
+} from "../../../../../../api/APIs/Services/Legislation.service";
 import PrivateBillModal from "../../../../../../components/PrivateBillModal";
 import { ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -21,7 +24,7 @@ function PrivateBill() {
   const [assignModalOpan, setAssignedModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const [data, setData] = useState([]);
 
@@ -33,16 +36,18 @@ function PrivateBill() {
   const transformPrivateData = (apiData) => {
     return apiData.map((item) => ({
       id: item?.id,
-      SerialNo: item?.SerialNo,
-      fileNo: item?.fileNo,
-      date: moment(item?.date).format("DD/MM/YYYY"),
-      fromReceived: item?.fromReceived,
-      briefSubject: item?.briefSubject,
-      remarks: item?.remarks,
+      SerialNo: item?.SerialNo ? item?.SerialNo : "",
+      fileNo: item?.fileNo ? item?.fileNo : "",
+      date: item?.date ? moment(item?.date).format("DD-MM-YYYY") : "",
+      fromReceived: item?.fromReceived ? item?.fromReceived : "",
+      briefSubject: item?.briefSubject ? item?.briefSubject : "",
+      remarks: item?.remarks ? item?.remarks : "",
       AssignedTo: item?.branch?.branchName
         ? item?.branch?.branchName
-        : "Notice",
-      status: item?.status,
+        : ""
+          ? item?.branch?.branchName
+          : "Notice",
+      status: item?.status ? item?.status : "",
     }));
   };
   const getAllPrivateBillApi = useCallback(async () => {
@@ -75,12 +80,12 @@ function PrivateBill() {
       const response = await deletePrivateBill(id);
       if (response?.success) {
         showSuccessMessage(response?.message);
-        getAllPrivateBillApi()
+        getAllPrivateBillApi();
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
     }
-  }
+  };
 
   const handleClose = () => setShowModal(false);
   const handleOkClick = () => {
@@ -121,8 +126,14 @@ function PrivateBill() {
             data={data}
             tableTitle="Private Bill"
             addBtnText={"Create Private Bill"}
-            handleAdd={() => navigate("/notice/legislation/private-bill/addedit")}
-            handleEdit={(item) => navigate("/notice/legislation/private-bill/addedit", { state: item })}
+            handleAdd={() =>
+              navigate("/notice/legislation/private-bill/addedit")
+            }
+            handleEdit={(item) =>
+              navigate("/notice/legislation/private-bill/addedit", {
+                state: item,
+              })
+            }
             handleDelete={(item) => {
               setSelectedItem(item);
               setShowModal(true);
