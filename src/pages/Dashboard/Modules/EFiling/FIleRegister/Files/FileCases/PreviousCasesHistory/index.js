@@ -3,7 +3,7 @@ import { ToastContainer } from 'react-toastify';
 import { useNavigate } from 'react-router';
 import { useLocation } from "react-router-dom";
 import { getUserData } from '../../../../../../../../api/Auth';
-import { getAllCasesByFileId } from '../../../../../../../../api/APIs/Services/efiling.service';
+import { getUserCaseHistory } from '../../../../../../../../api/APIs/Services/efiling.service';
 import { EfilingSideBarItem } from '../../../../../../../../utils/sideBarItems';
 import Header from '../../../../../../../../components/Header';
 import { Layout } from '../../../../../../../../components/Layout';
@@ -40,7 +40,7 @@ function PreviousCasesHistory() {
 
     const getAllCasesApi = async () => {
         try {
-            const response = await getAllCasesByFileId(fileIdINRegister, UserData?.fkUserId, currentPage, pageSize)
+            const response = await getUserCaseHistory(fileIdINRegister, UserData?.fkUserId, currentPage, pageSize)
             if (response.success) {
                 setCount(response?.data?.count)
                 const transferData = transformFilesCases(response?.data?.cases)
@@ -56,7 +56,7 @@ function PreviousCasesHistory() {
             setFileIdInRegister(location.state?.internalId);
         }
         getAllCasesApi();
-    }, [fileIdINRegister, setFileIdInRegister, currentPage])
+    }, [currentPage])
 
     return (
         <Layout module={true} sidebarItems={EfilingSideBarItem}>
@@ -65,8 +65,8 @@ function PreviousCasesHistory() {
             <div class="row">
                 <div class="col-12">
                     <CustomTable
+                        ActionHide={false}
                         hidebtn1={true}
-                        ActionHide={true}
                         hideBtn={true}
                         data={casesData}
                         tableTitle="File Cases History"
@@ -77,6 +77,10 @@ function PreviousCasesHistory() {
                         pageSize={pageSize}
                         totalCount={count}
                         singleDataCard={true}
+                        showEditIcon={true}
+                        hideDeleteIcon={true}
+                        showView={true}
+                        handleView={(item) => navigate("/efiling/dashboard/file-register-list/files-list/addedit-case", {state: {caseId: item.caseId, view: true}})}
                     />
                 </div>
             </div>
