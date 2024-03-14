@@ -97,7 +97,6 @@ function SentQuestion() {
   };
 
   const transformLeavesData = (apiData) => {
-    console.log("api", apiData);
     return apiData.map((res, index) => {
       const subjectMatter = [res?.englishText, res?.urduText]
         .filter(Boolean)
@@ -106,18 +105,28 @@ function SentQuestion() {
       return {
         // SrNo: index + 1,
         Id: res?.id,
-        DiaryNumber: res?.noticeOfficeDiary?.noticeOfficeDiaryNo,
-        NoticeDate: moment(
-          res?.noticeOfficeDiary?.noticeOfficeDiaryDate
-        ).format("DD-MM-YYYY"),
-        NoticeTime: moment(
-          res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
-          "hh:mm A"
-        ).format("hh:mm A"),
-        SessionNumber: res?.session?.sessionName,
-        SubjectMatter: cleanedSubjectMatter,
-        Category: res.questionCategory,
-        Status: res.questionStatus?.questionStatus,
+        noticeOfficeDiaryNumber: res?.noticeOfficeDiary?.noticeOfficeDiaryNo
+          ? res?.noticeOfficeDiary?.noticeOfficeDiaryNo
+          : "",
+        NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate
+          ? moment(res?.noticeOfficeDiary?.noticeOfficeDiaryDate).format(
+              "DD-MM-YYYY"
+            )
+          : "",
+        NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime
+          ? moment(
+              res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
+              "hh:mm A"
+            ).format("hh:mm A")
+          : "",
+        SessionNumber: res?.session?.sessionName
+          ? res?.session?.sessionName
+          : "",
+        SubjectMatter: cleanedSubjectMatter ? cleanedSubjectMatter : "",
+        Category: res.questionCategory ? res.questionCategory : "",
+        Status: res.questionStatus?.questionStatus
+          ? res.questionStatus?.questionStatus
+          : "",
       };
     });
   };

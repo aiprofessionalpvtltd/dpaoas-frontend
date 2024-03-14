@@ -102,20 +102,26 @@ function SentMotion() {
       console.log("Api", apiData);
       return {
         id: res?.id,
-        SessionName: res?.sessions?.sessionName,
-        motionType: res?.motionType,
-        noticeOfficeDiaryNo: res?.noticeOfficeDairies?.noticeOfficeDiaryNo,
-        noticeOfficeDiaryDate: moment(
-          res?.noticeOfficeDairies?.noticeOfficeDiaryDate
-        ).format("DD-MM-YYYY"),
+        SessionName: res?.sessions?.sessionName
+          ? res?.sessions?.sessionName
+          : "",
+        motionType: res?.motionType ? res?.motionType : "",
+        noticeOfficeDiaryNo: res?.noticeOfficeDairies?.noticeOfficeDiaryNo
+          ? res?.noticeOfficeDairies?.noticeOfficeDiaryNo
+          : "",
+        noticeOfficeDiaryDate: res?.noticeOfficeDairies?.noticeOfficeDiaryDate
+          ? moment(res?.noticeOfficeDairies?.noticeOfficeDiaryDate).format(
+              "DD-MM-YYYY"
+            )
+          : "",
         noticeOfficeDiaryTime: res?.noticeOfficeDairies?.noticeOfficeDiaryTime
           ? moment(
               res?.noticeOfficeDairies?.noticeOfficeDiaryTime,
               "hh:ss A"
             ).format("hh:ss A")
           : "",
-        englishText: EnglishText,
-        urduText: UrduText,
+        englishText: EnglishText ? EnglishText : "",
+        urduText: UrduText ? UrduText : "",
       };
     });
   };

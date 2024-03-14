@@ -24,10 +24,10 @@ import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 const validationSchema = Yup.object({
   fkSessionNo: Yup.number().required("Session No is required"),
   noticeOfficeDiaryNo: Yup.string().required(
-    "Notice Office Diary No is required",
+    "Notice Office Diary No is required"
   ),
   noticeOfficeDiaryDate: Yup.string().required(
-    "Notice Office Diary Date is required",
+    "Notice Office Diary Date is required"
   ),
   // noticeOfficeDiaryTime: Yup.string().required('Notice Office Diary Time is required'),
   resolutionType: Yup.string().required("Resolution Type is required"),
@@ -54,7 +54,7 @@ function NewResolution() {
 
   const formik = useFormik({
     initialValues: {
-      fkSessionNo: sessions[0]?.id,
+      fkSessionNo: "",
       noticeOfficeDiaryNo: "",
       noticeOfficeDiaryDate: null,
       noticeOfficeDiaryTime: "",
@@ -67,8 +67,9 @@ function NewResolution() {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      handleShow();
-      setFormValues(values);
+      // handleShow();
+      // setFormValues(values);
+      CreateResolutionApi(values);
     },
     enableReinitialize: true,
   });
@@ -78,11 +79,11 @@ function NewResolution() {
     formData.append("fkSessionNo", values.fkSessionNo);
     formData.append("noticeOfficeDiaryNo", Number(values.noticeOfficeDiaryNo));
     formData.append("noticeOfficeDiaryDate", values.noticeOfficeDiaryDate);
-    formData.append("noticeOfficeDiaryTime", "11:40am");
+    formData.append("noticeOfficeDiaryTime", values.noticeOfficeDiaryTime);
     formData.append("resolutionType", values.resolutionType);
 
     // Assuming resolutionMovers is an array of objects with a fkMemberId property
-    values.resolutionMovers.forEach((mover, index) => {
+    values?.resolutionMovers.forEach((mover, index) => {
       formData.append(`resolutionMovers[${index}][fkMemberId]`, mover.value);
     });
 
@@ -95,6 +96,7 @@ function NewResolution() {
       const response = await createResolution(formData);
       if (response?.success) {
         showSuccessMessage(response?.message);
+        formik.resetForm();
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -154,15 +156,22 @@ function NewResolution() {
                               ? "is-invalid"
                               : ""
                           }`}
-                          placeholder="Session No"
+                          // placeholder="Session No"
                           value={formik.values.fkSessionNo}
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                           name="fkSessionNo"
                         >
-                          <option value={sessions[0]?.id} selected disabled>
-                            {sessions[0]?.sessionName}
+                          <option value="" selected disabled hidden>
+                            Select
                           </option>
+                          {sessions &&
+                            sessions.length > 0 &&
+                            sessions.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item?.sessionName}
+                              </option>
+                            ))}
                         </select>
                         {formik.touched.fkSessionNo &&
                           formik.errors.fkSessionNo && (
@@ -232,15 +241,18 @@ function NewResolution() {
                       <div class="mb-3">
                         <label class="form-label">Member Senate</label>
                         <Select
-                          options={members.map((item) => ({
-                            value: item.id,
-                            label: item.memberName,
-                          }))}
+                          options={
+                            members &&
+                            members.map((item) => ({
+                              value: item.id,
+                              label: item.memberName,
+                            }))
+                          }
                           isMulti
                           onChange={(selectedOptions) =>
                             formik.setFieldValue(
                               "resolutionMovers",
-                              selectedOptions,
+                              selectedOptions
                             )
                           }
                           onBlur={formik.handleBlur}
@@ -257,9 +269,6 @@ function NewResolution() {
                     </div>
                   </div>
                   <div class="row">
-                    
-
-                    
                     <div className="col-3">
                       <div className="mb-3" style={{ position: "relative" }}>
                         <label className="form-label">
@@ -280,7 +289,7 @@ function NewResolution() {
                         </span>
                         <DatePicker
                           selected={formik.values.noticeOfficeDiaryDate}
-                          minDate={new Date()}
+                          maxDate={new Date()}
                           onChange={(date) =>
                             formik.setFieldValue("noticeOfficeDiaryDate", date)
                           }
@@ -333,7 +342,7 @@ function NewResolution() {
                           onChange={(event) => {
                             formik.setFieldValue(
                               "attachment",
-                              event.currentTarget.files[0],
+                              event.currentTarget.files[0]
                             );
                           }}
                         />
