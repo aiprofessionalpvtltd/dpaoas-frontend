@@ -101,7 +101,7 @@ function Dashboard() {
   const tilesData = [
     {
       title: "E-Filing System",
-      link: "/efiling/deshboard",
+      link: "/efiling/dashboard",
       type: "",
       cardbg: "greenbg",
       icon: faBuilding,
