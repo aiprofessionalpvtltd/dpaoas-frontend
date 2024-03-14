@@ -290,7 +290,9 @@ if (objection.attachedFiles) {
       if (response?.success) {
         showSuccessMessage(response?.message);
         // formik.resetForm()
-        // navigate("/efiling/dashboard/files")
+        setTimeout(() => {
+          navigate("/efiling/dashboard/file-register-list/files-list/cases")
+        }, 1000)
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -438,9 +440,9 @@ if (objection.attachedFiles) {
       <div className="dashboard-content" style={{ marginTop: 80 }}>
         <ToastContainer />
         <Header
-          dashboardLink={"/"}
-          addLink1={"/efiling/dashboard/files"}
-          title1={"E-Filing"}
+          dashboardLink={"/efiling/dashboard"}
+          addLink1={"/efiling/dashboard/file-register-list/files-list/cases"}
+          title1={"File Cases"}
           addLink2={"/efiling/dashboard/addedit"}
           title2={location && viewPage ? "File Detail" : "Edit File"}
           width={"500px"}

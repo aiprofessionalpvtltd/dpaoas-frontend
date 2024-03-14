@@ -478,8 +478,8 @@ export const ProtectedRoutes = [
   { path: "/cms/admin/inventory/vendor-list/add", element: <CMSEditVendor /> },
 
   // E-Filing
-  { path: "/efiling/dashboard", element: <EFilingDashboard /> },
-  { path: "/efiling/director-deshboard", element: <DirectorDashboard /> },
+  { path: "/efiling/dashboard", element: <DirectorDashboard /> },
+  { path: "/efiling/director-dashboard", element: <EFilingDashboard /> },
 
   { path: "/efiling/dashboard/fileDetail", element: <FileDetail /> },
   // { path: "/efiling/dashboard/addedit", element: <AddEditFileForm /> },
