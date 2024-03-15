@@ -108,6 +108,8 @@ const AttendanceReport = () => {
                         ? "is-invalid"
                         : ""
                     }`}
+                    dateFormat={"dd-MM-yyyy"}
+                    maxDate={new Date()}
                   />
                   {formik.touched.weeklyStartDate &&
                     formik.errors.weeklyStartDate && (
@@ -151,6 +153,7 @@ const AttendanceReport = () => {
                         ? "is-invalid"
                         : ""
                     }`}
+                    dateFormat={"dd-MM-yyyy"}
                     open={isEndDateOpen}
                     onClickOutside={() => setIsEndDateOpen(false)}
                     onInputClick={handleEndDateCalendarToggle}

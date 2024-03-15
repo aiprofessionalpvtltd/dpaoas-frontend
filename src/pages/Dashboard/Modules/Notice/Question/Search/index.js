@@ -457,6 +457,8 @@ function SearchQuestion() {
                             open={isFromNoticeOpen}
                             onClickOutside={() => setIsFromNoticeOpen(false)}
                             onInputClick={handleFromNoticeCalendarToggle}
+                            dateFormat="dd-MM-yyyy"
+                            maxDate={new Date()}
                           />
                         </div>
                       </div>
@@ -492,6 +494,8 @@ function SearchQuestion() {
                             open={isToNoticeOpen}
                             onClickOutside={() => setIsToNoticeOpen(false)}
                             onInputClick={handleToNoticeCalendarToggle}
+                            dateFormat="dd-MM-yyyy"
+                            maxDate={new Date()}
                           />
                         </div>
                       </div>

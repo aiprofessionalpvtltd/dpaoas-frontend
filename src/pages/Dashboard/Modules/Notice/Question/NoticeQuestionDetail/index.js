@@ -11,10 +11,7 @@ import TimePicker from "react-time-picker";
 import DatePicker from "react-datepicker";
 import { useLocation } from "react-router";
 
-import {
-  UpdateQuestionById,
-  getAllQuestionStatus,
-} from "../../../../../../api/APIs/Services/Question.service";
+import { UpdateQuestionById } from "../../../../../../api/APIs/Services/Question.service";
 import { ToastContainer } from "react-toastify";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -22,7 +19,6 @@ import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 
 import { AuthContext } from "../../../../../../api/AuthContext";
 import { Editor } from "../../../../../../components/CustomComponents/Editor";
-import { getAllDivisions } from "../../../../../../api/APIs/Services/ManageQMS.service";
 import {
   showSuccessMessage,
   showErrorMessage,
@@ -56,19 +52,15 @@ function NoticeQuestionDetail() {
   const { members, sessions } = useContext(AuthContext);
   const [filesData, setFilesData] = useState();
   const [currentPage, setCurrentPage] = useState(0);
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const pageSize = 10;
 
   const handleStatusPageChange = (page) => {
-    // Update currentPage when a page link is clicked
     setCurrentPage(page);
   };
-  console.log(
-    "location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryDate",
-    location?.state
-  );
+
   const formik = useFormik({
     initialValues: {
-      // sessionNo: location?.state?.question?.session?.sessionName,
       sessionNo: location.state
         ? {
             value: location?.state?.question?.session?.id,
@@ -115,6 +107,16 @@ function NoticeQuestionDetail() {
     },
   });
 
+  // Handle Claneder Toggel
+  const handleCalendarToggle = () => {
+    setIsCalendarOpen(!isCalendarOpen);
+  };
+  // Handale DateCHange
+  const handleDateSelect = (date) => {
+    formik.setFieldValue("noticeOfficeDiaryDate", date);
+    setIsCalendarOpen(false);
+  };
+
   const updateQuestion = async (values) => {
     const formData = new FormData();
     formData.append("fkSessionId", values?.sessionNo?.value);
@@ -145,6 +147,7 @@ function NoticeQuestionDetail() {
       );
       if (response?.success) {
         showSuccessMessage(response?.message);
+        formik.resetForm();
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -308,7 +311,7 @@ function NoticeQuestionDetail() {
                   <div class="col">
                     <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label">Notice Office Diary Date</label>
-                      <span
+                      {/* <span
                         style={{
                           position: "absolute",
                           right: "15px",
@@ -320,8 +323,23 @@ function NoticeQuestionDetail() {
                         }}
                       >
                         <FontAwesomeIcon icon={faCalendarAlt} />
+                      </span> */}
+                      <span
+                        style={{
+                          position: "absolute",
+                          right: "15px",
+                          top: "36px",
+                          zIndex: 1,
+                          fontSize: "20px",
+                          zIndex: "1",
+                          color: "#666",
+                          cursor: "pointer",
+                        }}
+                        onClick={handleCalendarToggle}
+                      >
+                        <FontAwesomeIcon icon={faCalendarAlt} />
                       </span>
-                      <DatePicker
+                      {/* <DatePicker
                         selected={formik.values.noticeOfficeDiaryDate}
                         onChange={(date) =>
                           formik.setFieldValue("noticeOfficeDiaryDate", date)
@@ -329,6 +347,24 @@ function NoticeQuestionDetail() {
                         onBlur={formik.handleBlur}
                         className={`form-control`}
                         maxDate={new Date()}
+                        dateFormat="dd-MM-yyyy"
+                      /> */}
+                      <DatePicker
+                        selected={formik.values.noticeOfficeDiaryDate}
+                        onChange={handleDateSelect}
+                        onBlur={formik.handleBlur}
+                        className={`form-control ${
+                          formik.touched.noticeOfficeDiaryDate &&
+                          formik.errors.noticeOfficeDiaryDate
+                            ? "is-invalid"
+                            : ""
+                        }`}
+                        open={isCalendarOpen}
+                        onClickOutside={() => setIsCalendarOpen(false)}
+                        onInputClick={handleCalendarToggle}
+                        // onClick={handleCalendarToggle}
+                        maxDate={new Date()}
+                        dateFormat="dd-MM-yyyy"
                       />
                     </div>
                   </div>

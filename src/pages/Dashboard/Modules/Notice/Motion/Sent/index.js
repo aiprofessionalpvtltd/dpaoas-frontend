@@ -99,7 +99,7 @@ function SentMotion() {
 
       const urdu = [res?.urduText].filter(Boolean).join(", ");
       const UrduText = urdu.replace(/(<([^>]+)>)/gi, "");
-      console.log("Api", apiData);
+
       return {
         id: res?.id,
         SessionName: res?.sessions?.sessionName
@@ -492,6 +492,8 @@ function SentMotion() {
                             ? "is-invalid"
                             : ""
                         }`}
+                        dateFormat={"dd-MM-yyyy"}
+                        maxDate={new Date()}
                         open={isFromNoticeOpen}
                         onClickOutside={() => setIsFromNoticeOpen(false)}
                         onInputClick={handleFromNoticeCalendarToggle}
@@ -527,6 +529,8 @@ function SentMotion() {
                             ? "is-invalid"
                             : ""
                         }`}
+                        maxDate={new Date()}
+                        dateFormat={"dd-MM-yyyy"}
                         open={isToNoticeOpen}
                         onClickOutside={() => setIsToNoticeOpen(false)}
                         onInputClick={handleToNoticeCalendarToggle}

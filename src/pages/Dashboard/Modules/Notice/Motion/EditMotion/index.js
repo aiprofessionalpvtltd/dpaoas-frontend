@@ -359,6 +359,7 @@ function EditMotion() {
                               ? "is-invalid"
                               : ""
                           }`}
+                          dateFormat={"dd-MM-yyyy"}
                         />
                         {formik.touched.noticeOfficeDiaryDate &&
                           formik.errors.noticeOfficeDiaryDate && (

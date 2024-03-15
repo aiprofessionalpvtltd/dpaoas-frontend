@@ -549,6 +549,8 @@ function SearchMotion() {
                         open={isFromNoticeOpen}
                         onClickOutside={() => setIsFromNoticeOpen(false)}
                         onInputClick={handleFromNoticeCalendarToggle}
+                        maxDate={new Date()}
+                        dateFormat={"dd-MM-yyyy"}
                       />
                     </div>
                   </div>
@@ -584,6 +586,8 @@ function SearchMotion() {
                         open={isToNoticeOpen}
                         onClickOutside={() => setIsToNoticeOpen(false)}
                         onInputClick={handleToNoticeCalendarToggle}
+                        maxDate={new Date()}
+                        dateFormat={"dd-MM-yyyy"}
                       />
                     </div>
                   </div>
