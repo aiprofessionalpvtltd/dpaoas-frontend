@@ -21,11 +21,34 @@ function NMSMemberSessionAttendance() {
   const [currentPage, setCurrentPage] = useState(0);
   const [selectedOptions, setSelectedOptions] = useState("");
   const [sittingDays, setSittingDays] = useState([]);
+  const [isStartDateOpen, setIsStartDateOpen] = useState(false);
+  const [isEndDateOpen, setIsEndDateOpen] = useState(false);
   const pageSize = 100;
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
     setCurrentPage(page);
   };
+
+  // Handle From Notice Date Claneder Toggel
+  const handlestartDateCalendarToggle = () => {
+    setIsStartDateOpen(!isStartDateOpen);
+  };
+  // Handale From Notice DateCHange
+  const handleStartDateSelect = (date) => {
+    formik.setFieldValue("startDate", date);
+    setIsStartDateOpen(false);
+  };
+
+  // Handle To Notice Date Claneder Toggel
+  const handleEndDateCalendarToggle = () => {
+    setIsEndDateOpen(!isEndDateOpen);
+  };
+  // Handale To Notice DateCHange
+  const handleEndDateSelect = (date) => {
+    formik.setFieldValue("endDate", date);
+    setIsEndDateOpen(false);
+  };
+
   const formik = useFormik({
     initialValues: {
       markAttendanceBy: "",
@@ -314,26 +337,34 @@ function NMSMemberSessionAttendance() {
                       style={{
                         position: "absolute",
                         right: "15px",
-                        top: "5px",
+                        top: "7px",
                         zIndex: 1,
                         fontSize: "20px",
                         zIndex: "1",
                         color: "#666",
+                        cursor: "pointer",
                       }}
+                      onClick={handlestartDateCalendarToggle}
                     >
                       <FontAwesomeIcon icon={faCalendarAlt} />
                     </span>
                     <DatePicker
                       selected={formik.values.startDate}
-                      onChange={(date) =>
-                        formik.setFieldValue("startDate", date)
-                      }
+                      // onChange={(date) =>
+                      //   formik.setFieldValue("startDate", date)
+                      // }
+                      onChange={handleStartDateSelect}
                       onBlur={formik.handleBlur}
                       className={`form-control ${
                         formik.touched.startDate && formik.errors.startDate
                           ? "is-invalid"
                           : ""
                       }`}
+                      open={isStartDateOpen}
+                      onClickOutside={() => setIsStartDateOpen(false)}
+                      onInputClick={handlestartDateCalendarToggle}
+                      dateFormat="dd-MM-yyyy"
+                      maxDate={new Date()}
                     />
                     {formik.touched.startDate && formik.errors.startDate && (
                       <div className="invalid-feedback">
@@ -352,24 +383,32 @@ function NMSMemberSessionAttendance() {
                       style={{
                         position: "absolute",
                         right: "15px",
-                        top: "5px",
+                        top: "7px",
                         zIndex: 1,
                         fontSize: "20px",
                         zIndex: "1",
                         color: "#666",
+                        cursor: "pointer",
                       }}
+                      onClick={handleEndDateCalendarToggle}
                     >
                       <FontAwesomeIcon icon={faCalendarAlt} />
                     </span>
                     <DatePicker
                       selected={formik.values.endDate}
-                      onChange={(date) => formik.setFieldValue("endDate", date)}
+                      // onChange={(date) => formik.setFieldValue("endDate", date)}
+                      onChange={handleEndDateSelect}
                       onBlur={formik.handleBlur}
                       className={`form-control ${
                         formik.touched.endDate && formik.errors.endDate
                           ? "is-invalid"
                           : ""
                       }`}
+                      open={isEndDateOpen}
+                      onClickOutside={() => setIsEndDateOpen(false)}
+                      onInputClick={handleEndDateCalendarToggle}
+                      dateFormat={"dd-MM-yyyy"}
+                      maxDate={new Date()}
                     />
                     {formik.touched.endDate && formik.errors.endDate && (
                       <div className="invalid-feedback">

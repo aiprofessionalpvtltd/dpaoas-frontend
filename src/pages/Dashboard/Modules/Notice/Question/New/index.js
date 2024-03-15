@@ -84,15 +84,7 @@ function NewQuestion() {
   };
   // Handale DateCHange
   const handleDateSelect = (date) => {
-    console.log("current Date", date);
-
-    const formattedDate = moment(date).format("YYYY-MM-DD");
-    console.log("formattedDate", formattedDate);
-    console.log(typeof formattedDate);
-
     formik.setFieldValue("noticeOfficeDiaryDate", date);
-    // formik.setFieldValue("noticeOfficeDiaryDate", date);
-    // console.log(" Formatted Date", utcFormattedDate);
     setIsCalendarOpen(false);
   };
 
@@ -344,6 +336,7 @@ function NewQuestion() {
                           onInputClick={handleCalendarToggle}
                           // onClick={handleCalendarToggle}
                           maxDate={new Date()}
+                          dateFormat="dd-MM-yyyy"
                         />
 
                         {formik.touched.noticeOfficeDiaryDate &&

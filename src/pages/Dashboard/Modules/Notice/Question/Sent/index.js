@@ -512,6 +512,8 @@ function SentQuestion() {
                                 ? "is-invalid"
                                 : ""
                             }`}
+                            dateFormat="dd-MM-yyyy"
+                            maxDate={new Date()}
                             open={isFromNoticeOpen}
                             onClickOutside={() => setIsFromNoticeOpen(false)}
                             onInputClick={handleFromNoticeCalendarToggle}
@@ -547,9 +549,11 @@ function SentQuestion() {
                                 ? "is-invalid"
                                 : ""
                             }`}
+                            maxDate={new Date()}
                             open={isToNoticeOpen}
                             onClickOutside={() => setIsToNoticeOpen(false)}
                             onInputClick={handleToNoticeCalendarToggle}
+                            dateFormat="dd-MM-yyyy"
                           />
                         </div>
                       </div>

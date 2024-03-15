@@ -118,6 +118,7 @@ function NewMotion() {
       const response = await createNewMotion(formData);
       if (response?.success) {
         showSuccessMessage(response?.message);
+        formik.resetForm();
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -326,6 +327,7 @@ function NewMotion() {
                           onInputClick={handleCalendarToggle}
                           // onClick={handleCalendarToggle}
                           maxDate={new Date()}
+                          dateFormat="dd-MM-yyyy"
                         />
                         {formik.touched.noticeOfficeDiaryDate &&
                           formik.errors.noticeOfficeDiaryDate && (

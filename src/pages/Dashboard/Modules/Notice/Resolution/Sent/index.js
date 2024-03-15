@@ -466,7 +466,7 @@ function SentResolution() {
                         </span>
                         <DatePicker
                           selected={formik.values.fromNoticeDate}
-                          minDate={new Date()}
+                          maxDate={new Date()}
                           onChange={(date) =>
                             formik.setFieldValue("fromNoticeDate", date)
                           }
@@ -477,6 +477,7 @@ function SentResolution() {
                               ? "is-invalid"
                               : ""
                           }`}
+                          dateFormat={"dd-MM-yyyy"}
                         />
                       </div>
                     </div>
@@ -498,7 +499,7 @@ function SentResolution() {
                         </span>
                         <DatePicker
                           selected={formik.values.toNoticeDate}
-                          minDate={new Date()}
+                          maxDate={new Date()}
                           onChange={(date) =>
                             formik.setFieldValue("toNoticeDate", date)
                           }
@@ -509,6 +510,7 @@ function SentResolution() {
                               ? "is-invalid"
                               : ""
                           }`}
+                          dateFormat={"dd-MM-yyyy"}
                         />
                       </div>
                     </div>

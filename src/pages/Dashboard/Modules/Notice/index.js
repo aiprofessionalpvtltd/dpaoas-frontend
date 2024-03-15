@@ -6,7 +6,12 @@ import Header from "../../../../components/Header";
 import CustomTable from "../../../../components/CustomComponents/CustomTable";
 import NoticeStatsCard from "../../../../components/CustomComponents/NoticeStatsCard";
 import { getAllNoticeStats } from "../../../../api/APIs/Services/Notice.service";
-import { faClipboardQuestion, faFileImport, faObjectGroup, faScaleBalanced } from "@fortawesome/free-solid-svg-icons";
+import {
+  faClipboardQuestion,
+  faFileImport,
+  faObjectGroup,
+  faScaleBalanced,
+} from "@fortawesome/free-solid-svg-icons";
 
 const data = [
   {
@@ -56,43 +61,118 @@ function NoticeDashboard() {
   }, []);
 
   return (
-    <Layout module={true} sidebarItems={NoticeSidebarItems} centerlogohide={true}>
+    <Layout
+      module={true}
+      sidebarItems={NoticeSidebarItems}
+      centerlogohide={true}
+    >
       <Header dashboardLink={"/"} title1={"Notice"} />
       <div style={{ marginLeft: 15 }}>
-        <h2 style={{ fontSize: '22px', fontWeight: 'bold', marginBottom: '10px', color: "#fb6340" }}>Daily Stats</h2>
+        <h2
+          style={{
+            fontSize: "22px",
+            fontWeight: "bold",
+            marginBottom: "10px",
+            color: "#fb6340",
+          }}
+        >
+          Daily Stats
+        </h2>
         <div class="row">
           <div class="col-md-12">
             <div class="mt-2 mb-4">
               <div class="row">
-                <NoticeStatsCard title={"Question"} icon={faClipboardQuestion} iconBgColor={"#FFA500"} total={`${stats?.questions?.dailySendQuestions + stats?.questions?.dailyRecievedQuestions}`} sent={stats?.questions?.dailySendQuestions} received={stats?.questions?.dailyRecievedQuestions} />
-                <NoticeStatsCard title={"Motion"} icon={faFileImport} iconBgColor={"#007bff"} total={`${stats?.motions?.dailySendMotions + stats?.motions?.dailyRecievedMotions}`} sent={stats?.motions?.dailySendMotions} received={stats?.motions?.dailyRecievedMotions} />
-                <NoticeStatsCard title={"Legislation"} icon={faScaleBalanced} iconBgColor={"#2dce89"} total={`${stats?.legislation?.sentToBranchesQ + stats?.legislation?.initiatedByBranchesQ}`} sent={stats?.legislation?.sentToBranchesQ} received={stats?.legislation?.initiatedByBranchesQ} />
+                <NoticeStatsCard
+                  title={"Question"}
+                  icon={faClipboardQuestion}
+                  iconBgColor={"#FFA500"}
+                  total={`${
+                    stats?.questions?.dailySendQuestions +
+                    stats?.questions?.dailyRecievedQuestions
+                  }`}
+                  sent={stats?.questions?.dailySendQuestions}
+                  received={stats?.questions?.dailyRecievedQuestions}
+                />
+                <NoticeStatsCard
+                  title={"Motion"}
+                  icon={faFileImport}
+                  iconBgColor={"#007bff"}
+                  total={`${
+                    stats?.motions?.dailySendMotions +
+                    stats?.motions?.dailyRecievedMotions
+                  }`}
+                  sent={stats?.motions?.dailySendMotions}
+                  received={stats?.motions?.dailyRecievedMotions}
+                />
+                {/* <NoticeStatsCard title={"Legislation"} icon={faScaleBalanced} iconBgColor={"#2dce89"} total={`${stats?.legislation?.sentToBranchesQ + stats?.legislation?.initiatedByBranchesQ}`} sent={stats?.legislation?.sentToBranchesQ} received={stats?.legislation?.initiatedByBranchesQ} /> */}
               </div>
             </div>
           </div>
         </div>
 
-        <h2 style={{ fontSize: '22px', fontWeight: 'bold', marginBottom: '10px', color: "#f5365c" }}>Monthly Stats</h2>
+        <h2
+          style={{
+            fontSize: "22px",
+            fontWeight: "bold",
+            marginBottom: "10px",
+            color: "#f5365c",
+          }}
+        >
+          Monthly Stats
+        </h2>
         <div class="row">
           <div class="col-md-12">
             <div class="mt-2 mb-4">
               <div class="row">
-              <NoticeStatsCard title={"Question"} icon={faClipboardQuestion} overall={true} iconBgColor={"#FFA500"} total={`${stats?.monthlyQuestions}`} />
-              <NoticeStatsCard title={"Motion"} icon={faFileImport} overall={true} iconBgColor={"#007bff"} total={`${stats?.monthlyMotions}`} />
-              <NoticeStatsCard title={"Legislation"} icon={faScaleBalanced} overall={true} iconBgColor={"#2dce89"} total={`${stats?.totalLegislations}`} />
+                <NoticeStatsCard
+                  title={"Question"}
+                  icon={faClipboardQuestion}
+                  overall={true}
+                  iconBgColor={"#FFA500"}
+                  total={`${stats?.monthlyQuestions}`}
+                />
+                <NoticeStatsCard
+                  title={"Motion"}
+                  icon={faFileImport}
+                  overall={true}
+                  iconBgColor={"#007bff"}
+                  total={`${stats?.monthlyMotions}`}
+                />
+                {/* <NoticeStatsCard title={"Legislation"} icon={faScaleBalanced} overall={true} iconBgColor={"#2dce89"} total={`${stats?.totalLegislations}`} /> */}
               </div>
             </div>
           </div>
         </div>
 
-        <h2 style={{ fontSize: '22px', fontWeight: 'bold', marginBottom: '10px', color: "#0177b4" }}>Upcoming Session Stats</h2>
+        <h2
+          style={{
+            fontSize: "22px",
+            fontWeight: "bold",
+            marginBottom: "10px",
+            color: "#0177b4",
+          }}
+        >
+          Upcoming Session Stats
+        </h2>
         <div class="row">
           <div class="col-md-12">
             <div class="mt-2 mb-4">
               <div class="row">
-              <NoticeStatsCard upcoming={true} title={"Question"} icon={faClipboardQuestion} iconBgColor={"#FFA500"} total={`${stats?.sessionWiseQuestions}`} />
-              <NoticeStatsCard upcoming={true} title={"Motion"} icon={faFileImport} iconBgColor={"#007bff"} total={`${stats?.sessionWiseMotions}`} />
-              <NoticeStatsCard upcoming={true} title={"Legislation"} icon={faScaleBalanced} iconBgColor={"#2dce89"} total={`${stats?.totalLegislations}`} />
+                <NoticeStatsCard
+                  upcoming={true}
+                  title={"Question"}
+                  icon={faClipboardQuestion}
+                  iconBgColor={"#FFA500"}
+                  total={`${stats?.sessionWiseQuestions}`}
+                />
+                <NoticeStatsCard
+                  upcoming={true}
+                  title={"Motion"}
+                  icon={faFileImport}
+                  iconBgColor={"#007bff"}
+                  total={`${stats?.sessionWiseMotions}`}
+                />
+                {/* <NoticeStatsCard upcoming={true} title={"Legislation"} icon={faScaleBalanced} iconBgColor={"#2dce89"} total={`${stats?.totalLegislations}`} /> */}
               </div>
             </div>
           </div>

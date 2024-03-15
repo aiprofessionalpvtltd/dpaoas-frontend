@@ -21,11 +21,35 @@ function BusinessSummary() {
   const [questionReport, setQuestionReport] = useState([]);
   const [motionReport, setMotionReport] = useState([]);
   const [resolutionReport, setresolutionReport] = useState([]);
+  const [isFromOpen, setIsFromOpen] = useState(false);
+  const [isToOpen, setIsToOpen] = useState(false);
+  // Handle From Notice Date Claneder Toggel
+  const handleFromCalendarToggle = () => {
+    setIsFromOpen(!isFromOpen);
+  };
+  // Handale From Notice DateCHange
+  const handleFromDateSelect = (date) => {
+    setFromDate(date);
+    // formik.setFieldValue("fromNoticeDate", date);
+    setIsFromOpen(false);
+  };
+
+  // Handle To Notice Date Claneder Toggel
+  const handleToCalendarToggle = () => {
+    setIsToOpen(!isToOpen);
+  };
+  // Handale To Notice DateCHange
+  const handleToDateSelect = (date) => {
+    setTodate(date);
+    // formik.setFieldValue("toNoticeDate", date);
+    setIsToOpen(false);
+  };
+
   const hendleSearch = async () => {
     try {
       const response = await noticeBusinessReport(
-        moment(fromDate).format("DD-MM-YYYY"),
-        moment(toData).format("DD-MM-YYYY")
+        moment(fromDate).format("YYYY-MM-DD"),
+        moment(toData).format("YYYY-MM-DD")
       );
       if (response.success) {
         setQuestionReport(response?.data?.questions);
@@ -151,7 +175,9 @@ function BusinessSummary() {
                           fontSize: "20px",
                           zIndex: "1",
                           color: "#666",
+                          cursor: "pointer",
                         }}
+                        onClick={handleFromCalendarToggle}
                       >
                         <FontAwesomeIcon icon={faCalendarAlt} />
                       </span>
@@ -159,8 +185,13 @@ function BusinessSummary() {
                         // minDate={new Date()}
                         selected={fromDate}
                         dateFormat="dd-MM-yyyy"
-                        onChange={(date) => setFromDate(date)}
+                        onChange={handleFromDateSelect}
+                        // onChange={(date) => setFromDate(date)}
                         className={"form-control"}
+                        open={isFromOpen}
+                        onClickOutside={() => setIsFromOpen(false)}
+                        onInputClick={handleFromCalendarToggle}
+                        maxDate={new Date()}
                       />
                     </div>
                   </div>
@@ -176,7 +207,9 @@ function BusinessSummary() {
                           fontSize: "20px",
                           zIndex: "1",
                           color: "#666",
+                          cursor: "pointer",
                         }}
+                        onClick={handleToCalendarToggle}
                       >
                         <FontAwesomeIcon icon={faCalendarAlt} />
                       </span>
@@ -184,8 +217,13 @@ function BusinessSummary() {
                         // minDate={new Date()}
                         selected={toData}
                         dateFormat="dd-MM-yyyy"
-                        onChange={(date) => setTodate(date)}
+                        onChange={handleToDateSelect}
+                        // onChange={(date) => setTodate(date)}
                         className={"form-control"}
+                        open={isToOpen}
+                        onClickOutside={() => setIsToOpen(false)}
+                        onInputClick={handleToCalendarToggle}
+                        maxDate={new Date()}
                       />
                     </div>
                   </div>
@@ -253,22 +291,40 @@ function BusinessSummary() {
                           <tr>
                             <td class="text-center">{item?.id}</td>
                             <td class="text-center">
-                              {item?.noticeOfficeDiary?.noticeOfficeDiaryNo}
+                              {item?.noticeOfficeDiary?.noticeOfficeDiaryNo
+                                ? item?.noticeOfficeDiary?.noticeOfficeDiaryNo
+                                : ""}
                             </td>
                             <td class="text-center">
-                              {item.noticeOfficeDiary.noticeOfficeDiaryDate}
+                              {item.noticeOfficeDiary.noticeOfficeDiaryDate
+                                ? moment(
+                                    item.noticeOfficeDiary.noticeOfficeDiaryDate
+                                  ).format("DD-MM-YYYY")
+                                : ""}
                             </td>
                             <td class="text-center">
-                              {item.noticeOfficeDiary.noticeOfficeDiaryTime}
+                              {item.noticeOfficeDiary.noticeOfficeDiaryTime
+                                ? moment(
+                                    item.noticeOfficeDiary
+                                      .noticeOfficeDiaryTime,
+                                    "hh:mm A"
+                                  ).format("hh:mm A")
+                                : ""}
                             </td>
                             <td class="text-center">
-                              {item?.session?.sessionName}
+                              {item?.session?.sessionName
+                                ? item?.session?.sessionName
+                                : ""}
                             </td>
                             <td class="text-center">
-                              {item?.member?.memberName}
+                              {item?.member?.memberName
+                                ? item?.member?.memberName
+                                : ""}
                             </td>
                             <td class="text-center">
-                              {item?.questionStatus?.questionStatus}
+                              {item?.questionStatus?.questionStatus
+                                ? item?.questionStatus?.questionStatus
+                                : ""}
                             </td>
                             <td class="text-center">
                               {[item?.englishText, item?.urduText]
@@ -323,18 +379,36 @@ function BusinessSummary() {
                           <tr>
                             <td class="text-center">{item?.id}</td>
                             <td class="text-center">
-                              {item?.noticeOfficeDairies?.noticeOfficeDiaryNo}
+                              {item?.noticeOfficeDairies?.noticeOfficeDiaryNo
+                                ? item?.noticeOfficeDairies?.noticeOfficeDiaryNo
+                                : ""}
                             </td>
                             <td class="text-center">
-                              {item?.noticeOfficeDairies?.noticeOfficeDiaryDate}
+                              {/* {item?.noticeOfficeDairies?.noticeOfficeDiaryDate} */}
+                              {item?.noticeOfficeDairies?.noticeOfficeDiaryDate
+                                ? moment(
+                                    item?.noticeOfficeDairies
+                                      ?.noticeOfficeDiaryDate
+                                  ).format("DD-MM-YYYY")
+                                : ""}
                             </td>
                             <td class="text-center">
-                              {item?.noticeOfficeDairies?.noticeOfficeDiaryTime}
+                              {item?.noticeOfficeDairies?.noticeOfficeDiaryTime
+                                ? moment(
+                                    item?.noticeOfficeDairies
+                                      ?.noticeOfficeDiaryTime,
+                                    "hh:mm A"
+                                  ).format("hh:mm A")
+                                : ""}
                             </td>
                             <td class="text-center">
-                              {item?.sessions?.sessionName}
+                              {item?.sessions?.sessionName
+                                ? item?.sessions?.sessionName
+                                : ""}
                             </td>
-                            <td class="text-center">{item?.motionType}</td>
+                            <td class="text-center">
+                              {item?.motionType ? item?.motionType : ""}
+                            </td>
                             <td class="text-center">
                               {[item?.englishText, item?.urduText]
                                 .filter(Boolean)
