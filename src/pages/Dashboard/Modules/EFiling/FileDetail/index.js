@@ -758,8 +758,11 @@ if (objection.attachedFiles) {
                             Select
                           </option>
                           <option value={"Approved"}>Approved</option>
-                          <option value={"Rejected"}>Rejected</option>
                           <option value={"Discuss"}>Discuss</option>
+                          <option value={"Retype/Amend"}>Retype/Amend</option>
+                          <option value={"Rejected"}>Rejected</option>
+                          <option value={"Submit For Approval"}>Submit For Approval</option>
+
                         </select>
                       </div>
                     </div>

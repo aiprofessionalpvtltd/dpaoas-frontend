@@ -10,6 +10,7 @@ import { DeleteFreshReceipt, getAllFreshReceipt } from '../../../../../api/APIs/
 import { showErrorMessage, showSuccessMessage } from '../../../../../utils/ToastAlert';
 import moment from 'moment';
 import FreshReceiptModal from '../../../../../components/FreshReceiptModal';
+import { getUserData } from '../../../../../api/Auth';
 
 
 function FileCases() {
@@ -20,6 +21,7 @@ function FileCases() {
     const [count, setCount] = useState(null);
     const pageSize = 10; // Set your desired page size
     const [fileData, setFileData] = useState([])
+    const UserData = getUserData()
 
     const handlePageChange = (page) => {
         // Update currentPage when a page link is clicked
@@ -30,16 +32,19 @@ function FileCases() {
         return apiData.map((item) => ({
           id: item?.id,
           frType: item?.frType,
-          frSubject: item?.frSubject,
+          Sender: item?.freshReceipt?.length > 0 ? item?.freshReceipt[item?.freshReceipt?.length - 1]?.submittedUser?.employee?.firstName : "---",
+          Receiver: item?.freshReceipt?.length > 0 ? item?.freshReceipt[item?.freshReceipt?.length - 1]?.assignedUser?.employee?.firstName : "---",
+          // Status: item?.fileRemarksData?.length > 0 ? item?.fileRemarksData[item?.fileRemarksData?.length - 1]?.CommentStatus : "Draft",
+          frSubject:item?.frSubject,
           referenceNumber: item?.referenceNumber,
-          frDate:moment(item?.frDate).format("DD/MM/YYYY"),
-          diaryDate:moment(item?.freshReceiptDiaries?.diaryDate).format("DD/MM/YYYY"),
-          status:item?.status
+          frDate: moment(item?.frDate).format("DD/MM/YYYY"),
+          DiaryDate: item?.freshReceiptDiaries ? moment(item?.freshReceiptDiaries?.diaryDate).format("DD/MM/YYYY") : "---",
+          staus:item?.status
         }));
       };
       const getAllFreshReceiptAPi = useCallback(async () => {
         try {
-            const response = await getAllFreshReceipt(currentPage, pageSize)
+            const response = await getAllFreshReceipt(UserData?.fkUserId, currentPage, pageSize)
             if (response.success) {
             //   showSuccessMessage(response?.message)
               setCount(response?.data?.count)
@@ -111,10 +116,11 @@ function FileCases() {
                         totalCount={count}
                         singleDataCard={true}
                         handleDelete={(item) => handleDelete(item.id)}
-                        handleEdit={(item) => navigate("/efiling/dashboard/fresh-receipt/addedit", {state:{id:item.id}})}
+                        handleEdit={(item) => navigate("/efiling/dashboard/fresh-receipt/addedit", {state:{id:item.id, view: true}})}
                         showAssigned={true}
-                        hendleAssigned={(item) => openModal(item)}
+                        hendleAssigned={(item) => navigate("/efiling/dashboard/fresh-receipt/frdetail", {state:{id:item.id, view: false}})}
                     />
+                    
                 </div>
             </div>
         </Layout>

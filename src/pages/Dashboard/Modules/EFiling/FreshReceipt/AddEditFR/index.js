@@ -22,6 +22,7 @@ import TimePicker from "react-time-picker";
 import { ToastContainer } from "react-toastify";
 import { AuthContext } from "../../../../../../api/AuthContext";
 import Select from "react-select";
+import { getUserData } from "../../../../../../api/Auth";
 
 const validationSchema = Yup.object().shape({
   diaryNumber: Yup.string().required("Diary No is required"),
@@ -40,6 +41,7 @@ const AddEditFR = () => {
   const [receptId, setRecepitId] = useState(location?.state?.id);
   const [receiptData, setRecepitData] = useState([]);
   const { allBranchesData, ministryData } = useContext(AuthContext);
+  const userData = getUserData()
   const formik = useFormik({
     initialValues: {
       diaryNumber: "",
@@ -93,7 +95,7 @@ const AddEditFR = () => {
     }
 
     try {
-      const response = await createFreshReceipt(formdata);
+      const response = await createFreshReceipt(userData?.fkUserId ,formdata);
       console.log("response Create", response);
       if (response.success) {
         showSuccessMessage(response.message);

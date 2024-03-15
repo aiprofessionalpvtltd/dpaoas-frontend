@@ -515,11 +515,11 @@ export const assigneCase = async (fileId, caseId, data) => {
 };
 
 //Fresh Recipt
-export const createFreshReceipt = async (data) => {
+export const createFreshReceipt = async (userId, data) => {
   try {
     //   const token = getAuthToken();
     const response = await axiosClientMMS.post(
-      `/freshReceipt/createFR`,
+      `/freshReceipt/createFR/${userId}`,
       data,
       {
         headers: {
@@ -534,11 +534,11 @@ export const createFreshReceipt = async (data) => {
     }
   };
 
-export const getAllFreshReceipt = async (currentPage, pageSize) => {
+export const getAllFreshReceipt = async (userId, currentPage, pageSize) => {
   try {
     //   const token = getAuthToken();
     const response = await axiosClientMMS.get(
-      `/freshReceipt/?currentPage=${currentPage}&pageSize=${pageSize}`)
+      `/freshReceipt/${userId}?currentPage=${currentPage}&pageSize=${pageSize}`)
       // {
       //   headers: {
       //     accept: "application/json",
@@ -699,6 +699,45 @@ export const getEfilingNotifications = async (userId) => {
         //   Authorization: `Bearer ${token}`,
         // }
       }
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+//FR History
+export const getFRHistory = async (branchId, currentPage, pageSize) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/freshReceipt/frsHistory/${branchId}?currentPage=${currentPage}&pageSize=${pageSize}`,
+      {
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // }
+      }
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+//Assigin Fr
+export const assiginFR = async (id, data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/freshReceipt/assignFR/${id}`,
+      data
+      // {
+      //   // headers: {
+      //   //   Authorization: `Bearer ${token}`,
+      //   // }
+      // }
     );
     return response?.data;
   } catch (error) {
