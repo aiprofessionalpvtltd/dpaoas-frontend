@@ -45,7 +45,7 @@ function DirectorDashboard() {
   return (
     <Layout module={true} centerlogohide={true} sidebarItems={EfilingSideBarItem}>
         <EFilingNotifications notificationType="Notifications" />
-        <Header dashboardLink={"/"} addLink1={"/efiling/director-deshboard"} title1={"E-Filing"} width={"500px"}  marginTop = {"0px"}/>
+        <Header dashboardLink={"/efiling/dashboard"} addLink1={"/efiling/director-deshboard"} title1={"E-Filing"} width={"500px"}  marginTop = {"0px"}/>
 
         <h2 style={{ marginLeft: 15, marginBottom: 20 }}> Welcome Back {userData && `${userData?.firstName} (${userData?.department?.departmentName})`}</h2>
         <div style={{ marginLeft: 15 }}>

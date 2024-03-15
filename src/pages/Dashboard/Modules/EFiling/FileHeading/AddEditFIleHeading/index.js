@@ -114,7 +114,7 @@ function AddEditFIleHeading() {
 
   return (
     <Layout sidebarItems={EfilingSideBarItem} module={true}>
-    <Header dashboardLink={"/efiling/dashboard/file-heading-list"} addLink1={"/efiling/dashboard/addedit-file-register"} title1={location?.state ? "Update File Heading" : "Create File Heading"} width={"500px"} />
+    <Header dashboardLink={"/efiling/dashboard"} addLink1={"/efiling/dashboard/file-heading-list"} title1={"File Headings"} addLink2={"/"} title2={location?.state ? "Update Heading" : "Create Heading"} width={"500px"} />
     <ToastContainer />
     <div class="container-fluid">
       <div class="card">
