@@ -11,7 +11,7 @@ import {
   updatePrivateBill,
 } from "../../api/APIs/Services/Legislation.service";
 import { ToastContainer } from "react-toastify";
-import { getEmployeeByCurrentUserId } from "../../api/APIs/Services/organizational.service";
+import { getLLEmployee } from "../../api/APIs/Services/organizational.service";
 
 const customStyles = {
   content: {
@@ -71,7 +71,7 @@ function FreshReceiptModal({ assignModalOpan, hendleModal, data }) {
 
   const getEmployeeData = async () => {
     try {
-      const response = await getEmployeeByCurrentUserId(UserData?.fkUserId);
+      const response = await getLLEmployee(UserData?.fkUserId);
       if (response?.success) {
         setEmployeeData(response?.data);
       }

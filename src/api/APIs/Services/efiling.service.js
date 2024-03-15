@@ -458,11 +458,11 @@ export const getSingleCaseByFileId = async (fileId, caseId) => {
   }
 };
 
-export const  getUserCaseHistory = async (fileId, userId, currentPage, pageSize) => {
+export const  getUserCaseHistory = async (fileId, branchId, currentPage, pageSize) => {
   try {
     //   const token = getAuthToken();
     const response = await axiosClientMMS.get(
-      `/cases/getCasesHistory/${fileId}/${userId}?currentPage=${currentPage}&pageSize=${pageSize}`,
+      `/cases/getCasesHistory/${fileId}/${branchId}?currentPage=${currentPage}&pageSize=${pageSize}`,
       )
       // {
       //   headers: {
