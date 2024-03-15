@@ -538,7 +538,7 @@ export const getAllFreshReceipt = async (userId, currentPage, pageSize) => {
   try {
     //   const token = getAuthToken();
     const response = await axiosClientMMS.get(
-      `/freshReceipt/${103}?currentPage=${currentPage}&pageSize=${pageSize}`)
+      `/freshReceipt/${userId}?currentPage=${currentPage}&pageSize=${pageSize}`)
       // {
       //   headers: {
       //     accept: "application/json",
