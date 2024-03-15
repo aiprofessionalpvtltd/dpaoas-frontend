@@ -9,6 +9,7 @@ import { EfilingSideBarItem } from '../../../../../../utils/sideBarItems';
 import { Layout } from '../../../../../../components/Layout';
 import Header from '../../../../../../components/Header';
 import CustomTable from '../../../../../../components/CustomComponents/CustomTable';
+import { getFRHistory } from '../../../../../../api/APIs/Services/efiling.service';
 
 
 function PreviousFRsHistory() {
@@ -17,7 +18,7 @@ function PreviousFRsHistory() {
     const location = useLocation();
     const [currentPage, setCurrentPage] = useState(0);
     const [count, setCount] = useState(null);
-    const [FrData, setFrdata] = useState([])
+    const [frHistoryData, setFRHistoryData] = useState([])
     const pageSize = 5; // Set your desired page size
     const UserData = getUserData();
 
@@ -27,37 +28,37 @@ function PreviousFRsHistory() {
     };
 
 
-    // const transformFilesCases = (apiData) => {
-    //     return apiData.map((item, index) => ({
-    //         caseId: item?.fkCaseId,
-    //         FileNo: item?.fileData?.fileNumber,
-    //         Sender: item?.fileRemarksData?.length > 0 ? item?.fileRemarksData[item?.fileRemarksData?.length - 1]?.submittedUser?.employee?.firstName : "---",
-    //         Receiver: item?.fileRemarksData?.length > 0 ? item?.fileRemarksData[item?.fileRemarksData?.length - 1]?.assignedUser?.employee?.firstName : "---",
-    //         Status: item?.fileRemarksData?.length > 0 ? item?.fileRemarksData[item?.fileRemarksData?.length - 1]?.CommentStatus : "Draft",
-    //         MarkedDate: item?.fileRemarksData?.length > 0 ? moment(item?.fileRemarksData[item?.fileRemarksData?.length - 1]?.createdAt).format('DD/MM/YYYY') : "---",
-    //         MarkedTime: item?.fileRemarksData?.length > 0 ? moment(item?.fileRemarksData[item?.fileRemarksData?.length - 1]?.createdAt).format("hh:mm A") : "---"
-    //     }));
-    // };
+    const transformFRHistory = (apiData) => {
+        return apiData.map((item, index) => ({
+            id: item?.id,
+            frType: item?.frType,
+            Sender: item?.freshReceipt?.length > 0 ? item?.freshReceipt[item?.freshReceipt?.length - 1]?.submittedUser?.employee?.firstName : "---",
+            Receiver: item?.freshReceipt?.length > 0 ? item?.freshReceipt[item?.freshReceipt?.length - 1]?.assignedUser?.employee?.firstName : "---",
+            // Status: item?.fileRemarksData?.length > 0 ? item?.fileRemarksData[item?.fileRemarksData?.length - 1]?.CommentStatus : "Draft",
+            frSubject:item?.frSubject,
+            referenceNumber: item?.referenceNumber,
+            frDate: moment(item?.frDate).format("DD/MM/YYYY"),
+            DiaryDate: item?.freshReceiptDiaries ? moment(item?.freshReceiptDiaries?.diaryDate).format("DD/MM/YYYY") : "---",
+            staus:item?.status
+        }));
+    };
 
-    // const getAllCasesApi = async () => {
-    //     try {
-    //         const response = await getUserCaseHistory(fileIdINRegister, UserData?.fkUserId, currentPage, pageSize)
-    //         if (response.success) {
-    //             setCount(response?.data?.count)
-    //             const transferData = transformFilesCases(response?.data?.cases)
-    //             setFrdata(transferData)
-    //         }
-    //     } catch (error) {
-    //         // showErrorMessage(error?.response?.data?.message);
-    //     }
-    // }
+    const getAllFRHistoryApi = async () => {
+        try {
+            const response = await getFRHistory(UserData?.fkDepartmentId, currentPage, pageSize)
+            if (response.success) {
+                setCount(response?.data?.count)
+                const transferData = transformFRHistory(response?.data?.freshReceipts)
+                setFRHistoryData(transferData)
+            }
+        } catch (error) {
+            // showErrorMessage(error?.response?.data?.message);
+        }
+    }
 
-    // useEffect(() => {
-    //     if(location.state?.internalId) {
-    //         setFileIdInRegister(location.state?.internalId);
-    //     }
-    //     getAllCasesApi();
-    // }, [currentPage])
+    useEffect(() => {
+        getAllFRHistoryApi();
+    }, [currentPage])
 
     return (
         <Layout module={true} sidebarItems={EfilingSideBarItem}>
@@ -69,7 +70,7 @@ function PreviousFRsHistory() {
                         ActionHide={false}
                         hidebtn1={true}
                         hideBtn={true}
-                        data={FrData}
+                        data={frHistoryData}
                         tableTitle="Fresh Receipts History"
                         headertitlebgColor={"#666"}
                         headertitletextColor={"#FFF"}
@@ -81,7 +82,7 @@ function PreviousFRsHistory() {
                         showEditIcon={true}
                         hideDeleteIcon={true}
                         showView={true}
-                        handleView={(item) => navigate("/efiling/dashboard/fileDetail", {state: {id: item.caseId, view: true}})}
+                        handleView={(item) => navigate("/efiling/dashboard/fresh-receipt/frdetail", {state:{id:item.id, view: true}})}
                     />
                 </div>
             </div>
