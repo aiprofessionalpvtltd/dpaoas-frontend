@@ -38,7 +38,7 @@ import { AuthContext } from "../../../../../api/AuthContext";
 import {
   getAllEmployee,
   getDepartment,
-  getEmployeeByCurrentUserId,
+  getHLEmployee,
 } from "../../../../../api/APIs/Services/organizational.service";
 import { getBranches } from "../../../../../api/APIs/Services/Branches.services";
 
@@ -421,7 +421,7 @@ if (objection.attachedFiles) {
 
   const getEmployeeData = async () => {
     try {
-      const response = await getEmployeeByCurrentUserId(UserData?.fkUserId);
+      const response = await getHLEmployee(UserData?.fkUserId);
       if (response?.success) {
         setEmployeeData(response?.data);
       }
@@ -861,8 +861,12 @@ if (objection.attachedFiles) {
                       >
                         <button
                           type="button"
-                          className={"nav-link"}
-                          style={{ width: "140px", backgroundColor: notingData.description ? "rgb(255, 165, 0)" : "lightGray", border: selectedTab === "Noting" ? '2px solid black' : 'none' }}
+                          className={
+                            selectedTab === "Noting"
+                              ? "nav-link active"
+                              : "nav-link"
+                          }
+                          style={{ width: "140px" }}
                           data-bs-toggle="tab"
                           role="tab"
                           aria-controls="ex1-tabs-1"
@@ -883,9 +887,12 @@ if (objection.attachedFiles) {
                       >
                         <button
                           type="button"
-                          className={"nav-link"
+                          className={
+                            selectedTab === "Correspondence"
+                              ? "nav-link active"
+                              : "nav-link"
                           }
-                          style={{ width: "140px", backgroundColor: correspondenceData.description ? "rgb(255, 165, 0)" : "lightGray", border: selectedTab === "Correspondence" ? '2px solid black' : 'none' }}
+                          style={{ width: "140px" }}
                           data-bs-toggle="tab"
                           role="tab"
                           aria-controls="ex1-tabs-2"
@@ -906,9 +913,12 @@ if (objection.attachedFiles) {
                       >
                         <button
                           type="button"
-                          className={"nav-link"
+                          className={
+                            selectedTab === "Sanction"
+                              ? "nav-link active"
+                              : "nav-link"
                           }
-                          style={{ width: "140px", backgroundColor: sanction.description ? "rgb(255, 165, 0)" : "lightGray", border: selectedTab === "Sanction" ? '2px solid black' : 'none' }}
+                          style={{ width: "140px" }}
                           data-bs-toggle="tab"
                           role="tab"
                           aria-controls="ex1-tabs-1"
@@ -934,7 +944,7 @@ if (objection.attachedFiles) {
                               ? "nav-link active"
                               : "nav-link"
                           }
-                          style={{ width: "140px", backgroundColor: objection.description ? "rgb(255, 165, 0)" : "lightGray", border: selectedTab === "Objection" ? '2px solid black' : 'none' }}
+                          style={{ width: "140px" }}
                           data-bs-toggle="tab"
                           role="tab"
                           aria-controls="ex1-tabs-2"
@@ -960,7 +970,7 @@ if (objection.attachedFiles) {
                               ? "nav-link active"
                               : "nav-link"
                           }
-                          style={{ width: "140px", backgroundColor: letter.description ? "rgb(255, 165, 0)" : "lightGray", border: selectedTab === "Letter" ? '2px solid black' : 'none' }}
+                          style={{ width: "140px" }}
                           data-bs-toggle="tab"
                           role="tab"
                           aria-controls="ex1-tabs-2"
