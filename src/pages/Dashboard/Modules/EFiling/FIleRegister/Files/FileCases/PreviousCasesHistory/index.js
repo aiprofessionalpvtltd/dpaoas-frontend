@@ -9,6 +9,7 @@ import Header from '../../../../../../../../components/Header';
 import { Layout } from '../../../../../../../../components/Layout';
 import CustomTable from '../../../../../../../../components/CustomComponents/CustomTable';
 import { AuthContext } from '../../../../../../../../api/AuthContext';
+import moment from 'moment';
 
 
 function PreviousCasesHistory() {
@@ -30,11 +31,12 @@ function PreviousCasesHistory() {
     const transformFilesCases = (apiData) => {
         return apiData.map((item, index) => ({
             caseId: item?.fkCaseId,
-            Noting: item?.Note?.description ? new DOMParser().parseFromString(item.Note?.description, 'text/html').documentElement.innerText : '',
-            Correspondence: item?.Correspondence?.description ? new DOMParser().parseFromString(item.Correspondence?.description, 'text/html').documentElement.innerText : '',
-            Sanction: item?.Sanction?.description ? new DOMParser().parseFromString(item.Sanction?.description, 'text/html').documentElement.innerText : '',
-            Objection: item?.Objection?.description ? new DOMParser().parseFromString(item.Objection?.description, 'text/html').documentElement.innerText : '',
-            Letter: item?.Letter?.description ? new DOMParser().parseFromString(item.Letter?.description, 'text/html').documentElement.innerText : '',
+            FileNo: item?.fileData?.fileNumber,
+            Sender: item?.fileRemarksData?.length > 0 ? item?.fileRemarksData[item?.fileRemarksData?.length - 1]?.submittedUser?.employee?.firstName : "---",
+            Receiver: item?.fileRemarksData?.length > 0 ? item?.fileRemarksData[item?.fileRemarksData?.length - 1]?.assignedUser?.employee?.firstName : "---",
+            Status: item?.fileRemarksData?.length > 0 ? item?.fileRemarksData[item?.fileRemarksData?.length - 1]?.CommentStatus : "Draft",
+            MarkedDate: item?.fileRemarksData?.length > 0 ? moment(item?.fileRemarksData[item?.fileRemarksData?.length - 1]?.createdAt).format('DD/MM/YYYY') : "---",
+            MarkedTime: item?.fileRemarksData?.length > 0 ? moment(item?.fileRemarksData[item?.fileRemarksData?.length - 1]?.createdAt).format("hh:mm A") : "---"
         }));
     };
 
@@ -80,7 +82,7 @@ function PreviousCasesHistory() {
                         showEditIcon={true}
                         hideDeleteIcon={true}
                         showView={true}
-                        handleView={(item) => navigate("/efiling/dashboard/file-register-list/files-list/addedit-case", {state: {caseId: item.caseId, view: true}})}
+                        handleView={(item) => navigate("/efiling/dashboard/fileDetail", {state: {id: item.caseId, view: true}})}
                     />
                 </div>
             </div>

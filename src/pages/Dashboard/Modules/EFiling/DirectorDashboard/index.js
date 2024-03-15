@@ -47,9 +47,9 @@ function DirectorDashboard() {
         <EFilingNotifications notificationType="Notifications" />
         <Header dashboardLink={"/efiling/dashboard"} addLink1={"/efiling/director-deshboard"} title1={"E-Filing"} width={"500px"}  marginTop = {"0px"}/>
 
-        <h2 style={{ marginLeft: 15, marginBottom: 20 }}> Welcome Back {userData && `${userData?.firstName} (${userData?.department?.departmentName})`}</h2>
+        <h2 style={{ marginLeft: 15, marginBottom:30, color: "#820001" }}> {userData && `${userData?.department?.departmentName} Branch`}</h2>
         <div style={{ marginLeft: 15 }}>
-        <h2 style={{ fontSize: '22px', fontWeight: 'bold', marginBottom: '10px', color: "#fb6340" }}>Daily Stats</h2>
+        <h2 style={{ fontSize: '22px', fontWeight: 'bold', marginBottom: '10px' }}>Daily Stats</h2>
         <div class="row">
           <div class="col-md-12">
             <div class="mt-2 mb-4">

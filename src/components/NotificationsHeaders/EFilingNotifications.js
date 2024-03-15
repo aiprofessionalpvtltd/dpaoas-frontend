@@ -63,7 +63,7 @@ export const EFilingNotifications = (notificationType) => {
       </Link>
     </ListGroup.Item>
     )) : (
-        <span className="float-end text-sm d-block text-center">No notifications found!</span>
+        <span className="text-sm d-block text-center">No notifications found!</span>
     )}
     </div>
   );
