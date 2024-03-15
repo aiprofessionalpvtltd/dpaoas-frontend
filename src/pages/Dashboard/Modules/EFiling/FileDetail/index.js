@@ -283,7 +283,7 @@ if (objection.attachedFiles) {
 
     try {
       const response = await assigneCase(
-        fileIdINRegister,
+        location?.state?.fileId ? location?.state?.fileId : fileIdINRegister,
         location?.state?.id,
         formData
       );
@@ -310,7 +310,7 @@ if (objection.attachedFiles) {
 
   const getFilesByID = async () => {
     try {
-      const response = await getCaseDetailByID(fileIdINRegister, caseId);
+      const response = await getCaseDetailByID(location?.state?.fileId ? location?.state?.fileId : fileIdINRegister, caseId);
       if (response?.success) {
         setDirectorData(response?.data?.cases?.fileDiary);
         setRemarksData(response?.data?.cases?.fileRemarks);
@@ -328,7 +328,7 @@ if (objection.attachedFiles) {
       if (response?.success) {
         showSuccessMessage(response.message);
         // if (caseId) {
-          getFilesByID(fileIdINRegister, caseId);
+          getFilesByID(location?.state?.fileId ? location?.state?.fileId : fileIdINRegister, caseId);
         // }
       }
     } catch (error) {

@@ -55,7 +55,7 @@ function DirectorDashboard() {
             <div class="mt-2 mb-4">
               <div class="row">
                 <NoticeStatsCard title={"Files"} icon={faClipboardQuestion} iconBgColor={"#FFA500"} total={fileStatsData && fileStatsData?.totalFiles} sent={fileStatsData && fileStatsData?.sentFiles} received={fileStatsData && fileStatsData?.receivedFiles} />
-                <NoticeStatsCard ReceivedText={"DisApproved"} SentText={"Approved"} title={"Approvel"} icon={faFileImport} iconBgColor={"#007bff"} total={approvelStatsData && approvelStatsData?.totalFiles} sent={approvelStatsData && approvelStatsData?.approvedFiles} received={approvelStatsData && approvelStatsData?.disapprovedFiles} />
+                <NoticeStatsCard ReceivedText={"Disapproved"} SentText={"Approved"} title={"Approval"} icon={faFileImport} iconBgColor={"#007bff"} total={approvelStatsData && approvelStatsData?.totalFiles} sent={approvelStatsData && approvelStatsData?.approvedFiles} received={approvelStatsData && approvelStatsData?.disapprovedFiles} />
               </div>
             </div>
           </div>

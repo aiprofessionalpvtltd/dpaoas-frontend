@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { getEfilingNotifications } from "../../api/APIs/Services/efiling.service";
 import { getUserData } from "../../api/Auth";
 import moment from "moment";
+import { Link } from "react-router-dom";
+import { ListGroup } from "react-bootstrap";
 
 export const EFilingNotifications = (notificationType) => {
   const [count, setCount] = useState(null);
@@ -43,18 +45,23 @@ export const EFilingNotifications = (notificationType) => {
       }}
     >
       {notificationData.length > 0 ? notificationData.map((item, index) => (
-      <ul>
-        <li key={index}>
-          <span>
-            {item?.message}
-            <br />
-            <span className="text-sm">
-              <i>{moment(item.date).format('DD/MM/YYYY')}</i>
-            </span>
-            <span className="float-end text-sm">{new Date(item.date).toLocaleTimeString()}</span>
+        <ListGroup.Item key={index} className={notificationData.length === 1 ? "" : "border-bottom"}>
+      <Link
+        to={"/efiling/dashboard/fileDetail"}
+        state={{ view: false, fileId: item.fileId, id: item.caseId }}
+        style={{ color: "black" }}
+        className="link"
+      >
+        <span>
+          {item?.message}
+          <br />
+          <span className="text-sm">
+            <i>{moment(item.date).format('DD/MM/YYYY')}</i>
           </span>
-        </li>
-      </ul>
+          <span className="float-end text-sm">{new Date(item.date).toLocaleTimeString()}</span>
+        </span>
+      </Link>
+    </ListGroup.Item>
     )) : (
         <span className="float-end text-sm d-block text-center">No notifications found!</span>
     )}
