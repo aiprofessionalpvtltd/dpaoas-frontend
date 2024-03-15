@@ -858,12 +858,8 @@ if (objection.attachedFiles) {
                       >
                         <button
                           type="button"
-                          className={
-                            selectedTab === "Noting"
-                              ? "nav-link active"
-                              : "nav-link"
-                          }
-                          style={{ width: "140px" }}
+                          className={"nav-link"}
+                          style={{ width: "140px", backgroundColor: notingData.description ? "rgb(255, 165, 0)" : "lightGray", border: selectedTab === "Noting" ? '2px solid black' : 'none' }}
                           data-bs-toggle="tab"
                           role="tab"
                           aria-controls="ex1-tabs-1"
@@ -884,12 +880,9 @@ if (objection.attachedFiles) {
                       >
                         <button
                           type="button"
-                          className={
-                            selectedTab === "Correspondence"
-                              ? "nav-link active"
-                              : "nav-link"
+                          className={"nav-link"
                           }
-                          style={{ width: "140px" }}
+                          style={{ width: "140px", backgroundColor: correspondenceData.description ? "rgb(255, 165, 0)" : "lightGray", border: selectedTab === "Correspondence" ? '2px solid black' : 'none' }}
                           data-bs-toggle="tab"
                           role="tab"
                           aria-controls="ex1-tabs-2"
@@ -910,12 +903,9 @@ if (objection.attachedFiles) {
                       >
                         <button
                           type="button"
-                          className={
-                            selectedTab === "Sanction"
-                              ? "nav-link active"
-                              : "nav-link"
+                          className={"nav-link"
                           }
-                          style={{ width: "140px" }}
+                          style={{ width: "140px", backgroundColor: sanction.description ? "rgb(255, 165, 0)" : "lightGray", border: selectedTab === "Sanction" ? '2px solid black' : 'none' }}
                           data-bs-toggle="tab"
                           role="tab"
                           aria-controls="ex1-tabs-1"
@@ -941,7 +931,7 @@ if (objection.attachedFiles) {
                               ? "nav-link active"
                               : "nav-link"
                           }
-                          style={{ width: "140px" }}
+                          style={{ width: "140px", backgroundColor: objection.description ? "rgb(255, 165, 0)" : "lightGray", border: selectedTab === "Objection" ? '2px solid black' : 'none' }}
                           data-bs-toggle="tab"
                           role="tab"
                           aria-controls="ex1-tabs-2"
@@ -967,7 +957,7 @@ if (objection.attachedFiles) {
                               ? "nav-link active"
                               : "nav-link"
                           }
-                          style={{ width: "140px" }}
+                          style={{ width: "140px", backgroundColor: letter.description ? "rgb(255, 165, 0)" : "lightGray", border: selectedTab === "Letter" ? '2px solid black' : 'none' }}
                           data-bs-toggle="tab"
                           role="tab"
                           aria-controls="ex1-tabs-2"
