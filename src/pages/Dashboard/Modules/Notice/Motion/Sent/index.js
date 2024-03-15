@@ -99,23 +99,29 @@ function SentMotion() {
 
       const urdu = [res?.urduText].filter(Boolean).join(", ");
       const UrduText = urdu.replace(/(<([^>]+)>)/gi, "");
-      console.log("Api", apiData);
+
       return {
         id: res?.id,
-        SessionName: res?.sessions?.sessionName,
-        motionType: res?.motionType,
-        noticeOfficeDiaryNo: res?.noticeOfficeDairies?.noticeOfficeDiaryNo,
-        noticeOfficeDiaryDate: moment(
-          res?.noticeOfficeDairies?.noticeOfficeDiaryDate
-        ).format("DD-MM-YYYY"),
+        SessionName: res?.sessions?.sessionName
+          ? res?.sessions?.sessionName
+          : "",
+        motionType: res?.motionType ? res?.motionType : "",
+        noticeOfficeDiaryNo: res?.noticeOfficeDairies?.noticeOfficeDiaryNo
+          ? res?.noticeOfficeDairies?.noticeOfficeDiaryNo
+          : "",
+        noticeOfficeDiaryDate: res?.noticeOfficeDairies?.noticeOfficeDiaryDate
+          ? moment(res?.noticeOfficeDairies?.noticeOfficeDiaryDate).format(
+              "DD-MM-YYYY"
+            )
+          : "",
         noticeOfficeDiaryTime: res?.noticeOfficeDairies?.noticeOfficeDiaryTime
           ? moment(
               res?.noticeOfficeDairies?.noticeOfficeDiaryTime,
               "hh:ss A"
             ).format("hh:ss A")
           : "",
-        englishText: EnglishText,
-        urduText: UrduText,
+        englishText: EnglishText ? EnglishText : "",
+        urduText: UrduText ? UrduText : "",
       };
     });
   };
@@ -486,6 +492,8 @@ function SentMotion() {
                             ? "is-invalid"
                             : ""
                         }`}
+                        dateFormat={"dd-MM-yyyy"}
+                        maxDate={new Date()}
                         open={isFromNoticeOpen}
                         onClickOutside={() => setIsFromNoticeOpen(false)}
                         onInputClick={handleFromNoticeCalendarToggle}
@@ -521,6 +529,8 @@ function SentMotion() {
                             ? "is-invalid"
                             : ""
                         }`}
+                        maxDate={new Date()}
+                        dateFormat={"dd-MM-yyyy"}
                         open={isToNoticeOpen}
                         onClickOutside={() => setIsToNoticeOpen(false)}
                         onInputClick={handleToNoticeCalendarToggle}

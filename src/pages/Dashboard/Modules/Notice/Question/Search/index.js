@@ -81,17 +81,25 @@ function SearchQuestion() {
 
       return {
         Id: res.id,
-        NoticeDate: moment(
-          res?.noticeOfficeDiary?.noticeOfficeDiaryDate
-        ).format("DD-MM-YYYY"),
-        NoticeTime: moment(
-          res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
-          "hh:ss A"
-        ).format("hh:ss A"),
-        SessionNumber: res?.session?.sessionName,
-        SubjectMatter: cleanedSubjectMatter,
-        Category: res.questionCategory,
-        Status: res.questionStatus?.questionStatus,
+        NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate
+          ? moment(res?.noticeOfficeDiary?.noticeOfficeDiaryDate).format(
+              "DD-MM-YYYY"
+            )
+          : "",
+        NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime
+          ? moment(
+              res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
+              "hh:ss A"
+            ).format("hh:ss A")
+          : "",
+        SessionNumber: res?.session?.sessionName
+          ? res?.session?.sessionName
+          : "",
+        SubjectMatter: cleanedSubjectMatter ? cleanedSubjectMatter : "",
+        Category: res.questionCategory ? res.questionCategory : "",
+        Status: res.questionStatus?.questionStatus
+          ? res.questionStatus?.questionStatus
+          : "",
       };
     });
   };
@@ -449,6 +457,8 @@ function SearchQuestion() {
                             open={isFromNoticeOpen}
                             onClickOutside={() => setIsFromNoticeOpen(false)}
                             onInputClick={handleFromNoticeCalendarToggle}
+                            dateFormat="dd-MM-yyyy"
+                            maxDate={new Date()}
                           />
                         </div>
                       </div>
@@ -484,6 +494,8 @@ function SearchQuestion() {
                             open={isToNoticeOpen}
                             onClickOutside={() => setIsToNoticeOpen(false)}
                             onInputClick={handleToNoticeCalendarToggle}
+                            dateFormat="dd-MM-yyyy"
+                            maxDate={new Date()}
                           />
                         </div>
                       </div>

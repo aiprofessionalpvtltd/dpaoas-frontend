@@ -271,11 +271,29 @@ export const getAllEmployee = async (currentPage, pageSize) => {
   }
 };
 
-export const getEmployeeByCurrentUserId = async (userId) => {
+export const getLLEmployee = async (userId) => {
   try {
     const token = getAuthToken();
     const response = await axiosClientMMS.get(
-      `/cases/getEmployees/${userId}`,
+      `/cases/getLLEmployee/${userId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const getHLEmployee = async (userId) => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/cases/getHLEmployees/${userId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

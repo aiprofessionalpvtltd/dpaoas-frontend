@@ -14,7 +14,7 @@ export const MotionListing = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
   const [motionData, setMotionData] = useState([]);
-  const pageSize = 4; // Set your desired page size
+  const pageSize = 10; // Set your desired page size
 
   const transformMotionData = (apiData) => {
     return apiData.map((res, index) => {

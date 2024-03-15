@@ -12,7 +12,6 @@ import TimePicker from "react-time-picker";
 import Select from "react-select";
 import { Editor } from "../../../../../../components/CustomComponents/Editor";
 import { ToastContainer } from "react-toastify";
-import { getAllSessions } from "../../../../../../api/APIs";
 import { createNewMotion } from "../../../../../../api/APIs/Services/Motion.service";
 import {
   showErrorMessage,
@@ -21,7 +20,7 @@ import {
 import { AuthContext } from "../../../../../../api/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
-
+import moment from "moment";
 const validationSchema = Yup.object({
   sessionNumber: Yup.number(),
   motionType: Yup.string().required("Motion Type is required"),
@@ -92,11 +91,20 @@ function NewMotion() {
     values?.mover.forEach((mover, index) => {
       formData.append(`moverIds[${index}]`, mover.value);
     });
-    formData.append("noticeOfficeDiaryDate", values?.noticeOfficeDiaryDate);
-    formData.append("noticeOfficeDiaryTime", values?.noticeOfficeDiaryTime);
+    formData.append(
+      "noticeOfficeDiaryDate",
+      values?.noticeOfficeDiaryDate &&
+        moment(values?.noticeOfficeDiaryDate).format("YYYY-MM-DD")
+    );
+    formData.append(
+      "noticeOfficeDiaryTime",
+      values?.noticeOfficeDiaryTime &&
+        moment(values?.noticeOfficeDiaryTime, "hh:mm A").format("hh:mm A")
+    );
     formData.append("businessType", "Motion");
     formData.append("englishText", values.englishText);
     formData.append("urduText", values.urduText);
+    formData.append("fkMotionStatus", 1);
     formData.append("motionSentStatus", "fromNotice");
     // formData.append("file", values?.attachment);
 
@@ -110,6 +118,7 @@ function NewMotion() {
       const response = await createNewMotion(formData);
       if (response?.success) {
         showSuccessMessage(response?.message);
+        formik.resetForm();
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -317,6 +326,8 @@ function NewMotion() {
                           onClickOutside={() => setIsCalendarOpen(false)}
                           onInputClick={handleCalendarToggle}
                           // onClick={handleCalendarToggle}
+                          maxDate={new Date()}
+                          dateFormat="dd-MM-yyyy"
                         />
                         {formik.touched.noticeOfficeDiaryDate &&
                           formik.errors.noticeOfficeDiaryDate && (

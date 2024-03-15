@@ -1,12 +1,20 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { NoticeSidebarItems } from "../../../../../../utils/sideBarItems";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
 import { useNavigate } from "react-router";
-import { DeleteResolution, getAllResolutions, getResolutionBYID, searchResolution } from "../../../../../../api/APIs/Services/Resolution.service";
+import {
+  DeleteResolution,
+  getAllResolutions,
+  getResolutionBYID,
+  searchResolution,
+} from "../../../../../../api/APIs/Services/Resolution.service";
 import Select from "react-select";
 
-import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../../utils/ToastAlert";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import { useFormik } from "formik";
 import DatePicker from "react-datepicker";
@@ -17,15 +25,29 @@ import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 
 function SentResolution() {
   const navigate = useNavigate();
-  const { members, sessions } = useContext(AuthContext);
+  const { members, sessions, resolutionStatus } = useContext(AuthContext);
   const [resData, setResData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
-  const pageSize = 4; // Set your desired page size
+  const pageSize = 10; // Set your desired page size
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
     setCurrentPage(page);
+    if (
+      formik?.values?.noticeDiaryNo ||
+      formik?.values?.resolutionId ||
+      formik?.values?.keyword ||
+      formik?.values?.memberName ||
+      formik?.values?.fromSession ||
+      formik?.values?.toSession ||
+      formik?.values?.resolutionType ||
+      formik?.values?.resolutionStatus ||
+      formik?.values?.fromNoticeDate ||
+      formik?.values?.toNoticeDate
+    ) {
+      SearchResolutionApi(formik?.values, page);
+    }
   };
 
   const initialValues = {
@@ -43,14 +65,24 @@ function SentResolution() {
 
   const transformLeavesData = (apiData) => {
     return apiData.map((leave) => {
+      const subjectMatter = [leave?.englishText, leave?.urduText]
+        .filter(Boolean)
+        .join(", ");
+      const cleanedSubjectMatter = subjectMatter.replace(/(<([^>]+)>)/gi, "");
       return {
         SrNo: leave.id,
-        SessionNumber: leave?.session?.sessionName,
-        ResolutionType: leave?.resolutionType,
-        SubjectMatter: "",
-        NoticeNo: leave?.noticeDiary?.noticeOfficeDiaryNo,
-        ResolutionStatus: leave?.resolutionStatus?.resolutionStatus,
-        Status: leave?.resolutionActive,
+        SessionNumber: leave?.session?.sessionName
+          ? leave?.session?.sessionName
+          : "",
+        ResolutionType: leave?.resolutionType ? leave?.resolutionType : "",
+        SubjectMatter: cleanedSubjectMatter ? cleanedSubjectMatter : "",
+        NoticeNo: leave?.noticeDiary?.noticeOfficeDiaryNo
+          ? leave?.noticeDiary?.noticeOfficeDiaryNo
+          : "",
+        ResolutionStatus: leave?.resolutionStatus?.resolutionStatus
+          ? leave?.resolutionStatus?.resolutionStatus
+          : "",
+        Status: leave?.resolutionActive ? leave?.resolutionActive : "",
       };
     });
   };
@@ -59,31 +91,30 @@ function SentResolution() {
     initialValues: initialValues,
     onSubmit: (values) => {
       // Handle your form submission here
-      SearchResolutionApi(values);
+      SearchResolutionApi(values, currentPage);
     },
   });
 
-  const SearchResolutionApi = async (values) => {
+  const SearchResolutionApi = async (values, page) => {
     const searchParams = {
       fkSessionNoFrom: values.fromSession,
       fkSessionNoTo: values.toSession,
       resolutionType: values.resolutionType,
-      colourResNo: "",
       keyword: values.keyword,
       resolutionId: values.resolutionID,
       resolutionDiaryNo: values.resolutionDiaryNo,
-      fkResolutionStatus: values.resolutionStatus,
-      noticeOfficeDiaryNo: "",
+      fkResolutionStatus: values.resolutionStatus?.value,
+      noticeOfficeDiaryNo: values?.noticeDiaryNo,
       noticeOfficeDiaryDateFrom: values.fromNoticeDate,
       noticeOfficeDiaryDateTo: values.toNoticeDate,
-      resolutionMovers: "",
+      resolutionMovers: values?.memberName?.value,
     };
 
     try {
-      const response = await searchResolution(searchParams);
+      const response = await searchResolution(searchParams, page, pageSize);
       if (response?.success) {
         setCount(response.data?.count);
-        const transformedData = transformLeavesData(response.data);
+        const transformedData = transformLeavesData(response.data?.resolutions);
         setResData(transformedData);
         showSuccessMessage(response?.message);
       }
@@ -92,25 +123,38 @@ function SentResolution() {
     }
   };
 
-  const getAllResolutionsApi = async () => {
+  // const getAllResolutionsApi = async () => {
+  //   try {
+  //     const response = await getAllResolutions(currentPage, pageSize);
+  //     if (response?.success) {
+  //       // showSuccessMessage(response?.message);
+  //       setCount(response.data?.count);
+  //       const transformedData = transformLeavesData(response.data?.resolution);
+  //       setResData(transformedData);
+  //     }
+  //   } catch (error) {
+  //     showErrorMessage(error?.response?.data?.message);
+  //   }
+  // };
+
+  const getAllResolutionsApi = useCallback(async () => {
     try {
       const response = await getAllResolutions(currentPage, pageSize);
       if (response?.success) {
-        // showSuccessMessage(response?.message);
-        setCount(response.data?.count);
-        const transformedData = transformLeavesData(response.data?.resolution);
+        const transformedData = transformLeavesData(response?.data?.resolution);
+        setCount(response?.data?.count);
         setResData(transformedData);
       }
     } catch (error) {
-      showErrorMessage(error?.response?.data?.message);
+      console.log(error);
     }
-  };
+  }, [currentPage, pageSize, setCount, setResData]);
 
   const handleEdit = async (id) => {
     try {
       const response = await getResolutionBYID(id);
       if (response?.success) {
-        navigate("/qms/notice/notice-resolution-detail", {
+        navigate("/notice/resolution/edit", {
           state: response?.data,
         });
       }
@@ -131,18 +175,49 @@ function SentResolution() {
     }
   };
   useEffect(() => {
+    if (
+      formik?.values?.noticeDiaryNo ||
+      formik?.values?.resolutionId ||
+      formik?.values?.keyword ||
+      formik?.values?.memberName ||
+      formik?.values?.fromSession ||
+      formik?.values?.toSession ||
+      formik?.values?.resolutionType ||
+      formik?.values?.resolutionStatus ||
+      formik?.values?.fromNoticeDate ||
+      formik?.values?.toNoticeDate
+    ) {
+      return;
+    }
     getAllResolutionsApi();
-  }, [currentPage]);
-
+  }, [getAllResolutionsApi, formik?.values]);
+  // useEffect(() => {
+  //   getAllResolutionsApi();
+  // }, [currentPage]);
+  const handleResetForm = () => {
+    formik.resetForm();
+    getAllResolutionsApi();
+  };
   return (
-    <Layout module={true} sidebarItems={NoticeSidebarItems} centerlogohide={true}>
+    <Layout
+      module={true}
+      sidebarItems={NoticeSidebarItems}
+      centerlogohide={true}
+    >
       <ToastContainer />
 
-      <Header dashboardLink={"/"} addLink1={"/notice/resolution/sent"} title1={"Sent Resolution"} />
+      <Header
+        dashboardLink={"/"}
+        addLink1={"/notice/resolution/sent"}
+        title1={"Sent Resolution"}
+      />
       <div>
         <div class="container-fluid dash-detail-container">
           <div class="card mt-1">
-            <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
+            <div
+              class="card-header red-bg"
+              style={{ background: "#14ae5c !important" }}
+            >
               <h1>List RESOLUTION</h1>
             </div>
             <div class="card-body">
@@ -153,8 +228,12 @@ function SentResolution() {
                       <div class="mb-3">
                         <label class="form-label">Notice Diary No</label>
                         <input
-                          className={`form-control ${formik.touched.noticeDiaryNo && formik.errors.noticeDiaryNo ? "is-invalid" : ""
-                            }`}
+                          className={`form-control ${
+                            formik.touched.noticeDiaryNo &&
+                            formik.errors.noticeDiaryNo
+                              ? "is-invalid"
+                              : ""
+                          }`}
                           type="text"
                           name="noticeDiaryNo"
                           onChange={formik.handleChange}
@@ -167,8 +246,12 @@ function SentResolution() {
                       <div class="mb-3">
                         <label class="form-label">Resolution ID</label>
                         <input
-                          className={`form-control ${formik.touched.resolutionId && formik.errors.resolutionId ? "is-invalid" : ""
-                            }`}
+                          className={`form-control ${
+                            formik.touched.resolutionId &&
+                            formik.errors.resolutionId
+                              ? "is-invalid"
+                              : ""
+                          }`}
                           type="text"
                           name="resolutionId"
                           onChange={formik.handleChange}
@@ -181,8 +264,11 @@ function SentResolution() {
                       <div class="mb-3">
                         <label class="form-label">Keyword</label>
                         <input
-                          className={`form-control ${formik.touched.keyword && formik.errors.keyword ? "is-invalid" : ""
-                            }`}
+                          className={`form-control ${
+                            formik.touched.keyword && formik.errors.keyword
+                              ? "is-invalid"
+                              : ""
+                          }`}
                           type="text"
                           name="keyword"
                           onChange={formik.handleChange}
@@ -199,8 +285,9 @@ function SentResolution() {
                             value: item.id,
                             label: item.memberName,
                           }))}
-                          isMulti
-                          onChange={(selectedOptions) => formik.setFieldValue("memberName", selectedOptions)}
+                          onChange={(selectedOptions) =>
+                            formik.setFieldValue("memberName", selectedOptions)
+                          }
                           onBlur={formik.handleBlur}
                           value={formik.values.memberName}
                           name="memberName"
@@ -209,14 +296,16 @@ function SentResolution() {
                     </div>
                   </div>
                   <div class="row">
-
-
                     <div class="col">
                       <div class="mb-3">
                         <label class="form-label">From Session</label>
                         <select
-                          class={`form-select ${formik.touched.fromSession && formik.errors.fromSession ? "is-invalid" : ""
-                            }`}
+                          class={`form-select ${
+                            formik.touched.fromSession &&
+                            formik.errors.fromSession
+                              ? "is-invalid"
+                              : ""
+                          }`}
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                           value={formik.values.fromSession || ""}
@@ -238,8 +327,11 @@ function SentResolution() {
                       <div class="mb-3">
                         <label class="form-label">To Session</label>
                         <select
-                          class={`form-select ${formik.touched.toSession && formik.errors.toSession ? "is-invalid" : ""
-                            }`}
+                          class={`form-select ${
+                            formik.touched.toSession && formik.errors.toSession
+                              ? "is-invalid"
+                              : ""
+                          }`}
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                           value={formik.values.toSession || ""}
@@ -261,8 +353,12 @@ function SentResolution() {
                       <div class="mb-3">
                         <label class="form-label">Resolution Type</label>
                         <select
-                          class={`form-select ${formik.touched.resolutionType && formik.errors.resolutionType ? "is-invalid" : ""
-                            }`}
+                          class={`form-select ${
+                            formik.touched.resolutionType &&
+                            formik.errors.resolutionType
+                              ? "is-invalid"
+                              : ""
+                          }`}
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                           value={formik.values.resolutionType || ""}
@@ -271,8 +367,12 @@ function SentResolution() {
                           <option value="" selected disabled hidden>
                             Select
                           </option>
-                          <option value="Government Resolution">Government Resolution</option>
-                          <option value="Private Member Resolution">Private Member Resolution</option>
+                          <option value="Government Resolution">
+                            Government Resolution
+                          </option>
+                          <option value="Private Member Resolution">
+                            Private Member Resolution
+                          </option>
                           <option value="Govt. Resolution Supported by others">
                             Govt. Resolution Supported by others
                           </option>
@@ -282,9 +382,13 @@ function SentResolution() {
                     <div class="col">
                       <div class="mb-3">
                         <label class="form-label">Resolution Status</label>
-                        <select
-                          class={`form-select ${formik.touched.resolutionStatus && formik.errors.resolutionStatus ? "is-invalid" : ""
-                            }`}
+                        {/* <select
+                          class={`form-select ${
+                            formik.touched.resolutionStatus &&
+                            formik.errors.resolutionStatus
+                              ? "is-invalid"
+                              : ""
+                          }`}
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                           value={formik.values.resolutionStatus || ""}
@@ -317,13 +421,33 @@ function SentResolution() {
                           <option>Pending for further discussion</option>
                           <option>NFA</option>
                           <option>Admitted as Call Attention Notice</option>
-                        </select>
+                        </select> */}
+                        <Select
+                          options={
+                            resolutionStatus &&
+                            resolutionStatus?.map((item) => ({
+                              value: item?.id,
+                              label: item?.resolutionStatus,
+                            }))
+                          }
+                          onChange={(selectedOptions) => {
+                            formik.setFieldValue(
+                              "resolutionStatus",
+                              selectedOptions
+                            );
+                          }}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.resolutionStatus}
+                          name="resolutionStatus"
+                          isClearable={true}
+                          // className="form-select"
+                          style={{ border: "none" }}
+                        />
                       </div>
                     </div>
                   </div>
 
                   <div class="row">
-
                     <div className="col-3">
                       <div className="mb-3" style={{ position: "relative" }}>
                         <label className="form-label">From Notice Date</label>
@@ -342,11 +466,18 @@ function SentResolution() {
                         </span>
                         <DatePicker
                           selected={formik.values.fromNoticeDate}
-                          minDate={new Date()}
-                          onChange={(date) => formik.setFieldValue("fromNoticeDate", date)}
+                          maxDate={new Date()}
+                          onChange={(date) =>
+                            formik.setFieldValue("fromNoticeDate", date)
+                          }
                           onBlur={formik.handleBlur}
-                          className={`form-control ${formik.touched.fromNoticeDate && formik.errors.fromNoticeDate ? "is-invalid" : ""
-                            }`}
+                          className={`form-control ${
+                            formik.touched.fromNoticeDate &&
+                            formik.errors.fromNoticeDate
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                          dateFormat={"dd-MM-yyyy"}
                         />
                       </div>
                     </div>
@@ -368,29 +499,42 @@ function SentResolution() {
                         </span>
                         <DatePicker
                           selected={formik.values.toNoticeDate}
-                          minDate={new Date()}
-                          onChange={(date) => formik.setFieldValue("toNoticeDate", date)}
+                          maxDate={new Date()}
+                          onChange={(date) =>
+                            formik.setFieldValue("toNoticeDate", date)
+                          }
                           onBlur={formik.handleBlur}
-                          className={`form-control ${formik.touched.toNoticeDate && formik.errors.toNoticeDate ? "is-invalid" : ""
-                            }`}
+                          className={`form-control ${
+                            formik.touched.toNoticeDate &&
+                            formik.errors.toNoticeDate
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                          dateFormat={"dd-MM-yyyy"}
                         />
                       </div>
                     </div>
                   </div>
-
 
                   <div class="row">
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                       <button class="btn btn-primary" type="submit">
                         Search
                       </button>
-                      <button class="btn btn-primary" type="submit">
+                      <button
+                        class="btn btn-primary"
+                        type="button"
+                        onClick={handleResetForm}
+                      >
                         Reset
                       </button>
                     </div>
                   </div>
 
-                  <div class="dash-detail-container" style={{ marginTop: "20px" }}>
+                  <div
+                    class="dash-detail-container"
+                    style={{ marginTop: "20px" }}
+                  >
                     <CustomTable
                       hideBtn={true}
                       data={resData}

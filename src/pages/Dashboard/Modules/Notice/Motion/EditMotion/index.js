@@ -133,12 +133,22 @@ function EditMotion() {
     values?.mover?.forEach((mover, index) => {
       formData.append(`moverIds[${index}]`, mover.value);
     });
-    formData.append("noticeOfficeDiaryDate", values?.noticeOfficeDiaryDate);
-    formData.append("noticeOfficeDiaryTime", values?.noticeOfficeDiaryTime);
+    formData.append(
+      "noticeOfficeDiaryDate",
+      values?.noticeOfficeDiaryDate &&
+        moment(values?.noticeOfficeDiaryDate).format("YYYY-MM-DD")
+    );
+    // formData.append("noticeOfficeDiaryTime", values?.noticeOfficeDiaryTime);
+    formData.append(
+      "noticeOfficeDiaryTime",
+      values?.noticeOfficeDiaryTime &&
+        moment(values?.noticeOfficeDiaryTime, "hh:mm A").format("hh:mm A")
+    );
     formData.append("businessType", "Motion");
     formData.append("englishText", values.englishText);
     formData.append("urduText", values.urduText);
     formData.append("motionSentStatus", "fromNotice");
+    formData.append("fkMotionStatus", 1);
     if (values?.file) {
       Array.from(values?.file).map((file, index) => {
         formData.append(`file`, file);
@@ -338,7 +348,7 @@ function EditMotion() {
                         </span>
                         <DatePicker
                           selected={formik.values.noticeOfficeDiaryDate}
-                          minDate={new Date()}
+                          maxDate={new Date()}
                           onChange={(date) =>
                             formik.setFieldValue("noticeOfficeDiaryDate", date)
                           }
@@ -349,6 +359,7 @@ function EditMotion() {
                               ? "is-invalid"
                               : ""
                           }`}
+                          dateFormat={"dd-MM-yyyy"}
                         />
                         {formik.touched.noticeOfficeDiaryDate &&
                           formik.errors.noticeOfficeDiaryDate && (

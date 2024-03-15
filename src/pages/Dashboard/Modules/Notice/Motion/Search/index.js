@@ -105,9 +105,13 @@ function SearchMotion() {
       const UrduText = Urdu.replace(/(<([^>]+)>)/gi, "");
       return {
         id: leave?.id,
-        SessionName: leave?.sessions?.sessionName,
-        motionType: leave?.motionType,
-        noticeOfficeDiaryNo: leave?.noticeOfficeDairies?.noticeOfficeDiaryNo,
+        SessionName: leave?.sessions?.sessionName
+          ? leave?.sessions?.sessionName
+          : "",
+        motionType: leave?.motionType ? leave?.motionType : "",
+        noticeOfficeDiaryNo: leave?.noticeOfficeDairies?.noticeOfficeDiaryNo
+          ? leave?.noticeOfficeDairies?.noticeOfficeDiaryNo
+          : "",
 
         noticeOfficeDiaryDate: leave?.noticeOfficeDairies?.noticeOfficeDiaryDate
           ? moment(leave?.noticeOfficeDairies?.noticeOfficeDiaryDate).format(
@@ -118,8 +122,8 @@ function SearchMotion() {
           leave?.noticeOfficeDairies?.noticeOfficeDiaryTime,
           "hh:ss A"
         ).format("hh:ss A"),
-        englishText: EnglishText,
-        urduText: UrduText,
+        englishText: EnglishText ? EnglishText : "",
+        urduText: UrduText ? UrduText : "",
       };
     });
   };
@@ -545,6 +549,8 @@ function SearchMotion() {
                         open={isFromNoticeOpen}
                         onClickOutside={() => setIsFromNoticeOpen(false)}
                         onInputClick={handleFromNoticeCalendarToggle}
+                        maxDate={new Date()}
+                        dateFormat={"dd-MM-yyyy"}
                       />
                     </div>
                   </div>
@@ -580,6 +586,8 @@ function SearchMotion() {
                         open={isToNoticeOpen}
                         onClickOutside={() => setIsToNoticeOpen(false)}
                         onInputClick={handleToNoticeCalendarToggle}
+                        maxDate={new Date()}
+                        dateFormat={"dd-MM-yyyy"}
                       />
                     </div>
                   </div>

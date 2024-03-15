@@ -38,7 +38,7 @@ import { AuthContext } from "../../../../../api/AuthContext";
 import {
   getAllEmployee,
   getDepartment,
-  getEmployeeByCurrentUserId,
+  getHLEmployee,
 } from "../../../../../api/APIs/Services/organizational.service";
 import { getBranches } from "../../../../../api/APIs/Services/Branches.services";
 
@@ -175,6 +175,7 @@ function FileDetail() {
       // notingDescription: "",
       // correspondingDescription: "",
       assignedTo: "",
+      diaryNumber: "",
       // CommentStatus: filesData ? filesData?.fileRemarks[0]?.CommentStatus : "",
       comment: "",
     },
@@ -255,6 +256,7 @@ function FileDetail() {
     formData.append("cases[0][Sanction][description]", sanction.description);
     formData.append("cases[0][Objection][description]", objection.description);
     formData.append("cases[0][Letter][description]", letter.description);
+    formData.append("diaryNumber", values?.diaryNumber);
   
 if (objection.attachedFiles) {
     objection.attachedFiles.forEach((file, index) => {
@@ -421,7 +423,7 @@ if (objection.attachedFiles) {
 
   const getEmployeeData = async () => {
     try {
-      const response = await getEmployeeByCurrentUserId(UserData?.fkUserId);
+      const response = await getHLEmployee(UserData?.fkUserId);
       if (response?.success) {
         setEmployeeData(response?.data);
       }
@@ -476,7 +478,7 @@ if (objection.attachedFiles) {
                     <div key={item.id}>
                       <p
                         style={{ marginBottom: "0px", fontWeight: "bold" }}
-                      >{`${item?.submittedByUser?.employee?.firstName} ${item?.submittedByUser?.employee?.lastName} (${item?.submittedByUser?.employee?.departments?.departmentName})`}</p>
+                      >{`${item?.submittedByUser?.employee?.departments?.departmentName} Branch`}</p>
                       <p
                         style={{ marginBottom: "0" }}
                       >{`Diary Number : ${item?.diaryNumber}`}</p>
@@ -742,6 +744,32 @@ if (objection.attachedFiles) {
                   </div>
 
                   <div class="row">
+                  <div className="col">
+                  <div className="mb-3">
+                    <label htmlFor="diaryNumber" className="form-label">
+                      Diary No
+                    </label>
+                    <input
+                      className={`form-control ${
+                        formik.touched.diaryNumber && formik.errors.diaryNumber
+                          ? "is-invalid"
+                          : ""
+                      }`}
+                      type="text"
+                      id="diaryNumber"
+                      placeholder="Diary No"
+                      value={formik.values.diaryNumber}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                    />
+                    {formik.touched.diaryNumber &&
+                      formik.errors.diaryNumber && (
+                        <div className="invalid-feedback">
+                          {formik.errors.diaryNumber}
+                        </div>
+                      )}
+                  </div>
+                </div>
                     <div class="col">
                       <div class="mb-3">
                         <label class="form-label">Action</label>
@@ -758,8 +786,11 @@ if (objection.attachedFiles) {
                             Select
                           </option>
                           <option value={"Approved"}>Approved</option>
-                          <option value={"Rejected"}>Rejected</option>
                           <option value={"Discuss"}>Discuss</option>
+                          <option value={"Retype/Amend"}>Retype/Amend</option>
+                          <option value={"Rejected"}>Rejected</option>
+                          <option value={"Submit For Approval"}>Submit For Approval</option>
+
                         </select>
                       </div>
                     </div>

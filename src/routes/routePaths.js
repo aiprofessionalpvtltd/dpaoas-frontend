@@ -150,6 +150,9 @@ import LegislativeBillList from "../pages/Dashboard/Modules/Notice/legislationBu
 import AddEditLegislativeBill from "../pages/Dashboard/Modules/Notice/legislationBusiness/LegislativeBill/AddEditLegislativeBill";
 import DirectorDashboard from "../pages/Dashboard/Modules/EFiling/DirectorDashboard";
 import PreviousCasesHistory from "../pages/Dashboard/Modules/EFiling/FIleRegister/Files/FileCases/PreviousCasesHistory";
+import NoticeResolutionDetail from "../pages/Dashboard/Modules/Notice/Resolution/ResolutionDetail";
+import PreviousFRsHistory from "../pages/Dashboard/Modules/EFiling/FreshReceipt/PreviousFRsHistory";
+import FRDetail from "../pages/Dashboard/Modules/EFiling/FreshReceipt/FRDetail";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -203,6 +206,7 @@ export const ProtectedRoutes = [
 
   { path: "/notice/resolution", element: <NoticeDashboard /> },
   { path: "/notice/resolution/new", element: <NewResolution /> },
+  { path: "/notice/resolution/edit", element: <NoticeResolutionDetail /> },
   { path: "/notice/resolution/search", element: <SearchResolution /> },
   { path: "/notice/resolution/sent", element: <SentResolution /> },
 
@@ -213,10 +217,14 @@ export const ProtectedRoutes = [
     element: <AddEditPrivateBill />,
   },
 
-  { path: "/notice/legislation/legislative-bill", element: <LegislativeBillList /> },
-  { path: "/notice/legislation/legislative-bill/addedit", element: <AddEditLegislativeBill /> },
-
-
+  {
+    path: "/notice/legislation/legislative-bill",
+    element: <LegislativeBillList />,
+  },
+  {
+    path: "/notice/legislation/legislative-bill/addedit",
+    element: <AddEditLegislativeBill />,
+  },
 
   { path: "/notice/manage", element: <NoticeDashboard /> },
   { path: "/notice/manage/members", element: <Members /> },
@@ -519,8 +527,16 @@ export const ProtectedRoutes = [
     element: <FreshReceipt />,
   },
   {
+    path: "/efiling/dashboard/fresh-receipt/history",
+    element: <PreviousFRsHistory />,
+  },
+  {
     path: "/efiling/dashboard/fresh-receipt/addedit",
     element: <AddEditFR />,
+  },
+  {
+    path: "/efiling/dashboard/fresh-receipt/frdetail",
+    element: <FRDetail />,
   },
   {
     path: "/efiling/dashboard/file-register-list/files-list/addedit-case",

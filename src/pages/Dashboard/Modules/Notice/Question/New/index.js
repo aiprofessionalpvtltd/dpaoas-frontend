@@ -85,15 +85,25 @@ function NewQuestion() {
   // Handale DateCHange
   const handleDateSelect = (date) => {
     formik.setFieldValue("noticeOfficeDiaryDate", date);
-    console.log("Date", date);
     setIsCalendarOpen(false);
   };
+
   const CreateQuestionApi = async (values) => {
     const formData = new FormData();
     formData.append("fkSessionId", values?.fkSessionId);
     formData.append("noticeOfficeDiaryNo", Number(values.noticeOfficeDiaryNo));
-    formData.append("noticeOfficeDiaryDate", values.noticeOfficeDiaryDate);
-    formData.append("noticeOfficeDiaryTime", values?.noticeOfficeDiaryTime);
+    // formData.append("noticeOfficeDiaryDate", values.noticeOfficeDiaryDate);
+
+    formData.append(
+      "noticeOfficeDiaryDate",
+      values?.noticeOfficeDiaryDate &&
+        moment(values?.noticeOfficeDiaryDate).format("YYYY-MM-DD")
+    );
+    formData.append(
+      "noticeOfficeDiaryTime",
+      values?.noticeOfficeDiaryTime &&
+        moment(values?.noticeOfficeDiaryTime, "hh:mm A").format("hh:mm A")
+    );
     formData.append("questionCategory", values.questionCategory);
     formData.append("fkQuestionStatus", 12);
     formData.append("fkMemberId", values.fkMemberId?.value);
@@ -325,6 +335,8 @@ function NewQuestion() {
                           onClickOutside={() => setIsCalendarOpen(false)}
                           onInputClick={handleCalendarToggle}
                           // onClick={handleCalendarToggle}
+                          maxDate={new Date()}
+                          dateFormat="dd-MM-yyyy"
                         />
 
                         {formik.touched.noticeOfficeDiaryDate &&
