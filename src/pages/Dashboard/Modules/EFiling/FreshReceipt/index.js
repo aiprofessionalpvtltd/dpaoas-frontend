@@ -9,14 +9,19 @@ import { EfilingSideBarItem } from '../../../../../utils/sideBarItems';
 import { DeleteFreshReceipt, getAllFreshReceipt } from '../../../../../api/APIs/Services/efiling.service';
 import { showErrorMessage, showSuccessMessage } from '../../../../../utils/ToastAlert';
 import moment from 'moment';
+import FreshReceiptModal from '../../../../../components/FreshReceiptModal';
+import { getUserData } from '../../../../../api/Auth';
 
 
 function FileCases() {
     const navigate = useNavigate()
     const [currentPage, setCurrentPage] = useState(0);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [assignModalOpan, setAssignedModal] = useState(false);
     const [count, setCount] = useState(null);
     const pageSize = 10; // Set your desired page size
     const [fileData, setFileData] = useState([])
+    const UserData = getUserData()
 
     const handlePageChange = (page) => {
         // Update currentPage when a page link is clicked
@@ -27,16 +32,19 @@ function FileCases() {
         return apiData.map((item) => ({
           id: item?.id,
           frType: item?.frType,
-          frSubject: item?.frSubject,
+          Sender: item?.freshReceipt?.length > 0 ? item?.freshReceipt[item?.freshReceipt?.length - 1]?.submittedUser?.employee?.firstName : "---",
+          Receiver: item?.freshReceipt?.length > 0 ? item?.freshReceipt[item?.freshReceipt?.length - 1]?.assignedUser?.employee?.firstName : "---",
+          // Status: item?.fileRemarksData?.length > 0 ? item?.fileRemarksData[item?.fileRemarksData?.length - 1]?.CommentStatus : "Draft",
+          frSubject:item?.frSubject,
           referenceNumber: item?.referenceNumber,
-          frDate:moment(item?.frDate).format("DD/MM/YYYY"),
-          diaryDate:moment(item?.freshReceiptDiaries?.diaryDate).format("DD/MM/YYYY"),
-          status:item?.status
+          frDate: moment(item?.frDate).format("DD/MM/YYYY"),
+          DiaryDate: item?.freshReceiptDiaries ? moment(item?.freshReceiptDiaries?.diaryDate).format("DD/MM/YYYY") : "---",
+          staus:item?.status
         }));
       };
       const getAllFreshReceiptAPi = useCallback(async () => {
         try {
-            const response = await getAllFreshReceipt(currentPage, pageSize)
+            const response = await getAllFreshReceipt(UserData?.fkUserId, currentPage, pageSize)
             if (response.success) {
             //   showSuccessMessage(response?.message)
               setCount(response?.data?.count)
@@ -64,10 +72,33 @@ function FileCases() {
       useEffect(() => {
         getAllFreshReceiptAPi()
       },[currentPage])
+
+      const openModal = (item) => {
+        // Inside a function or event handler
+        setSelectedItem(item);
+        setAssignedModal(true);
+      };
+
+
     return (
         <Layout module={true} sidebarItems={EfilingSideBarItem}>
+            <div class='row'>
             <Header dashboardLink={"/efiling/dashboard"} addLink1={"/efiling/dashboard/fresh-receipt"} title1={"Fresh Receipts"} />
+            <div className="col" style={{ marginTop: "30px", float: 'right' }}>
+                  <button className="btn btn-primary" onClick={() => navigate('/efiling/dashboard/fresh-receipt/history')} >
+                    View Previous History
+                  </button>
+            </div>
+            </div>
             <ToastContainer />
+            {assignModalOpan && (
+        <FreshReceiptModal
+          assignModalOpan={assignModalOpan}
+          hendleModal={() => setAssignedModal(!assignModalOpan)}
+          data={selectedItem}
+        />
+      )}
+
             <div class="row">
                 <div class="col-12">
                     <CustomTable
@@ -85,8 +116,11 @@ function FileCases() {
                         totalCount={count}
                         singleDataCard={true}
                         handleDelete={(item) => handleDelete(item.id)}
-                        handleEdit={(item) => navigate("/efiling/dashboard/fresh-receipt/addedit", {state:{id:item.id}})}
+                        handleEdit={(item) => navigate("/efiling/dashboard/fresh-receipt/addedit", {state:{id:item.id, view: true}})}
+                        showAssigned={true}
+                        hendleAssigned={(item) => navigate("/efiling/dashboard/fresh-receipt/frdetail", {state:{id:item.id, view: false}})}
                     />
+                    
                 </div>
             </div>
         </Layout>
