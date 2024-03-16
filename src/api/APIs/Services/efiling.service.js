@@ -730,7 +730,7 @@ export const getFRHistory = async (branchId, currentPage, pageSize) => {
 export const assiginFR = async (id, data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClientMMS.post(
       `/freshReceipt/assignFR/${id}`,
       data
       // {

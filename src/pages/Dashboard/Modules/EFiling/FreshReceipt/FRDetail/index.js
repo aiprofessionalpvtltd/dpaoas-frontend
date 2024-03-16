@@ -9,6 +9,7 @@ import { Layout } from "../../../../../../components/Layout";
 import thumbnail from "./../../../../../../assets/profile-img.jpg";
 import { assiginFR, getFreshReceiptById } from "../../../../../../api/APIs/Services/efiling.service";
 import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
+import { getLLEmployee } from "../../../../../../api/APIs/Services/organizational.service";
 
 
 
@@ -79,7 +80,7 @@ function FRDetail() {
   const hendleassiginFr = async (values) => {
      const data = {
         submittedBy : UserData?.fkUserId,
-        assignedTo:values?.assignedTo,
+        assignedTo:Number(values?.assignedTo),
         CommentStatus:values?.CommentStatus,
         comment : values?.comment
      }
@@ -87,15 +88,30 @@ function FRDetail() {
       const response = await assiginFR(receptId, data);
       if (response.success) {
         showSuccessMessage(response.message);
+        setTimeout(() => {
+          navigate("/efiling/dashboard/fresh-receipt");
+        }, 1000)
       }
     } catch (error) {
      showErrorMessage(error?.response?.data?.message);
     }
   };
 
+  const getEmployeeData = async () => {
+    try {
+      const response = await getLLEmployee(UserData?.fkUserId);
+      if (response?.success) {
+        setEmployeeData(response?.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     if (receptId) {
       getFreashRecepitByIdApi();
+      getEmployeeData();
     }
   }, []);
 
@@ -140,7 +156,7 @@ function FRDetail() {
                     <div key={item.id}>
                       <p
                         style={{ marginBottom: "0px", fontWeight: "bold" }}
-                      >{`${item?.submittedByUser?.employee?.firstName} ${item?.submittedByUser?.employee?.lastName} (${item?.submittedByUser?.employee?.departments?.departmentName})`}</p>
+                      >{`${item?.submittedByUser?.employee?.departments?.departmentName} Branch`}</p>
                       <p
                         style={{ marginBottom: "0" }}
                       >{`Diary Number : ${item?.diaryNumber}`}</p>
