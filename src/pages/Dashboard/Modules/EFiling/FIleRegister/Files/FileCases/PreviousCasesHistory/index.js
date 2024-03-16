@@ -42,7 +42,7 @@ function PreviousCasesHistory() {
 
     const getAllCasesApi = async () => {
         try {
-            const response = await getUserCaseHistory(fileIdINRegister, UserData?.fkUserId, currentPage, pageSize)
+            const response = await getUserCaseHistory(fileIdINRegister, UserData?.fkDepartmentId, currentPage, pageSize)
             if (response.success) {
                 setCount(response?.data?.count)
                 const transferData = transformFilesCases(response?.data?.cases)
