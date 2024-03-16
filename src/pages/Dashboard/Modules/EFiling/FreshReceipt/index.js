@@ -9,11 +9,14 @@ import { EfilingSideBarItem } from '../../../../../utils/sideBarItems';
 import { DeleteFreshReceipt, getAllFreshReceipt } from '../../../../../api/APIs/Services/efiling.service';
 import { showErrorMessage, showSuccessMessage } from '../../../../../utils/ToastAlert';
 import moment from 'moment';
+import FreshReceiptModal from '../../../../../components/FreshReceiptModal';
 
 
 function FileCases() {
     const navigate = useNavigate()
     const [currentPage, setCurrentPage] = useState(0);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [assignModalOpan, setAssignedModal] = useState(false);
     const [count, setCount] = useState(null);
     const pageSize = 10; // Set your desired page size
     const [fileData, setFileData] = useState([])
@@ -64,10 +67,33 @@ function FileCases() {
       useEffect(() => {
         getAllFreshReceiptAPi()
       },[currentPage])
+
+      const openModal = (item) => {
+        // Inside a function or event handler
+        setSelectedItem(item);
+        setAssignedModal(true);
+      };
+
+
     return (
         <Layout module={true} sidebarItems={EfilingSideBarItem}>
+            <div class='row'>
             <Header dashboardLink={"/efiling/dashboard"} addLink1={"/efiling/dashboard/fresh-receipt"} title1={"Fresh Receipts"} />
+            <div className="col" style={{ marginTop: "30px", float: 'right' }}>
+                  <button className="btn btn-primary" onClick={() => navigate('/efiling/dashboard/fresh-receipt/history')} >
+                    View Previous History
+                  </button>
+            </div>
+            </div>
             <ToastContainer />
+            {assignModalOpan && (
+        <FreshReceiptModal
+          assignModalOpan={assignModalOpan}
+          hendleModal={() => setAssignedModal(!assignModalOpan)}
+          data={selectedItem}
+        />
+      )}
+
             <div class="row">
                 <div class="col-12">
                     <CustomTable
@@ -86,6 +112,8 @@ function FileCases() {
                         singleDataCard={true}
                         handleDelete={(item) => handleDelete(item.id)}
                         handleEdit={(item) => navigate("/efiling/dashboard/fresh-receipt/addedit", {state:{id:item.id}})}
+                        showAssigned={true}
+                        hendleAssigned={(item) => openModal(item)}
                     />
                 </div>
             </div>

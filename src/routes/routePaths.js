@@ -151,6 +151,7 @@ import AddEditLegislativeBill from "../pages/Dashboard/Modules/Notice/legislatio
 import DirectorDashboard from "../pages/Dashboard/Modules/EFiling/DirectorDashboard";
 import PreviousCasesHistory from "../pages/Dashboard/Modules/EFiling/FIleRegister/Files/FileCases/PreviousCasesHistory";
 import NoticeResolutionDetail from "../pages/Dashboard/Modules/Notice/Resolution/ResolutionDetail";
+import PreviousFRsHistory from "../pages/Dashboard/Modules/EFiling/FreshReceipt/PreviousFRsHistory";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -523,6 +524,10 @@ export const ProtectedRoutes = [
   {
     path: "/efiling/dashboard/fresh-receipt",
     element: <FreshReceipt />,
+  },
+  {
+    path: "/efiling/dashboard/fresh-receipt/history",
+    element: <PreviousFRsHistory />,
   },
   {
     path: "/efiling/dashboard/fresh-receipt/addedit",
