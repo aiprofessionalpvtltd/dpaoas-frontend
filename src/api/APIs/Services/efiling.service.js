@@ -137,11 +137,11 @@ export const createFIleRegister = async (data) => {
   }
 };
 
-export const getAllFileRegister = async (currentPage, pageSize) => {
+export const getAllFileRegister = async (branchId, currentPage, pageSize) => {
   try {
     //   const token = getAuthToken();
     const response = await axiosClientMMS.get(
-      `/fileRegisters/?currentPage=${currentPage}&pageSize=${pageSize}`,
+      `/fileRegisters/${branchId}?currentPage=${currentPage}&pageSize=${pageSize}`,
       )
       // {
       //   headers: {
@@ -384,10 +384,10 @@ export const DeleteHeading = async (id) => {
 
 
 // Create Case
-export const createCase = async (id, userId, data) => {
+export const createCase = async (id, userId, frId, data) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.post(`/cases/createCase/${id}/${userId}`, data, {
+    const response = await axiosClientMMS.post(`/cases/createCase/${id}/${userId}/${frId}`, data, {
       headers: {
         accept: "multipart/form-data",
         "Content-Type": "multipart/form-data",
@@ -739,6 +739,25 @@ export const assiginFR = async (id, data) => {
       //   // }
       // }
     );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const getAllFRs = async (branchId) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/freshReceipt/ByBranch/${branchId}`,
+      )
+      // {
+      //   headers: {
+      //     accept: "application/json",
+      //     "Content-Type": "multipart/form-data",
+      //   },
+      // });
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);

@@ -7,7 +7,7 @@ import { EfilingSideBarItem } from '../../../../../utils/sideBarItems';
 import { useNavigate } from 'react-router';
 import { getAllFileRegister } from '../../../../../api/APIs/Services/efiling.service';
 import { showErrorMessage, showSuccessMessage } from '../../../../../utils/ToastAlert';
-import { setregisterID } from '../../../../../api/Auth';
+import { getUserData, setregisterID } from '../../../../../api/Auth';
 
 function ListFileRegister() {
     const navigate = useNavigate()
@@ -15,6 +15,7 @@ function ListFileRegister() {
     const [count, setCount] = useState(null);
     const [registerData, setRegisterData] = useState([])
     const pageSize = 5; // Set your desired page size
+    const UserData = getUserData();
 
 
     const handlePageChange = (page) => {
@@ -35,7 +36,7 @@ function ListFileRegister() {
 
     const getAllRegisterApi = async () => {
         try {
-            const response = await getAllFileRegister(currentPage, pageSize)
+            const response = await getAllFileRegister(UserData?.fkDepartmentId, currentPage, pageSize)
             if (response.success) {
                 // showSuccessMessage(response?.message)
                 const transferData = transformFilesRegisterdata(response?.data?.fileRegisters)
