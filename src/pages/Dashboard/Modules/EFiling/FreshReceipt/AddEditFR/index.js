@@ -77,6 +77,7 @@ const AddEditFR = () => {
     formdata.append("diaryDate", values?.diaryDate);
     formdata.append("diaryTime", values?.diaryTime);
     formdata.append("frType", values?.frType);
+    formdata.append("fkUserBranchId", userData?.fkDepartmentId);
     if (values?.fkBranchId) {
       formdata.append("fkBranchId", values?.fkBranchId?.value);
     }
@@ -127,12 +128,24 @@ const AddEditFR = () => {
     formdata.append("referenceNumber", values?.referenceNumber);
     formdata.append("frDate", values?.frDate);
     formdata.append("shortDescription", values?.shortDescription);
-    //    formdata.append("freshReceipt", values?.freshReceipt)
     if (values?.freshReceipt) {
       Array.from(values?.freshReceipt).map((file, index) => {
         formdata.append("freshReceipt", file);
       });
     }
+    //    formdata.append("freshReceipt", values?.freshReceipt)
+    // console.log(values?.freshReceipt);
+    // if (values?.freshReceipt) {
+    //   Array.from(values?.freshReceipt).map((file, index) => {
+    //     formdata.append("freshReceipt", file);
+    //   });
+    // }
+    // console.log(receiptData?.freshReceiptsAttachments);
+    // if (receiptData?.freshReceiptsAttachments.length > 0) {
+    //   Array.from(receiptData?.freshReceiptsAttachments).map((file, index) => {
+    //     formdata.append("freshReceipt", file?.id);
+    //   });
+    // }
     try {
       const response = await UpdateFreshReceipt(location.state.id, formdata);
       if (response.success) {
@@ -201,7 +214,7 @@ const AddEditFR = () => {
             : "",
         diaryTime:
           receiptData && receiptData?.freshReceiptDiaries
-            ? new Date(receiptData?.freshReceiptDiaries?.diaryTime)
+            ? receiptData?.freshReceiptDiaries?.diaryTime
             : "",
         shortDescription: receiptData ? receiptData?.shortDescription : "",
         referenceNumber: receiptData ? receiptData?.referenceNumber : "",

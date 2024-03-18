@@ -35,6 +35,7 @@ function FRDetail() {
 
 
   const [remarksData, setRemarksData] = useState([]);
+  const [attachments, setAttachments] = useState([]);
   const [directorData, setDirectorData] = useState([]);
 
   const navigate = useNavigate();
@@ -70,6 +71,7 @@ function FRDetail() {
       const response = await getFreshReceiptById(receptId);
       if (response.success) {
         setRemarksData(response?.data?.freshReceipt);
+        setAttachments(response?.data?.freshReceiptsAttachments)
         // showSuccessMessage(response.message);
       }
     } catch (error) {
@@ -115,6 +117,13 @@ function FRDetail() {
     }
   }, []);
 
+
+  const HandlePrint = async (urlimage) => {
+    const url = `http://172.16.170.8:5252${urlimage}`;
+    window.open(url, "_blank");
+    // setPdfUrl(url)
+  };
+
   return (
     <Layout centerlogohide={true}>
       <div className="dashboard-content" style={{ marginTop: 80 }}>
@@ -149,7 +158,7 @@ function FRDetail() {
 
         <div className="custom-editor">
           <div className="row">
-            <div className="col-md-2">
+            {/* <div className="col-md-2">
               <div className="noting">
                 {directorData?.length > 0 ? (
                   directorData.map((item) => (
@@ -180,8 +189,8 @@ function FRDetail() {
                   </div>
                 )}
               </div>
-            </div>
-            <div className="col-md-7">
+            </div> */}
+            <div className="col-md-8" style={{ marginLeft: 10 }}>
               <form onSubmit={formik.handleSubmit}>
                 <div>
                   
@@ -249,6 +258,7 @@ function FRDetail() {
                       </div>
                     </div>
                   </div>
+                  {!viewPage && (
                   <div class="row mb-4">
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                       <button class="btn btn-primary" type="submit" disabled={viewPage ? true : false}>
@@ -256,6 +266,55 @@ function FRDetail() {
                       </button>
                     </div>
                   </div>
+                  )}
+
+                  <div className="row">
+  <div className="col-4">
+    <label className="form-label" style={{ display: "block" }}>
+      Attached Files
+    </label>
+    {attachments.length > 0 ? (
+      attachments.map((item, index) => (
+        <div className="MultiFile-label mt-3" key={index}>
+          <span
+            className="MultiFile-label"
+            title={item?.filename
+              ?.split("\\")
+              .pop()
+              .split("/")
+              .pop()}
+          >
+            <span className="MultiFile-title">
+              <a
+                onClick={() => HandlePrint(item?.filename)}
+                style={{ cursor: "pointer", color: 'blue' }}
+              >
+                - {item?.filename
+                  ?.split("\\")
+                  .pop()
+                  .split("/")
+                  .pop()}
+              </a>
+            </span>
+          </span>
+        </div>
+      ))
+    ) : (
+      <div
+        className="alert alert-danger mt-1"
+        role="alert"
+        style={{
+          width: "350px",
+          textAlign: "center",
+        }}
+      >
+        No Attachments found
+      </div>
+    )}
+  </div>
+</div>
+
+
                   {/* <div className="row">
                     <div class="col-6">
                      
@@ -319,7 +378,7 @@ function FRDetail() {
                 </div> */}
               </form>
             </div>
-            <div className="col-md-3">
+            <div className="col-md-3" style={{ marginLeft: 40 }}>
               <div className="custom-editor-main" style={{ marginTop: 0 }}>
                 <div className="comment-heading">
                   <h2>Remarks</h2>
@@ -382,6 +441,7 @@ function FRDetail() {
                               <small
                                 style={{
                                   marginBottom: "20px",
+                                  width: "125px",
                                   background:
                                     item?.CommentStatus === "Approved"
                                       ? "green"

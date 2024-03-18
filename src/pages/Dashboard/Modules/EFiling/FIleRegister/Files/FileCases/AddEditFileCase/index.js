@@ -12,6 +12,7 @@ import {
   UpdateCase,
   createCase,
   createFiles,
+  getAllFRs,
   getAllYear,
   getSingleCaseByFileId,
   geteHeadingNumberbyMainHeadingId,
@@ -25,12 +26,16 @@ import { useNavigate } from "react-router-dom";
 import { Editor } from "../../../../../../../../components/CustomComponents/Editor";
 import { TinyEditor } from "../../../../../../../../components/CustomComponents/Editor/TinyEditor";
 import { getUserData } from "../../../../../../../../api/Auth";
+import Select from "react-select";
 
 function AddEditFileCase() {
   const navigate = useNavigate();
   const location = useLocation();
   const { fileIdINRegister } = useContext(AuthContext);
   const [selectedTab, setSelectedTab] = useState("Noting");
+  const [allFrs, setAllFrs] = useState([]);
+  const [fkFreshReceiptId, setFkFreshReceiptId] = useState(null);
+  
   const fileInputRef = useRef(null);
   const UserData = getUserData();
 
@@ -115,17 +120,21 @@ function AddEditFileCase() {
 
   const hendleCreateFileCase = async () => {
         try {
-      const formData = createFormData();
-      const response = await createCase(fileIdINRegister, UserData?.fkUserId, formData);
-      showSuccessMessage(response?.message);
-      if (response.success) {
-        setTimeout(() => {
-          navigate("/efiling/dashboard/file-register-list/files-list/cases");
-        }, 1000);
-      }
-    } catch (error) {
-      console.error("Error creating case:", error);
-    }
+          if(fkFreshReceiptId) {
+            const formData = createFormData();
+            const response = await createCase(fileIdINRegister, UserData?.fkUserId, fkFreshReceiptId?.value, formData);
+            showSuccessMessage(response?.message);
+            if (response.success) {
+              setTimeout(() => {
+                navigate("/efiling/dashboard/file-register-list/files-list/cases");
+              }, 1000);
+            }
+          } else {
+            showErrorMessage("Fresh receipt is mandatory");
+          }
+        } catch (error) {
+          console.error("Error creating case:", error);
+        }
   };
 
   const hendleEditFileCase = async () => {
@@ -240,6 +249,7 @@ if (objection.attachedFiles) {
     if (location.state?.caseId) {
       fetchCaseById(location.state.caseId);
     }
+    hendleGetAllFRs();
   }, [location.state?.caseId]);
 
   const hendleRemoveImage = async (item) => {
@@ -250,6 +260,17 @@ if (objection.attachedFiles) {
         if (location.state?.caseId) {
           fetchCaseById(location.state.caseId);
         }
+      }
+    } catch (error) {
+      showErrorMessage(error.response.data.message);
+    }
+  };
+
+  const hendleGetAllFRs = async (item) => {
+    try {
+      const response = await getAllFRs(UserData?.fkDepartmentId);
+      if (response?.success) {
+        setAllFrs(response?.data);
       }
     } catch (error) {
       showErrorMessage(error.response.data.message);
@@ -281,6 +302,26 @@ if (objection.attachedFiles) {
         </div>
 
         <div class="card-body">
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{
+              width: "30%", // Set width to 50%
+            }}>
+            <label for="formFile" class="form-label mt-3">
+                      Select Fresh Receipt
+                    </label>
+  <Select
+    options={allFrs && allFrs?.map((item) => ({
+      value: item.id,
+      label: `${item.frSubject} - ${item.referenceNumber}`,
+    }))}
+    onChange={(selectedOptions) => setFkFreshReceiptId(selectedOptions)}
+    // onBlur={formikAssigned.handleBlur}
+    value={fkFreshReceiptId}
+    name="fkFreshReceiptId"
+    isClearable={true}
+  />
+</div>
+</div>
           <div style={{ padding: "25px" }}>
             <div
               style={{
@@ -289,6 +330,7 @@ if (objection.attachedFiles) {
                 justifyContent: "center",
               }}
             >
+
               <ul className="nav nav-tabs mb-3 mt-3" id="ex1" role="tablist">
                 <li
                   className="nav-item"
