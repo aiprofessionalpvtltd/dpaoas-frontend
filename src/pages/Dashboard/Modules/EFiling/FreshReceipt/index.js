@@ -32,8 +32,8 @@ function FileCases() {
         return apiData.map((item) => ({
           id: item?.id,
           frType: item?.frType,
-          Sender: item?.freshReceipt?.length > 0 ? item?.freshReceipt[item?.freshReceipt?.length - 1]?.submittedUser?.employee?.firstName : "---",
-          Receiver: item?.freshReceipt?.length > 0 ? item?.freshReceipt[item?.freshReceipt?.length - 1]?.assignedUser?.employee?.firstName : "---",
+          Sender: item?.freshReceipt?.length > 0 ? item?.freshReceipt[0]?.submittedUser?.employee?.firstName : "---",
+          Receiver: item?.freshReceipt?.length > 0 ? item?.freshReceipt[0]?.assignedUser?.employee?.firstName : "---",
           // Status: item?.fileRemarksData?.length > 0 ? item?.fileRemarksData[item?.fileRemarksData?.length - 1]?.CommentStatus : "Draft",
           frSubject:item?.frSubject,
           referenceNumber: item?.referenceNumber,

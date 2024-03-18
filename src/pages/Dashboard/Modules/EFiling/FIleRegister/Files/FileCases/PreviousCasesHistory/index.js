@@ -32,11 +32,11 @@ function PreviousCasesHistory() {
         return apiData.map((item, index) => ({
             caseId: item?.fkCaseId,
             FileNo: item?.fileData?.fileNumber,
-            Sender: item?.fileRemarksData?.length > 0 ? item?.fileRemarksData[item?.fileRemarksData?.length - 1]?.submittedUser?.employee?.firstName : "---",
-            Receiver: item?.fileRemarksData?.length > 0 ? item?.fileRemarksData[item?.fileRemarksData?.length - 1]?.assignedUser?.employee?.firstName : "---",
-            Status: item?.fileRemarksData?.length > 0 ? item?.fileRemarksData[item?.fileRemarksData?.length - 1]?.CommentStatus : "Draft",
-            MarkedDate: item?.fileRemarksData?.length > 0 ? moment(item?.fileRemarksData[item?.fileRemarksData?.length - 1]?.createdAt).format('DD/MM/YYYY') : "---",
-            MarkedTime: item?.fileRemarksData?.length > 0 ? moment(item?.fileRemarksData[item?.fileRemarksData?.length - 1]?.createdAt).format("hh:mm A") : "---"
+            Sender: item?.fileRemarksData?.length > 0 ? item?.fileRemarksData[0]?.submittedUser?.employee?.firstName : "---",
+            Receiver: item?.fileRemarksData?.length > 0 ? item?.fileRemarksData[0]?.assignedUser?.employee?.firstName : "---",
+            Status: item?.fileRemarksData?.length > 0 ? item?.fileRemarksData[0]?.CommentStatus : "Draft",
+            MarkedDate: item?.fileRemarksData?.length > 0 ? moment(item?.fileRemarksData[0]?.createdAt).format('DD/MM/YYYY') : "---",
+            MarkedTime: item?.fileRemarksData?.length > 0 ? moment(item?.fileRemarksData[0]?.createdAt).format("hh:mm A") : "---"
         }));
     };
 
