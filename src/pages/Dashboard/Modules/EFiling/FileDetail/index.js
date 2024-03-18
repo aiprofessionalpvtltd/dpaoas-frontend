@@ -22,6 +22,7 @@ import { useFormik } from "formik";
 import { getUserData } from "../../../../../api/Auth";
 import {
   DeleteFileCaseImage,
+  DeleteFreahReceptImage,
   UpdateEfiling,
   UploadEfilingAttechment,
   assigneCase,
@@ -118,6 +119,8 @@ function FileDetail() {
   const [selectedTab, setSelectedTab] = useState("Noting");
 
   const [remarksData, setRemarksData] = useState([]);
+  const [frAttachments, setFrAttachments] = useState([]);
+
   const navigate = useNavigate();
 
   const yaerData = [
@@ -355,6 +358,8 @@ if (objection.attachedFiles) {
       const letter = filesData?.sections.filter((item) => item.sectionType === "Letter")
       const Objection = filesData?.sections.filter((item) => item.sectionType === "Objection")
       const Sanction = filesData?.sections.filter((item) => item.sectionType === "Sanction")
+      const frAttachments = filesData?.freshReceipts?.freshReceiptsAttachments?.length > 0 && filesData?.freshReceipts?.freshReceiptsAttachments;
+      setFrAttachments(frAttachments);
 
       setNotingStore(noting)
       setcorrespondanceStore(correspondance)
@@ -437,6 +442,24 @@ if (objection.attachedFiles) {
     getBranchesapi();
     getDepartmentData();
   }, []);
+
+  const hendleFRRemoveImage = async (item) => {
+    try {
+      const response = await DeleteFreahReceptImage(item?.id);
+      if (response?.success) {
+        showSuccessMessage(response.message);
+        getFilesByID(location?.state?.fileId ? location?.state?.fileId : fileIdINRegister, caseId);
+      }
+    } catch (error) {
+      showErrorMessage(error.response.data.message);
+    }
+  };
+
+  const HandlePrint = async (urlimage) => {
+    const url = `http://172.16.170.8:5252${urlimage}`;
+    window.open(url, "_blank");
+  };
+
   return (
     <Layout centerlogohide={true}>
       <div className="dashboard-content" style={{ marginTop: 80 }}>
@@ -835,6 +858,50 @@ if (objection.attachedFiles) {
                       </div>
                     </div>
                   </div>
+                  <div class="row">
+                    <div class="col">
+                  {frAttachments &&
+                      frAttachments?.map((item) => (
+                        <div class="MultiFile-label mt-3">
+                          {/* <a
+                            class="MultiFile-remove"
+                            style={{
+                              marginRight: "10px",
+                              color: "red",
+                              cursor: "pointer",
+                            }}
+                            onClick={() => hendleFRRemoveImage(item)}
+                          >
+                            x
+                          </a> */}
+                          <span
+                            class="MultiFile-label"
+                            title={item?.filename
+                              ?.split("\\")
+                              .pop()
+                              .split("/")
+                              .pop()}
+                          >
+                          <label className="form-label" style={{ display: "block" }}>
+                            Attached Fresh Receipts
+                          </label>
+                            <span class="MultiFile-title">
+                              <a
+                                onClick={() => HandlePrint(item?.filename)}
+                                style={{ cursor: "pointer", color: 'blue' }}
+                              >
+                                - {item?.filename
+                                  ?.split("\\")
+                                  .pop()
+                                  .split("/")
+                                  .pop()}
+                              </a>
+                            </span>
+                          </span>
+                        </div>
+                      ))}
+                      </div>
+                      </div>
                   <div class="row mb-4">
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                       <button class="btn btn-primary" type="submit" disabled={viewPage ? true : false}>
