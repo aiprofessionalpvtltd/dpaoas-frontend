@@ -216,6 +216,25 @@ export const getAllFileHeading = async (currentPage, pageSize) => {
   }
 };
 
+export const registerRecordByRegisterId = async (id) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/fileRegisters/singleRegister/${id}`,
+      )
+      // {
+      //   headers: {
+      //     accept: "application/json",
+      //     "Content-Type": "multipart/form-data",
+      //   },
+      // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
 export const UpdateFIleHeading = async (id, data) => {
   try {
     //   const token = getAuthToken();
@@ -496,11 +515,29 @@ export const DeleteFileCaseImage = async (id) => {
 };
 
 
-export const assigneCase = async (fileId, caseId, data) => {
+export const UpdateFIleCase = async (fileId, caseId, data) => {
   try {
     //   const token = getAuthToken();
     const response = await axiosClientMMS.put(
-      `/cases/handleAssignAndUpdate/${fileId}/${caseId}`, data)
+      `/cases/updateCase/${fileId}/${caseId}`, data)
+      // {
+      //   headers: {
+      //     accept: "application/json",
+      //     "Content-Type": "multipart/form-data",
+      //   },
+      // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const assignFIleCase = async (fileId, caseId, data) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClientMMS.post(
+      `/cases/assignCase/${fileId}/${caseId}`, data)
       // {
       //   headers: {
       //     accept: "application/json",

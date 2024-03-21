@@ -3,15 +3,17 @@ import { Layout } from "../../../../components/Layout";
 import Header from "../../../../components/Header";
 import CustomTable from "../../../../components/CustomComponents/CustomTable";
 import { useNavigate } from "react-router-dom";
-import { EfilingSideBarItem } from "../../../../utils/sideBarItems";
+import { EfilingSideBarBranchItem, EfilingSideBarItem } from "../../../../utils/sideBarItems";
 import NoticeStatsCard from "../../../../components/CustomComponents/NoticeStatsCard";
 import { faClipboardQuestion, faFile, faFileImport, faMailBulk, faScaleBalanced } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { showErrorMessage } from "../../../../utils/ToastAlert";
 import { getFileStates } from "../../../../api/APIs/Services/efiling.service";
+import { getUserData } from "../../../../api/Auth";
 
 function EFilingDashboard() {
   const [countData, setCountData] = useState(0)
+  const userData = getUserData()
 
   const getFilesStateApi = async () => {
     try {
@@ -30,7 +32,7 @@ function EFilingDashboard() {
   }, [])
 
   return (
-    <Layout module={true} centerlogohide={true} sidebarItems={EfilingSideBarItem}>
+    <Layout module={true} centerlogohide={true} sidebarItems={userData && userData?.userType === "Officer" ? EfilingSideBarItem : EfilingSideBarBranchItem}>
         <Header dashboardLink={"/"} addLink1={"/efiling/dashboard"} title1={"E-Filing"} width={"500px"} />
         <div class="row">
           <div class="col-8">

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { Layout } from "../../../../../../components/Layout";
-import { EfilingSideBarItem } from "../../../../../../utils/sideBarItems";
+import { EfilingSideBarBranchItem, EfilingSideBarItem } from "../../../../../../utils/sideBarItems";
 import Header from "../../../../../../components/Header";
 import { useLocation, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
@@ -236,7 +236,7 @@ const AddEditFR = () => {
   return (
     <Layout
       module={true}
-      sidebarItems={EfilingSideBarItem}
+      sidebarItems={userData && userData?.userType === "Officer" ? EfilingSideBarItem : EfilingSideBarBranchItem}
       centerlogohide={true}
     >
       <Header

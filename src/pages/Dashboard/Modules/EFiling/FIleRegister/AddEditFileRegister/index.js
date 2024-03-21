@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Layout } from '../../../../../../components/Layout'
-import { EfilingSideBarItem } from '../../../../../../utils/sideBarItems'
+import { EfilingSideBarBranchItem, EfilingSideBarItem } from '../../../../../../utils/sideBarItems'
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { AuthContext } from '../../../../../../api/AuthContext';
@@ -77,7 +77,7 @@ function AddEditFileRegister() {
 
 
   return (
-    <Layout sidebarItems={EfilingSideBarItem} module={true}>
+    <Layout sidebarItems={userData && userData?.userType === "Officer" ? EfilingSideBarItem : EfilingSideBarBranchItem} centerlogohide={true} module={true}>
       <Header dashboardLink={"/efiling/dashboard"} addLink1={"/efiling/dashboard/file-register-list"} title1={"File Registers"} addLink2={"/"} title2={"Create File Register"} width={"500px"} />
       <ToastContainer />
       <div class="container-fluid">

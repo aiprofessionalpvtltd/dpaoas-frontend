@@ -7,12 +7,12 @@ import DatePicker from "react-datepicker";
 import Select from "react-select";
 import { AuthContext } from "../../../../../../../api/AuthContext";
 import { Layout } from "../../../../../../../components/Layout";
-import { EfilingSideBarItem } from "../../../../../../../utils/sideBarItems";
+import { EfilingSideBarBranchItem, EfilingSideBarItem } from "../../../../../../../utils/sideBarItems";
 import Header from "../../../../../../../components/Header";
 import { ToastContainer } from "react-toastify";
 import { useLocation } from "react-router";
 import { getRegisterID, getUserData } from "../../../../../../../api/Auth";
-import { createFiles, getAllYear, geteHeadingNumberbyMainHeadingId, geteHeadingbyBranchId } from "../../../../../../../api/APIs/Services/efiling.service";
+import { createFiles, getAllFileRegister, getAllYear, geteHeadingNumberbyMainHeadingId, geteHeadingbyBranchId } from "../../../../../../../api/APIs/Services/efiling.service";
 import { showErrorMessage, showSuccessMessage } from "../../../../../../../utils/ToastAlert";
 import { useNavigate } from 'react-router-dom';
 
@@ -43,6 +43,8 @@ function AddEditFiles() {
   const [yearData, setYearData] = useState([])
   const [mainheadingData, setMainHeadingData] = useState([])
   const [numberMainHeading, setNumberMainHeading] = useState([])
+  const [registerData, setRegisterData] = useState([])
+ 
 
 
   // const [divisionById, setDivisionById] = useState();
@@ -60,6 +62,7 @@ function AddEditFiles() {
       classification: "",
       movement: "",
       fileCategory: null,
+      registerDataid:""
 
     },
     validationSchema: validationSchema,
@@ -71,7 +74,6 @@ function AddEditFiles() {
 
 
   const hendleSubmit = async (values) => {
-
     const Data = {
       fkBranchId: userData?.fkDepartmentId,
       fkMainHeadingId: values?.mainHeading,
@@ -86,7 +88,7 @@ function AddEditFiles() {
       ...(values?.fileCategory && { fileCategory: values?.fileCategory })
     }
       try {
-        const response = await createFiles(registerId, Data)
+        const response = await createFiles(location.state ? registerId : values?.registerDataid, Data)
         if (response.success) {
           showSuccessMessage(response?.message)
           formik.resetForm()
@@ -145,12 +147,26 @@ function AddEditFiles() {
       showErrorMessage(error?.response?.data?.message);
     }
   }
+  const getAllRegisterApi = async () => {
+    try {
+        const response = await getAllFileRegister(userData?.fkDepartmentId, 0, 100)
+        if (response.success) {
+            setRegisterData(response?.data?.fileRegisters)
+        }
+    } catch (error) {
+        // showErrorMessage(error?.response?.data?.message);
+    }
+}
+
+useEffect(() => {
+    getAllRegisterApi()
+}, [])
 
   useEffect(() => {
     handleBranch()
   },[])
   return (
-    <Layout module={true} sidebarItems={EfilingSideBarItem}>
+    <Layout module={true} sidebarItems={userData && userData?.userType === "Officer" ? EfilingSideBarItem : EfilingSideBarBranchItem}>
       <Header dashboardLink={"/efiling/dashboard"} addLink1={"/efiling/dashboard/file-register-list/files-list"} title1={"Register Index"} title2={"Create File"} addLink2={"/efiling/dashboard/file-register-list/files-list/addedit-file"} width={"500px"} />
       <ToastContainer />
 
@@ -176,6 +192,33 @@ function AddEditFiles() {
             <form onSubmit={formik.handleSubmit}>
               <div class="container-fluid">
                 <div class="row">
+                  
+                <div class="col-3">
+                    <div class="mb-3">
+                      <label class="form-label">Register</label>
+                      <select
+                        className={`form-select`}
+                        id="registerDataid"
+                        name="registerDataid"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.registerDataid}
+                      >
+                        <option value={""} selected disabled hidden>
+                          Select
+                        </option>
+                        {/* {mainheadingData && mainheadingData?.filter((filteredItem) => filteredItem?.status === "active")?.map((item) => (
+                          
+                        ))} */}
+                        {registerData && registerData.map((item) => (
+                            <option value={item.id}>
+                            {item?.year}
+                          </option>
+                        ))}
+                      </select>
+                      
+                    </div>
+                  </div>
                   <div class="col-3">
                     <div class="mb-3">
                       <label class="form-label">Main Heading</label>
@@ -269,7 +312,11 @@ function AddEditFiles() {
                       )}
                     </div>
                   </div>
-                  <div class="col-3">
+                 
+                </div>
+
+                <div class="row">
+                <div class="col-3">
                     <div class="mb-3">
                       <label class="form-label">Serial Number</label>
                       <input
@@ -293,10 +340,6 @@ function AddEditFiles() {
                         )}
                     </div>
                   </div>
-                </div>
-
-                <div class="row">
-                  
                   <div class="col-3">
                     <div class="mb-3">
                       <label class="form-label">File Number</label>
@@ -321,7 +364,7 @@ function AddEditFiles() {
                         )}
                     </div>
                   </div>
-                  <div class="col-3">
+                  <div class="col-6">
                     <div class="mb-3">
                       <label class="form-label">Subject</label>
                       <input

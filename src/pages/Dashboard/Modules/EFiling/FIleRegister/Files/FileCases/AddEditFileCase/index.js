@@ -1,9 +1,15 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { AuthContext } from "../../../../../../../../api/AuthContext";
 import { Layout } from "../../../../../../../../components/Layout";
-import { EfilingSideBarItem } from "../../../../../../../../utils/sideBarItems";
+import { EfilingSideBarBranchItem, EfilingSideBarItem } from "../../../../../../../../utils/sideBarItems";
 import Header from "../../../../../../../../components/Header";
 import { ToastContainer } from "react-toastify";
 import { useLocation } from "react-router";
@@ -13,7 +19,11 @@ import {
   createCase,
   createFiles,
   getAllFRs,
+  getAllFileHeading,
+  getAllFileRegister,
   getAllYear,
+  getFileByRegisterById,
+  getFreshReceiptById,
   getSingleCaseByFileId,
   geteHeadingNumberbyMainHeadingId,
   geteHeadingbyBranchId,
@@ -30,12 +40,14 @@ import Select from "react-select";
 
 function AddEditFileCase() {
   const navigate = useNavigate();
+  const [headings, setHeadings] = useState([]);
   const location = useLocation();
   const { fileIdINRegister } = useContext(AuthContext);
   const [selectedTab, setSelectedTab] = useState("Noting");
   const [allFrs, setAllFrs] = useState([]);
   const [fkFreshReceiptId, setFkFreshReceiptId] = useState(null);
-  
+  const [fkfileId, setFKFileId] = useState(null);
+
   const fileInputRef = useRef(null);
   const UserData = getUserData();
 
@@ -68,19 +80,19 @@ function AddEditFileCase() {
       fileInputRef.current.value = null; // Reset the value of the input
     }
   };
-  
+
   const handleFileChangeCorrespondance = (event) => {
     // Access the files from the event
     const files = event.target.files;
     // Convert the files object to an array
     const fileList = Array.from(files);
-  
+
     // Merge the new files with the existing ones
     setCorrespondenceData((prevState) => ({
       ...prevState,
       attachedFiles: [...prevState.attachedFiles, ...fileList],
     }));
-  };  
+  };
 
   const handleFileChangeSanction = (event) => {
     // Access the files from the event
@@ -119,28 +131,38 @@ function AddEditFileCase() {
   };
 
   const hendleCreateFileCase = async () => {
-        try {
-          if(fkFreshReceiptId) {
-            const formData = createFormData();
-            const response = await createCase(fileIdINRegister, UserData?.fkUserId, fkFreshReceiptId?.value, formData);
-            showSuccessMessage(response?.message);
-            if (response.success) {
-              setTimeout(() => {
-                navigate("/efiling/dashboard/file-register-list/files-list/cases");
-              }, 1000);
-            }
-          } else {
-            showErrorMessage("Fresh receipt is mandatory");
-          }
-        } catch (error) {
-          console.error("Error creating case:", error);
+    try {
+      if (fkFreshReceiptId) {
+        const formData = createFormData();
+        const response = await createCase(
+          fkfileId.value,
+          UserData?.fkUserId,
+          fkFreshReceiptId?.value,
+          formData
+        );
+        showSuccessMessage(response?.message);
+        if (response.success) {
+          setTimeout(() => {
+            navigate("/efiling/dashboard/file-register-list/files-list/cases");
+          }, 1000);
         }
+      } else {
+        showErrorMessage("Fresh receipt is mandatory");
+      }
+    } catch (error) {
+      console.error("Error creating case:", error);
+    }
   };
 
   const hendleEditFileCase = async () => {
     try {
       const formData = createFormData();
-      const response = await UpdateCase(fileIdINRegister, UserData?.fkUserId, location?.state?.caseId, formData);
+      const response = await UpdateCase(
+        fkfileId.value,
+        UserData?.fkUserId,
+        location?.state?.caseId,
+        formData
+      );
       if (response.success) {
         showSuccessMessage(response?.message);
         setTimeout(() => {
@@ -162,35 +184,31 @@ function AddEditFileCase() {
     formData.append("cases[0][Sanction][description]", sanction.description);
     formData.append("cases[0][Objection][description]", objection.description);
     formData.append("cases[0][Letter][description]", letter.description);
-  
-if (objection.attachedFiles) {
-    objection.attachedFiles.forEach((file, index) => {
-      formData.append(`cases[0][Objection][sections][${index}]`, file);
-    });
-}
+
+    if (objection.attachedFiles) {
+      objection.attachedFiles.forEach((file, index) => {
+        formData.append(`cases[0][Objection][sections][${index}]`, file);
+      });
+    }
     if (sanction.attachedFiles) {
-    sanction.attachedFiles.forEach((file, index) => {
-      formData.append(`cases[0][Sanction][sections][${index}]`, file);
-    });
-}
+      sanction.attachedFiles.forEach((file, index) => {
+        formData.append(`cases[0][Sanction][sections][${index}]`, file);
+      });
+    }
     if (letter.attachedFiles) {
-    letter.attachedFiles.forEach((file, index) => {
-      formData.append(`cases[0][Letter][sections][${index}]`, file);
-    });
-}
+      letter.attachedFiles.forEach((file, index) => {
+        formData.append(`cases[0][Letter][sections][${index}]`, file);
+      });
+    }
     if (correspondenceData.attachedFiles) {
-    correspondenceData.attachedFiles.forEach((file, index) => {
-      formData.append(
-          `cases[0][Correspondence][sections][${index}]`,
-          file
-        );
-    });
-  
-}
-  
+      correspondenceData.attachedFiles.forEach((file, index) => {
+        formData.append(`cases[0][Correspondence][sections][${index}]`, file);
+      });
+    }
+
     return formData;
   };
-  
+
   // Function to fetch data based on ID
   const fetchCaseById = async (caseId) => {
     try {
@@ -276,10 +294,94 @@ if (objection.attachedFiles) {
       showErrorMessage(error.response.data.message);
     }
   };
+  const [registerData, setRegisterData] = useState([]);
+  const getAllRegisterApi = async () => {
+    try {
+      const response = await getAllFileRegister(
+        UserData?.fkDepartmentId,
+        0,
+        100
+      );
+      if (response.success) {
+        setRegisterData(response?.data?.fileRegisters);
+      }
+    } catch (error) {
+      // showErrorMessage(error?.response?.data?.message);
+    }
+  };
 
+  useEffect(() => {
+    getAllRegisterApi();
+  }, []);
+
+  const [fileData, setFileData] = useState([]);
+  const [registerId, setRegisterId] = useState(null);
+  const hendleRegisterSelect = async (headID) => {
+    try {
+      const response = await getFileByRegisterById(registerId, headID);
+      if (response.success) {
+        if (response?.data?.files) {
+          setFileData(response?.data?.files);
+        } else {
+          setFileData([]);
+        }
+      }
+    } catch (error) {
+      // showErrorMessage(error?.response?.data?.message);
+    }
+  };
+  // useEffect(() => {
+  //   getAllFilesAPi()
+  // },[])
+  const [frAttectment, setFRAttechment] = useState(null);
+  const getFreashRecepitByIdApi = async (receptId) => {
+    try {
+      const response = await getFreshReceiptById(receptId);
+      if (response.success) {
+        setFRAttechment(response?.data);
+        // showSuccessMessage(response.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const transformFilesHeadings = (apiData) => {
+    console.log(apiData);
+    return apiData.map((item) => ({
+      HeadingNumber: item?.mainHeadingNumber,
+    }));
+  };
+  const [headcount, setHeadCount] = useState(null);
+  const getAllFileHeadingApi = useCallback(async () => {
+    try {
+      const response = await getAllFileHeading(0, 1000);
+      if (response.success) {
+        //   showSuccessMessage(response?.message)
+        // setCount(response?.data?.count);
+        const transformedData = transformFilesHeadings(
+          response?.data?.mainHeadings
+        );
+        setHeadCount(transformedData[transformedData.length - 1].HeadingNumber);
+        setHeadings(transformedData);
+        // if (registerDataid) {
+        //   getAllFilesAPi(registerDataid);
+        // }
+      }
+    } catch (error) {
+      // showErrorMessage(error?.response?.data?.message);
+    }
+  }, [headcount]);
+
+  useEffect(() => {
+    getAllFileHeadingApi();
+  }, []);
 
   return (
-    <Layout module={true} sidebarItems={EfilingSideBarItem}>
+    <Layout
+      module={true}
+      centerlogohide={true}
+      sidebarItems={UserData && UserData?.userType === "Officer" ? EfilingSideBarItem : EfilingSideBarBranchItem}
+    >
       <Header
         dashboardLink={"/efiling/dashboard"}
         addLink1={"/efiling/dashboard/file-register-list/files-list/cases"}
@@ -302,26 +404,114 @@ if (objection.attachedFiles) {
         </div>
 
         <div class="card-body">
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div style={{
-              width: "30%", // Set width to 50%
-            }}>
-            <label for="formFile" class="form-label mt-3">
-                      Select Fresh Receipt
-                    </label>
-  <Select
-    options={allFrs && allFrs?.map((item) => ({
-      value: item.id,
-      label: `${item.frSubject} - ${item.referenceNumber}`,
-    }))}
-    onChange={(selectedOptions) => setFkFreshReceiptId(selectedOptions)}
-    // onBlur={formikAssigned.handleBlur}
-    value={fkFreshReceiptId}
-    name="fkFreshReceiptId"
-    isClearable={true}
-  />
-</div>
-</div>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <div
+              style={{
+                width: "30%", // Set width to 50%
+              }}
+            >
+              <label for="formFile" class="form-label mt-3">
+                Select Fresh Receipt
+              </label>
+              <Select
+                options={
+                  allFrs &&
+                  allFrs?.map((item) => ({
+                    value: item.id,
+                    label: `${item.frSubject} - ${item.referenceNumber}`,
+                  }))
+                }
+                onChange={(selectedOptions) => {
+                  setFkFreshReceiptId(selectedOptions);
+                  getFreashRecepitByIdApi(selectedOptions.value);
+                }}
+                // onBlur={formikAssigned.handleBlur}
+                value={fkFreshReceiptId}
+                name="fkFreshReceiptId"
+                // isClearable={true}
+              />
+            </div>
+            <div
+              style={{
+                marginLeft: "20px",
+                width: "30%", // Set width to 50%
+              }}
+            >
+              <label for="formFile" class="form-label mt-3">
+                Select Register
+              </label>
+              <Select
+                options={
+                  registerData &&
+                  registerData?.map((item) => ({
+                    value: item.id,
+                    label: item.year,
+                  }))
+                }
+                onChange={(selectedOptions) =>
+                  setRegisterId(selectedOptions.value)
+                }
+                // onBlur={formikAssigned.handleBlur}
+                // value={fkregisterId}
+                name="fkregisterId"
+                // isClearable={true}
+              />
+            </div>
+            <div
+              style={{
+                marginLeft: "20px",
+                width: "30%", // Set width to 50%
+              }}
+            >
+              <label class="form-label mt-3">Heading Number</label>
+              <select
+                class="form-select"
+                placeholder={"Select Heading Number"}
+                onChange={(event) => hendleRegisterSelect(event.target.value)}
+                id="headings"
+              >
+                <option selected disabled hidden>
+                  Select
+                </option>
+                {headings &&
+                  headings.map((item) => (
+                    <option value={item.HeadingNumber}>
+                      {item.HeadingNumber}
+                    </option>
+                  ))}
+              </select>
+            </div>
+            <div
+              style={{
+                marginLeft: "20px",
+                width: "30%", // Set width to 50%
+              }}
+            >
+              <label for="formFile" class="form-label mt-3">
+                Select File
+              </label>
+              <Select
+                options={
+                  fileData &&
+                  fileData?.map((item) => ({
+                    value: item.id,
+                    label: item.fileNumber,
+                  }))
+                }
+                onChange={(selectedOptions) => setFKFileId(selectedOptions)}
+                // onBlur={formikAssigned.handleBlur}
+                value={fkfileId}
+                name="fkfileId"
+                isClearable={true}
+              />
+            </div>
+          </div>
           <div style={{ padding: "25px" }}>
             <div
               style={{
@@ -330,14 +520,13 @@ if (objection.attachedFiles) {
                 justifyContent: "center",
               }}
             >
-
               <ul className="nav nav-tabs mb-3 mt-3" id="ex1" role="tablist">
                 <li
                   className="nav-item"
                   role="presentation"
                   onClick={() => {
                     clearInput();
-                    setSelectedTab("Noting")
+                    setSelectedTab("Noting");
                   }}
                 >
                   <button
@@ -359,7 +548,35 @@ if (objection.attachedFiles) {
                   role="presentation"
                   onClick={() => {
                     clearInput();
-                  setSelectedTab("Correspondence")}}
+                    setSelectedTab("FR Noting");
+                  }}
+                >
+                  <button
+                    type="button"
+                    className={
+                      selectedTab === "FR Noting"
+                        ? "nav-link active"
+                        : "nav-link"
+                    }
+                    style={{ width: "170px" }}
+                    data-bs-toggle="tab"
+                    role="tab"
+                    aria-controls="ex1-tabs-1"
+                    disabled={frAttectment ? false: true}
+                    aria-selected={
+                      selectedTab === "FR Noting" ? "true" : "false"
+                    }
+                  >
+                    FR
+                  </button>
+                </li>
+                <li
+                  className="nav-item"
+                  role="presentation"
+                  onClick={() => {
+                    clearInput();
+                    setSelectedTab("Correspondence");
+                  }}
                 >
                   <button
                     type="button"
@@ -384,7 +601,8 @@ if (objection.attachedFiles) {
                   role="presentation"
                   onClick={() => {
                     clearInput();
-                    setSelectedTab("Sanction")}}
+                    setSelectedTab("Sanction");
+                  }}
                 >
                   <button
                     type="button"
@@ -409,7 +627,8 @@ if (objection.attachedFiles) {
                   role="presentation"
                   onClick={() => {
                     clearInput();
-                  setSelectedTab("Objection")}}
+                    setSelectedTab("Objection");
+                  }}
                 >
                   <button
                     type="button"
@@ -434,7 +653,8 @@ if (objection.attachedFiles) {
                   role="presentation"
                   onClick={() => {
                     clearInput();
-                    setSelectedTab("Letter")}}
+                    setSelectedTab("Letter");
+                  }}
                 >
                   <button
                     type="button"
@@ -481,6 +701,14 @@ if (objection.attachedFiles) {
                       disabled={location.state?.view ? true : false}
                     />
                   </section>
+                ) : selectedTab === "FR Noting" ? (
+                  <section>
+                    <iframe
+                      src={`http://172.16.170.8:5252${frAttectment?.freshReceiptsAttachments[0]?.filename}`}
+                      style={{ width: "700px", height: "400px" }}
+                      frameborder="0"
+                    ></iframe>
+                  </section>
                 ) : selectedTab === "Correspondence" ? (
                   <section>
                     <label for="formFile" class="form-label mt-3">
@@ -510,7 +738,7 @@ if (objection.attachedFiles) {
 
                               <div class="col-6">
                                 <input
-                                ref={fileInputRef}
+                                  ref={fileInputRef}
                                   className="form-control"
                                   type="file"
                                   accept=".pdf, .jpg, .jpeg, .png"
@@ -520,7 +748,7 @@ if (objection.attachedFiles) {
                                   onChange={(event) =>
                                     handleFileChangeCorrespondance(event)
                                   }
-                      disabled={location.state?.view ? true : false}
+                                  disabled={location.state?.view ? true : false}
                                 />
                                 {correspondenceData.attachedFiles.length >
                                   0 && (
@@ -533,33 +761,41 @@ if (objection.attachedFiles) {
                                     </label>
                                     <ul>
                                       {correspondenceData.attachedFiles?.map(
-                                            (file, index) => {
-                                              return (
-                                              <div key={index}>
+                                        (file, index) => {
+                                          return (
+                                            <div key={index}>
                                               <a
-                                                  class="MultiFile-remove"
-                                                  style={{
-                                                    marginRight: "10px",
-                                                    color: "red",
-                                                    cursor: "pointer",
-                                                  }}
-                                                  onClick={() => hendleRemoveImage(file)}
-                                                >
-                                                  x
-                                                </a>
-                                                <a
-                                                  href={file?.id ? `http://172.16.170.8:5252${file?.fileName}` : URL.createObjectURL(
-                                                    file
-                                                  )}
-                                                  target="_blank"
-                                                  rel="noopener noreferrer"
-                                                >
-                                                  {file?.id ? file?.fileName?.split("/").pop() : file.name}
-                                                </a>
-                                              </div>
-                                              )
-                                          }
-                                        )}
+                                                class="MultiFile-remove"
+                                                style={{
+                                                  marginRight: "10px",
+                                                  color: "red",
+                                                  cursor: "pointer",
+                                                }}
+                                                onClick={() =>
+                                                  hendleRemoveImage(file)
+                                                }
+                                              >
+                                                x
+                                              </a>
+                                              <a
+                                                href={
+                                                  file?.id
+                                                    ? `http://172.16.170.8:5252${file?.fileName}`
+                                                    : URL.createObjectURL(file)
+                                                }
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                              >
+                                                {file?.id
+                                                  ? file?.fileName
+                                                      ?.split("/")
+                                                      .pop()
+                                                  : file.name}
+                                              </a>
+                                            </div>
+                                          );
+                                        }
+                                      )}
                                     </ul>
                                   </div>
                                 )}
@@ -599,7 +835,7 @@ if (objection.attachedFiles) {
 
                               <div class="col-6">
                                 <input
-                                ref={fileInputRef}
+                                  ref={fileInputRef}
                                   className="form-control"
                                   type="file"
                                   accept=".pdf, .jpg, .jpeg, .png"
@@ -619,37 +855,45 @@ if (objection.attachedFiles) {
                                     >
                                       Attached Files
                                     </label>
-                                <ul>
-                                {sanction.attachedFiles?.map(
-                                            (file, index) => {
-                                              return (
-                                              <div key={index}>
+                                    <ul>
+                                      {sanction.attachedFiles?.map(
+                                        (file, index) => {
+                                          return (
+                                            <div key={index}>
                                               <a
-                                                  class="MultiFile-remove"
-                                                  style={{
-                                                    marginRight: "10px",
-                                                    color: "red",
-                                                    cursor: "pointer",
-                                                  }}
-                                                  onClick={() => hendleRemoveImage(file)}
-                                                >
-                                                  x
-                                                </a>
-                                                <a
-                                                  href={file?.id ? `http://172.16.170.8:5252${file?.fileName}` : URL.createObjectURL(
-                                                    file
-                                                  )}
-                                                  target="_blank"
-                                                  rel="noopener noreferrer"
-                                                >
-                                                  {file?.id ? file?.fileName?.split("/").pop() : file.name}
-                                                </a>
-                                              </div>
-                                              )
-                                          }
-                                        )}
+                                                class="MultiFile-remove"
+                                                style={{
+                                                  marginRight: "10px",
+                                                  color: "red",
+                                                  cursor: "pointer",
+                                                }}
+                                                onClick={() =>
+                                                  hendleRemoveImage(file)
+                                                }
+                                              >
+                                                x
+                                              </a>
+                                              <a
+                                                href={
+                                                  file?.id
+                                                    ? `http://172.16.170.8:5252${file?.fileName}`
+                                                    : URL.createObjectURL(file)
+                                                }
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                              >
+                                                {file?.id
+                                                  ? file?.fileName
+                                                      ?.split("/")
+                                                      .pop()
+                                                  : file.name}
+                                              </a>
+                                            </div>
+                                          );
+                                        }
+                                      )}
                                     </ul>
-                                    </div>
+                                  </div>
                                 )}
                               </div>
                             </div>
@@ -687,7 +931,7 @@ if (objection.attachedFiles) {
 
                               <div class="col-6">
                                 <input
-                                ref={fileInputRef}
+                                  ref={fileInputRef}
                                   className="form-control"
                                   type="file"
                                   accept=".pdf, .jpg, .jpeg, .png"
@@ -707,37 +951,45 @@ if (objection.attachedFiles) {
                                     >
                                       Attached Files
                                     </label>
-                                <ul>
-                                {objection.attachedFiles?.map(
-                                            (file, index) => {
-                                              return (
-                                              <div key={index}>
+                                    <ul>
+                                      {objection.attachedFiles?.map(
+                                        (file, index) => {
+                                          return (
+                                            <div key={index}>
                                               <a
-                                                  class="MultiFile-remove"
-                                                  style={{
-                                                    marginRight: "10px",
-                                                    color: "red",
-                                                    cursor: "pointer",
-                                                  }}
-                                                  onClick={() => hendleRemoveImage(file)}
-                                                >
-                                                  x
-                                                </a>
-                                                <a
-                                                  href={file?.id ? `http://172.16.170.8:5252${file?.fileName}` : URL.createObjectURL(
-                                                    file
-                                                  )}
-                                                  target="_blank"
-                                                  rel="noopener noreferrer"
-                                                >
-                                                  {file?.id ? file?.fileName?.split("/").pop() : file.name}
-                                                </a>
-                                              </div>
-                                              )
-                                          }
-                                        )}
+                                                class="MultiFile-remove"
+                                                style={{
+                                                  marginRight: "10px",
+                                                  color: "red",
+                                                  cursor: "pointer",
+                                                }}
+                                                onClick={() =>
+                                                  hendleRemoveImage(file)
+                                                }
+                                              >
+                                                x
+                                              </a>
+                                              <a
+                                                href={
+                                                  file?.id
+                                                    ? `http://172.16.170.8:5252${file?.fileName}`
+                                                    : URL.createObjectURL(file)
+                                                }
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                              >
+                                                {file?.id
+                                                  ? file?.fileName
+                                                      ?.split("/")
+                                                      .pop()
+                                                  : file.name}
+                                              </a>
+                                            </div>
+                                          );
+                                        }
+                                      )}
                                     </ul>
-                                    </div>
+                                  </div>
                                 )}
                               </div>
                             </div>
@@ -772,7 +1024,7 @@ if (objection.attachedFiles) {
 
                               <div class="col-6">
                                 <input
-                                ref={fileInputRef}
+                                  ref={fileInputRef}
                                   className="form-control"
                                   type="file"
                                   accept=".pdf, .jpg, .jpeg, .png"
@@ -793,34 +1045,42 @@ if (objection.attachedFiles) {
                                       Attached Files
                                     </label>
                                     <ul>
-                                    {letter.attachedFiles?.map(
-                                            (file, index) => {
-                                              return (
-                                              <div key={index}>
+                                      {letter.attachedFiles?.map(
+                                        (file, index) => {
+                                          return (
+                                            <div key={index}>
                                               <a
-                                                  class="MultiFile-remove"
-                                                  style={{
-                                                    marginRight: "10px",
-                                                    color: "red",
-                                                    cursor: "pointer",
-                                                  }}
-                                                  onClick={() => hendleRemoveImage(file)}
-                                                >
-                                                  x
-                                                </a>
-                                                <a
-                                                  href={file?.id ? `http://172.16.170.8:5252${file?.fileName}` : URL.createObjectURL(
-                                                    file
-                                                  )}
-                                                  target="_blank"
-                                                  rel="noopener noreferrer"
-                                                >
-                                                  {file?.id ? file?.fileName?.split("/").pop() : file.name}
-                                                </a>
-                                              </div>
-                                              )
-                                          }
-                                        )}
+                                                class="MultiFile-remove"
+                                                style={{
+                                                  marginRight: "10px",
+                                                  color: "red",
+                                                  cursor: "pointer",
+                                                }}
+                                                onClick={() =>
+                                                  hendleRemoveImage(file)
+                                                }
+                                              >
+                                                x
+                                              </a>
+                                              <a
+                                                href={
+                                                  file?.id
+                                                    ? `http://172.16.170.8:5252${file?.fileName}`
+                                                    : URL.createObjectURL(file)
+                                                }
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                              >
+                                                {file?.id
+                                                  ? file?.fileName
+                                                      ?.split("/")
+                                                      .pop()
+                                                  : file.name}
+                                              </a>
+                                            </div>
+                                          );
+                                        }
+                                      )}
                                     </ul>
                                   </div>
                                 )}
@@ -836,17 +1096,21 @@ if (objection.attachedFiles) {
             </div>
 
             {!location.state?.view && (
-            <div class="row mt-4">
-              <div class="col-11 p-0">
-                <button
-                  class="btn btn-primary float-end me-4"
-                  type="submit"
-                  onClick={location.state?.caseId ? hendleEditFileCase : hendleCreateFileCase}
-                >
-                  {location.state?.caseId ? "Update Case" : "Create Case"}
-                </button>
+              <div class="row mt-4">
+                <div class="col-11 p-0">
+                  <button
+                    class="btn btn-primary float-end me-4"
+                    type="submit"
+                    onClick={
+                      location.state?.caseId
+                        ? hendleEditFileCase
+                        : hendleCreateFileCase
+                    }
+                  >
+                    {location.state?.caseId ? "Update Case" : "Create Case"}
+                  </button>
+                </div>
               </div>
-            </div>
             )}
           </div>
         </div>

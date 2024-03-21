@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router';
 import { useLocation } from "react-router-dom";
 import { getUserData } from '../../../../../../../../api/Auth';
 import { getUserCaseHistory } from '../../../../../../../../api/APIs/Services/efiling.service';
-import { EfilingSideBarItem } from '../../../../../../../../utils/sideBarItems';
+import { EfilingSideBarBranchItem, EfilingSideBarItem } from '../../../../../../../../utils/sideBarItems';
 import Header from '../../../../../../../../components/Header';
 import { Layout } from '../../../../../../../../components/Layout';
 import CustomTable from '../../../../../../../../components/CustomComponents/CustomTable';
@@ -32,8 +32,8 @@ function PreviousCasesHistory() {
         return apiData.map((item, index) => ({
             caseId: item?.fkCaseId,
             FileNo: item?.fileData?.fileNumber,
-            Sender: item?.fileRemarksData?.length > 0 ? item?.fileRemarksData[item?.fileRemarksData.length - 1]?.submittedUser?.employee?.firstName : "---",
-            Receiver: item?.fileRemarksData?.length > 0 ? item?.fileRemarksData[item?.fileRemarksData.length - 1]?.assignedUser?.employee?.firstName : "---",
+            AssignedBy: item?.fileRemarksData?.length > 0 ? item?.fileRemarksData[item?.fileRemarksData.length - 1]?.submittedUser?.employee?.firstName : "---",
+            AssignedTo: item?.fileRemarksData?.length > 0 ? item?.fileRemarksData[item?.fileRemarksData.length - 1]?.assignedUser?.employee?.firstName : "---",
             Status: item?.fileRemarksData?.length > 0 ? item?.fileRemarksData[item?.fileRemarksData.length - 1]?.CommentStatus : "Draft",
             MarkedDate: item?.fileRemarksData?.length > 0 ? moment(item?.fileRemarksData[item?.fileRemarksData.length - 1]?.createdAt).format('DD/MM/YYYY') : "---",
             MarkedTime: item?.fileRemarksData?.length > 0 ? moment(item?.fileRemarksData[item?.fileRemarksData.length - 1]?.createdAt).format("hh:mm A") : "---"
@@ -42,7 +42,7 @@ function PreviousCasesHistory() {
 
     const getAllCasesApi = async () => {
         try {
-            const response = await getUserCaseHistory(fileIdINRegister, UserData?.fkDepartmentId, currentPage, pageSize)
+            const response = await getUserCaseHistory(location?.state?.fileId, UserData?.fkDepartmentId, currentPage, pageSize)
             if (response.success) {
                 setCount(response?.data?.count)
                 const transferData = transformFilesCases(response?.data?.cases)
@@ -61,7 +61,7 @@ function PreviousCasesHistory() {
     }, [currentPage])
 
     return (
-        <Layout module={true} sidebarItems={EfilingSideBarItem}>
+        <Layout module={true} sidebarItems={UserData && UserData?.userType === "Officer" ? EfilingSideBarItem : EfilingSideBarBranchItem}>
             <Header dashboardLink={"/efiling/dashboard"} addLink1={"/efiling/dashboard/file-register-list/files-list/cases"} title1={"File Cases"} title2={"Cases History"} addLink2={"/efiling/dashboard/file-register-list/files-list/cases-history"} width={"500px"} />
 
             <div class="row">
