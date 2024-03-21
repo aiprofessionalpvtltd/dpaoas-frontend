@@ -5,7 +5,7 @@ import { useLocation } from "react-router-dom";
 import moment from 'moment';
 import { AuthContext } from '../../../../../../api/AuthContext';
 import { getUserData } from '../../../../../../api/Auth';
-import { EfilingSideBarItem } from '../../../../../../utils/sideBarItems';
+import { EfilingSideBarBranchItem, EfilingSideBarItem } from '../../../../../../utils/sideBarItems';
 import { Layout } from '../../../../../../components/Layout';
 import Header from '../../../../../../components/Header';
 import CustomTable from '../../../../../../components/CustomComponents/CustomTable';
@@ -32,9 +32,10 @@ function PreviousFRsHistory() {
         return apiData.map((item, index) => ({
             id: item?.id,
             frType: item?.frType,
-            Sender: item?.freshReceipt?.length > 0 ? item?.freshReceipt[item?.freshReceipt?.length - 1]?.submittedUser?.employee?.firstName : "---",
-            Receiver: item?.freshReceipt?.length > 0 ? item?.freshReceipt[item?.freshReceipt?.length - 1]?.assignedUser?.employee?.firstName : "---",
-            // Status: item?.fileRemarksData?.length > 0 ? item?.fileRemarksData[item?.fileRemarksData?.length - 1]?.CommentStatus : "Draft",
+            AssignedBy: item?.freshReceipt?.length > 0 ? item?.freshReceipt[item?.freshReceipt?.length - 1]?.submittedUser?.employee?.firstName : "---",
+            AssignedTo: item?.freshReceipt?.length > 0 ? item?.freshReceipt[item?.freshReceipt?.length - 1]?.assignedUser?.employee?.firstName : "---",
+            Status: item?.freshReceipt?.length > 0 ? item?.freshReceipt[item?.freshReceipt?.length - 1]?.CommentStatus : "---",
+            AssignedDate: item?.freshReceipt?.length > 0 ? moment(item?.freshReceipt[item?.freshReceipt?.length - 1]?.createdAt).format("DD/MM/YYYY h:m A") : "---",
             frSubject:item?.frSubject,
             referenceNumber: item?.referenceNumber,
             frDate: moment(item?.frDate).format("DD/MM/YYYY"),
@@ -61,7 +62,7 @@ function PreviousFRsHistory() {
     }, [currentPage])
 
     return (
-        <Layout module={true} sidebarItems={EfilingSideBarItem}>
+        <Layout module={true} sidebarItems={UserData && UserData?.userType === "Officer" ? EfilingSideBarItem : EfilingSideBarBranchItem}>
             <Header dashboardLink={"/efiling/dashboard"} addLink1={"/efiling/dashboard/fresh-receipt"} title1={"Fresh Receipts"} title2={"FRs History"} addLink2={"/efiling/dashboard/file-register-list/files-list/cases-history"} width={"500px"} />
 
             <div class="row">

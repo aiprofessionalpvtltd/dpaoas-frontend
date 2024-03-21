@@ -1,16 +1,18 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Layout } from "../../../../../components/Layout";
-import { EfilingSideBarItem } from "../../../../../utils/sideBarItems";
+import { EfilingSideBarBranchItem, EfilingSideBarItem } from "../../../../../utils/sideBarItems";
 import Header from "../../../../../components/Header";
 import CustomTable from "../../../../../components/CustomComponents/CustomTable";
 import { useNavigate } from "react-router-dom";
 import { getAllFileDiary } from "../../../../../api/APIs/Services/efiling.service";
 import { showErrorMessage } from "../../../../../utils/ToastAlert";
 import moment from "moment";
+import { getUserData } from "../../../../../api/Auth";
 
 export const Diary = () => {
   const [selectedTab, setSelectedTab] = useState("Incoming");
   const navigate = useNavigate()
+  const userData = getUserData()
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
   const [outgoingCount, setOutGoingCount] = useState(null)
@@ -64,7 +66,7 @@ export const Diary = () => {
   }, [currentPage]);
 
   return (
-    <Layout module={true} sidebarItems={EfilingSideBarItem}>
+    <Layout module={true} centerlogohide={true} sidebarItems={userData && userData?.userType === "Officer" ? EfilingSideBarItem : EfilingSideBarBranchItem}>
       <Header
         dashboardLink={"/efiling/dashboard"}
         addLink1={"/efiling/dashboard/diary"}

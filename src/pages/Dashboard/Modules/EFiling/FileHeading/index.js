@@ -1,15 +1,17 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { Layout } from '../../../../../components/Layout'
-import { EfilingSideBarItem } from '../../../../../utils/sideBarItems'
+import { EfilingSideBarBranchItem, EfilingSideBarItem } from '../../../../../utils/sideBarItems'
 import Header from '../../../../../components/Header'
 import { ToastContainer } from 'react-toastify'
 import CustomTable from '../../../../../components/CustomComponents/CustomTable'
 import { useNavigate } from 'react-router-dom'
 import { DeleteHeading, getAllFileHeading } from '../../../../../api/APIs/Services/efiling.service'
 import { showErrorMessage, showSuccessMessage } from '../../../../../utils/ToastAlert'
+import { getUserData } from '../../../../../api/Auth'
 
 function FileHeadingList() {
     const navigate = useNavigate()
+    const userData = getUserData()
     const [currentPage, setCurrentPage] = useState(0);
     const [count, setCount] = useState(null);
     const pageSize = 5; // Set your desired page size
@@ -63,7 +65,7 @@ function FileHeadingList() {
         getAllFileHeadingApi()
       },[getAllFileHeadingApi])
   return (
-    <Layout module={true} sidebarItems={EfilingSideBarItem}>
+    <Layout module={true} centerlogohide={true} sidebarItems={userData && userData?.userType === "Officer" ? EfilingSideBarItem : EfilingSideBarBranchItem}>
     <Header dashboardLink={"/efiling/dashboard"} addLink1={"/efiling/dashboard"} title1={"File Heading"} width={"500px"} />
     <ToastContainer />
     <div class="row">

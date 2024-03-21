@@ -3,7 +3,7 @@ import CustomTable from '../../../../../components/CustomComponents/CustomTable'
 import { ToastContainer } from 'react-toastify';
 import Header from '../../../../../components/Header';
 import { Layout } from '../../../../../components/Layout';
-import { EfilingSideBarItem } from '../../../../../utils/sideBarItems';
+import { EfilingSideBarBranchItem, EfilingSideBarItem } from '../../../../../utils/sideBarItems';
 import { useNavigate } from 'react-router';
 import { getAllFileRegister } from '../../../../../api/APIs/Services/efiling.service';
 import { showErrorMessage, showSuccessMessage } from '../../../../../utils/ToastAlert';
@@ -52,7 +52,7 @@ function ListFileRegister() {
     }, [])
 
     return (
-        <Layout module={true} sidebarItems={EfilingSideBarItem}>
+        <Layout module={true} centerlogohide={true} sidebarItems={UserData && UserData?.userType === "Officer" ? EfilingSideBarItem : EfilingSideBarBranchItem}>
             <Header dashboardLink={"/efiling/dashboard"} addLink1={"/efiling/dashboard"} title1={"File Registers"} width={"500px"} />
             <ToastContainer />
             <div class="row">
@@ -67,6 +67,7 @@ function ListFileRegister() {
                         headertitlebgColor={"#666"}
                         headertitletextColor={"#FFF"}
                         handlePageChange={handlePageChange}
+                        ActionHide={true}
                         currentPage={currentPage}
                         handleAdd={() => navigate("/efiling/dashboard/addedit-file-register")}
                         pageSize={pageSize}

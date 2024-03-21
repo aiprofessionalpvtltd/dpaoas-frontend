@@ -24,8 +24,9 @@ import {
   DeleteFileCaseImage,
   DeleteFreahReceptImage,
   UpdateEfiling,
+  UpdateFIleCase,
   UploadEfilingAttechment,
-  assigneCase,
+  assignFIleCase,
   getCaseDetailByID,
   getEFilesByID,
 } from "../../../../../api/APIs/Services/efiling.service";
@@ -60,12 +61,7 @@ const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
             {children}
           </MDBModalBody>
 
-          <MDBModalFooter>
-            <MDBBtn color="secondary" onClick={toggleModal}>
-              Close
-            </MDBBtn>
-            <MDBBtn>Submit</MDBBtn>
-          </MDBModalFooter>
+          
         </MDBModalContent>
       </MDBModalDialog>
     </MDBModal>
@@ -75,6 +71,8 @@ const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
 function FileDetail() {
   const location = useLocation();
   const fileInputRef = useRef(null);
+
+  console.log("location?.state?.fileIdlocation?.state?.fileIdlocation?.state?.fileIdlocation?.state?.fileId",location?.state?.fileId);
 
   const [notingData, setNotingData] = useState({
     description: "",
@@ -189,6 +187,13 @@ function FileDetail() {
     },
   });
 
+  const [modalInputValue, setModalInputValue] = useState({
+      assignedTo: "",
+      CommentStatus: '',
+      comment: "",
+  })
+
+
   const handleFileChangeCorrespondance = (event) => {
     // Access the files from the event
     const files = event.target.files;
@@ -244,10 +249,10 @@ function FileDetail() {
   const UpdateEfilingApi = async (values) => {
 
     const formData = new FormData();
-    formData.append("submittedBy", UserData?.fkUserId);
-    formData.append("assignedTo",  values?.assignedTo);
-    formData.append("CommentStatus", values?.CommentStatus);
-    formData.append("comment", values?.comment);
+    // formData.append("submittedBy", UserData?.fkUserId);
+    // formData.append("assignedTo",  values?.assignedTo);
+    // formData.append("CommentStatus", values?.CommentStatus);
+    // formData.append("comment", values?.comment);
 
 
 
@@ -259,7 +264,7 @@ function FileDetail() {
     formData.append("cases[0][Sanction][description]", sanction.description);
     formData.append("cases[0][Objection][description]", objection.description);
     formData.append("cases[0][Letter][description]", letter.description);
-    formData.append("diaryNumber", values?.diaryNumber);
+    // formData.append("diaryNumber", values?.diaryNumber);
   
 if (objection.attachedFiles) {
     objection.attachedFiles.forEach((file, index) => {
@@ -287,7 +292,7 @@ if (objection.attachedFiles) {
 }
 
     try {
-      const response = await assigneCase(
+      const response = await UpdateFIleCase(
         location?.state?.fileId ? location?.state?.fileId : fileIdINRegister,
         location?.state?.id,
         formData
@@ -304,6 +309,38 @@ if (objection.attachedFiles) {
     }
   };
 
+  
+
+  const hendleAssiginFileCaseApi = async () => {
+    
+    const data = {
+      submittedBy: UserData?.fkUserId,
+      assignedTo:modalInputValue?.assignedTo,
+      CommentStatus:modalInputValue?.CommentStatus,
+      comment:modalInputValue?.comment
+    }
+    try {
+      const response = await assignFIleCase(
+        location?.state?.fileId ? location?.state?.fileId : fileIdINRegister,
+        location?.state?.id,
+        data
+      );
+      if (response?.success) {
+        showSuccessMessage(response?.message);
+
+        toggleModal();
+        getFilesByID();
+        // Clear all fields in modalInputValue
+        setModalInputValue({
+          assignedTo: "",
+          CommentStatus: "",
+          comment: "",
+        });
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  }
   const toggleModal = () => setIsModalOpen(!isModalOpen);
 
   // use it (editorContent) when submitting whole file content
@@ -474,22 +511,94 @@ if (objection.attachedFiles) {
         />
 
         <EFilingModal
-          title={"Add Remarks"}
+          title={"Add Comments"}
           isOpen={isModalOpen}
           toggleModal={toggleModal}
+          // hendleSubmit={() => hendleAssiginFileCaseApi()} 
         >
-          <label>Remarks</label>
-          <textarea
-            style={{ display: "block", width: "100%" }}
-            className="form-control"
-          ></textarea>
-          <div className="clearfix"></div>
-          <label className=" mt-3">Assign</label>
-          <select class="form-control">
-            <option>Superintendent</option>
-            <option>SO</option>
-            <option>DG</option>
-          </select>
+          <div class="row">
+                  
+                    <div class="col">
+                      <div class="mb-3">
+                        <label class="form-label">Action</label>
+                        <select
+                           className="form-select"
+                           id="CommentStatus"
+                           name="CommentStatus"
+                           onChange={(e) => setModalInputValue(prevState => ({
+                             ...prevState,
+                             CommentStatus: e.target.value
+                           }))}
+                           value={modalInputValue.CommentStatus}
+                        >
+                          <option value="" selected disabled hidden>
+                            Select
+                          </option>
+                          <option value={"Approved"}>Approved</option>
+                          <option value={"Under Discussion"}>Under Discussion</option>
+                          <option value={"Retype/Amend"}>Retype/Amend</option>
+                          <option value={"Rejected"}>Rejected</option>
+                          <option value={"Submit For Approval"}>Submit For Approval</option>
+                          <option value={"Seen"}>Seen</option>
+                          <option value={"Pend"}>Pend</option>
+                          <option value={"NFA"}>NFA</option>
+                          <option value={"Approval For Para"}>Approval For Para</option>
+
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="mb-3">
+                        <label class="form-label">Mark To</label>
+                        <select
+                          class="form-select"
+                          id="assignedTo"
+                          name="assignedTo"
+                          onChange={(e) => setModalInputValue(prevState => ({
+                            ...prevState,
+                            assignedTo: e.target.value
+                          }))}
+                          value={modalInputValue.assignedTo}
+                        >
+                          <option value={""} selected disabled hidden>
+                            Select
+                          </option>
+                          {employeeData &&
+                            employeeData?.map((item) => (
+                              <option
+                                value={item.id}
+                              >{`${item.designations?.designationName}`}</option>
+                            ))}
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col">
+                      <div class="mb-3">
+                        <label class="form-label">Add Comments</label>
+                        <textarea
+                          class="form-control"
+                          id="comment"
+                          name="comment"
+                          onChange={(e) => setModalInputValue(prevState => ({
+                            ...prevState,
+                            comment: e.target.value
+                          }))}
+                          value={modalInputValue.comment}
+                        ></textarea>
+                      </div>
+                    </div>
+                  </div>
+                  <MDBModalFooter>
+            <MDBBtn color="secondary" onClick={toggleModal}>
+              Close
+            </MDBBtn>
+            <MDBBtn onClick={() => {
+              hendleAssiginFileCaseApi()
+              toggleModal()
+              }}>Submit</MDBBtn>
+          </MDBModalFooter>
         </EFilingModal>
 
         <div className="custom-editor">
@@ -529,418 +638,8 @@ if (objection.attachedFiles) {
             <div className="col-md-7">
               <form onSubmit={formik.handleSubmit}>
                 <div>
-                  <div class="content">
-                    <div class="row">
-                      <div class="col-6">
-                        <div class="mb-3">
-                          <label class="form-label">File</label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            placeholder="fileNumber"
-                            disabled={true}
-                            id="fileNumber"
-                            name="fileNumber"
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            value={formik.values.fileNumber}
-                          />
-                          {/* <select class="form-select" disabled={viewPage ? true : false}
-                            id="fileNumber"
-                            name="fileNumber"
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            value={formik.values.fileNumber}>
-                            <option>8(14)/2022/IT</option>
-                            <option>8(15)/2022/IT</option>
-                          </select> */}
-                        </div>
-                      </div>
 
-                      <div class="col">
-                        <div class="mb-3">
-                          <label
-                            for="exampleFormControlInput1"
-                            class="form-label"
-                          >
-                            Subject
-                          </label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            placeholder="Subject"
-                            disabled={true}
-                            id="fileSubject"
-                            name="fileSubject"
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            value={formik.values.fileSubject}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      {/* <div class="col">
-                        <div class="mb-3">
-                          <div class="mb-3">
-                            <label class="form-label">Priority</label>
-                            <select
-                              class="form-select"
-                              disabled={viewPage ? true : false}
-                              id="priority"
-                              name="priority"
-                              onChange={formik.handleChange}
-                              onBlur={formik.handleBlur}
-                              value={formik.values.priority}
-                            >
-                              <option value={"Normal"}>Normal</option>
-                              <option value={"Immediate"}>Immediate</option>
-                            </select>
-                          </div>
-                        </div>
-                      </div> */}
-                      <div class="col-6">
-                        <div class="mb-3">
-                          <label class="form-label">Year</label>
-                          <select
-                            disabled={true}
-                            class="form-select"
-                            id="year"
-                            name="year"
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            value={formik.values.year}
-                          >
-                            <option value={""} selected disabled hidden>
-                              Select
-                            </option>
-                            {yaerData &&
-                              yaerData?.map((item) => (
-                                <option value={item.name}>{item.name}</option>
-                              ))}
-                          </select>
-                        </div>
-                      </div>
-{/* 
-                      <div class="col-6">
-                        <div class="mb-3">
-                          <label
-                            for="exampleFormControlInput1"
-                            class="form-label"
-                          >
-                            File Type
-                          </label>
-                          <select
-                            class="form-select"
-                            disabled={viewPage ? true : false}
-                            id="fileType"
-                            name="fileType"
-                            onChange={handleDocumentType}
-                            onBlur={formik.handleBlur}
-                            value={documentTypeVal}
-                          >
-                            <option value={""} selected disabled hidden>
-                              Select
-                            </option>
-
-                            <option value={"Urgent"}>Urgent</option>
-                            <option value={"Routine"}>Routine</option>
-                            <option value={"Immediate"}>Immediate</option>
-                            <option value={"Priority"}>Immediate</option>
-                          </select>
-                        </div>
-                      </div> */}
-                    </div>
-
-                  </div>
-                  <div className="row">
-                    {documentTypeVal === "Internal" ? (
-                      <>
-                        <div class="col-6">
-                          <div class="mb-3">
-                            <label class="form-label">Branch</label>
-                            <select
-                              class="form-select"
-                              id="fkBranchId"
-                              name="fkBranchId"
-                              disabled={true}
-                              onChange={formik.handleChange}
-                              onBlur={formik.handleBlur}
-                              value={formik.values.fkBranchId}
-                            >
-                              <option value={""} selected disabled hidden>
-                                Select
-                              </option>
-                              {branchesData &&
-                                branchesData?.map((item) => (
-                                  <option value={item.id}>
-                                    {item.branchName}
-                                  </option>
-                                ))}
-                            </select>
-                          </div>
-                        </div>
-
-                        {/* <div class="col-6">
-                          <div class="mb-3">
-                            <label class="form-label">Department</label>
-                            <select
-                              class="form-select"
-                              id="fkdepartmentId"
-                              name="fkdepartmentId"
-                              onChange={formik.handleChange}
-                              disabled={viewPage ? true : false}
-                              onBlur={formik.handleBlur}
-                              value={formik.values.fkdepartmentId}
-                            >
-                              <option value={""} selected disabled hidden>
-                                Select
-                              </option>
-                              {departmentData &&
-                                departmentData?.map((item) => (
-                                  <option value={item.id}>
-                                    {item.departmentName}
-                                  </option>
-                                ))}
-                            </select>
-                          </div>
-                        </div> */}
-                      </>
-                    ) : documentTypeVal === "External" ? (
-                      <>
-                        <div class="col-6">
-                          <div class="mb-3">
-                            <label class="form-label">Ministries</label>
-                            <select
-                              disabled={true}
-                              class="form-select"
-                              id="fkMinistryId"
-                              name="fkMinistryId"
-                              onChange={formik.handleChange}
-                              onBlur={formik.handleBlur}
-                              value={formik.values.fkMinistryId}
-                            >
-                              <option value={""} selected disabled hidden>
-                                Select
-                              </option>
-                              {ministryData &&
-                                ministryData.map((item) => (
-                                  <option value={item.id}>
-                                    {item.ministryName}
-                                  </option>
-                                ))}
-                            </select>
-                          </div>
-                        </div>
-                        <div className="col-6">
-                          <div
-                            className="mb-3"
-                            style={{ position: "relative" }}
-                          >
-                            <label className="form-label">Received On</label>
-                            <span
-                              style={{
-                                position: "absolute",
-                                right: "15px",
-                                top: "36px",
-                                zIndex: 1,
-                                fontSize: "20px",
-                                color: "#666",
-                              }}
-                            >
-                              <FontAwesomeIcon icon={faCalendarAlt} />
-                            </span>
-                            <DatePicker
-                              disabled={true}
-                              selected={formik.values.receivedOn}
-                              onChange={(date) =>
-                                formik.setFieldValue("receivedOn", date)
-                              }
-                              onBlur={formik.handleBlur}
-                              // minDate={new Date()}
-                              className={`form-control`}
-                            />
-                          </div>
-                        </div>
-                      </>
-                    ) : null}
-                  </div>
-
-                  <div class="row">
-                  <div className="col">
-                  <div className="mb-3">
-                    <label htmlFor="diaryNumber" className="form-label">
-                      Diary No
-                    </label>
-                    <input
-                      className={`form-control ${
-                        formik.touched.diaryNumber && formik.errors.diaryNumber
-                          ? "is-invalid"
-                          : ""
-                      }`}
-                      type="text"
-                      id="diaryNumber"
-                      placeholder="Diary No"
-                      value={formik.values.diaryNumber}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                    />
-                    {formik.touched.diaryNumber &&
-                      formik.errors.diaryNumber && (
-                        <div className="invalid-feedback">
-                          {formik.errors.diaryNumber}
-                        </div>
-                      )}
-                  </div>
-                </div>
-                    <div class="col">
-                      <div class="mb-3">
-                        <label class="form-label">Action</label>
-                        <select
-                          class="form-select"
-                          id="CommentStatus"
-                          name="CommentStatus"
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          value={formik.values.CommentStatus}
-                          disabled={viewPage ? true : false}
-                        >
-                          <option value="" selected disabled hidden>
-                            Select
-                          </option>
-                          <option value={"Approved"}>Approved</option>
-                          <option value={"Discuss"}>Discuss</option>
-                          <option value={"Retype/Amend"}>Retype/Amend</option>
-                          <option value={"Rejected"}>Rejected</option>
-                          <option value={"Submit For Approval"}>Submit For Approval</option>
-
-                        </select>
-                      </div>
-                    </div>
-                    <div class="col">
-                      <div class="mb-3">
-                        <label class="form-label">Mark To</label>
-                        <select
-                          class="form-select"
-                          id="assignedTo"
-                          name="assignedTo"
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          value={formik.values.assignedTo}
-                          disabled={viewPage ? true : false}
-                        >
-                          <option value={""} selected disabled hidden>
-                            Select
-                          </option>
-                          {employeeData &&
-                            employeeData?.map((item) => (
-                              <option
-                                value={item.id}
-                              >{`${item.designations?.designationName}`}</option>
-                            ))}
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col">
-                      <div class="mb-3">
-                        <label class="form-label">Remarks</label>
-                        <textarea
-                          class="form-control"
-                          id="comment"
-                          name="comment"
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          value={formik.values.comment}
-                          disabled={viewPage ? true : false}
-                        ></textarea>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col">
-                  {frAttachments &&
-                      frAttachments?.map((item) => (
-                        <div class="MultiFile-label mt-3">
-                          {/* <a
-                            class="MultiFile-remove"
-                            style={{
-                              marginRight: "10px",
-                              color: "red",
-                              cursor: "pointer",
-                            }}
-                            onClick={() => hendleFRRemoveImage(item)}
-                          >
-                            x
-                          </a> */}
-                          <span
-                            class="MultiFile-label"
-                            title={item?.filename
-                              ?.split("\\")
-                              .pop()
-                              .split("/")
-                              .pop()}
-                          >
-                          <label className="form-label" style={{ display: "block" }}>
-                            Attached Fresh Receipts
-                          </label>
-                            <span class="MultiFile-title">
-                              <a
-                                onClick={() => HandlePrint(item?.filename)}
-                                style={{ cursor: "pointer", color: 'blue' }}
-                              >
-                                - {item?.filename
-                                  ?.split("\\")
-                                  .pop()
-                                  .split("/")
-                                  .pop()}
-                              </a>
-                            </span>
-                          </span>
-                        </div>
-                      ))}
-                      </div>
-                      </div>
-                  <div class="row mb-4">
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                      <button class="btn btn-primary" type="submit" disabled={viewPage ? true : false}>
-                        Submit
-                      </button>
-                    </div>
-                  </div>
-                  {/* <div className="row">
-                    <div class="col-6">
-                     
-                      <label class="form-label" style={{ display: "block" }}>
-                        Attached File
-                      </label>
-                      <span
-                        class="MultiFile-label"
-                        style={{ marginBottom: "18px", display: "block" }}
-                        title={filesData?.attachment
-                          ?.split("\\")
-                          .pop()
-                          .split("/")
-                          .pop()}
-                      >
-                        <span class="MultiFile-title">
-                          <a
-                            href={`http://172.16.170.8:5252${filesData?.attachment}`}
-                          >
-                            {filesData?.attachment
-                              ?.split("\\")
-                              .pop()
-                              .split("/")
-                              .pop()}
-                          </a>
-                        </span>
-                      </span>
-                      
-                    </div>
-                  </div> */}
-
-                  <div class="shadow" style={{ padding: "25px" }}>
+                <div class="shadow" style={{ padding: "25px" }}>
                     <ul
                       className="nav nav-tabs mb-3 mt-3"
                       id="ex1"
@@ -1452,6 +1151,422 @@ if (objection.attachedFiles) {
                       )}
                     </div>
                   </div>
+                  <div class="content mt-5">
+                    <div class="row">
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">File</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            placeholder="fileNumber"
+                            disabled={true}
+                            id="fileNumber"
+                            name="fileNumber"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            value={formik.values.fileNumber}
+                          />
+                          {/* <select class="form-select" disabled={viewPage ? true : false}
+                            id="fileNumber"
+                            name="fileNumber"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            value={formik.values.fileNumber}>
+                            <option>8(14)/2022/IT</option>
+                            <option>8(15)/2022/IT</option>
+                          </select> */}
+                        </div>
+                      </div>
+
+                      <div class="col">
+                        <div class="mb-3">
+                          <label
+                            for="exampleFormControlInput1"
+                            class="form-label"
+                          >
+                            Subject
+                          </label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            placeholder="Subject"
+                            disabled={true}
+                            id="fileSubject"
+                            name="fileSubject"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            value={formik.values.fileSubject}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      {/* <div class="col">
+                        <div class="mb-3">
+                          <div class="mb-3">
+                            <label class="form-label">Priority</label>
+                            <select
+                              class="form-select"
+                              disabled={viewPage ? true : false}
+                              id="priority"
+                              name="priority"
+                              onChange={formik.handleChange}
+                              onBlur={formik.handleBlur}
+                              value={formik.values.priority}
+                            >
+                              <option value={"Normal"}>Normal</option>
+                              <option value={"Immediate"}>Immediate</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div> */}
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">Year</label>
+                          <select
+                            disabled={true}
+                            class="form-select"
+                            id="year"
+                            name="year"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            value={formik.values.year}
+                          >
+                            <option value={""} selected disabled hidden>
+                              Select
+                            </option>
+                            {yaerData &&
+                              yaerData?.map((item) => (
+                                <option value={item.name}>{item.name}</option>
+                              ))}
+                          </select>
+                        </div>
+                      </div>
+{/* 
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label
+                            for="exampleFormControlInput1"
+                            class="form-label"
+                          >
+                            File Type
+                          </label>
+                          <select
+                            class="form-select"
+                            disabled={viewPage ? true : false}
+                            id="fileType"
+                            name="fileType"
+                            onChange={handleDocumentType}
+                            onBlur={formik.handleBlur}
+                            value={documentTypeVal}
+                          >
+                            <option value={""} selected disabled hidden>
+                              Select
+                            </option>
+
+                            <option value={"Urgent"}>Urgent</option>
+                            <option value={"Routine"}>Routine</option>
+                            <option value={"Immediate"}>Immediate</option>
+                            <option value={"Priority"}>Immediate</option>
+                          </select>
+                        </div>
+                      </div> */}
+                    </div>
+
+                  </div>
+                  <div className="row">
+                    {documentTypeVal === "Internal" ? (
+                      <>
+                        <div class="col-6">
+                          <div class="mb-3">
+                            <label class="form-label">Branch</label>
+                            <select
+                              class="form-select"
+                              id="fkBranchId"
+                              name="fkBranchId"
+                              disabled={true}
+                              onChange={formik.handleChange}
+                              onBlur={formik.handleBlur}
+                              value={formik.values.fkBranchId}
+                            >
+                              <option value={""} selected disabled hidden>
+                                Select
+                              </option>
+                              {branchesData &&
+                                branchesData?.map((item) => (
+                                  <option value={item.id}>
+                                    {item.branchName}
+                                  </option>
+                                ))}
+                            </select>
+                          </div>
+                        </div>
+
+                        {/* <div class="col-6">
+                          <div class="mb-3">
+                            <label class="form-label">Department</label>
+                            <select
+                              class="form-select"
+                              id="fkdepartmentId"
+                              name="fkdepartmentId"
+                              onChange={formik.handleChange}
+                              disabled={viewPage ? true : false}
+                              onBlur={formik.handleBlur}
+                              value={formik.values.fkdepartmentId}
+                            >
+                              <option value={""} selected disabled hidden>
+                                Select
+                              </option>
+                              {departmentData &&
+                                departmentData?.map((item) => (
+                                  <option value={item.id}>
+                                    {item.departmentName}
+                                  </option>
+                                ))}
+                            </select>
+                          </div>
+                        </div> */}
+                      </>
+                    ) : documentTypeVal === "External" ? (
+                      <>
+                        <div class="col-6">
+                          <div class="mb-3">
+                            <label class="form-label">Ministries</label>
+                            <select
+                              disabled={true}
+                              class="form-select"
+                              id="fkMinistryId"
+                              name="fkMinistryId"
+                              onChange={formik.handleChange}
+                              onBlur={formik.handleBlur}
+                              value={formik.values.fkMinistryId}
+                            >
+                              <option value={""} selected disabled hidden>
+                                Select
+                              </option>
+                              {ministryData &&
+                                ministryData.map((item) => (
+                                  <option value={item.id}>
+                                    {item.ministryName}
+                                  </option>
+                                ))}
+                            </select>
+                          </div>
+                        </div>
+                        <div className="col-6">
+                          <div
+                            className="mb-3"
+                            style={{ position: "relative" }}
+                          >
+                            <label className="form-label">Received On</label>
+                            <span
+                              style={{
+                                position: "absolute",
+                                right: "15px",
+                                top: "36px",
+                                zIndex: 1,
+                                fontSize: "20px",
+                                color: "#666",
+                              }}
+                            >
+                              <FontAwesomeIcon icon={faCalendarAlt} />
+                            </span>
+                            <DatePicker
+                              disabled={true}
+                              selected={formik.values.receivedOn}
+                              onChange={(date) =>
+                                formik.setFieldValue("receivedOn", date)
+                              }
+                              onBlur={formik.handleBlur}
+                              // minDate={new Date()}
+                              className={`form-control`}
+                            />
+                          </div>
+                        </div>
+                      </>
+                    ) : null}
+                  </div>
+
+                  {/* <div class="row">
+                  <div className="col">
+                  <div className="mb-3">
+                    <label htmlFor="diaryNumber" className="form-label">
+                      Diary No
+                    </label>
+                    <input
+                      className={`form-control ${
+                        formik.touched.diaryNumber && formik.errors.diaryNumber
+                          ? "is-invalid"
+                          : ""
+                      }`}
+                      type="text"
+                      id="diaryNumber"
+                      placeholder="Diary No"
+                      value={formik.values.diaryNumber}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                    />
+                    {formik.touched.diaryNumber &&
+                      formik.errors.diaryNumber && (
+                        <div className="invalid-feedback">
+                          {formik.errors.diaryNumber}
+                        </div>
+                      )}
+                  </div>
+                </div>
+                    <div class="col">
+                      <div class="mb-3">
+                        <label class="form-label">Action</label>
+                        <select
+                          class="form-select"
+                          id="CommentStatus"
+                          name="CommentStatus"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.CommentStatus}
+                          disabled={viewPage ? true : false}
+                        >
+                          <option value="" selected disabled hidden>
+                            Select
+                          </option>
+                          <option value={"Approved"}>Approved</option>
+                          <option value={"Under Discussion"}>Under Discussion</option>
+                          <option value={"Retype/Amend"}>Retype/Amend</option>
+                          <option value={"Rejected"}>Rejected</option>
+                          <option value={"Submit For Approval"}>Submit For Approval</option>
+                          <option value={"Seen"}>Seen</option>
+                          <option value={"Pend"}>Pend</option>
+                          <option value={"NFA"}>NFA</option>
+                          <option value={"Approval For Para"}>Approval For Para</option>
+
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="mb-3">
+                        <label class="form-label">Mark To</label>
+                        <select
+                          class="form-select"
+                          id="assignedTo"
+                          name="assignedTo"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.assignedTo}
+                          disabled={viewPage ? true : false}
+                        >
+                          <option value={""} selected disabled hidden>
+                            Select
+                          </option>
+                          {employeeData &&
+                            employeeData?.map((item) => (
+                              <option
+                                value={item.id}
+                              >{`${item.designations?.designationName}`}</option>
+                            ))}
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col">
+                      <div class="mb-3">
+                        <label class="form-label">Add Comments</label>
+                        <textarea
+                          class="form-control"
+                          id="comment"
+                          name="comment"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.comment}
+                          disabled={viewPage ? true : false}
+                        ></textarea>
+                      </div>
+                    </div>
+                  </div> */}
+                  <div class="row">
+                    <div class="col">
+                  {frAttachments &&
+                      frAttachments?.map((item) => (
+                        <div class="MultiFile-label mt-3">
+                          {/* <a
+                            class="MultiFile-remove"
+                            style={{
+                              marginRight: "10px",
+                              color: "red",
+                              cursor: "pointer",
+                            }}
+                            onClick={() => hendleFRRemoveImage(item)}
+                          >
+                            x
+                          </a> */}
+                          <span
+                            class="MultiFile-label"
+                            title={item?.filename
+                              ?.split("\\")
+                              .pop()
+                              .split("/")
+                              .pop()}
+                          >
+                          <label className="form-label" style={{ display: "block" }}>
+                            Attached Fresh Receipts
+                          </label>
+                            <span class="MultiFile-title">
+                              <a
+                                onClick={() => HandlePrint(item?.filename)}
+                                style={{ cursor: "pointer", color: 'blue' }}
+                              >
+                                - {item?.filename
+                                  ?.split("\\")
+                                  .pop()
+                                  .split("/")
+                                  .pop()}
+                              </a>
+                            </span>
+                          </span>
+                        </div>
+                      ))}
+                      </div>
+                      </div>
+                  <div class="row mb-4">
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                      <button class="btn btn-primary" type="submit" disabled={viewPage ? true : false}>
+                        Submit
+                      </button>
+                    </div>
+                  </div>
+                  {/* <div className="row">
+                    <div class="col-6">
+                     
+                      <label class="form-label" style={{ display: "block" }}>
+                        Attached File
+                      </label>
+                      <span
+                        class="MultiFile-label"
+                        style={{ marginBottom: "18px", display: "block" }}
+                        title={filesData?.attachment
+                          ?.split("\\")
+                          .pop()
+                          .split("/")
+                          .pop()}
+                      >
+                        <span class="MultiFile-title">
+                          <a
+                            href={`http://172.16.170.8:5252${filesData?.attachment}`}
+                          >
+                            {filesData?.attachment
+                              ?.split("\\")
+                              .pop()
+                              .split("/")
+                              .pop()}
+                          </a>
+                        </span>
+                      </span>
+                      
+                    </div>
+                  </div> */}
+
+                  
                 </div>
                 {/* 
                 <div className="m-2">
@@ -1486,12 +1601,12 @@ if (objection.attachedFiles) {
             <div className="col-md-3">
               <div className="custom-editor-main" style={{ marginTop: 0 }}>
                 <div className="comment-heading">
-                  <h2>Remarks</h2>
-                  {/* <a onClick={toggleModal}>
+                  <h2>Comments</h2>
+                  <a onClick={toggleModal}>
                     <button class="btn add-btn">
                       <FontAwesomeIcon style={{ marginRight: "-5px" }} icon={faPlus} size="md" width={24} /> Add
                     </button>
-                  </a> */}
+                  </a>
                 </div>
                 {remarksData?.length > 0 ? (
                   remarksData.map((item) => (

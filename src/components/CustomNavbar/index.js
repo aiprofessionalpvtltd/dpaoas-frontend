@@ -8,6 +8,7 @@ import { Link, useNavigate } from "react-router-dom";
 export const CustomNavbar = ({ toggleSidebar, module, centerlogohide }) => {
   const navigation = useNavigate();
   const userData = getUserData()
+
   return (
     <header
       class="dashboard-toolbar"
@@ -52,8 +53,9 @@ export const CustomNavbar = ({ toggleSidebar, module, centerlogohide }) => {
           <Dropdown.Menu>
             <Dropdown.Item
               style={{ border: "none" }}
-              onClick={() => {
-                logout();
+              onClick={async (e) => {
+                e.preventDefault()
+               await logout();
                 navigation("/login");
               }}
             >

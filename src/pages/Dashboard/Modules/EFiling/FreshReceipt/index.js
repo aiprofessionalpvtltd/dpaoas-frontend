@@ -5,7 +5,7 @@ import { useLocation } from "react-router-dom";
 import { Layout } from '../../../../../components/Layout';
 import Header from '../../../../../components/Header';
 import CustomTable from '../../../../../components/CustomComponents/CustomTable';
-import { EfilingSideBarItem } from '../../../../../utils/sideBarItems';
+import { EfilingSideBarBranchItem, EfilingSideBarItem } from '../../../../../utils/sideBarItems';
 import { DeleteFreshReceipt, getAllFreshReceipt } from '../../../../../api/APIs/Services/efiling.service';
 import { showErrorMessage, showSuccessMessage } from '../../../../../utils/ToastAlert';
 import moment from 'moment';
@@ -81,7 +81,7 @@ function FileCases() {
 
 
     return (
-        <Layout module={true} sidebarItems={EfilingSideBarItem}>
+        <Layout module={true} sidebarItems={UserData && UserData?.userType === "Officer" ? EfilingSideBarItem : EfilingSideBarBranchItem}>
             <div class='row'>
             <Header dashboardLink={"/efiling/dashboard"} addLink1={"/efiling/dashboard/fresh-receipt"} title1={"Fresh Receipts"} />
             <div className="col" style={{ marginTop: "30px", float: 'right' }}>

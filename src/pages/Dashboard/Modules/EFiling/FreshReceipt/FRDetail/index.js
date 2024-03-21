@@ -10,6 +10,7 @@ import thumbnail from "./../../../../../../assets/profile-img.jpg";
 import { assiginFR, getFreshReceiptById } from "../../../../../../api/APIs/Services/efiling.service";
 import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
 import { getLLEmployee } from "../../../../../../api/APIs/Services/organizational.service";
+import { EfilingSideBarBranchItem, EfilingSideBarItem } from "../../../../../../utils/sideBarItems";
 
 
 
@@ -125,8 +126,8 @@ function FRDetail() {
   };
 
   return (
-    <Layout centerlogohide={true}>
-      <div className="dashboard-content" style={{ marginTop: 80 }}>
+    <Layout centerlogohide={true} module={true} sidebarItems={UserData && UserData?.userType === "Officer" ? EfilingSideBarItem : EfilingSideBarBranchItem}>
+      {/* <div className="dashboard-content"> */}
         <ToastContainer />
         <Header
           dashboardLink={"/efiling/dashboard"}
@@ -488,7 +489,7 @@ function FRDetail() {
             </div>
           </div>
         </div>
-      </div>
+      {/* </div> */}
     </Layout>
   );
 }
