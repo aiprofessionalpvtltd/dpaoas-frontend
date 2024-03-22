@@ -5,7 +5,7 @@ import { Dropdown } from "react-bootstrap";
 import { getUserData, logout } from "../../api/Auth";
 import { Link, useNavigate } from "react-router-dom";
 
-export const CustomNavbar = ({ toggleSidebar, module, centerlogohide }) => {
+export const CustomNavbar = ({ toggleSidebar, module, centerlogohide, dashboardLink, addLink1, addLink2, title1, title2, width, marginTop, breadcrumbs }) => {
   const navigation = useNavigate();
   const userData = getUserData()
 
@@ -19,8 +19,30 @@ export const CustomNavbar = ({ toggleSidebar, module, centerlogohide }) => {
     >
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
+  
           <div class="collapse navbar-collapse" id="navbarNavDropdown">
-            <ul class="navbar-nav">
+            {breadcrumbs ? (
+               <ul className="navbar-nav">
+               <li class="nav-item">
+                 <Link to={dashboardLink} class="nav-item">Dashboard {` `}</Link>
+               </li>
+               {addLink2 && title2 ? (
+                 <li class="nav-item">
+                   <Link to={addLink1}> / {title1}</Link>
+                 </li>
+               ) : (
+                 <li class="nav-item">
+                   <span> / {title1}</span>
+                 </li>
+               )}
+               {addLink2 && title2 && (
+                 <li class="nav-item">
+                   <span> / {title2}</span>
+                 </li>
+               )}
+             </ul>
+            ) : (
+              <ul class="navbar-nav">
               <li class="nav-item">
                 <Link
                   style={{ fontWeight: "bold" }}
@@ -32,8 +54,12 @@ export const CustomNavbar = ({ toggleSidebar, module, centerlogohide }) => {
                 </Link>
               </li>
             </ul>
+            )}
+            
           </div>
+          
         </div>
+        
         <Dropdown className="user-box dropdown px-3 float-end">
           <Dropdown.Toggle
             as="a"

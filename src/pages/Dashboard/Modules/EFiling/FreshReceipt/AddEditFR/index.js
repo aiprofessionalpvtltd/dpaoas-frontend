@@ -476,7 +476,7 @@ const AddEditFR = () => {
                       value={formik.values.fkBranchId}
                       name="fkBranchId"
                       // isClearable={true}
-                      className={`form-select`}
+                      
                     />
                   </div>
                 )}
@@ -500,7 +500,7 @@ const AddEditFR = () => {
                       value={formik.values.fkMinistryId}
                       name="fkMinistryId"
                       // isClearable={true}
-                      className={`form-select`}
+                      // className={`form-select`}
                     />
                   </div>
                 )}

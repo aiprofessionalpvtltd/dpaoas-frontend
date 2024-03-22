@@ -8,7 +8,7 @@ import { getAuthToken, logout } from "../../api/Auth";
 import { Link, useNavigate } from "react-router-dom";
 import { getAllMotion } from "../../api/APIs/Services/Motion.service";
 
-export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
+export const Layout = ({ children, module, sidebarItems, centerlogohide, dashboardLink, addLink1, addLink2, title1, title2, width, marginTop, breadcrumbs }) => {
   const [sidebarVisible, setSidebarVisible] = useState(true);
   const [modal, setModal] = useState(false);
   const [notificationData, setNotificationData] = useState([]);
@@ -192,7 +192,9 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide }) => {
         {module ? (
           <>
             <main className="dashboard-app" style={{ marginLeft: "220px" }}>
-              <CustomNavbar toggleSidebar={toggleSidebar} module={module} centerlogohide={centerlogohide} />
+              <CustomNavbar toggleSidebar={toggleSidebar} module={module} centerlogohide={centerlogohide} 
+              dashboardLink ={dashboardLink} addLink1 = {addLink1} addLink2 = {addLink2} title1 ={title1} title2 ={title2} width ={width} marginTop={marginTop} breadcrumbs={breadcrumbs}
+              />
               <div className="dashboard-content">
                 {shouldRenderNotice ? (
                   <>

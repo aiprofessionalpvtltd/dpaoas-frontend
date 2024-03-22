@@ -57,15 +57,15 @@ function DirectorDashboard() {
       module={true}
       centerlogohide={true}
       sidebarItems={userData && userData?.userType === "Officer" ? EfilingSideBarItem : EfilingSideBarBranchItem}
-    >
-      <EFilingNotifications notificationType="Notifications" />
-      <Header
-        dashboardLink={"/efiling/dashboard"}
+      dashboardLink={"/efiling/dashboard"}
         addLink1={"/efiling/director-deshboard"}
         title1={"E-Filing"}
         width={"500px"}
         marginTop={"0px"}
-      />
+        breadcrumbs={true}
+    >
+      <EFilingNotifications notificationType="Notifications" />
+      
 
       <h2 style={{ marginLeft: 15, marginBottom: 30, color: "#820001" }}>
         {" "}
