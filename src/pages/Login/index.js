@@ -151,6 +151,17 @@ export const Login = () => {
                 </button>
               </div>
             </div>
+
+            <span
+          style={{
+            fontSize: "18px",
+            marginTop: "20px",
+            fontWeight: "bold",
+          }}
+          class="login-form-title"
+        >
+          (Version: 1.0.0)
+        </span>
           </div>
         </form>
       </div>
