@@ -34,8 +34,8 @@ function HRMEmployeeDashboard() {
       gender: leave.gender,
       fileNumber: leave.fileNumber,
       // supervisor: leave.supervisor,
-      departmentName: leave.department.departmentName,
-      designation: leave.designation.designationName,
+      departmentName: leave.departments.departmentName,
+      designation: leave.designations.designationName,
     }));
   };
 
