@@ -40,7 +40,7 @@ function AddEditFileRegister() {
 
   const hendleCreateRegister = async (values) => {
     const Data = {
-      fkBranchId: userData?.fkDepartmentId,
+      fkBranchId: userData?.fkBranchId,
       registerNumber: values?.registerNumber,
       year: values?.year,
       registerSubject:values?.registerSubject

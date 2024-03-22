@@ -72,7 +72,7 @@ export const CustomNavbar = ({ toggleSidebar, module, centerlogohide, dashboardL
             <img src={Profile} className="user-img" alt="user avatar" />
             <div className="user-info">
               <p className="user-name mb-0">{userData && `${userData?.firstName} ${userData?.lastName}`}</p>
-              <p className="designation mb-0">{userData && `${userData?.designation?.designationName} ${userData?.department?.departmentName}`}</p>
+              <p className="designation mb-0">{userData && `${userData?.designation?.designationName} ${userData?.branch?.branchName}`}</p>
             </div>
           </Dropdown.Toggle>
           <div className="clearfix"></div>

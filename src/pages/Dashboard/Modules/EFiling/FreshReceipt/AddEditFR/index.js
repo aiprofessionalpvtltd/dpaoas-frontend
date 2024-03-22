@@ -77,7 +77,7 @@ const AddEditFR = () => {
     formdata.append("diaryDate", values?.diaryDate);
     formdata.append("diaryTime", values?.diaryTime);
     formdata.append("frType", values?.frType);
-    formdata.append("fkUserBranchId", userData?.fkDepartmentId);
+    formdata.append("fkUserBranchId", userData?.fkBranchId);
     if (values?.fkBranchId) {
       formdata.append("fkBranchId", values?.fkBranchId?.value);
     }

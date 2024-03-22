@@ -33,7 +33,7 @@ function PreviousCasesHistory() {
             caseId: item?.fkCaseId,
             FileNo: item?.fileData?.fileNumber,
             AssignedBy: item?.fileRemarksData?.length > 0 ? item?.fileRemarksData[item?.fileRemarksData.length - 1]?.submittedUser?.employee?.firstName : "---",
-            AssignedTo: item?.fileRemarksData?.length > 0 ? item?.fileRemarksData[item?.fileRemarksData.length - 1]?.assignedUser?.employee?.firstName : "---",
+            AssignedTo: item?.fileRemarksData?.length > 0 ? `${item?.fileRemarksData[item?.fileRemarksData.length - 1]?.assignedUser?.employee?.firstName} ${item?.fileRemarksData[item?.fileRemarksData.length - 1]?.assignedUser?.employee?.lastName}` : "---",
             Status: item?.fileRemarksData?.length > 0 ? item?.fileRemarksData[item?.fileRemarksData.length - 1]?.CommentStatus : "Draft",
             MarkedDate: item?.fileRemarksData?.length > 0 ? moment(item?.fileRemarksData[item?.fileRemarksData.length - 1]?.createdAt).format('DD/MM/YYYY') : "---",
             MarkedTime: item?.fileRemarksData?.length > 0 ? moment(item?.fileRemarksData[item?.fileRemarksData.length - 1]?.createdAt).format("hh:mm A") : "---"
@@ -42,7 +42,7 @@ function PreviousCasesHistory() {
 
     const getAllCasesApi = async () => {
         try {
-            const response = await getUserCaseHistory(location?.state?.fileId, UserData?.fkDepartmentId, currentPage, pageSize)
+            const response = await getUserCaseHistory(location?.state?.fileId, UserData?.fkBranchId, currentPage, pageSize)
             if (response.success) {
                 setCount(response?.data?.count)
                 const transferData = transformFilesCases(response?.data?.cases)

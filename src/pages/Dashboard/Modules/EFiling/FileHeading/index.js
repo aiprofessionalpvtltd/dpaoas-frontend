@@ -36,7 +36,7 @@ function FileHeadingList() {
       };
       const getAllFileHeadingApi = useCallback(async () => {
         try {
-            const response = await getAllFileHeading(currentPage, pageSize)
+            const response = await getAllFileHeading(userData?.fkBranchId, currentPage, pageSize)
             if (response.success) {
             //   showSuccessMessage(response?.message)
               setCount(response?.data?.count)

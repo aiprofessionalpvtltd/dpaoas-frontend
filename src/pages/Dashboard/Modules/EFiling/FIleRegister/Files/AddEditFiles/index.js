@@ -75,7 +75,7 @@ function AddEditFiles() {
 
   const hendleSubmit = async (values) => {
     const Data = {
-      fkBranchId: userData?.fkDepartmentId,
+      fkBranchId: userData?.fkBranchId,
       fkMainHeadingId: values?.mainHeading,
       year: values?.year,
       serialNumber: values?.serialNumber,
@@ -123,7 +123,7 @@ function AddEditFiles() {
   const handleBranch = async (event) => {
 
     try {
-      const response = await geteHeadingbyBranchId(userData?.fkDepartmentId)
+      const response = await geteHeadingbyBranchId(userData?.fkBranchId)
       if (response.success) {
         // showSuccessMessage(response?.message)
         setMainHeadingData(response?.data)
@@ -149,7 +149,7 @@ function AddEditFiles() {
   }
   const getAllRegisterApi = async () => {
     try {
-        const response = await getAllFileRegister(userData?.fkDepartmentId, 0, 100)
+        const response = await getAllFileRegister(userData?.fkBranchId, 0, 100)
         if (response.success) {
             setRegisterData(response?.data?.fileRegisters)
         }

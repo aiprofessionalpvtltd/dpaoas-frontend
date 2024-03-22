@@ -197,11 +197,11 @@ export const createFIleHeading = async (data) => {
   }
 };
 
-export const getAllFileHeading = async (currentPage, pageSize) => {
+export const getAllFileHeading = async (branchId, currentPage, pageSize) => {
   try {
     //   const token = getAuthToken();
     const response = await axiosClientMMS.get(
-      `/mainHeading/?currentPage=${currentPage}&pageSize=${pageSize}`,
+      `/mainHeading/${branchId}?currentPage=${currentPage}&pageSize=${pageSize}`,
       )
       // {
       //   headers: {

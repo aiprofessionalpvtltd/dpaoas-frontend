@@ -98,7 +98,7 @@ function FileCases() {
   const getAllRegisterApi = async () => {
     try {
       const response = await getAllFileRegister(
-        UserData?.fkDepartmentId,
+        UserData?.fkBranchId,
         0,
         100
       );
@@ -140,7 +140,7 @@ function FileCases() {
 
   const getAllFileHeadingApi = useCallback(async () => {
     try {
-      const response = await getAllFileHeading(0, 1000);
+      const response = await getAllFileHeading(UserData?.fkBranchId, 0, 1000);
       if (response.success) {
         //   showSuccessMessage(response?.message)
         setCount(response?.data?.count);

@@ -36,7 +36,7 @@ function ListFileRegister() {
 
     const getAllRegisterApi = async () => {
         try {
-            const response = await getAllFileRegister(UserData?.fkDepartmentId, currentPage, pageSize)
+            const response = await getAllFileRegister(UserData?.fkBranchId, currentPage, pageSize)
             if (response.success) {
                 // showSuccessMessage(response?.message)
                 const transferData = transformFilesRegisterdata(response?.data?.fileRegisters)

@@ -44,7 +44,7 @@ function AddEditFIleHeading() {
 
   const hendleCreateFileHeading = async (values) => {
     const Data = {
-      fkBranchId: userData?.fkDepartmentId,
+      fkBranchId: userData?.fkBranchId,
       mainHeading: values?.mainHeading,
       mainHeadingNumber: values?.mainHeadingNumber
     }
@@ -64,7 +64,7 @@ function AddEditFIleHeading() {
 
   const hendleUpdateFileHeading = async (values) => {
     const Data = {
-      fkBranchId: userData?.fkDepartmentId,
+      fkBranchId: userData?.fkBranchId,
       mainHeading: values?.mainHeading,
       mainHeadingNumber: values?.mainHeadingNumber
     }

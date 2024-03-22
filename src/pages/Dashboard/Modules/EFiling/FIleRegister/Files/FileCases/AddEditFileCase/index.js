@@ -286,7 +286,7 @@ function AddEditFileCase() {
 
   const hendleGetAllFRs = async (item) => {
     try {
-      const response = await getAllFRs(UserData?.fkDepartmentId);
+      const response = await getAllFRs(UserData?.fkBranchId);
       if (response?.success) {
         setAllFrs(response?.data);
       }
@@ -298,7 +298,7 @@ function AddEditFileCase() {
   const getAllRegisterApi = async () => {
     try {
       const response = await getAllFileRegister(
-        UserData?.fkDepartmentId,
+        UserData?.fkBranchId,
         0,
         100
       );
@@ -354,7 +354,7 @@ function AddEditFileCase() {
   const [headcount, setHeadCount] = useState(null);
   const getAllFileHeadingApi = useCallback(async () => {
     try {
-      const response = await getAllFileHeading(0, 1000);
+      const response = await getAllFileHeading(UserData?.fkBranchId, 0, 1000);
       if (response.success) {
         //   showSuccessMessage(response?.message)
         // setCount(response?.data?.count);

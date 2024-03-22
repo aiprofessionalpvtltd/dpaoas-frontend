@@ -88,7 +88,7 @@ const getRegisterRecordByRegisterId = async (id) => {
 
   const getAllFileHeadingApi = useCallback(async () => {
     try {
-      const response = await getAllFileHeading(0, 1000);
+      const response = await getAllFileHeading(userData?.fkBranchId,0, 1000);
       if (response.success) {
         //   showSuccessMessage(response?.message)
         setCount(response?.data?.count);
@@ -119,7 +119,7 @@ const getRegisterRecordByRegisterId = async (id) => {
   const getAllRegisterApi = async () => {
     try {
       const response = await getAllFileRegister(
-        userData?.fkDepartmentId,
+        userData?.fkBranchId,
         0,
         100
       );

@@ -46,7 +46,7 @@ function PreviousFRsHistory() {
 
     const getAllFRHistoryApi = async () => {
         try {
-            const response = await getFRHistory(UserData?.fkDepartmentId, currentPage, pageSize)
+            const response = await getFRHistory(UserData?.fkBranchId, currentPage, pageSize)
             if (response.success) {
                 setCount(response?.data?.count)
                 const transferData = transformFRHistory(response?.data?.freshReceipts)
