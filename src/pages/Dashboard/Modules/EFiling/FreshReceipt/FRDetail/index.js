@@ -315,7 +315,7 @@ function FRDetail() {
                 <div class="row">
                   <div class="col">
                     <div class="mb-3">
-                      <label class="form-label">Remarks</label>
+                      <label class="form-label">Add Comment</label>
                       <textarea
                         class="form-control"
                         id="comment"
