@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import logo from "../../assets/logo.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faLock } from "@fortawesome/free-solid-svg-icons";
+import { faUser, faLock, faEyeSlash, faEye } from "@fortawesome/free-solid-svg-icons";
 import { AuthContext } from "../../api/AuthContext";
 import { useNavigate } from "react-router";
 import { useFormik } from "formik";
@@ -17,6 +17,11 @@ const validationSchema = Yup.object({
 export const Login = () => {
   const { login, userLoginToken } = useContext(AuthContext);
   const navigation = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleTogglePassword = () => {
+    setShowPassword(prevState => !prevState);
+  };
 
   const showSuccessMessage = (message) => {
     toast.success(message, {
@@ -116,9 +121,12 @@ export const Login = () => {
             </div>
             <div class="wrap-input">
               <span class="label-input">Password</span>
+              <i style={{right:0, cursor:"pointer"}} onClick={handleTogglePassword}>
+              <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+              </i>
               <input
                 style={{ borderBottom: "2px solid #d9d9d9" }}
-                type="password"
+                type={showPassword ? "text" : "password"}
                 className={`input-field1 ${
                   formik.touched.password && formik.errors.password
                     ? "is-invalid"
