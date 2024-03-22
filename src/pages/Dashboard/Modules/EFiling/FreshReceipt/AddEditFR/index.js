@@ -371,7 +371,7 @@ const AddEditFR = () => {
               </div>
 
               <div className="row">
-                <div className="col-3">
+                <div className="col-6">
                   <div className="mb-3">
                     <label htmlFor="frSubject" className="form-label">
                       Subject
@@ -396,42 +396,7 @@ const AddEditFR = () => {
                   </div>
                 </div>
 
-                <div class="col-3">
-                  <div class="mb-3" style={{ position: "relative" }}>
-                    <label class="form-label">FR Date</label>
-                    <span
-                      style={{
-                        position: "absolute",
-                        right: "15px",
-                        top: "36px",
-                        zIndex: 1,
-                        fontSize: "20px",
-                        zIndex: "1",
-                        color: "#666",
-                      }}
-                    >
-                      <FontAwesomeIcon icon={faCalendarAlt} />
-                    </span>
-                    <DatePicker
-                      //   minDate={new Date()}
-                      selected={formik.values.frDate}
-                      onChange={(date) => formik.setFieldValue("frDate", date)}
-                      className={`form-control ${
-                        formik.touched.frDate && formik.errors.frDate
-                          ? "is-invalid"
-                          : ""
-                      }`}
-                    />
-                    {formik.touched.frDate && formik.errors.frDate && (
-                      <div
-                        className="invalid-feedback"
-                        style={{ display: "block" }}
-                      >
-                        {formik.errors.frDate}
-                      </div>
-                    )}
-                  </div>
-                </div>
+                
                 <div className=" mb-3 col-3">
                   <label htmlFor="frType" className="form-label">
                     FR Type
@@ -564,6 +529,42 @@ const AddEditFR = () => {
                           </span>
                         </div>
                       ))}
+                  </div>
+                </div>
+                <div class="col-3">
+                  <div class="mb-3" style={{ position: "relative" }}>
+                    <label class="form-label">FR Date</label>
+                    <span
+                      style={{
+                        position: "absolute",
+                        right: "15px",
+                        top: "36px",
+                        zIndex: 1,
+                        fontSize: "20px",
+                        zIndex: "1",
+                        color: "#666",
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faCalendarAlt} />
+                    </span>
+                    <DatePicker
+                      //   minDate={new Date()}
+                      selected={formik.values.frDate}
+                      onChange={(date) => formik.setFieldValue("frDate", date)}
+                      className={`form-control ${
+                        formik.touched.frDate && formik.errors.frDate
+                          ? "is-invalid"
+                          : ""
+                      }`}
+                    />
+                    {formik.touched.frDate && formik.errors.frDate && (
+                      <div
+                        className="invalid-feedback"
+                        style={{ display: "block" }}
+                      >
+                        {formik.errors.frDate}
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="col-3">
