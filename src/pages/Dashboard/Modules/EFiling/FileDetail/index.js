@@ -1612,9 +1612,9 @@ if (objection.attachedFiles) {
                   remarksData.map((item) => (
                     <>
                       {item?.comment !== null ? (
-                        <div class="d-flex flex-row p-3">
+                        <div class="d-flex flex-row p-3 ps-0">
                           <>
-                            <img
+                            {/* <img
                               style={{
                                 marginBottom: "30px",
                                 marginRight: "15px",
@@ -1623,13 +1623,16 @@ if (objection.attachedFiles) {
                               width="40"
                               height="40"
                               class="rounded-circle mr-3"
-                            />
+                            /> */}
                             <div class="w-100" style={{ position: "relative" }}>
                               <div class="d-flex justify-content-between align-items-center">
                                 <div class="d-flex flex-row align-items-center">
                                   <div style={{ float: "left" }}>
-                                    <span class="mr-2">{`${item?.submittedUser?.employee?.firstName}  ${item?.submittedUser?.employee?.lastName}`}</span>
-                                    <small
+                                    <span class="mr-2" style={{fontSize:"14px"}}>{`${item?.submittedUser?.employee?.firstName}  ${item?.submittedUser?.employee?.lastName}/ ${
+                                      item?.submittedUser?.employee
+                                        ?.designations?.designationNam
+                                    }`}</span>
+                                    {/* <small
                                       style={{
                                         marginLeft: "0px",
                                         position: "absolute",
@@ -1641,7 +1644,7 @@ if (objection.attachedFiles) {
                                         item?.submittedUser?.employee
                                           ?.designations?.designationNam
                                       }
-                                    </small>
+                                    </small> */}
                                   </div>
                                 </div>
                                 <div style={{ float: "right" }}>
@@ -1655,7 +1658,7 @@ if (objection.attachedFiles) {
                                   </small>
                                 </div>
                               </div>
-                              <p class="text-justify comment-text mb-0">
+                              <p class="text-justify comment-text mb-0" style={{fontSize:"20px"}}>
                                 {item?.comment}
                               </p>
                               <small
