@@ -60,8 +60,6 @@ const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
           <MDBModalBody className="justify-content-center align-items-center">
             {children}
           </MDBModalBody>
-
-          
         </MDBModalContent>
       </MDBModalDialog>
     </MDBModal>
@@ -72,7 +70,10 @@ function FileDetail() {
   const location = useLocation();
   const fileInputRef = useRef(null);
 
-  console.log("location?.state?.fileIdlocation?.state?.fileIdlocation?.state?.fileIdlocation?.state?.fileId",location?.state?.fileId);
+  console.log(
+    "location?.state?.fileIdlocation?.state?.fileIdlocation?.state?.fileIdlocation?.state?.fileId",
+    location?.state?.fileId
+  );
 
   const [notingData, setNotingData] = useState({
     description: "",
@@ -99,7 +100,7 @@ function FileDetail() {
   });
 
   const [employeeData, setEmployeeData] = useState([]);
-  console.log("employeeDataemployeeDataemployeeData",employeeData);
+  console.log("employeeDataemployeeDataemployeeData", employeeData);
   const UserData = getUserData();
   const [filesData, setFilesData] = useState(null);
   const [viewPage, setViewPage] = useState(location?.state?.view);
@@ -154,7 +155,6 @@ function FileDetail() {
     },
   ];
 
-
   const clearInput = () => {
     if (fileInputRef.current) {
       fileInputRef.current.value = null; // Reset the value of the input
@@ -188,24 +188,23 @@ function FileDetail() {
   });
 
   const [modalInputValue, setModalInputValue] = useState({
-      assignedTo: "",
-      CommentStatus: '',
-      comment: "",
-  })
-
+    assignedTo: "",
+    CommentStatus: "",
+    comment: "",
+  });
 
   const handleFileChangeCorrespondance = (event) => {
     // Access the files from the event
     const files = event.target.files;
     // Convert the files object to an array
     const fileList = Array.from(files);
-  
+
     // Merge the new files with the existing ones
     setCorrespondenceData((prevState) => ({
       ...prevState,
       attachedFiles: [...prevState.attachedFiles, ...fileList],
     }));
-  };  
+  };
 
   const handleFileChangeSanction = (event) => {
     // Access the files from the event
@@ -243,18 +242,13 @@ function FileDetail() {
     }));
   };
 
-  
- 
   console.log("Case Id----------------------", location?.state?.id);
   const UpdateEfilingApi = async (values) => {
-
     const formData = new FormData();
     // formData.append("submittedBy", UserData?.fkUserId);
     // formData.append("assignedTo",  values?.assignedTo);
     // formData.append("CommentStatus", values?.CommentStatus);
     // formData.append("comment", values?.comment);
-
-
 
     formData.append("cases[0][Note][description]", notingData.description);
     formData.append(
@@ -265,31 +259,27 @@ function FileDetail() {
     formData.append("cases[0][Objection][description]", objection.description);
     formData.append("cases[0][Letter][description]", letter.description);
     // formData.append("diaryNumber", values?.diaryNumber);
-  
-if (objection.attachedFiles) {
-    objection.attachedFiles.forEach((file, index) => {
-      formData.append(`cases[0][Objection][sections][${index}]`, file);
-    });
-}
+
+    if (objection.attachedFiles) {
+      objection.attachedFiles.forEach((file, index) => {
+        formData.append(`cases[0][Objection][sections][${index}]`, file);
+      });
+    }
     if (sanction.attachedFiles) {
-    sanction.attachedFiles.forEach((file, index) => {
-      formData.append(`cases[0][Sanction][sections][${index}]`, file);
-    });
-}
+      sanction.attachedFiles.forEach((file, index) => {
+        formData.append(`cases[0][Sanction][sections][${index}]`, file);
+      });
+    }
     if (letter.attachedFiles) {
-    letter.attachedFiles.forEach((file, index) => {
-      formData.append(`cases[0][Letter][sections][${index}]`, file);
-    });
-}
+      letter.attachedFiles.forEach((file, index) => {
+        formData.append(`cases[0][Letter][sections][${index}]`, file);
+      });
+    }
     if (correspondenceData.attachedFiles) {
-    correspondenceData.attachedFiles.forEach((file, index) => {
-      formData.append(
-          `cases[0][Correspondence][sections][${index}]`,
-          file
-        );
-    });
-  
-}
+      correspondenceData.attachedFiles.forEach((file, index) => {
+        formData.append(`cases[0][Correspondence][sections][${index}]`, file);
+      });
+    }
 
     try {
       const response = await UpdateFIleCase(
@@ -301,24 +291,21 @@ if (objection.attachedFiles) {
         showSuccessMessage(response?.message);
         // formik.resetForm()
         setTimeout(() => {
-          navigate("/efiling/dashboard/file-register-list/files-list/cases")
-        }, 1000)
+          navigate("/efiling/dashboard/file-register-list/files-list/cases");
+        }, 1000);
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
     }
   };
 
-  
-
   const hendleAssiginFileCaseApi = async () => {
-    
     const data = {
       submittedBy: UserData?.fkUserId,
-      assignedTo:modalInputValue?.assignedTo,
-      CommentStatus:modalInputValue?.CommentStatus,
-      comment:modalInputValue?.comment
-    }
+      assignedTo: modalInputValue?.assignedTo,
+      CommentStatus: modalInputValue?.CommentStatus,
+      comment: modalInputValue?.comment,
+    };
     try {
       const response = await assignFIleCase(
         location?.state?.fileId ? location?.state?.fileId : fileIdINRegister,
@@ -340,7 +327,7 @@ if (objection.attachedFiles) {
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
     }
-  }
+  };
   const toggleModal = () => setIsModalOpen(!isModalOpen);
 
   // use it (editorContent) when submitting whole file content
@@ -354,12 +341,14 @@ if (objection.attachedFiles) {
 
   const getFilesByID = async () => {
     try {
-      const response = await getCaseDetailByID(location?.state?.fileId ? location?.state?.fileId : fileIdINRegister, caseId);
+      const response = await getCaseDetailByID(
+        location?.state?.fileId ? location?.state?.fileId : fileIdINRegister,
+        caseId
+      );
       if (response?.success) {
         setDirectorData(response?.data?.cases?.fileDiary);
         setRemarksData(response?.data?.cases?.fileRemarks);
         setFilesData(response?.data?.cases);
-       
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -372,7 +361,10 @@ if (objection.attachedFiles) {
       if (response?.success) {
         showSuccessMessage(response.message);
         // if (caseId) {
-          getFilesByID(location?.state?.fileId ? location?.state?.fileId : fileIdINRegister, caseId);
+        getFilesByID(
+          location?.state?.fileId ? location?.state?.fileId : fileIdINRegister,
+          caseId
+        );
         // }
       }
     } catch (error) {
@@ -390,19 +382,31 @@ if (objection.attachedFiles) {
   useEffect(() => {
     // Update form values when termsById changes
     if (filesData) {
-      const noting = filesData?.sections.filter((item) => item.sectionType === "Note")
-      const correspondance = filesData?.sections.filter((item) => item.sectionType === "Correspondence")
-      const letter = filesData?.sections.filter((item) => item.sectionType === "Letter")
-      const Objection = filesData?.sections.filter((item) => item.sectionType === "Objection")
-      const Sanction = filesData?.sections.filter((item) => item.sectionType === "Sanction")
-      const frAttachments = filesData?.freshReceipts?.freshReceiptsAttachments?.length > 0 && filesData?.freshReceipts?.freshReceiptsAttachments;
+      const noting = filesData?.sections.filter(
+        (item) => item.sectionType === "Note"
+      );
+      const correspondance = filesData?.sections.filter(
+        (item) => item.sectionType === "Correspondence"
+      );
+      const letter = filesData?.sections.filter(
+        (item) => item.sectionType === "Letter"
+      );
+      const Objection = filesData?.sections.filter(
+        (item) => item.sectionType === "Objection"
+      );
+      const Sanction = filesData?.sections.filter(
+        (item) => item.sectionType === "Sanction"
+      );
+      const frAttachments =
+        filesData?.freshReceipts?.freshReceiptsAttachments?.length > 0 &&
+        filesData?.freshReceipts?.freshReceiptsAttachments[0];
       setFrAttachments(frAttachments);
 
-      setNotingStore(noting)
-      setcorrespondanceStore(correspondance)
-      setLetterStore(letter)
-      setbjectionstore(Objection)
-      setsectionstore(Sanction)
+      setNotingStore(noting);
+      setcorrespondanceStore(correspondance);
+      setLetterStore(letter);
+      setbjectionstore(Objection);
+      setsectionstore(Sanction);
 
       setCorrespondenceData((prev) => ({
         ...prev,
@@ -414,7 +418,7 @@ if (objection.attachedFiles) {
       }));
       setLetter((prev) => ({
         ...prev,
-        description:letter[0]?.description || "",
+        description: letter[0]?.description || "",
       }));
       setSanction((prev) => ({
         ...prev,
@@ -485,7 +489,10 @@ if (objection.attachedFiles) {
       const response = await DeleteFreahReceptImage(item?.id);
       if (response?.success) {
         showSuccessMessage(response.message);
-        getFilesByID(location?.state?.fileId ? location?.state?.fileId : fileIdINRegister, caseId);
+        getFilesByID(
+          location?.state?.fileId ? location?.state?.fileId : fileIdINRegister,
+          caseId
+        );
       }
     } catch (error) {
       showErrorMessage(error.response.data.message);
@@ -514,90 +521,100 @@ if (objection.attachedFiles) {
           title={"Add Comments"}
           isOpen={isModalOpen}
           toggleModal={toggleModal}
-          // hendleSubmit={() => hendleAssiginFileCaseApi()} 
+          // hendleSubmit={() => hendleAssiginFileCaseApi()}
         >
           <div class="row">
-                  
-                    <div class="col">
-                      <div class="mb-3">
-                        <label class="form-label">Action</label>
-                        <select
-                           className="form-select"
-                           id="CommentStatus"
-                           name="CommentStatus"
-                           onChange={(e) => setModalInputValue(prevState => ({
-                             ...prevState,
-                             CommentStatus: e.target.value
-                           }))}
-                           value={modalInputValue.CommentStatus}
-                        >
-                          <option value="" selected disabled hidden>
-                            Select
-                          </option>
-                          <option value={"Approved"}>Approved</option>
-                          <option value={"Under Discussion"}>Under Discussion</option>
-                          <option value={"Retype/Amend"}>Retype/Amend</option>
-                          <option value={"Rejected"}>Rejected</option>
-                          <option value={"Submit For Approval"}>Submit For Approval</option>
-                          <option value={"Seen"}>Seen</option>
-                          <option value={"Pend"}>Pend</option>
-                          <option value={"NFA"}>NFA</option>
-                          <option value={"Approval For Para"}>Approval For Para</option>
-
-                        </select>
-                      </div>
-                    </div>
-                    <div class="col">
-                      <div class="mb-3">
-                        <label class="form-label">Mark To</label>
-                        <select
-                          class="form-select"
-                          id="assignedTo"
-                          name="assignedTo"
-                          onChange={(e) => setModalInputValue(prevState => ({
-                            ...prevState,
-                            assignedTo: e.target.value
-                          }))}
-                          value={modalInputValue.assignedTo}
-                        >
-                          <option value={""} selected disabled hidden>
-                            Select
-                          </option>
-                          {employeeData &&
-                            employeeData?.map((item) => (
-                              <option
-                                value={item.id}
-                              >{`${item.designations?.designationName}`}</option>
-                            ))}
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col">
-                      <div class="mb-3">
-                        <label class="form-label">Add Comments</label>
-                        <textarea
-                          class="form-control"
-                          id="comment"
-                          name="comment"
-                          onChange={(e) => setModalInputValue(prevState => ({
-                            ...prevState,
-                            comment: e.target.value
-                          }))}
-                          value={modalInputValue.comment}
-                        ></textarea>
-                      </div>
-                    </div>
-                  </div>
-                  <MDBModalFooter>
+            <div class="col">
+              <div class="mb-3">
+                <label class="form-label">Action</label>
+                <select
+                  className="form-select"
+                  id="CommentStatus"
+                  name="CommentStatus"
+                  onChange={(e) =>
+                    setModalInputValue((prevState) => ({
+                      ...prevState,
+                      CommentStatus: e.target.value,
+                    }))
+                  }
+                  value={modalInputValue.CommentStatus}
+                >
+                  <option value="" selected disabled hidden>
+                    Select
+                  </option>
+                  <option value={"Approved"}>Approved</option>
+                  <option value={"Under Discussion"}>Under Discussion</option>
+                  <option value={"Retype/Amend"}>Retype/Amend</option>
+                  <option value={"Rejected"}>Rejected</option>
+                  <option value={"Submit For Approval"}>
+                    Submit For Approval
+                  </option>
+                  <option value={"Seen"}>Seen</option>
+                  <option value={"Pend"}>Pend</option>
+                  <option value={"NFA"}>NFA</option>
+                  <option value={"Approval For Para"}>Approval For Para</option>
+                </select>
+              </div>
+            </div>
+            <div class="col">
+              <div class="mb-3">
+                <label class="form-label">Mark To</label>
+                <select
+                  class="form-select"
+                  id="assignedTo"
+                  name="assignedTo"
+                  onChange={(e) =>
+                    setModalInputValue((prevState) => ({
+                      ...prevState,
+                      assignedTo: e.target.value,
+                    }))
+                  }
+                  value={modalInputValue.assignedTo}
+                >
+                  <option value={""} selected disabled hidden>
+                    Select
+                  </option>
+                  {employeeData &&
+                    employeeData?.map((item) => (
+                      <option
+                        value={item.id}
+                      >{`${item.designations?.designationName}`}</option>
+                    ))}
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <div class="mb-3">
+                <label class="form-label">Add Comments</label>
+                <textarea
+                  class="form-control"
+                  id="comment"
+                  name="comment"
+                  onChange={(e) =>
+                    setModalInputValue((prevState) => ({
+                      ...prevState,
+                      comment: e.target.value,
+                    }))
+                  }
+                  value={modalInputValue.comment}
+                ></textarea>
+              </div>
+            </div>
+          </div>
+          <MDBModalFooter>
             <MDBBtn color="secondary" onClick={toggleModal}>
               Close
             </MDBBtn>
-            <MDBBtn onClick={() => {
-              hendleAssiginFileCaseApi()
-              toggleModal()
-              }}>Submit</MDBBtn>
+            <MDBBtn
+              onClick={() => {
+                hendleAssiginFileCaseApi();
+                toggleModal();
+              }}
+            >
+              Submit
+            </MDBBtn>
           </MDBModalFooter>
         </EFilingModal>
 
@@ -638,8 +655,7 @@ if (objection.attachedFiles) {
             <div className="col-md-7">
               <form onSubmit={formik.handleSubmit}>
                 <div>
-
-                <div class="shadow" style={{ padding: "25px" }}>
+                  <div class="shadow" style={{ padding: "25px" }}>
                     <ul
                       className="nav nav-tabs mb-3 mt-3"
                       id="ex1"
@@ -669,6 +685,33 @@ if (objection.attachedFiles) {
                           }
                         >
                           Noting
+                        </button>
+                      </li>
+                      <li
+                        className="nav-item"
+                        role="presentation"
+                        onClick={() => {
+                          clearInput();
+                          setSelectedTab("FR Noting");
+                        }}
+                      >
+                        <button
+                          type="button"
+                          className={
+                            selectedTab === "FR Noting"
+                              ? "nav-link active"
+                              : "nav-link"
+                          }
+                          style={{ width: "170px" }}
+                          data-bs-toggle="tab"
+                          role="tab"
+                          aria-controls="ex1-tabs-1"
+                          disabled={frAttachments ? false : true}
+                          aria-selected={
+                            selectedTab === "FR Noting" ? "true" : "false"
+                          }
+                        >
+                          FR
                         </button>
                       </li>
                       <li
@@ -799,6 +842,14 @@ if (objection.attachedFiles) {
                             // disabled={location.state?.view ? true : false}
                           />
                         </section>
+                      ) : selectedTab === "FR Noting" ? (
+                        <section>
+                          <iframe
+                            src={`http://172.16.170.8:5252${frAttachments?.filename}`}
+                            style={{ width: "100%", height: "600px" }}
+                            frameborder="0"
+                          ></iframe>
+                        </section>
                       ) : selectedTab === "Correspondence" ? (
                         <section>
                           <label for="formFile" class="form-label mt-3">
@@ -830,64 +881,73 @@ if (objection.attachedFiles) {
                                       Attach File
                                     </label>
                                     <div class="col-6">
-                                <input
-                                ref={fileInputRef}
-                                  className="form-control"
-                                  type="file"
-                                  accept=".pdf, .jpg, .jpeg, .png"
-                                  id="correspondance"
-                                  name="correspondance"
-                                  multiple
-                                  onChange={(event) =>
-                                    handleFileChangeCorrespondance(event)
-                                  }
-                      // disabled={location.state?.view ? true : false}
-                                />
-                                {filesData?.sections.length >
-                                  0 && (
-                                  <div>
-                                    <label
-                                      for="formFile"
-                                      class="form-label mt-3 mb-0"
-                                    >
-                                      Attached Files
-                                    </label>
-                                    <ul>
-                                      {filesData?.sections &&
-                                      correspondancestore[0]?.caseAttachments.map(
-                                            (file, index) => {
-                                              return (
-                                              <div key={index}>
-                                              <a
-                                                  class="MultiFile-remove"
-                                                  style={{
-                                                    marginRight: "10px",
-                                                    color: "red",
-                                                    cursor: "pointer",
-                                                  }}
-                                                  onClick={() => hendleRemoveImage(file?.id)}
-                                                >
-                                                  x
-                                                </a>
-                                                <a
-                                                  href={file?.id ? `http://172.16.170.8:5252${file?.fileName}` : URL.createObjectURL(
-                                                    file
-                                                  )}
-                                                  target="_blank"
-                                                  rel="noopener noreferrer"
-                                                >
-                                                  {file?.id ? file?.fileName?.split("/").pop() : file.name}
-                                                </a>
-                                              </div>
-                                              )
-                                          }
-                                        )}
-                                    </ul>
-                                  </div>
-                                )}
-
-                                    
-                                      </div>
+                                      <input
+                                        ref={fileInputRef}
+                                        className="form-control"
+                                        type="file"
+                                        accept=".pdf, .jpg, .jpeg, .png"
+                                        id="correspondance"
+                                        name="correspondance"
+                                        multiple
+                                        onChange={(event) =>
+                                          handleFileChangeCorrespondance(event)
+                                        }
+                                        // disabled={location.state?.view ? true : false}
+                                      />
+                                      {filesData?.sections.length > 0 && (
+                                        <div>
+                                          <label
+                                            for="formFile"
+                                            class="form-label mt-3 mb-0"
+                                          >
+                                            Attached Files
+                                          </label>
+                                          <ul>
+                                            {filesData?.sections &&
+                                              correspondancestore[0]?.caseAttachments.map(
+                                                (file, index) => {
+                                                  return (
+                                                    <div key={index}>
+                                                      <a
+                                                        class="MultiFile-remove"
+                                                        style={{
+                                                          marginRight: "10px",
+                                                          color: "red",
+                                                          cursor: "pointer",
+                                                        }}
+                                                        onClick={() =>
+                                                          hendleRemoveImage(
+                                                            file?.id
+                                                          )
+                                                        }
+                                                      >
+                                                        x
+                                                      </a>
+                                                      <a
+                                                        href={
+                                                          file?.id
+                                                            ? `http://172.16.170.8:5252${file?.fileName}`
+                                                            : URL.createObjectURL(
+                                                                file
+                                                              )
+                                                        }
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                      >
+                                                        {file?.id
+                                                          ? file?.fileName
+                                                              ?.split("/")
+                                                              .pop()
+                                                          : file.name}
+                                                      </a>
+                                                    </div>
+                                                  );
+                                                }
+                                              )}
+                                          </ul>
+                                        </div>
+                                      )}
+                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -901,7 +961,7 @@ if (objection.attachedFiles) {
                           </label>
 
                           <TinyEditor
-                          disabled={viewPage ? true : false}
+                            disabled={viewPage ? true : false}
                             initialContent={""}
                             setEditorContent={(content) =>
                               setSanction((prev) => ({
@@ -925,54 +985,54 @@ if (objection.attachedFiles) {
                                       Attach File
                                     </label>
                                     <div class="col-6">
-                                <input
-                                ref={fileInputRef}
-                                  className="form-control"
-                                  type="file"
-                                  accept=".pdf, .jpg, .jpeg, .png"
-                                  id="correspondance"
-                                  name="correspondance"
-                                  multiple
-                                  onChange={(event) =>
-                                    handleFileChangeSanction(event)
-                                  }
-                      // disabled={location.state?.view ? true : false}
-                                />
+                                      <input
+                                        ref={fileInputRef}
+                                        className="form-control"
+                                        type="file"
+                                        accept=".pdf, .jpg, .jpeg, .png"
+                                        id="correspondance"
+                                        name="correspondance"
+                                        multiple
+                                        onChange={(event) =>
+                                          handleFileChangeSanction(event)
+                                        }
+                                        // disabled={location.state?.view ? true : false}
+                                      />
 
-                                    {filesData?.sections &&
-                                      sectionstore[0]?.caseAttachments.map(
-                                        (item) => (
-                                          <div class="MultiFile-label mt-3">
-                                            <a
-                                              href={`http://172.16.170.8:5252${item.fileName}`}
-                                            >
-                                              <i class="fas fa-download"></i>
-                                            </a>
-                                            
-                                            <span
-                                              class="MultiFile-label"
-                                              title={item.fileName
-                                                ?.split("\\")
-                                                .pop()
-                                                .split("/")
-                                                .pop()}
-                                            >
-                                              <span class="MultiFile-title">
-                                                <a
-                                                  href={`http://172.16.170.8:5252${item.fileName}`}
-                                                >
-                                                  {item.fileName
-                                                    ?.split("\\")
-                                                    .pop()
-                                                    .split("/")
-                                                    .pop()}
-                                                </a>
+                                      {filesData?.sections &&
+                                        sectionstore[0]?.caseAttachments.map(
+                                          (item) => (
+                                            <div class="MultiFile-label mt-3">
+                                              <a
+                                                href={`http://172.16.170.8:5252${item.fileName}`}
+                                              >
+                                                <i class="fas fa-download"></i>
+                                              </a>
+
+                                              <span
+                                                class="MultiFile-label"
+                                                title={item.fileName
+                                                  ?.split("\\")
+                                                  .pop()
+                                                  .split("/")
+                                                  .pop()}
+                                              >
+                                                <span class="MultiFile-title">
+                                                  <a
+                                                    href={`http://172.16.170.8:5252${item.fileName}`}
+                                                  >
+                                                    {item.fileName
+                                                      ?.split("\\")
+                                                      .pop()
+                                                      .split("/")
+                                                      .pop()}
+                                                  </a>
+                                                </span>
                                               </span>
-                                            </span>
-                                          </div>
-                                        )
-                                      )}
-                                      </div>
+                                            </div>
+                                          )
+                                        )}
+                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -986,7 +1046,7 @@ if (objection.attachedFiles) {
                           </label>
 
                           <TinyEditor
-                          disabled={viewPage ? true : false}
+                            disabled={viewPage ? true : false}
                             initialContent={""}
                             setEditorContent={(content) =>
                               setObjection((prev) => ({
@@ -1010,54 +1070,54 @@ if (objection.attachedFiles) {
                                       Attach File
                                     </label>
                                     <div class="col-6">
-                                <input
-                                ref={fileInputRef}
-                                  className="form-control"
-                                  type="file"
-                                  accept=".pdf, .jpg, .jpeg, .png"
-                                  id="correspondance"
-                                  name="correspondance"
-                                  multiple
-                                  onChange={(event) =>
-                                    handleFileChangeObjection(event)
-                                  }
-                      // disabled={location.state?.view ? true : false}
-                                />
+                                      <input
+                                        ref={fileInputRef}
+                                        className="form-control"
+                                        type="file"
+                                        accept=".pdf, .jpg, .jpeg, .png"
+                                        id="correspondance"
+                                        name="correspondance"
+                                        multiple
+                                        onChange={(event) =>
+                                          handleFileChangeObjection(event)
+                                        }
+                                        // disabled={location.state?.view ? true : false}
+                                      />
 
-                                    {filesData?.sections &&
-                                      objectionstore[0]?.caseAttachments.map(
-                                        (item) => (
-                                          <div class="MultiFile-label mt-3">
-                                            <a
-                                              href={`http://172.16.170.8:5252${item.fileName}`}
-                                            >
-                                              <i class="fas fa-download"></i>
-                                            </a>
-                                            
-                                            <span
-                                              class="MultiFile-label"
-                                              title={item.fileName
-                                                ?.split("\\")
-                                                .pop()
-                                                .split("/")
-                                                .pop()}
-                                            >
-                                              <span class="MultiFile-title">
-                                                <a
-                                                  href={`http://172.16.170.8:5252${item.fileName}`}
-                                                >
-                                                  {item.fileName
-                                                    ?.split("\\")
-                                                    .pop()
-                                                    .split("/")
-                                                    .pop()}
-                                                </a>
+                                      {filesData?.sections &&
+                                        objectionstore[0]?.caseAttachments.map(
+                                          (item) => (
+                                            <div class="MultiFile-label mt-3">
+                                              <a
+                                                href={`http://172.16.170.8:5252${item.fileName}`}
+                                              >
+                                                <i class="fas fa-download"></i>
+                                              </a>
+
+                                              <span
+                                                class="MultiFile-label"
+                                                title={item.fileName
+                                                  ?.split("\\")
+                                                  .pop()
+                                                  .split("/")
+                                                  .pop()}
+                                              >
+                                                <span class="MultiFile-title">
+                                                  <a
+                                                    href={`http://172.16.170.8:5252${item.fileName}`}
+                                                  >
+                                                    {item.fileName
+                                                      ?.split("\\")
+                                                      .pop()
+                                                      .split("/")
+                                                      .pop()}
+                                                  </a>
+                                                </span>
                                               </span>
-                                            </span>
-                                          </div>
-                                        )
-                                      )}
-                                      </div>
+                                            </div>
+                                          )
+                                        )}
+                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -1094,54 +1154,54 @@ if (objection.attachedFiles) {
                                       Attach File
                                     </label>
                                     <div class="col-6">
-                                <input
-                                ref={fileInputRef}
-                                  className="form-control"
-                                  type="file"
-                                  accept=".pdf, .jpg, .jpeg, .png"
-                                  id="correspondance"
-                                  name="correspondance"
-                                  multiple
-                                  onChange={(event) =>
-                                    handleFileChangeLetter(event)
-                                  }
-                      // disabled={location.state?.view ? true : false}
-                                />
+                                      <input
+                                        ref={fileInputRef}
+                                        className="form-control"
+                                        type="file"
+                                        accept=".pdf, .jpg, .jpeg, .png"
+                                        id="correspondance"
+                                        name="correspondance"
+                                        multiple
+                                        onChange={(event) =>
+                                          handleFileChangeLetter(event)
+                                        }
+                                        // disabled={location.state?.view ? true : false}
+                                      />
 
-                                    {filesData?.sections &&
-                                      letterstore[0]?.caseAttachments.map(
-                                        (item) => (
-                                          <div class="MultiFile-label mt-3">
-                                            <a
-                                              href={`http://172.16.170.8:5252${item.fileName}`}
-                                            >
-                                              <i class="fas fa-download"></i>
-                                            </a>
-                                            
-                                            <span
-                                              class="MultiFile-label"
-                                              title={item.fileName
-                                                ?.split("\\")
-                                                .pop()
-                                                .split("/")
-                                                .pop()}
-                                            >
-                                              <span class="MultiFile-title">
-                                                <a
-                                                  href={`http://172.16.170.8:5252${item.fileName}`}
-                                                >
-                                                  {item.fileName
-                                                    ?.split("\\")
-                                                    .pop()
-                                                    .split("/")
-                                                    .pop()}
-                                                </a>
+                                      {filesData?.sections &&
+                                        letterstore[0]?.caseAttachments.map(
+                                          (item) => (
+                                            <div class="MultiFile-label mt-3">
+                                              <a
+                                                href={`http://172.16.170.8:5252${item.fileName}`}
+                                              >
+                                                <i class="fas fa-download"></i>
+                                              </a>
+
+                                              <span
+                                                class="MultiFile-label"
+                                                title={item.fileName
+                                                  ?.split("\\")
+                                                  .pop()
+                                                  .split("/")
+                                                  .pop()}
+                                              >
+                                                <span class="MultiFile-title">
+                                                  <a
+                                                    href={`http://172.16.170.8:5252${item.fileName}`}
+                                                  >
+                                                    {item.fileName
+                                                      ?.split("\\")
+                                                      .pop()
+                                                      .split("/")
+                                                      .pop()}
+                                                  </a>
+                                                </span>
                                               </span>
-                                            </span>
-                                          </div>
-                                        )
-                                      )}
-                                      </div>
+                                            </div>
+                                          )
+                                        )}
+                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -1243,7 +1303,7 @@ if (objection.attachedFiles) {
                           </select>
                         </div>
                       </div>
-{/* 
+                      {/* 
                       <div class="col-6">
                         <div class="mb-3">
                           <label
@@ -1273,7 +1333,6 @@ if (objection.attachedFiles) {
                         </div>
                       </div> */}
                     </div>
-
                   </div>
                   <div className="row">
                     {documentTypeVal === "Internal" ? (
@@ -1484,22 +1543,12 @@ if (objection.attachedFiles) {
                       </div>
                     </div>
                   </div> */}
-                  <div class="row">
+                  {/* <div class="row">
                     <div class="col">
                   {frAttachments &&
                       frAttachments?.map((item) => (
                         <div class="MultiFile-label mt-3">
-                          {/* <a
-                            class="MultiFile-remove"
-                            style={{
-                              marginRight: "10px",
-                              color: "red",
-                              cursor: "pointer",
-                            }}
-                            onClick={() => hendleFRRemoveImage(item)}
-                          >
-                            x
-                          </a> */}
+                          
                           <span
                             class="MultiFile-label"
                             title={item?.filename
@@ -1527,10 +1576,15 @@ if (objection.attachedFiles) {
                         </div>
                       ))}
                       </div>
-                      </div>
+                      </div> */}
+
                   <div class="row mb-4">
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                      <button class="btn btn-primary" type="submit" disabled={viewPage ? true : false}>
+                      <button
+                        class="btn btn-primary"
+                        type="submit"
+                        disabled={viewPage ? true : false}
+                      >
                         Submit
                       </button>
                     </div>
@@ -1565,8 +1619,6 @@ if (objection.attachedFiles) {
                       
                     </div>
                   </div> */}
-
-                  
                 </div>
                 {/* 
                 <div className="m-2">
@@ -1604,7 +1656,13 @@ if (objection.attachedFiles) {
                   <h2>Comments</h2>
                   <a onClick={toggleModal}>
                     <button class="btn add-btn">
-                      <FontAwesomeIcon style={{ marginRight: "-5px" }} icon={faPlus} size="md" width={24} /> Add
+                      <FontAwesomeIcon
+                        style={{ marginRight: "-5px" }}
+                        icon={faPlus}
+                        size="md"
+                        width={24}
+                      />{" "}
+                      Add
                     </button>
                   </a>
                 </div>
@@ -1628,10 +1686,10 @@ if (objection.attachedFiles) {
                               <div class="d-flex justify-content-between align-items-center">
                                 <div class="d-flex flex-row align-items-center">
                                   <div style={{ float: "left" }}>
-                                    <span class="mr-2" style={{fontSize:"14px"}}>{`${item?.submittedUser?.employee?.firstName}  ${item?.submittedUser?.employee?.lastName}/ ${
-                                      item?.submittedUser?.employee
-                                        ?.designations?.designationNam
-                                    }`}</span>
+                                    <span
+                                      class="mr-2"
+                                      style={{ fontSize: "14px" }}
+                                    >{`${item?.submittedUser?.employee?.firstName}  ${item?.submittedUser?.employee?.lastName}/ ${item?.submittedUser?.employee?.designations?.designationNam}`}</span>
                                     {/* <small
                                       style={{
                                         marginLeft: "0px",
@@ -1658,7 +1716,10 @@ if (objection.attachedFiles) {
                                   </small>
                                 </div>
                               </div>
-                              <p class="text-justify comment-text mb-0" style={{fontSize:"20px"}}>
+                              <p
+                                class="text-justify comment-text mb-0"
+                                style={{ fontSize: "20px" }}
+                              >
                                 {item?.comment}
                               </p>
                               <small

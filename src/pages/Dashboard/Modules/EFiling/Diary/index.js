@@ -40,7 +40,7 @@ export const Diary = () => {
 
   const getAllFileDiaryApi = useCallback(async () => {
     try {
-      const response = await getAllFileDiary(currentPage, pageSize);
+      const response = await getAllFileDiary(userData?.fkBranchId, currentPage, pageSize);
       if (response?.success) {
         setCount(response?.data?.incoming?.count);
         const trensferData = treformFileDiary(
