@@ -664,11 +664,11 @@ export const DeleteFreahReceptImage = async (id) => {
   }
 };
 //Diary
-export const getAllFileDiary = async (currentPage,pageSize) => {
+export const getAllFileDiary = async (branchId, currentPage,pageSize) => {
   try {
     //   const token = getAuthToken();
     const response = await axiosClientMMS.get(
-      `/fileDiary/?currentPage=${currentPage}&pageSize=${pageSize}`)
+      `/fileDiary/${branchId}?currentPage=${currentPage}&pageSize=${pageSize}`)
       // {
       //   headers: {
       //     accept: "application/json",
