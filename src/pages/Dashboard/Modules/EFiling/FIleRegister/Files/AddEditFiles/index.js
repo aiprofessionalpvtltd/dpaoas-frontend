@@ -166,8 +166,8 @@ useEffect(() => {
     handleBranch()
   },[])
   return (
-    <Layout module={true} sidebarItems={userData && userData?.userType === "Officer" ? EfilingSideBarItem : EfilingSideBarBranchItem}>
-      <Header dashboardLink={"/efiling/dashboard"} addLink1={"/efiling/dashboard/file-register-list/files-list"} title1={"Register Index"} title2={"Create File"} addLink2={"/efiling/dashboard/file-register-list/files-list/addedit-file"} width={"500px"} />
+    <Layout module={false} sidebarItems={userData && userData?.userType === "Officer" ? EfilingSideBarItem : EfilingSideBarBranchItem}>
+      {/* <Header dashboardLink={"/efiling/dashboard"} addLink1={"/efiling/dashboard/file-register-list/files-list"} title1={"Register Index"} title2={"Create File"} addLink2={"/efiling/dashboard/file-register-list/files-list/addedit-file"} width={"500px"} /> */}
       <ToastContainer />
 
       <div class="container-fluid">

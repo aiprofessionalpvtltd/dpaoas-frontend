@@ -165,20 +165,20 @@ function FileCases() {
   
   return (
     <Layout
-      module={true}
+      module={false}
       centerlogohide={true}
       sidebarItems={UserData && UserData?.userType === "Officer" ? EfilingSideBarItem : EfilingSideBarBranchItem}
     >
       <div class="row">
-        <Header
+        {/* <Header
           dashboardLink={"/efiling/dashboard"}
           addLink1={"/efiling/dashboard/file-register-list/files-list"}
           title1={"Files"}
           title2={"File Cases"}
           addLink2={"/efiling/dashboard/file-register-list/files-list/cases"}
           width={"500px"}
-        />
-        <div className="col" style={{ marginTop: "30px", float: "right" }}>
+        /> */}
+        <div className="col" style={{ marginTop: "30px", float: "right", marginBottom: 20, marginLeft: 10  }}>
           <button
             className="btn btn-primary"
             onClick={() =>

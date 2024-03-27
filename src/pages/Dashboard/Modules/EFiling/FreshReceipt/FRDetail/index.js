@@ -124,7 +124,7 @@ function FRDetail() {
   return (
     <Layout
       centerlogohide={true}
-      module={true}
+      module={false}
       sidebarItems={
         UserData && UserData?.userType === "Officer"
           ? EfilingSideBarItem
@@ -132,14 +132,14 @@ function FRDetail() {
       }
     >
       <ToastContainer />
-      <Header
+      {/* <Header
         dashboardLink={"/efiling/dashboard"}
         addLink1={"/efiling/dashboard/fresh-receipt"}
         title1={"Fresh Receipts"}
         addLink2={"/efiling/dashboard/addedit"}
         title2={"FR Detail"}
         width={"500px"}
-      />
+      /> */}
 
       <div className="custom-editor">
         <div className="row">

@@ -192,9 +192,7 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide, dashboa
         {module ? (
           <>
             <main className="dashboard-app" style={{ marginLeft: "220px" }}>
-              <CustomNavbar toggleSidebar={toggleSidebar} module={module} centerlogohide={centerlogohide} 
-              dashboardLink ={dashboardLink} addLink1 = {addLink1} addLink2 = {addLink2} title1 ={title1} title2 ={title2} width ={width} marginTop={marginTop} breadcrumbs={breadcrumbs}
-              />
+              <CustomNavbar module={module} centerlogohide={centerlogohide} />
               <div className="dashboard-content">
                 {shouldRenderNotice ? (
                   <>
@@ -296,8 +294,8 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide, dashboa
         ) : (
           <>
             <main>
-              <CustomNavbar toggleSidebar={toggleSidebar} />
-              <div className="dashboard-content">
+              <CustomNavbar toggleSidebar={toggleSidebar} navItems={sidebarItems} />
+              <div className="dashboard-content" style={{ marginTop: 120 }}>
                 <div className="container-fluid">{children}</div>
               </div>
             </main>

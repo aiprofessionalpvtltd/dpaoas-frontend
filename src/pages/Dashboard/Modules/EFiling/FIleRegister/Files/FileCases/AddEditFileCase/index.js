@@ -378,11 +378,11 @@ function AddEditFileCase() {
 
   return (
     <Layout
-      module={true}
+      module={false}
       centerlogohide={true}
       sidebarItems={UserData && UserData?.userType === "Officer" ? EfilingSideBarItem : EfilingSideBarBranchItem}
     >
-      <Header
+      {/* <Header
         dashboardLink={"/efiling/dashboard"}
         addLink1={"/efiling/dashboard/file-register-list/files-list/cases"}
         title1={"File Cases"}
@@ -391,7 +391,7 @@ function AddEditFileCase() {
           "/efiling/dashboard/file-register-list/files-list/addedit-file"
         }
         width={"500px"}
-      />
+      /> */}
       <ToastContainer />
 
       <div class="card">

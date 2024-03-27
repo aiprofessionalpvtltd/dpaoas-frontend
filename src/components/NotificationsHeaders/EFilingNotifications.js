@@ -4,6 +4,8 @@ import { getUserData } from "../../api/Auth";
 import moment from "moment";
 import { Link } from "react-router-dom";
 import { ListGroup } from "react-bootstrap";
+import { Badge } from "@mui/material";
+import NotificationsIcon from '@mui/icons-material/Notifications';
 
 export const EFilingNotifications = (notificationType) => {
   const [count, setCount] = useState(null);
@@ -113,14 +115,10 @@ export const EFilingNotifications = (notificationType) => {
     <>
       {modal && notificationModal()}
 
-      <div class="tab-right me-4">
-        <button onClick={() => handleButtonClick("Notifications")}>
-          <span style={{ backgroundColor: "#FFA500", marginRight: 10 }}>
-            {count ? count : 0}
-          </span>
-          Notifications
-        </button>
-      </div>
+        <Badge badgeContent={count ? count : 0} color="primary" onClick={() => handleButtonClick("Notifications")} style={{ marginRight:20 }}>
+  <NotificationsIcon color="red" />
+</Badge>
+
     </>
   );
 };

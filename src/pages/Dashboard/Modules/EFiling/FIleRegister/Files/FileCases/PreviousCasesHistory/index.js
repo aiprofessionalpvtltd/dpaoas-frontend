@@ -82,11 +82,11 @@ function PreviousCasesHistory() {
    
 
     return (
-        <Layout module={true} sidebarItems={UserData && UserData?.userType === "Officer" ? EfilingSideBarItem : EfilingSideBarBranchItem}>
+        <Layout module={false} sidebarItems={UserData && UserData?.userType === "Officer" ? EfilingSideBarItem : EfilingSideBarBranchItem}>
             <div className='row'>
 
-            <Header dashboardLink={"/efiling/dashboard"} addLink1={"/efiling/dashboard/file-register-list/files-list/cases"} title1={"File Cases"} title2={"Cases History"} addLink2={"/efiling/dashboard/file-register-list/files-list/cases-history"} width={"500px"} />
-            <div className="col" style={{ marginTop: "30px", float: "right" }}>
+            {/* <Header dashboardLink={"/efiling/dashboard"} addLink1={"/efiling/dashboard/file-register-list/files-list/cases"} title1={"File Cases"} title2={"Cases History"} addLink2={"/efiling/dashboard/file-register-list/files-list/cases-history"} width={"500px"} /> */}
+            <div className="col" style={{ marginTop: "30px", float: "right", marginBottom: 20, marginLeft: 10 }}>
           <button
             className="btn btn-primary"
             onClick={() =>

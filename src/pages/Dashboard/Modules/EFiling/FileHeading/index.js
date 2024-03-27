@@ -65,8 +65,8 @@ function FileHeadingList() {
         getAllFileHeadingApi()
       },[getAllFileHeadingApi])
   return (
-    <Layout module={true} centerlogohide={true} sidebarItems={userData && userData?.userType === "Officer" ? EfilingSideBarItem : EfilingSideBarBranchItem}>
-    <Header dashboardLink={"/efiling/dashboard"} addLink1={"/efiling/dashboard"} title1={"File Heading"} width={"500px"} />
+    <Layout module={false} centerlogohide={true} sidebarItems={userData && userData?.userType === "Officer" ? EfilingSideBarItem : EfilingSideBarBranchItem}>
+    {/* <Header dashboardLink={"/efiling/dashboard"} addLink1={"/efiling/dashboard"} title1={"File Heading"} width={"500px"} /> */}
     <ToastContainer />
     <div class="row">
         <div class="col-12">

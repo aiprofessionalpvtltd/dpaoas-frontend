@@ -184,18 +184,18 @@ const getRegisterRecordByRegisterId = async (id) => {
 console.log("registerData",registerData);
   return (
     <Layout
-      module={true}
+      module={false}
       centerlogohide={true}
       sidebarItems={userData && userData?.userType === "Officer" ? EfilingSideBarItem : EfilingSideBarBranchItem}
     >
-      <Header
+      {/* <Header
         dashboardLink={"/efiling/dashboard"}
         addLink1={"/efiling/dashboard/file-register-list"}
         title1={"File Register"}
         title2={"Register Index"}
         addLink2={"/efiling/dashboard/file-register-list/files-list"}
         width={"500px"}
-      />
+      /> */}
 
       <div>
         <div style={{ float: "left" }}>

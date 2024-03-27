@@ -3,11 +3,20 @@ import Logo from "../../assets/logo.png";
 import Profile from "../../assets/profile-img.jpg";
 import { Dropdown } from "react-bootstrap";
 import { getUserData, logout } from "../../api/Auth";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { faSortDown } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { EFilingNotifications } from "../NotificationsHeaders/EFilingNotifications";
 
-export const CustomNavbar = ({ toggleSidebar, module, centerlogohide, dashboardLink, addLink1, addLink2, title1, title2, width, marginTop, breadcrumbs }) => {
+export const CustomNavbar = ({ module, centerlogohide, navItems }) => {
   const navigation = useNavigate();
-  const userData = getUserData()
+  const userData = getUserData();
+  console.log(navItems);
+  const location = useLocation();
+  const basePathEFiling = location.pathname.substring(0, location.pathname.lastIndexOf("/efiling") + 8);
+  const shouldRenderEfiling = basePathEFiling === "/efiling";
+
+  console.log(basePathEFiling, shouldRenderEfiling);
 
   return (
     <header
@@ -19,47 +28,78 @@ export const CustomNavbar = ({ toggleSidebar, module, centerlogohide, dashboardL
     >
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-  
           <div class="collapse navbar-collapse" id="navbarNavDropdown">
-            {breadcrumbs ? (
-               <ul className="navbar-nav">
-               <li class="nav-item">
-                 <Link to={dashboardLink} class="nav-item">Dashboard {` `}</Link>
-               </li>
-               {addLink2 && title2 ? (
-                 <li class="nav-item">
-                   <Link to={addLink1}> / {title1}</Link>
-                 </li>
-               ) : (
-                 <li class="nav-item">
-                   <span> / {title1}</span>
-                 </li>
-               )}
-               {addLink2 && title2 && (
-                 <li class="nav-item">
-                   <span> / {title2}</span>
-                 </li>
-               )}
-             </ul>
-            ) : (
-              <ul class="navbar-nav">
-              <li class="nav-item">
-                <Link
-                  style={{ fontWeight: "bold" }}
-                  class="nav-link"
-                  aria-current="page"
-                  to="/"
-                >
-                  Dashboard
-                </Link>
-              </li>
+            <ul class="navbar-nav">
+              {shouldRenderEfiling ? (
+              <>
+              {navItems &&
+                navItems?.map((item) => (
+                  <>
+                    {item?.subItems ? (
+                      <li class="nav-item">
+                        <Dropdown>
+                          <Dropdown.Toggle
+                            variant="default"
+                            id="about-dropdown"
+                            style={{ fontWeight: "bold" }}
+                          >
+                            {item?.itemName}{" "}
+                            <FontAwesomeIcon
+                              icon={faSortDown}
+                              style={{
+                                fontSize: "20px",
+                                color: "#000000",
+                                marginBottom: "1px",
+                              }}
+                            />
+                          </Dropdown.Toggle>
+
+                          <Dropdown.Menu>
+                            {item?.subItems.map((subItem) => (
+                              <Link
+                                to={subItem?.link}
+                                className="dropdown-item"
+                                key={subItem?.itemName}
+                              >
+                                {subItem?.itemName}
+                              </Link>
+                            ))}
+                          </Dropdown.Menu>
+                        </Dropdown>
+                      </li>
+                    ) : (
+                      <li class="nav-item">
+                        <Link
+                          style={{ fontWeight: "bold", color: "#000000" }}
+                          class="nav-link"
+                          aria-current="page"
+                          to={item?.link}
+                        >
+                          {item?.itemName}
+                        </Link>
+                      </li>
+                    )}
+                  </>
+                ))}
+              </>
+              ) : (
+                <li class="nav-item">
+                  <Link
+                    style={{ fontWeight: "bold", color: "#000000" }}
+                    class="nav-link"
+                    aria-current="page"
+                    to={'/'}
+                  >
+                    Dashboard
+                  </Link>
+                </li>
+              )}
             </ul>
-            )}
-            
           </div>
-          
         </div>
-        
+
+      <EFilingNotifications notificationType="Notifications" />
+
         <Dropdown className="user-box dropdown px-3 float-end">
           <Dropdown.Toggle
             as="a"
@@ -69,10 +109,15 @@ export const CustomNavbar = ({ toggleSidebar, module, centerlogohide, dashboardL
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            <img src={Profile} className="user-img" alt="user avatar" />
+            {/* <img src={Profile} className="user-img" alt="user avatar" /> */}
             <div className="user-info">
-              <p className="user-name mb-0">{userData && `${userData?.firstName} ${userData?.lastName}`}</p>
-              <p className="designation mb-0">{userData && `${userData?.designation?.designationName} ${userData?.branch?.branchName}`}</p>
+              <p className="user-name mb-0">
+                {userData && `${userData?.firstName} ${userData?.lastName}`}
+              </p>
+              <p className="designation mb-0">
+                {userData &&
+                  `${userData?.designation?.designationName} ${userData?.branch?.branchName}`}
+              </p>
             </div>
           </Dropdown.Toggle>
           <div className="clearfix"></div>
@@ -80,8 +125,8 @@ export const CustomNavbar = ({ toggleSidebar, module, centerlogohide, dashboardL
             <Dropdown.Item
               style={{ border: "none" }}
               onClick={async (e) => {
-                e.preventDefault()
-               await logout();
+                e.preventDefault();
+                await logout();
                 navigation("/login");
               }}
             >

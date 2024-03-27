@@ -54,7 +54,7 @@ function DirectorDashboard() {
   // },[])
   return (
     <Layout
-      module={true}
+      module={false}
       centerlogohide={true}
       sidebarItems={userData && userData?.userType === "Officer" ? EfilingSideBarItem : EfilingSideBarBranchItem}
       dashboardLink={"/efiling/dashboard"}
@@ -64,7 +64,7 @@ function DirectorDashboard() {
         marginTop={"0px"}
         breadcrumbs={true}
     >
-      <EFilingNotifications notificationType="Notifications" />
+      {/* <EFilingNotifications notificationType="Notifications" /> */}
       
 
       <h2 style={{ marginLeft: 15, marginBottom: 30, color: "#820001" }}>

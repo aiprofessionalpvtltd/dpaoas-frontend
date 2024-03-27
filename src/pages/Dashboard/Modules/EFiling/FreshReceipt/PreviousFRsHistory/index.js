@@ -62,8 +62,16 @@ function PreviousFRsHistory() {
     }, [currentPage])
 
     return (
-        <Layout module={true} sidebarItems={UserData && UserData?.userType === "Officer" ? EfilingSideBarItem : EfilingSideBarBranchItem}>
-            <Header dashboardLink={"/efiling/dashboard"} addLink1={"/efiling/dashboard/fresh-receipt"} title1={"Fresh Receipts"} title2={"FRs History"} addLink2={"/efiling/dashboard/file-register-list/files-list/cases-history"} width={"500px"} />
+        <Layout module={false} sidebarItems={UserData && UserData?.userType === "Officer" ? EfilingSideBarItem : EfilingSideBarBranchItem}>
+            <div class='row'>
+            {/* <Header dashboardLink={"/efiling/dashboard"} addLink1={"/efiling/dashboard/fresh-receipt"} title1={"Fresh Receipts"} title2={"FRs History"} addLink2={"/efiling/dashboard/file-register-list/files-list/cases-history"} width={"500px"} /> */}
+
+            <div className="col" style={{ marginTop: "30px", float: 'right', marginBottom: 20, marginLeft: 10 }}>
+                  <button className="btn btn-primary" onClick={() => navigate('/efiling/dashboard/fresh-receipt')} >
+                    View Fresh Receipts
+                  </button>
+            </div>
+            </div>
 
             <div class="row">
                 <div class="col-12">

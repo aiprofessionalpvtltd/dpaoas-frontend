@@ -933,6 +933,18 @@ export const EfilingSideBarBranchItem = [
           itemName: "File Headings",
           link: "/efiling/dashboard/file-heading-list",
           icon: faHeading,
+          subItems: [
+            {
+              itemName: "Create File Heading",
+              link: "/efiling/dashboard/addedit-file-heading",
+              icon: faHeading,
+            },
+            {
+              itemName: "File Headings List",
+              link: "/efiling/dashboard/file-heading-list",
+              icon: faHeading,
+            },
+          ],
         },
         {
           itemName: "Registers",
@@ -952,9 +964,21 @@ export const EfilingSideBarBranchItem = [
           ],
         },
         {
-          itemName: "Fresh Recipt",
+          itemName: "Fresh Receipts",
           link: "/efiling/dashboard/fresh-receipt",
           icon: faReceipt,
+          subItems: [
+            {
+              itemName: "Create Fresh Receipt",
+              link: "/efiling/dashboard/fresh-receipt/addedit",
+              icon: faReceipt,
+            },
+            {
+              itemName: "Fresh Receipts List",
+              link: "/efiling/dashboard/fresh-receipt",
+              icon: faReceipt,
+            },
+          ],
         },
         {
           itemName: "Files",

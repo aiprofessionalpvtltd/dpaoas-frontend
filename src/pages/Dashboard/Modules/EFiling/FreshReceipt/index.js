@@ -81,10 +81,10 @@ function FileCases() {
 
 
     return (
-        <Layout module={true} sidebarItems={UserData && UserData?.userType === "Officer" ? EfilingSideBarItem : EfilingSideBarBranchItem}>
+        <Layout module={false} centerlogohide={true} sidebarItems={UserData && UserData?.userType === "Officer" ? EfilingSideBarItem : EfilingSideBarBranchItem}>
             <div class='row'>
-            <Header dashboardLink={"/efiling/dashboard"} addLink1={"/efiling/dashboard/fresh-receipt"} title1={"Fresh Receipts"} />
-            <div className="col" style={{ marginTop: "30px", float: 'right' }}>
+            {/* <Header dashboardLink={"/efiling/dashboard"} addLink1={"/efiling/dashboard/fresh-receipt"} title1={"Fresh Receipts"} /> */}
+            <div className="col" style={{ marginTop: "30px", float: 'right', marginBottom: 20, marginLeft: 10 }}>
                   <button className="btn btn-primary" onClick={() => navigate('/efiling/dashboard/fresh-receipt/history')} >
                     View Previous History
                   </button>
