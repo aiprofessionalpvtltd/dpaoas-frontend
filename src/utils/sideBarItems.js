@@ -746,10 +746,14 @@ export const EfilingSideBarItem =  [
               link: "/efiling/dashboard/file-register-list/files-list/cases",
               icon: faClipboardList,
             },
+            {
+              itemName: "Approved Cases",
+              link: "/efiling/dashboard/file-register-list/files-list/cases/approved",
+              icon: faClipboardList,
+            },
           ],
         },
       ]
-    // : [
     //     {
     //       itemName: "Dashboard",
     //       link: "/efiling/dashboard",
@@ -930,23 +934,6 @@ export const EfilingSideBarBranchItem = [
           icon: faBook,
         },
         {
-          itemName: "File Headings",
-          link: "/efiling/dashboard/file-heading-list",
-          icon: faHeading,
-          subItems: [
-            {
-              itemName: "Create File Heading",
-              link: "/efiling/dashboard/addedit-file-heading",
-              icon: faHeading,
-            },
-            {
-              itemName: "File Headings List",
-              link: "/efiling/dashboard/file-heading-list",
-              icon: faHeading,
-            },
-          ],
-        },
-        {
           itemName: "Registers",
           link: "/efiling/dashboard/file-register",
           icon: faBookOpen,
@@ -960,6 +947,23 @@ export const EfilingSideBarBranchItem = [
               itemName: "Registers List",
               link: "/efiling/dashboard/file-register-list",
               icon: faBookOpen,
+            },
+          ],
+        },
+        {
+          itemName: "File Headings",
+          link: "/efiling/dashboard/file-heading-list",
+          icon: faHeading,
+          subItems: [
+            {
+              itemName: "Create File Heading",
+              link: "/efiling/dashboard/addedit-file-heading",
+              icon: faHeading,
+            },
+            {
+              itemName: "File Headings List",
+              link: "/efiling/dashboard/file-heading-list",
+              icon: faHeading,
             },
           ],
         },
@@ -1010,6 +1014,11 @@ export const EfilingSideBarBranchItem = [
             {
               itemName: "Cases List",
               link: "/efiling/dashboard/file-register-list/files-list/cases",
+              icon: faClipboardList,
+            },
+            {
+              itemName: "Approved Cases",
+              link: "/efiling/dashboard/file-register-list/files-list/cases/approved",
               icon: faClipboardList,
             },
           ],

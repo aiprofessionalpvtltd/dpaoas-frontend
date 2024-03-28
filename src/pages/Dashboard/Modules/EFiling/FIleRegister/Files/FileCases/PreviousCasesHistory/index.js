@@ -87,17 +87,8 @@ function PreviousCasesHistory() {
 
             {/* <Header dashboardLink={"/efiling/dashboard"} addLink1={"/efiling/dashboard/file-register-list/files-list/cases"} title1={"File Cases"} title2={"Cases History"} addLink2={"/efiling/dashboard/file-register-list/files-list/cases-history"} width={"500px"} /> */}
             <div className="col" style={{ marginTop: "30px", float: "right", marginBottom: 20, marginLeft: 10 }}>
-          <button
-            className="btn btn-primary"
-            onClick={() =>
-                setShowApproved(!showApproved)
-            }
-          >
-            View Approved Cases
-          </button>
         </div>
             </div>
-            {showApproved ? (
                 <div class="row">
                 <div class="col-12">
                     <CustomTable
@@ -120,30 +111,6 @@ function PreviousCasesHistory() {
                     />
                 </div>
             </div>
-            ): (
-                <div class="row">
-                <div class="col-12">
-                    <CustomTable
-                        ActionHide={false}
-                        hidebtn1={true}
-                        hideBtn={true}
-                        data={approvedCaseData}
-                        tableTitle="Approved Cases History"
-                        headertitlebgColor={"#666"}
-                        headertitletextColor={"#FFF"}
-                        handlePageChange={handlePageChange}
-                        currentPage={currentPage}
-                        pageSize={pageSize}
-                        totalCount={count}
-                        singleDataCard={true}
-                        showEditIcon={true}
-                        hideDeleteIcon={true}
-                        showView={true}
-                        handleView={(item) => navigate("/efiling/dashboard/fileDetail", {state: {id: item.caseId, view: true, fileId: location?.state?.fileId}})}
-                    />
-                </div>
-            </div>
-            )}
             
         </Layout>
     )

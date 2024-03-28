@@ -11,12 +11,9 @@ import { EFilingNotifications } from "../NotificationsHeaders/EFilingNotificatio
 export const CustomNavbar = ({ module, centerlogohide, navItems }) => {
   const navigation = useNavigate();
   const userData = getUserData();
-  console.log(navItems);
   const location = useLocation();
   const basePathEFiling = location.pathname.substring(0, location.pathname.lastIndexOf("/efiling") + 8);
   const shouldRenderEfiling = basePathEFiling === "/efiling";
-
-  console.log(basePathEFiling, shouldRenderEfiling);
 
   return (
     <header
@@ -41,14 +38,14 @@ export const CustomNavbar = ({ module, centerlogohide, navItems }) => {
                           <Dropdown.Toggle
                             variant="default"
                             id="about-dropdown"
-                            style={{ fontWeight: "bold" }}
+                            style={{ fontWeight: "bold", color: item.subItems.some(subItem => location.pathname === subItem.link) ? "#fff" : "#000", backgroundColor: item.subItems.some(subItem => location.pathname === subItem.link) ? "#14ae5c" : ""  }}
                           >
                             {item?.itemName}{" "}
                             <FontAwesomeIcon
                               icon={faSortDown}
                               style={{
                                 fontSize: "20px",
-                                color: "#000000",
+                                color: item.subItems.some(subItem => location.pathname === subItem.link) ? "#fff" : "#000",
                                 marginBottom: "1px",
                               }}
                             />
@@ -57,6 +54,7 @@ export const CustomNavbar = ({ module, centerlogohide, navItems }) => {
                           <Dropdown.Menu>
                             {item?.subItems.map((subItem) => (
                               <Link
+                                style={{ fontWeight: "bold", color: location.pathname === subItem?.link ? "#fff" : "#000", backgroundColor: location.pathname === subItem?.link ? "#14ae5c" : "" }}
                                 to={subItem?.link}
                                 className="dropdown-item"
                                 key={subItem?.itemName}
@@ -70,7 +68,7 @@ export const CustomNavbar = ({ module, centerlogohide, navItems }) => {
                     ) : (
                       <li class="nav-item">
                         <Link
-                          style={{ fontWeight: "bold", color: "#000000" }}
+                          style={{ fontWeight: "bold", color: location.pathname === item?.link ? "#fff" : "#000", backgroundColor: location.pathname === item?.link ? "#14ae5c" : "", borderRadius: 5, paddingRight: 10, paddingLeft: 10 }}
                           class="nav-link"
                           aria-current="page"
                           to={item?.link}

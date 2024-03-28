@@ -43,6 +43,7 @@ import {
   getHLEmployee,
 } from "../../../../../api/APIs/Services/organizational.service";
 import { getBranches } from "../../../../../api/APIs/Services/Branches.services";
+import { EfilingSideBarBranchItem, EfilingSideBarItem } from "../../../../../utils/sideBarItems";
 
 const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
   return (
@@ -69,6 +70,7 @@ const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
 function FileDetail() {
   const location = useLocation();
   const fileInputRef = useRef(null);
+  const UserData = getUserData();
 
   console.log(
     "location?.state?.fileIdlocation?.state?.fileIdlocation?.state?.fileIdlocation?.state?.fileId",
@@ -101,7 +103,6 @@ function FileDetail() {
 
   const [employeeData, setEmployeeData] = useState([]);
   console.log("employeeDataemployeeDataemployeeData", employeeData);
-  const UserData = getUserData();
   const [filesData, setFilesData] = useState(null);
   const [viewPage, setViewPage] = useState(location?.state?.view);
 
@@ -505,17 +506,17 @@ function FileDetail() {
   };
 
   return (
-    <Layout centerlogohide={true}>
-      <div className="dashboard-content" style={{ marginTop: 80 }}>
+    <Layout centerlogohide={true} module={false} sidebarItems={UserData && UserData?.userType === "Officer" ? EfilingSideBarItem : EfilingSideBarBranchItem}>
+      <div className="dashboard-content">
         <ToastContainer />
-        <Header
+        {/* <Header
           dashboardLink={"/efiling/dashboard"}
           addLink1={"/efiling/dashboard/file-register-list/files-list/cases"}
           title1={"File Cases"}
           addLink2={"/efiling/dashboard/addedit"}
           title2={location && viewPage ? "File Detail" : "Edit File"}
           width={"500px"}
-        />
+        /> */}
 
         <EFilingModal
           title={"Add Comments"}
