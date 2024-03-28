@@ -58,7 +58,7 @@ function CustomTable({
   hidebtn1,
 }) {
   const keys = data?.length > 0 ? Object.keys(data[0]) : [];
-  const filteredKeys = keys?.filter(key => key !== 'internalId');
+  const filteredKeys = keys?.filter((key) => key !== "internalId");
   const [totalPages, setTotalPages] = useState(0);
 
   const formatHeader = (key) => {
@@ -139,7 +139,7 @@ function CustomTable({
       </nav>
     );
   };
-
+  console.log("Total Count From Custom Table", totalCount);
   return (
     <div className="container-fluid">
       <div className={`${singleDataCard ? "card" : ""}`}>

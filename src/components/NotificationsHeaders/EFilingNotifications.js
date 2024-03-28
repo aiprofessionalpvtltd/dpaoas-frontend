@@ -5,7 +5,7 @@ import moment from "moment";
 import { Link } from "react-router-dom";
 import { ListGroup } from "react-bootstrap";
 import { Badge } from "@mui/material";
-import NotificationsIcon from '@mui/icons-material/Notifications';
+import NotificationsIcon from "@mui/icons-material/Notifications";
 
 export const EFilingNotifications = (notificationType) => {
   const [count, setCount] = useState(null);
@@ -46,27 +46,36 @@ export const EFilingNotifications = (notificationType) => {
         zIndex: 999, // Ensure it's above other elements
       }}
     >
-      {notificationData.length > 0 ? notificationData.map((item, index) => (
-        <ListGroup.Item key={index} className={notificationData.length === 1 ? "" : "border-bottom"}>
-      <Link
-        to={"/efiling/dashboard/fileDetail"}
-        state={{ view: false, fileId: item.fileId, id: item.caseId }}
-        style={{ color: "black" }}
-        className="link"
-      >
-        <span>
-          {item?.message}
-          <br />
-          <span className="text-sm">
-            <i>{moment(item.date).format('DD/MM/YYYY')}</i>
-          </span>
-          <span className="float-end text-sm">{new Date(item.date).toLocaleTimeString()}</span>
+      {notificationData.length > 0 ? (
+        notificationData.map((item, index) => (
+          <ListGroup.Item
+            key={index}
+            className={notificationData.length === 1 ? "" : "border-bottom"}
+          >
+            <Link
+              to={"/efiling/dashboard/fileDetail"}
+              state={{ view: false, fileId: item.fileId, id: item.caseId }}
+              style={{ color: "black" }}
+              className="link"
+            >
+              <span>
+                {item?.message}
+                <br />
+                <span className="text-sm">
+                  <i>{moment(item.date).format("DD/MM/YYYY")}</i>
+                </span>
+                <span className="float-end text-sm">
+                  {new Date(item.date).toLocaleTimeString()}
+                </span>
+              </span>
+            </Link>
+          </ListGroup.Item>
+        ))
+      ) : (
+        <span className="text-sm d-block text-center">
+          No notifications found!
         </span>
-      </Link>
-    </ListGroup.Item>
-    )) : (
-        <span className="text-sm d-block text-center">No notifications found!</span>
-    )}
+      )}
     </div>
   );
 
@@ -115,10 +124,14 @@ export const EFilingNotifications = (notificationType) => {
     <>
       {modal && notificationModal()}
 
-        <Badge badgeContent={count ? count : 0} color="primary" onClick={() => handleButtonClick("Notifications")} style={{ marginRight:20 }}>
-  <NotificationsIcon color="red" />
-</Badge>
-
+      <Badge
+        badgeContent={count ? count : 0}
+        color="primary"
+        onClick={() => handleButtonClick("Notifications")}
+        style={{ marginRight: 20, cursor: "pointer" }}
+      >
+        <NotificationsIcon color="red" />
+      </Badge>
     </>
   );
 };

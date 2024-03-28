@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Layout } from "../../../../../components/Layout";
 import Header from "../../../../../components/Header";
-import { EfilingSideBarBranchItem, EfilingSideBarItem } from "../../../../../utils/sideBarItems";
+import {
+  EfilingSideBarBranchItem,
+  EfilingSideBarItem,
+} from "../../../../../utils/sideBarItems";
 import NoticeStatsCard from "../../../../../components/CustomComponents/NoticeStatsCard";
 import {
   faClipboardQuestion,
@@ -10,6 +13,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import {
   getApprovelStats,
+  getsentAndRecievedFRStats,
   getsentAndRecievedFilesStats,
 } from "../../../../../api/APIs/Services/efiling.service";
 import { getUserData } from "../../../../../api/Auth";
@@ -19,6 +23,7 @@ import { EFilingNotifications } from "../../../../../components/NotificationsHea
 function DirectorDashboard() {
   const userData = getUserData();
   const [fileStatsData, setFileStatsData] = useState(null);
+  const [frStatsData, setFrStatsData] = useState(null);
   const [approvelStatsData, setApprovelStatsData] = useState(null);
 
   const getAllStats = async () => {
@@ -26,6 +31,17 @@ function DirectorDashboard() {
       const response = await getsentAndRecievedFilesStats(userData?.fkUserId);
       if (response?.success) {
         setFileStatsData(response?.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getAllFRStats = async () => {
+    try {
+      const response = await getsentAndRecievedFRStats(userData?.fkUserId);
+      if (response?.success) {
+        setFrStatsData(response?.data);
       }
     } catch (error) {
       console.log(error);
@@ -46,6 +62,7 @@ function DirectorDashboard() {
   useEffect(() => {
     getAllApprovelStatsApi();
     getAllStats();
+    getAllFRStats();
     // getUserData()
   }, []);
 
@@ -56,16 +73,19 @@ function DirectorDashboard() {
     <Layout
       module={false}
       centerlogohide={true}
-      sidebarItems={userData && userData?.userType === "Officer" ? EfilingSideBarItem : EfilingSideBarBranchItem}
+      sidebarItems={
+        userData && userData?.userType === "Officer"
+          ? EfilingSideBarItem
+          : EfilingSideBarBranchItem
+      }
       dashboardLink={"/efiling/dashboard"}
-        addLink1={"/efiling/director-deshboard"}
-        title1={"E-Filing"}
-        width={"500px"}
-        marginTop={"0px"}
-        breadcrumbs={true}
+      addLink1={"/efiling/director-deshboard"}
+      title1={"E-Filing"}
+      width={"500px"}
+      marginTop={"0px"}
+      breadcrumbs={true}
     >
       {/* <EFilingNotifications notificationType="Notifications" /> */}
-      
 
       <h2 style={{ marginLeft: 15, marginBottom: 30, color: "#820001" }}>
         {" "}
@@ -82,12 +102,23 @@ function DirectorDashboard() {
             <div class="mt-2 mb-4">
               <div class="row">
                 <NoticeStatsCard
+                  title={"Fresh Recipt (FR)"}
+                  icon={faClipboardQuestion}
+                  iconBgColor={"#FFA500"}
+                  total={frStatsData && frStatsData?.totalFRs}
+                  sent={frStatsData && frStatsData?.sentFRs?.count}
+                  received={frStatsData && frStatsData?.receivedFRs?.count}
+                />
+
+                <NoticeStatsCard
                   title={"Files"}
                   icon={faClipboardQuestion}
                   iconBgColor={"#FFA500"}
                   total={fileStatsData && fileStatsData?.totalFiles}
-                  sent={fileStatsData && fileStatsData?.sentFiles}
-                  received={fileStatsData && fileStatsData?.receivedFiles}
+                  sent={fileStatsData && fileStatsData?.sentFiles?.count}
+                  received={
+                    fileStatsData && fileStatsData?.receivedFiles?.count
+                  }
                 />
                 {/* <NoticeStatsCard ReceivedText={"Disapproved"} SentText={"Approved"} title={"Approval"} icon={faFileImport} iconBgColor={"#007bff"} total={approvelStatsData && approvelStatsData?.totalFiles} sent={approvelStatsData && approvelStatsData?.approvedFiles} received={approvelStatsData && approvelStatsData?.disapprovedFiles} /> */}
               </div>
@@ -100,7 +131,9 @@ function DirectorDashboard() {
                         icon={faClipboardQuestion}
                         overall={true}
                         iconBgColor={"#FFA500"}
-                        total={approvelStatsData && approvelStatsData.approvedFiles}
+                        total={
+                          approvelStatsData && approvelStatsData.approvedFiles
+                        }
                         ColValue={"col-3"}
                       />
                       <NoticeStatsCard
@@ -108,7 +141,9 @@ function DirectorDashboard() {
                         icon={faFileImport}
                         overall={true}
                         iconBgColor={"#007bff"}
-                        total={approvelStatsData && approvelStatsData.discussedFiles}
+                        total={
+                          approvelStatsData && approvelStatsData.discussedFiles
+                        }
                         ColValue={"col-3"}
                       />
                       <NoticeStatsCard
@@ -124,7 +159,9 @@ function DirectorDashboard() {
                         icon={faFileImport}
                         overall={true}
                         iconBgColor={"#007bff"}
-                        total={approvelStatsData && approvelStatsData.pendingFiles}
+                        total={
+                          approvelStatsData && approvelStatsData.pendingFiles
+                        }
                         ColValue={"col-3"}
                       />
                     </div>
