@@ -102,7 +102,7 @@ function DirectorDashboard() {
             <div class="mt-2 mb-4">
               <div class="row">
                 <NoticeStatsCard
-                  title={"Fresh Recipt (FR)"}
+                  title={"Fresh Receipts (FRs)"}
                   icon={faClipboardQuestion}
                   iconBgColor={"#FFA500"}
                   total={frStatsData && frStatsData?.totalFRs}
