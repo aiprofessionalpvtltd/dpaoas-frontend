@@ -3,11 +3,14 @@ import { ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router";
 import { useLocation } from "react-router-dom";
 import { Layout } from "../../../../../../../components/Layout";
-import Header from "../../../../../../../components/Header";
+
 import CustomTable from "../../../../../../../components/CustomComponents/CustomTable";
-import { EfilingSideBarBranchItem, EfilingSideBarItem } from "../../../../../../../utils/sideBarItems";
 import {
-  getAllCasesByFileId,
+  EfilingSideBarBranchItem,
+  EfilingSideBarItem,
+} from "../../../../../../../utils/sideBarItems";
+import {
+  getAllCasesThroughSearchParams,
   getAllFileHeading,
   getAllFileRegister,
   getFileByRegisterById,
@@ -16,30 +19,32 @@ import { AuthContext } from "../../../../../../../api/AuthContext";
 import { getUserData } from "../../../../../../../api/Auth";
 import moment from "moment";
 import Select from "react-select";
+import { showSuccessMessage } from "../../../../../../../utils/ToastAlert";
 
 function FileCases() {
   const navigate = useNavigate();
   const { setFileIdInRegister, fileIdINRegister } = useContext(AuthContext);
+  const userData = getUserData();
   const location = useLocation();
   const [headings, setHeadings] = useState(null);
   const [headcount, setHeadCount] = useState(null);
-
-
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
   const [casesData, setCasesData] = useState([]);
-  const pageSize = 5; // Set your desired page size
+  const pageSize = 4;
   const UserData = getUserData();
   const [fkfileId, setFKFileId] = useState(null);
-
+  const [showHeadings, setShowHeadings] = useState(false);
+  const [showFiles, setShowFiles] = useState(false);
   const handlePageChange = (page) => {
-    // Update currentPage when a page link is clicked
     setCurrentPage(page);
   };
 
   const transformFilesCases = (apiData) => {
-    return apiData.map((item, index) => ({
+    console.log("Data", apiData);
+    return apiData?.map((item, index) => ({
       caseId: item?.fkCaseId,
+      internalId: item?.fileData?.id,
       FileNo: item?.fileData?.fileNumber,
       Sender:
         item?.fileRemarksData?.length > 0
@@ -61,29 +66,28 @@ function FileCases() {
         item?.fileRemarksData?.length > 0
           ? moment(item?.fileRemarksData[0]?.createdAt).format("hh:mm A")
           : "---",
-      // Noting: item?.Note?.description ? new DOMParser().parseFromString(item.Note?.description, 'text/html').documentElement.innerText : '',
-      // Correspondence: item?.Correspondence?.description ? new DOMParser().parseFromString(item.Correspondence?.description, 'text/html').documentElement.innerText : '',
-      // Sanction: item?.Sanction?.description ? new DOMParser().parseFromString(item.Sanction?.description, 'text/html').documentElement.innerText : '',
-      // Objection: item?.Objection?.description ? new DOMParser().parseFromString(item.Objection?.description, 'text/html').documentElement.innerText : '',
-      // Letter: item?.Letter?.description ? new DOMParser().parseFromString(item.Letter?.description, 'text/html').documentElement.innerText : '',
     }));
   };
 
-  const getAllCasesApi = async (fileId) => {
+  const getAllCasesApi = async () => {
+    const searchParams = {
+      userId: userData?.fkUserId,
+      currentPage: currentPage,
+      pageSize: pageSize,
+      fileId: fkfileId?.value,
+    };
     try {
-      const response = await getAllCasesByFileId(
-        fileId.value,
-        UserData?.fkUserId,
-        currentPage,
-        pageSize
-      );
+      const response = await getAllCasesThroughSearchParams(searchParams);
+      console.log(response);
       if (response.success) {
         setCount(response?.data?.count);
+
         const transferData = transformFilesCases(response?.data?.cases);
         setCasesData(transferData);
+        showSuccessMessage(response?.message);
       }
     } catch (error) {
-      // showErrorMessage(error?.response?.data?.message);
+      console.log(error);
     }
   };
 
@@ -92,21 +96,18 @@ function FileCases() {
       setFileIdInRegister(location.state?.internalId);
     }
     getAllCasesApi();
-  }, [fileIdINRegister, setFileIdInRegister, currentPage]);
+  }, [fileIdINRegister, setFileIdInRegister, fkfileId, currentPage]);
 
   const [registerData, setRegisterData] = useState([]);
   const getAllRegisterApi = async () => {
     try {
-      const response = await getAllFileRegister(
-        UserData?.fkBranchId,
-        0,
-        100
-      );
+      const response = await getAllFileRegister(UserData?.fkBranchId, 0, 100);
+
       if (response.success) {
         setRegisterData(response?.data?.fileRegisters);
       }
     } catch (error) {
-      // showErrorMessage(error?.response?.data?.message);
+      console.log(error);
     }
   };
 
@@ -115,10 +116,28 @@ function FileCases() {
   }, []);
 
   const [fileData, setFileData] = useState([]);
-  const [registerId, setRegisterId] = useState(null)
+  const [registerId, setRegisterId] = useState(null);
+
+  // Register Drop Down Change
+  const handleRegisterDropDownChange = (selectedOption) => {
+    setRegisterId(selectedOption?.value);
+    setShowHeadings(true);
+    setFileData([]);
+  };
+
+  const handleHeadingChange = (e) => {
+    hendleRegisterSelect(e.target.value);
+    setShowFiles(true);
+  };
   const hendleRegisterSelect = async (headID) => {
+    const searchParams = {
+      userId: userData?.fkUserId,
+      currentPage: currentPage,
+      pageSize: pageSize,
+      mainHeadingNumber: headID,
+    };
     try {
-      const response = await getFileByRegisterById(registerId, headID);
+      const response = await getFileByRegisterById(searchParams);
       if (response.success) {
         if (response?.data?.files) {
           setFileData(response?.data?.files);
@@ -127,13 +146,12 @@ function FileCases() {
         }
       }
     } catch (error) {
-      // showErrorMessage(error?.response?.data?.message);
+      console.log(error);
     }
   };
 
   const transformFilesHeadings = (apiData) => {
-    console.log(apiData);
-    return apiData.map((item) => ({
+    return apiData?.map((item) => ({
       HeadingNumber: item?.mainHeadingNumber,
     }));
   };
@@ -142,12 +160,10 @@ function FileCases() {
     try {
       const response = await getAllFileHeading(UserData?.fkBranchId, 0, 1000);
       if (response.success) {
-        //   showSuccessMessage(response?.message)
-        setCount(response?.data?.count);
         const transformedData = transformFilesHeadings(
           response?.data?.mainHeadings
         );
-        setHeadCount(transformedData[transformedData.length - 1].HeadingNumber);
+        // setHeadCount(transformedData[transformedData.length - 1].HeadingNumber);
         setHeadings(transformedData);
         // if (registerDataid) {
         //   getAllFilesAPi(registerDataid);
@@ -162,23 +178,27 @@ function FileCases() {
     getAllFileHeadingApi();
   }, []);
 
-  
   return (
     <Layout
       module={false}
       centerlogohide={true}
-      sidebarItems={UserData && UserData?.userType === "Officer" ? EfilingSideBarItem : EfilingSideBarBranchItem}
+      sidebarItems={
+        UserData && UserData?.userType === "Officer"
+          ? EfilingSideBarItem
+          : EfilingSideBarBranchItem
+      }
     >
+      <ToastContainer />
       <div class="row">
-        {/* <Header
-          dashboardLink={"/efiling/dashboard"}
-          addLink1={"/efiling/dashboard/file-register-list/files-list"}
-          title1={"Files"}
-          title2={"File Cases"}
-          addLink2={"/efiling/dashboard/file-register-list/files-list/cases"}
-          width={"500px"}
-        /> */}
-        <div className="col" style={{ marginTop: "30px", float: "right", marginBottom: 20, marginLeft: 10  }}>
+        <div
+          className="col"
+          style={{
+            marginTop: "30px",
+            float: "right",
+            marginBottom: 20,
+            marginLeft: 10,
+          }}
+        >
           <button
             className="btn btn-primary"
             onClick={() =>
@@ -207,63 +227,63 @@ function FileCases() {
                 label: item.year,
               }))
             }
-            onChange={(selectedOptions) =>
-                setRegisterId(selectedOptions.value)
-            }
-            // onBlur={formikAssigned.handleBlur}
-            // value={registerId}
+            onChange={handleRegisterDropDownChange}
             name="fkregisterId"
-            // isClearable={true}
-            
           />
         </div>
         <div class="col-4">
+          {showHeadings && (
+            <>
               <label class="form-label">Heading Number</label>
               <select
                 class="form-select"
                 placeholder={"Select Heading Number"}
-                onChange={(event) =>  hendleRegisterSelect(event.target.value)}
+                onChange={handleHeadingChange}
+                // onChange={(event) => hendleRegisterSelect(event.target.value)}
                 id="headings"
               >
                 <option selected disabled hidden>
                   Select
                 </option>
                 {headings &&
-                  headings.map((item) => (
+                  headings?.map((item) => (
                     <option value={item.HeadingNumber}>
                       {item.HeadingNumber}
                     </option>
                   ))}
               </select>
-            </div>
+            </>
+          )}
+        </div>
         <div className="col-4">
-          <label for="formFile" class="form-label">
-            Select File
-          </label>
-          <Select
-            options={
-              fileData &&
-              fileData?.map((item) => ({
-                value: item.id,
-                label: item.fileNumber,
-              }))
-            }
-            onChange={(selectedOptions) => {
-              setFKFileId(selectedOptions);
-              getAllCasesApi(selectedOptions);
-            }}
-            // onBlur={formikAssigned.handleBlur}
-            value={fkfileId}
-            name="fkfileId"
-            isClearable={true}
-          />
+          {showFiles && (
+            <>
+              <label for="formFile" class="form-label">
+                Select File
+              </label>
+              <Select
+                options={
+                  fileData &&
+                  fileData?.map((item) => ({
+                    value: item.id,
+                    label: item.fileNumber,
+                  }))
+                }
+                onChange={(selectedOptions) => {
+                  setFKFileId(selectedOptions);
+                }}
+                value={fkfileId}
+                name="fkfileId"
+                isClearable={true}
+              />
+            </>
+          )}
         </div>
       </div>
 
       <div class="row">
         <div class="col-12">
           <CustomTable
-            // hidebtn1={true}
             ActionHide={false}
             hideBtn={false}
             addBtnText={"Create Case"}
@@ -280,7 +300,11 @@ function FileCases() {
             }
             handleEdit={(item) =>
               navigate("/efiling/dashboard/fileDetail", {
-                state: { view: false, id: item.caseId, fileId: fkfileId.value },
+                state: {
+                  view: false,
+                  id: item?.caseId,
+                  fileId: item?.internalId,
+                },
               })
             }
             pageSize={pageSize}
@@ -290,7 +314,11 @@ function FileCases() {
             showView={true}
             handleView={(item) =>
               navigate("/efiling/dashboard/fileDetail", {
-                state: { view: true, id: item.caseId, fileId: fkfileId.value },
+                state: {
+                  view: true,
+                  id: item?.caseId,
+                  fileId: item?.internalId,
+                },
               })
             }
             showAssigned={false}

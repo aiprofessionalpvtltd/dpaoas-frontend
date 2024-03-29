@@ -43,7 +43,10 @@ import {
   getHLEmployee,
 } from "../../../../../api/APIs/Services/organizational.service";
 import { getBranches } from "../../../../../api/APIs/Services/Branches.services";
-import { EfilingSideBarBranchItem, EfilingSideBarItem } from "../../../../../utils/sideBarItems";
+import {
+  EfilingSideBarBranchItem,
+  EfilingSideBarItem,
+} from "../../../../../utils/sideBarItems";
 
 const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
   return (
@@ -76,6 +79,8 @@ function FileDetail() {
     "location?.state?.fileIdlocation?.state?.fileIdlocation?.state?.fileIdlocation?.state?.fileId",
     location?.state?.fileId
   );
+
+  console.log("location?.state", location?.state);
 
   const [notingData, setNotingData] = useState({
     description: "",
@@ -155,6 +160,8 @@ function FileDetail() {
       name: "2015",
     },
   ];
+
+  console.log("File ID", location.state.fileId, fileIdINRegister);
 
   const clearInput = () => {
     if (fileInputRef.current) {
@@ -284,7 +291,9 @@ function FileDetail() {
 
     try {
       const response = await UpdateFIleCase(
-        location?.state?.fileId ? location?.state?.fileId : fileIdINRegister,
+        location?.state?.fileId
+          ? location?.state?.fileId
+          : fileIdINRegister && fileIdINRegister,
         location?.state?.id,
         formData
       );
@@ -383,19 +392,19 @@ function FileDetail() {
   useEffect(() => {
     // Update form values when termsById changes
     if (filesData) {
-      const noting = filesData?.sections.filter(
+      const noting = filesData?.sections?.filter(
         (item) => item.sectionType === "Note"
       );
-      const correspondance = filesData?.sections.filter(
+      const correspondance = filesData?.sections?.filter(
         (item) => item.sectionType === "Correspondence"
       );
-      const letter = filesData?.sections.filter(
+      const letter = filesData?.sections?.filter(
         (item) => item.sectionType === "Letter"
       );
-      const Objection = filesData?.sections.filter(
+      const Objection = filesData?.sections?.filter(
         (item) => item.sectionType === "Objection"
       );
-      const Sanction = filesData?.sections.filter(
+      const Sanction = filesData?.sections?.filter(
         (item) => item.sectionType === "Sanction"
       );
       const frAttachments =
@@ -506,7 +515,15 @@ function FileDetail() {
   };
 
   return (
-    <Layout centerlogohide={true} module={false} sidebarItems={UserData && UserData?.userType === "Officer" ? EfilingSideBarItem : EfilingSideBarBranchItem}>
+    <Layout
+      centerlogohide={true}
+      module={false}
+      sidebarItems={
+        UserData && UserData?.userType === "Officer"
+          ? EfilingSideBarItem
+          : EfilingSideBarBranchItem
+      }
+    >
       <div className="dashboard-content">
         <ToastContainer />
         {/* <Header
