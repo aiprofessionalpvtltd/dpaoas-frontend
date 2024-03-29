@@ -189,6 +189,9 @@ function FRDetail() {
           CommentStatus: "",
           comment: "",
         });
+        setTimeout(() => {
+          navigate("/efiling/dashboard/fresh-receipt");
+        }, 3000);
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);

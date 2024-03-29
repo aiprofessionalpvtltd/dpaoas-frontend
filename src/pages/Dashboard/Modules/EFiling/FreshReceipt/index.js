@@ -121,11 +121,11 @@ function FileReceipt() {
             <div class="row">
                 <div class="col-12">
                     <CustomTable
-                        // hidebtn1={true}
-                        hideBtn={false}
+                        hidebtn1={UserData && UserData?.userType === "Officer" ? true : false}
+                        hideBtn={true}
                         addBtnText={"Create Fresh Receipt"}
                         data={fileData}
-                        tableTitle="Fresh Receipts"
+                        tableTitle="Fresh Receipts" 
                         headertitlebgColor={"#666"}
                         headertitletextColor={"#FFF"}
                         handlePageChange={handlePageChange}

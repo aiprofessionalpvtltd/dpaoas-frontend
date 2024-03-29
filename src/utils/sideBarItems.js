@@ -737,6 +737,18 @@ export const EfilingSideBarItem =  [
           icon: faHome,
         },
         {
+          itemName: "Fresh Receipts",
+          link: "/efiling/dashboard/fresh-receipt",
+          icon: faReceipt,
+          subItems: [
+            {
+              itemName: "Fresh Receipts List",
+              link: "/efiling/dashboard/fresh-receipt",
+              icon: faReceipt,
+            },
+          ],
+        },
+        {
           itemName: "Cases",
           link: "/efiling/dashboard/file-register-list/files-list/cases",
           icon: faClipboardList,
