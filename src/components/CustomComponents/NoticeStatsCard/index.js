@@ -6,9 +6,9 @@ import React from "react";
 // import { CircularProgressbar } from 'react-circular-progressbar';
 import "react-circular-progressbar/dist/styles.css";
 
-function NoticeStatsCard({ title, icon, iconBgColor, total, sent, received, overall, upcoming, SentText, ReceivedText, ColValue }) {
+function NoticeStatsCard({ title, icon, iconBgColor, total, sent, received, overall, upcoming, SentText, ReceivedText, ColValue, onClick}) {
   return (
-    <div class= {ColValue ? ColValue : "col-4"}>
+    <div class= {ColValue ? ColValue : "col-4"} onClick={onClick}>
       {overall ? (
         <>
           <div class="card comp-card">
