@@ -569,6 +569,26 @@ export const createFreshReceipt = async (userId, data) => {
   }
 };
 
+export const assignFR = async (frId, data) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClientMMS.post(
+      `/freshReceipt/assignFR/${frId}`,
+      data
+    );
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
 export const getAllFreshReceipt = async (userId, currentPage, pageSize) => {
   try {
     //   const token = getAuthToken();
