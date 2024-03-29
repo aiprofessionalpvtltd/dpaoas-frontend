@@ -134,7 +134,7 @@ function DirectorDashboard() {
                         total={
                           approvelStatsData && approvelStatsData?.approvedFiles
                         }
-                        ColValue={"col-2"}
+                        ColValue={"col"}
                       />
                       <NoticeStatsCard
                         title={"Submit for Approval"}
@@ -145,7 +145,7 @@ function DirectorDashboard() {
                           approvelStatsData &&
                           approvelStatsData?.submitForApproval
                         }
-                        ColValue={"col-2"}
+                        ColValue={"col"}
                       />
                       <NoticeStatsCard
                         title={"Under Discussion"}
@@ -155,7 +155,7 @@ function DirectorDashboard() {
                         total={
                           approvelStatsData && approvelStatsData?.discussedFiles
                         }
-                        ColValue={"col-2"}
+                        ColValue={"col"}
                       />
                       <NoticeStatsCard
                         title={"NFA"}
@@ -163,7 +163,7 @@ function DirectorDashboard() {
                         overall={true}
                         iconBgColor={"#007bff"}
                         total={approvelStatsData && approvelStatsData.nfaFiles}
-                        ColValue={"col-2"}
+                        ColValue={"col"}
                       />
                       <NoticeStatsCard
                         title={"Pending"}
@@ -173,7 +173,7 @@ function DirectorDashboard() {
                         total={
                           approvelStatsData && approvelStatsData.pendingFiles
                         }
-                        ColValue={"col-2"}
+                        ColValue={"col"}
                       />
                     </div>
                   </div>
