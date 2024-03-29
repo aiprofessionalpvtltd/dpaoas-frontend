@@ -7,22 +7,34 @@ import DatePicker from "react-datepicker";
 import Select from "react-select";
 import { AuthContext } from "../../../../../../../api/AuthContext";
 import { Layout } from "../../../../../../../components/Layout";
-import { EfilingSideBarBranchItem, EfilingSideBarItem } from "../../../../../../../utils/sideBarItems";
+import {
+  EfilingSideBarBranchItem,
+  EfilingSideBarItem,
+} from "../../../../../../../utils/sideBarItems";
 import Header from "../../../../../../../components/Header";
 import { ToastContainer } from "react-toastify";
 import { useLocation } from "react-router";
 import { getRegisterID, getUserData } from "../../../../../../../api/Auth";
-import { createFiles, getAllFileRegister, getAllYear, geteHeadingNumberbyMainHeadingId, geteHeadingbyBranchId } from "../../../../../../../api/APIs/Services/efiling.service";
-import { showErrorMessage, showSuccessMessage } from "../../../../../../../utils/ToastAlert";
-import { useNavigate } from 'react-router-dom';
-
-
+import {
+  createFiles,
+  getAllFileRegister,
+  getAllYear,
+  geteHeadingNumberbyMainHeadingId,
+  geteHeadingbyBranchId,
+} from "../../../../../../../api/APIs/Services/efiling.service";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../../../utils/ToastAlert";
+import { useNavigate } from "react-router-dom";
 
 const validationSchema = Yup.object({
   mainHeading: Yup.string().required("Main Heading is required"),
-  numberOfMainHeading: Yup.string().required("Number Of Main Heading is required"),
+  numberOfMainHeading: Yup.string().required(
+    "Number Of Main Heading is required"
+  ),
   year: Yup.string().required("Year is required"),
-  serialNumber: Yup.string().required("Serial Number is required"),
+  // serialNumber: Yup.string().required("Serial Number is required"),
   fileNumber: Yup.string().required("File Number is required"),
   subject: Yup.string().required("Subject is required"),
   // fileType: Yup.string().required("File Type is required"),
@@ -30,22 +42,19 @@ const validationSchema = Yup.object({
   classification: Yup.string().optional(),
   movement: Yup.string().optional(),
   // fileCategory: Yup.string().optional(),
-
 });
 
 function AddEditFiles() {
   const { allBranchesData } = useContext(AuthContext);
-  const location = useLocation()
-  const userData = getUserData()
-  console.log("kjfkejklflejkljflj",userData);
-  const navigate = useNavigate()
-  const registerId = getRegisterID()
-  const [yearData, setYearData] = useState([])
-  const [mainheadingData, setMainHeadingData] = useState([])
-  const [numberMainHeading, setNumberMainHeading] = useState([])
-  const [registerData, setRegisterData] = useState([])
- 
-
+  const location = useLocation();
+  const userData = getUserData();
+  console.log("kjfkejklflejkljflj", userData);
+  const navigate = useNavigate();
+  const registerId = getRegisterID();
+  const [yearData, setYearData] = useState([]);
+  const [mainheadingData, setMainHeadingData] = useState([]);
+  const [numberMainHeading, setNumberMainHeading] = useState([]);
+  const [registerData, setRegisterData] = useState([]);
 
   // const [divisionById, setDivisionById] = useState();
 
@@ -62,8 +71,7 @@ function AddEditFiles() {
       classification: "",
       movement: "",
       fileCategory: null,
-      registerDataid:""
-
+      registerDataid: "",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -71,7 +79,6 @@ function AddEditFiles() {
       hendleSubmit(values);
     },
   });
-
 
   const hendleSubmit = async (values) => {
     const Data = {
@@ -81,105 +88,118 @@ function AddEditFiles() {
       serialNumber: values?.serialNumber,
       fileNumber: values?.fileNumber,
       fileSubject: values?.subject,
-      fileType:null,
+      fileType: null,
       dateOfRecording: values?.dateOfRecord,
       fileClassification: values?.classification,
       fileMovement: values?.movement,
-      ...(values?.fileCategory && { fileCategory: values?.fileCategory })
-    }
-      try {
-        const response = await createFiles(location.state ? registerId : values?.registerDataid, Data)
-        if (response.success) {
-          showSuccessMessage(response?.message)
-          formik.resetForm()
-          setTimeout(() => {
-            navigate("/efiling/dashboard/file-register-list/files-list");
-          }, 1000)
-        }
-      } catch (error) {
-        showErrorMessage(error?.response?.data?.message);
+      ...(values?.fileCategory && { fileCategory: values?.fileCategory }),
+    };
+    try {
+      const response = await createFiles(
+        location.state ? registerId : values?.registerDataid,
+        Data
+      );
+      if (response.success) {
+        showSuccessMessage(response?.message);
+        formik.resetForm();
+        setTimeout(() => {
+          navigate("/efiling/dashboard/file-register-list/files-list");
+        }, 1000);
       }
-  }
-
-
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  };
 
   const getAllYearApi = async () => {
     try {
-      const response = await getAllYear()
+      const response = await getAllYear();
       if (response.success) {
         // showSuccessMessage(response?.message)
-        setYearData(response?.data)
+        setYearData(response?.data);
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
     }
-  }
+  };
 
   useEffect(() => {
-    getAllYearApi()
-  }, [])
-
+    getAllYearApi();
+  }, []);
 
   const handleBranch = async (event) => {
-
     try {
-      const response = await geteHeadingbyBranchId(userData?.fkBranchId)
+      const response = await geteHeadingbyBranchId(userData?.fkBranchId);
       if (response.success) {
         // showSuccessMessage(response?.message)
-        setMainHeadingData(response?.data)
+        setMainHeadingData(response?.data);
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
     }
-  }
-
+  };
 
   // hendleMainHeading
   const hendleMainHeading = async (event) => {
-
     try {
-      const response = await geteHeadingNumberbyMainHeadingId(event?.target?.value)
+      const response = await geteHeadingNumberbyMainHeadingId(
+        event?.target?.value
+      );
       if (response.success) {
         // showSuccessMessage(response?.message)
-        setNumberMainHeading(response?.data)
+        setNumberMainHeading(response?.data);
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
     }
-  }
+  };
   const getAllRegisterApi = async () => {
     try {
-        const response = await getAllFileRegister(userData?.fkBranchId, 0, 100)
-        if (response.success) {
-            setRegisterData(response?.data?.fileRegisters)
-        }
+      const response = await getAllFileRegister(userData?.fkBranchId, 0, 100);
+      if (response.success) {
+        setRegisterData(response?.data?.fileRegisters);
+      }
     } catch (error) {
-        // showErrorMessage(error?.response?.data?.message);
+      // showErrorMessage(error?.response?.data?.message);
     }
-}
-
-useEffect(() => {
-    getAllRegisterApi()
-}, [])
+  };
 
   useEffect(() => {
-    handleBranch()
-  },[])
+    getAllRegisterApi();
+  }, []);
+
+  useEffect(() => {
+    handleBranch();
+  }, []);
   return (
-    <Layout module={false} sidebarItems={userData && userData?.userType === "Officer" ? EfilingSideBarItem : EfilingSideBarBranchItem}>
+    <Layout
+      module={false}
+      sidebarItems={
+        userData && userData?.userType === "Officer"
+          ? EfilingSideBarItem
+          : EfilingSideBarBranchItem
+      }
+    >
       {/* <Header dashboardLink={"/efiling/dashboard"} addLink1={"/efiling/dashboard/file-register-list/files-list"} title1={"Register Index"} title2={"Create File"} addLink2={"/efiling/dashboard/file-register-list/files-list/addedit-file"} width={"500px"} /> */}
       <ToastContainer />
 
       <div class="container-fluid">
-            <div className='row'>
-                <div className='col'>
-                <div class="top-head-left" style={{marginLeft:"15px",marginBottom:"15px"}}>
-              <p style={{fontSize: "14px", marginBottom: "5px"}}>S-92</p>
-              <p style={{fontSize: "15px", marginBottom: "5px"}}>(See Appendix E-Instructions)</p>
-              <p style={{fontSize: "15px", marginBottom: "5px"}}>Secretariat Instructions</p>
+        <div className="row">
+          <div className="col">
+            <div
+              class="top-head-left"
+              style={{ marginLeft: "15px", marginBottom: "15px" }}
+            >
+              <p style={{ fontSize: "14px", marginBottom: "5px" }}>S-92</p>
+              <p style={{ fontSize: "15px", marginBottom: "5px" }}>
+                (See Appendix E-Instructions)
+              </p>
+              <p style={{ fontSize: "15px", marginBottom: "5px" }}>
+                Secretariat Instructions
+              </p>
             </div>
-                </div>
-            </div>
+          </div>
+        </div>
         <div class="card">
           <div class="card-header red-bg" style={{ background: "#14ae5c" }}>
             {location && location.state ? (
@@ -192,8 +212,7 @@ useEffect(() => {
             <form onSubmit={formik.handleSubmit}>
               <div class="container-fluid">
                 <div class="row">
-                  
-                <div class="col-3">
+                  <div class="col-3">
                     <div class="mb-3">
                       <label class="form-label">Register</label>
                       <select
@@ -210,23 +229,23 @@ useEffect(() => {
                         {/* {mainheadingData && mainheadingData?.filter((filteredItem) => filteredItem?.status === "active")?.map((item) => (
                           
                         ))} */}
-                        {registerData && registerData.map((item) => (
-                            <option value={item.id}>
-                            {item?.year}
-                          </option>
-                        ))}
+                        {registerData &&
+                          registerData.map((item) => (
+                            <option value={item.id}>{item?.year}</option>
+                          ))}
                       </select>
-                      
                     </div>
                   </div>
                   <div class="col-3">
                     <div class="mb-3">
                       <label class="form-label">Main Heading</label>
                       <select
-                        className={`form-select ${formik.touched.mainHeading && formik.errors.mainHeading
+                        className={`form-select ${
+                          formik.touched.mainHeading &&
+                          formik.errors.mainHeading
                             ? "is-invalid"
                             : ""
-                          }`}
+                        }`}
                         id="mainHeading"
                         name="mainHeading"
                         onChange={(event) => {
@@ -239,27 +258,36 @@ useEffect(() => {
                         <option value={""} selected disabled hidden>
                           Select
                         </option>
-                        {mainheadingData && mainheadingData?.filter((filteredItem) => filteredItem?.status === "active")?.map((item) => (
-                          <option value={item.id}>
-                            {item?.mainHeading}
-                          </option>
-                        ))}
+                        {mainheadingData &&
+                          mainheadingData
+                            ?.filter(
+                              (filteredItem) =>
+                                filteredItem?.status === "active"
+                            )
+                            ?.map((item) => (
+                              <option value={item.id}>
+                                {item?.mainHeading}
+                              </option>
+                            ))}
                       </select>
-                      {formik.touched.mainHeading && formik.errors.mainHeading && (
-                        <div className="invalid-feedback">
-                          {formik.errors.mainHeading}
-                        </div>
-                      )}
+                      {formik.touched.mainHeading &&
+                        formik.errors.mainHeading && (
+                          <div className="invalid-feedback">
+                            {formik.errors.mainHeading}
+                          </div>
+                        )}
                     </div>
                   </div>
                   <div class="col-3">
                     <div class="mb-3">
                       <label class="form-label">Number Of Main Heading</label>
                       <select
-                        className={`form-select ${formik.touched.numberOfMainHeading && formik.errors.numberOfMainHeading
+                        className={`form-select ${
+                          formik.touched.numberOfMainHeading &&
+                          formik.errors.numberOfMainHeading
                             ? "is-invalid"
                             : ""
-                          }`}
+                        }`}
                         id="numberOfMainHeading"
                         name="numberOfMainHeading"
                         onChange={formik.handleChange}
@@ -269,27 +297,30 @@ useEffect(() => {
                         <option value={""} selected disabled hidden>
                           Select
                         </option>
-                        {numberMainHeading && numberMainHeading.map((item) => (
-                          <option value={item.id}>
-                            {item?.mainHeadingNumber}
-                          </option>
-                        ))}
+                        {numberMainHeading &&
+                          numberMainHeading.map((item) => (
+                            <option value={item.id}>
+                              {item?.mainHeadingNumber}
+                            </option>
+                          ))}
                       </select>
-                      {formik.touched.numberOfMainHeading && formik.errors.numberOfMainHeading && (
-                        <div className="invalid-feedback">
-                          {formik.errors.numberOfMainHeading}
-                        </div>
-                      )}
+                      {formik.touched.numberOfMainHeading &&
+                        formik.errors.numberOfMainHeading && (
+                          <div className="invalid-feedback">
+                            {formik.errors.numberOfMainHeading}
+                          </div>
+                        )}
                     </div>
                   </div>
                   <div class="col-3">
                     <div class="mb-3">
                       <label class="form-label">Year</label>
                       <select
-                        className={`form-select ${formik.touched.year && formik.errors.year
+                        className={`form-select ${
+                          formik.touched.year && formik.errors.year
                             ? "is-invalid"
                             : ""
-                          }`}
+                        }`}
                         id="year"
                         name="year"
                         onChange={formik.handleChange}
@@ -299,11 +330,10 @@ useEffect(() => {
                         <option value={""} selected disabled hidden>
                           Select
                         </option>
-                        {yearData && yearData?.map((item) => (
-                          <option value={item?.year}>
-                            {item?.year}
-                          </option>
-                        ))}
+                        {yearData &&
+                          yearData?.map((item) => (
+                            <option value={item?.year}>{item?.year}</option>
+                          ))}
                       </select>
                       {formik.touched.year && formik.errors.year && (
                         <div className="invalid-feedback">
@@ -312,22 +342,22 @@ useEffect(() => {
                       )}
                     </div>
                   </div>
-                 
                 </div>
 
                 <div class="row">
-                <div class="col-3">
+                  <div class="col-3">
                     <div class="mb-3">
                       <label class="form-label">Serial Number</label>
                       <input
                         type="text"
                         placeholder={"Serial Number"}
                         value={formik.values.serialNumber}
-                        className={`form-control ${formik.touched.serialNumber &&
-                            formik.errors.serialNumber
+                        className={`form-control ${
+                          formik.touched.serialNumber &&
+                          formik.errors.serialNumber
                             ? "is-invalid"
                             : ""
-                          }`}
+                        }`}
                         id="serialNumber"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -347,11 +377,11 @@ useEffect(() => {
                         type="text"
                         placeholder={"File Number"}
                         value={formik.values.fileNumber}
-                        className={`form-control ${formik.touched.fileNumber &&
-                            formik.errors.fileNumber
+                        className={`form-control ${
+                          formik.touched.fileNumber && formik.errors.fileNumber
                             ? "is-invalid"
                             : ""
-                          }`}
+                        }`}
                         id="fileNumber"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -371,21 +401,20 @@ useEffect(() => {
                         type="text"
                         placeholder={"Subject"}
                         value={formik.values.subject}
-                        className={`form-control ${formik.touched.subject &&
-                            formik.errors.subject
+                        className={`form-control ${
+                          formik.touched.subject && formik.errors.subject
                             ? "is-invalid"
                             : ""
-                          }`}
+                        }`}
                         id="subject"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
-                      {formik.touched.subject &&
-                        formik.errors.subject && (
-                          <div className="invalid-feedback">
-                            {formik.errors.subject}
-                          </div>
-                        )}
+                      {formik.touched.subject && formik.errors.subject && (
+                        <div className="invalid-feedback">
+                          {formik.errors.subject}
+                        </div>
+                      )}
                     </div>
                   </div>
                   {/* <div class="col-3">
@@ -419,7 +448,13 @@ useEffect(() => {
                   </div> */}
                 </div>
 
-                <div class="row" style={{ background: "rgb(242, 242, 242)", padding: "20px 20px 0 20px" }}>
+                <div
+                  class="row"
+                  style={{
+                    background: "rgb(242, 242, 242)",
+                    padding: "20px 20px 0 20px",
+                  }}
+                >
                   <div class="col-3">
                     <div class="mb-3">
                       <label class="form-label">Data Of Record</label>
@@ -434,7 +469,6 @@ useEffect(() => {
                       />
                     </div>
                   </div>
-
 
                   <div class="col-3">
                     <div class="mb-3">
@@ -469,12 +503,17 @@ useEffect(() => {
                       />
                     </div>
                   </div>
-                 
                 </div>
                 <div className="clearfix"></div>
 
-                <div className="row" style={{ background: "rgb(242, 242, 242)", padding: "0 20px" }}>
-                <div class="col-9">
+                <div
+                  className="row"
+                  style={{
+                    background: "rgb(242, 242, 242)",
+                    padding: "0 20px",
+                  }}
+                >
+                  <div class="col-9">
                     <div class="mb-3">
                       <label className="form-label">Movement</label>
                       <textarea

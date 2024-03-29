@@ -139,7 +139,7 @@ function CustomTable({
       </nav>
     );
   };
-  console.log("Total Count From Custom Table", totalCount);
+
   return (
     <div className="container-fluid">
       <div className={`${singleDataCard ? "card" : ""}`}>

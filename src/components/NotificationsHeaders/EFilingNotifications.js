@@ -9,6 +9,7 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 
 export const EFilingNotifications = (notificationType) => {
   const [count, setCount] = useState(null);
+
   const [modal, setModal] = useState(false);
   const [notificationData, setNotificationData] = useState([]);
   const [activeNotificationType, setActiveNotificationType] = useState(null);
@@ -19,8 +20,24 @@ export const EFilingNotifications = (notificationType) => {
     try {
       const response = await getEfilingNotifications(UserData?.fkUserId);
       if (response?.success) {
-        setCount(response?.data?.count);
-        setNotificationData(response?.data?.files);
+        setCount(response?.data?.totalCount);
+        // setNotificationData(response?.data?.frs);
+        const filesNotifications = response?.data?.files.map((file) => ({
+          fileId: file?.fileId,
+          message: file?.message,
+          date: file?.date,
+          caseId: file?.caseId,
+        }));
+        const frsNotifications = response?.data?.frs.map((fr) => ({
+          frId: fr?.frId,
+          message: fr?.message,
+          date: fr?.date,
+        }));
+        const combinedNotifications = [
+          ...filesNotifications,
+          ...frsNotifications,
+        ];
+        setNotificationData(combinedNotifications);
       }
     } catch (error) {
       // Handle error
@@ -30,7 +47,6 @@ export const EFilingNotifications = (notificationType) => {
   useEffect(() => {
     getAllQuestionsApi();
   }, []);
-
   const notificationModal = () => (
     <div
       ref={notificationRef}
@@ -52,23 +68,43 @@ export const EFilingNotifications = (notificationType) => {
             key={index}
             className={notificationData.length === 1 ? "" : "border-bottom"}
           >
-            <Link
-              to={"/efiling/dashboard/fileDetail"}
-              state={{ view: false, fileId: item.fileId, id: item.caseId }}
-              style={{ color: "black" }}
-              className="link"
-            >
-              <span>
-                {item?.message}
-                <br />
-                <span className="text-sm">
-                  <i>{moment(item.date).format("DD/MM/YYYY")}</i>
+            {item?.frId ? (
+              <Link
+                to={"/efiling/dashboard/fresh-receipt/addedit"}
+                state={{ view: false, frId: item.frId }}
+                style={{ color: "black" }}
+                className="link"
+              >
+                <span>
+                  {item?.message}
+                  <br />
+                  <span className="text-sm">
+                    <i>{moment(item.date).format("DD/MM/YYYY")}</i>
+                  </span>
+                  <span className="float-end text-sm">
+                    {new Date(item.date).toLocaleTimeString()}
+                  </span>
                 </span>
-                <span className="float-end text-sm">
-                  {new Date(item.date).toLocaleTimeString()}
+              </Link>
+            ) : (
+              <Link
+                to={"/efiling/dashboard/fileDetail"}
+                state={{ view: true, fileId: item?.fileId, id: item?.caseId }}
+                style={{ color: "black" }}
+                className="link"
+              >
+                <span>
+                  {item?.message}
+                  <br />
+                  <span className="text-sm">
+                    <i>{moment(item.date).format("DD/MM/YYYY")}</i>
+                  </span>
+                  <span className="float-end text-sm">
+                    {new Date(item.date).toLocaleTimeString()}
+                  </span>
                 </span>
-              </span>
-            </Link>
+              </Link>
+            )}
           </ListGroup.Item>
         ))
       ) : (

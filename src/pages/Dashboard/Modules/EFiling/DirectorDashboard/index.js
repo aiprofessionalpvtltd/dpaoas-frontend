@@ -132,19 +132,30 @@ function DirectorDashboard() {
                         overall={true}
                         iconBgColor={"#FFA500"}
                         total={
-                          approvelStatsData && approvelStatsData.approvedFiles
+                          approvelStatsData && approvelStatsData?.approvedFiles
                         }
-                        ColValue={"col-3"}
+                        ColValue={"col-2"}
+                      />
+                      <NoticeStatsCard
+                        title={"Submit for Approval"}
+                        icon={faClipboardQuestion}
+                        overall={true}
+                        iconBgColor={"#FFA500"}
+                        total={
+                          approvelStatsData &&
+                          approvelStatsData?.submitForApproval
+                        }
+                        ColValue={"col-2"}
                       />
                       <NoticeStatsCard
                         title={"Under Discussion"}
                         icon={faFileImport}
                         overall={true}
-                        iconBgColor={"#007bff"}
+                        iconBgColor={"#FFA500"}
                         total={
-                          approvelStatsData && approvelStatsData.discussedFiles
+                          approvelStatsData && approvelStatsData?.discussedFiles
                         }
-                        ColValue={"col-3"}
+                        ColValue={"col-2"}
                       />
                       <NoticeStatsCard
                         title={"NFA"}
@@ -152,7 +163,7 @@ function DirectorDashboard() {
                         overall={true}
                         iconBgColor={"#007bff"}
                         total={approvelStatsData && approvelStatsData.nfaFiles}
-                        ColValue={"col-3"}
+                        ColValue={"col-2"}
                       />
                       <NoticeStatsCard
                         title={"Pending"}
@@ -162,7 +173,7 @@ function DirectorDashboard() {
                         total={
                           approvelStatsData && approvelStatsData.pendingFiles
                         }
-                        ColValue={"col-3"}
+                        ColValue={"col-2"}
                       />
                     </div>
                   </div>

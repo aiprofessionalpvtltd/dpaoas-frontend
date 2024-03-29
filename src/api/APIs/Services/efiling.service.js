@@ -427,23 +427,18 @@ export const UpdateCase = async (fileId, userId, caseId, data) => {
   }
 };
 
-export const getAllCasesByFileId = async (
-  fileId,
-  userId,
-  currentPage,
-  pageSize
-) => {
+export const getAllCasesThroughSearchParams = async (searchParams) => {
+  const filteredSearchParams = Object.fromEntries(
+    Object.entries(searchParams).filter(([_, value]) => value !== "")
+  );
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.get(
-      `/cases/getCasesByFileId/${fileId}/${userId}?currentPage=${currentPage}&pageSize=${pageSize}`
-    );
-    // {
-    //   headers: {
-    //     accept: "application/json",
-    //     "Content-Type": "multipart/form-data",
-    //   },
-    // });
+    const response = await axiosClientMMS.get(`/cases/getCasesByFileId`, {
+      params: filteredSearchParams,
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // },
+    });
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
