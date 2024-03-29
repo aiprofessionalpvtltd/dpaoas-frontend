@@ -70,8 +70,8 @@ export const EFilingNotifications = (notificationType) => {
           >
             {item?.frId ? (
               <Link
-                to={"/efiling/dashboard/fresh-receipt/addedit"}
-                state={{ view: false, frId: item.frId }}
+                to={"/efiling/dashboard/fresh-receipt/frdetail"}
+                state={{ view: false, id: item.frId }}
                 style={{ color: "black" }}
                 className="link"
               >
@@ -89,7 +89,7 @@ export const EFilingNotifications = (notificationType) => {
             ) : (
               <Link
                 to={"/efiling/dashboard/fileDetail"}
-                state={{ view: true, fileId: item?.fileId, id: item?.caseId }}
+                state={{ view: false, fileId: item?.fileId, id: item?.caseId }}
                 style={{ color: "black" }}
                 className="link"
               >

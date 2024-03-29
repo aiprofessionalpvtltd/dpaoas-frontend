@@ -17,14 +17,31 @@ import {
   getsentAndRecievedFilesStats,
 } from "../../../../../api/APIs/Services/efiling.service";
 import { getUserData } from "../../../../../api/Auth";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { EFilingNotifications } from "../../../../../components/NotificationsHeaders/EFilingNotifications";
+import CustomTable from "../../../../../components/CustomComponents/CustomTable";
+import moment from "moment";
 
 function DirectorDashboard() {
+  const navigate = useNavigate()
+  const [selectedTab, setSelectedTab] = useState("FRsent");
+  const [currentPage, setCurrentPage] = useState(0);
+  const [togleTable, setTogleTable] = useState(null)
+  const [frsentData, setFrsentData] = useState([])
+  const [frrecivedData, setFrRecivedData] = useState([])
+   const [count, setCount] = useState(null);
+   const [frrecivedCount, setFRRecivedCount] = useState(null)
+    const pageSize = 10; 
+
   const userData = getUserData();
   const [fileStatsData, setFileStatsData] = useState(null);
   const [frStatsData, setFrStatsData] = useState(null);
   const [approvelStatsData, setApprovelStatsData] = useState(null);
+
+  const handlePageChange = (page) => {
+    // Update currentPage when a page link is clicked
+    setCurrentPage(page);
+};
 
   const getAllStats = async () => {
     try {
@@ -37,11 +54,31 @@ function DirectorDashboard() {
     }
   };
 
+  const transformFreshReceiptdata = (apiData) => {
+    return apiData.map((item) => ({
+      id: item?.id,
+      frType: item?.freshReceipt?.frType,
+      Sender: item?.submittedUser ? item?.submittedUser?.employee?.firstName : "---",
+      Receiver: item?.assignedUser ? item?.assignedUser?.employee?.firstName : "---",
+      // Status: item?.fileRemarksData?.length > 0 ? item?.fileRemarksData[item?.fileRemarksData?.length - 1]?.CommentStatus : "Draft",
+      frSubject:item?.freshReceipt?.frSubject,
+      referenceNumber: item?.freshReceipt?.referenceNumber,
+      frDate: moment(item?.frDate).format("DD/MM/YYYY"),
+      // DiaryDate: item?.freshReceiptDiaries ? moment(item?.freshReceiptDiaries?.diaryDate).format("DD/MM/YYYY") : "---",
+      // staus:item?.status
+    }));
+  };
   const getAllFRStats = async () => {
     try {
       const response = await getsentAndRecievedFRStats(userData?.fkUserId);
       if (response?.success) {
         setFrStatsData(response?.data);
+        setCount(response?.data?.sentFRs?.count)
+        setFRRecivedCount(response?.data?.receivedFRs?.count)
+        const transformsentData = transformFreshReceiptdata(response?.data?.sentFRs?.rows)
+        const transformsentrecivedData = transformFreshReceiptdata(response?.data?.receivedFRs?.rows)
+        setFrRecivedData(transformsentrecivedData)
+        setFrsentData(transformsentData)
       }
     } catch (error) {
       console.log(error);
@@ -102,6 +139,7 @@ function DirectorDashboard() {
             <div class="mt-2 mb-4">
               <div class="row">
                 <NoticeStatsCard
+                  onClick={() => setTogleTable(!togleTable)}
                   title={"Fresh Receipts (FRs)"}
                   icon={faClipboardQuestion}
                   iconBgColor={"#FFA500"}
@@ -134,7 +172,7 @@ function DirectorDashboard() {
                         total={
                           approvelStatsData && approvelStatsData?.approvedFiles
                         }
-                        ColValue={"col-2"}
+                        ColValue={"col"}
                       />
                       <NoticeStatsCard
                         title={"Submit for Approval"}
@@ -145,7 +183,7 @@ function DirectorDashboard() {
                           approvelStatsData &&
                           approvelStatsData?.submitForApproval
                         }
-                        ColValue={"col-2"}
+                        ColValue={"col"}
                       />
                       <NoticeStatsCard
                         title={"Under Discussion"}
@@ -155,7 +193,7 @@ function DirectorDashboard() {
                         total={
                           approvelStatsData && approvelStatsData?.discussedFiles
                         }
-                        ColValue={"col-2"}
+                        ColValue={"col"}
                       />
                       <NoticeStatsCard
                         title={"NFA"}
@@ -163,7 +201,7 @@ function DirectorDashboard() {
                         overall={true}
                         iconBgColor={"#007bff"}
                         total={approvelStatsData && approvelStatsData.nfaFiles}
-                        ColValue={"col-2"}
+                        ColValue={"col"}
                       />
                       <NoticeStatsCard
                         title={"Pending"}
@@ -173,7 +211,7 @@ function DirectorDashboard() {
                         total={
                           approvelStatsData && approvelStatsData.pendingFiles
                         }
-                        ColValue={"col-2"}
+                        ColValue={"col"}
                       />
                     </div>
                   </div>
@@ -182,6 +220,110 @@ function DirectorDashboard() {
             </div>
           </div>
         </div>
+        {/* FR Sent Recive Show */}
+        {togleTable ? <div>
+          <div style={{ padding: "25px" }}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <ul className="nav nav-tabs mb-3 mt-3" id="ex1" role="tablist">
+                <li
+                  className="nav-item"
+                  role="presentation"
+                  onClick={() => setSelectedTab("FRsent")}
+                >
+                  <button
+                    type="button"
+                    className={
+                      selectedTab === "FRsent"
+                        ? "nav-link active"
+                        : "nav-link"
+                    }
+                    style={{ width: "170px" }}
+                    data-bs-toggle="tab"
+                    role="tab"
+                    aria-controls="ex1-tabs-1"
+                    aria-selected={
+                      selectedTab === "FRsent" ? "true" : "false"
+                    }
+                  >
+                    FR sent
+                  </button>
+                </li>
+                <li
+                  className="nav-item"
+                  role="presentation"
+                  onClick={() => setSelectedTab("FRrecive")}
+                >
+                  <button
+                    type="button"
+                    className={
+                      selectedTab === "FRrecive"
+                        ? "nav-link active"
+                        : "nav-link"
+                    }
+                    style={{ width: "170px" }}
+                    data-bs-toggle="tab"
+                    role="tab"
+                    aria-controls="ex1-tabs-2"
+                    aria-selected={
+                      selectedTab === "FRrecive" ? "true" : "false"
+                    }
+                  >
+                    FR Received
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="tab-content" id="ex1-content">
+              {selectedTab === "FRsent" ? (
+                // Render content for the 'Noting' tab
+                <section class="mb-5">
+                <CustomTable
+                        hidebtn1={true}
+                        ActionHide={true}
+                        hideBtn={true}
+                        data={frsentData}
+                        tableTitle="Sent FRs"
+                        headertitlebgColor={"#666"}
+                        headertitletextColor={"#FFF"}
+                        handlePageChange={handlePageChange}
+                        currentPage={currentPage}
+                        
+                        pageSize={pageSize}
+                        totalCount={count}
+                        singleDataCard={true}
+                       
+                    />
+                </section>
+              ) : (
+                <section class="mb-5">
+                <CustomTable
+                        hidebtn1={true}
+                        ActionHide={true}
+                        hideBtn={true}
+                        data={frrecivedData}
+                        tableTitle="Received FRs"
+                        headertitlebgColor={"#666"}
+                        headertitletextColor={"#FFF"}
+                        handlePageChange={handlePageChange}
+                        currentPage={currentPage}
+                        pageSize={pageSize}
+                        totalCount={frrecivedCount}
+                        singleDataCard={true}
+                        
+                    />
+                </section>
+              )}
+            </div>
+        </div>:null}
+        
       </div>
     </Layout>
   );

@@ -40,7 +40,6 @@ function PreviousFRsHistory() {
             referenceNumber: item?.referenceNumber,
             frDate: moment(item?.frDate).format("DD/MM/YYYY"),
             DiaryDate: item?.freshReceiptDiaries ? moment(item?.freshReceiptDiaries?.diaryDate).format("DD/MM/YYYY") : "---",
-            staus:item?.status
         }));
     };
 
