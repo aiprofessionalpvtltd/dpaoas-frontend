@@ -350,7 +350,7 @@ const AddEditFR = () => {
                     Ref No
                   </label>
                   <input
-                    type="text"
+                    type="number"
                     id="referenceNumber"
                     value={formik.values.referenceNumber}
                     onChange={formik.handleChange}
