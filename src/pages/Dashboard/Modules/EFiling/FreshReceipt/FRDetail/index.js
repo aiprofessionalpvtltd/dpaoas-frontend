@@ -261,11 +261,13 @@ function FRDetail() {
                         <option value="" selected disabled hidden>
                           Select
                         </option>
+                        <option value={"Received"}>Received</option>
+                        <option value={"Put Up"}>Put Up</option>
                         <option value={"Initiated"}>Initiated</option>
+                        <option value={"Retype/Amend"}>Retype/Amend</option>
                         <option value={"Submit For Approval"}>
                           Submit For Approval
                         </option>
-                        <option value={"Retype/Amend"}>Retype/Amend</option>
                       </select>
               </div>
             </div>

@@ -39,7 +39,8 @@ function FileReceipt() {
           referenceNumber: item?.referenceNumber,
           frDate: moment(item?.frDate).format("DD/MM/YYYY"),
           DiaryDate: item?.freshReceiptDiaries ? moment(item?.freshReceiptDiaries?.diaryDate).format("DD/MM/YYYY") : "---",
-          staus:item?.status
+          staus:item?.status,
+          internalAttachment: item?.freshReceiptsAttachments
         }));
       };
       const getAllFreshReceiptAPi = useCallback(async () => {
@@ -111,6 +112,14 @@ function FileReceipt() {
                         handleEdit={(item) => navigate("/efiling/dashboard/fresh-receipt/addedit", {state:{id:item.id, view: true}})}
                         showAssigned={true}
                         hendleAssigned={(item) => navigate("/efiling/dashboard/fresh-receipt/frdetail", {state:{id:item.id, view: false}})}
+                        showCreateBtn={true}
+                        hendleCreateBtn={(item) => {
+                          if(item?.internalAttachment) {
+                            navigate("/efiling/dashboard/file-register-list/files-list/addedit-case", {state:{freshReceiptsAttachments:item.internalAttachment}})
+                          } else {
+                            alert("Please select an attachment")
+                          }
+                        }}
                     />
                     
                 </div>

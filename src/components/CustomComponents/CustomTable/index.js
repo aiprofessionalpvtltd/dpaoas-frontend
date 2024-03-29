@@ -9,6 +9,7 @@ import {
   faFileExport,
   faEye,
   faUserCheck,
+  faCirclePlus
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
@@ -56,9 +57,18 @@ function CustomTable({
   singleDataCard,
   showEditIcon,
   hidebtn1,
+  showCreateBtn,
+  hendleCreateBtn
 }) {
   const keys = data?.length > 0 ? Object.keys(data[0]) : [];
-  const filteredKeys = keys?.filter((key) => key !== "internalId");
+const filteredKeys = keys?.filter((key) => {
+  if (key === "internalAttachment" && data.some(obj => Array.isArray(obj[key]))) {
+    return false; // Skip filtering if it's an array in any object
+  }
+  return key !== "internalAttachment" && key !== "internalId";
+});
+
+  
   const [totalPages, setTotalPages] = useState(0);
 
   const formatHeader = (key) => {
@@ -91,6 +101,7 @@ function CustomTable({
   const duplicateTooltip = <Tooltip id="duplicate-tooltip">Duplicate</Tooltip>;
   const resolveTooltip = <Tooltip id="print-tooltip">Resolve</Tooltip>;
   const assignedTooltip = <Tooltip id="print-tooltip">Assigne</Tooltip>;
+  const createTooltip = <Tooltip id="create-tooltip">Create Case</Tooltip>;
   const attendanceTooltip = <Tooltip id="attendance-tooltip">Mark </Tooltip>;
 
   const renderPagination = () => {
@@ -331,6 +342,22 @@ function CustomTable({
                                     data-id={item.id}
                                   >
                                     <FontAwesomeIcon icon={faPrint} />
+                                  </button>
+                                </OverlayTrigger>
+                              )}
+
+                              {showCreateBtn && (
+                                <OverlayTrigger
+                                  placement="top"
+                                  overlay={createTooltip}
+                                >
+                                  <button
+                                    onClick={() => hendleCreateBtn(item)}
+                                    className="btn-xs black circle-btn"
+                                    data-id={item.id}
+                                    style={{ backgroundColor: "darkblue" }}
+                                  >
+                                    <FontAwesomeIcon icon={faCirclePlus} />
                                   </button>
                                 </OverlayTrigger>
                               )}
