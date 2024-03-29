@@ -47,7 +47,7 @@ function AddEditFileCase() {
   const [headings, setHeadings] = useState([]);
   const location = useLocation();
   const { fileIdINRegister } = useContext(AuthContext);
-  const [selectedTab, setSelectedTab] = useState("FR Noting");
+  const [selectedTab, setSelectedTab] = useState(location.state?.frId ? "FR Noting" : "Noting");
   const [allFrs, setAllFrs] = useState([]);
   const [fkFreshReceiptId, setFkFreshReceiptId] = useState(null);
   const [fkfileId, setFKFileId] = useState(null);
@@ -136,12 +136,12 @@ function AddEditFileCase() {
 
   const hendleCreateFileCase = async () => {
     try {
-      if (fkFreshReceiptId) {
+      
         const formData = createFormData();
         const response = await createCase(
           fkfileId.value,
           UserData?.fkUserId,
-          fkFreshReceiptId?.value,
+       location.state?.frId ? location.state?.frId :null,
           formData
         );
         showSuccessMessage(response?.message);
@@ -150,9 +150,7 @@ function AddEditFileCase() {
             navigate("/efiling/dashboard/file-register-list/files-list/cases");
           }, 1000);
         }
-      } else {
-        showErrorMessage("Fresh receipt is mandatory");
-      }
+      
     } catch (error) {
       console.error("Error creating case:", error);
     }
@@ -180,6 +178,10 @@ function AddEditFileCase() {
 
   const createFormData = () => {
     const formData = new FormData();
+    // if(location.state?.frId){
+    //   formData.append("fkFreshReceiptId", location.state?.frId);
+    // }
+    
     formData.append("cases[0][Note][description]", notingData.description);
     formData.append(
       "cases[0][Correspondence][description]",
