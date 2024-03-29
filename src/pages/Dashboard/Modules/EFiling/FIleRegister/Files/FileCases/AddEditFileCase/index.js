@@ -43,6 +43,7 @@ import Select from "react-select";
 
 function AddEditFileCase() {
   const navigate = useNavigate();
+  const userData = getUserData();
   const [headings, setHeadings] = useState([]);
   const location = useLocation();
   const { fileIdINRegister } = useContext(AuthContext);
@@ -316,8 +317,14 @@ function AddEditFileCase() {
   const [fileData, setFileData] = useState([]);
   const [registerId, setRegisterId] = useState(null);
   const hendleRegisterSelect = async (headID) => {
+    const searchParams = {
+      userId: userData?.fkUserId,
+      currentPage: 0,
+      pageSize: 100,
+      mainHeadingNumber: headID,
+    };
     try {
-      const response = await getFileByRegisterById(registerId, headID);
+      const response = await getFileByRegisterById(searchParams);
       if (response.success) {
         if (response?.data?.files) {
           setFileData(response?.data?.files);
