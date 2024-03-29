@@ -860,7 +860,7 @@ function FileDetail() {
                           Noting
                         </button>
                       </li>
-                      {/* <li
+                      <li
                         className="nav-item"
                         role="presentation"
                         onClick={() => {
@@ -886,6 +886,7 @@ function FileDetail() {
                           Correspondence
                         </button>
                       </li>
+                       {/*
                       <li
                         className="nav-item"
                         role="presentation"
@@ -995,6 +996,110 @@ function FileDetail() {
                             multiLanguage={false}
                             // disabled={location.state?.view ? true : false}
                           />
+                        </section>
+                      ) : selectedTab === "Correspondence" ? (
+                        <section>
+                          <label for="formFile" class="form-label mt-3">
+                            Description
+                          </label>
+
+                          <TinyEditor
+                            initialContent={""}
+                            disabled={viewPage ? true : false}
+                            setEditorContent={(content) =>
+                              setCorrespondenceData((prev) => ({
+                                ...prev,
+                                description: content,
+                              }))
+                            }
+                            editorContent={correspondenceData.description}
+                            multiLanguage={false}
+                            // disabled={location.state?.view ? true : false}
+                          />
+                          <div class="row">
+                            <div class="col">
+                              <div class="mb-3 mt-5">
+                                <div class="form-group">
+                                  <div class="row">
+                                    <label
+                                      for="formFile"
+                                      class="form-label mt-3"
+                                    >
+                                      Attach File
+                                    </label>
+                                    <div class="col-6">
+                                      <input
+                                        ref={fileInputRef}
+                                        className="form-control"
+                                        type="file"
+                                        accept=".pdf, .jpg, .jpeg, .png"
+                                        id="correspondance"
+                                        name="correspondance"
+                                        multiple
+                                        onChange={(event) =>
+                                          handleFileChangeCorrespondance(event)
+                                        }
+                                        // disabled={location.state?.view ? true : false}
+                                      />
+                                      {filesData?.sections.length > 0 && (
+                                        <div>
+                                          <label
+                                            for="formFile"
+                                            class="form-label mt-3 mb-0"
+                                          >
+                                            Attached Files
+                                          </label>
+                                          <ul>
+                                            {filesData?.sections &&
+                                              correspondancestore[0]?.caseAttachments.map(
+                                                (file, index) => {
+                                                  return (
+                                                    <div key={index}>
+                                                      <a
+                                                        class="MultiFile-remove"
+                                                        style={{
+                                                          marginRight: "10px",
+                                                          color: "red",
+                                                          cursor: "pointer",
+                                                        }}
+                                                        onClick={() =>
+                                                          hendleRemoveImage(
+                                                            file?.id
+                                                          )
+                                                        }
+                                                      >
+                                                        x
+                                                      </a>
+                                                      <a
+                                                        href={
+                                                          file?.id
+                                                            ? `http://172.16.170.8:5252${file?.fileName}`
+                                                            : URL.createObjectURL(
+                                                                file
+                                                              )
+                                                        }
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                      >
+                                                        {file?.id
+                                                          ? file?.fileName
+                                                              ?.split("/")
+                                                              .pop()
+                                                          : file.name}
+                                                      </a>
+                                                    </div>
+                                                  );
+                                                }
+                                              )}
+                                          </ul>
+                                        </div>
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </section>
                       ) : null}
                     </div>

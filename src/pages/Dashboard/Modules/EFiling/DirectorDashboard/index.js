@@ -23,15 +23,22 @@ import CustomTable from "../../../../../components/CustomComponents/CustomTable"
 import moment from "moment";
 
 function DirectorDashboard() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState("FRsent");
+  const [selectedFileTab, setSelectedFIleTab] = useState("Filesent");
   const [currentPage, setCurrentPage] = useState(0);
-  const [togleTable, setTogleTable] = useState(null)
-  const [frsentData, setFrsentData] = useState([])
-  const [frrecivedData, setFrRecivedData] = useState([])
-   const [count, setCount] = useState(null);
-   const [frrecivedCount, setFRRecivedCount] = useState(null)
-    const pageSize = 10; 
+  const [togleTable, setTogleTable] = useState(false);
+  const [fileTogleTable, setTogleFileTable] = useState(false);
+  const [frsentData, setFrsentData] = useState([]);
+  const [frrecivedData, setFrRecivedData] = useState([]);
+  const [count, setCount] = useState(null);
+  const [frrecivedCount, setFRRecivedCount] = useState(null);
+  const [filerecivedCount, setFIleRecivedCount] = useState(null);
+  const [fileSentCount, setFIleSentCount] = useState(null);
+  const [fileSentData, setFilesentData] = useState([]);
+  const [filerecivedData, setFileRecivedData] = useState([]);
+
+  const pageSize = 10;
 
   const userData = getUserData();
   const [fileStatsData, setFileStatsData] = useState(null);
@@ -41,12 +48,33 @@ function DirectorDashboard() {
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
     setCurrentPage(page);
-};
+  };
 
+  const transformFilesdata = (apiData) => {
+    return apiData.map((item) => ({
+      internalId: item?.id,
+      SNo: item?.id,
+      // HeadingNumber: item?.mainHeading?.mainHeadingNumber,
+      // mainHeading: item?.mainHeading?.mainHeading,
+      year: item.year,
+      fileNumber: item?.fileNumber,
+      fileSubject: item?.fileSubject,
+    }));
+  };
   const getAllStats = async () => {
     try {
       const response = await getsentAndRecievedFilesStats(userData?.fkUserId);
       if (response?.success) {
+        setFIleSentCount(response?.data?.sentFiles?.count);
+        setFIleRecivedCount(response?.data?.receivedFiles?.count);
+        const transformsendData = transformFilesdata(
+          response?.data?.sentFiles?.rows?.file
+        );
+        setFilesentData(transformsendData);
+        const transformrecivedData = transformFilesdata(
+          response?.data?.receivedFiles?.rows?.file
+        );
+        setFileRecivedData(transformrecivedData);
         setFileStatsData(response?.data);
       }
     } catch (error) {
@@ -58,10 +86,14 @@ function DirectorDashboard() {
     return apiData.map((item) => ({
       id: item?.id,
       frType: item?.freshReceipt?.frType,
-      Sender: item?.submittedUser ? item?.submittedUser?.employee?.firstName : "---",
-      Receiver: item?.assignedUser ? item?.assignedUser?.employee?.firstName : "---",
+      Sender: item?.submittedUser
+        ? item?.submittedUser?.employee?.firstName
+        : "---",
+      Receiver: item?.assignedUser
+        ? item?.assignedUser?.employee?.firstName
+        : "---",
       // Status: item?.fileRemarksData?.length > 0 ? item?.fileRemarksData[item?.fileRemarksData?.length - 1]?.CommentStatus : "Draft",
-      frSubject:item?.freshReceipt?.frSubject,
+      frSubject: item?.freshReceipt?.frSubject,
       referenceNumber: item?.freshReceipt?.referenceNumber,
       frDate: moment(item?.frDate).format("DD/MM/YYYY"),
       // DiaryDate: item?.freshReceiptDiaries ? moment(item?.freshReceiptDiaries?.diaryDate).format("DD/MM/YYYY") : "---",
@@ -73,12 +105,16 @@ function DirectorDashboard() {
       const response = await getsentAndRecievedFRStats(userData?.fkUserId);
       if (response?.success) {
         setFrStatsData(response?.data);
-        setCount(response?.data?.sentFRs?.count)
-        setFRRecivedCount(response?.data?.receivedFRs?.count)
-        const transformsentData = transformFreshReceiptdata(response?.data?.sentFRs?.rows)
-        const transformsentrecivedData = transformFreshReceiptdata(response?.data?.receivedFRs?.rows)
-        setFrRecivedData(transformsentrecivedData)
-        setFrsentData(transformsentData)
+        setCount(response?.data?.sentFRs?.count);
+        setFRRecivedCount(response?.data?.receivedFRs?.count);
+        const transformsentData = transformFreshReceiptdata(
+          response?.data?.sentFRs?.rows
+        );
+        const transformsentrecivedData = transformFreshReceiptdata(
+          response?.data?.receivedFRs?.rows
+        );
+        setFrRecivedData(transformsentrecivedData);
+        setFrsentData(transformsentData);
       }
     } catch (error) {
       console.log(error);
@@ -139,7 +175,10 @@ function DirectorDashboard() {
             <div class="mt-2 mb-4">
               <div class="row">
                 <NoticeStatsCard
-                  onClick={() => setTogleTable(!togleTable)}
+                  onClick={() => {
+                    setTogleTable(!togleTable);
+                    setTogleFileTable(false);
+                  }}
                   title={"Fresh Receipts (FRs)"}
                   icon={faClipboardQuestion}
                   iconBgColor={"#FFA500"}
@@ -149,6 +188,10 @@ function DirectorDashboard() {
                 />
 
                 <NoticeStatsCard
+                  onClick={() => {
+                    setTogleFileTable(!fileTogleTable);
+                    setTogleTable(false);
+                  }}
                   title={"Files"}
                   icon={faClipboardQuestion}
                   iconBgColor={"#FFA500"}
@@ -221,109 +264,207 @@ function DirectorDashboard() {
           </div>
         </div>
         {/* FR Sent Recive Show */}
-        {togleTable ? <div>
-          <div style={{ padding: "25px" }}>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <ul className="nav nav-tabs mb-3 mt-3" id="ex1" role="tablist">
-                <li
-                  className="nav-item"
-                  role="presentation"
-                  onClick={() => setSelectedTab("FRsent")}
-                >
-                  <button
-                    type="button"
-                    className={
-                      selectedTab === "FRsent"
-                        ? "nav-link active"
-                        : "nav-link"
-                    }
-                    style={{ width: "170px" }}
-                    data-bs-toggle="tab"
-                    role="tab"
-                    aria-controls="ex1-tabs-1"
-                    aria-selected={
-                      selectedTab === "FRsent" ? "true" : "false"
-                    }
+        {togleTable ? (
+          <div>
+            <div style={{ padding: "25px" }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <ul className="nav nav-tabs mb-3 mt-3" id="ex1" role="tablist">
+                  <li
+                    className="nav-item"
+                    role="presentation"
+                    onClick={() => setSelectedTab("FRsent")}
                   >
-                    FR sent
-                  </button>
-                </li>
-                <li
-                  className="nav-item"
-                  role="presentation"
-                  onClick={() => setSelectedTab("FRrecive")}
-                >
-                  <button
-                    type="button"
-                    className={
-                      selectedTab === "FRrecive"
-                        ? "nav-link active"
-                        : "nav-link"
-                    }
-                    style={{ width: "170px" }}
-                    data-bs-toggle="tab"
-                    role="tab"
-                    aria-controls="ex1-tabs-2"
-                    aria-selected={
-                      selectedTab === "FRrecive" ? "true" : "false"
-                    }
+                    <button
+                      type="button"
+                      className={
+                        selectedTab === "FRsent"
+                          ? "nav-link active"
+                          : "nav-link"
+                      }
+                      style={{ width: "170px" }}
+                      data-bs-toggle="tab"
+                      role="tab"
+                      aria-controls="ex1-tabs-1"
+                      aria-selected={
+                        selectedTab === "FRsent" ? "true" : "false"
+                      }
+                    >
+                      FR sent
+                    </button>
+                  </li>
+                  <li
+                    className="nav-item"
+                    role="presentation"
+                    onClick={() => setSelectedTab("FRrecive")}
                   >
-                    FR Received
-                  </button>
-                </li>
-              </ul>
+                    <button
+                      type="button"
+                      className={
+                        selectedTab === "FRrecive"
+                          ? "nav-link active"
+                          : "nav-link"
+                      }
+                      style={{ width: "170px" }}
+                      data-bs-toggle="tab"
+                      role="tab"
+                      aria-controls="ex1-tabs-2"
+                      aria-selected={
+                        selectedTab === "FRrecive" ? "true" : "false"
+                      }
+                    >
+                      FR Received
+                    </button>
+                  </li>
+                </ul>
+              </div>
             </div>
-          </div>
 
-          <div className="tab-content" id="ex1-content">
+            <div className="tab-content" id="ex1-content">
               {selectedTab === "FRsent" ? (
                 // Render content for the 'Noting' tab
                 <section class="mb-5">
-                <CustomTable
-                        hidebtn1={true}
-                        ActionHide={true}
-                        hideBtn={true}
-                        data={frsentData}
-                        tableTitle="Sent FRs"
-                        headertitlebgColor={"#666"}
-                        headertitletextColor={"#FFF"}
-                        handlePageChange={handlePageChange}
-                        currentPage={currentPage}
-                        
-                        pageSize={pageSize}
-                        totalCount={count}
-                        singleDataCard={true}
-                       
-                    />
+                  <CustomTable
+                    hidebtn1={true}
+                    ActionHide={true}
+                    hideBtn={true}
+                    data={frsentData}
+                    tableTitle="Sent FRs"
+                    headertitlebgColor={"#666"}
+                    headertitletextColor={"#FFF"}
+                    handlePageChange={handlePageChange}
+                    currentPage={currentPage}
+                    pageSize={pageSize}
+                    totalCount={count}
+                    singleDataCard={true}
+                  />
                 </section>
               ) : (
                 <section class="mb-5">
-                <CustomTable
-                        hidebtn1={true}
-                        ActionHide={true}
-                        hideBtn={true}
-                        data={frrecivedData}
-                        tableTitle="Received FRs"
-                        headertitlebgColor={"#666"}
-                        headertitletextColor={"#FFF"}
-                        handlePageChange={handlePageChange}
-                        currentPage={currentPage}
-                        pageSize={pageSize}
-                        totalCount={frrecivedCount}
-                        singleDataCard={true}
-                        
-                    />
+                  <CustomTable
+                    hidebtn1={true}
+                    ActionHide={true}
+                    hideBtn={true}
+                    data={frrecivedData}
+                    tableTitle="Received FRs"
+                    headertitlebgColor={"#666"}
+                    headertitletextColor={"#FFF"}
+                    handlePageChange={handlePageChange}
+                    currentPage={currentPage}
+                    pageSize={pageSize}
+                    totalCount={frrecivedCount}
+                    singleDataCard={true}
+                  />
                 </section>
               )}
             </div>
-        </div>:null}
-        
+          </div>
+        ) : fileTogleTable ? (
+          <div>
+            <div style={{ padding: "25px" }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <ul className="nav nav-tabs mb-3 mt-3" id="ex1" role="tablist">
+                  <li
+                    className="nav-item"
+                    role="presentation"
+                    onClick={() => setSelectedFIleTab("Filesent")}
+                  >
+                    <button
+                      type="button"
+                      className={
+                        selectedFileTab === "Filesent"
+                          ? "nav-link active"
+                          : "nav-link"
+                      }
+                      style={{ width: "170px" }}
+                      data-bs-toggle="tab"
+                      role="tab"
+                      aria-controls="ex1-tabs-1"
+                      aria-selected={
+                        selectedFileTab === "Filesent" ? "true" : "false"
+                      }
+                    >
+                      File sent
+                    </button>
+                  </li>
+                  <li
+                    className="nav-item"
+                    role="presentation"
+                    onClick={() => setSelectedFIleTab("FileRecived")}
+                  >
+                    <button
+                      type="button"
+                      className={
+                        selectedFileTab === "FileRecived"
+                          ? "nav-link active"
+                          : "nav-link"
+                      }
+                      style={{ width: "170px" }}
+                      data-bs-toggle="tab"
+                      role="tab"
+                      aria-controls="ex1-tabs-2"
+                      aria-selected={
+                        selectedFileTab === "FileRecived" ? "true" : "false"
+                      }
+                    >
+                      File Received
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="tab-content" id="ex1-content">
+              {selectedFileTab === "Filesent" ? (
+                // Render content for the 'Noting' tab
+                <section class="mb-5">
+                  <CustomTable
+                    hidebtn1={true}
+                    ActionHide={true}
+                    hideBtn={true}
+                    data={fileSentData}
+                    tableTitle="Sent Files"
+                    headertitlebgColor={"#666"}
+                    headertitletextColor={"#FFF"}
+                    handlePageChange={handlePageChange}
+                    currentPage={currentPage}
+                    pageSize={pageSize}
+                    totalCount={fileSentCount}
+                    singleDataCard={true}
+                  />
+                </section>
+              ) : (
+                <section class="mb-5">
+                  <CustomTable
+                    hidebtn1={true}
+                    ActionHide={true}
+                    hideBtn={true}
+                    data={filerecivedData}
+                    tableTitle="Received Files"
+                    headertitlebgColor={"#666"}
+                    headertitletextColor={"#FFF"}
+                    handlePageChange={handlePageChange}
+                    currentPage={currentPage}
+                    pageSize={pageSize}
+                    totalCount={filerecivedCount}
+                    singleDataCard={true}
+                  />
+                </section>
+              )}
+            </div>
+          </div>
+        ) : null}
       </div>
     </Layout>
   );
