@@ -39,6 +39,7 @@ import { useNavigate } from "react-router-dom";
 import { Editor } from "../../../../../../../../components/CustomComponents/Editor";
 import { TinyEditor } from "../../../../../../../../components/CustomComponents/Editor/TinyEditor";
 import { getUserData } from "../../../../../../../../api/Auth";
+import ImageGallery from "react-image-gallery";
 import Select from "react-select";
 
 function AddEditFileCase() {
@@ -380,6 +381,11 @@ function AddEditFileCase() {
     }
   }, [headcount]);
 
+  const images = location?.state?.freshReceiptsAttachments?.map(item => ({
+    original: `http://172.16.170.8:5252${item?.filename}`,
+    thumbnail: `http://172.16.170.8:5252${item?.filename}`,
+  })) || [];
+
   useEffect(() => {
     getAllFileHeadingApi();
   }, []);
@@ -557,7 +563,7 @@ function AddEditFileCase() {
                         selectedTab === "FR Noting" ? "true" : "false"
                       }
                     >
-                      FR
+                      FR ({location?.state?.freshReceiptsAttachments?.length})
                     </button>
                   </li>
                 )}
@@ -717,11 +723,19 @@ function AddEditFileCase() {
                   </section>
                 ) : selectedTab === "FR Noting" ? (
                   <section>
-                    <iframe
-                      src={`http://10.10.140.200:5152${location?.state?.freshReceiptsAttachments[0]?.filename}`}
+                    {/* <iframe
+                      src={`http://172.16.170.8:5252${location?.state?.freshReceiptsAttachments[0]?.filename}`}
                       style={{ width: "700px", height: "400px" }}
                       frameborder="0"
-                    ></iframe>
+                    ></iframe> */}
+                    <section>
+            <ImageGallery style={{ maxHeight: 'calc(100vh 0px)' }} items={images} showThumbnails={false} showFullscreenButton={false} showPlayButton={false} slideOnThumbnailOver renderThumbInner={(item) => (
+    <div className="image-gallery-thumbnail-inner">
+      <img src={item.thumbnail} alt={"file"} width={92} height={80} />
+      {/* Add any additional elements or styles for the thumbnail */}
+    </div>
+  )} />
+                  </section>
                   </section>
                 ) : selectedTab === "Correspondence" ? (
                   <section>

@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt, faPlus } from "@fortawesome/free-solid-svg-icons";
 import thumbnail from "./../../../../../assets/profile-img.jpg";
 import DatePicker from "react-datepicker";
+import ImageGallery from "react-image-gallery";
 import {
   MDBBtn,
   MDBModal,
@@ -15,6 +16,7 @@ import {
   MDBModalBody,
   MDBModalFooter,
 } from "mdb-react-ui-kit";
+// import Modal from "react-modal";
 import { TinyEditor } from "../../../../../components/CustomComponents/Editor/TinyEditor";
 import NewCaseEfilling from "../AddEditFileForm";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -47,26 +49,16 @@ import {
   EfilingSideBarBranchItem,
   EfilingSideBarItem,
 } from "../../../../../utils/sideBarItems";
+import { Button, Modal } from "react-bootstrap";
 
 const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
   return (
-    <MDBModal open={isOpen} setopen={toggleModal} tabIndex="-1">
-      <MDBModalDialog centered>
-        <MDBModalContent>
-          <MDBModalHeader>
-            <MDBModalTitle>{title}</MDBModalTitle>
-            <MDBBtn
-              className="btn-close"
-              color="none"
-              onClick={toggleModal}
-            ></MDBBtn>
-          </MDBModalHeader>
-          <MDBModalBody className="justify-content-center align-items-center">
-            {children}
-          </MDBModalBody>
-        </MDBModalContent>
-      </MDBModalDialog>
-    </MDBModal>
+    <Modal show={isOpen} onHide={toggleModal} centered>
+      <Modal.Header closeButton>
+        <Modal.Title>{title}</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>{children}</Modal.Body>
+    </Modal>
   );
 };
 
@@ -409,7 +401,7 @@ function FileDetail() {
       );
       const frAttachments =
         filesData?.freshReceipts?.freshReceiptsAttachments?.length > 0 &&
-        filesData?.freshReceipts?.freshReceiptsAttachments[0];
+        filesData?.freshReceipts?.freshReceiptsAttachments;
       setFrAttachments(frAttachments);
 
       setNotingStore(noting);
@@ -509,10 +501,18 @@ function FileDetail() {
     }
   };
 
-  const HandlePrint = async (urlimage) => {
-    const url = `http://172.16.170.8:5252${urlimage}`;
-    window.open(url, "_blank");
-  };
+  const images =
+    (frAttachments &&
+      frAttachments?.map((item) => ({
+        original: `http://172.16.170.8:5252${item?.filename}`,
+        thumbnail: `http://172.16.170.8:5252${item?.filename}`,
+      }))) ||
+    [];
+
+  // const HandlePrint = async (urlimage) => {
+  //   const url = `http://172.16.170.8:5252${urlimage}`;
+  //   window.open(url, "_blank");
+  // };
 
   return (
     <Layout
@@ -536,7 +536,7 @@ function FileDetail() {
         /> */}
 
         <EFilingModal
-          title={"Add Comments"}
+          title="Add Comments"
           isOpen={isModalOpen}
           toggleModal={toggleModal}
           // hendleSubmit={() => hendleAssiginFileCaseApi()}
@@ -621,24 +621,26 @@ function FileDetail() {
               </div>
             </div>
           </div>
-          <MDBModalFooter>
-            <MDBBtn color="secondary" onClick={toggleModal}>
-              Close
-            </MDBBtn>
-            <MDBBtn
+
+          <Modal.Footer>
+            <Button
+              variant="primary"
               onClick={() => {
                 hendleAssiginFileCaseApi();
                 toggleModal();
               }}
             >
               Submit
-            </MDBBtn>
-          </MDBModalFooter>
+            </Button>
+            <Button variant="secondary" onClick={toggleModal}>
+              Close
+            </Button>
+          </Modal.Footer>
         </EFilingModal>
 
         <div className="custom-editor">
           <div className="row">
-            <div className="col-md-2">
+            {/* <div className="col-md-2">
               <div className="noting">
                 {directorData?.length > 0 ? (
                   directorData.map((item) => (
@@ -669,22 +671,22 @@ function FileDetail() {
                   </div>
                 )}
               </div>
-            </div>
-            <div className="col-md-7">
+            </div> */}
+            <div className="col-md-9">
               <form onSubmit={formik.handleSubmit}>
                 <div>
-                  <div class="content mt-5">
+                  <div class="content">
                     <div class="row">
                       <div className="col">
                         <div className="mb-3">
                           <label className="form-label">File</label>
-                          <span
+                          <input
                             className="form-control"
                             id="fileNumber"
                             name="fileNumber"
-                          >
-                            {formik.values.fileNumber}
-                          </span>
+                            disabled={true}
+                            value={formik.values.fileNumber}
+                          />
                         </div>
                       </div>
 
@@ -693,21 +695,25 @@ function FileDetail() {
                           <label htmlFor="fileSubject" className="form-label">
                             Subject
                           </label>
-                          <span
+                          <input
                             className="form-control"
                             id="fileSubject"
                             name="fileSubject"
-                          >
-                            {formik.values.fileSubject}
-                          </span>
+                            disabled={true}
+                            value={formik.values.fileSubject}
+                          />
                         </div>
                       </div>
                       <div className="col">
                         <div className="mb-3">
                           <label className="form-label">Year</label>
-                          <span className="form-control" id="year" name="year">
-                            {formik.values.year}
-                          </span>
+                          <input
+                            className="form-control"
+                            id="year"
+                            name="year"
+                            value={formik.values.year}
+                            disabled={true}
+                          />
                         </div>
                       </div>
                     </div>
@@ -831,7 +837,7 @@ function FileDetail() {
                             selectedTab === "FR Noting" ? "true" : "false"
                           }
                         >
-                          FR
+                          FR ({frAttachments.length})
                         </button>
                       </li>
                       <li
@@ -886,7 +892,7 @@ function FileDetail() {
                           Correspondence
                         </button>
                       </li>
-                       {/*
+                      {/*
                       <li
                         className="nav-item"
                         role="presentation"
@@ -970,11 +976,25 @@ function FileDetail() {
                     <div class="tab-content" id="ex1-content">
                       {selectedTab === "FR Noting" ? (
                         <section>
-                          <iframe
-                            src={`http://172.16.170.8:5252${frAttachments?.filename}`}
-                            style={{ width: "100%", height: "600px" }}
-                            frameborder="0"
-                          ></iframe>
+                          <ImageGallery
+                            style={{ maxHeight: "calc(100vh 0px)" }}
+                            items={images}
+                            showThumbnails={false}
+                            showFullscreenButton={false}
+                            showPlayButton={false}
+                            slideOnThumbnailOver
+                            renderThumbInner={(item) => (
+                              <div className="image-gallery-thumbnail-inner">
+                                <img
+                                  src={item.thumbnail}
+                                  alt={"file"}
+                                  width={92}
+                                  height={80}
+                                />
+                                {/* Add any additional elements or styles for the thumbnail */}
+                              </div>
+                            )}
+                          />
                         </section>
                       ) : selectedTab === "Noting" ? (
                         // Render content for the 'Noting' tab
@@ -1308,10 +1328,18 @@ function FileDetail() {
                 </div> */}
               </form>
             </div>
-            <div className="col-md-3">
-              <div className="custom-editor-main" style={{ marginTop: 0 }}>
+            <div className="col-md-3" style={{ paddingRight: 0 }}>
+              <div
+                className="custom-editor-main"
+                style={{ marginTop: 0, borderLeft: "1px solid #ddd" }}
+              >
                 <div className="comment-heading">
-                  <h2>Comments</h2>
+                  <h2
+                    class="ps-3"
+                    style={{ fontWeight: "bold", paddingTop: "7px" }}
+                  >
+                    Comments
+                  </h2>
                   <a onClick={toggleModal}>
                     <button class="btn add-btn">
                       <FontAwesomeIcon
@@ -1320,17 +1348,22 @@ function FileDetail() {
                         size="md"
                         width={24}
                       />{" "}
-                      Add
+                      Add your comment
                     </button>
                   </a>
                 </div>
-                {remarksData?.length > 0 ? (
-                  remarksData.map((item) => (
-                    <>
-                      {item?.comment !== null ? (
-                        <div class="d-flex flex-row p-3 ps-0">
-                          <>
-                            {/* <img
+
+                <div style={{ maxHeight: "712px", overflowY: "scroll" }}>
+                  {remarksData?.length > 0 ? (
+                    remarksData.map((item) => (
+                      <>
+                        {item?.comment !== null ? (
+                          <div
+                            class="d-flex flex-row p-3 ps-3"
+                            style={{ borderBottom: "1px solid #ddd" }}
+                          >
+                            <>
+                              {/* <img
                               style={{
                                 marginBottom: "30px",
                                 marginRight: "15px",
@@ -1340,15 +1373,18 @@ function FileDetail() {
                               height="40"
                               class="rounded-circle mr-3"
                             /> */}
-                            <div class="w-100" style={{ position: "relative" }}>
-                              <div class="d-flex justify-content-between align-items-center">
-                                <div class="d-flex flex-row align-items-center">
-                                  <div style={{ float: "left" }}>
-                                    <span
-                                      class="mr-2"
-                                      style={{ fontSize: "14px" }}
-                                    >{`${item?.submittedUser?.employee?.firstName}  ${item?.submittedUser?.employee?.lastName}/ ${item?.submittedUser?.employee?.designations?.designationNam}`}</span>
-                                    {/* <small
+                              <div
+                                class="w-100"
+                                style={{ position: "relative" }}
+                              >
+                                <div class="d-flex justify-content-between align-items-center">
+                                  <div class="d-flex flex-row align-items-center">
+                                    <div style={{ float: "left" }}>
+                                      <span
+                                        class="mr-2"
+                                        style={{ fontSize: "14px" }}
+                                      >{`${item?.submittedUser?.employee?.firstName}  ${item?.submittedUser?.employee?.lastName}/ ${item?.submittedUser?.employee?.designations?.designationName}`}</span>
+                                      {/* <small
                                       style={{
                                         marginLeft: "0px",
                                         position: "absolute",
@@ -1361,26 +1397,28 @@ function FileDetail() {
                                           ?.designations?.designationNam
                                       }
                                     </small> */}
+                                    </div>
+                                  </div>
+                                  <div style={{ float: "right" }}>
+                                    <small>
+                                      {moment(item?.createdAt).format(
+                                        "DD/MM/YYYY"
+                                      )}
+                                    </small>
+                                    <small className="ms-2">
+                                      {moment(item?.createdAt).format(
+                                        "hh:mm A"
+                                      )}
+                                    </small>
                                   </div>
                                 </div>
-                                <div style={{ float: "right" }}>
-                                  <small>
-                                    {moment(item?.createdAt).format(
-                                      "DD/MM/YYYY"
-                                    )}
-                                  </small>
-                                  <small className="ms-2">
-                                    {moment(item?.createdAt).format("hh:mm A")}
-                                  </small>
-                                </div>
-                              </div>
-                              <p
-                                class="text-justify comment-text mb-0"
-                                style={{ fontSize: "20px" }}
-                              >
-                                {item?.comment}
-                              </p>
-                              <small
+                                <p
+                                  class="text-justify comment-text mb-0"
+                                  style={{ fontSize: "18px" }}
+                                >
+                                  {item?.comment}
+                                </p>
+                                {/* <small
                                 style={{
                                   marginBottom: "20px",
                                   background:
@@ -1393,38 +1431,39 @@ function FileDetail() {
                                 class="c-badge"
                               >
                                 {item?.CommentStatus}
-                              </small>
-                            </div>
-                          </>
-                        </div>
-                      ) : (
-                        <div
-                          class="alert alert-danger mt-5"
-                          role="alert"
-                          style={{
-                            width: "350px",
-                            margin: "0 auto",
-                            textAlign: "center",
-                          }}
-                        >
-                          No data found
-                        </div>
-                      )}
-                    </>
-                  ))
-                ) : (
-                  <div
-                    class="alert alert-danger mt-5"
-                    role="alert"
-                    style={{
-                      width: "350px",
-                      margin: "0 auto",
-                      textAlign: "center",
-                    }}
-                  >
-                    No data found
-                  </div>
-                )}
+                              </small> */}
+                              </div>
+                            </>
+                          </div>
+                        ) : (
+                          <div
+                            class="alert alert-danger mt-5"
+                            role="alert"
+                            style={{
+                              width: "350px",
+                              margin: "0 auto",
+                              textAlign: "center",
+                            }}
+                          >
+                            No data found
+                          </div>
+                        )}
+                      </>
+                    ))
+                  ) : (
+                    <div
+                      class="alert alert-danger mt-5"
+                      role="alert"
+                      style={{
+                        width: "350px",
+                        margin: "0 auto",
+                        textAlign: "center",
+                      }}
+                    >
+                      No data found
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>

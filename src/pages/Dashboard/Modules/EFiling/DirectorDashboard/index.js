@@ -50,17 +50,24 @@ function DirectorDashboard() {
     setCurrentPage(page);
   };
 
-  const transformFilesdata = (apiData) => {
+  const transformFilesdata = (apiData, id) => {
     return apiData.map((item) => ({
       internalId: item?.id,
       SNo: item?.id,
-      // HeadingNumber: item?.mainHeading?.mainHeadingNumber,
-      // mainHeading: item?.mainHeading?.mainHeading,
-      year: item.year,
-      fileNumber: item?.fileNumber,
-      fileSubject: item?.fileSubject,
+      ...(id === 1 && {
+        Sender: `${item?.submittedUser?.employee?.firstName} ${item?.submittedUser?.employee?.lastName}`,
+      }),
+      ...(id !== 1 && {
+        Receiver: `${item?.assignedUser?.employee?.firstName} ${item?.assignedUser?.employee?.lastName}`,
+      }),
+      HeadingNumber: item?.file?.mainHeading?.mainHeadingNumber,
+      mainHeading: item?.file?.mainHeading?.mainHeading,
+      year: item?.file?.year,
+      fileNumber: item?.file?.fileNumber,
+      fileSubject: item?.file?.fileSubject,
     }));
   };
+
   const getAllStats = async () => {
     try {
       const response = await getsentAndRecievedFilesStats(userData?.fkUserId);
@@ -68,11 +75,13 @@ function DirectorDashboard() {
         setFIleSentCount(response?.data?.sentFiles?.count);
         setFIleRecivedCount(response?.data?.receivedFiles?.count);
         const transformsendData = transformFilesdata(
-          response?.data?.sentFiles?.rows?.file
+          response?.data?.sentFiles?.rows,
+          1
         );
         setFilesentData(transformsendData);
         const transformrecivedData = transformFilesdata(
-          response?.data?.receivedFiles?.rows?.file
+          response?.data?.receivedFiles?.rows,
+          0
         );
         setFileRecivedData(transformrecivedData);
         setFileStatsData(response?.data);

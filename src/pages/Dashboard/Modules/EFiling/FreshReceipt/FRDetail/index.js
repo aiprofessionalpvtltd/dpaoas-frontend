@@ -25,36 +25,16 @@ import {
   EfilingSideBarBranchItem,
   EfilingSideBarItem,
 } from "../../../../../../utils/sideBarItems";
-import {
-  MDBBtn,
-  MDBModal,
-  MDBModalDialog,
-  MDBModalContent,
-  MDBModalHeader,
-  MDBModalTitle,
-  MDBModalBody,
-  MDBModalFooter,
-} from "mdb-react-ui-kit";
+import { Button, Modal } from "react-bootstrap";
 
 const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
   return (
-    <MDBModal open={isOpen} setopen={toggleModal} tabIndex="-1">
-      <MDBModalDialog centered>
-        <MDBModalContent>
-          <MDBModalHeader>
-            <MDBModalTitle>{title}</MDBModalTitle>
-            <MDBBtn
-              className="btn-close"
-              color="none"
-              onClick={toggleModal}
-            ></MDBBtn>
-          </MDBModalHeader>
-          <MDBModalBody className="justify-content-center align-items-center">
-            {children}
-          </MDBModalBody>
-        </MDBModalContent>
-      </MDBModalDialog>
-    </MDBModal>
+    <Modal show={isOpen} onHide={toggleModal} centered>
+      <Modal.Header closeButton>
+        <Modal.Title>{title}</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>{children}</Modal.Body>
+    </Modal>
   );
 };
 
@@ -165,7 +145,6 @@ function FRDetail() {
 
   const toggleModal = () => setIsModalOpen(!isModalOpen);
 
-
   const hendleAssiginFileCaseApi = async () => {
     const data = {
       submittedBy: UserData?.fkUserId,
@@ -174,10 +153,7 @@ function FRDetail() {
       comment: modalInputValue?.comment,
     };
     try {
-      const response = await assignFR(
-        receptId,
-        data
-      );
+      const response = await assignFR(receptId, data);
       if (response?.success) {
         showSuccessMessage(response?.message);
 
@@ -198,10 +174,11 @@ function FRDetail() {
     }
   };
 
-  const images = attachments?.map(item => ({
-    original: `http://10.10.140.200:5152${item?.filename}`,
-    thumbnail: `http://10.10.140.200:5152${item?.filename}`,
-  })) || [];
+  const images =
+    attachments?.map((item) => ({
+      original: `http://172.16.170.8:5252${item?.filename}`,
+      thumbnail: `http://172.16.170.8:5252${item?.filename}`,
+    })) || [];
 
   // const images = [
   //   {
@@ -239,89 +216,90 @@ function FRDetail() {
       /> */}
 
       <EFilingModal
-          title={"Add Comments"}
-          isOpen={isModalOpen}
-          toggleModal={toggleModal}
-          // hendleSubmit={() => hendleAssiginFileCaseApi()}
-        >
-          <div class="row">
-            <div class="col">
-              <div class="mb-3">
-                <label class="form-label">Action</label>
-                <select
-                        className="form-select"
-                  id="CommentStatus"
-                  name="CommentStatus"
-                  onChange={(e) =>
-                    setModalInputValue((prevState) => ({
-                      ...prevState,
-                      CommentStatus: e.target.value,
-                    }))
-                  }
-                  value={modalInputValue.CommentStatus}
-                        disabled={viewPage ? true : false}
-                      >
-                        <option value="" selected disabled hidden>
-                          Select
-                        </option>
-                        <option value={"Received"}>Received</option>
-                        <option value={"Put Up"}>Put Up</option>
-                        <option value={"Initiated"}>Initiated</option>
-                        <option value={"Retype/Amend"}>Retype/Amend</option>
-                        <option value={"Submit For Approval"}>
-                          Submit For Approval
-                        </option>
-                      </select>
-              </div>
-            </div>
-            <div class="col">
-              <div class="mb-3">
-                <label class="form-label">Mark To</label>
-                <select
-                  class="form-select"
-                  id="assignedTo"
-                  name="assignedTo"
-                  onChange={(e) =>
-                    setModalInputValue((prevState) => ({
-                      ...prevState,
-                      assignedTo: e.target.value,
-                    }))
-                  }
-                  value={modalInputValue.assignedTo}
-                >
-                  <option value={""} selected disabled hidden>
-                    Select
-                  </option>
-                  {employeeData &&
-                    employeeData?.map((item) => (
-                      <option
-                        value={item.id}
-                      >{`${item.designations?.designationName}`}</option>
-                    ))}
-                </select>
-              </div>
+        title={"Add Comments"}
+        isOpen={isModalOpen}
+        toggleModal={toggleModal}
+
+        // hendleSubmit={() => hendleAssiginFileCaseApi()}
+      >
+        <div class="row">
+          <div class="col">
+            <div class="mb-3">
+              <label class="form-label">Action</label>
+              <select
+                className="form-select"
+                id="CommentStatus"
+                name="CommentStatus"
+                onChange={(e) =>
+                  setModalInputValue((prevState) => ({
+                    ...prevState,
+                    CommentStatus: e.target.value,
+                  }))
+                }
+                value={modalInputValue.CommentStatus}
+                disabled={viewPage ? true : false}
+              >
+                <option value="" selected disabled hidden>
+                  Select
+                </option>
+                <option value={"Received"}>Received</option>
+                <option value={"Put Up"}>Put Up</option>
+                <option value={"Initiated"}>Initiated</option>
+                <option value={"Retype/Amend"}>Retype/Amend</option>
+                <option value={"Submit For Approval"}>
+                  Submit For Approval
+                </option>
+              </select>
             </div>
           </div>
-          <div class="row">
-            <div class="col">
-              <div class="mb-3">
-                <label class="form-label">Add Comments</label>
-                <textarea
-                  class="form-control"
-                  id="comment"
-                  name="comment"
-                  onChange={(e) =>
-                    setModalInputValue((prevState) => ({
-                      ...prevState,
-                      comment: e.target.value,
-                    }))
-                  }
-                  value={modalInputValue.comment}
-                ></textarea>
-              </div>
+          <div class="col">
+            <div class="mb-3">
+              <label class="form-label">Mark To</label>
+              <select
+                class="form-select"
+                id="assignedTo"
+                name="assignedTo"
+                onChange={(e) =>
+                  setModalInputValue((prevState) => ({
+                    ...prevState,
+                    assignedTo: e.target.value,
+                  }))
+                }
+                value={modalInputValue.assignedTo}
+              >
+                <option value={""} selected disabled hidden>
+                  Select
+                </option>
+                {employeeData &&
+                  employeeData?.map((item) => (
+                    <option
+                      value={item.id}
+                    >{`${item.designations?.designationName}`}</option>
+                  ))}
+              </select>
             </div>
           </div>
-          <MDBModalFooter>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="mb-3">
+              <label class="form-label">Add Comments</label>
+              <textarea
+                class="form-control"
+                id="comment"
+                name="comment"
+                onChange={(e) =>
+                  setModalInputValue((prevState) => ({
+                    ...prevState,
+                    comment: e.target.value,
+                  }))
+                }
+                value={modalInputValue.comment}
+              ></textarea>
+            </div>
+          </div>
+        </div>
+        {/* <MDBModalFooter>
             <MDBBtn color="secondary" onClick={toggleModal}>
               Close
             </MDBBtn>
@@ -333,45 +311,83 @@ function FRDetail() {
             >
               Submit
             </MDBBtn>
-          </MDBModalFooter>
-        </EFilingModal>
+          </MDBModalFooter> */}
+        <Modal.Footer>
+          <Button
+            variant="primary"
+            onClick={() => {
+              hendleAssiginFileCaseApi();
+              toggleModal();
+            }}
+          >
+            Submit
+          </Button>
+          <Button variant="secondary" onClick={toggleModal}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </EFilingModal>
 
       <div className="custom-editor">
         <div className="row">
           <div className="col-md-9">
-          <section>
-            <ImageGallery style={{ maxHeight: 'calc(100vh 0px)' }} items={images} showThumbnails={false} showFullscreenButton={false} showPlayButton={false} slideOnThumbnailOver renderThumbInner={(item) => (
-    <div className="image-gallery-thumbnail-inner">
-      <img src={item.thumbnail} alt={"file"} width={92} height={80} />
-      {/* Add any additional elements or styles for the thumbnail */}
-    </div>
-  )} />
-                  </section>
+            <section>
+              <ImageGallery
+                style={{ maxHeight: "calc(100vh 0px)" }}
+                items={images}
+                showThumbnails={false}
+                showFullscreenButton={false}
+                showPlayButton={false}
+                slideOnThumbnailOver
+                renderThumbInner={(item) => (
+                  <div className="image-gallery-thumbnail-inner">
+                    <img
+                      src={item.thumbnail}
+                      alt={"file"}
+                      width={92}
+                      height={80}
+                    />
+                    {/* Add any additional elements or styles for the thumbnail */}
+                  </div>
+                )}
+              />
+            </section>
           </div>
-          
-          <div className="col-md-3" style={{ paddingRight: 0 }}>
-              <div className="custom-editor-main" style={{ marginTop: 0, borderLeft: '1px solid #ddd' }}>
-                <div className="comment-heading">
-                  <h2 class='ps-3' style={{ fontWeight: 'bold', paddingTop: '7px' }}>Comments</h2>
-                  <a onClick={toggleModal}>
-                    <button class="btn add-btn">
-                      <FontAwesomeIcon
-                        style={{ marginRight: "-5px" }}
-                        icon={faPlus}
-                        size="md"
-                        width={24}
-                      />{" "}
-                      Add your comment
-                    </button>
-                  </a>
-                </div>
 
-                <div style={{ maxHeight:"712px", overflowY:"scroll" }}>
+          <div className="col-md-3" style={{ paddingRight: 0 }}>
+            <div
+              className="custom-editor-main"
+              style={{ marginTop: 0, borderLeft: "1px solid #ddd" }}
+            >
+              <div className="comment-heading">
+                <h2
+                  class="ps-3"
+                  style={{ fontWeight: "bold", paddingTop: "7px" }}
+                >
+                  Comments
+                </h2>
+                <a onClick={toggleModal}>
+                  <button class="btn add-btn">
+                    <FontAwesomeIcon
+                      style={{ marginRight: "-5px" }}
+                      icon={faPlus}
+                      size="md"
+                      width={24}
+                    />{" "}
+                    Add your comment
+                  </button>
+                </a>
+              </div>
+
+              <div style={{ maxHeight: "712px", overflowY: "scroll" }}>
                 {remarksData?.length > 0 ? (
                   remarksData.map((item) => (
                     <>
                       {item?.comment !== null ? (
-                        <div class="d-flex flex-row p-3 ps-3" style={{ borderBottom: '1px solid #ddd' }}>
+                        <div
+                          class="d-flex flex-row p-3 ps-3"
+                          style={{ borderBottom: "1px solid #ddd" }}
+                        >
                           <>
                             {/* <img
                               style={{
@@ -468,9 +484,9 @@ function FRDetail() {
                     No data found
                   </div>
                 )}
-                </div>
               </div>
             </div>
+          </div>
         </div>
       </div>
       {/* </div> */}
