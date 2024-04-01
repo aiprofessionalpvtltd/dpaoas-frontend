@@ -12,10 +12,12 @@ import {
   getFileByRegisterById,
   getUserApprovedCaseHistory,
 } from "../../../../../../../../api/APIs/Services/efiling.service";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Select from "react-select";
+import moment from "moment";
 function ApprovedCasesHistory() {
   const location = useLocation();
+  const navigate = useNavigate();
   const [registerData, setRegisterData] = useState([]);
   const [fileData, setFileData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
@@ -36,6 +38,7 @@ function ApprovedCasesHistory() {
   };
 
   console.log("Register Data", registerData);
+  console.log("Approved", approvedCasesData);
 
   //Transform Data
   const transformFilesHeadings = (apiData) => {
@@ -47,9 +50,12 @@ function ApprovedCasesHistory() {
   const transformApprovedCases = (apiData) => {
     return apiData.map((item, index) => ({
       caseId: item?.fkCaseId,
+      internalId: item?.fileData?.id,
       FileNo: item?.fileData?.fileNumber,
+      markDate: moment(item?.fileData?.createdAt).format("DD/MM/YYYY"),
+      Status: item?.fileData?.fileStatus,
 
-      Status: item?.fileData?.map((status) => status?.fileStatus),
+      // Status: item?.fileData?.map((status) => status?.fileStatus),
     }));
   };
 
@@ -267,15 +273,15 @@ function ApprovedCasesHistory() {
             showEditIcon={true}
             hideDeleteIcon={true}
             showView={true}
-            // handleView={(item) =>
-            //   navigate("/efiling/dashboard/fileDetail", {
-            //     state: {
-            //       id: item.caseId,
-            //       fileId: location?.state?.fileId,
-            //       view: true,
-            //     },
-            //   })
-            // }
+            handleView={(item) =>
+              navigate("/efiling/dashboard/fileDetail", {
+                state: {
+                  view: true,
+                  id: item?.caseId,
+                  fileId: item?.internalId,
+                },
+              })
+            }
           />
         </div>
       </div>
