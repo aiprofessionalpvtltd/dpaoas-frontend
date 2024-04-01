@@ -153,6 +153,7 @@ import PreviousCasesHistory from "../pages/Dashboard/Modules/EFiling/FIleRegiste
 import NoticeResolutionDetail from "../pages/Dashboard/Modules/Notice/Resolution/ResolutionDetail";
 import PreviousFRsHistory from "../pages/Dashboard/Modules/EFiling/FreshReceipt/PreviousFRsHistory";
 import FRDetail from "../pages/Dashboard/Modules/EFiling/FreshReceipt/FRDetail";
+import ApprovedCasesHistory from "../pages/Dashboard/Modules/EFiling/FIleRegister/Files/FileCases/ApprovedCases";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -521,6 +522,10 @@ export const ProtectedRoutes = [
   {
     path: "/efiling/dashboard/file-register-list/files-list/cases-history",
     element: <PreviousCasesHistory />,
+  },
+  {
+    path: "/efiling/dashboard/file-register-list/files-list/cases/approved",
+    element: <ApprovedCasesHistory />,
   },
   {
     path: "/efiling/dashboard/fresh-receipt",

@@ -191,7 +191,7 @@ function FileCases() {
       <ToastContainer />
       <div class="row">
         <div
-          className="col"
+          className="col-2"
           style={{
             marginTop: "30px",
             float: "right",

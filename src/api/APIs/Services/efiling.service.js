@@ -489,6 +489,31 @@ export const getUserCaseHistory = async (
   }
 };
 
+export const getUserApprovedCaseHistory = async (searchParams) => {
+  const filteredSearchParams = Object.fromEntries(
+    Object.entries(searchParams).filter(([_, value]) => value !== "")
+  );
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/cases/getApprovedCasesHistory`,
+      {
+        params: filteredSearchParams,
+      }
+    );
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
 export const DeleteFileCaseImage = async (id) => {
   try {
     //   const token = getAuthToken();
