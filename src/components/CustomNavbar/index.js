@@ -102,7 +102,7 @@ export const CustomNavbar = ({ module, centerlogohide, navItems }) => {
           <Dropdown.Toggle
             as="a"
             className="d-flex align-items-center nav-link dropdown-toggle gap-3 dropdown-toggle-nocaret"
-            href="#"
+            // href="#"
             role="button"
             data-bs-toggle="dropdown"
             aria-expanded="false"

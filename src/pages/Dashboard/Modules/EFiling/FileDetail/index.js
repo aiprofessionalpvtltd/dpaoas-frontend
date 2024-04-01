@@ -881,7 +881,7 @@ function FileDetail() {
                               ? "nav-link active"
                               : "nav-link"
                           }
-                          style={{ width: "140px" }}
+                          style={{ width: "200px" }}
                           data-bs-toggle="tab"
                           role="tab"
                           aria-controls="ex1-tabs-2"
@@ -889,7 +889,7 @@ function FileDetail() {
                             selectedTab === "Correspondence" ? "true" : "false"
                           }
                         >
-                          Correspondence
+                          Correspondence ({correspondancestore && correspondancestore[0]?.caseAttachments?.length})
                         </button>
                       </li>
                       {/*
