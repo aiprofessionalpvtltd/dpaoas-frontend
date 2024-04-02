@@ -7,10 +7,15 @@ import moment from "moment";
 import { getUserData } from "../../../../../../api/Auth";
 import { Layout } from "../../../../../../components/Layout";
 import thumbnail from "./../../../../../../assets/profile-img.jpg";
+import ImageGallery from "react-image-gallery";
+import "react-image-gallery/styles/css/image-gallery.css";
 import {
   assiginFR,
+  assignFR,
   getFreshReceiptById,
 } from "../../../../../../api/APIs/Services/efiling.service";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendarAlt, faPlus } from "@fortawesome/free-solid-svg-icons";
 import {
   showErrorMessage,
   showSuccessMessage,
@@ -20,6 +25,18 @@ import {
   EfilingSideBarBranchItem,
   EfilingSideBarItem,
 } from "../../../../../../utils/sideBarItems";
+import { Button, Modal } from "react-bootstrap";
+
+const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
+  return (
+    <Modal show={isOpen} onHide={toggleModal} centered>
+      <Modal.Header closeButton>
+        <Modal.Title>{title}</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>{children}</Modal.Body>
+    </Modal>
+  );
+};
 
 function FRDetail() {
   const location = useLocation();
@@ -36,6 +53,11 @@ function FRDetail() {
   const [remarksData, setRemarksData] = useState([]);
   const [attachments, setAttachments] = useState([]);
   const [directorData, setDirectorData] = useState([]);
+  const [modalInputValue, setModalInputValue] = useState({
+    assignedTo: "",
+    CommentStatus: "",
+    comment: "",
+  });
 
   const navigate = useNavigate();
 
@@ -121,10 +143,62 @@ function FRDetail() {
     // setPdfUrl(url)
   };
 
+  const toggleModal = () => setIsModalOpen(!isModalOpen);
+
+  const hendleAssiginFileCaseApi = async () => {
+    const data = {
+      submittedBy: UserData?.fkUserId,
+      assignedTo: modalInputValue?.assignedTo,
+      CommentStatus: modalInputValue?.CommentStatus,
+      comment: modalInputValue?.comment,
+    };
+    try {
+      const response = await assignFR(receptId, data);
+      if (response?.success) {
+        showSuccessMessage(response?.message);
+
+        toggleModal();
+        getFreashRecepitByIdApi();
+        // Clear all fields in modalInputValue
+        setModalInputValue({
+          assignedTo: "",
+          CommentStatus: "",
+          comment: "",
+        });
+        setTimeout(() => {
+          navigate("/efiling/dashboard/fresh-receipt");
+        }, 3000);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  };
+
+  const images =
+    attachments?.map((item) => ({
+      original: `http://172.16.170.8:5252${item?.filename}`,
+      thumbnail: `http://172.16.170.8:5252${item?.filename}`,
+    })) || [];
+
+  // const images = [
+  //   {
+  //     original: "https://picsum.photos/id/1018/1000/600/",
+  //     thumbnail: "https://picsum.photos/id/1018/250/150/",
+  //   },
+  //   {
+  //     original: "https://picsum.photos/id/1015/1000/600/",
+  //     thumbnail: "https://picsum.photos/id/1015/250/150/",
+  //   },
+  //   {
+  //     original: "https://picsum.photos/id/1019/1000/600/",
+  //     thumbnail: "https://picsum.photos/id/1019/250/150/",
+  //   },
+  // ];
+
   return (
     <Layout
       centerlogohide={true}
-      module={true}
+      module={false}
       sidebarItems={
         UserData && UserData?.userType === "Officer"
           ? EfilingSideBarItem
@@ -132,264 +206,286 @@ function FRDetail() {
       }
     >
       <ToastContainer />
-      <Header
+      {/* <Header
         dashboardLink={"/efiling/dashboard"}
         addLink1={"/efiling/dashboard/fresh-receipt"}
         title1={"Fresh Receipts"}
         addLink2={"/efiling/dashboard/addedit"}
         title2={"FR Detail"}
         width={"500px"}
-      />
+      /> */}
+
+      <EFilingModal
+        title={"Add Comments"}
+        isOpen={isModalOpen}
+        toggleModal={toggleModal}
+
+        // hendleSubmit={() => hendleAssiginFileCaseApi()}
+      >
+        <div class="row">
+          <div class="col">
+            <div class="mb-3">
+              <label class="form-label">Action</label>
+              <select
+                className="form-select"
+                id="CommentStatus"
+                name="CommentStatus"
+                onChange={(e) =>
+                  setModalInputValue((prevState) => ({
+                    ...prevState,
+                    CommentStatus: e.target.value,
+                  }))
+                }
+                value={modalInputValue.CommentStatus}
+                disabled={viewPage ? true : false}
+              >
+                <option value="" selected disabled hidden>
+                  Select
+                </option>
+                <option value={"Received"}>Received</option>
+                <option value={"Put Up"}>Put Up</option>
+                <option value={"Initiated"}>Initiated</option>
+                <option value={"Retype/Amend"}>Retype/Amend</option>
+                <option value={"Submit For Approval"}>
+                  Submit For Approval
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="mb-3">
+              <label class="form-label">Mark To</label>
+              <select
+                class="form-select"
+                id="assignedTo"
+                name="assignedTo"
+                onChange={(e) =>
+                  setModalInputValue((prevState) => ({
+                    ...prevState,
+                    assignedTo: e.target.value,
+                  }))
+                }
+                value={modalInputValue.assignedTo}
+              >
+                <option value={""} selected disabled hidden>
+                  Select
+                </option>
+                {employeeData &&
+                  employeeData?.map((item) => (
+                    <option
+                      value={item.id}
+                    >{`${item.designations?.designationName}`}</option>
+                  ))}
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="mb-3">
+              <label class="form-label">Add Comments</label>
+              <textarea
+                class="form-control"
+                id="comment"
+                name="comment"
+                onChange={(e) =>
+                  setModalInputValue((prevState) => ({
+                    ...prevState,
+                    comment: e.target.value,
+                  }))
+                }
+                value={modalInputValue.comment}
+              ></textarea>
+            </div>
+          </div>
+        </div>
+        {/* <MDBModalFooter>
+            <MDBBtn color="secondary" onClick={toggleModal}>
+              Close
+            </MDBBtn>
+            <MDBBtn
+              onClick={() => {
+                hendleAssiginFileCaseApi();
+                toggleModal();
+              }}
+            >
+              Submit
+            </MDBBtn>
+          </MDBModalFooter> */}
+        <Modal.Footer>
+          <Button
+            variant="primary"
+            onClick={() => {
+              hendleAssiginFileCaseApi();
+              toggleModal();
+            }}
+          >
+            Submit
+          </Button>
+          <Button variant="secondary" onClick={toggleModal}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </EFilingModal>
 
       <div className="custom-editor">
         <div className="row">
-          <div className="col-md-8" style={{ marginLeft: 10 }}>
-          <section>
-                    <iframe
-                      src={`http://172.16.170.8:5252${attachments[0]?.filename}`}
-                      style={{ width: "100%", height: "600px" }}
-                      frameborder="0"
-                    ></iframe>
-                  </section>
-          </div>
-          <div className="col-md-3" style={{ marginLeft: 40 }}>
-            <div className="custom-editor-main" style={{ marginTop: 0, maxHeight:"400px", overflowY:"scroll" }}>
-              <div className="comment-heading">
-                <h2>Comments</h2>
-                {/* <a onClick={toggleModal}>
-                    <button class="btn add-btn">
-                      <FontAwesomeIcon style={{ marginRight: "-5px" }} icon={faPlus} size="md" width={24} /> Add
-                    </button>
-                  </a> */}
-              </div>
-              {remarksData?.length > 0 ? (
-                remarksData.map((item) => (
-                  <>
-                    {item?.comment !== null ? (
-                      <div class="d-flex flex-row p-3 ps-0">
-                        <>
-                          {/* <img
-                            style={{
-                              marginBottom: "30px",
-                              marginRight: "15px",
-                            }}
-                            src={thumbnail}
-                            width="40"
-                            height="40"
-                            class="rounded-circle mr-3"
-                          /> */}
-                          <div class="w-100" style={{ position: "relative" }}>
-                            <div class="d-flex justify-content-between align-items-center">
-                              <div class="d-flex flex-row align-items-center">
-                                <div style={{ float: "left" }}>
-                                  <span class="mr-2" style={{fontSize:"14px"}}>{`${item?.submittedUser?.employee?.firstName}  ${item?.submittedUser?.employee?.lastName} / ${
-                                      item?.submittedUser?.employee
-                                        ?.designations?.designationNam
-                                    }`}</span>
-                                  {/* <small
-                                    style={{
-                                      marginLeft: "0px",
-                                      position: "absolute",
-                                      top: "-21px",
-                                    }}
-                                    class="c-badge"
-                                  >
-                                    {
-                                      item?.submittedUser?.employee
-                                        ?.designations?.designationNam
-                                    }
-                                  </small> */}
-                                </div>
-                              </div>
-                              <div style={{ float: "right" }}>
-                                <small>
-                                  {moment(item?.createdAt).format("DD/MM/YYYY")}
-                                </small>
-                                <small className="ms-2">
-                                  {moment(item?.createdAt).format("hh:mm A")}
-                                </small>
-                              </div>
-                            </div>
-                            <p class="text-justify comment-text mb-0" style={{fontSize:"20px"}}>
-                              {item?.comment}
-                            </p>
-                            <small
-                              style={{
-                                marginBottom: "20px",
-                                width: "125px",
-                                background:
-                                  item?.CommentStatus === "Approved"
-                                    ? "green"
-                                    : item?.CommentStatus === "Rejected"
-                                      ? "red"
-                                      : "grey",
-                              }}
-                              class="c-badge"
-                            >
-                              {item?.CommentStatus}
-                            </small>
-                          </div>
-                        </>
-                      </div>
-                    ) : (
-                      <div
-                        class="alert alert-danger mt-5"
-                        role="alert"
-                        style={{
-                          width: "350px",
-                          margin: "0 auto",
-                          textAlign: "center",
-                        }}
-                      >
-                        No data found
-                      </div>
-                    )}
-                  </>
-                ))
-              ) : (
-                <div
-                  class="alert alert-danger mt-5"
-                  role="alert"
-                  style={{
-                    width: "350px",
-                    margin: "0 auto",
-                    textAlign: "center",
-                  }}
-                >
-                  No data found
-                </div>
-              )}
-            </div>
-
-            <form onSubmit={formik.handleSubmit}>
-              <div>
-                <div class="row mt-3">
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Action</label>
-                      <select
-                        class="form-select"
-                        id="CommentStatus"
-                        name="CommentStatus"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.CommentStatus}
-                        disabled={viewPage ? true : false}
-                      >
-                        <option value="" selected disabled hidden>
-                          Select
-                        </option>
-                        <option value={"Initiated"}>Initiated</option>
-                        <option value={"Submit For Approval"}>
-                          Submit For Approval
-                        </option>
-                        <option value={"Retype/Amend"}>Retype/Amend</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Mark To</label>
-                      <select
-                        class="form-select"
-                        id="assignedTo"
-                        name="assignedTo"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.assignedTo}
-                        disabled={viewPage ? true : false}
-                      >
-                        <option value={""} selected disabled hidden>
-                          Select
-                        </option>
-                        {employeeData &&
-                          employeeData?.map((item) => (
-                            <option
-                              value={item.id}
-                            >{`${item.designations?.designationName}`}</option>
-                          ))}
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Add Comment</label>
-                      <textarea
-                        class="form-control"
-                        id="comment"
-                        name="comment"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.comment}
-                        disabled={viewPage ? true : false}
-                      ></textarea>
-                    </div>
-                  </div>
-                </div>
-                {!viewPage && (
-                  <div class="row mb-4">
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                      <button
-                        class="btn btn-primary"
-                        type="submit"
-                        disabled={viewPage ? true : false}
-                      >
-                        Submit
-                      </button>
-                    </div>
+          <div className="col-md-9">
+            <section>
+              <ImageGallery
+                style={{ maxHeight: "calc(100vh 0px)" }}
+                items={images}
+                showThumbnails={false}
+                showFullscreenButton={false}
+                showPlayButton={false}
+                slideOnThumbnailOver
+                renderThumbInner={(item) => (
+                  <div className="image-gallery-thumbnail-inner">
+                    <img
+                      src={item.thumbnail}
+                      alt={"file"}
+                      width={92}
+                      height={80}
+                    />
+                    {/* Add any additional elements or styles for the thumbnail */}
                   </div>
                 )}
+              />
+            </section>
+          </div>
 
-                {/* <div className="row">
-                  <div className="col-4">
-                    <label className="form-label" style={{ display: "block" }}>
-                      Attached Files
-                    </label>
-                    {attachments.length > 0 ? (
-                      attachments.map((item, index) => (
-                        <div className="MultiFile-label mt-3" key={index}>
-                          <span
-                            className="MultiFile-label"
-                            title={item?.filename
-                              ?.split("\\")
-                              .pop()
-                              .split("/")
-                              .pop()}
-                          >
-                            <span className="MultiFile-title">
-                              <a
-                                onClick={() => HandlePrint(item?.filename)}
-                                style={{ cursor: "pointer", color: "blue" }}
-                              >
-                                -{" "}
-                                {item?.filename
-                                  ?.split("\\")
-                                  .pop()
-                                  .split("/")
-                                  .pop()}
-                              </a>
-                            </span>
-                          </span>
-                        </div>
-                      ))
-                    ) : (
-                      <div
-                        className="alert alert-danger mt-1"
-                        role="alert"
-                        style={{
-                          width: "350px",
-                          textAlign: "center",
-                        }}
-                      >
-                        No Attachments found
-                      </div>
-                    )}
-                  </div>
-                </div> */}
+          <div className="col-md-3" style={{ paddingRight: 0 }}>
+            <div
+              className="custom-editor-main"
+              style={{ marginTop: 0, borderLeft: "1px solid #ddd" }}
+            >
+              <div className="comment-heading">
+                <h2
+                  class="ps-3"
+                  style={{ fontWeight: "bold", paddingTop: "7px" }}
+                >
+                  Comments
+                </h2>
+                <a onClick={toggleModal}>
+                  <button class="btn add-btn">
+                    <FontAwesomeIcon
+                      style={{ marginRight: "-5px" }}
+                      icon={faPlus}
+                      size="md"
+                      width={24}
+                    />{" "}
+                    Add your comment
+                  </button>
+                </a>
               </div>
-            </form>
+
+              <div style={{ maxHeight: "712px", overflowY: "scroll" }}>
+                {remarksData?.length > 0 ? (
+                  remarksData.map((item) => (
+                    <>
+                      {item?.comment !== null ? (
+                        <div
+                          class="d-flex flex-row p-3 ps-3"
+                          style={{ borderBottom: "1px solid #ddd" }}
+                        >
+                          <>
+                            {/* <img
+                              style={{
+                                marginBottom: "30px",
+                                marginRight: "15px",
+                              }}
+                              src={thumbnail}
+                              width="40"
+                              height="40"
+                              class="rounded-circle mr-3"
+                            /> */}
+                            <div class="w-100" style={{ position: "relative" }}>
+                              <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex flex-row align-items-center">
+                                  <div style={{ float: "left" }}>
+                                    <span
+                                      class="mr-2"
+                                      style={{ fontSize: "14px" }}
+                                    >{`${item?.submittedUser?.employee?.firstName}  ${item?.submittedUser?.employee?.lastName}/ ${item?.submittedUser?.employee?.designations?.designationNam}`}</span>
+                                    {/* <small
+                                      style={{
+                                        marginLeft: "0px",
+                                        position: "absolute",
+                                        top: "-21px",
+                                      }}
+                                      class="c-badge"
+                                    >
+                                      {
+                                        item?.submittedUser?.employee
+                                          ?.designations?.designationNam
+                                      }
+                                    </small> */}
+                                  </div>
+                                </div>
+                                <div style={{ float: "right" }}>
+                                  <small>
+                                    {moment(item?.createdAt).format(
+                                      "DD/MM/YYYY"
+                                    )}
+                                  </small>
+                                  <small className="ms-2">
+                                    {moment(item?.createdAt).format("hh:mm A")}
+                                  </small>
+                                </div>
+                              </div>
+                              <p
+                                class="text-justify comment-text mb-0"
+                                style={{ fontSize: "18px" }}
+                              >
+                                {item?.comment}
+                              </p>
+                              {/* <small
+                                style={{
+                                  marginBottom: "20px",
+                                  background:
+                                    item?.CommentStatus === "Approved"
+                                      ? "green"
+                                      : item?.CommentStatus === "Rejected"
+                                        ? "red"
+                                        : "grey",
+                                }}
+                                class="c-badge"
+                              >
+                                {item?.CommentStatus}
+                              </small> */}
+                            </div>
+                          </>
+                        </div>
+                      ) : (
+                        <div
+                          class="alert alert-danger mt-5"
+                          role="alert"
+                          style={{
+                            width: "350px",
+                            margin: "0 auto",
+                            textAlign: "center",
+                          }}
+                        >
+                          No data found
+                        </div>
+                      )}
+                    </>
+                  ))
+                ) : (
+                  <div
+                    class="alert alert-danger mt-5"
+                    role="alert"
+                    style={{
+                      width: "350px",
+                      margin: "0 auto",
+                      textAlign: "center",
+                    }}
+                  >
+                    No data found
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </div>

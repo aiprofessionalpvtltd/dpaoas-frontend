@@ -51,7 +51,7 @@ function AddEditCaseForm() {
   }
 
   return (
-    <Layout centerlogohide={true}>
+    <Layout centerlogohide={true} module={false}>
       <div className="dashboard-content" style={{ marginTop: 80 }}>
         <Header
           dashboardLink={"/efiling/dashboard"}

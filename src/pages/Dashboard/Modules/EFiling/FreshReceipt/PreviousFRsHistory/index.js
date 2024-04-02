@@ -40,7 +40,6 @@ function PreviousFRsHistory() {
             referenceNumber: item?.referenceNumber,
             frDate: moment(item?.frDate).format("DD/MM/YYYY"),
             DiaryDate: item?.freshReceiptDiaries ? moment(item?.freshReceiptDiaries?.diaryDate).format("DD/MM/YYYY") : "---",
-            staus:item?.status
         }));
     };
 
@@ -62,8 +61,7 @@ function PreviousFRsHistory() {
     }, [currentPage])
 
     return (
-        <Layout module={true} sidebarItems={UserData && UserData?.userType === "Officer" ? EfilingSideBarItem : EfilingSideBarBranchItem}>
-            <Header dashboardLink={"/efiling/dashboard"} addLink1={"/efiling/dashboard/fresh-receipt"} title1={"Fresh Receipts"} title2={"FRs History"} addLink2={"/efiling/dashboard/file-register-list/files-list/cases-history"} width={"500px"} />
+        <Layout module={false} sidebarItems={UserData && UserData?.userType === "Officer" ? EfilingSideBarItem : EfilingSideBarBranchItem}>
 
             <div class="row">
                 <div class="col-12">

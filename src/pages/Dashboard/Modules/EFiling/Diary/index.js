@@ -66,13 +66,13 @@ export const Diary = () => {
   }, [currentPage]);
 
   return (
-    <Layout module={true} centerlogohide={true} sidebarItems={userData && userData?.userType === "Officer" ? EfilingSideBarItem : EfilingSideBarBranchItem}>
-      <Header
+    <Layout module={false} centerlogohide={true} sidebarItems={userData && userData?.userType === "Officer" ? EfilingSideBarItem : EfilingSideBarBranchItem}>
+      {/* <Header
         dashboardLink={"/efiling/dashboard"}
         addLink1={"/efiling/dashboard/diary"}
         title1={"Diary"}
         width={"500px"}
-      />
+      /> */}
 
       <div class="card">
         <div class="card-body">

@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt, faPlus } from "@fortawesome/free-solid-svg-icons";
 import thumbnail from "./../../../../../assets/profile-img.jpg";
 import DatePicker from "react-datepicker";
+import ImageGallery from "react-image-gallery";
 import {
   MDBBtn,
   MDBModal,
@@ -15,6 +16,7 @@ import {
   MDBModalBody,
   MDBModalFooter,
 } from "mdb-react-ui-kit";
+// import Modal from "react-modal";
 import { TinyEditor } from "../../../../../components/CustomComponents/Editor/TinyEditor";
 import NewCaseEfilling from "../AddEditFileForm";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -43,37 +45,34 @@ import {
   getHLEmployee,
 } from "../../../../../api/APIs/Services/organizational.service";
 import { getBranches } from "../../../../../api/APIs/Services/Branches.services";
+import {
+  EfilingSideBarBranchItem,
+  EfilingSideBarItem,
+} from "../../../../../utils/sideBarItems";
+import { Button, Modal } from "react-bootstrap";
 
 const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
   return (
-    <MDBModal open={isOpen} setopen={toggleModal} tabIndex="-1">
-      <MDBModalDialog centered>
-        <MDBModalContent>
-          <MDBModalHeader>
-            <MDBModalTitle>{title}</MDBModalTitle>
-            <MDBBtn
-              className="btn-close"
-              color="none"
-              onClick={toggleModal}
-            ></MDBBtn>
-          </MDBModalHeader>
-          <MDBModalBody className="justify-content-center align-items-center">
-            {children}
-          </MDBModalBody>
-        </MDBModalContent>
-      </MDBModalDialog>
-    </MDBModal>
+    <Modal show={isOpen} onHide={toggleModal} centered>
+      <Modal.Header closeButton>
+        <Modal.Title>{title}</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>{children}</Modal.Body>
+    </Modal>
   );
 };
 
 function FileDetail() {
   const location = useLocation();
   const fileInputRef = useRef(null);
+  const UserData = getUserData();
 
   console.log(
     "location?.state?.fileIdlocation?.state?.fileIdlocation?.state?.fileIdlocation?.state?.fileId",
     location?.state?.fileId
   );
+
+  console.log("location?.state", location?.state);
 
   const [notingData, setNotingData] = useState({
     description: "",
@@ -101,7 +100,6 @@ function FileDetail() {
 
   const [employeeData, setEmployeeData] = useState([]);
   console.log("employeeDataemployeeDataemployeeData", employeeData);
-  const UserData = getUserData();
   const [filesData, setFilesData] = useState(null);
   const [viewPage, setViewPage] = useState(location?.state?.view);
 
@@ -115,7 +113,7 @@ function FileDetail() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [togleOpan, setTogleOpan] = useState(true);
-  const [selectedTab, setSelectedTab] = useState("Noting");
+  const [selectedTab, setSelectedTab] = useState("FR Noting");
 
   const [remarksData, setRemarksData] = useState([]);
   const [frAttachments, setFrAttachments] = useState([]);
@@ -154,6 +152,8 @@ function FileDetail() {
       name: "2015",
     },
   ];
+
+  console.log("File ID", location.state.fileId, fileIdINRegister);
 
   const clearInput = () => {
     if (fileInputRef.current) {
@@ -283,7 +283,9 @@ function FileDetail() {
 
     try {
       const response = await UpdateFIleCase(
-        location?.state?.fileId ? location?.state?.fileId : fileIdINRegister,
+        location?.state?.fileId
+          ? location?.state?.fileId
+          : fileIdINRegister && fileIdINRegister,
         location?.state?.id,
         formData
       );
@@ -382,24 +384,24 @@ function FileDetail() {
   useEffect(() => {
     // Update form values when termsById changes
     if (filesData) {
-      const noting = filesData?.sections.filter(
+      const noting = filesData?.sections?.filter(
         (item) => item.sectionType === "Note"
       );
-      const correspondance = filesData?.sections.filter(
+      const correspondance = filesData?.sections?.filter(
         (item) => item.sectionType === "Correspondence"
       );
-      const letter = filesData?.sections.filter(
+      const letter = filesData?.sections?.filter(
         (item) => item.sectionType === "Letter"
       );
-      const Objection = filesData?.sections.filter(
+      const Objection = filesData?.sections?.filter(
         (item) => item.sectionType === "Objection"
       );
-      const Sanction = filesData?.sections.filter(
+      const Sanction = filesData?.sections?.filter(
         (item) => item.sectionType === "Sanction"
       );
       const frAttachments =
         filesData?.freshReceipts?.freshReceiptsAttachments?.length > 0 &&
-        filesData?.freshReceipts?.freshReceiptsAttachments[0];
+        filesData?.freshReceipts?.freshReceiptsAttachments;
       setFrAttachments(frAttachments);
 
       setNotingStore(noting);
@@ -499,26 +501,42 @@ function FileDetail() {
     }
   };
 
-  const HandlePrint = async (urlimage) => {
-    const url = `http://172.16.170.8:5252${urlimage}`;
-    window.open(url, "_blank");
-  };
+  const images =
+    (frAttachments &&
+      frAttachments?.map((item) => ({
+        original: `http://172.16.170.8:5252${item?.filename}`,
+        thumbnail: `http://172.16.170.8:5252${item?.filename}`,
+      }))) ||
+    [];
+
+  // const HandlePrint = async (urlimage) => {
+  //   const url = `http://172.16.170.8:5252${urlimage}`;
+  //   window.open(url, "_blank");
+  // };
 
   return (
-    <Layout centerlogohide={true}>
-      <div className="dashboard-content" style={{ marginTop: 80 }}>
+    <Layout
+      centerlogohide={true}
+      module={false}
+      sidebarItems={
+        UserData && UserData?.userType === "Officer"
+          ? EfilingSideBarItem
+          : EfilingSideBarBranchItem
+      }
+    >
+      <div className="dashboard-content">
         <ToastContainer />
-        <Header
+        {/* <Header
           dashboardLink={"/efiling/dashboard"}
           addLink1={"/efiling/dashboard/file-register-list/files-list/cases"}
           title1={"File Cases"}
           addLink2={"/efiling/dashboard/addedit"}
           title2={location && viewPage ? "File Detail" : "Edit File"}
           width={"500px"}
-        />
+        /> */}
 
         <EFilingModal
-          title={"Add Comments"}
+          title="Add Comments"
           isOpen={isModalOpen}
           toggleModal={toggleModal}
           // hendleSubmit={() => hendleAssiginFileCaseApi()}
@@ -603,24 +621,26 @@ function FileDetail() {
               </div>
             </div>
           </div>
-          <MDBModalFooter>
-            <MDBBtn color="secondary" onClick={toggleModal}>
-              Close
-            </MDBBtn>
-            <MDBBtn
+
+          <Modal.Footer>
+            <Button
+              variant="primary"
               onClick={() => {
                 hendleAssiginFileCaseApi();
                 toggleModal();
               }}
             >
               Submit
-            </MDBBtn>
-          </MDBModalFooter>
+            </Button>
+            <Button variant="secondary" onClick={toggleModal}>
+              Close
+            </Button>
+          </Modal.Footer>
         </EFilingModal>
 
         <div className="custom-editor">
           <div className="row">
-            <div className="col-md-2">
+            {/* <div className="col-md-2">
               <div className="noting">
                 {directorData?.length > 0 ? (
                   directorData.map((item) => (
@@ -651,16 +671,175 @@ function FileDetail() {
                   </div>
                 )}
               </div>
-            </div>
-            <div className="col-md-7">
+            </div> */}
+            <div className="col-md-9">
               <form onSubmit={formik.handleSubmit}>
                 <div>
+                  <div class="content">
+                    <div class="row">
+                      <div className="col">
+                        <div className="mb-3">
+                          <label className="form-label">File</label>
+                          <input
+                            className="form-control"
+                            id="fileNumber"
+                            name="fileNumber"
+                            disabled={true}
+                            value={formik.values.fileNumber}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="col">
+                        <div className="mb-3">
+                          <label htmlFor="fileSubject" className="form-label">
+                            Subject
+                          </label>
+                          <input
+                            className="form-control"
+                            id="fileSubject"
+                            name="fileSubject"
+                            disabled={true}
+                            value={formik.values.fileSubject}
+                          />
+                        </div>
+                      </div>
+                      <div className="col">
+                        <div className="mb-3">
+                          <label className="form-label">Year</label>
+                          <input
+                            className="form-control"
+                            id="year"
+                            name="year"
+                            value={formik.values.year}
+                            disabled={true}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="row"></div>
+                  </div>
+                  {/* <div className="row">
+                    {documentTypeVal === "Internal" ? (
+                      <>
+                        <div class="col-6">
+                          <div class="mb-3">
+                            <label class="form-label">Branch</label>
+                            <select
+                              class="form-select"
+                              id="fkBranchId"
+                              name="fkBranchId"
+                              disabled={true}
+                              onChange={formik.handleChange}
+                              onBlur={formik.handleBlur}
+                              value={formik.values.fkBranchId}
+                            >
+                              <option value={""} selected disabled hidden>
+                                Select
+                              </option>
+                              {branchesData &&
+                                branchesData?.map((item) => (
+                                  <option value={item.id}>
+                                    {item.branchName}
+                                  </option>
+                                ))}
+                            </select>
+                          </div>
+                        </div>
+                      </>
+                    ) : documentTypeVal === "External" ? (
+                      <>
+                        <div class="col-6">
+                          <div class="mb-3">
+                            <label class="form-label">Ministries</label>
+                            <select
+                              disabled={true}
+                              class="form-select"
+                              id="fkMinistryId"
+                              name="fkMinistryId"
+                              onChange={formik.handleChange}
+                              onBlur={formik.handleBlur}
+                              value={formik.values.fkMinistryId}
+                            >
+                              <option value={""} selected disabled hidden>
+                                Select
+                              </option>
+                              {ministryData &&
+                                ministryData.map((item) => (
+                                  <option value={item.id}>
+                                    {item.ministryName}
+                                  </option>
+                                ))}
+                            </select>
+                          </div>
+                        </div>
+                        <div className="col-6">
+                          <div
+                            className="mb-3"
+                            style={{ position: "relative" }}
+                          >
+                            <label className="form-label">Received On</label>
+                            <span
+                              style={{
+                                position: "absolute",
+                                right: "15px",
+                                top: "36px",
+                                zIndex: 1,
+                                fontSize: "20px",
+                                color: "#666",
+                              }}
+                            >
+                              <FontAwesomeIcon icon={faCalendarAlt} />
+                            </span>
+                            <DatePicker
+                              disabled={true}
+                              selected={formik.values.receivedOn}
+                              onChange={(date) =>
+                                formik.setFieldValue("receivedOn", date)
+                              }
+                              onBlur={formik.handleBlur}
+                              // minDate={new Date()}
+                              className={`form-control`}
+                            />
+                          </div>
+                        </div>
+                      </>
+                    ) : null}
+                  </div> */}
+
                   <div class="shadow" style={{ padding: "25px" }}>
                     <ul
                       className="nav nav-tabs mb-3 mt-3"
                       id="ex1"
                       role="tablist"
                     >
+                      <li
+                        className="nav-item"
+                        role="presentation"
+                        onClick={() => {
+                          clearInput();
+                          setSelectedTab("FR Noting");
+                        }}
+                      >
+                        <button
+                          type="button"
+                          className={
+                            selectedTab === "FR Noting"
+                              ? "nav-link active"
+                              : "nav-link"
+                          }
+                          style={{ width: "170px" }}
+                          data-bs-toggle="tab"
+                          role="tab"
+                          aria-controls="ex1-tabs-1"
+                          disabled={frAttachments ? false : true}
+                          aria-selected={
+                            selectedTab === "FR Noting" ? "true" : "false"
+                          }
+                        >
+                          FR ({frAttachments.length})
+                        </button>
+                      </li>
                       <li
                         className="nav-item"
                         role="presentation"
@@ -692,33 +871,6 @@ function FileDetail() {
                         role="presentation"
                         onClick={() => {
                           clearInput();
-                          setSelectedTab("FR Noting");
-                        }}
-                      >
-                        <button
-                          type="button"
-                          className={
-                            selectedTab === "FR Noting"
-                              ? "nav-link active"
-                              : "nav-link"
-                          }
-                          style={{ width: "170px" }}
-                          data-bs-toggle="tab"
-                          role="tab"
-                          aria-controls="ex1-tabs-1"
-                          disabled={frAttachments ? false : true}
-                          aria-selected={
-                            selectedTab === "FR Noting" ? "true" : "false"
-                          }
-                        >
-                          FR
-                        </button>
-                      </li>
-                      <li
-                        className="nav-item"
-                        role="presentation"
-                        onClick={() => {
-                          clearInput();
                           setSelectedTab("Correspondence");
                         }}
                       >
@@ -729,7 +881,7 @@ function FileDetail() {
                               ? "nav-link active"
                               : "nav-link"
                           }
-                          style={{ width: "140px" }}
+                          style={{ width: "200px" }}
                           data-bs-toggle="tab"
                           role="tab"
                           aria-controls="ex1-tabs-2"
@@ -737,9 +889,10 @@ function FileDetail() {
                             selectedTab === "Correspondence" ? "true" : "false"
                           }
                         >
-                          Correspondence
+                          Correspondence ({correspondancestore && correspondancestore[0]?.caseAttachments?.length})
                         </button>
                       </li>
+                      {/*
                       <li
                         className="nav-item"
                         role="presentation"
@@ -817,11 +970,33 @@ function FileDetail() {
                         >
                           Letter
                         </button>
-                      </li>
+                      </li> */}
                     </ul>
 
                     <div class="tab-content" id="ex1-content">
-                      {selectedTab === "Noting" ? (
+                      {selectedTab === "FR Noting" ? (
+                        <section>
+                          <ImageGallery
+                            style={{ maxHeight: "calc(100vh 0px)" }}
+                            items={images}
+                            showThumbnails={false}
+                            showFullscreenButton={false}
+                            showPlayButton={false}
+                            slideOnThumbnailOver
+                            renderThumbInner={(item) => (
+                              <div className="image-gallery-thumbnail-inner">
+                                <img
+                                  src={item.thumbnail}
+                                  alt={"file"}
+                                  width={92}
+                                  height={80}
+                                />
+                                {/* Add any additional elements or styles for the thumbnail */}
+                              </div>
+                            )}
+                          />
+                        </section>
+                      ) : selectedTab === "Noting" ? (
                         // Render content for the 'Noting' tab
                         <section class="mb-5">
                           <label for="formFile" class="form-label mt-3">
@@ -841,14 +1016,6 @@ function FileDetail() {
                             multiLanguage={false}
                             // disabled={location.state?.view ? true : false}
                           />
-                        </section>
-                      ) : selectedTab === "FR Noting" ? (
-                        <section>
-                          <iframe
-                            src={`http://172.16.170.8:5252${frAttachments?.filename}`}
-                            style={{ width: "100%", height: "600px" }}
-                            frameborder="0"
-                          ></iframe>
                         </section>
                       ) : selectedTab === "Correspondence" ? (
                         <section>
@@ -954,497 +1121,8 @@ function FileDetail() {
                             </div>
                           </div>
                         </section>
-                      ) : selectedTab === "Sanction" ? (
-                        <section>
-                          <label for="formFile" class="form-label mt-3">
-                            Description
-                          </label>
-
-                          <TinyEditor
-                            disabled={viewPage ? true : false}
-                            initialContent={""}
-                            setEditorContent={(content) =>
-                              setSanction((prev) => ({
-                                ...prev,
-                                description: content,
-                              }))
-                            }
-                            editorContent={sanction.description}
-                            multiLanguage={false}
-                            // disabled={location.state?.view ? true : false}
-                          />
-                          <div class="row">
-                            <div class="col">
-                              <div class="mb-3 mt-5">
-                                <div class="form-group">
-                                  <div class="row">
-                                    <label
-                                      for="formFile"
-                                      class="form-label mt-3"
-                                    >
-                                      Attach File
-                                    </label>
-                                    <div class="col-6">
-                                      <input
-                                        ref={fileInputRef}
-                                        className="form-control"
-                                        type="file"
-                                        accept=".pdf, .jpg, .jpeg, .png"
-                                        id="correspondance"
-                                        name="correspondance"
-                                        multiple
-                                        onChange={(event) =>
-                                          handleFileChangeSanction(event)
-                                        }
-                                        // disabled={location.state?.view ? true : false}
-                                      />
-
-                                      {filesData?.sections &&
-                                        sectionstore[0]?.caseAttachments.map(
-                                          (item) => (
-                                            <div class="MultiFile-label mt-3">
-                                              <a
-                                                href={`http://172.16.170.8:5252${item.fileName}`}
-                                              >
-                                                <i class="fas fa-download"></i>
-                                              </a>
-
-                                              <span
-                                                class="MultiFile-label"
-                                                title={item.fileName
-                                                  ?.split("\\")
-                                                  .pop()
-                                                  .split("/")
-                                                  .pop()}
-                                              >
-                                                <span class="MultiFile-title">
-                                                  <a
-                                                    href={`http://172.16.170.8:5252${item.fileName}`}
-                                                  >
-                                                    {item.fileName
-                                                      ?.split("\\")
-                                                      .pop()
-                                                      .split("/")
-                                                      .pop()}
-                                                  </a>
-                                                </span>
-                                              </span>
-                                            </div>
-                                          )
-                                        )}
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </section>
-                      ) : selectedTab === "Objection" ? (
-                        <section>
-                          <label for="formFile" class="form-label mt-3">
-                            Description
-                          </label>
-
-                          <TinyEditor
-                            disabled={viewPage ? true : false}
-                            initialContent={""}
-                            setEditorContent={(content) =>
-                              setObjection((prev) => ({
-                                ...prev,
-                                description: content,
-                              }))
-                            }
-                            editorContent={objection.description}
-                            multiLanguage={false}
-                            // disabled={location.state?.view ? true : false}
-                          />
-                          <div class="row">
-                            <div class="col">
-                              <div class="mb-3 mt-5">
-                                <div class="form-group">
-                                  <div class="row">
-                                    <label
-                                      for="formFile"
-                                      class="form-label mt-3"
-                                    >
-                                      Attach File
-                                    </label>
-                                    <div class="col-6">
-                                      <input
-                                        ref={fileInputRef}
-                                        className="form-control"
-                                        type="file"
-                                        accept=".pdf, .jpg, .jpeg, .png"
-                                        id="correspondance"
-                                        name="correspondance"
-                                        multiple
-                                        onChange={(event) =>
-                                          handleFileChangeObjection(event)
-                                        }
-                                        // disabled={location.state?.view ? true : false}
-                                      />
-
-                                      {filesData?.sections &&
-                                        objectionstore[0]?.caseAttachments.map(
-                                          (item) => (
-                                            <div class="MultiFile-label mt-3">
-                                              <a
-                                                href={`http://172.16.170.8:5252${item.fileName}`}
-                                              >
-                                                <i class="fas fa-download"></i>
-                                              </a>
-
-                                              <span
-                                                class="MultiFile-label"
-                                                title={item.fileName
-                                                  ?.split("\\")
-                                                  .pop()
-                                                  .split("/")
-                                                  .pop()}
-                                              >
-                                                <span class="MultiFile-title">
-                                                  <a
-                                                    href={`http://172.16.170.8:5252${item.fileName}`}
-                                                  >
-                                                    {item.fileName
-                                                      ?.split("\\")
-                                                      .pop()
-                                                      .split("/")
-                                                      .pop()}
-                                                  </a>
-                                                </span>
-                                              </span>
-                                            </div>
-                                          )
-                                        )}
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </section>
-                      ) : (
-                        <section>
-                          <label for="formFile" class="form-label mt-3">
-                            Description
-                          </label>
-
-                          <TinyEditor
-                            initialContent={""}
-                            setEditorContent={(content) =>
-                              setLetter((prev) => ({
-                                ...prev,
-                                description: content,
-                              }))
-                            }
-                            editorContent={letter.description}
-                            multiLanguage={false}
-                            disabled={location.state?.view ? true : false}
-                          />
-                          <div class="row">
-                            <div class="col">
-                              <div class="mb-3 mt-5">
-                                <div class="form-group">
-                                  <div class="row">
-                                    <label
-                                      for="formFile"
-                                      class="form-label mt-3"
-                                    >
-                                      Attach File
-                                    </label>
-                                    <div class="col-6">
-                                      <input
-                                        ref={fileInputRef}
-                                        className="form-control"
-                                        type="file"
-                                        accept=".pdf, .jpg, .jpeg, .png"
-                                        id="correspondance"
-                                        name="correspondance"
-                                        multiple
-                                        onChange={(event) =>
-                                          handleFileChangeLetter(event)
-                                        }
-                                        // disabled={location.state?.view ? true : false}
-                                      />
-
-                                      {filesData?.sections &&
-                                        letterstore[0]?.caseAttachments.map(
-                                          (item) => (
-                                            <div class="MultiFile-label mt-3">
-                                              <a
-                                                href={`http://172.16.170.8:5252${item.fileName}`}
-                                              >
-                                                <i class="fas fa-download"></i>
-                                              </a>
-
-                                              <span
-                                                class="MultiFile-label"
-                                                title={item.fileName
-                                                  ?.split("\\")
-                                                  .pop()
-                                                  .split("/")
-                                                  .pop()}
-                                              >
-                                                <span class="MultiFile-title">
-                                                  <a
-                                                    href={`http://172.16.170.8:5252${item.fileName}`}
-                                                  >
-                                                    {item.fileName
-                                                      ?.split("\\")
-                                                      .pop()
-                                                      .split("/")
-                                                      .pop()}
-                                                  </a>
-                                                </span>
-                                              </span>
-                                            </div>
-                                          )
-                                        )}
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </section>
-                      )}
+                      ) : null}
                     </div>
-                  </div>
-                  <div class="content mt-5">
-                    <div class="row">
-                      <div class="col-6">
-                        <div class="mb-3">
-                          <label class="form-label">File</label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            placeholder="fileNumber"
-                            disabled={true}
-                            id="fileNumber"
-                            name="fileNumber"
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            value={formik.values.fileNumber}
-                          />
-                          {/* <select class="form-select" disabled={viewPage ? true : false}
-                            id="fileNumber"
-                            name="fileNumber"
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            value={formik.values.fileNumber}>
-                            <option>8(14)/2022/IT</option>
-                            <option>8(15)/2022/IT</option>
-                          </select> */}
-                        </div>
-                      </div>
-
-                      <div class="col">
-                        <div class="mb-3">
-                          <label
-                            for="exampleFormControlInput1"
-                            class="form-label"
-                          >
-                            Subject
-                          </label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            placeholder="Subject"
-                            disabled={true}
-                            id="fileSubject"
-                            name="fileSubject"
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            value={formik.values.fileSubject}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      {/* <div class="col">
-                        <div class="mb-3">
-                          <div class="mb-3">
-                            <label class="form-label">Priority</label>
-                            <select
-                              class="form-select"
-                              disabled={viewPage ? true : false}
-                              id="priority"
-                              name="priority"
-                              onChange={formik.handleChange}
-                              onBlur={formik.handleBlur}
-                              value={formik.values.priority}
-                            >
-                              <option value={"Normal"}>Normal</option>
-                              <option value={"Immediate"}>Immediate</option>
-                            </select>
-                          </div>
-                        </div>
-                      </div> */}
-                      <div class="col-6">
-                        <div class="mb-3">
-                          <label class="form-label">Year</label>
-                          <select
-                            disabled={true}
-                            class="form-select"
-                            id="year"
-                            name="year"
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            value={formik.values.year}
-                          >
-                            <option value={""} selected disabled hidden>
-                              Select
-                            </option>
-                            {yaerData &&
-                              yaerData?.map((item) => (
-                                <option value={item.name}>{item.name}</option>
-                              ))}
-                          </select>
-                        </div>
-                      </div>
-                      {/* 
-                      <div class="col-6">
-                        <div class="mb-3">
-                          <label
-                            for="exampleFormControlInput1"
-                            class="form-label"
-                          >
-                            File Type
-                          </label>
-                          <select
-                            class="form-select"
-                            disabled={viewPage ? true : false}
-                            id="fileType"
-                            name="fileType"
-                            onChange={handleDocumentType}
-                            onBlur={formik.handleBlur}
-                            value={documentTypeVal}
-                          >
-                            <option value={""} selected disabled hidden>
-                              Select
-                            </option>
-
-                            <option value={"Urgent"}>Urgent</option>
-                            <option value={"Routine"}>Routine</option>
-                            <option value={"Immediate"}>Immediate</option>
-                            <option value={"Priority"}>Immediate</option>
-                          </select>
-                        </div>
-                      </div> */}
-                    </div>
-                  </div>
-                  <div className="row">
-                    {documentTypeVal === "Internal" ? (
-                      <>
-                        <div class="col-6">
-                          <div class="mb-3">
-                            <label class="form-label">Branch</label>
-                            <select
-                              class="form-select"
-                              id="fkBranchId"
-                              name="fkBranchId"
-                              disabled={true}
-                              onChange={formik.handleChange}
-                              onBlur={formik.handleBlur}
-                              value={formik.values.fkBranchId}
-                            >
-                              <option value={""} selected disabled hidden>
-                                Select
-                              </option>
-                              {branchesData &&
-                                branchesData?.map((item) => (
-                                  <option value={item.id}>
-                                    {item.branchName}
-                                  </option>
-                                ))}
-                            </select>
-                          </div>
-                        </div>
-
-                        {/* <div class="col-6">
-                          <div class="mb-3">
-                            <label class="form-label">Department</label>
-                            <select
-                              class="form-select"
-                              id="fkdepartmentId"
-                              name="fkdepartmentId"
-                              onChange={formik.handleChange}
-                              disabled={viewPage ? true : false}
-                              onBlur={formik.handleBlur}
-                              value={formik.values.fkdepartmentId}
-                            >
-                              <option value={""} selected disabled hidden>
-                                Select
-                              </option>
-                              {departmentData &&
-                                departmentData?.map((item) => (
-                                  <option value={item.id}>
-                                    {item.departmentName}
-                                  </option>
-                                ))}
-                            </select>
-                          </div>
-                        </div> */}
-                      </>
-                    ) : documentTypeVal === "External" ? (
-                      <>
-                        <div class="col-6">
-                          <div class="mb-3">
-                            <label class="form-label">Ministries</label>
-                            <select
-                              disabled={true}
-                              class="form-select"
-                              id="fkMinistryId"
-                              name="fkMinistryId"
-                              onChange={formik.handleChange}
-                              onBlur={formik.handleBlur}
-                              value={formik.values.fkMinistryId}
-                            >
-                              <option value={""} selected disabled hidden>
-                                Select
-                              </option>
-                              {ministryData &&
-                                ministryData.map((item) => (
-                                  <option value={item.id}>
-                                    {item.ministryName}
-                                  </option>
-                                ))}
-                            </select>
-                          </div>
-                        </div>
-                        <div className="col-6">
-                          <div
-                            className="mb-3"
-                            style={{ position: "relative" }}
-                          >
-                            <label className="form-label">Received On</label>
-                            <span
-                              style={{
-                                position: "absolute",
-                                right: "15px",
-                                top: "36px",
-                                zIndex: 1,
-                                fontSize: "20px",
-                                color: "#666",
-                              }}
-                            >
-                              <FontAwesomeIcon icon={faCalendarAlt} />
-                            </span>
-                            <DatePicker
-                              disabled={true}
-                              selected={formik.values.receivedOn}
-                              onChange={(date) =>
-                                formik.setFieldValue("receivedOn", date)
-                              }
-                              onBlur={formik.handleBlur}
-                              // minDate={new Date()}
-                              className={`form-control`}
-                            />
-                          </div>
-                        </div>
-                      </>
-                    ) : null}
                   </div>
 
                   {/* <div class="row">
@@ -1578,12 +1256,12 @@ function FileDetail() {
                       </div>
                       </div> */}
 
-                  <div class="row mb-4">
+                  <div class="row mt-4">
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                       <button
                         class="btn btn-primary"
                         type="submit"
-                        disabled={viewPage ? true : false}
+                        disabled={viewPage ? true : location?.state?.approved ?  true : false}
                       >
                         Submit
                       </button>
@@ -1650,11 +1328,20 @@ function FileDetail() {
                 </div> */}
               </form>
             </div>
-            <div className="col-md-3">
-              <div className="custom-editor-main" style={{ marginTop: 0 }}>
+            <div className="col-md-3" style={{ paddingRight: 0 }}>
+              <div
+                className="custom-editor-main"
+                style={{ marginTop: 0, borderLeft: "1px solid #ddd" }}
+              >
                 <div className="comment-heading">
-                  <h2>Comments</h2>
-                  <a onClick={toggleModal}>
+                  <h2
+                    class="ps-3"
+                    style={{ fontWeight: "bold", paddingTop: "7px" }}
+                  >
+                    Comments
+                  </h2>
+                  {!location?.state.approved && (
+                    <a onClick={toggleModal}>
                     <button class="btn add-btn">
                       <FontAwesomeIcon
                         style={{ marginRight: "-5px" }}
@@ -1662,17 +1349,24 @@ function FileDetail() {
                         size="md"
                         width={24}
                       />{" "}
-                      Add
+                      Add your comment
                     </button>
                   </a>
+                  )}
+                  
                 </div>
-                {remarksData?.length > 0 ? (
-                  remarksData.map((item) => (
-                    <>
-                      {item?.comment !== null ? (
-                        <div class="d-flex flex-row p-3 ps-0">
-                          <>
-                            {/* <img
+
+                <div style={{ maxHeight: "712px", overflowY: "scroll" }}>
+                  {remarksData?.length > 0 ? (
+                    remarksData.map((item) => (
+                      <>
+                        {item?.comment !== null ? (
+                          <div
+                            class="d-flex flex-row p-3 ps-3"
+                            style={{ borderBottom: "1px solid #ddd" }}
+                          >
+                            <>
+                              {/* <img
                               style={{
                                 marginBottom: "30px",
                                 marginRight: "15px",
@@ -1682,15 +1376,18 @@ function FileDetail() {
                               height="40"
                               class="rounded-circle mr-3"
                             /> */}
-                            <div class="w-100" style={{ position: "relative" }}>
-                              <div class="d-flex justify-content-between align-items-center">
-                                <div class="d-flex flex-row align-items-center">
-                                  <div style={{ float: "left" }}>
-                                    <span
-                                      class="mr-2"
-                                      style={{ fontSize: "14px" }}
-                                    >{`${item?.submittedUser?.employee?.firstName}  ${item?.submittedUser?.employee?.lastName}/ ${item?.submittedUser?.employee?.designations?.designationNam}`}</span>
-                                    {/* <small
+                              <div
+                                class="w-100"
+                                style={{ position: "relative" }}
+                              >
+                                <div class="d-flex justify-content-between align-items-center">
+                                  <div class="d-flex flex-row align-items-center">
+                                    <div style={{ float: "left" }}>
+                                      <span
+                                        class="mr-2"
+                                        style={{ fontSize: "14px" }}
+                                      >{`${item?.submittedUser?.employee?.firstName}  ${item?.submittedUser?.employee?.lastName}/ ${item?.submittedUser?.employee?.designations?.designationName}`}</span>
+                                      {/* <small
                                       style={{
                                         marginLeft: "0px",
                                         position: "absolute",
@@ -1703,26 +1400,28 @@ function FileDetail() {
                                           ?.designations?.designationNam
                                       }
                                     </small> */}
+                                    </div>
+                                  </div>
+                                  <div style={{ float: "right" }}>
+                                    <small>
+                                      {moment(item?.createdAt).format(
+                                        "DD/MM/YYYY"
+                                      )}
+                                    </small>
+                                    <small className="ms-2">
+                                      {moment(item?.createdAt).format(
+                                        "hh:mm A"
+                                      )}
+                                    </small>
                                   </div>
                                 </div>
-                                <div style={{ float: "right" }}>
-                                  <small>
-                                    {moment(item?.createdAt).format(
-                                      "DD/MM/YYYY"
-                                    )}
-                                  </small>
-                                  <small className="ms-2">
-                                    {moment(item?.createdAt).format("hh:mm A")}
-                                  </small>
-                                </div>
-                              </div>
-                              <p
-                                class="text-justify comment-text mb-0"
-                                style={{ fontSize: "20px" }}
-                              >
-                                {item?.comment}
-                              </p>
-                              <small
+                                <p
+                                  class="text-justify comment-text mb-0"
+                                  style={{ fontSize: "18px" }}
+                                >
+                                  {item?.comment}
+                                </p>
+                                {/* <small
                                 style={{
                                   marginBottom: "20px",
                                   background:
@@ -1735,38 +1434,39 @@ function FileDetail() {
                                 class="c-badge"
                               >
                                 {item?.CommentStatus}
-                              </small>
-                            </div>
-                          </>
-                        </div>
-                      ) : (
-                        <div
-                          class="alert alert-danger mt-5"
-                          role="alert"
-                          style={{
-                            width: "350px",
-                            margin: "0 auto",
-                            textAlign: "center",
-                          }}
-                        >
-                          No data found
-                        </div>
-                      )}
-                    </>
-                  ))
-                ) : (
-                  <div
-                    class="alert alert-danger mt-5"
-                    role="alert"
-                    style={{
-                      width: "350px",
-                      margin: "0 auto",
-                      textAlign: "center",
-                    }}
-                  >
-                    No data found
-                  </div>
-                )}
+                              </small> */}
+                              </div>
+                            </>
+                          </div>
+                        ) : (
+                          <div
+                            class="alert alert-danger mt-5"
+                            role="alert"
+                            style={{
+                              width: "350px",
+                              margin: "0 auto",
+                              textAlign: "center",
+                            }}
+                          >
+                            No data found
+                          </div>
+                        )}
+                      </>
+                    ))
+                  ) : (
+                    <div
+                      class="alert alert-danger mt-5"
+                      role="alert"
+                      style={{
+                        width: "350px",
+                        margin: "0 auto",
+                        textAlign: "center",
+                      }}
+                    >
+                      No data found
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>

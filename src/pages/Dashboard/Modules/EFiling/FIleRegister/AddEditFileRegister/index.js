@@ -77,8 +77,8 @@ function AddEditFileRegister() {
 
 
   return (
-    <Layout sidebarItems={userData && userData?.userType === "Officer" ? EfilingSideBarItem : EfilingSideBarBranchItem} centerlogohide={true} module={true}>
-      <Header dashboardLink={"/efiling/dashboard"} addLink1={"/efiling/dashboard/file-register-list"} title1={"File Registers"} addLink2={"/"} title2={"Create File Register"} width={"500px"} />
+    <Layout sidebarItems={userData && userData?.userType === "Officer" ? EfilingSideBarItem : EfilingSideBarBranchItem} centerlogohide={true} module={false}>
+      {/* <Header dashboardLink={"/efiling/dashboard"} addLink1={"/efiling/dashboard/file-register-list"} title1={"File Registers"} addLink2={"/"} title2={"Create File Register"} width={"500px"} /> */}
       <ToastContainer />
       <div class="container-fluid">
         <div class="card">

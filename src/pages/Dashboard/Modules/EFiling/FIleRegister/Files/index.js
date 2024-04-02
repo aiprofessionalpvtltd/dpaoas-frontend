@@ -2,7 +2,10 @@ import React, { useCallback, useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router";
 import { Layout } from "../../../../../../components/Layout";
-import { EfilingSideBarBranchItem, EfilingSideBarItem } from "../../../../../../utils/sideBarItems";
+import {
+  EfilingSideBarBranchItem,
+  EfilingSideBarItem,
+} from "../../../../../../utils/sideBarItems";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import Header from "../../../../../../components/Header";
 import {
@@ -18,19 +21,18 @@ import {
 } from "../../../../../../utils/ToastAlert";
 import { useLocation } from "react-router-dom";
 import Select from "react-select";
-
 function ListFiles() {
   const navigate = useNavigate();
   const [registerData, setRegisterData] = useState([]);
   const userData = getUserData();
-  const location = useLocation();
-  const [currentPage, setCurrentPage] = useState(null);
-  const [count, setCount] = useState(1);
-  const pageSize = 5; // Set your desired page size
-  const registerId = getRegisterID();
+  const [currentPage, setCurrentPage] = useState(0);
+  const [count, setCount] = useState(null);
+  const pageSize = 5;
+
   const [fileData, setFileData] = useState([]);
   const [headings, setHeadings] = useState(null);
   const [registerDataid, setRegisterDataId] = useState(null);
+  const [headingNumber, setHeadingNumber] = useState(null);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -47,25 +49,20 @@ function ListFiles() {
       fileSubject: item?.fileSubject,
     }));
   };
-const [registerHistory, setRegisterHistory] = useState(null)
-
-const getRegisterRecordByRegisterId = async (id) => {
-  try {
-    const response = await registerRecordByRegisterId(id.value)
-    if (response.success) {
-      setRegisterHistory(response?.data);
-    }
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-  const getAllFilesAPi = async (id) => {
+  const [registerHistory, setRegisterHistory] = useState(null);
+  const getAllFilesAPi = async () => {
+    const searchParams = {
+      branchId: userData?.fkBranchId,
+      currentPage: currentPage,
+      pageSize: pageSize,
+      fileRegisterId: registerDataid,
+      mainHeadingNumber: headingNumber,
+    };
     try {
-      const response = await getFileByRegisterById(id.value, currentPage);
-      if (response.success) {
+      const response = await getFileByRegisterById(searchParams);
+      if (response?.success) {
+        setCount(response?.data?.count);
         if (response?.data?.files) {
-          setCount(response?.data?.count);
           const transformedData = transformFilesHeadingdata(
             response?.data?.files
           );
@@ -75,10 +72,10 @@ const getRegisterRecordByRegisterId = async (id) => {
         }
       }
     } catch (error) {
+      console.log(error);
       // showErrorMessage(error?.response?.data?.message);
     }
   };
-
   const transformFilesHeadings = (apiData) => {
     console.log(apiData);
     return apiData.map((item) => ({
@@ -88,29 +85,22 @@ const getRegisterRecordByRegisterId = async (id) => {
 
   const getAllFileHeadingApi = useCallback(async () => {
     try {
-      const response = await getAllFileHeading(userData?.fkBranchId,0, 1000);
+      const response = await getAllFileHeading(userData?.fkBranchId, 0, 1000);
       if (response.success) {
-        //   showSuccessMessage(response?.message)
-        setCount(response?.data?.count);
         const transformedData = transformFilesHeadings(
           response?.data?.mainHeadings
         );
-        setCurrentPage(transformedData[transformedData.length - 1].HeadingNumber);
+
         setHeadings(transformedData);
-        if (registerDataid) {
-          getAllFilesAPi(registerDataid);
-        }
       }
     } catch (error) {
-      // showErrorMessage(error?.response?.data?.message);
+      console.log(error);
     }
   }, [currentPage]);
 
   useEffect(() => {
-    if (registerDataid) {
-      getAllFilesAPi(registerDataid);
-    }
-  }, [currentPage, registerDataid]);
+    getAllFilesAPi();
+  }, [currentPage, pageSize, registerDataid, headingNumber]);
 
   useEffect(() => {
     getAllFileHeadingApi();
@@ -118,15 +108,12 @@ const getRegisterRecordByRegisterId = async (id) => {
 
   const getAllRegisterApi = async () => {
     try {
-      const response = await getAllFileRegister(
-        userData?.fkBranchId,
-        0,
-        100
-      );
+      const response = await getAllFileRegister(userData?.fkBranchId, 0, 100);
       if (response.success) {
         setRegisterData(response?.data?.fileRegisters);
       }
     } catch (error) {
+      console.log(error);
       // showErrorMessage(error?.response?.data?.message);
     }
   };
@@ -135,68 +122,16 @@ const getRegisterRecordByRegisterId = async (id) => {
     getAllRegisterApi();
   }, []);
 
-  //       const renderPagination = () => {
-  //         const uniqueHeadingNumbers = [...new Set(headings?.map(item => item.HeadingNumber))];
-  //         const totalPages = Math.ceil(fileData.length / pageSize);
-  //         return (
-  //           <nav aria-label="Page navigation">
-  //     <ul className="pagination float-end mt-2">
-  //         {/* <li className={`page-item ${currentPage === 0 ? "disabled" : ""}`}>
-  //             <button
-  //                 className="page-link"
-  //                 onClick={() => handlePageChange("prev")}
-  //                 disabled={currentPage === 0}
-  //             >
-  //                 Previous
-  //             </button>
-  //         </li> */}
-  //         {uniqueHeadingNumbers.map((headingNumber, index) => (
-  //             <li
-  //                 key={index}
-  //                 className={`page-item ${currentPage === headingNumber ? "active" : ""}`}
-  //             >
-  //                 <button
-  //                     className="page-link"
-  //                     onClick={() => handlePageChange(headingNumber)}
-  //                 >
-  //                     {headingNumber}
-  //                 </button>
-  //             </li>
-  //         ))}
-  //         {/* <li
-  //             className={`page-item ${
-  //                 currentPage >= totalPages - 1 ? "disabled" : ""
-  //             }`}
-  //         >
-  //             <button
-  //                 className="page-link"
-  //                 onClick={() => handlePageChange("next")}
-  //                 disabled={currentPage >= totalPages - 1}
-  //             >
-  //                 Next
-  //             </button>
-  //         </li> */}
-  //     </ul>
-  // </nav>
-
-  //         );
-  //       };
-console.log("registerData",registerData);
   return (
     <Layout
-      module={true}
+      module={false}
       centerlogohide={true}
-      sidebarItems={userData && userData?.userType === "Officer" ? EfilingSideBarItem : EfilingSideBarBranchItem}
+      sidebarItems={
+        userData && userData?.userType === "Officer"
+          ? EfilingSideBarItem
+          : EfilingSideBarBranchItem
+      }
     >
-      <Header
-        dashboardLink={"/efiling/dashboard"}
-        addLink1={"/efiling/dashboard/file-register-list"}
-        title1={"File Register"}
-        title2={"Register Index"}
-        addLink2={"/efiling/dashboard/file-register-list/files-list"}
-        width={"500px"}
-      />
-
       <div>
         <div style={{ float: "left" }}>
           <div className="col">
@@ -259,8 +194,15 @@ console.log("registerData",registerData);
             padding: 10,
           }}
         >
-          <div className="col-8" style={{display: "flex", flexDirection:"row",alignItems:"center"}}>
-          <div class="col-4">
+          <div
+            className="col-8"
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <div class="col-4">
               <label for="formFile" class="form-label">
                 Select Register
               </label>
@@ -273,22 +215,18 @@ console.log("registerData",registerData);
                   }))
                 }
                 onChange={(selectedOptions) => {
-                  setRegisterDataId(selectedOptions);
-                  getAllFilesAPi(selectedOptions);
-                  getRegisterRecordByRegisterId(selectedOptions)
+                  setRegisterDataId(selectedOptions?.value);
                 }}
-                // onBlur={formikAssigned.handleBlur}
-                // value={fkregisterId}
                 name="fkregisterId"
                 isClearable={true}
               />
-          </div>
-          <div class="col-4" style={{marginLeft:"20px"}}>
+            </div>
+            <div class="col-4" style={{ marginLeft: "20px" }}>
               <label class="form-label">Heading Number</label>
               <select
                 class="form-select"
                 placeholder={"Select Heading Number"}
-                onChange={(event) => setCurrentPage(event.target.value)}
+                onChange={(event) => setHeadingNumber(event.target.value)}
                 id="headings"
               >
                 <option selected disabled hidden>
@@ -301,7 +239,7 @@ console.log("registerData",registerData);
                     </option>
                   ))}
               </select>
-          </div>
+            </div>
           </div>
 
           <p style={{ textAlign: "right", marginRight: "10px" }}>
@@ -313,7 +251,6 @@ console.log("registerData",registerData);
       <div class="row">
         <div class="col-12">
           <CustomTable
-            // hidebtn1={true}
             ActionHide={false}
             hideBtn={false}
             addBtnText={"Create File"}
@@ -322,16 +259,19 @@ console.log("registerData",registerData);
             addBtnText2="Create File"
             headertitlebgColor={"#666"}
             headertitletextColor={"#FFF"}
+            currentPage={currentPage}
+            pageSize={pageSize}
+            handlePageChange={handlePageChange}
             handleAdd={() =>
               navigate(
                 "/efiling/dashboard/file-register-list/files-list/addedit-file"
               )
             }
+            totalCount={count}
             singleDataCard={true}
             hideDeleteIcon={true}
             showEditIcon={true}
             showView={true}
-            hidePagination={true}
             handleView={(item) =>
               navigate(
                 "/efiling/dashboard/file-register-list/files-list/cases",

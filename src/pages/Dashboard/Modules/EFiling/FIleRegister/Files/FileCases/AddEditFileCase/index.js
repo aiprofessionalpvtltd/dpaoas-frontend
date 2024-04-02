@@ -9,7 +9,10 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { AuthContext } from "../../../../../../../../api/AuthContext";
 import { Layout } from "../../../../../../../../components/Layout";
-import { EfilingSideBarBranchItem, EfilingSideBarItem } from "../../../../../../../../utils/sideBarItems";
+import {
+  EfilingSideBarBranchItem,
+  EfilingSideBarItem,
+} from "../../../../../../../../utils/sideBarItems";
 import Header from "../../../../../../../../components/Header";
 import { ToastContainer } from "react-toastify";
 import { useLocation } from "react-router";
@@ -36,14 +39,16 @@ import { useNavigate } from "react-router-dom";
 import { Editor } from "../../../../../../../../components/CustomComponents/Editor";
 import { TinyEditor } from "../../../../../../../../components/CustomComponents/Editor/TinyEditor";
 import { getUserData } from "../../../../../../../../api/Auth";
+import ImageGallery from "react-image-gallery";
 import Select from "react-select";
 
 function AddEditFileCase() {
   const navigate = useNavigate();
+  const userData = getUserData();
   const [headings, setHeadings] = useState([]);
   const location = useLocation();
   const { fileIdINRegister } = useContext(AuthContext);
-  const [selectedTab, setSelectedTab] = useState("Noting");
+  const [selectedTab, setSelectedTab] = useState(location.state?.frId ? "FR Noting" : "Noting");
   const [allFrs, setAllFrs] = useState([]);
   const [fkFreshReceiptId, setFkFreshReceiptId] = useState(null);
   const [fkfileId, setFKFileId] = useState(null);
@@ -132,12 +137,12 @@ function AddEditFileCase() {
 
   const hendleCreateFileCase = async () => {
     try {
-      if (fkFreshReceiptId) {
+      
         const formData = createFormData();
         const response = await createCase(
           fkfileId.value,
           UserData?.fkUserId,
-          fkFreshReceiptId?.value,
+       location.state?.frId ? location.state?.frId :null,
           formData
         );
         showSuccessMessage(response?.message);
@@ -146,9 +151,7 @@ function AddEditFileCase() {
             navigate("/efiling/dashboard/file-register-list/files-list/cases");
           }, 1000);
         }
-      } else {
-        showErrorMessage("Fresh receipt is mandatory");
-      }
+      
     } catch (error) {
       console.error("Error creating case:", error);
     }
@@ -176,6 +179,10 @@ function AddEditFileCase() {
 
   const createFormData = () => {
     const formData = new FormData();
+    // if(location.state?.frId){
+    //   formData.append("fkFreshReceiptId", location.state?.frId);
+    // }
+    
     formData.append("cases[0][Note][description]", notingData.description);
     formData.append(
       "cases[0][Correspondence][description]",
@@ -297,11 +304,7 @@ function AddEditFileCase() {
   const [registerData, setRegisterData] = useState([]);
   const getAllRegisterApi = async () => {
     try {
-      const response = await getAllFileRegister(
-        UserData?.fkBranchId,
-        0,
-        100
-      );
+      const response = await getAllFileRegister(UserData?.fkBranchId, 0, 100);
       if (response.success) {
         setRegisterData(response?.data?.fileRegisters);
       }
@@ -317,8 +320,14 @@ function AddEditFileCase() {
   const [fileData, setFileData] = useState([]);
   const [registerId, setRegisterId] = useState(null);
   const hendleRegisterSelect = async (headID) => {
+    const searchParams = {
+      userId: userData?.fkUserId,
+      currentPage: 0,
+      pageSize: 100,
+      mainHeadingNumber: headID,
+    };
     try {
-      const response = await getFileByRegisterById(registerId, headID);
+      const response = await getFileByRegisterById(searchParams);
       if (response.success) {
         if (response?.data?.files) {
           setFileData(response?.data?.files);
@@ -372,17 +381,26 @@ function AddEditFileCase() {
     }
   }, [headcount]);
 
+  const images = location?.state?.freshReceiptsAttachments?.map(item => ({
+    original: `http://172.16.170.8:5252${item?.filename}`,
+    thumbnail: `http://172.16.170.8:5252${item?.filename}`,
+  })) || [];
+
   useEffect(() => {
     getAllFileHeadingApi();
   }, []);
 
   return (
     <Layout
-      module={true}
+      module={false}
       centerlogohide={true}
-      sidebarItems={UserData && UserData?.userType === "Officer" ? EfilingSideBarItem : EfilingSideBarBranchItem}
+      sidebarItems={
+        UserData && UserData?.userType === "Officer"
+          ? EfilingSideBarItem
+          : EfilingSideBarBranchItem
+      }
     >
-      <Header
+      {/* <Header
         dashboardLink={"/efiling/dashboard"}
         addLink1={"/efiling/dashboard/file-register-list/files-list/cases"}
         title1={"File Cases"}
@@ -391,7 +409,7 @@ function AddEditFileCase() {
           "/efiling/dashboard/file-register-list/files-list/addedit-file"
         }
         width={"500px"}
-      />
+      /> */}
       <ToastContainer />
 
       <div class="card">
@@ -411,7 +429,7 @@ function AddEditFileCase() {
               justifyContent: "center",
             }}
           >
-            <div
+            {/* <div
               style={{
                 width: "30%", // Set width to 50%
               }}
@@ -436,7 +454,7 @@ function AddEditFileCase() {
                 name="fkFreshReceiptId"
                 // isClearable={true}
               />
-            </div>
+            </div> */}
             <div
               style={{
                 marginLeft: "20px",
@@ -521,6 +539,34 @@ function AddEditFileCase() {
               }}
             >
               <ul className="nav nav-tabs mb-3 mt-3" id="ex1" role="tablist">
+                {location?.state?.freshReceiptsAttachments?.length > 0 && (
+                  <li
+                    className="nav-item"
+                    role="presentation"
+                    onClick={() => {
+                      clearInput();
+                      setSelectedTab("FR Noting");
+                    }}
+                  >
+                    <button
+                      type="button"
+                      className={
+                        selectedTab === "FR Noting"
+                          ? "nav-link active"
+                          : "nav-link"
+                      }
+                      style={{ width: "170px" }}
+                      data-bs-toggle="tab"
+                      role="tab"
+                      aria-controls="ex1-tabs-1"
+                      aria-selected={
+                        selectedTab === "FR Noting" ? "true" : "false"
+                      }
+                    >
+                      FR ({location?.state?.freshReceiptsAttachments?.length})
+                    </button>
+                  </li>
+                )}
                 <li
                   className="nav-item"
                   role="presentation"
@@ -543,33 +589,7 @@ function AddEditFileCase() {
                     Noting
                   </button>
                 </li>
-                <li
-                  className="nav-item"
-                  role="presentation"
-                  onClick={() => {
-                    clearInput();
-                    setSelectedTab("FR Noting");
-                  }}
-                >
-                  <button
-                    type="button"
-                    className={
-                      selectedTab === "FR Noting"
-                        ? "nav-link active"
-                        : "nav-link"
-                    }
-                    style={{ width: "170px" }}
-                    data-bs-toggle="tab"
-                    role="tab"
-                    aria-controls="ex1-tabs-1"
-                    disabled={frAttectment ? false: true}
-                    aria-selected={
-                      selectedTab === "FR Noting" ? "true" : "false"
-                    }
-                  >
-                    FR
-                  </button>
-                </li>
+
                 <li
                   className="nav-item"
                   role="presentation"
@@ -596,7 +616,7 @@ function AddEditFileCase() {
                     Correspondence
                   </button>
                 </li>
-                <li
+                {/* <li
                   className="nav-item"
                   role="presentation"
                   onClick={() => {
@@ -669,7 +689,7 @@ function AddEditFileCase() {
                   >
                     Letter
                   </button>
-                </li>
+                </li> */}
               </ul>
             </div>
 
@@ -703,11 +723,19 @@ function AddEditFileCase() {
                   </section>
                 ) : selectedTab === "FR Noting" ? (
                   <section>
-                    <iframe
-                      src={`http://172.16.170.8:5252${frAttectment?.freshReceiptsAttachments[0]?.filename}`}
+                    {/* <iframe
+                      src={`http://172.16.170.8:5252${location?.state?.freshReceiptsAttachments[0]?.filename}`}
                       style={{ width: "700px", height: "400px" }}
                       frameborder="0"
-                    ></iframe>
+                    ></iframe> */}
+                    <section>
+            <ImageGallery style={{ maxHeight: 'calc(100vh 0px)' }} items={images} showThumbnails={false} showFullscreenButton={false} showPlayButton={false} slideOnThumbnailOver renderThumbInner={(item) => (
+    <div className="image-gallery-thumbnail-inner">
+      <img src={item.thumbnail} alt={"file"} width={92} height={80} />
+      {/* Add any additional elements or styles for the thumbnail */}
+    </div>
+  )} />
+                  </section>
                   </section>
                 ) : selectedTab === "Correspondence" ? (
                   <section>

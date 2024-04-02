@@ -235,17 +235,17 @@ const AddEditFR = () => {
   };
   return (
     <Layout
-      module={true}
+      module={false}
       sidebarItems={userData && userData?.userType === "Officer" ? EfilingSideBarItem : EfilingSideBarBranchItem}
       centerlogohide={true}
     >
-      <Header
+      {/* <Header
         dashboardLink={"/"}
         title1={"Fresh Receipts"}
         addLink1={"/efiling/dashboard/fresh-receipt"}
         title2={location.state?.id ? "Edit Fresh Receipt" : "Add Fresh Receipt"}
         addLink2={"/efiling/dashboard/fresh-receipt/addedit"}
-      />
+      /> */}
       <ToastContainer />
       <div className="container-fluid">
         <div className="card">
@@ -350,7 +350,7 @@ const AddEditFR = () => {
                     Ref No
                   </label>
                   <input
-                    type="text"
+                    type="number"
                     id="referenceNumber"
                     value={formik.values.referenceNumber}
                     onChange={formik.handleChange}

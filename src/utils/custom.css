@@ -3883,3 +3883,21 @@ button span {
   transform: scale(1.2) rotate(35deg) !important;
   cursor: pointer;
 }
+
+
+
+/* Image gallery FR */
+.image-gallery-slide.image-gallery-center {
+  height: 712px !important;
+  overflow: scroll !important;
+}
+
+.image-gallery-slide .image-gallery-image {
+  width: 940px !important;
+  height: auto !important;
+  object-fit: cover !important;
+}
+
+.image-gallery-content .image-gallery-slide .image-gallery-image {
+  max-height: 1200px !important;
+}
