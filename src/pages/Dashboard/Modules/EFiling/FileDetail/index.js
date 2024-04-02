@@ -1261,7 +1261,7 @@ function FileDetail() {
                       <button
                         class="btn btn-primary"
                         type="submit"
-                        disabled={viewPage ? true : false}
+                        disabled={viewPage ? true : location?.state?.approved ?  true : false}
                       >
                         Submit
                       </button>
@@ -1340,7 +1340,8 @@ function FileDetail() {
                   >
                     Comments
                   </h2>
-                  <a onClick={toggleModal}>
+                  {!location?.state.approved && (
+                    <a onClick={toggleModal}>
                     <button class="btn add-btn">
                       <FontAwesomeIcon
                         style={{ marginRight: "-5px" }}
@@ -1351,6 +1352,8 @@ function FileDetail() {
                       Add your comment
                     </button>
                   </a>
+                  )}
+                  
                 </div>
 
                 <div style={{ maxHeight: "712px", overflowY: "scroll" }}>

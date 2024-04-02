@@ -279,9 +279,10 @@ function ApprovedCasesHistory() {
             handleView={(item) =>
               navigate("/efiling/dashboard/fileDetail", {
                 state: {
-                  view: true,
+                  approved: true,
                   id: item?.caseId,
                   fileId: item?.internalId,
+
                 },
               })
             }
