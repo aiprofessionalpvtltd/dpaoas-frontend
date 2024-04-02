@@ -37,8 +37,8 @@ function ApprovedCasesHistory() {
     setCurrentPage(page);
   };
 
-  console.log("Register Data", registerData);
-  console.log("Approved", approvedCasesData);
+  // console.log("Register Data", registerData);
+  // console.log("Approved", approvedCasesData);
 
   //Transform Data
   const transformFilesHeadings = (apiData) => {
@@ -48,12 +48,15 @@ function ApprovedCasesHistory() {
   };
 
   const transformApprovedCases = (apiData) => {
+    console.log("API Response", apiData);
     return apiData.map((item, index) => ({
       caseId: item?.fkCaseId,
       internalId: item?.fileData?.id,
       FileNo: item?.fileData?.fileNumber,
+      Sender: item?.fileRemarksData?.submittedUser?.employee?.firstName,
+      Receiver: item?.fileRemarksData?.assignedUser?.employee?.firstName,
       markDate: moment(item?.fileData?.createdAt).format("DD/MM/YYYY"),
-      Status: item?.fileData?.fileStatus,
+      Status: item?.fileRemarksData?.CommentStatus,
 
       // Status: item?.fileData?.map((status) => status?.fileStatus),
     }));
