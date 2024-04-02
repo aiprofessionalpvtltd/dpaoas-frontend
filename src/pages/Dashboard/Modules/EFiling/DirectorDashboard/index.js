@@ -24,8 +24,8 @@ import moment from "moment";
 
 function DirectorDashboard() {
   const navigate = useNavigate();
-  const [selectedTab, setSelectedTab] = useState("FRsent");
-  const [selectedFileTab, setSelectedFIleTab] = useState("Filesent");
+  const [selectedTab, setSelectedTab] = useState("FRrecive");
+  const [selectedFileTab, setSelectedFIleTab] = useState("FileRecived");
   const [currentPage, setCurrentPage] = useState(0);
   const [togleTable, setTogleTable] = useState(false);
   const [fileTogleTable, setTogleFileTable] = useState(false);
@@ -52,7 +52,8 @@ function DirectorDashboard() {
 
   const transformFilesdata = (apiData, id) => {
     return apiData.map((item) => ({
-      internalId: item?.id,
+      caseId: item?.fkCaseId,
+      internalId: item?.file?.id,
       SNo: item?.id,
       ...(id === 1 && {
         Sender: `${item?.submittedUser?.employee?.firstName} ${item?.submittedUser?.employee?.lastName}`,
@@ -284,6 +285,29 @@ function DirectorDashboard() {
                 }}
               >
                 <ul className="nav nav-tabs mb-3 mt-3" id="ex1" role="tablist">
+                <li
+                    className="nav-item"
+                    role="presentation"
+                    onClick={() => setSelectedTab("FRrecive")}
+                  >
+                    <button
+                      type="button"
+                      className={
+                        selectedTab === "FRrecive"
+                          ? "nav-link active"
+                          : "nav-link"
+                      }
+                      style={{ width: "170px" }}
+                      data-bs-toggle="tab"
+                      role="tab"
+                      aria-controls="ex1-tabs-2"
+                      aria-selected={
+                        selectedTab === "FRrecive" ? "true" : "false"
+                      }
+                    >
+                      FR Received
+                    </button>
+                  </li>
                   <li
                     className="nav-item"
                     role="presentation"
@@ -307,29 +331,7 @@ function DirectorDashboard() {
                       FR sent
                     </button>
                   </li>
-                  <li
-                    className="nav-item"
-                    role="presentation"
-                    onClick={() => setSelectedTab("FRrecive")}
-                  >
-                    <button
-                      type="button"
-                      className={
-                        selectedTab === "FRrecive"
-                          ? "nav-link active"
-                          : "nav-link"
-                      }
-                      style={{ width: "170px" }}
-                      data-bs-toggle="tab"
-                      role="tab"
-                      aria-controls="ex1-tabs-2"
-                      aria-selected={
-                        selectedTab === "FRrecive" ? "true" : "false"
-                      }
-                    >
-                      FR Received
-                    </button>
-                  </li>
+                 
                 </ul>
               </div>
             </div>
@@ -340,7 +342,7 @@ function DirectorDashboard() {
                 <section class="mb-5">
                   <CustomTable
                     hidebtn1={true}
-                    ActionHide={true}
+                    // ActionHide={true}
                     hideBtn={true}
                     data={frsentData}
                     tableTitle="Sent FRs"
@@ -351,13 +353,17 @@ function DirectorDashboard() {
                     pageSize={pageSize}
                     totalCount={count}
                     singleDataCard={true}
+                    showAssigned={true}
+                    hideDeleteIcon={true}
+                    showEditIcon={true}
+                    hendleAssigned={(item) => navigate("/efiling/dashboard/fresh-receipt/frdetail", {state:{id:item.id, view: false}})}
                   />
                 </section>
               ) : (
                 <section class="mb-5">
                   <CustomTable
                     hidebtn1={true}
-                    ActionHide={true}
+                    // ActionHide={true}
                     hideBtn={true}
                     data={frrecivedData}
                     tableTitle="Received FRs"
@@ -368,6 +374,10 @@ function DirectorDashboard() {
                     pageSize={pageSize}
                     totalCount={frrecivedCount}
                     singleDataCard={true}
+                    showAssigned={true}
+                    hideDeleteIcon={true}
+                    showEditIcon={true}
+                   hendleAssigned={(item) => navigate("/efiling/dashboard/fresh-receipt/frdetail", {state:{id:item.id, view: false}})}
                   />
                 </section>
               )}
@@ -384,6 +394,29 @@ function DirectorDashboard() {
                 }}
               >
                 <ul className="nav nav-tabs mb-3 mt-3" id="ex1" role="tablist">
+                <li
+                    className="nav-item"
+                    role="presentation"
+                    onClick={() => setSelectedFIleTab("FileRecived")}
+                  >
+                    <button
+                      type="button"
+                      className={
+                        selectedFileTab === "FileRecived"
+                          ? "nav-link active"
+                          : "nav-link"
+                      }
+                      style={{ width: "170px" }}
+                      data-bs-toggle="tab"
+                      role="tab"
+                      aria-controls="ex1-tabs-2"
+                      aria-selected={
+                        selectedFileTab === "FileRecived" ? "true" : "false"
+                      }
+                    >
+                      File Received
+                    </button>
+                  </li>
                   <li
                     className="nav-item"
                     role="presentation"
@@ -407,29 +440,7 @@ function DirectorDashboard() {
                       File sent
                     </button>
                   </li>
-                  <li
-                    className="nav-item"
-                    role="presentation"
-                    onClick={() => setSelectedFIleTab("FileRecived")}
-                  >
-                    <button
-                      type="button"
-                      className={
-                        selectedFileTab === "FileRecived"
-                          ? "nav-link active"
-                          : "nav-link"
-                      }
-                      style={{ width: "170px" }}
-                      data-bs-toggle="tab"
-                      role="tab"
-                      aria-controls="ex1-tabs-2"
-                      aria-selected={
-                        selectedFileTab === "FileRecived" ? "true" : "false"
-                      }
-                    >
-                      File Received
-                    </button>
-                  </li>
+                 
                 </ul>
               </div>
             </div>
@@ -440,7 +451,7 @@ function DirectorDashboard() {
                 <section class="mb-5">
                   <CustomTable
                     hidebtn1={true}
-                    ActionHide={true}
+                    // ActionHide={true}
                     hideBtn={true}
                     data={fileSentData}
                     tableTitle="Sent Files"
@@ -451,13 +462,25 @@ function DirectorDashboard() {
                     pageSize={pageSize}
                     totalCount={fileSentCount}
                     singleDataCard={true}
+                    hideDeleteIcon={true}
+                    showEditIcon={true}
+                    showView={true}
+                    handleView={(item) =>
+                      navigate("/efiling/dashboard/fileDetail", {
+                        state: {
+                          view: true,
+                          id: item?.caseId,
+                          fileId: item?.internalId,
+                        },
+                      })
+                    }
                   />
                 </section>
               ) : (
                 <section class="mb-5">
                   <CustomTable
                     hidebtn1={true}
-                    ActionHide={true}
+                    // ActionHide={true}
                     hideBtn={true}
                     data={filerecivedData}
                     tableTitle="Received Files"
@@ -468,6 +491,18 @@ function DirectorDashboard() {
                     pageSize={pageSize}
                     totalCount={filerecivedCount}
                     singleDataCard={true}
+                    hideDeleteIcon={true}
+                    showEditIcon={true}
+                    showView={true}
+                    handleView={(item) =>
+                      navigate("/efiling/dashboard/fileDetail", {
+                        state: {
+                          view: true,
+                          id: item?.caseId,
+                          fileId: item?.internalId,
+                        },
+                      })
+                    }
                   />
                 </section>
               )}

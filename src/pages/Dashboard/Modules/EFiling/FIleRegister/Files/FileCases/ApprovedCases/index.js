@@ -15,6 +15,8 @@ import {
 import { useLocation, useNavigate } from "react-router-dom";
 import Select from "react-select";
 import moment from "moment";
+import { ToastContainer } from "react-toastify";
+import { showSuccessMessage } from "../../../../../../../../utils/ToastAlert";
 function ApprovedCasesHistory() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -77,6 +79,7 @@ function ApprovedCasesHistory() {
       console.log("Response", response);
       if (response?.success) {
         setCount(response?.data?.count);
+        showSuccessMessage(response?.message)
         const transformedData = transformApprovedCases(response?.data?.cases);
         setApprovedCasesData(transformedData);
       }
@@ -169,6 +172,7 @@ function ApprovedCasesHistory() {
           : EfilingSideBarBranchItem
       }
     >
+      <ToastContainer />
       <div className="container-fluid">
         <div className="row mb-5">
           <div class="col">
