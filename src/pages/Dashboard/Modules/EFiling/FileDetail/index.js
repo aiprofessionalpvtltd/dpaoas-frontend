@@ -25,6 +25,7 @@ import { getUserData } from "../../../../../api/Auth";
 import {
   DeleteFileCaseImage,
   DeleteFreahReceptImage,
+  DeleteNotificationById,
   UpdateEfiling,
   UpdateFIleCase,
   UploadEfilingAttechment,
@@ -480,7 +481,17 @@ function FileDetail() {
     }
   };
 
+  const deleteNotification = async (item) => {
+    try {
+      const response = await DeleteNotificationById(location.state?.notificationId, UserData?.fkUserId);
+      console.log("Notification deleted", response?.data);
+    } catch (error) {
+      console.log(error.response.data.message);
+    }
+  };
+
   useEffect(() => {
+    deleteNotification();
     getEmployeeData();
     getBranchesapi();
     getDepartmentData();

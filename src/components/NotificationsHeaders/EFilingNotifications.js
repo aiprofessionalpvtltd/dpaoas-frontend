@@ -23,12 +23,14 @@ export const EFilingNotifications = (notificationType) => {
         setCount(response?.data?.totalCount);
         // setNotificationData(response?.data?.frs);
         const filesNotifications = response?.data?.files.map((file) => ({
+          notificationId: file?.notificationId,
           fileId: file?.fileId,
           message: file?.message,
           date: file?.date,
           caseId: file?.caseId,
         }));
         const frsNotifications = response?.data?.frs.map((fr) => ({
+          notificationId: fr?.notificationId,
           frId: fr?.frId,
           message: fr?.message,
           date: fr?.date,
@@ -71,7 +73,7 @@ export const EFilingNotifications = (notificationType) => {
             {item?.frId ? (
               <Link
                 to={"/efiling/dashboard/fresh-receipt/frdetail"}
-                state={{ view: false, id: item.frId }}
+                state={{ view: false, id: item.frId, notificationId: item.notificationId }}
                 style={{ color: "black" }}
                 className="link"
               >
@@ -89,7 +91,7 @@ export const EFilingNotifications = (notificationType) => {
             ) : (
               <Link
                 to={"/efiling/dashboard/fileDetail"}
-                state={{ view: false, fileId: item?.fileId, id: item?.caseId }}
+                state={{ view: false, fileId: item?.fileId, id: item?.caseId, notificationId: item?.notificationId }}
                 style={{ color: "black" }}
                 className="link"
               >

@@ -10,6 +10,7 @@ import thumbnail from "./../../../../../../assets/profile-img.jpg";
 import ImageGallery from "react-image-gallery";
 import "react-image-gallery/styles/css/image-gallery.css";
 import {
+  DeleteNotificationById,
   assiginFR,
   assignFR,
   getFreshReceiptById,
@@ -130,7 +131,18 @@ function FRDetail() {
     }
   };
 
+  const deleteNotification = async (item) => {
+    try {
+      const response = await DeleteNotificationById(location.state?.notificationId, UserData?.fkUserId);
+      console.log("Notification deleted", response?.data);
+    } catch (error) {
+      console.log(error.response.data.message);
+    }
+  };
+
   useEffect(() => {
+    console.log("location.state?.notificationId)", location.state);
+    deleteNotification();
     if (receptId) {
       getFreashRecepitByIdApi();
       getEmployeeData();
