@@ -251,6 +251,9 @@ function FileDetail() {
     // formData.append("CommentStatus", values?.CommentStatus);
     // formData.append("comment", values?.comment);
 
+    console.log("alues?.isEditable", values?.isEditable);
+
+    formData.append("isEditable", values?.isEditable);
     formData.append("cases[0][Note][description]", notingData.description);
     formData.append(
       "cases[0][Correspondence][description]",
@@ -491,7 +494,9 @@ function FileDetail() {
   };
 
   useEffect(() => {
-    deleteNotification();
+    if(location.state?.notificationId) {
+      deleteNotification();
+    }
     getEmployeeData();
     getBranchesapi();
     getDepartmentData();
@@ -524,6 +529,11 @@ function FileDetail() {
   //   const url = `http://172.16.170.8:5252${urlimage}`;
   //   window.open(url, "_blank");
   // };
+
+  const handleSubmit = (isDraft) => {
+    formik.setFieldValue('isEditable', isDraft); // Set isEdit value based on button clicked
+    formik.submitForm(); // Trigger form submission
+  };
 
   return (
     <Layout
@@ -1016,7 +1026,7 @@ function FileDetail() {
 
                           <TinyEditor
                             initialContent={""}
-                            disabled={viewPage ? true : false}
+                            disabled={viewPage ? true : filesData?.isEditable ? true : false}
                             setEditorContent={(content) =>
                               setNotingData((prev) => ({
                                 ...prev,
@@ -1036,7 +1046,7 @@ function FileDetail() {
 
                           <TinyEditor
                             initialContent={""}
-                            disabled={viewPage ? true : false}
+                            disabled={viewPage ? true  : filesData?.isEditable ? filesData?.isEditable : false}
                             setEditorContent={(content) =>
                               setCorrespondenceData((prev) => ({
                                 ...prev,
@@ -1136,142 +1146,24 @@ function FileDetail() {
                     </div>
                   </div>
 
-                  {/* <div class="row">
-                  <div className="col">
-                  <div className="mb-3">
-                    <label htmlFor="diaryNumber" className="form-label">
-                      Diary No
-                    </label>
-                    <input
-                      className={`form-control ${
-                        formik.touched.diaryNumber && formik.errors.diaryNumber
-                          ? "is-invalid"
-                          : ""
-                      }`}
-                      type="text"
-                      id="diaryNumber"
-                      placeholder="Diary No"
-                      value={formik.values.diaryNumber}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                    />
-                    {formik.touched.diaryNumber &&
-                      formik.errors.diaryNumber && (
-                        <div className="invalid-feedback">
-                          {formik.errors.diaryNumber}
-                        </div>
-                      )}
-                  </div>
-                </div>
+                  <div class="row mt-4 d-md-flex justify-content-end float-end">
                     <div class="col">
-                      <div class="mb-3">
-                        <label class="form-label">Action</label>
-                        <select
-                          class="form-select"
-                          id="CommentStatus"
-                          name="CommentStatus"
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          value={formik.values.CommentStatus}
-                          disabled={viewPage ? true : false}
-                        >
-                          <option value="" selected disabled hidden>
-                            Select
-                          </option>
-                          <option value={"Approved"}>Approved</option>
-                          <option value={"Under Discussion"}>Under Discussion</option>
-                          <option value={"Retype/Amend"}>Retype/Amend</option>
-                          <option value={"Rejected"}>Rejected</option>
-                          <option value={"Submit For Approval"}>Submit For Approval</option>
-                          <option value={"Seen"}>Seen</option>
-                          <option value={"Pend"}>Pend</option>
-                          <option value={"NFA"}>NFA</option>
-                          <option value={"Approval For Para"}>Approval For Para</option>
-
-                        </select>
-                      </div>
-                    </div>
-                    <div class="col">
-                      <div class="mb-3">
-                        <label class="form-label">Mark To</label>
-                        <select
-                          class="form-select"
-                          id="assignedTo"
-                          name="assignedTo"
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          value={formik.values.assignedTo}
-                          disabled={viewPage ? true : false}
-                        >
-                          <option value={""} selected disabled hidden>
-                            Select
-                          </option>
-                          {employeeData &&
-                            employeeData?.map((item) => (
-                              <option
-                                value={item.id}
-                              >{`${item.designations?.designationName}`}</option>
-                            ))}
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col">
-                      <div class="mb-3">
-                        <label class="form-label">Add Comments</label>
-                        <textarea
-                          class="form-control"
-                          id="comment"
-                          name="comment"
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          value={formik.values.comment}
-                          disabled={viewPage ? true : false}
-                        ></textarea>
-                      </div>
-                    </div>
-                  </div> */}
-                  {/* <div class="row">
-                    <div class="col">
-                  {frAttachments &&
-                      frAttachments?.map((item) => (
-                        <div class="MultiFile-label mt-3">
-                          
-                          <span
-                            class="MultiFile-label"
-                            title={item?.filename
-                              ?.split("\\")
-                              .pop()
-                              .split("/")
-                              .pop()}
-                          >
-                          <label className="form-label" style={{ display: "block" }}>
-                            Attached Fresh Receipts
-                          </label>
-                            <span class="MultiFile-title">
-                              <a
-                                onClick={() => HandlePrint(item?.filename)}
-                                style={{ cursor: "pointer", color: 'blue' }}
-                              >
-                                - {item?.filename
-                                  ?.split("\\")
-                                  .pop()
-                                  .split("/")
-                                  .pop()}
-                              </a>
-                            </span>
-                          </span>
-                        </div>
-                      ))}
-                      </div>
-                      </div> */}
-
-                  <div class="row mt-4">
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                       <button
                         class="btn btn-primary"
                         type="submit"
+                        style={{ width: '150px' }}
+                        onClick={() => handleSubmit(false)} // False means editable
+                        disabled={viewPage ? true : location?.state?.approved ?  true : false}
+                      >
+                        Submit As Draft
+                      </button>
+                    </div>
+
+                    <div class="col">
+                      <button
+                        class="btn btn-primary"
+                        type="submit"
+                        onClick={() => handleSubmit(true)} // True means non-editable
                         disabled={viewPage ? true : location?.state?.approved ?  true : false}
                       >
                         Submit

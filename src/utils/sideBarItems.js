@@ -742,6 +742,11 @@ export const EfilingSideBarItem =  [
           icon: faReceipt,
           subItems: [
             {
+              itemName: "Create Fresh Receipt",
+              link: "/efiling/dashboard/fresh-receipt/addedit",
+              icon: faReceipt,
+            },
+            {
               itemName: "Fresh Receipts List",
               link: "/efiling/dashboard/fresh-receipt",
               icon: faReceipt,
