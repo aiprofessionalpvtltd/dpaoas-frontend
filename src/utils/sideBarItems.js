@@ -319,11 +319,11 @@ export const MMSSideBarItems = [
     link: "/mms/motion",
     icon: faClipboardList,
     subItems: [
-      // {
-      //   itemName: "Motion List",
-      //   link: "/mms/motion/list",
-      //   icon: faClipboardList,
-      // },
+      {
+        itemName: "Motion List",
+        link: "/mms/motion/list",
+        icon: faClipboardList,
+      },
       {
         itemName: "New Motion",
         link: "/mms/motion/new",
@@ -357,11 +357,6 @@ export const MMSSideBarItems = [
         link: "/mms/reports/motion-summary",
         icon: faClipboardList,
       },
-      {
-          itemName: "Motion List",
-          link: "/mms/motion/list",
-          icon: faClipboardList,
-        },
     ],
   },
 ];
