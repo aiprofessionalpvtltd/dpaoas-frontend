@@ -48,6 +48,7 @@ function MMSNewMotion() {
   const location = useLocation();
   const { ministryData, members, sessions } = useContext(AuthContext);
   const [motionStatusData, setMotionStatusData] = useState([]);
+  const [imageLinks, setImageLinks] = useState([]);
 
   const getCurrentTime = () => {
     const now = new Date();
@@ -78,6 +79,7 @@ function MMSNewMotion() {
       mover: location.state ? location.state.mover : [],
       ministry: location.state ? location.state.ministry : [],
       englishText: "",
+      file: [],
       // Add more fields as needed
     },
     validationSchema: validationSchema,
@@ -113,6 +115,11 @@ function MMSNewMotion() {
     formData.append("englishText", values.englishText);
     formData.append("urduText", "dkpad");
     formData.append("fkMotionStatus", values?.motionStatus);
+    if (values?.file) {
+      Array.from(values?.file).map((file, index) => {
+        formData.append(`file`, file);
+      });
+    }
     try {
       const response = await createNewMotion(formData);
       if (response?.success) {
@@ -164,6 +171,14 @@ function MMSNewMotion() {
       showErrorMessage(error?.response?.data?.message);
     }
   };
+
+  const handleFileChange = (event) => {
+    const selectedFiles = Array.from(event.currentTarget.files);
+    const links = selectedFiles.map((file) => URL.createObjectURL(file));
+    setImageLinks(links);
+    formik.setFieldValue("file", event.currentTarget.files);
+  };
+
   useEffect(() => {
     getMotionStatus();
   }, []);
@@ -198,9 +213,17 @@ function MMSNewMotion() {
                         value={formik.values.sessionNumber}
                         className={"form-select"}
                       >
-                        <option value={sessions[0]?.id} selected disabled>
-                          {sessions[0]?.sessionName}
-                        </option>
+                         <option  value={""}>
+                                Select
+                              </option>
+                       {sessions &&
+                            sessions.length > 0 &&
+                            sessions.map((item) => (
+                              <option value={item.id}>
+                                {item.sessionName}
+                              </option>
+                            ))}
+                       
                       </select>
                     </div>
                   </div>
@@ -282,12 +305,12 @@ function MMSNewMotion() {
                         }
                       >
                         <option>Select</option>
-                        <option>Not Applicable</option>
-                        <option>1st Week</option>
-                        <option>2nd Week</option>
-                        <option>3rd Week</option>
-                        <option>4th Week</option>
-                        <option>5th Week</option>
+                        <option value={"Not Applicable"}>Not Applicable</option>
+                        <option value={"1st Week"}>1st Week</option>
+                        <option value={"2nd Week"}>2nd Week</option>
+                        <option value={"3rd Week"}>3rd Week</option>
+                        <option value={"4th Week"}>4th Week</option>
+                        <option value={"5th Week"}>5th Week</option>
                       </select>
                       {formik.errors.motionWeek &&
                         formik.touched.motionWeek && (
@@ -307,7 +330,19 @@ function MMSNewMotion() {
                       <label className="form-label">
                         Notice Office Diary No
                       </label>
-                      <select
+                      <input
+                        type="text"
+                        value={formik.values.noticeOfficeDiaryNo}
+                        className={`form-control ${
+                          formik.touched.noticeOfficeDiaryNo && formik.errors.noticeOfficeDiaryNo
+                            ? "is-invalid"
+                            : ""
+                        }`}
+                        id="noticeOfficeDiaryNo"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      />
+                      {/* <select
                         className="form-select"
                         id="noticeOfficeDiaryNo"
                         name="noticeOfficeDiaryNo"
@@ -324,7 +359,7 @@ function MMSNewMotion() {
                         <option>select</option>
                         <option>2655</option>
                         <option>2556</option>
-                      </select>
+                      </select> */}
                       {formik.errors.noticeOfficeDiaryNo &&
                         formik.touched.noticeOfficeDiaryNo && (
                           <div className="invalid-feedback">
@@ -424,7 +459,7 @@ function MMSNewMotion() {
                             : "form-select"
                         }
                       >
-                        <option selected disabled hidden>
+                        <option value={""}>
                           Select
                         </option>
                         {motionStatusData &&
@@ -497,6 +532,50 @@ function MMSNewMotion() {
                     </div>
                   </div>
                 </div>
+                <div className="row">
+                <div class="col-3">
+                      <div class="mb-3">
+                        <label for="formFile" class="form-label">
+                          Attach Image File{" "}
+                        </label>
+                        <input
+                          className="form-control"
+                          type="file"
+                          accept=".pdf, .jpg, .jpeg, .png"
+                          id="formFile"
+                          name="attachment"
+                          multiple
+                          // onChange={(event) => {
+                          //   formik.setFieldValue(
+                          //     "file",
+                          //     event.currentTarget.files
+                          //   );
+                          // }}
+                          onChange={handleFileChange}
+                        />
+
+                        {imageLinks.length > 0 && (
+                          <div>
+                            <div className="col ">
+                              {imageLinks.map((link, index) => (
+                                <a
+                                  key={index}
+                                  href={link}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="mx-1"
+                                >
+                                  Image {index + 1}
+                                </a>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        
+                      </div>
+                    </div>
+                    </div>
 
                 <div style={{ marginTop: 10 }}>
                   <Editor

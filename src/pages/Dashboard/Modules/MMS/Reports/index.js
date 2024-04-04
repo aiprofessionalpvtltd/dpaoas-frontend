@@ -1,11 +1,84 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Layout } from "../../../../../components/Layout";
 import Header from "../../../../../components/Header";
 import { MMSSideBarItems } from "../../../../../utils/sideBarItems";
+import { useFormik } from "formik";
+import { AuthContext } from "../../../../../api/AuthContext";
+import { showSuccessMessage } from "../../../../../utils/ToastAlert";
+import { ToastContainer } from "react-toastify";
+import CustomTable from "../../../../../components/CustomComponents/CustomTable";
+import { allMotionSummary } from "../../../../../api/APIs/Services/Motion.service";
 
 function MMSMotionSummery() {
+  const { sessions } = useContext(AuthContext);
+  const [count, setCount] = useState(null);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [searchedData, setSearchData] = useState([])
+  const pageSize = 4;
+
+  
+
+  const formik = useFormik({
+    initialValues: {
+      fromsessionNumber: "",
+      tosessionNumber:"",
+      motionType: "",
+     
+    },
+    onSubmit: (values) => {
+      allMotionSummaryApi(values, currentPage);
+    },
+    enableReinitialize: true,
+  });
+
+  const handlePageChange = (page) => {
+    // Update currentPage when a page link is clicked
+    setCurrentPage(page);
+    if (
+      formik?.values?.fromsessionNumber ||
+      formik?.values?.tosessionNumber ||
+      formik?.values?.motionType 
+    ) {
+      allMotionSummaryApi(formik?.values, page);
+    }
+
+    allMotionSummaryApi(formik?.values, page);
+  };
+
+  const transformSummaryData = (apiData) => {
+    // Sort the array based on the condition (statusName === "totalCount" should come first)
+    apiData.sort((a, b) => {
+      if (a.statusName === "Total Motions") return -1; // "totalCount" comes before other status names
+      if (b.statusName === "Total Motions") return 1; // Other status names come after "totalCount"
+      return 0; // No change in order if statusName is not "totalCount"
+    });
+  
+    return apiData.map((item) => ({
+      statusName: item?.statusName,
+      statusCount: item?.statusCount,
+    }));
+  };
+
+  const allMotionSummaryApi = async (values, page) => {
+    const Data = {motionType : values?.motionType, fromSessionId: values?.fromsessionNumber, toSessionId: values?.tosessionNumber}
+    try {
+      const response = await allMotionSummary(Data, page, pageSize)
+      if (response?.success) {
+        showSuccessMessage(response.message);
+        setCount(response?.data?.totalPages)
+        const transformedData = transformSummaryData(response?.data?.motionStatusCounts)
+        setSearchData(transformedData)
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  
+
   return (
     <Layout module={true} sidebarItems={MMSSideBarItems} centerlogohide={true}>
+        <ToastContainer />
       <Header
         dashboardLink={"/"}
         addLink1={"/mms/reports/motion-summary"}
@@ -21,38 +94,72 @@ function MMSMotionSummery() {
           </div>
           <div class="card-body">
             <div class="container-fluid">
+            <form onSubmit={formik.handleSubmit}>
               <div class="row">
                 <div class="col">
                   <div class="mb-3">
                     <label class="form-label">From Session</label>
-                    <select class="form-select">
-                      <option>Select</option>
-                      <option>121</option>
-                      <option>122</option>
-                      <option>123</option>
+                    <select className={`form-select`}
+                          // placeholder="Session No"
+                          value={formik.values.fromsessionNumber}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          name="fromsessionNumber">
+                    
+                      <option value={""} selected disabled hidden>
+                            Select
+                          </option>
+
+                          {sessions &&
+                            sessions.length > 0 &&
+                            sessions.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item.sessionName}
+                              </option>
+                            ))}
                     </select>
                   </div>
                 </div>
                 <div class="col">
                   <div class="mb-3">
                     <label class="form-label">To Session</label>
-                    <select class="form-select">
-                      <option>Select</option>
-                      <option>121</option>
-                      <option>122</option>
-                      <option>123</option>
+                    <select className={`form-select`}
+                          // placeholder="Session No"
+                          value={formik.values.tosessionNumber}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          name="tosessionNumber">
+                    
+                      <option value={""} selected disabled hidden>
+                            Select
+                          </option>
+
+                          {sessions &&
+                            sessions.length > 0 &&
+                            sessions.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item.sessionName}
+                              </option>
+                            ))}
                     </select>
                   </div>
                 </div>
                 <div class="col">
                   <div class="mb-3">
                     <label class="form-label">Motion Type</label>
-                    <select class="form-select">
-                      <option>Adjournment Motion</option>
-                      <option>Call Attention Notice</option>
-                      <option>Privilege Motion</option>
-                      <option>Motion Under Rule 218</option>
-                      <option>Motion Under Rule 60</option>
+                    <select class="form-select"
+                     value={formik.values.motionType}
+                     onChange={formik.handleChange}
+                     onBlur={formik.handleBlur}
+                     name="motionType">
+                       <option value={""} selected disabled hidden>
+                            Select
+                          </option>
+                      <option value={"Adjournment Motion"}>Adjournment Motion</option>
+                      <option value={"Call Attention Notice"}>Call Attention Notice</option>
+                      <option value={"Privilege Motion"}>Privilege Motion</option>
+                      <option value={"Motion Under Rule 218"}>Motion Under Rule 218</option>
+                      <option value={"Motion Under Rule 60"}>Motion Under Rule 60</option>
                     </select>
                   </div>
                 </div>
@@ -64,94 +171,29 @@ function MMSMotionSummery() {
                   </button>
                 </div>
               </div>
-              <div class="dash-detail-container" style={{ marginTop: "20px" }}>
-                <table class="table red-bg-head th">
-                  <thead>
-                    <tr>
-                      <th class="text-left" scope="col">
-                        Summary Detail
-                      </th>
-                      <th class="text-left" scope="col">
-                        Total
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td class="text-left" style={{ paddingLeft: "23px" }}>
-                        Total Motions
-                      </td>
-                      <td class="text-left" style={{ paddingLeft: "23px" }}>
-                        39
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="text-left" style={{ paddingLeft: "23px" }}>
-                        Admissibility not Allowed by the House
-                      </td>
-                      <td class="text-left" style={{ paddingLeft: "23px" }}>
-                        2
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="text-left" style={{ paddingLeft: "23px" }}>
-                        Admitted but Lapsed
-                      </td>
-                      <td class="text-left" style={{ paddingLeft: "23px" }}>
-                        76
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="text-left" style={{ paddingLeft: "23px" }}>
-                        Approved
-                      </td>
-                      <td class="text-left" style={{ paddingLeft: "23px" }}>
-                        19
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="text-left" style={{ paddingLeft: "23px" }}>
-                        Disallowed
-                      </td>
-                      <td class="text-left" style={{ paddingLeft: "23px" }}>
-                        49
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="text-left" style={{ paddingLeft: "23px" }}>
-                        Held out of Order
-                      </td>
-                      <td class="text-left" style={{ paddingLeft: "23px" }}>
-                        127
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="text-left" style={{ paddingLeft: "23px" }}>
-                        Lapsed
-                      </td>
-                      <td class="text-left" style={{ paddingLeft: "23px" }}>
-                        11
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="text-left" style={{ paddingLeft: "23px" }}>
-                        Referred to Standing Committee
-                      </td>
-                      <td class="text-left" style={{ paddingLeft: "23px" }}>
-                        37
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="text-left" style={{ paddingLeft: "23px" }}>
-                        Under Process
-                      </td>
-                      <td class="text-left" style={{ paddingLeft: "23px" }}>
-                        5
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+              </form>
+
+
+              <div class="" style={{ marginTop: "20px" }}>
+                  <CustomTable
+                    // block={true}
+                    hideBtn={true}
+                    hidebtn1={true}
+                    data={searchedData}
+                    tableTitle="Motion Summary"
+                    // handlePageChange={handlePageChange}
+                    handlePageChange={handlePageChange}
+                    currentPage={currentPage}
+                    showPrint={false}
+                    ActionHide={true}
+                    headertitlebgColor={"#666"}
+                    headertitletextColor={"#FFF"}
+                    hideDeleteIcon={true}
+                    pageSize={pageSize}
+                    // handleDelete={(item) => handleDelete(item?.QID)}
+                    totalCount={count}
+                  />
+                </div>
             </div>
           </div>
         </div>
