@@ -159,3 +159,40 @@ export const createNewMotion = async (data) => {
       throw error;
     }
   };
+
+    export const allMotionSummary = async (searchParams, currentPage, pageSize) => {
+      try {
+        // const token = getAuthToken();
+    
+        // Filter out empty values
+        const filteredSearchParams = Object.fromEntries(
+          Object.entries(searchParams).filter(([_, value]) => value !== "")
+        );
+    
+        const response = await axiosClientMMS.get(
+          `/motion/summary?currentPage=${currentPage}&pageSize=${pageSize}`,
+          {
+            params: filteredSearchParams,
+            // headers: {
+            //   Authorization: `Bearer ${token}`,
+            // },
+          }
+        );
+        return response?.data;
+      } catch (error) {
+        console.error("Error fetching API endpoint:", error);
+        throw error;
+      }
+    };
+
+    //Create Motion List 
+    export const createNewMotionList = async (data) => {
+      try {
+        // const token = getAuthToken();
+        const response = await axiosClientMMS.post(`/motion/motion-lists`, data)
+        return response?.data;
+      } catch (error) {
+        console.error("Error fetching API endpoint:", error);
+        throw error;
+      }
+    };
