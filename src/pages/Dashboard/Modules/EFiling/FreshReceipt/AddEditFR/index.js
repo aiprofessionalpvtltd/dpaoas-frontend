@@ -25,9 +25,9 @@ import Select from "react-select";
 import { getUserData } from "../../../../../../api/Auth";
 
 const validationSchema = Yup.object().shape({
-  diaryNumber: Yup.string().required("Diary No is required"),
-  diaryDate: Yup.date().required("Diary Date is required"),
-  diaryTime: Yup.string().required("Diary Time is required"),
+  // diaryNumber: Yup.string().required("Diary No is required"),
+  // diaryDate: Yup.date().required("Diary Date is required"),
+  // diaryTime: Yup.string().required("Diary Time is required"),
   frType: Yup.string().required("FR Type is required"),
   frSubject: Yup.string().required("Subject is required"),
   referenceNumber: Yup.string().required("Ref No is required"),
@@ -44,9 +44,9 @@ const AddEditFR = () => {
   const userData = getUserData()
   const formik = useFormik({
     initialValues: {
-      diaryNumber: "",
-      diaryDate: "",
-      diaryTime: "",
+      // diaryNumber: "",
+      // diaryDate: "",
+      // diaryTime: "",
       frType: "",
       fkBranchId: "",
       fkMinistryId: "",
@@ -73,9 +73,9 @@ const AddEditFR = () => {
   const handleCreateFreshReceipt = async (values) => {
     const formdata = new FormData();
     formdata.append("diaryType", "Incoming");
-    formdata.append("diaryNumber", values?.diaryNumber);
-    formdata.append("diaryDate", values?.diaryDate);
-    formdata.append("diaryTime", values?.diaryTime);
+    // formdata.append("diaryNumber", values?.diaryNumber);
+    // formdata.append("diaryDate", values?.diaryDate);
+    // formdata.append("diaryTime", values?.diaryTime);
     formdata.append("frType", values?.frType);
     formdata.append("fkUserBranchId", userData?.fkBranchId);
     if (values?.fkBranchId) {
@@ -114,9 +114,9 @@ const AddEditFR = () => {
   const UpdateFreshReceiptApi = async (values) => {
     const formdata = new FormData();
     formdata.append("diaryType", "Incoming");
-    formdata.append("diaryNumber", values?.diaryNumber);
-    formdata.append("diaryDate", values?.diaryDate);
-    formdata.append("diaryTime", values?.diaryTime);
+    // formdata.append("diaryNumber", values?.diaryNumber);
+    // formdata.append("diaryDate", values?.diaryDate);
+    // formdata.append("diaryTime", values?.diaryTime);
     formdata.append("frType", values?.frType);
     if (values?.fkBranchId) {
       formdata.append("fkBranchId", values?.fkBranchId?.value);
@@ -199,23 +199,23 @@ const AddEditFR = () => {
               label: receiptData?.branches?.branchName,
             }
           : "",
-        diaryNumber: receiptData
-          ? receiptData?.freshReceiptDiaries?.diaryNumber
-          : "",
+        // diaryNumber: receiptData
+        //   ? receiptData?.freshReceiptDiaries?.diaryNumber
+        //   : "",
         fkMinistryId: receiptData?.ministries
           ? {
               value: receiptData?.ministries?.id,
               label: receiptData?.ministries?.ministryName,
             }
           : "",
-        diaryDate:
-          receiptData && receiptData?.freshReceiptDiaries
-            ? new Date(receiptData?.freshReceiptDiaries?.diaryDate)
-            : "",
-        diaryTime:
-          receiptData && receiptData?.freshReceiptDiaries
-            ? receiptData?.freshReceiptDiaries?.diaryTime
-            : "",
+        // diaryDate:
+        //   receiptData && receiptData?.freshReceiptDiaries
+        //     ? new Date(receiptData?.freshReceiptDiaries?.diaryDate)
+        //     : "",
+        // diaryTime:
+        //   receiptData && receiptData?.freshReceiptDiaries
+        //     ? receiptData?.freshReceiptDiaries?.diaryTime
+        //     : "",
         shortDescription: receiptData ? receiptData?.shortDescription : "",
         referenceNumber: receiptData ? receiptData?.referenceNumber : "",
         frDate:
@@ -256,7 +256,7 @@ const AddEditFR = () => {
           <div className="card-body">
             <form onSubmit={formik.handleSubmit}>
               <div className="row">
-                <div className="col-3">
+                {/* <div className="col-3">
                   <div className="mb-3">
                     <label htmlFor="diaryNumber" className="form-label">
                       Diary No
@@ -280,8 +280,8 @@ const AddEditFR = () => {
                         </div>
                       )}
                   </div>
-                </div>
-
+                </div> */}
+{/* 
                 <div class="col-3">
                   <div class="mb-3" style={{ position: "relative" }}>
                     <label class="form-label">Diary Date</label>
@@ -344,33 +344,8 @@ const AddEditFR = () => {
                       </div>
                     )}
                   </div>
-                </div>
-                <div className="col-3">
-                  <label htmlFor="referenceNumber" className="form-label">
-                    Ref No
-                  </label>
-                  <input
-                    type="number"
-                    id="referenceNumber"
-                    value={formik.values.referenceNumber}
-                    onChange={formik.handleChange}
-                    className={`form-control ${
-                      formik.touched.referenceNumber &&
-                      formik.errors.referenceNumber
-                        ? "is-invalid"
-                        : ""
-                    }`}
-                  />
-                  {formik.touched.referenceNumber &&
-                    formik.errors.referenceNumber && (
-                      <div className="invalid-feedback">
-                        {formik.errors.referenceNumber}
-                      </div>
-                    )}
-                </div>
-              </div>
+                </div> */}
 
-              <div className="row">
                 <div className="col-6">
                   <div className="mb-3">
                     <label htmlFor="frSubject" className="form-label">
@@ -396,7 +371,6 @@ const AddEditFR = () => {
                   </div>
                 </div>
 
-                
                 <div className=" mb-3 col-3">
                   <label htmlFor="frType" className="form-label">
                     FR Type
@@ -471,8 +445,8 @@ const AddEditFR = () => {
                 )}
               </div>
 
-              <div className="row">
-                <div className="col-3">
+              <div className="row">  
+              <div className="col-3">
                   <div className="mb-3">
                     <label htmlFor="freshReceipt" className="form-label">
                       Attachment
@@ -531,6 +505,42 @@ const AddEditFR = () => {
                       ))}
                   </div>
                 </div>
+
+                <div className="col-3">
+                  <label className="form-label">Short description</label>
+                  <input
+                    type="text"
+                    id="shortDescription"
+                    value={formik.values.shortDescription}
+                    onChange={formik.handleChange}
+                    className="form-control"
+                  />
+                </div>
+                      
+                <div className="col-3">
+                  <label htmlFor="referenceNumber" className="form-label">
+                    Ref No
+                  </label>
+                  <input
+                    type="number"
+                    id="referenceNumber"
+                    value={formik.values.referenceNumber}
+                    onChange={formik.handleChange}
+                    className={`form-control ${
+                      formik.touched.referenceNumber &&
+                      formik.errors.referenceNumber
+                        ? "is-invalid"
+                        : ""
+                    }`}
+                  />
+                  {formik.touched.referenceNumber &&
+                    formik.errors.referenceNumber && (
+                      <div className="invalid-feedback">
+                        {formik.errors.referenceNumber}
+                      </div>
+                    )}
+                </div>
+
                 <div class="col-3">
                   <div class="mb-3" style={{ position: "relative" }}>
                     <label class="form-label">FR Date</label>
@@ -566,16 +576,6 @@ const AddEditFR = () => {
                       </div>
                     )}
                   </div>
-                </div>
-                <div className="col-3">
-                  <label className="form-label">Short description</label>
-                  <input
-                    type="text"
-                    id="shortDescription"
-                    value={formik.values.shortDescription}
-                    onChange={formik.handleChange}
-                    className="form-control"
-                  />
                 </div>
               </div>
 

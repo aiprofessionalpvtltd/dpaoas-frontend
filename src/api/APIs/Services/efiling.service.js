@@ -803,6 +803,25 @@ export const getEfilingNotifications = async (userId) => {
   }
 };
 
+export const DeleteNotificationById = async (notificationId, userId) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClientMMS.delete(
+      `/filesDashboard/makeNotificationDecrease/${notificationId}/${userId}`,
+    );
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
 //FR History
 export const getFRHistory = async (branchId, currentPage, pageSize) => {
   try {

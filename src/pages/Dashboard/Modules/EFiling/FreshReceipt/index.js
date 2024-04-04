@@ -46,7 +46,6 @@ function FileReceipt() {
           frSubject:item?.frSubject,
           referenceNumber: item?.referenceNumber,
           frDate: moment(item?.frDate).format("DD/MM/YYYY"),
-          DiaryDate: item?.freshReceiptDiaries ? moment(item?.freshReceiptDiaries?.diaryDate).format("DD/MM/YYYY") : "---",
           internalAttachment: item?.freshReceiptsAttachments
         }));
       };
@@ -121,7 +120,7 @@ function FileReceipt() {
             <div class="row">
                 <div class="col-12">
                     <CustomTable
-                        hidebtn1={UserData && UserData?.userType === "Officer" ? true : false}
+                        hidebtn1={false}
                         hideBtn={true}
                         addBtnText={"Create Fresh Receipt"}
                         data={fileData}
