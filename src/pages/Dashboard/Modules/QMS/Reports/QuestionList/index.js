@@ -6,15 +6,15 @@ import { useNavigate } from "react-router-dom";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import { useFormik } from "formik";
 import DatePicker from "react-datepicker";
-
 import * as Yup from "yup";
-import { getAllQuestion, getAllQuestionByID } from "../../../../../../api/APIs/Services/Question.service";
+import { delleteQuestionsList, getAllQuesListBySession, getAllQuestion, getAllQuestionByID, getGeneratedQuesList, printQuestionsFromList, saveQuestionList } from "../../../../../../api/APIs/Services/Question.service";
 import { ToastContainer } from "react-toastify";
 import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
 import { AuthContext } from "../../../../../../api/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
+import { getUserData } from "../../../../../../api/Auth";
 const validationSchema = Yup.object({
   sessionNumber: Yup.string(),
   category: Yup.string(),
@@ -27,9 +27,13 @@ const validationSchema = Yup.object({
 
 function QMSReportQuestionList() {
   const { sessions } = useContext(AuthContext);
+  const userData = getUserData();
+  const [generatedData, setGeneratedData] = useState([]);
   const [resData, setResData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
+  const [sessionId, setSessionId] = useState(null);
+  const [include, setInclude] = useState(false);
   const pageSize = 10; // Set your desired page size
 
   const handlePageChange = (page) => {
@@ -38,18 +42,16 @@ function QMSReportQuestionList() {
   };
   const formik = useFormik({
     initialValues: {
-      sessionNumber: "",
       category: "",
       groupNo: "",
       startListNo: "",
       listName: "",
       houseLayDate: "",
-      include: "",
     },
-    validationSchema: validationSchema,
+    // validationSchema: validationSchema,
     onSubmit: (values) => {
-      // Handle form submission here
       console.log(values);
+      generateQuestionsList(values);
     },
   });
   const navigate = useNavigate();
@@ -73,32 +75,48 @@ function QMSReportQuestionList() {
       Catagory: "AI Professionals Pvt Limited",
       "Start Number": "21-11-2023",
     },
-  ];
+  ];  
 
   const transformLeavesData = (apiData) => {
     return apiData.map((res, index) => {
-      return {
+      const rowData = {
         SrNo: index,
-        QID: res.id,
-        QDN: res.fkQuestionDiaryId,
-        NoticeDate: moment(res?.noticeOfficeDiary?.noticeOfficeDiaryDate).format("YYYY/MM/DD"),
-        NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
-        SessionNumber: res?.session?.sessionName,
-        SubjectMatter: [res?.englishText, res?.urduText].filter(Boolean).join(", "),
-        Category: res.questionCategory,
-        // SubmittedBy: res.category,
-        Status: res.questionStatus?.questionStatus,
+        id: res?.id, // Show id as the second column
+        questionCategory: res?.questionCategory,
+        houseLayDate: res?.houseLayDate,
+        listName: res?.listName,
+        defferedQuestions: res?.defferedQuestions ? "true" : "false",
+        questionListStatus: res.questionListStatus ? res?.questionListStatus : "active",
       };
+    
+      // Remove id key from rowData if it's null or undefined
+      if (rowData.id == null) {
+        delete rowData.id;
+      }
+    
+      return rowData;
     });
   };
-  const getAllQuestionsApi = async () => {
+
+  const generateQuestionsList = async (values) => {
+    const Data = {
+      fkUserId: userData?.fkUserId,
+      fkSessionId: sessionId,
+      questionCategory: values?.category || "",
+      fkGroupId: values?.groupNo || "",
+      startListNo: values?.startListNo || "",
+      listName: values?.listName || "",
+      houseLayDate: moment(values?.houseLayDate).format("YYYY-MM-DD") || "",
+      defferedQuestions: include,
+    }
+
     try {
-      const response = await getAllQuestion(currentPage, pageSize);
+      const response = await getGeneratedQuesList(Data);
       if (response?.success) {
         // showSuccessMessage(response?.message);
-        setCount(response?.count);
-        const transformedData = transformLeavesData(response.data);
-        console.log("Saqib", transformedData);
+        // setCount(response?.count);
+        const transformedData = transformLeavesData(response.data?.questionList);
+        setGeneratedData(response.data);
         setResData(transformedData);
       }
     } catch (error) {
@@ -106,28 +124,84 @@ function QMSReportQuestionList() {
     }
   };
 
-  const handleEdit = async (id) => {
+  const handleSessionChange = async (e) => {
+    setSessionId(e.target.value);
+    getQuestionsListBySessionApi(e.target.value)
+  }
+
+  const getQuestionsListBySessionApi = async (sessionId) => {
     try {
-      const { question, history } = await getAllQuestionByID(id);
-      console.log("LIST DAtA", history?.data, question?.data);
-      if (question?.success) {
-        navigate("/qms/question/detail", {
-          state: { question: question?.data, history: history?.data },
-        });
+      const response = await getAllQuesListBySession(sessionId, currentPage, pageSize);
+      if (response?.success) {  
+        setCount(response?.count);
+        const transformedData = transformLeavesData(response.data?.questionList);
+        setResData(transformedData)
+      }
+    } catch (error) {
+      console.log(error?.response?.data?.message);
+    }
+  };
+
+  const handleSaveList = async () => {
+    const questionIds = generatedData.questions.map(question => ({ id: question.id }));
+  
+    const requestData = {
+      questionList: {
+        fkSessionId: sessionId,
+        questionCategory: formik.values.category,
+        fkGroupId: formik.values.groupNo,
+        startListNo: formik.values.startListNo,
+        listName: formik.values.listName,
+        houseLayDate: moment(formik.values.houseLayDate).format("YYYY-MM-DD"),
+        defferedQuestions: include, // Use formik values for include
+        fkUserId: userData.fkUserId,
+        questionIds: questionIds
+      }
+    };
+  
+    try {
+      const response = await saveQuestionList(requestData);
+      if (response?.success) {
+        showSuccessMessage(response.data.message);
+      }
+    } catch (error) {
+      showErrorMessage(error.response?.data?.message);
+    }
+  };  
+
+  const printQuestions = async (data) => {
+    try {
+      const response = await printQuestionsFromList(data);
+      if (response?.success) {
+       showSuccessMessage(response.data.message);
       }
     } catch (error) {
       showErrorMessage(error.response?.data?.message);
     }
   };
 
-  useEffect(() => {
-    getAllQuestionsApi();
-  }, []);
+  const deleteList = async (data) => {
+    console.log(data);
+    try {
+      const response = await delleteQuestionsList(data);
+      if (response?.success) {
+       showSuccessMessage(response.message);
+       getQuestionsListBySessionApi(sessionId);
+      }
+    } catch (error) {
+      showErrorMessage(error.response?.data?.message);
+    }
+  };
+
+  const handleInclude = () => {
+    setInclude(!include);
+  }
+
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <Header
         dashboardLink={"/"}
-        addLink1={"/qms/reports/question-list"}
+        addLink1={"/qms/question/list"}
         title1={"Question List"}
       />
       <ToastContainer />
@@ -166,9 +240,9 @@ function QMSReportQuestionList() {
                       <select
                         class="form-select"
                         id="sessionNumber"
-                        placeholder={formik.values.sessionNumber}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
+                        placeholder={"Session Number"}
+                        onChange={handleSessionChange}
+                        value={sessionId}
                       >
                         <option selected disabled hidden>
                           Select
@@ -267,8 +341,8 @@ function QMSReportQuestionList() {
                           class="form-check-input "
                           type="checkbox"
                           id="include"
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
+                          checked={include}
+                          onChange={handleInclude}
                         />
                         <label class="form-check-label" for="flexCheckDefault">
                           Include Deffer Questions
@@ -282,7 +356,7 @@ function QMSReportQuestionList() {
                     <button class="btn btn-primary" type="submit">
                       Generate
                     </button>
-                    <button class="btn btn-primary" type="">
+                    <button class="btn btn-primary" type="" onClick={handleSaveList}>
                       Save
                     </button>
                   </div>
@@ -291,12 +365,16 @@ function QMSReportQuestionList() {
               <CustomTable
                 block={false}
                 hideBtn={true}
+                hidebtn1={true}
                 data={resData}
                 tableTitle="Questions"
                 handlePageChange={handlePageChange}
                 currentPage={currentPage}
                 pageSize={pageSize}
-                handleEdit={(item) => handleEdit(item.QID)}
+                showEditIcon={true}
+                handleDelete={(item) => deleteList(item.id)}
+                showPrint={true}
+                handlePrint={(item) => printQuestions(item.id)}
                 totalCount={count}
               />
             </div>

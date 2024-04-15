@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import DatePicker from "react-datepicker";
-import { getAllQuestion } from "../../../../../../api/APIs/Services/Question.service";
+import { UpdateQuestionById, getAllDeletedQuestions, getAllQuestion } from "../../../../../../api/APIs/Services/Question.service";
 import {
   showErrorMessage,
   showSuccessMessage,
@@ -62,6 +62,7 @@ function QMSDeleteQuestion() {
     onSubmit: (values) => {
       // Handle form submission here
       console.log(values);
+      handleSearchDeletedQuestion(values);
     },
   });
   const navigate = useNavigate();
@@ -70,46 +71,49 @@ function QMSDeleteQuestion() {
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
   const [resData, setResData] = useState([]);
-
   const pageSize = 4; // Set your desired page size
-  const data = [
-    {
-      "Sr#": 1,
-      MID: "21-11-2023",
-      "M-File No": "Saqib khan",
-      "Motion Diary No": "Additional Secretary Office",
-      "Session Number": "Educational Trip",
-      "Motion Type": "Personal",
-      "Subject Matter": "AI Professionals Pvt Limited",
-      "Notice No./Date": "21-11-2023",
-      "Motion Week": "30-11-2023",
-      "Motion Status": ["Saturday"],
-      Movers: "Visit",
-      Ministries: "Inactive",
-    },
-    {
-      "Sr#": 1,
-      MID: "21-11-2023",
-      "M-File No": "Ali Ahmad Jan",
-      "Motion Diary No": "Additional Secretary Office",
-      "Session Number": "Educational Trip",
-      "Motion Type": "Personal",
-      "Subject Matter": "AI Professionals Pvt Limited",
-      "Notice No./Date": "21-11-2023",
-      "Motion Week": "30-11-2023",
-      "Motion Status": ["Saturday"],
-      Movers: "Visit",
-      Ministries: "Inactive",
-    },
-  ];
+
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
     setCurrentPage(page);
   };
 
+  const handleSearchDeletedQuestion = async (values) => {
+    const Data = {
+      fromSession: values?.fromsessionNumber || "",
+      toSession: values?.tosessionNumber || "",
+      questionDiaryNo: values?.questionDiaryNo || "",
+      questionId: values?.questionId || "",
+      keyword: values?.keyword || "",
+      memberName: values?.memberName || "",
+      category: values?.category || "",
+      group: values?.group || "",
+      questionStatus: values?.questionStatus || "",
+      noticeDiaryNo: values?.noticeDiaryNo || "",
+      fromNoticeDate: values?.fromNoticeDate || "",
+      toNoticeDate: values?.toNoticeDate || "",
+      gender: values?.gender || "",
+      religion: values?.religion || "",
+      notInReligion: values?.notInReligion || "",
+      completeText: values?.completeText || "",
+      division: values?.division || "",
+    }
+
+    try {
+      const response = await getAllDeletedQuestions(currentPage, pageSize, Data);
+      if (response?.success) {
+        // showSuccessMessage(response?.message);
+        setCount(response?.count);
+        const transformedData = transformLeavesData(response.data);
+        setResData(transformedData);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  };
+
   const transformLeavesData = (apiData) => {
     return apiData
-      .filter((question) => question?.questionActive === "inactive")
       .map((res, index) => {
         return {
           SrNo: index,
@@ -129,7 +133,7 @@ function QMSDeleteQuestion() {
   };
   const getAllQuestionsApi = async () => {
     try {
-      const response = await getAllQuestion(currentPage, pageSize);
+      const response = await getAllDeletedQuestions(currentPage, pageSize);
       if (response?.success) {
         // showSuccessMessage(response?.message);
         setCount(response?.count);
@@ -143,6 +147,26 @@ function QMSDeleteQuestion() {
   useEffect(() => {
     getAllQuestionsApi();
   }, []);
+
+  const recoverQuestion = async (id) => {
+    const formData = new FormData();
+    formData.append("fkSessionId", true);
+
+    try {
+      const response = await UpdateQuestionById(
+        id,
+        formData
+      );
+      if (response?.success) {
+        showSuccessMessage(response?.message);
+        getAllQuestionsApi();
+        formik.resetForm();
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  }
+
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <ToastContainer />
@@ -577,7 +601,7 @@ function QMSDeleteQuestion() {
                 </div>
               </form>
               <div class="dash-detail-container" style={{ marginTop: "20px" }}>
-                <div class="row mb-3">
+                {/* <div class="row mb-3">
                   <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                     <button class="btn btn-primary" type="submit">
                       Print Questions
@@ -587,7 +611,7 @@ function QMSDeleteQuestion() {
                     </button>
                   </div>
                   <div class="clearfix"></div>
-                </div>
+                </div> */}
                 <CustomTable
                   hideBtn={true}
                   data={resData || []}
@@ -596,8 +620,10 @@ function QMSDeleteQuestion() {
                   currentPage={currentPage}
                   showPrint={true}
                   pageSize={pageSize}
-                  handleAdd={(item) => navigate("/")}
-                  handleEdit={(item) => navigate("/")}
+                  showEditIcon={true}
+                  hideDeleteIcon={true}
+                  showRecoverIcon={false}
+                  handleRecover={(id) => recoverQuestion(id)}
                   totalCount={count}
                 />
               </div>

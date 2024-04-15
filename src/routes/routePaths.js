@@ -154,6 +154,8 @@ import NoticeResolutionDetail from "../pages/Dashboard/Modules/Notice/Resolution
 import PreviousFRsHistory from "../pages/Dashboard/Modules/EFiling/FreshReceipt/PreviousFRsHistory";
 import FRDetail from "../pages/Dashboard/Modules/EFiling/FreshReceipt/FRDetail";
 import ApprovedCasesHistory from "../pages/Dashboard/Modules/EFiling/FIleRegister/Files/FileCases/ApprovedCases";
+import NoticeSummary from "../pages/Dashboard/Modules/QMS/Reports/NoticeSummary";
+import RemoveQuestion from "../pages/Dashboard/Modules/QMS/Manage/RemoveQuestion";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -313,11 +315,13 @@ export const ProtectedRoutes = [
   { path: "/qms/resolution/search", element: <QMSSerchResolution /> },
 
   { path: "/qms/reports", element: <QMSQuestionDashboard /> },
+
   {
     path: "/qms/reports/resolution-summary",
     element: <QMSResolutionSummary />,
   },
   { path: "/qms/reports/question-summary", element: <QMSQuestionSummary /> },
+  { path: "/qms/reports/notice-summary", element: <NoticeSummary /> },
   {
     path: "/qms/reports/resolution-annual-reports",
     element: <QMSResolutionAnnualReports />,
@@ -411,6 +415,11 @@ export const ProtectedRoutes = [
   {
     path: "/qms/manage/parliamentary-year/addedit",
     element: <QMSAddEditParliamentaryYearForm />,
+  },
+
+  {
+    path: "/qms/manage/remove-question",
+    element: <RemoveQuestion />,
   },
 
   //SMS Module routes
