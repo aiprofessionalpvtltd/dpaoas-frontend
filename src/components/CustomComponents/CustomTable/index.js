@@ -469,7 +469,7 @@ const filteredKeys = keys?.filter((key) => {
                             </OverlayTrigger>
                           )}
 
-                          {!showRecoverIcon && !showRecoverIcon && (
+                          {showRecoverIcon && showRecoverIcon && (
                                 <OverlayTrigger
                                   placement="top"
                                   overlay={restoreTooltip}
@@ -645,7 +645,7 @@ const filteredKeys = keys?.filter((key) => {
                               </button>
                             </OverlayTrigger>
                           )}
-                          {!showRecoverIcon && !showRecoverIcon && (
+                          {showRecoverIcon && showRecoverIcon && (
                                 <OverlayTrigger
                                   placement="top"
                                   overlay={restoreTooltip}
