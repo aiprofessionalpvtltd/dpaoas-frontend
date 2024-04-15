@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
 import { QMSSideBarItems } from "../../../../../../utils/sideBarItems";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useLocation } from "react-router";
+import Select from "react-select";
 import {
   UpdateResolution,
   sendResolutionForTranslation,
@@ -16,6 +17,8 @@ import DatePicker from "react-datepicker";
 import { Editor } from "../../../../../../components/CustomComponents/Editor";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
+import { AuthContext } from "../../../../../../api/AuthContext";
+import moment from "moment";
 
 const validationSchema = Yup.object({
   sessionNo: Yup.number(),
@@ -35,18 +38,56 @@ const validationSchema = Yup.object({
 
 function QMSNoticeResolutionDetail() {
   const location = useLocation();
-  console.log("dksfifsdpoipfosdpfiopf", location.state.id);
+  const { members, sessions, resolutionStatus } = useContext(AuthContext);
+  console.log("dksfifsdpoipfosdpfiopf", location.state);
+  console.log(
+    "location?.state?.resolutionMoversAssociatio",
+    location?.state?.resolutionMoversAssociation?.map(
+      (item) => item?.memberAssociation?.id
+    )
+  );
   const formik = useFormik({
     initialValues: {
-      sessionNo: location?.state?.session?.sessionName,
-      noticeOfficeDiaryNo: location?.state?.noticeDiary?.noticeOfficeDiaryNo,
-      noticeOfficeDiaryDate: "",
-      noticeOfficeDiaryTime: "",
-      resolutionType: "",
-      resolutionStatus: "",
-      resolutionMovers: "",
-      englishText: "",
-      urduText: "",
+      //   sessionNo: location?.state?.session?.sessionName,
+      sessionNo: location?.state?.session
+        ? {
+            value: location?.state?.session?.id,
+            label: location?.state?.session?.sessionName,
+          }
+        : "",
+      noticeOfficeDiaryNo: location?.state?.noticeDiary?.noticeOfficeDiaryNo
+        ? location?.state?.noticeDiary?.noticeOfficeDiaryNo
+        : "",
+      noticeOfficeDiaryDate: location?.state?.noticeDiary?.noticeOfficeDiaryDate
+        ? moment(
+            location?.state?.noticeDiary?.noticeOfficeDiaryDate,
+            "YYYY-MM-DD"
+          ).toDate()
+        : "",
+      noticeOfficeDiaryTime: location?.state?.noticeDiary?.noticeOfficeDiaryTime
+        ? location?.state?.noticeDiary?.noticeOfficeDiaryTime
+        : "",
+      resolutionType: location?.state?.resolutionType
+        ? location?.state?.resolutionType
+        : "",
+      resolutionStatus: location?.state?.resolutionStatus
+        ? {
+            value: location?.state?.resolutionStatus?.id,
+            label: location?.state?.resolutionStatus?.resolutionStatus,
+          }
+        : "",
+      resolutionMovers:
+        location?.state?.resolutionMoversAssociation.length > 0
+          ? location?.state?.resolutionMoversAssociation.map((item) => ({
+              value: item?.memberAssociation?.id,
+              label: item?.memberAssociation?.memberName,
+            }))
+          : [],
+
+      englishText: location?.state?.englishText
+        ? location?.state?.englishText
+        : "",
+      urduText: location?.state?.urduText ? location?.state?.urduText : "",
     },
     // validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -57,15 +98,16 @@ function QMSNoticeResolutionDetail() {
 
   const hendleUpdate = async (values) => {
     const data = new FormData();
+    data.append("fkSessionNo", values?.sessionNo?.value);
     data.append("noticeOfficeDiaryDate", values.noticeOfficeDiaryDate);
     data.append("noticeOfficeDiaryTime", values.noticeOfficeDiaryTime);
     data.append("resolutionType", values.resolutionType);
-    data.append("fkResolutionStatus", values.resolutionStatus);
-    data.append("resolutionMovers[]", values.resolutionMovers);
-    data.append(
-      "resolutionDiaryNo",
-      location?.state?.noticeDiary?.noticeOfficeDiaryNo,
-    );
+    data.append("fkResolutionStatus", values.resolutionStatus?.value);
+    values?.resolutionMovers?.forEach((mover, index) => {
+      data.append(`resolutionMovers[${index}][fkMemberId]`, mover.value);
+    });
+    // data.append("resolutionMovers[]", values.resolutionMovers?.value);
+    data.append("resolutionDiaryNo", values?.noticeOfficeDiaryNo);
     data.append("englishText", values.englishText);
     data.append("urduText", values.urduText);
 
@@ -97,7 +139,7 @@ function QMSNoticeResolutionDetail() {
         addLink1={"/qms/notice/notice-resolution-detail"}
         title1={"Notice Resolution Detail"}
       />
-      <div class="container-fluid">
+       <div class="container-fluid">
         <div class="card mt-4">
           <div
             class="card-header red-bg"
@@ -112,7 +154,7 @@ function QMSNoticeResolutionDetail() {
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Session No</label>
-                      <input
+                      {/* <input
                         type="text"
                         readOnly={true}
                         placeholder={formik.values.sessionNo}
@@ -120,6 +162,24 @@ function QMSNoticeResolutionDetail() {
                         id="sessionNo"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
+                      /> */}
+                      <Select
+                        options={
+                          sessions &&
+                          sessions?.map((item) => ({
+                            value: item?.id,
+                            label: item?.sessionName,
+                          }))
+                        }
+                        onChange={(selectedOptions) => {
+                          formik.setFieldValue("sessionNo", selectedOptions);
+                        }}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.sessionNo}
+                        name="sessionNo"
+                        isClearable={true}
+                        // className="form-select"
+                        style={{ border: "none" }}
                       />
                     </div>
                   </div>
@@ -128,10 +188,12 @@ function QMSNoticeResolutionDetail() {
                       <label class="form-label">Notice Office Diary No</label>
                       <input
                         type="text"
-                        placeholder={formik.values.noticeOfficeDiaryNo}
+                        value={formik.values.noticeOfficeDiaryNo}
                         className={`form-control`}
                         id="noticeOfficeDiaryNo"
-                        readOnly={true}
+                        // readOnly={true}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
                       />
                     </div>
                   </div>
@@ -153,7 +215,7 @@ function QMSNoticeResolutionDetail() {
                       </span>
                       <DatePicker
                         selected={formik.values.noticeOfficeDiaryDate}
-                        minDate={new Date()}
+                        maxDate={new Date()}
                         onChange={(date) =>
                           formik.setFieldValue("noticeOfficeDiaryDate", date)
                         }
@@ -164,6 +226,7 @@ function QMSNoticeResolutionDetail() {
                             ? "is-invalid"
                             : ""
                         }`}
+                        dateFormat={"dd-MM-yyyy"}
                       />
                       {formik.touched.noticeOfficeDiaryDate &&
                         formik.errors.noticeOfficeDiaryDate && (
@@ -211,6 +274,7 @@ function QMSNoticeResolutionDetail() {
                         id="resolutionType"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
+                        value={formik?.values?.resolutionType}
                       >
                         <option>Select</option>
                         <option value="Government Resolution">
@@ -228,21 +292,42 @@ function QMSNoticeResolutionDetail() {
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Resolution Status</label>
-                      <select
+                      {/* <select
                         class="form-control form-select"
                         id="resolutionStatus"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       >
                         <option>Select</option>
-                        <option value={"1"}>inactive</option>
-                      </select>
+                        <option value={"1"}>under Process</option>
+                      </select> */}
+                      <Select
+                        options={
+                          resolutionStatus &&
+                          resolutionStatus?.map((item) => ({
+                            value: item?.id,
+                            label: item?.resolutionStatus,
+                          }))
+                        }
+                        onChange={(selectedOptions) => {
+                          formik.setFieldValue(
+                            "resolutionStatus",
+                            selectedOptions
+                          );
+                        }}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.resolutionStatus}
+                        name="resolutionStatus"
+                        isClearable={true}
+                        // className="form-select"
+                        style={{ border: "none" }}
+                      />
                     </div>
                   </div>
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Resolution Movers</label>
-                      <select
+                      {/* <select
                         class="form-control form-select"
                         id="resolutionMovers"
                         onChange={formik.handleChange}
@@ -250,18 +335,34 @@ function QMSNoticeResolutionDetail() {
                       >
                         <option>Select</option>
                         <option value={"1"}>Saqib Khan</option>
-                      </select>
+                      </select> */}
+
+                      <Select
+                        options={
+                          members &&
+                          members?.map((item) => ({
+                            value: item?.id,
+                            label: item?.memberName,
+                          }))
+                        }
+                        onChange={(selectedOptions) => {
+                          formik.setFieldValue(
+                            "resolutionMovers",
+                            selectedOptions
+                          );
+                        }}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.resolutionMovers}
+                        name="resolutionMovers"
+                        isClearable={true}
+                        isMulti
+                        // className="form-select"
+                      />
                     </div>
                   </div>
                 </div>
                 <div class="row">
                   <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                    <button class="btn btn-warning" type="">
-                      No File Attached
-                    </button>
-                    <button class="btn btn-primary" type="submit">
-                      Save
-                    </button>
                     <button
                       class="btn btn-primary"
                       type="button"
@@ -271,25 +372,34 @@ function QMSNoticeResolutionDetail() {
                     </button>
                   </div>
                 </div>
+
+                <div style={{ marginTop: 10 }}>
+                  <Editor
+                    title={"English Text"}
+                    onChange={(content) =>
+                      formik.setFieldValue("englishText", content)
+                    }
+                    value={formik.values.englishText}
+                  />
+                </div>
+                <div style={{ marginTop: 70, marginBottom: 40 }}>
+                  <Editor
+                    title={"Urdu Text"}
+                    onChange={(content) =>
+                      formik.setFieldValue("urduText", content)
+                    }
+                    value={formik.values.urduText}
+                  />
+                </div>
+
+                <div class="row">
+                  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button class="btn btn-primary" type="submit">
+                      Submit
+                    </button>
+                  </div>
+                </div>
               </form>
-              <div style={{ marginTop: 10 }}>
-                <Editor
-                  title={"English Text"}
-                  onChange={(content) =>
-                    formik.setFieldValue("englishText", content)
-                  }
-                  value={formik.values.englishText}
-                />
-              </div>
-              <div style={{ marginTop: 70, marginBottom: 40 }}>
-                <Editor
-                  title={"Urdu Text"}
-                  onChange={(content) =>
-                    formik.setFieldValue("urduText", content)
-                  }
-                  value={formik.values.urduText}
-                />
-              </div>
             </div>
           </div>
         </div>
