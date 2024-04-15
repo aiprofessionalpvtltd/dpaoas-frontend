@@ -5,6 +5,7 @@ import CustomTable from "../../../../../components/CustomComponents/CustomTable"
 import { useNavigate } from "react-router-dom";
 import { QMSSideBarItems } from "../../../../../utils/sideBarItems";
 import DatePicker from "react-datepicker";
+import Select from "react-select";
 import {
   showErrorMessage,
   showSuccessMessage,
@@ -12,26 +13,28 @@ import {
 import { ToastContainer } from "react-toastify";
 import { useFormik } from "formik";
 import {
+  DeleteResolution,
+  getResolutionBYID,
   searchResolution,
 } from "../../../../../api/APIs/Services/Resolution.service";
 import { AuthContext } from "../../../../../api/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
+import { getAllQuestionStatus } from "../../../../../api/APIs/Services/Question.service";
 
 function QMSSerchResolution() {
   const navigate = useNavigate();
-
   const { members, sessions, resolutionStatus } = useContext(AuthContext);
-
-  const [currentPage, setCurrentPage] = useState(0);
   const [searchedData, setSearchedData] = useState([]);
-
-  const pageSize = 4;
+  const [currentPage, setCurrentPage] = useState(0);
+  const [allResolutionStatus, setAllResolutionStatus] = useState([]);
+  const pageSize = 10; // Set your desired page size
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
     setCurrentPage(page);
   };
+
   const formik = useFormik({
     initialValues: {
       resolutionDiaryNo: "",
@@ -56,20 +59,29 @@ function QMSSerchResolution() {
 
   const transformLeavesData = (apiData) => {
     return apiData.map((res) => {
+      const subjectMatter = [res?.englishText, res?.urduText]
+        .filter(Boolean)
+        .join(", ");
+      const cleanedSubjectMatter = subjectMatter.replace(/(<([^>]+)>)/gi, "");
       const movers =
         res?.resolutionMoversAssociation.map(
-          (item) => item?.memberAssociation?.memberName,
+          (item) => item?.memberAssociation?.memberName
         ) || [];
 
       return {
         RID: res.id,
-        ResDN: res.noticeDiary.noticeOfficeDiaryNo,
-        SessionNumber: res.session?.sessionName,
-        ResolutionType: res.resolutionType,
-        SubjectMatter: "",
-        NoticeNo: res.noticeDiary?.noticeOfficeDiaryNo,
-        ResolutionStatus: res.resolutionStatus?.resolutionStatus,
-        Movers: movers,
+        // ResDN: res.resolutionDiaries,
+        SessionNumber: res.session?.sessionName ? res.session?.sessionName : "",
+        ResolutionType: res.resolutionType ? res.resolutionType : "",
+        SubjectMatter: cleanedSubjectMatter ? cleanedSubjectMatter : "",
+        NoticeNo: res.noticeDiary?.noticeOfficeDiaryNo
+          ? res.noticeDiary?.noticeOfficeDiaryNo
+          : "",
+        ResolutionStatus: res.resolutionStatus?.resolutionStatus
+          ? res.resolutionStatus?.resolutionStatus
+          : "",
+        Movers: movers ? movers : "",
+        Status:res?.resolutionActive,
       };
     });
   };
@@ -79,27 +91,81 @@ function QMSSerchResolution() {
       fkSessionNoFrom: values.fromSession,
       fkSessionNoTo: values.toSession,
       resolutionType: values.resolutionType,
-      colourResNo: values.colourResNo,
       keyword: values.keyword,
       resolutionId: values.resolutionID,
       resolutionDiaryNo: values.resolutionDiaryNo,
-      fkResolutionStatus: values.resolutionStatus,
-      noticeOfficeDiaryNo: values.noticeOfficeDiaryNo,
+      fkResolutionStatus: values.resolutionStatus?.value,
+      noticeOfficeDiaryNo: "",
       noticeOfficeDiaryDateFrom: values.fromNoticeDate,
       noticeOfficeDiaryDateTo: values.toNoticeDate,
-      resolutionMovers: "",
+      resolutionMovers: values?.memberName?.value,
     };
 
     try {
-      const response = await searchResolution(searchParams);
+      const response = await searchResolution(
+        searchParams,
+        currentPage,
+        pageSize
+      );
+
       if (response?.success) {
-        const transformedData = transformLeavesData(response.data);
-        setSearchedData(transformedData);
         showSuccessMessage(response?.message);
+        const transformedData = transformLeavesData(
+          response?.data?.resolutions
+        );
+        setSearchedData(transformedData);
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
     }
+  };
+
+  const GetALlStatus = async () => {
+    try {
+      const response = await getAllQuestionStatus();
+      if (response?.success) {
+        setAllResolutionStatus(response?.data);
+        // showSuccessMessage(response.message);
+      }
+    } catch (error) {
+      console.log(error);
+      showErrorMessage(error?.response?.data?.message);
+    }
+  };
+  
+
+  const handleEdit = async (id) => {
+    try {
+      const response = await getResolutionBYID(id);
+      if (response?.success) {
+        navigate("/qms/notice/notice-resolution-detail", {
+          state: response?.data,
+        });
+      }
+    } catch (error) {
+      showErrorMessage(error.response.data.message);
+    }
+  };
+
+  const deleteResolutionApi = async (id) => {
+    try {
+      const response = await DeleteResolution(id);
+      if (response?.success) {
+        showSuccessMessage(response?.message);
+        SearchResolutionApi(formik.values);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  };
+
+
+  useEffect(() => {
+    GetALlStatus();
+  }, []);
+  const handleResetForm = () => {
+    formik.resetForm();
+    setSearchedData([]);
   };
 
   return (
@@ -120,260 +186,271 @@ function QMSSerchResolution() {
           </div>
           <div class="card-body">
             <div class="container-fluid">
-              <form onSubmit={formik.handleSubmit}>
-                <div className="container-fluid">
-                  <div className="row">
-                    <div className="col">
-                      <div className="mb-3">
-                        <label className="form-label">
-                          Resolution Diary No
-                        </label>
-                        <input
-                          className="form-control"
-                          type="text"
-                          id="resolutionDiaryNo"
-                          placeholder={formik.values.resolutionDiaryNo}
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                        />
+            <form onSubmit={formik.handleSubmit}>
+                  <div className="container-fluid">
+                    <div className="row">
+                      <div className="col">
+                        <div className="mb-3">
+                          <label className="form-label">
+                            Resolution Diary No
+                          </label>
+                          <input
+                            className="form-control"
+                            type="text"
+                            id="resolutionDiaryNo"
+                            value={formik.values.resolutionDiaryNo}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                          />
+                        </div>
+                      </div>
+                      <div className="col">
+                        <div className="mb-3">
+                          <label className="form-label">Resolution ID</label>
+                          <input
+                            className="form-control"
+                            type="text"
+                            id="resolutionID"
+                            value={formik.values.resolutionID}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                          />
+                        </div>
+                      </div>
+                      <div className="col">
+                        <div className="mb-3">
+                          <label className="form-label">Keyword</label>
+                          <input
+                            className="form-control"
+                            type="text"
+                            id="keyword"
+                            value={formik.values.keyword}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                          />
+                        </div>
+                      </div>
+                      <div className="col">
+                        <div className="mb-3">
+                          <label className="form-label">Member Name</label>
+                          {/* <input
+                            className="form-control"
+                            type="text"
+                            id="memberName"
+                            placeholder={formik.values.memberName}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                          /> */}
+                          <Select
+                            options={members.map((item) => ({
+                              value: item.id,
+                              label: item.memberName,
+                            }))}
+                            onChange={(selectedOptions) =>
+                              formik.setFieldValue(
+                                "memberName",
+                                selectedOptions
+                              )
+                            }
+                            onBlur={formik.handleBlur}
+                            value={formik.values.memberName}
+                            name="memberName"
+                          />
+                        </div>
                       </div>
                     </div>
-                    <div className="col">
-                      <div className="mb-3">
-                        <label className="form-label">Resolution ID</label>
-                        <input
-                          className="form-control"
-                          type="text"
-                          id="resolutionID"
-                          placeholder={formik.values.resolutionID}
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                        />
+                    <div className="row">
+                      <div className="col">
+                        <div className="mb-3">
+                          <label className="form-label">From Session</label>
+                          <select
+                            class="form-select"
+                            id="fromSession"
+                            value={formik.values.fromSession}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                          >
+                            <option value="" selected disabled hidden>
+                              Select
+                            </option>
+                            {sessions &&
+                              sessions.map((item) => (
+                                <option key={item.id} value={item.id}>
+                                  {item?.sessionName}
+                                </option>
+                              ))}
+                          </select>
+                        </div>
+                      </div>
+                      <div className="col">
+                        <div className="mb-3">
+                          <label className="form-label">To Session</label>
+                          <select
+                            className="form-select"
+                            id="toSession"
+                            value={formik.values.toSession}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                          >
+                            <option value="" selected disabled hidden>
+                              Select
+                            </option>
+                            {sessions &&
+                              sessions.map((item) => (
+                                <option key={item.id} value={item.id}>
+                                  {item?.sessionName}
+                                </option>
+                              ))}
+                          </select>
+                        </div>
+                      </div>
+                      <div className="col">
+                        <div className="mb-3">
+                          <label className="form-label">Resolution Type</label>
+                          <select
+                            className="form-select"
+                            id="resolutionType"
+                            value={formik.values.resolutionType}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                          >
+                            <option value={""} selected disabled hidden>
+                              Select
+                            </option>
+                            <option value={"Government Resolution"}>
+                              Government Resolution
+                            </option>
+                            <option value={"Private Member Resolution"}>
+                              Private Member Resolution
+                            </option>
+                            <option
+                              value={"Govt. Resolution Supported by others"}
+                            >
+                              Govt. Resolution Supported by others
+                            </option>
+                          </select>
+                        </div>
+                      </div>
+                      <div className="col">
+                        <div className="mb-3">
+                          <label className="form-label">
+                            Resolution Status
+                          </label>
+                          {/* <select
+                            className="form-select"
+                            id="resolutionStatus"
+                            value={formik.values.resolutionStatus}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                          >
+                            <option value="" selected disabled hidden>
+                              Select
+                            </option>
+                            {allResolutionStatus &&
+                              allResolutionStatus.map((item) => (
+                                <option key={item.id} value={item.id}>
+                                  {item?.questionStatus}
+                                </option>
+                              ))}
+                          </select> */}
+                          <Select
+                            options={
+                              resolutionStatus &&
+                              resolutionStatus?.map((item) => ({
+                                value: item?.id,
+                                label: item?.resolutionStatus,
+                              }))
+                            }
+                            onChange={(selectedOptions) => {
+                              formik.setFieldValue(
+                                "resolutionStatus",
+                                selectedOptions
+                              );
+                            }}
+                            onBlur={formik.handleBlur}
+                            value={formik.values.resolutionStatus}
+                            name="resolutionStatus"
+                            isClearable={true}
+                            // className="form-select"
+                            style={{ border: "none" }}
+                          />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="row">
-                    <div className="col">
-                      <div className="mb-3">
-                        <label className="form-label">Keyword</label>
-                        <input
-                          className="form-control"
-                          type="text"
-                          id="keyword"
-                          placeholder={formik.values.keyword}
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                        />
-                      </div>
-                    </div>
-                    <div className="col">
-                      <div className="mb-3">
-                        <label className="form-label">Member Name</label>
-                        <select
-                          class="form-select"
-                          placeholder={formik.values.memberName}
-                          onChange={formik.handleChange}
-                          id="memberName"
-                          onBlur={formik.handleBlur}
-                        >
-                          <option selected disabled hidden>
-                            Select
-                          </option>
-                          {members &&
-                            members.map((item) => (
-                              <option key={item.id} value={item.id}>
-                                {item?.memberName}
-                              </option>
-                            ))}
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="col">
-                      <div className="mb-3">
-                        <label className="form-label">From Session</label>
-                        <select
-                          class="form-select"
-                          id="fromSession"
-                          placeholder={formik.values.fromSession}
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                        >
-                          <option selected disabled hidden>
-                            Select
-                          </option>
-                          {sessions &&
-                            sessions.map((item) => (
-                              <option key={item.id} value={item.id}>
-                                {item?.sessionName}
-                              </option>
-                            ))}
-                        </select>
-                      </div>
-                    </div>
-                    <div className="col">
-                      <div className="mb-3">
-                        <label className="form-label">To Session</label>
-                        <select
-                          className="form-select"
-                          id="toSession"
-                          placeholder={formik.values.toSession}
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                        >
-                          <option selected disabled hidden>
-                            Select
-                          </option>
-                          {sessions &&
-                            sessions.map((item) => (
-                              <option key={item.id} value={item.id}>
-                                {item?.sessionName}
-                              </option>
-                            ))}
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="col">
-                      <div className="mb-3">
-                        <label className="form-label">Resolution Type</label>
-                        <select
-                          className="form-select"
-                          id="resolutionType"
-                          placeholder={formik.values.resolutionType}
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                        >
-                          <option value={""} selected disabled hidden>
-                            Resolution Type
-                          </option>
-                          <option>Resolution Type</option>
-                          <option>Government Resolution</option>
-                          <option>Private Member Resolution</option>
-                          <option>Govt. Resolution Supported by others</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div className="col">
-                      <div className="mb-3">
-                        <label className="form-label">Resolution Status</label>
-                        <select
-                          className="form-select"
-                          id="resolutionStatus"
-                          placeholder={formik.values.resolutionStatus}
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                        >
-                          <option value="" selected disabled hidden>
-                            Select
-                          </option>
-                          {resolutionStatus &&
-                            resolutionStatus.map((item) => (
-                              <option key={item.id} value={item.id}>
-                                {item?.resolutionStatus}
-                              </option>
-                            ))}
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="col">
-                      <div className="mb-3" style={{ position: "relative" }}>
-                        <label className="form-label">From Notice Date</label>
-                        <span
-                          style={{
-                            position: "absolute",
-                            right: "15px",
-                            top: "36px",
-                            zIndex: 1,
-                            fontSize: "20px",
-                            zIndex: "1",
-                            color: "#666",
-                          }}
-                        >
-                          <FontAwesomeIcon icon={faCalendarAlt} />
-                        </span>
-                        <DatePicker
-                          selected={formik.values.fromNoticeDate}
-                          minDate={new Date()}
-                          onChange={(date) =>
-                            formik.setFieldValue("fromNoticeDate", date)
-                          }
-                          className={`form-control`}
-                        />
-                      </div>
-                    </div>
-                    <div className="col">
-                      <div className="mb-3" style={{ position: "relative" }}>
-                        <label className="form-label">To Notice Date</label>
-                        <span
-                          style={{
-                            position: "absolute",
-                            right: "15px",
-                            top: "36px",
-                            zIndex: 1,
-                            fontSize: "20px",
-                            zIndex: "1",
-                            color: "#666",
-                          }}
-                        >
-                          <FontAwesomeIcon icon={faCalendarAlt} />
-                        </span>
-                        <DatePicker
-                          selected={formik.values.toNoticeDate}
-                          minDate={new Date()}
-                          onChange={(date) =>
-                            formik.setFieldValue("toNoticeDate", date)
-                          }
-                          className={`form-control`}
-                        />
-                      </div>
-                    </div>
-                  </div>
 
-                  <div className="row">
-                    <div className="col">
-                      <div className="mb-3">
-                        <label className="form-label">Notice Diary No</label>
-                        <input
-                          className="form-control"
-                          type="text"
-                          id="noticeOfficeDiaryNo"
-                          placeholder={formik.values.noticeOfficeDiaryNo}
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                        />
+                    <div className="row">
+                      <div className="col-3">
+                        <div className="mb-3" style={{ position: "relative" }}>
+                          <label className="form-label">From Notice Date</label>
+                          <span
+                            style={{
+                              position: "absolute",
+                              right: "15px",
+                              top: "36px",
+                              zIndex: 1,
+                              fontSize: "20px",
+                              zIndex: "1",
+                              color: "#666",
+                            }}
+                          >
+                            <FontAwesomeIcon icon={faCalendarAlt} />
+                          </span>
+                          <DatePicker
+                            selected={formik.values.fromNoticeDate}
+                            maxDate={new Date()}
+                            onChange={(date) =>
+                              formik.setFieldValue("fromNoticeDate", date)
+                            }
+                            className={`form-control`}
+                            dateFormat={"dd-MM-yyyy"}
+                          />
+                        </div>
+                      </div>
+                      <div className="col-3">
+                        <div className="mb-3" style={{ position: "relative" }}>
+                          <label className="form-label">To Notice Date</label>
+                          <span
+                            style={{
+                              position: "absolute",
+                              right: "15px",
+                              top: "36px",
+                              zIndex: 1,
+                              fontSize: "20px",
+                              zIndex: "1",
+                              color: "#666",
+                            }}
+                          >
+                            <FontAwesomeIcon icon={faCalendarAlt} />
+                          </span>
+                          <DatePicker
+                            selected={formik.values.toNoticeDate}
+                            maxDate={new Date()}
+                            onChange={(date) =>
+                              formik.setFieldValue("toNoticeDate", date)
+                            }
+                            className={`form-control`}
+                            dateFormat={"dd-MM-yyyy"}
+                          />
+                        </div>
                       </div>
                     </div>
-                    <div className="col">
-                      <div className="mb-3">
-                        <label className="form-label">Colour Res.No</label>
-                        <input
-                          className="form-control"
-                          type="text"
-                          id="colourResNo"
-                          placeholder={formik.values.colourResNo}
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                        />
+
+                    <div className="row">
+                      <div className="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button className="btn btn-primary" type="submit">
+                          Search
+                        </button>
+                        <button
+                          class="btn btn-primary"
+                          type="button"
+                          onClick={handleResetForm}
+                        >
+                          Reset
+                        </button>
                       </div>
                     </div>
                   </div>
-                  <div className="row">
-                    <div className="d-grid gap-2 d-md-flex justify-content-md-end">
-                      <button className="btn btn-primary" type="submit">
-                        Search
-                      </button>
-                      <button className="btn btn-primary" type="reset">
-                        Reset
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </form>
+                </form>
 
               <div class="row mt-3">
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
@@ -386,23 +463,21 @@ function QMSSerchResolution() {
                 </div>
               </div>
               <CustomTable
-                block={false}
-                data={searchedData}
-                tableTitle=""
-                addBtnText="Print Resolution"
-                handleAdd={() => alert("Print")}
-                // seachBarShow={true}
-                handlePageChange={handlePageChange}
-                currentPage={currentPage}
-                pageSize={pageSize}
-                headertitlebgColor={"#666"}
-                headertitletextColor={"#FFF"}
-                hideEditIcon={true}
-                ActionHide={true}
-                // handlePrint={}
-                // handleUser={}
-                // handleDelete={(item) => handleDelete(item.id)}
-              />
+                    block={false}
+                    hideBtn={true}
+                    data={searchedData}
+                    hidebtn1={true}
+                    // ActionHide={true}
+                    tableTitle="Resolutions"
+                    handlePageChange={handlePageChange}
+                    currentPage={currentPage}
+                    headertitlebgColor={"#666"}
+                    headertitletextColor={"#FFF"}
+                    showPrint={false}
+                    pageSize={pageSize}
+                    handleEdit={(item) => handleEdit(item.RID)}
+                    handleDelete={(item) => deleteResolutionApi(item.RID)}
+                  />
               <div class="row mt-3">
                 <div class="col">
                   <div class="mb-3">

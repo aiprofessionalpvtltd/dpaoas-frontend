@@ -294,7 +294,7 @@ const filteredKeys = keys?.filter((key) => {
                             >
                               {item[key]}
                             </span>
-                          ) :  item[key] === "Total Motions" ?  (
+                          ) :  item[key] === "Total Motions" || item[key] === "Total Resolution" ?  (
                             <span style={{fontWeight:"bold"}}>{item[key]}</span>
                           ) :( <span>{item[key]}</span>)}
                         </td>
