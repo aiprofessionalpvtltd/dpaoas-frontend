@@ -438,7 +438,7 @@ function QMSDeleteResolution() {
                   </div>
                 </form>
               <div class="" style={{ marginTop: "20px" }}>
-                <div class="row mb-3">
+                {/* <div class="row mb-3">
                   <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                     <button class="btn btn-primary" type="submit">
                       Print Resolution
@@ -448,8 +448,8 @@ function QMSDeleteResolution() {
                     </button>
                   </div>
                   <div class="clearfix"></div>
-                </div>
-
+                </div> */}
+                <div class="clearfix"></div>
                 <CustomTable
                     block={false}
                     hideBtn={true}
