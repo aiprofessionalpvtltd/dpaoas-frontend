@@ -9,7 +9,8 @@ import {
   faFileExport,
   faEye,
   faUserCheck,
-  faCirclePlus
+  faCirclePlus,
+  faTrashArrowUp
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
@@ -56,6 +57,8 @@ function CustomTable({
   hideDeleteIcon,
   singleDataCard,
   showEditIcon,
+  showRecoverIcon,
+  handleRecover,
   hidebtn1,
   showCreateBtn,
   hendleCreateBtn
@@ -103,6 +106,7 @@ const filteredKeys = keys?.filter((key) => {
   const assignedTooltip = <Tooltip id="print-tooltip">Assigne</Tooltip>;
   const createTooltip = <Tooltip id="create-tooltip">Create Case</Tooltip>;
   const attendanceTooltip = <Tooltip id="attendance-tooltip">Mark </Tooltip>;
+  const restoreTooltip = <Tooltip id="restore-tooltip">Recover</Tooltip>;
 
   const renderPagination = () => {
     if (totalPages <= 1) {
@@ -464,6 +468,21 @@ const filteredKeys = keys?.filter((key) => {
                               </button>
                             </OverlayTrigger>
                           )}
+
+                          {!showRecoverIcon && !showRecoverIcon && (
+                                <OverlayTrigger
+                                  placement="top"
+                                  overlay={restoreTooltip}
+                                >
+                                  <button
+                                    onClick={() => handleRecover(item)}
+                                    className="btn-xs black circle-btn"
+                                    data-id={item.id}
+                                  >
+                                    <FontAwesomeIcon icon={faTrashArrowUp} />
+                                  </button>
+                                </OverlayTrigger>
+                              )}
                         </td>
                       )}
                     </tr>
@@ -626,6 +645,20 @@ const filteredKeys = keys?.filter((key) => {
                               </button>
                             </OverlayTrigger>
                           )}
+                          {!showRecoverIcon && !showRecoverIcon && (
+                                <OverlayTrigger
+                                  placement="top"
+                                  overlay={restoreTooltip}
+                                >
+                                  <button
+                                    onClick={() => handleRecover(item)}
+                                    className="btn-xs black circle-btn"
+                                    data-id={item.id}
+                                  >
+                                    <FontAwesomeIcon icon={faTrashArrowUp} />
+                                  </button>
+                                </OverlayTrigger>
+                              )}
                         </td>
                       )}
                     </tr>

@@ -455,13 +455,18 @@ export const QMSSideBarItems = [
         icon: faClipboardList,
       },
       {
+        itemName: "Notice Summary",
+        link: "/qms/reports/notice-summary",
+        icon: faClipboardList,
+      },
+      {
         itemName: "Question Summary",
         link: "/qms/reports/question-summary",
         icon: faClipboardList,
       },
 
       {
-        itemName: "Question List",
+        itemName: "Question List Report",
         link: "/qms/reports/question-list",
         icon: faClipboardList,
       },
@@ -471,11 +476,11 @@ export const QMSSideBarItems = [
         link: "/qms/reports/resolution-annual-reports",
         icon: faClipboardList,
       },
-      {
-        itemName: "Question Annual Reports",
-        link: "/qms/reports/question-annual-reports",
-        icon: faClipboardList,
-      },
+      // {
+      //   itemName: "Question Annual Reports",
+      //   link: "/qms/reports/question-annual-reports",
+      //   icon: faClipboardList,
+      // },
       {
         itemName: "Defer Question Reports",
         link: "/qms/reports/defer-question-reports",
@@ -536,6 +541,11 @@ export const QMSSideBarItems = [
       {
         itemName: "Parliamentary Year",
         link: "/qms/manage/parliamentary-year",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Remove Question",
+        link: "/qms/manage/remove-question",
         icon: faClipboardList,
       },
     ],
