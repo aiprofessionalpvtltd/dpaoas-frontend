@@ -131,7 +131,7 @@ function QMSDeleteResolution() {
     }
   };
   
-  const hendleEdit = async (id) => {
+  const hendleRecover = async (id) => {
     try {
       const response = await RecoverDeleteResolution(id)
       if(response?.success){
@@ -464,7 +464,9 @@ function QMSDeleteResolution() {
                     showPrint={false}
                     pageSize={pageSize}
                     hideDeleteIcon={true}
-                    handleEdit={(item) => hendleEdit(item.RID)}
+                    hideEditIcon={true}
+                    showRecoverIcon={true}
+                    handleRecover={(item) => hendleRecover(item.RID)}
                   />
 
                 {/* <div style={{ float: "right", marginTop: "10px" }}>

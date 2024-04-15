@@ -477,6 +477,7 @@ function QMSSerchResolution() {
                     pageSize={pageSize}
                     handleEdit={(item) => handleEdit(item.RID)}
                     handleDelete={(item) => deleteResolutionApi(item.RID)}
+                    // showRecoverIcon={true}
                   />
               <div class="row mt-3">
                 <div class="col">
