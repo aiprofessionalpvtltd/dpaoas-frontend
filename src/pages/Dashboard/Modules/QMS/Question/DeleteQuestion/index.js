@@ -61,7 +61,6 @@ function QMSDeleteQuestion() {
     validationSchema: validationSchema,
     onSubmit: (values) => {
       // Handle form submission here
-      console.log(values);
       handleSearchDeletedQuestion(values);
     },
   });
@@ -104,7 +103,7 @@ function QMSDeleteQuestion() {
       if (response?.success) {
         // showSuccessMessage(response?.message);
         setCount(response?.count);
-        const transformedData = transformLeavesData(response.data);
+        const transformedData = transformLeavesData(response.data?.questions);
         setResData(transformedData);
       }
     } catch (error) {
@@ -120,14 +119,15 @@ function QMSDeleteQuestion() {
           QID: res.id,
           // QDN: res.questionDiary,
           NoticeDate: moment(res?.noticeOfficeDiary?.noticeOfficeDiaryDate).format("YYYY/MM/DD"),
-          NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
+          // NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
           SessionNumber: res?.session?.sessionName,
           SubjectMatter: [res?.englishText, res?.urduText]
             .filter(Boolean)
             .join(", "),
           Category: res.questionCategory,
           // SubmittedBy: res.category,
-          Status: res.questionStatus?.questionStatus,
+          questionStatus: res.questionStatuses?.questionStatus,
+          questionActive: res?.questionActive
         };
       });
   };
@@ -149,8 +149,9 @@ function QMSDeleteQuestion() {
   }, []);
 
   const recoverQuestion = async (id) => {
+    console.log(id);
     const formData = new FormData();
-    formData.append("fkSessionId", true);
+    formData.append("questionActive", "active");
 
     try {
       const response = await UpdateQuestionById(
@@ -165,6 +166,10 @@ function QMSDeleteQuestion() {
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
     }
+  }
+
+  const handleResetForm = () => {
+    formik.resetForm();
   }
 
   return (
@@ -594,7 +599,7 @@ function QMSDeleteQuestion() {
                     <button class="btn btn-primary" type="submit">
                       Search
                     </button>
-                    <button class="btn btn-primary" type="submit">
+                    <button class="btn btn-primary" onClick={handleResetForm}>
                       Reset
                     </button>
                   </div>
@@ -613,17 +618,17 @@ function QMSDeleteQuestion() {
                   <div class="clearfix"></div>
                 </div> */}
                 <CustomTable
-                  hideBtn={true}
+                  hidebtn1={true}
                   data={resData || []}
                   tableTitle="Deleted Questions"
                   handlePageChange={handlePageChange}
                   currentPage={currentPage}
-                  showPrint={true}
+                  showPrint={false}
                   pageSize={pageSize}
                   showEditIcon={true}
                   hideDeleteIcon={true}
-                  showRecoverIcon={false}
-                  handleRecover={(id) => recoverQuestion(id)}
+                  showRecoverIcon={true}
+                  handleRecover={(item) => recoverQuestion(item?.QID)}
                   totalCount={count}
                 />
               </div>

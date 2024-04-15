@@ -378,11 +378,11 @@ export const QMSSideBarItems = [
     link: "/qms/question",
     icon: faClipboardList,
     subItems: [
-      {
-        itemName: "Question List",
-        link: "/qms/question/list",
-        icon: faClipboardList,
-      },
+      // {
+      //   itemName: "Question List",
+      //   link: "/qms/question/list",
+      //   icon: faClipboardList,
+      // },
       // {
       //     itemName: "Question Detail",
       //     link: "/qms/question/detail",

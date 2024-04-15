@@ -51,16 +51,10 @@ function QMSDeferQuestionReports() {
   const transformedQuesData = (apiData) => {
     return apiData.map((res, index) => {
       return {
-        SrNo: index,
-        QID: res.id,
-        QDN: res.fkQuestionDiaryId,
-        NoticeDate: moment(res?.noticeOfficeDiary?.noticeOfficeDiaryDate).format("YYYY/MM/DD"),
-        NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
-        SessionNumber: res?.session?.sessionName,
-        SubjectMatter: [res?.englishText, res?.urduText].filter(Boolean).join(", "),
-        Category: res.questionCategory,
-        // SubmittedBy: res.category,
-        Status: res.questionStatus?.questionStatus,
+        id: res.id,
+        deferredDate: res?.deferredDate,
+        deferredSession: res?.deferredSession?.sessionName,
+        deferredBy: res?.deferredByUser?.employee?.firstName + res?.deferredByUser?.employee?.lastName,
       };
     });
   };
@@ -70,7 +64,7 @@ function QMSDeferQuestionReports() {
       if (response?.success) {
         // showSuccessMessage(response?.message);
         setCount(response?.count);
-        const transformedData = transformedQuesData(response.data);
+        const transformedData = transformedQuesData(response.data?.questions);
         setData(transformedData);
       }
     } catch (error) {
@@ -102,15 +96,9 @@ function QMSDeferQuestionReports() {
               <CustomTable
                 headerShown={true}
                 hideBtn={true}
-                block={true}
+                ActionHide={true}
+                // block={true}
                 data={data}
-                handleAdd={() => alert("Print")}
-                handleEdit={(item) =>
-                  navigate("/vms/addeditpass", { state: item })
-                }
-                hideUserIcon={true}
-                handleUser={() => navigate("/vms/visitor")}
-                handleDuplicate={() => navigate("/vms/duplicatepass")}
                 // seachBarShow={true}
                 handlePageChange={handlePageChange}
                 currentPage={currentPage}
