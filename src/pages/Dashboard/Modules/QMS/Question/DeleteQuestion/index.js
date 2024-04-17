@@ -79,23 +79,23 @@ function QMSDeleteQuestion() {
 
   const handleSearchDeletedQuestion = async (values) => {
     const Data = {
-      fromSession: values?.fromsessionNumber || "",
-      toSession: values?.tosessionNumber || "",
+      fromSessionNo: values?.fromsessionNumber || "",
+      toSessionNo: values?.tosessionNumber || "",
       questionDiaryNo: values?.questionDiaryNo || "",
-      questionId: values?.questionId || "",
+      questionID: values?.questionId || "",
       keyword: values?.keyword || "",
       memberName: values?.memberName || "",
-      category: values?.category || "",
-      group: values?.group || "",
+      questionCategory: values?.category || "",
+      groups: values?.group || "",
       questionStatus: values?.questionStatus || "",
-      noticeDiaryNo: values?.noticeDiaryNo || "",
-      fromNoticeDate: values?.fromNoticeDate || "",
-      toNoticeDate: values?.toNoticeDate || "",
+      noticeOfficeDiaryNo: values?.noticeDiaryNo || "",
+      noticeOfficeDiaryDateFrom: values?.fromNoticeDate || "",
+      noticeOfficeDiaryDateTo: values?.toNoticeDate || "",
       gender: values?.gender || "",
       religion: values?.religion || "",
       notInReligion: values?.notInReligion || "",
       completeText: values?.completeText || "",
-      division: values?.division || "",
+      divisions: values?.division || "",
     }
 
     try {

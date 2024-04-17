@@ -10,7 +10,8 @@ import {
   faEye,
   faUserCheck,
   faCirclePlus,
-  faTrashArrowUp
+  faTrashArrowUp,
+  faListCheck
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
@@ -22,6 +23,7 @@ function CustomTable({
   showAssigned,
   showResolve,
   hendleResolve,
+  handleList,
   data,
   handleEdit,
   handleView,
@@ -58,6 +60,7 @@ function CustomTable({
   singleDataCard,
   showEditIcon,
   showRecoverIcon,
+  showListIcon,
   handleRecover,
   hidebtn1,
   showCreateBtn,
@@ -107,6 +110,7 @@ const filteredKeys = keys?.filter((key) => {
   const createTooltip = <Tooltip id="create-tooltip">Create Case</Tooltip>;
   const attendanceTooltip = <Tooltip id="attendance-tooltip">Mark </Tooltip>;
   const restoreTooltip = <Tooltip id="restore-tooltip">Recover</Tooltip>;
+  const listTooltip = <Tooltip id="list-tooltip">List</Tooltip>;
 
   const renderPagination = () => {
     if (totalPages <= 1) {
@@ -483,6 +487,22 @@ const filteredKeys = keys?.filter((key) => {
                                   </button>
                                 </OverlayTrigger>
                               )}
+
+                              {showListIcon && showListIcon && (
+                                <OverlayTrigger
+                                  placement="top"
+                                  overlay={listTooltip}
+                                >
+                                  <button
+                                    onClick={() => handleList(item)}
+                                    className="btn-xs black circle-btn"
+                                    data-id={item.id}
+                                  >
+                                    <FontAwesomeIcon icon={faListCheck} />
+                                  </button>
+                                </OverlayTrigger>
+                              )}
+
                         </td>
                       )}
                     </tr>
@@ -656,6 +676,21 @@ const filteredKeys = keys?.filter((key) => {
                                     data-id={item.id}
                                   >
                                     <FontAwesomeIcon icon={faTrashArrowUp} />
+                                  </button>
+                                </OverlayTrigger>
+                              )}
+
+                              {showListIcon && showListIcon && (
+                                <OverlayTrigger
+                                  placement="top"
+                                  overlay={listTooltip}
+                                >
+                                  <button
+                                    onClick={() => handleList(item)}
+                                    className="btn-xs black circle-btn"
+                                    data-id={item.id}
+                                  >
+                                    <FontAwesomeIcon icon={faListCheck} />
                                   </button>
                                 </OverlayTrigger>
                               )}

@@ -450,6 +450,16 @@ export const QMSSideBarItems = [
     icon: faClipboardList,
     subItems: [
       {
+        itemName: "Group Diary",
+        link: "/qms/reports/question-group-diary",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Pending Under Process",
+        link: "/qms/reports/question-pending-under-process",
+        icon: faClipboardList,
+      },
+      {
         itemName: "Resolution Summary",
         link: "/qms/reports/resolution-summary",
         icon: faClipboardList,
