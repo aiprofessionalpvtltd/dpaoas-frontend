@@ -452,7 +452,7 @@ function QMSSerchResolution() {
                   </div>
                 </form>
 
-              <div class="row mt-3">
+              {/* <div class="row mt-3">
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                   <button class="btn btn-primary mb-3" type="submit">
                     Print Resolution
@@ -461,7 +461,8 @@ function QMSSerchResolution() {
                     Motion Annual Report
                   </button>
                 </div>
-              </div>
+              </div> */}
+              <div className="mt-3">
               <CustomTable
                     block={false}
                     hideBtn={true}
@@ -477,9 +478,10 @@ function QMSSerchResolution() {
                     pageSize={pageSize}
                     handleEdit={(item) => handleEdit(item.RID)}
                     handleDelete={(item) => deleteResolutionApi(item.RID)}
-                    // showRecoverIcon={true}
                   />
-              <div class="row mt-3">
+              </div>
+             
+              {/* <div class="row mt-3">
                 <div class="col">
                   <div class="mb-3">
                     <label class="form-label">Resolution Status</label>
@@ -529,7 +531,7 @@ function QMSSerchResolution() {
                     Change Status
                   </button>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
