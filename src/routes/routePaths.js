@@ -160,6 +160,7 @@ import QuestionGroupDiary from "../pages/Dashboard/Modules/QMS/Reports/QuestionG
 import QuestionPendingUnderProcess from "../pages/Dashboard/Modules/QMS/Reports/QuestionPendingUnderProcess";
 import SupplementaryList from "../pages/Dashboard/Modules/QMS/Reports/QuestionList/SupplementaryList";
 import QMSRotaList from "../pages/Dashboard/Modules/QMS/Reports/RotaList";
+import RotaListFurtherDetails from "../pages/Dashboard/Modules/QMS/Reports/RotaList/RotaListFurtherDetails";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -360,7 +361,7 @@ export const ProtectedRoutes = [
   },
   {
     path: "/qms/reports/rota-list/further-details",
-    element: <SupplementaryList />,
+    element: <RotaListFurtherDetails />,
   },
 
   //QMS Module
