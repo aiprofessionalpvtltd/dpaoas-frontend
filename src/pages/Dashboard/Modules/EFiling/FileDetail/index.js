@@ -296,9 +296,9 @@ function FileDetail() {
       if (response?.success) {
         showSuccessMessage(response?.message);
         // formik.resetForm()
-        setTimeout(() => {
-          navigate("/efiling/dashboard/file-register-list/files-list/cases");
-        }, 1000);
+        // setTimeout(() => {
+        //   navigate("/efiling/dashboard/file-register-list/files-list/cases");
+        // }, 1000);
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -1155,7 +1155,7 @@ function FileDetail() {
                         onClick={() => handleSubmit(false)} // False means editable
                         disabled={viewPage ? true : location?.state?.approved ?  true : false}
                       >
-                        Submit As Draft
+                        Save As Draft
                       </button>
                     </div>
 
@@ -1166,7 +1166,7 @@ function FileDetail() {
                         onClick={() => handleSubmit(true)} // True means non-editable
                         disabled={viewPage ? true : location?.state?.approved ?  true : false}
                       >
-                        Submit
+                        Save
                       </button>
                     </div>
                   </div>

@@ -48,7 +48,7 @@ export const EFilingNotifications = (notificationType) => {
 
   useEffect(() => {
     getAllQuestionsApi();
-  }, []);
+  }, [count]);
   const notificationModal = () => (
     <div
       ref={notificationRef}

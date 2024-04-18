@@ -136,11 +136,11 @@ export const CustomNavbar = ({ module, centerlogohide, navItems }) => {
       </nav>
 
       <div class="clearfix"></div>
-      {!centerlogohide && !centerlogohide && (
+      {/* {!centerlogohide && !centerlogohide && (
         <div class="circle">
           <img src={Logo} alt="" srcSet="" />
         </div>
-      )}
+      )} */}
     </header>
   );
 };
