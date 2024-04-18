@@ -496,6 +496,11 @@ export const QMSSideBarItems = [
         link: "/qms/reports/defer-question-reports",
         icon: faClipboardList,
       },
+      {
+        itemName: "Rota List",
+        link: "/qms/reports/rota-list",
+        icon: faClipboardList,
+      },
     ],
   },
   {
