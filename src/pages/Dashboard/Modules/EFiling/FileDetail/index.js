@@ -995,6 +995,64 @@ function FileDetail() {
                     </ul>
 
                     <div class="tab-content" id="ex1-content">
+                      <div class='row'>
+                        {selectedTab === "Correspondence" && (
+                        <div class='col-2'>
+                        {filesData?.sections.length > 0 && (
+                                        <div>
+                                          <label
+                                            for="formFile"
+                                            class="form-label mt-3 mb-0"
+                                          >
+                                            Attached Files
+                                          </label>
+                                            {filesData?.sections &&
+                                              correspondancestore?.length > 0 && correspondancestore[0]?.caseAttachments.map(
+                                                (file, index) => {
+                                                  return (
+                                                    <div key={index}>
+                                                      <a
+                                                        class="MultiFile-remove"
+                                                        style={{
+                                                          marginRight: "10px",
+                                                          color: "red",
+                                                          cursor: "pointer",
+                                                        }}
+                                                        onClick={() =>
+                                                          hendleRemoveImage(
+                                                            file?.id
+                                                          )
+                                                        }
+                                                      >
+                                                        x
+                                                      </a>
+                                                      <a
+                                                        href={
+                                                          file?.id
+                                                            ? `http://172.16.170.8:5252${file?.fileName}`
+                                                            : URL.createObjectURL(
+                                                                file
+                                                              )
+                                                        }
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                      >
+                                                        {file?.id
+                                                          ? file?.fileName
+                                                              ?.split("/")
+                                                              .pop()
+                                                          : file.name}
+                                                      </a>
+                                                    </div>
+                                                  );
+                                                }
+                                              )}
+                                        </div>
+                                      )}
+                        </div>
+                        )}
+                        <div class='col'>
+
                       {selectedTab === "FR Noting" ? (
                         <section>
                           <ImageGallery
@@ -1082,59 +1140,6 @@ function FileDetail() {
                                         }
                                         // disabled={location.state?.view ? true : false}
                                       />
-                                      {filesData?.sections.length > 0 && (
-                                        <div>
-                                          <label
-                                            for="formFile"
-                                            class="form-label mt-3 mb-0"
-                                          >
-                                            Attached Files
-                                          </label>
-                                          <ul>
-                                            {filesData?.sections &&
-                                              correspondancestore[0]?.caseAttachments.map(
-                                                (file, index) => {
-                                                  return (
-                                                    <div key={index}>
-                                                      <a
-                                                        class="MultiFile-remove"
-                                                        style={{
-                                                          marginRight: "10px",
-                                                          color: "red",
-                                                          cursor: "pointer",
-                                                        }}
-                                                        onClick={() =>
-                                                          hendleRemoveImage(
-                                                            file?.id
-                                                          )
-                                                        }
-                                                      >
-                                                        x
-                                                      </a>
-                                                      <a
-                                                        href={
-                                                          file?.id
-                                                            ? `http://172.16.170.8:5252${file?.fileName}`
-                                                            : URL.createObjectURL(
-                                                                file
-                                                              )
-                                                        }
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                      >
-                                                        {file?.id
-                                                          ? file?.fileName
-                                                              ?.split("/")
-                                                              .pop()
-                                                          : file.name}
-                                                      </a>
-                                                    </div>
-                                                  );
-                                                }
-                                              )}
-                                          </ul>
-                                        </div>
-                                      )}
                                     </div>
                                   </div>
                                 </div>
@@ -1143,6 +1148,9 @@ function FileDetail() {
                           </div>
                         </section>
                       ) : null}
+
+                      </div>
+                      </div>
                     </div>
                   </div>
 
@@ -1307,14 +1315,16 @@ function FileDetail() {
                                   </div>
                                   <div style={{ float: "right" }}>
                                     <small>
-                                      {moment(item?.createdAt).format(
+                                      {/* {moment(item?.createdAt).format(
                                         "DD/MM/YYYY"
-                                      )}
+                                      )} */}
+                                      {item?.formattedDateCreatedAt}
                                     </small>
                                     <small className="ms-2">
-                                      {moment(item?.createdAt).format(
+                                      {/* {moment(item?.createdAt).format(
                                         "hh:mm A"
-                                      )}
+                                      )} */}
+                                      {item?.formattedTimeCreatedAt}
                                     </small>
                                   </div>
                                 </div>

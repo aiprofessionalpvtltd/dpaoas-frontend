@@ -436,12 +436,14 @@ function FRDetail() {
                                 </div>
                                 <div style={{ float: "right" }}>
                                   <small>
-                                    {moment(item?.createdAt).format(
+                                    {/* {moment(item?.formattedCreatedAt).format(
                                       "DD/MM/YYYY"
-                                    )}
+                                    )} */}
+                                    {item?.formattedDateCreatedAt}
                                   </small>
                                   <small className="ms-2">
-                                    {moment(item?.createdAt).format("hh:mm A")}
+                                    {/* {moment(item?.formattedCreatedAt).format("hh:mm A")} */}
+                                    {item?.formattedTimeCreatedAt}
                                   </small>
                                 </div>
                               </div>
