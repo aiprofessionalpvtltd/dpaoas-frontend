@@ -378,11 +378,11 @@ export const QMSSideBarItems = [
     link: "/qms/question",
     icon: faClipboardList,
     subItems: [
-      {
-        itemName: "Question List",
-        link: "/qms/question/list",
-        icon: faClipboardList,
-      },
+      // {
+      //   itemName: "Question List",
+      //   link: "/qms/question/list",
+      //   icon: faClipboardList,
+      // },
       // {
       //     itemName: "Question Detail",
       //     link: "/qms/question/detail",
@@ -449,6 +449,16 @@ export const QMSSideBarItems = [
     link: "/qms/reports",
     icon: faClipboardList,
     subItems: [
+      {
+        itemName: "Group Diary",
+        link: "/qms/reports/question-group-diary",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Pending Under Process",
+        link: "/qms/reports/question-pending-under-process",
+        icon: faClipboardList,
+      },
       {
         itemName: "Resolution Summary",
         link: "/qms/reports/resolution-summary",

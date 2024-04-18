@@ -156,6 +156,9 @@ import FRDetail from "../pages/Dashboard/Modules/EFiling/FreshReceipt/FRDetail";
 import ApprovedCasesHistory from "../pages/Dashboard/Modules/EFiling/FIleRegister/Files/FileCases/ApprovedCases";
 import NoticeSummary from "../pages/Dashboard/Modules/QMS/Reports/NoticeSummary";
 import RemoveQuestion from "../pages/Dashboard/Modules/QMS/Manage/RemoveQuestion";
+import QuestionGroupDiary from "../pages/Dashboard/Modules/QMS/Reports/QuestionGroupDiary";
+import QuestionPendingUnderProcess from "../pages/Dashboard/Modules/QMS/Reports/QuestionPendingUnderProcess";
+import SupplementaryList from "../pages/Dashboard/Modules/QMS/Reports/QuestionList/SupplementaryList";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -315,7 +318,14 @@ export const ProtectedRoutes = [
   { path: "/qms/resolution/search", element: <QMSSerchResolution /> },
 
   { path: "/qms/reports", element: <QMSQuestionDashboard /> },
-
+  {
+    path: "/qms/reports/question-group-diary",
+    element: <QuestionGroupDiary />,
+  },
+  {
+    path: "/qms/reports/question-pending-under-process",
+    element: <QuestionPendingUnderProcess />,
+  },
   {
     path: "/qms/reports/resolution-summary",
     element: <QMSResolutionSummary />,
@@ -337,6 +347,10 @@ export const ProtectedRoutes = [
   {
     path: "/qms/reports/question-list",
     element: <QMSReportQuestionList />,
+  },
+  {
+    path: "/qms/reports/question-list/supplementary",
+    element: <SupplementaryList />,
   },
 
   //QMS Module

@@ -34,6 +34,7 @@ function QMSReportQuestionList() {
   const [count, setCount] = useState(null);
   const [sessionId, setSessionId] = useState(null);
   const [include, setInclude] = useState(false);
+  const [generatedItem, setGeneratedItem] = useState(false);
   const pageSize = 10; // Set your desired page size
 
   const handlePageChange = (page) => {
@@ -116,6 +117,7 @@ function QMSReportQuestionList() {
         // showSuccessMessage(response?.message);
         // setCount(response?.count);
         const transformedData = transformLeavesData(response.data?.questionList);
+        setGeneratedItem(true);
         setGeneratedData(response.data);
         setResData(transformedData);
       }
@@ -134,6 +136,7 @@ function QMSReportQuestionList() {
       const response = await getAllQuesListBySession(sessionId, currentPage, pageSize);
       if (response?.success) {  
         setCount(response?.count);
+        setGeneratedItem(false);
         const transformedData = transformLeavesData(response.data?.questionList);
         setResData(transformedData)
       }
@@ -162,6 +165,7 @@ function QMSReportQuestionList() {
     try {
       const response = await saveQuestionList(requestData);
       if (response?.success) {
+        setGeneratedItem(false);
         showSuccessMessage(response.data.message);
       }
     } catch (error) {
@@ -375,6 +379,9 @@ function QMSReportQuestionList() {
                 handleDelete={(item) => deleteList(item.id)}
                 showPrint={true}
                 handlePrint={(item) => printQuestions(item.id)}
+                ActionHide={generatedItem ? true : false}
+                showListIcon={true}
+                handleList={(item) => navigate("/qms/reports/question-list/supplementary", { state: { listId: item?.id } })}
                 totalCount={count}
               />
             </div>

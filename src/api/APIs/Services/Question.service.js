@@ -46,7 +46,7 @@ export const searchQuestion = async (searchParams, currentPage, pageSize) => {
     );
 
     const response = await axiosClientMMS.get(
-      `/questions/searchQuestion?currentPage=${currentPage}&pageSize=${pageSize}`,
+      `/questions/searchQuestion`,
       {
         params: filteredSearchParams,
         // headers: {
@@ -375,6 +375,147 @@ export const delleteQuestionsList = async (id) => {
     // const token = getAuthToken();
     const response = await axiosClientMMS.delete(
       `/questionList/deleteQuestionList/${id}`,
+      {
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // }
+      }
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const getQuestionGroupDiaries = async (searchParams) => {
+  try {
+    // const token = getAuthToken();
+
+    // Filter out empty values
+    const filteredSearchParams = Object.fromEntries(
+      Object.entries(searchParams).filter(([_, value]) => value !== "")
+    );
+
+    const response = await axiosClientMMS.get(
+      `/questions/getGroupDiary`,
+      {
+        params: filteredSearchParams,
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // },
+      }
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const getUnderProcessQuestions = async (searchParams) => {
+  try {
+    // const token = getAuthToken();
+
+    // Filter out empty values
+    const filteredSearchParams = Object.fromEntries(
+      Object.entries(searchParams).filter(([_, value]) => value !== "")
+    );
+
+    const response = await axiosClientMMS.get(
+      `/questions/getUnderProcessQuestions`,
+      {
+        params: filteredSearchParams,
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // },
+      }
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+
+
+
+// Supplementary List API
+export const getAllSupplementaryLists = async (id) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.get(`/questionList/getByQuestionListId/${id}`, {
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // }
+    });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const getGeneratedSuppList = async (id, data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.post(`/questionList/generateSupplementaryList/${id}`, data, {
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // }
+    });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const saveSuppList = async (id, data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.post(
+      `/questionList/saveSupplementaryList/${id}`,
+      data,
+      {
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // }
+      }
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+// api needed
+export const printSuppFromList = async (data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.post(
+      `/questionList/saveQuestionList`,
+      data,
+      {
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // }
+      }
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const deleteSuppList = async (id) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.delete(
+      `/questionList/deleteSupplementaryList/${id}`,
       {
         // headers: {
         //   Authorization: `Bearer ${token}`,
