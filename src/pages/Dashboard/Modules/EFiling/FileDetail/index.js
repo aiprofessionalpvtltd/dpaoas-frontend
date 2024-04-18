@@ -296,9 +296,9 @@ function FileDetail() {
       if (response?.success) {
         showSuccessMessage(response?.message);
         // formik.resetForm()
-        setTimeout(() => {
-          navigate("/efiling/dashboard/file-register-list/files-list/cases");
-        }, 1000);
+        // setTimeout(() => {
+        //   navigate("/efiling/dashboard/file-register-list/files-list/cases");
+        // }, 1000);
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -532,7 +532,6 @@ function FileDetail() {
 
   const handleSubmit = (isDraft) => {
     formik.setFieldValue('isEditable', isDraft); // Set isEdit value based on button clicked
-    formik.submitForm(); // Trigger form submission
   };
 
   return (
@@ -996,6 +995,32 @@ function FileDetail() {
 
                     <div class="tab-content" id="ex1-content">
                       <div class='row'>
+                      <div class="row mt-2 d-flex justify-content-end float-end">
+                    <div class="col-2">
+                      <button
+                        class="btn btn-primary"
+                        type="submit"
+                        style={{ width: '150px' }}
+                        onClick={() => handleSubmit(false)} // False means editable
+                        disabled={viewPage ? true : location?.state?.approved ?  true : false}
+                      >
+                        Save As Draft
+                      </button>
+                    </div>
+
+                    <div class="col-2">
+                      <button
+                        class="btn btn-primary"
+                        type="submit"
+                        style={{ width: '150px' }}
+                        onClick={() => handleSubmit(true)} // True means non-editable
+                        disabled={viewPage ? true : location?.state?.approved ?  true : false}
+                      >
+                        Save
+                      </button>
+                    </div>
+                  </div>
+                  
                         {selectedTab === "Correspondence" && (
                         <div class='col-2'>
                         {filesData?.sections.length > 0 && (
@@ -1051,8 +1076,8 @@ function FileDetail() {
                                       )}
                         </div>
                         )}
+                        
                         <div class='col'>
-
                       {selectedTab === "FR Noting" ? (
                         <section>
                           <ImageGallery
@@ -1153,31 +1178,7 @@ function FileDetail() {
                       </div>
                     </div>
                   </div>
-
-                  <div class="row mt-4 d-md-flex justify-content-end float-end">
-                    <div class="col">
-                      <button
-                        class="btn btn-primary"
-                        type="submit"
-                        style={{ width: '150px' }}
-                        onClick={() => handleSubmit(false)} // False means editable
-                        disabled={viewPage ? true : location?.state?.approved ?  true : false}
-                      >
-                        Submit As Draft
-                      </button>
-                    </div>
-
-                    <div class="col">
-                      <button
-                        class="btn btn-primary"
-                        type="submit"
-                        onClick={() => handleSubmit(true)} // True means non-editable
-                        disabled={viewPage ? true : location?.state?.approved ?  true : false}
-                      >
-                        Submit
-                      </button>
-                    </div>
-                  </div>
+                  
                   {/* <div className="row">
                     <div class="col-6">
                      

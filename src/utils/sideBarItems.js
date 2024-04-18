@@ -976,7 +976,7 @@ export const EfilingSideBarBranchItem = [
           icon: faBook,
         },
         {
-          itemName: "Registers",
+          itemName: "Register",
           link: "/efiling/dashboard/file-register",
           icon: faBookOpen,
           subItems: [
@@ -986,24 +986,24 @@ export const EfilingSideBarBranchItem = [
               icon: faBookOpen,
             },
             {
-              itemName: "Registers List",
+              itemName: "Register List",
               link: "/efiling/dashboard/file-register-list",
               icon: faBookOpen,
             },
           ],
         },
         {
-          itemName: "File Headings",
+          itemName: "File Head",
           link: "/efiling/dashboard/file-heading-list",
           icon: faHeading,
           subItems: [
             {
-              itemName: "Create File Heading",
+              itemName: "Create File Head",
               link: "/efiling/dashboard/addedit-file-heading",
               icon: faHeading,
             },
             {
-              itemName: "File Headings List",
+              itemName: "File Head List",
               link: "/efiling/dashboard/file-heading-list",
               icon: faHeading,
             },
