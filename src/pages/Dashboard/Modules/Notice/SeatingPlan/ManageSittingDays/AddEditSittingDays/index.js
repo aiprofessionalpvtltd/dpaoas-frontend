@@ -33,9 +33,9 @@ import moment from "moment";
 const validationSchema = Yup.object({
   fkSessionId: Yup.string().required("Session is required"),
   sittingDate: Yup.string().required("Sitting date is required"),
-  startTime: Yup.string().required("Start time is required"),
-  endTime: Yup.string().required("End time is required"),
-  isAdjourned: Yup.boolean(),
+  sittingStartTime: Yup.string().required("Start time is required"),
+  sittingEndTime: Yup.string().required("End time is required"),
+  // isAdjourned: Yup.boolean(),
 });
 
 function NMSAddEditSittingDaysForm() {
@@ -346,7 +346,7 @@ function NMSAddEditSittingDaysForm() {
         },
       ],
     },
-    // validationSchema: validationSchema,
+    validationSchema: validationSchema,
     onSubmit: (values) => {
       // Handle form submission here
       if (location?.state) {
@@ -378,18 +378,18 @@ function NMSAddEditSittingDaysForm() {
     const data = {
       fkSessionId: parseInt(values.fkSessionId),
       sittingDate: values?.sittingDate,
-      sittingStartTime: moment(values?.sittingStartTime, "hh:mm A").format(
+      sittingStartTime: values?.sittingStartTime ?  moment(values?.sittingStartTime, "hh:mm A").format(
         "hh:mm A"
-      ),
-      sittingEndTime: moment(values?.sittingEndTime, "hh:mm A").format(
+      ):"",
+      sittingEndTime: values?.sittingEndTime ? moment(values?.sittingEndTime, "hh:mm A").format(
         "hh:mm A"
-      ),
-      committeeStartTime: moment(values?.committeeStartTime, "hh:mm A").format(
+      ):"",
+      committeeStartTime: values?.committeeStartTime ? moment(values?.committeeStartTime, "hh:mm A").format(
         "hh:mm A"
-      ),
-      committeeEndTime: moment(values?.committeeEndTime, "hh:mm A").format(
+      ):"",
+      committeeEndTime: values?.committeeEndTime ? moment(values?.committeeEndTime, "hh:mm A").format(
         "hh:mm A"
-      ),
+      ):"",
       sessionMembers: values?.sessionMembers,
       // sessionMembers: values.sessionMembers.map((member) => ({
       //   fkMemberId: member.fkMemberId,
@@ -455,12 +455,12 @@ function NMSAddEditSittingDaysForm() {
         "hh:mm A"
       ),
       breakEndTime: moment(values?.breakEndTime, "hh:mm A").format("hh:mm A"),
-      committeeStartTime: moment(values?.committeeStartTime, "hh:mm A").format(
+      committeeStartTime: values?.committeeStartTime ? moment(values?.committeeStartTime, "hh:mm A").format(
         "hh:mm A"
-      ),
-      committeeEndTime: moment(values.committeeEndTime, "hh:mm A").format(
+      ):"",
+      committeeEndTime: values?.committeeEndTime ? moment(values?.committeeEndTime, "hh:mm A").format(
         "hh:mm A"
-      ),
+      ):"",
       sessionMembers: values.sessionMembers,
       // sessionMembers: values.sessionMembers.map((member) => ({
       //   fkMemberId: member.fkMemberId,
@@ -649,6 +649,12 @@ function NMSAddEditSittingDaysForm() {
                           ))}
                         ;
                       </select>
+                      {formik.touched.fkSessionId &&
+                        formik.errors.fkSessionId && (
+                          <div className="invalid-feedback">
+                            {formik.errors.fkSessionId}
+                          </div>
+                        )}
                     </div>
                   </div>
                   <div className="col">
@@ -683,7 +689,7 @@ function NMSAddEditSittingDaysForm() {
                       />
                       {formik.touched.sittingDate &&
                         formik.errors.sittingDate && (
-                          <div className="invalid-feedback">
+                          <div className="invalid-feedback" style={{display:"block"}}>
                             {formik.errors.sittingDate}
                           </div>
                         )}
@@ -723,7 +729,12 @@ function NMSAddEditSittingDaysForm() {
                             // moment(time, "hh:mm a").format("hh:mm a")
                           )
                         }
-                        className={`form-control`}
+                        className={`form-control ${
+                          formik.touched.sittingStartTime &&
+                          formik.errors.sittingStartTime
+                            ? "is-invalid"
+                            : ""
+                        }`}
                       />
                       {formik.touched.sittingStartTime &&
                         formik.errors.sittingStartTime && (
@@ -765,7 +776,12 @@ function NMSAddEditSittingDaysForm() {
                             // moment(time, "hh:mm a").format("hh:mm a")
                           )
                         }
-                        className={`form-control`}
+                        className={`form-control ${
+                          formik.touched.sittingEndTime &&
+                          formik.errors.sittingEndTime
+                            ? "is-invalid"
+                            : ""
+                        }`}
                       />
                       {formik.touched.sittingEndTime &&
                         formik.errors.sittingEndTime && (

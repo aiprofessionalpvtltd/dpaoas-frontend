@@ -43,7 +43,7 @@ function NMSProroguredSessions() {
       session: item?.sessionName,
       sessionStartDate: moment(item?.sessionStartDate).format("DD-MM-YYYY"),
       sessionEndDate: moment(item?.sessionEndDate).format("DD-MM-YYYY"),
-      isProrogued: item?.isSessionProrogued.toString(),
+      // isProrogued: item?.isSessionProrogued.toString(),
     }));
   };
 
@@ -51,9 +51,15 @@ function NMSProroguredSessions() {
     try {
       const response = await getProroguedSession(currentPage, pageSize);
       if (response?.success) {
+        // const proroguedSessions = response.data.sessionSittings.filter(session => session.isSessionProrogued);
+       
+        // const transformedData = transformProroguedData(
+        //   proroguedSessions
+        // );
         const transformedData = transformProroguedData(
           response?.data?.sessionSittings
         );
+        
         setProroguredSessions(transformedData);
         // showSuccessMessage(response?.message);
         // setCount(response?.data?.count);
