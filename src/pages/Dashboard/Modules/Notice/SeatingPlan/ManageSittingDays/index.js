@@ -28,7 +28,7 @@ function ManageSittingsDays() {
   const [sittingDays, setSittingDays] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
-  const pageSize = 15; // Set your desired page size
+  const pageSize = 5; // Set your desired page size
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
@@ -56,7 +56,7 @@ function ManageSittingsDays() {
         "hh:ss:a"
       ),
       sittingEndTime: moment(item?.sittingEndTime, "hh:ss:a").format("hh:ss:a"),
-      committeeAsWholeTime: item?.committeeTotalTime  ? item?.committeeTotalTime : "--",
+      committeeAsWholeTime: item?.committeeTotalTime,
       totalBreakTime: item?.totalBreakTime,
       presidingMemberTime: item?.totalMemberTime,
       sessionAdjourned: String(item?.sessionAdjourned),
