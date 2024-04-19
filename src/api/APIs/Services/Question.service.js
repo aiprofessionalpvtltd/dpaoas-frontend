@@ -528,3 +528,36 @@ export const deleteSuppList = async (id) => {
     throw error;
   }
 };
+
+
+
+// Rota List API
+export const generatedRotaList = async (data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.post(`/rota/create`, data, {
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // }
+    });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const generateRotaFurtherAllotmentList = async (data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.post(`/rota/createFurtherAllotment`, data, {
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // }
+    });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};

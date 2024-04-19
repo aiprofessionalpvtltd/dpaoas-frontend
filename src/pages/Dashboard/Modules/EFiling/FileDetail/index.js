@@ -296,9 +296,9 @@ function FileDetail() {
       if (response?.success) {
         showSuccessMessage(response?.message);
         // formik.resetForm()
-        setTimeout(() => {
-          navigate("/efiling/dashboard/file-register-list/files-list/cases");
-        }, 1000);
+        // setTimeout(() => {
+        //   navigate("/efiling/dashboard/file-register-list/files-list/cases");
+        // }, 1000);
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -532,7 +532,6 @@ function FileDetail() {
 
   const handleSubmit = (isDraft) => {
     formik.setFieldValue('isEditable', isDraft); // Set isEdit value based on button clicked
-    formik.submitForm(); // Trigger form submission
   };
 
   return (
@@ -995,6 +994,90 @@ function FileDetail() {
                     </ul>
 
                     <div class="tab-content" id="ex1-content">
+                      <div class='row'>
+                      <div class="row mt-2 d-flex justify-content-end float-end">
+                    <div class="col-2">
+                      <button
+                        class="btn btn-primary"
+                        type="submit"
+                        style={{ width: '150px' }}
+                        onClick={() => handleSubmit(false)} // False means editable
+                        disabled={viewPage ? true : location?.state?.approved ?  true : false}
+                      >
+                        Save As Draft
+                      </button>
+                    </div>
+
+                    <div class="col-2">
+                      <button
+                        class="btn btn-primary"
+                        type="submit"
+                        style={{ width: '150px' }}
+                        onClick={() => handleSubmit(true)} // True means non-editable
+                        disabled={viewPage ? true : location?.state?.approved ?  true : false}
+                      >
+                        Save
+                      </button>
+                    </div>
+                  </div>
+                  
+                        {selectedTab === "Correspondence" && (
+                        <div class='col-2'>
+                        {filesData?.sections.length > 0 && (
+                                        <div>
+                                          <label
+                                            for="formFile"
+                                            class="form-label mt-3 mb-0"
+                                          >
+                                            Attached Files
+                                          </label>
+                                            {filesData?.sections &&
+                                              correspondancestore?.length > 0 && correspondancestore[0]?.caseAttachments.map(
+                                                (file, index) => {
+                                                  return (
+                                                    <div key={index}>
+                                                      <a
+                                                        class="MultiFile-remove"
+                                                        style={{
+                                                          marginRight: "10px",
+                                                          color: "red",
+                                                          cursor: "pointer",
+                                                        }}
+                                                        onClick={() =>
+                                                          hendleRemoveImage(
+                                                            file?.id
+                                                          )
+                                                        }
+                                                      >
+                                                        x
+                                                      </a>
+                                                      <a
+                                                        href={
+                                                          file?.id
+                                                            ? `http://172.16.170.8:5252${file?.fileName}`
+                                                            : URL.createObjectURL(
+                                                                file
+                                                              )
+                                                        }
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                      >
+                                                        {file?.id
+                                                          ? file?.fileName
+                                                              ?.split("/")
+                                                              .pop()
+                                                          : file.name}
+                                                      </a>
+                                                    </div>
+                                                  );
+                                                }
+                                              )}
+                                        </div>
+                                      )}
+                        </div>
+                        )}
+                        
+                        <div class='col'>
                       {selectedTab === "FR Noting" ? (
                         <section>
                           <ImageGallery
@@ -1082,59 +1165,6 @@ function FileDetail() {
                                         }
                                         // disabled={location.state?.view ? true : false}
                                       />
-                                      {filesData?.sections.length > 0 && (
-                                        <div>
-                                          <label
-                                            for="formFile"
-                                            class="form-label mt-3 mb-0"
-                                          >
-                                            Attached Files
-                                          </label>
-                                          <ul>
-                                            {filesData?.sections &&
-                                              correspondancestore[0]?.caseAttachments.map(
-                                                (file, index) => {
-                                                  return (
-                                                    <div key={index}>
-                                                      <a
-                                                        class="MultiFile-remove"
-                                                        style={{
-                                                          marginRight: "10px",
-                                                          color: "red",
-                                                          cursor: "pointer",
-                                                        }}
-                                                        onClick={() =>
-                                                          hendleRemoveImage(
-                                                            file?.id
-                                                          )
-                                                        }
-                                                      >
-                                                        x
-                                                      </a>
-                                                      <a
-                                                        href={
-                                                          file?.id
-                                                            ? `http://172.16.170.8:5252${file?.fileName}`
-                                                            : URL.createObjectURL(
-                                                                file
-                                                              )
-                                                        }
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                      >
-                                                        {file?.id
-                                                          ? file?.fileName
-                                                              ?.split("/")
-                                                              .pop()
-                                                          : file.name}
-                                                      </a>
-                                                    </div>
-                                                  );
-                                                }
-                                              )}
-                                          </ul>
-                                        </div>
-                                      )}
                                     </div>
                                   </div>
                                 </div>
@@ -1143,33 +1173,12 @@ function FileDetail() {
                           </div>
                         </section>
                       ) : null}
+
+                      </div>
+                      </div>
                     </div>
                   </div>
-
-                  <div class="row mt-4 d-md-flex justify-content-end float-end">
-                    <div class="col">
-                      <button
-                        class="btn btn-primary"
-                        type="submit"
-                        style={{ width: '150px' }}
-                        onClick={() => handleSubmit(false)} // False means editable
-                        disabled={viewPage ? true : location?.state?.approved ?  true : false}
-                      >
-                        Submit As Draft
-                      </button>
-                    </div>
-
-                    <div class="col">
-                      <button
-                        class="btn btn-primary"
-                        type="submit"
-                        onClick={() => handleSubmit(true)} // True means non-editable
-                        disabled={viewPage ? true : location?.state?.approved ?  true : false}
-                      >
-                        Submit
-                      </button>
-                    </div>
-                  </div>
+                  
                   {/* <div className="row">
                     <div class="col-6">
                      
@@ -1307,14 +1316,16 @@ function FileDetail() {
                                   </div>
                                   <div style={{ float: "right" }}>
                                     <small>
-                                      {moment(item?.createdAt).format(
+                                      {/* {moment(item?.createdAt).format(
                                         "DD/MM/YYYY"
-                                      )}
+                                      )} */}
+                                      {item?.formattedDateCreatedAt}
                                     </small>
                                     <small className="ms-2">
-                                      {moment(item?.createdAt).format(
+                                      {/* {moment(item?.createdAt).format(
                                         "hh:mm A"
-                                      )}
+                                      )} */}
+                                      {item?.formattedTimeCreatedAt}
                                     </small>
                                   </div>
                                 </div>
