@@ -153,23 +153,23 @@ export const NoticeSidebarItems = [
   //     },
   //   ],
   // },
-  {
-    itemName: "Legislation Business",
-    link: "/notice/legislation",
-    icon: faScaleBalanced,
-    subItems: [
-      {
-        itemName: "Private Bill",
-        link: "/notice/legislation/private-bill",
-        icon: faFileInvoice,
-      },
-      {
-        itemName: "legislative Bill",
-        link: "/notice/legislation/legislative-bill",
-        icon: faFileInvoice,
-      },
-    ],
-  },
+  // {
+  //   itemName: "Legislation Business",
+  //   link: "/notice/legislation",
+  //   icon: faScaleBalanced,
+  //   subItems: [
+  //     {
+  //       itemName: "Private Bill",
+  //       link: "/notice/legislation/private-bill",
+  //       icon: faFileInvoice,
+  //     },
+  //     {
+  //       itemName: "legislative Bill",
+  //       link: "/notice/legislation/legislative-bill",
+  //       icon: faFileInvoice,
+  //     },
+  //   ],
+  // },
 
   // {
   //   itemName: "Manage",
@@ -276,17 +276,17 @@ export const NoticeSidebarItems = [
       },
     ],
   },
-  {
-    itemName: "Speech On demand",
-    link: "/notice/speech-on-demand",
-    icon: faHome,
-  },
+  // {
+  //   itemName: "Speech On demand",
+  //   link: "/notice/speech-on-demand",
+  //   icon: faHome,
+  // },
 
-  {
-    itemName: "Research Services",
-    link: "/notice/research-services",
-    icon: faHome,
-  },
+  // {
+  //   itemName: "Research Services",
+  //   link: "/notice/research-services",
+  //   icon: faHome,
+  // },
   {
     itemName: "Reports",
     link: "/notice/reports",
