@@ -329,6 +329,9 @@ function FileDetail() {
           CommentStatus: "",
           comment: "",
         });
+        setTimeout(() => {
+          navigate("/efiling/dashboard/file-register-list/files-list/cases");
+        }, 1000);
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -486,7 +489,10 @@ function FileDetail() {
 
   const deleteNotification = async (item) => {
     try {
-      const response = await DeleteNotificationById(location.state?.notificationId, UserData?.fkUserId);
+      const response = await DeleteNotificationById(
+        location.state?.notificationId,
+        UserData?.fkUserId
+      );
       console.log("Notification deleted", response?.data);
     } catch (error) {
       console.log(error.response.data.message);
@@ -494,7 +500,7 @@ function FileDetail() {
   };
 
   useEffect(() => {
-    if(location.state?.notificationId) {
+    if (location.state?.notificationId) {
       deleteNotification();
     }
     getEmployeeData();
@@ -531,7 +537,7 @@ function FileDetail() {
   // };
 
   const handleSubmit = (isDraft) => {
-    formik.setFieldValue('isEditable', isDraft); // Set isEdit value based on button clicked
+    formik.setFieldValue("isEditable", isDraft); // Set isEdit value based on button clicked
   };
 
   return (
@@ -909,7 +915,10 @@ function FileDetail() {
                             selectedTab === "Correspondence" ? "true" : "false"
                           }
                         >
-                          Correspondence ({correspondancestore && correspondancestore[0]?.caseAttachments?.length})
+                          Correspondence (
+                          {correspondancestore &&
+                            correspondancestore[0]?.caseAttachments?.length}
+                          )
                         </button>
                       </li>
                       {/*
@@ -994,191 +1003,211 @@ function FileDetail() {
                     </ul>
 
                     <div class="tab-content" id="ex1-content">
-                      <div class='row'>
-                      <div class="row mt-2 d-flex justify-content-end float-end">
-                    <div class="col-2">
-                      <button
-                        class="btn btn-primary"
-                        type="submit"
-                        style={{ width: '150px' }}
-                        onClick={() => handleSubmit(false)} // False means editable
-                        disabled={viewPage ? true : location?.state?.approved ?  true : false}
-                      >
-                        Save As Draft
-                      </button>
-                    </div>
+                      <div class="row">
+                        <div class="row mt-2 d-flex justify-content-end float-end">
+                          <div class="col-2">
+                            <button
+                              class="btn btn-primary"
+                              type="submit"
+                              style={{ width: "150px" }}
+                              onClick={() => handleSubmit(false)} // False means editable
+                              disabled={
+                                viewPage
+                                  ? true
+                                  : location?.state?.approved
+                                    ? true
+                                    : false
+                              }
+                            >
+                              Save As Draft
+                            </button>
+                          </div>
 
-                    <div class="col-2">
-                      <button
-                        class="btn btn-primary"
-                        type="submit"
-                        style={{ width: '150px' }}
-                        onClick={() => handleSubmit(true)} // True means non-editable
-                        disabled={viewPage ? true : location?.state?.approved ?  true : false}
-                      >
-                        Save
-                      </button>
-                    </div>
-                  </div>
-                  
-                        {selectedTab === "Correspondence" && (
-                        <div class='col-2'>
-                        {filesData?.sections.length > 0 && (
-                                        <div>
-                                          <label
-                                            for="formFile"
-                                            class="form-label mt-3 mb-0"
-                                          >
-                                            Attached Files
-                                          </label>
-                                            {filesData?.sections &&
-                                              correspondancestore?.length > 0 && correspondancestore[0]?.caseAttachments.map(
-                                                (file, index) => {
-                                                  return (
-                                                    <div key={index}>
-                                                      <a
-                                                        class="MultiFile-remove"
-                                                        style={{
-                                                          marginRight: "10px",
-                                                          color: "red",
-                                                          cursor: "pointer",
-                                                        }}
-                                                        onClick={() =>
-                                                          hendleRemoveImage(
-                                                            file?.id
-                                                          )
-                                                        }
-                                                      >
-                                                        x
-                                                      </a>
-                                                      <a
-                                                        href={
-                                                          file?.id
-                                                            ? `http://172.16.170.8:5252${file?.fileName}`
-                                                            : URL.createObjectURL(
-                                                                file
-                                                              )
-                                                        }
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                      >
-                                                        {file?.id
-                                                          ? file?.fileName
-                                                              ?.split("/")
-                                                              .pop()
-                                                          : file.name}
-                                                      </a>
-                                                    </div>
-                                                  );
-                                                }
-                                              )}
-                                        </div>
-                                      )}
+                          <div class="col-2">
+                            <button
+                              class="btn btn-primary"
+                              type="submit"
+                              style={{ width: "150px" }}
+                              onClick={() => handleSubmit(true)} // True means non-editable
+                              disabled={
+                                viewPage
+                                  ? true
+                                  : location?.state?.approved
+                                    ? true
+                                    : false
+                              }
+                            >
+                              Save
+                            </button>
+                          </div>
                         </div>
-                        )}
-                        
-                        <div class='col'>
-                      {selectedTab === "FR Noting" ? (
-                        <section>
-                          <ImageGallery
-                            style={{ maxHeight: "calc(100vh 0px)" }}
-                            items={images}
-                            showThumbnails={false}
-                            showFullscreenButton={false}
-                            showPlayButton={false}
-                            slideOnThumbnailOver
-                            renderThumbInner={(item) => (
-                              <div className="image-gallery-thumbnail-inner">
-                                <img
-                                  src={item.thumbnail}
-                                  alt={"file"}
-                                  width={92}
-                                  height={80}
-                                />
-                                {/* Add any additional elements or styles for the thumbnail */}
+
+                        {selectedTab === "Correspondence" && (
+                          <div class="col-2">
+                            {filesData?.sections.length > 0 && (
+                              <div>
+                                <label
+                                  for="formFile"
+                                  class="form-label mt-3 mb-0"
+                                >
+                                  Attached Files
+                                </label>
+                                {filesData?.sections &&
+                                  correspondancestore?.length > 0 &&
+                                  correspondancestore[0]?.caseAttachments.map(
+                                    (file, index) => {
+                                      return (
+                                        <div key={index}>
+                                          <a
+                                            class="MultiFile-remove"
+                                            style={{
+                                              marginRight: "10px",
+                                              color: "red",
+                                              cursor: "pointer",
+                                            }}
+                                            onClick={() =>
+                                              hendleRemoveImage(file?.id)
+                                            }
+                                          >
+                                            x
+                                          </a>
+                                          <a
+                                            href={
+                                              file?.id
+                                                ? `http://172.16.170.8:5252${file?.fileName}`
+                                                : URL.createObjectURL(file)
+                                            }
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                          >
+                                            {file?.id
+                                              ? file?.fileName?.split("/").pop()
+                                              : file.name}
+                                          </a>
+                                        </div>
+                                      );
+                                    }
+                                  )}
                               </div>
                             )}
-                          />
-                        </section>
-                      ) : selectedTab === "Noting" ? (
-                        // Render content for the 'Noting' tab
-                        <section class="mb-5">
-                          <label for="formFile" class="form-label mt-3">
-                            Description
-                          </label>
+                          </div>
+                        )}
 
-                          <TinyEditor
-                            initialContent={""}
-                            disabled={viewPage ? true : filesData?.isEditable ? true : false}
-                            setEditorContent={(content) =>
-                              setNotingData((prev) => ({
-                                ...prev,
-                                description: content,
-                              }))
-                            }
-                            editorContent={notingData.description}
-                            multiLanguage={false}
-                            // disabled={location.state?.view ? true : false}
-                          />
-                        </section>
-                      ) : selectedTab === "Correspondence" ? (
-                        <section>
-                          <label for="formFile" class="form-label mt-3">
-                            Description
-                          </label>
+                        <div class="col">
+                          {selectedTab === "FR Noting" ? (
+                            <section>
+                              <ImageGallery
+                                style={{ maxHeight: "calc(100vh 0px)" }}
+                                items={images}
+                                showThumbnails={false}
+                                showFullscreenButton={false}
+                                showPlayButton={false}
+                                slideOnThumbnailOver
+                                renderThumbInner={(item) => (
+                                  <div className="image-gallery-thumbnail-inner">
+                                    <img
+                                      src={item.thumbnail}
+                                      alt={"file"}
+                                      width={92}
+                                      height={80}
+                                    />
+                                    {/* Add any additional elements or styles for the thumbnail */}
+                                  </div>
+                                )}
+                              />
+                            </section>
+                          ) : selectedTab === "Noting" ? (
+                            // Render content for the 'Noting' tab
+                            <section class="mb-5">
+                              <label for="formFile" class="form-label mt-3">
+                                Description
+                              </label>
 
-                          <TinyEditor
-                            initialContent={""}
-                            disabled={viewPage ? true  : filesData?.isEditable ? filesData?.isEditable : false}
-                            setEditorContent={(content) =>
-                              setCorrespondenceData((prev) => ({
-                                ...prev,
-                                description: content,
-                              }))
-                            }
-                            editorContent={correspondenceData.description}
-                            multiLanguage={false}
-                            // disabled={location.state?.view ? true : false}
-                          />
-                          <div class="row">
-                            <div class="col">
-                              <div class="mb-3 mt-5">
-                                <div class="form-group">
-                                  <div class="row">
-                                    <label
-                                      for="formFile"
-                                      class="form-label mt-3"
-                                    >
-                                      Attach File
-                                    </label>
-                                    <div class="col-6">
-                                      <input
-                                        ref={fileInputRef}
-                                        className="form-control"
-                                        type="file"
-                                        accept=".pdf, .jpg, .jpeg, .png"
-                                        id="correspondance"
-                                        name="correspondance"
-                                        multiple
-                                        onChange={(event) =>
-                                          handleFileChangeCorrespondance(event)
-                                        }
-                                        // disabled={location.state?.view ? true : false}
-                                      />
+                              <TinyEditor
+                                initialContent={""}
+                                disabled={
+                                  viewPage
+                                    ? true
+                                    : filesData?.isEditable
+                                      ? true
+                                      : false
+                                }
+                                setEditorContent={(content) =>
+                                  setNotingData((prev) => ({
+                                    ...prev,
+                                    description: content,
+                                  }))
+                                }
+                                editorContent={notingData.description}
+                                multiLanguage={false}
+                                // disabled={location.state?.view ? true : false}
+                              />
+                            </section>
+                          ) : selectedTab === "Correspondence" ? (
+                            <section>
+                              <label for="formFile" class="form-label mt-3">
+                                Description
+                              </label>
+
+                              <TinyEditor
+                                initialContent={""}
+                                disabled={
+                                  viewPage
+                                    ? true
+                                    : filesData?.isEditable
+                                      ? filesData?.isEditable
+                                      : false
+                                }
+                                setEditorContent={(content) =>
+                                  setCorrespondenceData((prev) => ({
+                                    ...prev,
+                                    description: content,
+                                  }))
+                                }
+                                editorContent={correspondenceData.description}
+                                multiLanguage={false}
+                                // disabled={location.state?.view ? true : false}
+                              />
+                              <div class="row">
+                                <div class="col">
+                                  <div class="mb-3 mt-5">
+                                    <div class="form-group">
+                                      <div class="row">
+                                        <label
+                                          for="formFile"
+                                          class="form-label mt-3"
+                                        >
+                                          Attach File
+                                        </label>
+                                        <div class="col-6">
+                                          <input
+                                            ref={fileInputRef}
+                                            className="form-control"
+                                            type="file"
+                                            accept=".pdf, .jpg, .jpeg, .png"
+                                            id="correspondance"
+                                            name="correspondance"
+                                            multiple
+                                            onChange={(event) =>
+                                              handleFileChangeCorrespondance(
+                                                event
+                                              )
+                                            }
+                                            // disabled={location.state?.view ? true : false}
+                                          />
+                                        </div>
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                          </div>
-                        </section>
-                      ) : null}
-
-                      </div>
+                            </section>
+                          ) : null}
+                        </div>
                       </div>
                     </div>
                   </div>
-                  
+
                   {/* <div className="row">
                     <div class="col-6">
                      
@@ -1254,18 +1283,17 @@ function FileDetail() {
                   </h2>
                   {!location?.state.approved && (
                     <a onClick={toggleModal}>
-                    <button class="btn add-btn">
-                      <FontAwesomeIcon
-                        style={{ marginRight: "-5px" }}
-                        icon={faPlus}
-                        size="md"
-                        width={24}
-                      />{" "}
-                      Add your comment
-                    </button>
-                  </a>
+                      <button class="btn add-btn">
+                        <FontAwesomeIcon
+                          style={{ marginRight: "-5px" }}
+                          icon={faPlus}
+                          size="md"
+                          width={24}
+                        />{" "}
+                        Add your comment
+                      </button>
+                    </a>
                   )}
-                  
                 </div>
 
                 <div style={{ maxHeight: "712px", overflowY: "scroll" }}>

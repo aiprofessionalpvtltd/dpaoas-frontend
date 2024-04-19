@@ -131,28 +131,28 @@ export const NoticeSidebarItems = [
       },
     ],
   },
-  {
-    itemName: "Resolution",
-    link: "/notice/resolution",
-    icon: faClipboardList,
-    subItems: [
-      {
-        itemName: "New Resolution",
-        link: "/notice/resolution/new",
-        icon: faClipboardList,
-      },
-      {
-        itemName: "Search Resolution",
-        link: "/notice/resolution/search",
-        icon: faClipboardList,
-      },
-      {
-        itemName: "List Resolution",
-        link: "/notice/resolution/sent",
-        icon: faClipboardList,
-      },
-    ],
-  },
+  // {
+  //   itemName: "Resolution",
+  //   link: "/notice/resolution",
+  //   icon: faClipboardList,
+  //   subItems: [
+  //     {
+  //       itemName: "New Resolution",
+  //       link: "/notice/resolution/new",
+  //       icon: faClipboardList,
+  //     },
+  //     {
+  //       itemName: "Search Resolution",
+  //       link: "/notice/resolution/search",
+  //       icon: faClipboardList,
+  //     },
+  //     {
+  //       itemName: "List Resolution",
+  //       link: "/notice/resolution/sent",
+  //       icon: faClipboardList,
+  //     },
+  //   ],
+  // },
   {
     itemName: "Legislation Business",
     link: "/notice/legislation",
@@ -753,122 +753,122 @@ export const CMSsidebarItems = [
   },
 ];
 const offcerType = getUserData();
-console.log("-----------------",offcerType?.userType);
+console.log("-----------------", offcerType?.userType);
 //Efiling
-export const EfilingSideBarItem =  [
-        {
-          itemName: "Dashboard",
-          link: "/efiling/dashboard",
-          icon: faHome,
-        },
-        {
-          itemName: "Fresh Receipts",
-          link: "/efiling/dashboard/fresh-receipt",
-          icon: faReceipt,
-          subItems: [
-            {
-              itemName: "Create Fresh Receipt",
-              link: "/efiling/dashboard/fresh-receipt/addedit",
-              icon: faReceipt,
-            },
-            {
-              itemName: "Fresh Receipts List",
-              link: "/efiling/dashboard/fresh-receipt",
-              icon: faReceipt,
-            },
-          ],
-        },
-        {
-          itemName: "Cases",
-          link: "/efiling/dashboard/file-register-list/files-list/cases",
-          icon: faClipboardList,
-          subItems: [
-            {
-              itemName: "Cases List",
-              link: "/efiling/dashboard/file-register-list/files-list/cases",
-              icon: faClipboardList,
-            },
-            {
-              itemName: "Approved Cases",
-              link: "/efiling/dashboard/file-register-list/files-list/cases/approved",
-              icon: faClipboardList,
-            },
-          ],
-        },
-      ]
-    //     {
-    //       itemName: "Dashboard",
-    //       link: "/efiling/dashboard",
-    //       icon: faHome,
-    //     },
+export const EfilingSideBarItem = [
+  {
+    itemName: "Dashboard",
+    link: "/efiling/dashboard",
+    icon: faHome,
+  },
+  {
+    itemName: "Fresh Receipts",
+    link: "/efiling/dashboard/fresh-receipt",
+    icon: faReceipt,
+    subItems: [
+      {
+        itemName: "Create Fresh Receipt",
+        link: "/efiling/dashboard/fresh-receipt/addedit",
+        icon: faReceipt,
+      },
+      {
+        itemName: "Fresh Receipts List",
+        link: "/efiling/dashboard/fresh-receipt",
+        icon: faReceipt,
+      },
+    ],
+  },
+  {
+    itemName: "Cases",
+    link: "/efiling/dashboard/file-register-list/files-list/cases",
+    icon: faClipboardList,
+    subItems: [
+      {
+        itemName: "Cases List",
+        link: "/efiling/dashboard/file-register-list/files-list/cases",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Approved Cases",
+        link: "/efiling/dashboard/file-register-list/files-list/cases/approved",
+        icon: faClipboardList,
+      },
+    ],
+  },
+];
+//     {
+//       itemName: "Dashboard",
+//       link: "/efiling/dashboard",
+//       icon: faHome,
+//     },
 
-    //     {
-    //       itemName: "Section Diary",
-    //       link: "/efiling/dashboard/diary",
-    //       icon: faBook,
-    //     },
-    //     {
-    //       itemName: "File Headings",
-    //       link: "/efiling/dashboard/file-heading-list",
-    //       icon: faHeading,
-    //     },
-    //     {
-    //       itemName: "Registers",
-    //       link: "/efiling/dashboard/file-register",
-    //       icon: faBookOpen,
-    //       subItems: [
-    //         {
-    //           itemName: "Create Register",
-    //           link: "/efiling/dashboard/addedit-file-register",
-    //           icon: faBookOpen,
-    //         },
-    //         {
-    //           itemName: "Registers List",
-    //           link: "/efiling/dashboard/file-register-list",
-    //           icon: faBookOpen,
-    //         },
-    //       ],
-    //     },
-    //     {
-    //       itemName: "Fresh Recipt",
-    //       link: "/efiling/dashboard/fresh-receipt",
-    //       icon: faReceipt,
-    //     },
-    //     {
-    //       itemName: "Files",
-    //       link: "/efiling/dashboard/file-register-list/files",
-    //       icon: faClipboardList,
-    //       subItems: [
-    //         {
-    //           itemName: "Create Files",
-    //           link: "/efiling/dashboard/file-register-list/files-list/addedit-file",
-    //           icon: faClipboardList,
-    //         },
-    //         {
-    //           itemName: "File List",
-    //           link: "/efiling/dashboard/file-register-list/files-list",
-    //           icon: faClipboardList,
-    //         },
-    //       ],
-    //     },
-    //     {
-    //       itemName: "Cases",
-    //       link: "/efiling/dashboard/file-register-list/files-list/cases",
-    //       icon: faClipboardList,
-    //       subItems: [
-    //         {
-    //           itemName: "Create Cases",
-    //           link: "/efiling/dashboard/file-register-list/files-list/addedit-case",
-    //           icon: faClipboardList,
-    //         },
-    //         {
-    //           itemName: "Cases List",
-    //           link: "/efiling/dashboard/file-register-list/files-list/cases",
-    //           icon: faClipboardList,
-    //         },
-    //       ],
-    //     },
-    //   ]),
+//     {
+//       itemName: "Section Diary",
+//       link: "/efiling/dashboard/diary",
+//       icon: faBook,
+//     },
+//     {
+//       itemName: "File Headings",
+//       link: "/efiling/dashboard/file-heading-list",
+//       icon: faHeading,
+//     },
+//     {
+//       itemName: "Registers",
+//       link: "/efiling/dashboard/file-register",
+//       icon: faBookOpen,
+//       subItems: [
+//         {
+//           itemName: "Create Register",
+//           link: "/efiling/dashboard/addedit-file-register",
+//           icon: faBookOpen,
+//         },
+//         {
+//           itemName: "Registers List",
+//           link: "/efiling/dashboard/file-register-list",
+//           icon: faBookOpen,
+//         },
+//       ],
+//     },
+//     {
+//       itemName: "Fresh Recipt",
+//       link: "/efiling/dashboard/fresh-receipt",
+//       icon: faReceipt,
+//     },
+//     {
+//       itemName: "Files",
+//       link: "/efiling/dashboard/file-register-list/files",
+//       icon: faClipboardList,
+//       subItems: [
+//         {
+//           itemName: "Create Files",
+//           link: "/efiling/dashboard/file-register-list/files-list/addedit-file",
+//           icon: faClipboardList,
+//         },
+//         {
+//           itemName: "File List",
+//           link: "/efiling/dashboard/file-register-list/files-list",
+//           icon: faClipboardList,
+//         },
+//       ],
+//     },
+//     {
+//       itemName: "Cases",
+//       link: "/efiling/dashboard/file-register-list/files-list/cases",
+//       icon: faClipboardList,
+//       subItems: [
+//         {
+//           itemName: "Create Cases",
+//           link: "/efiling/dashboard/file-register-list/files-list/addedit-case",
+//           icon: faClipboardList,
+//         },
+//         {
+//           itemName: "Cases List",
+//           link: "/efiling/dashboard/file-register-list/files-list/cases",
+//           icon: faClipboardList,
+//         },
+//       ],
+//     },
+//   ]),
 // ];
 
 // export const EfilingSideBarItem = [
@@ -964,105 +964,105 @@ export const EfilingSideBarItem =  [
 // ];
 
 export const EfilingSideBarBranchItem = [
-        {
-          itemName: "Dashboard",
-          link: "/efiling/dashboard",
-          icon: faHome,
-        },
+  {
+    itemName: "Dashboard",
+    link: "/efiling/dashboard",
+    icon: faHome,
+  },
 
-        {
-          itemName: "Section Diary",
-          link: "/efiling/dashboard/diary",
-          icon: faBook,
-        },
-        {
-          itemName: "Register",
-          link: "/efiling/dashboard/file-register",
-          icon: faBookOpen,
-          subItems: [
-            {
-              itemName: "Create Register",
-              link: "/efiling/dashboard/addedit-file-register",
-              icon: faBookOpen,
-            },
-            {
-              itemName: "Register List",
-              link: "/efiling/dashboard/file-register-list",
-              icon: faBookOpen,
-            },
-          ],
-        },
-        {
-          itemName: "File Head",
-          link: "/efiling/dashboard/file-heading-list",
-          icon: faHeading,
-          subItems: [
-            {
-              itemName: "Create File Head",
-              link: "/efiling/dashboard/addedit-file-heading",
-              icon: faHeading,
-            },
-            {
-              itemName: "File Head List",
-              link: "/efiling/dashboard/file-heading-list",
-              icon: faHeading,
-            },
-          ],
-        },
-        {
-          itemName: "Fresh Receipts",
-          link: "/efiling/dashboard/fresh-receipt",
-          icon: faReceipt,
-          subItems: [
-            {
-              itemName: "Create Fresh Receipt",
-              link: "/efiling/dashboard/fresh-receipt/addedit",
-              icon: faReceipt,
-            },
-            {
-              itemName: "Fresh Receipts List",
-              link: "/efiling/dashboard/fresh-receipt",
-              icon: faReceipt,
-            },
-          ],
-        },
-        {
-          itemName: "Files",
-          link: "/efiling/dashboard/file-register-list/files",
-          icon: faClipboardList,
-          subItems: [
-            {
-              itemName: "Create Files",
-              link: "/efiling/dashboard/file-register-list/files-list/addedit-file",
-              icon: faClipboardList,
-            },
-            {
-              itemName: "File List",
-              link: "/efiling/dashboard/file-register-list/files-list",
-              icon: faClipboardList,
-            },
-          ],
-        },
-        {
-          itemName: "Cases",
-          link: "/efiling/dashboard/file-register-list/files-list/cases",
-          icon: faClipboardList,
-          subItems: [
-            {
-              itemName: "Create Cases",
-              link: "/efiling/dashboard/file-register-list/files-list/addedit-case",
-              icon: faClipboardList,
-            },
-            {
-              itemName: "Cases List",
-              link: "/efiling/dashboard/file-register-list/files-list/cases",
-              icon: faClipboardList,
-            },
-            {
-              itemName: "Approved Cases",
-              link: "/efiling/dashboard/file-register-list/files-list/cases/approved",
-              icon: faClipboardList,
-            },
-          ],
-        },
-      ]
+  {
+    itemName: "Section Diary",
+    link: "/efiling/dashboard/diary",
+    icon: faBook,
+  },
+  {
+    itemName: "Register",
+    link: "/efiling/dashboard/file-register",
+    icon: faBookOpen,
+    subItems: [
+      {
+        itemName: "Create Register",
+        link: "/efiling/dashboard/addedit-file-register",
+        icon: faBookOpen,
+      },
+      {
+        itemName: "Register List",
+        link: "/efiling/dashboard/file-register-list",
+        icon: faBookOpen,
+      },
+    ],
+  },
+  {
+    itemName: "File Head",
+    link: "/efiling/dashboard/file-heading-list",
+    icon: faHeading,
+    subItems: [
+      {
+        itemName: "Create File Head",
+        link: "/efiling/dashboard/addedit-file-heading",
+        icon: faHeading,
+      },
+      {
+        itemName: "File Head List",
+        link: "/efiling/dashboard/file-heading-list",
+        icon: faHeading,
+      },
+    ],
+  },
+  {
+    itemName: "Fresh Receipts",
+    link: "/efiling/dashboard/fresh-receipt",
+    icon: faReceipt,
+    subItems: [
+      {
+        itemName: "Create Fresh Receipt",
+        link: "/efiling/dashboard/fresh-receipt/addedit",
+        icon: faReceipt,
+      },
+      {
+        itemName: "Fresh Receipts List",
+        link: "/efiling/dashboard/fresh-receipt",
+        icon: faReceipt,
+      },
+    ],
+  },
+  {
+    itemName: "Files",
+    link: "/efiling/dashboard/file-register-list/files",
+    icon: faClipboardList,
+    subItems: [
+      {
+        itemName: "Create Files",
+        link: "/efiling/dashboard/file-register-list/files-list/addedit-file",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "File List",
+        link: "/efiling/dashboard/file-register-list/files-list",
+        icon: faClipboardList,
+      },
+    ],
+  },
+  {
+    itemName: "Cases",
+    link: "/efiling/dashboard/file-register-list/files-list/cases",
+    icon: faClipboardList,
+    subItems: [
+      {
+        itemName: "Create Cases",
+        link: "/efiling/dashboard/file-register-list/files-list/addedit-case",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Cases List",
+        link: "/efiling/dashboard/file-register-list/files-list/cases",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Approved Cases",
+        link: "/efiling/dashboard/file-register-list/files-list/cases/approved",
+        icon: faClipboardList,
+      },
+    ],
+  },
+];
