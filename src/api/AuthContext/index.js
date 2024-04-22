@@ -118,7 +118,7 @@ export const AuthProvider = ({ children }) => {
         setallBranchesData(response?.data?.rows);
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       showErrorMessage(error?.response?.data?.error);
     }
   };
