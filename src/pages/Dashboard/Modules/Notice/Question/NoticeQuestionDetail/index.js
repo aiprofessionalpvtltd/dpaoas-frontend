@@ -10,6 +10,7 @@ import * as Yup from "yup";
 import TimePicker from "react-time-picker";
 import DatePicker from "react-datepicker";
 import { useLocation } from "react-router";
+import { useNavigate } from "react-router-dom";
 
 import { UpdateQuestionById } from "../../../../../../api/APIs/Services/Question.service";
 import { ToastContainer } from "react-toastify";
@@ -27,28 +28,29 @@ import CustomTable from "../../../../../../components/CustomComponents/CustomTab
 import moment from "moment";
 import Select from "react-select";
 const validationSchema = Yup.object({
-  sessionNo: Yup.string(),
-  noticeOfficeDiaryNo: Yup.string(),
-  noticeOfficeDiaryDate: Yup.date(),
-  noticeOfficeDiaryTime: Yup.string(),
-  priority: Yup.string(),
-  questionId: Yup.string(),
-  questionDiaryNo: Yup.string(),
-  category: Yup.string(),
-  questionStatus: Yup.string(),
-  replyDate: Yup.string(),
-  senator: Yup.string(),
-  group: Yup.string(),
-  division: Yup.string(),
-  fileStatus: Yup.string(),
-  urduText: Yup.string(),
-  englishText: Yup.string(),
-  ammendedText: Yup.string(),
-  originalText: Yup.string(),
+  sessionNo: Yup.object().required("Session No is required"),
+  noticeOfficeDiaryNo: Yup.string().required("Diary No is required"),
+  noticeOfficeDiaryDate: Yup.string().required("Date is required"),
+  noticeOfficeDiaryTime: Yup.string().required("Time is required"),
+  // priority: Yup.string(),
+  // questionId: Yup.string(),
+  // questionDiaryNo: Yup.string(),
+  // category: Yup.string(),
+  // questionStatus: Yup.string(),
+  // replyDate: Yup.string(),
+  senator: Yup.object().required("Senator Name is required"),
+  // group: Yup.string(),
+  // division: Yup.string(),
+  // fileStatus: Yup.string(),
+  // urduText: Yup.string(),
+  // englishText: Yup.string(),
+  // ammendedText: Yup.string(),
+  // originalText: Yup.string(),
 });
 
 function NoticeQuestionDetail() {
   const location = useLocation();
+  const navigate = useNavigate();
   const { members, sessions } = useContext(AuthContext);
   const [filesData, setFilesData] = useState();
   const [currentPage, setCurrentPage] = useState(0);
@@ -100,8 +102,9 @@ function NoticeQuestionDetail() {
       ammendedText: "",
       originalText: "",
     },
-    // validationSchema: validationSchema,
+    validationSchema: validationSchema,
     onSubmit: (values) => {
+      console.log("values", values);
       // Handle form submission here
       updateQuestion(values);
     },
@@ -148,6 +151,10 @@ function NoticeQuestionDetail() {
       if (response?.success) {
         showSuccessMessage(response?.message);
         formik.resetForm();
+        setTimeout(() => {
+          navigate("/notice/question/sent");
+        }, 2500);
+        // navigate("/notice/question/sent");
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -290,22 +297,42 @@ function NoticeQuestionDetail() {
                         value={formik.values.sessionNo}
                         name="sessionNo"
                         isClearable={true}
-                        // className="form-select"
+                        className={` ${
+                          formik.touched.sessionNo && formik.errors.sessionNo
+                            ? "is-invalid"
+                            : ""
+                        }`}
                         style={{ border: "none" }}
                       />
+                      {formik.touched.sessionNo && formik.errors.sessionNo && (
+                        <div className="invalid-feedback">
+                          {formik.errors.sessionNo}
+                        </div>
+                      )}
                     </div>
                   </div>
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Notice Office Diary No</label>
                       <input
+                        className={`form-control ${
+                          formik.touched.noticeOfficeDiaryNo &&
+                          formik.errors.noticeOfficeDiaryNo
+                            ? "is-invalid"
+                            : ""
+                        }`}
                         value={formik.values.noticeOfficeDiaryNo}
                         type="text"
-                        class="form-control"
                         id="noticeOfficeDiaryNo"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
+                      {formik.touched.noticeOfficeDiaryNo &&
+                        formik.errors.noticeOfficeDiaryNo && (
+                          <div class="invalid-feedback">
+                            {formik.errors.noticeOfficeDiaryNo}
+                          </div>
+                        )}
                     </div>
                   </div>
                   <div class="col">
@@ -366,6 +393,15 @@ function NoticeQuestionDetail() {
                         maxDate={new Date()}
                         dateFormat="dd-MM-yyyy"
                       />
+                      {formik.touched.noticeOfficeDiaryDate &&
+                        formik.errors.noticeOfficeDiaryDate && (
+                          <div
+                            class="invalid-feedback"
+                            style={{ display: "block" }}
+                          >
+                            {formik.errors.noticeOfficeDiaryDate}
+                          </div>
+                        )}
                     </div>
                   </div>
                   <div class="col">
@@ -379,8 +415,22 @@ function NoticeQuestionDetail() {
                         onChange={(time) =>
                           formik.setFieldValue("noticeOfficeDiaryTime", time)
                         }
-                        className={`form-control`}
+                        className={`form-control ${
+                          formik.touched.noticeOfficeDiaryTime &&
+                          formik.errors.noticeOfficeDiaryTime
+                            ? "is-invalid"
+                            : ""
+                        }`}
                       />
+                      {formik.touched.noticeOfficeDiaryTime &&
+                        formik.errors.noticeOfficeDiaryTime && (
+                          <div
+                            class="invalid-feedback"
+                            style={{ display: "block" }}
+                          >
+                            {formik.errors.noticeOfficeDiaryTime}
+                          </div>
+                        )}
                     </div>
                   </div>
                 </div>
@@ -403,7 +453,7 @@ function NoticeQuestionDetail() {
                     <div class="mb-3">
                       <label class="form-label">Category</label>
                       <select
-                        class="form-control small-control"
+                        className="form-control small-control"
                         id="category"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -454,8 +504,21 @@ function NoticeQuestionDetail() {
                         value={formik.values.senator}
                         name="senator"
                         isClearable={true}
-                        // className="form-select"
+                        className={` ${
+                          formik.touched.noticeOfficeDiaryTime &&
+                          formik.errors.noticeOfficeDiaryTime
+                            ? "is-invalid"
+                            : ""
+                        }`}
                       />
+                      {formik.touched.senator && formik.errors.senator && (
+                        <div
+                          class="invalid-feedback"
+                          style={{ display: "block" }}
+                        >
+                          {formik.errors.senator}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

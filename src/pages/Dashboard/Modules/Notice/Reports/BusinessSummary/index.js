@@ -14,10 +14,12 @@ import {
 import { ToastContainer } from "react-toastify";
 import moment from "moment";
 import * as XLSX from "xlsx";
+import * as Yup from "yup";
 
 function BusinessSummary() {
   const [fromDate, setFromDate] = useState(null);
   const [toData, setTodate] = useState(null);
+
   const [questionReport, setQuestionReport] = useState([]);
   const [motionReport, setMotionReport] = useState([]);
   const [resolutionReport, setresolutionReport] = useState([]);
@@ -234,6 +236,7 @@ function BusinessSummary() {
                       class="btn btn-primary"
                       type="button"
                       onClick={() => hendleSearch()}
+                      disabled={fromDate === null || toData === null}
                     >
                       View Summary
                     </button>

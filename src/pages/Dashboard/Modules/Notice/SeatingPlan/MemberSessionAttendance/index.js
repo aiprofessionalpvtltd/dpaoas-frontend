@@ -2,7 +2,7 @@ import { ToastContainer } from "react-toastify";
 import Header from "../../../../../../components/Header";
 import { Layout } from "../../../../../../components/Layout";
 import { NoticeSidebarItems } from "../../../../../../utils/sideBarItems";
-import { useFormik } from "formik";
+import { useFormik, validateYupSchema } from "formik";
 import DatePicker from "react-datepicker";
 import Select from "react-select";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -16,6 +16,15 @@ import {
 import { createSingleMemberAttendance } from "../../../../../../api/APIs/Services/AttendanceReport.service";
 import { getSessionSitting } from "../../../../../../api/APIs/Services/ManageQMS.service";
 import moment from "moment";
+import * as Yup from "yup";
+const validationSchema = Yup.object({
+  memberName: Yup.string().required("Member Name is required"),
+  sessionId: Yup.string().required("Session Number required"),
+  sittingDate: Yup.date().required("Sitting Date is required"),
+  attendanceType: Yup.string().required("Attendance Type is required"),
+  startDate: Yup.string().required("Start Date is required"),
+  endDate: Yup.string().required("End Date is required"),
+});
 function NMSMemberSessionAttendance() {
   const { members, sessions } = useContext(AuthContext);
   const [currentPage, setCurrentPage] = useState(0);
@@ -59,6 +68,7 @@ function NMSMemberSessionAttendance() {
       startDate: "",
       endDate: "",
     },
+    validationSchema: validationSchema,
     onSubmit: (values) => {
       markMemberAttendance(values);
     },
@@ -367,7 +377,10 @@ function NMSMemberSessionAttendance() {
                       maxDate={new Date()}
                     />
                     {formik.touched.startDate && formik.errors.startDate && (
-                      <div className="invalid-feedback">
+                      <div
+                        className="invalid-feedback"
+                        style={{ display: "block" }}
+                      >
                         {formik.errors.startDate}
                       </div>
                     )}
@@ -411,7 +424,10 @@ function NMSMemberSessionAttendance() {
                       maxDate={new Date()}
                     />
                     {formik.touched.endDate && formik.errors.endDate && (
-                      <div className="invalid-feedback">
+                      <div
+                        className="invalid-feedback"
+                        style={{ display: "block" }}
+                      >
                         {formik.errors.endDate}
                       </div>
                     )}
@@ -567,13 +583,24 @@ function NMSMemberSessionAttendance() {
                 <div className="row">
                   <div className="col-9"></div>
                   <div className="col-3 d-flex justify-content-end">
-                    <button className="btn btn-primary me-2" type="submit">
+                    <button
+                      className="btn btn-primary me-2"
+                      type="submit"
+                      disabled={
+                        selectedOptions !== "BySession" &&
+                        selectedOptions !== "ByDateRange"
+                      }
+                    >
                       Mark Attendance
                     </button>
                     <button
                       className="btn btn-primary"
                       type="button"
                       onClick={handleReset}
+                      disabled={
+                        selectedOptions !== "BySession" &&
+                        selectedOptions !== "ByDateRange"
+                      }
                     >
                       Reset
                     </button>

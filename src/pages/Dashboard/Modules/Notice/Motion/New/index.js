@@ -22,7 +22,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
 const validationSchema = Yup.object({
-  sessionNumber: Yup.number(),
+  sessionNumber: Yup.string().required("Session Number is required"),
   motionType: Yup.string().required("Motion Type is required"),
   noticeOfficeDiaryNo: Yup.number().required(
     "Notice Office Diary No is required"
@@ -33,7 +33,7 @@ const validationSchema = Yup.object({
   noticeOfficeDiaryTime: Yup.string().required(
     "Notice Office Diary Time is required"
   ),
-  mover: Yup.array().required("Mover is required"),
+  mover: Yup.array().required("Member Senate is required"),
   //   englishText: Yup.string().required("English Text is required"),
   //   urduText: Yup.string().required("Urdu Text is required"),
 });
@@ -89,7 +89,7 @@ function NewMotion() {
     formData.append("noticeOfficeDiaryNo", values?.noticeOfficeDiaryNo);
     // formData.append("moverIds[]", values?.mover);
     values?.mover.forEach((mover, index) => {
-      formData.append(`moverIds[${index}]`, mover.value);
+      formData.append(`moverIds[${index}]`, mover?.value);
     });
     formData.append(
       "noticeOfficeDiaryDate",
@@ -119,6 +119,9 @@ function NewMotion() {
       if (response?.success) {
         showSuccessMessage(response?.message);
         formik.resetForm();
+        setTimeout(() => {
+          navigate("/notice/question/sent");
+        }, 2500);
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -173,8 +176,8 @@ function NewMotion() {
 
                         <select
                           className={`form-select ${
-                            formik.touched.fkSessionId &&
-                            formik.errors.fkSessionId
+                            formik.touched.sessionNumber &&
+                            formik.errors.sessionNumber
                               ? "is-invalid"
                               : ""
                           }`}
@@ -183,6 +186,7 @@ function NewMotion() {
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                           name="sessionNumber"
+                          id="sessionNumber"
                         >
                           <option value={""} selected disabled hidden>
                             Select
@@ -196,6 +200,12 @@ function NewMotion() {
                               </option>
                             ))}
                         </select>
+                        {formik.touched.sessionNumber &&
+                          formik.errors.sessionNumber && (
+                            <div class="invalid-feedback">
+                              {formik.errors.sessionNumber}
+                            </div>
+                          )}
                       </div>
                     </div>
                     {/* <div class="col">
@@ -331,7 +341,10 @@ function NewMotion() {
                         />
                         {formik.touched.noticeOfficeDiaryDate &&
                           formik.errors.noticeOfficeDiaryDate && (
-                            <div className="invalid-feedback">
+                            <div
+                              className="invalid-feedback"
+                              style={{ display: "block" }}
+                            >
                               {formik.errors.noticeOfficeDiaryDate}
                             </div>
                           )}
@@ -359,8 +372,19 @@ function NewMotion() {
                           onChange={(time) =>
                             formik.setFieldValue("noticeOfficeDiaryTime", time)
                           }
-                          className={`form-control`}
+                          className={`form-control ${
+                            formik.touched.noticeOfficeDiaryTime &&
+                            formik.errors.noticeOfficeDiaryTime
+                              ? "is-invalid"
+                              : ""
+                          }`}
                         />
+                        {formik.touched.noticeOfficeDiaryTime &&
+                          formik.errors.noticeOfficeDiaryTime && (
+                            <div class="invalid-feedback">
+                              {formik.errors.noticeOfficeDiaryTime}
+                            </div>
+                          )}
                       </div>
                     </div>
                   </div>
@@ -370,7 +394,7 @@ function NewMotion() {
                       <div class="mb-3">
                         <label class="form-label">Notice Office Diary No</label>
                         <input
-                          class={`form-control ${
+                          className={`form-control ${
                             formik.touched.noticeOfficeDiaryNo &&
                             formik.errors.noticeOfficeDiaryNo
                               ? "is-invalid"
@@ -429,6 +453,11 @@ function NewMotion() {
                           onBlur={formik.handleBlur}
                           value={formik.values.mover}
                           name="mover"
+                          className={` ${
+                            formik.touched.mover && formik.errors.mover
+                              ? "is-invalid"
+                              : ""
+                          }`}
                         />
                         {formik.touched.mover && formik.errors.mover && (
                           <div class="invalid-feedback">

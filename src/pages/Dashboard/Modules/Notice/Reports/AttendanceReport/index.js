@@ -16,20 +16,17 @@ import {
 } from "../../../../../../utils/ToastAlert";
 import { NoticeSidebarItems } from "../../../../../../utils/sideBarItems";
 const validationSchema = Yup.object({
-  //   attendenceReportsId: Yup.string().required("Selection is Required"),
   selectedMonth: Yup.string().required("Month is Required"),
-  //   selectedYear: Yup.string().required("Year is required"),
+  selectedYear: Yup.string().required("Year is required"),
   weeklyStartDate: Yup.string().required("Start date is required"),
   weeklyEndDate: Yup.string().required("End date is required"),
-  //   selectedSingleYear: Yup.string().required("Year is required"),
-  // selected3YearsReport: Yup.string().required("Year date is required"),
 });
 const AttendanceReport = () => {
   const [selectedOption, setSelectedOption] = useState("");
   const [searchedData, setSearchedData] = useState(null);
   const [isStartDateOpen, setIsStartDateOpen] = useState(false);
   const [isEndDateOpen, setIsEndDateOpen] = useState(false);
-  console.log("searchedData", searchedData);
+
   const formik = useFormik({
     initialValues: {
       attendenceReportsId: "",
@@ -39,6 +36,30 @@ const AttendanceReport = () => {
       selectedYear: "",
       selectedSingleYear: "",
       selected3YearsReport: "",
+    },
+    validationSchema: () => {
+      switch (selectedOption) {
+        case "Weekly":
+          return Yup.object({
+            weeklyStartDate: Yup.date().required("Start date is required"),
+            weeklyEndDate: Yup.date().required("End date is required"),
+          });
+        case "Monthly":
+          return Yup.object({
+            selectedMonth: Yup.string().required("Month is required"),
+            selectedYear: Yup.string().required("Year is required"),
+          });
+        case "Yearly":
+          return Yup.object({
+            selectedYear: Yup.string().required("Year is required"),
+          });
+        case "3 Years":
+          return Yup.object({
+            selected3YearsReport: Yup.string().required("Year is required"),
+          });
+        default:
+          return Yup.object({});
+      }
     },
     // validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -113,7 +134,10 @@ const AttendanceReport = () => {
                   />
                   {formik.touched.weeklyStartDate &&
                     formik.errors.weeklyStartDate && (
-                      <div className="invalid-feedback">
+                      <div
+                        className="invalid-feedback"
+                        style={{ display: "block" }}
+                      >
                         {formik.errors.weeklyStartDate}
                       </div>
                     )}
@@ -160,7 +184,10 @@ const AttendanceReport = () => {
                   />
                   {formik.touched.weeklyEndDate &&
                     formik.errors.weeklyEndDate && (
-                      <div className="invalid-feedback">
+                      <div
+                        className="invalid-feedback"
+                        style={{ display: "block" }}
+                      >
                         {formik.errors.weeklyEndDate}
                       </div>
                     )}
@@ -202,7 +229,7 @@ const AttendanceReport = () => {
                   <option value="09">Sep</option>
                   <option value="10">Oct</option>
                   <option value="11">Nov</option>
-                  <option value="12">Jan</option>
+                  <option value="12">Dec</option>
                 </select>
                 {formik.touched.selectedMonth &&
                   formik.errors.selectedMonth && (
@@ -481,7 +508,11 @@ const AttendanceReport = () => {
                     {renderFields()}
                     <div className="col-1 my-2">
                       <div className="mt-4">
-                        <button class="btn btn-primary mb-3" type="submit">
+                        <button
+                          class="btn btn-primary mb-3"
+                          type="submit"
+                          disabled={selectedOption === ""}
+                        >
                           Search
                         </button>
                       </div>
@@ -491,6 +522,7 @@ const AttendanceReport = () => {
                         <button
                           class="btn btn-primary mb-3"
                           type="button"
+                          disabled={selectedOption === ""}
                           onClick={handleReset}
                         >
                           Reset

@@ -28,7 +28,7 @@ import { useLocation } from "react-router-dom";
 import moment from "moment";
 
 const validationSchema = Yup.object({
-  sessionNumber: Yup.number(),
+  sessionNumber: Yup.object().required("Session Number is required"),
   motionType: Yup.string().required("Motion Type is required"),
   noticeOfficeDiaryNo: Yup.number().required(
     "Notice Office Diary No is required"
@@ -115,7 +115,7 @@ function EditMotion() {
       urduText: location.state ? location?.state?.urduText : "",
       attachment: null,
     },
-    // validationSchema: validationSchema,
+    validationSchema: validationSchema,
     onSubmit: (values) => {
       // handleShow();
       // setFormValues(values);
@@ -160,6 +160,10 @@ function EditMotion() {
       const response = await updateNewMotion(location?.state?.id, formData);
       if (response?.success) {
         showSuccessMessage(response?.message);
+        formik.resetForm();
+        setTimeout(() => {
+          navigate("/notice/motion/sent");
+        }, 2000);
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -258,9 +262,23 @@ function EditMotion() {
                           value={formik.values.sessionNumber}
                           name="sessionNumber"
                           isClearable={true}
-                          // className="form-select"
+                          className={`${
+                            formik.touched.sessionNumber &&
+                            formik.errors.sessionNumber
+                              ? "is-invalid"
+                              : ""
+                          }`}
                           style={{ border: "none" }}
                         />
+                        {formik.touched.sessionNumber &&
+                          formik.errors.sessionNumber && (
+                            <div
+                              class="invalid-feedback"
+                              style={{ display: "block" }}
+                            >
+                              {formik.errors.sessionNumber}
+                            </div>
+                          )}
                       </div>
                     </div>
                     {/* <div class="col">
@@ -363,7 +381,10 @@ function EditMotion() {
                         />
                         {formik.touched.noticeOfficeDiaryDate &&
                           formik.errors.noticeOfficeDiaryDate && (
-                            <div className="invalid-feedback">
+                            <div
+                              className="invalid-feedback"
+                              style={{ display: "block" }}
+                            >
                               {formik.errors.noticeOfficeDiaryDate}
                             </div>
                           )}
@@ -391,8 +412,22 @@ function EditMotion() {
                           onChange={(time) =>
                             formik.setFieldValue("noticeOfficeDiaryTime", time)
                           }
-                          className={`form-control`}
+                          className={`form-control ${
+                            formik.touched.noticeOfficeDiaryTime &&
+                            formik.errors.noticeOfficeDiaryTime
+                              ? "is-invalid"
+                              : ""
+                          }`}
                         />
+                        {formik.touched.noticeOfficeDiaryTime &&
+                          formik.errors.noticeOfficeDiaryTime && (
+                            <div
+                              className="invalid-feedback"
+                              style={{ display: "block" }}
+                            >
+                              {formik.errors.noticeOfficeDiaryTime}
+                            </div>
+                          )}
                       </div>
                     </div>
                   </div>
