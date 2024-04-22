@@ -23,16 +23,18 @@ import { getUserData } from "../../../../../../api/Auth";
 import moment from "moment";
 
 const validationSchema = Yup.object({
-  // fkSessionId: Yup.number().required("Session No is required"),
+  fkSessionId: Yup.number().required("Session No is required"),
   questionCategory: Yup.string().required("Category is required"),
   noticeOfficeDiaryNo: Yup.number().required(
     "Notice office diary No is required"
   ),
-  fkMemberId: Yup.number().required("Member id is required"),
+  fkMemberId: Yup.object().required("Member Name is required"),
   noticeOfficeDiaryDate: Yup.string().required(
     "Notice Office Diary Date is required"
   ),
-  //   noticeOfficeDiaryTime: Yup.string().required('Notice Office Diary Time is required'),
+  noticeOfficeDiaryTime: Yup.string().required(
+    "Notice Office Diary Time is required"
+  ),
   // englishText: Yup.string().required('English Text is required'),
   // urduText: Yup.string().required('Urdu Text is required'),
 });
@@ -68,7 +70,7 @@ function NewQuestion() {
       initiatedByBranch: "",
       sentToBranch: "",
     },
-    // validationSchema: validationSchema,
+    validationSchema: validationSchema,
     onSubmit: (values) => {
       console.log("Create Question Data", values);
       // handleShow();
@@ -134,6 +136,9 @@ function NewQuestion() {
       if (response?.success) {
         showSuccessMessage(response?.message);
         formik.resetForm();
+        setTimeout(() => {
+          navigate("/notice/question/sent");
+        }, 2500);
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -187,7 +192,7 @@ function NewQuestion() {
                       <div class="mb-3">
                         <label class="form-label">Session No</label>
                         <select
-                          class={`form-select ${
+                          className={`form-select ${
                             formik.touched.fkSessionId &&
                             formik.errors.fkSessionId
                               ? "is-invalid"
@@ -288,6 +293,12 @@ function NewQuestion() {
                           onBlur={formik.handleBlur}
                           value={formik.values.fkMemberId}
                           name="fkMemberId"
+                          className={` ${
+                            formik.touched.fkMemberId &&
+                            formik.errors.fkMemberId
+                              ? "is-invalid"
+                              : ""
+                          }`}
                         />
 
                         {formik.touched.fkMemberId &&
@@ -341,13 +352,10 @@ function NewQuestion() {
 
                         {formik.touched.noticeOfficeDiaryDate &&
                           formik.errors.noticeOfficeDiaryDate && (
-                            <div className="invalid-feedback">
-                              {formik.errors.noticeOfficeDiaryDate}
-                            </div>
-                          )}
-                        {formik.touched.noticeOfficeDiaryDate &&
-                          formik.errors.noticeOfficeDiaryDate && (
-                            <div className="invalid-feedback">
+                            <div
+                              className="invalid-feedback"
+                              style={{ display: "block" }}
+                            >
                               {formik.errors.noticeOfficeDiaryDate}
                             </div>
                           )}
@@ -368,8 +376,22 @@ function NewQuestion() {
                           onChange={(time) =>
                             formik.setFieldValue("noticeOfficeDiaryTime", time)
                           }
-                          className={`form-control`}
+                          className={`form-control ${
+                            formik.touched.noticeOfficeDiaryTime &&
+                            formik.errors.noticeOfficeDiaryTime
+                              ? "is-invalid"
+                              : ""
+                          }`}
                         />
+                        {formik.touched.noticeOfficeDiaryTime &&
+                          formik.errors.noticeOfficeDiaryTime && (
+                            <div
+                              className="invalid-feedback"
+                              style={{ display: "block" }}
+                            >
+                              {formik.errors.noticeOfficeDiaryTime}
+                            </div>
+                          )}
                       </div>
                     </div>
                     {/* From Notice */}

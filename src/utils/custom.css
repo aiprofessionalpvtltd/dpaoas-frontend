@@ -3474,11 +3474,11 @@ textarea {
   /* transform: rotate(-5deg); */
   /* background: url("../assets/seat.png") no-repeat; */
 }
-.sitt-card-left p{
+.sitt-card-left p {
   position: absolute;
-  left:35px;
+  left: 35px;
 }
-.sitt-card-left img{
+.sitt-card-left img {
   width: 116%;
 }
 .sitt-card-right {
@@ -3492,7 +3492,7 @@ textarea {
   /* transform: rotate(5deg);
   background: url("../assets/seat.png") no-repeat; */
 }
-.sitt-card-right img{
+.sitt-card-right img {
   width: 116%;
 }
 .sitting-card-right h2 {
@@ -3624,7 +3624,7 @@ button span {
 .main-dashboard-tiles .card h2 {
   font-size: 24px;
 }
-.tox .tox-editor-header{
+.tox .tox-editor-header {
   z-index: 0 !important;
 }
 .single-professionals {
@@ -3637,7 +3637,7 @@ button span {
   margin-bottom: 30px;
   min-height: 223px;
   min-height: 240px;
-  background: #FFF;
+  background: #fff;
   border-radius: 10px;
 }
 .single-professionals .professionals-img {
@@ -3661,18 +3661,16 @@ button span {
   margin-bottom: 10px;
 }
 
-.single-professionals .tag{
-  
+.single-professionals .tag {
   margin-top: 6px;
   width: 100px;
   height: 28px;
   line-height: 30px;
   background-color: #19bc28;
   padding-left: 8px;
-  color: #FFF;
+  color: #fff;
   border-radius: 50px;
   text-align: center;
-
 }
 /* .single-professionals .nice-select::before {
   content: "9+";
@@ -3727,8 +3725,6 @@ button span {
   width: auto;
 }
 
-
-
 /* Stats Card */
 .proj-t-card {
   position: relative;
@@ -3745,19 +3741,19 @@ button span {
   top: -45px;
   right: -35px;
   transition: all 0.3s ease-in-out;
-  box-shadow: 0 5px 7px 0 rgba(62,57,107,0.18);
+  box-shadow: 0 5px 7px 0 rgba(62, 57, 107, 0.18);
 }
 .proj-t-card h6 {
   color: #000;
 }
 .proj-t-card:hover .pt-badge {
   padding: 65px 55px 30px 30px;
-  text-shadow: 0 3px 5px rgba(62,57,107,0.5);
-  box-shadow: 0 4px 4px 0 rgba(62,57,107,0.3);
+  text-shadow: 0 3px 5px rgba(62, 57, 107, 0.5);
+  box-shadow: 0 4px 4px 0 rgba(62, 57, 107, 0.3);
   transition: all 0.5s ease-in-out;
 }
 .bg-red {
-  background-color: #F22613 !important;
+  background-color: #f22613 !important;
 }
 .mb-30 {
   margin-bottom: 30px !important;
@@ -3773,23 +3769,21 @@ button span {
   max-width: 100%;
 }
 .text-red {
-  color: #F22613 !important;
+  color: #f22613 !important;
 }
 .f-30 {
   font-size: 30px;
 }
-.circle-btn{
+.circle-btn {
   border-radius: 100%;
   margin-right: 5px;
   background: black;
-  color: #FFF;
+  color: #fff;
   width: 30px;
   height: 30px !important;
   text-align: center;
   border: none;
 }
-
-
 
 .comp-card i {
   color: #fff;
@@ -3799,17 +3793,17 @@ button span {
   text-align: center;
   padding: 17px 0;
   font-size: 18px;
-  text-shadow: 0 6px 8px rgba(62,57,107,0.18);
+  text-shadow: 0 6px 8px rgba(62, 57, 107, 0.18);
   transition: all 0.3s ease-in-out;
 }
 .bg-blue {
-  background-color: #19B5FE !important;
+  background-color: #19b5fe !important;
 }
 .mb-25 {
   margin-bottom: 25px !important;
 }
 .text-blue {
-  color: #19B5FE !important;
+  color: #19b5fe !important;
 }
 .box-thumbnail {
   width: 50px;
@@ -3817,7 +3811,7 @@ button span {
   background: black;
   display: flex;
   align-items: center;
-  justify-content: center
+  justify-content: center;
 }
 .comp-card:hover .box-thumbnail {
   border-radius: 50%;
@@ -3826,20 +3820,17 @@ button span {
 .comp-card:hover {
   cursor: pointer;
 }
-.react-time-picker__wrapper{
+.react-time-picker__wrapper {
   border: none !important;
 }
-.blueheadbg{
+.blueheadbg {
   background-color: #4285f4 !important;
   text-align: center;
-  color: #FFF;
+  color: #fff;
   font-size: 16px;
   font-weight: bold;
   padding: 10px;
 }
-
-
-
 
 .sos-st-card {
   cursor: pointer;
@@ -3869,10 +3860,10 @@ button span {
   background-color: #1da1f2;
   border-color: #96d3f9;
   border: 10px solid transparent;
-    border-top-color: transparent;
-    border-right-color: transparent;
-    border-bottom-color: transparent;
-    border-left-color: transparent;
+  border-top-color: transparent;
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+  border-left-color: transparent;
   transition: all 0.3s ease-in-out;
   float: left;
 }
@@ -3883,8 +3874,6 @@ button span {
   transform: scale(1.2) rotate(35deg) !important;
   cursor: pointer;
 }
-
-
 
 /* Image gallery FR */
 .image-gallery-slide.image-gallery-center {

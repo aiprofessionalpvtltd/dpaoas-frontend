@@ -11,7 +11,7 @@ import {
 import { Layout } from "../../../../../../../components/Layout";
 import { NoticeSidebarItems } from "../../../../../../../utils/sideBarItems";
 import Header from "../../../../../../../components/Header";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../../../../../../api/AuthContext";
 import {
   getAllMemberAttendence,
@@ -30,10 +30,11 @@ import axios from "axios";
 
 function NMSSessionAttendance() {
   const location = useLocation();
+  const navigate = useNavigate();
   const sessionID = location.state ? location?.state?.id : "";
   const [attendenceMemberData, setAttendanceMemberData] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  console.log("LocationSTat", location?.state?.data);
+  console.log("location from Mark", location?.state);
   const GetSessionMembersWithStatus = useCallback(async () => {
     try {
       const response = await getAllMemberAttendence(sessionID);
@@ -64,6 +65,15 @@ function NMSSessionAttendance() {
       if (response?.success) {
         showSuccessMessage(response?.message);
         GetSessionMembersWithStatus();
+        setTimeout(() => {
+          navigate(`/notice/manage/manage-session/member-attendence`, {
+            state: {
+              view: true,
+              id: location.state ? location?.state?.id : "",
+              data: location?.state?.data,
+            },
+          });
+        }, 2500);
       }
     } catch (error) {
       console.log(error);
@@ -152,7 +162,7 @@ function NMSSessionAttendance() {
       </div>
       <div className="container-fluid">
         <div className="row mb-4 align-items-center">
-          <div className="col-8 ">
+          <div className="col-7 ">
             <div
               className="bg-white p-3 border rounded"
               // style={{ width: width ? width : "500px" }}
@@ -201,13 +211,32 @@ function NMSSessionAttendance() {
               </div>
             </div>
           </div>
-          <div className="col" style={{ marginLeft: -15 }}>
-            <button
-              className="btn btn-primary float-end"
-              onClick={handleReport}
-            >
-              Print Report
-            </button>
+          <div className="col-5" style={{ marginLeft: 0 }}>
+            <div className="row">
+              <div className="col-5"></div>
+              {/* <div className="col">
+                {location?.state?.view && location?.state?.view === true ? (
+                  ""
+                ) : (
+                  <div>
+                    <button className="btn btn-primary float-end" type="submit">
+                      Mark Attendance
+                    </button>
+                  </div>
+                )}
+              </div> */}
+
+              <div className="col">
+                <div>
+                  <button
+                    className="btn btn-primary float-end"
+                    onClick={handleReport}
+                  >
+                    Print Report
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -239,10 +268,33 @@ function NMSSessionAttendance() {
                         </div>
                       ))}
                   </div>
-                  {location?.state?.view && location?.state?.view === true ? (
+                  {/* {location?.state?.view && location?.state?.view === true ? (
                     ""
                   ) : (
                     <div className="row mt-2">
+                      <div className="col">
+                        <button
+                          className="btn btn-primary float-end"
+                          type="submit"
+                        >
+                          Mark Attendance
+                        </button>
+                      </div>
+                    </div>
+                  )} */}
+                  {location?.state?.view && location?.state?.view === true ? (
+                    ""
+                  ) : (
+                    <div
+                      className="row mt-2"
+                      style={{
+                        position: "absolute",
+                        // bottom: 610,
+                        // left: 500,
+                        right: 180,
+                        top: 218,
+                      }}
+                    >
                       <div className="col">
                         <button
                           className="btn btn-primary float-end"

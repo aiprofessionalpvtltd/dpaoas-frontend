@@ -56,7 +56,9 @@ function ManageSittingsDays() {
         "hh:ss:a"
       ),
       sittingEndTime: moment(item?.sittingEndTime, "hh:ss:a").format("hh:ss:a"),
-      committeeAsWholeTime: item?.committeeTotalTime  ? item?.committeeTotalTime : "--",
+      committeeAsWholeTime: item?.committeeTotalTime
+        ? item?.committeeTotalTime
+        : "--",
       totalBreakTime: item?.totalBreakTime,
       presidingMemberTime: item?.totalMemberTime,
       sessionAdjourned: String(item?.sessionAdjourned),

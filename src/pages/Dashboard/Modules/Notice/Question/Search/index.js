@@ -389,8 +389,9 @@ function SearchQuestion() {
                             id="category"
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
+                            name="category"
                           >
-                            <option value={" "} selected disabled hidden>
+                            <option value={""} selected disabled hidden>
                               Select
                             </option>
                             <option value={"Starred"}>Starred</option>
