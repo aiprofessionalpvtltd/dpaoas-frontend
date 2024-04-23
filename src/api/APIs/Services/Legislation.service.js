@@ -24,7 +24,7 @@ export const getAllPrivateBill = async (page, pageSize) => {
     try {
         const token = getAuthToken();
         const response = await axiosClientMMS.get(
-            `/privateMemberBills?currentPage=${page}&pageSize=${pageSize}`,
+            `/privateMemberBills/findall?currentPage=${page}&pageSize=${pageSize}`,
         );
         return response?.data;
     } catch (error) {
