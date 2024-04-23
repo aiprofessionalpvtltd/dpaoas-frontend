@@ -61,7 +61,7 @@ export const getAllSpeachOnDemand = async (currentPage, pageSize) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClientMMS.get(
-      `/senator/speech-on-demand?currentPage=${currentPage}&pageSize=${pageSize}`
+      `/senator/speech-on-demand/findall?currentPage=${currentPage}&pageSize=${pageSize}`
       // {
       //   // headers: {
       //   //   Authorization: `Bearer ${token}`,
@@ -191,7 +191,7 @@ export const getAllResarchServices = async (currentPage, pageSize) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClientMMS.get(
-      `/senator/request-research?currentPage=${currentPage}&pageSize=${pageSize}`
+      `/senator/request-research/findall?currentPage=${currentPage}&pageSize=${pageSize}`
       // {
       //   // headers: {
       //   //   Authorization: `Bearer ${token}`,
@@ -227,7 +227,7 @@ export const getAllLegislativeBill = async (currentPage, pageSize) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClientMMS.get(
-      `/legislativeBills?currentPage=${currentPage}&pageSize=${pageSize}`
+      `/legislativeBills/findall?currentPage=${currentPage}&pageSize=${pageSize}`
       // {
       //   // headers: {
       //   //   Authorization: `Bearer ${token}`,
