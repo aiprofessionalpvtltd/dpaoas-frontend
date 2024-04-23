@@ -42,6 +42,7 @@ const validationSchema = Yup.object({
 function NewQuestion() {
   const navigate = useNavigate();
   const { members, sessions, allBranchesData } = useContext(AuthContext);
+
   const [showModal, setShowModal] = useState(false);
   const [formValues, setFormValues] = useState([]);
   const [filesData, setFilesData] = useState();
@@ -49,6 +50,7 @@ function NewQuestion() {
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [imageLinks, setImageLinks] = useState([]);
   const UserData = getUserData();
+  const LoggedInUserID = UserData && UserData?.fkUserId;
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
   const handleOkClick = () => {
@@ -114,7 +116,7 @@ function NewQuestion() {
     // formData.append("sentToBranch", values.sentToBranch);
     formData.append("sentToBranch", 1);
     // formData.append("createdByUser", UserData && UserData?.id);
-    formData.append("createdByUser", 1);
+    formData.append("submittedBy", LoggedInUserID);
     formData.append("englishText", values.englishText);
     formData.append("urduText", values.urduText);
     formData.append("questionSentStatus", "fromNotice");
