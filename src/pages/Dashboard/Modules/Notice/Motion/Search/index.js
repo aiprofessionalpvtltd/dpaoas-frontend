@@ -146,7 +146,7 @@ function SearchMotion() {
   const searchMotionList = async (values, page) => {
     const data = {
       // fileNumber: ,
-      fkSessionId: values?.fromSession,
+      // fkSessionId: values?.fromSession,
       noticeOfficeDiaryNo: values?.motionDiaryNo,
       fkMemberId: values?.memberName?.value,
       fkMinistryId: values?.ministry,

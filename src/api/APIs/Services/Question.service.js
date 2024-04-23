@@ -44,9 +44,9 @@ export const searchQuestion = async (searchParams, currentPage, pageSize) => {
     const filteredSearchParams = Object.fromEntries(
       Object.entries(searchParams).filter(([_, value]) => value !== "")
     );
-
+    console.log("filtered", filteredSearchParams);
     const response = await axiosClientMMS.get(
-      `/questions/searchQuestion`,
+      `/questions/searchQuestion?currentPage=${currentPage}&pageSize=${pageSize}`,
       {
         params: filteredSearchParams,
         // headers: {
@@ -217,7 +217,11 @@ export const noticeBusinessReport = async (fromDate, toDate) => {
   }
 };
 
-export const allQuestionSummary = async (searchParams, currentPage, pageSize) => {
+export const allQuestionSummary = async (
+  searchParams,
+  currentPage,
+  pageSize
+) => {
   try {
     // const token = getAuthToken();
 
@@ -268,12 +272,15 @@ export const getAllDeletedQuestions = async (page, pageSize, searchParams) => {
     );
 
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/questions/getDeletedQuestions?currentPage=${page}&pageSize=${pageSize}`, {
-      params: filteredSearchParams
-      // headers: {
-      //   Authorization: `Bearer ${token}`,
-      // }
-    });
+    const response = await axiosClientMMS.get(
+      `/questions/getDeletedQuestions?currentPage=${page}&pageSize=${pageSize}`,
+      {
+        params: filteredSearchParams,
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // }
+      }
+    );
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -284,11 +291,14 @@ export const getAllDeletedQuestions = async (page, pageSize, searchParams) => {
 export const getAllDeferedQuestions = async (page, pageSize) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/questions/getDeferredQuestions?currentPage=${page}&pageSize=${pageSize}`, {
-      // headers: {
-      //   Authorization: `Bearer ${token}`,
-      // }
-    });
+    const response = await axiosClientMMS.get(
+      `/questions/getDeferredQuestions?currentPage=${page}&pageSize=${pageSize}`,
+      {
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // }
+      }
+    );
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -299,11 +309,14 @@ export const getAllDeferedQuestions = async (page, pageSize) => {
 export const getAllQuesListBySession = async (sessionId, page, pageSize) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/questionList/getBySessionId/${sessionId}?currentPage=${page}&pageSize=${pageSize}`, {
-      // headers: {
-      //   Authorization: `Bearer ${token}`,
-      // }
-    });
+    const response = await axiosClientMMS.get(
+      `/questionList/getBySessionId/${sessionId}?currentPage=${page}&pageSize=${pageSize}`,
+      {
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // }
+      }
+    );
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -319,11 +332,15 @@ export const getGeneratedQuesList = async (data) => {
     );
 
     // const token = getAuthToken();
-    const response = await axiosClientMMS.post(`/questionList/generateQuestionList`, data, {
-      // headers: {
-      //   Authorization: `Bearer ${token}`,
-      // }
-    });
+    const response = await axiosClientMMS.post(
+      `/questionList/generateQuestionList`,
+      data,
+      {
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // }
+      }
+    );
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -397,15 +414,12 @@ export const getQuestionGroupDiaries = async (searchParams) => {
       Object.entries(searchParams).filter(([_, value]) => value !== "")
     );
 
-    const response = await axiosClientMMS.get(
-      `/questions/getGroupDiary`,
-      {
-        params: filteredSearchParams,
-        // headers: {
-        //   Authorization: `Bearer ${token}`,
-        // },
-      }
-    );
+    const response = await axiosClientMMS.get(`/questions/getGroupDiary`, {
+      params: filteredSearchParams,
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // },
+    });
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -438,18 +452,18 @@ export const getUnderProcessQuestions = async (searchParams) => {
   }
 };
 
-
-
-
 // Supplementary List API
 export const getAllSupplementaryLists = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/questionList/getByQuestionListId/${id}`, {
-      // headers: {
-      //   Authorization: `Bearer ${token}`,
-      // }
-    });
+    const response = await axiosClientMMS.get(
+      `/questionList/getByQuestionListId/${id}`,
+      {
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // }
+      }
+    );
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -460,11 +474,15 @@ export const getAllSupplementaryLists = async (id) => {
 export const getGeneratedSuppList = async (id, data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.post(`/questionList/generateSupplementaryList/${id}`, data, {
-      // headers: {
-      //   Authorization: `Bearer ${token}`,
-      // }
-    });
+    const response = await axiosClientMMS.post(
+      `/questionList/generateSupplementaryList/${id}`,
+      data,
+      {
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // }
+      }
+    );
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -529,8 +547,6 @@ export const deleteSuppList = async (id) => {
   }
 };
 
-
-
 // Rota List API
 export const generatedRotaList = async (data) => {
   try {
@@ -550,11 +566,15 @@ export const generatedRotaList = async (data) => {
 export const generateRotaFurtherAllotmentList = async (data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.post(`/rota/createFurtherAllotment`, data, {
-      // headers: {
-      //   Authorization: `Bearer ${token}`,
-      // }
-    });
+    const response = await axiosClientMMS.post(
+      `/rota/createFurtherAllotment`,
+      data,
+      {
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // }
+      }
+    );
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);

@@ -564,7 +564,7 @@ function SentMotion() {
                     headertitletextColor={"#FFF"}
                     handlePageChange={handlePageChange}
                     currentPage={currentPage}
-                    pageSize={4}
+                    pageSize={pageSize}
                     totalCount={count}
                   />
                 </div>

@@ -102,6 +102,7 @@ function SentQuestion() {
         .filter(Boolean)
         .join(", ");
       const cleanedSubjectMatter = subjectMatter.replace(/(<([^>]+)>)/gi, "");
+
       return {
         // SrNo: index + 1,
         Id: res?.id,
@@ -124,8 +125,8 @@ function SentQuestion() {
           : "",
         SubjectMatter: cleanedSubjectMatter ? cleanedSubjectMatter : "",
         Category: res.questionCategory ? res.questionCategory : "",
-        Status: res.questionStatus?.questionStatus
-          ? res.questionStatus?.questionStatus
+        Status: res.questionStatuses?.questionStatus
+          ? res.questionStatuses?.questionStatus
           : "",
       };
     });

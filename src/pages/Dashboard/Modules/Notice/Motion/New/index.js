@@ -120,7 +120,7 @@ function NewMotion() {
         showSuccessMessage(response?.message);
         formik.resetForm();
         setTimeout(() => {
-          navigate("/notice/question/sent");
+          navigate("/notice/motion/sent");
         }, 2500);
       }
     } catch (error) {
