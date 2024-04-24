@@ -7,21 +7,35 @@ import * as Yup from "yup";
 import DatePicker from "react-datepicker";
 import Header from "../../../../../../../components/Header";
 import { Layout } from "../../../../../../../components/Layout";
-import { NoticeSidebarItems, QMSSideBarItems } from "../../../../../../../utils/sideBarItems";
-import { createDivision, getDivisionsByID, updateDivisions } from "../../../../../../../api/APIs/Services/ManageQMS.service";
-import { showErrorMessage, showSuccessMessage } from "../../../../../../../utils/ToastAlert";
+import {
+  NoticeSidebarItems,
+  QMSSideBarItems,
+} from "../../../../../../../utils/sideBarItems";
+import {
+  createDivision,
+  getDivisionsByID,
+  updateDivisions,
+} from "../../../../../../../api/APIs/Services/ManageQMS.service";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
-import { createPrivateBill, getPrivateBillById, updatePrivateBill } from "../../../../../../../api/APIs/Services/Legislation.service";
+import {
+  createPrivateBill,
+  getPrivateBillById,
+  updatePrivateBill,
+} from "../../../../../../../api/APIs/Services/Legislation.service";
 import { AuthContext } from "../../../../../../../api/AuthContext";
 import moment from "moment";
 
 const validationSchema = Yup.object({
-    SerialNo: Yup.string().required("Serial No is required"),
-    fileNo: Yup.string().required("file No is required"),
-    date: Yup.string().required("Date is required"),
-    fromReceived: Yup.string().required("Received From is required"),
-    briefSubject: Yup.string().required("Brief Subject is required"),
-    remarks: Yup.string().required("Remarks is required"),
+  SerialNo: Yup.string().required("Serial No is required"),
+  fileNo: Yup.string().required("file No is required"),
+  date: Yup.string().required("Date is required"),
+  fromReceived: Yup.string().required("Received From is required"),
+  briefSubject: Yup.string().required("Brief Subject is required"),
+  remarks: Yup.string().required("Remarks is required"),
 });
 function AddEditPrivateBill() {
   const location = useLocation();
@@ -29,16 +43,16 @@ function AddEditPrivateBill() {
 
   const formik = useFormik({
     initialValues: {
-        SerialNo: '',
-        fileNo: '',
-        date: '',
-        fromReceived: '',
-        briefSubject: '',
-        remarks: ''
+      SerialNo: "",
+      fileNo: "",
+      date: "",
+      fromReceived: "",
+      briefSubject: "",
+      remarks: "",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-        console.log(values);
+      console.log(values);
       // Handle form submission here
       if (location?.state?.id) {
         handleEditBill(values);
@@ -50,13 +64,13 @@ function AddEditPrivateBill() {
 
   const handleCreateBill = async (values) => {
     const data = {
-        SerialNo: values?.SerialNo,
-        fileNo: values.fileNo,
-        date: moment(values.date).format('DD-MM-YYYY'),
-        fromReceived: values.fromReceived,
-        briefSubject: values.briefSubject,
-        remarks: values.remarks
-    }
+      SerialNo: values?.SerialNo,
+      fileNo: values.fileNo,
+      date: values.date,
+      fromReceived: values.fromReceived,
+      briefSubject: values.briefSubject,
+      remarks: values.remarks,
+    };
 
     try {
       const response = await createPrivateBill(data);
@@ -66,18 +80,18 @@ function AddEditPrivateBill() {
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
     }
-  }
+  };
 
   const handleEditBill = async (values) => {
     const data = {
-        SerialNo: values?.SerialNo,
-        fileNo: values.fileNo,
-        date: values.date,
-        fromReceived: values.fromReceived,
-        briefSubject: values.briefSubject,
-        remarks: values.remarks,
-        status: location?.state?.status
-    }
+      SerialNo: values?.SerialNo,
+      fileNo: values.fileNo,
+      date: values.date,
+      fromReceived: values.fromReceived,
+      briefSubject: values.briefSubject,
+      remarks: values.remarks,
+      status: location?.state?.status,
+    };
 
     try {
       const response = await updatePrivateBill(location?.state?.id, data);
@@ -87,7 +101,7 @@ function AddEditPrivateBill() {
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
     }
-  }
+  };
 
   const getBillByIdApi = async () => {
     try {
@@ -104,7 +118,7 @@ function AddEditPrivateBill() {
     if (location.state?.id) {
       getBillByIdApi();
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     // Update form values when termsById changes
@@ -115,7 +129,7 @@ function AddEditPrivateBill() {
         date: new Date(billById.date) || "",
         fromReceived: billById.fromReceived || "",
         briefSubject: billById.briefSubject || "",
-        remarks: billById.remarks || ""
+        remarks: billById.remarks || "",
       });
     }
   }, [billById, formik.setValues]);
@@ -131,9 +145,7 @@ function AddEditPrivateBill() {
         addLink1={"/notice/legislation/private-bill"}
         title1={"Private Bills"}
         addLink2={"/notice/legislation/private-bill"}
-        title2={
-          location && location?.state ? "Edit Bill" : "Add Bill"
-        }
+        title2={location && location?.state ? "Edit Bill" : "Add Bill"}
       />
       <ToastContainer />
 
@@ -158,14 +170,18 @@ function AddEditPrivateBill() {
                         placeholder={"Serial No"}
                         value={formik.values.SerialNo}
                         className={`form-control ${
-                          formik.touched.SerialNo && formik.errors.SerialNo ? "is-invalid" : ""
+                          formik.touched.SerialNo && formik.errors.SerialNo
+                            ? "is-invalid"
+                            : ""
                         }`}
                         id="SerialNo"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
                       {formik.touched.SerialNo && formik.errors.SerialNo && (
-                        <div className="invalid-feedback">{formik.errors.SerialNo}</div>
+                        <div className="invalid-feedback">
+                          {formik.errors.SerialNo}
+                        </div>
                       )}
                     </div>
                   </div>
@@ -177,20 +193,24 @@ function AddEditPrivateBill() {
                         placeholder={"File No"}
                         value={formik.values.fileNo}
                         className={`form-control ${
-                          formik.touched.fileNo && formik.errors.fileNo ? "is-invalid" : ""
+                          formik.touched.fileNo && formik.errors.fileNo
+                            ? "is-invalid"
+                            : ""
                         }`}
                         id="fileNo"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
                       {formik.touched.fileNo && formik.errors.fileNo && (
-                        <div className="invalid-feedback">{formik.errors.fileNo}</div>
+                        <div className="invalid-feedback">
+                          {formik.errors.fileNo}
+                        </div>
                       )}
                     </div>
                   </div>
                 </div>
                 <div class="row">
-                <div className="col">
+                  <div className="col">
                     <div className="mb-3" style={{ position: "relative" }}>
                       <label className="form-label">Date</label>
                       <span
@@ -208,22 +228,20 @@ function AddEditPrivateBill() {
                       </span>
                       <DatePicker
                         selected={formik.values.date}
-                        onChange={(date) =>
-                          formik.setFieldValue("date", date)
-                        }
+                        onChange={(date) => formik.setFieldValue("date", date)}
                         onBlur={formik.handleBlur}
-                        className={`form-control ${formik.touched.date &&
-                          formik.errors.date
-                          ? "is-invalid"
-                          : ""
-                          }`}
+                        className={`form-control ${
+                          formik.touched.date && formik.errors.date
+                            ? "is-invalid"
+                            : ""
+                        }`}
+                        dateFormat={"dd-MM-yyyy"}
                       />
-                      {formik.touched.date &&
-                        formik.errors.date && (
-                          <div className="invalid-feedback">
-                            {formik.errors.date}
-                          </div>
-                        )}
+                      {formik.touched.date && formik.errors.date && (
+                        <div className="invalid-feedback">
+                          {formik.errors.date}
+                        </div>
+                      )}
                     </div>
                   </div>
                   <div class="col-6">
@@ -234,15 +252,21 @@ function AddEditPrivateBill() {
                         placeholder={"Received From"}
                         value={formik.values.fromReceived}
                         className={`form-control ${
-                          formik.touched.fromReceived && formik.errors.fromReceived ? "is-invalid" : ""
+                          formik.touched.fromReceived &&
+                          formik.errors.fromReceived
+                            ? "is-invalid"
+                            : ""
                         }`}
                         id="fromReceived"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
-                      {formik.touched.fromReceived && formik.errors.fromReceived && (
-                        <div className="invalid-feedback">{formik.errors.fromReceived}</div>
-                      )}
+                      {formik.touched.fromReceived &&
+                        formik.errors.fromReceived && (
+                          <div className="invalid-feedback">
+                            {formik.errors.fromReceived}
+                          </div>
+                        )}
                     </div>
                   </div>
                 </div>
@@ -256,15 +280,21 @@ function AddEditPrivateBill() {
                         placeholder={"Brief Subject"}
                         value={formik.values.briefSubject}
                         className={`form-control ${
-                          formik.touched.briefSubject && formik.errors.briefSubject ? "is-invalid" : ""
+                          formik.touched.briefSubject &&
+                          formik.errors.briefSubject
+                            ? "is-invalid"
+                            : ""
                         }`}
                         id="briefSubject"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
-                      {formik.touched.briefSubject && formik.errors.briefSubject && (
-                        <div className="invalid-feedback">{formik.errors.briefSubject}</div>
-                      )}
+                      {formik.touched.briefSubject &&
+                        formik.errors.briefSubject && (
+                          <div className="invalid-feedback">
+                            {formik.errors.briefSubject}
+                          </div>
+                        )}
                     </div>
                   </div>
                   <div class="col">
@@ -275,14 +305,18 @@ function AddEditPrivateBill() {
                         placeholder={"Remarks"}
                         value={formik.values.remarks}
                         className={`form-control ${
-                          formik.touched.remarks && formik.errors.remarks ? "is-invalid" : ""
+                          formik.touched.remarks && formik.errors.remarks
+                            ? "is-invalid"
+                            : ""
                         }`}
                         id="remarks"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
                       {formik.touched.remarks && formik.errors.remarks && (
-                        <div className="invalid-feedback">{formik.errors.remarks}</div>
+                        <div className="invalid-feedback">
+                          {formik.errors.remarks}
+                        </div>
                       )}
                     </div>
                   </div>

@@ -70,11 +70,6 @@ function EditMotion() {
     });
   };
 
-  console.log("location?.state", location?.state);
-  console.log(
-    "location?",
-    location?.state?.motionMovers?.map((mover) => mover?.members?.memberName)
-  );
   const formik = useFormik({
     initialValues: {
       sessionNumber: location.state

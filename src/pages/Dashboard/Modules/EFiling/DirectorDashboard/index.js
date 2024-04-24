@@ -94,7 +94,7 @@ function DirectorDashboard() {
 
   const transformFreshReceiptdata = (apiData) => {
     return apiData.map((item) => ({
-      id: item?.id,
+      internalId: item?.freshReceipt?.id,
       frType: item?.freshReceipt?.frType,
       Sender: item?.submittedUser
         ? item?.submittedUser?.employee?.firstName
@@ -285,7 +285,7 @@ function DirectorDashboard() {
                 }}
               >
                 <ul className="nav nav-tabs mb-3 mt-3" id="ex1" role="tablist">
-                <li
+                  <li
                     className="nav-item"
                     role="presentation"
                     onClick={() => setSelectedTab("FRrecive")}
@@ -331,7 +331,6 @@ function DirectorDashboard() {
                       FR sent
                     </button>
                   </li>
-                 
                 </ul>
               </div>
             </div>
@@ -356,7 +355,11 @@ function DirectorDashboard() {
                     showAssigned={true}
                     hideDeleteIcon={true}
                     showEditIcon={true}
-                    hendleAssigned={(item) => navigate("/efiling/dashboard/fresh-receipt/frdetail", {state:{id:item.id, view: false}})}
+                    hendleAssigned={(item) =>
+                      navigate("/efiling/dashboard/fresh-receipt/frdetail", {
+                        state: { id: item.internalId, view: false },
+                      })
+                    }
                   />
                 </section>
               ) : (
@@ -377,7 +380,11 @@ function DirectorDashboard() {
                     showAssigned={true}
                     hideDeleteIcon={true}
                     showEditIcon={true}
-                   hendleAssigned={(item) => navigate("/efiling/dashboard/fresh-receipt/frdetail", {state:{id:item.id, view: false}})}
+                    hendleAssigned={(item) =>
+                      navigate("/efiling/dashboard/fresh-receipt/frdetail", {
+                        state: { id: item.internalId, view: false },
+                      })
+                    }
                   />
                 </section>
               )}
@@ -394,7 +401,7 @@ function DirectorDashboard() {
                 }}
               >
                 <ul className="nav nav-tabs mb-3 mt-3" id="ex1" role="tablist">
-                <li
+                  <li
                     className="nav-item"
                     role="presentation"
                     onClick={() => setSelectedFIleTab("FileRecived")}
@@ -440,7 +447,6 @@ function DirectorDashboard() {
                       File sent
                     </button>
                   </li>
-                 
                 </ul>
               </div>
             </div>

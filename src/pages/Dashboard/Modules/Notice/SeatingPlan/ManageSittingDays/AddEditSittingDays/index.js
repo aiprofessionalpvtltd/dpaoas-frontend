@@ -378,18 +378,18 @@ function NMSAddEditSittingDaysForm() {
     const data = {
       fkSessionId: parseInt(values.fkSessionId),
       sittingDate: values?.sittingDate,
-      sittingStartTime: values?.sittingStartTime ?  moment(values?.sittingStartTime, "hh:mm A").format(
-        "hh:mm A"
-      ):"",
-      sittingEndTime: values?.sittingEndTime ? moment(values?.sittingEndTime, "hh:mm A").format(
-        "hh:mm A"
-      ):"",
-      committeeStartTime: values?.committeeStartTime ? moment(values?.committeeStartTime, "hh:mm A").format(
-        "hh:mm A"
-      ):"",
-      committeeEndTime: values?.committeeEndTime ? moment(values?.committeeEndTime, "hh:mm A").format(
-        "hh:mm A"
-      ):"",
+      sittingStartTime: values?.sittingStartTime
+        ? moment(values?.sittingStartTime, "hh:mm A").format("hh:mm A")
+        : "",
+      sittingEndTime: values?.sittingEndTime
+        ? moment(values?.sittingEndTime, "hh:mm A").format("hh:mm A")
+        : "",
+      committeeStartTime: values?.committeeStartTime
+        ? moment(values?.committeeStartTime, "hh:mm A").format("hh:mm A")
+        : "",
+      committeeEndTime: values?.committeeEndTime
+        ? moment(values?.committeeEndTime, "hh:mm A").format("hh:mm A")
+        : "",
       sessionMembers: values?.sessionMembers,
       // sessionMembers: values.sessionMembers.map((member) => ({
       //   fkMemberId: member.fkMemberId,
@@ -455,12 +455,12 @@ function NMSAddEditSittingDaysForm() {
         "hh:mm A"
       ),
       breakEndTime: moment(values?.breakEndTime, "hh:mm A").format("hh:mm A"),
-      committeeStartTime: values?.committeeStartTime ? moment(values?.committeeStartTime, "hh:mm A").format(
-        "hh:mm A"
-      ):"",
-      committeeEndTime: values?.committeeEndTime ? moment(values?.committeeEndTime, "hh:mm A").format(
-        "hh:mm A"
-      ):"",
+      committeeStartTime: values?.committeeStartTime
+        ? moment(values?.committeeStartTime, "hh:mm A").format("hh:mm A")
+        : "",
+      committeeEndTime: values?.committeeEndTime
+        ? moment(values?.committeeEndTime, "hh:mm A").format("hh:mm A")
+        : "",
       sessionMembers: values.sessionMembers,
       // sessionMembers: values.sessionMembers.map((member) => ({
       //   fkMemberId: member.fkMemberId,
@@ -689,7 +689,10 @@ function NMSAddEditSittingDaysForm() {
                       />
                       {formik.touched.sittingDate &&
                         formik.errors.sittingDate && (
-                          <div className="invalid-feedback" style={{display:"block"}}>
+                          <div
+                            className="invalid-feedback"
+                            style={{ display: "block" }}
+                          >
                             {formik.errors.sittingDate}
                           </div>
                         )}

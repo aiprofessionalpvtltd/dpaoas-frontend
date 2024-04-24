@@ -74,7 +74,9 @@ const AttendanceReport = () => {
   // Handale DateCHange
   const handleStartDateSelect = (date) => {
     formik.setFieldValue("weeklyStartDate", date);
-
+    const endDate = new Date(date);
+    endDate.setDate(endDate.getDate() + 6); // Add 6 days to start date
+    formik.setFieldValue("weeklyEndDate", endDate);
     setIsStartDateOpen(false);
   };
 
@@ -159,18 +161,19 @@ const AttendanceReport = () => {
                       color: "#666",
                       cursor: "pointer",
                     }}
-                    onClick={handleEndDateCalendarToggle}
+                    // onClick={handleEndDateCalendarToggle}
                   >
                     <FontAwesomeIcon icon={faCalendarAlt} />
                   </span>
                   <DatePicker
                     selected={formik.values.weeklyEndDate}
+                    readOnly
                     // onChange={(date) =>
                     //   formik.setFieldValue("weeklyEndDate", date)
                     // }
-                    onChange={handleEndDateSelect}
+                    // onChange={handleEndDateSelect}
                     onBlur={formik.handleBlur}
-                    maxDate={new Date()}
+                    // maxDate={new Date()}
                     className={`form-control ${
                       formik.touched.weeklyEndDate &&
                       formik.errors.weeklyEndDate
@@ -178,9 +181,9 @@ const AttendanceReport = () => {
                         : ""
                     }`}
                     dateFormat={"dd-MM-yyyy"}
-                    open={isEndDateOpen}
-                    onClickOutside={() => setIsEndDateOpen(false)}
-                    onInputClick={handleEndDateCalendarToggle}
+                    // open={isEndDateOpen}
+                    // onClickOutside={() => setIsEndDateOpen(false)}
+                    // onInputClick={handleEndDateCalendarToggle}
                   />
                   {formik.touched.weeklyEndDate &&
                     formik.errors.weeklyEndDate && (
@@ -389,6 +392,7 @@ const AttendanceReport = () => {
 
           if (response?.data?.fileLink) {
             const url = `http://172.16.170.8:5252${response?.data?.fileLink}`;
+
             setSearchedData(url);
           } else {
             searchedData(null);
