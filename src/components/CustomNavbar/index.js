@@ -27,7 +27,60 @@ export const CustomNavbar = ({ module, centerlogohide, navItems }) => {
         <div class="container-fluid">
           <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
-              {shouldRenderEfiling ? (
+            <>
+              {navItems &&
+                navItems?.map((item) => (
+                  <>
+                    {item?.subItems ? (
+                      <li class="nav-item">
+                        <Dropdown>
+                          <Dropdown.Toggle
+                            variant="default"
+                            id="about-dropdown"
+                            style={{ fontWeight: "bold", color: item.subItems.some(subItem => location.pathname === subItem.link) ? "#fff" : "#000", backgroundColor: item.subItems.some(subItem => location.pathname === subItem.link) ? "#14ae5c" : ""  }}
+                          >
+                            {item?.itemName}{" "}
+                            <FontAwesomeIcon
+                              icon={faSortDown}
+                              style={{
+                                fontSize: "20px",
+                                color: item.subItems.some(subItem => location.pathname === subItem.link) ? "#fff" : "#000",
+                                marginBottom: "1px",
+                              }}
+                            />
+                          </Dropdown.Toggle>
+
+                          <Dropdown.Menu>
+                            {item?.subItems.map((subItem) => (
+                              <Link
+                                style={{ fontWeight: "bold", color: location.pathname === subItem?.link ? "#fff" : "#000", backgroundColor: location.pathname === subItem?.link ? "#14ae5c" : "" }}
+                                to={subItem?.link}
+                                className="dropdown-item"
+                                key={subItem?.itemName}
+                                target={subItem?.target}
+                              >
+                                {subItem?.itemName}
+                              </Link>
+                            ))}
+                          </Dropdown.Menu>
+                        </Dropdown>
+                      </li>
+                    ) : (
+                      <li class="nav-item">
+                        <Link
+                          style={{ fontWeight: "bold", color: location.pathname === item?.link ? "#fff" : "#000", backgroundColor: location.pathname === item?.link ? "#14ae5c" : "", borderRadius: 5, paddingRight: 10, paddingLeft: 10 }}
+                          class="nav-link"
+                          aria-current="page"
+                          to={item?.link}
+                        >
+                          {item?.itemName}
+                        </Link>
+                      </li>
+                    )}
+                  </>
+                ))}
+              </>
+              {/* {shouldRenderEfiling ? (
               <>
               {navItems &&
                 navItems?.map((item) => (
@@ -91,7 +144,7 @@ export const CustomNavbar = ({ module, centerlogohide, navItems }) => {
                     Dashboard
                   </Link>
                 </li>
-              )}
+              )} */}
             </ul>
           </div>
         </div>

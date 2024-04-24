@@ -8,12 +8,13 @@ import { getAuthToken, logout } from "../../api/Auth";
 import { Link, useNavigate } from "react-router-dom";
 import { getAllMotion } from "../../api/APIs/Services/Motion.service";
 
-export const Layout = ({ children, module, sidebarItems, centerlogohide, dashboardLink, addLink1, addLink2, title1, title2, width, marginTop, breadcrumbs }) => {
+export const Layout = ({ children, sidebarItems, centerlogohide, dashboardLink, addLink1, addLink2, title1, title2, width, marginTop, breadcrumbs }) => {
   const [sidebarVisible, setSidebarVisible] = useState(true);
   const [modal, setModal] = useState(false);
   const [notificationData, setNotificationData] = useState([]);
   const [activeNotificationType, setActiveNotificationType] = useState(null);
   const notificationRef = useRef();
+  const module = false;
 
   const openNotificationModal = (notificationType) => {
     if (modal && activeNotificationType === notificationType) {
@@ -146,11 +147,11 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide, dashboa
   }, [shouldRenderNotice, shouldRenderQuestion, shouldRenderMotion]);
 
   useEffect(() => {
-    const token = getAuthToken();
-    if (token === undefined || token === null) {
-      logout();
-      navigation("/login");
-    }
+  const token = getAuthToken();
+  if (token === undefined || token === null) {
+  logout();
+  navigation("/login");
+  }
   }, [navigation]);
 
   const notificationModal = () => (
@@ -192,7 +193,7 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide, dashboa
         {module ? (
           <>
             <main className="dashboard-app" style={{ marginLeft: "220px" }}>
-              <CustomNavbar module={module} centerlogohide={centerlogohide} />
+              <CustomNavbar module={module} centerlogohide={centerlogohide} toggleSidebar={toggleSidebar} navItems={sidebarItems} />
               <div className="dashboard-content">
                 {shouldRenderNotice ? (
                   <>
@@ -295,7 +296,7 @@ export const Layout = ({ children, module, sidebarItems, centerlogohide, dashboa
           <>
             <main>
               <CustomNavbar toggleSidebar={toggleSidebar} navItems={sidebarItems} />
-              <div className="dashboard-content" style={{ marginTop: 120 }}>
+              <div className="dashboard-content" style={{ marginTop: location.pathname === '/' ? 5 : 120 }}>
                 <div className="container-fluid">{children}</div>
               </div>
             </main>

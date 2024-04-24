@@ -75,12 +75,12 @@ export const Login = () => {
 
       <div class="wrap-login">
         <span
-          style={{ fontSize: "25px", marginTop: "10px", fontWeight: "bold" }}
+          style={{ fontSize: "28px", marginTop: "10px", marginBottom: "30px", fontWeight: "bold" }}
           class="login-form-title"
         >
-          Senate SMART Docs
+          SSDocs
         </span>
-        <span
+        {/* <span
           style={{
             fontSize: "22px",
             marginBottom: "30px",
@@ -89,8 +89,8 @@ export const Login = () => {
           }}
           class="login-form-title"
         >
-          (SSDocs)
-        </span>
+          SSDocs
+        </span> */}
         <form onSubmit={formik.handleSubmit}>
           <div class="login-form">
             <div class="logo">
