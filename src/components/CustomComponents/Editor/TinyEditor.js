@@ -42,7 +42,7 @@ export const TinyEditor = ({ initialContent, setEditorContent, editorContent, mu
         <Editor
         disabled = {disabled}
           key={key}
-          apiKey={process.env.REACT_APP_TINY_EDITOR_API_KEY}
+          apiKey={process.env.REACT_APP_TINY_EDITOR_API_KEY || "kx0a8xteqo1erph79kj5kszpyzhv2ywhpdukm0j2h1tys2ku"}
           onInit={() => setLoading(false)}
           initialValue={""} // type === "ltr" ? "<p>Hello there! Write something new</p>" : "سنو ذرا! کچھ نیا لکھیں۔"
           value={editorContent && editorContent}
