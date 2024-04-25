@@ -72,7 +72,12 @@ function FileDetail() {
     "location?.state?.fileIdlocation?.state?.fileIdlocation?.state?.fileIdlocation?.state?.fileId",
     location?.state?.fileId
   );
+  const [showSubButtonsCorrespondence, setShowSubButtonsCorrespondence] =
+    useState(false);
 
+  const toggleButtons = () => {
+    setShowSubButtonsCorrespondence(true);
+  };
   console.log("location?.state", location?.state);
 
   const [notingData, setNotingData] = useState({
@@ -115,7 +120,7 @@ function FileDetail() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [togleOpan, setTogleOpan] = useState(true);
   const [selectedTab, setSelectedTab] = useState("FR Noting");
-
+  const [subSelectedTab, setSubSelectedTab] = useState("");
   const [remarksData, setRemarksData] = useState([]);
   const [frAttachments, setFrAttachments] = useState([]);
 
@@ -839,7 +844,7 @@ function FileDetail() {
                       id="ex1"
                       role="tablist"
                     >
-                      <li
+                      {/* <li
                         className="nav-item"
                         role="presentation"
                         onClick={() => {
@@ -865,13 +870,14 @@ function FileDetail() {
                         >
                           FR ({frAttachments.length})
                         </button>
-                      </li>
+                      </li> */}
                       <li
                         className="nav-item"
                         role="presentation"
                         onClick={() => {
                           clearInput();
                           setSelectedTab("Noting");
+                          setShowSubButtonsCorrespondence(false);
                         }}
                       >
                         <button
@@ -914,6 +920,7 @@ function FileDetail() {
                           aria-selected={
                             selectedTab === "Correspondence" ? "true" : "false"
                           }
+                          onClick={toggleButtons}
                         >
                           Correspondence (
                           {correspondancestore &&
@@ -921,86 +928,152 @@ function FileDetail() {
                           )
                         </button>
                       </li>
-                      {/*
-                      <li
-                        className="nav-item"
-                        role="presentation"
-                        onClick={() => {
-                          clearInput();
-                          setSelectedTab("Sanction");
-                        }}
-                      >
-                        <button
-                          type="button"
-                          className={
-                            selectedTab === "Sanction"
-                              ? "nav-link active"
-                              : "nav-link"
-                          }
-                          style={{ width: "140px" }}
-                          data-bs-toggle="tab"
-                          role="tab"
-                          aria-controls="ex1-tabs-1"
-                          aria-selected={
-                            selectedTab === "Sanction" ? "true" : "false"
-                          }
-                        >
-                          Sanction
-                        </button>
-                      </li>
-                      <li
-                        className="nav-item"
-                        role="presentation"
-                        onClick={() => {
-                          clearInput();
-                          setSelectedTab("Objection");
-                        }}
-                      >
-                        <button
-                          type="button"
-                          className={
-                            selectedTab === "Objection"
-                              ? "nav-link active"
-                              : "nav-link"
-                          }
-                          style={{ width: "140px" }}
-                          data-bs-toggle="tab"
-                          role="tab"
-                          aria-controls="ex1-tabs-2"
-                          aria-selected={
-                            selectedTab === "Objection" ? "true" : "false"
-                          }
-                        >
-                          Objection
-                        </button>
-                      </li>
-                      <li
-                        className="nav-item"
-                        role="presentation"
-                        onClick={() => {
-                          clearInput();
-                          setSelectedTab("Letter");
-                        }}
-                      >
-                        <button
-                          type="button"
-                          className={
-                            selectedTab === "Letter"
-                              ? "nav-link active"
-                              : "nav-link"
-                          }
-                          style={{ width: "140px" }}
-                          data-bs-toggle="tab"
-                          role="tab"
-                          aria-controls="ex1-tabs-2"
-                          aria-selected={
-                            selectedTab === "Letter" ? "true" : "false"
-                          }
-                        >
-                          Letter
-                        </button>
-                      </li> */}
                     </ul>
+                    {showSubButtonsCorrespondence && (
+                      <div className="row">
+                        <ul
+                          className="nav nav-tabs mb-3 mt-3"
+                          id="ex2"
+                          role="tablist"
+                        >
+                          <li
+                            className="nav-item"
+                            role="presentation"
+                            onClick={() => {
+                              clearInput();
+                              setSelectedTab("Sanction");
+                              // setSubSelectedTab("Sanction");
+                            }}
+                          >
+                            <button
+                              type="button"
+                              className={
+                                selectedTab === "Sanction"
+                                  ? "nav-link active"
+                                  : "nav-link"
+                              }
+                              style={{ width: "140px" }}
+                              data-bs-toggle="tab"
+                              role="tab"
+                              aria-controls="ex1-tabs-1"
+                              aria-selected={
+                                selectedTab === "Sanction" ? "true" : "false"
+                              }
+                            >
+                              Sanction
+                            </button>
+                          </li>
+
+                          <li
+                            className="nav-item"
+                            role="presentation"
+                            onClick={() => {
+                              clearInput();
+                              setSelectedTab("Objection");
+                            }}
+                          >
+                            <button
+                              type="button"
+                              className={
+                                selectedTab === "Objection"
+                                  ? "nav-link active"
+                                  : "nav-link"
+                              }
+                              style={{ width: "140px" }}
+                              data-bs-toggle="tab"
+                              role="tab"
+                              aria-controls="ex1-tabs-2"
+                              aria-selected={
+                                selectedTab === "Objection" ? "true" : "false"
+                              }
+                            >
+                              Objection
+                            </button>
+                          </li>
+
+                          <li
+                            className="nav-item"
+                            role="presentation"
+                            onClick={() => {
+                              clearInput();
+                              setSelectedTab("Letter");
+                            }}
+                          >
+                            <button
+                              type="button"
+                              className={
+                                selectedTab === "Letter"
+                                  ? "nav-link active"
+                                  : "nav-link"
+                              }
+                              style={{ width: "140px" }}
+                              data-bs-toggle="tab"
+                              role="tab"
+                              aria-controls="ex1-tabs-2"
+                              aria-selected={
+                                selectedTab === "Letter" ? "true" : "false"
+                              }
+                            >
+                              Letter
+                            </button>
+                          </li>
+
+                          <li
+                            className="nav-item"
+                            role="presentation"
+                            onClick={() => {
+                              clearInput();
+                              setSelectedTab("Circular");
+                            }}
+                          >
+                            <button
+                              type="button"
+                              className={
+                                selectedTab === "Circular"
+                                  ? "nav-link active"
+                                  : "nav-link"
+                              }
+                              style={{ width: "140px" }}
+                              data-bs-toggle="tab"
+                              role="tab"
+                              aria-controls="ex1-tabs-2"
+                              aria-selected={
+                                selectedTab === "Circular" ? "true" : "false"
+                              }
+                            >
+                              Circular
+                            </button>
+                          </li>
+
+                          <li
+                            className="nav-item"
+                            role="presentation"
+                            onClick={() => {
+                              clearInput();
+                              setSelectedTab("Misc");
+                            }}
+                          >
+                            <button
+                              type="button"
+                              className={
+                                selectedTab === "Misc"
+                                  ? "nav-link active"
+                                  : "nav-link"
+                              }
+                              style={{ width: "140px" }}
+                              data-bs-toggle="tab"
+                              role="tab"
+                              aria-controls="ex1-tabs-2"
+                              aria-selected={
+                                selectedTab === "Misc" ? "true" : "false"
+                              }
+                            >
+                              Misc
+                            </button>
+                          </li>
+                        </ul>
+                      </div>
+                    )}
 
                     <div class="tab-content" id="ex1-content">
                       <div class="row">
@@ -1042,7 +1115,7 @@ function FileDetail() {
                           </div>
                         </div>
 
-                        {selectedTab === "Correspondence" && (
+                        {/* {selectedTab === "Correspondence" && (
                           <div class="col-2">
                             {filesData?.sections.length > 0 && (
                               <div>
@@ -1091,7 +1164,7 @@ function FileDetail() {
                               </div>
                             )}
                           </div>
-                        )}
+                        )} */}
 
                         <div class="col">
                           {selectedTab === "FR Noting" ? (
@@ -1203,6 +1276,614 @@ function FileDetail() {
                               </div>
                             </section>
                           ) : null}
+                          <div className="row">
+                            {selectedTab === "Sanction" ? (
+                              <>
+                                {" "}
+                                <div class="col-2">
+                                  {filesData?.sections.length > 0 && (
+                                    <div>
+                                      <label
+                                        for="formFile"
+                                        class="form-label mt-3 mb-0"
+                                      >
+                                        Sanction Files
+                                      </label>
+                                      {filesData?.sections &&
+                                        correspondancestore?.length > 0 &&
+                                        correspondancestore[0]?.caseAttachments.map(
+                                          (file, index) => {
+                                            return (
+                                              <div key={index}>
+                                                <a
+                                                  class="MultiFile-remove"
+                                                  style={{
+                                                    marginRight: "10px",
+                                                    color: "red",
+                                                    cursor: "pointer",
+                                                  }}
+                                                  onClick={() =>
+                                                    hendleRemoveImage(file?.id)
+                                                  }
+                                                >
+                                                  x
+                                                </a>
+                                                <a
+                                                  href={
+                                                    file?.id
+                                                      ? `http://172.16.170.8:5252${file?.fileName}`
+                                                      : URL.createObjectURL(
+                                                          file
+                                                        )
+                                                  }
+                                                  target="_blank"
+                                                  rel="noopener noreferrer"
+                                                >
+                                                  {file?.id
+                                                    ? file?.fileName
+                                                        ?.split("/")
+                                                        .pop()
+                                                    : file.name}
+                                                </a>
+                                              </div>
+                                            );
+                                          }
+                                        )}
+                                    </div>
+                                  )}
+                                </div>
+                                <div className="col">
+                                  <section>
+                                    <label
+                                      for="formFile"
+                                      class="form-label mt-3"
+                                    >
+                                      Description
+                                    </label>
+
+                                    <TinyEditor
+                                      initialContent={""}
+                                      disabled={
+                                        viewPage
+                                          ? true
+                                          : filesData?.isEditable
+                                            ? filesData?.isEditable
+                                            : false
+                                      }
+                                      setEditorContent={(content) =>
+                                        setCorrespondenceData((prev) => ({
+                                          ...prev,
+                                          description: content,
+                                        }))
+                                      }
+                                      editorContent={
+                                        correspondenceData.description
+                                      }
+                                      multiLanguage={false}
+                                      // disabled={location.state?.view ? true : false}
+                                    />
+                                    <div class="row">
+                                      <div class="col">
+                                        <div class="mb-3 mt-5">
+                                          <div class="form-group">
+                                            <div class="row">
+                                              <label
+                                                for="formFile"
+                                                class="form-label mt-3"
+                                              >
+                                                Attach File
+                                              </label>
+                                              <div class="col-6">
+                                                <input
+                                                  ref={fileInputRef}
+                                                  className="form-control"
+                                                  type="file"
+                                                  accept=".pdf, .jpg, .jpeg, .png"
+                                                  id="correspondance"
+                                                  name="correspondance"
+                                                  multiple
+                                                  onChange={(event) =>
+                                                    handleFileChangeCorrespondance(
+                                                      event
+                                                    )
+                                                  }
+                                                  // disabled={location.state?.view ? true : false}
+                                                />
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </section>
+                                </div>
+                              </>
+                            ) : selectedTab === "Objection" ? (
+                              <>
+                                {" "}
+                                <div class="col-2">
+                                  {filesData?.sections.length > 0 && (
+                                    <div>
+                                      <label
+                                        for="formFile"
+                                        class="form-label mt-3 mb-0"
+                                      >
+                                        Objection Files
+                                      </label>
+                                      {filesData?.sections &&
+                                        correspondancestore?.length > 0 &&
+                                        correspondancestore[0]?.caseAttachments.map(
+                                          (file, index) => {
+                                            return (
+                                              <div key={index}>
+                                                <a
+                                                  class="MultiFile-remove"
+                                                  style={{
+                                                    marginRight: "10px",
+                                                    color: "red",
+                                                    cursor: "pointer",
+                                                  }}
+                                                  onClick={() =>
+                                                    hendleRemoveImage(file?.id)
+                                                  }
+                                                >
+                                                  x
+                                                </a>
+                                                <a
+                                                  href={
+                                                    file?.id
+                                                      ? `http://172.16.170.8:5252${file?.fileName}`
+                                                      : URL.createObjectURL(
+                                                          file
+                                                        )
+                                                  }
+                                                  target="_blank"
+                                                  rel="noopener noreferrer"
+                                                >
+                                                  {file?.id
+                                                    ? file?.fileName
+                                                        ?.split("/")
+                                                        .pop()
+                                                    : file.name}
+                                                </a>
+                                              </div>
+                                            );
+                                          }
+                                        )}
+                                    </div>
+                                  )}
+                                </div>
+                                <div className="col">
+                                  <section>
+                                    <label
+                                      for="formFile"
+                                      class="form-label mt-3"
+                                    >
+                                      Description
+                                    </label>
+
+                                    <TinyEditor
+                                      initialContent={""}
+                                      disabled={
+                                        viewPage
+                                          ? true
+                                          : filesData?.isEditable
+                                            ? filesData?.isEditable
+                                            : false
+                                      }
+                                      setEditorContent={(content) =>
+                                        setCorrespondenceData((prev) => ({
+                                          ...prev,
+                                          description: content,
+                                        }))
+                                      }
+                                      editorContent={
+                                        correspondenceData.description
+                                      }
+                                      multiLanguage={false}
+                                      // disabled={location.state?.view ? true : false}
+                                    />
+                                    <div class="row">
+                                      <div class="col">
+                                        <div class="mb-3 mt-5">
+                                          <div class="form-group">
+                                            <div class="row">
+                                              <label
+                                                for="formFile"
+                                                class="form-label mt-3"
+                                              >
+                                                Attach File
+                                              </label>
+                                              <div class="col-6">
+                                                <input
+                                                  ref={fileInputRef}
+                                                  className="form-control"
+                                                  type="file"
+                                                  accept=".pdf, .jpg, .jpeg, .png"
+                                                  id="correspondance"
+                                                  name="correspondance"
+                                                  multiple
+                                                  onChange={(event) =>
+                                                    handleFileChangeCorrespondance(
+                                                      event
+                                                    )
+                                                  }
+                                                  // disabled={location.state?.view ? true : false}
+                                                />
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </section>
+                                </div>
+                              </>
+                            ) : selectedTab === "Letter" ? (
+                              <>
+                                {" "}
+                                <div class="col-2">
+                                  {filesData?.sections.length > 0 && (
+                                    <div>
+                                      <label
+                                        for="formFile"
+                                        class="form-label mt-3 mb-0"
+                                      >
+                                        Letter Files
+                                      </label>
+                                      {filesData?.sections &&
+                                        correspondancestore?.length > 0 &&
+                                        correspondancestore[0]?.caseAttachments.map(
+                                          (file, index) => {
+                                            return (
+                                              <div key={index}>
+                                                <a
+                                                  class="MultiFile-remove"
+                                                  style={{
+                                                    marginRight: "10px",
+                                                    color: "red",
+                                                    cursor: "pointer",
+                                                  }}
+                                                  onClick={() =>
+                                                    hendleRemoveImage(file?.id)
+                                                  }
+                                                >
+                                                  x
+                                                </a>
+                                                <a
+                                                  href={
+                                                    file?.id
+                                                      ? `http://172.16.170.8:5252${file?.fileName}`
+                                                      : URL.createObjectURL(
+                                                          file
+                                                        )
+                                                  }
+                                                  target="_blank"
+                                                  rel="noopener noreferrer"
+                                                >
+                                                  {file?.id
+                                                    ? file?.fileName
+                                                        ?.split("/")
+                                                        .pop()
+                                                    : file.name}
+                                                </a>
+                                              </div>
+                                            );
+                                          }
+                                        )}
+                                    </div>
+                                  )}
+                                </div>
+                                <div className="col">
+                                  <section>
+                                    <label
+                                      for="formFile"
+                                      class="form-label mt-3"
+                                    >
+                                      Description
+                                    </label>
+
+                                    <TinyEditor
+                                      initialContent={""}
+                                      disabled={
+                                        viewPage
+                                          ? true
+                                          : filesData?.isEditable
+                                            ? filesData?.isEditable
+                                            : false
+                                      }
+                                      setEditorContent={(content) =>
+                                        setCorrespondenceData((prev) => ({
+                                          ...prev,
+                                          description: content,
+                                        }))
+                                      }
+                                      editorContent={
+                                        correspondenceData.description
+                                      }
+                                      multiLanguage={false}
+                                      // disabled={location.state?.view ? true : false}
+                                    />
+                                    <div class="row">
+                                      <div class="col">
+                                        <div class="mb-3 mt-5">
+                                          <div class="form-group">
+                                            <div class="row">
+                                              <label
+                                                for="formFile"
+                                                class="form-label mt-3"
+                                              >
+                                                Attach File
+                                              </label>
+                                              <div class="col-6">
+                                                <input
+                                                  ref={fileInputRef}
+                                                  className="form-control"
+                                                  type="file"
+                                                  accept=".pdf, .jpg, .jpeg, .png"
+                                                  id="correspondance"
+                                                  name="correspondance"
+                                                  multiple
+                                                  onChange={(event) =>
+                                                    handleFileChangeCorrespondance(
+                                                      event
+                                                    )
+                                                  }
+                                                  // disabled={location.state?.view ? true : false}
+                                                />
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </section>
+                                </div>
+                              </>
+                            ) : selectedTab === "Circular" ? (
+                              <>
+                                {" "}
+                                <div class="col-2">
+                                  {filesData?.sections.length > 0 && (
+                                    <div>
+                                      <label
+                                        for="formFile"
+                                        class="form-label mt-3 mb-0"
+                                      >
+                                        Circular Files
+                                      </label>
+                                      {filesData?.sections &&
+                                        correspondancestore?.length > 0 &&
+                                        correspondancestore[0]?.caseAttachments.map(
+                                          (file, index) => {
+                                            return (
+                                              <div key={index}>
+                                                <a
+                                                  class="MultiFile-remove"
+                                                  style={{
+                                                    marginRight: "10px",
+                                                    color: "red",
+                                                    cursor: "pointer",
+                                                  }}
+                                                  onClick={() =>
+                                                    hendleRemoveImage(file?.id)
+                                                  }
+                                                >
+                                                  x
+                                                </a>
+                                                <a
+                                                  href={
+                                                    file?.id
+                                                      ? `http://172.16.170.8:5252${file?.fileName}`
+                                                      : URL.createObjectURL(
+                                                          file
+                                                        )
+                                                  }
+                                                  target="_blank"
+                                                  rel="noopener noreferrer"
+                                                >
+                                                  {file?.id
+                                                    ? file?.fileName
+                                                        ?.split("/")
+                                                        .pop()
+                                                    : file.name}
+                                                </a>
+                                              </div>
+                                            );
+                                          }
+                                        )}
+                                    </div>
+                                  )}
+                                </div>
+                                <div className="col">
+                                  <section>
+                                    <label
+                                      for="formFile"
+                                      class="form-label mt-3"
+                                    >
+                                      Description
+                                    </label>
+
+                                    <TinyEditor
+                                      initialContent={""}
+                                      disabled={
+                                        viewPage
+                                          ? true
+                                          : filesData?.isEditable
+                                            ? filesData?.isEditable
+                                            : false
+                                      }
+                                      setEditorContent={(content) =>
+                                        setCorrespondenceData((prev) => ({
+                                          ...prev,
+                                          description: content,
+                                        }))
+                                      }
+                                      editorContent={
+                                        correspondenceData.description
+                                      }
+                                      multiLanguage={false}
+                                      // disabled={location.state?.view ? true : false}
+                                    />
+                                    <div class="row">
+                                      <div class="col">
+                                        <div class="mb-3 mt-5">
+                                          <div class="form-group">
+                                            <div class="row">
+                                              <label
+                                                for="formFile"
+                                                class="form-label mt-3"
+                                              >
+                                                Attach File
+                                              </label>
+                                              <div class="col-6">
+                                                <input
+                                                  ref={fileInputRef}
+                                                  className="form-control"
+                                                  type="file"
+                                                  accept=".pdf, .jpg, .jpeg, .png"
+                                                  id="correspondance"
+                                                  name="correspondance"
+                                                  multiple
+                                                  onChange={(event) =>
+                                                    handleFileChangeCorrespondance(
+                                                      event
+                                                    )
+                                                  }
+                                                  // disabled={location.state?.view ? true : false}
+                                                />
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </section>
+                                </div>
+                              </>
+                            ) : selectedTab === "Misc" ? (
+                              <>
+                                {" "}
+                                <div class="col-2">
+                                  {filesData?.sections.length > 0 && (
+                                    <div>
+                                      <label
+                                        for="formFile"
+                                        class="form-label mt-3 mb-0"
+                                      >
+                                        Misc Files
+                                      </label>
+                                      {filesData?.sections &&
+                                        correspondancestore?.length > 0 &&
+                                        correspondancestore[0]?.caseAttachments.map(
+                                          (file, index) => {
+                                            return (
+                                              <div key={index}>
+                                                <a
+                                                  class="MultiFile-remove"
+                                                  style={{
+                                                    marginRight: "10px",
+                                                    color: "red",
+                                                    cursor: "pointer",
+                                                  }}
+                                                  onClick={() =>
+                                                    hendleRemoveImage(file?.id)
+                                                  }
+                                                >
+                                                  x
+                                                </a>
+                                                <a
+                                                  href={
+                                                    file?.id
+                                                      ? `http://172.16.170.8:5252${file?.fileName}`
+                                                      : URL.createObjectURL(
+                                                          file
+                                                        )
+                                                  }
+                                                  target="_blank"
+                                                  rel="noopener noreferrer"
+                                                >
+                                                  {file?.id
+                                                    ? file?.fileName
+                                                        ?.split("/")
+                                                        .pop()
+                                                    : file.name}
+                                                </a>
+                                              </div>
+                                            );
+                                          }
+                                        )}
+                                    </div>
+                                  )}
+                                </div>
+                                <div className="col">
+                                  <section>
+                                    <label
+                                      for="formFile"
+                                      class="form-label mt-3"
+                                    >
+                                      Description
+                                    </label>
+
+                                    <TinyEditor
+                                      initialContent={""}
+                                      disabled={
+                                        viewPage
+                                          ? true
+                                          : filesData?.isEditable
+                                            ? filesData?.isEditable
+                                            : false
+                                      }
+                                      setEditorContent={(content) =>
+                                        setCorrespondenceData((prev) => ({
+                                          ...prev,
+                                          description: content,
+                                        }))
+                                      }
+                                      editorContent={
+                                        correspondenceData.description
+                                      }
+                                      multiLanguage={false}
+                                      // disabled={location.state?.view ? true : false}
+                                    />
+                                    <div class="row">
+                                      <div class="col">
+                                        <div class="mb-3 mt-5">
+                                          <div class="form-group">
+                                            <div class="row">
+                                              <label
+                                                for="formFile"
+                                                class="form-label mt-3"
+                                              >
+                                                Attach File
+                                              </label>
+                                              <div class="col-6">
+                                                <input
+                                                  ref={fileInputRef}
+                                                  className="form-control"
+                                                  type="file"
+                                                  accept=".pdf, .jpg, .jpeg, .png"
+                                                  id="correspondance"
+                                                  name="correspondance"
+                                                  multiple
+                                                  onChange={(event) =>
+                                                    handleFileChangeCorrespondance(
+                                                      event
+                                                    )
+                                                  }
+                                                  // disabled={location.state?.view ? true : false}
+                                                />
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </section>
+                                </div>
+                              </>
+                            ) : null}
+                          </div>
                         </div>
                       </div>
                     </div>
