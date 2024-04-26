@@ -125,8 +125,8 @@ function SentQuestion() {
           : "",
         SubjectMatter: cleanedSubjectMatter ? cleanedSubjectMatter : "",
         Category: res.questionCategory ? res.questionCategory : "",
-        Status: res.questionStatuses?.questionStatus
-          ? res.questionStatuses?.questionStatus
+        Status: res.questionStatus?.questionStatus
+          ? res.questionStatus?.questionStatus
           : "",
       };
     });

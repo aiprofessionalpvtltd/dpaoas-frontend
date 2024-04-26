@@ -7,7 +7,11 @@ import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import DatePicker from "react-datepicker";
-import { UpdateQuestionById, getAllDeletedQuestions, getAllQuestion } from "../../../../../../api/APIs/Services/Question.service";
+import {
+  UpdateQuestionById,
+  getAllDeletedQuestions,
+  getAllQuestion,
+} from "../../../../../../api/APIs/Services/Question.service";
 import {
   showErrorMessage,
   showSuccessMessage,
@@ -96,10 +100,14 @@ function QMSDeleteQuestion() {
       notInReligion: values?.notInReligion || "",
       completeText: values?.completeText || "",
       divisions: values?.division || "",
-    }
+    };
 
     try {
-      const response = await getAllDeletedQuestions(currentPage, pageSize, Data);
+      const response = await getAllDeletedQuestions(
+        currentPage,
+        pageSize,
+        Data
+      );
       if (response?.success) {
         // showSuccessMessage(response?.message);
         setCount(response?.count);
@@ -112,24 +120,25 @@ function QMSDeleteQuestion() {
   };
 
   const transformLeavesData = (apiData) => {
-    return apiData
-      .map((res, index) => {
-        return {
-          SrNo: index,
-          QID: res.id,
-          // QDN: res.questionDiary,
-          NoticeDate: moment(res?.noticeOfficeDiary?.noticeOfficeDiaryDate).format("YYYY/MM/DD"),
-          // NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
-          SessionNumber: res?.session?.sessionName,
-          SubjectMatter: [res?.englishText, res?.urduText]
-            .filter(Boolean)
-            .join(", "),
-          Category: res.questionCategory,
-          // SubmittedBy: res.category,
-          questionStatus: res.questionStatuses?.questionStatus,
-          questionActive: res?.questionActive
-        };
-      });
+    return apiData.map((res, index) => {
+      return {
+        SrNo: index,
+        QID: res.id,
+        // QDN: res.questionDiary,
+        NoticeDate: moment(
+          res?.noticeOfficeDiary?.noticeOfficeDiaryDate
+        ).format("YYYY/MM/DD"),
+        // NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
+        SessionNumber: res?.session?.sessionName,
+        SubjectMatter: [res?.englishText, res?.urduText]
+          .filter(Boolean)
+          .join(", "),
+        Category: res.questionCategory,
+        // SubmittedBy: res.category,
+        questionStatus: res.questionStatus?.questionStatus,
+        questionActive: res?.questionActive,
+      };
+    });
   };
   const getAllQuestionsApi = async () => {
     try {
@@ -154,10 +163,7 @@ function QMSDeleteQuestion() {
     formData.append("questionActive", "active");
 
     try {
-      const response = await UpdateQuestionById(
-        id,
-        formData
-      );
+      const response = await UpdateQuestionById(id, formData);
       if (response?.success) {
         showSuccessMessage(response?.message);
         getAllQuestionsApi();
@@ -166,11 +172,11 @@ function QMSDeleteQuestion() {
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
     }
-  }
+  };
 
   const handleResetForm = () => {
     formik.resetForm();
-  }
+  };
 
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
@@ -198,11 +204,12 @@ function QMSDeleteQuestion() {
                       <input
                         type="text"
                         placeholder={formik.values.questionDiaryNo}
-                        className={`form-control ${formik.touched.questionDiaryNo &&
-                            formik.errors.questionDiaryNo
+                        className={`form-control ${
+                          formik.touched.questionDiaryNo &&
+                          formik.errors.questionDiaryNo
                             ? "is-invalid"
                             : ""
-                          }`}
+                        }`}
                         id="questionDiaryNo"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -221,10 +228,11 @@ function QMSDeleteQuestion() {
                       <input
                         type="text"
                         placeholder={formik.values.questionId}
-                        className={`form-control ${formik.touched.questionId && formik.errors.questionId
+                        className={`form-control ${
+                          formik.touched.questionId && formik.errors.questionId
                             ? "is-invalid"
                             : ""
-                          }`}
+                        }`}
                         id="questionId"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -243,10 +251,11 @@ function QMSDeleteQuestion() {
                       <input
                         type="text"
                         placeholder={formik.values.keyword}
-                        className={`form-control ${formik.touched.keyword && formik.errors.keyword
+                        className={`form-control ${
+                          formik.touched.keyword && formik.errors.keyword
                             ? "is-invalid"
                             : ""
-                          }`}
+                        }`}
                         id="keyword"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -274,10 +283,11 @@ function QMSDeleteQuestion() {
                         onBlur={formik.handleBlur}
                       /> */}
                       <select
-                        class={`form-select ${formik.touched.memberName && formik.errors.memberName
+                        class={`form-select ${
+                          formik.touched.memberName && formik.errors.memberName
                             ? "is-invalid"
                             : ""
-                          }`}
+                        }`}
                         placeholder={formik.values.memberName}
                         onChange={formik.handleChange}
                         id="memberName"
@@ -409,11 +419,12 @@ function QMSDeleteQuestion() {
                       <input
                         type="text"
                         placeholder={formik.values.noticeDiaryNo}
-                        className={`form-control ${formik.touched.noticeDiaryNo &&
-                            formik.errors.noticeDiaryNo
+                        className={`form-control ${
+                          formik.touched.noticeDiaryNo &&
+                          formik.errors.noticeDiaryNo
                             ? "is-invalid"
                             : ""
-                          }`}
+                        }`}
                         id="noticeDiaryNo"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -449,11 +460,12 @@ function QMSDeleteQuestion() {
                           formik.setFieldValue("fromNoticeDate", date)
                         }
                         onBlur={formik.handleBlur}
-                        className={`form-control ${formik.touched.fromNoticeDate &&
-                            formik.errors.fromNoticeDate
+                        className={`form-control ${
+                          formik.touched.fromNoticeDate &&
+                          formik.errors.fromNoticeDate
                             ? "is-invalid"
                             : ""
-                          }`}
+                        }`}
                       />
                       {formik.touched.fromNoticeDate &&
                         formik.errors.fromNoticeDate && (
@@ -486,11 +498,12 @@ function QMSDeleteQuestion() {
                           formik.setFieldValue("toNoticeDate", date)
                         }
                         onBlur={formik.handleBlur}
-                        className={`form-control ${formik.touched.toNoticeDate &&
-                            formik.errors.toNoticeDate
+                        className={`form-control ${
+                          formik.touched.toNoticeDate &&
+                          formik.errors.toNoticeDate
                             ? "is-invalid"
                             : ""
-                          }`}
+                        }`}
                       />
                       {formik.touched.toNoticeDate &&
                         formik.errors.toNoticeDate && (
@@ -578,10 +591,11 @@ function QMSDeleteQuestion() {
                       <input
                         type="text"
                         placeholder={formik.values.division}
-                        className={`form-control ${formik.touched.division && formik.errors.division
+                        className={`form-control ${
+                          formik.touched.division && formik.errors.division
                             ? "is-invalid"
                             : ""
-                          }`}
+                        }`}
                         id="division"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
