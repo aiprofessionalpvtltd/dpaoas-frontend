@@ -68,17 +68,17 @@ function FileDetail() {
   const fileInputRef = useRef(null);
   const UserData = getUserData();
 
-  console.log(
-    "location?.state?.fileIdlocation?.state?.fileIdlocation?.state?.fileIdlocation?.state?.fileId",
-    location?.state?.fileId
-  );
+  // console.log(
+  //   "location?.state?.fileIdlocation?.state?.fileIdlocation?.state?.fileIdlocation?.state?.fileId",
+  //   location?.state?.fileId
+  // );
   const [showSubButtonsCorrespondence, setShowSubButtonsCorrespondence] =
     useState(false);
 
   const toggleButtons = () => {
     setShowSubButtonsCorrespondence(true);
   };
-  console.log("location?.state", location?.state);
+  // console.log("location?.state", location?.state);
 
   const [notingData, setNotingData] = useState({
     description: "",
@@ -104,8 +104,18 @@ function FileDetail() {
     attachedFiles: [],
   });
 
+  const [circular, setCircular] = useState({
+    description: "",
+    attachedFiles: [],
+  });
+
+  const [misc, setMisc] = useState({
+    description: "",
+    attachedFiles: [],
+  });
+
   const [employeeData, setEmployeeData] = useState([]);
-  console.log("employeeDataemployeeDataemployeeData", employeeData);
+  // console.log("employeeDataemployeeDataemployeeData", employeeData);
   const [filesData, setFilesData] = useState(null);
   const [viewPage, setViewPage] = useState(location?.state?.view);
 
@@ -159,7 +169,7 @@ function FileDetail() {
     },
   ];
 
-  console.log("File ID", location.state.fileId, fileIdINRegister);
+  // console.log("File ID", location.state.fileId, fileIdINRegister);
 
   const clearInput = () => {
     if (fileInputRef.current) {
@@ -247,8 +257,30 @@ function FileDetail() {
       attachedFiles: [...prevState.attachedFiles, ...fileList],
     }));
   };
+  const handleFileChangeCircular = (event) => {
+    // Access the files from the event
+    const files = event.target.files;
+    // Convert the files object to an array
+    const fileList = Array.from(files);
+    // Store the selected files in state
+    setCircular((prevState) => ({
+      ...prevState,
+      attachedFiles: [...prevState.attachedFiles, ...fileList],
+    }));
+  };
+  const handleFileChangeMisc = (event) => {
+    // Access the files from the event
+    const files = event.target.files;
+    // Convert the files object to an array
+    const fileList = Array.from(files);
+    // Store the selected files in state
+    setMisc((prevState) => ({
+      ...prevState,
+      attachedFiles: [...prevState.attachedFiles, ...fileList],
+    }));
+  };
 
-  console.log("Case Id----------------------", location?.state?.id);
+  // console.log("Case Id----------------------", location?.state?.id);
   const UpdateEfilingApi = async (values) => {
     const formData = new FormData();
     // formData.append("submittedBy", UserData?.fkUserId);
@@ -256,7 +288,7 @@ function FileDetail() {
     // formData.append("CommentStatus", values?.CommentStatus);
     // formData.append("comment", values?.comment);
 
-    console.log("alues?.isEditable", values?.isEditable);
+    // console.log("alues?.isEditable", values?.isEditable);
 
     formData.append("isEditable", values?.isEditable);
     formData.append("cases[0][Note][description]", notingData.description);
@@ -267,6 +299,8 @@ function FileDetail() {
     formData.append("cases[0][Sanction][description]", sanction.description);
     formData.append("cases[0][Objection][description]", objection.description);
     formData.append("cases[0][Letter][description]", letter.description);
+    formData.append("cases[0][Circular][description]", circular.description);
+    formData.append("cases[0][Misc][description]", misc.description);
     // formData.append("diaryNumber", values?.diaryNumber);
 
     if (objection.attachedFiles) {
@@ -282,6 +316,16 @@ function FileDetail() {
     if (letter.attachedFiles) {
       letter.attachedFiles.forEach((file, index) => {
         formData.append(`cases[0][Letter][sections][${index}]`, file);
+      });
+    }
+    if (circular.attachedFiles) {
+      circular.attachedFiles.forEach((file, index) => {
+        formData.append(`cases[0][Circular][sections][${index}]`, file);
+      });
+    }
+    if (misc.attachedFiles) {
+      misc.attachedFiles.forEach((file, index) => {
+        formData.append(`cases[0][Misc][sections][${index}]`, file);
       });
     }
     if (correspondenceData.attachedFiles) {
@@ -352,6 +396,9 @@ function FileDetail() {
   const [letterstore, setLetterStore] = useState();
   const [objectionstore, setbjectionstore] = useState();
   const [sectionstore, setsectionstore] = useState();
+  const [circularStore, setCircularStore] = useState();
+  const [miscStore, setMiscStore] = useState();
+  console.log("asljfdlkajskdkl;", sectionstore);
 
   const getFilesByID = async () => {
     try {
@@ -411,6 +458,12 @@ function FileDetail() {
       const Sanction = filesData?.sections?.filter(
         (item) => item.sectionType === "Sanction"
       );
+      const Circular = filesData?.sections?.filter(
+        (item) => item.sectionType === "Circular"
+      );
+      const Misc = filesData?.sections?.filter(
+        (item) => item.sectionType === "Misc"
+      );
       const frAttachments =
         filesData?.freshReceipts?.freshReceiptsAttachments?.length > 0 &&
         filesData?.freshReceipts?.freshReceiptsAttachments;
@@ -421,6 +474,8 @@ function FileDetail() {
       setLetterStore(letter);
       setbjectionstore(Objection);
       setsectionstore(Sanction);
+      setCircularStore(Circular);
+      setMiscStore(Misc);
 
       setCorrespondenceData((prev) => ({
         ...prev,
@@ -441,6 +496,14 @@ function FileDetail() {
       setNotingData((prev) => ({
         ...prev,
         description: noting[0]?.description || "",
+      }));
+      setCircular((prev) => ({
+        ...prev,
+        description: Circular[0]?.description || "",
+      }));
+      setMisc((prev) => ({
+        ...prev,
+        description: Misc[0]?.description || "",
       }));
 
       formik.setValues({
@@ -498,7 +561,7 @@ function FileDetail() {
         location.state?.notificationId,
         UserData?.fkUserId
       );
-      console.log("Notification deleted", response?.data);
+      // console.log("Notification deleted", response?.data);
     } catch (error) {
       console.log(error.response.data.message);
     }
@@ -545,6 +608,52 @@ function FileDetail() {
     formik.setFieldValue("isEditable", isDraft); // Set isEdit value based on button clicked
   };
 
+  const SanactionImages =
+    (filesData &&
+      filesData?.sections &&
+      sectionstore?.length > 0 &&
+      sectionstore[0]?.caseAttachments.map((item) => ({
+        original: `http://172.16.170.8:5252${item?.fileName}`,
+        thumbnail: `http://172.16.170.8:5252${item?.fileName}`,
+      }))) ||
+    [];
+
+  const ObjectionImages =
+    (filesData &&
+      filesData?.sections &&
+      objectionstore?.length > 0 &&
+      objectionstore[0]?.caseAttachments.map((item) => ({
+        original: `http://172.16.170.8:5252${item?.fileName}`,
+        thumbnail: `http://172.16.170.8:5252${item?.fileName}`,
+      }))) ||
+    [];
+  const LetterImages =
+    (filesData &&
+      filesData?.sections &&
+      letterstore?.length > 0 &&
+      letterstore[0]?.caseAttachments.map((item) => ({
+        original: `http://172.16.170.8:5252${item?.fileName}`,
+        thumbnail: `http://172.16.170.8:5252${item?.fileName}`,
+      }))) ||
+    [];
+  const CircularImages =
+    (filesData &&
+      filesData?.sections &&
+      circularStore?.length > 0 &&
+      circularStore[0]?.caseAttachments.map((item) => ({
+        original: `http://172.16.170.8:5252${item?.fileName}`,
+        thumbnail: `http://172.16.170.8:5252${item?.fileName}`,
+      }))) ||
+    [];
+  const MiscImages =
+    (filesData &&
+      filesData?.sections &&
+      miscStore?.length > 0 &&
+      miscStore[0]?.caseAttachments.map((item) => ({
+        original: `http://172.16.170.8:5252${item?.fileName}`,
+        thumbnail: `http://172.16.170.8:5252${item?.fileName}`,
+      }))) ||
+    [];
   return (
     <Layout
       centerlogohide={true}
@@ -922,10 +1031,11 @@ function FileDetail() {
                           }
                           onClick={toggleButtons}
                         >
-                          Correspondence (
+                          Correspondence
+                          {/* (
                           {correspondancestore &&
                             correspondancestore[0]?.caseAttachments?.length}
-                          )
+                          ) */}
                         </button>
                       </li>
                     </ul>
@@ -936,6 +1046,35 @@ function FileDetail() {
                           id="ex2"
                           role="tablist"
                         >
+                          {filesData?.freshReceipts !== null && (
+                            <li
+                              className="nav-item"
+                              role="presentation"
+                              onClick={() => {
+                                clearInput();
+                                setSelectedTab("FR Noting");
+                              }}
+                            >
+                              <button
+                                type="button"
+                                className={
+                                  selectedTab === "FR Noting"
+                                    ? "nav-link active"
+                                    : "nav-link"
+                                }
+                                style={{ width: "170px" }}
+                                data-bs-toggle="tab"
+                                role="tab"
+                                aria-controls="ex1-tabs-1"
+                                disabled={frAttachments ? false : true}
+                                aria-selected={
+                                  selectedTab === "FR Noting" ? "true" : "false"
+                                }
+                              >
+                                FR ({frAttachments.length})
+                              </button>
+                            </li>
+                          )}
                           <li
                             className="nav-item"
                             role="presentation"
@@ -1082,7 +1221,12 @@ function FileDetail() {
                             <button
                               class="btn btn-primary"
                               type="submit"
-                              style={{ width: "150px" }}
+                              style={{
+                                width: "150px",
+                                display: location?.state?.view
+                                  ? "none"
+                                  : "block",
+                              }}
                               onClick={() => handleSubmit(false)} // False means editable
                               disabled={
                                 viewPage
@@ -1100,7 +1244,12 @@ function FileDetail() {
                             <button
                               class="btn btn-primary"
                               type="submit"
-                              style={{ width: "150px" }}
+                              style={{
+                                width: "150px",
+                                display: location?.state?.view
+                                  ? "none"
+                                  : "block",
+                              }}
                               onClick={() => handleSubmit(true)} // True means non-editable
                               disabled={
                                 viewPage
@@ -1167,171 +1316,200 @@ function FileDetail() {
                         )} */}
 
                         <div class="col">
-                          {selectedTab === "FR Noting" ? (
-                            <section>
-                              <ImageGallery
-                                style={{ maxHeight: "calc(100vh 0px)" }}
-                                items={images}
-                                showThumbnails={false}
-                                showFullscreenButton={false}
-                                showPlayButton={false}
-                                slideOnThumbnailOver
-                                renderThumbInner={(item) => (
-                                  <div className="image-gallery-thumbnail-inner">
-                                    <img
-                                      src={item.thumbnail}
-                                      alt={"file"}
-                                      width={92}
-                                      height={80}
-                                    />
-                                    {/* Add any additional elements or styles for the thumbnail */}
-                                  </div>
-                                )}
-                              />
-                            </section>
-                          ) : selectedTab === "Noting" ? (
-                            // Render content for the 'Noting' tab
-                            <section class="mb-5">
-                              <label for="formFile" class="form-label mt-3">
-                                Description
-                              </label>
-
-                              <TinyEditor
-                                initialContent={""}
-                                disabled={
-                                  viewPage
-                                    ? true
-                                    : filesData?.isEditable
-                                      ? true
-                                      : false
-                                }
-                                setEditorContent={(content) =>
-                                  setNotingData((prev) => ({
-                                    ...prev,
-                                    description: content,
-                                  }))
-                                }
-                                editorContent={notingData.description}
-                                multiLanguage={false}
-                                // disabled={location.state?.view ? true : false}
-                              />
-                            </section>
-                          ) : selectedTab === "Correspondence" ? (
-                            <section>
-                              <label for="formFile" class="form-label mt-3">
-                                Description
-                              </label>
-
-                              <TinyEditor
-                                initialContent={""}
-                                disabled={
-                                  viewPage
-                                    ? true
-                                    : filesData?.isEditable
-                                      ? filesData?.isEditable
-                                      : false
-                                }
-                                setEditorContent={(content) =>
-                                  setCorrespondenceData((prev) => ({
-                                    ...prev,
-                                    description: content,
-                                  }))
-                                }
-                                editorContent={correspondenceData.description}
-                                multiLanguage={false}
-                                // disabled={location.state?.view ? true : false}
-                              />
-                              <div class="row">
-                                <div class="col">
-                                  <div class="mb-3 mt-5">
-                                    <div class="form-group">
-                                      <div class="row">
-                                        <label
-                                          for="formFile"
-                                          class="form-label mt-3"
-                                        >
-                                          Attach File
-                                        </label>
-                                        <div class="col-6">
-                                          <input
-                                            ref={fileInputRef}
-                                            className="form-control"
-                                            type="file"
-                                            accept=".pdf, .jpg, .jpeg, .png"
-                                            id="correspondance"
-                                            name="correspondance"
-                                            multiple
-                                            onChange={(event) =>
-                                              handleFileChangeCorrespondance(
-                                                event
-                                              )
-                                            }
-                                            // disabled={location.state?.view ? true : false}
-                                          />
-                                        </div>
-                                      </div>
+                          {
+                            selectedTab === "FR Noting" ? (
+                              <section>
+                                <ImageGallery
+                                  style={{ maxHeight: "calc(100vh 0px)" }}
+                                  items={images}
+                                  showThumbnails={false}
+                                  showFullscreenButton={false}
+                                  showPlayButton={false}
+                                  slideOnThumbnailOver
+                                  renderThumbInner={(item) => (
+                                    <div className="image-gallery-thumbnail-inner">
+                                      <img
+                                        src={item.thumbnail}
+                                        alt={"file"}
+                                        width={92}
+                                        height={80}
+                                      />
+                                      {/* Add any additional elements or styles for the thumbnail */}
                                     </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </section>
-                          ) : null}
+                                  )}
+                                />
+                              </section>
+                            ) : selectedTab === "Noting" ? (
+                              // Render content for the 'Noting' tab
+                              <section class="mb-5">
+                                <label for="formFile" class="form-label mt-3">
+                                  Description
+                                </label>
+
+                                <TinyEditor
+                                  initialContent={""}
+                                  disabled={
+                                    viewPage
+                                      ? true
+                                      : filesData?.isEditable
+                                        ? true
+                                        : false
+                                  }
+                                  setEditorContent={(content) =>
+                                    setNotingData((prev) => ({
+                                      ...prev,
+                                      description: content,
+                                    }))
+                                  }
+                                  editorContent={notingData.description}
+                                  multiLanguage={false}
+                                  // disabled={location.state?.view ? true : false}
+                                />
+                              </section>
+                            ) : null
+                            // : selectedTab === "Correspondence" ? (
+                            // <section>
+                            //   <label for="formFile" class="form-label mt-3">
+                            //     Description
+                            //   </label>
+
+                            //   <TinyEditor
+                            //     initialContent={""}
+                            //     disabled={
+                            //       viewPage
+                            //         ? true
+                            //         : filesData?.isEditable
+                            //           ? filesData?.isEditable
+                            //           : false
+                            //     }
+                            //     setEditorContent={(content) =>
+                            //       setCorrespondenceData((prev) => ({
+                            //         ...prev,
+                            //         description: content,
+                            //       }))
+                            //     }
+                            //     editorContent={correspondenceData.description}
+                            //     multiLanguage={false}
+                            //     // disabled={location.state?.view ? true : false}
+                            //   />
+                            //   <div class="row">
+                            //     <div class="col">
+                            //       <div class="mb-3 mt-5">
+                            //         <div class="form-group">
+                            //           <div class="row">
+                            //             <label
+                            //               for="formFile"
+                            //               class="form-label mt-3"
+                            //             >
+                            //               Attach File
+                            //             </label>
+                            //             <div class="col-6">
+                            //               <input
+                            //                 ref={fileInputRef}
+                            //                 className="form-control"
+                            //                 type="file"
+                            //                 accept=".pdf, .jpg, .jpeg, .png"
+                            //                 id="correspondance"
+                            //                 name="correspondance"
+                            //                 multiple
+                            //                 onChange={(event) =>
+                            //                   handleFileChangeCorrespondance(
+                            //                     event
+                            //                   )
+                            //                 }
+                            //                 // disabled={location.state?.view ? true : false}
+                            //               />
+                            //             </div>
+                            //           </div>
+                            //         </div>
+                            //       </div>
+                            //     </div>
+                            //   </div>
+                            // </section>
+                            // ) }
+                          }
                           <div className="row">
                             {selectedTab === "Sanction" ? (
                               <>
-                                {" "}
-                                <div class="col-2">
-                                  {filesData?.sections.length > 0 && (
-                                    <div>
-                                      <label
-                                        for="formFile"
-                                        class="form-label mt-3 mb-0"
-                                      >
-                                        Sanction Files
-                                      </label>
-                                      {filesData?.sections &&
-                                        correspondancestore?.length > 0 &&
-                                        correspondancestore[0]?.caseAttachments.map(
-                                          (file, index) => {
-                                            return (
-                                              <div key={index}>
-                                                <a
-                                                  class="MultiFile-remove"
-                                                  style={{
-                                                    marginRight: "10px",
-                                                    color: "red",
-                                                    cursor: "pointer",
-                                                  }}
-                                                  onClick={() =>
-                                                    hendleRemoveImage(file?.id)
-                                                  }
-                                                >
-                                                  x
-                                                </a>
-                                                <a
-                                                  href={
-                                                    file?.id
-                                                      ? `http://172.16.170.8:5252${file?.fileName}`
-                                                      : URL.createObjectURL(
-                                                          file
-                                                        )
-                                                  }
-                                                  target="_blank"
-                                                  rel="noopener noreferrer"
-                                                >
-                                                  {file?.id
-                                                    ? file?.fileName
-                                                        ?.split("/")
-                                                        .pop()
-                                                    : file.name}
-                                                </a>
-                                              </div>
-                                            );
-                                          }
-                                        )}
-                                    </div>
-                                  )}
-                                </div>
+                                {location?.state && location?.state?.view ? (
+                                  <section>
+                                    <ImageGallery
+                                      style={{ maxHeight: "calc(100vh 0px)" }}
+                                      items={SanactionImages}
+                                      showThumbnails={false}
+                                      showFullscreenButton={false}
+                                      showPlayButton={false}
+                                      slideOnThumbnailOver
+                                      renderThumbInner={(item) => (
+                                        <div className="image-gallery-thumbnail-inner">
+                                          <img
+                                            src={item.thumbnail}
+                                            alt={"file"}
+                                            width={92}
+                                            height={80}
+                                          />
+                                          {/* Add any additional elements or styles for the thumbnail */}
+                                        </div>
+                                      )}
+                                    />
+                                  </section>
+                                ) : (
+                                  <div class="col-2">
+                                    {filesData?.sections.length > 0 && (
+                                      <div>
+                                        <label
+                                          for="formFile"
+                                          class="form-label mt-3 mb-0"
+                                        >
+                                          Sanction Files
+                                        </label>
+                                        {filesData &&
+                                          filesData?.sections &&
+                                          sectionstore?.length > 0 &&
+                                          sectionstore[0]?.caseAttachments.map(
+                                            (file, index) => {
+                                              return (
+                                                <div key={index}>
+                                                  <a
+                                                    class="MultiFile-remove"
+                                                    style={{
+                                                      marginRight: "10px",
+                                                      color: "red",
+                                                      cursor: "pointer",
+                                                    }}
+                                                    onClick={() =>
+                                                      hendleRemoveImage(
+                                                        file?.id
+                                                      )
+                                                    }
+                                                  >
+                                                    x
+                                                  </a>
+                                                  <a
+                                                    href={
+                                                      file?.id
+                                                        ? `http://172.16.170.8:5252${file?.fileName}`
+                                                        : URL.createObjectURL(
+                                                            file
+                                                          )
+                                                    }
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                  >
+                                                    {file?.id
+                                                      ? file?.fileName
+                                                          ?.split("/")
+                                                          .pop()
+                                                      : file.name}
+                                                  </a>
+                                                </div>
+                                              );
+                                            }
+                                          )}
+                                      </div>
+                                    )}
+                                  </div>
+                                )}
                                 <div className="col">
                                   <section>
                                     <label
@@ -1351,22 +1529,34 @@ function FileDetail() {
                                             : false
                                       }
                                       setEditorContent={(content) =>
-                                        setCorrespondenceData((prev) => ({
+                                        setSanction((prev) => ({
                                           ...prev,
                                           description: content,
                                         }))
                                       }
-                                      editorContent={
-                                        correspondenceData.description
-                                      }
+                                      editorContent={sanction.description}
                                       multiLanguage={false}
                                       // disabled={location.state?.view ? true : false}
                                     />
-                                    <div class="row">
+                                    <div
+                                      class="row"
+                                      style={{
+                                        display: location?.state?.view
+                                          ? "none"
+                                          : "block",
+                                      }}
+                                    >
                                       <div class="col">
                                         <div class="mb-3 mt-5">
                                           <div class="form-group">
-                                            <div class="row">
+                                            <div
+                                              class="row"
+                                              style={{
+                                                display: location?.state?.view
+                                                  ? "none"
+                                                  : "block",
+                                              }}
+                                            >
                                               <label
                                                 for="formFile"
                                                 class="form-label mt-3"
@@ -1379,11 +1569,11 @@ function FileDetail() {
                                                   className="form-control"
                                                   type="file"
                                                   accept=".pdf, .jpg, .jpeg, .png"
-                                                  id="correspondance"
-                                                  name="correspondance"
+                                                  id="sanction"
+                                                  name="sanction"
                                                   multiple
                                                   onChange={(event) =>
-                                                    handleFileChangeCorrespondance(
+                                                    handleFileChangeSanction(
                                                       event
                                                     )
                                                   }
@@ -1400,59 +1590,86 @@ function FileDetail() {
                               </>
                             ) : selectedTab === "Objection" ? (
                               <>
-                                {" "}
-                                <div class="col-2">
-                                  {filesData?.sections.length > 0 && (
-                                    <div>
-                                      <label
-                                        for="formFile"
-                                        class="form-label mt-3 mb-0"
-                                      >
-                                        Objection Files
-                                      </label>
-                                      {filesData?.sections &&
-                                        correspondancestore?.length > 0 &&
-                                        correspondancestore[0]?.caseAttachments.map(
-                                          (file, index) => {
-                                            return (
-                                              <div key={index}>
-                                                <a
-                                                  class="MultiFile-remove"
-                                                  style={{
-                                                    marginRight: "10px",
-                                                    color: "red",
-                                                    cursor: "pointer",
-                                                  }}
-                                                  onClick={() =>
-                                                    hendleRemoveImage(file?.id)
-                                                  }
-                                                >
-                                                  x
-                                                </a>
-                                                <a
-                                                  href={
-                                                    file?.id
-                                                      ? `http://172.16.170.8:5252${file?.fileName}`
-                                                      : URL.createObjectURL(
-                                                          file
-                                                        )
-                                                  }
-                                                  target="_blank"
-                                                  rel="noopener noreferrer"
-                                                >
-                                                  {file?.id
-                                                    ? file?.fileName
-                                                        ?.split("/")
-                                                        .pop()
-                                                    : file.name}
-                                                </a>
-                                              </div>
-                                            );
-                                          }
-                                        )}
-                                    </div>
-                                  )}
-                                </div>
+                                {location?.state?.view ? (
+                                  <section>
+                                    <ImageGallery
+                                      style={{ maxHeight: "calc(100vh 0px)" }}
+                                      items={ObjectionImages}
+                                      showThumbnails={false}
+                                      showFullscreenButton={false}
+                                      showPlayButton={false}
+                                      slideOnThumbnailOver
+                                      renderThumbInner={(item) => (
+                                        <div className="image-gallery-thumbnail-inner">
+                                          <img
+                                            src={item.thumbnail}
+                                            alt={"file"}
+                                            width={92}
+                                            height={80}
+                                          />
+                                          {/* Add any additional elements or styles for the thumbnail */}
+                                        </div>
+                                      )}
+                                    />
+                                  </section>
+                                ) : (
+                                  <div class="col-2">
+                                    {filesData?.sections.length > 0 && (
+                                      <div>
+                                        <label
+                                          for="formFile"
+                                          class="form-label mt-3 mb-0"
+                                        >
+                                          Objection Files
+                                        </label>
+                                        {filesData &&
+                                          filesData?.sections &&
+                                          objectionstore?.length > 0 &&
+                                          objectionstore[0]?.caseAttachments.map(
+                                            (file, index) => {
+                                              return (
+                                                <div key={index}>
+                                                  <a
+                                                    class="MultiFile-remove"
+                                                    style={{
+                                                      marginRight: "10px",
+                                                      color: "red",
+                                                      cursor: "pointer",
+                                                    }}
+                                                    onClick={() =>
+                                                      hendleRemoveImage(
+                                                        file?.id
+                                                      )
+                                                    }
+                                                  >
+                                                    x
+                                                  </a>
+                                                  <a
+                                                    href={
+                                                      file?.id
+                                                        ? `http://172.16.170.8:5252${file?.fileName}`
+                                                        : URL.createObjectURL(
+                                                            file
+                                                          )
+                                                    }
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                  >
+                                                    {file?.id
+                                                      ? file?.fileName
+                                                          ?.split("/")
+                                                          .pop()
+                                                      : file.name}
+                                                  </a>
+                                                </div>
+                                              );
+                                            }
+                                          )}
+                                      </div>
+                                    )}
+                                  </div>
+                                )}
+
                                 <div className="col">
                                   <section>
                                     <label
@@ -1472,14 +1689,12 @@ function FileDetail() {
                                             : false
                                       }
                                       setEditorContent={(content) =>
-                                        setCorrespondenceData((prev) => ({
+                                        setObjection((prev) => ({
                                           ...prev,
                                           description: content,
                                         }))
                                       }
-                                      editorContent={
-                                        correspondenceData.description
-                                      }
+                                      editorContent={objection?.description}
                                       multiLanguage={false}
                                       // disabled={location.state?.view ? true : false}
                                     />
@@ -1487,10 +1702,17 @@ function FileDetail() {
                                       <div class="col">
                                         <div class="mb-3 mt-5">
                                           <div class="form-group">
-                                            <div class="row">
+                                            <div
+                                              class="row"
+                                              style={{
+                                                display: location?.state?.view
+                                                  ? "none"
+                                                  : "block",
+                                              }}
+                                            >
                                               <label
                                                 for="formFile"
-                                                class="form-label mt-3"
+                                                className="form-label mt-3"
                                               >
                                                 Attach File
                                               </label>
@@ -1500,11 +1722,11 @@ function FileDetail() {
                                                   className="form-control"
                                                   type="file"
                                                   accept=".pdf, .jpg, .jpeg, .png"
-                                                  id="correspondance"
-                                                  name="correspondance"
+                                                  id="objection"
+                                                  name="objection"
                                                   multiple
                                                   onChange={(event) =>
-                                                    handleFileChangeCorrespondance(
+                                                    handleFileChangeObjection(
                                                       event
                                                     )
                                                   }
@@ -1521,59 +1743,86 @@ function FileDetail() {
                               </>
                             ) : selectedTab === "Letter" ? (
                               <>
-                                {" "}
-                                <div class="col-2">
-                                  {filesData?.sections.length > 0 && (
-                                    <div>
-                                      <label
-                                        for="formFile"
-                                        class="form-label mt-3 mb-0"
-                                      >
-                                        Letter Files
-                                      </label>
-                                      {filesData?.sections &&
-                                        correspondancestore?.length > 0 &&
-                                        correspondancestore[0]?.caseAttachments.map(
-                                          (file, index) => {
-                                            return (
-                                              <div key={index}>
-                                                <a
-                                                  class="MultiFile-remove"
-                                                  style={{
-                                                    marginRight: "10px",
-                                                    color: "red",
-                                                    cursor: "pointer",
-                                                  }}
-                                                  onClick={() =>
-                                                    hendleRemoveImage(file?.id)
-                                                  }
-                                                >
-                                                  x
-                                                </a>
-                                                <a
-                                                  href={
-                                                    file?.id
-                                                      ? `http://172.16.170.8:5252${file?.fileName}`
-                                                      : URL.createObjectURL(
-                                                          file
-                                                        )
-                                                  }
-                                                  target="_blank"
-                                                  rel="noopener noreferrer"
-                                                >
-                                                  {file?.id
-                                                    ? file?.fileName
-                                                        ?.split("/")
-                                                        .pop()
-                                                    : file.name}
-                                                </a>
-                                              </div>
-                                            );
-                                          }
-                                        )}
-                                    </div>
-                                  )}
-                                </div>
+                                {location?.state?.view ? (
+                                  <section>
+                                    <ImageGallery
+                                      style={{ maxHeight: "calc(100vh 0px)" }}
+                                      items={LetterImages}
+                                      showThumbnails={false}
+                                      showFullscreenButton={false}
+                                      showPlayButton={false}
+                                      slideOnThumbnailOver
+                                      renderThumbInner={(item) => (
+                                        <div className="image-gallery-thumbnail-inner">
+                                          <img
+                                            src={item.thumbnail}
+                                            alt={"file"}
+                                            width={92}
+                                            height={80}
+                                          />
+                                          {/* Add any additional elements or styles for the thumbnail */}
+                                        </div>
+                                      )}
+                                    />
+                                  </section>
+                                ) : (
+                                  <div class="col-2">
+                                    {filesData?.sections.length > 0 && (
+                                      <div>
+                                        <label
+                                          for="formFile"
+                                          class="form-label mt-3 mb-0"
+                                        >
+                                          Letter Files
+                                        </label>
+                                        {filesData &&
+                                          filesData?.sections &&
+                                          letterstore?.length > 0 &&
+                                          letterstore[0]?.caseAttachments.map(
+                                            (file, index) => {
+                                              return (
+                                                <div key={index}>
+                                                  <a
+                                                    class="MultiFile-remove"
+                                                    style={{
+                                                      marginRight: "10px",
+                                                      color: "red",
+                                                      cursor: "pointer",
+                                                    }}
+                                                    onClick={() =>
+                                                      hendleRemoveImage(
+                                                        file?.id
+                                                      )
+                                                    }
+                                                  >
+                                                    x
+                                                  </a>
+                                                  <a
+                                                    href={
+                                                      file?.id
+                                                        ? `http://172.16.170.8:5252${file?.fileName}`
+                                                        : URL.createObjectURL(
+                                                            file
+                                                          )
+                                                    }
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                  >
+                                                    {file?.id
+                                                      ? file?.fileName
+                                                          ?.split("/")
+                                                          .pop()
+                                                      : file.name}
+                                                  </a>
+                                                </div>
+                                              );
+                                            }
+                                          )}
+                                      </div>
+                                    )}
+                                  </div>
+                                )}
+
                                 <div className="col">
                                   <section>
                                     <label
@@ -1593,14 +1842,12 @@ function FileDetail() {
                                             : false
                                       }
                                       setEditorContent={(content) =>
-                                        setCorrespondenceData((prev) => ({
+                                        setLetter((prev) => ({
                                           ...prev,
                                           description: content,
                                         }))
                                       }
-                                      editorContent={
-                                        correspondenceData.description
-                                      }
+                                      editorContent={letter.description}
                                       multiLanguage={false}
                                       // disabled={location.state?.view ? true : false}
                                     />
@@ -1608,7 +1855,14 @@ function FileDetail() {
                                       <div class="col">
                                         <div class="mb-3 mt-5">
                                           <div class="form-group">
-                                            <div class="row">
+                                            <div
+                                              class="row"
+                                              style={{
+                                                display: location?.state?.view
+                                                  ? "none"
+                                                  : "block",
+                                              }}
+                                            >
                                               <label
                                                 for="formFile"
                                                 class="form-label mt-3"
@@ -1621,11 +1875,11 @@ function FileDetail() {
                                                   className="form-control"
                                                   type="file"
                                                   accept=".pdf, .jpg, .jpeg, .png"
-                                                  id="correspondance"
-                                                  name="correspondance"
+                                                  id="letter"
+                                                  name="letter"
                                                   multiple
                                                   onChange={(event) =>
-                                                    handleFileChangeCorrespondance(
+                                                    handleFileChangeLetter(
                                                       event
                                                     )
                                                   }
@@ -1642,59 +1896,86 @@ function FileDetail() {
                               </>
                             ) : selectedTab === "Circular" ? (
                               <>
-                                {" "}
-                                <div class="col-2">
-                                  {filesData?.sections.length > 0 && (
-                                    <div>
-                                      <label
-                                        for="formFile"
-                                        class="form-label mt-3 mb-0"
-                                      >
-                                        Circular Files
-                                      </label>
-                                      {filesData?.sections &&
-                                        correspondancestore?.length > 0 &&
-                                        correspondancestore[0]?.caseAttachments.map(
-                                          (file, index) => {
-                                            return (
-                                              <div key={index}>
-                                                <a
-                                                  class="MultiFile-remove"
-                                                  style={{
-                                                    marginRight: "10px",
-                                                    color: "red",
-                                                    cursor: "pointer",
-                                                  }}
-                                                  onClick={() =>
-                                                    hendleRemoveImage(file?.id)
-                                                  }
-                                                >
-                                                  x
-                                                </a>
-                                                <a
-                                                  href={
-                                                    file?.id
-                                                      ? `http://172.16.170.8:5252${file?.fileName}`
-                                                      : URL.createObjectURL(
-                                                          file
-                                                        )
-                                                  }
-                                                  target="_blank"
-                                                  rel="noopener noreferrer"
-                                                >
-                                                  {file?.id
-                                                    ? file?.fileName
-                                                        ?.split("/")
-                                                        .pop()
-                                                    : file.name}
-                                                </a>
-                                              </div>
-                                            );
-                                          }
-                                        )}
-                                    </div>
-                                  )}
-                                </div>
+                                {location?.state?.view ? (
+                                  <section>
+                                    <ImageGallery
+                                      style={{ maxHeight: "calc(100vh 0px)" }}
+                                      items={CircularImages}
+                                      showThumbnails={false}
+                                      showFullscreenButton={false}
+                                      showPlayButton={false}
+                                      slideOnThumbnailOver
+                                      renderThumbInner={(item) => (
+                                        <div className="image-gallery-thumbnail-inner">
+                                          <img
+                                            src={item.thumbnail}
+                                            alt={"file"}
+                                            width={92}
+                                            height={80}
+                                          />
+                                          {/* Add any additional elements or styles for the thumbnail */}
+                                        </div>
+                                      )}
+                                    />
+                                  </section>
+                                ) : (
+                                  <div class="col-2">
+                                    {filesData?.sections.length > 0 && (
+                                      <div>
+                                        <label
+                                          for="formFile"
+                                          class="form-label mt-3 mb-0"
+                                        >
+                                          Circular Files
+                                        </label>
+                                        {filesData &&
+                                          filesData?.sections &&
+                                          circularStore?.length > 0 &&
+                                          circularStore[0]?.caseAttachments.map(
+                                            (file, index) => {
+                                              return (
+                                                <div key={index}>
+                                                  <a
+                                                    class="MultiFile-remove"
+                                                    style={{
+                                                      marginRight: "10px",
+                                                      color: "red",
+                                                      cursor: "pointer",
+                                                    }}
+                                                    onClick={() =>
+                                                      hendleRemoveImage(
+                                                        file?.id
+                                                      )
+                                                    }
+                                                  >
+                                                    x
+                                                  </a>
+                                                  <a
+                                                    href={
+                                                      file?.id
+                                                        ? `http://172.16.170.8:5252${file?.fileName}`
+                                                        : URL.createObjectURL(
+                                                            file
+                                                          )
+                                                    }
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                  >
+                                                    {file?.id
+                                                      ? file?.fileName
+                                                          ?.split("/")
+                                                          .pop()
+                                                      : file.name}
+                                                  </a>
+                                                </div>
+                                              );
+                                            }
+                                          )}
+                                      </div>
+                                    )}
+                                  </div>
+                                )}
+
                                 <div className="col">
                                   <section>
                                     <label
@@ -1714,14 +1995,12 @@ function FileDetail() {
                                             : false
                                       }
                                       setEditorContent={(content) =>
-                                        setCorrespondenceData((prev) => ({
+                                        setCircular((prev) => ({
                                           ...prev,
                                           description: content,
                                         }))
                                       }
-                                      editorContent={
-                                        correspondenceData.description
-                                      }
+                                      editorContent={circular.description}
                                       multiLanguage={false}
                                       // disabled={location.state?.view ? true : false}
                                     />
@@ -1729,7 +2008,14 @@ function FileDetail() {
                                       <div class="col">
                                         <div class="mb-3 mt-5">
                                           <div class="form-group">
-                                            <div class="row">
+                                            <div
+                                              class="row"
+                                              style={{
+                                                display: location?.state?.view
+                                                  ? "none"
+                                                  : "block",
+                                              }}
+                                            >
                                               <label
                                                 for="formFile"
                                                 class="form-label mt-3"
@@ -1742,11 +2028,11 @@ function FileDetail() {
                                                   className="form-control"
                                                   type="file"
                                                   accept=".pdf, .jpg, .jpeg, .png"
-                                                  id="correspondance"
-                                                  name="correspondance"
+                                                  id="Circular"
+                                                  name="Circular"
                                                   multiple
                                                   onChange={(event) =>
-                                                    handleFileChangeCorrespondance(
+                                                    handleFileChangeCircular(
                                                       event
                                                     )
                                                   }
@@ -1763,59 +2049,85 @@ function FileDetail() {
                               </>
                             ) : selectedTab === "Misc" ? (
                               <>
-                                {" "}
-                                <div class="col-2">
-                                  {filesData?.sections.length > 0 && (
-                                    <div>
-                                      <label
-                                        for="formFile"
-                                        class="form-label mt-3 mb-0"
-                                      >
-                                        Misc Files
-                                      </label>
-                                      {filesData?.sections &&
-                                        correspondancestore?.length > 0 &&
-                                        correspondancestore[0]?.caseAttachments.map(
-                                          (file, index) => {
-                                            return (
-                                              <div key={index}>
-                                                <a
-                                                  class="MultiFile-remove"
-                                                  style={{
-                                                    marginRight: "10px",
-                                                    color: "red",
-                                                    cursor: "pointer",
-                                                  }}
-                                                  onClick={() =>
-                                                    hendleRemoveImage(file?.id)
-                                                  }
-                                                >
-                                                  x
-                                                </a>
-                                                <a
-                                                  href={
-                                                    file?.id
-                                                      ? `http://172.16.170.8:5252${file?.fileName}`
-                                                      : URL.createObjectURL(
-                                                          file
-                                                        )
-                                                  }
-                                                  target="_blank"
-                                                  rel="noopener noreferrer"
-                                                >
-                                                  {file?.id
-                                                    ? file?.fileName
-                                                        ?.split("/")
-                                                        .pop()
-                                                    : file.name}
-                                                </a>
-                                              </div>
-                                            );
-                                          }
-                                        )}
-                                    </div>
-                                  )}
-                                </div>
+                                {location?.state?.view ? (
+                                  <section>
+                                    <ImageGallery
+                                      style={{ maxHeight: "calc(100vh 0px)" }}
+                                      items={MiscImages}
+                                      showThumbnails={false}
+                                      showFullscreenButton={false}
+                                      showPlayButton={false}
+                                      slideOnThumbnailOver
+                                      renderThumbInner={(item) => (
+                                        <div className="image-gallery-thumbnail-inner">
+                                          <img
+                                            src={item.thumbnail}
+                                            alt={"file"}
+                                            width={92}
+                                            height={80}
+                                          />
+                                          {/* Add any additional elements or styles for the thumbnail */}
+                                        </div>
+                                      )}
+                                    />
+                                  </section>
+                                ) : (
+                                  <div class="col-2">
+                                    {filesData?.sections.length > 0 && (
+                                      <div>
+                                        <label
+                                          for="formFile"
+                                          class="form-label mt-3 mb-0"
+                                        >
+                                          Misc Files
+                                        </label>
+                                        {filesData?.sections &&
+                                          miscStore?.length > 0 &&
+                                          miscStore[0]?.caseAttachments.map(
+                                            (file, index) => {
+                                              return (
+                                                <div key={index}>
+                                                  <a
+                                                    class="MultiFile-remove"
+                                                    style={{
+                                                      marginRight: "10px",
+                                                      color: "red",
+                                                      cursor: "pointer",
+                                                    }}
+                                                    onClick={() =>
+                                                      hendleRemoveImage(
+                                                        file?.id
+                                                      )
+                                                    }
+                                                  >
+                                                    x
+                                                  </a>
+                                                  <a
+                                                    href={
+                                                      file?.id
+                                                        ? `http://172.16.170.8:5252${file?.fileName}`
+                                                        : URL.createObjectURL(
+                                                            file
+                                                          )
+                                                    }
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                  >
+                                                    {file?.id
+                                                      ? file?.fileName
+                                                          ?.split("/")
+                                                          .pop()
+                                                      : file.name}
+                                                  </a>
+                                                </div>
+                                              );
+                                            }
+                                          )}
+                                      </div>
+                                    )}
+                                  </div>
+                                )}
+
                                 <div className="col">
                                   <section>
                                     <label
@@ -1835,14 +2147,12 @@ function FileDetail() {
                                             : false
                                       }
                                       setEditorContent={(content) =>
-                                        setCorrespondenceData((prev) => ({
+                                        setMisc((prev) => ({
                                           ...prev,
                                           description: content,
                                         }))
                                       }
-                                      editorContent={
-                                        correspondenceData.description
-                                      }
+                                      editorContent={misc.description}
                                       multiLanguage={false}
                                       // disabled={location.state?.view ? true : false}
                                     />
@@ -1863,13 +2173,11 @@ function FileDetail() {
                                                   className="form-control"
                                                   type="file"
                                                   accept=".pdf, .jpg, .jpeg, .png"
-                                                  id="correspondance"
-                                                  name="correspondance"
+                                                  id="Misc"
+                                                  name="Misc"
                                                   multiple
                                                   onChange={(event) =>
-                                                    handleFileChangeCorrespondance(
-                                                      event
-                                                    )
+                                                    handleFileChangeMisc(event)
                                                   }
                                                   // disabled={location.state?.view ? true : false}
                                                 />
@@ -1964,14 +2272,20 @@ function FileDetail() {
                   </h2>
                   {!location?.state.approved && (
                     <a onClick={toggleModal}>
-                      <button class="btn add-btn">
+                      <button
+                        className="btn add-btn"
+                        style={{
+                          display: location?.state?.view ? "none" : "block",
+                        }}
+                      >
                         <FontAwesomeIcon
                           style={{ marginRight: "-5px" }}
-                          icon={faPlus}
+                          // icon={faPlus}
                           size="md"
                           width={24}
                         />{" "}
-                        Add your comment
+                        {/* Add your comment */}
+                        Proceed
                       </button>
                     </a>
                   )}
