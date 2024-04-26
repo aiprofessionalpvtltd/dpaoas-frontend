@@ -1219,7 +1219,7 @@ function FileDetail() {
                         <div class="row mt-2 d-flex justify-content-end float-end">
                           <div class="col-2">
                             <button
-                              class="btn btn-primary"
+                              class="btn btn-primary mb-4"
                               type="submit"
                               style={{
                                 width: "150px",
@@ -2160,7 +2160,14 @@ function FileDetail() {
                                       <div class="col">
                                         <div class="mb-3 mt-5">
                                           <div class="form-group">
-                                            <div class="row">
+                                            <div
+                                              class="row"
+                                              style={{
+                                                display: location?.state?.view
+                                                  ? "none"
+                                                  : "block",
+                                              }}
+                                            >
                                               <label
                                                 for="formFile"
                                                 class="form-label mt-3"

@@ -8,7 +8,19 @@ import { getAuthToken, logout } from "../../api/Auth";
 import { Link, useNavigate } from "react-router-dom";
 import { getAllMotion } from "../../api/APIs/Services/Motion.service";
 
-export const Layout = ({ children, sidebarItems, centerlogohide, dashboardLink, addLink1, addLink2, title1, title2, width, marginTop, breadcrumbs }) => {
+export const Layout = ({
+  children,
+  sidebarItems,
+  centerlogohide,
+  dashboardLink,
+  addLink1,
+  addLink2,
+  title1,
+  title2,
+  width,
+  marginTop,
+  breadcrumbs,
+}) => {
   const [sidebarVisible, setSidebarVisible] = useState(true);
   const [modal, setModal] = useState(false);
   const [notificationData, setNotificationData] = useState([]);
@@ -80,9 +92,18 @@ export const Layout = ({ children, sidebarItems, centerlogohide, dashboardLink, 
   });
   const location = useLocation();
 
-  const basePathNotice = location.pathname.substring(0, location.pathname.lastIndexOf("/notice") + 7);
-  const basePathMotion = location.pathname.substring(0, location.pathname.indexOf("/mms") + 4);
-  const basePathQuestion = location.pathname.substring(0, location.pathname.lastIndexOf("/qms") + 4);
+  const basePathNotice = location.pathname.substring(
+    0,
+    location.pathname.lastIndexOf("/notice") + 7
+  );
+  const basePathMotion = location.pathname.substring(
+    0,
+    location.pathname.indexOf("/mms") + 4
+  );
+  const basePathQuestion = location.pathname.substring(
+    0,
+    location.pathname.lastIndexOf("/qms") + 4
+  );
 
   const shouldRenderNotice = basePathNotice === "/notice";
   const shouldRenderMotion = basePathMotion === "/mms";
@@ -96,7 +117,10 @@ export const Layout = ({ children, sidebarItems, centerlogohide, dashboardLink, 
     try {
       const response = await getAllMotion(0, 4);
       if (response?.success) {
-        setCount((prevCount) => ({ ...prevCount, motion: response?.data?.count }));
+        setCount((prevCount) => ({
+          ...prevCount,
+          motion: response?.data?.count,
+        }));
       }
     } catch (error) {}
   };
@@ -105,7 +129,10 @@ export const Layout = ({ children, sidebarItems, centerlogohide, dashboardLink, 
     try {
       const response = await getAllQuestion(0, 4);
       if (response?.success) {
-        setCount((prevCount) => ({ ...prevCount, question: response?.data?.count }));
+        setCount((prevCount) => ({
+          ...prevCount,
+          question: response?.data?.count,
+        }));
       }
     } catch (error) {
       // Handle error
@@ -147,11 +174,11 @@ export const Layout = ({ children, sidebarItems, centerlogohide, dashboardLink, 
   }, [shouldRenderNotice, shouldRenderQuestion, shouldRenderMotion]);
 
   useEffect(() => {
-  const token = getAuthToken();
-  if (token === undefined || token === null) {
-  logout();
-  navigation("/login");
-  }
+    const token = getAuthToken();
+    if (token === undefined || token === null) {
+      logout();
+      navigation("/login");
+    }
   }, [navigation]);
 
   const notificationModal = () => (
@@ -193,7 +220,12 @@ export const Layout = ({ children, sidebarItems, centerlogohide, dashboardLink, 
         {module ? (
           <>
             <main className="dashboard-app" style={{ marginLeft: "220px" }}>
-              <CustomNavbar module={module} centerlogohide={centerlogohide} toggleSidebar={toggleSidebar} navItems={sidebarItems} />
+              <CustomNavbar
+                module={module}
+                centerlogohide={centerlogohide}
+                toggleSidebar={toggleSidebar}
+                navItems={sidebarItems}
+              />
               <div className="dashboard-content">
                 {shouldRenderNotice ? (
                   <>
@@ -211,23 +243,43 @@ export const Layout = ({ children, sidebarItems, centerlogohide, dashboardLink, 
                       </button> */}
                       <Link to={"/notice/question/sent"}>
                         <button
-                          style={{ backgroundColor: location.pathname === "/notice/question/sent" ? "white" : "" }}
+                          style={{
+                            backgroundColor:
+                              location.pathname === "/notice/question/sent"
+                                ? "white"
+                                : "",
+                          }}
                         >
                           Questions
                           {count?.motion ? (
-                            <span style={{ backgroundColor: "#FFA500" }}>{count.question}</span>
+                            <span style={{ backgroundColor: "#FFA500" }}>
+                              {count.question}
+                            </span>
                           ) : (
-                            <span style={{ backgroundColor: "#FFA500" }}>{0}</span>
+                            <span style={{ backgroundColor: "#FFA500" }}>
+                              {0}
+                            </span>
                           )}
                         </button>
                       </Link>
                       <Link to={"/notice/motion"}>
-                        <button style={{ backgroundColor: location.pathname === "/notice/motion" ? "white" : "" }}>
+                        <button
+                          style={{
+                            backgroundColor:
+                              location.pathname === "/notice/motion"
+                                ? "white"
+                                : "",
+                          }}
+                        >
                           Motion
                           {count?.motion ? (
-                            <span style={{ backgroundColor: "#007bff" }}>{count.motion}</span>
+                            <span style={{ backgroundColor: "#007bff" }}>
+                              {count.motion}
+                            </span>
                           ) : (
-                            <span style={{ backgroundColor: "#007bff" }}>{0}</span>
+                            <span style={{ backgroundColor: "#007bff" }}>
+                              {0}
+                            </span>
                           )}
                         </button>
                       </Link>
@@ -239,13 +291,22 @@ export const Layout = ({ children, sidebarItems, centerlogohide, dashboardLink, 
                       </Link> */}
                       <Link to={"/notice/resolution/sent"}>
                         <button
-                          style={{ backgroundColor: location.pathname === "/notice/resolution/sent" ? "white" : "" }}
+                          style={{
+                            backgroundColor:
+                              location.pathname === "/notice/resolution/sent"
+                                ? "white"
+                                : "",
+                          }}
                         >
                           Legislation
                           {count?.legislation ? (
-                            <span style={{ backgroundColor: "#2dce89" }}>{count.legislation}</span>
+                            <span style={{ backgroundColor: "#2dce89" }}>
+                              {count.legislation}
+                            </span>
                           ) : (
-                            <span style={{ backgroundColor: "#2dce89" }}>{0}</span>
+                            <span style={{ backgroundColor: "#2dce89" }}>
+                              {0}
+                            </span>
                           )}
                         </button>
                       </Link>
@@ -270,7 +331,9 @@ export const Layout = ({ children, sidebarItems, centerlogohide, dashboardLink, 
                   shouldRenderQuestion && (
                     <>
                       <div class="tab-right me-4 mt-1 mb-4">
-                        <button onClick={() => handleButtonClick("Translations")}>
+                        <button
+                          onClick={() => handleButtonClick("Translations")}
+                        >
                           Translations
                           {count?.motion && <span>{count?.motion}</span>}
                         </button>
@@ -295,8 +358,14 @@ export const Layout = ({ children, sidebarItems, centerlogohide, dashboardLink, 
         ) : (
           <>
             <main>
-              <CustomNavbar toggleSidebar={toggleSidebar} navItems={sidebarItems} />
-              <div className="dashboard-content" style={{ marginTop: location.pathname === '/' ? 5 : 120 }}>
+              <CustomNavbar
+                toggleSidebar={toggleSidebar}
+                navItems={sidebarItems}
+              />
+              <div
+                className="dashboard-content"
+                style={{ marginTop: location.pathname === "/" ? 5 : 90 }}
+              >
                 <div className="container-fluid">{children}</div>
               </div>
             </main>
