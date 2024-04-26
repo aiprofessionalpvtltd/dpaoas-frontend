@@ -12,7 +12,10 @@ export const CustomNavbar = ({ module, centerlogohide, navItems }) => {
   const navigation = useNavigate();
   const userData = getUserData();
   const location = useLocation();
-  const basePathEFiling = location.pathname.substring(0, location.pathname.lastIndexOf("/efiling") + 8);
+  const basePathEFiling = location.pathname.substring(
+    0,
+    location.pathname.lastIndexOf("/efiling") + 8
+  );
   const shouldRenderEfiling = basePathEFiling === "/efiling";
 
   return (
@@ -20,65 +23,107 @@ export const CustomNavbar = ({ module, centerlogohide, navItems }) => {
       class="dashboard-toolbar"
       style={{
         marginLeft: module ? "240px" : "0px",
-        top: centerlogohide ? "0px" : "22px",
+        top: centerlogohide ? "0px" : "0px",
       }}
     >
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
           <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
-            <>
-              {navItems &&
-                navItems?.map((item) => (
-                  <>
-                    {item?.subItems ? (
-                      <li class="nav-item">
-                        <Dropdown>
-                          <Dropdown.Toggle
-                            variant="default"
-                            id="about-dropdown"
-                            style={{ fontWeight: "bold", color: item.subItems.some(subItem => location.pathname === subItem.link) ? "#fff" : "#000", backgroundColor: item.subItems.some(subItem => location.pathname === subItem.link) ? "#14ae5c" : ""  }}
-                          >
-                            {item?.itemName}{" "}
-                            <FontAwesomeIcon
-                              icon={faSortDown}
+              <>
+                {navItems &&
+                  navItems?.map((item) => (
+                    <>
+                      {item?.subItems ? (
+                        <li class="nav-item">
+                          <Dropdown>
+                            <Dropdown.Toggle
+                              variant="default"
+                              id="about-dropdown"
                               style={{
-                                fontSize: "20px",
-                                color: item.subItems.some(subItem => location.pathname === subItem.link) ? "#fff" : "#000",
-                                marginBottom: "1px",
+                                fontWeight: "bold",
+                                color: item.subItems.some(
+                                  (subItem) =>
+                                    location.pathname === subItem.link
+                                )
+                                  ? "#fff"
+                                  : "#000",
+                                backgroundColor: item.subItems.some(
+                                  (subItem) =>
+                                    location.pathname === subItem.link
+                                )
+                                  ? "#14ae5c"
+                                  : "",
                               }}
-                            />
-                          </Dropdown.Toggle>
+                            >
+                              {item?.itemName}{" "}
+                              <FontAwesomeIcon
+                                icon={faSortDown}
+                                style={{
+                                  fontSize: "20px",
+                                  color: item.subItems.some(
+                                    (subItem) =>
+                                      location.pathname === subItem.link
+                                  )
+                                    ? "#fff"
+                                    : "#000",
+                                  marginBottom: "1px",
+                                }}
+                              />
+                            </Dropdown.Toggle>
 
-                          <Dropdown.Menu>
-                            {item?.subItems.map((subItem) => (
-                              <Link
-                                style={{ fontWeight: "bold", color: location.pathname === subItem?.link ? "#fff" : "#000", backgroundColor: location.pathname === subItem?.link ? "#14ae5c" : "" }}
-                                to={subItem?.link}
-                                className="dropdown-item"
-                                key={subItem?.itemName}
-                                target={subItem?.target}
-                              >
-                                {subItem?.itemName}
-                              </Link>
-                            ))}
-                          </Dropdown.Menu>
-                        </Dropdown>
-                      </li>
-                    ) : (
-                      <li class="nav-item">
-                        <Link
-                          style={{ fontWeight: "bold", color: location.pathname === item?.link ? "#fff" : "#000", backgroundColor: location.pathname === item?.link ? "#14ae5c" : "", borderRadius: 5, paddingRight: 10, paddingLeft: 10 }}
-                          class="nav-link"
-                          aria-current="page"
-                          to={item?.link}
-                        >
-                          {item?.itemName}
-                        </Link>
-                      </li>
-                    )}
-                  </>
-                ))}
+                            <Dropdown.Menu>
+                              {item?.subItems.map((subItem) => (
+                                <Link
+                                  style={{
+                                    fontWeight: "bold",
+                                    color:
+                                      location.pathname === subItem?.link
+                                        ? "#fff"
+                                        : "#000",
+                                    backgroundColor:
+                                      location.pathname === subItem?.link
+                                        ? "#14ae5c"
+                                        : "",
+                                  }}
+                                  to={subItem?.link}
+                                  className="dropdown-item"
+                                  key={subItem?.itemName}
+                                  target={subItem?.target}
+                                >
+                                  {subItem?.itemName}
+                                </Link>
+                              ))}
+                            </Dropdown.Menu>
+                          </Dropdown>
+                        </li>
+                      ) : (
+                        <li class="nav-item">
+                          <Link
+                            style={{
+                              fontWeight: "bold",
+                              color:
+                                location.pathname === item?.link
+                                  ? "#fff"
+                                  : "#000",
+                              backgroundColor:
+                                location.pathname === item?.link
+                                  ? "#14ae5c"
+                                  : "",
+                              borderRadius: 5,
+                              paddingRight: 10,
+                              paddingLeft: 10,
+                            }}
+                            class="nav-link"
+                            aria-current="page"
+                            to={item?.link}
+                          >
+                            {item?.itemName}
+                          </Link>
+                        </li>
+                      )}
+                    </>
+                  ))}
               </>
               {/* {shouldRenderEfiling ? (
               <>
@@ -149,7 +194,7 @@ export const CustomNavbar = ({ module, centerlogohide, navItems }) => {
           </div>
         </div>
 
-      <EFilingNotifications notificationType="Notifications" />
+        <EFilingNotifications notificationType="Notifications" />
 
         <Dropdown className="user-box dropdown px-3 float-end">
           <Dropdown.Toggle

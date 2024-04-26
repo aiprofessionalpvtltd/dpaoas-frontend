@@ -68,17 +68,12 @@ function FileDetail() {
   const fileInputRef = useRef(null);
   const UserData = getUserData();
 
-  // console.log(
-  //   "location?.state?.fileIdlocation?.state?.fileIdlocation?.state?.fileIdlocation?.state?.fileId",
-  //   location?.state?.fileId
-  // );
   const [showSubButtonsCorrespondence, setShowSubButtonsCorrespondence] =
     useState(false);
 
   const toggleButtons = () => {
     setShowSubButtonsCorrespondence(true);
   };
-  // console.log("location?.state", location?.state);
 
   const [notingData, setNotingData] = useState({
     description: "",
@@ -115,7 +110,7 @@ function FileDetail() {
   });
 
   const [employeeData, setEmployeeData] = useState([]);
-  // console.log("employeeDataemployeeDataemployeeData", employeeData);
+
   const [filesData, setFilesData] = useState(null);
   const [viewPage, setViewPage] = useState(location?.state?.view);
 
@@ -1219,7 +1214,7 @@ function FileDetail() {
                         <div class="row mt-2 d-flex justify-content-end float-end">
                           <div class="col-2">
                             <button
-                              class="btn btn-primary"
+                              class="btn btn-primary mb-4"
                               type="submit"
                               style={{
                                 width: "150px",
@@ -2160,7 +2155,14 @@ function FileDetail() {
                                       <div class="col">
                                         <div class="mb-3 mt-5">
                                           <div class="form-group">
-                                            <div class="row">
+                                            <div
+                                              class="row"
+                                              style={{
+                                                display: location?.state?.view
+                                                  ? "none"
+                                                  : "block",
+                                              }}
+                                            >
                                               <label
                                                 for="formFile"
                                                 class="form-label mt-3"
