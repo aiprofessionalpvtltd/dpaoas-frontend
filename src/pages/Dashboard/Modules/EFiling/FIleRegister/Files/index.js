@@ -255,7 +255,7 @@ function ListFiles() {
             hideBtn={false}
             addBtnText={"Create File"}
             data={fileData}
-            tableTitle="Register Index"
+            tableTitle="Files List"
             addBtnText2="Create File"
             headertitlebgColor={"#666"}
             headertitletextColor={"#FFF"}

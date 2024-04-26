@@ -133,7 +133,10 @@ function FRDetail() {
 
   const deleteNotification = async (item) => {
     try {
-      const response = await DeleteNotificationById(location.state?.notificationId, UserData?.fkUserId);
+      const response = await DeleteNotificationById(
+        location.state?.notificationId,
+        UserData?.fkUserId
+      );
       console.log("Notification deleted", response?.data);
     } catch (error) {
       console.log(error.response.data.message);
@@ -382,11 +385,12 @@ function FRDetail() {
                   <button class="btn add-btn">
                     <FontAwesomeIcon
                       style={{ marginRight: "-5px" }}
-                      icon={faPlus}
+                      // icon={faPlus}
                       size="md"
                       width={24}
                     />{" "}
-                    Add your comment
+                    {/* Add your comment */}
+                    Procced
                   </button>
                 </a>
               </div>

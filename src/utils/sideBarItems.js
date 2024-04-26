@@ -971,7 +971,7 @@ export const EfilingSideBarBranchItem = [
   },
 
   {
-    itemName: "Section Diary",
+    itemName: "Diary Register",
     link: "/efiling/dashboard/diary",
     icon: faBook,
   },
@@ -1009,23 +1009,23 @@ export const EfilingSideBarBranchItem = [
       },
     ],
   },
-  {
-    itemName: "Fresh Receipts",
-    link: "/efiling/dashboard/fresh-receipt",
-    icon: faReceipt,
-    subItems: [
-      {
-        itemName: "Create Fresh Receipt",
-        link: "/efiling/dashboard/fresh-receipt/addedit",
-        icon: faReceipt,
-      },
-      {
-        itemName: "Fresh Receipts List",
-        link: "/efiling/dashboard/fresh-receipt",
-        icon: faReceipt,
-      },
-    ],
-  },
+  // {
+  //   itemName: "Fresh Receipts",
+  //   link: "/efiling/dashboard/fresh-receipt",
+  //   icon: faReceipt,
+  //   subItems: [
+  //     {
+  //       itemName: "Create Fresh Receipt",
+  //       link: "/efiling/dashboard/fresh-receipt/addedit",
+  //       icon: faReceipt,
+  //     },
+  //     {
+  //       itemName: "Fresh Receipts List",
+  //       link: "/efiling/dashboard/fresh-receipt",
+  //       icon: faReceipt,
+  //     },
+  //   ],
+  // },
   {
     itemName: "Files",
     link: "/efiling/dashboard/file-register-list/files",
@@ -1044,10 +1044,20 @@ export const EfilingSideBarBranchItem = [
     ],
   },
   {
-    itemName: "Cases",
+    itemName: "Fresh Recipt / Cases",
     link: "/efiling/dashboard/file-register-list/files-list/cases",
     icon: faClipboardList,
     subItems: [
+      {
+        itemName: "Create Fresh Receipt",
+        link: "/efiling/dashboard/fresh-receipt/addedit",
+        icon: faReceipt,
+      },
+      {
+        itemName: "Fresh Receipts List",
+        link: "/efiling/dashboard/fresh-receipt",
+        icon: faReceipt,
+      },
       {
         itemName: "Create Cases",
         link: "/efiling/dashboard/file-register-list/files-list/addedit-case",
