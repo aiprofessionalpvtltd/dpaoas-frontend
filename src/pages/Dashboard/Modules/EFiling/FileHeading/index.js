@@ -34,9 +34,9 @@ function FileHeadingList() {
   const transformFilesHeadingdata = (apiData) => {
     console.log(apiData);
     return apiData.map((item) => ({
-      id: item?.id,
-      Heading: item?.mainHeading,
+      internalId: item?.id,
       HeadingNumber: item?.mainHeadingNumber,
+      Heading: item?.mainHeading,
       branch: item?.branches?.branchName,
       status: item?.status,
     }));
@@ -107,7 +107,7 @@ function FileHeadingList() {
             totalCount={count}
             singleDataCard={true}
             // hideDeleteIcon={true}
-            handleDelete={(item) => handleDelete(item.id)}
+            handleDelete={(item) => handleDelete(item.internalId)}
             showEditIcon={false}
             handleEdit={(item) =>
               navigate("/efiling/dashboard/addedit-file-heading", {
