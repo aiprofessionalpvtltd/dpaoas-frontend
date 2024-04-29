@@ -124,8 +124,8 @@ function FileDetail() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [togleOpan, setTogleOpan] = useState(true);
-  const [selectedTab, setSelectedTab] = useState("FR Noting");
-  const [subSelectedTab, setSubSelectedTab] = useState("");
+  const [selectedTab, setSelectedTab] = useState("Noting");
+  const [subSelectedTab, setSubSelectedTab] = useState("Sanction");
   const [remarksData, setRemarksData] = useState([]);
   const [frAttachments, setFrAttachments] = useState([]);
 
@@ -1034,6 +1034,10 @@ function FileDetail() {
                         </button>
                       </li>
                     </ul>
+
+                    {/* <div className="row">
+                      <div style={{display:"flex", alignItems:"center", justifyContent:"center"}}></div>
+                    </div> */}
                     {showSubButtonsCorrespondence && (
                       <div className="row">
                         <ul
@@ -1047,13 +1051,13 @@ function FileDetail() {
                               role="presentation"
                               onClick={() => {
                                 clearInput();
-                                setSelectedTab("FR Noting");
+                                setSubSelectedTab("FR");
                               }}
                             >
                               <button
                                 type="button"
                                 className={
-                                  selectedTab === "FR Noting"
+                                  subSelectedTab === "FR"
                                     ? "nav-link active"
                                     : "nav-link"
                                 }
@@ -1063,10 +1067,10 @@ function FileDetail() {
                                 aria-controls="ex1-tabs-1"
                                 disabled={frAttachments ? false : true}
                                 aria-selected={
-                                  selectedTab === "FR Noting" ? "true" : "false"
+                                  subSelectedTab === "FR" ? "true" : "false"
                                 }
                               >
-                                FR ({frAttachments.length})
+                                FR ({frAttachments?.length})
                               </button>
                             </li>
                           )}
@@ -1075,14 +1079,14 @@ function FileDetail() {
                             role="presentation"
                             onClick={() => {
                               clearInput();
-                              setSelectedTab("Sanction");
+                              setSubSelectedTab("Sanction");
                               // setSubSelectedTab("Sanction");
                             }}
                           >
                             <button
                               type="button"
                               className={
-                                selectedTab === "Sanction"
+                                subSelectedTab === "Sanction"
                                   ? "nav-link active"
                                   : "nav-link"
                               }
@@ -1091,7 +1095,7 @@ function FileDetail() {
                               role="tab"
                               aria-controls="ex1-tabs-1"
                               aria-selected={
-                                selectedTab === "Sanction" ? "true" : "false"
+                                subSelectedTab === "Sanction" ? "true" : "false"
                               }
                             >
                               Sanction
@@ -1103,13 +1107,13 @@ function FileDetail() {
                             role="presentation"
                             onClick={() => {
                               clearInput();
-                              setSelectedTab("Objection");
+                              setSubSelectedTab("Objection");
                             }}
                           >
                             <button
                               type="button"
                               className={
-                                selectedTab === "Objection"
+                                subSelectedTab === "Objection"
                                   ? "nav-link active"
                                   : "nav-link"
                               }
@@ -1118,7 +1122,9 @@ function FileDetail() {
                               role="tab"
                               aria-controls="ex1-tabs-2"
                               aria-selected={
-                                selectedTab === "Objection" ? "true" : "false"
+                                subSelectedTab === "Objection"
+                                  ? "true"
+                                  : "false"
                               }
                             >
                               Objection
@@ -1130,13 +1136,13 @@ function FileDetail() {
                             role="presentation"
                             onClick={() => {
                               clearInput();
-                              setSelectedTab("Letter");
+                              setSubSelectedTab("Letter");
                             }}
                           >
                             <button
                               type="button"
                               className={
-                                selectedTab === "Letter"
+                                subSelectedTab === "Letter"
                                   ? "nav-link active"
                                   : "nav-link"
                               }
@@ -1145,7 +1151,7 @@ function FileDetail() {
                               role="tab"
                               aria-controls="ex1-tabs-2"
                               aria-selected={
-                                selectedTab === "Letter" ? "true" : "false"
+                                subSelectedTab === "Letter" ? "true" : "false"
                               }
                             >
                               Letter
@@ -1157,13 +1163,13 @@ function FileDetail() {
                             role="presentation"
                             onClick={() => {
                               clearInput();
-                              setSelectedTab("Circular");
+                              setSubSelectedTab("Circular");
                             }}
                           >
                             <button
                               type="button"
                               className={
-                                selectedTab === "Circular"
+                                subSelectedTab === "Circular"
                                   ? "nav-link active"
                                   : "nav-link"
                               }
@@ -1172,7 +1178,7 @@ function FileDetail() {
                               role="tab"
                               aria-controls="ex1-tabs-2"
                               aria-selected={
-                                selectedTab === "Circular" ? "true" : "false"
+                                subSelectedTab === "Circular" ? "true" : "false"
                               }
                             >
                               Circular
@@ -1184,13 +1190,13 @@ function FileDetail() {
                             role="presentation"
                             onClick={() => {
                               clearInput();
-                              setSelectedTab("Misc");
+                              setSubSelectedTab("Misc");
                             }}
                           >
                             <button
                               type="button"
                               className={
-                                selectedTab === "Misc"
+                                subSelectedTab === "Misc"
                                   ? "nav-link active"
                                   : "nav-link"
                               }
@@ -1199,7 +1205,7 @@ function FileDetail() {
                               role="tab"
                               aria-controls="ex1-tabs-2"
                               aria-selected={
-                                selectedTab === "Misc" ? "true" : "false"
+                                subSelectedTab === "Misc" ? "true" : "false"
                               }
                             >
                               Misc
@@ -1312,7 +1318,7 @@ function FileDetail() {
 
                         <div class="col">
                           {
-                            selectedTab === "FR Noting" ? (
+                            subSelectedTab === "FR" ? (
                               <section>
                                 <ImageGallery
                                   style={{ maxHeight: "calc(100vh 0px)" }}
@@ -1424,7 +1430,8 @@ function FileDetail() {
                             // ) }
                           }
                           <div className="row">
-                            {selectedTab === "Sanction" ? (
+                            {subSelectedTab === "Sanction" &&
+                            selectedTab === "Correspondence" ? (
                               <>
                                 {location?.state && location?.state?.view ? (
                                   <section>
@@ -1583,7 +1590,8 @@ function FileDetail() {
                                   </section>
                                 </div>
                               </>
-                            ) : selectedTab === "Objection" ? (
+                            ) : subSelectedTab === "Objection" &&
+                              selectedTab === "Correspondence" ? (
                               <>
                                 {location?.state?.view ? (
                                   <section>
@@ -1736,7 +1744,8 @@ function FileDetail() {
                                   </section>
                                 </div>
                               </>
-                            ) : selectedTab === "Letter" ? (
+                            ) : subSelectedTab === "Letter" &&
+                              selectedTab === "Correspondence" ? (
                               <>
                                 {location?.state?.view ? (
                                   <section>
@@ -1889,7 +1898,8 @@ function FileDetail() {
                                   </section>
                                 </div>
                               </>
-                            ) : selectedTab === "Circular" ? (
+                            ) : subSelectedTab === "Circular" &&
+                              selectedTab === "Correspondence" ? (
                               <>
                                 {location?.state?.view ? (
                                   <section>
@@ -2042,7 +2052,8 @@ function FileDetail() {
                                   </section>
                                 </div>
                               </>
-                            ) : selectedTab === "Misc" ? (
+                            ) : subSelectedTab === "Misc" &&
+                              selectedTab === "Correspondence" ? (
                               <>
                                 {location?.state?.view ? (
                                   <section>
