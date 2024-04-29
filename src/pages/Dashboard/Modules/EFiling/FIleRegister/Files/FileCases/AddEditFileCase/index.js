@@ -52,6 +52,7 @@ function AddEditFileCase() {
   //   location.state?.frId ? "FR Noting" : "Noting"
   // );
   const [selectedTab, setSelectedTab] = useState("Noting");
+  const [subSelectedTab, setSubSelectedTab] = useState("Sanction");
   const [allFrs, setAllFrs] = useState([]);
   const [fkFreshReceiptId, setFkFreshReceiptId] = useState(null);
   const [fkfileId, setFKFileId] = useState(null);
@@ -649,13 +650,13 @@ function AddEditFileCase() {
                   role="presentation"
                   onClick={() => {
                     clearInput();
-                    // setSelectedTab("Correspondence");
+                    setSelectedTab("Correspondence");
                     // setSelectedTab("FR Noting");
-                    setSelectedTab(
-                      location?.state?.freshReceiptsAttachments?.length > 0
-                        ? "FR Noting"
-                        : "Sanction"
-                    );
+                    // setSelectedTab(
+                    //   location?.state?.freshReceiptsAttachments?.length > 0
+                    //     ? "FR Noting"
+                    //     : "Sanction"
+                    // );
                   }}
                 >
                   <button
@@ -754,26 +755,32 @@ function AddEditFileCase() {
               </ul>
             </div>
             <div className="row">
-              {showSubButtonsCorrespondence && (
-                <div className="row">
-                  <ul
-                    className="nav nav-tabs mb-3 mt-3"
-                    id="ex2"
-                    role="tablist"
-                  >
-                    {location?.state?.freshReceiptsAttachments?.length > 0 && (
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                {showSubButtonsCorrespondence && (
+                  <div className="row">
+                    <ul
+                      className="nav nav-tabs mb-3 mt-3"
+                      id="ex2"
+                      role="tablist"
+                    >
                       <li
                         className="nav-item"
                         role="presentation"
                         onClick={() => {
                           clearInput();
-                          setSelectedTab("FR Noting");
+                          setSubSelectedTab("Sanction");
                         }}
                       >
                         <button
                           type="button"
                           className={
-                            selectedTab === "FR Noting"
+                            subSelectedTab === "Sanction"
                               ? "nav-link active"
                               : "nav-link"
                           }
@@ -782,147 +789,153 @@ function AddEditFileCase() {
                           role="tab"
                           aria-controls="ex1-tabs-1"
                           aria-selected={
-                            selectedTab === "FR Noting" ? "true" : "false"
+                            subSelectedTab === "Sanction" ? "true" : "false"
                           }
                         >
-                          FR (
-                          {location?.state?.freshReceiptsAttachments?.length})
+                          Sanction
                         </button>
                       </li>
-                    )}
-                    <li
-                      className="nav-item"
-                      role="presentation"
-                      onClick={() => {
-                        clearInput();
-                        setSelectedTab("Sanction");
-                      }}
-                    >
-                      <button
-                        type="button"
-                        className={
-                          selectedTab === "Sanction"
-                            ? "nav-link active"
-                            : "nav-link"
-                        }
-                        style={{ width: "170px" }}
-                        data-bs-toggle="tab"
-                        role="tab"
-                        aria-controls="ex1-tabs-1"
-                        aria-selected={
-                          selectedTab === "Sanction" ? "true" : "false"
-                        }
+                      <li
+                        className="nav-item"
+                        role="presentation"
+                        onClick={() => {
+                          clearInput();
+                          setSubSelectedTab("Objection");
+                        }}
                       >
-                        Sanction
-                      </button>
-                    </li>
-                    <li
-                      className="nav-item"
-                      role="presentation"
-                      onClick={() => {
-                        clearInput();
-                        setSelectedTab("Objection");
-                      }}
-                    >
-                      <button
-                        type="button"
-                        className={
-                          selectedTab === "Objection"
-                            ? "nav-link active"
-                            : "nav-link"
-                        }
-                        style={{ width: "170px" }}
-                        data-bs-toggle="tab"
-                        role="tab"
-                        aria-controls="ex1-tabs-2"
-                        aria-selected={
-                          selectedTab === "Objection" ? "true" : "false"
-                        }
+                        <button
+                          type="button"
+                          className={
+                            subSelectedTab === "Objection"
+                              ? "nav-link active"
+                              : "nav-link"
+                          }
+                          style={{ width: "170px" }}
+                          data-bs-toggle="tab"
+                          role="tab"
+                          aria-controls="ex1-tabs-2"
+                          aria-selected={
+                            subSelectedTab === "Objection" ? "true" : "false"
+                          }
+                        >
+                          Objection
+                        </button>
+                      </li>
+                      <li
+                        className="nav-item"
+                        role="presentation"
+                        onClick={() => {
+                          clearInput();
+                          setSubSelectedTab("Letter");
+                        }}
                       >
-                        Objection
-                      </button>
-                    </li>
-                    <li
-                      className="nav-item"
-                      role="presentation"
-                      onClick={() => {
-                        clearInput();
-                        setSelectedTab("Letter");
-                      }}
-                    >
-                      <button
-                        type="button"
-                        className={
-                          selectedTab === "Letter"
-                            ? "nav-link active"
-                            : "nav-link"
-                        }
-                        style={{ width: "170px" }}
-                        data-bs-toggle="tab"
-                        role="tab"
-                        aria-controls="ex1-tabs-2"
-                        aria-selected={
-                          selectedTab === "Letter" ? "true" : "false"
-                        }
+                        <button
+                          type="button"
+                          className={
+                            subSelectedTab === "Letter"
+                              ? "nav-link active"
+                              : "nav-link"
+                          }
+                          style={{ width: "170px" }}
+                          data-bs-toggle="tab"
+                          role="tab"
+                          aria-controls="ex1-tabs-2"
+                          aria-selected={
+                            subSelectedTab === "Letter" ? "true" : "false"
+                          }
+                        >
+                          Letter
+                        </button>
+                      </li>
+                      <li
+                        className="nav-item"
+                        role="presentation"
+                        onClick={() => {
+                          clearInput();
+                          setSubSelectedTab("Circular");
+                        }}
                       >
-                        Letter
-                      </button>
-                    </li>
-                    <li
-                      className="nav-item"
-                      role="presentation"
-                      onClick={() => {
-                        clearInput();
-                        setSelectedTab("Circular");
-                      }}
-                    >
-                      <button
-                        type="button"
-                        className={
-                          selectedTab === "Circular"
-                            ? "nav-link active"
-                            : "nav-link"
-                        }
-                        style={{ width: "170px" }}
-                        data-bs-toggle="tab"
-                        role="tab"
-                        aria-controls="ex1-tabs-1"
-                        aria-selected={
-                          selectedTab === "Circular" ? "true" : "false"
-                        }
+                        <button
+                          type="button"
+                          className={
+                            subSelectedTab === "Circular"
+                              ? "nav-link active"
+                              : "nav-link"
+                          }
+                          style={{ width: "170px" }}
+                          data-bs-toggle="tab"
+                          role="tab"
+                          aria-controls="ex1-tabs-1"
+                          aria-selected={
+                            subSelectedTab === "Circular" ? "true" : "false"
+                          }
+                        >
+                          Circular
+                        </button>
+                      </li>
+                      <li
+                        className="nav-item"
+                        role="presentation"
+                        onClick={() => {
+                          clearInput();
+                          setSubSelectedTab("Misc");
+                        }}
                       >
-                        Circular
-                      </button>
-                    </li>
-                    <li
-                      className="nav-item"
-                      role="presentation"
-                      onClick={() => {
-                        clearInput();
-                        setSelectedTab("Misc");
-                      }}
-                    >
-                      <button
-                        type="button"
-                        className={
-                          selectedTab === "Misc"
-                            ? "nav-link active"
-                            : "nav-link"
-                        }
-                        style={{ width: "170px" }}
-                        data-bs-toggle="tab"
-                        role="tab"
-                        aria-controls="ex1-tabs-1"
-                        aria-selected={
-                          selectedTab === "Misc" ? "true" : "false"
-                        }
-                      >
-                        Misc
-                      </button>
-                    </li>
-                  </ul>
-                </div>
-              )}
+                        <button
+                          type="button"
+                          className={
+                            subSelectedTab === "Misc"
+                              ? "nav-link active"
+                              : "nav-link"
+                          }
+                          style={{ width: "170px" }}
+                          data-bs-toggle="tab"
+                          role="tab"
+                          aria-controls="ex1-tabs-1"
+                          aria-selected={
+                            subSelectedTab === "Misc" ? "true" : "false"
+                          }
+                        >
+                          Misc
+                        </button>
+                      </li>
+                      {location?.state?.freshReceiptsAttachments?.length >
+                        0 && (
+                        <li
+                          className="nav-item"
+                          role="presentation"
+                          onClick={() => {
+                            clearInput();
+                            setSubSelectedTab("FR");
+
+                            // setSelectedTab("FR Noting");
+                            // setSelectedTab("FR Noting");
+                          }}
+                        >
+                          <button
+                            type="button"
+                            className={
+                              subSelectedTab === "FR"
+                                ? "nav-link active"
+                                : "nav-link"
+                            }
+                            style={{ width: "170px" }}
+                            data-bs-toggle="tab"
+                            role="tab"
+                            aria-controls="ex1-tabs-1"
+                            aria-selected={
+                              subSelectedTab === "FR" ? "true" : "false"
+                            }
+                          >
+                            FR (
+                            {location?.state?.freshReceiptsAttachments?.length})
+                          </button>
+                        </li>
+                      )}
+                    </ul>
+                  </div>
+                )}
+              </div>
             </div>
 
             <div className="tab-content" id="ex1-content">
@@ -953,7 +966,8 @@ function AddEditFileCase() {
                       disabled={location.state?.view ? true : false}
                     />
                   </section>
-                ) : selectedTab === "FR Noting" ? (
+                ) : null}
+                {subSelectedTab === "FR" && selectedTab === "Correspondence" ? (
                   <section>
                     {/* <iframe
                       src={`http://172.16.170.8:5252${location?.state?.freshReceiptsAttachments[0]?.filename}`}
@@ -982,103 +996,8 @@ function AddEditFileCase() {
                       />
                     </section>
                   </section>
-                ) : // <section>
-                //   <label for="formFile" class="form-label mt-3">
-                //     Correspondence Data
-                //   </label>
-
-                //   <TinyEditor
-                //     initialContent={""}
-                //     setEditorContent={(content) =>
-                //       setCorrespondenceData((prev) => ({
-                //         ...prev,
-                //         description: content,
-                //       }))
-                //     }
-                //     editorContent={correspondenceData.description}
-                //     multiLanguage={false}
-                //     disabled={location.state?.view ? true : false}
-                //   />
-                //   <div class="row">
-                //     <div class="col">
-                //       <div class="mb-3 mt-5">
-                //         <div class="form-group">
-                //           <div class="row">
-                //             <label for="formFile" class="form-label mt-3">
-                //               Attach File
-                //             </label>
-
-                //             <div class="col-6">
-                //               <input
-                //                 ref={fileInputRef}
-                //                 className="form-control"
-                //                 type="file"
-                //                 accept=".pdf, .jpg, .jpeg, .png"
-                //                 id="correspondance"
-                //                 name="correspondance"
-                //                 multiple
-                //                 onChange={(event) =>
-                //                   handleFileChangeCorrespondance(event)
-                //                 }
-                //                 disabled={location.state?.view ? true : false}
-                //               />
-                //               {correspondenceData.attachedFiles.length >
-                //                 0 && (
-                //                 <div>
-                //                   <label
-                //                     for="formFile"
-                //                     class="form-label mt-3 mb-0"
-                //                   >
-                //                     Attached Files
-                //                   </label>
-                //                   <ul>
-                //                     {correspondenceData.attachedFiles?.map(
-                //                       (file, index) => {
-                //                         return (
-                //                           <div key={index}>
-                //                             <a
-                //                               class="MultiFile-remove"
-                //                               style={{
-                //                                 marginRight: "10px",
-                //                                 color: "red",
-                //                                 cursor: "pointer",
-                //                               }}
-                //                               onClick={() =>
-                //                                 hendleRemoveImage(file)
-                //                               }
-                //                             >
-                //                               x
-                //                             </a>
-                //                             <a
-                //                               href={
-                //                                 file?.id
-                //                                   ? `http://172.16.170.8:5252${file?.fileName}`
-                //                                   : URL.createObjectURL(file)
-                //                               }
-                //                               target="_blank"
-                //                               rel="noopener noreferrer"
-                //                             >
-                //                               {file?.id
-                //                                 ? file?.fileName
-                //                                     ?.split("/")
-                //                                     .pop()
-                //                                 : file.name}
-                //                             </a>
-                //                           </div>
-                //                         );
-                //                       }
-                //                     )}
-                //                   </ul>
-                //                 </div>
-                //               )}
-                //             </div>
-                //           </div>
-                //         </div>
-                //       </div>
-                //     </div>
-                //   </div>
-                // </section>
-                selectedTab === "Sanction" ? (
+                ) : subSelectedTab === "Sanction" &&
+                  selectedTab === "Correspondence" ? (
                   <section>
                     <label for="formFile" class="form-label mt-3">
                       Sanction Data
@@ -1174,7 +1093,8 @@ function AddEditFileCase() {
                       </div>
                     </div>
                   </section>
-                ) : selectedTab === "Objection" ? (
+                ) : subSelectedTab === "Objection" &&
+                  selectedTab === "Correspondence" ? (
                   <section>
                     <label for="formFile" class="form-label mt-3">
                       Objection Data
@@ -1270,7 +1190,8 @@ function AddEditFileCase() {
                       </div>
                     </div>
                   </section>
-                ) : selectedTab === "Letter" ? (
+                ) : subSelectedTab === "Letter" &&
+                  selectedTab === "Correspondence" ? (
                   <section>
                     <label for="formFile" class="form-label mt-3">
                       Letter Data
@@ -1363,7 +1284,8 @@ function AddEditFileCase() {
                       </div>
                     </div>
                   </section>
-                ) : selectedTab === "Circular" ? (
+                ) : subSelectedTab === "Circular" &&
+                  selectedTab === "Correspondence" ? (
                   <section>
                     <label for="formFile" class="form-label mt-3">
                       Circular Data
@@ -1459,7 +1381,8 @@ function AddEditFileCase() {
                       </div>
                     </div>
                   </section>
-                ) : selectedTab === "Misc" ? (
+                ) : subSelectedTab === "Misc" &&
+                  selectedTab === "Correspondence" ? (
                   <section>
                     <label for="formFile" class="form-label mt-3">
                       Misc Data

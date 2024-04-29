@@ -15,6 +15,7 @@ import { ToastContainer } from "react-toastify";
 import { getAllSessions } from "../../../../../../api/APIs";
 import {
   createNewMotion,
+  getallMotionStatus,
   updateNewMotion,
 } from "../../../../../../api/APIs/Services/Motion.service";
 import {
@@ -52,7 +53,8 @@ function EditMotion() {
   const { members, sessions } = useContext(AuthContext);
   const [showModal, setShowModal] = useState(false);
   const [formValues, setFormValues] = useState([]);
-
+  const [motionStatusData, setMotionStatusData] = useState([]);
+  console.log("Dat", motionStatusData);
   // const sessionId = sessions && sessions.map((item) => item?.id);
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
@@ -61,6 +63,22 @@ function EditMotion() {
     handleClose();
   };
 
+  // Get All Motion Statuses
+
+  const getMotionStatus = async () => {
+    try {
+      const response = await getallMotionStatus();
+      if (response?.success) {
+        setMotionStatusData(response?.data);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  };
+
+  useEffect(() => {
+    getMotionStatus();
+  }, []);
   const getCurrentTime = () => {
     const now = new Date();
     return now.toLocaleTimeString("en-US", {
@@ -69,7 +87,12 @@ function EditMotion() {
       hour12: true,
     });
   };
-
+  console.log(
+    "location",
+    location?.state?.motionStatusHistories.map(
+      (item) => item?.motionStatuses?.statusName
+    )
+  );
   const formik = useFormik({
     initialValues: {
       sessionNumber: location.state
@@ -108,6 +131,14 @@ function EditMotion() {
         : "",
       englishText: location.state ? location.state?.englishText : "",
       urduText: location.state ? location?.state?.urduText : "",
+      motionStatus:
+        location?.state && location?.state?.motionStatusHistories
+          ? location?.state?.motionStatusHistories.map((item) => ({
+              value: item?.motionStatuses?.id,
+              label: item?.motionStatuses?.statusName,
+            }))
+          : [],
+
       attachment: null,
     },
     validationSchema: validationSchema,
@@ -143,7 +174,7 @@ function EditMotion() {
     formData.append("englishText", values.englishText);
     formData.append("urduText", values.urduText);
     formData.append("motionSentStatus", "fromNotice");
-    formData.append("fkMotionStatus", 1);
+    formData.append("fkMotionStatus", values?.motionStatus?.value);
     if (values?.file) {
       Array.from(values?.file).map((file, index) => {
         formData.append(`file`, file);
@@ -449,6 +480,51 @@ function EditMotion() {
                           formik.errors.noticeOfficeDiaryNo && (
                             <div class="invalid-feedback">
                               {formik.errors.noticeOfficeDiaryNo}
+                            </div>
+                          )}
+                      </div>
+                    </div>
+
+                    <div class="col-3">
+                      <div class="mb-3">
+                        <label class="form-label">Motion Status</label>
+                        {/* <input
+                          class={`form-control ${
+                            formik.touched.noticeOfficeDiaryNo &&
+                            formik.errors.noticeOfficeDiaryNo
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                          type="number"
+                          id="noticeOfficeDiaryNo"
+                          value={formik.values.noticeOfficeDiaryNo}
+                          name="noticeOfficeDiaryNo"
+                          onBlur={formik.handleBlur}
+                          onChange={formik.handleChange}
+                        /> */}
+                        <Select
+                          options={
+                            motionStatusData &&
+                            motionStatusData?.map((item) => ({
+                              value: item.id,
+                              label: item?.statusName,
+                            }))
+                          }
+                          onChange={(selectedOptions) =>
+                            formik.setFieldValue(
+                              "motionStatus",
+                              selectedOptions
+                            )
+                          }
+                          // onBlur={formikAssigned.handleBlur}
+                          value={formik.values.motionStatus}
+                          name="motionStatus"
+                          isClearable={true}
+                        />
+                        {formik.touched.motionStatus &&
+                          formik.errors.motionStatus && (
+                            <div class="invalid-feedback">
+                              {formik.errors.motionStatus}
                             </div>
                           )}
                       </div>

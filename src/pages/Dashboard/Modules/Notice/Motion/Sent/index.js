@@ -122,6 +122,7 @@ function SentMotion() {
           : "",
         englishText: EnglishText ? EnglishText : "",
         urduText: UrduText ? UrduText : "",
+        motionStatus: res?.motionStatuses?.statusName,
       };
     });
   };
