@@ -162,6 +162,8 @@ import SupplementaryList from "../pages/Dashboard/Modules/QMS/Reports/QuestionLi
 import QMSRotaList from "../pages/Dashboard/Modules/QMS/Reports/RotaList";
 import RotaListFurtherDetails from "../pages/Dashboard/Modules/QMS/Reports/RotaList/RotaListFurtherDetails";
 import MainDashBoard from "../pages/Dashboard/Modules/EFiling/MainDashBoard";
+import EventCalendar from "../pages/Dashboard/Modules/Notice/EventCalendar";
+import AddEditEventCalendar from "../pages/Dashboard/Modules/Notice/EventCalendar/AddEditEventCalendar";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -269,6 +271,14 @@ export const ProtectedRoutes = [
   {
     path: "/notice/research-services/addedit",
     element: <CMSAddEditResearchService />,
+  },
+  {
+    path: "/notice/event-calendar",
+    element: <EventCalendar />,
+  },
+  {
+    path: "/notice/event-calendar/addedit",
+    element: <AddEditEventCalendar />,
   },
   {
     path: "/notice/manage/manage-session-days",

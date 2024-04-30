@@ -37,7 +37,7 @@ function SMSAddList({ modalisOpan, hendleModal, Data, getContactListApi }) {
     console.log("Data ? Data[0]?.listActive", Data[0]?.isPublicList);
 
 
-    const [isChecked, setChecked] = useState(Data ? Data[0]?.isPublicList : false)
+    const [isChecked, setChecked] = useState(Data && Data[0]?.isPublicList ? Data[0]?.isPublicList : false)
     const handleCheckboxChange = () => {
         setChecked(!isChecked);
     };

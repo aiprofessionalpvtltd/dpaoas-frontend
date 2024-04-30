@@ -25,8 +25,10 @@ import {
   faLaptopFile,
   faReceipt,
   faPeopleGroup,
+  faCalendarAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { getUserData } from "../api/Auth";
+import { icon } from "@fortawesome/fontawesome-svg-core";
 
 // LMS Sidebar
 export const LMSsidebarItems = [
@@ -281,6 +283,9 @@ export const NoticeSidebarItems = [
     link: "/notice/speech-on-demand",
     icon: faHome,
   },
+  {itemName:"Event Calendar",
+link:"/notice/event-calendar",
+icon:faCalendarAlt},
 
   {
     itemName: "Research Services",
