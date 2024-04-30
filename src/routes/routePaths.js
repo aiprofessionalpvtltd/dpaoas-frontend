@@ -161,6 +161,7 @@ import QuestionPendingUnderProcess from "../pages/Dashboard/Modules/QMS/Reports/
 import SupplementaryList from "../pages/Dashboard/Modules/QMS/Reports/QuestionList/SupplementaryList";
 import QMSRotaList from "../pages/Dashboard/Modules/QMS/Reports/RotaList";
 import RotaListFurtherDetails from "../pages/Dashboard/Modules/QMS/Reports/RotaList/RotaListFurtherDetails";
+import MainDashBoard from "../pages/Dashboard/Modules/EFiling/MainDashBoard";
 import EventCalendar from "../pages/Dashboard/Modules/Notice/EventCalendar";
 import AddEditEventCalendar from "../pages/Dashboard/Modules/Notice/EventCalendar/AddEditEventCalendar";
 // import { Register } from "../pages/Register";
@@ -531,7 +532,8 @@ export const ProtectedRoutes = [
   { path: "/cms/admin/inventory/vendor-list/add", element: <CMSEditVendor /> },
 
   // E-Filing
-  { path: "/efiling/dashboard", element: <DirectorDashboard /> },
+  // { path: "/efiling/dashboard", element: <DirectorDashboard /> },
+  { path: "/efiling/dashboard", element: <MainDashBoard /> },
   { path: "/efiling/director-dashboard", element: <EFilingDashboard /> },
 
   { path: "/efiling/dashboard/fileDetail", element: <FileDetail /> },
