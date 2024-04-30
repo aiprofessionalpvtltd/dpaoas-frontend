@@ -390,7 +390,7 @@ function FRDetail() {
                       width={24}
                     />{" "}
                     {/* Add your comment */}
-                    Procced
+                    Proceed
                   </button>
                 </a>
               </div>

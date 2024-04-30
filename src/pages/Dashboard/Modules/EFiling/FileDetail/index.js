@@ -128,43 +128,7 @@ function FileDetail() {
   const [subSelectedTab, setSubSelectedTab] = useState("Sanction");
   const [remarksData, setRemarksData] = useState([]);
   const [frAttachments, setFrAttachments] = useState([]);
-
   const navigate = useNavigate();
-
-  const yaerData = [
-    {
-      name: "2024",
-    },
-    {
-      name: "2023",
-    },
-    {
-      name: "2022",
-    },
-    {
-      name: "2021",
-    },
-    {
-      name: "2020",
-    },
-    {
-      name: "2019",
-    },
-    {
-      name: "2018",
-    },
-    {
-      name: "2017",
-    },
-    {
-      name: "2016",
-    },
-    {
-      name: "2015",
-    },
-  ];
-
-  // console.log("File ID", location.state.fileId, fileIdINRegister);
 
   const clearInput = () => {
     if (fileInputRef.current) {
@@ -275,7 +239,6 @@ function FileDetail() {
     }));
   };
 
-  // console.log("Case Id----------------------", location?.state?.id);
   const UpdateEfilingApi = async (values) => {
     const formData = new FormData();
     // formData.append("submittedBy", UserData?.fkUserId);
@@ -393,7 +356,6 @@ function FileDetail() {
   const [sectionstore, setsectionstore] = useState();
   const [circularStore, setCircularStore] = useState();
   const [miscStore, setMiscStore] = useState();
-  console.log("asljfdlkajskdkl;", sectionstore);
 
   const getFilesByID = async () => {
     try {
@@ -401,10 +363,16 @@ function FileDetail() {
         location?.state?.fileId ? location?.state?.fileId : fileIdINRegister,
         caseId
       );
+
       if (response?.success) {
         setDirectorData(response?.data?.cases?.fileDiary);
         setRemarksData(response?.data?.cases?.fileRemarks);
         setFilesData(response?.data?.cases);
+        const FRSelection =
+          response?.data?.cases?.freshReceipts?.freshReceiptsAttachments;
+        if (FRSelection?.length > 0) {
+          setSubSelectedTab("FR");
+        }
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -661,15 +629,6 @@ function FileDetail() {
     >
       <div className="dashboard-content">
         <ToastContainer />
-        {/* <Header
-          dashboardLink={"/efiling/dashboard"}
-          addLink1={"/efiling/dashboard/file-register-list/files-list/cases"}
-          title1={"File Cases"}
-          addLink2={"/efiling/dashboard/addedit"}
-          title2={location && viewPage ? "File Detail" : "Edit File"}
-          width={"500px"}
-        /> */}
-
         <EFilingModal
           title="Add Comments"
           isOpen={isModalOpen}
@@ -775,38 +734,6 @@ function FileDetail() {
 
         <div className="custom-editor">
           <div className="row">
-            {/* <div className="col-md-2">
-              <div className="noting">
-                {directorData?.length > 0 ? (
-                  directorData.map((item) => (
-                    <div key={item.id}>
-                      <p
-                        style={{ marginBottom: "0px", fontWeight: "bold" }}
-                      >{`${item?.submittedByUser?.employee?.departments?.departmentName} Branch`}</p>
-                      <p
-                        style={{ marginBottom: "0" }}
-                      >{`Diary Number : ${item?.diaryNumber}`}</p>
-                      <p style={{ marginBottom: "0" }}>
-                        {moment(item?.createdAt).format("DD/MM/YYYY")}
-                      </p>
-                      <p>{moment(item?.createdAt).format("hh:mm A")}</p>
-                    </div>
-                  ))
-                ) : (
-                  <div
-                    className="alert alert-danger mt-2"
-                    role="alert"
-                    style={{
-                      width: "208px",
-                      margin: "0 auto",
-                      textAlign: "center",
-                    }}
-                  >
-                    No data found
-                  </div>
-                )}
-              </div>
-            </div> */}
             <div className="col-md-9">
               <form onSubmit={formik.handleSubmit}>
                 <div>
@@ -854,93 +781,6 @@ function FileDetail() {
                     </div>
                     <div className="row"></div>
                   </div>
-                  {/* <div className="row">
-                    {documentTypeVal === "Internal" ? (
-                      <>
-                        <div class="col-6">
-                          <div class="mb-3">
-                            <label class="form-label">Branch</label>
-                            <select
-                              class="form-select"
-                              id="fkBranchId"
-                              name="fkBranchId"
-                              disabled={true}
-                              onChange={formik.handleChange}
-                              onBlur={formik.handleBlur}
-                              value={formik.values.fkBranchId}
-                            >
-                              <option value={""} selected disabled hidden>
-                                Select
-                              </option>
-                              {branchesData &&
-                                branchesData?.map((item) => (
-                                  <option value={item.id}>
-                                    {item.branchName}
-                                  </option>
-                                ))}
-                            </select>
-                          </div>
-                        </div>
-                      </>
-                    ) : documentTypeVal === "External" ? (
-                      <>
-                        <div class="col-6">
-                          <div class="mb-3">
-                            <label class="form-label">Ministries</label>
-                            <select
-                              disabled={true}
-                              class="form-select"
-                              id="fkMinistryId"
-                              name="fkMinistryId"
-                              onChange={formik.handleChange}
-                              onBlur={formik.handleBlur}
-                              value={formik.values.fkMinistryId}
-                            >
-                              <option value={""} selected disabled hidden>
-                                Select
-                              </option>
-                              {ministryData &&
-                                ministryData.map((item) => (
-                                  <option value={item.id}>
-                                    {item.ministryName}
-                                  </option>
-                                ))}
-                            </select>
-                          </div>
-                        </div>
-                        <div className="col-6">
-                          <div
-                            className="mb-3"
-                            style={{ position: "relative" }}
-                          >
-                            <label className="form-label">Received On</label>
-                            <span
-                              style={{
-                                position: "absolute",
-                                right: "15px",
-                                top: "36px",
-                                zIndex: 1,
-                                fontSize: "20px",
-                                color: "#666",
-                              }}
-                            >
-                              <FontAwesomeIcon icon={faCalendarAlt} />
-                            </span>
-                            <DatePicker
-                              disabled={true}
-                              selected={formik.values.receivedOn}
-                              onChange={(date) =>
-                                formik.setFieldValue("receivedOn", date)
-                              }
-                              onBlur={formik.handleBlur}
-                              // minDate={new Date()}
-                              className={`form-control`}
-                            />
-                          </div>
-                        </div>
-                      </>
-                    ) : null}
-                  </div> */}
 
                   <div class="shadow" style={{ padding: "25px" }}>
                     <ul
@@ -948,33 +788,6 @@ function FileDetail() {
                       id="ex1"
                       role="tablist"
                     >
-                      {/* <li
-                        className="nav-item"
-                        role="presentation"
-                        onClick={() => {
-                          clearInput();
-                          setSelectedTab("FR Noting");
-                        }}
-                      >
-                        <button
-                          type="button"
-                          className={
-                            selectedTab === "FR Noting"
-                              ? "nav-link active"
-                              : "nav-link"
-                          }
-                          style={{ width: "170px" }}
-                          data-bs-toggle="tab"
-                          role="tab"
-                          aria-controls="ex1-tabs-1"
-                          disabled={frAttachments ? false : true}
-                          aria-selected={
-                            selectedTab === "FR Noting" ? "true" : "false"
-                          }
-                        >
-                          FR ({frAttachments.length})
-                        </button>
-                      </li> */}
                       <li
                         className="nav-item"
                         role="presentation"
@@ -1318,29 +1131,7 @@ function FileDetail() {
 
                         <div class="col">
                           {
-                            subSelectedTab === "FR" ? (
-                              <section>
-                                <ImageGallery
-                                  style={{ maxHeight: "calc(100vh 0px)" }}
-                                  items={images}
-                                  showThumbnails={false}
-                                  showFullscreenButton={false}
-                                  showPlayButton={false}
-                                  slideOnThumbnailOver
-                                  renderThumbInner={(item) => (
-                                    <div className="image-gallery-thumbnail-inner">
-                                      <img
-                                        src={item.thumbnail}
-                                        alt={"file"}
-                                        width={92}
-                                        height={80}
-                                      />
-                                      {/* Add any additional elements or styles for the thumbnail */}
-                                    </div>
-                                  )}
-                                />
-                              </section>
-                            ) : selectedTab === "Noting" ? (
+                            selectedTab === "Noting" ? (
                               // Render content for the 'Noting' tab
                               <section class="mb-5">
                                 <label for="formFile" class="form-label mt-3">
@@ -1430,8 +1221,31 @@ function FileDetail() {
                             // ) }
                           }
                           <div className="row">
-                            {subSelectedTab === "Sanction" &&
+                            {subSelectedTab === "FR" &&
                             selectedTab === "Correspondence" ? (
+                              <section>
+                                <ImageGallery
+                                  style={{ maxHeight: "calc(100vh 0px)" }}
+                                  items={images}
+                                  showThumbnails={false}
+                                  showFullscreenButton={false}
+                                  showPlayButton={false}
+                                  slideOnThumbnailOver
+                                  renderThumbInner={(item) => (
+                                    <div className="image-gallery-thumbnail-inner">
+                                      <img
+                                        src={item.thumbnail}
+                                        alt={"file"}
+                                        width={92}
+                                        height={80}
+                                      />
+                                      {/* Add any additional elements or styles for the thumbnail */}
+                                    </div>
+                                  )}
+                                />
+                              </section>
+                            ) : subSelectedTab === "Sanction" &&
+                              selectedTab === "Correspondence" ? (
                               <>
                                 {location?.state && location?.state?.view ? (
                                   <section>
