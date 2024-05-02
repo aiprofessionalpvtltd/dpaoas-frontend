@@ -42,9 +42,9 @@ function ListFiles() {
     return apiData.map((item) => ({
       internalId: item?.id,
       SNo: item?.id,
-      HeadingNumber: item?.mainHeading?.mainHeadingNumber,
-      mainHeading: item?.mainHeading?.mainHeading,
-      year: item.year,
+      HeadNumber: item?.mainHeading?.mainHeadingNumber,
+      mainHead: item?.mainHeading?.mainHeading,
+      // year: item.year,
       fileNumber: item?.fileNumber,
       fileSubject: item?.fileSubject,
     }));
@@ -222,10 +222,10 @@ function ListFiles() {
               />
             </div>
             <div class="col-4" style={{ marginLeft: "20px" }}>
-              <label class="form-label">Heading Number</label>
+              <label class="form-label">Head Number</label>
               <select
                 class="form-select"
-                placeholder={"Select Heading Number"}
+                placeholder={"Select Head Number"}
                 onChange={(event) => setHeadingNumber(event.target.value)}
                 id="headings"
               >

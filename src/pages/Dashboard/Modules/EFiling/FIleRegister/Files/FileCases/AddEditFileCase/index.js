@@ -52,7 +52,11 @@ function AddEditFileCase() {
   //   location.state?.frId ? "FR Noting" : "Noting"
   // );
   const [selectedTab, setSelectedTab] = useState("Noting");
-  const [subSelectedTab, setSubSelectedTab] = useState("Sanction");
+  const [subSelectedTab, setSubSelectedTab] = useState(
+    location?.state && location?.state?.freshReceiptsAttachments?.length > 0
+      ? "FR"
+      : "Sanction"
+  );
   const [allFrs, setAllFrs] = useState([]);
   const [fkFreshReceiptId, setFkFreshReceiptId] = useState(null);
   const [fkfileId, setFKFileId] = useState(null);
@@ -273,6 +277,7 @@ function AddEditFileCase() {
   const fetchCaseById = async (caseId) => {
     try {
       const response = await getSingleCaseByFileId(fileIdINRegister, caseId);
+
       if (response.success) {
         // Set data in states
         const { Note, Sanction, Correspondence, Objection, Letter } =
@@ -541,10 +546,10 @@ function AddEditFileCase() {
                 width: "30%", // Set width to 50%
               }}
             >
-              <label class="form-label mt-3">Heading Number</label>
+              <label class="form-label mt-3">Head Number</label>
               <select
                 class="form-select"
-                placeholder={"Select Heading Number"}
+                placeholder={"Select Head Number"}
                 onChange={(event) => hendleRegisterSelect(event.target.value)}
                 id="headings"
               >
@@ -769,6 +774,44 @@ function AddEditFileCase() {
                       id="ex2"
                       role="tablist"
                     >
+                      {location?.state &&
+                        location?.state?.freshReceiptsAttachments?.length >
+                          0 && (
+                          <li
+                            className="nav-item"
+                            role="presentation"
+                            onClick={() => {
+                              clearInput();
+                              setSubSelectedTab("FR");
+
+                              // setSelectedTab("FR Noting");
+                              // setSelectedTab("FR Noting");
+                            }}
+                          >
+                            <button
+                              type="button"
+                              className={
+                                subSelectedTab === "FR"
+                                  ? "nav-link active"
+                                  : "nav-link"
+                              }
+                              style={{ width: "170px" }}
+                              data-bs-toggle="tab"
+                              role="tab"
+                              aria-controls="ex1-tabs-1"
+                              aria-selected={
+                                subSelectedTab === "FR" ? "true" : "false"
+                              }
+                            >
+                              FR (
+                              {
+                                location?.state?.freshReceiptsAttachments
+                                  ?.length
+                              }
+                              )
+                            </button>
+                          </li>
+                        )}
                       <li
                         className="nav-item"
                         role="presentation"
@@ -899,39 +942,6 @@ function AddEditFileCase() {
                           Misc
                         </button>
                       </li>
-                      {location?.state?.freshReceiptsAttachments?.length >
-                        0 && (
-                        <li
-                          className="nav-item"
-                          role="presentation"
-                          onClick={() => {
-                            clearInput();
-                            setSubSelectedTab("FR");
-
-                            // setSelectedTab("FR Noting");
-                            // setSelectedTab("FR Noting");
-                          }}
-                        >
-                          <button
-                            type="button"
-                            className={
-                              subSelectedTab === "FR"
-                                ? "nav-link active"
-                                : "nav-link"
-                            }
-                            style={{ width: "170px" }}
-                            data-bs-toggle="tab"
-                            role="tab"
-                            aria-controls="ex1-tabs-1"
-                            aria-selected={
-                              subSelectedTab === "FR" ? "true" : "false"
-                            }
-                          >
-                            FR (
-                            {location?.state?.freshReceiptsAttachments?.length})
-                          </button>
-                        </li>
-                      )}
                     </ul>
                   </div>
                 )}

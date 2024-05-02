@@ -54,7 +54,7 @@ import { Button, Modal } from "react-bootstrap";
 
 const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
   return (
-    <Modal show={isOpen} onHide={toggleModal} centered>
+    <Modal show={isOpen} onHide={toggleModal} centered size="lg">
       <Modal.Header closeButton>
         <Modal.Title>{title}</Modal.Title>
       </Modal.Header>
@@ -128,43 +128,7 @@ function FileDetail() {
   const [subSelectedTab, setSubSelectedTab] = useState("Sanction");
   const [remarksData, setRemarksData] = useState([]);
   const [frAttachments, setFrAttachments] = useState([]);
-
   const navigate = useNavigate();
-
-  const yaerData = [
-    {
-      name: "2024",
-    },
-    {
-      name: "2023",
-    },
-    {
-      name: "2022",
-    },
-    {
-      name: "2021",
-    },
-    {
-      name: "2020",
-    },
-    {
-      name: "2019",
-    },
-    {
-      name: "2018",
-    },
-    {
-      name: "2017",
-    },
-    {
-      name: "2016",
-    },
-    {
-      name: "2015",
-    },
-  ];
-
-  // console.log("File ID", location.state.fileId, fileIdINRegister);
 
   const clearInput = () => {
     if (fileInputRef.current) {
@@ -275,7 +239,6 @@ function FileDetail() {
     }));
   };
 
-  // console.log("Case Id----------------------", location?.state?.id);
   const UpdateEfilingApi = async (values) => {
     const formData = new FormData();
     // formData.append("submittedBy", UserData?.fkUserId);
@@ -350,21 +313,22 @@ function FileDetail() {
   };
 
   const hendleAssiginFileCaseApi = async () => {
-    const data = {
-      submittedBy: UserData?.fkUserId,
-      assignedTo: modalInputValue?.assignedTo,
-      CommentStatus: modalInputValue?.CommentStatus,
-      comment: modalInputValue?.comment,
-    };
     try {
+      const formData = new FormData();
+      formData.append("submittedBy", UserData?.fkUserId);
+      formData.append("assignedTo", modalInputValue?.assignedTo);
+      formData.append("CommentStatus", modalInputValue?.CommentStatus);
+      formData.append("comment", modalInputValue?.CommentStatus ? "" : modalInputValue?.comment);
+      formData.append("signature", uplodedSignature);
+  
       const response = await assignFIleCase(
         location?.state?.fileId ? location?.state?.fileId : fileIdINRegister,
         location?.state?.id,
-        data
+        formData
       );
+  
       if (response?.success) {
         showSuccessMessage(response?.message);
-
         toggleModal();
         getFilesByID();
         // Clear all fields in modalInputValue
@@ -373,6 +337,7 @@ function FileDetail() {
           CommentStatus: "",
           comment: "",
         });
+  
         setTimeout(() => {
           navigate("/efiling/dashboard/file-register-list/files-list/cases");
         }, 1000);
@@ -381,7 +346,8 @@ function FileDetail() {
       showErrorMessage(error?.response?.data?.message);
     }
   };
-  const toggleModal = () => setIsModalOpen(!isModalOpen);
+  
+  const toggleModal = () => {setIsModalOpen(!isModalOpen); setUplodedSignature(null)};
 
   // use it (editorContent) when submitting whole file content
 
@@ -393,7 +359,23 @@ function FileDetail() {
   const [sectionstore, setsectionstore] = useState();
   const [circularStore, setCircularStore] = useState();
   const [miscStore, setMiscStore] = useState();
-  console.log("asljfdlkajskdkl;", sectionstore);
+  const [uplodedSignature, setUplodedSignature] = useState(null);
+  const [uplodedSignaturePreview, setUplodedSignaturePreview] = useState(null);
+
+  // Function to handle file upload
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    setUplodedSignature(file);
+
+    if (file) {
+      // Read the uploaded file as a data URL
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setUplodedSignaturePreview(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const getFilesByID = async () => {
     try {
@@ -401,10 +383,16 @@ function FileDetail() {
         location?.state?.fileId ? location?.state?.fileId : fileIdINRegister,
         caseId
       );
+
       if (response?.success) {
         setDirectorData(response?.data?.cases?.fileDiary);
         setRemarksData(response?.data?.cases?.fileRemarks);
         setFilesData(response?.data?.cases);
+        const FRSelection =
+          response?.data?.cases?.freshReceipts?.freshReceiptsAttachments;
+        if (FRSelection?.length > 0) {
+          setSubSelectedTab("FR");
+        }
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -649,6 +637,7 @@ function FileDetail() {
         thumbnail: `http://172.16.170.8:5252${item?.fileName}`,
       }))) ||
     [];
+
   return (
     <Layout
       centerlogohide={true}
@@ -661,15 +650,6 @@ function FileDetail() {
     >
       <div className="dashboard-content">
         <ToastContainer />
-        {/* <Header
-          dashboardLink={"/efiling/dashboard"}
-          addLink1={"/efiling/dashboard/file-register-list/files-list/cases"}
-          title1={"File Cases"}
-          addLink2={"/efiling/dashboard/addedit"}
-          title2={location && viewPage ? "File Detail" : "Edit File"}
-          width={"500px"}
-        /> */}
-
         <EFilingModal
           title="Add Comments"
           isOpen={isModalOpen}
@@ -679,7 +659,7 @@ function FileDetail() {
           <div class="row">
             <div class="col">
               <div class="mb-3">
-                <label class="form-label">Action</label>
+                <label class="form-label">Predefined Comments</label>
                 <select
                   className="form-select"
                   id="CommentStatus"
@@ -692,7 +672,7 @@ function FileDetail() {
                   }
                   value={modalInputValue.CommentStatus}
                 >
-                  <option value="" selected disabled hidden>
+                  <option value="" selected>
                     Select
                   </option>
                   <option value={"Approved"}>Approved</option>
@@ -724,7 +704,7 @@ function FileDetail() {
                   }
                   value={modalInputValue.assignedTo}
                 >
-                  <option value={""} selected disabled hidden>
+                  <option value={""} selected>
                     Select
                   </option>
                   {employeeData &&
@@ -740,7 +720,7 @@ function FileDetail() {
           <div class="row">
             <div class="col">
               <div class="mb-3">
-                <label class="form-label">Add Comments</label>
+                <label class="form-label">Add Special Comments</label>
                 <textarea
                   class="form-control"
                   id="comment"
@@ -754,6 +734,26 @@ function FileDetail() {
                   value={modalInputValue.comment}
                 ></textarea>
               </div>
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col">
+                <label for="formFile" class="form-label mt-3">
+                  Upload Signature
+                </label>
+                <input class="form-control" type="file" id="formFile" onChange={handleFileUpload} />
+                <div className="clearfix"></div>
+              </div>
+
+            <div class="col">
+              {uplodedSignaturePreview && (
+                <img
+                  src={uplodedSignaturePreview}
+                  alt="Uploaded Signature"
+                  className="img-fluid"
+                />
+              )}
             </div>
           </div>
 
@@ -775,38 +775,6 @@ function FileDetail() {
 
         <div className="custom-editor">
           <div className="row">
-            {/* <div className="col-md-2">
-              <div className="noting">
-                {directorData?.length > 0 ? (
-                  directorData.map((item) => (
-                    <div key={item.id}>
-                      <p
-                        style={{ marginBottom: "0px", fontWeight: "bold" }}
-                      >{`${item?.submittedByUser?.employee?.departments?.departmentName} Branch`}</p>
-                      <p
-                        style={{ marginBottom: "0" }}
-                      >{`Diary Number : ${item?.diaryNumber}`}</p>
-                      <p style={{ marginBottom: "0" }}>
-                        {moment(item?.createdAt).format("DD/MM/YYYY")}
-                      </p>
-                      <p>{moment(item?.createdAt).format("hh:mm A")}</p>
-                    </div>
-                  ))
-                ) : (
-                  <div
-                    className="alert alert-danger mt-2"
-                    role="alert"
-                    style={{
-                      width: "208px",
-                      margin: "0 auto",
-                      textAlign: "center",
-                    }}
-                  >
-                    No data found
-                  </div>
-                )}
-              </div>
-            </div> */}
             <div className="col-md-9">
               <form onSubmit={formik.handleSubmit}>
                 <div>
@@ -854,93 +822,6 @@ function FileDetail() {
                     </div>
                     <div className="row"></div>
                   </div>
-                  {/* <div className="row">
-                    {documentTypeVal === "Internal" ? (
-                      <>
-                        <div class="col-6">
-                          <div class="mb-3">
-                            <label class="form-label">Branch</label>
-                            <select
-                              class="form-select"
-                              id="fkBranchId"
-                              name="fkBranchId"
-                              disabled={true}
-                              onChange={formik.handleChange}
-                              onBlur={formik.handleBlur}
-                              value={formik.values.fkBranchId}
-                            >
-                              <option value={""} selected disabled hidden>
-                                Select
-                              </option>
-                              {branchesData &&
-                                branchesData?.map((item) => (
-                                  <option value={item.id}>
-                                    {item.branchName}
-                                  </option>
-                                ))}
-                            </select>
-                          </div>
-                        </div>
-                      </>
-                    ) : documentTypeVal === "External" ? (
-                      <>
-                        <div class="col-6">
-                          <div class="mb-3">
-                            <label class="form-label">Ministries</label>
-                            <select
-                              disabled={true}
-                              class="form-select"
-                              id="fkMinistryId"
-                              name="fkMinistryId"
-                              onChange={formik.handleChange}
-                              onBlur={formik.handleBlur}
-                              value={formik.values.fkMinistryId}
-                            >
-                              <option value={""} selected disabled hidden>
-                                Select
-                              </option>
-                              {ministryData &&
-                                ministryData.map((item) => (
-                                  <option value={item.id}>
-                                    {item.ministryName}
-                                  </option>
-                                ))}
-                            </select>
-                          </div>
-                        </div>
-                        <div className="col-6">
-                          <div
-                            className="mb-3"
-                            style={{ position: "relative" }}
-                          >
-                            <label className="form-label">Received On</label>
-                            <span
-                              style={{
-                                position: "absolute",
-                                right: "15px",
-                                top: "36px",
-                                zIndex: 1,
-                                fontSize: "20px",
-                                color: "#666",
-                              }}
-                            >
-                              <FontAwesomeIcon icon={faCalendarAlt} />
-                            </span>
-                            <DatePicker
-                              disabled={true}
-                              selected={formik.values.receivedOn}
-                              onChange={(date) =>
-                                formik.setFieldValue("receivedOn", date)
-                              }
-                              onBlur={formik.handleBlur}
-                              // minDate={new Date()}
-                              className={`form-control`}
-                            />
-                          </div>
-                        </div>
-                      </>
-                    ) : null}
-                  </div> */}
 
                   <div class="shadow" style={{ padding: "25px" }}>
                     <ul
@@ -948,33 +829,6 @@ function FileDetail() {
                       id="ex1"
                       role="tablist"
                     >
-                      {/* <li
-                        className="nav-item"
-                        role="presentation"
-                        onClick={() => {
-                          clearInput();
-                          setSelectedTab("FR Noting");
-                        }}
-                      >
-                        <button
-                          type="button"
-                          className={
-                            selectedTab === "FR Noting"
-                              ? "nav-link active"
-                              : "nav-link"
-                          }
-                          style={{ width: "170px" }}
-                          data-bs-toggle="tab"
-                          role="tab"
-                          aria-controls="ex1-tabs-1"
-                          disabled={frAttachments ? false : true}
-                          aria-selected={
-                            selectedTab === "FR Noting" ? "true" : "false"
-                          }
-                        >
-                          FR ({frAttachments.length})
-                        </button>
-                      </li> */}
                       <li
                         className="nav-item"
                         role="presentation"
@@ -1318,29 +1172,7 @@ function FileDetail() {
 
                         <div class="col">
                           {
-                            subSelectedTab === "FR" ? (
-                              <section>
-                                <ImageGallery
-                                  style={{ maxHeight: "calc(100vh 0px)" }}
-                                  items={images}
-                                  showThumbnails={false}
-                                  showFullscreenButton={false}
-                                  showPlayButton={false}
-                                  slideOnThumbnailOver
-                                  renderThumbInner={(item) => (
-                                    <div className="image-gallery-thumbnail-inner">
-                                      <img
-                                        src={item.thumbnail}
-                                        alt={"file"}
-                                        width={92}
-                                        height={80}
-                                      />
-                                      {/* Add any additional elements or styles for the thumbnail */}
-                                    </div>
-                                  )}
-                                />
-                              </section>
-                            ) : selectedTab === "Noting" ? (
+                            selectedTab === "Noting" ? (
                               // Render content for the 'Noting' tab
                               <section class="mb-5">
                                 <label for="formFile" class="form-label mt-3">
@@ -1430,8 +1262,31 @@ function FileDetail() {
                             // ) }
                           }
                           <div className="row">
-                            {subSelectedTab === "Sanction" &&
+                            {subSelectedTab === "FR" &&
                             selectedTab === "Correspondence" ? (
+                              <section>
+                                <ImageGallery
+                                  style={{ maxHeight: "calc(100vh 0px)" }}
+                                  items={images}
+                                  showThumbnails={false}
+                                  showFullscreenButton={false}
+                                  showPlayButton={false}
+                                  slideOnThumbnailOver
+                                  renderThumbInner={(item) => (
+                                    <div className="image-gallery-thumbnail-inner">
+                                      <img
+                                        src={item.thumbnail}
+                                        alt={"file"}
+                                        width={92}
+                                        height={80}
+                                      />
+                                      {/* Add any additional elements or styles for the thumbnail */}
+                                    </div>
+                                  )}
+                                />
+                              </section>
+                            ) : subSelectedTab === "Sanction" &&
+                              selectedTab === "Correspondence" ? (
                               <>
                                 {location?.state && location?.state?.view ? (
                                   <section>
@@ -2209,6 +2064,26 @@ function FileDetail() {
                       </div>
                     </div>
                   </div>
+                  
+                  <div className="row mt-4">
+                    <div class="col-8">
+                      <label class="form-label" style={{ display: "block", fontWeight: 'bold' }}>
+                        Signatures
+                      </label>                            
+                    </div>
+                  </div>
+
+                  <div className='row'>
+  {filesData?.digitalSignature?.map((item, index) => (
+    <div key={index} style={{ width: '250px', height: '200px', marginRight: '10px' }}>
+      <img
+        src={`http://10.10.140.200:5152${item?.signature}`}
+        alt="Uploaded Signature"
+        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+      />
+    </div>
+  ))}
+</div>
 
                   {/* <div className="row">
                     <div class="col-6">
@@ -2291,14 +2166,13 @@ function FileDetail() {
                           display: location?.state?.view ? "none" : "block",
                         }}
                       >
-                        <FontAwesomeIcon
+                        {/* <FontAwesomeIcon
                           style={{ marginRight: "-5px" }}
                           // icon={faPlus}
                           size="md"
                           width={24}
-                        />{" "}
-                        {/* Add your comment */}
-                        Proceed
+                        /> */}
+                        Action
                       </button>
                     </a>
                   )}
@@ -2308,7 +2182,7 @@ function FileDetail() {
                   {remarksData?.length > 0 ? (
                     remarksData.map((item) => (
                       <>
-                        {item?.comment !== null ? (
+                        {item?.CommentStatus !== null || item?.comment !== null ? (
                           <div
                             class="d-flex flex-row p-3 ps-3"
                             style={{ borderBottom: "1px solid #ddd" }}
@@ -2369,7 +2243,7 @@ function FileDetail() {
                                   class="text-justify comment-text mb-0"
                                   style={{ fontSize: "18px" }}
                                 >
-                                  {item?.comment}
+                                  {item?.CommentStatus ? item?.CommentStatus : item?.comment}
                                 </p>
                                 {/* <small
                                 style={{

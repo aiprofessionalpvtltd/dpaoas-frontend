@@ -345,7 +345,7 @@ function FRDetail() {
 
       <div className="custom-editor">
         <div className="row">
-          <div className="col-md-9">
+          <div className="col-8">
             <section>
               <ImageGallery
                 style={{ maxHeight: "calc(100vh 0px)" }}
@@ -369,7 +369,7 @@ function FRDetail() {
             </section>
           </div>
 
-          <div className="col-md-3" style={{ paddingRight: 0 }}>
+          <div className="col-4" style={{ paddingRight: 0 }}>
             <div
               className="custom-editor-main"
               style={{ marginTop: 0, borderLeft: "1px solid #ddd" }}
@@ -390,7 +390,7 @@ function FRDetail() {
                       width={24}
                     />{" "}
                     {/* Add your comment */}
-                    Procced
+                    Proceed
                   </button>
                 </a>
               </div>

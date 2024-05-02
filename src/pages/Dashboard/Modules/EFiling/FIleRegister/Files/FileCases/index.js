@@ -234,10 +234,10 @@ function FileCases() {
         <div class="col-4">
           {showHeadings && (
             <>
-              <label class="form-label">Heading Number</label>
+              <label class="form-label">Head Number</label>
               <select
                 class="form-select"
-                placeholder={"Select Heading Number"}
+                placeholder={"Select Head Number"}
                 onChange={handleHeadingChange}
                 // onChange={(event) => hendleRegisterSelect(event.target.value)}
                 id="headings"

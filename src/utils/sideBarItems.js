@@ -1037,12 +1037,12 @@ export const EfilingSideBarBranchItem = [
     icon: faClipboardList,
     subItems: [
       {
-        itemName: "Create Files",
+        itemName: "Create File",
         link: "/efiling/dashboard/file-register-list/files-list/addedit-file",
         icon: faClipboardList,
       },
       {
-        itemName: "File List",
+        itemName: "Files List",
         link: "/efiling/dashboard/file-register-list/files-list",
         icon: faClipboardList,
       },
@@ -1064,7 +1064,7 @@ export const EfilingSideBarBranchItem = [
         icon: faReceipt,
       },
       {
-        itemName: "Create Cases",
+        itemName: "Create Case",
         link: "/efiling/dashboard/file-register-list/files-list/addedit-case",
         icon: faClipboardList,
       },

@@ -30,10 +30,10 @@ import { useNavigate } from "react-router-dom";
 
 const validationSchema = Yup.object({
   mainHeading: Yup.string().required("Main Heading is required"),
-  numberOfMainHeading: Yup.string().required(
-    "Number Of Main Heading is required"
-  ),
-  year: Yup.string().required("Year is required"),
+  // numberOfMainHeading: Yup.string().required(
+  //   "Number Of Main Heading is required"
+  // ),
+  // year: Yup.string().required("Year is required"),
   // serialNumber: Yup.string().required("Serial Number is required"),
   fileNumber: Yup.string().required("File Number is required"),
   subject: Yup.string().required("Subject is required"),
@@ -48,14 +48,15 @@ function AddEditFiles() {
   const { allBranchesData } = useContext(AuthContext);
   const location = useLocation();
   const userData = getUserData();
-  console.log("kjfkejklflejkljflj", userData);
   const navigate = useNavigate();
   const registerId = getRegisterID();
   const [yearData, setYearData] = useState([]);
   const [mainheadingData, setMainHeadingData] = useState([]);
   const [numberMainHeading, setNumberMainHeading] = useState([]);
-  const [registerData, setRegisterData] = useState([]);
-
+  const [registerData, setRegisterData] = useState({});
+  const [fileNumberValid, setFileNumberValid] = useState(true);
+  const [selectedHeadNumber, setSelectedHeadNumber] = useState("");
+  
   // const [divisionById, setDivisionById] = useState();
 
   const formik = useFormik({
@@ -65,6 +66,7 @@ function AddEditFiles() {
       year: "",
       serialNumber: "",
       fileNumber: "",
+      fileNumberDerived: true,
       subject: "",
       // fileType:"",
       dateOfRecord: "",
@@ -84,7 +86,7 @@ function AddEditFiles() {
     const Data = {
       fkBranchId: userData?.fkBranchId,
       fkMainHeadingId: values?.mainHeading,
-      year: values?.year,
+      // year: values?.year,
       serialNumber: values?.serialNumber,
       fileNumber: values?.fileNumber,
       fileSubject: values?.subject,
@@ -96,7 +98,7 @@ function AddEditFiles() {
     };
     try {
       const response = await createFiles(
-        location.state ? registerId : values?.registerDataid,
+        location.state ? registerId : registerData?.id,
         Data
       );
       if (response.success) {
@@ -148,6 +150,7 @@ function AddEditFiles() {
       if (response.success) {
         // showSuccessMessage(response?.message)
         setNumberMainHeading(response?.data);
+        setSelectedHeadNumber(response?.data[0]?.mainHeadingNumber)
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -157,7 +160,7 @@ function AddEditFiles() {
     try {
       const response = await getAllFileRegister(userData?.fkBranchId, 0, 100);
       if (response.success) {
-        setRegisterData(response?.data?.fileRegisters);
+        setRegisterData(response?.data?.fileRegisters[0]);
       }
     } catch (error) {
       // showErrorMessage(error?.response?.data?.message);
@@ -171,6 +174,18 @@ function AddEditFiles() {
   useEffect(() => {
     handleBranch();
   }, []);
+
+  useEffect(() => {
+    // Set the value of the fileNumber field if it's derived
+      const fileNumber = `F.No. ${selectedHeadNumber} (${formik.values.serialNumber}) - ${registerData?.year}`;
+      formik.setFieldValue("fileNumber", fileNumber);
+  }, [selectedHeadNumber, formik.values.serialNumber, registerData]);
+  
+  // Handle onChange event for the fileNumber field
+  const handleFileNumberChange = (e) => {
+    formik.handleChange(e);
+  };
+
   return (
     <Layout
       module={false}
@@ -212,7 +227,7 @@ function AddEditFiles() {
             <form onSubmit={formik.handleSubmit}>
               <div class="container-fluid">
                 <div class="row">
-                  <div class="col-3">
+                  <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Register</label>
                       <select
@@ -221,7 +236,8 @@ function AddEditFiles() {
                         name="registerDataid"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                        value={formik.values.registerDataid}
+                        value={registerData?.year}
+                        disabled
                       >
                         <option value={""} selected disabled hidden>
                           Select
@@ -229,16 +245,16 @@ function AddEditFiles() {
                         {/* {mainheadingData && mainheadingData?.filter((filteredItem) => filteredItem?.status === "active")?.map((item) => (
                           
                         ))} */}
-                        {registerData &&
-                          registerData.map((item) => (
-                            <option value={item.id}>{item?.year}</option>
-                          ))}
+                        {/* {registerData &&
+                          registerData.map((item) => ( */}
+                            <option value={registerData?.id}>{registerData?.year}</option>
+                          {/* ))} */}
                       </select>
                     </div>
                   </div>
-                  <div class="col-3">
+                  <div class="col">
                     <div class="mb-3">
-                      <label class="form-label">Main Heading</label>
+                      <label class="form-label">Main Head</label>
                       <select
                         className={`form-select ${
                           formik.touched.mainHeading &&
@@ -255,7 +271,7 @@ function AddEditFiles() {
                         onBlur={formik.handleBlur}
                         value={formik.values.mainHeading}
                       >
-                        <option value={""} selected disabled hidden>
+                        <option value={""} selected>
                           Select
                         </option>
                         {mainheadingData &&
@@ -278,9 +294,9 @@ function AddEditFiles() {
                         )}
                     </div>
                   </div>
-                  <div class="col-3">
+                  <div class="col">
                     <div class="mb-3">
-                      <label class="form-label">Number Of Main Heading</label>
+                      <label class="form-label">Head Number</label>
                       <select
                         className={`form-select ${
                           formik.touched.numberOfMainHeading &&
@@ -290,9 +306,12 @@ function AddEditFiles() {
                         }`}
                         id="numberOfMainHeading"
                         name="numberOfMainHeading"
-                        onChange={formik.handleChange}
+                        onChange={(e) => {
+                          formik.handleChange(e);
+                        }}
                         onBlur={formik.handleBlur}
-                        value={formik.values.numberOfMainHeading}
+                        value={selectedHeadNumber}
+                        disabled
                       >
                         <option value={""} selected disabled hidden>
                           Select
@@ -312,40 +331,7 @@ function AddEditFiles() {
                         )}
                     </div>
                   </div>
-                  <div class="col-3">
-                    <div class="mb-3">
-                      <label class="form-label">Year</label>
-                      <select
-                        className={`form-select ${
-                          formik.touched.year && formik.errors.year
-                            ? "is-invalid"
-                            : ""
-                        }`}
-                        id="year"
-                        name="year"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.year}
-                      >
-                        <option value={""} selected disabled hidden>
-                          Select
-                        </option>
-                        {yearData &&
-                          yearData?.map((item) => (
-                            <option value={item?.year}>{item?.year}</option>
-                          ))}
-                      </select>
-                      {formik.touched.year && formik.errors.year && (
-                        <div className="invalid-feedback">
-                          {formik.errors.year}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                <div class="row">
-                  <div class="col-3">
+                  <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Serial Number</label>
                       <input
@@ -370,6 +356,39 @@ function AddEditFiles() {
                         )}
                     </div>
                   </div>
+                  {/* <div class="col-3">
+                    <div class="mb-3">
+                      <label class="form-label">Year</label>
+                      <select
+                        className={`form-select ${
+                          formik.touched.year && formik.errors.year
+                            ? "is-invalid"
+                            : ""
+                        }`}
+                        id="year"
+                        name="year"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.year}
+                      >
+                        <option value={""} selected>
+                          Select
+                        </option>
+                        {yearData &&
+                          yearData?.map((item) => (
+                            <option value={item?.year}>{item?.year}</option>
+                          ))}
+                      </select>
+                      {formik.touched.year && formik.errors.year && (
+                        <div className="invalid-feedback">
+                          {formik.errors.year}
+                        </div>
+                      )}
+                    </div>
+                  </div> */}
+                </div>
+
+                <div class="row">
                   <div class="col-3">
                     <div class="mb-3">
                       <label class="form-label">File Number</label>
@@ -383,8 +402,9 @@ function AddEditFiles() {
                             : ""
                         }`}
                         id="fileNumber"
-                        onChange={formik.handleChange}
+                        onChange={handleFileNumberChange}
                         onBlur={formik.handleBlur}
+                        disabled={fileNumberValid ? true : false}
                       />
                       {formik.touched.fileNumber &&
                         formik.errors.fileNumber && (
@@ -392,6 +412,25 @@ function AddEditFiles() {
                             {formik.errors.fileNumber}
                           </div>
                         )}
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <div style={{ marginTop: "35px" }}>
+                      <div class="form-check">
+                        <input
+                          class={`form-check-input`}
+                          type="checkbox"
+                          id="fileNumberEdit"
+                          checked={fileNumberValid}
+                          onChange={() => {
+                              setFileNumberValid(!fileNumberValid);
+                            }
+                          }
+                        />
+                        <label class="form-check-label" for="fileNumberEdit">
+                          Valid
+                        </label>
+                      </div>
                     </div>
                   </div>
                   <div class="col-6">
