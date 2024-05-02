@@ -488,6 +488,7 @@ function CMSUserDashboard() {
                   data={complaintData}
                   tableTitle="User Complaint"
                   addBtnText="Add User Complaint"
+                  ActionHide={true}
                   handleAdd={() => navigate("/cms/dashboard/addedit")}
                   // handleEdit={(item) => navigate("/cms/dashboard/addedit", { state: item })}
                   handlePageChange={handlePageChange}

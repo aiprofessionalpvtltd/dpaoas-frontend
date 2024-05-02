@@ -366,6 +366,7 @@ function InventoryIssueDate() {
                             data={allIssuedData}
                             tableTitle={"Issuance Details"}
                             hideBtn={true}
+                            hidebtn1={true}
                             singleDataCard={true}
                             ActionHide={true}
                             hideDeleteIcon={true}
