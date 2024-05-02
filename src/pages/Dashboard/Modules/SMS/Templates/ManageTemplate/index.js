@@ -30,6 +30,8 @@ function SMSMAnageTemplate() {
     const [permissionsLocal, setPermissionsLocal] = useState([]);
     const [roles, setRoles] = useState([]);
 
+    console.log("pr",permissionsLocal);
+
     const userRole = getUserData();
 
     const handlePageChange = (page) => {
@@ -145,6 +147,7 @@ function SMSMAnageTemplate() {
                         data={templateData}
                         singleDataCard={true}
                         hideBtn={permissionsLocal?.SMS?.canCreate ? false : true}
+                        hidebtn1={permissionsLocal?.SMS?.canCreate ? false : true}
                         tableTitle="Manage Template"
                         addBtnText="Add Template"
                         handleAdd={() => {
