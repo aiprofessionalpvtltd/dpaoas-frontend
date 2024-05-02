@@ -199,6 +199,7 @@ function SMSManageList() {
             tableTitle="Manage List"
             addBtnText="Add List"
             hideBtn={permissionsLocal?.SMS?.canCreate ? false : true}
+            hidebtn1={permissionsLocal?.SMS?.canCreate ? false : true}
             handleAdd={() => hendleAdd()}
             handleEdit={(item) => hendleSingleListRecord(item.id)
             }
