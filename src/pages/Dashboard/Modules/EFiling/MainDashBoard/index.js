@@ -15,8 +15,152 @@ import {
   faReceipt,
 } from "@fortawesome/free-solid-svg-icons";
 import CalenderImage from "../../../../../assets/calander.png";
+import { useEffect, useState } from "react";
+import {
+  getApprovelStats,
+  getsentAndRecievedFRStats,
+  getsentAndRecievedFilesStats,
+} from "../../../../../api/APIs/Services/efiling.service";
+import moment from "moment";
 function MainDashboard() {
   const userData = getUserData();
+  const [fileStatsData, setFileStatsData] = useState(null);
+  const [frStatsData, setFrStatsData] = useState(null);
+  const [fileSentCount, setFileSentCount] = useState(null);
+  const [fileRecivedCount, setFileRecivedCount] = useState(null);
+  const [frrecivedCount, setFRRecivedCount] = useState(null);
+  const [allStatsData, setAllStatsData] = useState([]);
+  const [fileSentData, setFilesentData] = useState([]);
+  const [filerecivedData, setFileRecivedData] = useState([]);
+  const [frsentData, setFrsentData] = useState([]);
+  const [frrecivedData, setFrRecivedData] = useState([]);
+  const [count, setCount] = useState(null);
+
+  // Getting All Stats
+  // const getAllStats = async () => {
+  //   try {
+  //     const response = await getsentAndRecievedFilesStats(userData?.fkUserId);
+  //     if (response?.success) {
+  //       setFileSentCount(response?.data?.sentFiles?.count);
+  //       setFileRecivedCount(response?.data?.receivedFiles?.count);
+  //       const transformsendData = transformFilesdata(
+  //         response?.data?.sentFiles?.rows,
+  //         1
+  //       );
+  //       setFilesentData(transformsendData);
+  //       const transformrecivedData = transformFilesdata(
+  //         response?.data?.receivedFiles?.rows,
+  //         0
+  //       );
+  //       setFileRecivedData(transformrecivedData);
+  //       setFileStatsData(response?.data);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
+  // Getting Stats Data
+  const getAllStatsDataApi = async () => {
+    try {
+      const response = await getApprovelStats(userData?.fkUserId);
+      if (response?.success) {
+        setAllStatsData(response?.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  // Transform File Data
+  const transformFilesdata = (apiData, id) => {
+    return apiData.map((item) => ({
+      caseId: item?.fkCaseId,
+      internalId: item?.file?.id,
+      SNo: item?.id,
+      ...(id === 1 && {
+        Sender: `${item?.submittedUser?.employee?.firstName} ${item?.submittedUser?.employee?.lastName}`,
+      }),
+      ...(id !== 1 && {
+        Receiver: `${item?.assignedUser?.employee?.firstName} ${item?.assignedUser?.employee?.lastName}`,
+      }),
+      HeadingNumber: item?.file?.mainHeading?.mainHeadingNumber,
+      mainHeading: item?.file?.mainHeading?.mainHeading,
+      year: item?.file?.year,
+      fileNumber: item?.file?.fileNumber,
+      fileSubject: item?.file?.fileSubject,
+    }));
+  };
+  // Getting Files Data
+  const getAllFilesDataApi = async () => {
+    try {
+      const response = await getsentAndRecievedFilesStats(userData?.fkUserId);
+      if (response?.success) {
+        setFileSentCount(response?.data?.sentFiles?.count);
+        setFileRecivedCount(response?.data?.receivedFiles?.count);
+        const transformsendData = transformFilesdata(
+          response?.data?.sentFiles?.rows,
+          1
+        );
+        setFilesentData(transformsendData);
+        const transformrecivedData = transformFilesdata(
+          response?.data?.receivedFiles?.rows,
+          0
+        );
+        setFileRecivedData(transformrecivedData);
+        setFileStatsData(response?.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // TransForm Fr Data
+  const transformFreshReceiptdata = (apiData) => {
+    return apiData.map((item) => ({
+      internalId: item?.freshReceipt?.id,
+      frType: item?.freshReceipt?.frType,
+      Sender: item?.submittedUser
+        ? item?.submittedUser?.employee?.firstName
+        : "---",
+      Receiver: item?.assignedUser
+        ? item?.assignedUser?.employee?.firstName
+        : "---",
+      // Status: item?.fileRemarksData?.length > 0 ? item?.fileRemarksData[item?.fileRemarksData?.length - 1]?.CommentStatus : "Draft",
+      frSubject: item?.freshReceipt?.frSubject,
+      referenceNumber: item?.freshReceipt?.referenceNumber,
+      frDate: moment(item?.frDate).format("DD/MM/YYYY"),
+      // DiaryDate: item?.freshReceiptDiaries ? moment(item?.freshReceiptDiaries?.diaryDate).format("DD/MM/YYYY") : "---",
+      // staus:item?.status
+    }));
+  };
+  // Getting All Fr Data
+  const getAllFRDataApi = async () => {
+    try {
+      const response = await getsentAndRecievedFRStats(userData?.fkUserId);
+      if (response?.success) {
+        setFrStatsData(response?.data);
+        setCount(response?.data?.sentFRs?.count);
+        setFRRecivedCount(response?.data?.receivedFRs?.count);
+        const transformsentData = transformFreshReceiptdata(
+          response?.data?.sentFRs?.rows
+        );
+        const transformsentrecivedData = transformFreshReceiptdata(
+          response?.data?.receivedFRs?.rows
+        );
+        setFrRecivedData(transformsentrecivedData);
+        setFrsentData(transformsentData);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getAllStatsDataApi();
+    getAllFilesDataApi();
+    getAllFRDataApi();
+  }, []);
+
   return (
     <Layout
       module={false}
@@ -54,14 +198,17 @@ function MainDashboard() {
                     className="dash-card-header"
                     style={{ textAlign: "center", background: "#4f5966" }}
                   >
-                    <h2 style={{ marginBottom: "0" }}>FR </h2>
+                    <h2 style={{ marginBottom: "0" }}>IN </h2>
                   </div>
                   <div
                     className="count float-start"
                     style={{ borderLeft: "#ddd solid 1px" }}
                   >
                     <span style={{ display: "inline-flex" }}>
-                      Urgent <span style={{ marginLeft: "5px" }}>(0)</span>
+                      FRs{" "}
+                      <span style={{ marginLeft: "5px" }}>
+                        ({frStatsData && frStatsData?.receivedFRs?.count})
+                      </span>
                     </span>
                     <div class="clearfix"></div>
                     {/* <i
@@ -82,7 +229,10 @@ function MainDashboard() {
                     style={{ borderLeft: "#ddd solid 1px" }}
                   >
                     <span style={{ display: "inline-flex" }}>
-                      Immediate <span style={{ marginLeft: "5px" }}>(0)</span>
+                      File{" "}
+                      <span style={{ marginLeft: "5px" }}>
+                        ({fileStatsData && fileStatsData?.receivedFiles?.count})
+                      </span>
                     </span>
                     <div class="clearfix"></div>
                     <FontAwesomeIcon
@@ -139,14 +289,18 @@ function MainDashboard() {
                     className="dash-card-header"
                     style={{ textAlign: "center", background: "#4f5966" }}
                   >
-                    <h2 style={{ marginBottom: "0" }}>FR </h2>
+                    <h2 style={{ marginBottom: "0" }}>OUT </h2>
                   </div>
                   <div
                     className="count float-start"
                     style={{ borderLeft: "#ddd solid 1px" }}
                   >
                     <span style={{ display: "inline-flex" }}>
-                      Urgent <span style={{ marginLeft: "5px" }}>(0)</span>
+                      FRs{" "}
+                      <span style={{ marginLeft: "5px" }}>
+                        {" "}
+                        ({frStatsData && frStatsData?.sentFRs?.count})
+                      </span>
                     </span>
                     <div class="clearfix"></div>
                     {/* <i
@@ -167,7 +321,10 @@ function MainDashboard() {
                     style={{ borderLeft: "#ddd solid 1px" }}
                   >
                     <span style={{ display: "inline-flex" }}>
-                      Immediate <span style={{ marginLeft: "5px" }}>(0)</span>
+                      File{" "}
+                      <span style={{ marginLeft: "5px" }}>
+                        ({fileStatsData && fileStatsData?.sentFiles?.count})
+                      </span>
                     </span>
                     <div class="clearfix"></div>
                     <FontAwesomeIcon
@@ -586,7 +743,7 @@ function MainDashboard() {
                   </table>
                 </div> */}
                 <div class="table-responsive p-0">
-                  <h2 className="text-center">Out</h2>
+                  <h2 className="text-center">OUT</h2>
 
                   <table
                     className="table align-center"
