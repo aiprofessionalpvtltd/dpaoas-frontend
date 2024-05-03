@@ -86,7 +86,7 @@ function AddEditFiles() {
     const Data = {
       fkBranchId: userData?.fkBranchId,
       fkMainHeadingId: values?.mainHeading,
-      // year: values?.year,
+      year: registerData?.year,
       serialNumber: values?.serialNumber,
       fileNumber: values?.fileNumber,
       fileSubject: values?.subject,
@@ -496,10 +496,10 @@ function AddEditFiles() {
                 >
                   <div class="col-3">
                     <div class="mb-3">
-                      <label class="form-label">Data Of Record</label>
+                      <label class="form-label">Date of Record</label>
                       <input
                         type="text"
-                        placeholder={"Data Of Record"}
+                        placeholder={"Date of Record"}
                         value={formik.values.dateOfRecord}
                         className={`form-control`}
                         id="dateOfRecord"

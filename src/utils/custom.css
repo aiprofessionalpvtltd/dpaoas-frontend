@@ -3890,3 +3890,11 @@ button span {
 .image-gallery-content .image-gallery-slide .image-gallery-image {
   max-height: 1200px !important;
 }
+
+.image-gallery-left-nav {
+  left: -25px !important;
+}
+
+.image-gallery-right-nav {
+  right: -25px !important;
+}
