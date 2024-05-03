@@ -38,6 +38,7 @@ function FileReceipt() {
 
     const transformFreshReceiptdata = (apiData) => {
         return apiData.map((item) => ({
+          isEditable: item?.isEditable,
           id: item?.id,
           frType: item?.frType,
           Sender: item?.freshReceipt?.length > 0 ? item?.freshReceipt[0]?.submittedUser?.employee?.firstName : "---",
@@ -134,6 +135,7 @@ function FileReceipt() {
                         totalCount={count}
                         singleDataCard={true}
                         handleDelete={(item) => handleDelete(item.id)}
+                        showEditIcon={true}
                         handleEdit={(item) => navigate("/efiling/dashboard/fresh-receipt/addedit", {state:{id:item.id, view: true}})}
                         showAssigned={true}
                         hendleAssigned={(item) => navigate("/efiling/dashboard/fresh-receipt/frdetail", {state:{id:item.id, view: false}})}

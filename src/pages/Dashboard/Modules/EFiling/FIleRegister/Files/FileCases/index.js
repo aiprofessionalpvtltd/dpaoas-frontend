@@ -36,45 +36,48 @@ function FileCases() {
   const [fkfileId, setFKFileId] = useState(null);
   const [showHeadings, setShowHeadings] = useState(false);
   const [showFiles, setShowFiles] = useState(false);
+
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
 
   const transformFilesCases = (apiData) => {
-    console.log("Data", apiData);
-    return apiData?.map((item, index) => ({
-      caseId: item?.fkCaseId,
-      internalId: item?.fileData?.id,
-      FileNo: item?.fileData?.fileNumber,
-      Sender:
-        item?.fileRemarksData?.length > 0
-          ? item?.fileRemarksData[0]?.submittedUser?.employee?.firstName
-          : "---",
-      Receiver:
-        item?.fileRemarksData?.length > 0
-          ? item?.fileRemarksData[0]?.assignedUser?.employee?.firstName
-          : "---",
-      Status:
-        item?.fileRemarksData?.length > 0
-          ? item?.fileRemarksData[0]?.CommentStatus
-          : "Draft",
-      MarkedDate:
-        item?.fileRemarksData?.length > 0
-          ? moment(item?.fileRemarksData[0]?.createdAt).format("DD/MM/YYYY")
-          : "---",
-      MarkedTime:
-        item?.fileRemarksData?.length > 0
-          ? moment(item?.fileRemarksData[0]?.createdAt).format("hh:mm A")
-          : "---",
-    }));
-  };
+    return apiData?.map((item, index) => {
+      return {
+        isEditable: item?.isEditable,
+        caseId: item?.fkCaseId,
+        internalId: item?.fileData?.id,
+        FileNo: item?.fileData?.fileNumber,
+        Sender:
+          item?.fileRemarksData?.length > 0
+            ? item?.fileRemarksData[0]?.submittedUser?.employee?.firstName
+            : "---",
+        Receiver:
+          item?.fileRemarksData?.length > 0
+            ? item?.fileRemarksData[0]?.assignedUser?.employee?.firstName
+            : "---",
+        Status:
+          item?.fileRemarksData?.length > 0
+            ? item?.fileRemarksData[0]?.CommentStatus
+            : "Draft",
+        MarkedDate:
+          item?.fileRemarksData?.length > 0
+            ? moment(item?.fileRemarksData[0]?.createdAt).format("DD/MM/YYYY")
+            : "---",
+        MarkedTime:
+          item?.fileRemarksData?.length > 0
+            ? moment(item?.fileRemarksData[0]?.createdAt).format("hh:mm A")
+            : "---",
+      };
+    });
+  };  
 
   const getAllCasesApi = async () => {
     const searchParams = {
       userId: userData?.fkUserId,
       currentPage: currentPage,
       pageSize: pageSize,
-      fileId: fkfileId?.value,
+      fileId: fkfileId?.value ? fkfileId?.value : location.state?.internalId,
     };
     try {
       const response = await getAllCasesThroughSearchParams(searchParams);
@@ -84,7 +87,7 @@ function FileCases() {
 
         const transferData = transformFilesCases(response?.data?.cases);
         setCasesData(transferData);
-        showSuccessMessage(response?.message);
+        // showSuccessMessage(response?.message);
       }
     } catch (error) {
       console.log(error);
@@ -189,6 +192,7 @@ function FileCases() {
       }
     >
       <ToastContainer />
+      {userData?.userType === "Officer" && (
       <div class="row">
         <div
           className="col-2"
@@ -213,6 +217,7 @@ function FileCases() {
           </button>
         </div>
       </div>
+      )}
 
       <div className="row" style={{ marginBottom: "20px", marginLeft: "3px" }}>
         <div className="col-4">
@@ -307,6 +312,7 @@ function FileCases() {
                 },
               })
             }
+            showEditIcon={true}
             pageSize={pageSize}
             totalCount={count}
             singleDataCard={true}

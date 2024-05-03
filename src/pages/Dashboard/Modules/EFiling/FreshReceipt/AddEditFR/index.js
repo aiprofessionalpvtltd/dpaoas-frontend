@@ -23,6 +23,7 @@ import { ToastContainer } from "react-toastify";
 import { AuthContext } from "../../../../../../api/AuthContext";
 import Select from "react-select";
 import { getUserData } from "../../../../../../api/Auth";
+import { TinyEditor } from "../../../../../../components/CustomComponents/Editor/TinyEditor";
 
 const validationSchema = Yup.object().shape({
   // diaryNumber: Yup.string().required("Diary No is required"),
@@ -40,6 +41,7 @@ const AddEditFR = () => {
   const navigate = useNavigate();
   const [receptId, setRecepitId] = useState(location?.state?.id);
   const [receiptData, setRecepitData] = useState([]);
+  const [descriptionData, setDescriptionData] = useState("");
   const { allBranchesData, ministryData } = useContext(AuthContext);
   const userData = getUserData()
   const formik = useFormik({
@@ -87,7 +89,7 @@ const AddEditFR = () => {
     formdata.append("frSubject", values?.frSubject);
     formdata.append("referenceNumber", values?.referenceNumber);
     formdata.append("frDate", values?.frDate);
-    formdata.append("shortDescription", values?.shortDescription);
+    formdata.append("shortDescription", descriptionData);
     //    formdata.append("freshReceipt", values?.freshReceipt)
     if (values?.freshReceipt) {
       Array.from(values?.freshReceipt).map((file, index) => {
@@ -127,7 +129,7 @@ const AddEditFR = () => {
     formdata.append("frSubject", values?.frSubject);
     formdata.append("referenceNumber", values?.referenceNumber);
     formdata.append("frDate", values?.frDate);
-    formdata.append("shortDescription", values?.shortDescription);
+    formdata.append("shortDescription", descriptionData);
     if (values?.freshReceipt) {
       Array.from(values?.freshReceipt).map((file, index) => {
         formdata.append("freshReceipt", file);
@@ -191,6 +193,7 @@ const AddEditFR = () => {
   }, []);
   useEffect(() => {
     // Update form values when termsById changes
+    setDescriptionData(receiptData?.shortDescription)
     if (receiptData) {
       formik.setValues({
         fkBranchId: receiptData?.branches
@@ -216,7 +219,6 @@ const AddEditFR = () => {
         //   receiptData && receiptData?.freshReceiptDiaries
         //     ? receiptData?.freshReceiptDiaries?.diaryTime
         //     : "",
-        shortDescription: receiptData ? receiptData?.shortDescription : "",
         referenceNumber: receiptData ? receiptData?.referenceNumber : "",
         frDate:
           receiptData && receiptData?.frDate
@@ -505,17 +507,6 @@ const AddEditFR = () => {
                       ))}
                   </div>
                 </div>
-
-                <div className="col-3">
-                  <label className="form-label">Short description</label>
-                  <input
-                    type="text"
-                    id="shortDescription"
-                    value={formik.values.shortDescription}
-                    onChange={formik.handleChange}
-                    className="form-control"
-                  />
-                </div>
                       
                 <div className="col-3">
                   <label htmlFor="referenceNumber" className="form-label">
@@ -576,6 +567,20 @@ const AddEditFR = () => {
                       </div>
                     )}
                   </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-9">
+                  <label className="form-label">F.R Detail</label>
+                  <TinyEditor
+                      initialContent={""}
+                      setEditorContent={(content) =>
+                        setDescriptionData(content)
+                      }
+                      editorContent={descriptionData}
+                      multiLanguage={false}
+                    />
                 </div>
               </div>
 

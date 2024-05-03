@@ -71,7 +71,7 @@ const filteredKeys = keys?.filter((key) => {
   if (key === "internalAttachment" && data.some(obj => Array.isArray(obj[key]))) {
     return false; // Skip filtering if it's an array in any object
   }
-  return key !== "internalAttachment" && key !== "internalId";
+  return key !== "internalAttachment" && key !== "internalId" && key !== "isEditable";
 });
 
   
@@ -385,7 +385,20 @@ const filteredKeys = keys?.filter((key) => {
                                   </button>
                                 </OverlayTrigger>
                               )}
-
+                              {item?.isEditable && (
+                                <OverlayTrigger
+                                  placement="top"
+                                  overlay={editTooltip}
+                                >
+                                  <button
+                                    onClick={() => handleEdit(item)}
+                                    className="btn-xs black circle-btn"
+                                    data-id={item.id}
+                                  >
+                                    <FontAwesomeIcon icon={faEdit} />
+                                  </button>
+                                </OverlayTrigger>
+                              )}
                               {!showEditIcon && !showEditIcon && (
                                 <OverlayTrigger
                                   placement="top"
@@ -534,6 +547,20 @@ const filteredKeys = keys?.filter((key) => {
                         <td className="text-center">
                           {!hideEditIcon && !hideEditIcon && (
                             <>
+                              {item?.isEditable && (
+                                <OverlayTrigger
+                                  placement="top"
+                                  overlay={editTooltip}
+                                >
+                                  <button
+                                    onClick={() => handleEdit(item)}
+                                    className="btn-xs black circle-btn"
+                                    data-id={item.id}
+                                  >
+                                    <FontAwesomeIcon icon={faEdit} />
+                                  </button>
+                                </OverlayTrigger>
+                              )}
                               {!showEditIcon && !showEditIcon && (
                                 <OverlayTrigger
                                   placement="top"

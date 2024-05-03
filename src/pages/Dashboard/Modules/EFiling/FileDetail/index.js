@@ -32,6 +32,7 @@ import {
   assignFIleCase,
   getCaseDetailByID,
   getEFilesByID,
+  getSignatureByUserId,
 } from "../../../../../api/APIs/Services/efiling.service";
 import { ToastContainer } from "react-toastify";
 import {
@@ -318,15 +319,21 @@ function FileDetail() {
       formData.append("submittedBy", UserData?.fkUserId);
       formData.append("assignedTo", modalInputValue?.assignedTo);
       formData.append("CommentStatus", modalInputValue?.CommentStatus);
-      formData.append("comment", modalInputValue?.CommentStatus ? "" : modalInputValue?.comment);
-      formData.append("signature", uplodedSignature);
-  
+      formData.append(
+        "comment",
+        modalInputValue?.CommentStatus ? "" : modalInputValue?.comment
+      );
+      formData.append(
+        "signature",
+        uplodedSignature ? uplodedSignature : uplodedSignaturePreviewUrl
+      );
+
       const response = await assignFIleCase(
         location?.state?.fileId ? location?.state?.fileId : fileIdINRegister,
         location?.state?.id,
         formData
       );
-  
+
       if (response?.success) {
         showSuccessMessage(response?.message);
         toggleModal();
@@ -337,7 +344,7 @@ function FileDetail() {
           CommentStatus: "",
           comment: "",
         });
-  
+
         setTimeout(() => {
           navigate("/efiling/dashboard/file-register-list/files-list/cases");
         }, 1000);
@@ -346,8 +353,11 @@ function FileDetail() {
       showErrorMessage(error?.response?.data?.message);
     }
   };
-  
-  const toggleModal = () => {setIsModalOpen(!isModalOpen); setUplodedSignature(null)};
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+    setUplodedSignaturePreview(null);
+  };
 
   // use it (editorContent) when submitting whole file content
 
@@ -361,6 +371,8 @@ function FileDetail() {
   const [miscStore, setMiscStore] = useState();
   const [uplodedSignature, setUplodedSignature] = useState(null);
   const [uplodedSignaturePreview, setUplodedSignaturePreview] = useState(null);
+  const [uplodedSignaturePreviewUrl, setUplodedSignaturePreviewUrl] =
+    useState(null);
 
   // Function to handle file upload
   const handleFileUpload = (event) => {
@@ -399,6 +411,18 @@ function FileDetail() {
     }
   };
 
+  const getUsersSignatureApi = async () => {
+    try {
+      const response = await getSignatureByUserId(UserData?.fkUserId);
+
+      if (response?.success) {
+        setUplodedSignaturePreviewUrl(`${response?.data?.signature}`);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  };
+
   const hendleRemoveImage = async (id) => {
     try {
       const response = await DeleteFileCaseImage(id);
@@ -419,6 +443,7 @@ function FileDetail() {
   useEffect(() => {
     if (location.state?.id) {
       getFilesByID();
+      getUsersSignatureApi();
     }
   }, []);
 
@@ -675,17 +700,10 @@ function FileDetail() {
                   <option value="" selected>
                     Select
                   </option>
-                  <option value={"Approved"}>Approved</option>
-                  <option value={"Under Discussion"}>Under Discussion</option>
-                  <option value={"Retype/Amend"}>Retype/Amend</option>
-                  <option value={"Rejected"}>Rejected</option>
-                  <option value={"Submit For Approval"}>
-                    Submit For Approval
-                  </option>
-                  <option value={"Seen"}>Seen</option>
-                  <option value={"Pend"}>Pend</option>
-                  <option value={"NFA"}>NFA</option>
-                  <option value={"Approval For Para"}>Approval For Para</option>
+                  <option value={"Put Up For"}>Put Up For</option>
+                  <option value={"Please Link"}>Please Link</option>
+                  <option value={"For Perusal Please"}>For Perusal Please</option>
+                  <option value={"Submitted For Approval"}>Submitted For Approval</option>
                 </select>
               </div>
             </div>
@@ -720,7 +738,7 @@ function FileDetail() {
           <div class="row">
             <div class="col">
               <div class="mb-3">
-                <label class="form-label">Add Special Comments</label>
+                <label class="form-label">Special Comment</label>
                 <textarea
                   class="form-control"
                   id="comment"
@@ -732,6 +750,7 @@ function FileDetail() {
                     }))
                   }
                   value={modalInputValue.comment}
+                  disabled={modalInputValue.CommentStatus ? true : false}
                 ></textarea>
               </div>
             </div>
@@ -739,20 +758,35 @@ function FileDetail() {
 
           <div class="row mb-2">
             <div class="col">
-                <label for="formFile" class="form-label mt-3">
-                  Upload Signature
-                </label>
-                <input class="form-control" type="file" id="formFile" onChange={handleFileUpload} />
-                <div className="clearfix"></div>
-              </div>
+              <label for="formFile" class="form-label mt-3">
+                Upload Signature
+              </label>
+              <input
+                class="form-control"
+                type="file"
+                id="formFile"
+                onChange={handleFileUpload}
+              />
+              <div className="clearfix"></div>
+            </div>
 
             <div class="col">
-              {uplodedSignaturePreview && (
+              {(uplodedSignaturePreviewUrl || uplodedSignaturePreview) && (
+                <>
+              {uplodedSignaturePreview ? (
                 <img
                   src={uplodedSignaturePreview}
                   alt="Uploaded Signature"
                   className="img-fluid"
                 />
+              ) : (
+                <img
+                  src={`http://10.10.140.200:5152${uplodedSignaturePreviewUrl}`}
+                  alt="Signature"
+                  className="img-fluid"
+                />
+              )}
+              </>
               )}
             </div>
           </div>
@@ -2064,26 +2098,44 @@ function FileDetail() {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="row mt-4">
                     <div class="col-8">
-                      <label class="form-label" style={{ display: "block", fontWeight: 'bold' }}>
+                      <label
+                        class="form-label"
+                        style={{ display: "block", fontWeight: "bold" }}
+                      >
                         Signatures
-                      </label>                            
+                      </label>
                     </div>
                   </div>
 
-                  <div className='row'>
-  {filesData?.digitalSignature?.map((item, index) => (
-    <div key={index} style={{ width: '250px', height: '200px', marginRight: '10px' }}>
-      <img
-        src={`http://10.10.140.200:5152${item?.signature}`}
-        alt="Uploaded Signature"
-        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-      />
-    </div>
-  ))}
-</div>
+                  <div className="row" style={{ textAlign: 'center' }}>
+                    {filesData?.digitalSignature?.map((item, index) => (
+                      <div
+                        key={index}
+                        style={{
+                          width: "200px",
+                          height: "200px",
+                          marginRight: "10px",
+                          marginTop: 30,
+                        }}
+                      >
+                        <img
+                          src={`http://10.10.140.200:5152${item?.signature}`}
+                          alt="Uploaded Signature"
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "contain",
+                          }}
+                        />
+                        <span
+                          style={{ fontSize: "14px" }}
+                        >{`${item?.users?.employee?.firstName}  ${item?.users?.employee?.lastName} / ${item?.users?.employee?.designations?.designationName}`}</span>
+                      </div>
+                    ))}
+                  </div>
 
                   {/* <div className="row">
                     <div class="col-6">
@@ -2172,7 +2224,7 @@ function FileDetail() {
                           size="md"
                           width={24}
                         /> */}
-                        Action
+                        Proceed
                       </button>
                     </a>
                   )}
@@ -2182,7 +2234,8 @@ function FileDetail() {
                   {remarksData?.length > 0 ? (
                     remarksData.map((item) => (
                       <>
-                        {item?.CommentStatus !== null || item?.comment !== null ? (
+                        {item?.CommentStatus !== null ||
+                        item?.comment !== null ? (
                           <div
                             class="d-flex flex-row p-3 ps-3"
                             style={{ borderBottom: "1px solid #ddd" }}
@@ -2241,9 +2294,11 @@ function FileDetail() {
                                 </div>
                                 <p
                                   class="text-justify comment-text mb-0"
-                                  style={{ fontSize: "18px" }}
+                                  style={{ fontSize: "18px", color: item?.submittedUser?.employee?.userType === "Officer" ? "green" : item?.submittedUser?.employee?.userType === "Section" ? "blue" : "black" }}
                                 >
-                                  {item?.CommentStatus ? item?.CommentStatus : item?.comment}
+                                  {item?.CommentStatus
+                                    ? item?.CommentStatus
+                                    : item?.comment}
                                 </p>
                                 {/* <small
                                 style={{

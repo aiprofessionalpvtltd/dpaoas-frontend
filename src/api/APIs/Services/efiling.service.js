@@ -879,3 +879,20 @@ export const getAllFRs = async (branchId) => {
     throw error;
   }
 };
+
+export const getSignatureByUserId = async (id) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClientMMS.get(`/cases/getSignatureByUserId/${id}`);
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
