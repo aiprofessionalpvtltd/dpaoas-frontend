@@ -5,12 +5,21 @@ import { useLocation } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import DatePicker from "react-datepicker";
-import Header from "../../../../../../../components/Header";
-import { Layout } from "../../../../../../../components/Layout";
-import { QMSSideBarItems } from "../../../../../../../utils/sideBarItems";
-import { showErrorMessage, showSuccessMessage } from "../../../../../../../utils/ToastAlert";
-import { createMember, getAllPoliticalParties, getAllTenures, getMembersByID, updateMembers } from "../../../../../../../api/APIs/Services/ManageQMS.service";
+import Header from "../../../../../../components/Header";
+import { Layout } from "../../../../../../components/Layout";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../../utils/ToastAlert";
+import {
+  createMember,
+  getAllPoliticalParties,
+  getAllTenures,
+  getMembersByID,
+  updateMembers,
+} from "../../../../../../api/APIs/Services/ManageQMS.service";
 import { ToastContainer } from "react-toastify";
+import { SMSsidebarItems } from "../../../../../../utils/sideBarItems";
 
 const validationSchema = Yup.object({
   memberName: Yup.string().required("Member name is required"),
@@ -21,7 +30,7 @@ const validationSchema = Yup.object({
   gender: Yup.string().required("Gender is required"),
   phoneNo: Yup.string().required("Phone no is required"),
 });
-function QMSMembersAddEditForm() {
+function SMSMembersAddEditForm() {
   const location = useLocation();
 
   const [tenures, setTenures] = useState([]);
@@ -37,7 +46,7 @@ function QMSMembersAddEditForm() {
       electionType: "",
       gender: "",
       isMinister: "",
-      phoneNo: ""
+      phoneNo: "",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -59,8 +68,8 @@ function QMSMembersAddEditForm() {
       electionType: values.electionType,
       gender: values.gender,
       isMinister: Boolean(values.isMinister),
-      phoneNo: values.phoneNo
-    }
+      phoneNo: values.phoneNo,
+    };
 
     try {
       const response = await createMember(data);
@@ -70,7 +79,7 @@ function QMSMembersAddEditForm() {
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
     }
-  }
+  };
 
   const handleEditMembers = async (values) => {
     const data = {
@@ -81,8 +90,8 @@ function QMSMembersAddEditForm() {
       electionType: values.electionType,
       gender: values.gender,
       isMinister: Boolean(values.isMinister),
-      phoneNo: values.phoneNo
-    }
+      phoneNo: values.phoneNo,
+    };
 
     try {
       const response = await updateMembers(location?.state?.id, data);
@@ -92,7 +101,7 @@ function QMSMembersAddEditForm() {
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
     }
-  }
+  };
 
   const handleTenures = async () => {
     try {
@@ -103,7 +112,7 @@ function QMSMembersAddEditForm() {
     } catch (error) {
       console.log(error?.response?.data?.message);
     }
-  }
+  };
 
   const getMemberByIdApi = async () => {
     try {
@@ -116,8 +125,8 @@ function QMSMembersAddEditForm() {
     }
   };
 
-   //Get Political Party
-   const AllPoliticalPartiesList =async () => {
+  //Get Political Party
+  const AllPoliticalPartiesList =async () => {
     try {
       const response = await getAllPoliticalParties(0, 100);
       if (response?.success) {
@@ -132,14 +141,13 @@ function QMSMembersAddEditForm() {
     }
   }
 
-
   useEffect(() => {
     handleTenures();
     AllPoliticalPartiesList()
     if (location.state?.id) {
       getMemberByIdApi();
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     // Update form values when termsById changes
@@ -158,16 +166,12 @@ function QMSMembersAddEditForm() {
   }, [memberById, formik.setValues]);
 
   return (
-    <Layout
-      module={true}
-      sidebarItems={QMSSideBarItems}
-      centerlogohide={true}
-    >
+    <Layout module={true} sidebarItems={SMSsidebarItems} centerlogohide={true}>
       <Header
-        dashboardLink={"/qms/dashboard"}
-        addLink1={"/qms/manage/members"}
+        dashboardLink={"/sms/dashboard"}
+        addLink1={"/sms/members/list"}
         title1={"Members"}
-        addLink2={"/qms/manage/members/addedit"}
+        addLink2={"/sms/members/addedit"}
         title2={location && location?.state ? "Edit Members" : "Add Members"}
       />
       <ToastContainer />
@@ -210,111 +214,124 @@ function QMSMembersAddEditForm() {
                     </div>
                   </div>
                   <div class="col-6">
-                      <div class="mb-3">
-                        <label class="form-label">Member Tenure</label>
-                        <select class="form-select"
-                          id="memberTenure"
-                          name="memberTenure"
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          value={formik.values.memberTenure}
-                        >
-                          <option value={""} selected disabled hidden>
-                            Select
-                          </option>
-                            {tenures.length > 0 && tenures.map((tenure) => (
-                              <option value={tenure?.id}>{tenure?.tenureName}</option>
-                            ))}
-                        </select>
-                      </div>
+                    <div class="mb-3">
+                      <label class="form-label">Member Tenure</label>
+                      <select
+                        class="form-select"
+                        id="memberTenure"
+                        name="memberTenure"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.memberTenure}
+                      >
+                        <option value={""} selected disabled hidden>
+                          Select
+                        </option>
+                        {tenures.length > 0 &&
+                          tenures.map((tenure) => (
+                            <option value={tenure?.id}>
+                              {tenure?.tenureName}
+                            </option>
+                          ))}
+                      </select>
                     </div>
+                  </div>
                 </div>
-                
+
                 <div class="row">
                   <div class="col-6">
-                      <div class="mb-3">
-                        <label class="form-label">Member Status</label>
-                        <select class="form-select"
-                          id="memberStatus"
-                          name="memberStatus"
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          value={formik.values.memberStatus}
-                        >
-                          <option value={""} selected disabled hidden>
-                            Select
-                          </option>
-                            <option value="Active">Active</option>
-                            <option value="Active/Oath Not Administered">Active/Oath Not Administered</option>
-                            <option value="Deceased">Deceased</option>
-                            <option value="Disqualified">Disqualified</option>
-                            <option value="Resigned">Resigned</option>
-                            <option value="Retired">Retired</option>
-                            <option value="Tenure Completed">Tenure Completed</option>
-                        </select>
-                      </div>
+                    <div class="mb-3">
+                      <label class="form-label">Member Status</label>
+                      <select
+                        class="form-select"
+                        id="memberStatus"
+                        name="memberStatus"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.memberStatus}
+                      >
+                        <option value={""} selected disabled hidden>
+                          Select
+                        </option>
+                        <option value="Active">Active</option>
+                        <option value="Active/Oath Not Administered">
+                          Active/Oath Not Administered
+                        </option>
+                        <option value="Deceased">Deceased</option>
+                        <option value="Disqualified">Disqualified</option>
+                        <option value="Resigned">Resigned</option>
+                        <option value="Retired">Retired</option>
+                        <option value="Tenure Completed">
+                          Tenure Completed
+                        </option>
+                      </select>
                     </div>
+                  </div>
 
-                    <div class="col-6">
-                      <div class="mb-3">
-                        <label class="form-label">Political Party</label>
-                        <select class="form-select"
-                          id="politicalParty"
-                          name="politicalParty"
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          value={formik.values.politicalParty}
-                        >
-                          <option value={""} selected disabled hidden>
-                            Select
-                          </option>
-                          {allparties && allparties.map((item) => (
+                  <div class="col-6">
+                    <div class="mb-3">
+                      <label class="form-label">Political Party</label>
+                      <select
+                        class="form-select"
+                        id="politicalParty"
+                        name="politicalParty"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.politicalParty}
+                      >
+                        <option value={""} selected disabled hidden>
+                          Select
+                        </option>
+                        {allparties && allparties.map((item) => (
                            <option value={item.id}>{item.shortName}</option>
                         ))}
-                        </select>
-                      </div>
+                      </select>
                     </div>
+                  </div>
                 </div>
 
                 <div class="row">
-
-                <div class="col-6">
-                      <div class="mb-3">
-                        <label class="form-label">Election Type</label>
-                        <select class="form-select"
-                          id="electionType"
-                          name="electionType"
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          value={formik.values.electionType}
-                        >
-                          <option value={""} selected disabled hidden>
-                            Select
-                          </option>
-                            <option value="Bye Election">Bye Election</option>
-                            <option value="Scheduled Election">Scheduled Election</option>
-                        </select>
-                      </div>
+                  <div class="col-6">
+                    <div class="mb-3">
+                      <label class="form-label">Election Type</label>
+                      <select
+                        class="form-select"
+                        id="electionType"
+                        name="electionType"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.electionType}
+                      >
+                        <option value={""} selected disabled hidden>
+                          Select
+                        </option>
+                        <option value="Bye Election">Bye Election</option>
+                        <option value="Scheduled Election">
+                          Scheduled Election
+                        </option>
+                      </select>
                     </div>
+                  </div>
 
-                    <div class="col-6">
-                      <div class="mb-3">
-                        <label class="form-label">Gender</label>
-                        <select class="form-select"
-                          id="gender"
-                          name="gender"
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          value={formik.values.gender}
-                        >
-                          <option value={""} selected disabled hidden>
-                            select
-                          </option>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                        </select>
-                      </div>
+                  <div class="col-6">
+                    <div class="mb-3">
+                      <label class="form-label">Gender</label>
+                      <select
+                        class="form-select"
+                        id="gender"
+                        name="gender"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.gender}
+                      >
+                        <option value={""} selected disabled hidden>
+                          select
+                        </option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                      </select>
                     </div>
+                  </div>
                 </div>
 
                 <div class="row">
@@ -334,45 +351,43 @@ function QMSMembersAddEditForm() {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
-                      {formik.touched.phoneNo &&
-                        formik.errors.phoneNo && (
-                          <div className="invalid-feedback">
-                            {formik.errors.phoneNo}
-                          </div>
-                        )}
+                      {formik.touched.phoneNo && formik.errors.phoneNo && (
+                        <div className="invalid-feedback">
+                          {formik.errors.phoneNo}
+                        </div>
+                      )}
                     </div>
                   </div>
 
                   <div class="col-6" style={{ marginTop: "40px" }}>
-                      <div class="form-check">
-                        <input
-                          class={`form-check-input ${
-                            formik.touched.isMinister &&
-                            formik.errors.isMinister
-                              ? "is-invalid"
-                              : ""
-                          }`}
-                          type="checkbox"
-                          id="flexCheckDefault"
-                          checked={formik.values.isMinister}
-                          onChange={() =>
-                            formik.setFieldValue(
-                              "isMinister",
-                              !formik.values.isMinister,
-                            )
-                          }
-                        />
-                        <label class="form-check-label" for="flexCheckDefault">
-                          Is Minister
-                        </label>
-                        {formik.touched.isMinister &&
-                          formik.errors.isMinister && (
-                            <div className="invalid-feedback">
-                              {formik.errors.isMinister}
-                            </div>
-                          )}
-                      </div>
+                    <div class="form-check">
+                      <input
+                        class={`form-check-input ${
+                          formik.touched.isMinister && formik.errors.isMinister
+                            ? "is-invalid"
+                            : ""
+                        }`}
+                        type="checkbox"
+                        id="flexCheckDefault"
+                        checked={formik.values.isMinister}
+                        onChange={() =>
+                          formik.setFieldValue(
+                            "isMinister",
+                            !formik.values.isMinister
+                          )
+                        }
+                      />
+                      <label class="form-check-label" for="flexCheckDefault">
+                        Is Minister
+                      </label>
+                      {formik.touched.isMinister &&
+                        formik.errors.isMinister && (
+                          <div className="invalid-feedback">
+                            {formik.errors.isMinister}
+                          </div>
+                        )}
                     </div>
+                  </div>
                 </div>
 
                 <div class="row">
@@ -391,4 +406,4 @@ function QMSMembersAddEditForm() {
   );
 }
 
-export default QMSMembersAddEditForm;
+export default SMSMembersAddEditForm;

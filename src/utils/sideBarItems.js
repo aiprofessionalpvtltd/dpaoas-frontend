@@ -133,28 +133,28 @@ export const NoticeSidebarItems = [
       },
     ],
   },
-  // {
-  //   itemName: "Resolution",
-  //   link: "/notice/resolution",
-  //   icon: faClipboardList,
-  //   subItems: [
-  //     {
-  //       itemName: "New Resolution",
-  //       link: "/notice/resolution/new",
-  //       icon: faClipboardList,
-  //     },
-  //     {
-  //       itemName: "Search Resolution",
-  //       link: "/notice/resolution/search",
-  //       icon: faClipboardList,
-  //     },
-  //     {
-  //       itemName: "List Resolution",
-  //       link: "/notice/resolution/sent",
-  //       icon: faClipboardList,
-  //     },
-  //   ],
-  // },
+  {
+    itemName: "Resolution",
+    link: "/notice/resolution",
+    icon: faClipboardList,
+    subItems: [
+      {
+        itemName: "New Resolution",
+        link: "/notice/resolution/new",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Search Resolution",
+        link: "/notice/resolution/search",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "List Resolution",
+        link: "/notice/resolution/sent",
+        icon: faClipboardList,
+      },
+    ],
+  },
   {
     itemName: "Legislation Business",
     link: "/notice/legislation",
@@ -652,6 +652,19 @@ export const SMSsidebarItems = [
       },
     ],
   },
+  {
+    itemName: "Members",
+    link: "/sms/members",
+    icon: faClipboardList,
+    subItems: [
+      {
+        itemName: "Members List",
+        link: "/sms/members/list",
+        icon: faClipboardList,
+      },
+    ],
+  },
+  
 ];
 
 // TMS Sidebar

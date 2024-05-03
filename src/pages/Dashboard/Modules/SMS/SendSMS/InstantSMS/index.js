@@ -1,22 +1,31 @@
-import React, { useEffect, useState } from 'react'
-import { Layout } from '../../../../../../components/Layout'
-import { SMSsidebarItems } from '../../../../../../utils/sideBarItems'
-import Header from '../../../../../../components/Header'
-import { createSendSMS, getContactList, getContactTemplate, getSignalContactListByid, getSignalContactTemplateByid } from '../../../../../../api/APIs/Services/SMS.service';
-import { showErrorMessage, showSuccessMessage } from '../../../../../../utils/ToastAlert';
-import { ToastContainer } from 'react-toastify';
-import { getUserData } from '../../../../../../api/Auth';
+import React, { useEffect, useState } from "react";
+import { Layout } from "../../../../../../components/Layout";
+import { SMSsidebarItems } from "../../../../../../utils/sideBarItems";
+import Header from "../../../../../../components/Header";
+import {
+  createSendSMS,
+  getContactList,
+  getContactTemplate,
+  getSignalContactListByid,
+  getSignalContactTemplateByid,
+} from "../../../../../../api/APIs/Services/SMS.service";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../../utils/ToastAlert";
+import { ToastContainer } from "react-toastify";
+import { getUserData } from "../../../../../../api/Auth";
 import { TagsInput } from "react-tag-input-component";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
 
 function SMSInstantSMS() {
   const userData = getUserData();
-  const [contactList, setContactList] = useState([])
-  const [templateList, settemplateList] = useState([])
-  const [templateId, settemplateId] = useState(null)
+  const [contactList, setContactList] = useState([]);
+  const [templateList, settemplateList] = useState([]);
+  const [templateId, settemplateId] = useState(null);
   const [textareaInput, setTextareaInput] = useState(null);
-  const [groupData, setGroupData] = useState([])
+  const [groupData, setGroupData] = useState([]);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [numbers, setNumbers] = useState([]);
 
@@ -40,13 +49,13 @@ function SMSInstantSMS() {
       RecieverNo: numbers,
       fkUserId: userData?.fkUserId,
       // fkListId: JSON.parse(selectedTemplate),
-      isSent: "pending"
+      isSent: "pending",
     };
     try {
       const response = await createSendSMS(data);
       if (response.success) {
         showSuccessMessage(response.message);
-        handleReset()
+        handleReset();
       }
     } catch (error) {
       showErrorMessage(error.response.data.message);
@@ -58,75 +67,79 @@ function SMSInstantSMS() {
   };
 
   const getListDataAPi = async () => {
-    const currentPage = 0
-    const pageSize = 100
+    const currentPage = 0;
+    const pageSize = 100;
     try {
-      const response = await getContactList(currentPage, pageSize)
+      const response = await getContactList(currentPage, pageSize);
       if (response?.success) {
-        const filterpublicList = response?.data?.contactList.filter(item => item.isPublicList === true)
+        const filterpublicList = response?.data?.contactList.filter(
+          (item) => item.isPublicList === true
+        );
         setContactList(filterpublicList);
       }
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   const getTemplateData = async () => {
-    const currentPage = 0
-    const pageSize = 100
+    const currentPage = 0;
+    const pageSize = 100;
     try {
       const response = await getContactTemplate(currentPage, pageSize);
       if (response?.success) {
-        settemplateList(response?.data?.contactTemplate)
+        settemplateList(response?.data?.contactTemplate);
       }
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   const HandleSignalTemplateData = async (event) => {
     const selectedValue = event.target.value;
-    settemplateId(selectedValue)
+    settemplateId(selectedValue);
     try {
-      const response = await getSignalContactTemplateByid(event.target.value)
+      const response = await getSignalContactTemplateByid(event.target.value);
       if (response?.success) {
         console.log("saquib;k", response?.data?.msgText);
-        setTextareaInput(response?.data[0]?.msgText)
+        setTextareaInput(response?.data[0]?.msgText);
       }
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   const transfrerListData = (apiData) => {
     return apiData.map((leave, index) => ({
       memberName: leave?.member?.memberName,
       phoneNo: leave?.member?.phoneNo,
-      gender: leave?.member?.gender,
+      // gender: leave?.member?.gender,
     }));
   };
   const HandleSignalListData = async (e) => {
     try {
-      const response = await getSignalContactListByid(e.target.value)
+      const response = await getSignalContactListByid(e.target.value);
       if (response?.success) {
-        const transformedData = transfrerListData(response?.data[0]?.contactMembers);
+        const transformedData = transfrerListData(
+          response?.data[0]?.contactMembers
+        );
         console.log("my signel DAta", response?.data[0]?.contactMembers);
-        setGroupData(transformedData)
+        setGroupData(transformedData);
       }
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   const handleReset = () => {
-    setNumbers([])
-    setTextareaInput(null)
-    settemplateId(null)
+    setNumbers([]);
+    setTextareaInput(null);
+    settemplateId(null);
   };
 
   useEffect(() => {
-    getTemplateData()
-    getListDataAPi()
+    getTemplateData();
+    getListDataAPi();
   }, []);
 
   return (
@@ -136,7 +149,6 @@ function SMSInstantSMS() {
         dashboardLink={"/sms/dashboard"}
         title1={"Instant SMS"}
         addLink1={"/sms/send-sms/instant"}
-
       />
       <ToastContainer />
       <div className="container-fluid">
@@ -150,10 +162,12 @@ function SMSInstantSMS() {
                 <div class="col">
                   <div class="mb-3">
                     <label class="form-label">Message Template</label>
-                    <select class="form-select"
+                    <select
+                      class="form-select"
                       id="employeeName"
                       value={templateId}
-                      onChange={HandleSignalTemplateData}>
+                      onChange={HandleSignalTemplateData}
+                    >
                       <option value={""} selected disabled hidden>
                         Select
                       </option>
@@ -199,9 +213,13 @@ function SMSInstantSMS() {
                     <label for="" class="form-label">
                       Contact List
                     </label>
-                    <select class="form-select " placeholder="Contact List" id="templateSelect"
+                    <select
+                      class="form-select "
+                      placeholder="Contact List"
+                      id="templateSelect"
                       value={selectedTemplate}
-                      onChange={HandleSignalListData}>
+                      onChange={HandleSignalListData}
+                    >
                       <option value={""} selected disabled hidden>
                         Select
                       </option>
@@ -216,13 +234,15 @@ function SMSInstantSMS() {
                 </div>
               </div>
               <div className="d-grid gap-2 d-md-flex justify-content-md-end">
-                <button className="btn btn-primary" type="submit" onClick={() => HendleSendSms()}>
+                <button
+                  className="btn btn-primary"
+                  type="submit"
+                  onClick={() => HendleSendSms()}
+                >
                   Send
                 </button>
               </div>
-              <div class="dash-detail-container"
-                style={{ marginTop: "20px" }}
-              >
+              <div class="dash-detail-container" style={{ marginTop: "20px" }}>
                 <table class="table red-bg-head th">
                   <thead>
                     <tr>
@@ -232,9 +252,9 @@ function SMSInstantSMS() {
                       <th class="text-center" scope="col">
                         Phone No
                       </th>
-                      <th class="text-center" scope="col">
+                      {/* <th class="text-center" scope="col">
                         Gender
-                      </th>
+                      </th> */}
                     </tr>
                   </thead>
                   <tbody>
@@ -245,14 +265,19 @@ function SMSInstantSMS() {
                           <td
                             className="text-center"
                             onClick={() => handlePhoneNumberClick(item.phoneNo)}
-                            style={{ cursor: 'pointer' }}
+                            style={{ cursor: "pointer" }}
                           >
-                            {item.phoneNo}
-                            {' '}
+                            {item.phoneNo}{" "}
                             {numbers.includes(item.phoneNo) ? (
-                              <FontAwesomeIcon icon={faCheck} style={{ color: 'green', marginLeft: '5px' }} />
+                              <FontAwesomeIcon
+                                icon={faCheck}
+                                style={{ color: "green", marginLeft: "5px" }}
+                              />
                             ) : (
-                              <FontAwesomeIcon icon={faTimes} style={{ color: 'red', marginLeft: '5px' }} />
+                              <FontAwesomeIcon
+                                icon={faTimes}
+                                style={{ color: "red", marginLeft: "5px" }}
+                              />
                             )}
                           </td>
                           <td className="text-center">{item.gender}</td>
@@ -266,10 +291,7 @@ function SMSInstantSMS() {
         </div>
       </div>
     </Layout>
-  )
+  );
 }
 
-export default SMSInstantSMS
-
-
-
+export default SMSInstantSMS;
