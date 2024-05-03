@@ -54,7 +54,7 @@ function EditMotion() {
   const [showModal, setShowModal] = useState(false);
   const [formValues, setFormValues] = useState([]);
   const [motionStatusData, setMotionStatusData] = useState([]);
-  console.log("Dat", motionStatusData);
+
   // const sessionId = sessions && sessions.map((item) => item?.id);
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
@@ -87,12 +87,7 @@ function EditMotion() {
       hour12: true,
     });
   };
-  console.log(
-    "location",
-    location?.state?.motionStatusHistories.map(
-      (item) => item?.motionStatuses?.statusName
-    )
-  );
+  console.log("status", location?.state?.motionStatuses);
   const formik = useFormik({
     initialValues: {
       sessionNumber: location.state
@@ -131,13 +126,12 @@ function EditMotion() {
         : "",
       englishText: location.state ? location.state?.englishText : "",
       urduText: location.state ? location?.state?.urduText : "",
-      motionStatus:
-        location?.state && location?.state?.motionStatusHistories
-          ? location?.state?.motionStatusHistories.map((item) => ({
-              value: item?.motionStatuses?.id,
-              label: item?.motionStatuses?.statusName,
-            }))
-          : [],
+      motionStatus: location?.state?.motionStatuses
+        ? {
+            value: location?.state?.motionStatuses?.id,
+            label: location?.state?.motionStatuses?.statusName,
+          }
+        : "",
 
       attachment: null,
     },
@@ -174,6 +168,7 @@ function EditMotion() {
     formData.append("englishText", values.englishText);
     formData.append("urduText", values.urduText);
     formData.append("motionSentStatus", "fromNotice");
+    // formData.append("fkMotionStatus", values?.motionStatus?.value);
     formData.append("fkMotionStatus", values?.motionStatus?.value);
     if (values?.file) {
       Array.from(values?.file).map((file, index) => {

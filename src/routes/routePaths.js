@@ -164,6 +164,10 @@ import RotaListFurtherDetails from "../pages/Dashboard/Modules/QMS/Reports/RotaL
 import MainDashBoard from "../pages/Dashboard/Modules/EFiling/MainDashBoard";
 import EventCalendar from "../pages/Dashboard/Modules/Notice/EventCalendar";
 import AddEditEventCalendar from "../pages/Dashboard/Modules/Notice/EventCalendar/AddEditEventCalendar";
+import ExternalBranchFR from "../pages/Dashboard/Modules/EFiling/FreshReceipt/ExternalBranchFR";
+import AddEditExternalBranchFR from "../pages/Dashboard/Modules/EFiling/FreshReceipt/ExternalBranchFR/AddEditExternalBranchFr";
+import UpdatedDashboard from "../pages/Dashboard/Modules/EFiling/updatedDashboard";
+import MainDashboard from "../pages/Dashboard/Modules/EFiling/MainDashBoard";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -533,7 +537,8 @@ export const ProtectedRoutes = [
 
   // E-Filing
   // { path: "/efiling/dashboard", element: <DirectorDashboard /> },
-  { path: "/efiling/dashboard", element: <MainDashBoard /> },
+  { path: "/efiling/dashboard", element: <MainDashboard /> },
+  // { path: "/efiling/dashboard", element: <UpdatedDashboard /> },
   { path: "/efiling/director-dashboard", element: <EFilingDashboard /> },
 
   { path: "/efiling/dashboard/fileDetail", element: <FileDetail /> },
@@ -578,12 +583,20 @@ export const ProtectedRoutes = [
     element: <FreshReceipt />,
   },
   {
+    path: "/efiling/dashboard/external/fresh-receipt",
+    element: <ExternalBranchFR />,
+  },
+  {
     path: "/efiling/dashboard/fresh-receipt/history",
     element: <PreviousFRsHistory />,
   },
   {
     path: "/efiling/dashboard/fresh-receipt/addedit",
     element: <AddEditFR />,
+  },
+  {
+    path: "/efiling/dashboard/external/branch/fresh-receipt/addedit",
+    element: <AddEditExternalBranchFR />,
   },
   {
     path: "/efiling/dashboard/fresh-receipt/frdetail",

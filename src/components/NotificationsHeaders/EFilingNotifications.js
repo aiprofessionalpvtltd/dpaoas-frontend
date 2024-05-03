@@ -61,7 +61,11 @@ export const EFilingNotifications = (notificationType) => {
         padding: "20px",
         borderRadius: "8px",
         width: "380px", // Adjust the width as needed
-        zIndex: 999, // Ensure it's above other elements
+        zIndex: 999,
+        height: "75vh",
+        overflow: "hidden",
+        overflowY: "auto",
+        overflowX: "hidden",
       }}
     >
       {notificationData.length > 0 ? (
@@ -69,11 +73,16 @@ export const EFilingNotifications = (notificationType) => {
           <ListGroup.Item
             key={index}
             className={notificationData.length === 1 ? "" : "border-bottom"}
+            style={{ padding: "10px 0px" }}
           >
             {item?.frId ? (
               <Link
                 to={"/efiling/dashboard/fresh-receipt/frdetail"}
-                state={{ view: false, id: item.frId, notificationId: item.notificationId }}
+                state={{
+                  view: false,
+                  id: item.frId,
+                  notificationId: item.notificationId,
+                }}
                 style={{ color: "black" }}
                 className="link"
               >
@@ -91,7 +100,12 @@ export const EFilingNotifications = (notificationType) => {
             ) : (
               <Link
                 to={"/efiling/dashboard/fileDetail"}
-                state={{ view: false, fileId: item?.fileId, id: item?.caseId, notificationId: item?.notificationId }}
+                state={{
+                  view: false,
+                  fileId: item?.fileId,
+                  id: item?.caseId,
+                  notificationId: item?.notificationId,
+                }}
                 style={{ color: "black" }}
                 className="link"
               >
