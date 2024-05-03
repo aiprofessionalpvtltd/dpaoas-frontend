@@ -164,6 +164,8 @@ import RotaListFurtherDetails from "../pages/Dashboard/Modules/QMS/Reports/RotaL
 import MainDashBoard from "../pages/Dashboard/Modules/EFiling/MainDashBoard";
 import EventCalendar from "../pages/Dashboard/Modules/Notice/EventCalendar";
 import AddEditEventCalendar from "../pages/Dashboard/Modules/Notice/EventCalendar/AddEditEventCalendar";
+import SMSMembers from "../pages/Dashboard/Modules/SMS/Members";
+import SMSMembersAddEditForm from "../pages/Dashboard/Modules/SMS/Members/AddEditMembers";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -483,6 +485,10 @@ export const ProtectedRoutes = [
   { path: "/sms/messagelog", element: <SMSDashboard /> },
   { path: "/sms/messagelog/summary", element: <SMSMessageSummary /> },
   { path: "/sms/messagelog/detailed", element: <SMSDetailedMessageLog /> },
+
+  { path: "/sms/members", element: <SMSDashboard /> },
+  { path: "/sms/members/list", element: <SMSMembers /> },
+  { path: "/sms/members/addedit", element: <SMSMembersAddEditForm /> },
 
   //CMS Module routes
   { path: "/cms/dashboard", element: <CMSUserDashboard /> },
