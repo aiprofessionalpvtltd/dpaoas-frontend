@@ -18,7 +18,7 @@ function CMSVendorList() {
   const [count, setCount] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [vendorData, setVendorData] = useState([]);
-  const pageSize = 4; // Set your desired page size
+  const pageSize = 5; // Set your desired page size
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
@@ -80,7 +80,7 @@ function CMSVendorList() {
     () => {
       getAllVendorList();
     },
-    { getAllVendorList }
+    [getAllVendorList]
   );
   return (
     <Layout module={true} sidebarItems={CMSsidebarItems} centerlogohide={true}>

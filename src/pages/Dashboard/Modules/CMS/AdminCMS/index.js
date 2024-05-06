@@ -680,6 +680,7 @@ function CMSAdminDashboard() {
                   data={complaintData}
                   tableTitle="Admin Complaint"
                   hideBtn={true}
+                  hidebtn1={true}
                   hendleResolve={(item) => HendleEdit(item.id)}
                   handlePageChange={handlePageChange}
                   currentPage={currentPage}

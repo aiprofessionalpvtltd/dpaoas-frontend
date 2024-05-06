@@ -35,8 +35,8 @@ function FileHeadingList() {
     console.log(apiData);
     return apiData.map((item) => ({
       internalId: item?.id,
-      HeadingNumber: item?.mainHeadingNumber,
-      Heading: item?.mainHeading,
+      HeadNumber: item?.mainHeadingNumber,
+      mainHead: item?.mainHeading,
       branch: item?.branches?.branchName,
       status: item?.status,
     }));
@@ -93,7 +93,7 @@ function FileHeadingList() {
           <CustomTable
             // hidebtn1={true}
             hideBtn={false}
-            addBtnText={"Create File Heading"}
+            addBtnText={"Create File Head"}
             data={headingData}
             tableTitle="File Headings"
             headertitlebgColor={"#666"}

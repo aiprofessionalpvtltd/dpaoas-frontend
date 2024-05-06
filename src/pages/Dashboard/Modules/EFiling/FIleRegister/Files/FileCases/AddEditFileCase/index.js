@@ -546,10 +546,10 @@ function AddEditFileCase() {
                 width: "30%", // Set width to 50%
               }}
             >
-              <label class="form-label mt-3">Heading Number</label>
+              <label class="form-label mt-3">Head Number</label>
               <select
                 class="form-select"
-                placeholder={"Select Heading Number"}
+                placeholder={"Select Head Number"}
                 onChange={(event) => hendleRegisterSelect(event.target.value)}
                 id="headings"
               >

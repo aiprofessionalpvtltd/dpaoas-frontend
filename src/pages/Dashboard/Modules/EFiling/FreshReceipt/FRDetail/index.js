@@ -27,6 +27,7 @@ import {
   EfilingSideBarItem,
 } from "../../../../../../utils/sideBarItems";
 import { Button, Modal } from "react-bootstrap";
+import { TinyEditor } from "../../../../../../components/CustomComponents/Editor/TinyEditor";
 
 const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
   return (
@@ -46,6 +47,7 @@ function FRDetail() {
   const UserData = getUserData();
   const [filesData, setFilesData] = useState(null);
   const [viewPage, setViewPage] = useState(location?.state?.view);
+  const [descriptionData, setDescriptionData] = useState("");
 
   const [receptId, setreceptId] = useState(location?.state?.id);
 
@@ -92,6 +94,7 @@ function FRDetail() {
       const response = await getFreshReceiptById(receptId);
       if (response.success) {
         setRemarksData(response?.data?.freshReceipt);
+        setDescriptionData(response?.data?.shortDescription)
         setAttachments(response?.data?.freshReceiptsAttachments);
         // showSuccessMessage(response.message);
       }
@@ -191,8 +194,8 @@ function FRDetail() {
 
   const images =
     attachments?.map((item) => ({
-      original: `http://172.16.170.8:5252${item?.filename}`,
-      thumbnail: `http://172.16.170.8:5252${item?.filename}`,
+      original: `http://10.10.140.200:5152${item?.filename}`,
+      thumbnail: `http://10.10.140.200:5152${item?.filename}`,
     })) || [];
 
   // const images = [
@@ -240,7 +243,7 @@ function FRDetail() {
         <div class="row">
           <div class="col">
             <div class="mb-3">
-              <label class="form-label">Action</label>
+              <label class="form-label">Predefined Comments</label>
               <select
                 className="form-select"
                 id="CommentStatus"
@@ -257,13 +260,10 @@ function FRDetail() {
                 <option value="" selected disabled hidden>
                   Select
                 </option>
-                <option value={"Received"}>Received</option>
-                <option value={"Put Up"}>Put Up</option>
-                <option value={"Initiated"}>Initiated</option>
-                <option value={"Retype/Amend"}>Retype/Amend</option>
-                <option value={"Submit For Approval"}>
-                  Submit For Approval
-                </option>
+                  <option value={"Put Up For"}>Put Up For</option>
+                  <option value={"Please Link"}>Please Link</option>
+                  <option value={"For Perusal Please"}>For Perusal Please</option>
+                  <option value={"Submitted For Approval"}>Submitted For Approval</option>
               </select>
             </div>
           </div>
@@ -298,7 +298,7 @@ function FRDetail() {
         <div class="row">
           <div class="col">
             <div class="mb-3">
-              <label class="form-label">Add Comments</label>
+              <label class="form-label">Special Comment</label>
               <textarea
                 class="form-control"
                 id="comment"
@@ -310,6 +310,7 @@ function FRDetail() {
                   }))
                 }
                 value={modalInputValue.comment}
+                disabled={modalInputValue.CommentStatus ? true : false}
               ></textarea>
             </div>
           </div>
@@ -344,8 +345,9 @@ function FRDetail() {
       </EFilingModal>
 
       <div className="custom-editor">
+
         <div className="row">
-          <div className="col-md-9">
+          <div className="col-7">
             <section>
               <ImageGallery
                 style={{ maxHeight: "calc(100vh 0px)" }}
@@ -367,9 +369,20 @@ function FRDetail() {
                 )}
               />
             </section>
+
+            <label className="form-label mt-4">F.R Detail</label>
+                  <TinyEditor
+                      initialContent={""}
+                      setEditorContent={(content) =>
+                        setDescriptionData(content)
+                      }
+                      editorContent={descriptionData}
+                      multiLanguage={false}
+                      disabled={true}
+                    />
           </div>
 
-          <div className="col-md-3" style={{ paddingRight: 0 }}>
+          <div className="col-5" style={{ paddingRight: 0 }}>
             <div
               className="custom-editor-main"
               style={{ marginTop: 0, borderLeft: "1px solid #ddd" }}
@@ -399,7 +412,8 @@ function FRDetail() {
                 {remarksData?.length > 0 ? (
                   remarksData.map((item) => (
                     <>
-                      {item?.comment !== null ? (
+                    {item?.CommentStatus !== null ||
+                        item?.comment !== null ? (
                         <div
                           class="d-flex flex-row p-3 ps-3"
                           style={{ borderBottom: "1px solid #ddd" }}
@@ -453,9 +467,11 @@ function FRDetail() {
                               </div>
                               <p
                                 class="text-justify comment-text mb-0"
-                                style={{ fontSize: "18px" }}
+                                style={{ fontSize: "18px", color: item?.submittedUser?.employee?.userType === "Officer" ? "green" : item?.submittedUser?.employee?.userType === "Section" ? "blue" : "black" }}
                               >
-                                {item?.comment}
+                                {item?.CommentStatus
+                                    ? item?.CommentStatus
+                                    : item?.comment}
                               </p>
                               {/* <small
                                 style={{

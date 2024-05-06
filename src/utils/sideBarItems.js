@@ -133,28 +133,28 @@ export const NoticeSidebarItems = [
       },
     ],
   },
-  // {
-  //   itemName: "Resolution",
-  //   link: "/notice/resolution",
-  //   icon: faClipboardList,
-  //   subItems: [
-  //     {
-  //       itemName: "New Resolution",
-  //       link: "/notice/resolution/new",
-  //       icon: faClipboardList,
-  //     },
-  //     {
-  //       itemName: "Search Resolution",
-  //       link: "/notice/resolution/search",
-  //       icon: faClipboardList,
-  //     },
-  //     {
-  //       itemName: "List Resolution",
-  //       link: "/notice/resolution/sent",
-  //       icon: faClipboardList,
-  //     },
-  //   ],
-  // },
+  {
+    itemName: "Resolution",
+    link: "/notice/resolution",
+    icon: faClipboardList,
+    subItems: [
+      {
+        itemName: "New Resolution",
+        link: "/notice/resolution/new",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Search Resolution",
+        link: "/notice/resolution/search",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "List Resolution",
+        link: "/notice/resolution/sent",
+        icon: faClipboardList,
+      },
+    ],
+  },
   {
     itemName: "Legislation Business",
     link: "/notice/legislation",
@@ -654,6 +654,19 @@ export const SMSsidebarItems = [
       },
     ],
   },
+  {
+    itemName: "Members",
+    link: "/sms/members",
+    icon: faClipboardList,
+    subItems: [
+      {
+        itemName: "Members List",
+        link: "/sms/members/list",
+        icon: faClipboardList,
+      },
+    ],
+  },
+  
 ];
 
 // TMS Sidebar
@@ -1039,12 +1052,12 @@ export const EfilingSideBarBranchItem = [
     icon: faClipboardList,
     subItems: [
       {
-        itemName: "Create Files",
+        itemName: "Create File",
         link: "/efiling/dashboard/file-register-list/files-list/addedit-file",
         icon: faClipboardList,
       },
       {
-        itemName: "File List",
+        itemName: "Files List",
         link: "/efiling/dashboard/file-register-list/files-list",
         icon: faClipboardList,
       },
@@ -1077,7 +1090,7 @@ export const EfilingSideBarBranchItem = [
       //   icon: faReceipt,
       // },
       {
-        itemName: "Create Cases",
+        itemName: "Create Case",
         link: "/efiling/dashboard/file-register-list/files-list/addedit-case",
         icon: faClipboardList,
       },

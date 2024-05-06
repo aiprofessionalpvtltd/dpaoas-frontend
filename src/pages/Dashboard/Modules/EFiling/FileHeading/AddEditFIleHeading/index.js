@@ -121,7 +121,7 @@ function AddEditFIleHeading() {
     <div class="container-fluid">
       <div class="card">
         <div class="card-header red-bg" style={{ background: "#14ae5c" }}>
-            {fileId ? <h1>Update File Heading</h1> :  <h1>Create File Heading</h1>}
+            {fileId ? <h1>Update File Head</h1> :  <h1>Create File Head</h1>}
         </div>
         <div class="card-body">
           <form onSubmit={formik.handleSubmit}>
@@ -129,10 +129,10 @@ function AddEditFIleHeading() {
               <div class="row">
                 <div class="col-6">
                   <div class="mb-3">
-                    <label class="form-label">Heading</label>
+                    <label class="form-label">Head</label>
                     <input
                       type="text"
-                      placeholder={"Heading"}
+                      placeholder={"Head"}
                       value={formik.values.mainHeading}
                       className={`form-control ${formik.touched.mainHeading &&
                           formik.errors.mainHeading
@@ -153,10 +153,10 @@ function AddEditFIleHeading() {
                 </div>
                 <div class="col-6">
                   <div class="mb-3">
-                    <label class="form-label">Heading Number</label>
+                    <label class="form-label">Head Number</label>
                      <input
                       type="text"
-                      placeholder={"Heading Number"}
+                      placeholder={"Head Number"}
                       value={formik.values.mainHeadingNumber}
                       className={`form-control ${formik.touched.mainHeadingNumber &&
                           formik.errors.mainHeadingNumber
@@ -182,7 +182,7 @@ function AddEditFIleHeading() {
               <div class="row">
                 <div class="col">
                   <button class="btn btn-primary float-end" type="submit">
-                    {fileId ? "Update File Heading" : "Create File Heading"}
+                    {fileId ? "Update File Head" : "Create File Head"}
                   </button>
                 </div>
               </div>
