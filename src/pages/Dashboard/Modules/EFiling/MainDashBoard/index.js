@@ -205,7 +205,7 @@ function MainDashboard() {
                     style={{ borderLeft: "#ddd solid 1px" }}
                   >
                     <span style={{ display: "inline-flex" }}>
-                      FRs{" "}
+                      F.Rs{" "}
                       <span style={{ marginLeft: "5px" }}>
                         ({frStatsData && frStatsData?.receivedFRs?.count})
                       </span>
@@ -229,7 +229,7 @@ function MainDashboard() {
                     style={{ borderLeft: "#ddd solid 1px" }}
                   >
                     <span style={{ display: "inline-flex" }}>
-                      File{" "}
+                      Files{" "}
                       <span style={{ marginLeft: "5px" }}>
                         ({fileStatsData && fileStatsData?.receivedFiles?.count})
                       </span>
@@ -296,7 +296,7 @@ function MainDashboard() {
                     style={{ borderLeft: "#ddd solid 1px" }}
                   >
                     <span style={{ display: "inline-flex" }}>
-                      FRs{" "}
+                      F.Rs{" "}
                       <span style={{ marginLeft: "5px" }}>
                         {" "}
                         ({frStatsData && frStatsData?.sentFRs?.count})
@@ -321,7 +321,7 @@ function MainDashboard() {
                     style={{ borderLeft: "#ddd solid 1px" }}
                   >
                     <span style={{ display: "inline-flex" }}>
-                      File{" "}
+                      Files{" "}
                       <span style={{ marginLeft: "5px" }}>
                         ({fileStatsData && fileStatsData?.sentFiles?.count})
                       </span>
