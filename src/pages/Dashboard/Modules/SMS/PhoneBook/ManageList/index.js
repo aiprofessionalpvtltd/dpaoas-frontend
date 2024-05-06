@@ -22,7 +22,7 @@ function SMSManageList() {
   const [modalisOpan, setModalisOpan] = useState(false)
   const [selecteditem, setSelecteditem] = useState([])
   const [contactList, setContactList] = useState([])
-  const pageSize = 10; // Set your desired page size
+  const pageSize = 15; // Set your desired page size
 
   const { permissions } = useContext(AuthContext);
   const [permissionsLocal, setPermissionsLocal] = useState([]);
@@ -34,25 +34,23 @@ function SMSManageList() {
     // Update currentPage when a page link is clicked
     setCurrentPage(page);
   };
-  const transformDepartmentData = (apiData) => {
-
-    return apiData.map((leave) => ({
-      id: leave?.id,
-      listName: leave.isPublicList === true ? `*${leave?.listName}` : leave?.listName,
-      listDescription: leave?.listDescription,
-      listActive: leave?.listActive,
-      UserName: `${leave.user.employee?.firstName}${leave.user.employee?.lastName}`,
-      isPublicList: JSON.stringify(leave?.isPublicList),
-      createdAt: moment(leave?.createdAt).format("YYYY/MM/DD"),
-      updatedAt: moment(leave?.updatedAt).format("YYYY/MM/DD")
-      //   contactMembers: leave?.contactMembers[0]?.member.memberName
+  const transformData = (apiData) => {
+    return apiData.map((item) => ({
+      id: item?.id,
+      listName: item.isPublicList === true ? `*${item?.listName}` : item?.listName,
+      listDescription: item?.listDescription,
+      listActive: item?.listActive,
+      UserName: `${item.user.employee?.firstName}${item.user.employee?.lastName}`,
+      isPublicList: JSON.stringify(item?.isPublicList),
+      createdAt: moment(item?.createdAt).format("YYYY/MM/DD"),
+      updatedAt: moment(item?.updatedAt).format("YYYY/MM/DD")
     }));
   };
   const getContactListApi = useCallback(async () => {
     try {
       const response = await getContactList(currentPage, pageSize);
       if (response?.success) {
-        const transformedData = transformDepartmentData(response?.data?.contactList);
+        const transformedData = transformData(response?.data?.contactList);
         setCount(response?.data?.count);
         setContactList(transformedData);
       }

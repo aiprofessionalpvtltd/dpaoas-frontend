@@ -43,12 +43,11 @@ function SMSAdvancedSMS() {
         // Update currentPage when a page link is clicked
         setCurrentPage(page);
     };
-    const transformDepartmentData = (apiData) => {
-        return apiData.map((leave, index) => ({
+    const transformData = (apiData) => {
+        return apiData.map((item, index) => ({
             Sr: `${index + 1}`,
-            memberName: leave?.member?.memberName,
-            phoneNo: leave?.member?.phoneNo,
-            // gender: leave?.member?.gender,
+            memberName: item?.member?.memberName,
+            phoneNo: item?.member?.phoneNo,
         }));
     };
 
@@ -81,7 +80,7 @@ function SMSAdvancedSMS() {
         try {
             const response = await getSignalContactListByid(id)
             if (response?.success) {
-                const transformedData = transformDepartmentData(response?.data[0]?.contactMembers);
+                const transformedData = transformData(response?.data[0]?.contactMembers);
                 setCount(response?.data?.count);
                 setAllListData(transformedData);
             }
