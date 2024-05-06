@@ -74,12 +74,12 @@ export const Login = () => {
       <ToastContainer />
 
       <div class="wrap-login">
-        <span
+        {/* <span
           style={{ fontSize: "28px", marginTop: "10px", marginBottom: "30px", fontWeight: "bold" }}
           class="login-form-title"
         >
           SSDocs
-        </span>
+        </span> */}
         {/* <span
           style={{
             fontSize: "22px",
@@ -93,7 +93,7 @@ export const Login = () => {
         </span> */}
         <form onSubmit={formik.handleSubmit}>
           <div class="login-form">
-            <div class="logo">
+            <div class="logo mb-3">
               <img src={logo} alt="" />
             </div>
             <div class="wrap-input">
