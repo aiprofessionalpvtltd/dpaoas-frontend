@@ -24,7 +24,7 @@ function SMSMAnageTemplate() {
     const [selecteditem, setSelecteditem] = useState([])
 
     const [count, setCount] = useState()
-    const pageSize = 10; // Set your desired page size
+    const pageSize = 15; // Set your desired page size
 
     const { permissions } = useContext(AuthContext);
     const [permissionsLocal, setPermissionsLocal] = useState([]);
@@ -39,22 +39,21 @@ function SMSMAnageTemplate() {
         setCurrentPage(page);
     };
 
-    const transformDepartmentData = (apiData) => {
-        console.log(apiData[0].isActive)
-        return apiData.map((leave) => ({
-            id: leave?.id,
-            templateName: leave?.templateName,
-            description: leave?.msgText,
-            Status: JSON.stringify(leave?.isActive),
-            createdAt: moment(leave?.createdAt).format("YYYY/MM/DD"),
-            updatedAt: moment(leave?.updatedAt).format("YYYY/MM/DD")
+    const transformData = (apiData) => {
+        return apiData.map((item) => ({
+            id: item?.id,
+            templateName: item?.templateName,
+            description: item?.msgText,
+            Status: JSON.stringify(item?.isActive),
+            createdAt: moment(item?.createdAt).format("YYYY/MM/DD"),
+            updatedAt: moment(item?.updatedAt).format("YYYY/MM/DD")
         }));
     };
     const getTemplate = useCallback(async () => {
         try {
             const response = await getContactTemplate(currentPage, pageSize);
             if (response?.success) {
-                const transformedData = transformDepartmentData(response?.data?.contactTemplate);
+                const transformedData = transformData(response?.data?.contactTemplate);
                 setCount(response?.data?.count);
                 setTemplateData(transformedData);
             }
