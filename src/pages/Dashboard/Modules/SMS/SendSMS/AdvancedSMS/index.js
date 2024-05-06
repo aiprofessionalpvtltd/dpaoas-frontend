@@ -48,7 +48,7 @@ function SMSAdvancedSMS() {
             Sr: `${index + 1}`,
             memberName: leave?.member?.memberName,
             phoneNo: leave?.member?.phoneNo,
-            gender: leave?.member?.gender,
+            // gender: leave?.member?.gender,
         }));
     };
 
