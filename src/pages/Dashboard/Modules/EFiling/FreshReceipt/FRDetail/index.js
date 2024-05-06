@@ -194,8 +194,8 @@ function FRDetail() {
 
   const images =
     attachments?.map((item) => ({
-      original: `http://10.10.140.200:5152${item?.filename}`,
-      thumbnail: `http://10.10.140.200:5152${item?.filename}`,
+      original: `http://172.16.170.8:5252${item?.filename}`,
+      thumbnail: `http://172.16.170.8:5252${item?.filename}`,
     })) || [];
 
   // const images = [
