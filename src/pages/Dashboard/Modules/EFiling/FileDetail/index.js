@@ -781,7 +781,7 @@ function FileDetail() {
                 />
               ) : (
                 <img
-                  src={`http://10.10.140.200:5152${uplodedSignaturePreviewUrl}`}
+                  src={`http://172.16.170.8:5252${uplodedSignaturePreviewUrl}`}
                   alt="Signature"
                   className="img-fluid"
                 />
@@ -2122,7 +2122,7 @@ function FileDetail() {
                         }}
                       >
                         <img
-                          src={`http://10.10.140.200:5152${item?.signature}`}
+                          src={`http://172.16.170.8:5252${item?.signature}`}
                           alt="Uploaded Signature"
                           style={{
                             width: "100%",

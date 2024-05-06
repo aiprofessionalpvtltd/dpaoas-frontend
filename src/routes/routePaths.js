@@ -588,10 +588,10 @@ export const ProtectedRoutes = [
     path: "/efiling/dashboard/fresh-receipt",
     element: <FreshReceipt />,
   },
-  {
-    path: "/efiling/dashboard/external/fresh-receipt",
-    element: <ExternalBranchFR />,
-  },
+  // {
+  //   path: "/efiling/dashboard/external/fresh-receipt",
+  //   element: <ExternalBranchFR />,
+  // },
   {
     path: "/efiling/dashboard/fresh-receipt/history",
     element: <PreviousFRsHistory />,
@@ -600,10 +600,10 @@ export const ProtectedRoutes = [
     path: "/efiling/dashboard/fresh-receipt/addedit",
     element: <AddEditFR />,
   },
-  {
-    path: "/efiling/dashboard/external/branch/fresh-receipt/addedit",
-    element: <AddEditExternalBranchFR />,
-  },
+  // {
+  //   path: "/efiling/dashboard/external/branch/fresh-receipt/addedit",
+  //   element: <AddEditExternalBranchFR />,
+  // },
   {
     path: "/efiling/dashboard/fresh-receipt/frdetail",
     element: <FRDetail />,

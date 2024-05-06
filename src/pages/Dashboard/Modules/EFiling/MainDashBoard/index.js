@@ -193,7 +193,7 @@ function MainDashboard() {
           <div className="dash-detail-container" style={{ background: "none" }}>
             <div className="row">
               <div className="col-4">
-                <div className="dash-card" style={{ marginLeft: "-12px" }}>
+                <div className="dash-card">
                   <div
                     className="dash-card-header"
                     style={{ textAlign: "center", background: "#4f5966" }}
@@ -284,7 +284,7 @@ function MainDashboard() {
                 </div>
               </div>
               <div className="col-4">
-                <div className="dash-card" style={{ marginLeft: "-12px" }}>
+                <div className="dash-card">
                   <div
                     className="dash-card-header"
                     style={{ textAlign: "center", background: "#4f5966" }}
@@ -376,7 +376,7 @@ function MainDashboard() {
                 </div>
               </div>
               <div className="col-4">
-                {/* <div className="dash-card" style={{ marginLeft: "-12px" }}>
+                {/* <div className="dash-card">
                   <div
                     className="dash-card-header"
                     style={{ textAlign: "center", background: "#4f5966" }}
@@ -1034,7 +1034,6 @@ function MainDashboard() {
             <div
               className="dash-card"
               style={{
-                marginLeft: "-12px",
                 height: "210px",
                 // overflowY: "auto",
                 // overflowX: "hidden",
