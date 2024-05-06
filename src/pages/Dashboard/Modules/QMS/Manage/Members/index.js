@@ -4,16 +4,14 @@ import { QMSSideBarItems } from "../../../../../../utils/sideBarItems";
 import Header from "../../../../../../components/Header";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import { useNavigate } from "react-router-dom";
-import {
-  deleteMembers,
-  getAllMembers,
-} from "../../../../../../api/APIs/Services/ManageQMS.service";
+import { deleteMembers } from "../../../../../../api/APIs/Services/ManageQMS.service";
 import moment from "moment";
 import {
   showErrorMessage,
   showSuccessMessage,
 } from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
+import { getallMembers } from "../../../../../../api/APIs/Services/Motion.service";
 
 function QMSMembers() {
   const navigate = useNavigate();
@@ -45,10 +43,10 @@ function QMSMembers() {
 
   const handleMembers = async () => {
     try {
-      const response = await getAllMembers(currentPage, pageSize);
+      const response = await getallMembers(currentPage, pageSize);
       if (response?.success) {
         setCount(response?.data?.count);
-        const transformedData = transformData(response.data?.rows);
+        const transformedData = transformData(response.data?.members);
         setMembers(transformedData);
       }
     } catch (error) {

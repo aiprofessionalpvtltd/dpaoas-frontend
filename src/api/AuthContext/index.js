@@ -80,7 +80,7 @@ export const AuthProvider = ({ children }) => {
       const response = await getallMembers(currentPage, pageSize);
       if (response?.success) {
         // showSuccessMessage(response?.message);
-        setMembers(response?.data?.rows);
+        setMembers(response?.data?.members);
       }
     } catch (error) {
       console.log(error);
@@ -148,7 +148,7 @@ export const AuthProvider = ({ children }) => {
         allBranchesData,
 
         setFileIdInRegister,
-        fileIdINRegister
+        fileIdINRegister,
       }}
     >
       {children}

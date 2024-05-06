@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt, faPlus } from "@fortawesome/free-solid-svg-icons";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import DatePicker from "react-datepicker";
@@ -32,10 +32,11 @@ const validationSchema = Yup.object({
 });
 function SMSMembersAddEditForm() {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const [tenures, setTenures] = useState([]);
   const [memberById, setMemberById] = useState();
-  const [allparties, setAllParties] = useState([])
+  const [allparties, setAllParties] = useState([]);
 
   const formik = useFormik({
     initialValues: {
@@ -91,12 +92,19 @@ function SMSMembersAddEditForm() {
       gender: values.gender,
       isMinister: Boolean(values.isMinister),
       phoneNo: values.phoneNo,
+      memberUrduName: values?.memberUrduName,
+      governmentType: values?.governmentType,
+      memberProvince: values?.memberProvince,
+      reason: values?.reason,
     };
 
     try {
       const response = await updateMembers(location?.state?.id, data);
       if (response?.success) {
         showSuccessMessage(response?.message);
+        setTimeout(() => {
+          navigate("/sms/members/list");
+        }, 3000);
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -126,7 +134,7 @@ function SMSMembersAddEditForm() {
   };
 
   //Get Political Party
-  const AllPoliticalPartiesList =async () => {
+  const AllPoliticalPartiesList = async () => {
     try {
       const response = await getAllPoliticalParties(0, 100);
       if (response?.success) {
@@ -139,11 +147,11 @@ function SMSMembersAddEditForm() {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   useEffect(() => {
     handleTenures();
-    AllPoliticalPartiesList()
+    AllPoliticalPartiesList();
     if (location.state?.id) {
       getMemberByIdApi();
     }
@@ -161,6 +169,10 @@ function SMSMembersAddEditForm() {
         gender: memberById.gender || "",
         isMinister: memberById.isMinister || "",
         phoneNo: memberById.phoneNo || "",
+        memberUrduName: memberById?.memberUrduName || "",
+        governmentType: memberById?.governmentType || "",
+        memberProvince: memberById?.memberProvince || "",
+        reason: memberById?.reason || "",
       });
     }
   }, [memberById, formik.setValues]);
@@ -213,7 +225,32 @@ function SMSMembersAddEditForm() {
                         )}
                     </div>
                   </div>
-                  <div class="col-6">
+                  <div class="col">
+                    <div class="mb-3">
+                      <label class="form-label">Member Urdu Name</label>
+                      <input
+                        type="text"
+                        placeholder={"Member Urdu Name"}
+                        value={formik.values.memberUrduName}
+                        className={`form-control ${
+                          formik.touched.memberUrduName &&
+                          formik.errors.memberUrduName
+                            ? "is-invalid"
+                            : ""
+                        }`}
+                        id="memberUrduName"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      />
+                      {formik.touched.memberUrduName &&
+                        formik.errors.memberUrduName && (
+                          <div className="invalid-feedback">
+                            {formik.errors.memberUrduName}
+                          </div>
+                        )}
+                    </div>
+                  </div>
+                  <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Member Tenure</label>
                       <select
@@ -239,7 +276,7 @@ function SMSMembersAddEditForm() {
                 </div>
 
                 <div class="row">
-                  <div class="col-6">
+                  <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Member Status</label>
                       <select
@@ -268,7 +305,7 @@ function SMSMembersAddEditForm() {
                     </div>
                   </div>
 
-                  <div class="col-6">
+                  <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Political Party</label>
                       <select
@@ -282,16 +319,36 @@ function SMSMembersAddEditForm() {
                         <option value={""} selected disabled hidden>
                           Select
                         </option>
-                        {allparties && allparties.map((item) => (
-                           <option value={item.id}>{item.shortName}</option>
-                        ))}
+                        {allparties &&
+                          allparties.map((item) => (
+                            <option value={item.id}>{item.shortName}</option>
+                          ))}
+                      </select>
+                    </div>
+                  </div>
+                  <div className="col">
+                    <div class="mb-3">
+                      <label class="form-label">Government Type</label>
+                      <select
+                        class="form-select"
+                        id="governmentType"
+                        name="governmentType"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.governmentType}
+                      >
+                        <option value={""} selected disabled hidden>
+                          Select
+                        </option>
+                        <option value="Opposition">Opposition</option>
+                        <option value="Government">Government</option>
                       </select>
                     </div>
                   </div>
                 </div>
 
                 <div class="row">
-                  <div class="col-6">
+                  <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Election Type</label>
                       <select
@@ -313,7 +370,7 @@ function SMSMembersAddEditForm() {
                     </div>
                   </div>
 
-                  <div class="col-6">
+                  <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Gender</label>
                       <select
@@ -332,10 +389,38 @@ function SMSMembersAddEditForm() {
                       </select>
                     </div>
                   </div>
+
+                  <div className="col">
+                    <div class="mb-3">
+                      <label class="form-label">Member Province</label>
+                      <select
+                        class="form-select"
+                        id="memberProvince"
+                        name="memberProvince"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.memberProvince}
+                      >
+                        <option value={""} selected disabled hidden>
+                          Select
+                        </option>
+                        <option value="Khyber Pakhtunkhwa">
+                          Khyber Pakhtunkhwa
+                        </option>
+                        <option value="Balochistan">Balochistan</option>
+                        <option value="Sindh">Sindh</option>
+                        <option value="Punjab">Punjab</option>
+                        <option value="Erstwhile FATA">Erstwhile FATA</option>
+                        <option value="Federal Capital Area Islamabad">
+                          Federal Capital Area Islamabad
+                        </option>
+                      </select>
+                    </div>
+                  </div>
                 </div>
 
                 <div class="row">
-                  <div class="col-6">
+                  <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Phone No</label>
                       <input
@@ -359,8 +444,8 @@ function SMSMembersAddEditForm() {
                     </div>
                   </div>
 
-                  <div class="col-6" style={{ marginTop: "40px" }}>
-                    <div class="form-check">
+                  <div className="col">
+                    <div class="form-check" style={{ marginTop: "40px" }}>
                       <input
                         class={`form-check-input ${
                           formik.touched.isMinister && formik.errors.isMinister
@@ -387,6 +472,27 @@ function SMSMembersAddEditForm() {
                           </div>
                         )}
                     </div>
+                  </div>
+                </div>
+                <div className="row">
+                  <div class="col">
+                    <label className="form-label">Reason</label>
+                    <textarea
+                      className={`form-control  ${
+                        formik.touched.reason && formik.errors.reason
+                          ? "is-invalid"
+                          : ""
+                      } mb-3`}
+                      id="reason"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.reason}
+                    ></textarea>
+                    {formik.touched.reason && formik.errors.reason && (
+                      <div className="invalid-feedback">
+                        {formik.errors.reason}
+                      </div>
+                    )}
                   </div>
                 </div>
 
