@@ -420,7 +420,7 @@ function SMSMembersAddEditForm() {
                 </div>
 
                 <div class="row">
-                  <div class="col">
+                  <div class="col-4">
                     <div class="mb-3">
                       <label class="form-label">Phone No</label>
                       <input
@@ -444,7 +444,7 @@ function SMSMembersAddEditForm() {
                     </div>
                   </div>
 
-                  <div className="col">
+                  <div className="col-4">
                     <div class="form-check" style={{ marginTop: "40px" }}>
                       <input
                         class={`form-check-input ${
@@ -475,7 +475,7 @@ function SMSMembersAddEditForm() {
                   </div>
                 </div>
                 <div className="row">
-                  <div class="col">
+                  <div class="col-8">
                     <label className="form-label">Reason</label>
                     <textarea
                       className={`form-control  ${
