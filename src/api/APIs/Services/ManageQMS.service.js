@@ -209,23 +209,23 @@ export const createMember = async (data) => {
   }
 };
 
-export const getAllMembers = async (currentPage, pageSize) => {
-  try {
-    // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
-      `/members/all?currentPage=${currentPage}&pageSize=${pageSize}`
-    );
-    // {
-    //   headers: {
-    //     Authorization: `Bearer ${token}`,
-    //   }
-    // });
-    return response?.data;
-  } catch (error) {
-    console.error("Error fetching API endpoint:", error);
-    throw error;
-  }
-};
+// export const getAllMembers = async (currentPage, pageSize) => {
+//   try {
+//     // const token = getAuthToken();
+//     const response = await axiosClientMMS.get(
+//       `/members/all?currentPage=${currentPage}&pageSize=${pageSize}`
+//     );
+//     // {
+//     //   headers: {
+//     //     Authorization: `Bearer ${token}`,
+//     //   }
+//     // });
+//     return response?.data;
+//   } catch (error) {
+//     console.error("Error fetching API endpoint:", error);
+//     throw error;
+//   }
+// };
 
 //
 
