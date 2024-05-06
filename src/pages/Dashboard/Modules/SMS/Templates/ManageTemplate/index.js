@@ -24,7 +24,7 @@ function SMSMAnageTemplate() {
     const [selecteditem, setSelecteditem] = useState([])
 
     const [count, setCount] = useState()
-    const pageSize = 4; // Set your desired page size
+    const pageSize = 10; // Set your desired page size
 
     const { permissions } = useContext(AuthContext);
     const [permissionsLocal, setPermissionsLocal] = useState([]);

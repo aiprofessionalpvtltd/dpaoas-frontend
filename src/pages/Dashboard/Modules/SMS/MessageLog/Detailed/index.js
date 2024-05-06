@@ -10,24 +10,26 @@ function SMSDetailedMessageLog() {
   const [count, setCount] = useState(null);
   const [smsLogData, setSMSLogData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
+  const [searchdata, setSearchData] = useState([]);
+  const [search, setSearch] = useState("");
   const pageSize = 8; // Set your desired page size
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
     setCurrentPage(page);
   };
-  const transformDepartmentData = (apiData) => {
-    return apiData.map((leave) => ({
-      id: leave?.id,
-      msgText: leave?.msgText,
-      RecieverNo: leave?.RecieverNo,
-      listName: leave?.contactList?.listName,
-      listDescription: leave?.contactList?.listDescription,
-      memberName: leave.contactList?.contactMembers[0]?.member?.memberName,
-      phoneNo: leave.contactList?.contactMembers[0]?.member.phoneNo,
-      Status: leave?.isSent,
-      createdAt: moment(leave?.createdAt).format("YYYY/MM/DD"),
-      updatedAt: moment(leave?.updatedAt).format("YYYY/MM/DD"),
+  const transformMessageLogsData = (apiData) => {
+    return apiData.map((item) => ({
+      id: item?.id,
+      msgText: item?.msgText,
+      RecieverNo: item?.RecieverNo,
+      listName: item?.contactList?.listName,
+      listDescription: item?.contactList?.listDescription,
+      memberName: item.contactList?.contactMembers[0]?.member?.memberName,
+      phoneNo: item.contactList?.contactMembers[0]?.member.phoneNo,
+      Status: item?.isSent,
+      createdAt: moment(item?.createdAt).format("YYYY/MM/DD"),
+      updatedAt: moment(item?.updatedAt).format("YYYY/MM/DD"),
     }));
   };
 
@@ -35,9 +37,11 @@ function SMSDetailedMessageLog() {
     try {
       const response = await getSMSLog(currentPage, pageSize);
       if (response?.success) {
-        const transformedData = transformDepartmentData(
+        const transformedData = transformMessageLogsData(
           response?.data?.smsRecord
         );
+        setSearchData(transformedData)
+
         setCount(response?.data.count);
         setSMSLogData(transformedData);
       }
@@ -45,6 +49,23 @@ function SMSDetailedMessageLog() {
       console.log(error);
     }
   }, [currentPage, pageSize, setCount, setSMSLogData]);
+
+  const SearchFilter = (text) => {
+    if (text) {
+      const newData = searchdata.filter((item) => {
+        const itemData = `${item.msgText} ${item.RecieverNo} ${item.phoneNo} ${item?.memberName}`
+          ? `${item.msgText} ${item.RecieverNo} ${item.phoneNo} ${item?.memberName}`.toUpperCase()
+          : "".toUpperCase();
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      });
+      setSMSLogData(newData);
+      setSearch(text);
+    } else {
+      setSMSLogData(searchdata);
+      setSearch(text);
+    }
+  };
 
   useEffect(() => {
     getSMSLogDetailApi();
@@ -62,6 +83,8 @@ function SMSDetailedMessageLog() {
           <CustomTable
             data={smsLogData}
             singleDataCard={true}
+            seachBarShow={true}
+            searchonchange={(e) => SearchFilter(e.target.value)}
             tableTitle={"Detailed"}
             hidebtn1={true}
             hideBtn={true}
