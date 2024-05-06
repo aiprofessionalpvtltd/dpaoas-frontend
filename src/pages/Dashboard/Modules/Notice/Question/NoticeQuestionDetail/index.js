@@ -12,7 +12,10 @@ import DatePicker from "react-datepicker";
 import { useLocation } from "react-router";
 import { useNavigate } from "react-router-dom";
 
-import { UpdateQuestionById } from "../../../../../../api/APIs/Services/Question.service";
+import {
+  UpdateQuestionById,
+  getAllQuestionStatus,
+} from "../../../../../../api/APIs/Services/Question.service";
 import { ToastContainer } from "react-toastify";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -27,6 +30,7 @@ import {
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import moment from "moment";
 import Select from "react-select";
+
 const validationSchema = Yup.object({
   sessionNo: Yup.object().required("Session No is required"),
   noticeOfficeDiaryNo: Yup.string().required("Diary No is required"),
@@ -39,11 +43,12 @@ const validationSchema = Yup.object({
   // questionStatus: Yup.string(),
   // replyDate: Yup.string(),
   senator: Yup.object().required("Senator Name is required"),
+  questionStatus: Yup.object().required("Question Status is required"),
   // group: Yup.string(),
   // division: Yup.string(),
   // fileStatus: Yup.string(),
   // urduText: Yup.string(),
-  // englishText: Yup.string(),
+
   // ammendedText: Yup.string(),
   // originalText: Yup.string(),
 });
@@ -55,12 +60,25 @@ function NoticeQuestionDetail() {
   const [filesData, setFilesData] = useState();
   const [currentPage, setCurrentPage] = useState(0);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  const [allQuestionStatus, setAllQuestionStatus] = useState([]);
   const pageSize = 10;
 
   const handleStatusPageChange = (page) => {
     setCurrentPage(page);
   };
 
+  // Getting Question Statuses
+  const GetAllQuestionStatus = async () => {
+    try {
+      const response = await getAllQuestionStatus();
+      if (response?.success) {
+        setAllQuestionStatus(response?.data);
+        // showSuccessMessage(response.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const formik = useFormik({
     initialValues: {
       sessionNo: location.state
@@ -86,7 +104,7 @@ function NoticeQuestionDetail() {
       questionId: location?.state?.question?.id,
       questionDiaryNo: location?.state?.question?.fkNoticeDiary,
       category: location?.state?.question?.questionCategory,
-      questionStatus: location?.state?.question?.fkQuestionStatus,
+      // questionStatus: location?.state?.question?.fkQuestionStatus,
       replyDate: new Date(location?.state?.question?.replyDate),
       senator: location.state
         ? {
@@ -99,6 +117,12 @@ function NoticeQuestionDetail() {
       fileStatus: location?.state?.question?.fileStatus,
       englishText: location?.state?.question?.englishText,
       urduText: location?.state?.question?.urduText,
+      questionStatus: location?.state?.question?.questionStatus
+        ? {
+            value: location?.state?.question?.questionStatus?.id,
+            label: location?.state?.question?.questionStatus?.questionStatus,
+          }
+        : "",
       ammendedText: "",
       originalText: "",
     },
@@ -110,6 +134,15 @@ function NoticeQuestionDetail() {
     },
   });
 
+  useEffect(() => {
+    GetAllQuestionStatus();
+  }, []);
+
+  console.log(
+    "location?.state?.questionStatus",
+    location?.state?.question?.questionStatus?.questionStatus
+  );
+  console.log("GetaALl Status", allQuestionStatus);
   // Handle Claneder Toggel
   const handleCalendarToggle = () => {
     setIsCalendarOpen(!isCalendarOpen);
@@ -136,6 +169,7 @@ function NoticeQuestionDetail() {
     );
     formData.append("questionCategory", values?.category);
     formData.append("fkMemberId", values?.senator?.value);
+    formData.append("fkQuestionStatus", values?.questionStatus?.value);
     formData.append("urduText", values.urduText);
     formData.append("englishText", values.englishText);
     if (values?.questionImage) {
@@ -519,6 +553,78 @@ function NoticeQuestionDetail() {
                           {formik.errors.senator}
                         </div>
                       )}
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="mb-3">
+                      <label class="form-label">Question Status</label>
+                      {/* <input
+                        className={`form-control ${
+                          formik.touched.questionStatus &&
+                          formik.errors.questionStatus
+                            ? "is-invalid"
+                            : ""
+                        }`}
+                        value={formik.values.questionStatus}
+                        type="text"
+                        id="questionStatus"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      /> */}
+                      {/* <select
+                        id="questionStatus"
+                        name="questionStatus"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.questionStatus}
+                        className={`form-select  ${
+                          formik.touched.questionStatus &&
+                          formik.errors.questionStatus
+                            ? "is-invalid"
+                            : ""
+                        }`}
+                      >
+                        <option value={""} selected disabled hidden>
+                          Select
+                        </option>
+                        {allQuestionStatus &&
+                          allQuestionStatus.map((item) => (
+                            <option key={item.id} value={item.id}>
+                              {item?.questionStatus}
+                            </option>
+                          ))}
+                      </select> */}
+                      <Select
+                        options={
+                          allQuestionStatus &&
+                          allQuestionStatus?.map((item) => ({
+                            value: item?.id,
+                            label: item?.questionStatus,
+                          }))
+                        }
+                        onChange={(selectedOptions) => {
+                          formik.setFieldValue(
+                            "questionStatus",
+                            selectedOptions
+                          );
+                        }}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.questionStatus}
+                        name="questionStatus"
+                        isClearable={true}
+                        className={` ${
+                          formik.touched.questionStatus &&
+                          formik.errors.questionStatus
+                            ? "is-invalid"
+                            : ""
+                        }`}
+                      />
+                      {formik.touched.questionStatus &&
+                        formik.errors.questionStatus && (
+                          <div class="invalid-feedback">
+                            {formik.errors.questionStatus}
+                          </div>
+                        )}
                     </div>
                   </div>
                 </div>

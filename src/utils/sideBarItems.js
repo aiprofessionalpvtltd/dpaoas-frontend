@@ -283,9 +283,11 @@ export const NoticeSidebarItems = [
     link: "/notice/speech-on-demand",
     icon: faHome,
   },
-  {itemName:"Event Calendar",
-link:"/notice/event-calendar",
-icon:faCalendarAlt},
+  {
+    itemName: "Event Calendar",
+    link: "/notice/event-calendar",
+    icon: faCalendarAlt,
+  },
 
   {
     itemName: "Research Services",
@@ -1067,15 +1069,26 @@ export const EfilingSideBarBranchItem = [
     icon: faClipboardList,
     subItems: [
       {
-        itemName: "Create Fresh Receipt",
+        itemName: "Create  FR",
         link: "/efiling/dashboard/fresh-receipt/addedit",
         icon: faReceipt,
       },
+
       {
         itemName: "Fresh Receipts List",
         link: "/efiling/dashboard/fresh-receipt",
         icon: faReceipt,
       },
+      // {
+      //   itemName: "Internal Branch FR",
+      //   link: "/efiling/dashboard/fresh-receipt",
+      //   icon: faReceipt,
+      // },
+      // {
+      //   itemName: "External Branch FR",
+      //   link: "/efiling/dashboard/external/fresh-receipt",
+      //   icon: faReceipt,
+      // },
       {
         itemName: "Create Case",
         link: "/efiling/dashboard/file-register-list/files-list/addedit-case",
