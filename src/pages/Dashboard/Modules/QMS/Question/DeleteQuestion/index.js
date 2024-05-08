@@ -109,7 +109,7 @@ function QMSDeleteQuestion() {
         Data
       );
       if (response?.success) {
-        // showSuccessMessage(response?.message);
+        showSuccessMessage(response?.message);
         setCount(response?.count);
         const transformedData = transformLeavesData(response.data?.questions);
         setResData(transformedData);
