@@ -114,7 +114,7 @@ function QMSReportQuestionList() {
     try {
       const response = await getGeneratedQuesList(Data);
       if (response?.success) {
-        // showSuccessMessage(response?.message);
+        showSuccessMessage(response?.message);
         // setCount(response?.count);
         const transformedData = transformLeavesData(response.data?.questionList);
         setGeneratedItem(true);
@@ -331,7 +331,6 @@ function QMSReportQuestionList() {
                       </span>
                       <DatePicker
                         selected={formik.values.houseLayDate}
-                        minDate={new Date()}
                         onChange={(date) => formik.setFieldValue("houseLayDate", date)}
                         onBlur={formik.handleBlur}
                         className={`form-control`}

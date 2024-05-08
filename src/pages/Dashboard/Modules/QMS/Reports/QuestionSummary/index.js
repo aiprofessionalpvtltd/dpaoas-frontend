@@ -42,7 +42,7 @@ function QMSQuestionSummary() {
 
   const transformSummaryData = (apiData) => {
     return apiData.map((item) => ({
-      questionStatus: item?.questionStatus,
+      questionStatus: item?.status,
       statusCount: item?.statusCount,
     }));
   };
