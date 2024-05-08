@@ -64,14 +64,17 @@ function CustomTable({
   handleRecover,
   hidebtn1,
   showCreateBtn,
-  hendleCreateBtn
+  hendleCreateBtn,
+  isCheckbox,
+  isChecked,
+  setIsChecked
 }) {
   const keys = data?.length > 0 ? Object.keys(data[0]) : [];
 const filteredKeys = keys?.filter((key) => {
   if (key === "internalAttachment" && data.some(obj => Array.isArray(obj[key]))) {
     return false; // Skip filtering if it's an array in any object
   }
-  return key !== "internalAttachment" && key !== "internalId" && key !== "isEditable";
+  return key !== "internalAttachment" && key !== "internalId" && key !== "isEditable" && key !== "isCheckbox";
 });
 
   
@@ -243,7 +246,9 @@ const filteredKeys = keys?.filter((key) => {
           >
             <thead>
               <tr>
+                {isCheckbox && <th>Select</th>}
                 {filteredKeys?.map((key, index) => (
+                  <>
                   <th
                     key={index}
                     className="text-center"
@@ -259,8 +264,10 @@ const filteredKeys = keys?.filter((key) => {
                   >
                     {formatHeader(key)}
                   </th>
+                  </>
                 ))}
                 {data?.length > 0 && !ActionHide && (
+                  <>
                   <th
                     className="text-center"
                     style={{
@@ -275,253 +282,71 @@ const filteredKeys = keys?.filter((key) => {
                   >
                     Actions
                   </th>
+                  </>
                 )}
               </tr>
             </thead>
             <tbody>
               {totalCount || hidePagination
                 ? data?.map((item, rowIndex) => (
-                    <tr key={rowIndex}>
-                      {filteredKeys?.map((key, colIndex) => (
-                        // <td key={colIndex} className="text-center">
-                        //     {item[key]}
-                        // </td>
-                        <td className="text-center">
-                          {item[key] === "active" ||
-                          item[key] === "inactive" ? (
-                            <span
-                              className={`label label-sm ${
-                                item[key] === "active"
-                                  ? "label-success"
-                                  : "label-danger"
-                              }`}
-                            >
-                              {item[key]}
-                            </span>
-                          ) :  item[key] === "Total Motions" || item[key] === "Total Resolution" ?  (
-                            <span style={{fontWeight:"bold"}}>{item[key]}</span>
-                          ) :( <span>{item[key]}</span>)}
-                        </td>
-                      ))}
-                      {!ActionHide && (
-                        <td className="text-center">
-                          {!hideEditIcon && !hideEditIcon && (
-                            <>
-                              {showView && handleView && (
-                                <OverlayTrigger
-                                  placement="top"
-                                  overlay={viewTooltip}
-                                >
-                                  <button
-                                    onClick={() => handleView(item)}
-                                    className="btn-xs black circle-btn"
-                                    data-id={item.id}
-                                    style={{ background: "#2dce89" }}
-                                  >
-                                    <FontAwesomeIcon icon={faEye} />
-                                  </button>
-                                </OverlayTrigger>
-                              )}
+                  <tr key={rowIndex}>
+                    {/* Render the checkbox in each row */}
+                    {isCheckbox && (
+                      <td className="text-center">
+                        <input
+                          type="checkbox"
+                          checked={isChecked.includes(item.QID)} // Check if item.QID is in the array of selected IDs
+                          onChange={() => {
+                            // Toggle the selection of the current item
+                            const updatedChecked = isChecked.includes(item.QID)
+                              ? isChecked.filter(id => id !== item.QID) // If already selected, remove it from the array
+                              : [...isChecked, item.QID]; // If not selected, add it to the array
+                            setIsChecked(updatedChecked);
+                          }}
+                        />
+                      </td>
+                    )}
 
-                              {showAttendance && (
-                                <OverlayTrigger
-                                  placement="top"
-                                  overlay={attendanceTooltip}
-                                >
-                                  <button
-                                    onClick={() => hendleAttendance(item)}
-                                    className="btn-xs black circle-btn"
-                                    data-id={item.id}
-                                    style={{ background: "#007bff" }}
-                                  >
-                                    <FontAwesomeIcon icon={faUserCheck} />
-                                  </button>
-                                </OverlayTrigger>
-                              )}
 
-                              {showPrint && (
-                                <OverlayTrigger
-                                  placement="top"
-                                  overlay={printTooltip}
-                                >
-                                  <button
-                                    onClick={() => handlePrint(item)}
-                                    className="btn-xs black circle-btn"
-                                    data-id={item.id}
-                                  >
-                                    <FontAwesomeIcon icon={faPrint} />
-                                  </button>
-                                </OverlayTrigger>
-                              )}
-
-                              {showCreateBtn && (
-                                <OverlayTrigger
-                                  placement="top"
-                                  overlay={createTooltip}
-                                >
-                                  <button
-                                    onClick={() => hendleCreateBtn(item)}
-                                    className="btn-xs black circle-btn"
-                                    data-id={item.id}
-                                    style={{ backgroundColor: "darkblue" }}
-                                  >
-                                    <FontAwesomeIcon icon={faCirclePlus} />
-                                  </button>
-                                </OverlayTrigger>
-                              )}
-
-                              {showAssigned && (
-                                <OverlayTrigger
-                                  placement="top"
-                                  overlay={assignedTooltip}
-                                >
-                                  <button
-                                    onClick={() => hendleAssigned(item)}
-                                    className="btn-xs black circle-btn"
-                                    data-id={item.id}
-                                    style={{ backgroundColor: "green" }}
-                                  >
-                                    <FontAwesomeIcon icon={faFileExport} />
-                                  </button>
-                                </OverlayTrigger>
-                              )}
-                              {item?.isEditable && (
-                                <OverlayTrigger
-                                  placement="top"
-                                  overlay={editTooltip}
-                                >
-                                  <button
-                                    onClick={() => handleEdit(item)}
-                                    className="btn-xs black circle-btn"
-                                    data-id={item.id}
-                                  >
-                                    <FontAwesomeIcon icon={faEdit} />
-                                  </button>
-                                </OverlayTrigger>
-                              )}
-                              {!showEditIcon && !showEditIcon && (
-                                <OverlayTrigger
-                                  placement="top"
-                                  overlay={editTooltip}
-                                >
-                                  <button
-                                    onClick={() => handleEdit(item)}
-                                    className="btn-xs black circle-btn"
-                                    data-id={item.id}
-                                  >
-                                    <FontAwesomeIcon icon={faEdit} />
-                                  </button>
-                                </OverlayTrigger>
-                              )}
-
-                              {!hideDeleteIcon && !hideDeleteIcon && (
-                                <OverlayTrigger
-                                  placement="top"
-                                  overlay={deleteTooltip}
-                                >
-                                  <button
-                                    onClick={() => handleDelete(item)}
-                                    className="btn-xs black circle-btn"
-                                    data-id={item.id}
-                                    style={{ background: "#fb6340" }}
-                                  >
-                                    <FontAwesomeIcon icon={faTrash} />
-                                  </button>
-                                </OverlayTrigger>
-                              )}
-                            </>
-                          )}
-                          {hideUserIcon && hideUserIcon && (
-                            <>
-                              <OverlayTrigger
-                                placement="top"
-                                overlay={vistorTooltip}
-                              >
-                                <button
-                                  onClick={() => handleUser(item)}
-                                  className="btn-xs black circle-btn"
-                                  data-id={item.id}
-                                >
-                                  <FontAwesomeIcon icon={faUser} />
-                                </button>
-                              </OverlayTrigger>
-                              <OverlayTrigger
-                                placement="top"
-                                overlay={printTooltip}
-                              >
-                                <button
-                                  onClick={() => handlePrint(item)}
-                                  className="btn-xs black circle-btn"
-                                  data-id={item.id}
-                                >
-                                  <FontAwesomeIcon icon={faPrint} />
-                                </button>
-                              </OverlayTrigger>
-                              <OverlayTrigger
-                                placement="top"
-                                overlay={duplicateTooltip}
-                              >
-                                <button
-                                  onClick={() => handleDuplicate(item)}
-                                  className="btn-xs black circle-btn"
-                                  data-id={item.id}
-                                >
-                                  <FontAwesomeIcon icon={faClone} />
-                                </button>
-                              </OverlayTrigger>
-                            </>
-                          )}
-                          {showResolve && (
-                            <OverlayTrigger
-                              placement="top"
-                              overlay={resolveTooltip}
-                            >
-                              <button
-                                onClick={() => hendleResolve(item)}
-                                className="btn-xs black circle-btn"
-                                data-id={item.id}
-                              >
-                                <FontAwesomeIcon icon={faCheck} />
-                              </button>
-                            </OverlayTrigger>
-                          )}
-
-                          {showRecoverIcon && showRecoverIcon && (
-                                <OverlayTrigger
-                                  placement="top"
-                                  overlay={restoreTooltip}
-                                >
-                                  <button
-                                    onClick={() => handleRecover(item)}
-                                    className="btn-xs black circle-btn"
-                                    data-id={item.id}
-                                  >
-                                    <FontAwesomeIcon icon={faTrashArrowUp} />
-                                  </button>
-                                </OverlayTrigger>
-                              )}
-
-                              {showListIcon && showListIcon && (
-                                <OverlayTrigger
-                                  placement="top"
-                                  overlay={listTooltip}
-                                >
-                                  <button
-                                    onClick={() => handleList(item)}
-                                    className="btn-xs black circle-btn"
-                                    data-id={item.id}
-                                  >
-                                    <FontAwesomeIcon icon={faListCheck} />
-                                  </button>
-                                </OverlayTrigger>
-                              )}
-
-                        </td>
-                      )}
-                    </tr>
+                    {/* Render other table cells */}
+                    {filteredKeys?.map((key, colIndex) => (
+                      <td key={colIndex} className="text-center">
+                        {item[key] === "active" || item[key] === "inactive" ? (
+                          <span
+                            className={`label label-sm ${
+                              item[key] === "active" ? "label-success" : "label-danger"
+                            }`}
+                          >
+                            {item[key]}
+                          </span>
+                        ) : item[key] === "Total Motions" || item[key] === "Total Resolution" ? (
+                          <span style={{ fontWeight: "bold" }}>{item[key]}</span>
+                        ) : (
+                          <span>{item[key]}</span>
+                        )}
+                      </td>
+                    ))}
+                  </tr>
                   ))
                 : displayedData?.map((item, rowIndex) => (
                     <tr key={rowIndex}>
+                    {isCheckbox && (
+                      <td className="text-center">
+                        <input
+                          type="checkbox"
+                          checked={isChecked.includes(item.QID)} // Check if item.QID is in the array of selected IDs
+                          onChange={() => {
+                            // Toggle the selection of the current item
+                            const updatedChecked = isChecked.includes(item.QID)
+                              ? isChecked.filter(id => id !== item.QID) // If already selected, remove it from the array
+                              : [...isChecked, item.QID]; // If not selected, add it to the array
+                            setIsChecked(updatedChecked);
+                          }}
+                        />
+                      </td>
+                    )}
+
+
                       {filteredKeys?.map((key, colIndex) => (
                         // <td key={colIndex} className="text-center">
                         //     {item[key]}
