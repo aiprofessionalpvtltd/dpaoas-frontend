@@ -32,11 +32,8 @@ function SMSMembers() {
       memberName: `${item.memberName}`,
       politicalParty: `${item?.politicalParties?.partyName}`,
       electionType: item?.electionType,
-      // tenure: item?.tenures?.tenureName,
+      reason: item?.reason ? item?.reason:"---",
       phoneNo: item?.phoneNo,
-      // gender: item?.gender,
-      // fromDate: moment(item.fromDate).format("YYYY/MM/DD"),
-      // toDate: moment(item.toDate).format("YYYY/MM/DD"),
       memberStatus: item?.memberStatus,
     }));
   };
