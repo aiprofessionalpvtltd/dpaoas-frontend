@@ -3,7 +3,6 @@ import Header from "../../../../../../components/Header";
 import { Layout } from "../../../../../../components/Layout";
 import { LegislationSideBarItems } from "../../../../../../utils/sideBarItems";
 import {
-  GetAllOrdinancesList,
   SearchedOrdinance,
   getAllBillStatus,
 } from "../../../../../../api/APIs/Services/LegislationModule.service";

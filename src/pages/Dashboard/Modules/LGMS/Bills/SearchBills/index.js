@@ -19,6 +19,9 @@ import {
   showSuccessMessage,
 } from "../../../../../../utils/ToastAlert";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
+import DatePicker from "react-datepicker";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 
 const validationSchema = Yup.object({
   //   fileNumber: Yup.number().required("File Number  is required"),
@@ -38,7 +41,38 @@ const SearchLegislationBills = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [searchdata, setSearchData] = useState([]);
   const [billdata, setBilldata] = useState([]);
+  const [isFromNoticeDateCalenderOpen, setIsFromNoticeDateCalenderOpen] =
+    useState(false);
+  const [isToNoticeDateCalenderOpen, setIsToNoticeDateCalenderOpen] =
+    useState(false);
+  const [isPresentedCalenderOpen, setIsPresentedCalenderOpen] = useState(false);
   const pageSize = 8;
+
+  const handleFromNoticeCalendarToggle = () => {
+    setIsFromNoticeDateCalenderOpen(!isFromNoticeDateCalenderOpen);
+  };
+  // Handale DateCHange
+  const handleFromNoticeDateSelect = (date) => {
+    formik.setFieldValue("FromNoticeDate", date);
+    setIsFromNoticeDateCalenderOpen(false);
+  };
+  const handleToNoticeCalendarToggle = () => {
+    setIsToNoticeDateCalenderOpen(!isToNoticeDateCalenderOpen);
+  };
+  // Handale DateCHange
+  const handleToNoticeDateSelect = (date) => {
+    formik.setFieldValue("ToNoticeDate", date);
+    setIsToNoticeDateCalenderOpen(false);
+  };
+  const handlePresentedHouseCalendarToggle = () => {
+    setIsPresentedCalenderOpen(!isPresentedCalenderOpen);
+  };
+  // Handale DateCHange
+  const handlePresentedHouseDateSelect = (date) => {
+    formik.setFieldValue("PresetedInHOuseOn", date);
+    setIsPresentedCalenderOpen(false);
+  };
+
   const formik = useFormik({
     initialValues: {
       selectedMinistry: "",
@@ -131,28 +165,22 @@ const SearchLegislationBills = () => {
         fkSenatorId: values.selectedSenator?.value,
         fkParliamentaryYearId: values.parliamentaryYear,
         fkMinistryId: values.selectedMinistry?.value,
-        keywords: values?.keywords,
-        fkSessionIdFrom: values.fromSession?.value,
-        fkSessionIdto: values.toSessionId?.value,
-        // billFrom: values.originatedIn,
-        // billCategory: values.billCategory,
-        // fkBillStatus: values.statusId,
-        // billType: values.billType,
-        // fkManageCommitteeId: values.concerndCommitties,
-        //
-        // committeeRecomendation: values.committeeRecomendation,
+        keyword: values?.keywords,
+        fkSessionIdFrom: values.fromSession,
+        fkSessionIdto: values.toSessionId,
+        billFrom: values?.billFrom,
+        billCategory: values?.billCategory,
+        fkBillStatus: values?.statusId,
+        billType: values?.billType,
+        fkManageCommitteeId: values.concerndCommitties?.value,
+        committeeRecomendation: values?.committeeRecomendation?.value,
         // fileNumber: values.fileNumber,
-        // noticeDateFrom: values.FromNoticeDate,
-        // noticeDateTo: values.ToNoticeDate,
-        // introducedInHouseDate: values.PresetedInHOuseOn,
+        noticeDateFrom: values.FromNoticeDate,
+        noticeDateTo: values.ToNoticeDate,
+        introducedInHouseDate: values?.PresetedInHOuseOn,
       };
       try {
-        const response = await mainSearchApi(
-          currentPage,
-          pageSize,
-
-          data
-        );
+        const response = await mainSearchApi(currentPage, pageSize, data);
         if (response?.success) {
           const transformedData = await transFormsearchData(
             response?.data?.senateBills
@@ -430,7 +458,7 @@ const SearchLegislationBills = () => {
                   </div>
 
                   <div className="form-group col-3">
-                    <label htmlFor="concerndCommitties" className="form-label">
+                    <label htmlFor="?.value" className="form-label">
                       Concernd Committes
                     </label>
                     <Select
@@ -441,8 +469,8 @@ const SearchLegislationBills = () => {
                           label: item?.committeeName,
                         }))
                       }
-                      id="concerndCommitties"
-                      name="concerndCommitties"
+                      id="?.value"
+                      name="?.value"
                       onChange={(selectedOptions) =>
                         formik.setFieldValue(
                           "concerndCommitties",
@@ -450,7 +478,6 @@ const SearchLegislationBills = () => {
                         )
                       }
                       value={formik.values.concerndCommitties}
-                      isMulti={true}
                     />
                   </div>
                 </div>
@@ -487,11 +514,10 @@ const SearchLegislationBills = () => {
                         )
                       }
                       value={formik.values.committeeRecomendation}
-                      isMulti={true}
                     />
                   </div>
 
-                  <div className="form-group col-3">
+                  {/* <div className="form-group col-3">
                     <label htmlFor="FromNoticeDate" className="form-label">
                       From Notice Date
                     </label>
@@ -503,9 +529,107 @@ const SearchLegislationBills = () => {
                       onChange={formik.handleChange}
                       value={formik.values.FromNoticeDate}
                     />
+                  </div> */}
+
+                  <div class="col">
+                    <div class="mb-3" style={{ position: "relative" }}>
+                      <label class="form-label">From Notice Date</label>
+                      <span
+                        style={{
+                          position: "absolute",
+                          right: "15px",
+                          top: "36px",
+                          zIndex: 1,
+                          fontSize: "20px",
+                          zIndex: "1",
+                          color: "#666",
+                          cursor: "pointer",
+                        }}
+                        onClick={handleFromNoticeCalendarToggle}
+                      >
+                        <FontAwesomeIcon icon={faCalendarAlt} />
+                      </span>
+                      <DatePicker
+                        selected={formik.values.FromNoticeDate}
+                        onChange={handleFromNoticeDateSelect}
+                        onBlur={formik.handleBlur}
+                        className="form-control"
+                        open={isFromNoticeDateCalenderOpen}
+                        onClickOutside={() =>
+                          setIsFromNoticeDateCalenderOpen(false)
+                        }
+                        onInputClick={handleFromNoticeCalendarToggle}
+                        maxDate={new Date()}
+                        dateFormat="dd-MM-yyyy"
+                      />
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="mb-3" style={{ position: "relative" }}>
+                      <label class="form-label">To Notice Date</label>
+                      <span
+                        style={{
+                          position: "absolute",
+                          right: "15px",
+                          top: "36px",
+                          zIndex: 1,
+                          fontSize: "20px",
+                          zIndex: "1",
+                          color: "#666",
+                          cursor: "pointer",
+                        }}
+                        onClick={handleToNoticeCalendarToggle}
+                      >
+                        <FontAwesomeIcon icon={faCalendarAlt} />
+                      </span>
+                      <DatePicker
+                        selected={formik.values.ToNoticeDate}
+                        onChange={handleToNoticeDateSelect}
+                        onBlur={formik.handleBlur}
+                        className="form-control"
+                        open={isToNoticeDateCalenderOpen}
+                        onClickOutside={() =>
+                          setIsToNoticeDateCalenderOpen(false)
+                        }
+                        onInputClick={handleToNoticeCalendarToggle}
+                        maxDate={new Date()}
+                        dateFormat="dd-MM-yyyy"
+                      />
+                    </div>
                   </div>
 
-                  <div className="form-group col-3">
+                  <div class="col">
+                    <div class="mb-3" style={{ position: "relative" }}>
+                      <label class="form-label">Presented In House On</label>
+                      <span
+                        style={{
+                          position: "absolute",
+                          right: "15px",
+                          top: "36px",
+                          zIndex: 1,
+                          fontSize: "20px",
+                          zIndex: "1",
+                          color: "#666",
+                          cursor: "pointer",
+                        }}
+                        onClick={handlePresentedHouseCalendarToggle}
+                      >
+                        <FontAwesomeIcon icon={faCalendarAlt} />
+                      </span>
+                      <DatePicker
+                        selected={formik.values.PresetedInHOuseOn}
+                        onChange={handlePresentedHouseDateSelect}
+                        onBlur={formik.handleBlur}
+                        className="form-control"
+                        open={isPresentedCalenderOpen}
+                        onClickOutside={() => setIsPresentedCalenderOpen(false)}
+                        onInputClick={handlePresentedHouseCalendarToggle}
+                        maxDate={new Date()}
+                        dateFormat="dd-MM-yyyy"
+                      />
+                    </div>
+                  </div>
+                  {/* <div className="form-group col-3">
                     <label htmlFor="ToNoticeDate" className="form-label">
                       To Notice Date
                     </label>
@@ -517,9 +641,9 @@ const SearchLegislationBills = () => {
                       onChange={formik.handleChange}
                       value={formik.values.ToNoticeDate}
                     />
-                  </div>
+                  </div> */}
 
-                  <div className="form-group col-3">
+                  {/* <div className="form-group col-3">
                     <label htmlFor="PresetedInHOuseOn" className="form-label">
                       Preseted In House On
                     </label>
@@ -531,7 +655,7 @@ const SearchLegislationBills = () => {
                       onChange={formik.handleChange}
                       value={formik.values.PresetedInHOuseOn}
                     />
-                  </div>
+                  </div> */}
                 </div>
 
                 <div className="row col mt-3">
