@@ -717,12 +717,12 @@ export const CMSsidebarItems = [
   },
 
   {
-    itemName: "Admin Complaint",
+    itemName: "Admin",
     link: "/cms/admin/dashboard",
     icon: faHome,
     subItems: [
       {
-        itemName: "Admin Complaint",
+        itemName: "Admin Dashboard",
         link: "/cms/admin/dashboard",
         icon: faClipboardList,
       },
