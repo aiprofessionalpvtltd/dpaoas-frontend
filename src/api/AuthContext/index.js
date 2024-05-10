@@ -1,5 +1,6 @@
 import React, { createContext, useEffect, useState } from "react";
 import {
+  getAllParliamentaryYears,
   getAllSessions,
   retriveEmployeesAsEngineers,
 } from "../APIs/Services/ManageQMS.service";
@@ -22,6 +23,7 @@ export const AuthProvider = ({ children }) => {
   const [employeesAsEngineersData, setemployeesAsEngineersData] = useState([]);
   const [allBranchesData, setallBranchesData] = useState([]);
   const [members, setMembers] = useState([]);
+  const [parliamentaryYear, setParliamentaryYear] = useState([]);
   const [fileIdINRegister, setFileIdInRegister] = useState(null);
 
   const login = async (data) => {
@@ -122,6 +124,18 @@ export const AuthProvider = ({ children }) => {
       showErrorMessage(error?.response?.data?.error);
     }
   };
+  const getAllParliamnetaryYears = async () => {
+    try {
+      const response = await getAllParliamentaryYears(0, 200);
+      if (response?.success) {
+        // showSuccessMessage(response?.message);
+        setParliamentaryYear(response?.data);
+      }
+    } catch (error) {
+      // console.log(error);
+      showErrorMessage(error?.response?.data?.error);
+    }
+  };
 
   useEffect(() => {
     getAllResolutionStatusApi();
@@ -131,6 +145,7 @@ export const AuthProvider = ({ children }) => {
     getEmployeeData();
     getretriveEmployeesAsEngineers();
     AllBranchesData();
+    getAllParliamnetaryYears();
   }, []);
 
   return (
@@ -146,7 +161,7 @@ export const AuthProvider = ({ children }) => {
         resolutionStatus,
         employeesAsEngineersData,
         allBranchesData,
-
+        parliamentaryYear,
         setFileIdInRegister,
         fileIdINRegister,
       }}

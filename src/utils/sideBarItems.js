@@ -666,7 +666,6 @@ export const SMSsidebarItems = [
       },
     ],
   },
-  
 ];
 
 // TMS Sidebar
@@ -1103,6 +1102,67 @@ export const EfilingSideBarBranchItem = [
         itemName: "Approved Cases",
         link: "/efiling/dashboard/file-register-list/files-list/cases/approved",
         icon: faClipboardList,
+      },
+    ],
+  },
+];
+
+// Legislation Management System SideBar Items
+export const LegislationSideBarItems = [
+  {
+    itemName: "Dashboard",
+    link: "/lgms/dashboard",
+    icon: faHome,
+  },
+  {
+    itemName: "Bills",
+    link: "/lgms/dashboard/bills",
+    icon: faBookOpen,
+    subItems: [
+      {
+        itemName: "Legislation Bills",
+        link: "/lgms/dashboard/bills/legislation-bills",
+        icon: faBookOpen,
+      },
+      {
+        itemName: "Search Bills",
+        link: "/lgms/dashboard/bills/search-bills",
+        icon: faBookOpen,
+      },
+    ],
+  },
+  {
+    itemName: "Ordinances",
+    link: "/lgms/dashboard/ordinances",
+    icon: faBookOpen,
+    subItems: [
+      {
+        itemName: "Ordinance List",
+        link: "/lgms/dashboard/ordinances/ordinance-list",
+        icon: faBookOpen,
+      },
+      {
+        itemName: "Search Ordinance",
+        link: "/lgms/dashboard/ordinances/search-ordinance",
+        icon: faBookOpen,
+      },
+    ],
+  },
+
+  {
+    itemName: "Manage",
+    link: "/lgms/dashboard/ordinances",
+    icon: faBookOpen,
+    subItems: [
+      {
+        itemName: "Manage Bill Statuses",
+        link: "/lgms/dashboard/bill/manage-bill-statuses",
+        icon: faBookOpen,
+      },
+      {
+        itemName: "Manage Committees",
+        link: "/lgms/dashboard/committees/manage-committees",
+        icon: faBookOpen,
       },
     ],
   },

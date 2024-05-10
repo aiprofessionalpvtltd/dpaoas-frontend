@@ -170,6 +170,19 @@ import AddEditEventCalendar from "../pages/Dashboard/Modules/Notice/EventCalenda
 import MainDashboard from "../pages/Dashboard/Modules/EFiling/MainDashBoard";
 import SMSMembers from "../pages/Dashboard/Modules/SMS/Members";
 import SMSMembersAddEditForm from "../pages/Dashboard/Modules/SMS/Members/AddEditMembers";
+import LegislationManagementSystemDashboard from "../pages/Dashboard/Modules/LGMS";
+import SearchLegislationBills from "../pages/Dashboard/Modules/LGMS/Bills/SearchBills";
+import AllOrdinanceList from "../pages/Dashboard/Modules/LGMS/Ordinance/OrdinanceList";
+import SearchOrdinance from "../pages/Dashboard/Modules/LGMS/Ordinance/SearchOrdinance";
+
+import EditOrdinance from "../pages/Dashboard/Modules/LGMS/Ordinance/EditOrdinance";
+import AddOrdinance from "../pages/Dashboard/Modules/LGMS/Ordinance/AddOrdinance";
+import AllLegislationBillList from "../pages/Dashboard/Modules/LGMS/Bills/LegislationBills";
+import NewLegislationNABill from "../pages/Dashboard/Modules/LGMS/Bills/NABills/AddNABills";
+import NewLegislationSenateBill from "../pages/Dashboard/Modules/LGMS/Bills/SenateBills/AddSenateBills";
+import UpdateBills from "../pages/Dashboard/Modules/LGMS/Bills/NABills/EditNABills";
+import EditSenateBill from "../pages/Dashboard/Modules/LGMS/Bills/SenateBills/EditSenateBills";
+import AllBillStatuses from "../pages/Dashboard/Modules/LGMS/Manage/ManageBillStatuses";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -619,5 +632,56 @@ export const ProtectedRoutes = [
   {
     path: "/efiling/dashboard/addedit-file-heading",
     element: <AddEditFIleHeading />,
+  },
+
+  // Legislation Routes Start
+
+  {
+    path: "lgms/dashboard",
+    element: <LegislationManagementSystemDashboard />,
+  },
+  {
+    path: "/lgms/dashboard/bills/search-bills",
+    element: <SearchLegislationBills />,
+  },
+  {
+    path: "/lgms/dashboard/ordinances/ordinance-list",
+    element: <AllOrdinanceList />,
+  },
+  {
+    path: "/lgms/dashboard/ordinances/search-ordinance",
+    element: <SearchOrdinance />,
+  },
+  {
+    path: "/lgms/dashboard/ordinances/add/ordinance",
+    element: <AddOrdinance />,
+  },
+  {
+    path: "/lgms/dashboard/ordinances/edit/ordinance",
+    element: <EditOrdinance />,
+  },
+  {
+    path: "/lgms/dashboard/bills/legislation-bills",
+    element: <AllLegislationBillList />,
+  },
+  {
+    path: "/lgms/dashboard/bills/NA-bills",
+    element: <NewLegislationNABill />,
+  },
+  {
+    path: "/lgms/dashboard/bills/edit/NA-bills/",
+    element: <UpdateBills />,
+  },
+  {
+    path: "/lgms/dashboard/bills/senate-bills",
+    element: <NewLegislationSenateBill />,
+  },
+  {
+    path: "/lgms/dashboard/bills/edit/senate-bills",
+    element: <EditSenateBill />,
+  },
+  {
+    path: "/lgms/dashboard/bill/manage-bill-statuses",
+    element: <AllBillStatuses />,
   },
 ];
