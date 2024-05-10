@@ -19,7 +19,7 @@ function SMSMembers() {
   const [members, setMembers] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
-  const pageSize = 10; // Set your desired page size
+  const pageSize = 15; // Set your desired page size
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
@@ -31,13 +31,9 @@ function SMSMembers() {
       id: item.id,
       memberName: `${item.memberName}`,
       politicalParty: `${item?.politicalParties?.partyName}`,
-      // politicalParty: `${item?.politicalParty}`,
       electionType: item?.electionType,
-      tenure: item?.tenures?.tenureName,
+      reason: item?.reason ? item?.reason:"---",
       phoneNo: item?.phoneNo,
-      gender: item?.gender,
-      fromDate: moment(item.fromDate).format("YYYY/MM/DD"),
-      toDate: moment(item.toDate).format("YYYY/MM/DD"),
       memberStatus: item?.memberStatus,
     }));
   };
@@ -80,7 +76,6 @@ function SMSMembers() {
         title1={"Members"}
       />
       <ToastContainer />
-
       <div class="container-fluid dash-detail-container card">
         <div class="row">
           <div class="col-12">

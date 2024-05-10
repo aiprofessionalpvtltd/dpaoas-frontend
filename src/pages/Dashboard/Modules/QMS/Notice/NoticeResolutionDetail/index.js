@@ -88,6 +88,23 @@ function QMSNoticeResolutionDetail() {
         ? location?.state?.englishText
         : "",
       urduText: location?.state?.urduText ? location?.state?.urduText : "",
+      colourResNo:location?.state?.colourResNo ? location?.state?.colourResNo : "",
+      resolutionDiaryNo: location?.state?.resolutionDiaries ? location?.state?.resolutionDiaries?.resolutionDiaryNo : "",
+      dateOfMovingHouse:location?.state?.dateOfMovingHouse
+      ? moment(
+          location?.state?.dateOfMovingHouse,
+        ).toDate()
+      : "",
+      dateOfDiscussion:location?.state?.dateOfDiscussion
+      ? moment(
+          location?.state?.dateOfDiscussion,
+        ).toDate()
+      : "",
+      dateOfPassing:location?.state?.dateOfPassing
+      ? moment(
+          location?.state?.dateOfPassing,
+        ).toDate()
+      : ""
     },
     // validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -107,7 +124,14 @@ function QMSNoticeResolutionDetail() {
       data.append(`resolutionMovers[${index}][fkMemberId]`, mover.value);
     });
     // data.append("resolutionMovers[]", values.resolutionMovers?.value);
-    data.append("resolutionDiaryNo", values?.noticeOfficeDiaryNo);
+    data.append("noticeOfficeDiaryNo", values?.noticeOfficeDiaryNo);
+
+    data.append("colourResNo", values.colourResNo);
+    data.append("resolutionDiaryNo", values.resolutionDiaryNo);
+    data.append("dateOfMovingHouse", values.dateOfMovingHouse);
+    data.append("dateOfDiscussion", values.dateOfDiscussion);
+    data.append("dateOfPassing", values.dateOfPassing);
+
     data.append("englishText", values.englishText);
     data.append("urduText", values.urduText);
 
@@ -358,6 +382,123 @@ function QMSNoticeResolutionDetail() {
                         isMulti
                         // className="form-select"
                       />
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="mb-3">
+                      <label class="form-label">Color No</label>
+                      <input
+                        type="text"
+                        value={formik.values.colourResNo}
+                        className={`form-control`}
+                        id="colourResNo"
+                        // readOnly={true}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="row">
+                <div class="col">
+                    <div class="mb-3">
+                      <label class="form-label">Resolution Diary No</label>
+                      <input
+                        type="text"
+                        value={formik.values.resolutionDiaryNo}
+                        className={`form-control`}
+                        id="resolutionDiaryNo"
+                        // readOnly={true}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      />
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="mb-3" style={{ position: "relative" }}>
+                      <label class="form-label">Date Of Moving House</label>
+                      <span
+                        style={{
+                          position: "absolute",
+                          right: "15px",
+                          top: "36px",
+                          zIndex: 1,
+                          fontSize: "20px",
+                          zIndex: "1",
+                          color: "#666",
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faCalendarAlt} />
+                      </span>
+                      <DatePicker
+                        selected={formik.values.dateOfMovingHouse}
+                        maxDate={new Date()}
+                        onChange={(date) =>
+                          formik.setFieldValue("dateOfMovingHouse", date)
+                        }
+                        onBlur={formik.handleBlur}
+                        className={`form-control`}
+                        dateFormat={"dd-MM-yyyy"}
+                      />
+                      
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="mb-3" style={{ position: "relative" }}>
+                      <label class="form-label">Date Of Discussion</label>
+                      <span
+                        style={{
+                          position: "absolute",
+                          right: "15px",
+                          top: "36px",
+                          zIndex: 1,
+                          fontSize: "20px",
+                          zIndex: "1",
+                          color: "#666",
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faCalendarAlt} />
+                      </span>
+                      <DatePicker
+                        selected={formik.values.dateOfDiscussion}
+                        maxDate={new Date()}
+                        onChange={(date) =>
+                          formik.setFieldValue("dateOfDiscussion", date)
+                        }
+                        onBlur={formik.handleBlur}
+                        className={`form-control`}
+                        dateFormat={"dd-MM-yyyy"}
+                      />
+                      
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="mb-3" style={{ position: "relative" }}>
+                      <label class="form-label">Date Of Passing</label>
+                      <span
+                        style={{
+                          position: "absolute",
+                          right: "15px",
+                          top: "36px",
+                          zIndex: 1,
+                          fontSize: "20px",
+                          zIndex: "1",
+                          color: "#666",
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faCalendarAlt} />
+                      </span>
+                      <DatePicker
+                        selected={formik.values.dateOfPassing}
+                        maxDate={new Date()}
+                        onChange={(date) =>
+                          formik.setFieldValue("dateOfPassing", date)
+                        }
+                        onBlur={formik.handleBlur}
+                        className={`form-control`}
+                        dateFormat={"dd-MM-yyyy"}
+                      />
+                      
                     </div>
                   </div>
                 </div>

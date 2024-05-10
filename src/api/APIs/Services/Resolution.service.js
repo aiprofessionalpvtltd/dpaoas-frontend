@@ -25,7 +25,7 @@ export const getAllResolutions = async (page, pageSize) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClientMMS.get(
-      `/resolution?currentPage=${page}&pageSize=${pageSize}`,
+      `/resolution/all?currentPage=${page}&pageSize=${pageSize}`,
       {
         // headers: {
         //   Authorization: `Bearer ${token}`,

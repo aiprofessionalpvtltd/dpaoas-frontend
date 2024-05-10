@@ -110,10 +110,9 @@ function SMSInstantSMS() {
   };
 
   const transfrerListData = (apiData) => {
-    return apiData.map((leave, index) => ({
-      memberName: leave?.member?.memberName,
-      phoneNo: leave?.member?.phoneNo,
-      // gender: leave?.member?.gender,
+    return apiData.map((item, index) => ({
+      memberName: item?.member?.memberName,
+      phoneNo: item?.member?.phoneNo,
     }));
   };
   const HandleSignalListData = async (e) => {

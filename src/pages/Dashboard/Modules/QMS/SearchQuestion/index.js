@@ -15,6 +15,7 @@ import {
   getAllQuestionByID,
   getAllQuestionStatus,
   searchQuestion,
+  updateQuestionStatus,
 } from "../../../../../api/APIs/Services/Question.service";
 import {
   showErrorMessage,
@@ -24,14 +25,18 @@ import { AuthContext } from "../../../../../api/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
+import { getUserData } from "../../../../../api/Auth";
 
 function QMSSearchQuestion() {
   const navigate = useNavigate();
   const { members, sessions } = useContext(AuthContext);
-
+  const UserData = getUserData();
   const [currentPage, setCurrentPage] = useState(0);
   const [searchedData, setSearchedData] = useState([]);
   const [allquestionStatus, setAllQuestionStatus] = useState([]);
+  const [isChecked, setIsChecked] = useState([]);
+  const [questionStatus, setQuestionStatus] = useState("");
+  const [statusDate, setStatusDate] = useState("");
 
   const [count, setCount] = useState(null);
 
@@ -106,10 +111,10 @@ function QMSSearchQuestion() {
     };
 
     try {
-      const response = await searchQuestion(searchParams);
+      const response = await searchQuestion(searchParams, currentPage, pageSize);
       if (response?.success) {
         showSuccessMessage(response?.message);
-        const transformedData = transformLeavesData(response?.data);
+        const transformedData = transformLeavesData(response?.data?.questions);
         setSearchedData(transformedData);
       }
     } catch (error) {
@@ -143,6 +148,19 @@ function QMSSearchQuestion() {
     }
   };
 
+  const handleChangeStatus = async (id) => {
+    try {
+      const data = { isChecked, questionStatus: questionStatus, statusDate: statusDate, deferredBy: UserData?.fkUserId }; 
+      console.log("isChecked", data);
+
+      const response = await updateQuestionStatus(data);
+      showSuccessMessage(response.message);
+      formik.resetForm({});
+    } catch (error) {
+      showErrorMessage(error.response?.data?.message);
+    }
+  };
+
   useEffect(() => {
     GetALlStatus();
   }, []);
@@ -152,6 +170,7 @@ function QMSSearchQuestion() {
   const handleResetForm = () => {
     formik.resetForm({});
   };
+
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <Header
@@ -554,27 +573,25 @@ function QMSSearchQuestion() {
                   pageSize={pageSize}
                   headertitlebgColor={"#666"}
                   headertitletextColor={"#FFF"}
+                  isChecked={isChecked}
+                  setIsChecked={setIsChecked}
+                  isCheckbox={true}
                 />
               </div>
               <div class="row mt-4">
                 <div class="col">
                   <div class="mb-3">
                     <label class="form-label">Question Status</label>
-                    <select class="form-select">
-                      <option>Question Status</option>
-                      <option>Admitted</option>
-                      <option>Admitted but Lapsed</option>
-                      <option>Deferred</option>
-                      <option>Disallowed</option>
-                      <option>Disallowed on Reconsideration</option>
-                      <option>File not Available</option>
-                      <option>Lapsed</option>
-                      <option>NFA</option>
-                      <option>Replied</option>
-                      <option>Replied/Referred to Standing Committee</option>
-                      <option>Under Correspondence</option>
-                      <option>Under Process</option>
-                      <option>Withdrawn</option>
+                    <select class="form-select" onChange={(e) => setQuestionStatus(e.target.value)}>
+                      <option value={""} selected>
+                        Select
+                      </option>
+                      {allquestionStatus &&
+                        allquestionStatus.map((item) => (
+                          <option key={item.id} value={item.id}>
+                            {item?.questionStatus}
+                          </option>
+                        ))}
                     </select>
                   </div>
                 </div>
@@ -596,8 +613,8 @@ function QMSSearchQuestion() {
                     </span>
                     <DatePicker
                       minDate={new Date()}
-                      // selected={formik.values.fromNoticeDate}
-                      // onChange={(date) => formik.setFieldValue("fromNoticeDate", date)}
+                      selected={statusDate}
+                      onChange={(date) => setStatusDate(date)}
                       className={"form-control"}
                     />
                   </div>
@@ -606,7 +623,7 @@ function QMSSearchQuestion() {
                   <button
                     style={{ marginTop: "30px" }}
                     class="btn btn-primary"
-                    type="submit"
+                    onClick={handleChangeStatus}
                   >
                     Change Status
                   </button>

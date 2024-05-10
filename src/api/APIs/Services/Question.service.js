@@ -581,3 +581,22 @@ export const generateRotaFurtherAllotmentList = async (data) => {
     throw error;
   }
 };
+
+export const updateQuestionStatus = async (data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.put(
+      `/questions/changeQuestionStatus`,
+      data,
+      {
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // }
+      }
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};

@@ -109,7 +109,7 @@ function NoticeResolutionDetail() {
       data.append(`resolutionMovers[${index}][fkMemberId]`, mover.value);
     });
     // data.append("resolutionMovers[]", values.resolutionMovers?.value);
-    data.append("resolutionDiaryNo", values?.noticeOfficeDiaryNo);
+    data.append("noticeOfficeDiaryNo", values?.noticeOfficeDiaryNo);
     data.append("englishText", values.englishText);
     data.append("urduText", values.urduText);
 

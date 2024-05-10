@@ -64,7 +64,10 @@ function CustomTable({
   handleRecover,
   hidebtn1,
   showCreateBtn,
-  hendleCreateBtn
+  hendleCreateBtn,
+  isCheckbox,
+  isChecked,
+  setIsChecked
 }) {
   const keys = data?.length > 0 ? Object.keys(data[0]) : [];
 const filteredKeys = keys?.filter((key) => {
@@ -243,6 +246,7 @@ const filteredKeys = keys?.filter((key) => {
           >
             <thead>
               <tr>
+              {isCheckbox && <th>Select</th>}
                 {filteredKeys?.map((key, index) => (
                   <th
                     key={index}
@@ -282,6 +286,22 @@ const filteredKeys = keys?.filter((key) => {
               {totalCount || hidePagination
                 ? data?.map((item, rowIndex) => (
                     <tr key={rowIndex}>
+                    {isCheckbox && (
+                      <td className="text-center">
+                        <input
+                          type="checkbox"
+                          checked={isChecked.includes(item.QID)} // Check if item.QID is in the array of selected IDs
+                          onChange={() => {
+                            // Toggle the selection of the current item
+                            const updatedChecked = isChecked.includes(item.QID)
+                              ? isChecked.filter(id => id !== item.QID) // If already selected, remove it from the array
+                              : [...isChecked, item.QID]; // If not selected, add it to the array
+                            setIsChecked(updatedChecked);
+                          }}
+                        />
+                      </td>
+                    )}
+
                       {filteredKeys?.map((key, colIndex) => (
                         // <td key={colIndex} className="text-center">
                         //     {item[key]}
@@ -522,6 +542,22 @@ const filteredKeys = keys?.filter((key) => {
                   ))
                 : displayedData?.map((item, rowIndex) => (
                     <tr key={rowIndex}>
+                    {isCheckbox && (
+                      <td className="text-center">
+                        <input
+                          type="checkbox"
+                          checked={isChecked.includes(item.QID)} // Check if item.QID is in the array of selected IDs
+                          onChange={() => {
+                            // Toggle the selection of the current item
+                            const updatedChecked = isChecked.includes(item.QID)
+                              ? isChecked.filter(id => id !== item.QID) // If already selected, remove it from the array
+                              : [...isChecked, item.QID]; // If not selected, add it to the array
+                            setIsChecked(updatedChecked);
+                          }}
+                        />
+                      </td>
+                    )}
+
                       {filteredKeys?.map((key, colIndex) => (
                         // <td key={colIndex} className="text-center">
                         //     {item[key]}
