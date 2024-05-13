@@ -149,6 +149,26 @@ export const updatedOrdinance = async (id, data) => {
     throw error;
   }
 };
+
+// Delete Ordinance
+
+export const DeleteOrdinance = async (id) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.delete(
+      `ordinance/delete/${id}`
+      // {
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // }
+      // },
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
 // Search Ordinance
 export const SearchedOrdinance = async (
   currentPage,
@@ -268,6 +288,26 @@ export const UpdateNABill = async (id, data) => {
       }
     );
 
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+// Delete Ordinance
+
+export const DeleteLegislationBill = async (id) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.delete(
+      `senate-bill/delete/${id}`
+      // {
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // }
+      // },
+    );
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);

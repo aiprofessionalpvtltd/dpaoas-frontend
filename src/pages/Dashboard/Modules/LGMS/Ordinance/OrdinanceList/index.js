@@ -2,7 +2,14 @@ import { useCallback, useEffect, useState } from "react";
 import Header from "../../../../../../components/Header";
 import { Layout } from "../../../../../../components/Layout";
 import { LegislationSideBarItems } from "../../../../../../utils/sideBarItems";
-import { GetAllOrdinancesList } from "../../../../../../api/APIs/Services/LegislationModule.service";
+import {
+  DeleteOrdinance,
+  GetAllOrdinancesList,
+} from "../../../../../../api/APIs/Services/LegislationModule.service";
+import {
+  showSuccessMessage,
+  showErrorMessage,
+} from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import { useNavigate } from "react-router-dom";
@@ -59,10 +66,18 @@ const AllOrdinanceList = () => {
     GetAllOrdinancesApi();
   }, [GetAllOrdinancesApi]);
 
-  //   Handle Creating Ordinanace
-  // const handleAddOrdinance = () => {
-  //   navigate("/lgms/dashboard/ordinances/addedit/ordinance");
-  // };
+  //  Delete Ordinaance
+  const handleDeleteOrdinance = async (id) => {
+    try {
+      const resposne = await DeleteOrdinance(id);
+      if (resposne?.success) {
+        showSuccessMessage(resposne?.message);
+        GetAllOrdinancesApi();
+      }
+    } catch (error) {
+      showErrorMessage(error?.message);
+    }
+  };
   return (
     <Layout
       module={true}
@@ -98,7 +113,7 @@ const AllOrdinanceList = () => {
                 state: item,
               })
             }
-            //   handleDelete={(item) => handleDeleteOrdinance(item?.id)}
+            handleDelete={(item) => handleDeleteOrdinance(item?.id)}
           />
         </div>
       </div>

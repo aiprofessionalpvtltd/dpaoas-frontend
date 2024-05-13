@@ -2,11 +2,18 @@ import { useCallback, useEffect, useState } from "react";
 import Header from "../../../../../../components/Header";
 import { Layout } from "../../../../../../components/Layout";
 import { LegislationSideBarItems } from "../../../../../../utils/sideBarItems";
-import { getAllLegislationBills } from "../../../../../../api/APIs/Services/LegislationModule.service";
+import {
+  DeleteLegislationBill,
+  getAllLegislationBills,
+} from "../../../../../../api/APIs/Services/LegislationModule.service";
 import { ToastContainer } from "react-toastify";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../../utils/ToastAlert";
 
 const AllLegislationBillList = () => {
   const navigate = useNavigate();
@@ -142,6 +149,20 @@ const AllLegislationBillList = () => {
   const handleEditNABill = (id) => {
     navigate("/lgms/dashboard/bills/edit/NA-bills/", { state: id });
   };
+
+  // Handle Delete Bills
+  const handleDeleteLegislationBill = async (id) => {
+    try {
+      const resposne = await DeleteLegislationBill(id);
+      if (resposne?.success) {
+        showSuccessMessage(resposne?.message);
+        getBills();
+      }
+    } catch (error) {
+      showErrorMessage(error?.message);
+    }
+  };
+
   return (
     <Layout
       module={true}
@@ -214,8 +235,7 @@ const AllLegislationBillList = () => {
                 ? (item) => handleEditSenateBill(item?.id)
                 : (item) => handleEditNABill(item?.id)
             }
-
-            //   handleDelete={(item) => handleDeleteOrdinance(item?.id)}
+            handleDelete={(item) => handleDeleteLegislationBill(item?.id)}
           />
         </div>
       </div>
