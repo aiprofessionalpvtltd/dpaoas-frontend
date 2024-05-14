@@ -183,6 +183,18 @@ import NewLegislationSenateBill from "../pages/Dashboard/Modules/LGMS/Bills/Sena
 import UpdateBills from "../pages/Dashboard/Modules/LGMS/Bills/NABills/EditNABills";
 import EditSenateBill from "../pages/Dashboard/Modules/LGMS/Bills/SenateBills/EditSenateBills";
 import AllBillStatuses from "../pages/Dashboard/Modules/LGMS/Manage/ManageBillStatuses";
+import LGMSMembers from "../pages/Dashboard/Modules/LGMS/Manage/Members";
+import LGMSMembersAddEditForm from "../pages/Dashboard/Modules/LGMS/Manage/Members/AddEditMembers";
+import LGMSParliamentaryYear from "../pages/Dashboard/Modules/LGMS/Manage/ParliamentaryYear";
+import LGMSAddEditParliamentaryYearForm from "../pages/Dashboard/Modules/LGMS/Manage/ParliamentaryYear/AddEditParliamentaryYear";
+import LGMSSessions from "../pages/Dashboard/Modules/LGMS/Manage/Sessions";
+import LGMSAddEditSessionsForm from "../pages/Dashboard/Modules/LGMS/Manage/Sessions/AddEditSessions";
+import LGMSTenures from "../pages/Dashboard/Modules/LGMS/Manage/Tenures";
+import LGMSAddEditTenuresForm from "../pages/Dashboard/Modules/LGMS/Manage/Tenures/AddEditTenures";
+import LGMSTerms from "../pages/Dashboard/Modules/LGMS/Manage/Terms";
+import LGMSAddEditTermsForm from "../pages/Dashboard/Modules/LGMS/Manage/Terms/AddEditTerms";
+import LGMSCommittees from "../pages/Dashboard/Modules/LGMS/Manage/Committees";
+import LGMSAddEditCommiteesForm from "../pages/Dashboard/Modules/LGMS/Manage/Committees/AddEditCommittees";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -684,4 +696,58 @@ export const ProtectedRoutes = [
     path: "/lgms/dashboard/bill/manage-bill-statuses",
     element: <AllBillStatuses />,
   },
+
+  {
+    path: "/lgms/dashboard/manage/members/list",
+    element: <LGMSMembers />,
+  },
+  {
+    path: "/lgms/dashboard/manage/members/addedit",
+    element: <LGMSMembersAddEditForm />,
+  },
+  {
+    path: "/lgms/dashboard/manage/parliamentary-year/list",
+    element: <LGMSParliamentaryYear />,
+  },
+  {
+    path: "/lgms/dashboard/manage/parliamentary-year/addedit",
+    element: <LGMSAddEditParliamentaryYearForm />,
+  },
+  {
+    path: "/lgms/dashboard/manage/session/list",
+    element: <LGMSSessions />,
+  },
+
+  {
+    path: "/lgms/dashboard/manage/session/addedit",
+    element: <LGMSAddEditSessionsForm />,
+  },
+
+  {
+    path: "/lgms/dashboard/manage/tenures/list",
+    element: <LGMSTenures />,
+  },
+  {
+    path: "/lgms/dashboard/manage/tenures/addedit",
+    element: <LGMSAddEditTenuresForm />,
+  },
+
+  {
+    path: "/lgms/dashboard/manage/terms/list",
+    element: <LGMSTerms />,
+  },
+  {
+    path: "/lgms/dashboard/manage/terms/addedit",
+    element: <LGMSAddEditTermsForm />,
+  },
+
+  {
+    path: "/lgms/dashboard/manage/committees/list",
+    element: <LGMSCommittees />,
+  },
+  {
+    path: "/lgms/dashboard/manage/committees/addedit",
+    element: <LGMSAddEditCommiteesForm />,
+  },
+
 ];

@@ -7,7 +7,7 @@ import * as Yup from "yup";
 import DatePicker from "react-datepicker";
 import Header from "../../../../../../../components/Header";
 import { Layout } from "../../../../../../../components/Layout";
-import { QMSSideBarItems } from "../../../../../../../utils/sideBarItems";
+import { LegislationSideBarItems, QMSSideBarItems } from "../../../../../../../utils/sideBarItems";
 import { createTerm, getAllTenures, getTermByID, updateTerm } from "../../../../../../../api/APIs/Services/ManageQMS.service";
 import { showErrorMessage, showSuccessMessage } from "../../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
@@ -18,7 +18,7 @@ const validationSchema = Yup.object({
   endDate: Yup.string().required("End date is required"),
   tenureId: Yup.string().required("Tenure ID is required"),
 });
-function QMSAddEditTermsForm() {
+function LGMSAddEditTermsForm() {
   const location = useLocation();
   const [tenures, setTenures] = useState([]);
   const [termsById, setTermsById] = useState();
@@ -118,12 +118,12 @@ function QMSAddEditTermsForm() {
   }, [termsById, formik.setValues]);
 
   return (
-    <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
+    <Layout module={true} sidebarItems={LegislationSideBarItems} centerlogohide={true}>
       <Header
-        dashboardLink={"/qms/dashboard"}
-        addLink1={"/qms/manage/terms"}
+        dashboardLink={"lgms/dashboard"}
+        addLink1={"/lgms/dashboard/manage/terms/list"}
         title1={"Terms"}
-        addLink2={"/qms/manage/terms/addedit"}
+        addLink2={"/lgms/dashboard/manage/terms/addedit"}
         title2={location && location?.state ? "Edit Terms" : "Add Terms"}
       />
       <ToastContainer />
@@ -269,4 +269,4 @@ function QMSAddEditTermsForm() {
   );
 }
 
-export default QMSAddEditTermsForm;
+export default LGMSAddEditTermsForm;

@@ -11,6 +11,7 @@ import {
 } from "../../../../../utils/ToastAlert";
 import {
   DeleteResearchServices,
+  UpdateResearchServices,
   getAllResarchServices,
 } from "../../../../../api/APIs/Services/Notice.service";
 
@@ -60,6 +61,23 @@ function CMSResearchServicesDashboard() {
     }
   };
 
+  const hendleCompleted = async (item) => {
+    const Data = {
+      isActive: "complete",
+      service_type: item?.serviceType,
+      details: item?.details,
+    };
+    try {
+      const response = await UpdateResearchServices(item?.SR, Data);
+      if (response.success) {
+        showSuccessMessage(response.message);
+        getAllResarchServicesApi()
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  };
+
   useEffect(() => {
     getAllResarchServicesApi();
   }, [currentPage]);
@@ -99,6 +117,8 @@ function CMSResearchServicesDashboard() {
                     })
                   }
                   handleDelete={(item) => handleDelete(item.SR)}
+                  showResolve={true}
+                  hendleResolve={(item) => hendleCompleted(item)}
                 />
               </div>
             </div>

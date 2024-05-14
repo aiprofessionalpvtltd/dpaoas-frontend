@@ -8,73 +8,40 @@ import DatePicker from "react-datepicker";
 import Header from "../../../../../../../components/Header";
 import { Layout } from "../../../../../../../components/Layout";
 import { QMSSideBarItems } from "../../../../../../../utils/sideBarItems";
-import { createTerm, getAllTenures, getTermByID, updateTerm } from "../../../../../../../api/APIs/Services/ManageQMS.service";
+import { createParliamentaryYears, getAllTenures, updateParliamentaryYears } from "../../../../../../../api/APIs/Services/ManageQMS.service";
 import { showErrorMessage, showSuccessMessage } from "../../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 
 const validationSchema = Yup.object({
-  termName: Yup.string().required("Term name is required"),
-  startDate: Yup.string().required("Start date is required"),
-  endDate: Yup.string().required("End date is required"),
-  tenureId: Yup.string().required("Tenure ID is required"),
+  parliamentaryTenure: Yup.string().required("Tenure is required"),
+  fkTenureId: Yup.string().required("Tenure ID is required"),
+  fromDate: Yup.string().required("From Date is required"),
+  toDate: Yup.string().required("To Date is required"),
+  description: Yup.string().required("Description is required"),
 });
-function QMSAddEditTermsForm() {
+function LGMSAddEditParliamentaryYearForm() {
   const location = useLocation();
   const [tenures, setTenures] = useState([]);
-  const [termsById, setTermsById] = useState();
 
+  console.log("location.state",location.state);
   const formik = useFormik({
     initialValues: {
-      termName: "",
-      startDate: "",
-      endDate: "",
-      tenureId: ""
+      parliamentaryTenure: location.state ? location.state?.parliamentaryTenure : "",
+      fkTenureId: location.state ? location?.state?.tenure?.id : "",
+      fromDate: location.state ? new Date(location.state?.fromDate) : "",
+      toDate: location.state ? new Date(location.state?.toDate) : "",
+      description: location.state ? location.state?.description : "",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       // Handle form submission here
       if (location?.state) {
-        handleEditTerms(values);
+        handleEditParliamentaryYear(values);
       } else {
-        handleCreateTerms(values);
+        handleCreateParliamentaryYear(values);
       }
     },
   });
-
-  const handleCreateTerms = async (values) => {
-    const data = {
-      termName: values?.termName,
-      fkTenureId: Number(values?.tenureId),
-      fromDate: values?.startDate,
-      toDate: values?.endDate
-    }
-
-    try {
-      const response = await createTerm(data);
-      if (response?.success) {
-        showSuccessMessage(response?.message);
-      }
-    } catch (error) {
-      showErrorMessage(error?.response?.data?.message);
-    }
-  }
-
-  const handleEditTerms = async (values) => {
-    const data = {
-      termName: values?.termName,
-      fkTenureId: Number(values?.tenureId),
-      fromDate: values?.startDate,
-      toDate: values?.endDate
-    }
-    try {
-      const response = await updateTerm(location?.state?.id, data);
-      if (response?.success) {
-        showSuccessMessage(response?.message);
-      }
-    } catch (error) {
-      showErrorMessage(error?.response?.data?.message);
-    }
-  }
 
   const handleTenures = async () => {
     try {
@@ -87,51 +54,63 @@ function QMSAddEditTermsForm() {
     }
   }
 
-  const getTermByIdApi = async () => {
+  const handleCreateParliamentaryYear = async (values) => {
+    const data = {
+      parliamentaryTenure: values.parliamentaryTenure,
+      fkTenureId: values.fkTenureId,
+      fromDate: values.fromDate,
+      toDate: values.toDate,
+      description: values.description
+    }
+
     try {
-      const response = await getTermByID(location.state?.id);
+      const response = await createParliamentaryYears(data);
       if (response?.success) {
-        setTermsById(response?.data);
+        showSuccessMessage(response?.message);
       }
     } catch (error) {
-      // showErrorMessage(error?.response?.data?.message);
+      showErrorMessage(error?.response?.data?.message);
     }
-  };
+  }
+
+  const handleEditParliamentaryYear = async (values) => {
+    const data = {
+      parliamentaryTenure: values.parliamentaryTenure,
+      fkTenureId: values.fkTenureId,
+      fromDate: values.fromDate,
+      toDate: values.toDate,
+      description: values.description
+    }
+
+    try {
+      const response = await updateParliamentaryYears(location?.state?.id, data);
+      if (response?.success) {
+        showSuccessMessage(response?.message);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  }
 
   useEffect(() => {
-    handleTenures();
-    if (location.state?.id) {
-      getTermByIdApi();
-    }
-  }, [])
-
-  useEffect(() => {
-    // Update form values when termsById changes
-    if (termsById) {
-      formik.setValues({
-        termName: termsById.termName || "",
-        startDate: new Date(termsById.fromDate) || "",
-        endDate: new Date(termsById.toDate) || "",
-        tenureId: termsById.fkTenureId || ""
-      });
-    }
-  }, [termsById, formik.setValues]);
+    handleTenures()
+  },[])
 
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <Header
-        dashboardLink={"/qms/dashboard"}
-        addLink1={"/qms/manage/terms"}
-        title1={"Terms"}
-        addLink2={"/qms/manage/terms/addedit"}
-        title2={location && location?.state ? "Edit Terms" : "Add Terms"}
+        dashboardLink={"lgms/dashboard"}
+        addLink1={"/lgms/dashboard/manage/parliamentary-year/list"}
+        title1={"Parliamentary Year"}
+        addLink2={"/lgms/dashboard/manage/parliamentary-year/addedit"}
+        title2={location && location?.state ? "Edit Parliamentary Year" : "Add Parliamentary Year"}
       />
       <ToastContainer />
 
       <div class="container-fluid">
         <div class="card">
           <div class="card-header red-bg" style={{ background: "#14ae5c" }}>
-            {location && location.state ? <h1>Edit Terms</h1> : <h1>Add Terms</h1>}
+            {location && location.state ? <h1>Edit Parliamentary Year</h1> : <h1>Add Parliamentary Year</h1>}
           </div>
           <div class="card-body">
             <form onSubmit={formik.handleSubmit}>
@@ -139,33 +118,32 @@ function QMSAddEditTermsForm() {
                 <div class="row">
                   <div class="col">
                     <div class="mb-3">
-                      <label class="form-label">Term Name</label>
+                      <label class="form-label">Parliamentary Tenure</label>
                       <input
                         type="text"
-                        placeholder={"Term Name"}
-                        value={formik.values.termName}
+                        placeholder={formik.values.parliamentaryTenure}
                         className={`form-control ${
-                          formik.touched.termName && formik.errors.termName ? "is-invalid" : ""
+                          formik.touched.parliamentaryTenure && formik.errors.parliamentaryTenure ? "is-invalid" : ""
                         }`}
-                        id="termName"
+                        id="parliamentaryTenure"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
-                      {formik.touched.termName && formik.errors.termName && (
-                        <div className="invalid-feedback">{formik.errors.termName}</div>
+                      {formik.touched.parliamentaryTenure && formik.errors.parliamentaryTenure && (
+                        <div className="invalid-feedback">{formik.errors.parliamentaryTenure}</div>
                       )}
                     </div>
                   </div>
-
-                  <div class="col-6">
-                      <div class="mb-3">
-                        <label class="form-label">Tenure ID</label>
-                        <select class="form-select"
-                          id="tenureId"
-                          name="tenureId"
+                  <div class="col">
+                    <div class="mb-3">
+                      <label class="form-label">Tenure ID</label>
+                      
+                      <select class="form-select"
+                          id="fkTenureId"
+                          name="fkTenureId"
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
-                          value={formik.values.tenureId}
+                          value={location.state?.tenure?.id || formik.values.fkTenureId || ""}
                         >
                           <option value={""} selected disabled hidden>
                             select
@@ -174,9 +152,13 @@ function QMSAddEditTermsForm() {
                               <option value={tenure?.id}>{tenure?.tenureName}</option>
                             ))}
                         </select>
-                      </div>
+                      {formik.touched.fkTenureId && formik.errors.fkTenureId && (
+                        <div className="invalid-feedback">{formik.errors.fkTenureId}</div>
+                      )}
                     </div>
+                  </div>
                 </div>
+
                 <div class="row">
                   <div className="col">
                     <div className="mb-3" style={{ position: "relative" }}>
@@ -195,21 +177,21 @@ function QMSAddEditTermsForm() {
                         <FontAwesomeIcon icon={faCalendarAlt} />
                       </span>
                       <DatePicker
-                        selected={formik.values.startDate}
+                        selected={formik.values.fromDate}
                         onChange={(date) =>
-                          formik.setFieldValue("startDate", date)
+                          formik.setFieldValue("fromDate", date)
                         }
                         onBlur={formik.handleBlur}
                         minDate={new Date()}
                         className={`form-control ${
-                          formik.touched.startDate && formik.errors.startDate
+                          formik.touched.fromDate && formik.errors.fromDate
                             ? "is-invalid"
                             : ""
                         }`}
                       />
-                      {formik.touched.startDate && formik.errors.startDate && (
+                      {formik.touched.fromDate && formik.errors.fromDate && (
                         <div className="invalid-feedback">
-                          {formik.errors.startDate}
+                          {formik.errors.fromDate}
                         </div>
                       )}
                     </div>
@@ -232,23 +214,38 @@ function QMSAddEditTermsForm() {
                         <FontAwesomeIcon icon={faCalendarAlt} />
                       </span>
                       <DatePicker
-                        selected={formik.values.endDate}
+                        selected={formik.values.toDate}
                         onChange={(date) =>
-                          formik.setFieldValue("endDate", date)
+                          formik.setFieldValue("toDate", date)
                         }
                         onBlur={formik.handleBlur}
                         minDate={new Date()}
                         className={`form-control ${
-                          formik.touched.endDate && formik.errors.endDate
+                          formik.touched.toDate && formik.errors.toDate
                             ? "is-invalid"
                             : ""
                         }`}
                       />
-                      {formik.touched.endDate && formik.errors.endDate && (
+                      {formik.touched.toDate && formik.errors.toDate && (
                         <div className="invalid-feedback">
-                          {formik.errors.endDate}
+                          {formik.errors.toDate}
                         </div>
                       )}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div className="col">
+                    <div className="mb-3">
+                      <label className="form-label">Description</label>
+                      <textarea
+                        className={`form-control`}
+                        id="description"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.description}
+                      ></textarea>
                     </div>
                   </div>
                 </div>
@@ -269,4 +266,4 @@ function QMSAddEditTermsForm() {
   );
 }
 
-export default QMSAddEditTermsForm;
+export default LGMSAddEditParliamentaryYearForm;
