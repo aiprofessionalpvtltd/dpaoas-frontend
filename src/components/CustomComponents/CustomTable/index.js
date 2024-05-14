@@ -108,7 +108,7 @@ const filteredKeys = keys?.filter((key) => {
   const vistorTooltip = <Tooltip id="visitor-tooltip">Visitors</Tooltip>;
   const printTooltip = <Tooltip id="print-tooltip">Print</Tooltip>;
   const duplicateTooltip = <Tooltip id="duplicate-tooltip">Duplicate</Tooltip>;
-  const resolveTooltip = <Tooltip id="print-tooltip">Resolve</Tooltip>;
+  const resolveTooltip = <Tooltip id="print-tooltip">Complete</Tooltip>;
   const assignedTooltip = <Tooltip id="print-tooltip">Assigne</Tooltip>;
   const createTooltip = <Tooltip id="create-tooltip">Create Case</Tooltip>;
   const attendanceTooltip = <Tooltip id="attendance-tooltip">Mark </Tooltip>;
@@ -308,11 +308,11 @@ const filteredKeys = keys?.filter((key) => {
                         // </td>
                         <td className="text-center">
                           {item[key] === "active" ||
-                          item[key] === "inactive" ? (
+                          item[key] === "inactive" || item[key] === "complete" || item[key] === "pending"? (
                             <span
                               className={`label label-sm ${
-                                item[key] === "active"
-                                  ? "label-success"
+                                item[key] === "active" || item[key] === "complete"
+                                  ? "label-success" : item[key] === "pending" ? "label-pending"
                                   : "label-danger"
                               }`}
                             >

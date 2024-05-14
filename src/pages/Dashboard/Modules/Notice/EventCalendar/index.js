@@ -56,7 +56,7 @@ function EventCalendar() {
   };
   useEffect(() => {
     getEventCalendarApi();
-  }, [getEventCalendarApi]);
+  }, [currentPage]);
   return (
     <Layout
       module={true}

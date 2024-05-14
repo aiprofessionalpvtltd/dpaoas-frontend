@@ -11,6 +11,7 @@ import {
 } from "../../../../../utils/ToastAlert";
 import {
   DeleteSpeachOnDemand,
+  UpdateSpeachOnDemand,
   getAllSpeachOnDemand,
 } from "../../../../../api/APIs/Services/Notice.service";
 import moment from "moment";
@@ -27,6 +28,7 @@ function CMSSpeechOnDemandDashboard() {
   };
   const transformSpeechOnDemandData = (apiData) => {
     return apiData.map((item, index) => ({
+      internalId:item?.session?.id ? item?.session?.id :"",
       SR: item?.id,
       sessionno: item?.session?.sessionName ? item?.session?.sessionName : "",
       fromdate: item?.date_from
@@ -64,6 +66,28 @@ function CMSSpeechOnDemandDashboard() {
       }
     } catch (error) {
       showErrorMessage(error.response.data.message);
+    }
+  };
+  const HendleCompleted = async (item) => {
+    const data = {
+      isActive: "complete",
+      fkSessionNo: item?.internalId,
+      date_to: item?.todate,
+      date_from: item?.fromdate,
+      delivery_on: item?.deliverOn,
+      whatsapp_number: item?.whatsappnumber,
+      justification: item?.justification,
+      is_certified: true,
+      
+    };
+    try {
+      const response = await UpdateSpeachOnDemand(item?.SR, data);
+      if (response.success) {
+        showSuccessMessage(response.message);
+        getAllSpeachOnDemandAPi()
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
     }
   };
 
@@ -106,6 +130,8 @@ function CMSSpeechOnDemandDashboard() {
                       state: { id: item?.SR },
                     })
                   }
+                  showResolve={true}
+                  hendleResolve={(item) => HendleCompleted(item)}
                   handleDelete={(item) => handleDelete(item.SR)}
                 />
               </div>

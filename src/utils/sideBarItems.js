@@ -250,34 +250,34 @@ export const NoticeSidebarItems = [
   //     // },
   //   ],
   // },
-  {
-    itemName: "Manage",
-    link: "/notice/manage",
-    icon: faBarsProgress,
-    subItems: [
-      // {
-      //itemName: "Manage Session Days",
-      //  link: "/notice/manage/manage-session-days",
-      // icon: faClipboardList,
-      //  },
-      {
-        itemName: "Session Days",
-        link: "/notice/manage/manage-session-days",
-        icon: faCalendarDays,
-      },
-      {
-        itemName: "Seating Plan",
-        link: "/notice/manage/manage-seating-plan",
-        target: "blank",
-        icon: faChair,
-      },
-      {
-        itemName: "Member Attendance",
-        link: "/notice/manage/single-member-session-attendance",
-        icon: faChair,
-      },
-    ],
-  },
+  // {
+  //   itemName: "Manage",
+  //   link: "/notice/manage",
+  //   icon: faBarsProgress,
+  //   subItems: [
+  //     // {
+  //     //itemName: "Manage Session Days",
+  //     //  link: "/notice/manage/manage-session-days",
+  //     // icon: faClipboardList,
+  //     //  },
+  //     {
+  //       itemName: "Session Days",
+  //       link: "/notice/manage/manage-session-days",
+  //       icon: faCalendarDays,
+  //     },
+  //     {
+  //       itemName: "Seating Plan",
+  //       link: "/notice/manage/manage-seating-plan",
+  //       target: "blank",
+  //       icon: faChair,
+  //     },
+  //     {
+  //       itemName: "Member Attendance",
+  //       link: "/notice/manage/single-member-session-attendance",
+  //       icon: faChair,
+  //     },
+  //   ],
+  // },
   {
     itemName: "Speech On demand",
     link: "/notice/speech-on-demand",
@@ -294,28 +294,28 @@ export const NoticeSidebarItems = [
     link: "/notice/research-services",
     icon: faHome,
   },
-  {
-    itemName: "Reports",
-    link: "/notice/reports",
-    icon: faFileLines,
-    subItems: [
-      {
-        itemName: "Business Summary",
-        link: "/notice/reports/business-summary",
-        icon: faSquarePollHorizontal,
-      },
-      {
-        itemName: "Attendence Reports",
-        link: "/notice/reports/attendence-reports",
-        icon: faClipboardList,
-      },
-      {
-        itemName: "Party/Province Reports",
-        link: "/notice/reports/party-province-annual-attendence-reports",
-        icon: faClipboardList,
-      },
-    ],
-  },
+  // {
+  //   itemName: "Reports",
+  //   link: "/notice/reports",
+  //   icon: faFileLines,
+  //   subItems: [
+  //     {
+  //       itemName: "Business Summary",
+  //       link: "/notice/reports/business-summary",
+  //       icon: faSquarePollHorizontal,
+  //     },
+  //     {
+  //       itemName: "Attendence Reports",
+  //       link: "/notice/reports/attendence-reports",
+  //       icon: faClipboardList,
+  //     },
+  //     {
+  //       itemName: "Party/Province Reports",
+  //       link: "/notice/reports/party-province-annual-attendence-reports",
+  //       icon: faClipboardList,
+  //     },
+  //   ],
+  // },
 ];
 
 //Motion Management SideBar items
@@ -1164,6 +1164,38 @@ export const LegislationSideBarItems = [
         link: "/lgms/dashboard/committees/manage-committees",
         icon: faBookOpen,
       },
+      {
+        itemName: "Members",
+        link: "/lgms/dashboard/manage/members/list",
+        icon: faBookOpen,
+      },
+      
+      {
+        itemName: "Parliamentary Years",
+        link: "/lgms/dashboard/manage/parliamentary-year/list",
+        icon: faBookOpen,
+      },
+      {
+        itemName: "Sessions",
+        link: "/lgms/dashboard/manage/session/list",
+        icon: faBookOpen,
+      },
+      {
+        itemName: "Tenures",
+        link: "/lgms/dashboard/manage/tenures/list",
+        icon: faBookOpen,
+      },
+      {
+        itemName: "Terms",
+        link: "/lgms/dashboard/manage/terms/list",
+        icon: faBookOpen,
+      },
+      {
+        itemName: "Committees",
+        link: "/lgms/dashboard/manage/committees/list",
+        icon: faBookOpen,
+      },
+      
     ],
   },
 ];
