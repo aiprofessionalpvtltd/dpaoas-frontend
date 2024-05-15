@@ -127,7 +127,7 @@ function PrivateBill() {
       <Header
         dashboardLink={"/notice/dashboard"}
         // addLink1={"/notice/question/sent"}
-        title1={"Private Bill"}
+        title1={"Private Member Bill"}
       />
 
       <CustomAlert
@@ -141,7 +141,7 @@ function PrivateBill() {
           <CustomTable
             singleDataCard={true}
             data={data}
-            tableTitle="Private Bill"
+            tableTitle="Private Member Bill"
             addBtnText={"Create Private Bill"}
             handleAdd={() =>
               navigate("/notice/legislation/private-bill/addedit")

@@ -110,7 +110,7 @@ function LGMSPrivateBill() {
       <Header
         dashboardLink={"/notice/dashboard"}
         // addLink1={"/notice/question/sent"}
-        title1={"Private Bill"}
+        title1={"Private Member Bill"}
       />
 
       <CustomAlert
@@ -124,7 +124,7 @@ function LGMSPrivateBill() {
           <CustomTable
             singleDataCard={true}
             data={data}
-            tableTitle="Private Bill"
+            tableTitle="Private Member Bill"
             hidebtn1={true}
             // addBtnText={"Create Private Bill"}
             // handleAdd={() =>

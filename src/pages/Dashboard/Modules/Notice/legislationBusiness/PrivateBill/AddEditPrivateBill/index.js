@@ -143,7 +143,7 @@ function AddEditPrivateBill() {
       <Header
         dashboardLink={"/notice/dashboard"}
         addLink1={"/notice/legislation/private-bill"}
-        title1={"Private Bills"}
+        title1={"Private Member Bills"}
         addLink2={"/notice/legislation/private-bill"}
         title2={location && location?.state ? "Edit Bill" : "Add Bill"}
       />
