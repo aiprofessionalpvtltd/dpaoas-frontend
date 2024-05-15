@@ -233,7 +233,7 @@ function SearchMotion() {
               class="card-header red-bg"
               style={{ background: "#14ae5c !important" }}
             >
-              <h1>SEARCH MOTION</h1>
+              <h1>Search</h1>
             </div>
             <div class="card-body">
               <form onSubmit={formik.handleSubmit}>

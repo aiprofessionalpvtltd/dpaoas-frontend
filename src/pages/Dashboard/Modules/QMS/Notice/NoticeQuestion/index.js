@@ -257,7 +257,7 @@ function QMSNoticeQuestion() {
               class="card-header red-bg"
               style={{ background: "#14ae5c !important" }}
             >
-              <h1>List QUESTION</h1>
+              <h1>Question List</h1>
             </div>
             <div class="card-body">
               <div class="container-fluid">
