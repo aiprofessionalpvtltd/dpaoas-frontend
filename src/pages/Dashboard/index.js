@@ -139,7 +139,7 @@ function Dashboard() {
     },
     {
       title: "Notice Management System",
-      link: "/notice/dashboard",
+      link: userRole?.fkBranchId === 9 ? "/notice/speech-on-demand" : "/notice/dashboard",
       type: "",
       cardbg: "darkGreenbg",
       icon: faBullhorn,
@@ -195,7 +195,7 @@ function Dashboard() {
     },
     {
       title: "Legislation Management System",
-      link: "/lgms/dashboard",
+      link: "/lgms/legislation/private-bill",
       type: "",
       cardbg: "greenbg",
       icon: faMailBulk,
@@ -217,7 +217,6 @@ function Dashboard() {
     rows.push(filteredTiles.slice(i, i + 4));
   }
 
-  console.log(rows, "rows");
   return (
     <Layout>
       <div class="dashboard-content" style={{ marginTop: "100px" }}>

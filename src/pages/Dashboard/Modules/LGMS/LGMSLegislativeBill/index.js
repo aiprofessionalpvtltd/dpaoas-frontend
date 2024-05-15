@@ -1,23 +1,21 @@
 import React, { useCallback, useEffect, useState } from "react";
-import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import {
   showErrorMessage,
   showSuccessMessage,
-} from "../../../../../../utils/ToastAlert";
+} from "../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
-import { Layout } from "../../../../../../components/Layout";
-import { NoticeSidebarItems } from "../../../../../../utils/sideBarItems";
+import { Layout } from "../../../../../components/Layout";
+import { LegislationSideBarItems } from "../../../../../utils/sideBarItems";
 import {
   DeleteLegislativeBill,
   getAllLegislativeBill,
-  getAllLegislativeBillNotice,
-  sendLegislativeBill,
-} from "../../../../../../api/APIs/Services/Notice.service";
-import Header from "../../../../../../components/Header";
+} from "../../../../../api/APIs/Services/Notice.service";
+import Header from "../../../../../components/Header";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
+import CustomTable from "../../../../../components/CustomComponents/CustomTable";
 
-function LegislativeBillList() {
+function LGMSLegislativeBill() {
   const navigate = useNavigate();
   const [count, setCount] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
@@ -41,7 +39,7 @@ function LegislativeBillList() {
 
   const getAllLegislativeBillApi = useCallback(async () => {
     try {
-      const response = await getAllLegislativeBillNotice(currentPage, pageSize);
+      const response = await getAllLegislativeBill(currentPage, pageSize);
       if (response?.success) {
         setCount(response?.data?.count);
         const trensferData = transformLegislativeData(
@@ -69,26 +67,10 @@ function LegislativeBillList() {
   useEffect(() => {
     getAllLegislativeBillApi();
   }, [currentPage]);
-
-  const sendBill = async (id) => {
-    try {
-      const data = {
-        billSentDate: new Date()
-      }
-      const response = await sendLegislativeBill(id, data);
-      if (response?.success) {
-        showSuccessMessage(response.message);
-        getAllLegislativeBillApi();
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   return (
     <Layout
       module={true}
-      sidebarItems={NoticeSidebarItems}
+      sidebarItems={LegislationSideBarItems}
       centerlogohide={true}
     >
       <ToastContainer />
@@ -120,12 +102,11 @@ function LegislativeBillList() {
               })
             }
             handleDelete={(item) => handleDelete(item.SR)}
-            showSent={true}
-            handleSent={(item) => sendBill(item?.SR)}
+            ActionHide={true}
           />
         </div>
       </div>
     </Layout>
   );
 }
-export default LegislativeBillList;
+export default LGMSLegislativeBill;

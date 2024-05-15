@@ -11,7 +11,8 @@ import {
   faUserCheck,
   faCirclePlus,
   faTrashArrowUp,
-  faListCheck
+  faListCheck,
+  faPaperPlane
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
@@ -67,7 +68,9 @@ function CustomTable({
   hendleCreateBtn,
   isCheckbox,
   isChecked,
-  setIsChecked
+  setIsChecked,
+  handleSent,
+  showSent
 }) {
   const keys = data?.length > 0 ? Object.keys(data[0]) : [];
 const filteredKeys = keys?.filter((key) => {
@@ -103,6 +106,7 @@ const filteredKeys = keys?.filter((key) => {
   const displayedData = data?.slice(startIndex, endIndex);
 
   const editTooltip = <Tooltip id="edit-tooltip">Edit</Tooltip>;
+  const sendTooltip = <Tooltip id="edit-tooltip">Send</Tooltip>;
   const viewTooltip = <Tooltip id="edit-tooltip">View</Tooltip>;
   const deleteTooltip = <Tooltip id="delete-tooltip">Delete</Tooltip>;
   const vistorTooltip = <Tooltip id="visitor-tooltip">Visitors</Tooltip>;
@@ -419,6 +423,20 @@ const filteredKeys = keys?.filter((key) => {
                                   </button>
                                 </OverlayTrigger>
                               )}
+                              {showSent && showSent && (
+                                <OverlayTrigger
+                                  placement="top"
+                                  overlay={sendTooltip}
+                                >
+                                  <button
+                                    onClick={() => handleSent(item)}
+                                    className="btn-xs black circle-btn"
+                                    data-id={item.id}
+                                  >
+                                    <FontAwesomeIcon icon={faPaperPlane} />
+                                  </button>
+                                </OverlayTrigger>
+                              )}
                               {!showEditIcon && !showEditIcon && (
                                 <OverlayTrigger
                                   placement="top"
@@ -583,6 +601,20 @@ const filteredKeys = keys?.filter((key) => {
                         <td className="text-center">
                           {!hideEditIcon && !hideEditIcon && (
                             <>
+                            {showSent && showSent && (
+                                <OverlayTrigger
+                                  placement="top"
+                                  overlay={sendTooltip}
+                                >
+                                  <button
+                                    onClick={() => handleSent(item)}
+                                    className="btn-xs black circle-btn"
+                                    data-id={item.id}
+                                  >
+                                    <FontAwesomeIcon icon={faPaperPlane} />
+                                  </button>
+                                </OverlayTrigger>
+                              )}
                               {item?.isEditable && (
                                 <OverlayTrigger
                                   placement="top"

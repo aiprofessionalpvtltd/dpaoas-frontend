@@ -100,6 +100,7 @@ function SearchQuestion() {
         Status: res.questionStatus?.questionStatus
           ? res.questionStatus?.questionStatus
           : "",
+        SentDate: res?.questionSentDate
       };
     });
   };
@@ -531,7 +532,7 @@ function SearchQuestion() {
                     handlePageChange={handlePageChange}
                     currentPage={currentPage}
                     showPrint={false}
-                    ActionHide={false}
+                    ActionHide={true}
                     headertitlebgColor={"#666"}
                     headertitletextColor={"#FFF"}
                     hideDeleteIcon={true}

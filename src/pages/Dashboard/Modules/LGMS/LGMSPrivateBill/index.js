@@ -1,25 +1,23 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Layout } from "../../../../../../components/Layout";
-import Header from "../../../../../../components/Header";
-import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
-import { NoticeSidebarItems } from "../../../../../../utils/sideBarItems";
+import { Layout } from "../../../../../components/Layout";
+import Header from "../../../../../components/Header";
+import CustomTable from "../../../../../components/CustomComponents/CustomTable";
+import { LegislationSideBarItems } from "../../../../../utils/sideBarItems";
 import {
   showErrorMessage,
   showSuccessMessage,
-} from "../../../../../../utils/ToastAlert";
+} from "../../../../../utils/ToastAlert";
 import {
   deletePrivateBill,
   getAllPrivateBill,
-  getAllPrivateBillNotice,
-  sendPrivateBill,
-} from "../../../../../../api/APIs/Services/Legislation.service";
-import PrivateBillModal from "../../../../../../components/PrivateBillModal";
+} from "../../../../../api/APIs/Services/Legislation.service";
+import PrivateBillModal from "../../../../../components/PrivateBillModal";
 import { ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { CustomAlert } from "../../../../../../components/CustomComponents/CustomAlert";
+import { CustomAlert } from "../../../../../components/CustomComponents/CustomAlert";
 import moment from "moment";
 
-function PrivateBill() {
+function LGMSPrivateBill() {
   const [currentPage, setCurrentPage] = useState(0);
   const pageSize = 4; // Set your desired page size
   const [count, setCount] = useState();
@@ -54,7 +52,7 @@ function PrivateBill() {
   };
   const getAllPrivateBillApi = useCallback(async () => {
     try {
-      const response = await getAllPrivateBillNotice(currentPage, pageSize);
+      const response = await getAllPrivateBill(currentPage, pageSize);
       if (response?.success) {
         const transformedData = transformPrivateData(
           response?.data?.privateMemberBills
@@ -95,25 +93,10 @@ function PrivateBill() {
     handleClose();
   };
 
-  const sendBill = async (id) => {
-    try {
-      const data = {
-        billSentDate: new Date()
-      }
-      const response = await sendPrivateBill(id, data);
-      if (response?.success) {
-        showSuccessMessage(response.message);
-        getAllPrivateBillApi();
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   return (
     <Layout
       module={true}
-      sidebarItems={NoticeSidebarItems}
+      sidebarItems={LegislationSideBarItems}
       centerlogohide={true}
     >
       <ToastContainer />
@@ -136,16 +119,17 @@ function PrivateBill() {
         handleOkClick={handleOkClick}
       />
 
-      <div class="row">
+      <div class="row mt-5">
         <div class="col-12">
           <CustomTable
             singleDataCard={true}
             data={data}
             tableTitle="Private Bill"
-            addBtnText={"Create Private Bill"}
-            handleAdd={() =>
-              navigate("/notice/legislation/private-bill/addedit")
-            }
+            hidebtn1={true}
+            // addBtnText={"Create Private Bill"}
+            // handleAdd={() =>
+            //   navigate("/notice/legislation/private-bill/addedit")
+            // }
             handleEdit={(item) =>
               navigate("/notice/legislation/private-bill/addedit", {
                 state: item,
@@ -161,10 +145,9 @@ function PrivateBill() {
             currentPage={currentPage}
             pageSize={pageSize}
             totalCount={count}
-            showAssigned={false}
+            showAssigned={true}
             hendleAssigned={(item) => openModal(item)}
-            showSent={true}
-            handleSent={(item) => sendBill(item?.id)}
+            ActionHide={true}
           />
         </div>
       </div>
@@ -172,4 +155,4 @@ function PrivateBill() {
   );
 }
 
-export default PrivateBill;
+export default LGMSPrivateBill;

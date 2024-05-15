@@ -14,9 +14,12 @@ import { useFormik } from "formik";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import {
   getAllMotion,
+  getAllMotionNotice,
   getMotionByID,
   getallMotionStatus,
   searchMotion,
+  searchMotionNotice,
+  sendToMotion,
 } from "../../../../../../api/APIs/Services/Motion.service";
 import { AuthContext } from "../../../../../../api/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -44,7 +47,7 @@ function SentMotion() {
       fromSession: "",
       toSession: "",
       motionType: "",
-      motionStatus: "0",
+      motionStatus: "",
       fromNoticeDate: "",
       toNoticeDate: "",
     },
@@ -66,7 +69,7 @@ function SentMotion() {
       formik?.values?.toSession ||
       formik?.values?.motionType ||
       formik?.values?.fromNoticeDate ||
-      formik?.values?.toNoticeDate
+      formik?.values?.toNoticeDate || formik?.values?.motionStatus
     ) {
       searchMotionList(formik?.values, page);
     }
@@ -129,7 +132,7 @@ function SentMotion() {
 
   const getMotionListDataa = useCallback(async () => {
     try {
-      const response = await getAllMotion(currentPage, pageSize);
+      const response = await getAllMotionNotice(currentPage, pageSize);
       if (response?.success) {
         const transformedData = transformMotionData(response?.data?.rows);
         setCount(response?.data?.count);
@@ -159,11 +162,14 @@ function SentMotion() {
       englishText: values?.keyword,
       motionWeek: values?.motionWeek,
       motionType: values?.motionType,
+      fkMotionStatus: values?.motionStatus
     };
+
+
     try {
-      const response = await searchMotion(page, pageSize, data); // Add await here
+      const response = await searchMotionNotice(page, pageSize, data); // Add await here
       if (response?.success) {
-        showSuccessMessage(response?.message);
+        // showSuccessMessage(response?.message);
         const transformedData = transformMotionData(response?.data?.rows);
         setMotionData(transformedData);
       }
@@ -213,12 +219,27 @@ function SentMotion() {
       formik?.values?.toSession ||
       formik?.values?.motionType ||
       formik?.values?.fromNoticeDate ||
-      formik?.values?.toNoticeDate
+      formik?.values?.toNoticeDate || formik?.values?.motionStatus
     ) {
       return;
     }
     getMotionListDataa();
   }, [getMotionListDataa, formik?.values]);
+
+  const sendMotion = async (id) => {
+    try {
+      const data = {
+        motionSentDate: new Date()
+      }
+      const response = await sendToMotion(id, data);
+      if (response?.success) {
+        showSuccessMessage(response.message);
+        getMotionListDataa();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <Layout
@@ -385,7 +406,7 @@ function SentMotion() {
                         id="motionStatus"
                         onBlur={formik.handleBlur}
                       >
-                        <option value={" "} selected disabled hidden>
+                        <option value={" "} selected>
                           Select
                         </option>
                         {motionStatus &&
@@ -567,6 +588,8 @@ function SentMotion() {
                     currentPage={currentPage}
                     pageSize={pageSize}
                     totalCount={count}
+                    showSent={true}
+                    handleSent={(item) => sendMotion(item?.id)}
                   />
                 </div>
               </form>

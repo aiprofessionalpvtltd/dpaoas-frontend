@@ -81,6 +81,7 @@ function SearchResolution() {
           ? res.resolutionStatus?.resolutionStatus
           : "",
         Movers: movers ? movers : "",
+        SentDate: res?.resolutionSentDate
       };
     });
   };
@@ -459,6 +460,7 @@ function SearchResolution() {
                     pageSize={pageSize}
                     hideDeleteIcon={true}
                     handleEdit={(item) => handleEdit(item.RID)}
+                    ActionHide={true}
                   />
                 </div>
               </div>

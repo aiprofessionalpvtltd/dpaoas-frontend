@@ -39,6 +39,24 @@ export const getAllResolutions = async (page, pageSize) => {
   }
 };
 
+export const getAllResolutionsNotice = async (page, pageSize) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/resolution/inNotice?currentPage=${page}&pageSize=${pageSize}`,
+      {
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // }
+      }
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
 export const getAllResolutionStatus = async () => {
   try {
     // const token = getAuthToken();
@@ -166,6 +184,24 @@ export const UpdateResolution = async (id, data) => {
           accept: "application/json",
           "Content-Type": "multipart/form-data",
         },
+      }
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const sendToResolution = async (id, data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.put(
+      `/resolution/sendToResolution/${id}`, data,
+      {
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // }
       }
     );
     return response?.data;

@@ -10,8 +10,10 @@ import {
 import {
   getAllQuestion,
   getAllQuestionByID,
+  getAllQuestionNotice,
   getAllQuestionStatus,
   searchQuestion,
+  sendToQuestion,
 } from "../../../../../../api/APIs/Services/Question.service";
 import { Field, Form, Formik, useFormik } from "formik";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
@@ -156,8 +158,8 @@ function SentQuestion() {
         if (response?.success) {
           showSuccessMessage(response?.message);
           setCount(response?.data?.count);
-          const transformedData = transformLeavesData(response.data?.questions);
-          setResData(transformedData);
+            const transformedData = transformLeavesData(response.data?.questions);
+            setResData(transformedData);
         }
         // formik.resetForm();
       } catch (error) {
@@ -186,7 +188,7 @@ function SentQuestion() {
 
   const getAllQuestionsApi = useCallback(async () => {
     try {
-      const response = await getAllQuestion(currentPage, pageSize);
+      const response = await getAllQuestionNotice(currentPage, pageSize);
       if (response?.success) {
         const transformedData = transformLeavesData(response?.data?.questions);
         setCount(response?.data?.count);
@@ -239,6 +241,22 @@ function SentQuestion() {
     formik.resetForm();
     getAllQuestionsApi();
   };
+
+  const sendQuestion = async (id) => {
+    try {
+      const data = {
+        questionSentDate: new Date()
+      }
+      const response = await sendToQuestion(id, data);
+      if (response?.success) {
+        showSuccessMessage(response.message);
+        getAllQuestionsApi();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <Layout
       module={true}
@@ -598,8 +616,10 @@ function SentQuestion() {
                     ActionHide={false}
                     hideEditIcon={false}
                     hideDeleteIcon={true}
+                    showSent={true}
                     handleAdd={(item) => navigate("/")}
                     handleEdit={(item) => handleEdit(item?.Id)}
+                    handleSent={(item) => sendQuestion(item?.Id)}
                   />
                 </div>
               </div>

@@ -1,7 +1,7 @@
 import { ToastContainer } from "react-toastify";
 import { Layout } from "../../../../../components/Layout";
 import Header from "../../../../../components/Header";
-import { NoticeSidebarItems } from "../../../../../utils/sideBarItems";
+import { NoticeSidebarItems, NoticeSidebarItemsTelecasting } from "../../../../../utils/sideBarItems";
 import CustomTable from "../../../../../components/CustomComponents/CustomTable";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -15,6 +15,8 @@ import {
   getAllSpeachOnDemand,
 } from "../../../../../api/APIs/Services/Notice.service";
 import moment from "moment";
+import { getUserData } from "../../../../../api/Auth";
+import axios from "axios";
 
 function CMSSpeechOnDemandDashboard() {
   const navigate = useNavigate();
@@ -22,6 +24,7 @@ function CMSSpeechOnDemandDashboard() {
   const [currentPage, setCurrentPage] = useState(0);
   const [speechOnDemand, setSpeechOnDemand] = useState([]);
   const pageSize = 10;
+  const UserData = getUserData();
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -94,10 +97,33 @@ function CMSSpeechOnDemandDashboard() {
   useEffect(() => {
     getAllSpeachOnDemandAPi();
   }, [currentPage]);
+
+  const handleDownload = (fileUrl) => {
+    // Check if fileUrl exists
+    if (!fileUrl) return;
+
+    // Extract the filename from the fileUrl
+    const filename = fileUrl.split("/").pop();
+
+    // Perform the download
+    axios({
+      url: fileUrl,
+      method: "GET",
+      responseType: "blob", // Important for handling binary data like files
+    }).then((response) => {
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", filename); // Set the filename for download
+      document.body.appendChild(link);
+      link.click();
+    });
+  };
+
   return (
     <Layout
       module={true}
-      sidebarItems={NoticeSidebarItems}
+      sidebarItems={UserData?.fkBranchId === 9 ? NoticeSidebarItemsTelecasting : NoticeSidebarItems}
       centerlogohide={true}
     >
       <ToastContainer />
@@ -130,9 +156,13 @@ function CMSSpeechOnDemandDashboard() {
                       state: { id: item?.SR },
                     })
                   }
-                  showResolve={true}
+                  showResolve={false}
+                  showEditIcon={true}
+                  hideDeleteIcon={true}
                   hendleResolve={(item) => HendleCompleted(item)}
                   handleDelete={(item) => handleDelete(item.SR)}
+                  showPrint={true}
+                  handlePrint={() => handleDownload(`http://172.16.170.8:5252/public/question/2024-05-15T04-08-30/letter.jpeg`)}
                 />
               </div>
             </div>

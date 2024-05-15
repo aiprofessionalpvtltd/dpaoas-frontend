@@ -33,6 +33,19 @@ export const getAllPrivateBill = async (page, pageSize) => {
     }
 };
 
+export const getAllPrivateBillNotice = async (page, pageSize) => {
+  try {
+      const token = getAuthToken();
+      const response = await axiosClientMMS.get(
+          `/privateMemberBills/inNotice?currentPage=${page}&pageSize=${pageSize}`,
+      );
+      return response?.data;
+  } catch (error) {
+      console.error("Error fetching API endpoint:", error);
+      throw error;
+  }
+};
+
 export const getPrivateBillById = async (id) => {
     try {
         const token = getAuthToken();
@@ -69,6 +82,24 @@ export const deletePrivateBill = async (id) => {
         //     Authorization: `Bearer ${token}`,
         //   },
         // },
+      );
+      return response?.data;
+    } catch (error) {
+      console.error("Error fetching API endpoint:", error);
+      throw error;
+    }
+  };
+
+  export const sendPrivateBill = async (id, data) => {
+    try {
+      // const token = getAuthToken();
+      const response = await axiosClientMMS.put(
+        `/privateMemberBills/sendToLegislation/${id}`, data,
+        {
+          // headers: {
+          //   Authorization: `Bearer ${token}`,
+          // }
+        }
       );
       return response?.data;
     } catch (error) {

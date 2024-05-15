@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Layout } from "../../../../components/Layout";
-import { NoticeSidebarItems } from "../../../../utils/sideBarItems";
+import { NoticeSidebarItems, NoticeSidebarItemsTelecasting } from "../../../../utils/sideBarItems";
 import { useNavigate } from "react-router-dom";
 import Header from "../../../../components/Header";
 import CustomTable from "../../../../components/CustomComponents/CustomTable";
@@ -12,6 +12,7 @@ import {
   faObjectGroup,
   faScaleBalanced,
 } from "@fortawesome/free-solid-svg-icons";
+import { getUserData } from "../../../../api/Auth";
 
 const data = [
   {
@@ -37,6 +38,7 @@ function NoticeDashboard() {
   const [stats, setStats] = useState(null);
   const [todaySpeach, setTodaySpeach] = useState(0);
   const [todayservices, setTodayservices] = useState(0);
+  const UserData = getUserData();
 
 
   const [currentPage, setCurrentPage] = useState(0);
@@ -96,7 +98,7 @@ function NoticeDashboard() {
   return (
     <Layout
       module={true}
-      sidebarItems={NoticeSidebarItems}
+      sidebarItems={UserData?.fkBranchId === 9 ? NoticeSidebarItemsTelecasting : NoticeSidebarItems}
       centerlogohide={true}
     >
       <Header dashboardLink={"/"} title1={"Notice"} />

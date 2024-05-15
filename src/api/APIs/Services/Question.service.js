@@ -36,6 +36,24 @@ export const getAllQuestion = async (page, pageSize) => {
   }
 };
 
+export const getAllQuestionNotice = async (page, pageSize) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/questions/inNotice?currentPage=${page}&pageSize=${pageSize}`,
+      {
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // }
+      }
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
 export const searchQuestion = async (searchParams, currentPage, pageSize) => {
   try {
     // const token = getAuthToken();
@@ -70,6 +88,25 @@ export const getAllQuestionStatus = async () => {
       //   Authorization: `Bearer ${token}`,
       // }
     });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+//Send Question
+export const sendToQuestion = async (id, data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.put(
+      `/questions/sendToQuestion/${id}`, data,
+      {
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // }
+      }
+    );
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);

@@ -124,6 +124,7 @@ function SearchMotion() {
         ).format("hh:ss A"),
         englishText: EnglishText ? EnglishText : "",
         urduText: UrduText ? UrduText : "",
+        SentDate: leave?.motionSentDate
       };
     });
   };
@@ -619,6 +620,7 @@ function SearchMotion() {
                     currentPage={currentPage}
                     pageSize={pageSize}
                     totalCount={count}
+                    ActionHide={true}
                   />
                 </div>
               </form>

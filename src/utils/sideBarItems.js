@@ -94,11 +94,11 @@ export const NoticeSidebarItems = [
     link: "/notice/question",
     icon: faClipboardQuestion,
     subItems: [
-      {
-        itemName: "New Question",
-        link: "/notice/question/new",
-        icon: faFilePen,
-      },
+      // {
+      //   itemName: "New Question",
+      //   link: "/notice/question/new",
+      //   icon: faFilePen,
+      // },
       {
         itemName: "Search Question",
         link: "/notice/question/search",
@@ -116,11 +116,11 @@ export const NoticeSidebarItems = [
     link: "/notice/motion",
     icon: faFileImport,
     subItems: [
-      {
-        itemName: "New Motion",
-        link: "/notice/motion/new",
-        icon: faFilePen,
-      },
+      // {
+      //   itemName: "New Motion",
+      //   link: "/notice/motion/new",
+      //   icon: faFilePen,
+      // },
       {
         itemName: "Search Motion",
         link: "/notice/motion/search",
@@ -138,11 +138,11 @@ export const NoticeSidebarItems = [
     link: "/notice/resolution",
     icon: faClipboardList,
     subItems: [
-      {
-        itemName: "New Resolution",
-        link: "/notice/resolution/new",
-        icon: faClipboardList,
-      },
+      // {
+      //   itemName: "New Resolution",
+      //   link: "/notice/resolution/new",
+      //   icon: faClipboardList,
+      // },
       {
         itemName: "Search Resolution",
         link: "/notice/resolution/search",
@@ -166,7 +166,7 @@ export const NoticeSidebarItems = [
         icon: faFileInvoice,
       },
       {
-        itemName: "legislative Bill",
+        itemName: "Legislative Bill",
         link: "/notice/legislation/legislative-bill",
         icon: faFileInvoice,
       },
@@ -316,6 +316,14 @@ export const NoticeSidebarItems = [
   //     },
   //   ],
   // },
+];
+
+export const NoticeSidebarItemsTelecasting = [
+  {
+    itemName: "Speech On demand",
+    link: "/notice/speech-on-demand",
+    icon: faHome,
+  },
 ];
 
 //Motion Management SideBar items
@@ -1109,93 +1117,104 @@ export const EfilingSideBarBranchItem = [
 
 // Legislation Management System SideBar Items
 export const LegislationSideBarItems = [
-  {
-    itemName: "Dashboard",
-    link: "/lgms/dashboard",
-    icon: faHome,
-  },
-  {
-    itemName: "Bills",
-    link: "/lgms/dashboard/bills",
-    icon: faBookOpen,
-    subItems: [
-      {
-        itemName: "Legislation Bills",
-        link: "/lgms/dashboard/bills/legislation-bills",
-        icon: faBookOpen,
-      },
-      {
-        itemName: "Search Bills",
-        link: "/lgms/dashboard/bills/search-bills",
-        icon: faBookOpen,
-      },
-    ],
-  },
-  {
-    itemName: "Ordinances",
-    link: "/lgms/dashboard/ordinances",
-    icon: faBookOpen,
-    subItems: [
-      {
-        itemName: "Ordinance List",
-        link: "/lgms/dashboard/ordinances/ordinance-list",
-        icon: faBookOpen,
-      },
-      {
-        itemName: "Search Ordinance",
-        link: "/lgms/dashboard/ordinances/search-ordinance",
-        icon: faBookOpen,
-      },
-    ],
-  },
+  // {
+  //   itemName: "Dashboard",
+  //   link: "/lgms/dashboard",
+  //   icon: faHome,
+  // },
+  // {
+  //   itemName: "Bills",
+  //   link: "/lgms/dashboard/bills",
+  //   icon: faBookOpen,
+  //   subItems: [
+  //     {
+  //       itemName: "Legislation Bills",
+  //       link: "/lgms/dashboard/bills/legislation-bills",
+  //       icon: faBookOpen,
+  //     },
+  //     {
+  //       itemName: "Search Bills",
+  //       link: "/lgms/dashboard/bills/search-bills",
+  //       icon: faBookOpen,
+  //     },
+  //   ],
+  // },
+  // {
+  //   itemName: "Ordinances",
+  //   link: "/lgms/dashboard/ordinances",
+  //   icon: faBookOpen,
+  //   subItems: [
+  //     {
+  //       itemName: "Ordinance List",
+  //       link: "/lgms/dashboard/ordinances/ordinance-list",
+  //       icon: faBookOpen,
+  //     },
+  //     {
+  //       itemName: "Search Ordinance",
+  //       link: "/lgms/dashboard/ordinances/search-ordinance",
+  //       icon: faBookOpen,
+  //     },
+  //   ],
+  // },
+
+  // {
+  //   itemName: "Manage",
+  //   link: "/lgms/dashboard/ordinances",
+  //   icon: faBookOpen,
+  //   subItems: [
+  //     {
+  //       itemName: "Manage Bill Statuses",
+  //       link: "/lgms/dashboard/bill/manage-bill-statuses",
+  //       icon: faBookOpen,
+  //     },
+  //     {
+  //       itemName: "Manage Committees",
+  //       link: "/lgms/dashboard/committees/manage-committees",
+  //       icon: faBookOpen,
+  //     },
+  //     {
+  //       itemName: "Members",
+  //       link: "/lgms/dashboard/manage/members/list",
+  //       icon: faBookOpen,
+  //     },
+      
+  //     {
+  //       itemName: "Parliamentary Years",
+  //       link: "/lgms/dashboard/manage/parliamentary-year/list",
+  //       icon: faBookOpen,
+  //     },
+  //     {
+  //       itemName: "Sessions",
+  //       link: "/lgms/dashboard/manage/session/list",
+  //       icon: faBookOpen,
+  //     },
+  //     {
+  //       itemName: "Tenures",
+  //       link: "/lgms/dashboard/manage/tenures/list",
+  //       icon: faBookOpen,
+  //     },
+  //     {
+  //       itemName: "Terms",
+  //       link: "/lgms/dashboard/manage/terms/list",
+  //       icon: faBookOpen,
+  //     },
+  //     {
+  //       itemName: "Committees",
+  //       link: "/lgms/dashboard/manage/committees/list",
+  //       icon: faBookOpen,
+  //     },
+      
+  //   ],
+  // },
 
   {
-    itemName: "Manage",
-    link: "/lgms/dashboard/ordinances",
-    icon: faBookOpen,
-    subItems: [
-      {
-        itemName: "Manage Bill Statuses",
-        link: "/lgms/dashboard/bill/manage-bill-statuses",
-        icon: faBookOpen,
-      },
-      {
-        itemName: "Manage Committees",
-        link: "/lgms/dashboard/committees/manage-committees",
-        icon: faBookOpen,
-      },
-      {
-        itemName: "Members",
-        link: "/lgms/dashboard/manage/members/list",
-        icon: faBookOpen,
-      },
-      
-      {
-        itemName: "Parliamentary Years",
-        link: "/lgms/dashboard/manage/parliamentary-year/list",
-        icon: faBookOpen,
-      },
-      {
-        itemName: "Sessions",
-        link: "/lgms/dashboard/manage/session/list",
-        icon: faBookOpen,
-      },
-      {
-        itemName: "Tenures",
-        link: "/lgms/dashboard/manage/tenures/list",
-        icon: faBookOpen,
-      },
-      {
-        itemName: "Terms",
-        link: "/lgms/dashboard/manage/terms/list",
-        icon: faBookOpen,
-      },
-      {
-        itemName: "Committees",
-        link: "/lgms/dashboard/manage/committees/list",
-        icon: faBookOpen,
-      },
-      
-    ],
+    itemName: "Private Bill",
+    link: "/lgms/legislation/private-bill",
+    icon: faFileInvoice,
+  },
+  {
+    itemName: "Legislative Bill",
+    link: "/lgms/legislation/legislative-bill",
+    icon: faFileInvoice,
   },
 ];

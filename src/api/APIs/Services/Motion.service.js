@@ -68,6 +68,24 @@ export const getAllMotion = async (currentPage, pageSize) => {
   }
 };
 
+export const getAllMotionNotice = async (currentPage, pageSize) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/motion/inNotice?page=${currentPage}&pageSize=${pageSize}`
+    );
+    // {
+    //   headers: {
+    //     Authorization: `Bearer ${token}`,
+    //   }
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
 export const updateNewMotion = async (id, data) => {
   try {
     // const token = getAuthToken();
@@ -108,6 +126,28 @@ export const searchMotion = async (currentPage, pageSize, data) => {
   }
 };
 
+export const searchMotionNotice = async (currentPage, pageSize, data) => {
+  try {
+    // const token = getAuthToken();
+    const filteredSearchParams = Object.fromEntries(
+      Object.entries(data).filter(([_, value]) => value !== "")
+    );
+    const response = await axiosClientMMS.get(
+      `/motion/inNotice?page=${currentPage}&pageSize=${pageSize}`,
+      {
+        params: filteredSearchParams,
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // },
+      }
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
 // Motion Status
 export const getallMotionStatus = async () => {
   try {
@@ -129,6 +169,24 @@ export const getallMembers = async (currentPage, pageSize) => {
     // const token = getAuthToken();
     const response = await axiosClientMMS.get(
       `/members/all?currentPage=${currentPage}&pageSize=${pageSize}`,
+      {
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // }
+      }
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const sendToMotion = async (id, data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.put(
+      `/motion/sendToMotion/${id}`, data,
       {
         // headers: {
         //   Authorization: `Bearer ${token}`,

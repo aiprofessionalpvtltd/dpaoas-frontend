@@ -195,6 +195,8 @@ import LGMSTerms from "../pages/Dashboard/Modules/LGMS/Manage/Terms";
 import LGMSAddEditTermsForm from "../pages/Dashboard/Modules/LGMS/Manage/Terms/AddEditTerms";
 import LGMSCommittees from "../pages/Dashboard/Modules/LGMS/Manage/Committees";
 import LGMSAddEditCommiteesForm from "../pages/Dashboard/Modules/LGMS/Manage/Committees/AddEditCommittees";
+import LGMSPrivateBill from "../pages/Dashboard/Modules/LGMS/LGMSPrivateBill";
+import LGMSLegislativeBill from "../pages/Dashboard/Modules/LGMS/LGMSLegislativeBill";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -254,6 +256,8 @@ export const ProtectedRoutes = [
 
   { path: "/notice/legislation/government-bill", element: <GovernmentBill /> },
   { path: "/notice/legislation/private-bill", element: <PrivateBill /> },
+
+  
   {
     path: "/notice/legislation/private-bill/addedit",
     element: <AddEditPrivateBill />,
@@ -427,6 +431,7 @@ export const ProtectedRoutes = [
 
   { path: "/qms/notice", element: <QMSQuestionDashboard /> },
   { path: "/qms/notice/notice-question", element: <QMSNoticeQuestion /> },
+  
   {
     path: "/qms/notice/notice-question-detail",
     element: <QMSNoticeQuestionDetail />,
@@ -748,6 +753,16 @@ export const ProtectedRoutes = [
   {
     path: "/lgms/dashboard/manage/committees/addedit",
     element: <LGMSAddEditCommiteesForm />,
+  },
+
+  {
+    path: "/lgms/legislation/private-bill",
+    element: <LGMSPrivateBill />,
+  },
+
+  {
+    path: "/lgms/legislation/legislative-bill",
+    element: <LGMSLegislativeBill />,
   },
 
 ];
