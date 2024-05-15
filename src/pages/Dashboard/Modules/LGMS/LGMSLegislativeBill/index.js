@@ -97,12 +97,11 @@ function LGMSLegislativeBill() {
             totalCount={count}
             // handleAdd={() => navigate("/notice/speech-on-demand/addedit")}
             handleEdit={(item) =>
-              navigate("/notice/legislation/legislative-bill/addedit", {
+              navigate("/lgms/legislation/legislative-bill/addedit", {
                 state: { id: item?.SR },
               })
             }
             handleDelete={(item) => handleDelete(item.SR)}
-            ActionHide={true}
           />
         </div>
       </div>

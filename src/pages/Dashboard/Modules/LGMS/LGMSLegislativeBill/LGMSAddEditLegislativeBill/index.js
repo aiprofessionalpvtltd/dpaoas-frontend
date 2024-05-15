@@ -1,25 +1,25 @@
 import React, { useContext, useEffect, useState } from "react";
 import Select from "react-select";
-import { Layout } from "../../../../../../../components/Layout";
-import { NoticeSidebarItems } from "../../../../../../../utils/sideBarItems";
-import Header from "../../../../../../../components/Header";
+import { Layout } from "../../../../../../components/Layout";
+import { LegislationSideBarItems, NoticeSidebarItems } from "../../../../../../utils/sideBarItems";
+import Header from "../../../../../../components/Header";
 import { ToastContainer } from "react-toastify";
 import { useLocation, useNavigate } from "react-router-dom";
-import { AuthContext } from "../../../../../../../api/AuthContext";
+import { AuthContext } from "../../../../../../api/AuthContext";
 import { useFormik } from "formik";
 import {
   UpdateLegislativeBillById,
   getLegislativeBillById,
-} from "../../../../../../../api/APIs/Services/Notice.service";
+} from "../../../../../../api/APIs/Services/Notice.service";
 import {
   showErrorMessage,
   showSuccessMessage,
-} from "../../../../../../../utils/ToastAlert";
+} from "../../../../../../utils/ToastAlert";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import DatePicker from "react-datepicker";
 
-function AddEditLegislativeBill() {
+function LGMSAddEditLegislativeBill() {
   const location = useLocation();
   const navigate = useNavigate();
   const { sessions } = useContext(AuthContext);
@@ -64,9 +64,6 @@ function AddEditLegislativeBill() {
       if (response.success) {
         showSuccessMessage(response.message);
         formik.resetForm();
-        setTimeout(() => {
-          navigate("/notice/legislation/legislative-bill");
-        }, 1000);
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -111,7 +108,7 @@ function AddEditLegislativeBill() {
   return (
     <Layout
       module={true}
-      sidebarItems={NoticeSidebarItems}
+      sidebarItems={LegislationSideBarItems}
       centerlogohide={true}
     >
       <Header
@@ -281,4 +278,4 @@ function AddEditLegislativeBill() {
   );
 }
 
-export default AddEditLegislativeBill;
+export default LGMSAddEditLegislativeBill;

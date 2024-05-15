@@ -5,28 +5,29 @@ import { useLocation } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import DatePicker from "react-datepicker";
-import Header from "../../../../../../../components/Header";
-import { Layout } from "../../../../../../../components/Layout";
+import Header from "../../../../../../components/Header";
+import { Layout } from "../../../../../../components/Layout";
 import {
+  LegislationSideBarItems,
   NoticeSidebarItems,
   QMSSideBarItems,
-} from "../../../../../../../utils/sideBarItems";
+} from "../../../../../../utils/sideBarItems";
 import {
   createDivision,
   getDivisionsByID,
   updateDivisions,
-} from "../../../../../../../api/APIs/Services/ManageQMS.service";
+} from "../../../../../../api/APIs/Services/ManageQMS.service";
 import {
   showErrorMessage,
   showSuccessMessage,
-} from "../../../../../../../utils/ToastAlert";
+} from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 import {
   createPrivateBill,
   getPrivateBillById,
   updatePrivateBill,
-} from "../../../../../../../api/APIs/Services/Legislation.service";
-import { AuthContext } from "../../../../../../../api/AuthContext";
+} from "../../../../../../api/APIs/Services/Legislation.service";
+import { AuthContext } from "../../../../../../api/AuthContext";
 import moment from "moment";
 
 const validationSchema = Yup.object({
@@ -37,7 +38,7 @@ const validationSchema = Yup.object({
   briefSubject: Yup.string().required("Brief Subject is required"),
   remarks: Yup.string().required("Remarks is required"),
 });
-function AddEditPrivateBill() {
+function LGMSAddEditPrivateBill() {
   const location = useLocation();
   const [billById, setBillById] = useState();
 
@@ -137,7 +138,7 @@ function AddEditPrivateBill() {
   return (
     <Layout
       module={true}
-      sidebarItems={NoticeSidebarItems}
+      sidebarItems={LegislationSideBarItems}
       centerlogohide={true}
     >
       <Header
@@ -338,4 +339,4 @@ function AddEditPrivateBill() {
   );
 }
 
-export default AddEditPrivateBill;
+export default LGMSAddEditPrivateBill;

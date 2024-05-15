@@ -197,6 +197,8 @@ import LGMSCommittees from "../pages/Dashboard/Modules/LGMS/Manage/Committees";
 import LGMSAddEditCommiteesForm from "../pages/Dashboard/Modules/LGMS/Manage/Committees/AddEditCommittees";
 import LGMSPrivateBill from "../pages/Dashboard/Modules/LGMS/LGMSPrivateBill";
 import LGMSLegislativeBill from "../pages/Dashboard/Modules/LGMS/LGMSLegislativeBill";
+import LGMSAddEditPrivateBill from "../pages/Dashboard/Modules/LGMS/LGMSPrivateBill/LGMSAddEditPrivateBill";
+import LGMSAddEditLegislativeBill from "../pages/Dashboard/Modules/LGMS/LGMSLegislativeBill/LGMSAddEditLegislativeBill";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -763,6 +765,16 @@ export const ProtectedRoutes = [
   {
     path: "/lgms/legislation/legislative-bill",
     element: <LGMSLegislativeBill />,
+  },
+
+  {
+    path: "/lgms/legislation/private-bill/addedit",
+    element: <LGMSAddEditPrivateBill />,
+  },
+
+  {
+    path: "/lgms/legislation/legislative-bill/addedit",
+    element: <LGMSAddEditLegislativeBill />,
   },
 
 ];

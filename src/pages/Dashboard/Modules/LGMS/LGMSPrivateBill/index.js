@@ -131,7 +131,7 @@ function LGMSPrivateBill() {
             //   navigate("/notice/legislation/private-bill/addedit")
             // }
             handleEdit={(item) =>
-              navigate("/notice/legislation/private-bill/addedit", {
+              navigate("/lgms/legislation/private-bill/addedit", {
                 state: item,
               })
             }
@@ -145,9 +145,8 @@ function LGMSPrivateBill() {
             currentPage={currentPage}
             pageSize={pageSize}
             totalCount={count}
-            showAssigned={true}
+            showAssigned={false}
             hendleAssigned={(item) => openModal(item)}
-            ActionHide={true}
           />
         </div>
       </div>
