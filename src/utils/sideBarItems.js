@@ -278,22 +278,17 @@ export const NoticeSidebarItems = [
   //     },
   //   ],
   // },
-  {
-    itemName: "Speech On demand",
-    link: "/notice/speech-on-demand",
-    icon: faHome,
-  },
-  {
-    itemName: "Event Calendar",
-    link: "/notice/event-calendar",
-    icon: faCalendarAlt,
-  },
+  // {
+  //   itemName: "Event Calendar",
+  //   link: "/notice/event-calendar",
+  //   icon: faCalendarAlt,
+  // },
 
-  {
-    itemName: "Research Services",
-    link: "/notice/research-services",
-    icon: faHome,
-  },
+  // {
+  //   itemName: "Research Services",
+  //   link: "/notice/research-services",
+  //   icon: faHome,
+  // },
   // {
   //   itemName: "Reports",
   //   link: "/notice/reports",
@@ -316,14 +311,6 @@ export const NoticeSidebarItems = [
   //     },
   //   ],
   // },
-];
-
-export const NoticeSidebarItemsTelecasting = [
-  {
-    itemName: "Speech On demand",
-    link: "/notice/speech-on-demand",
-    icon: faHome,
-  },
 ];
 
 //Motion Management SideBar items
@@ -375,6 +362,32 @@ export const MMSSideBarItems = [
     ],
   },
 ];
+
+export const TelecastingSideBarItems = [
+  {
+    itemName: "Dashboard",
+    link: "/telecasting/dashboard",
+    icon: faHome,
+  },
+  {
+    itemName: "Speech on demand",
+    link: "/telecasting/speech-on-demand",
+    icon: faHome,
+  },
+]
+
+export const ResearchSideBarItems = [
+  {
+    itemName: "Dashboard",
+    link: "/research/dashboard",
+    icon: faHome,
+  },
+  {
+    itemName: "Research Services",
+    link: "/research/research-services",
+    icon: faHome,
+  },
+]
 
 //Question Management System
 export const QMSSideBarItems = [

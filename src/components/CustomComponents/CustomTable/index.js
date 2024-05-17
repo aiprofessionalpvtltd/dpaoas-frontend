@@ -77,7 +77,7 @@ const filteredKeys = keys?.filter((key) => {
   if (key === "internalAttachment" && data.some(obj => Array.isArray(obj[key]))) {
     return false; // Skip filtering if it's an array in any object
   }
-  return key !== "internalAttachment" && key !== "internalId" && key !== "isEditable";
+  return key !== "internalAttachment" && key !== "internalId" && key !== "isEditable" && key !== "attachmentInternal";
 });
 
   
@@ -332,6 +332,21 @@ const filteredKeys = keys?.filter((key) => {
                           {!hideEditIcon && !hideEditIcon && (
                             <>
                               {showView && handleView && (
+                                <OverlayTrigger
+                                  placement="top"
+                                  overlay={viewTooltip}
+                                >
+                                  <button
+                                    onClick={() => handleView(item)}
+                                    className="btn-xs black circle-btn"
+                                    data-id={item.id}
+                                    style={{ background: "#2dce89" }}
+                                  >
+                                    <FontAwesomeIcon icon={faEye} />
+                                  </button>
+                                </OverlayTrigger>
+                              )}
+                              {item?.attachmentInternal && (
                                 <OverlayTrigger
                                   placement="top"
                                   overlay={viewTooltip}

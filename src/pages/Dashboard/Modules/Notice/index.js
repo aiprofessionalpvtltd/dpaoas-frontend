@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Layout } from "../../../../components/Layout";
-import { NoticeSidebarItems, NoticeSidebarItemsTelecasting } from "../../../../utils/sideBarItems";
+import { NoticeSidebarItems } from "../../../../utils/sideBarItems";
 import { useNavigate } from "react-router-dom";
 import Header from "../../../../components/Header";
 import CustomTable from "../../../../components/CustomComponents/CustomTable";
@@ -12,7 +12,6 @@ import {
   faObjectGroup,
   faScaleBalanced,
 } from "@fortawesome/free-solid-svg-icons";
-import { getUserData } from "../../../../api/Auth";
 
 const data = [
   {
@@ -38,7 +37,6 @@ function NoticeDashboard() {
   const [stats, setStats] = useState(null);
   const [todaySpeach, setTodaySpeach] = useState(0);
   const [todayservices, setTodayservices] = useState(0);
-  const UserData = getUserData();
 
 
   const [currentPage, setCurrentPage] = useState(0);
@@ -98,7 +96,7 @@ function NoticeDashboard() {
   return (
     <Layout
       module={true}
-      sidebarItems={UserData?.fkBranchId === 9 ? NoticeSidebarItemsTelecasting : NoticeSidebarItems}
+      sidebarItems={NoticeSidebarItems}
       centerlogohide={true}
     >
       <Header dashboardLink={"/"} title1={"Notice"} />
@@ -127,6 +125,7 @@ function NoticeDashboard() {
                   }`}
                   sent={stats?.questions?.dailySendQuestions}
                   received={stats?.questions?.dailyRecievedQuestions}
+                  onClick={() => navigate("/notice/question/sent")}
                 />
                 <NoticeStatsCard
                   title={"Motion"}
@@ -138,23 +137,19 @@ function NoticeDashboard() {
                   }`}
                   sent={stats?.motions?.dailySendMotions}
                   received={stats?.motions?.dailyRecievedMotions}
+                  onClick={() => navigate("/notice/motion/sent")}
                 />
-                <NoticeStatsCard
-                  title={"Speach On Demand Request"}
-                  icon={faClipboardQuestion}
-                  overall={true}
-                  iconBgColor={"#FFA500"}
-                  total={todaySpeach && todaySpeach}
-                />
-                <div className="mt-5">
-                <NoticeStatsCard
-                  title={"Research Services Request"}
-                  icon={faClipboardQuestion}
-                  overall={true}
-                  iconBgColor={"#FFA500"}
-                  total={todayservices && todayservices}
-                />
-                </div>
+                {/* <NoticeStatsCard
+                  title={"Resolution"}
+                  icon={faScaleBalanced}
+                  iconBgColor={"#2dce89"}
+                  total={`${
+                    stats?.motions?.dailySendMotions +
+                    stats?.motions?.dailyRecievedMotions
+                  }`}
+                  sent={stats?.motions?.dailySendMotions}
+                  received={stats?.motions?.dailyRecievedMotions}
+                /> */}
                 
                 
                 {/* <NoticeStatsCard title={"Legislation"} icon={faScaleBalanced} iconBgColor={"#2dce89"} total={`${stats?.legislation?.sentToBranchesQ + stats?.legislation?.initiatedByBranchesQ}`} sent={stats?.legislation?.sentToBranchesQ} received={stats?.legislation?.initiatedByBranchesQ} /> */}

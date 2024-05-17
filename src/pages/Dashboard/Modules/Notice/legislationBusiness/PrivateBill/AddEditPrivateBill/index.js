@@ -28,6 +28,7 @@ import {
 } from "../../../../../../../api/APIs/Services/Legislation.service";
 import { AuthContext } from "../../../../../../../api/AuthContext";
 import moment from "moment";
+import { getAllBillStatus } from "../../../../../../../api/APIs/Services/LegislationModule.service";
 
 const validationSchema = Yup.object({
   SerialNo: Yup.string().required("Serial No is required"),
@@ -40,6 +41,7 @@ const validationSchema = Yup.object({
 function AddEditPrivateBill() {
   const location = useLocation();
   const [billById, setBillById] = useState();
+  const [billStatusesData, setBillStatusesData] = useState([]);
 
   const formik = useFormik({
     initialValues: {
@@ -49,6 +51,7 @@ function AddEditPrivateBill() {
       fromReceived: "",
       briefSubject: "",
       remarks: "",
+      billStatus: ""
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -70,6 +73,7 @@ function AddEditPrivateBill() {
       fromReceived: values.fromReceived,
       briefSubject: values.briefSubject,
       remarks: values.remarks,
+      fkBillStatus: values.billStatus
     };
 
     try {
@@ -90,7 +94,7 @@ function AddEditPrivateBill() {
       fromReceived: values.fromReceived,
       briefSubject: values.briefSubject,
       remarks: values.remarks,
-      status: location?.state?.status,
+      fkBillStatus: values.billStatus,
     };
 
     try {
@@ -114,10 +118,31 @@ function AddEditPrivateBill() {
     }
   };
 
+
+  const billTransfromData = (apiData) => {
+    return apiData?.map((item) => ({
+      id: item.id,
+      billStatusName: item.billStatusName,
+      billStatus: item.billStatus,
+    }));
+  };
+
+  const GetBillStatusesAPi = async () => {
+    try {
+      const response = await getAllBillStatus(0, 1000);
+
+      const billData = billTransfromData(response?.data?.billStatus);
+      setBillStatusesData(billData);
+    } catch (error) {
+      console.log("Error", error);
+    }
+  };
+
   useEffect(() => {
     if (location.state?.id) {
       getBillByIdApi();
     }
+    GetBillStatusesAPi();
   }, []);
 
   useEffect(() => {
@@ -130,6 +155,7 @@ function AddEditPrivateBill() {
         fromReceived: billById.fromReceived || "",
         briefSubject: billById.briefSubject || "",
         remarks: billById.remarks || "",
+        billStatus: billById.billStatuses?.id || "",
       });
     }
   }, [billById, formik.setValues]);
@@ -318,6 +344,31 @@ function AddEditPrivateBill() {
                           {formik.errors.remarks}
                         </div>
                       )}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="row">
+                  <div class="col-6">
+                    <div class="mb-3">
+                      <label class="form-label">Bill Status</label>
+                      <select
+                        class="form-select"
+                        placeholder={formik.values.billStatus}
+                        id="billStatus"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      >
+                        <option selected disabled hidden>
+                          Select
+                        </option>
+                        {billStatusesData &&
+                          billStatusesData.map((item, index) => (
+                            <option value={item.id} key={index}>
+                              {item?.billStatusName}
+                            </option>
+                          ))}
+                      </select>
                     </div>
                   </div>
                 </div>

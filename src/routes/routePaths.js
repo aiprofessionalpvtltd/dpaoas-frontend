@@ -199,6 +199,12 @@ import LGMSPrivateBill from "../pages/Dashboard/Modules/LGMS/LGMSPrivateBill";
 import LGMSLegislativeBill from "../pages/Dashboard/Modules/LGMS/LGMSLegislativeBill";
 import LGMSAddEditPrivateBill from "../pages/Dashboard/Modules/LGMS/LGMSPrivateBill/LGMSAddEditPrivateBill";
 import LGMSAddEditLegislativeBill from "../pages/Dashboard/Modules/LGMS/LGMSLegislativeBill/LGMSAddEditLegislativeBill";
+import TelecastingDashboard from "../pages/Dashboard/Modules/Telecasting";
+import TelecastingSpeechOnDemand from "../pages/Dashboard/Modules/Telecasting/SpeechOnDemand";
+import TelecastingAddEditSpeechOnDemand from "../pages/Dashboard/Modules/Telecasting/SpeechOnDemand/AddEditSpeechOnDemand";
+import ResearchDashboard from "../pages/Dashboard/Modules/Research";
+import ResearchBRServices from "../pages/Dashboard/Modules/Research/ResearchServices";
+import ResearchAddEditResearchService from "../pages/Dashboard/Modules/Research/ResearchServices/AddEditResearchService";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -290,17 +296,15 @@ export const ProtectedRoutes = [
     path: "/notice/manage/view-prorogued-sessions",
     element: <NMSProroguredSessions />,
   },
+  {
+    path: "/notice/manage/view-prorogued-sessions",
+    element: <NMSProroguredSessions />,
+  },
 
   // {
   //   path: "/notice/manage/manage-session-days",
   //   element: <ManageSessionDays />,
   // },
-
-  { path: "/notice/speech-on-demand", element: <CMSSpeechOnDemandDashboard /> },
-  {
-    path: "/notice/speech-on-demand/addedit",
-    element: <CMSAddEditSpeechOnDemand />,
-  },
   {
     path: "/notice/research-services",
     element: <CMSResearchServicesDashboard />,
@@ -777,4 +781,19 @@ export const ProtectedRoutes = [
     element: <LGMSAddEditLegislativeBill />,
   },
 
+    // Telecasting branch
+    { path: "/telecasting/dashboard", element: <TelecastingDashboard /> },
+    { path: "/telecasting/speech-on-demand", element: <TelecastingSpeechOnDemand /> },
+    {
+      path: "/telecasting/speech-on-demand/addedit",
+      element: <TelecastingAddEditSpeechOnDemand />,
+    },
+
+    // Research branch
+    { path: "/research/dashboard", element: <ResearchDashboard /> },
+    { path: "/research/research-services", element: <ResearchBRServices /> },
+    {
+      path: "/research/research-services/addedit",
+      element: <ResearchAddEditResearchService />,
+    },
 ];

@@ -49,7 +49,7 @@ function PrivateBill() {
         : ""
           ? item?.branch?.branchName
           : "Notice",
-      status: item?.status ? item?.status : "",
+      status: item?.billStatuses ? item?.billStatuses?.billStatusName : "",
     }));
   };
   const getAllPrivateBillApi = useCallback(async () => {

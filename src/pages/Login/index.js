@@ -11,7 +11,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const validationSchema = Yup.object({
-  username: Yup.string().required("User Name is required"),
+  username: Yup.string().required("Email is required"),
   password: Yup.string().required("Password is required"),
 });
 export const Login = () => {
@@ -97,7 +97,7 @@ export const Login = () => {
               <img src={logo} alt="" />
             </div>
             <div class="wrap-input">
-              <span class="label-input">Username</span>
+              <span class="label-input">Email</span>
               {/* <input class="input-field1" type="text" name="username" placeholder="Type your username" /> */}
               <input
                 type="text"

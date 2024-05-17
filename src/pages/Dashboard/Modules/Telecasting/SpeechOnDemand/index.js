@@ -1,10 +1,13 @@
 import { ToastContainer } from "react-toastify";
 import { Layout } from "../../../../../components/Layout";
 import Header from "../../../../../components/Header";
-import { NoticeSidebarItems } from "../../../../../utils/sideBarItems";
+import {
+  NoticeSidebarItems,
+  TelecastingSideBarItems,
+} from "../../../../../utils/sideBarItems";
 import CustomTable from "../../../../../components/CustomComponents/CustomTable";
 import { useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   showErrorMessage,
   showSuccessMessage,
@@ -13,24 +16,32 @@ import {
   DeleteSpeachOnDemand,
   UpdateSpeachOnDemand,
   getAllSpeachOnDemand,
+  getSpeachOnDemandById,
 } from "../../../../../api/APIs/Services/Notice.service";
 import moment from "moment";
 import { getUserData } from "../../../../../api/Auth";
 import axios from "axios";
+import { Modal } from "react-bootstrap";
 
-function CMSSpeechOnDemandDashboard() {
+function TelecastingSpeechOnDemand() {
   const navigate = useNavigate();
   const [count, setCount] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [speechOnDemand, setSpeechOnDemand] = useState([]);
+  const [demandStatus, setDemandStatus] = useState("All");
+  const [changeStatus, setChangeStatus] = useState("");
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [showModal, setShowModal] = useState(false);
   const pageSize = 10;
+  const location = useLocation();
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
   const transformSpeechOnDemandData = (apiData) => {
     return apiData.map((item, index) => ({
-      internalId:item?.session?.id ? item?.session?.id :"",
+      isEditable: item.isEditable,
+      internalId: item?.session?.id ? item?.session?.id : "",
       SR: item?.id,
       sessionno: item?.session?.sessionName ? item?.session?.sessionName : "",
       fromdate: item?.date_from
@@ -44,20 +55,23 @@ function CMSSpeechOnDemandDashboard() {
     }));
   };
 
-  const getAllSpeachOnDemandAPi = useCallback(async () => {
+  const getAllSpeachOnDemandAPi = async () => {
     try {
-      const response = await getAllSpeachOnDemand(currentPage, pageSize);
+      const response = await getAllSpeachOnDemand(
+        currentPage,
+        pageSize,
+        demandStatus
+      );
       if (response?.success) {
         setCount(response?.data?.count);
-        const trensferData = transformSpeechOnDemandData(
-          response?.data?.speechOnDemand
-        );
-        setSpeechOnDemand(trensferData);
+        const speechData = response?.data?.speechOnDemand || []; // If empty, set to empty array
+        const transferData = transformSpeechOnDemandData(speechData);
+        setSpeechOnDemand(transferData);
       }
     } catch (error) {
-      showErrorMessage(error?.response?.data?.message);
+      console.log(error?.response?.data?.message);
     }
-  }, [currentPage, pageSize, setCount, setSpeechOnDemand]);
+  };
 
   const handleDelete = async (id) => {
     try {
@@ -70,9 +84,10 @@ function CMSSpeechOnDemandDashboard() {
       showErrorMessage(error.response.data.message);
     }
   };
-  const HendleCompleted = async (item) => {
+  const HendleCompleted = async (item, status) => {
     const data = {
-      isActive: "complete",
+      isActive: status,
+      isEditable: status === "Delivered" ? false : true,
       fkSessionNo: item?.internalId,
       date_to: item?.todate,
       date_from: item?.fromdate,
@@ -80,13 +95,14 @@ function CMSSpeechOnDemandDashboard() {
       whatsapp_number: item?.whatsappnumber,
       justification: item?.justification,
       is_certified: true,
-      
     };
     try {
       const response = await UpdateSpeachOnDemand(item?.SR, data);
       if (response.success) {
+        setShowModal(false);
+        setDemandStatus("")
         showSuccessMessage(response.message);
-        getAllSpeachOnDemandAPi()
+        getAllSpeachOnDemandAPi();
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -94,8 +110,12 @@ function CMSSpeechOnDemandDashboard() {
   };
 
   useEffect(() => {
+    setDemandStatus(location?.state ? location?.state?.status : "");
+  }, []);
+
+  useEffect(() => {
     getAllSpeachOnDemandAPi();
-  }, [currentPage]);
+  }, [demandStatus, currentPage]);
 
   const handleDownload = (fileUrl) => {
     // Check if fileUrl exists
@@ -119,10 +139,25 @@ function CMSSpeechOnDemandDashboard() {
     });
   };
 
+  const handleStatus = (e) => {
+    setDemandStatus(e.target.value);
+  };
+
+  const printFile = async (id) =>  {
+    try {
+      const response = await getSpeachOnDemandById(id);
+      if (response.success) {
+        handleDownload(`http://172.16.170.8:5252${response?.data?.fileLink}`)
+      }
+    } catch (error) {
+      console.log(error?.response?.data?.message);
+    }
+  }
+
   return (
     <Layout
       module={true}
-      sidebarItems={NoticeSidebarItems}
+      sidebarItems={TelecastingSideBarItems}
       centerlogohide={true}
     >
       <ToastContainer />
@@ -131,8 +166,78 @@ function CMSSpeechOnDemandDashboard() {
         addLink1={"/notice/speech-on-demand/addedit"}
         title1={"Speech On Demand"}
       />
+
+      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+        <div>
+            <Modal.Header closeButton>
+              <Modal.Title>
+                Edit Status
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <div className="mb-3">
+                <label className="form-label">Status</label>
+                <select
+                  className="form-select"
+                  id="status"
+                  name="status"
+                  onChange={(e) => setChangeStatus(e.target.value)}
+                  value={changeStatus ? changeStatus : selectedItem?.status}
+                >
+                  <option value="" selected disabled hidden>
+                    Select
+                  </option>
+                  <option value={"Waiting For Approval"}>
+                    Waiting For Approval
+                  </option>
+                  <option value={"Request In Process"}>
+                    Request In Process
+                  </option>
+                  <option value={"Delivered"}>Delivered</option>
+                </select>
+              </div>
+            </Modal.Body>
+
+            <Modal.Footer>
+              <button className="btn btn-primary" type="submit" onClick={() => HendleCompleted(selectedItem, changeStatus)}>
+                Submit
+              </button>
+              <button
+                className="btn btn-primary"
+                type="button"
+                onClick={() => setShowModal(false)}
+              >
+                Close
+              </button>
+            </Modal.Footer>
+        </div>
+      </Modal>
+
       <div>
         <div class="container-fluid">
+          <div class="row">
+            <div class="col-2">
+              <div class="mb-3">
+                {/* <label class="form-label">Status</label> */}
+                <select
+                  class="form-select"
+                  id="active"
+                  name="active"
+                  onChange={handleStatus}
+                  value={demandStatus}
+                >
+                  <option value={""}>All</option>
+                  <option value={"Waiting For Approval"}>
+                    Waiting For Approval
+                  </option>
+                  <option value={"Request In Process"}>
+                    Request In Process
+                  </option>
+                  <option value={"Delivered"}>Delivered</option>
+                </select>
+              </div>
+            </div>
+          </div>
           <div class="card mt-1">
             <div class="row mt-5">
               <div class="col-12">
@@ -150,18 +255,19 @@ function CMSSpeechOnDemandDashboard() {
                   headertitletextColor={"#FFF"}
                   totalCount={count}
                   // handleAdd={() => navigate("/notice/speech-on-demand/addedit")}
-                  handleEdit={(item) =>
-                    navigate("/notice/speech-on-demand/addedit", {
-                      state: { id: item?.SR },
-                    })
-                  }
+                  handleEdit={(item) =>{
+                    setShowModal(true);
+                    setSelectedItem(item);
+                  }}
                   showResolve={false}
                   showEditIcon={true}
                   hideDeleteIcon={true}
                   hendleResolve={(item) => HendleCompleted(item)}
                   handleDelete={(item) => handleDelete(item.SR)}
                   showPrint={true}
-                  handlePrint={() => handleDownload(`http://172.16.170.8:5252/public/question/2024-05-15T04-08-30/letter.jpeg`)}
+                  handlePrint={(item) =>
+                    printFile(item?.SR)
+                  }
                 />
               </div>
             </div>
@@ -171,4 +277,4 @@ function CMSSpeechOnDemandDashboard() {
     </Layout>
   );
 }
-export default CMSSpeechOnDemandDashboard;
+export default TelecastingSpeechOnDemand;

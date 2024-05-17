@@ -11,6 +11,8 @@ import {
   faClipboardQuestion,
   faSms,
   faBuilding,
+  faTelevision,
+  faBookOpenReader,
 } from "@fortawesome/free-solid-svg-icons";
 import { AuthContext } from "../../api/AuthContext";
 import {
@@ -200,6 +202,22 @@ function Dashboard() {
       cardbg: "greenbg",
       icon: faMailBulk,
       permission: ["Complaint"],
+    },
+    {
+      title: "Telecasting",
+      link: "/telecasting/dashboard",
+      type: "",
+      cardbg: "orangebg",
+      icon: faTelevision,
+      permission: ["Telecasting"],
+    },
+    {
+      title: "IPR",
+      link: "/research/dashboard",
+      type: "",
+      cardbg: "bluebg",
+      icon: faBookOpenReader,
+      permission: ["IPR"],
     },
   ];
 
