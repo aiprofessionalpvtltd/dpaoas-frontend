@@ -132,7 +132,7 @@ function CMSAdminEditComplaint() {
                           className={`form-control`}
                           id="productName"
                           placeholder={
-                            location?.state?.complaintType?.complaintTypeName
+                            location?.state?.complaintType?.branchName
                           }
                           readOnly
                         />

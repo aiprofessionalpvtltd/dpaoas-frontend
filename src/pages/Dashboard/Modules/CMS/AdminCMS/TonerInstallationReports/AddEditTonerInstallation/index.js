@@ -23,6 +23,7 @@ import {
   createTonar,
   getAllTonerModels,
 } from "../../../../../../../api/APIs/Services/TonerInstallation.service";
+import { getBranches } from "../../../../../../../api/APIs/Services/Branches.services";
 function CMSAddEditTonerInstallation() {
   const location = useLocation();
   const { employeeData } = useContext(AuthContext);
@@ -139,10 +140,10 @@ function CMSAddEditTonerInstallation() {
   // Get Branch Request
   const BranchRequest = async () => {
     try {
-      const response = await getallcomplaintTypes();
+      const response = await getBranches(0,200);
       if (response?.success) {
         // showSuccessMessage(response?.message);
-        setRequestedBranch(response?.data);
+        setRequestedBranch(response?.data?.rows);
       }
     } catch (error) {
       console.log(error);
@@ -287,7 +288,7 @@ function CMSAddEditTonerInstallation() {
                         {requestedBranch &&
                           requestedBranch.map((item) => (
                             <option value={item.id}>
-                              {item.complaintTypeName}
+                              {item.branchName}
                             </option>
                           ))}
                       </select>

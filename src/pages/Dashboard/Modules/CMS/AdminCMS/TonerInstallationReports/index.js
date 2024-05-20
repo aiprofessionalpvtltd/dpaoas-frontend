@@ -25,6 +25,7 @@ import {
   getallToners,
   tonerDelete,
 } from "../../../../../../api/APIs/Services/TonerInstallation.service";
+import { getBranches } from "../../../../../../api/APIs/Services/Branches.services";
 
 function CMSTonerInstallationReports() {
   const navigate = useNavigate();
@@ -63,7 +64,7 @@ function CMSTonerInstallationReports() {
       }`,
 
       UserRequest: item?.requestUser?.employee ? `${item?.requestUser?.employee?.firstName}${item?.requestUser?.employee?.lastName}` : item?.userRequestName,
-      BranchRequest: `${item?.requestBranch?.complaintTypeName}`,
+      BranchRequest: `${item?.requestBranch?.branchName}`,
       TonerModel: `${item?.tonerModel?.tonerModel}`,
       Qty: item?.quantity,
       status: item?.status,
@@ -93,10 +94,10 @@ function CMSTonerInstallationReports() {
   // Getting Branch Request
   const BranchRequest = async () => {
     try {
-      const response = await getallcomplaintTypes();
+      const response = await getBranches(0,100);
       if (response?.success) {
         // showSuccessMessage(response?.message);
-        setRequestedBranch(response?.data);
+        setRequestedBranch(response?.data?.rows);
       }
     } catch (error) {
       console.log(error);
@@ -186,12 +187,10 @@ function CMSTonerInstallationReports() {
             ? moment(item.requestDate).format("DD/MM/YYYY")
             : "",
           UserRequest: item?.requestUser?.employee ? `${item?.requestUser?.employee?.firstName} ${item?.requestUser?.employee?.lastName}` : item.userRequestName,
-          BranchRequest: item?.requestBranch?.complaintTypeName,
+          BranchRequest: item?.requestBranch?.branchName,
           TonerModel: item?.tonerModel?.tonerModel,
           Qty: item?.quantity,
           status: item?.status,
-          CreatedAt: item?.createdAt,
-          updatedAt: item?.updatedAt,
         }));
 
         const worksheet = XLSX.utils.json_to_sheet(Data);
@@ -269,7 +268,7 @@ function CMSTonerInstallationReports() {
                       {requestedBranch &&
                         requestedBranch.map((item) => (
                           <option value={item.id}>
-                            {item.complaintTypeName}
+                            {item.branchName}
                           </option>
                         ))}
                     </select>

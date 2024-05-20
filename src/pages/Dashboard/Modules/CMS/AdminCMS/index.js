@@ -130,9 +130,9 @@ function CMSAdminDashboard() {
     return apiData.map((item) => ({
       id: item?.id,
       complaineeUser: item?.complaineeUser?.employee ? `${item?.complaineeUser?.employee?.firstName}${item?.complaineeUser?.employee?.lastName}`: item.userName,
-      BranchOffice: item?.complaintType?.complaintTypeName,
-      NatureofComplaint: item?.complaintCategory?.complaintCategoryName,
-      AssigneTo:
+      BranchOffice: item?.complaintType?.branchName,
+      NatureOfComplaint: item?.complaintCategory?.complaintCategoryName,
+      AssignTo:
         item?.resolverUser &&
         `${item?.resolverUser?.employee?.firstName}${item?.resolverUser?.employee?.lastName}`,
       complaintDate: moment(item?.complaintIssuedDate).format("DD/MM/YYYY"),
@@ -284,7 +284,7 @@ function CMSAdminDashboard() {
     );
     pdf.text(`Description: ${printData?.complaintDescription}`, 10, 30);
     pdf.text(
-      `ComplaintType: ${printData?.complaintType?.complaintTypeName}`,
+      `ComplaintType: ${printData?.complaintType?.branchName}`,
       10,
       40
     );
@@ -338,7 +338,7 @@ function CMSAdminDashboard() {
         const response = await getallComplaint(0, 100);
         if (response?.success) {
             // Export to Excel logic
-            const worksheet = XLSX.utils.json_to_sheet(response?.data?.complaints);
+            const worksheet = XLSX.utils.json_to_sheet(transformComplaintData(response?.data?.complaints));
             const workbook = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
             //let buffer = XLSX.write(workbook, { bookType: "xlsx", type: "buffer" });
@@ -396,7 +396,7 @@ function CMSAdminDashboard() {
               {new Date(printData?.complaintIssuedDate).toLocaleString()}
             </p>
             <p>Description: {printData?.complaintDescription}</p>
-            <p>ComplaintType: {printData?.complaintType?.complaintTypeName}</p>
+            <p>ComplaintType: {printData?.complaintType?.branchName}</p>
             <p>
               ComplaintCategory:{" "}
               {printData?.complaintCategory?.complaintCategoryName}
@@ -716,7 +716,7 @@ function CMSAdminDashboard() {
                   showResolve={true}
                   showEditIcon={true}
                   hideDeleteIcon={false}
-                  showPrint={true}
+                  showPrint={false}
                   showAssigned={true}
                   hendleAssigned={(item) => openModal(item)}
                 />

@@ -85,9 +85,9 @@ function CMSUserDashboard() {
     return apiData.map((item) => ({
       id: item?.id,
       complaineeUser:item?.complaineeUser?.employee ? `${item?.complaineeUser?.employee?.firstName}${item?.complaineeUser?.employee?.lastName}` : item.userName,
-      BranchOffice: item?.complaintType?.complaintTypeName,
-      NatureofComplaint: item?.complaintCategory?.complaintCategoryName,
-      AssigneTo:
+      BranchOffice: item?.complaintType?.branchName,
+      NatureOfComplaint: item?.complaintCategory?.complaintCategoryName,
+      AssignTo:
         item?.resolverUser &&
         `${item?.resolverUser?.employee?.firstName}${item?.resolverUser?.employee?.lastName}`,
       complaintIssuedDate:
