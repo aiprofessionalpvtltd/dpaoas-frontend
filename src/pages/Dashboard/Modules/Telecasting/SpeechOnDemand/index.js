@@ -117,26 +117,33 @@ function TelecastingSpeechOnDemand() {
     getAllSpeachOnDemandAPi();
   }, [demandStatus, currentPage]);
 
-  const handleDownload = (fileUrl) => {
+  const handleDownload = async (fileUrl) => {
     // Check if fileUrl exists
     if (!fileUrl) return;
-
+  
     // Extract the filename from the fileUrl
-    const filename = fileUrl.split("/").pop();
-
-    // Perform the download
-    axios({
-      url: fileUrl,
-      method: "GET",
-      responseType: "blob", // Important for handling binary data like files
-    }).then((response) => {
+    const filename = fileUrl.split('/').pop();
+  
+    try {
+      // Perform the download
+      const response = await axios({
+        url: fileUrl,
+        method: 'GET',
+        responseType: 'blob', // Important for handling binary data like files
+      });
+  
       const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement("a");
+      const link = document.createElement('a');
       link.href = url;
-      link.setAttribute("download", filename); // Set the filename for download
+      link.setAttribute('download', filename); // Set the filename for download
       document.body.appendChild(link);
       link.click();
-    });
+      document.body.removeChild(link); // Clean up after download
+  
+    } catch (error) {
+      // If there's an error (e.g., URL not found), show an alert message
+      showErrorMessage('The URL is not correct or the file could not be found.');
+    }
   };
 
   const handleStatus = (e) => {
