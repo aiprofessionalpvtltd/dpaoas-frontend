@@ -201,7 +201,7 @@ function Dashboard() {
       type: "",
       cardbg: "greenbg",
       icon: faMailBulk,
-      permission: ["Complaint"],
+      permission: ["Legislation"],
     },
     {
       title: "Telecasting",
