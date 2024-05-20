@@ -1,7 +1,7 @@
 import React from "react";
 import Header from "../../../../../../../components/Header";
 import { Layout } from "../../../../../../../components/Layout";
-import { HRMsidebarItems } from "../../../../../../../utils/sideBarItems";
+import { CMSsidebarItems, HRMsidebarItems } from "../../../../../../../utils/sideBarItems";
 import { useLocation } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -75,7 +75,7 @@ function CMSAddEditBranch() {
   };
 
   return (
-    <Layout module={true} sidebarItems={HRMsidebarItems} centerlogohide={true}>
+    <Layout module={true} sidebarItems={CMSsidebarItems} centerlogohide={true}>
       <Header
         dashboardLink={"/cms/admin/dashboard"}
         addLink1={"/cms/admin/branch/list"}

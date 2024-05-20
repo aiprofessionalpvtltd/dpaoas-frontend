@@ -32,6 +32,7 @@ import { AuthContext } from "../../../../../api/AuthContext";
 import ComplaintAssignedEmployee from "../../../../../components/ComplaintAssignedEmployee";
 import { CustomAlert } from "../../../../../components/CustomComponents/CustomAlert";
 import * as XLSX from 'xlsx';
+import { getBranches } from "../../../../../api/APIs/Services/Branches.services";
 
 
 const customStyles = {
@@ -230,9 +231,9 @@ function CMSAdminDashboard() {
 
   const AllComplaintTypeApi = async () => {
     try {
-      const response = await getallcomplaintTypes();
+      const response = await getBranches(0,200);
       if (response?.success) {
-        setComplaintType(response?.data);
+        setComplaintType(response?.data?.rows);
       }
     } catch (error) {
       console.log(error);
@@ -597,7 +598,7 @@ function CMSAdminDashboard() {
                       {complaintType &&
                         complaintType.map((item) => (
                           <option value={item.id}>
-                            {item.complaintTypeName}
+                            {item.branchName}
                           </option>
                         ))}
                     </select>

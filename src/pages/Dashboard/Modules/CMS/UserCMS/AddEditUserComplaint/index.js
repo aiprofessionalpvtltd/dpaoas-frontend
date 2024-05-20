@@ -16,6 +16,8 @@ import Select from "react-select";
 import CustomTable from '../../../../../../components/CustomComponents/CustomTable';
 import moment from 'moment';
 import * as Yup from "yup";
+import { getAllEmployee } from '../../../../../../api/APIs/Services/organizational.service';
+import { getBranches } from '../../../../../../api/APIs/Services/Branches.services';
 
 const validationSchema = Yup.object({
   fkComplaintTypeId: Yup.string().required("Branch/Office is required"),
@@ -25,7 +27,8 @@ const validationSchema = Yup.object({
 function CMSAddEditUserComplaint() {
   const location = useLocation()
   const userData = getUserData();
-  const { employeeData, employeesAsEngineersData } = useContext(AuthContext)
+  const {  employeesAsEngineersData } = useContext(AuthContext)
+  const [employeeData, setEmployeeData] = useState([]);
   const [complaintType, setComplaintType] = useState([])
   const [complaintCategories, setComplaintCategories] = useState([])
   const [userinventoryData, setUserInventoryData] = useState([])
@@ -116,10 +119,10 @@ function CMSAddEditUserComplaint() {
 
   const AllComplaintTypeApi = async () => {
     try {
-      const response = await getallcomplaintTypes();
+      const response = await getBranches(0,200);
       if (response?.success) {
         // showSuccessMessage(response?.message);
-        setComplaintType(response?.data);
+        setComplaintType(response?.data?.rows);
       }
     } catch (error) {
       console.log(error);
@@ -152,11 +155,23 @@ function CMSAddEditUserComplaint() {
     }
   };
 
+  const getEmployeeData = async () => {
+    try {
+      const response = await getAllEmployee(0, 1000);
+      if(response?.success) {
+        setEmployeeData(response?.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
 
 
   useEffect(() => {
     AllComplaintTypeApi()
     AllComplaintCategoriesApi()
+    getEmployeeData();
   }, [])
 
   return (
@@ -248,7 +263,7 @@ function CMSAddEditUserComplaint() {
                         </option>
                         {complaintType &&
                           complaintType.map((item) => (
-                            <option value={item.id}>{item.complaintTypeName}</option>
+                            <option value={item.id}>{item.branchName}</option>
                           ))}
                       </select>
                       {formik.touched.fkComplaintTypeId &&

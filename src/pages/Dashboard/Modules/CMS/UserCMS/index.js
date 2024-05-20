@@ -29,6 +29,7 @@ import { getUserData } from "../../../../../api/Auth";
 import { AuthContext } from "../../../../../api/AuthContext";
 import Select from "react-select";
 import * as XLSX from "xlsx";
+import { getBranches } from "../../../../../api/APIs/Services/Branches.services";
 
 const customStyles = {
   content: {
@@ -202,10 +203,10 @@ function CMSUserDashboard() {
 
   const AllComplaintTypeApi = async () => {
     try {
-      const response = await getallcomplaintTypes();
+      const response = await getBranches(0,200);
       if (response?.success) {
         // showSuccessMessage(response?.message);
-        setComplaintType(response?.data);
+        setComplaintType(response?.data?.rows);
       }
     } catch (error) {
       console.log(error);
@@ -390,7 +391,7 @@ function CMSUserDashboard() {
                       {complaintType &&
                         complaintType.map((item) => (
                           <option value={item.id}>
-                            {item.complaintTypeName}
+                            {item.branchName}
                           </option>
                         ))}
                     </select>
