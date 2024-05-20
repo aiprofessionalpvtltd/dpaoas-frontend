@@ -112,6 +112,7 @@ function CMSAdminDashboard() {
       complaintCategory: "",
       complaintIssuedDate: "",
       complaintResolvedDate: "",
+      userName:""
     },
     onSubmit: (values) => {
       // Handle form submission here
@@ -127,7 +128,7 @@ function CMSAdminDashboard() {
   const transformComplaintData = (apiData) => {
     return apiData.map((item) => ({
       id: item?.id,
-      complaineeUser: `${item?.complaineeUser?.employee?.firstName}${item?.complaineeUser?.employee?.lastName}`,
+      complaineeUser: item?.complaineeUser?.employee ? `${item?.complaineeUser?.employee?.firstName}${item?.complaineeUser?.employee?.lastName}`: item.userName,
       BranchOffice: item?.complaintType?.complaintTypeName,
       NatureofComplaint: item?.complaintCategory?.complaintCategoryName,
       AssigneTo:
@@ -210,6 +211,7 @@ function CMSAdminDashboard() {
       complaintCategory: values?.complaintCategory,
       complaintIssuedDate: values?.complaintIssuedDate,
       complaintResolvedDate: values?.complaintResolvedDate,
+      userName:values?.userName
     };
     try {
       const response = await SearchComplaint(Data);
@@ -366,6 +368,7 @@ function CMSAdminDashboard() {
           assignModalOpan={assignModalOpan}
           hendleModal={() => setAssignedModal(!assignModalOpan)}
           ComplaintUserData={selectedItem}
+          getComplaint={getComplaint}
         />
       ) : null}
       {/* Print Pdf Modal */}
@@ -541,6 +544,21 @@ function CMSAdminDashboard() {
                     />
                   </div>
                 </div>
+                <div className='col'>
+                  <div className="mb-3">
+                      <label className="form-label">Complainee</label>
+                      <input
+                        type="text"
+                        className={`form-control`}
+                        id="userName"
+                        placeholder='Complainee Name'
+                        value={formik.values.userName}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      /> 
+                      </div>
+                      </div>
+
                 <div class="col">
                   <div class="mb-3">
                     <label class="form-label">Resolve By</label>

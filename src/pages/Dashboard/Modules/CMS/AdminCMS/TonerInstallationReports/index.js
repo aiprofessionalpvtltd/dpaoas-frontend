@@ -47,6 +47,7 @@ function CMSTonerInstallationReports() {
       RequestBranch: "",
       tonerModel: "",
       requestDate: "",
+      userRequestName:""
     },
     onSubmit: (values) => {
       // Handle form submission here
@@ -61,7 +62,7 @@ function CMSTonerInstallationReports() {
         item?.requestDate && moment(item?.requestDate).format("DD/MM/YYYY")
       }`,
 
-      UserRequest: `${item?.requestUser?.employee?.firstName}${item?.requestUser?.employee?.lastName}`,
+      UserRequest: item?.requestUser?.employee ? `${item?.requestUser?.employee?.firstName}${item?.requestUser?.employee?.lastName}` : item?.userRequestName,
       BranchRequest: `${item?.requestBranch?.complaintTypeName}`,
       TonerModel: `${item?.tonerModel?.tonerModel}`,
       Qty: item?.quantity,
@@ -150,10 +151,11 @@ function CMSTonerInstallationReports() {
   // Search for Toner
   const SearchTonerApi = async (values) => {
     const Data = {
-      requestUser: values.UserRequest.value,
-      requestBranch: values.RequestBranch,
-      tonerModel: values.tonerModel,
-      requestDate: values.requestDate,
+      requestUser: values?.UserRequest?.value,
+      requestBranch: values?.RequestBranch,
+      tonerModel: values?.tonerModel,
+      requestDate: values?.requestDate,
+      userRequestName:values?.userRequestName
     };
     try {
       const response = await SearchToner(Data);
@@ -183,7 +185,7 @@ function CMSTonerInstallationReports() {
           RequestDate: item.requestDate
             ? moment(item.requestDate).format("DD/MM/YYYY")
             : "",
-          UserRequest: `${item?.requestUser?.employee?.firstName} ${item?.requestUser?.employee?.lastName}`,
+          UserRequest: item?.requestUser?.employee ? `${item?.requestUser?.employee?.firstName} ${item?.requestUser?.employee?.lastName}` : item.userRequestName,
           BranchRequest: item?.requestBranch?.complaintTypeName,
           TonerModel: item?.tonerModel?.tonerModel,
           Qty: item?.quantity,
@@ -235,6 +237,21 @@ function CMSTonerInstallationReports() {
                     />
                   </div>
                 </div>
+
+                <div className='col'>
+                  <div className="mb-3">
+                      <label className="form-label">Request User</label>
+                      <input
+                        type="text"
+                        className={`form-control`}
+                        id="userRequestName"
+                        placeholder='Enter Complainee Name'
+                        value={formik.values.userRequestName}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      /> 
+                      </div>
+                      </div>
 
                 <div class="col">
                   <div class="mb-3">

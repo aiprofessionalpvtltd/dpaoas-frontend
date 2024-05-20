@@ -33,6 +33,7 @@ function InventoryIssueDate() {
     const [searchData, setSearchData] = useState([])
     const [allIssuedData, setAllIssuedData] = useState([])
     const [count, setCount] = useState(null);
+    const [assignuser, setAssignUser] = useState(null)
     const [currentPage, setCurrentPage] = useState(0);
     const pageSize = 4;
 
@@ -63,7 +64,7 @@ function InventoryIssueDate() {
 
     const tranformissuedData = (apiData) => {
         return apiData.map((item) => ({
-            assignedToUser: item?.assignedToUser && `${item?.assignedToUser?.employee.firstName} ${item?.assignedToUser?.employee?.lastName}`,
+            assignedToUser: item?.assignedToUser ? `${item?.assignedToUser?.employee.firstName} ${item?.assignedToUser?.employee?.lastName}` : item.userAssignedName,
             assignedToBranch: item?.assignedToBranch && item?.assignedToBranch?.complaintTypeName,
             issuedDate: item.issuedDate && moment(item.issuedDate).format("MM/DD/YYYY"),
             returnDate: item.returnDate && moment(item.returnDate).format("MM/DD/YYYY"),
@@ -129,11 +130,14 @@ function InventoryIssueDate() {
             showErrorMessage(error?.response?.data?.error);
         }
     };
+    console.log(searchData);
     const hendleIssueDate = async (values) => {
         const Data = {
             fkAssignedToUserId: employee ? employee?.value : null,
             fkAssignedToBranchId: JSON.parse(branch),
             issuedDate: issuedDate,
+            userAssignedName:assignuser
+
 
         }
         try {
@@ -320,6 +324,21 @@ function InventoryIssueDate() {
                                         />
                                     </div>
                                 </div>
+                                <div className='col'>
+                  <div className="mb-3">
+                      <label className="form-label">User</label>
+                      <input
+                        type="text"
+                        className={`form-control`}
+                        // id="assignuser"
+                        name='assignuser'
+                        placeholder='Enter User Name'
+                        value={assignuser}
+                        onChange={(text) => setAssignUser(text.target.value)}
+                       
+                      /> 
+                      </div>
+                      </div>
 
                                 <div class="col">
                                     <div class="mb-3" style={{ position: "relative" }}>

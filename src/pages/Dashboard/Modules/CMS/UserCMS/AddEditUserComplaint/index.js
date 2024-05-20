@@ -39,7 +39,8 @@ function CMSAddEditUserComplaint() {
       complaintDescription: location.state ? location?.state?.complaintDescription : "",
       complaintIssuedDate: new Date(),
       fkAssignedResolverId: "",
-      complaintAttachment: ""
+      complaintAttachment: "",
+      userName:""
     },
     validationSchema: validationSchema,
     onSubmit: async (values, { resetForm }) => {
@@ -78,7 +79,8 @@ function CMSAddEditUserComplaint() {
       fkComplaintCategoryId: values.fkComplaintCategoryId,
       complaintDescription: values.complaintDescription,
       complaintIssuedDate: values?.complaintIssuedDate,
-      fkAssignedResolverId: values?.fkAssignedResolverId?.value
+      fkAssignedResolverId: values?.fkAssignedResolverId?.value,
+      userName:values?.userName
     }
     try {
       const response = await createComplaint(Data);
@@ -183,7 +185,7 @@ function CMSAddEditUserComplaint() {
             <form onSubmit={formik.handleSubmit}>
               <div className="container-fluid">
                 <div className="row">
-                  <div className="col-6">
+                  <div className="col">
                     <div className="mb-3">
                       <label className="form-label">Complainee</label>
                       {/* <input
@@ -213,7 +215,21 @@ function CMSAddEditUserComplaint() {
                       />
                     </div>
                   </div>
-                  <div class="col-6">
+                  <div className='col'>
+                  <div className="mb-3">
+                      <label className="form-label">Complainee</label>
+                      <input
+                        type="text"
+                        className={`form-control`}
+                        id="userName"
+                        placeholder='Enter Complainee Name'
+                        value={formik.values.userName}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      /> 
+                      </div>
+                      </div>
+                  <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Branch/Office</label>
                       <select class={`form-control ${formik.touched.fkComplaintTypeId &&

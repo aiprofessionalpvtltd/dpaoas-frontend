@@ -33,7 +33,7 @@ function CMSAddEditTonerInstallation() {
   // Validation Schema For Toner Installation
   const validationSchema = Yup.object({
     requestDate: Yup.string().required("Date  is required"),
-    fkUserRequestId: Yup.object().required("Requested User is required"),
+    fkUserRequestId: Yup.object().optional(),
     fkBranchRequestId: Yup.string().required("Requested Branch  is required"),
     tonerModels: Yup.object().required("Toner Model is required"),
     quantity: Yup.string().required("Quantity is required"),
@@ -61,6 +61,8 @@ function CMSAddEditTonerInstallation() {
           }
         : "",
 
+        userRequestName: location.state ? location.state.userRequestName : "",
+
       quantity: location.state ? location?.state?.quantity : "",
       status: location.state ? location?.state?.status : "",
     },
@@ -85,6 +87,7 @@ function CMSAddEditTonerInstallation() {
       fkBranchRequestId: values?.fkBranchRequestId,
       fkTonerModelId: values?.tonerModels?.value,
       quantity: values?.quantity,
+      userRequestName:values?.userRequestName
     };
 
     try {
@@ -106,6 +109,7 @@ function CMSAddEditTonerInstallation() {
       fkTonerModelId: values?.tonerModels?.value,
       quantity: values?.quantity,
       status: values?.status,
+      userRequestName:values?.userRequestName
     };
     try {
       const response = await UpdateTonner(location.state.id, data);
@@ -177,7 +181,7 @@ function CMSAddEditTonerInstallation() {
             <form onSubmit={formik.handleSubmit}>
               <div className="container-fluid">
                 <div className="row">
-                  <div className="col-6">
+                  <div className="col">
                     <div className="mb-3" style={{ position: "relative" }}>
                       <label className="form-label">Request Date</label>
                       <span
@@ -216,7 +220,7 @@ function CMSAddEditTonerInstallation() {
                         )}
                     </div>
                   </div>
-                  <div class="col-6">
+                  <div class="col">
                     <div class="mb-3">
                       <label class="form-label">User Request</label>
                       <Select
@@ -237,21 +241,27 @@ function CMSAddEditTonerInstallation() {
                         value={formik.values.fkUserRequestId}
                         name="fkUserRequestId"
                         isClearable={true}
-                        className={`.form-select  ${
-                          formik.touched.fkUserRequestId &&
-                          formik.errors.fkUserRequestId
-                            ? "is-invalid"
-                            : ""
-                        }`}
+                        className={`.form-select`}
                       />
-                      {formik.touched.fkUserRequestId &&
-                        formik.errors.fkUserRequestId && (
-                          <div className="invalid-feedback">
-                            {formik.errors.fkUserRequestId}
-                          </div>
-                        )}
                     </div>
                   </div>
+
+                  
+                <div className='col'>
+                  <div className="mb-3">
+                      <label className="form-label">User Request</label>
+                      <input
+                        type="text"
+                        className={`form-control`}
+                        id="userRequestName"
+                        placeholder='Enter Complainee Name'
+                        value={formik.values.userRequestName}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      /> 
+                      </div>
+                      </div>
+
                 </div>
                 <div className="row">
                   <div className="col-6">
