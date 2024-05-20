@@ -137,12 +137,14 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  useEffect(()=>{  
+    getEmployeeData();
+  },[])
   useEffect(() => {
     getAllResolutionStatusApi();
     AllMembersData();
     AllMinistryData();
     getAllSessionsApi();
-    getEmployeeData();
     getretriveEmployeesAsEngineers();
     AllBranchesData();
     getAllParliamnetaryYears();
@@ -153,6 +155,7 @@ export const AuthProvider = ({ children }) => {
       value={{
         login,
         setPermissions,
+        setEmployeeData,
         permissions,
         ministryData,
         members,

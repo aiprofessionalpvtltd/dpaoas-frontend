@@ -205,6 +205,8 @@ import TelecastingAddEditSpeechOnDemand from "../pages/Dashboard/Modules/Telecas
 import ResearchDashboard from "../pages/Dashboard/Modules/Research";
 import ResearchBRServices from "../pages/Dashboard/Modules/Research/ResearchServices";
 import ResearchAddEditResearchService from "../pages/Dashboard/Modules/Research/ResearchServices/AddEditResearchService";
+import CMSBranches from "../pages/Dashboard/Modules/CMS/AdminCMS/BranchesCMS";
+import CMSAddEditBranch from "../pages/Dashboard/Modules/CMS/AdminCMS/BranchesCMS/AddEditBranchCMS";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -576,6 +578,8 @@ export const ProtectedRoutes = [
   { path: "/cms/admin/inventory/vendor-list", element: <CMSVendorList /> },
   { path: "/cms/admin/inventory/vendor-list/edit", element: <CMSEditVendor /> },
   { path: "/cms/admin/inventory/vendor-list/add", element: <CMSEditVendor /> },
+  {path:"/cms/admin/branch/list", element: <CMSBranches />},
+  {path:"/cms/admin/branch/addedit", element: <CMSAddEditBranch />},
 
   // E-Filing
   // { path: "/efiling/dashboard", element: <DirectorDashboard /> },

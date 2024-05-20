@@ -5,7 +5,7 @@ export const getBranches = async (currentPage, pageSize) => {
     try {
         //   const token = getAuthToken();
         const response = await axiosClientMMS.get(
-            `/branches?currentPage=${currentPage}&pageSize=${pageSize}`,
+            `/branches?page=${currentPage}&pageSize=${pageSize}`,
             // {
             //   headers: {
             //     Authorization: `Bearer ${token}`,

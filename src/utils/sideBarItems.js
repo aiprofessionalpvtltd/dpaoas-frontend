@@ -756,6 +756,11 @@ export const CMSsidebarItems = [
         link: "/cms/admin/toner-models",
         icon: faClipboardList,
       },
+      {
+        itemName: "Branch",
+        link: "/cms/admin/branch/list",
+        icon: faClipboardList,
+      },
     ],
   },
 

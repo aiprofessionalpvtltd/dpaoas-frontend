@@ -8,6 +8,7 @@ import Header from "../../../../../components/Header";
 import { useNavigate } from "react-router-dom";
 import {
   SearchComplaint,
+  getallComplaint,
   getallcomplaintCategories,
   getallcomplaintRecordById,
   getallcomplaintRecordByUserId,
@@ -82,7 +83,7 @@ function CMSUserDashboard() {
   const transformDepartmentData = (apiData) => {
     return apiData.map((item) => ({
       id: item?.id,
-      complaineeUser: `${item?.complaineeUser?.employee?.firstName}${item?.complaineeUser?.employee?.lastName}`,
+      complaineeUser:item?.complaineeUser?.employee ? `${item?.complaineeUser?.employee?.firstName}${item?.complaineeUser?.employee?.lastName}` : item.userName,
       BranchOffice: item?.complaintType?.complaintTypeName,
       NatureofComplaint: item?.complaintCategory?.complaintCategoryName,
       AssigneTo:
@@ -96,11 +97,12 @@ function CMSUserDashboard() {
   };
   const getComplaint = useCallback(async () => {
     try {
-      const response = await getallcomplaintRecordByUserId(
-        userData.fkUserId,
-        currentPage,
-        pageSize
-      );
+      const response = await getallComplaint(currentPage, pageSize)
+      // const response = await getallcomplaintRecordByUserId(
+      //   userData.fkUserId,
+      //   currentPage,
+      //   pageSize
+      // );
       if (response?.success) {
         setCount(response?.data?.count);
         const transformedData = transformDepartmentData(
