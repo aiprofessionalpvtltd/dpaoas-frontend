@@ -439,7 +439,6 @@ function CMSUserDashboard() {
                       <FontAwesomeIcon icon={faCalendarAlt} />
                     </span>
                     <DatePicker
-                      minDate={new Date()}
                       selected={formik.values.complaintIssuedDate}
                       onChange={(date) =>
                         formik.setFieldValue("complaintIssuedDate", date)
@@ -466,7 +465,6 @@ function CMSUserDashboard() {
                     </span>
                     <DatePicker
                       selected={formik.values.complaintResolvedDate}
-                      minDate={new Date()}
                       onChange={(date) =>
                         formik.setFieldValue("complaintResolvedDate", date)
                       }

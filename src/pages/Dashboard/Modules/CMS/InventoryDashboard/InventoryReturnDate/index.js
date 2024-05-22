@@ -189,7 +189,6 @@ function InventoryReturnDate() {
                                             <FontAwesomeIcon icon={faCalendarAlt} />
                                         </span>
                                         <DatePicker
-                                            minDate={new Date()}
                                             selected={returnDate}
                                             onChange={(date) => setReturnDate(date)}
                                             className={"form-control"}

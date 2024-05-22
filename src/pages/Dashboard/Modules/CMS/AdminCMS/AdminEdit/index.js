@@ -217,7 +217,7 @@ function CMSAdminEditComplaint() {
                       </span>
                       <DatePicker
                         selected={formik.values.complaintResolvedDate}
-                        minDate={new Date()}
+                        // minDate={new Date()}
                         onChange={(date) =>
                           formik.setFieldValue("complaintResolvedDate", date)
                         }

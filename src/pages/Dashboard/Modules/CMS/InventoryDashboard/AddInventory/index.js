@@ -439,7 +439,6 @@ function CMSAddInventory() {
                         <FontAwesomeIcon icon={faCalendarAlt} />
                       </span>
                       <DatePicker
-                        minDate={new Date()}
                         selected={formik.values.warrantyExpireDate}
                         onChange={(date) =>
                           formik.setFieldValue("warrantyExpireDate", date)

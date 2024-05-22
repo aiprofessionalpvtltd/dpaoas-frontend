@@ -358,7 +358,6 @@ function InventoryIssueDate() {
                                             <FontAwesomeIcon icon={faCalendarAlt} />
                                         </span>
                                         <DatePicker
-                                            minDate={new Date()}
                                             selected={issuedDate}
                                             onChange={(date) => setIssuedDate(date)}
                                             className={"form-control"}

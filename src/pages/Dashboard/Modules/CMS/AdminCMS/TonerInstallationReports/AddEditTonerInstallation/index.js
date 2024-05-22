@@ -206,7 +206,6 @@ function CMSAddEditTonerInstallation() {
                       </span>
                       <DatePicker
                         selected={formik.values.requestDate}
-                        minDate={new Date()}
                         onChange={(date) =>
                           formik.setFieldValue("requestDate", date)
                         }

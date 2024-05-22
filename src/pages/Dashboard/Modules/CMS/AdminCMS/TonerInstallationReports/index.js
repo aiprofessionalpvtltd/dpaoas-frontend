@@ -316,7 +316,6 @@ function CMSTonerInstallationReports() {
                       <FontAwesomeIcon icon={faCalendarAlt} />
                     </span>
                     <DatePicker
-                      minDate={new Date()}
                       selected={formik.values.requestDate}
                       onChange={(date) =>
                         formik.setFieldValue("requestDate", date)
