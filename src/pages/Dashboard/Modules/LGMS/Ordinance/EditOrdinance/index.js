@@ -31,6 +31,7 @@ function EditOrdinance() {
   const [imageLinks, setImageLinks] = useState([]);
 
   const userData = getUserData();
+
   // Handle Claneder Toggel
   const handleCalendarToggle = () => {
     setIsCalendarOpen(!isCalendarOpen);
@@ -106,7 +107,9 @@ function EditOrdinance() {
 
   const getOrdinanceByIdApi = async () => {
     try {
-      const response = await (location.state && location.state?.id);
+      const response = await getSingleOrdinanceByID(
+        location.state && location.state?.id
+      );
       if (response?.success) {
         setSingleOrdinanceData(response?.data[0]);
       }
@@ -149,9 +152,11 @@ function EditOrdinance() {
         ordinanceStatus: singleOrdinanceData?.ordinanceStatus
           ? singleOrdinanceData?.ordinanceStatus
           : "",
+        // file: singleOrdinanceData?.file ? singleOrdinanceData?.file : "",
       });
     }
   }, [singleOrdinanceData, formik.setValues]);
+
   const updateOrdinance = async (values) => {
     const formData = new FormData();
     formData.append("fkParliamentaryYearId", values?.fkParliamentaryYearId);
