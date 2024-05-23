@@ -47,7 +47,7 @@ function LGMSPrivateBill() {
         : ""
           ? item?.branch?.branchName
           : "Notice",
-      status: item?.status ? item?.status : "",
+      status: item?.billStatuses?.billStatus ? item?.billStatuses?.billStatus : "",
     }));
   };
   const getAllPrivateBillApi = useCallback(async () => {
@@ -147,6 +147,7 @@ function LGMSPrivateBill() {
             totalCount={count}
             showAssigned={false}
             hendleAssigned={(item) => openModal(item)}
+            ActionHide={true}
           />
         </div>
       </div>

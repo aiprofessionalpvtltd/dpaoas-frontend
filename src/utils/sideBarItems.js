@@ -172,112 +172,34 @@ export const NoticeSidebarItems = [
       },
     ],
   },
-
-  // {
-  //   itemName: "Manage",
-  //   link: "/notice/manage",
-  //   icon: faClipboardList,
-  //   subItems: [
-  //     {
-  //       itemName: "Members",
-  //       link: "/notice/manage/members",
-  //       icon: faClipboardList,
-  //     },
-  //     // {
-  //     //     itemName: "Deleted Questions",
-  //     //     link: "/notice/manage/deleted-questions",
-  //     //     icon: faClipboardList
-  //     // },
-  //     // {
-  //     //     itemName: "Divisions",
-  //     //     link: "/notice/manage/divisions",
-  //     //     icon: faClipboardList
-  //     // },
-  //     // {
-  //     //     itemName: "Groups",
-  //     //     link: "/notice/manage/groups",
-  //     //     icon: faClipboardList
-  //     // },
-  //     // {
-  //     //     itemName: "Members",
-  //     //     link: "/notice/manage/members",
-  //     //     icon: faClipboardList
-  //     // },
-  //     // {
-  //     //     itemName: "Parliamentary Years",
-  //     //     link: "/notice/manage/parliamentary-years",
-  //     //     icon: faClipboardList
-  //     // },
-  //     // {
-  //     //     itemName: "Question Categories",
-  //     //     link: "/notice/manage/question-categories",
-  //     //     icon: faClipboardList
-  //     // },
-  //     // {
-  //     //     itemName: "Question Status",
-  //     //     link: "/notice/manage/groups/question-status",
-  //     //     icon: faClipboardList
-  //     // },
-  //     // {
-  //     //     itemName: "Remove Questions from List",
-  //     //     link: "/notice/manage/remove-questions",
-  //     //     icon: faClipboardList
-  //     // },
-  //     // {
-  //     //     itemName: "Rota",
-  //     //     link: "/notice/manage/rota",
-  //     //     icon: faClipboardList
-  //     // },
-  //     // {
-  //     //     itemName: "Session Sittings",
-  //     //     link: "/notice/manage/session-sittings",
-  //     //     icon: faClipboardList
-  //     // },
-  //     {
-  //       itemName: "Sessions",
-  //       link: "/notice/manage/sessions",
-  //       icon: faClipboardList,
-  //     },
-  //     // {
-  //     //     itemName: "Sitting Types",
-  //     //     link: "/notice/manage/sitting-types",
-  //     //     icon: faClipboardList
-  //     // },
-  //     // {
-  //     //     itemName: "Swap Question",
-  //     //     link: "/notice/manage/swap-question",
-  //     //     icon: faClipboardList
-  //     // },
-  //   ],
-  // },
-  // {
-  //   itemName: "Manage",
-  //   link: "/notice/manage",
-  //   icon: faBarsProgress,
-  //   subItems: [
-  //     // {
-  //     //itemName: "Manage Session Days",
-  //     //  link: "/notice/manage/manage-session-days",
-  //     // icon: faClipboardList,
-  //     //  },
-  //     {
-  //       itemName: "Session Days",
-  //       link: "/notice/manage/manage-session-days",
-  //       icon: faCalendarDays,
-  //     },
-  //     {
-  //       itemName: "Seating Plan",
-  //       link: "/notice/manage/manage-seating-plan",
-  //       target: "blank",
-  //       icon: faChair,
-  //     },
-  //     {
-  //       itemName: "Member Attendance",
-  //       link: "/notice/manage/single-member-session-attendance",
-  //       icon: faChair,
-  //     },
-  //   ],
-  // },
+  {
+    itemName: "Manage",
+    link: "/notice/manage",
+    icon: faBarsProgress,
+    subItems: [
+      // {
+      //itemName: "Manage Session Days",
+      //  link: "/notice/manage/manage-session-days",
+      // icon: faClipboardList,
+      //  },
+      {
+        itemName: "Session Days",
+        link: "/notice/manage/manage-session-days",
+        icon: faCalendarDays,
+      },
+      {
+        itemName: "Seating Plan",
+        link: "/notice/manage/manage-seating-plan",
+        target: "blank",
+        icon: faChair,
+      },
+      {
+        itemName: "Member Attendance",
+        link: "/notice/manage/single-member-session-attendance",
+        icon: faChair,
+      },
+    ],
+  },
   // {
   //   itemName: "Event Calendar",
   //   link: "/notice/event-calendar",
@@ -289,28 +211,28 @@ export const NoticeSidebarItems = [
   //   link: "/notice/research-services",
   //   icon: faHome,
   // },
-  // {
-  //   itemName: "Reports",
-  //   link: "/notice/reports",
-  //   icon: faFileLines,
-  //   subItems: [
-  //     {
-  //       itemName: "Business Summary",
-  //       link: "/notice/reports/business-summary",
-  //       icon: faSquarePollHorizontal,
-  //     },
-  //     {
-  //       itemName: "Attendence Reports",
-  //       link: "/notice/reports/attendence-reports",
-  //       icon: faClipboardList,
-  //     },
-  //     {
-  //       itemName: "Party/Province Reports",
-  //       link: "/notice/reports/party-province-annual-attendence-reports",
-  //       icon: faClipboardList,
-  //     },
-  //   ],
-  // },
+  {
+    itemName: "Reports",
+    link: "/notice/reports",
+    icon: faFileLines,
+    subItems: [
+      {
+        itemName: "Business Summary",
+        link: "/notice/reports/business-summary",
+        icon: faSquarePollHorizontal,
+      },
+      {
+        itemName: "Attendence Reports",
+        link: "/notice/reports/attendence-reports",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Party/Province Reports",
+        link: "/notice/reports/party-province-annual-attendence-reports",
+        icon: faClipboardList,
+      },
+    ],
+  },
 ];
 
 //Motion Management SideBar items
@@ -338,16 +260,16 @@ export const MMSSideBarItems = [
       },
     ],
   },
-  {
-    itemName: "Search Question",
-    link: "/mms/question/search",
-    icon: faClipboardList,
-  },
-  {
-    itemName: "Search Resolution",
-    link: "/mms/resolution/search",
-    icon: faClipboardList,
-  },
+  // {
+  //   itemName: "Search Question",
+  //   link: "/mms/question/search",
+  //   icon: faClipboardList,
+  // },
+  // {
+  //   itemName: "Search Resolution",
+  //   link: "/mms/resolution/search",
+  //   icon: faClipboardList,
+  // },
 
   {
     itemName: "Reports",
@@ -392,16 +314,6 @@ export const ResearchSideBarItems = [
 //Question Management System
 export const QMSSideBarItems = [
   {
-    itemName: "Search Question",
-    link: "/qms/search/question",
-    icon: faClipboardList,
-  },
-  {
-    itemName: "Search Resolution",
-    link: "/qms/search/resolution",
-    icon: faClipboardList,
-  },
-  {
     itemName: "Question",
     link: "/qms/question",
     icon: faClipboardList,
@@ -426,6 +338,11 @@ export const QMSSideBarItems = [
         link: "/qms/question/delete",
         icon: faClipboardList,
       },
+      {
+        itemName: "Search Question",
+        link: "/qms/search/question",
+        icon: faClipboardList,
+      },
     ],
   },
   {
@@ -441,6 +358,11 @@ export const QMSSideBarItems = [
       {
         itemName: "Resolution Delete",
         link: "/qms/resolution/delete",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Search Resolution",
+        link: "/qms/search/resolution",
         icon: faClipboardList,
       },
     ],
@@ -1135,104 +1057,110 @@ export const EfilingSideBarBranchItem = [
 
 // Legislation Management System SideBar Items
 export const LegislationSideBarItems = [
-  // {
-  //   itemName: "Dashboard",
-  //   link: "/lgms/dashboard",
-  //   icon: faHome,
-  // },
-  // {
-  //   itemName: "Bills",
-  //   link: "/lgms/dashboard/bills",
-  //   icon: faBookOpen,
-  //   subItems: [
-  //     {
-  //       itemName: "Legislation Bills",
-  //       link: "/lgms/dashboard/bills/legislation-bills",
-  //       icon: faBookOpen,
-  //     },
-  //     {
-  //       itemName: "Search Bills",
-  //       link: "/lgms/dashboard/bills/search-bills",
-  //       icon: faBookOpen,
-  //     },
-  //   ],
-  // },
-  // {
-  //   itemName: "Ordinances",
-  //   link: "/lgms/dashboard/ordinances",
-  //   icon: faBookOpen,
-  //   subItems: [
-  //     {
-  //       itemName: "Ordinance List",
-  //       link: "/lgms/dashboard/ordinances/ordinance-list",
-  //       icon: faBookOpen,
-  //     },
-  //     {
-  //       itemName: "Search Ordinance",
-  //       link: "/lgms/dashboard/ordinances/search-ordinance",
-  //       icon: faBookOpen,
-  //     },
-  //   ],
-  // },
-
-  // {
-  //   itemName: "Manage",
-  //   link: "/lgms/dashboard/ordinances",
-  //   icon: faBookOpen,
-  //   subItems: [
-  //     {
-  //       itemName: "Manage Bill Statuses",
-  //       link: "/lgms/dashboard/bill/manage-bill-statuses",
-  //       icon: faBookOpen,
-  //     },
-  //     {
-  //       itemName: "Manage Committees",
-  //       link: "/lgms/dashboard/committees/manage-committees",
-  //       icon: faBookOpen,
-  //     },
-  //     {
-  //       itemName: "Members",
-  //       link: "/lgms/dashboard/manage/members/list",
-  //       icon: faBookOpen,
-  //     },
-      
-  //     {
-  //       itemName: "Parliamentary Years",
-  //       link: "/lgms/dashboard/manage/parliamentary-year/list",
-  //       icon: faBookOpen,
-  //     },
-  //     {
-  //       itemName: "Sessions",
-  //       link: "/lgms/dashboard/manage/session/list",
-  //       icon: faBookOpen,
-  //     },
-  //     {
-  //       itemName: "Tenures",
-  //       link: "/lgms/dashboard/manage/tenures/list",
-  //       icon: faBookOpen,
-  //     },
-  //     {
-  //       itemName: "Terms",
-  //       link: "/lgms/dashboard/manage/terms/list",
-  //       icon: faBookOpen,
-  //     },
-  //     {
-  //       itemName: "Committees",
-  //       link: "/lgms/dashboard/manage/committees/list",
-  //       icon: faBookOpen,
-  //     },
-      
-  //   ],
-  // },
-
   {
-    itemName: "Private Member Bill",
-    link: "/lgms/legislation/private-bill",
-    icon: faFileInvoice,
+    itemName: "Dashboard",
+    link: "/lgms/dashboard",
+    icon: faHome,
   },
   {
-    itemName: "Legislative Bill",
-    link: "/lgms/legislation/legislative-bill",
-    icon: faFileInvoice,
+    itemName: "Bills",
+    link: "/lgms/dashboard/bills",
+    icon: faBookOpen,
+    subItems: [
+      {
+        itemName: "Legislation Bills",
+        link: "/lgms/dashboard/bills/legislation-bills",
+        icon: faBookOpen,
+      },
+      {
+        itemName: "Search Bills",
+        link: "/lgms/dashboard/bills/search-bills",
+        icon: faBookOpen,
+      },
+    ],
   },
+  {
+    itemName: "Ordinances",
+    link: "/lgms/dashboard/ordinances",
+    icon: faBookOpen,
+    subItems: [
+      {
+        itemName: "Ordinance List",
+        link: "/lgms/dashboard/ordinances/ordinance-list",
+        icon: faBookOpen,
+      },
+      {
+        itemName: "Search Ordinance",
+        link: "/lgms/dashboard/ordinances/search-ordinance",
+        icon: faBookOpen,
+      },
+    ],
+  },
+
+  {
+    itemName: "Manage",
+    link: "/lgms/dashboard/ordinances",
+    icon: faBookOpen,
+    subItems: [
+      {
+        itemName: "Manage Bill Statuses",
+        link: "/lgms/dashboard/bill/manage-bill-statuses",
+        icon: faBookOpen,
+      },
+      // {
+      //   itemName: "Manage Committees",
+      //   link: "/lgms/dashboard/committees/manage-committees",
+      //   icon: faBookOpen,
+      // },
+      {
+        itemName: "Members",
+        link: "/lgms/dashboard/manage/members/list",
+        icon: faBookOpen,
+      },
+      
+      {
+        itemName: "Parliamentary Years",
+        link: "/lgms/dashboard/manage/parliamentary-year/list",
+        icon: faBookOpen,
+      },
+      {
+        itemName: "Sessions",
+        link: "/lgms/dashboard/manage/session/list",
+        icon: faBookOpen,
+      },
+      {
+        itemName: "Tenures",
+        link: "/lgms/dashboard/manage/tenures/list",
+        icon: faBookOpen,
+      },
+      {
+        itemName: "Terms",
+        link: "/lgms/dashboard/manage/terms/list",
+        icon: faBookOpen,
+      },
+      // {
+      //   itemName: "Committees",
+      //   link: "/lgms/dashboard/manage/committees/list",
+      //   icon: faBookOpen,
+      // },
+      
+    ],
+  },
+  {
+    itemName: "From Notice Office",
+    link: "/lgms/notice-office",
+    icon: faBookOpen,
+    subItems: [
+      {
+        itemName: "Private Member Bill",
+        link: "/lgms/legislation/private-bill",
+        icon: faFileInvoice,
+      },
+      {
+        itemName: "Legislative Bill",
+        link: "/lgms/legislation/legislative-bill",
+        icon: faFileInvoice,
+      },
+    ]
+  }
 ];

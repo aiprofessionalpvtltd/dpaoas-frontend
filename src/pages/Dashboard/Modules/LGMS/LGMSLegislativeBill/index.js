@@ -33,7 +33,7 @@ function LGMSLegislativeBill() {
       date: item?.date ? moment(item?.date).format("DD-MM-YYYY") : "",
       description: item?.description ? item?.description : "",
       device: item?.device ? item?.device : "",
-      isActive: item?.isActive ? item?.isActive : "",
+      status: item?.isActive ? item?.isActive : "",
     }));
   };
 
@@ -102,6 +102,7 @@ function LGMSLegislativeBill() {
               })
             }
             handleDelete={(item) => handleDelete(item.SR)}
+            ActionHide={true}
           />
         </div>
       </div>

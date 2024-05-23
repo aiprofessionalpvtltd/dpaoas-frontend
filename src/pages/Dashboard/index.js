@@ -197,7 +197,7 @@ function Dashboard() {
     },
     {
       title: "Legislation Management System",
-      link: "/lgms/legislation/private-bill",
+      link: "/lgms/dashboard",
       type: "",
       cardbg: "greenbg",
       icon: faMailBulk,

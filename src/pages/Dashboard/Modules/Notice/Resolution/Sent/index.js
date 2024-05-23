@@ -117,7 +117,7 @@ function SentResolution() {
       const response = await searchResolution(searchParams, page, pageSize);
       
       if (response?.success) {
-        // showSuccessMessage(response?.message);
+        showSuccessMessage(response?.message);
 
         setCount(response.data?.count);
         if(response.data?.length > 0) {
