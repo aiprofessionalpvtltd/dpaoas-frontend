@@ -94,11 +94,11 @@ export const NoticeSidebarItems = [
     link: "/notice/question",
     icon: faClipboardQuestion,
     subItems: [
-      // {
-      //   itemName: "New Question",
-      //   link: "/notice/question/new",
-      //   icon: faFilePen,
-      // },
+      {
+        itemName: "New Question",
+        link: "/notice/question/new",
+        icon: faFilePen,
+      },
       {
         itemName: "Search Question",
         link: "/notice/question/search",
@@ -116,11 +116,11 @@ export const NoticeSidebarItems = [
     link: "/notice/motion",
     icon: faFileImport,
     subItems: [
-      // {
-      //   itemName: "New Motion",
-      //   link: "/notice/motion/new",
-      //   icon: faFilePen,
-      // },
+      {
+        itemName: "New Motion",
+        link: "/notice/motion/new",
+        icon: faFilePen,
+      },
       {
         itemName: "Search Motion",
         link: "/notice/motion/search",
@@ -138,11 +138,11 @@ export const NoticeSidebarItems = [
     link: "/notice/resolution",
     icon: faClipboardList,
     subItems: [
-      // {
-      //   itemName: "New Resolution",
-      //   link: "/notice/resolution/new",
-      //   icon: faClipboardList,
-      // },
+      {
+        itemName: "New Resolution",
+        link: "/notice/resolution/new",
+        icon: faClipboardList,
+      },
       {
         itemName: "Search Resolution",
         link: "/notice/resolution/search",

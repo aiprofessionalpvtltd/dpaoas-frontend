@@ -23,7 +23,7 @@ function SMSInventoryDashboard() {
   const [count, setCount] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [inventoryData, setInventoryData] = useState([]);
-  const pageSize = 4; // Set your desired page size
+  const pageSize = 10; // Set your desired page size
 
   const formik = useFormik({
     initialValues: {

@@ -35,7 +35,7 @@ function CMSTonerInstallationReports() {
   const [currentPage, setCurrentPage] = useState(0);
   const [requestedBranch, setRequestedBranch] = useState([]);
   const [tonerModelData, setTonerModalData] = useState([]);
-  const pageSize = 4; // Set your desired page size
+  const pageSize = 10; // Set your desired page size
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked

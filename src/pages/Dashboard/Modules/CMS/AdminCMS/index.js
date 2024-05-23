@@ -71,7 +71,7 @@ function CMSAdminDashboard() {
   const [currentPage, setCurrentPage] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [complaintId, setComplaintId] = useState(null);
-  const pageSize = 4; // Set your desired page size
+  const pageSize = 10; // Set your desired page size
 
   const [selectedItem, setSelectedItem] = useState({
     id: 0,

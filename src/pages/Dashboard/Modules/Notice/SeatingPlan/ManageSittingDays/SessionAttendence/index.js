@@ -125,7 +125,7 @@ function NMSSessionAttendance() {
     >
       <div
         class="row"
-        style={{ display: "flex", justifyContent: "space-between" }}
+        style={{ display: "flex", alignItems:"center", justifyContent: "space-between" }}
       >
         <div class="col-3">
           <Header
@@ -142,7 +142,7 @@ function NMSSessionAttendance() {
           <Formik initialValues={{ search: "" }}>
             <Form>
               <div
-                className="input-group mb-3"
+                className="input-group"
                 style={{ height: "45px", width: "400px", marginLeft: -30 }}
               >
                 <span className="input-group-text">
@@ -292,7 +292,7 @@ function NMSSessionAttendance() {
                         // bottom: 610,
                         // left: 500,
                         right: 180,
-                        top: 218,
+                        top: 212.9,
                       }}
                     >
                       <div className="col">
