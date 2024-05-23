@@ -6,8 +6,10 @@ import { useNavigate } from "react-router";
 import {
   DeleteResolution,
   getAllResolutions,
+  getAllResolutionsNotice,
   getResolutionBYID,
   searchResolution,
+  sendToResolution,
 } from "../../../../../../api/APIs/Services/Resolution.service";
 import Select from "react-select";
 
@@ -96,6 +98,7 @@ function SentResolution() {
   });
 
   const SearchResolutionApi = async (values, page) => {
+
     const searchParams = {
       fkSessionNoFrom: values.fromSession,
       fkSessionNoTo: values.toSession,
@@ -112,34 +115,27 @@ function SentResolution() {
 
     try {
       const response = await searchResolution(searchParams, page, pageSize);
+      
       if (response?.success) {
-        setCount(response.data?.count);
-        const transformedData = transformLeavesData(response.data?.resolutions);
-        setResData(transformedData);
         showSuccessMessage(response?.message);
+
+        setCount(response.data?.count);
+        if(response.data?.length > 0) {
+          const transformedData = transformLeavesData(response.data?.resolutions);
+          setResData(transformedData);
+        } else {
+          setResData(response.data);
+        }
+
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
     }
   };
 
-  // const getAllResolutionsApi = async () => {
-  //   try {
-  //     const response = await getAllResolutions(currentPage, pageSize);
-  //     if (response?.success) {
-  //       // showSuccessMessage(response?.message);
-  //       setCount(response.data?.count);
-  //       const transformedData = transformLeavesData(response.data?.resolution);
-  //       setResData(transformedData);
-  //     }
-  //   } catch (error) {
-  //     showErrorMessage(error?.response?.data?.message);
-  //   }
-  // };
-
   const getAllResolutionsApi = useCallback(async () => {
     try {
-      const response = await getAllResolutions(currentPage, pageSize);
+      const response = await getAllResolutionsNotice(currentPage, pageSize);
       if (response?.success) {
         const transformedData = transformLeavesData(response?.data?.resolution);
         setCount(response?.data?.count);
@@ -191,13 +187,27 @@ function SentResolution() {
     }
     getAllResolutionsApi();
   }, [getAllResolutionsApi, formik?.values]);
-  // useEffect(() => {
-  //   getAllResolutionsApi();
-  // }, [currentPage]);
+
   const handleResetForm = () => {
     formik.resetForm();
     getAllResolutionsApi();
   };
+
+  const sendResolution = async (id) => {
+    try {
+      const data = {
+        resolutionSentDate: new Date()
+      }
+      const response = await sendToResolution(id, data);
+      if (response?.success) {
+        showSuccessMessage(response.message);
+        getAllResolutionsApi();
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  };
+
   return (
     <Layout
       module={true}
@@ -218,7 +228,7 @@ function SentResolution() {
               class="card-header red-bg"
               style={{ background: "#14ae5c !important" }}
             >
-              <h1>List RESOLUTION</h1>
+              <h1>Resolution List</h1>
             </div>
             <div class="card-body">
               <form onSubmit={formik.handleSubmit}>
@@ -537,7 +547,7 @@ function SentResolution() {
                   >
                     <CustomTable
                       hideBtn={true}
-                      data={resData}
+                      data={resData?.length > 0 ? resData : []}
                       hidebtn1={true}
                       tableTitle="Resolutions"
                       handlePageChange={handlePageChange}
@@ -546,8 +556,10 @@ function SentResolution() {
                       pageSize={pageSize}
                       headertitlebgColor={"#666"}
                       headertitletextColor={"#FFF"}
+                      showSent={true}
                       handleDelete={(item) => deleteResolutionApi(item.SrNo)}
                       handleEdit={(item) => handleEdit(item.SrNo)}
+                      handleSent={(item) => sendResolution(item?.SrNo)}
                       totalCount={count}
                     />
                   </div>

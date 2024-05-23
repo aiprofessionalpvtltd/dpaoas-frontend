@@ -41,6 +41,7 @@ export const CustomNavbar = ({ module, centerlogohide, navItems }) => {
                               variant="default"
                               id="about-dropdown"
                               style={{
+                                marginRight:5,
                                 fontWeight: "bold",
                                 color: item.subItems.some(
                                   (subItem) =>
@@ -112,6 +113,7 @@ export const CustomNavbar = ({ module, centerlogohide, navItems }) => {
                                   : "",
                               borderRadius: 5,
                               paddingRight: 10,
+                              marginRight:5,
                               paddingLeft: 10,
                             }}
                             class="nav-link"

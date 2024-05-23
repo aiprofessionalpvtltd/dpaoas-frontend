@@ -105,7 +105,7 @@ function NewMotion() {
     formData.append("englishText", values.englishText);
     formData.append("urduText", values.urduText);
     formData.append("fkMotionStatus", 1);
-    formData.append("motionSentStatus", "fromNotice");
+    // formData.append("motionSentStatus", "fromNotice");
     // formData.append("file", values?.attachment);
 
     if (values?.file) {

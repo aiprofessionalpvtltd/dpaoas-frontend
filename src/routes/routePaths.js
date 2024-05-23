@@ -183,6 +183,30 @@ import NewLegislationSenateBill from "../pages/Dashboard/Modules/LGMS/Bills/Sena
 import UpdateBills from "../pages/Dashboard/Modules/LGMS/Bills/NABills/EditNABills";
 import EditSenateBill from "../pages/Dashboard/Modules/LGMS/Bills/SenateBills/EditSenateBills";
 import AllBillStatuses from "../pages/Dashboard/Modules/LGMS/Manage/ManageBillStatuses";
+import LGMSMembers from "../pages/Dashboard/Modules/LGMS/Manage/Members";
+import LGMSMembersAddEditForm from "../pages/Dashboard/Modules/LGMS/Manage/Members/AddEditMembers";
+import LGMSParliamentaryYear from "../pages/Dashboard/Modules/LGMS/Manage/ParliamentaryYear";
+import LGMSAddEditParliamentaryYearForm from "../pages/Dashboard/Modules/LGMS/Manage/ParliamentaryYear/AddEditParliamentaryYear";
+import LGMSSessions from "../pages/Dashboard/Modules/LGMS/Manage/Sessions";
+import LGMSAddEditSessionsForm from "../pages/Dashboard/Modules/LGMS/Manage/Sessions/AddEditSessions";
+import LGMSTenures from "../pages/Dashboard/Modules/LGMS/Manage/Tenures";
+import LGMSAddEditTenuresForm from "../pages/Dashboard/Modules/LGMS/Manage/Tenures/AddEditTenures";
+import LGMSTerms from "../pages/Dashboard/Modules/LGMS/Manage/Terms";
+import LGMSAddEditTermsForm from "../pages/Dashboard/Modules/LGMS/Manage/Terms/AddEditTerms";
+import LGMSCommittees from "../pages/Dashboard/Modules/LGMS/Manage/Committees";
+import LGMSAddEditCommiteesForm from "../pages/Dashboard/Modules/LGMS/Manage/Committees/AddEditCommittees";
+import LGMSPrivateBill from "../pages/Dashboard/Modules/LGMS/LGMSPrivateBill";
+import LGMSLegislativeBill from "../pages/Dashboard/Modules/LGMS/LGMSLegislativeBill";
+import LGMSAddEditPrivateBill from "../pages/Dashboard/Modules/LGMS/LGMSPrivateBill/LGMSAddEditPrivateBill";
+import LGMSAddEditLegislativeBill from "../pages/Dashboard/Modules/LGMS/LGMSLegislativeBill/LGMSAddEditLegislativeBill";
+import TelecastingDashboard from "../pages/Dashboard/Modules/Telecasting";
+import TelecastingSpeechOnDemand from "../pages/Dashboard/Modules/Telecasting/SpeechOnDemand";
+import TelecastingAddEditSpeechOnDemand from "../pages/Dashboard/Modules/Telecasting/SpeechOnDemand/AddEditSpeechOnDemand";
+import ResearchDashboard from "../pages/Dashboard/Modules/Research";
+import ResearchBRServices from "../pages/Dashboard/Modules/Research/ResearchServices";
+import ResearchAddEditResearchService from "../pages/Dashboard/Modules/Research/ResearchServices/AddEditResearchService";
+import CMSBranches from "../pages/Dashboard/Modules/CMS/AdminCMS/BranchesCMS";
+import CMSAddEditBranch from "../pages/Dashboard/Modules/CMS/AdminCMS/BranchesCMS/AddEditBranchCMS";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -242,6 +266,8 @@ export const ProtectedRoutes = [
 
   { path: "/notice/legislation/government-bill", element: <GovernmentBill /> },
   { path: "/notice/legislation/private-bill", element: <PrivateBill /> },
+
+  
   {
     path: "/notice/legislation/private-bill/addedit",
     element: <AddEditPrivateBill />,
@@ -272,17 +298,15 @@ export const ProtectedRoutes = [
     path: "/notice/manage/view-prorogued-sessions",
     element: <NMSProroguredSessions />,
   },
+  {
+    path: "/notice/manage/view-prorogued-sessions",
+    element: <NMSProroguredSessions />,
+  },
 
   // {
   //   path: "/notice/manage/manage-session-days",
   //   element: <ManageSessionDays />,
   // },
-
-  { path: "/notice/speech-on-demand", element: <CMSSpeechOnDemandDashboard /> },
-  {
-    path: "/notice/speech-on-demand/addedit",
-    element: <CMSAddEditSpeechOnDemand />,
-  },
   {
     path: "/notice/research-services",
     element: <CMSResearchServicesDashboard />,
@@ -415,6 +439,7 @@ export const ProtectedRoutes = [
 
   { path: "/qms/notice", element: <QMSQuestionDashboard /> },
   { path: "/qms/notice/notice-question", element: <QMSNoticeQuestion /> },
+  
   {
     path: "/qms/notice/notice-question-detail",
     element: <QMSNoticeQuestionDetail />,
@@ -553,6 +578,8 @@ export const ProtectedRoutes = [
   { path: "/cms/admin/inventory/vendor-list", element: <CMSVendorList /> },
   { path: "/cms/admin/inventory/vendor-list/edit", element: <CMSEditVendor /> },
   { path: "/cms/admin/inventory/vendor-list/add", element: <CMSEditVendor /> },
+  {path:"/cms/admin/branch/list", element: <CMSBranches />},
+  {path:"/cms/admin/branch/addedit", element: <CMSAddEditBranch />},
 
   // E-Filing
   // { path: "/efiling/dashboard", element: <DirectorDashboard /> },
@@ -684,4 +711,93 @@ export const ProtectedRoutes = [
     path: "/lgms/dashboard/bill/manage-bill-statuses",
     element: <AllBillStatuses />,
   },
+
+  {
+    path: "/lgms/dashboard/manage/members/list",
+    element: <LGMSMembers />,
+  },
+  {
+    path: "/lgms/dashboard/manage/members/addedit",
+    element: <LGMSMembersAddEditForm />,
+  },
+  {
+    path: "/lgms/dashboard/manage/parliamentary-year/list",
+    element: <LGMSParliamentaryYear />,
+  },
+  {
+    path: "/lgms/dashboard/manage/parliamentary-year/addedit",
+    element: <LGMSAddEditParliamentaryYearForm />,
+  },
+  {
+    path: "/lgms/dashboard/manage/session/list",
+    element: <LGMSSessions />,
+  },
+
+  {
+    path: "/lgms/dashboard/manage/session/addedit",
+    element: <LGMSAddEditSessionsForm />,
+  },
+
+  {
+    path: "/lgms/dashboard/manage/tenures/list",
+    element: <LGMSTenures />,
+  },
+  {
+    path: "/lgms/dashboard/manage/tenures/addedit",
+    element: <LGMSAddEditTenuresForm />,
+  },
+
+  {
+    path: "/lgms/dashboard/manage/terms/list",
+    element: <LGMSTerms />,
+  },
+  {
+    path: "/lgms/dashboard/manage/terms/addedit",
+    element: <LGMSAddEditTermsForm />,
+  },
+
+  {
+    path: "/lgms/dashboard/manage/committees/list",
+    element: <LGMSCommittees />,
+  },
+  {
+    path: "/lgms/dashboard/manage/committees/addedit",
+    element: <LGMSAddEditCommiteesForm />,
+  },
+
+  {
+    path: "/lgms/legislation/private-bill",
+    element: <LGMSPrivateBill />,
+  },
+
+  {
+    path: "/lgms/legislation/legislative-bill",
+    element: <LGMSLegislativeBill />,
+  },
+
+  {
+    path: "/lgms/legislation/private-bill/addedit",
+    element: <LGMSAddEditPrivateBill />,
+  },
+
+  {
+    path: "/lgms/legislation/legislative-bill/addedit",
+    element: <LGMSAddEditLegislativeBill />,
+  },
+
+    // Telecasting branch
+    { path: "/telecasting/dashboard", element: <TelecastingDashboard /> },
+    { path: "/telecasting/speech-on-demand", element: <TelecastingSpeechOnDemand /> },
+    {
+      path: "/telecasting/speech-on-demand/addedit",
+      element: <TelecastingAddEditSpeechOnDemand />,
+    },
+
+    // Research branch
+    { path: "/research/dashboard", element: <ResearchDashboard /> },
+    { path: "/research/research-services", element: <ResearchBRServices /> },
+    {
+      path: "/research/research-services/addedit",
+      element: <ResearchAddEditResearchService />,
+    },
 ];

@@ -16,6 +16,7 @@ import { useNavigate } from 'react-router'
 import CustomTable from '../../../../../../components/CustomComponents/CustomTable'
 import { useFormik } from 'formik'
 import * as Yup from "yup";
+import { getBranches } from '../../../../../../api/APIs/Services/Branches.services'
 
 const validationSchema = Yup.object({
     serialNo: Yup.string().required("Serial No is required"),
@@ -33,6 +34,7 @@ function InventoryIssueDate() {
     const [searchData, setSearchData] = useState([])
     const [allIssuedData, setAllIssuedData] = useState([])
     const [count, setCount] = useState(null);
+    const [assignuser, setAssignUser] = useState(null)
     const [currentPage, setCurrentPage] = useState(0);
     const pageSize = 4;
 
@@ -63,8 +65,8 @@ function InventoryIssueDate() {
 
     const tranformissuedData = (apiData) => {
         return apiData.map((item) => ({
-            assignedToUser: item?.assignedToUser && `${item?.assignedToUser?.employee.firstName} ${item?.assignedToUser?.employee?.lastName}`,
-            assignedToBranch: item?.assignedToBranch && item?.assignedToBranch?.complaintTypeName,
+            assignedToUser: item?.assignedToUser ? `${item?.assignedToUser?.employee.firstName} ${item?.assignedToUser?.employee?.lastName}` : item.userAssignedName,
+            assignedToBranch: item?.assignedToBranch && item?.assignedToBranch?.branchName,
             issuedDate: item.issuedDate && moment(item.issuedDate).format("MM/DD/YYYY"),
             returnDate: item.returnDate && moment(item.returnDate).format("MM/DD/YYYY"),
 
@@ -119,21 +121,24 @@ function InventoryIssueDate() {
 
     const AllComplaintTypeApi = async () => {
         try {
-            const response = await getallcomplaintTypes();
+            const response = await getBranches(0,200);
             if (response?.success) {
                 // showSuccessMessage(response?.message);
-                setComplaintType(response?.data);
+                setComplaintType(response?.data?.rows);
             }
         } catch (error) {
             console.log(error);
             showErrorMessage(error?.response?.data?.error);
         }
     };
+    console.log(searchData);
     const hendleIssueDate = async (values) => {
         const Data = {
             fkAssignedToUserId: employee ? employee?.value : null,
             fkAssignedToBranchId: JSON.parse(branch),
             issuedDate: issuedDate,
+            userAssignedName:assignuser
+
 
         }
         try {
@@ -267,7 +272,7 @@ function InventoryIssueDate() {
 
                                                 )}
                                                 {searchData[0]?.assignedToBranch && (
-                                                    <td class="text-center">{searchData[0]?.assignedToBranch?.complaintTypeName}</td>
+                                                    <td class="text-center">{searchData[0]?.assignedToBranch?.branchName}</td>
                                                 )}
                                                 {searchData[0]?.issuedDate && (
                                                     <td class="text-center">{moment(searchData[0]?.issuedDate).format("MM/DD/YYYY")}</td>
@@ -297,7 +302,7 @@ function InventoryIssueDate() {
                                                 Select
                                             </option>
                                             {complaintType &&
-                                                complaintType.map((item) => <option value={item.id}>{item.complaintTypeName}</option>)}
+                                                complaintType.map((item) => <option value={item.id}>{item.branchName}</option>)}
                                         </select>
                                     </div>
                                 </div>
@@ -320,6 +325,21 @@ function InventoryIssueDate() {
                                         />
                                     </div>
                                 </div>
+                                <div className='col'>
+                  <div className="mb-3">
+                      <label className="form-label">User</label>
+                      <input
+                        type="text"
+                        className={`form-control`}
+                        // id="assignuser"
+                        name='assignuser'
+                        placeholder='Enter User Name'
+                        value={assignuser}
+                        onChange={(text) => setAssignUser(text.target.value)}
+                       
+                      /> 
+                      </div>
+                      </div>
 
                                 <div class="col">
                                     <div class="mb-3" style={{ position: "relative" }}>
@@ -338,7 +358,6 @@ function InventoryIssueDate() {
                                             <FontAwesomeIcon icon={faCalendarAlt} />
                                         </span>
                                         <DatePicker
-                                            minDate={new Date()}
                                             selected={issuedDate}
                                             onChange={(date) => setIssuedDate(date)}
                                             className={"form-control"}

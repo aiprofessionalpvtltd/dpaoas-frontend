@@ -159,7 +159,7 @@ function InventoryReturnDate() {
                                                     <td class="text-center">{`${searchData[0]?.assignedToUser?.employee?.firstName} ${searchData[0]?.assignedToUser?.employee?.lastName}`}</td>
                                                 )}
                                                 {searchData[0]?.assignedToBranch && (
-                                                    <td class="text-center">{searchData[0]?.assignedToBranch?.complaintTypeName}</td>
+                                                    <td class="text-center">{searchData[0]?.assignedToBranch?.branchName}</td>
                                                 )}
                                                 <td class="text-center">{moment(searchData[0]?.issuedDate).format("MM/DD/YYYY")}</td>
                                             </tr>
@@ -189,7 +189,6 @@ function InventoryReturnDate() {
                                             <FontAwesomeIcon icon={faCalendarAlt} />
                                         </span>
                                         <DatePicker
-                                            minDate={new Date()}
                                             selected={returnDate}
                                             onChange={(date) => setReturnDate(date)}
                                             className={"form-control"}

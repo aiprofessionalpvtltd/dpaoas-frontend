@@ -11,7 +11,8 @@ import {
   faUserCheck,
   faCirclePlus,
   faTrashArrowUp,
-  faListCheck
+  faListCheck,
+  faPaperPlane
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
@@ -67,14 +68,16 @@ function CustomTable({
   hendleCreateBtn,
   isCheckbox,
   isChecked,
-  setIsChecked
+  setIsChecked,
+  handleSent,
+  showSent
 }) {
   const keys = data?.length > 0 ? Object.keys(data[0]) : [];
 const filteredKeys = keys?.filter((key) => {
   if (key === "internalAttachment" && data.some(obj => Array.isArray(obj[key]))) {
     return false; // Skip filtering if it's an array in any object
   }
-  return key !== "internalAttachment" && key !== "internalId" && key !== "isEditable";
+  return key !== "internalAttachment" && key !== "internalId" && key !== "isEditable" && key !== "attachmentInternal";
 });
 
   
@@ -103,12 +106,13 @@ const filteredKeys = keys?.filter((key) => {
   const displayedData = data?.slice(startIndex, endIndex);
 
   const editTooltip = <Tooltip id="edit-tooltip">Edit</Tooltip>;
+  const sendTooltip = <Tooltip id="edit-tooltip">Send</Tooltip>;
   const viewTooltip = <Tooltip id="edit-tooltip">View</Tooltip>;
   const deleteTooltip = <Tooltip id="delete-tooltip">Delete</Tooltip>;
   const vistorTooltip = <Tooltip id="visitor-tooltip">Visitors</Tooltip>;
   const printTooltip = <Tooltip id="print-tooltip">Print</Tooltip>;
   const duplicateTooltip = <Tooltip id="duplicate-tooltip">Duplicate</Tooltip>;
-  const resolveTooltip = <Tooltip id="print-tooltip">Resolve</Tooltip>;
+  const resolveTooltip = <Tooltip id="print-tooltip">Complete</Tooltip>;
   const assignedTooltip = <Tooltip id="print-tooltip">Assigne</Tooltip>;
   const createTooltip = <Tooltip id="create-tooltip">Create Case</Tooltip>;
   const attendanceTooltip = <Tooltip id="attendance-tooltip">Mark </Tooltip>;
@@ -308,11 +312,11 @@ const filteredKeys = keys?.filter((key) => {
                         // </td>
                         <td className="text-center">
                           {item[key] === "active" ||
-                          item[key] === "inactive" ? (
+                          item[key] === "inactive" || item[key] === "complete" || item[key] === "pending"? (
                             <span
                               className={`label label-sm ${
-                                item[key] === "active"
-                                  ? "label-success"
+                                item[key] === "active" || item[key] === "complete"
+                                  ? "label-success" : item[key] === "pending" ? "label-pending"
                                   : "label-danger"
                               }`}
                             >
@@ -328,6 +332,21 @@ const filteredKeys = keys?.filter((key) => {
                           {!hideEditIcon && !hideEditIcon && (
                             <>
                               {showView && handleView && (
+                                <OverlayTrigger
+                                  placement="top"
+                                  overlay={viewTooltip}
+                                >
+                                  <button
+                                    onClick={() => handleView(item)}
+                                    className="btn-xs black circle-btn"
+                                    data-id={item.id}
+                                    style={{ background: "#2dce89" }}
+                                  >
+                                    <FontAwesomeIcon icon={faEye} />
+                                  </button>
+                                </OverlayTrigger>
+                              )}
+                              {item?.attachmentInternal && (
                                 <OverlayTrigger
                                   placement="top"
                                   overlay={viewTooltip}
@@ -416,6 +435,20 @@ const filteredKeys = keys?.filter((key) => {
                                     data-id={item.id}
                                   >
                                     <FontAwesomeIcon icon={faEdit} />
+                                  </button>
+                                </OverlayTrigger>
+                              )}
+                              {showSent && showSent && (
+                                <OverlayTrigger
+                                  placement="top"
+                                  overlay={sendTooltip}
+                                >
+                                  <button
+                                    onClick={() => handleSent(item)}
+                                    className="btn-xs black circle-btn"
+                                    data-id={item.id}
+                                  >
+                                    <FontAwesomeIcon icon={faPaperPlane} />
                                   </button>
                                 </OverlayTrigger>
                               )}
@@ -583,6 +616,20 @@ const filteredKeys = keys?.filter((key) => {
                         <td className="text-center">
                           {!hideEditIcon && !hideEditIcon && (
                             <>
+                            {showSent && showSent && (
+                                <OverlayTrigger
+                                  placement="top"
+                                  overlay={sendTooltip}
+                                >
+                                  <button
+                                    onClick={() => handleSent(item)}
+                                    className="btn-xs black circle-btn"
+                                    data-id={item.id}
+                                  >
+                                    <FontAwesomeIcon icon={faPaperPlane} />
+                                  </button>
+                                </OverlayTrigger>
+                              )}
                               {item?.isEditable && (
                                 <OverlayTrigger
                                   placement="top"

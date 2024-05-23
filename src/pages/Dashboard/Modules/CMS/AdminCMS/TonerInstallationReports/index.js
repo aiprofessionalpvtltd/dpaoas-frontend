@@ -25,6 +25,7 @@ import {
   getallToners,
   tonerDelete,
 } from "../../../../../../api/APIs/Services/TonerInstallation.service";
+import { getBranches } from "../../../../../../api/APIs/Services/Branches.services";
 
 function CMSTonerInstallationReports() {
   const navigate = useNavigate();
@@ -34,7 +35,7 @@ function CMSTonerInstallationReports() {
   const [currentPage, setCurrentPage] = useState(0);
   const [requestedBranch, setRequestedBranch] = useState([]);
   const [tonerModelData, setTonerModalData] = useState([]);
-  const pageSize = 4; // Set your desired page size
+  const pageSize = 10; // Set your desired page size
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
@@ -47,6 +48,7 @@ function CMSTonerInstallationReports() {
       RequestBranch: "",
       tonerModel: "",
       requestDate: "",
+      userRequestName:""
     },
     onSubmit: (values) => {
       // Handle form submission here
@@ -61,8 +63,8 @@ function CMSTonerInstallationReports() {
         item?.requestDate && moment(item?.requestDate).format("DD/MM/YYYY")
       }`,
 
-      UserRequest: `${item?.requestUser?.employee?.firstName}${item?.requestUser?.employee?.lastName}`,
-      BranchRequest: `${item?.requestBranch?.complaintTypeName}`,
+      UserRequest: item?.requestUser?.employee ? `${item?.requestUser?.employee?.firstName}${item?.requestUser?.employee?.lastName}` : item?.userRequestName,
+      BranchRequest: `${item?.requestBranch?.branchName}`,
       TonerModel: `${item?.tonerModel?.tonerModel}`,
       Qty: item?.quantity,
       status: item?.status,
@@ -92,10 +94,10 @@ function CMSTonerInstallationReports() {
   // Getting Branch Request
   const BranchRequest = async () => {
     try {
-      const response = await getallcomplaintTypes();
+      const response = await getBranches(0,100);
       if (response?.success) {
         // showSuccessMessage(response?.message);
-        setRequestedBranch(response?.data);
+        setRequestedBranch(response?.data?.rows);
       }
     } catch (error) {
       console.log(error);
@@ -150,10 +152,11 @@ function CMSTonerInstallationReports() {
   // Search for Toner
   const SearchTonerApi = async (values) => {
     const Data = {
-      requestUser: values.UserRequest.value,
-      requestBranch: values.RequestBranch,
-      tonerModel: values.tonerModel,
-      requestDate: values.requestDate,
+      requestUser: values?.UserRequest?.value,
+      requestBranch: values?.RequestBranch,
+      tonerModel: values?.tonerModel,
+      requestDate: values?.requestDate,
+      userRequestName:values?.userRequestName
     };
     try {
       const response = await SearchToner(Data);
@@ -183,13 +186,11 @@ function CMSTonerInstallationReports() {
           RequestDate: item.requestDate
             ? moment(item.requestDate).format("DD/MM/YYYY")
             : "",
-          UserRequest: `${item?.requestUser?.employee?.firstName} ${item?.requestUser?.employee?.lastName}`,
-          BranchRequest: item?.requestBranch?.complaintTypeName,
+          UserRequest: item?.requestUser?.employee ? `${item?.requestUser?.employee?.firstName} ${item?.requestUser?.employee?.lastName}` : item.userRequestName,
+          BranchRequest: item?.requestBranch?.branchName,
           TonerModel: item?.tonerModel?.tonerModel,
           Qty: item?.quantity,
           status: item?.status,
-          CreatedAt: item?.createdAt,
-          updatedAt: item?.updatedAt,
         }));
 
         const worksheet = XLSX.utils.json_to_sheet(Data);
@@ -236,6 +237,21 @@ function CMSTonerInstallationReports() {
                   </div>
                 </div>
 
+                <div className='col'>
+                  <div className="mb-3">
+                      <label className="form-label">Request User</label>
+                      <input
+                        type="text"
+                        className={`form-control`}
+                        id="userRequestName"
+                        placeholder='Enter Complainee Name'
+                        value={formik.values.userRequestName}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      /> 
+                      </div>
+                      </div>
+
                 <div class="col">
                   <div class="mb-3">
                     <label class="form-label">Request Branch</label>
@@ -252,7 +268,7 @@ function CMSTonerInstallationReports() {
                       {requestedBranch &&
                         requestedBranch.map((item) => (
                           <option value={item.id}>
-                            {item.complaintTypeName}
+                            {item.branchName}
                           </option>
                         ))}
                     </select>
@@ -300,7 +316,6 @@ function CMSTonerInstallationReports() {
                       <FontAwesomeIcon icon={faCalendarAlt} />
                     </span>
                     <DatePicker
-                      minDate={new Date()}
                       selected={formik.values.requestDate}
                       onChange={(date) =>
                         formik.setFieldValue("requestDate", date)

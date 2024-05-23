@@ -32,6 +32,7 @@ import { AuthContext } from "../../../../../api/AuthContext";
 import ComplaintAssignedEmployee from "../../../../../components/ComplaintAssignedEmployee";
 import { CustomAlert } from "../../../../../components/CustomComponents/CustomAlert";
 import * as XLSX from 'xlsx';
+import { getBranches } from "../../../../../api/APIs/Services/Branches.services";
 
 
 const customStyles = {
@@ -70,7 +71,7 @@ function CMSAdminDashboard() {
   const [currentPage, setCurrentPage] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [complaintId, setComplaintId] = useState(null);
-  const pageSize = 4; // Set your desired page size
+  const pageSize = 10; // Set your desired page size
 
   const [selectedItem, setSelectedItem] = useState({
     id: 0,
@@ -112,6 +113,7 @@ function CMSAdminDashboard() {
       complaintCategory: "",
       complaintIssuedDate: "",
       complaintResolvedDate: "",
+      userName:""
     },
     onSubmit: (values) => {
       // Handle form submission here
@@ -127,10 +129,10 @@ function CMSAdminDashboard() {
   const transformComplaintData = (apiData) => {
     return apiData.map((item) => ({
       id: item?.id,
-      complaineeUser: `${item?.complaineeUser?.employee?.firstName}${item?.complaineeUser?.employee?.lastName}`,
-      BranchOffice: item?.complaintType?.complaintTypeName,
-      NatureofComplaint: item?.complaintCategory?.complaintCategoryName,
-      AssigneTo:
+      complaineeUser: item?.complaineeUser?.employee ? `${item?.complaineeUser?.employee?.firstName}${item?.complaineeUser?.employee?.lastName}`: item.userName,
+      BranchOffice: item?.complaintType?.branchName,
+      NatureOfComplaint: item?.complaintCategory?.complaintCategoryName,
+      AssignTo:
         item?.resolverUser &&
         `${item?.resolverUser?.employee?.firstName}${item?.resolverUser?.employee?.lastName}`,
       complaintDate: moment(item?.complaintIssuedDate).format("DD/MM/YYYY"),
@@ -210,6 +212,7 @@ function CMSAdminDashboard() {
       complaintCategory: values?.complaintCategory,
       complaintIssuedDate: values?.complaintIssuedDate,
       complaintResolvedDate: values?.complaintResolvedDate,
+      userName:values?.userName
     };
     try {
       const response = await SearchComplaint(Data);
@@ -228,9 +231,9 @@ function CMSAdminDashboard() {
 
   const AllComplaintTypeApi = async () => {
     try {
-      const response = await getallcomplaintTypes();
+      const response = await getBranches(0,200);
       if (response?.success) {
-        setComplaintType(response?.data);
+        setComplaintType(response?.data?.rows);
       }
     } catch (error) {
       console.log(error);
@@ -281,7 +284,7 @@ function CMSAdminDashboard() {
     );
     pdf.text(`Description: ${printData?.complaintDescription}`, 10, 30);
     pdf.text(
-      `ComplaintType: ${printData?.complaintType?.complaintTypeName}`,
+      `ComplaintType: ${printData?.complaintType?.branchName}`,
       10,
       40
     );
@@ -335,7 +338,7 @@ function CMSAdminDashboard() {
         const response = await getallComplaint(0, 100);
         if (response?.success) {
             // Export to Excel logic
-            const worksheet = XLSX.utils.json_to_sheet(response?.data?.complaints);
+            const worksheet = XLSX.utils.json_to_sheet(transformComplaintData(response?.data?.complaints));
             const workbook = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
             //let buffer = XLSX.write(workbook, { bookType: "xlsx", type: "buffer" });
@@ -366,6 +369,7 @@ function CMSAdminDashboard() {
           assignModalOpan={assignModalOpan}
           hendleModal={() => setAssignedModal(!assignModalOpan)}
           ComplaintUserData={selectedItem}
+          getComplaint={getComplaint}
         />
       ) : null}
       {/* Print Pdf Modal */}
@@ -392,7 +396,7 @@ function CMSAdminDashboard() {
               {new Date(printData?.complaintIssuedDate).toLocaleString()}
             </p>
             <p>Description: {printData?.complaintDescription}</p>
-            <p>ComplaintType: {printData?.complaintType?.complaintTypeName}</p>
+            <p>ComplaintType: {printData?.complaintType?.branchName}</p>
             <p>
               ComplaintCategory:{" "}
               {printData?.complaintCategory?.complaintCategoryName}
@@ -541,6 +545,21 @@ function CMSAdminDashboard() {
                     />
                   </div>
                 </div>
+                <div className='col'>
+                  <div className="mb-3">
+                      <label className="form-label">Complainee</label>
+                      <input
+                        type="text"
+                        className={`form-control`}
+                        id="userName"
+                        placeholder='Complainee Name'
+                        value={formik.values.userName}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      /> 
+                      </div>
+                      </div>
+
                 <div class="col">
                   <div class="mb-3">
                     <label class="form-label">Resolve By</label>
@@ -579,7 +598,7 @@ function CMSAdminDashboard() {
                       {complaintType &&
                         complaintType.map((item) => (
                           <option value={item.id}>
-                            {item.complaintTypeName}
+                            {item.branchName}
                           </option>
                         ))}
                     </select>
@@ -627,7 +646,6 @@ function CMSAdminDashboard() {
                       <FontAwesomeIcon icon={faCalendarAlt} />
                     </span>
                     <DatePicker
-                      minDate={new Date()}
                       selected={formik.values.complaintIssuedDate}
                       onChange={(date) =>
                         formik.setFieldValue("complaintIssuedDate", date)
@@ -654,7 +672,6 @@ function CMSAdminDashboard() {
                     </span>
                     <DatePicker
                       selected={formik.values.complaintResolvedDate}
-                      minDate={new Date()}
                       onChange={(date) =>
                         formik.setFieldValue("complaintResolvedDate", date)
                       }
@@ -697,7 +714,7 @@ function CMSAdminDashboard() {
                   showResolve={true}
                   showEditIcon={true}
                   hideDeleteIcon={false}
-                  showPrint={true}
+                  showPrint={false}
                   showAssigned={true}
                   hendleAssigned={(item) => openModal(item)}
                 />

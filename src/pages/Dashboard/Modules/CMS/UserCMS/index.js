@@ -8,6 +8,7 @@ import Header from "../../../../../components/Header";
 import { useNavigate } from "react-router-dom";
 import {
   SearchComplaint,
+  getallComplaint,
   getallcomplaintCategories,
   getallcomplaintRecordById,
   getallcomplaintRecordByUserId,
@@ -28,6 +29,7 @@ import { getUserData } from "../../../../../api/Auth";
 import { AuthContext } from "../../../../../api/AuthContext";
 import Select from "react-select";
 import * as XLSX from "xlsx";
+import { getBranches } from "../../../../../api/APIs/Services/Branches.services";
 
 const customStyles = {
   content: {
@@ -72,7 +74,7 @@ function CMSUserDashboard() {
 
   const [currentPage, setCurrentPage] = useState(0);
 
-  const pageSize = 4; // Set your desired page size
+  const pageSize = 10; // Set your desired page size
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
@@ -82,10 +84,10 @@ function CMSUserDashboard() {
   const transformDepartmentData = (apiData) => {
     return apiData.map((item) => ({
       id: item?.id,
-      complaineeUser: `${item?.complaineeUser?.employee?.firstName}${item?.complaineeUser?.employee?.lastName}`,
-      BranchOffice: item?.complaintType?.complaintTypeName,
-      NatureofComplaint: item?.complaintCategory?.complaintCategoryName,
-      AssigneTo:
+      complaineeUser:item?.complaineeUser?.employee ? `${item?.complaineeUser?.employee?.firstName}${item?.complaineeUser?.employee?.lastName}` : item.userName,
+      BranchOffice: item?.complaintType?.branchName,
+      NatureOfComplaint: item?.complaintCategory?.complaintCategoryName,
+      AssignTo:
         item?.resolverUser &&
         `${item?.resolverUser?.employee?.firstName}${item?.resolverUser?.employee?.lastName}`,
       complaintIssuedDate:
@@ -96,11 +98,12 @@ function CMSUserDashboard() {
   };
   const getComplaint = useCallback(async () => {
     try {
-      const response = await getallcomplaintRecordByUserId(
-        userData.fkUserId,
-        currentPage,
-        pageSize
-      );
+      const response = await getallComplaint(currentPage, pageSize)
+      // const response = await getallcomplaintRecordByUserId(
+      //   userData.fkUserId,
+      //   currentPage,
+      //   pageSize
+      // );
       if (response?.success) {
         setCount(response?.data?.count);
         const transformedData = transformDepartmentData(
@@ -200,10 +203,10 @@ function CMSUserDashboard() {
 
   const AllComplaintTypeApi = async () => {
     try {
-      const response = await getallcomplaintTypes();
+      const response = await getBranches(0,200);
       if (response?.success) {
         // showSuccessMessage(response?.message);
-        setComplaintType(response?.data);
+        setComplaintType(response?.data?.rows);
       }
     } catch (error) {
       console.log(error);
@@ -388,7 +391,7 @@ function CMSUserDashboard() {
                       {complaintType &&
                         complaintType.map((item) => (
                           <option value={item.id}>
-                            {item.complaintTypeName}
+                            {item.branchName}
                           </option>
                         ))}
                     </select>
@@ -436,7 +439,6 @@ function CMSUserDashboard() {
                       <FontAwesomeIcon icon={faCalendarAlt} />
                     </span>
                     <DatePicker
-                      minDate={new Date()}
                       selected={formik.values.complaintIssuedDate}
                       onChange={(date) =>
                         formik.setFieldValue("complaintIssuedDate", date)
@@ -463,7 +465,6 @@ function CMSUserDashboard() {
                     </span>
                     <DatePicker
                       selected={formik.values.complaintResolvedDate}
-                      minDate={new Date()}
                       onChange={(date) =>
                         formik.setFieldValue("complaintResolvedDate", date)
                       }

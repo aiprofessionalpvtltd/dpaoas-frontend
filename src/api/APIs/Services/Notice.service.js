@@ -57,11 +57,29 @@ export const createSpeachOnDemand = async (data) => {
   }
 };
 
-export const getAllSpeachOnDemand = async (currentPage, pageSize) => {
+export const getAllSpeachOnDemand = async (currentPage, pageSize, isActive) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClientMMS.get(
-      `/senator/speech-on-demand/findall?currentPage=${currentPage}&pageSize=${pageSize}`
+      `/senator/speech-on-demand/findall?currentPage=${currentPage}&pageSize=${pageSize}&isActive=${isActive}`
+      // {
+      //   // headers: {
+      //   //   Authorization: `Bearer ${token}`,
+      //   // }
+      // },
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const getSpeachOnDemandStats = async () => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/senator/speech-on-demand/stats`
       // {
       //   // headers: {
       //   //   Authorization: `Bearer ${token}`,
@@ -155,12 +173,13 @@ export const UpdateResearchServices = async (id, data) => {
     // const token = getAuthToken();
     const response = await axiosClientMMS.put(
       `/senator/request-research/${id}`,
-      data
-      // {
-      //   // headers: {
-      //   //   Authorization: `Bearer ${token}`,
-      //   // }
-      // },
+      data,
+      {
+        headers: {
+          accept: "application/json",
+          "Content-Type": "multipart/form-data",
+        },
+      },
     );
     return response?.data;
   } catch (error) {
@@ -187,11 +206,11 @@ export const getResearchServicesById = async (id) => {
   }
 };
 
-export const getAllResarchServices = async (currentPage, pageSize) => {
+export const getAllResarchServices = async (currentPage, pageSize, isActive) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClientMMS.get(
-      `/senator/request-research/findall?currentPage=${currentPage}&pageSize=${pageSize}`
+      `/senator/request-research/findall?currentPage=${currentPage}&pageSize=${pageSize}&isActive=${isActive}`
       // {
       //   // headers: {
       //   //   Authorization: `Bearer ${token}`,
@@ -204,6 +223,25 @@ export const getAllResarchServices = async (currentPage, pageSize) => {
     throw error;
   }
 };
+
+export const getResearchServicesStats = async () => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/senator/request-research/stats`
+      // {
+      //   // headers: {
+      //   //   Authorization: `Bearer ${token}`,
+      //   // }
+      // },
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
 export const DeleteResearchServices = async (id) => {
   try {
     // const token = getAuthToken();
@@ -233,6 +271,42 @@ export const getAllLegislativeBill = async (currentPage, pageSize) => {
       //   //   Authorization: `Bearer ${token}`,
       //   // }
       // },
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const getAllLegislativeBillNotice = async (currentPage, pageSize) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/legislativeBills/inNotice?currentPage=${currentPage}&pageSize=${pageSize}`
+      // {
+      //   // headers: {
+      //   //   Authorization: `Bearer ${token}`,
+      //   // }
+      // },
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const sendLegislativeBill = async (id, data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.put(
+      `/legislativeBills/sendToLegislation/${id}`, data,
+      {
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // }
+      }
     );
     return response?.data;
   } catch (error) {

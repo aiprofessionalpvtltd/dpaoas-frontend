@@ -115,6 +115,7 @@ function MMSNewMotion() {
     formData.append("englishText", values.englishText);
     formData.append("urduText", "dkpad");
     formData.append("fkMotionStatus", values?.motionStatus);
+    formData.append("motionSentStatus", 'inMotion');
     if (values?.file) {
       Array.from(values?.file).map((file, index) => {
         formData.append(`file`, file);

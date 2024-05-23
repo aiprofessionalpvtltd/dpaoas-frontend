@@ -305,7 +305,6 @@ function CMSAddInventoryBill() {
                         <FontAwesomeIcon icon={faCalendarAlt} />
                       </span>
                       <DatePicker
-                        minDate={new Date()}
                         selected={formik.values.assignedDate}
                         onChange={(date) =>
                           formik.setFieldValue("assignedDate", date)

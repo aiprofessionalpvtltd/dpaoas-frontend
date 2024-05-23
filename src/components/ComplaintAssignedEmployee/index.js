@@ -20,7 +20,7 @@ const customStyles = {
   },
 };
 
-function ComplaintAssignedEmployee({ assignModalOpan, hendleModal, ComplaintUserData }) {
+function ComplaintAssignedEmployee({ assignModalOpan, hendleModal, ComplaintUserData, getComplaint }) {
   const { employeesAsEngineersData } = useContext(AuthContext)
   const UserData = getUserData()
 
@@ -54,6 +54,7 @@ function ComplaintAssignedEmployee({ assignModalOpan, hendleModal, ComplaintUser
         showSuccessMessage(response?.message)
         formikAssigned.resetForm()
         hendleModal()
+        getComplaint()
 
       }
     } catch (error) {

@@ -22,8 +22,11 @@ const validationSchema = Yup.object({
     complaintStatus: Yup.string().required("Complaint Status is required")
 });
 
+
 function CMSAdminEditComplaint() {
+  
   const location = useLocation();
+  console.log("location",location.state);
   const formik = useFormik({
     initialValues: {
       fkResolverUserId: "",
@@ -43,10 +46,10 @@ function CMSAdminEditComplaint() {
   const UpdateComplaintAPi = async (values) => {
     const formData = new FormData();
 
-    formData.append("fkResolverUserId", location?.state?.complaineeUser.id);
-    formData.append("complaintResolvedDate", values.complaintResolvedDate);
-    formData.append("complaintRemark", values.complaintRemark);
-    formData.append("complaintStatus", values.complaintStatus);
+    formData.append("fkResolverUserId", location?.state?.fkAssignedResolverId);
+    formData.append("complaintResolvedDate", values?.complaintResolvedDate);
+    formData.append("complaintRemark", values?.complaintRemark);
+    formData.append("complaintStatus", values?.complaintStatus);
     formData.append(
       "complaintAttachmentFromResolver",
       values.complaintAttachmentFromResolver
@@ -54,7 +57,7 @@ function CMSAdminEditComplaint() {
 
     try {
       const response = await UpdateComplaintByAdmin(
-        location.state.id,
+        location?.state?.id,
         formData
       );
       if (response.success) {
@@ -97,7 +100,7 @@ function CMSAdminEditComplaint() {
                           type="text"
                           className={`form-control`}
                           id="productName"
-                          placeholder={`${location?.state?.complaineeUser?.employee?.firstName} ${location?.state?.complaineeUser?.employee?.lastName}`}
+                          placeholder={location?.state?.complaineeUser ? `${location?.state?.complaineeUser?.employee?.firstName} ${location?.state?.complaineeUser?.employee?.lastName}` : location?.state?.userName}
                           readOnly
                         />
                       </div>
@@ -129,7 +132,7 @@ function CMSAdminEditComplaint() {
                           className={`form-control`}
                           id="productName"
                           placeholder={
-                            location?.state?.complaintType?.complaintTypeName
+                            location?.state?.complaintType?.branchName
                           }
                           readOnly
                         />
@@ -214,7 +217,7 @@ function CMSAdminEditComplaint() {
                       </span>
                       <DatePicker
                         selected={formik.values.complaintResolvedDate}
-                        minDate={new Date()}
+                        // minDate={new Date()}
                         onChange={(date) =>
                           formik.setFieldValue("complaintResolvedDate", date)
                         }

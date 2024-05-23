@@ -11,6 +11,8 @@ import {
   faClipboardQuestion,
   faSms,
   faBuilding,
+  faTelevision,
+  faBookOpenReader,
 } from "@fortawesome/free-solid-svg-icons";
 import { AuthContext } from "../../api/AuthContext";
 import {
@@ -139,7 +141,7 @@ function Dashboard() {
     },
     {
       title: "Notice Management System",
-      link: "/notice/dashboard",
+      link: userRole?.fkBranchId === 9 ? "/notice/speech-on-demand" : "/notice/dashboard",
       type: "",
       cardbg: "darkGreenbg",
       icon: faBullhorn,
@@ -199,7 +201,23 @@ function Dashboard() {
       type: "",
       cardbg: "greenbg",
       icon: faMailBulk,
-      permission: ["Complaint"],
+      permission: ["Legislation"],
+    },
+    {
+      title: "Telecasting",
+      link: "/telecasting/dashboard",
+      type: "",
+      cardbg: "orangebg",
+      icon: faTelevision,
+      permission: ["Telecasting"],
+    },
+    {
+      title: "IPR",
+      link: "/research/dashboard",
+      type: "",
+      cardbg: "bluebg",
+      icon: faBookOpenReader,
+      permission: ["IPR"],
     },
   ];
 
@@ -217,7 +235,6 @@ function Dashboard() {
     rows.push(filteredTiles.slice(i, i + 4));
   }
 
-  console.log(rows, "rows");
   return (
     <Layout>
       <div class="dashboard-content" style={{ marginTop: "100px" }}>

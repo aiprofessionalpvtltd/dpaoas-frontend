@@ -80,7 +80,7 @@ function QMSAddEditTermsForm() {
     try {
       const response = await getAllTenures(0, 100);
       if (response?.success) {
-        setTenures(response?.data);
+        setTenures(response?.data?.tenures);
       }
     } catch (error) {
       console.log(error?.response?.data?.message);

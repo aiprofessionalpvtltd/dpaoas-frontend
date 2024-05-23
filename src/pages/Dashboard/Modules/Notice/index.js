@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "../../../../components/Header";
 import CustomTable from "../../../../components/CustomComponents/CustomTable";
 import NoticeStatsCard from "../../../../components/CustomComponents/NoticeStatsCard";
-import { getAllNoticeStats } from "../../../../api/APIs/Services/Notice.service";
+import { getAllNoticeStats, getAllResarchServices, getAllSpeachOnDemand } from "../../../../api/APIs/Services/Notice.service";
 import {
   faClipboardQuestion,
   faFileImport,
@@ -35,6 +35,10 @@ const data = [
 function NoticeDashboard() {
   const navigate = useNavigate();
   const [stats, setStats] = useState(null);
+  const [todaySpeach, setTodaySpeach] = useState(0);
+  const [todayservices, setTodayservices] = useState(0);
+
+
   const [currentPage, setCurrentPage] = useState(0);
   const pageSize = 4; // Set your desired page size
 
@@ -56,7 +60,36 @@ function NoticeDashboard() {
     }
   };
 
+
+  const today = new Date().toISOString().split('T')[0];
+
+  const getAllSpeachOnDemandAPi = async () => {
+    try {
+      const response = await getAllSpeachOnDemand(0, 200);
+      if (response?.success) {
+       const todaycount = response?.data?.speechOnDemand.filter(item => item.createdAt.split('T')[0] === today).length
+       setTodaySpeach(todaycount)
+      }
+    } catch (error) {
+      console.log(error?.response?.data?.message);
+    }
+  }
+
+  const getAllResarchServicesApi = async () => {
+    try {
+      const response = await getAllResarchServices(0, 200);
+      if (response?.success) {
+        const todaycount = response?.data?.researchServiceData?.filter(item => item.createdAt.split('T')[0] === today).length
+        setTodayservices(todaycount)
+      }
+    } catch (error) {
+      console.log(error?.response?.data?.message);
+    }
+  };
+
   useEffect(() => {
+    getAllSpeachOnDemandAPi()
+    getAllResarchServicesApi()
     GetAllNoticeStatsApi();
   }, []);
 
@@ -92,6 +125,7 @@ function NoticeDashboard() {
                   }`}
                   sent={stats?.questions?.dailySendQuestions}
                   received={stats?.questions?.dailyRecievedQuestions}
+                  onClick={() => navigate("/notice/question/sent")}
                 />
                 <NoticeStatsCard
                   title={"Motion"}
@@ -103,7 +137,21 @@ function NoticeDashboard() {
                   }`}
                   sent={stats?.motions?.dailySendMotions}
                   received={stats?.motions?.dailyRecievedMotions}
+                  onClick={() => navigate("/notice/motion/sent")}
                 />
+                {/* <NoticeStatsCard
+                  title={"Resolution"}
+                  icon={faScaleBalanced}
+                  iconBgColor={"#2dce89"}
+                  total={`${
+                    stats?.motions?.dailySendMotions +
+                    stats?.motions?.dailyRecievedMotions
+                  }`}
+                  sent={stats?.motions?.dailySendMotions}
+                  received={stats?.motions?.dailyRecievedMotions}
+                /> */}
+                
+                
                 {/* <NoticeStatsCard title={"Legislation"} icon={faScaleBalanced} iconBgColor={"#2dce89"} total={`${stats?.legislation?.sentToBranchesQ + stats?.legislation?.initiatedByBranchesQ}`} sent={stats?.legislation?.sentToBranchesQ} received={stats?.legislation?.initiatedByBranchesQ} /> */}
               </div>
             </div>

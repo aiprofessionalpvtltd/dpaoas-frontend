@@ -16,6 +16,8 @@ import Select from "react-select";
 import CustomTable from '../../../../../../components/CustomComponents/CustomTable';
 import moment from 'moment';
 import * as Yup from "yup";
+import { getAllEmployee } from '../../../../../../api/APIs/Services/organizational.service';
+import { getBranches } from '../../../../../../api/APIs/Services/Branches.services';
 
 const validationSchema = Yup.object({
   fkComplaintTypeId: Yup.string().required("Branch/Office is required"),
@@ -25,7 +27,8 @@ const validationSchema = Yup.object({
 function CMSAddEditUserComplaint() {
   const location = useLocation()
   const userData = getUserData();
-  const { employeeData, employeesAsEngineersData } = useContext(AuthContext)
+  const {  employeesAsEngineersData } = useContext(AuthContext)
+  const [employeeData, setEmployeeData] = useState([]);
   const [complaintType, setComplaintType] = useState([])
   const [complaintCategories, setComplaintCategories] = useState([])
   const [userinventoryData, setUserInventoryData] = useState([])
@@ -39,7 +42,8 @@ function CMSAddEditUserComplaint() {
       complaintDescription: location.state ? location?.state?.complaintDescription : "",
       complaintIssuedDate: new Date(),
       fkAssignedResolverId: "",
-      complaintAttachment: ""
+      complaintAttachment: "",
+      userName:""
     },
     validationSchema: validationSchema,
     onSubmit: async (values, { resetForm }) => {
@@ -78,7 +82,8 @@ function CMSAddEditUserComplaint() {
       fkComplaintCategoryId: values.fkComplaintCategoryId,
       complaintDescription: values.complaintDescription,
       complaintIssuedDate: values?.complaintIssuedDate,
-      fkAssignedResolverId: values?.fkAssignedResolverId?.value
+      fkAssignedResolverId: values?.fkAssignedResolverId?.value,
+      userName:values?.userName
     }
     try {
       const response = await createComplaint(Data);
@@ -114,10 +119,10 @@ function CMSAddEditUserComplaint() {
 
   const AllComplaintTypeApi = async () => {
     try {
-      const response = await getallcomplaintTypes();
+      const response = await getBranches(0,200);
       if (response?.success) {
         // showSuccessMessage(response?.message);
-        setComplaintType(response?.data);
+        setComplaintType(response?.data?.rows);
       }
     } catch (error) {
       console.log(error);
@@ -150,11 +155,23 @@ function CMSAddEditUserComplaint() {
     }
   };
 
+  const getEmployeeData = async () => {
+    try {
+      const response = await getAllEmployee(0, 1000);
+      if(response?.success) {
+        setEmployeeData(response?.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
 
 
   useEffect(() => {
     AllComplaintTypeApi()
     AllComplaintCategoriesApi()
+    getEmployeeData();
   }, [])
 
   return (
@@ -183,7 +200,7 @@ function CMSAddEditUserComplaint() {
             <form onSubmit={formik.handleSubmit}>
               <div className="container-fluid">
                 <div className="row">
-                  <div className="col-6">
+                  <div className="col">
                     <div className="mb-3">
                       <label className="form-label">Complainee</label>
                       {/* <input
@@ -213,7 +230,21 @@ function CMSAddEditUserComplaint() {
                       />
                     </div>
                   </div>
-                  <div class="col-6">
+                  <div className='col'>
+                  <div className="mb-3">
+                      <label className="form-label">Complainee</label>
+                      <input
+                        type="text"
+                        className={`form-control`}
+                        id="userName"
+                        placeholder='Enter Complainee Name'
+                        value={formik.values.userName}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      /> 
+                      </div>
+                      </div>
+                  <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Branch/Office</label>
                       <select class={`form-control ${formik.touched.fkComplaintTypeId &&
@@ -232,7 +263,7 @@ function CMSAddEditUserComplaint() {
                         </option>
                         {complaintType &&
                           complaintType.map((item) => (
-                            <option value={item.id}>{item.complaintTypeName}</option>
+                            <option value={item.id}>{item.branchName}</option>
                           ))}
                       </select>
                       {formik.touched.fkComplaintTypeId &&
@@ -325,7 +356,7 @@ function CMSAddEditUserComplaint() {
                       </span>
                       <DatePicker
                         selected={formik.values.complaintIssuedDate}
-                        minDate={new Date()}
+                        // minDate={new Date()}
                         onChange={(date) =>
                           formik.setFieldValue("complaintIssuedDate", date)
                         }

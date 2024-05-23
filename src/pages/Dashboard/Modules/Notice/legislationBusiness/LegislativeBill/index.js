@@ -10,6 +10,8 @@ import { NoticeSidebarItems } from "../../../../../../utils/sideBarItems";
 import {
   DeleteLegislativeBill,
   getAllLegislativeBill,
+  getAllLegislativeBillNotice,
+  sendLegislativeBill,
 } from "../../../../../../api/APIs/Services/Notice.service";
 import Header from "../../../../../../components/Header";
 import moment from "moment";
@@ -39,7 +41,7 @@ function LegislativeBillList() {
 
   const getAllLegislativeBillApi = useCallback(async () => {
     try {
-      const response = await getAllLegislativeBill(currentPage, pageSize);
+      const response = await getAllLegislativeBillNotice(currentPage, pageSize);
       if (response?.success) {
         setCount(response?.data?.count);
         const trensferData = transformLegislativeData(
@@ -67,6 +69,22 @@ function LegislativeBillList() {
   useEffect(() => {
     getAllLegislativeBillApi();
   }, [currentPage]);
+
+  const sendBill = async (id) => {
+    try {
+      const data = {
+        billSentDate: new Date()
+      }
+      const response = await sendLegislativeBill(id, data);
+      if (response?.success) {
+        showSuccessMessage(response.message);
+        getAllLegislativeBillApi();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <Layout
       module={true}
@@ -102,6 +120,8 @@ function LegislativeBillList() {
               })
             }
             handleDelete={(item) => handleDelete(item.SR)}
+            showSent={true}
+            handleSent={(item) => sendBill(item?.SR)}
           />
         </div>
       </div>

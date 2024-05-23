@@ -10,6 +10,8 @@ import {
 import {
   deletePrivateBill,
   getAllPrivateBill,
+  getAllPrivateBillNotice,
+  sendPrivateBill,
 } from "../../../../../../api/APIs/Services/Legislation.service";
 import PrivateBillModal from "../../../../../../components/PrivateBillModal";
 import { ToastContainer } from "react-toastify";
@@ -47,12 +49,12 @@ function PrivateBill() {
         : ""
           ? item?.branch?.branchName
           : "Notice",
-      status: item?.status ? item?.status : "",
+      status: item?.billStatuses ? item?.billStatuses?.billStatusName : "",
     }));
   };
   const getAllPrivateBillApi = useCallback(async () => {
     try {
-      const response = await getAllPrivateBill(currentPage, pageSize);
+      const response = await getAllPrivateBillNotice(currentPage, pageSize);
       if (response?.success) {
         const transformedData = transformPrivateData(
           response?.data?.privateMemberBills
@@ -93,6 +95,21 @@ function PrivateBill() {
     handleClose();
   };
 
+  const sendBill = async (id) => {
+    try {
+      const data = {
+        billSentDate: new Date()
+      }
+      const response = await sendPrivateBill(id, data);
+      if (response?.success) {
+        showSuccessMessage(response.message);
+        getAllPrivateBillApi();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <Layout
       module={true}
@@ -110,7 +127,7 @@ function PrivateBill() {
       <Header
         dashboardLink={"/notice/dashboard"}
         // addLink1={"/notice/question/sent"}
-        title1={"Private Bill"}
+        title1={"Private Member Bill"}
       />
 
       <CustomAlert
@@ -124,7 +141,7 @@ function PrivateBill() {
           <CustomTable
             singleDataCard={true}
             data={data}
-            tableTitle="Private Bill"
+            tableTitle="Private Member Bill"
             addBtnText={"Create Private Bill"}
             handleAdd={() =>
               navigate("/notice/legislation/private-bill/addedit")
@@ -144,8 +161,10 @@ function PrivateBill() {
             currentPage={currentPage}
             pageSize={pageSize}
             totalCount={count}
-            showAssigned={true}
+            showAssigned={false}
             hendleAssigned={(item) => openModal(item)}
+            showSent={true}
+            handleSent={(item) => sendBill(item?.id)}
           />
         </div>
       </div>
