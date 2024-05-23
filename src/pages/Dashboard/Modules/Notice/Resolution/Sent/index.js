@@ -85,6 +85,7 @@ function SentResolution() {
           ? leave?.resolutionStatus?.resolutionStatus
           : "",
         Status: leave?.resolutionActive ? leave?.resolutionActive : "",
+        createdBy:leave?.resolutionSentStatus === "inNotice" ? "Notice Office": "---"
       };
     });
   };
@@ -111,6 +112,7 @@ function SentResolution() {
       noticeOfficeDiaryDateFrom: values.fromNoticeDate,
       noticeOfficeDiaryDateTo: values.toNoticeDate,
       resolutionMovers: values?.memberName?.value,
+      resolutionSentStatus: ["inNotice", "toResolution"]
     };
 
     try {
@@ -120,7 +122,7 @@ function SentResolution() {
         showSuccessMessage(response?.message);
 
         setCount(response.data?.count);
-        if(response.data?.length > 0) {
+        if(response.data?.resolutions?.length > 0) {
           const transformedData = transformLeavesData(response.data?.resolutions);
           setResData(transformedData);
         } else {

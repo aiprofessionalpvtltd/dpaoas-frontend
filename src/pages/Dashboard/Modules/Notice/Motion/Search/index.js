@@ -124,7 +124,8 @@ function SearchMotion() {
         ).format("hh:ss A"),
         englishText: EnglishText ? EnglishText : "",
         urduText: UrduText ? UrduText : "",
-        SentDate: leave?.motionSentDate
+        SentDate: leave?.motionSentDate,
+        createdBy : leave?.motionSentStatus === "inNotice" ? "Notice Office" : leave?.motionSentStatus == "toMotion" ? "From Notice Office":"--"
       };
     });
   };
@@ -163,6 +164,7 @@ function SearchMotion() {
       englishText: values?.keyword,
       motionWeek: values?.motionWeek,
       motionType: values?.motionType,
+      motionSentStatus:["inNotice", "toMotion"]
     };
     setCount(null);
 

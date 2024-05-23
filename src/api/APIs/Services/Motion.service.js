@@ -50,11 +50,11 @@ export const getMotionByID = async (id) => {
   }
 };
 
-export const getAllMotion = async (currentPage, pageSize) => {
+export const getAllMotion = async (currentPage, pageSize,motionSentStatus, motiontoStatus) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClientMMS.get(
-      `/motion/all?page=${currentPage}&pageSize=${pageSize}`
+      `/motion/all?page=${currentPage}&pageSize=${pageSize}&motionSentStatus=${motionSentStatus}&motionSentStatus=${motiontoStatus}`
     );
     // {
     //   headers: {
@@ -68,11 +68,11 @@ export const getAllMotion = async (currentPage, pageSize) => {
   }
 };
 
-export const getAllMotionNotice = async (currentPage, pageSize) => {
+export const getAllMotionNotice = async (currentPage, pageSize, motionSentStatus) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClientMMS.get(
-      `/motion/inNotice?page=${currentPage}&pageSize=${pageSize}`
+      `/motion/inNotice?page=${currentPage}&pageSize=${pageSize}&motionSentStatus=${motionSentStatus}`
     );
     // {
     //   headers: {

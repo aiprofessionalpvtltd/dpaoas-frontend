@@ -99,6 +99,7 @@ function QMSSerchResolution() {
       noticeOfficeDiaryDateFrom: values.fromNoticeDate,
       noticeOfficeDiaryDateTo: values.toNoticeDate,
       resolutionMovers: values?.memberName?.value,
+      resolutionSentStatus:"inResolution"
     };
 
     try {

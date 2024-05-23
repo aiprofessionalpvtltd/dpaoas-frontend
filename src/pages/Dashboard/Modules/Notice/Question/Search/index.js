@@ -100,7 +100,8 @@ function SearchQuestion() {
         Status: res.questionStatus?.questionStatus
           ? res.questionStatus?.questionStatus
           : "",
-        SentDate: res?.questionSentDate
+        SentDate: res?.questionSentDate,
+        createdBy : res?.questionSentStatus === "inNotice" ? "Notice Office" : res?.questionSentStatus == "toQuestion" ? "From Notice Office":"--"
       };
     });
   };
@@ -146,6 +147,7 @@ function SearchQuestion() {
         noticeOfficeDiaryDateTo:
           values?.toNoticeDate &&
           moment(values?.toNoticeDate).format("YYYY-MM-DD"),
+          questionSentStatus : ["inNotice", "toQuestion"]
       };
 
       try {

@@ -18,11 +18,11 @@ export const createQuestion = async (data) => {
   }
 };
 
-export const getAllQuestion = async (page, pageSize) => {
+export const getAllQuestion = async (page, pageSize, questionSentStatus) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClientMMS.get(
-      `/questions/all?currentPage=${page}&pageSize=${pageSize}`,
+      `/questions/all?currentPage=${page}&pageSize=${pageSize}&questionSentStatus=${questionSentStatus}`,
       {
         // headers: {
         //   Authorization: `Bearer ${token}`,
