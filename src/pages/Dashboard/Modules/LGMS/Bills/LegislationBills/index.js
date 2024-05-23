@@ -38,9 +38,6 @@ const AllLegislationBillList = () => {
       billCategory: item.billCategory,
       fileNumber: item?.fileNumber,
       billFrom: item?.billFrom,
-      dateOfPassageBySenate: item?.dateOfPassageBySenate
-        ? moment(item?.dateOfPassageBySenate).format("DD-MM-YYYY")
-        : "---",
       billStatus: item.billStatus,
     }));
   };
@@ -56,9 +53,7 @@ const AllLegislationBillList = () => {
       noticeDate: item?.noticeDate
         ? moment(item?.noticeDate).format("DD-MM-YYYY")
         : "---",
-      dateOfPassageBySenate: item?.dateOfPassageBySenate
-        ? moment(item?.dateOfPassageBySenate).format("DD-MM-YYYY")
-        : "---",
+
       billStatus: item.billStatus,
     }));
   };
@@ -74,6 +69,9 @@ const AllLegislationBillList = () => {
 
       dateOfReceiptOfMessageFromNa: item?.DateOfReceiptOfMessageFromNA
         ? moment(item?.DateOfReceiptOfMessageFromNA).format("DD-MM-YYYY")
+        : "---",
+      dateOfPassageBySenate: item?.dateOfPassageBySenate
+        ? moment(item?.dateOfPassageBySenate).format("DD-MM-YYYY")
         : "---",
       passedByNA: item?.PassedByNADate
         ? moment(item?.PassedByNADate).format("DD-MM-YYYY")

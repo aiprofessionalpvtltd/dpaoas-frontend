@@ -469,7 +469,7 @@ const EditSenateBill = () => {
                   class="card-header red-bg"
                   style={{ background: "#14ae5c !important" }}
                 >
-                  <h1>Update National Assembly Bill</h1>
+                  <h1>Update Senate Bill</h1>
                 </div>
                 <div className="card-body">
                   <div className="container-fluid">
