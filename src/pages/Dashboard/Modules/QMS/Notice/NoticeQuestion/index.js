@@ -130,6 +130,7 @@ function QMSNoticeQuestion() {
         Status: res.questionStatus?.questionStatus
           ? res.questionStatus?.questionStatus
           : "",
+          createdBy:res?.questionSentStatus === "toQuestion" ? "Notice Office": "---"
       };
     });
   };
@@ -151,6 +152,7 @@ function QMSNoticeQuestion() {
         noticeOfficeDiaryDateTo:
           values?.toNoticeDate &&
           moment(values?.toNoticeDate).format("YYYY-MM-DD"),
+          questionSentStatus:"toQuestion"
       };
       try {
         const response = await searchQuestion(searchParams, page, pageSize);
@@ -187,8 +189,9 @@ function QMSNoticeQuestion() {
   };
 
   const getAllQuestionsApi = useCallback(async () => {
+    const questionSentStatus = "toQuestion"
     try {
-      const response = await getAllQuestion(currentPage, pageSize);
+      const response = await getAllQuestion(currentPage, pageSize, questionSentStatus);
       if (response?.success) {
         const transformedData = transformLeavesData(response?.data?.questions);
         setCount(response?.data?.count);

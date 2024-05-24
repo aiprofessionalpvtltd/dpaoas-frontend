@@ -89,6 +89,7 @@ function QMSSearchQuestion() {
         Category: res?.questionCategory,
         // SubmittedBy: res.category,
         Status: res?.questionStatus?.questionStatus,
+        CreatedBy:res?.questionSentStatus == "inQuestion" && "Question"
       };
     });
   };
@@ -108,6 +109,7 @@ function QMSSearchQuestion() {
       fileStatus: values.fileStatus,
       groups: values.groups,
       divisions: values.divisions,
+      questionSentStatus:"inQuestion"
     };
 
     try {

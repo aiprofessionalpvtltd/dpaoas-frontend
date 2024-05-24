@@ -83,6 +83,7 @@ function QMSNoticeResolution() {
           ? leave?.resolutionStatus?.resolutionStatus
           : "",
         Status: leave?.resolutionActive ? leave?.resolutionActive : "",
+        createdBy:leave?.resolutionSentStatus === "toResolution" ? "Notice Office": "---"
       };
     });
   };
@@ -108,6 +109,8 @@ function QMSNoticeResolution() {
       noticeOfficeDiaryDateFrom: values.fromNoticeDate,
       noticeOfficeDiaryDateTo: values.toNoticeDate,
       resolutionMovers: values?.memberName?.value,
+      resolutionSentStatus:"toResolution"
+
     };
 
     try {
@@ -124,8 +127,9 @@ function QMSNoticeResolution() {
   };
 
   const getAllResolutionsApi = useCallback(async () => {
+    const resolutionSentStatus = "toResolution"
     try {
-      const response = await getAllResolutions(currentPage, pageSize);
+      const response = await getAllResolutions(currentPage, pageSize, resolutionSentStatus);
       if (response?.success) {
         const transformedData = transformLeavesData(response?.data?.resolution);
         setCount(response?.data?.count);

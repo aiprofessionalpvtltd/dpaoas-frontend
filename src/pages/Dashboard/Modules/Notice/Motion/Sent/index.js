@@ -126,13 +126,15 @@ function SentMotion() {
         englishText: EnglishText ? EnglishText : "",
         urduText: UrduText ? UrduText : "",
         motionStatus: res?.motionStatuses?.statusName,
+        createdBy:res?.motionSentStatus === "inNotice" ? "Notice Office": "---"
       };
     });
   };
 
   const getMotionListDataa = useCallback(async () => {
+    const motionSentStatus = "inNotice"
     try {
-      const response = await getAllMotionNotice(currentPage, pageSize);
+      const response = await getAllMotionNotice(currentPage, pageSize, motionSentStatus);
       if (response?.success) {
         const transformedData = transformMotionData(response?.data?.rows);
         setCount(response?.data?.count);

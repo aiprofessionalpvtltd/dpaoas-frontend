@@ -125,13 +125,16 @@ function MMSMotionList() {
         englishText: EnglishText ? EnglishText : "",
         urduText: UrduText ? UrduText : "",
         motionStatus: res?.motionStatuses?.statusName,
+        createdBy:res?.motionSentStatus === "toMotion" ? "From Notice Office": res?.motionSentStatus === "inMotion" ? "Motion Branch":"---"
       };
     });
   };
 
   const getMotionListDataa = useCallback(async () => {
+    const motionSentStatus = "inMotion"
+    const motiontoStatus ="toMotion"
     try {
-      const response = await getAllMotion(currentPage, pageSize);
+      const response = await getAllMotion(currentPage, pageSize, motionSentStatus, motiontoStatus);
       if (response?.success) {
         const transformedData = transformMotionData(response?.data?.rows);
         setCount(response?.data?.count);
@@ -161,8 +164,10 @@ function MMSMotionList() {
       englishText: values?.keyword,
       motionWeek: values?.motionWeek,
       motionType: values?.motionType,
-      fkMotionStatus: values?.fkmotionStatus
+      fkMotionStatus: values?.fkmotionStatus,
+      motionSentStatus:["inMotion","toMotion"]
     };
+
     try {
       const response = await searchMotion(page, pageSize, data); // Add await here
       if (response?.success) {

@@ -81,7 +81,8 @@ function SearchResolution() {
           ? res.resolutionStatus?.resolutionStatus
           : "",
         Movers: movers ? movers : "",
-        SentDate: res?.resolutionSentDate
+        SentDate: res?.resolutionSentDate,
+        createdBy:res?.resolutionSentStatus === "inNotice" ? "Notice Office": "---"
       };
     });
   };
@@ -99,6 +100,7 @@ function SearchResolution() {
       noticeOfficeDiaryDateFrom: values.fromNoticeDate,
       noticeOfficeDiaryDateTo: values.toNoticeDate,
       resolutionMovers: values?.memberName?.value,
+      resolutionSentStatus: ["inNotice", "toResolution"]
     };
 
     try {

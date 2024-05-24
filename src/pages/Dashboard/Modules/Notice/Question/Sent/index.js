@@ -130,6 +130,7 @@ function SentQuestion() {
         Status: res.questionStatus?.questionStatus
           ? res.questionStatus?.questionStatus
           : "",
+          createdBy:res?.questionSentStatus === "inNotice" ? "Notice Office": "---"
       };
     });
   };
@@ -151,6 +152,7 @@ function SentQuestion() {
         noticeOfficeDiaryDateTo:
           values?.toNoticeDate &&
           moment(values?.toNoticeDate).format("YYYY-MM-DD"),
+         questionSentStatus : ["inNotice", "toQuestion"]
       };
       try {
         const response = await searchQuestion(searchParams, page, pageSize);

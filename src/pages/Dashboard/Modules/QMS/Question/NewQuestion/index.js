@@ -76,6 +76,7 @@ function QMSNewQuestion() {
 
     formData.append("englishText", values.englishText);
     formData.append("urduText", values.urduText);
+    formData.append("questionSentStatus" ,"inQuestion")
 
     try {
       const response = await createQuestion(formData);
@@ -212,7 +213,7 @@ function QMSNewQuestion() {
 
                     <div class="col">
                       <div class="mb-3">
-                        <label class="form-label">Member ID</label>
+                        <label class="form-label">Member Name</label>
                         {/* <input
                           className={`form-control ${
                             formik.touched.fkMemberId &&

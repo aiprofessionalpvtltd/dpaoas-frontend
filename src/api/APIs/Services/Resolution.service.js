@@ -21,11 +21,11 @@ export const createResolution = async (data) => {
   }
 };
 
-export const getAllResolutions = async (page, pageSize) => {
+export const getAllResolutions = async (page, pageSize, resolutionSentStatus) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClientMMS.get(
-      `/resolution/all?currentPage=${page}&pageSize=${pageSize}`,
+      `/resolution/all?currentPage=${page}&pageSize=${pageSize}&resolutionSentStatus=${resolutionSentStatus}`,
       {
         // headers: {
         //   Authorization: `Bearer ${token}`,
