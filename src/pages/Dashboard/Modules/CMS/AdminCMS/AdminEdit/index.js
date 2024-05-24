@@ -1,6 +1,6 @@
 import { useFormik } from "formik";
 import React from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Layout } from "../../../../../../components/Layout";
 import { CMSsidebarItems } from "../../../../../../utils/sideBarItems";
 import Header from "../../../../../../components/Header";
@@ -24,6 +24,7 @@ const validationSchema = Yup.object({
 
 
 function CMSAdminEditComplaint() {
+  const navigate = useNavigate()
   
   const location = useLocation();
   console.log("location",location.state);
@@ -50,12 +51,18 @@ function CMSAdminEditComplaint() {
     formData.append("complaintResolvedDate", values?.complaintResolvedDate);
     formData.append("complaintRemark", values?.complaintRemark);
     formData.append("complaintStatus", values?.complaintStatus);
-    formData.append(
-      "complaintAttachmentFromResolver",
-      values.complaintAttachmentFromResolver
-    );
-    formData.append("tonerQuantity", location?.state?.tonerQuantity)
-    formData.append("fkTonerModelId", location?.state?.fkTonerModelId)
+    if(values?.complaintAttachmentFromResolver){
+      formData.append(
+        "complaintAttachmentFromResolver",
+        values.complaintAttachmentFromResolver
+      );
+    }
+    if(location?.state?.tonerQuantity){
+      formData.append("tonerQuantity", location?.state?.tonerQuantity)
+    }
+    if(location?.state?.fkTonerModelId){
+      formData.append("fkTonerModelId", location?.state?.fkTonerModelId)
+    }
 
 
     try {
@@ -66,6 +73,9 @@ function CMSAdminEditComplaint() {
       if (response.success) {
         showSuccessMessage(response.message);
         formik.resetForm()
+        setTimeout(() => {
+          navigate("/cms/admin/dashboard")
+        }, 1000)
       }
     } catch (error) {
       showErrorMessage(error.response.data.message);

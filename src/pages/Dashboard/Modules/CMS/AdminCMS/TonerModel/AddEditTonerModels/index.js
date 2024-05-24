@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { Layout } from "../../../../../../../components/Layout";
 import { CMSsidebarItems } from "../../../../../../../utils/sideBarItems";
@@ -12,6 +12,7 @@ import {
 } from "../../../../../../../api/APIs/Services/TonerInstallation.service";
 
 function AddEditTonerModel() {
+  const navigate = useNavigate()
   const validationSchema = Yup.object({
     tonerModelName: Yup.string().required("Modal name is required"),
     quantity: Yup.string().required("Quantity is required"),
@@ -47,6 +48,9 @@ function AddEditTonerModel() {
       const response = await createTonarModal(Data);
       if (response?.success) {
         showSuccessMessage(response?.message);
+        setTimeout(() => {
+          navigate("/cms/admin/toner-models")
+        }, 1000)
       }
     } catch (error) {
       console.log(error);
@@ -64,6 +68,9 @@ function AddEditTonerModel() {
       const response = await UpdateTonnerModel(location.state.id, data);
       if (response.success) {
         showSuccessMessage(response.message);
+        setTimeout(() => {
+          navigate("/cms/admin/toner-models")
+        }, 1000)
       }
     } catch (error) {
       console.log(error);

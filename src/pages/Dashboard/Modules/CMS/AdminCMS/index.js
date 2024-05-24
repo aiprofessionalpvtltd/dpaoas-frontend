@@ -139,6 +139,8 @@ function CMSAdminDashboard() {
       ResolvedDate:
         item?.complaintResolvedDate &&
         moment(item?.complaintResolvedDate).format("DD/MM/YYY"),
+        TonerModel: item?.tonerModels ? `${item?.tonerModels?.tonerModel}`:"--",
+        tonerQuantity: item?.tonerQuantity ? item?.tonerQuantity :"--",
       complaintStatus: item?.complaintStatus,
       status: item?.status,
     }));
@@ -180,13 +182,27 @@ function CMSAdminDashboard() {
     }
   };
 
+  // const HandlePrint = async (id) => {
+  //   try {
+      // const response = await getallcomplaintRecordById(id);
+      // if (response.success) {
+      //   setPrintData(response?.data);
+      //   setIsOpen(true);
+      // }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
   const HandlePrint = async (id) => {
+    console.log("impdpdpdpd",id);
     try {
       const response = await getallcomplaintRecordById(id);
       if (response.success) {
-        setPrintData(response?.data);
-        setIsOpen(true);
+        const url = `http://10.10.140.200:5152${response?.data?.complaintAttachmentFromResolver}`;
+      window.open(url, "_blank");
       }
+     
+      // setPdfUrl(url)
     } catch (error) {
       console.log(error);
     }
@@ -714,7 +730,7 @@ function CMSAdminDashboard() {
                   showResolve={true}
                   showEditIcon={true}
                   hideDeleteIcon={false}
-                  showPrint={false}
+                  showPrint={true}
                   showAssigned={true}
                   hendleAssigned={(item) => openModal(item)}
                 />

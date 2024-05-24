@@ -1,6 +1,6 @@
 import { useFormik } from 'formik';
 import React, { useContext, useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Layout } from '../../../../../../components/Layout';
 import { CMSsidebarItems } from '../../../../../../utils/sideBarItems';
 import Header from '../../../../../../components/Header';
@@ -29,6 +29,7 @@ const validationSchema = Yup.object({
 function CMSAddEditUserComplaint() {
   const location = useLocation()
   const userData = getUserData();
+  const navigate = useNavigate()
   const {  employeesAsEngineersData } = useContext(AuthContext)
   const [employeeData, setEmployeeData] = useState([]);
   const [complaintType, setComplaintType] = useState([])
@@ -76,6 +77,9 @@ function CMSAddEditUserComplaint() {
       if (response.success) {
         showSuccessMessage(response.message);
         formik.resetForm()
+        setTimeout(() => {
+          navigate("/cms/dashboard")
+        }, 1000)
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);

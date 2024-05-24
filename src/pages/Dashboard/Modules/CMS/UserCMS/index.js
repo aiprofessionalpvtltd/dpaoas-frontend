@@ -93,6 +93,8 @@ function CMSUserDashboard() {
       complaintIssuedDate:
         item?.complaintIssuedDate &&
         moment(item?.complaintIssuedDate).format("DD/MM/YYYY"),
+        TonerModel: item?.tonerModels ? `${item?.tonerModels?.tonerModel}`:"--",
+       tonerQuantity: item?.tonerQuantity ? item?.tonerQuantity :"--",
       complaintStatus: item?.complaintStatus,
     }));
   };
