@@ -48,6 +48,7 @@ function CMSUserDashboard() {
   const userData = getUserData();
   const { employeeData, employeesAsEngineersData } = useContext(AuthContext);
   const [complaintType, setComplaintType] = useState([]);
+  const [showSearch, setShowSearch] = useState(false);
 
   const [count, setCount] = useState(null);
   const [modalIsOpen, setIsOpen] = useState(false);
@@ -84,7 +85,9 @@ function CMSUserDashboard() {
   const transformDepartmentData = (apiData) => {
     return apiData.map((item) => ({
       id: item?.id,
-      complaineeUser:item?.complaineeUser?.employee ? `${item?.complaineeUser?.employee?.firstName}${item?.complaineeUser?.employee?.lastName}` : item.userName,
+      complaineeUser: item?.complaineeUser?.employee
+        ? `${item?.complaineeUser?.employee?.firstName}${item?.complaineeUser?.employee?.lastName}`
+        : item.userName,
       BranchOffice: item?.complaintType?.branchName,
       NatureOfComplaint: item?.complaintCategory?.complaintCategoryName,
       AssignTo:
@@ -93,14 +96,14 @@ function CMSUserDashboard() {
       complaintIssuedDate:
         item?.complaintIssuedDate &&
         moment(item?.complaintIssuedDate).format("DD/MM/YYYY"),
-        TonerModel: item?.tonerModels ? `${item?.tonerModels?.tonerModel}`:"--",
-       tonerQuantity: item?.tonerQuantity ? item?.tonerQuantity :"--",
+      TonerModel: item?.tonerModels ? `${item?.tonerModels?.tonerModel}` : "--",
+      tonerQuantity: item?.tonerQuantity ? item?.tonerQuantity : "--",
       complaintStatus: item?.complaintStatus,
     }));
   };
   const getComplaint = useCallback(async () => {
     try {
-      const response = await getallComplaint(currentPage, pageSize)
+      const response = await getallComplaint(currentPage, pageSize);
       // const response = await getallcomplaintRecordByUserId(
       //   userData.fkUserId,
       //   currentPage,
@@ -205,7 +208,7 @@ function CMSUserDashboard() {
 
   const AllComplaintTypeApi = async () => {
     try {
-      const response = await getBranches(0,200);
+      const response = await getBranches(0, 200);
       if (response?.success) {
         // showSuccessMessage(response?.message);
         setComplaintType(response?.data?.rows);
@@ -319,9 +322,10 @@ function CMSUserDashboard() {
       <div class="mt-4">
         <div class="container-fluid ">
           <div className="dash-detail-container">
-            <form onSubmit={formik.handleSubmit}>
-              <div class="row">
-                {/* <div class="col">
+            {showSearch && (
+              <form onSubmit={formik.handleSubmit}>
+                <div class="row">
+                  {/* <div class="col">
                   <div class="mb-3">
                     <label class="form-label">Complainee</label>
                      
@@ -341,29 +345,30 @@ function CMSUserDashboard() {
                     />
                   </div>
                 </div> */}
-                <div class="col">
-                  <div class="mb-3">
-                    <label class="form-label">Resolve By</label>
+                  <div class="col">
+                    <div class="mb-3">
+                      <label class="form-label">Resolve By</label>
 
-                    <Select
-                      options={
-                        employeesAsEngineersData &&
-                        employeesAsEngineersData?.map((item) => ({
-                          value: item.id,
-                          label: `${item.firstName}${item.lastName}`,
-                        }))
-                      }
-                      onChange={(selectedOptions) =>
-                        formik.setFieldValue("resolverUser", selectedOptions)
-                      }
-                      onBlur={formik.handleBlur}
-                      value={formik.values.resolverUser}
-                      name="resolverUser"
-                      isClearable={true}
-                    />
+                      <Select
+                        options={
+                          employeesAsEngineersData &&
+                          employeesAsEngineersData?.map((item) => ({
+                            value: item.id,
+                            label: `${item.firstName}${item.lastName}`,
+                          }))
+                        }
+                        onChange={(selectedOptions) =>
+                          formik.setFieldValue("resolverUser", selectedOptions)
+                        }
+                        onBlur={formik.handleBlur}
+                        // placeholder="Select"
+                        value={formik.values.resolverUser}
+                        name="resolverUser"
+                        isClearable={true}
+                      />
+                    </div>
                   </div>
-                </div>
-                {/* <div class="col">
+                  {/* <div class="col">
                   <div class="mb-3">
                     <label class="form-label">Keyword</label>
                     <input
@@ -377,117 +382,130 @@ function CMSUserDashboard() {
                     />
                   </div>
                 </div> */}
-                <div class="col">
-                  <div class="mb-3">
-                    <label class="form-label">Branch/Office</label>
-                    <select
-                      class="form-select"
-                      placeholder={formik.values.complaintType}
-                      onChange={formik.handleChange}
-                      id="complaintType"
-                      onBlur={formik.handleBlur}
-                    >
-                      <option selected disabled hidden>
-                        Select
-                      </option>
-                      {complaintType &&
-                        complaintType.map((item) => (
-                          <option value={item.id}>
-                            {item.branchName}
-                          </option>
-                        ))}
-                    </select>
+                  <div class="col">
+                    <div class="mb-3">
+                      <label class="form-label">Branch/Office</label>
+                      <select
+                        class="form-select"
+                        placeholder={formik.values.complaintType}
+                        onChange={formik.handleChange}
+                        id="complaintType"
+                        onBlur={formik.handleBlur}
+                      >
+                        <option selected disabled hidden>
+                          Select
+                        </option>
+                        {complaintType &&
+                          complaintType.map((item) => (
+                            <option value={item.id}>{item.branchName}</option>
+                          ))}
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="mb-3">
+                      <label class="form-label">Nature of Complaint</label>
+                      <select
+                        class="form-select"
+                        placeholder={formik.values.complaintCategory}
+                        id="complaintCategory"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      >
+                        <option selected disabled hidden>
+                          Select
+                        </option>
+                        {complaintCategories &&
+                          complaintCategories.map((item) => (
+                            <option value={item.id}>
+                              {item.complaintCategoryName}
+                            </option>
+                          ))}
+                      </select>
+                    </div>
                   </div>
                 </div>
-                <div class="col">
-                  <div class="mb-3">
-                    <label class="form-label">Nature of Complaint</label>
-                    <select
-                      class="form-select"
-                      placeholder={formik.values.complaintCategory}
-                      id="complaintCategory"
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                    >
-                      <option selected disabled hidden>
-                        Select
-                      </option>
-                      {complaintCategories &&
-                        complaintCategories.map((item) => (
-                          <option value={item.id}>
-                            {item.complaintCategoryName}
-                          </option>
-                        ))}
-                    </select>
-                  </div>
-                </div>
-              </div>
 
-              <div class="row">
-                <div class="col-4">
-                  <div class="mb-3" style={{ position: "relative" }}>
-                    <label class="form-label">Complaint Issued Date</label>
-                    <span
-                      style={{
-                        position: "absolute",
-                        right: "15px",
-                        top: "36px",
-                        zIndex: 1,
-                        fontSize: "20px",
-                        zIndex: "1",
-                        color: "#666",
-                      }}
-                    >
-                      <FontAwesomeIcon icon={faCalendarAlt} />
-                    </span>
-                    <DatePicker
-                      selected={formik.values.complaintIssuedDate}
-                      onChange={(date) =>
-                        formik.setFieldValue("complaintIssuedDate", date)
-                      }
-                      className={"form-control"}
-                    />
+                <div class="row">
+                  <div class="col-4">
+                    <div class="mb-3" style={{ position: "relative" }}>
+                      <label class="form-label">Complaint Issued Date</label>
+                      <span
+                        style={{
+                          position: "absolute",
+                          right: "15px",
+                          top: "36px",
+                          zIndex: 1,
+                          fontSize: "20px",
+                          zIndex: "1",
+                          color: "#666",
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faCalendarAlt} />
+                      </span>
+                      <DatePicker
+                        selected={formik.values.complaintIssuedDate}
+                        onChange={(date) =>
+                          formik.setFieldValue("complaintIssuedDate", date)
+                        }
+                        className={"form-control"}
+                      />
+                    </div>
+                  </div>
+                  <div class="col-4">
+                    <div class="mb-3" style={{ position: "relative" }}>
+                      <label class="form-label">Complaint Resolved Date</label>
+                      <span
+                        style={{
+                          position: "absolute",
+                          right: "15px",
+                          top: "36px",
+                          zIndex: 1,
+                          fontSize: "20px",
+                          zIndex: "1",
+                          color: "#666",
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faCalendarAlt} />
+                      </span>
+                      <DatePicker
+                        selected={formik.values.complaintResolvedDate}
+                        onChange={(date) =>
+                          formik.setFieldValue("complaintResolvedDate", date)
+                        }
+                        className={"form-control"}
+                      />
+                    </div>
                   </div>
                 </div>
-                <div class="col-4">
-                  <div class="mb-3" style={{ position: "relative" }}>
-                    <label class="form-label">Complaint Resolved Date</label>
-                    <span
-                      style={{
-                        position: "absolute",
-                        right: "15px",
-                        top: "36px",
-                        zIndex: 1,
-                        fontSize: "20px",
-                        zIndex: "1",
-                        color: "#666",
+                <div class="row">
+                  <div class="d-grid gap-2 d-md-flex justify-content-md-end col">
+                    <button class="btn btn-primary" type="submit">
+                      Search
+                    </button>
+                    <button
+                      class="btn btn-primary"
+                      type="button"
+                      onClick={() => {
+                        formik.resetForm();
+                        getComplaint();
                       }}
                     >
-                      <FontAwesomeIcon icon={faCalendarAlt} />
-                    </span>
-                    <DatePicker
-                      selected={formik.values.complaintResolvedDate}
-                      onChange={(date) =>
-                        formik.setFieldValue("complaintResolvedDate", date)
-                      }
-                      className={"form-control"}
-                    />
+                      Reset
+                    </button>
                   </div>
                 </div>
-              </div>
-              <div class="row">
-                <div class="d-grid gap-2 d-md-flex justify-content-md-end col">
-                  <button class="btn btn-primary" type="submit">
-                    Search
-                  </button>
-                </div>
-              </div>
-            </form>
+              </form>
+            )}
 
             <div class="row mt-5">
               <div class="col-12">
                 <CustomTable
                   block={false}
+                  hidebtn1={false}
+                  hideBtn={false}
+                  handleAdd2={() => setShowSearch(!showSearch)}
+                  addBtnText2={"Search"}
                   data={complaintData}
                   tableTitle="User Complaint"
                   addBtnText="Add User Complaint"

@@ -31,9 +31,8 @@ import LeaveCard from "../../../../../components/CustomComponents/LeaveCard";
 import { AuthContext } from "../../../../../api/AuthContext";
 import ComplaintAssignedEmployee from "../../../../../components/ComplaintAssignedEmployee";
 import { CustomAlert } from "../../../../../components/CustomComponents/CustomAlert";
-import * as XLSX from 'xlsx';
+import * as XLSX from "xlsx";
 import { getBranches } from "../../../../../api/APIs/Services/Branches.services";
-
 
 const customStyles = {
   content: {
@@ -113,7 +112,7 @@ function CMSAdminDashboard() {
       complaintCategory: "",
       complaintIssuedDate: "",
       complaintResolvedDate: "",
-      userName:""
+      userName: "",
     },
     onSubmit: (values) => {
       // Handle form submission here
@@ -129,7 +128,9 @@ function CMSAdminDashboard() {
   const transformComplaintData = (apiData) => {
     return apiData.map((item) => ({
       id: item?.id,
-      complaineeUser: item?.complaineeUser?.employee ? `${item?.complaineeUser?.employee?.firstName}${item?.complaineeUser?.employee?.lastName}`: item.userName,
+      complaineeUser: item?.complaineeUser?.employee
+        ? `${item?.complaineeUser?.employee?.firstName}${item?.complaineeUser?.employee?.lastName}`
+        : item.userName,
       BranchOffice: item?.complaintType?.branchName,
       NatureOfComplaint: item?.complaintCategory?.complaintCategoryName,
       AssignTo:
@@ -139,8 +140,8 @@ function CMSAdminDashboard() {
       ResolvedDate:
         item?.complaintResolvedDate &&
         moment(item?.complaintResolvedDate).format("DD/MM/YYY"),
-        TonerModel: item?.tonerModels ? `${item?.tonerModels?.tonerModel}`:"--",
-        tonerQuantity: item?.tonerQuantity ? item?.tonerQuantity :"--",
+      TonerModel: item?.tonerModels ? `${item?.tonerModels?.tonerModel}` : "--",
+      tonerQuantity: item?.tonerQuantity ? item?.tonerQuantity : "--",
       complaintStatus: item?.complaintStatus,
       status: item?.status,
     }));
@@ -184,24 +185,28 @@ function CMSAdminDashboard() {
 
   // const HandlePrint = async (id) => {
   //   try {
-      // const response = await getallcomplaintRecordById(id);
-      // if (response.success) {
-      //   setPrintData(response?.data);
-      //   setIsOpen(true);
-      // }
+  // const response = await getallcomplaintRecordById(id);
+  // if (response.success) {
+  //   setPrintData(response?.data);
+  //   setIsOpen(true);
+  // }
   //   } catch (error) {
   //     console.log(error);
   //   }
   // };
   const HandlePrint = async (id) => {
-    console.log("impdpdpdpd",id);
+    console.log("impdpdpdpd", id);
     try {
       const response = await getallcomplaintRecordById(id);
       if (response.success) {
-        const url = `http://10.10.140.200:5152${response?.data?.complaintAttachmentFromResolver}`;
-      window.open(url, "_blank");
+        if (response?.data?.complaintAttachmentFromResolver) {
+          const url = `http://172.16.170.8:5252${response?.data?.complaintAttachmentFromResolver}`;
+          window.open(url, "_blank");
+        } else {
+          showSuccessMessage("No Attachment Available");
+        }
       }
-     
+
       // setPdfUrl(url)
     } catch (error) {
       console.log(error);
@@ -228,7 +233,7 @@ function CMSAdminDashboard() {
       complaintCategory: values?.complaintCategory,
       complaintIssuedDate: values?.complaintIssuedDate,
       complaintResolvedDate: values?.complaintResolvedDate,
-      userName:values?.userName
+      userName: values?.userName,
     };
     try {
       const response = await SearchComplaint(Data);
@@ -237,7 +242,7 @@ function CMSAdminDashboard() {
         setCount(1);
         setComplaintData(transformedData);
         showSuccessMessage(response.message);
-        formik.resetForm()
+        formik.resetForm();
       }
     } catch (error) {
       console.log(error);
@@ -247,7 +252,7 @@ function CMSAdminDashboard() {
 
   const AllComplaintTypeApi = async () => {
     try {
-      const response = await getBranches(0,200);
+      const response = await getBranches(0, 200);
       if (response?.success) {
         setComplaintType(response?.data?.rows);
       }
@@ -299,11 +304,7 @@ function CMSAdminDashboard() {
       20
     );
     pdf.text(`Description: ${printData?.complaintDescription}`, 10, 30);
-    pdf.text(
-      `ComplaintType: ${printData?.complaintType?.branchName}`,
-      10,
-      40
-    );
+    pdf.text(`ComplaintType: ${printData?.complaintType?.branchName}`, 10, 40);
     pdf.text(
       `ComplaintCategory: ${printData?.complaintCategory?.complaintCategoryName}`,
       10,
@@ -351,20 +352,22 @@ function CMSAdminDashboard() {
   // Export Admin Complaint
   const hendleExportExcel = async () => {
     try {
-        const response = await getallComplaint(0, 100);
-        if (response?.success) {
-            // Export to Excel logic
-            const worksheet = XLSX.utils.json_to_sheet(transformComplaintData(response?.data?.complaints));
-            const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
-            //let buffer = XLSX.write(workbook, { bookType: "xlsx", type: "buffer" });
-            //XLSX.write(workbook, { bookType: "xlsx", type: "binary" });
-            XLSX.writeFile(workbook, "DataSheet.xlsx");
-        }
+      const response = await getallComplaint(0, 100);
+      if (response?.success) {
+        // Export to Excel logic
+        const worksheet = XLSX.utils.json_to_sheet(
+          transformComplaintData(response?.data?.complaints)
+        );
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+        //let buffer = XLSX.write(workbook, { bookType: "xlsx", type: "buffer" });
+        //XLSX.write(workbook, { bookType: "xlsx", type: "binary" });
+        XLSX.writeFile(workbook, "DataSheet.xlsx");
+      }
     } catch (error) {
-        showErrorMessage(error?.response?.data?.message);
+      showErrorMessage(error?.response?.data?.message);
     }
-}
+  };
   useEffect(() => {
     AllComplaintTypeApi();
     AllComplaintCategoriesApi();
@@ -561,20 +564,20 @@ function CMSAdminDashboard() {
                     />
                   </div>
                 </div>
-                <div className='col'>
+                <div className="col">
                   <div className="mb-3">
-                      <label className="form-label">Complainee</label>
-                      <input
-                        type="text"
-                        className={`form-control`}
-                        id="userName"
-                        placeholder='Complainee Name'
-                        value={formik.values.userName}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                      /> 
-                      </div>
-                      </div>
+                    <label className="form-label">Complainee</label>
+                    <input
+                      type="text"
+                      className={`form-control`}
+                      id="userName"
+                      placeholder="Complainee Name"
+                      value={formik.values.userName}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                    />
+                  </div>
+                </div>
 
                 <div class="col">
                   <div class="mb-3">
@@ -613,9 +616,7 @@ function CMSAdminDashboard() {
                       </option>
                       {complaintType &&
                         complaintType.map((item) => (
-                          <option value={item.id}>
-                            {item.branchName}
-                          </option>
+                          <option value={item.id}>{item.branchName}</option>
                         ))}
                     </select>
                   </div>
@@ -735,7 +736,11 @@ function CMSAdminDashboard() {
                   hendleAssigned={(item) => openModal(item)}
                 />
                 <div class="d-grid gap-2 d-md-flex justify-content-md-start col">
-                  <button class="btn btn-primary" type="button" onClick={() => hendleExportExcel()}>
+                  <button
+                    class="btn btn-primary"
+                    type="button"
+                    onClick={() => hendleExportExcel()}
+                  >
                     Export Excel
                   </button>
                 </div>
