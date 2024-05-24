@@ -7,9 +7,16 @@ import * as Yup from "yup";
 import DatePicker from "react-datepicker";
 import Header from "../../../../../../../components/Header";
 import { Layout } from "../../../../../../../components/Layout";
-import { QMSSideBarItems } from "../../../../../../../utils/sideBarItems";
-import { createParliamentaryYears, getAllTenures, updateParliamentaryYears } from "../../../../../../../api/APIs/Services/ManageQMS.service";
-import { showErrorMessage, showSuccessMessage } from "../../../../../../../utils/ToastAlert";
+import { LegislationSideBarItems } from "../../../../../../../utils/sideBarItems";
+import {
+  createParliamentaryYears,
+  getAllTenures,
+  updateParliamentaryYears,
+} from "../../../../../../../api/APIs/Services/ManageQMS.service";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 
 const validationSchema = Yup.object({
@@ -23,10 +30,12 @@ function LGMSAddEditParliamentaryYearForm() {
   const location = useLocation();
   const [tenures, setTenures] = useState([]);
 
-  console.log("location.state",location.state);
+  console.log("location.state", location.state);
   const formik = useFormik({
     initialValues: {
-      parliamentaryTenure: location.state ? location.state?.parliamentaryTenure : "",
+      parliamentaryTenure: location.state
+        ? location.state?.parliamentaryTenure
+        : "",
       fkTenureId: location.state ? location?.state?.tenure?.id : "",
       fromDate: location.state ? new Date(location.state?.fromDate) : "",
       toDate: location.state ? new Date(location.state?.toDate) : "",
@@ -52,7 +61,7 @@ function LGMSAddEditParliamentaryYearForm() {
     } catch (error) {
       console.log(error?.response?.data?.message);
     }
-  }
+  };
 
   const handleCreateParliamentaryYear = async (values) => {
     const data = {
@@ -60,8 +69,8 @@ function LGMSAddEditParliamentaryYearForm() {
       fkTenureId: values.fkTenureId,
       fromDate: values.fromDate,
       toDate: values.toDate,
-      description: values.description
-    }
+      description: values.description,
+    };
 
     try {
       const response = await createParliamentaryYears(data);
@@ -71,7 +80,7 @@ function LGMSAddEditParliamentaryYearForm() {
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
     }
-  }
+  };
 
   const handleEditParliamentaryYear = async (values) => {
     const data = {
@@ -79,38 +88,53 @@ function LGMSAddEditParliamentaryYearForm() {
       fkTenureId: values.fkTenureId,
       fromDate: values.fromDate,
       toDate: values.toDate,
-      description: values.description
-    }
+      description: values.description,
+    };
 
     try {
-      const response = await updateParliamentaryYears(location?.state?.id, data);
+      const response = await updateParliamentaryYears(
+        location?.state?.id,
+        data
+      );
       if (response?.success) {
         showSuccessMessage(response?.message);
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
     }
-  }
+  };
 
   useEffect(() => {
-    handleTenures()
-  },[])
+    handleTenures();
+  }, []);
 
   return (
-    <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
+    <Layout
+      module={true}
+      sidebarItems={LegislationSideBarItems}
+      centerlogohide={true}
+    >
       <Header
         dashboardLink={"lgms/dashboard"}
         addLink1={"/lgms/dashboard/manage/parliamentary-year/list"}
         title1={"Parliamentary Year"}
         addLink2={"/lgms/dashboard/manage/parliamentary-year/addedit"}
-        title2={location && location?.state ? "Edit Parliamentary Year" : "Add Parliamentary Year"}
+        title2={
+          location && location?.state
+            ? "Edit Parliamentary Year"
+            : "Add Parliamentary Year"
+        }
       />
       <ToastContainer />
 
       <div class="container-fluid">
         <div class="card">
           <div class="card-header red-bg" style={{ background: "#14ae5c" }}>
-            {location && location.state ? <h1>Edit Parliamentary Year</h1> : <h1>Add Parliamentary Year</h1>}
+            {location && location.state ? (
+              <h1>Edit Parliamentary Year</h1>
+            ) : (
+              <h1>Add Parliamentary Year</h1>
+            )}
           </div>
           <div class="card-body">
             <form onSubmit={formik.handleSubmit}>
@@ -123,38 +147,55 @@ function LGMSAddEditParliamentaryYearForm() {
                         type="text"
                         placeholder={formik.values.parliamentaryTenure}
                         className={`form-control ${
-                          formik.touched.parliamentaryTenure && formik.errors.parliamentaryTenure ? "is-invalid" : ""
+                          formik.touched.parliamentaryTenure &&
+                          formik.errors.parliamentaryTenure
+                            ? "is-invalid"
+                            : ""
                         }`}
                         id="parliamentaryTenure"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
-                      {formik.touched.parliamentaryTenure && formik.errors.parliamentaryTenure && (
-                        <div className="invalid-feedback">{formik.errors.parliamentaryTenure}</div>
-                      )}
+                      {formik.touched.parliamentaryTenure &&
+                        formik.errors.parliamentaryTenure && (
+                          <div className="invalid-feedback">
+                            {formik.errors.parliamentaryTenure}
+                          </div>
+                        )}
                     </div>
                   </div>
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Tenure ID</label>
-                      
-                      <select class="form-select"
-                          id="fkTenureId"
-                          name="fkTenureId"
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          value={location.state?.tenure?.id || formik.values.fkTenureId || ""}
-                        >
-                          <option value={""} selected disabled hidden>
-                            select
-                          </option>
-                            {tenures.length > 0 && tenures.map((tenure) => (
-                              <option value={tenure?.id}>{tenure?.tenureName}</option>
-                            ))}
-                        </select>
-                      {formik.touched.fkTenureId && formik.errors.fkTenureId && (
-                        <div className="invalid-feedback">{formik.errors.fkTenureId}</div>
-                      )}
+
+                      <select
+                        class="form-select"
+                        id="fkTenureId"
+                        name="fkTenureId"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={
+                          location.state?.tenure?.id ||
+                          formik.values.fkTenureId ||
+                          ""
+                        }
+                      >
+                        <option value={""} selected disabled hidden>
+                          select
+                        </option>
+                        {tenures.length > 0 &&
+                          tenures.map((tenure) => (
+                            <option value={tenure?.id}>
+                              {tenure?.tenureName}
+                            </option>
+                          ))}
+                      </select>
+                      {formik.touched.fkTenureId &&
+                        formik.errors.fkTenureId && (
+                          <div className="invalid-feedback">
+                            {formik.errors.fkTenureId}
+                          </div>
+                        )}
                     </div>
                   </div>
                 </div>
@@ -196,7 +237,7 @@ function LGMSAddEditParliamentaryYearForm() {
                       )}
                     </div>
                   </div>
-                  
+
                   <div className="col">
                     <div className="mb-3" style={{ position: "relative" }}>
                       <label className="form-label">End Date</label>

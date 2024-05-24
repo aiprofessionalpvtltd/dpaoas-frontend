@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Layout } from "../../../../../../components/Layout";
-import { LegislationSideBarItems, QMSSideBarItems } from "../../../../../../utils/sideBarItems";
+import {
+  LegislationSideBarItems,
+  QMSSideBarItems,
+} from "../../../../../../utils/sideBarItems";
 import Header from "../../../../../../components/Header";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import { useNavigate } from "react-router-dom";
@@ -18,7 +21,7 @@ function LGMSMembers() {
   const [members, setMembers] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
-  const pageSize = 5; // Set your desired page size
+  const pageSize = 10; // Set your desired page size
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
@@ -71,7 +74,11 @@ function LGMSMembers() {
   };
 
   return (
-    <Layout module={true} sidebarItems={LegislationSideBarItems} centerlogohide={true}>
+    <Layout
+      module={true}
+      sidebarItems={LegislationSideBarItems}
+      centerlogohide={true}
+    >
       <Header
         dashboardLink={"lgms/dashboard"}
         addLink1={"/lgms/dashboard/manage/members/list"}
@@ -86,9 +93,13 @@ function LGMSMembers() {
               data={members}
               tableTitle="Member List"
               addBtnText="Add Member"
-              handleAdd={() => navigate("/lgms/dashboard/manage/members/addedit")}
+              handleAdd={() =>
+                navigate("/lgms/dashboard/manage/members/addedit")
+              }
               handleEdit={(item) =>
-                navigate("/lgms/dashboard/manage/members/addedit", { state: item })
+                navigate("/lgms/dashboard/manage/members/addedit", {
+                  state: item,
+                })
               }
               handleDelete={(item) => handleDelete(item.id)}
               headertitlebgColor={"#666"}

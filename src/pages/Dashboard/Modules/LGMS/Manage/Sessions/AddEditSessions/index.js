@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useLocation } from "react-router-dom";
@@ -7,28 +7,40 @@ import * as Yup from "yup";
 import DatePicker from "react-datepicker";
 import Header from "../../../../../../../components/Header";
 import { Layout } from "../../../../../../../components/Layout";
-import { LegislationSideBarItems, QMSSideBarItems } from "../../../../../../../utils/sideBarItems";
+import { LegislationSideBarItems } from "../../../../../../../utils/sideBarItems";
 import TimePicker from "react-time-picker";
-import { createSession, getSessionByID, updateSessions } from "../../../../../../../api/APIs/Services/ManageQMS.service";
-import { showErrorMessage, showSuccessMessage } from "../../../../../../../utils/ToastAlert";
+import {
+  createSession,
+  getSessionByID,
+  updateSessions,
+} from "../../../../../../../api/APIs/Services/ManageQMS.service";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
-
+import { AuthContext } from "../../../../../../../api/AuthContext";
+import Select from "react-select";
 const validationSchema = Yup.object({
   sessionNo: Yup.string().required("Sesison no is required"),
   CalledBy: Yup.string().required("Session called by is required"),
   startDate: Yup.date().required("Start Date is required"),
   endDate: Yup.date().required("End Date is required"),
-  legislationDiaryNo: Yup.string().required("Legislation Diary Number is required"),
-  legislationDiaryDate: Yup.date().required("Legislation Diary Date is required"),
-  businessStatus: Yup.string().required("Business Status is required"),
+  legislationDiaryNo: Yup.string().required(
+    "Legislation Diary Number is required"
+  ),
+  legislationDiaryDate: Yup.date().required(
+    "Legislation Diary Date is required"
+  ),
+  businessStatus: Yup.object().required("Business Status is required"),
   businessSession: Yup.string().required("Business Session is required"),
   parliamentaryYear: Yup.string().required("Parliamentary Year is required"),
-  jointSessionPurpose: Yup.string().required("Parliamentary Year is required"),
+  // jointSessionPurpose: Yup.string().required("Parliamentary Year is required"),
 });
 function LGMSAddEditSessionsForm() {
   const location = useLocation();
   const [sessionByIdData, setSessionByIdData] = useState();
-
+  const { sessions } = useContext(AuthContext);
   const formik = useFormik({
     initialValues: {
       sessionNo: "",
@@ -39,14 +51,14 @@ function LGMSAddEditSessionsForm() {
       legislationDiaryNo: "",
       legislationDiaryDate: "",
       businessStatus: "",
-      businessSession: "",
+      businessSession: [],
       parliamentaryYear: "",
       isAdjourned: false,
       summonDate: "",
       summonTime: "",
       jointSessionPurpose: "",
     },
-    validationSchema: validationSchema,
+    // validationSchema: validationSchema,
     onSubmit: (values) => {
       // Handle form submission here
       console.log(values);
@@ -62,20 +74,27 @@ function LGMSAddEditSessionsForm() {
     const data = {
       sessionName: Number(values?.sessionNo),
       calledBy: values.CalledBy,
-      isJointSession: Boolean(values.isJoint),
+      isJointSession: values.isJoint ? Boolean(values.isJoint) : "",
       startDate: values.startDate,
       endDate: values.endDate,
       legislationDiaryNo: values.legislationDiaryNo,
       legislationDiaryDate: values.legislationDiaryDate,
       businessStatus: values.businessStatus,
-      businessSessions: [Number(values.businessSession)],
+
       fkParliamentaryYearId: Number(values.parliamentaryYear),
       isQuoraumAdjourned: Boolean(values.isAdjourned),
       summonNoticeDate: values.summonDate,
       summonNoticeTime: values.summonTime,
       jointSessionPurpose: values.jointSessionPurpose,
-    };
 
+      ...(values?.businessSessions &&
+        values.businessSessions.length > 0 && {
+          businessSessions: values?.businessSessions.map((session, index) => ({
+            [`businessSessions[${index}]`]: session?.value,
+          })),
+        }),
+    };
+    console.log("object", data);
     try {
       const response = await createSession(data);
       if (response.success) {
@@ -90,7 +109,7 @@ function LGMSAddEditSessionsForm() {
     const data = {
       sessionName: Number(values?.sessionNo),
       calledBy: values.CalledBy,
-      isJointSession: Boolean(values.isJoint),
+      isJointSession: values.isJoint ? Boolean(values.isJoint) : "",
       startDate: values.startDate,
       endDate: values.endDate,
       legislationDiaryNo: values.legislationDiaryNo,
@@ -128,7 +147,7 @@ function LGMSAddEditSessionsForm() {
     if (location.state?.id) {
       getSessionByIdApi();
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     // Update form values when termsById changes
@@ -140,7 +159,8 @@ function LGMSAddEditSessionsForm() {
         startDate: new Date(sessionByIdData.startDate) || "",
         endDate: new Date(sessionByIdData.endDate) || "",
         legislationDiaryNo: sessionByIdData.legislationDiaryNo || "",
-        legislationDiaryDate: new Date(sessionByIdData.legislationDiaryDate) || "",
+        legislationDiaryDate:
+          new Date(sessionByIdData.legislationDiaryDate) || "",
         businessStatus: sessionByIdData.businessStatus || "",
         businessSession: sessionByIdData.businessSessions[0]?.sessionName || "",
         parliamentaryYear: sessionByIdData.fkParliamentaryYearId || "",
@@ -150,9 +170,13 @@ function LGMSAddEditSessionsForm() {
       });
     }
   }, [sessionByIdData, formik.setValues]);
-  
+
   return (
-    <Layout module={true} sidebarItems={LegislationSideBarItems} centerlogohide={true}>
+    <Layout
+      module={true}
+      sidebarItems={LegislationSideBarItems}
+      centerlogohide={true}
+    >
       <Header
         dashboardLink={"lgms/dashboard"}
         addLink1={"/lgms/dashboard/manage/session/list"}
@@ -165,7 +189,11 @@ function LGMSAddEditSessionsForm() {
       <div class="container-fluid">
         <div class="card">
           <div class="card-header red-bg" style={{ background: "#14ae5c" }}>
-            {location && location.state ? <h1>Edit Sessions</h1> : <h1>Add Sessions</h1>}
+            {location && location.state ? (
+              <h1>Edit Sessions</h1>
+            ) : (
+              <h1>Add Sessions</h1>
+            )}
           </div>
           <div class="card-body">
             <form onSubmit={formik.handleSubmit}>
@@ -179,45 +207,49 @@ function LGMSAddEditSessionsForm() {
                         placeholder={"Session No"}
                         value={formik.values.sessionNo}
                         className={`form-control ${
-                          formik.touched.sessionNo && formik.errors.sessionNo ? "is-invalid" : ""
+                          formik.touched.sessionNo && formik.errors.sessionNo
+                            ? "is-invalid"
+                            : ""
                         }`}
                         id="sessionNo"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
                       {formik.touched.sessionNo && formik.errors.sessionNo && (
-                        <div className="invalid-feedback">{formik.errors.sessionNo}</div>
+                        <div className="invalid-feedback">
+                          {formik.errors.sessionNo}
+                        </div>
                       )}
                     </div>
                   </div>
                 </div>
                 <div class="row">
-                    <div class="col-6">
-                      <div class="mb-3">
-                        <label class="form-label">Called By</label>
-                        <select class="form-select"
-                          id="CalledBy"
-                          name="CalledBy"
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          value={formik.values.CalledBy}
-                        >
-                          <option value={""} selected disabled hidden>
-                            select
-                          </option>
-                            <option value="President">2023</option>
-                            <option value="Chairman">2024</option>
-                        </select>
-                      </div>
+                  <div class="col-6">
+                    <div class="mb-3">
+                      <label class="form-label">Called By</label>
+                      <select
+                        class="form-select"
+                        id="CalledBy"
+                        name="CalledBy"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.CalledBy}
+                      >
+                        <option value={""} selected disabled hidden>
+                          Select
+                        </option>
+                        <option value="President">President</option>
+                        <option value="Chairman">Chairman</option>
+                      </select>
                     </div>
+                  </div>
 
-                    <div class="col-6">
+                  <div class="col-6">
                     <div class="mb-3">
                       <div class="form-check" style={{ marginTop: "39px" }}>
                         <input
                           class={`form-check-input ${
-                            formik.touched.isJoint &&
-                            formik.errors.isJoint
+                            formik.touched.isJoint && formik.errors.isJoint
                               ? "is-invalid"
                               : ""
                           }`}
@@ -227,19 +259,18 @@ function LGMSAddEditSessionsForm() {
                           onChange={() =>
                             formik.setFieldValue(
                               "isJoint",
-                              !formik.values.isJoint,
+                              !formik.values.isJoint
                             )
                           }
                         />
                         <label class="form-check-label" for="flexCheckDefault">
                           Is Joint Session
                         </label>
-                        {formik.touched.isJoint &&
-                          formik.errors.isJoint && (
-                            <div className="invalid-feedback">
-                              {formik.errors.isJoint}
-                            </div>
-                          )}
+                        {formik.touched.isJoint && formik.errors.isJoint && (
+                          <div className="invalid-feedback">
+                            {formik.errors.isJoint}
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -282,7 +313,7 @@ function LGMSAddEditSessionsForm() {
                       )}
                     </div>
                   </div>
-                  
+
                   <div className="col">
                     <div className="mb-3" style={{ position: "relative" }}>
                       <label className="form-label">End Date</label>
@@ -330,21 +361,29 @@ function LGMSAddEditSessionsForm() {
                         placeholder={"Legislation Diary No"}
                         value={formik.values.legislationDiaryNo}
                         className={`form-control ${
-                          formik.touched.legislationDiaryNo && formik.errors.legislationDiaryNo ? "is-invalid" : ""
+                          formik.touched.legislationDiaryNo &&
+                          formik.errors.legislationDiaryNo
+                            ? "is-invalid"
+                            : ""
                         }`}
                         id="legislationDiaryNo"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
-                      {formik.touched.legislationDiaryNo && formik.errors.legislationDiaryNo && (
-                        <div className="invalid-feedback">{formik.errors.legislationDiaryNo}</div>
-                      )}
+                      {formik.touched.legislationDiaryNo &&
+                        formik.errors.legislationDiaryNo && (
+                          <div className="invalid-feedback">
+                            {formik.errors.legislationDiaryNo}
+                          </div>
+                        )}
                     </div>
                   </div>
-                  
+
                   <div className="col">
                     <div className="mb-3" style={{ position: "relative" }}>
-                      <label className="form-label">Legislation Diary Date</label>
+                      <label className="form-label">
+                        Legislation Diary Date
+                      </label>
                       <span
                         style={{
                           position: "absolute",
@@ -366,84 +405,108 @@ function LGMSAddEditSessionsForm() {
                         onBlur={formik.handleBlur}
                         minDate={new Date()}
                         className={`form-control ${
-                          formik.touched.legislationDiaryDate && formik.errors.legislationDiaryDate
+                          formik.touched.legislationDiaryDate &&
+                          formik.errors.legislationDiaryDate
                             ? "is-invalid"
                             : ""
                         }`}
                       />
-                      {formik.touched.legislationDiaryDate && formik.errors.legislationDiaryDate && (
-                        <div className="invalid-feedback">
-                          {formik.errors.legislationDiaryDate}
-                        </div>
-                      )}
+                      {formik.touched.legislationDiaryDate &&
+                        formik.errors.legislationDiaryDate && (
+                          <div className="invalid-feedback">
+                            {formik.errors.legislationDiaryDate}
+                          </div>
+                        )}
                     </div>
                   </div>
                 </div>
-                
-                <div class="row">
-                    <div class="col-6">
-                      <div class="mb-3">
-                        <label class="form-label">Business Status</label>
-                        <select class="form-select"
-                          id="businessStatus"
-                          name="businessStatus"
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          value={formik.values.businessStatus}
-                        >
-                          <option value={""} selected disabled hidden>
-                            select
-                          </option>
-                            <option>Select</option>
-                            <option value={"Carry Forward"}>Pending</option>
-                            <option value={"Lapsed"}>Approved</option>
-                        </select>
-                      </div>
-                    </div>
 
-                    <div class="col-6">
-                      <div class="mb-3">
-                        <label class="form-label">Business Session</label>
-                        <select class="form-select"
-                          id="businessSession"
-                          name="businessSession"
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          value={formik.values.businessSession}
-                        >
-                          <option value={""} selected disabled hidden>
-                            select
-                          </option>
-                            <option>Federal</option>
-                            <option value={"1"}>Punjab</option>
-                            <option value={"2"}>Sindh</option>
-                        </select>
-                      </div>
+                <div class="row">
+                  <div class="col-6">
+                    <div class="mb-3">
+                      <label class="form-label">Business Status</label>
+                      <select
+                        class="form-select"
+                        id="businessStatus"
+                        name="businessStatus"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.businessStatus}
+                      >
+                        <option value={""} selected disabled hidden>
+                          Select
+                        </option>
+                        <option>Select</option>
+                        <option value="Carry Forward">Carry Forward</option>
+                        <option value="Lapsed">Lapsed</option>
+                      </select>
                     </div>
+                  </div>
+
+                  {/* <div class="col-6">
+                    <div class="mb-3">
+                      <label class="form-label">Business Session</label>
+                      <select
+                        class="form-select"
+                        id="businessSession"
+                        name="businessSession"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.businessSession}
+                      >
+                        <option value={""} selected disabled hidden>
+                          select
+                        </option>
+                        <option>Federal</option>
+                        <option value={"1"}>Punjab</option>
+                        <option value={"2"}>Sindh</option>
+                      </select>
+                    </div>
+                  </div> */}
+                  <div className="col">
+                    <label className="form-label">Business Session</label>
+                    <Select
+                      options={
+                        sessions &&
+                        sessions?.map((item) => ({
+                          value: item.id,
+                          label: item?.sessionName,
+                        }))
+                      }
+                      name="businessSession"
+                      id="businessSession"
+                      onChange={(selectedOptions) =>
+                        formik.setFieldValue("businessSession", selectedOptions)
+                      }
+                      value={formik.values.businessSession}
+                      isMulti={true}
+                    />
+                  </div>
                 </div>
 
                 <div class="row">
-                    <div class="col-6">
-                      <div class="mb-3">
-                        <label class="form-label">Parliamentary Year ID</label>
-                        <select class="form-select"
-                          id="parliamentaryYear"
-                          name="parliamentaryYear"
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          value={formik.values.parliamentaryYear}
-                        >
-                          <option value={""} selected disabled hidden>
-                            select
-                          </option>
-                            <option value={"1"}>Federal</option>
-                            <option value={"2"}>Punjab</option>
-                            <option value={"3"}>Sindh</option>
-                        </select>
-                      </div>
+                  <div class="col-6">
+                    <div class="mb-3">
+                      <label class="form-label">Parliamentary Year ID</label>
+                      <select
+                        class="form-select"
+                        id="parliamentaryYear"
+                        name="parliamentaryYear"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.parliamentaryYear}
+                      >
+                        <option value={""} selected disabled hidden>
+                          select
+                        </option>
+                        <option value={"1"}>Federal</option>
+                        <option value={"2"}>Punjab</option>
+                        <option value={"3"}>Sindh</option>
+                      </select>
                     </div>
+                  </div>
 
-                    <div class="col-6">
+                  <div class="col-6">
                     <div class="mb-3">
                       <div class="form-check" style={{ marginTop: "39px" }}>
                         <input
@@ -459,7 +522,7 @@ function LGMSAddEditSessionsForm() {
                           onChange={() =>
                             formik.setFieldValue(
                               "isAdjourned",
-                              !formik.values.isAdjourned,
+                              !formik.values.isAdjourned
                             )
                           }
                         />
@@ -475,7 +538,6 @@ function LGMSAddEditSessionsForm() {
                       </div>
                     </div>
                   </div>
-
                 </div>
 
                 <div class="row">
@@ -508,14 +570,15 @@ function LGMSAddEditSessionsForm() {
                             : ""
                         }`}
                       />
-                      {formik.touched.summonDate && formik.errors.summonDate && (
-                        <div className="invalid-feedback">
-                          {formik.errors.summonDate}
-                        </div>
-                      )}
+                      {formik.touched.summonDate &&
+                        formik.errors.summonDate && (
+                          <div className="invalid-feedback">
+                            {formik.errors.summonDate}
+                          </div>
+                        )}
                     </div>
                   </div>
-                  
+
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Summon Notice Time</label>
@@ -528,8 +591,7 @@ function LGMSAddEditSessionsForm() {
                           formik.setFieldValue("summonTime", time)
                         }
                         className={`form-control ${
-                          formik.errors.summonTime &&
-                          formik.touched.summonTime
+                          formik.errors.summonTime && formik.touched.summonTime
                             ? "is-invalid"
                             : ""
                         }`}
@@ -547,7 +609,9 @@ function LGMSAddEditSessionsForm() {
                 <div class="row">
                   <div className="col">
                     <div className="mb-3">
-                      <label className="form-label">Joint Session Purpose</label>
+                      <label className="form-label">
+                        Joint Session Purpose
+                      </label>
                       <textarea
                         className={`form-control`}
                         id="jointSessionPurpose"

@@ -41,12 +41,13 @@ const SearchLegislationBills = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [searchdata, setSearchData] = useState([]);
   const [billdata, setBilldata] = useState([]);
+  const [count, setCount] = useState(null);
   const [isFromNoticeDateCalenderOpen, setIsFromNoticeDateCalenderOpen] =
     useState(false);
   const [isToNoticeDateCalenderOpen, setIsToNoticeDateCalenderOpen] =
     useState(false);
   const [isPresentedCalenderOpen, setIsPresentedCalenderOpen] = useState(false);
-  const pageSize = 8;
+  const pageSize = 10;
 
   const handleFromNoticeCalendarToggle = () => {
     setIsFromNoticeDateCalenderOpen(!isFromNoticeDateCalenderOpen);
@@ -73,6 +74,32 @@ const SearchLegislationBills = () => {
     setIsPresentedCalenderOpen(false);
   };
 
+  const handlePageChange = (page) => {
+    // Update currentPage when a page link is clicked
+    setCurrentPage(page);
+    if (
+      formik?.values?.selectedMinistry ||
+      formik?.values?.selectedSenator ||
+      formik?.values?.parliamentaryYear ||
+      formik?.values?.fromSession ||
+      formik?.values?.toSessionId ||
+      formik?.values?.billCategory ||
+      formik?.values?.billType ||
+      formik?.values?.FromNoticeDate ||
+      formik?.values?.ToNoticeDate ||
+      formik?.values?.keywords ||
+      formik?.values?.concerndCommitties ||
+      formik?.values?.committeeRecomendation ||
+      formik?.values?.remarks ||
+      formik?.values?.billFrom ||
+      formik?.values?.billStatus
+    ) {
+      handleSearch(formik?.values, page);
+    }
+
+    handleSearch(formik?.values, page);
+  };
+
   const formik = useFormik({
     initialValues: {
       selectedMinistry: "",
@@ -84,7 +111,7 @@ const SearchLegislationBills = () => {
       billCategory: "",
       statusId: "",
       billType: "",
-      fileNumber: "",
+      billFrom: "",
       FromNoticeDate: "",
       ToNoticeDate: "",
       PresetedInHOuseOn: "",
@@ -93,8 +120,7 @@ const SearchLegislationBills = () => {
       keywords: "",
     },
     onSubmit: (values) => {
-      console.log(values);
-      handleSearch(values);
+      handleSearch(values, currentPage);
     },
   });
 
@@ -144,23 +170,26 @@ const SearchLegislationBills = () => {
     handleParliamentaryYears();
     getBillstatus();
     getCommitties();
-    console.log("members", members);
   }, []);
 
   const transFormsearchData = (apiData) => {
     return (
       apiData?.map((item) => ({
         id: item.id,
-        billText: item.billText,
+        parliamentaryYear: item?.parliamentaryYears?.parliamentaryTenure,
+        session: item?.sessions?.sessionName,
         billType: item.billType,
         billCategory: item.billCategory,
         billFrom: item.billFrom,
-        billStatus: item.billStatus,
+        concerndCommittes:
+          item?.introducedInHouses?.manageCommittees?.committeeName,
+        billStatus: item?.billStatuses?.billStatusName,
+        Status: item.billStatus,
       })) || []
     );
   };
   const handleSearch = useCallback(
-    async (values) => {
+    async (values, page) => {
       const data = {
         fkSenatorId: values.selectedSenator?.value,
         fkParliamentaryYearId: values.parliamentaryYear,
@@ -180,11 +209,12 @@ const SearchLegislationBills = () => {
         introducedInHouseDate: values?.PresetedInHOuseOn,
       };
       try {
-        const response = await mainSearchApi(currentPage, pageSize, data);
+        const response = await mainSearchApi(page, pageSize, data);
         if (response?.success) {
           const transformedData = await transFormsearchData(
             response?.data?.senateBills
           );
+          setCount(response?.data?.count);
           setSearchData(transformedData);
           showSuccessMessage(response?.message);
         }
@@ -192,7 +222,7 @@ const SearchLegislationBills = () => {
         showErrorMessage(error?.response?.message);
       }
     },
-    [currentPage, pageSize]
+    [currentPage, pageSize, setCount, setSearchData]
   );
 
   const handleResetForm = () => {
@@ -245,17 +275,22 @@ const SearchLegislationBills = () => {
                   </div>
 
                   <div className="form-group col-3">
-                    <label htmlFor="fileNumber" className="form-label">
-                      File Number
+                    <label htmlFor="" className="form-label">
+                      Bill Type
                     </label>
-                    <input
-                      className="form-control"
-                      type="text"
-                      id="fileNumber"
-                      name="fileNumber"
+                    <select
+                      id="billFrom"
+                      name="billFrom"
+                      className="form-select"
                       onChange={formik.handleChange}
-                      value={formik.values.fileNumber}
-                    />
+                      value={formik.values.billFrom}
+                    >
+                      <option value="" disabled hidden>
+                        Select
+                      </option>
+                      <option value="From Senate">Introdced In Senate</option>
+                      <option value="From NA">Received From NA</option>
+                    </select>
                   </div>
 
                   <div className="form-group col-3">
@@ -392,7 +427,7 @@ const SearchLegislationBills = () => {
                 </div>
 
                 <div className="row mt-3">
-                  <div className="form-group col-3">
+                  {/* <div className="form-group col-3">
                     <label htmlFor="originatedIn" className="form-label">
                       Origniated In
                     </label>
@@ -409,7 +444,7 @@ const SearchLegislationBills = () => {
                       <option value="InSenate">In Senate</option>
                       <option value="InAssembly">In Assembly</option>
                     </select>
-                  </div>
+                  </div> */}
 
                   <div className="form-group col-3">
                     <label htmlFor="statusId" className="form-label">
@@ -670,12 +705,12 @@ const SearchLegislationBills = () => {
                     >
                       Reset
                     </button>
-                    <button type="" className="btn btn-primary me-2">
+                    {/* <button type="" className="btn btn-primary me-2">
                       Print
                     </button>
                     <button type="" className="btn btn-primary">
                       Annual Report
-                    </button>
+                    </button> */}
                   </div>
                 </div>
               </form>
@@ -687,14 +722,15 @@ const SearchLegislationBills = () => {
                 hidebtn1={true}
                 hideBtn={true}
                 singleDataCard={true}
-                // ActionHide={true}
+                ActionHide={true}
                 hideDeleteIcon={true}
-                // hideEditIcon={true}
+                hideEditIcon={true}
                 headertitlebgColor={"#666"}
                 headertitletextColor={"#FFF"}
-                //  handlePageChange={handlePageChange}
+                handlePageChange={handlePageChange}
                 currentPage={currentPage}
                 pageSize={pageSize}
+                totalCount={count}
               />
             </div>
           </div>

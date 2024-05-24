@@ -283,7 +283,9 @@ function EditOrdinance() {
                 </div>
                 <div className="col">
                   <div className="mb-3" style={{ position: "relative" }}>
-                    <label className="form-label">Documnent Date</label>
+                    <label className="form-label">
+                      Date of Laying in Senate
+                    </label>
                     <span
                       style={{
                         position: "absolute",
@@ -330,9 +332,7 @@ function EditOrdinance() {
                 </div>
                 <div className="col">
                   <div className="mb-3" style={{ position: "relative" }}>
-                    <label className="form-label">
-                      Date of Laying in the National Assembly
-                    </label>
+                    <label className="form-label">Date of Laying in NA</label>
                     <span
                       style={{
                         position: "absolute",

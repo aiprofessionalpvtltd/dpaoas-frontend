@@ -269,6 +269,7 @@ const UpdateBills = () => {
         fkSessionId: singleSenateBillData?.fkSessionId || "",
         billCategory: singleSenateBillData?.billCategory || "",
         billType: singleSenateBillData?.billType || "",
+        billStatuses: singleSenateBillData?.billStatuses || "",
         fileNumber: singleSenateBillData?.fileNumber || "",
         PassedByNADate: singleSenateBillData?.PassedByNADate
           ? moment(singleSenateBillData?.PassedByNADate).toDate()
@@ -382,6 +383,7 @@ const UpdateBills = () => {
     formData.append("fkSessionId", values?.fkSessionId);
     formData.append("billCategory", values?.billCategory);
     formData.append("billType", values?.billType);
+    formData.append("fkBillStatus", values?.fkBillStatus);
     formData.append("fileNumber", values?.fileNumber);
     formData.append("PassedByNADate", values?.PassedByNADate);
     formData.append(
@@ -642,7 +644,35 @@ const UpdateBills = () => {
                     </div>
 
                     <div className="row">
-                      <div className="col-3">
+                      <div class="col">
+                        <div class="mb-3">
+                          <label class="form-label">Bill Status</label>
+                          <select
+                            id="fkBillStatus"
+                            name="fkBillStatus"
+                            className="form-select"
+                            onChange={formik.handleChange}
+                            value={formik.values.fkBillStatus}
+                          >
+                            <option value="" disabled hidden>
+                              Select
+                            </option>
+                            {billStatusData &&
+                              billStatusData.map((item) => (
+                                <option value={item.id}>
+                                  {item.billStatusName}
+                                </option>
+                              ))}
+                          </select>
+                          {formik.touched.fkBillStatus &&
+                            formik.errors.fkBillStatus && (
+                              <div class="invalid-feedback">
+                                {formik.errors.fkBillStatus}
+                              </div>
+                            )}
+                        </div>
+                      </div>
+                      <div className="col">
                         <div className="mb-3">
                           <label className="form-label">File Number</label>
 
@@ -666,7 +696,7 @@ const UpdateBills = () => {
                             )}
                         </div>
                       </div>
-                      <div className="col-3">
+                      <div className="col">
                         <div className="mb-3" style={{ position: "relative" }}>
                           <label className="form-label">
                             Passed By NA Date
@@ -717,7 +747,7 @@ const UpdateBills = () => {
                         </div>
                       </div>
 
-                      <div className="col-3">
+                      <div className="col">
                         <div className="mb-3" style={{ position: "relative" }}>
                           <label className="form-label">
                             Date of Recipt of Message From NA
@@ -768,35 +798,6 @@ const UpdateBills = () => {
                                 style={{ display: "block" }}
                               >
                                 {formik.errors.DateOfReceiptOfMessageFromNA}
-                              </div>
-                            )}
-                        </div>
-                      </div>
-
-                      <div class="col">
-                        <div class="mb-3">
-                          <label class="form-label">Bill Status</label>
-                          <select
-                            id="fkBillStatus"
-                            name="fkBillStatus"
-                            className="form-control"
-                            onChange={formik.handleChange}
-                            value={formik.values.fkBillStatus}
-                          >
-                            <option value="" disabled hidden>
-                              Select
-                            </option>
-                            {billStatusData &&
-                              billStatusData.map((item) => (
-                                <option value={item.id}>
-                                  {item.billStatusName}
-                                </option>
-                              ))}
-                          </select>
-                          {formik.touched.fkBillStatus &&
-                            formik.errors.fkBillStatus && (
-                              <div class="invalid-feedback">
-                                {formik.errors.fkBillStatus}
                               </div>
                             )}
                         </div>
