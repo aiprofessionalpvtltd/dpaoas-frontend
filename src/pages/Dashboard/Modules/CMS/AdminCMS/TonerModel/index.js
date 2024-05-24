@@ -36,7 +36,7 @@ function CMSTonerModels() {
     return apiData.map((model) => ({
       id: model?.id,
       TonerName: model?.tonerModel,
-      TonnerDescription: model?.description,
+      quantity: model?.quantity,
       Status: model?.status,
     }));
   };

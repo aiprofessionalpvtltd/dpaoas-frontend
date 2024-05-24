@@ -67,7 +67,7 @@ function CMSTonerInstallationReports() {
       BranchRequest: `${item?.requestBranch?.branchName}`,
       TonerModel: `${item?.tonerModel?.tonerModel}`,
       Qty: item?.quantity,
-      status: item?.status,
+      // status: item?.status,
     }));
   };
 
@@ -124,30 +124,30 @@ function CMSTonerInstallationReports() {
   useEffect(() => {
     GetAllTonerModelsData();
   }, []);
-  const hendleEdit = async (id) => {
-    try {
-      const response = await getTonersById(id);
-      if (response?.success) {
-        navigate("/cms/dashboard/toner/addedit", {
-          state: response?.data,
-        });
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const hendleEdit = async (id) => {
+  //   try {
+  //     const response = await getTonersById(id);
+  //     if (response?.success) {
+  //       navigate("/cms/dashboard/toner/addedit", {
+  //         state: response?.data,
+  //       });
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
-  const handleDelete = async (id) => {
-    try {
-      const response = await tonerDelete(id);
-      if (response?.success) {
-        showSuccessMessage(response?.message);
-        getToner();
-      }
-    } catch (error) {
-      showErrorMessage(error?.response?.data?.message);
-    }
-  };
+  // const handleDelete = async (id) => {
+  //   try {
+  //     const response = await tonerDelete(id);
+  //     if (response?.success) {
+  //       showSuccessMessage(response?.message);
+  //       getToner();
+  //     }
+  //   } catch (error) {
+  //     showErrorMessage(error?.response?.data?.message);
+  //   }
+  // };
 
   // Search for Toner
   const SearchTonerApi = async (values) => {
@@ -346,11 +346,14 @@ function CMSTonerInstallationReports() {
                   headertitlebgColor={"#666"}
                   headertitletextColor={"#FFF"}
                   totalCount={count}
+                  ActionHide={true}
                   showPrint={false}
-                  addBtnText={"Add Toner Installation"}
-                  handleAdd={() => navigate("/cms/dashboard/toner/addedit")}
-                  handleEdit={(item) => hendleEdit(item.SR)}
-                  handleDelete={(item) => handleDelete(item.SR)}
+                  hidebtn1={true}
+
+                  // addBtnText={"Add Toner Installation"}
+                  // handleAdd={() => navigate("/cms/dashboard/toner/addedit")}
+                  // handleEdit={(item) => hendleEdit(item.SR)}
+                  // handleDelete={(item) => handleDelete(item.SR)}
                 />
                 <div class="d-grid gap-2 d-md-flex justify-content-md-start col">
                   <button

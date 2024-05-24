@@ -123,6 +123,25 @@ const filteredKeys = keys?.filter((key) => {
     if (totalPages <= 1) {
       return null; // Hide pagination if totalPages is 1 or less
     }
+  
+    const getPages = () => {
+      const pages = [];
+      if (totalPages <= 5) {
+        for (let i = 0; i < totalPages; i++) {
+          pages.push(i);
+        }
+      } else {
+        if (currentPage <= 2) {
+          pages.push(0, 1, 2, 3, -1, totalPages - 1); // Show first 4 pages, dots, and last page
+        } else if (currentPage >= totalPages - 3) {
+          pages.push(0, -1, totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1); // Show first page, dots, and last 4 pages
+        } else {
+          pages.push(0, -1, currentPage - 1, currentPage, currentPage + 1, -1, totalPages - 1); // Show first page, dots, current page, adjacent pages, dots, and last page
+        }
+      }
+      return pages;
+    };
+  
     return (
       <nav aria-label="Page navigation">
         <ul className="pagination">
@@ -135,23 +154,25 @@ const filteredKeys = keys?.filter((key) => {
               Previous
             </button>
           </li>
-          {Array.from({ length: totalPages })?.map((_, index) => (
+          {getPages().map((page, index) => (
             <li
               key={index}
-              className={`page-item ${currentPage === index ? "active" : ""}`}
+              className={`page-item ${currentPage === page ? "active" : ""} ${page === -1 ? "disabled" : ""}`}
             >
-              <button
-                className="page-link"
-                onClick={() => handlePageChange(index)}
-              >
-                {index + 1}
-              </button>
+              {page === -1 ? (
+                <span className="page-link">...</span>
+              ) : (
+                <button
+                  className="page-link"
+                  onClick={() => handlePageChange(page)}
+                >
+                  {page + 1}
+                </button>
+              )}
             </li>
           ))}
           <li
-            className={`page-item ${
-              currentPage >= totalPages - 1 ? "disabled" : ""
-            }`}
+            className={`page-item ${currentPage >= totalPages - 1 ? "disabled" : ""}`}
           >
             <button
               className="page-link"
@@ -165,6 +186,7 @@ const filteredKeys = keys?.filter((key) => {
       </nav>
     );
   };
+  
 
   return (
     <div className="container-fluid">
