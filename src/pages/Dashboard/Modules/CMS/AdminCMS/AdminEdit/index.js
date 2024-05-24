@@ -54,6 +54,9 @@ function CMSAdminEditComplaint() {
       "complaintAttachmentFromResolver",
       values.complaintAttachmentFromResolver
     );
+    formData.append("tonerQuantity", location?.state?.tonerQuantity)
+    formData.append("fkTonerModelId", location?.state?.fkTonerModelId)
+
 
     try {
       const response = await UpdateComplaintByAdmin(

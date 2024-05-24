@@ -14,15 +14,14 @@ import {
 function AddEditTonerModel() {
   const validationSchema = Yup.object({
     tonerModelName: Yup.string().required("Modal name is required"),
-    tonerModelDescription: Yup.string().required("Description is required"),
-    tonerModelStatus: Yup.string().required("Status is required"),
+    quantity: Yup.string().required("Quantity is required"),
   });
   const location = useLocation();
   const formik = useFormik({
     initialValues: {
       tonerModelName: location.state ? location?.state?.tonerModel : "",
-      tonerModelDescription: location.state ? location?.state?.description : "",
-      tonerModelStatus: location.state ? location?.state?.status : "",
+      quantity: location.state ? location?.state?.quantity : "",
+
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -41,8 +40,7 @@ function AddEditTonerModel() {
   const handleTonerModel = async (values) => {
     const Data = {
       tonerModel: values?.tonerModelName,
-      description: values?.tonerModelDescription,
-      status: values?.tonerModelStatus,
+      quantity: values?.quantity,
     };
 
     try {
@@ -59,8 +57,7 @@ function AddEditTonerModel() {
   const UpdateTonerModelAPi = async (values) => {
     const data = {
       tonerModel: values?.tonerModelName,
-      description: values?.tonerModelDescription,
-      status: values?.tonerModelStatus,
+      quantity: values?.quantity,
     };
 
     try {
@@ -96,7 +93,7 @@ function AddEditTonerModel() {
             <form onSubmit={formik.handleSubmit}>
               <div className="container-fluid">
                 <div className="row">
-                  <div className="col-12">
+                  <div className="col-6">
                     <div className="mb-3">
                       <label className="form-label">Tonar Modal Name</label>
                       <input
@@ -122,58 +119,33 @@ function AddEditTonerModel() {
                 </div>
 
                 <div className="row">
-                  <div className="col-12">
+                <div className="col-6">
                     <div className="mb-3">
-                      <label className="form-label">
-                        Tonar Modal Description
-                      </label>
-                      <textarea
-                        className={`form-control  ${
-                          formik.touched.tonerModelDescription &&
-                          formik.errors.tonerModelDescription
+                      <label className="form-label">Quantity</label>
+                      <input
+                        type="text"
+                        // className={`form-control`}
+                        id="quantity"
+                        value={formik.values.quantity}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        className={`form-control ${
+                          formik.touched.quantity &&
+                          formik.errors.quantity
                             ? "is-invalid"
                             : ""
                         }`}
-                        id="tonerModelDescription"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.tonerModelDescription}
-                      ></textarea>
-                      {formik.touched.tonerModelDescription &&
-                        formik.errors.tonerModelDescription && (
+                      />
+                       {formik.touched.quantity &&
+                        formik.errors.quantity && (
                           <div className="invalid-feedback">
-                            {formik.errors.tonerModelDescription}
+                            {formik.errors.quantity}
                           </div>
                         )}
                     </div>
                   </div>
                 </div>
-                <div className="row">
-                  <div className="col-12">
-                    <div className="mb-3">
-                      <label className="form-label">Tonar Modal status</label>
-                      <select
-                        className={`form-select  ${
-                          formik.touched.tonerModelStatus &&
-                          formik.errors.tonerModelStatus
-                            ? "is-invalid"
-                            : ""
-                        }`}
-                        id="tonerModelStatus"
-                        name="tonerModelStatus"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.tonerModelStatus}
-                      >
-                        <option value={""} selected disabled hidden>
-                          Select
-                        </option>
-                        <option value="active">active</option>
-                        <option value="inactive">inactive</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
+               
                 <div className="d-grid gap-2 d-md-flex justify-content-md-end">
                   <button className="btn btn-primary" type="submit">
                     Submit
