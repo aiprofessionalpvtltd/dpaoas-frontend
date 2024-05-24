@@ -11,6 +11,7 @@ import { LegislationSideBarItems } from "../../../../../../../utils/sideBarItems
 import {
   AllManageCommitties,
   UpdateNABill,
+  getAllBillStatus,
   getAllMNALists,
   getSingleNABillByID,
 } from "../../../../../../../api/APIs/Services/LegislationModule.service";
@@ -26,7 +27,7 @@ const EditSenateBill = () => {
   const NA_Bill_ID = location?.state;
   const { ministryData, members, sessions, parliamentaryYear } =
     useContext(AuthContext);
-
+  const [billStatusData, setBillStatusesData] = useState([]);
   const [MNAData, setMNAData] = useState([]);
   const [singleSenateBillData, setSingleSenateBillData] = useState([]);
   const [committieeData, setCommittieData] = useState([]);
@@ -63,7 +64,18 @@ const EditSenateBill = () => {
       console.log(error);
     }
   };
+  // Getting All Bill Statuses
+  const getAllBillStatusData = async () => {
+    try {
+      const response = await getAllBillStatus(0, 500);
 
+      if (response?.success) {
+        setBillStatusesData(response?.data?.billStatus);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   // Getting All MNA
   const getAllMNA = async () => {
     try {
@@ -77,6 +89,7 @@ const EditSenateBill = () => {
     }
   };
   useEffect(() => {
+    getAllBillStatusData();
     getAllMNA();
     GetAllCommittiesApi();
   }, []);
@@ -87,6 +100,7 @@ const EditSenateBill = () => {
       fkSessionId: "",
       billCategory: "",
       billType: "",
+      fkBillStatus: "",
       fileNumber: "",
       noticeDate: "",
       //   noticeDate: "",
@@ -244,6 +258,10 @@ const EditSenateBill = () => {
         fkSessionId: singleSenateBillData?.fkSessionId || "",
         billCategory: singleSenateBillData?.billCategory || "",
         billType: singleSenateBillData?.billType || "",
+        fkBillStatus:
+          (singleSenateBillData?.billStatuses &&
+            singleSenateBillData?.billStatuses) ||
+          "",
         fileNumber: singleSenateBillData?.fileNumber || "",
         noticeDate: singleSenateBillData?.noticeDate
           ? moment(singleSenateBillData?.noticeDate).toDate()
@@ -348,6 +366,7 @@ const EditSenateBill = () => {
     formData.append("fkSessionId", values?.fkSessionId);
     formData.append("billCategory", values?.billCategory);
     formData.append("billType", values?.billType);
+    formData.append("fkBillStatus", values?.fkBillStatus);
     formData.append("fileNumber", values?.fileNumber);
     formData.append("noticeDate", values?.noticeDate);
     formData.append("billFrom", "From Senate");
@@ -605,6 +624,34 @@ const EditSenateBill = () => {
                     </div>
 
                     <div className="row">
+                      <div class="col-3">
+                        <div class="mb-3">
+                          <label class="form-label">Bill Status</label>
+                          <select
+                            id="fkBillStatus"
+                            name="fkBillStatus"
+                            className="form-select"
+                            onChange={formik.handleChange}
+                            value={formik.values.fkBillStatus}
+                          >
+                            <option value="" disabled hidden>
+                              Select
+                            </option>
+                            {billStatusData &&
+                              billStatusData.map((item) => (
+                                <option value={item.id}>
+                                  {item.billStatusName}
+                                </option>
+                              ))}
+                          </select>
+                          {formik.touched.fkBillStatus &&
+                            formik.errors.fkBillStatus && (
+                              <div class="invalid-feedback">
+                                {formik.errors.fkBillStatus}
+                              </div>
+                            )}
+                        </div>
+                      </div>
                       <div className="col-3">
                         <div className="mb-3">
                           <label className="form-label">File Number</label>

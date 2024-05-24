@@ -161,10 +161,10 @@ export const updateTenure = async (id, data) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClientMMS.put(`/tenures/update/${id}`, data, {
-      headers: {
-        accept: "application/json",
-        "Content-Type": "multipart/form-data",
-      },
+      // headers: {
+      //   accept: "application/json",
+      //   "Content-Type": "multipart/form-data",
+      // },
     });
 
     return response?.data;

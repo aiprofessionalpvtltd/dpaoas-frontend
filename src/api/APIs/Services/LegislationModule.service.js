@@ -77,6 +77,28 @@ export const updatedBillNewStatus = async (id, data) => {
     throw error;
   }
 };
+
+// Delete Bill Statuses
+// Delete Ordinance
+
+export const DeleteBillStatus = async (id) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.delete(
+      `bill-status/delete/${id}`
+      // {
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // }
+      // },
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
 // Get All committies
 
 export const getAllCommitties = async (currentPage, pageSize) => {

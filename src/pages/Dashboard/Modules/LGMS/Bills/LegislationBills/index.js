@@ -18,19 +18,19 @@ import {
 const AllLegislationBillList = () => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(0);
-  const [selectedOption, setSelectedOption] = useState("");
+  const [selectedOption, setSelectedOption] = useState("From Senate");
   const [legislationBillData, setLegislationBillData] = useState([]);
   const [senateBillData, setSenateBillData] = useState([]);
   const [NABillData, setNABillData] = useState([]);
   const [count, setCount] = useState(null);
-  const pageSize = 4;
+  const pageSize = 3;
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
     setCurrentPage(page);
   };
   const transformAllBillData = (apiData) => {
-    return apiData.map((item) => ({
+    return apiData?.map((item) => ({
       id: item.id,
       parliamentaryYear: item?.parliamentaryYears?.parliamentaryTenure,
       session: item?.sessions?.sessionName,
@@ -38,12 +38,18 @@ const AllLegislationBillList = () => {
       billCategory: item.billCategory,
       fileNumber: item?.fileNumber,
       billFrom: item?.billFrom,
-      billStatus: item.billStatus,
+      concerndCommittes: item?.introducedInHouses?.manageCommittees
+        ?.committeeName
+        ? item?.introducedInHouses?.manageCommittees?.committeeName
+        : "---",
+      billStatus: item?.billStatuses?.billStatusName,
+      Status: item.billStatus,
     }));
   };
   //   Transform Senate Bill Data
   const transformSenateBillData = (apiData) => {
-    return apiData.map((item) => ({
+    console.log("SenateBill Data", apiData);
+    return apiData?.map((item) => ({
       id: item.id,
       parliamentaryYear: item?.parliamentaryYears?.parliamentaryTenure,
       session: item?.sessions?.sessionName,
@@ -54,12 +60,17 @@ const AllLegislationBillList = () => {
         ? moment(item?.noticeDate).format("DD-MM-YYYY")
         : "---",
 
-      billStatus: item.billStatus,
+      concerndCommittes: item?.introducedInHouses?.manageCommittees
+        ?.committeeName
+        ? item?.introducedInHouses?.manageCommittees?.committeeName
+        : "---",
+      billStatus: item?.billStatuses?.billStatusName,
+      Status: item.billStatus,
     }));
   };
   // Transform National Bill Data
   const transformNABillData = (apiData) => {
-    return apiData.map((item) => ({
+    return apiData?.map((item) => ({
       id: item.id,
       parliamentaryYear: item?.parliamentaryYears?.parliamentaryTenure,
       session: item?.sessions?.sessionName,
@@ -76,18 +87,24 @@ const AllLegislationBillList = () => {
       passedByNA: item?.PassedByNADate
         ? moment(item?.PassedByNADate).format("DD-MM-YYYY")
         : "---",
-      billStatus: item.billStatus,
+      concerndCommittes: item?.introducedInHouses?.manageCommittees
+        ?.committeeName
+        ? item?.introducedInHouses?.manageCommittees?.committeeName
+        : "---",
+      billStatus: item?.billStatuses?.billStatusName,
+      Status: item.billStatus,
     }));
   };
 
   const handleOptionChange = (event) => {
     setSelectedOption(event.target.value);
+    getBills(event.target?.value);
 
-    if (event.target.value === "All Bills") {
-      getBills();
-    } else {
-      getBills(event.target.value);
-    }
+    // if (event.target.value === "All Bills") {
+    //   getBills();
+    // } else {
+    //   getBills(event.target.value);
+    // }
   };
 
   const getBills = useCallback(
@@ -110,18 +127,17 @@ const AllLegislationBillList = () => {
         searchParams
       );
       if (response?.success) {
-        console.log(response?.data);
         setCount(response?.data?.count);
         const ALL_BILLS_DATA = response?.data?.senateBills;
         const trnasformAllData = transformAllBillData(ALL_BILLS_DATA);
         setLegislationBillData(trnasformAllData);
-        const senateBills = await ALL_BILLS_DATA.filter(
+        const senateBills = await ALL_BILLS_DATA?.filter(
           (bill) => bill?.billFrom === "From Senate"
         );
         const senateData = transformSenateBillData(senateBills);
         setSenateBillData(senateData);
 
-        const naBills = await ALL_BILLS_DATA.filter(
+        const naBills = await ALL_BILLS_DATA?.filter(
           (bill) => bill?.billFrom === "From NA"
         );
         const NAData = transformNABillData(naBills);
@@ -185,9 +201,9 @@ const AllLegislationBillList = () => {
             <option value="" selected disabled hidden>
               Select
             </option>
-            <option value="All Bills">All Bills Data</option>
-            <option value="From Senate">From Senate</option>
-            <option value="From NA">From National Assembly</option>
+            {/* <option value="All Bills">All Bills Data</option> */}
+            <option value="From Senate">Introduced In Senate</option>
+            <option value="From NA">Received From NA</option>
           </select>
         </div>
         <div>
@@ -199,23 +215,37 @@ const AllLegislationBillList = () => {
                 : "Create National Assembly Bill"
             }
             tableTitle={
-              selectedOption === ""
-                ? "All Bills Data"
-                : selectedOption === "From Senate"
-                  ? "Senate Bills Data"
-                  : "National Assembly Bills"
+              // selectedOption === ""
+              //   ? "All Bills Data"
+              //   :
+              selectedOption === "From Senate"
+                ? "Senate Bills Data"
+                : "National Assembly Bills"
             }
             data={
-              selectedOption === ""
-                ? legislationBillData
-                : selectedOption === "All Bills"
-                  ? legislationBillData
-                  : selectedOption === "From Senate"
-                    ? senateBillData
-                    : NABillData
+              // selectedOption === ""
+              //   ? legislationBillData
+              //   : selectedOption === "All Bills"
+              //     ? legislationBillData
+              //     :
+              selectedOption === "From Senate" ? senateBillData : NABillData
             }
-            // data={[]}
             hideBtn={true}
+            ActionHide={
+              selectedOption === "From Senate" || selectedOption === "From NA"
+                ? false
+                : true
+            }
+            hideDeleteIcon={
+              selectedOption === "From Senate" || selectedOption === "From NA"
+                ? false
+                : true
+            }
+            hideEditIcon={
+              selectedOption === "From Senate" || selectedOption === "From NA"
+                ? false
+                : true
+            }
             singleDataCard={true}
             headertitlebgColor={"#666"}
             headertitletextColor={"#FFF"}

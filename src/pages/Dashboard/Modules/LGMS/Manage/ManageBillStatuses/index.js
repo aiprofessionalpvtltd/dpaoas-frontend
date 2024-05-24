@@ -8,11 +8,16 @@ import { ToastContainer } from "react-toastify";
 import Header from "../../../../../../components/Header";
 import Modal from "react-bootstrap/Modal";
 import {
+  DeleteBillStatus,
   createBillNewStatus,
   getAllBillStatus,
 } from "../../../../../../api/APIs/Services/LegislationModule.service";
 import { useFormik } from "formik";
 import AddEditBillsStatusModal from "../../../../../../components/AddEditBillsStatusModal";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../../utils/ToastAlert";
 const AllBillStatuses = () => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(0);
@@ -61,6 +66,18 @@ const AllBillStatuses = () => {
     // console.log("edig", id);
     setEditStatusData(item);
     openModal();
+  };
+
+  const handleDeleteBillStatus = async (id) => {
+    try {
+      const resposne = await DeleteBillStatus(id);
+      if (resposne?.success) {
+        showSuccessMessage(resposne?.message);
+        GetBillStatusesAPi();
+      }
+    } catch (error) {
+      showErrorMessage(error?.message);
+    }
   };
 
   return (
@@ -160,6 +177,9 @@ const AllBillStatuses = () => {
             }}
             handleEdit={(item) => {
               handleEdit(item);
+            }}
+            handleDelete={(item) => {
+              handleDeleteBillStatus(item?.id);
             }}
           />
         </div>

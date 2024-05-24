@@ -97,6 +97,7 @@ function NewLegislationNABill() {
     formData.append("billTitle", values?.billTitle);
     formData.append("billFrom", "From NA");
     formData.append("fkUserId", userData && userData?.id);
+    formData.append("fkBillStatus", 1);
 
     if (values?.selectedSenator) {
       values?.selectedSenator?.forEach((senator, index) => {
