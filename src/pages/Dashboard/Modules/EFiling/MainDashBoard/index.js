@@ -22,6 +22,8 @@ import {
   getsentAndRecievedFilesStats,
 } from "../../../../../api/APIs/Services/efiling.service";
 import moment from "moment";
+import { keyframes } from "@emotion/react";
+import { Box } from "@mui/system";
 function MainDashboard() {
   const userData = getUserData();
   const [fileStatsData, setFileStatsData] = useState(null);
@@ -161,6 +163,44 @@ function MainDashboard() {
     getAllFRDataApi();
   }, []);
 
+  const blink = keyframes`
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+`;
+
+const BlinkingIndicator = () => {
+  return (
+    <Box
+      sx={{
+        width: 15,
+        height: 15,
+        borderRadius: '50%',
+        marginTop: "5px",
+        backgroundColor: 'red',
+        animation: `${blink} 1s infinite`,
+      }}
+    ></Box>
+  );
+};
+
+const NonBlinkingIndicator = () => {
+  return (
+    <Box
+      sx={{
+        width: 15,
+        height: 15,
+        marginTop: "5px",
+        borderRadius: '50%',
+        backgroundColor: 'blue',
+      }}
+    ></Box>
+  );
+}
+
   return (
     <Layout
       module={false}
@@ -178,7 +218,7 @@ function MainDashboard() {
       breadcrumbs={true}
     >
       <div className="row">
-        <h2 style={{ marginBottom: 30, color: "#820001" }}>
+        {/* <h2 style={{ marginBottom: 30, color: "#820001" }}>
           {" "}
           {userData && `${userData?.department?.departmentName} Branch`}
         </h2>
@@ -186,103 +226,124 @@ function MainDashboard() {
           style={{ fontSize: "22px", fontWeight: "bold", marginBottom: "10px" }}
         >
           Today's Stats
-        </h2>
+        </h2> */}
       </div>
       <div className="row">
-        <div className="col-8">
+        <div className="col-7">
           <div className="dash-detail-container" style={{ background: "none" }}>
             <div className="row">
+
+{/* FRs Card */}
               <div className="col-4">
                 <div className="dash-card">
                   <div
                     className="dash-card-header"
-                    style={{ textAlign: "center", background: "#4f5966" }}
+                    style={{ textAlign: "center", background: "#FFA500" }}
                   >
                     <h2 style={{ marginBottom: "0" }}>IN </h2>
                   </div>
-                  <div
-                    className="count float-start"
-                    style={{ borderLeft: "#ddd solid 1px" }}
-                  >
-                    <span style={{ display: "inline-flex" }}>
-                      F.Rs{" "}
-                      <span style={{ marginLeft: "5px" }}>
-                        ({frStatsData && frStatsData?.receivedFRs?.count})
+
+                  <div className="float-start" style={{ width: "50%" }}>
+                    <div
+                      className="count"
+                      style={{ width: "100%", height: 90, background: "#FFF" }}
+                    >
+                      <span style={{ display: "inline-flex" }}>
+                        F.Rs <span style={{ marginLeft: 5 }}>({frStatsData && frStatsData?.receivedFRs?.count})</span>
                       </span>
-                    </span>
-                    <div class="clearfix"></div>
-                    {/* <i
-                      style={{ fontSize: "25px" }}
-                      class="fas fa-file-alt mt-2"
-                    ></i> */}
-                    <FontAwesomeIcon
-                      icon={faFileAlt}
-                      style={{
-                        fontSize: 24,
-                        verticalAlign: "middle",
-                      }}
-                      className="mt-2"
-                    />
+                      <div className="clearfix" />
+
+                      <FontAwesomeIcon
+                        icon={faFileAlt}
+                        style={{ fontSize: 25, paddingTop: 10 }}
+                      />
+                    </div>
                   </div>
-                  <div
-                    className="count float-start"
-                    style={{ borderLeft: "#ddd solid 1px" }}
-                  >
-                    <span style={{ display: "inline-flex" }}>
-                      Files{" "}
-                      <span style={{ marginLeft: "5px" }}>
-                        ({fileStatsData && fileStatsData?.receivedFiles?.count})
+                  <div className="float-start" style={{ width: "50%" }}>
+                    <div
+                      className="count"
+                      style={{
+                        width: "100%",
+                        borderLeft: "#ddd solid 1px",
+                        background: "#FFF",
+                        height: 45,
+                      }}
+                    >
+                      <span style={{ display: "flex" }}>
+                        {BlinkingIndicator()} <span style={{ marginLeft: 5 }}>Immediate (0)</span>
                       </span>
-                    </span>
-                    <div class="clearfix"></div>
-                    <FontAwesomeIcon
-                      icon={faFileAlt}
+                      <div className="clearfix" />
+                    </div>
+                    <div
+                      className="count"
                       style={{
-                        fontSize: 24,
-                        verticalAlign: "middle",
+                        borderLeft: "#ddd solid 1px",
+                        width: "100%",
+                        background: "#FFF",
+                        height: 45,
                       }}
-                      className="mt-2"
-                    />
+                    >
+                      <span style={{ display: "flex" }}>
+                      {NonBlinkingIndicator()} <span style={{ marginLeft: 5 }}>Routine (0)</span>
+                      </span>
+                      <div className="clearfix" />
+                    </div>
                   </div>
-                  <div class="clearfix"></div>
-                  <div
-                    className="count float-start"
-                    style={{ borderLeft: "#ddd solid 1px" }}
-                  >
-                    <span style={{ display: "inline-flex" }}>
-                      Piriority <span style={{ marginLeft: "5px" }}>(0)</span>
-                    </span>
-                    <div class="clearfix"></div>
-                    <FontAwesomeIcon
-                      icon={faFileAlt}
-                      style={{
-                        fontSize: 24,
-                        verticalAlign: "middle",
-                      }}
-                      className="mt-2"
-                    />
+
+
+                  <div className="float-start" style={{ width: "50%" }}>
+                    <div
+                      className="count"
+                      style={{ width: "100%", height: 90, background: "#FFF" }}
+                    >
+                      <span style={{ display: "inline-flex" }}>
+                        Files <span style={{ marginLeft: 5 }}>({fileStatsData && fileStatsData?.receivedFiles?.count})</span>
+                      </span>
+                      <div className="clearfix" />
+
+                      <FontAwesomeIcon
+                        icon={faFileAlt}
+                        style={{ fontSize: 25, paddingTop: 10 }}
+                      />
+                    </div>
                   </div>
-                  <div
-                    className="count float-start"
-                    style={{ borderLeft: "#ddd solid 1px" }}
-                  >
-                    <span style={{ display: "inline-flex" }}>
-                      Routine <span style={{ marginLeft: "5px" }}>(0)</span>
-                    </span>
-                    <div class="clearfix"></div>
-                    <FontAwesomeIcon
-                      icon={faFileAlt}
+                  <div className="float-start" style={{ width: "50%" }}>
+                    <div
+                      className="count"
                       style={{
-                        fontSize: 24,
-                        verticalAlign: "middle",
+                        width: "100%",
+                        borderLeft: "#ddd solid 1px",
+                        background: "#FFF",
+                        height: 45,
                       }}
-                      className="mt-2"
-                    />
+                    >
+                      <span style={{ display: "flex" }}>
+                        {BlinkingIndicator()} <span style={{ marginLeft: 5 }}>Immediate (0)</span>
+                      </span>
+                      <div className="clearfix" />
+                    </div>
+                    <div
+                      className="count"
+                      style={{
+                        borderLeft: "#ddd solid 1px",
+                        width: "100%",
+                        background: "#FFF",
+                        height: 45,
+                      }}
+                    >
+                      <span style={{ display: "flex" }}>
+                      {NonBlinkingIndicator()} <span style={{ marginLeft: 5 }}>Routine (0)</span>
+                      </span>
+                      <div className="clearfix" />
+                    </div>
                   </div>
 
                   <div class="clearfix"></div>
                 </div>
               </div>
+
+
+{/* Files Card */}
               <div className="col-4">
                 <div className="dash-card">
                   <div
@@ -291,174 +352,112 @@ function MainDashboard() {
                   >
                     <h2 style={{ marginBottom: "0" }}>OUT </h2>
                   </div>
-                  <div
-                    className="count float-start"
-                    style={{ borderLeft: "#ddd solid 1px" }}
-                  >
-                    <span style={{ display: "inline-flex" }}>
-                      F.Rs{" "}
-                      <span style={{ marginLeft: "5px" }}>
-                        {" "}
-                        ({frStatsData && frStatsData?.sentFRs?.count})
+
+                  <div className="float-start" style={{ width: "50%" }}>
+                    <div
+                      className="count"
+                      style={{ width: "100%", height: 90, background: "#FFF" }}
+                    >
+                      <span style={{ display: "inline-flex" }}>
+                        F.Rs <span style={{ marginLeft: 5 }}>({frStatsData && frStatsData?.sentFiles?.count})</span>
                       </span>
-                    </span>
-                    <div class="clearfix"></div>
-                    {/* <i
-                      style={{ fontSize: "25px" }}
-                      class="fas fa-file-alt mt-2"
-                    ></i> */}
-                    <FontAwesomeIcon
-                      icon={faFileAlt}
-                      style={{
-                        fontSize: 24,
-                        verticalAlign: "middle",
-                      }}
-                      className="mt-2"
-                    />
+                      <div className="clearfix" />
+
+                      <FontAwesomeIcon
+                        icon={faFileAlt}
+                        style={{ fontSize: 25, paddingTop: 10 }}
+                      />
+                    </div>
                   </div>
-                  <div
-                    className="count float-start"
-                    style={{ borderLeft: "#ddd solid 1px" }}
-                  >
-                    <span style={{ display: "inline-flex" }}>
-                      Files{" "}
-                      <span style={{ marginLeft: "5px" }}>
-                        ({fileStatsData && fileStatsData?.sentFiles?.count})
+                  <div className="float-start" style={{ width: "50%" }}>
+                    <div
+                      className="count"
+                      style={{
+                        width: "100%",
+                        borderLeft: "#ddd solid 1px",
+                        background: "#FFF",
+                        height: 45,
+                      }}
+                    >
+                      <span style={{ display: "flex" }}>
+                        {BlinkingIndicator()} <span style={{ marginLeft: 5 }}>Immediate (0)</span>
                       </span>
-                    </span>
-                    <div class="clearfix"></div>
-                    <FontAwesomeIcon
-                      icon={faFileAlt}
+                      <div className="clearfix" />
+                    </div>
+                    <div
+                      className="count"
                       style={{
-                        fontSize: 24,
-                        verticalAlign: "middle",
+                        borderLeft: "#ddd solid 1px",
+                        width: "100%",
+                        background: "#FFF",
+                        height: 45,
                       }}
-                      className="mt-2"
-                    />
+                    >
+                      <span style={{ display: "flex" }}>
+                      {NonBlinkingIndicator()} <span style={{ marginLeft: 5 }}>Routine (0)</span>
+                      </span>
+                      <div className="clearfix" />
+                    </div>
                   </div>
-                  <div class="clearfix"></div>
-                  <div
-                    className="count float-start"
-                    style={{ borderLeft: "#ddd solid 1px" }}
-                  >
-                    <span style={{ display: "inline-flex" }}>
-                      Piriority <span style={{ marginLeft: "5px" }}>(0)</span>
-                    </span>
-                    <div class="clearfix"></div>
-                    <FontAwesomeIcon
-                      icon={faFileAlt}
-                      style={{
-                        fontSize: 24,
-                        verticalAlign: "middle",
-                      }}
-                      className="mt-2"
-                    />
+
+
+                  <div className="float-start" style={{ width: "50%" }}>
+                    <div
+                      className="count"
+                      style={{ width: "100%", height: 90, background: "#FFF" }}
+                    >
+                      <span style={{ display: "inline-flex" }}>
+                        Files <span style={{ marginLeft: 5 }}>({fileStatsData && fileStatsData?.receivedFiles?.count})</span>
+                      </span>
+                      <div className="clearfix" />
+
+                      <FontAwesomeIcon
+                        icon={faFileAlt}
+                        style={{ fontSize: 25, paddingTop: 10 }}
+                      />
+                    </div>
                   </div>
-                  <div
-                    className="count float-start"
-                    style={{ borderLeft: "#ddd solid 1px" }}
-                  >
-                    <span style={{ display: "inline-flex" }}>
-                      Routine <span style={{ marginLeft: "5px" }}>(0)</span>
-                    </span>
-                    <div class="clearfix"></div>
-                    <FontAwesomeIcon
-                      icon={faFileAlt}
+                  <div className="float-start" style={{ width: "50%" }}>
+                    <div
+                      className="count"
                       style={{
-                        fontSize: 24,
-                        verticalAlign: "middle",
+                        width: "100%",
+                        borderLeft: "#ddd solid 1px",
+                        background: "#FFF",
+                        height: 45,
                       }}
-                      className="mt-2"
-                    />
+                    >
+                      <span style={{ display: "flex" }}>
+                        {BlinkingIndicator()} <span style={{ marginLeft: 5 }}>Immediate (0)</span>
+                      </span>
+                      <div className="clearfix" />
+                    </div>
+                    <div
+                      className="count"
+                      style={{
+                        borderLeft: "#ddd solid 1px",
+                        width: "100%",
+                        background: "#FFF",
+                        height: 45,
+                      }}
+                    >
+                      <span style={{ display: "flex" }}>
+                      {NonBlinkingIndicator()} <span style={{ marginLeft: 5 }}>Routine (0)</span>
+                      </span>
+                      <div className="clearfix" />
+                    </div>
                   </div>
 
                   <div class="clearfix"></div>
                 </div>
               </div>
-              <div className="col-4">
-                {/* <div className="dash-card">
-                  <div
-                    className="dash-card-header"
-                    style={{ textAlign: "center", background: "#4f5966" }}
-                  >
-                    <h2 style={{ marginBottom: "0" }}>File</h2>
-                  </div>
-                  <div
-                    className="count float-start"
-                    style={{ borderLeft: "#ddd solid 1px" }}
-                  >
-                    <span style={{ display: "inline-flex" }}>
-                      Urgent <span style={{ marginLeft: "5px" }}>(0)</span>
-                    </span>
-                    <div class="clearfix"></div>
-                    <FontAwesomeIcon
-                      icon={faFileAlt}
-                      style={{
-                        fontSize: 24,
-                        verticalAlign: "middle",
-                      }}
-                      className="mt-2"
-                    />
-                  </div>
-                  <div
-                    className="count float-start"
-                    style={{ borderLeft: "#ddd solid 1px" }}
-                  >
-                    <span style={{ display: "inline-flex" }}>
-                      Immediate <span style={{ marginLeft: "5px" }}>(0)</span>
-                    </span>
-                    <div class="clearfix"></div>
-                    <FontAwesomeIcon
-                      icon={faFileAlt}
-                      style={{
-                        fontSize: 24,
-                        verticalAlign: "middle",
-                      }}
-                      className="mt-2"
-                    />
-                  </div>
-                  <div class="clearfix"></div>
-                  <div
-                    className="count float-start"
-                    style={{ borderLeft: "#ddd solid 1px" }}
-                  >
-                    <span style={{ display: "inline-flex" }}>
-                      Piriority <span style={{ marginLeft: "5px" }}>(0)</span>
-                    </span>
-                    <div class="clearfix"></div>
-                    <FontAwesomeIcon
-                      icon={faFileAlt}
-                      style={{
-                        fontSize: 24,
-                        verticalAlign: "middle",
-                      }}
-                      className="mt-2"
-                    />
-                  </div>
-                  <div
-                    className="count float-start"
-                    style={{ borderLeft: "#ddd solid 1px" }}
-                  >
-                    <span style={{ display: "inline-flex" }}>
-                      Routine <span style={{ marginLeft: "5px" }}>(0)</span>
-                    </span>
-                    <div class="clearfix"></div>
-                    <FontAwesomeIcon
-                      icon={faFileAlt}
-                      style={{
-                        fontSize: 24,
-                        verticalAlign: "middle",
-                      }}
-                      className="mt-2"
-                    />
-                  </div>
 
-                  <div class="clearfix"></div>
-                </div> */}
+
+              <div className="col-4">
                 <div className="dash-card">
                   <div
                     className="dash-card-header"
-                    style={{ textAlign: "center", background: "#4f5966" }}
+                    style={{ textAlign: "center", background: "#007bff" }}
                   >
                     <h2 style={{ marginBottom: "0" }}>Marked</h2>
                   </div>
@@ -498,8 +497,10 @@ function MainDashboard() {
                   </div>
                 </div>
               </div>
+
             </div>
           </div>
+
           <div
             className="dash-detail-container mt-3"
             style={{ background: "none" }}
@@ -825,7 +826,7 @@ function MainDashboard() {
                                     verticalAlign: "middle",
                                   }}
                                 />
-                                Mail Circulation
+                                Circular
                               </h6>
                             </div>
                           </div>
@@ -842,6 +843,7 @@ function MainDashboard() {
               </div>
             </div>
           </div>
+
           <div
             className="dash-detail-container mt-3"
             style={{ background: "none" }}
@@ -959,7 +961,7 @@ function MainDashboard() {
                   </table>
                 </div>
               </div>
-              <div className="col">
+              {/* <div className="col">
                 <div className="dash-card">
                   <div
                     className="dash-card-header"
@@ -1025,11 +1027,12 @@ function MainDashboard() {
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
-        <div className="col-4">
+
+        <div className="col-5">
           <div className="dash-detail-container" style={{ background: "none" }}>
             <div
               className="dash-card"

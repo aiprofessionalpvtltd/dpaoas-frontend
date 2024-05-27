@@ -209,7 +209,7 @@ export const CustomNavbar = ({ module, centerlogohide, navItems }) => {
           >
             {/* <img src={Profile} className="user-img" alt="user avatar" /> */}
             <div className="user-info">
-              <p className="user-name mb-0">
+              <p className="user-name mb-0" style={{ fontSize: "19px" }}>
                 {userData && `${userData?.firstName} ${userData?.lastName}`}
               </p>
               <p className="designation mb-0">
