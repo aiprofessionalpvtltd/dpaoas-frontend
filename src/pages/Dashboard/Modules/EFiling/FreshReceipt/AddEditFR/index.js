@@ -2,6 +2,11 @@ import React, { useContext, useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { Layout } from "../../../../../../components/Layout";
 import { EfilingSideBarBranchItem, EfilingSideBarItem } from "../../../../../../utils/sideBarItems";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCalendarAlt,
+  faPlusSquare,
+} from "@fortawesome/free-solid-svg-icons";
 import Header from "../../../../../../components/Header";
 import { useLocation, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
@@ -9,14 +14,14 @@ import {
   DeleteFreahReceptImage,
   UpdateFreshReceipt,
   createFreshReceipt,
+  createReceivedFromBranches,
   getFreshReceiptById,
+  getReceivedFromBranches,
 } from "../../../../../../api/APIs/Services/efiling.service";
 import {
   showErrorMessage,
   showSuccessMessage,
 } from "../../../../../../utils/ToastAlert";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import DatePicker from "react-datepicker";
 import TimePicker from "react-time-picker";
 import { ToastContainer } from "react-toastify";
@@ -24,6 +29,7 @@ import { AuthContext } from "../../../../../../api/AuthContext";
 import Select from "react-select";
 import { getUserData } from "../../../../../../api/Auth";
 import { TinyEditor } from "../../../../../../components/CustomComponents/Editor/TinyEditor";
+import { Modal } from "react-bootstrap";
 
 const validationSchema = Yup.object().shape({
   // diaryNumber: Yup.string().required("Diary No is required"),
@@ -41,6 +47,10 @@ const AddEditFR = () => {
   const navigate = useNavigate();
   const [receptId, setRecepitId] = useState(location?.state?.id);
   const [receiptData, setRecepitData] = useState([]);
+  const [receivedFromData, setReceivedFrom] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [receivedMinistryData, setReceivedMinistryData] = useState("");
+
   const [descriptionData, setDescriptionData] = useState("");
   const { allBranchesData, ministryData } = useContext(AuthContext);
   const userData = getUserData()
@@ -51,7 +61,7 @@ const AddEditFR = () => {
       // diaryTime: "",
       frType: "",
       fkBranchId: "",
-      fkMinistryId: "",
+      fkExternalMinistryId: "",
       frSubject: "",
       referenceNumber: "",
       frDate: "",
@@ -83,8 +93,8 @@ const AddEditFR = () => {
     if (values?.fkBranchId) {
       formdata.append("fkBranchId", values?.fkBranchId?.value);
     }
-    if (values?.fkMinistryId) {
-      formdata.append("fkMinistryId", values?.fkMinistryId?.value);
+    if (values?.fkExternalMinistryId) {
+      formdata.append("fkExternalMinistryId", values?.fkExternalMinistryId?.value);
     }
     formdata.append("frSubject", values?.frSubject);
     formdata.append("referenceNumber", values?.referenceNumber);
@@ -123,8 +133,8 @@ const AddEditFR = () => {
     if (values?.fkBranchId) {
       formdata.append("fkBranchId", values?.fkBranchId?.value);
     }
-    if (values?.fkMinistryId) {
-      formdata.append("fkMinistryId", values?.fkMinistryId?.value);
+    if (values?.fkExternalMinistryId) {
+      formdata.append("fkExternalMinistryId", values?.fkExternalMinistryId?.value);
     }
     formdata.append("frSubject", values?.frSubject);
     formdata.append("referenceNumber", values?.referenceNumber);
@@ -186,10 +196,41 @@ const AddEditFR = () => {
     }
   };
 
+  const getReceivedFromApi = async () => {
+    try {
+      const response = await getReceivedFromBranches();
+      if (response.success) {
+        setReceivedFrom(response?.data?.externalMinistries);
+        // showSuccessMessage(response.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleReceivedFrom = async () => {
+    const data = {
+      receivedFrom: receivedMinistryData
+    }
+
+    try {
+      const response = await createReceivedFromBranches(data);
+      showSuccessMessage(response.message);
+      getReceivedFromApi();
+      setReceivedMinistryData("");
+      formik.setFieldValue("frType", "External");
+      setShowModal(false);
+    } catch (error) {
+      setShowModal(false);
+      showErrorMessage(error?.response?.data?.message);
+    }
+  }
+
   useEffect(() => {
     if (receptId) {
       getFreashRecepitByIdApi();
     }
+    getReceivedFromApi();
   }, []);
   useEffect(() => {
     // Update form values when termsById changes
@@ -205,7 +246,7 @@ const AddEditFR = () => {
         // diaryNumber: receiptData
         //   ? receiptData?.freshReceiptDiaries?.diaryNumber
         //   : "",
-        fkMinistryId: receiptData?.ministries
+        fkExternalMinistryId: receiptData?.ministries
           ? {
               value: receiptData?.ministries?.id,
               label: receiptData?.ministries?.ministryName,
@@ -249,6 +290,44 @@ const AddEditFR = () => {
         addLink2={"/efiling/dashboard/fresh-receipt/addedit"}
       /> */}
       <ToastContainer />
+
+      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+        <div>
+            <Modal.Header closeButton>
+              <Modal.Title>
+                Add External Branch
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <div className="mb-3">
+                <label htmlFor="receivedMinistryData" className="form-label">
+                  Add External Branch 
+                </label>
+                <input
+                  type="text"
+                  id="receivedMinistryData"
+                  value={receivedMinistryData}
+                  onChange={(e) => setReceivedMinistryData(e.target.value)}
+                  className="form-control"
+                />
+              </div>
+            </Modal.Body>
+
+            <Modal.Footer>
+              <button className="btn btn-primary" type="submit" onClick={() => handleReceivedFrom()}>
+                Add
+              </button>
+              <button
+                className="btn btn-primary"
+                type="button"
+                onClick={() => setShowModal(false)}
+              >
+                Close
+              </button>
+            </Modal.Footer>
+        </div>
+      </Modal>
+
       <div className="container-fluid">
         <div className="card">
           <div class="card-header red-bg" style={{ background: "#14ae5c" }}>
@@ -373,78 +452,66 @@ const AddEditFR = () => {
                   </div>
                 </div>
 
-                <div className=" mb-3 col-3">
-                  <label htmlFor="frType" className="form-label">
-                    FR Type
+                <div class="col-3">
+                  <div class="mb-3" style={{ position: "relative" }}>
+                    <label class="form-label">FR Date</label>
+                    <span
+                      style={{
+                        position: "absolute",
+                        right: "15px",
+                        top: "36px",
+                        zIndex: 1,
+                        fontSize: "20px",
+                        zIndex: "1",
+                        color: "#666",
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faCalendarAlt} />
+                    </span>
+                    <DatePicker
+                      //   minDate={new Date()}
+                      selected={formik.values.frDate}
+                      onChange={(date) => formik.setFieldValue("frDate", date)}
+                      className={`form-control ${
+                        formik.touched.frDate && formik.errors.frDate
+                          ? "is-invalid"
+                          : ""
+                      }`}
+                    />
+                    {formik.touched.frDate && formik.errors.frDate && (
+                      <div
+                        className="invalid-feedback"
+                        style={{ display: "block" }}
+                      >
+                        {formik.errors.frDate}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="col-3">
+                  <label htmlFor="referenceNumber" className="form-label">
+                    Ref No
                   </label>
-                  <select
-                    id="frType"
-                    className={`form-select ${
-                      formik.touched.frType && formik.errors.frType
+                  <input
+                    type="text"
+                    id="referenceNumber"
+                    value={formik.values.referenceNumber}
+                    onChange={formik.handleChange}
+                    className={`form-control ${
+                      formik.touched.referenceNumber &&
+                      formik.errors.referenceNumber
                         ? "is-invalid"
                         : ""
                     }`}
-                    value={formik.values.frType}
-                    onChange={handleFrTypeChange}
-                  >
-                    <option value="">Select FreshReceipt</option>
-                    <option value="Internal">Internal</option>
-                    <option value="External">External</option>
-                  </select>
-                  {formik.touched.frType && formik.errors.frType && (
-                    <div className="invalid-feedback">
-                      {formik.errors.frType}
-                    </div>
-                  )}
+                  />
+                  {formik.touched.referenceNumber &&
+                    formik.errors.referenceNumber && (
+                      <div className="invalid-feedback">
+                        {formik.errors.referenceNumber}
+                      </div>
+                    )}
                 </div>
-                {formik.values.frType === "Internal" && (
-                  <div className="mb-3 col-3">
-                    <label htmlFor="fkBranchId" className="form-label">
-                      Branch Name
-                    </label>
-                    <Select
-                      options={
-                        allBranchesData &&
-                        allBranchesData?.map((item) => ({
-                          value: item?.id,
-                          label: item?.branchName,
-                        }))
-                      }
-                      onChange={(selectedOptions) => {
-                        formik.setFieldValue("fkBranchId", selectedOptions);
-                      }}
-                      onBlur={formik.handleBlur}
-                      value={formik.values.fkBranchId}
-                      name="fkBranchId"
-                      // isClearable={true}
-                      
-                    />
-                  </div>
-                )}
-                {formik.values.frType === "External" && (
-                  <div className="mb-3 col-3">
-                    <label htmlFor="fkMinistryId" className="form-label">
-                      Ministry Name
-                    </label>
-                    <Select
-                      options={
-                        ministryData &&
-                        ministryData?.map((item) => ({
-                          value: item?.id,
-                          label: item?.ministryName,
-                        }))
-                      }
-                      onChange={(selectedOptions) => {
-                        formik.setFieldValue("fkMinistryId", selectedOptions);
-                      }}
-                      onBlur={formik.handleBlur}
-                      value={formik.values.fkMinistryId}
-                      name="fkMinistryId"
-                      // isClearable={true}
-                      // className={`form-select`}
-                    />
-                  </div>
-                )}
               </div>
 
               <div className="row">  
@@ -508,66 +575,101 @@ const AddEditFR = () => {
                   </div>
                 </div>
                       
-                <div className="col-3">
-                  <label htmlFor="referenceNumber" className="form-label">
-                    Ref No
+                
+                <div className=" mb-3 col-3">
+                  <label htmlFor="frType" className="form-label">
+                    FR Type
                   </label>
-                  <input
-                    type="number"
-                    id="referenceNumber"
-                    value={formik.values.referenceNumber}
-                    onChange={formik.handleChange}
-                    className={`form-control ${
-                      formik.touched.referenceNumber &&
-                      formik.errors.referenceNumber
+                  <select
+                    id="frType"
+                    className={`form-select ${
+                      formik.touched.frType && formik.errors.frType
                         ? "is-invalid"
                         : ""
                     }`}
-                  />
-                  {formik.touched.referenceNumber &&
-                    formik.errors.referenceNumber && (
-                      <div className="invalid-feedback">
-                        {formik.errors.referenceNumber}
-                      </div>
-                    )}
+                    value={formik.values.frType}
+                    onChange={handleFrTypeChange}
+                  >
+                    <option value="">Select FreshReceipt</option>
+                    <option value="Senate Secretariat">Senate Secretariat</option>
+                    <option value="External">External</option>
+                  </select>
+                  {formik.touched.frType && formik.errors.frType && (
+                    <div className="invalid-feedback">
+                      {formik.errors.frType}
+                    </div>
+                  )}
                 </div>
-
-                <div class="col-3">
-                  <div class="mb-3" style={{ position: "relative" }}>
-                    <label class="form-label">FR Date</label>
-                    <span
-                      style={{
-                        position: "absolute",
-                        right: "15px",
-                        top: "36px",
-                        zIndex: 1,
-                        fontSize: "20px",
-                        zIndex: "1",
-                        color: "#666",
+                {formik.values.frType === "Senate Secretariat" && (
+                  <div className="mb-3 col-3">
+                    <label htmlFor="fkBranchId" className="form-label">
+                      Branch Name
+                    </label>
+                    <Select
+                      options={
+                        allBranchesData &&
+                        allBranchesData?.map((item) => ({
+                          value: item?.id,
+                          label: item?.branchName,
+                        }))
+                      }
+                      onChange={(selectedOptions) => {
+                        formik.setFieldValue("fkBranchId", selectedOptions);
                       }}
-                    >
-                      <FontAwesomeIcon icon={faCalendarAlt} />
-                    </span>
-                    <DatePicker
-                      //   minDate={new Date()}
-                      selected={formik.values.frDate}
-                      onChange={(date) => formik.setFieldValue("frDate", date)}
-                      className={`form-control ${
-                        formik.touched.frDate && formik.errors.frDate
-                          ? "is-invalid"
-                          : ""
-                      }`}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.fkBranchId}
+                      name="fkBranchId"
+                      // isClearable={true}
+                      
                     />
-                    {formik.touched.frDate && formik.errors.frDate && (
-                      <div
-                        className="invalid-feedback"
-                        style={{ display: "block" }}
-                      >
-                        {formik.errors.frDate}
-                      </div>
-                    )}
                   </div>
-                </div>
+                )}
+                {formik.values.frType === "External" && (
+                  <>
+                  <div className="mb-3 col-5">
+                    <div className="row">
+                      <div className="col">
+                        <label htmlFor="fkExternalMinistryId" className="form-label">
+                          Received From
+                        </label>
+                        <Select
+                          options={
+                            receivedFromData &&
+                            receivedFromData?.map((item) => ({
+                              value: item?.id,
+                              label: item?.receivedFrom,
+                            }))
+                          }
+                          onChange={(selectedOptions) => {
+                            formik.setFieldValue("fkExternalMinistryId", selectedOptions);
+                          }}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.fkExternalMinistryId}
+                          name="fkExternalMinistryId"
+                          // isClearable={true}
+                          // className={`form-select`}
+                        />
+                      </div>
+
+                      <div className="col">
+                        <FontAwesomeIcon
+                          icon={faPlusSquare}
+                          style={{
+                            fontSize: "30px",
+                            color: "#14ae5c",
+                            cursor: "pointer",
+                            marginTop: "33px",
+                          }}
+                          onClick={() => setShowModal(true)}
+                        />
+                      </div>
+
+                    </div>
+                  </div>
+
+                  </>
+                )}
+
               </div>
 
               <div class="row">

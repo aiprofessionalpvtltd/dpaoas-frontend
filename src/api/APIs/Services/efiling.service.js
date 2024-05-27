@@ -650,6 +650,43 @@ export const getFreshReceiptById = async (id) => {
   }
 };
 
+export const createReceivedFromBranches = async (data) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClientMMS.post(
+      `/freshReceipt/createExternal`,
+      data,
+      // {
+      //   headers: {
+      //     accept: "application/json",
+      //     "Content-Type": "multipart/form-data",
+      //   },
+      // }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const getReceivedFromBranches = async () => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClientMMS.get(`/freshReceipt/getExternal?currentPage=0&pageSize=1000`);
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
 export const UpdateFreshReceipt = async (id, data) => {
   try {
     //   const token = getAuthToken();
