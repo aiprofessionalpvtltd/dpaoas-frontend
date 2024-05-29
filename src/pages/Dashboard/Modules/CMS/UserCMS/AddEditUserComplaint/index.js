@@ -1,66 +1,104 @@
-import { useFormik } from 'formik';
-import React, { useContext, useEffect, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom';
-import { Layout } from '../../../../../../components/Layout';
-import { CMSsidebarItems } from '../../../../../../utils/sideBarItems';
-import Header from '../../../../../../components/Header';
-import { ToastContainer } from 'react-toastify';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCalendarAlt, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
+import { useFormik } from "formik";
+import React, { useContext, useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Layout } from "../../../../../../components/Layout";
+import { CMSsidebarItems } from "../../../../../../utils/sideBarItems";
+import Header from "../../../../../../components/Header";
+import { ToastContainer } from "react-toastify";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendarAlt, faPlusSquare } from "@fortawesome/free-solid-svg-icons";
 import DatePicker from "react-datepicker";
-import { UpdateComplaint, createComplaint, getInventoryRecordByUserId, getallcomplaintCategories, getallcomplaintTypes } from '../../../../../../api/APIs/Services/Complaint.service';
-import { showErrorMessage, showSuccessMessage } from '../../../../../../utils/ToastAlert';
-import { getUserData } from '../../../../../../api/Auth';
-import { AuthContext } from '../../../../../../api/AuthContext';
+import {
+  UpdateComplaint,
+  createComplaint,
+  getInventoryRecordByUserId,
+  getallcomplaintCategories,
+  getallcomplaintTypes,
+} from "../../../../../../api/APIs/Services/Complaint.service";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../../utils/ToastAlert";
+import { getUserData } from "../../../../../../api/Auth";
+import { AuthContext } from "../../../../../../api/AuthContext";
 import Select from "react-select";
-import CustomTable from '../../../../../../components/CustomComponents/CustomTable';
-import moment from 'moment';
+import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
+import moment from "moment";
 import * as Yup from "yup";
-import { getAllEmployee } from '../../../../../../api/APIs/Services/organizational.service';
-import { getBranches } from '../../../../../../api/APIs/Services/Branches.services';
-import AddTonarModal from '../../../../../../components/AddTonerModal';
-import { getAllTonerModels } from '../../../../../../api/APIs/Services/TonerInstallation.service';
+import { getAllEmployee } from "../../../../../../api/APIs/Services/organizational.service";
+import { getBranches } from "../../../../../../api/APIs/Services/Branches.services";
+import AddTonarModal from "../../../../../../components/AddTonerModal";
+import { getAllTonerModels } from "../../../../../../api/APIs/Services/TonerInstallation.service";
 
 const validationSchema = Yup.object({
   fkComplaintTypeId: Yup.string().required("Branch/Office is required"),
-  complaintDescription: Yup.string().required("Complaint Description is required")
+  complaintDescription: Yup.string().required(
+    "Complaint Description is required"
+  ),
 });
 
 function CMSAddEditUserComplaint() {
-  const location = useLocation()
+  const location = useLocation();
   const userData = getUserData();
-  const navigate = useNavigate()
-  const {  employeesAsEngineersData } = useContext(AuthContext)
+  const navigate = useNavigate();
+  const { employeesAsEngineersData } = useContext(AuthContext);
   const [employeeData, setEmployeeData] = useState([]);
-  const [complaintType, setComplaintType] = useState([])
-  const [complaintCategories, setComplaintCategories] = useState([])
-  const [userinventoryData, setUserInventoryData] = useState([])
+  const [complaintType, setComplaintType] = useState([]);
+  const [complaintCategories, setComplaintCategories] = useState([]);
+  const [userinventoryData, setUserInventoryData] = useState([]);
   const [, set] = useState(false);
   const [modalData, setModalData] = useState([]);
 
-
   const formik = useFormik({
     initialValues: {
-      fkComplaineeUserId: location.state ? location.state.fkComplaineeUserId : `${userData.firstName} ${userData.lastName}`,
-      fkComplaintTypeId: "",
-      fkComplaintCategoryId: "",
-      complaintDescription: location.state ? location?.state?.complaintDescription : "",
-      complaintIssuedDate: new Date(),
-      fkAssignedResolverId: "",
+      fkComplaineeUserId: location?.state?.complaineeUser
+        ? {
+            value: location.state.complaineeUser?.id,
+            label: `${location.state.complaineeUser?.employee?.firstName}${location.state.complaineeUser?.employee?.lastName}`,
+          }
+        : "",
+      fkComplaintTypeId: location?.state?.fkComplaintTypeId
+        ? location?.state?.fkComplaintTypeId
+        : "",
+      fkComplaintCategoryId: location?.state?.fkComplaintCategoryId
+        ? location?.state?.fkComplaintCategoryId
+        : "",
+      complaintDescription: location.state
+        ? location?.state?.complaintDescription
+        : "",
+      complaintIssuedDate: location?.state?.complaintIssuedDate
+        ? moment(location?.state?.complaintIssuedDate).toDate()
+        : new Date(),
+      fkAssignedResolverId: location?.state?.resolverUser
+        ? {
+            value: location?.state?.resolverUser?.id,
+            label: `${location.state.resolverUser?.employee?.firstName}${location.state.resolverUser?.employee?.lastName}`,
+          }
+        : "",
       complaintAttachment: "",
-      userName:"",
-      quantity:"",
-      tonerModels:""
+      userName: location?.state?.userName ? location?.state?.userName : "",
+      quantity: location?.state?.tonerQuantity
+        ? location?.state?.tonerQuantity
+        : "",
+      tonerModels: location?.state?.tonerModels
+        ? {
+            value: location?.state?.tonerModels?.id,
+            label: location?.state?.tonerModels?.tonerModel,
+          }
+        : "",
     },
     validationSchema: validationSchema,
-    onSubmit: async (values, { resetForm }) => {
+    onSubmit: async (values) => {
       // Handle form submission here
-      await CreateComplaintApi(values, { resetForm });
+      if (location?.state?.id) {
+        await UpdateComplaintApi(values);
+      } else {
+        await CreateComplaintApi(values);
+      }
     },
   });
 
-  
-  const CreateComplaintApi = async (values, { resetForm }) => {
+  const UpdateComplaintApi = async (values) => {
     const Data = {
       fkComplaineeUserId: values?.fkComplaineeUserId?.value,
       fkComplaintTypeId: values.fkComplaintTypeId,
@@ -68,28 +106,53 @@ function CMSAddEditUserComplaint() {
       complaintDescription: values.complaintDescription,
       complaintIssuedDate: values?.complaintIssuedDate,
       fkAssignedResolverId: values?.fkAssignedResolverId?.value,
-      userName:values?.userName,
-      tonerQuantity:values?.quantity,
-      fkTonerModelId:values?.tonerModels.value
-    }
+      userName: values?.userName,
+      tonerQuantity: values?.quantity,
+      fkTonerModelId: values?.tonerModels.value,
+    };
     try {
-      const response = await createComplaint(Data);
+      const response = await UpdateComplaint(location?.state?.id, Data);
       if (response.success) {
         showSuccessMessage(response.message);
-        formik.resetForm()
+        formik.resetForm();
         setTimeout(() => {
-          navigate("/cms/dashboard")
-        }, 1000)
+          navigate("/cms/dashboard");
+        }, 1000);
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
     }
   };
 
+  const CreateComplaintApi = async (values) => {
+    const Data = {
+      fkComplaineeUserId: values?.fkComplaineeUserId?.value,
+      fkComplaintTypeId: values.fkComplaintTypeId,
+      fkComplaintCategoryId: values.fkComplaintCategoryId,
+      complaintDescription: values.complaintDescription,
+      complaintIssuedDate: values?.complaintIssuedDate,
+      fkAssignedResolverId: values?.fkAssignedResolverId?.value,
+      userName: values?.userName,
+      tonerQuantity: values?.quantity,
+      fkTonerModelId: values?.tonerModels.value,
+    };
+    try {
+      const response = await createComplaint(Data);
+      if (response.success) {
+        showSuccessMessage(response.message);
+        formik.resetForm();
+        setTimeout(() => {
+          navigate("/cms/dashboard");
+        }, 1000);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  };
 
   const AllComplaintTypeApi = async () => {
     try {
-      const response = await getBranches(0,200);
+      const response = await getBranches(0, 200);
       if (response?.success) {
         // showSuccessMessage(response?.message);
         setComplaintType(response?.data?.rows);
@@ -128,7 +191,7 @@ function CMSAddEditUserComplaint() {
   const getEmployeeData = async () => {
     try {
       const response = await getAllEmployee(0, 1000);
-      if(response?.success) {
+      if (response?.success) {
         setEmployeeData(response?.data);
       }
     } catch (error) {
@@ -136,13 +199,11 @@ function CMSAddEditUserComplaint() {
     }
   };
 
-
-
   useEffect(() => {
-    AllComplaintTypeApi()
-    AllComplaintCategoriesApi()
+    AllComplaintTypeApi();
+    AllComplaintCategoriesApi();
     getEmployeeData();
-  }, [])
+  }, []);
 
   // Get All Toner MOdels
   const GetAllTonerModelsData = async () => {
@@ -157,7 +218,7 @@ function CMSAddEditUserComplaint() {
     }
   };
 
-  console.log("fkComplaintCategoryId",formik.values.fkComplaintCategoryId);
+  console.log("fkComplaintCategoryId", formik.values.fkComplaintCategoryId);
 
   useEffect(() => {
     GetAllTonerModelsData();
@@ -169,7 +230,9 @@ function CMSAddEditUserComplaint() {
         dashboardLink={"/cms/dashboard"}
         addLink1={"/cms/dashboard/addedit"}
         title1={
-          location && location?.state ? "Edit User Complaint" : "Add User Complaint"
+          location && location?.state
+            ? "Edit User Complaint"
+            : "Add User Complaint"
         }
       />
       {/* {modalisOpan && (
@@ -180,8 +243,6 @@ function CMSAddEditUserComplaint() {
       )} */}
       <ToastContainer />
       <div className="container-fluid">
-
-
         <div className="card">
           <div className="card-header red-bg" style={{ background: "#666" }}>
             {location && location?.state ? (
@@ -191,7 +252,6 @@ function CMSAddEditUserComplaint() {
             )}
           </div>
           <div className="card-body">
-
             <form onSubmit={formik.handleSubmit}>
               <div className="container-fluid">
                 <div className="row">
@@ -208,16 +268,20 @@ function CMSAddEditUserComplaint() {
                         readOnly
                       /> */}
                       <Select
-                        options={employeeData && employeeData?.map((item) => ({
-                          value: item.fkUserId,
-                          label: `${item.firstName}${item.lastName}`,
-                        }))}
-
+                        options={
+                          employeeData &&
+                          employeeData?.map((item) => ({
+                            value: item.fkUserId,
+                            label: `${item.firstName}${item.lastName}`,
+                          }))
+                        }
                         onChange={(selectedOptions) => {
-                          formik.setFieldValue("fkComplaineeUserId", selectedOptions)
-                          getInventoryRecordById(selectedOptions)
-                        }
-                        }
+                          formik.setFieldValue(
+                            "fkComplaineeUserId",
+                            selectedOptions
+                          );
+                          getInventoryRecordById(selectedOptions);
+                        }}
                         onBlur={formik.handleBlur}
                         value={formik.values.fkComplaineeUserId}
                         name="fkComplaineeUserId"
@@ -225,27 +289,29 @@ function CMSAddEditUserComplaint() {
                       />
                     </div>
                   </div>
-                  <div className='col'>
-                  <div className="mb-3">
+                  <div className="col">
+                    <div className="mb-3">
                       <label className="form-label">Complainee</label>
                       <input
                         type="text"
                         className={`form-control`}
                         id="userName"
-                        placeholder='Enter Complainee Name'
+                        placeholder="Enter Complainee Name"
                         value={formik.values.userName}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                      /> 
-                      </div>
-                      </div>
+                      />
+                    </div>
+                  </div>
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Branch/Office</label>
-                      <select class={`form-control ${formik.touched.fkComplaintTypeId &&
-                        formik.errors.fkComplaintTypeId
-                        ? "is-invalid"
-                        : ""
+                      <select
+                        class={`form-control ${
+                          formik.touched.fkComplaintTypeId &&
+                          formik.errors.fkComplaintTypeId
+                            ? "is-invalid"
+                            : ""
                         }`}
                         id="fkComplaintTypeId"
                         name="fkComplaintTypeId"
@@ -274,13 +340,16 @@ function CMSAddEditUserComplaint() {
                 <div className="row">
                   <div className="col-6">
                     <div className="mb-3">
-                      <label className="form-label">Complaint Description</label>
+                      <label className="form-label">
+                        Complaint Description
+                      </label>
                       <textarea
-                        className={`form-control ${formik.touched.complaintDescription &&
+                        className={`form-control ${
+                          formik.touched.complaintDescription &&
                           formik.errors.complaintDescription
-                          ? "is-invalid"
-                          : ""
-                          }`}
+                            ? "is-invalid"
+                            : ""
+                        }`}
                         id="complaintDescription"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -297,7 +366,8 @@ function CMSAddEditUserComplaint() {
                   <div class="col-6">
                     <div class="mb-3">
                       <label class="form-label">Nature of Complaint</label>
-                      <select class="form-select"
+                      <select
+                        class="form-select"
                         id="fkComplaintCategoryId"
                         name="fkComplaintCategoryId"
                         onChange={formik.handleChange}
@@ -309,7 +379,9 @@ function CMSAddEditUserComplaint() {
                         </option>
                         {complaintCategories &&
                           complaintCategories.map((item) => (
-                            <option value={item.id}>{item.complaintCategoryName}</option>
+                            <option value={item.id}>
+                              {item.complaintCategoryName}
+                            </option>
                           ))}
                       </select>
                     </div>
@@ -317,29 +389,29 @@ function CMSAddEditUserComplaint() {
                 </div>
 
                 {formik.values.fkComplaintCategoryId == 5 && (
-                <div className="row">
-                  <div class="col-6">
-                    <div class="mb-3">
-                      <label htmlFor="formFile" className="form-label">
-                        Toner Modal
-                      </label>
+                  <div className="row">
+                    <div class="col-6">
+                      <div class="mb-3">
+                        <label htmlFor="formFile" className="form-label">
+                          Toner Modal
+                        </label>
 
-                      <Select
-                        options={modalData.map((item) => ({
-                          value: item.id,
-                          label: item.tonerModel,
-                        }))}
-                        onChange={(selectedOptions) =>
-                          formik.setFieldValue("tonerModels", selectedOptions)
-                        }
-                        onBlur={formik.handleBlur}
-                        value={formik.values.tonerModels}
-                        name="tonerModels"
-                        isClearable={true}
-                        className={`.form-select`}
-                      />  
-                    </div>
-                    {/* <div
+                        <Select
+                          options={modalData.map((item) => ({
+                            value: item.id,
+                            label: item.tonerModel,
+                          }))}
+                          onChange={(selectedOptions) =>
+                            formik.setFieldValue("tonerModels", selectedOptions)
+                          }
+                          onBlur={formik.handleBlur}
+                          value={formik.values.tonerModels}
+                          name="tonerModels"
+                          isClearable={true}
+                          className={`.form-select`}
+                        />
+                      </div>
+                      {/* <div
                       className="ms-2"
                       style={{ position: "relative" }}
                       onClick={() => setModalIsOpan(!modalisOpan)}
@@ -355,23 +427,22 @@ function CMSAddEditUserComplaint() {
                         }}
                       />
                     </div> */}
-                  </div>
-                <div className="col-6">
-                    <div className="mb-3">
-                      <label className="form-label">Quantity</label>
-                      <input
-                        type="text"
-                        // className={`form-control`}
-                        id="quantity"
-                        value={formik.values.quantity}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        className={`form-control`}
-                      />
+                    </div>
+                    <div className="col-6">
+                      <div className="mb-3">
+                        <label className="form-label">Quantity</label>
+                        <input
+                          type="text"
+                          // className={`form-control`}
+                          id="quantity"
+                          value={formik.values.quantity}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          className={`form-control`}
+                        />
+                      </div>
                     </div>
                   </div>
-                  
-                </div>
                 )}
 
                 <div class="row">
@@ -402,7 +473,6 @@ function CMSAddEditUserComplaint() {
                         onBlur={formik.handleBlur}
                         className={`form-control`}
                       />
-
                     </div>
                   </div>
                   <div class="col">
@@ -416,7 +486,12 @@ function CMSAddEditUserComplaint() {
                             label: `${item.firstName}${item.lastName}`,
                           }))
                         }
-                        onChange={(selectedOptions) => formik.setFieldValue("fkAssignedResolverId", selectedOptions)}
+                        onChange={(selectedOptions) =>
+                          formik.setFieldValue(
+                            "fkAssignedResolverId",
+                            selectedOptions
+                          )
+                        }
                         onBlur={formik.handleBlur}
                         value={formik.values.fkAssignedResolverId}
                         name="fkAssignedResolverId"
@@ -459,13 +534,22 @@ function CMSAddEditUserComplaint() {
                   </tr>
                 </thead>
                 <tbody>
-                  {userinventoryData && userinventoryData?.length > 0 &&
+                  {userinventoryData &&
+                    userinventoryData?.length > 0 &&
                     userinventoryData.map((item, index) => (
                       <tr>
-                        <td class="text-center">{item?.assignedInventory?.productName}</td>
-                        <td class="text-center">{item?.assignedInventory?.serialNo}</td>
-                        <td class="text-center">{item?.assignedInventory?.manufacturer}</td>
-                        <td class="text-center">{item?.assignedInventory?.status}</td>
+                        <td class="text-center">
+                          {item?.assignedInventory?.productName}
+                        </td>
+                        <td class="text-center">
+                          {item?.assignedInventory?.serialNo}
+                        </td>
+                        <td class="text-center">
+                          {item?.assignedInventory?.manufacturer}
+                        </td>
+                        <td class="text-center">
+                          {item?.assignedInventory?.status}
+                        </td>
                         <td class="text-center">{item?.issuedDate}</td>
                       </tr>
                     ))}
@@ -476,7 +560,7 @@ function CMSAddEditUserComplaint() {
         )}
       </div>
     </Layout>
-  )
+  );
 }
 
-export default CMSAddEditUserComplaint
+export default CMSAddEditUserComplaint;
