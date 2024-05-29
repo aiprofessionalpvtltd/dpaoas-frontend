@@ -77,14 +77,14 @@ export const getallComplaint = async (currentPage, pageSize) => {
     try {
       // const token = getAuthToken();
       const response = await axiosClientMMS.put(
-        `/complaints/update/${id}`,
-        data,
-        {
-          headers: {
-            accept: "application/json",
-            "Content-Type": "multipart/form-data",
-          },
-        });
+        `/complaints/updateComplaint/${id}`,
+        data)
+        // {
+        //   headers: {
+        //     accept: "application/json",
+        //     "Content-Type": "multipart/form-data",
+        //   },
+        // });
       return response?.data;
     } catch (error) {
       console.error("Error fetching API endpoint:", error);
