@@ -176,6 +176,7 @@ function MMSSearchMotion() {
       englishText: values?.keyword,
       motionWeek: values?.motionWeek,
       motionType: values?.motionType,
+      motionSentStatus:"inMotion"
     };
     setCount(null);
 
