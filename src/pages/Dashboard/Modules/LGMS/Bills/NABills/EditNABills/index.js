@@ -269,7 +269,7 @@ const UpdateBills = () => {
         fkSessionId: singleSenateBillData?.fkSessionId || "",
         billCategory: singleSenateBillData?.billCategory || "",
         billType: singleSenateBillData?.billType || "",
-        billStatuses: singleSenateBillData?.billStatuses || "",
+        // billStatuses: singleSenateBillData?.billStatuses || "",
         fileNumber: singleSenateBillData?.fileNumber || "",
         PassedByNADate: singleSenateBillData?.PassedByNADate
           ? moment(singleSenateBillData?.PassedByNADate).toDate()
@@ -287,10 +287,12 @@ const UpdateBills = () => {
               label: senator?.member?.memberName,
             }))
           : [],
-        fkBillStatus:
-          (singleSenateBillData?.billStatuses &&
-            singleSenateBillData?.billStatuses) ||
-          "",
+          fkBillStatus: singleSenateBillData?.billStatuses &&
+          {
+            value: singleSenateBillData?.billStatuses?.id,
+            label: singleSenateBillData?.billStatuses?.billStatusName,
+          }
+        || "",
         senateBillMnaMovers: singleSenateBillData?.senateBillMnaMovers
           ? singleSenateBillData?.senateBillMnaMovers.map((senator) => ({
               value: senator?.mna?.id,
@@ -383,7 +385,7 @@ const UpdateBills = () => {
     formData.append("fkSessionId", values?.fkSessionId);
     formData.append("billCategory", values?.billCategory);
     formData.append("billType", values?.billType);
-    formData.append("fkBillStatus", values?.fkBillStatus);
+    formData.append("fkBillStatus", values?.fkBillStatus?.value);
     formData.append("fileNumber", values?.fileNumber);
     formData.append("PassedByNADate", values?.PassedByNADate);
     formData.append(
@@ -647,7 +649,7 @@ const UpdateBills = () => {
                       <div class="col">
                         <div class="mb-3">
                           <label class="form-label">Bill Status</label>
-                          <select
+                          {/* <select
                             id="fkBillStatus"
                             name="fkBillStatus"
                             className="form-select"
@@ -663,7 +665,26 @@ const UpdateBills = () => {
                                   {item.billStatusName}
                                 </option>
                               ))}
-                          </select>
+                          </select> */}
+                           <Select
+                      options={
+                        billStatusData &&
+                        billStatusData?.map((item) => ({
+                          value: item.id,
+                          label: item?.billStatusName,
+                        }))
+                      }
+                      onChange={(selectedOptions) =>
+                        formik.setFieldValue(
+                          "fkBillStatus",
+                          selectedOptions
+                        )
+                      }
+                      // onBlur={formikAssigned.handleBlur}
+                      value={formik.values.fkBillStatus}
+                      name="fkBillStatus"
+                      
+                    />
                           {formik.touched.fkBillStatus &&
                             formik.errors.fkBillStatus && (
                               <div class="invalid-feedback">
