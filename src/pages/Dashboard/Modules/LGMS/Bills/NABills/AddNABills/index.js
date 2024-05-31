@@ -17,6 +17,7 @@ import {
 } from "../../../../../../../api/APIs/Services/LegislationModule.service";
 import { showSuccessMessage } from "../../../../../../../utils/ToastAlert";
 import { useNavigate } from "react-router-dom";
+import moment from "moment";
 function NewLegislationNABill() {
   const navigate = useNavigate();
   const { sessions, members, ministryData, parliamentaryYear } =
@@ -87,11 +88,21 @@ function NewLegislationNABill() {
     formData.append("fkSessionId", values?.session);
     formData.append("fkParliamentaryYearId", values?.parliamentaryYear);
     formData.append("fileNumber", values?.fileNumber);
-    formData.append("PassedByNADate", values?.passedByNADate);
-    formData.append(
-      "DateOfReceiptOfMessageFromNA",
-      values?.receiptMessageDateFromNA
-    );
+    // formData.append("PassedByNADate", values?.passedByNADate);
+    if (values?.PassedByNADate) {
+      const formattedDate = moment(values?.PassedByNADate).format("YYYY-MM-DD");
+      formData.append("PassedByNADate", formattedDate);
+    }
+    // formData.append(
+    //   "DateOfReceiptOfMessageFromNA",
+    //   values?.receiptMessageDateFromNA
+    // );
+    if (values?.receiptMessageDateFromNA) {
+      const formattedDate = moment(values?.receiptMessageDateFromNA).format(
+        "YYYY-MM-DD"
+      );
+      formData.append("receiptMessageDateFromNA", formattedDate);
+    }
     formData.append("billCategory", values?.billCategory);
     formData.append("billType", values?.billType);
     formData.append("billTitle", values?.billTitle);

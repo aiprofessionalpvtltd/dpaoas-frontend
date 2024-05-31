@@ -11,13 +11,14 @@ import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import DatePicker from "react-datepicker";
 import { getAllParliamentaryYears } from "../../../../../../api/APIs/Services/ManageQMS.service";
 import {
-  createNewOrdinance,
+  getAllBillStatus,
   getSingleOrdinanceByID,
   updatedOrdinance,
 } from "../../../../../../api/APIs/Services/LegislationModule.service";
 import { getUserData } from "../../../../../../api/Auth";
 import { showSuccessMessage } from "../../../../../../utils/ToastAlert";
 import moment from "moment";
+import Select from "react-select";
 function EditOrdinance() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -25,13 +26,15 @@ function EditOrdinance() {
   const { sessions } = useContext(AuthContext);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [isNACalendarOpen, setIsNACalendarOpen] = useState(false);
+  const [isOrdinanceStatusCalenderOpen, setIsOrdinanceStatusCalenderOpen] =
+    useState(false);
   const [isDocumentCalendarOpen, setIsDocumnetCalendarOpen] = useState(false);
   const [parliamentaryYearData, setParliamentaryYearData] = useState([]);
   const [singleOrdinanceData, setSingleOrdinanceData] = useState([]);
   const [imageLinks, setImageLinks] = useState([]);
 
   const userData = getUserData();
-
+  const [billStatusData, setBillStatusesData] = useState([]);
   // Handle Claneder Toggel
   const handleCalendarToggle = () => {
     setIsCalendarOpen(!isCalendarOpen);
@@ -49,6 +52,16 @@ function EditOrdinance() {
   const handleNADateSelect = (date) => {
     formik.setFieldValue("dateOfLayingInTheNA", date);
     setIsNACalendarOpen(false);
+  };
+
+  // Handle Claneder Toggel
+  const handleOrdinanceCalendarToggle = () => {
+    setIsOrdinanceStatusCalenderOpen(!isOrdinanceStatusCalenderOpen);
+  };
+  // Handale DateCHange
+  const handleOrdinanceDateSelect = (date) => {
+    formik.setFieldValue("ordinanceStatusDate", date);
+    setIsOrdinanceStatusCalenderOpen(false);
   };
 
   const handleDocumentCalendarToggle = () => {
@@ -71,8 +84,21 @@ function EditOrdinance() {
     }
   };
 
+  const getAllBillStatusData = async () => {
+    try {
+      const response = await getAllBillStatus(0, 500);
+
+      if (response?.success) {
+        setBillStatusesData(response?.data?.billStatus);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     GetParlimentaryYearsApi();
+    getAllBillStatusData();
   }, []);
 
   const formik = useFormik({
@@ -81,9 +107,10 @@ function EditOrdinance() {
       fkSessionId: "",
       dateOfLayingInTheNA: "",
       dateOfLayingInTheSenate: "",
+      fkOrdinanceStatus: "",
+      ordinanceStatusDate: "",
       ordinanceTitle: "",
       ordinanceRemarks: "",
-      ordinanceStatusDate: "",
       documentDate: "",
       documentDiscription: "",
       ordinanceStatus: "",
@@ -152,6 +179,15 @@ function EditOrdinance() {
         ordinanceStatus: singleOrdinanceData?.ordinanceStatus
           ? singleOrdinanceData?.ordinanceStatus
           : "",
+        fkOrdinanceStatus:
+          (singleOrdinanceData?.fkOrdinanceStatus && {
+            value: singleOrdinanceData?.billStatuses?.id,
+            label: singleOrdinanceData?.billStatuses?.billStatusName,
+          }) ||
+          "",
+        ordinanceStatusDate: singleOrdinanceData?.ordinanceStatusDate
+          ? moment(singleOrdinanceData?.ordinanceStatusDate).toDate()
+          : "",
         // file: singleOrdinanceData?.file ? singleOrdinanceData?.file : "",
       });
     }
@@ -163,12 +199,28 @@ function EditOrdinance() {
     formData.append("fkSessionId", values?.fkSessionId);
     formData.append("fkUserId", userData && userData?.id);
     formData.append("ordinanceTitle", values?.ordinanceTitle);
-    formData.append("ordinanceRemarks", values?.ordinanceRemarks);
-    formData.append("documentDiscription", values?.documentDiscription);
-    formData.append(
-      "documentDate",
-      values?.documentDate ? values?.documentDate : ""
-    );
+
+    if (values?.fkOrdinanceStatus) {
+      formData.append("fkOrdinanceStatus", values?.fkOrdinanceStatus.value);
+    }
+    if (values?.ordinanceStatusDate) {
+      const formattedDate = moment(values?.ordinanceStatusDate).format(
+        "YYYY-MM-DD"
+      );
+      formData.append("ordinanceStatusDate", formattedDate);
+    }
+    if (values?.ordinanceRemarks) {
+      formData.append("ordinanceRemarks", values.ordinanceRemarks);
+    }
+    // formData.append("ordinanceRemarks", values?.ordinanceRemarks);
+    if (values?.documentDiscription) {
+      formData.append("documentDiscription", values?.documentDiscription);
+    }
+
+    if (values?.documentDate) {
+      const formattedDate = moment(values.documentDate).format("YYYY-MM-DD");
+      formData.append("documentDate", formattedDate);
+    }
     formData.append("ordinanceStatus", values?.ordinanceStatus);
     if (values?.file) {
       Array.from(values?.file).map((file, index) => {
@@ -373,6 +425,86 @@ function EditOrdinance() {
                           style={{ display: "block" }}
                         >
                           {formik.errors.dateOfLayingInTheNA}
+                        </div>
+                      )}
+                  </div>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-3">
+                  <div className="mb-3">
+                    <label className="form-label">Ordinance Status</label>
+                    <Select
+                      options={
+                        billStatusData &&
+                        billStatusData?.map((item) => ({
+                          value: item.id,
+                          label: item?.billStatusName,
+                        }))
+                      }
+                      onChange={(selectedOptions) =>
+                        formik.setFieldValue(
+                          "fkOrdinanceStatus",
+                          selectedOptions
+                        )
+                      }
+                      // onBlur={formikAssigned.handleBlur}
+                      value={formik.values.fkOrdinanceStatus}
+                      name="fkOrdinanceStatus"
+                    />
+                    {formik.touched.fkOrdinanceStatus &&
+                      formik.errors.fkOrdinanceStatus && (
+                        <div class="invalid-feedback">
+                          {formik.errors.fkOrdinanceStatus}
+                        </div>
+                      )}
+                  </div>
+                </div>
+                <div className="col-3">
+                  <div className="mb-3" style={{ position: "relative" }}>
+                    <label className="form-label">Ordinance Status Date</label>
+                    <span
+                      style={{
+                        position: "absolute",
+                        right: "15px",
+                        top: "36px",
+                        zIndex: 1,
+                        fontSize: "20px",
+                        zIndex: "1",
+                        color: "#666",
+                        cursor: "pointer",
+                      }}
+                      onClick={handleOrdinanceCalendarToggle}
+                    >
+                      <FontAwesomeIcon icon={faCalendarAlt} />
+                    </span>
+
+                    <DatePicker
+                      selected={formik.values.ordinanceStatusDate}
+                      onChange={handleOrdinanceDateSelect}
+                      onBlur={formik.handleBlur}
+                      className={`form-control ${
+                        formik.touched.ordinanceStatusDate &&
+                        formik.errors.ordinanceStatusDate
+                          ? "is-invalid"
+                          : ""
+                      }`}
+                      open={isOrdinanceStatusCalenderOpen}
+                      onClickOutside={() =>
+                        setIsOrdinanceStatusCalenderOpen(false)
+                      }
+                      onInputClick={handleOrdinanceCalendarToggle}
+                      // onClick={handleCalendarToggle}
+                      maxDate={new Date()}
+                      dateFormat="dd-MM-yyyy"
+                    />
+                    {formik.touched.ordinanceStatusDate &&
+                      formik.errors.ordinanceStatusDate && (
+                        <div
+                          className="invalid-feedback"
+                          style={{ display: "block" }}
+                        >
+                          {formik.errors.ordinanceStatusDate}
                         </div>
                       )}
                   </div>
