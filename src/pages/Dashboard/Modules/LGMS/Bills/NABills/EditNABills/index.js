@@ -53,6 +53,8 @@ const UpdateBills = () => {
     useState(false);
   const [isDocomentDateCalendarOpen, setDocomentDateCalendarOpen] =
     useState(false);
+  const [isBillStatusDateCalendarOpen, setBillStatusDateCalendarOpen] =
+    useState(false);
 
   const GetAllCommittiesApi = async () => {
     try {
@@ -106,11 +108,14 @@ const UpdateBills = () => {
       PassedByNADate: "",
       DateOfReceiptOfMessageFromNA: "",
       billTitle: "",
+      billText: "",
+      billRemarks: "",
       fkBillStatus: "",
+      billStatusDate: "",
       senateBillSenatorMovers: [],
       senateBillMnaMovers: [],
       senateBillMinistryMovers: [],
-      introducedInHouses: "",
+      introducedInHouseDate: "",
       fkManageCommitteeId: "",
       referedOnDate: "",
       committeeRecomendation: "",
@@ -152,13 +157,22 @@ const UpdateBills = () => {
     formik.setFieldValue("DateOfReceiptOfMessageFromNA", date);
     setIsDateofReciptCalendarOpen(false);
   };
+  // Handle Claneder Toggel
+  const handleBillStatusCalendarToggle = () => {
+    setBillStatusDateCalendarOpen(!isBillStatusDateCalendarOpen);
+  };
+  // Handale DateCHange
+  const handleBillStatustDateSelect = (date) => {
+    formik.setFieldValue("billStatusDate", date);
+    setBillStatusDateCalendarOpen(false);
+  };
 
   const handleIntroducedCalendarToggle = () => {
     setIntroducedCalendarOpen(!isIntroducedCalendarOpen);
   };
   // Handale DateCHange
   const handleIntroducedDateSelect = (date) => {
-    formik.setFieldValue("introducedInHouses", date);
+    formik.setFieldValue("introducedInHouseDate", date);
     setIntroducedCalendarOpen(false);
   };
 
@@ -281,18 +295,20 @@ const UpdateBills = () => {
               ).toDate()
             : null,
         billTitle: singleSenateBillData?.billTitle || "",
+        billText: singleSenateBillData?.billText || "",
+        billRemarks: singleSenateBillData?.billRemarks || "",
         senateBillSenatorMovers: singleSenateBillData?.senateBillSenatorMovers
           ? singleSenateBillData?.senateBillSenatorMovers.map((senator) => ({
               value: senator?.member?.id,
               label: senator?.member?.memberName,
             }))
           : [],
-          fkBillStatus: singleSenateBillData?.billStatuses &&
-          {
+        fkBillStatus:
+          (singleSenateBillData?.billStatuses && {
             value: singleSenateBillData?.billStatuses?.id,
             label: singleSenateBillData?.billStatuses?.billStatusName,
-          }
-        || "",
+          }) ||
+          "",
         senateBillMnaMovers: singleSenateBillData?.senateBillMnaMovers
           ? singleSenateBillData?.senateBillMnaMovers.map((senator) => ({
               value: senator?.mna?.id,
@@ -305,7 +321,7 @@ const UpdateBills = () => {
               label: senator?.ministrie?.ministryName,
             }))
           : [],
-        introducedInHouses:
+        introducedInHouseDate:
           singleSenateBillData?.introducedInHouses &&
           singleSenateBillData?.introducedInHouses?.introducedInHouseDate
             ? moment(
@@ -375,6 +391,9 @@ const UpdateBills = () => {
         documentType: singleSenateBillData?.billDocuments
           ? singleSenateBillData?.billDocuments?.documentType
           : "",
+        billStatusDate: singleSenateBillData?.billStatusDate
+          ? moment(singleSenateBillData?.billStatusDate).toDate()
+          : "",
       });
     }
   }, [singleSenateBillData, formik.setValues]);
@@ -387,39 +406,84 @@ const UpdateBills = () => {
     formData.append("billType", values?.billType);
     formData.append("fkBillStatus", values?.fkBillStatus?.value);
     formData.append("fileNumber", values?.fileNumber);
-    formData.append("PassedByNADate", values?.PassedByNADate);
-    formData.append(
-      "DateOfReceiptOfMessageFromNA",
-      values?.DateOfReceiptOfMessageFromNA
-    );
+    // formData.append("PassedByNADate", values?.PassedByNADate);
+    if (values?.PassedByNADate) {
+      const formattedDate = moment(values?.PassedByNADate).format("YYYY-MM-DD");
+      formData.append("PassedByNADate", formattedDate);
+    }
+    // formData.append(
+    //   "DateOfReceiptOfMessageFromNA",
+    //   values?.DateOfReceiptOfMessageFromNA
+    // );
+    if (values?.DateOfReceiptOfMessageFromNA) {
+      const formattedDate = moment(values?.DateOfReceiptOfMessageFromNA).format(
+        "YYYY-MM-DD"
+      );
+      formData.append("DateOfReceiptOfMessageFromNA", formattedDate);
+    }
+    if (values?.billStatusDate) {
+      const formattedDate = moment(values?.billStatusDate).format("YYYY-MM-DD");
+      formData.append("billStatusDate", formattedDate);
+    }
     formData.append("fkUserId", userData && userData?.id);
     formData.append("billTitle", values?.billTitle);
-    if (values?.introducedInHouses) {
-      formData.append("introducedInHouses", values?.introducedInHouses);
+    formData.append("billText", values?.billText);
+    formData.append("billRemarks", values?.billRemarks);
+
+    // if (values?.introducedInHouses) {
+    //   formData.append("introducedInHouses", values?.introducedInHouses);
+    // }
+    if (values?.introducedInHouseDate) {
+      const formattedDate = moment(values?.introducedInHouseDate).format(
+        "YYYY-MM-DD"
+      );
+      formData.append("introducedInHouseDate", formattedDate);
     }
     if (values?.fkManageCommitteeId) {
       formData.append("fkManageCommitteeId", values?.fkManageCommitteeId);
     }
+    // if (values?.referedOnDate) {
+    //   formData.append("referedOnDate", values?.referedOnDate);
+    // }
     if (values?.referedOnDate) {
-      formData.append("referedOnDate", values?.referedOnDate);
+      const formattedDate = moment(values?.referedOnDate).format("YYYY-MM-DD");
+      formData.append("referedOnDate", formattedDate);
     }
     if (values?.committeeRecomendation) {
       formData.append("committeeRecomendation", values?.committeeRecomendation);
     }
+    // if (values?.reportPresentationDate) {
+    //   formData.append("reportPresentationDate", values?.reportPresentationDate);
+    // }
     if (values?.reportPresentationDate) {
-      formData.append("reportPresentationDate", values?.reportPresentationDate);
+      const formattedDate = moment(values?.reportPresentationDate).format(
+        "YYYY-MM-DD"
+      );
+      formData.append("reportPresentationDate", formattedDate);
     }
     if (values?.fkMemberPassageId) {
       formData.append("fkMemberPassageId", values?.fkMemberPassageId);
     }
+    // if (values?.memeberNoticeDate) {
+    //   formData.append("memeberNoticeDate", values?.memeberNoticeDate);
+    // }
     if (values?.memeberNoticeDate) {
-      formData.append("memeberNoticeDate", values?.memeberNoticeDate);
-    }
-    if (values?.dateOfConsiderationBill) {
-      formData.append(
-        "dateOfConsiderationBill",
-        values?.dateOfConsiderationBill
+      const formattedDate = moment(values?.memeberNoticeDate).format(
+        "YYYY-MM-DD"
       );
+      formData.append("memeberNoticeDate", formattedDate);
+    }
+    // if (values?.dateOfConsiderationBill) {
+    //   formData.append(
+    //     "dateOfConsiderationBill",
+    //     values?.dateOfConsiderationBill
+    //   );
+    // }
+    if (values?.dateOfConsiderationBill) {
+      const formattedDate = moment(values?.dateOfConsiderationBill).format(
+        "YYYY-MM-DD"
+      );
+      formData.append("dateOfConsiderationBill", formattedDate);
     }
     if (values?.fkSessionMemberPassageId) {
       formData.append(
@@ -427,26 +491,54 @@ const UpdateBills = () => {
         values?.fkSessionMemberPassageId
       );
     }
+    // if (values?.dateOfPassageBySenate) {
+    //   formData.append("dateOfPassageBySenate", values?.dateOfPassageBySenate);
+    // }
     if (values?.dateOfPassageBySenate) {
-      formData.append("dateOfPassageBySenate", values?.dateOfPassageBySenate);
-    }
-    if (values?.dateOfTransmissionToNA) {
-      formData.append("dateOfTransmissionToNA", values?.dateOfTransmissionToNA);
-    }
-    if (values?.dateOfReceiptMessageFromNA) {
-      formData.append(
-        "dateOfReceiptMessageFromNA",
-        values?.dateOfReceiptMessageFromNA
+      const formattedDate = moment(values?.dateOfPassageBySenate).format(
+        "YYYY-MM-DD"
       );
+      formData.append("dateOfPassageBySenate", formattedDate);
     }
+    // if (values?.dateOfTransmissionToNA) {
+    //   formData.append("dateOfTransmissionToNA", values?.dateOfTransmissionToNA);
+    // }
+    if (values?.dateOfTransmissionToNA) {
+      const formattedDate = moment(values?.dateOfTransmissionToNA).format(
+        "YYYY-MM-DD"
+      );
+      formData.append("dateOfTransmissionToNA", formattedDate);
+    }
+    // if (values?.dateOfReceiptMessageFromNA) {
+    //   formData.append(
+    //     "dateOfReceiptMessageFromNA",
+    //     values?.dateOfReceiptMessageFromNA
+    //   );
+    // }
+    if (values?.dateOfReceiptMessageFromNA) {
+      const formattedDate = moment(values?.dateOfReceiptMessageFromNA).format(
+        "YYYY-MM-DD"
+      );
+      formData.append("dateOfReceiptMessageFromNA", formattedDate);
+    }
+    // if (values?.dateOfPassageByNA) {
+    //   formData.append("dateOfPassageByNA", values?.dateOfPassageByNA);
+    // }
     if (values?.dateOfPassageByNA) {
-      formData.append("dateOfPassageByNA", values?.dateOfPassageByNA);
+      const formattedDate = moment(values?.dateOfPassageByNA).format(
+        "YYYY-MM-DD"
+      );
+      formData.append("dateOfPassageByNA", formattedDate);
     }
     if (values?.documentDiscription) {
       formData.append("documentDiscription", values?.documentDiscription);
     }
+    // if (values?.documentDate) {
+    //   formData.append("documentDate", values?.documentDate);
+    // }
     if (values?.documentDate) {
-      formData.append("documentDate", values?.documentDate);
+      const formattedDate = moment(values?.documentDate).format("YYYY-MM-DD");
+      formData.append("documentDate", formattedDate);
     }
     if (values?.documentType) {
       formData.append("documentType", values?.documentType);
@@ -666,29 +758,76 @@ const UpdateBills = () => {
                                 </option>
                               ))}
                           </select> */}
-                           <Select
-                      options={
-                        billStatusData &&
-                        billStatusData?.map((item) => ({
-                          value: item.id,
-                          label: item?.billStatusName,
-                        }))
-                      }
-                      onChange={(selectedOptions) =>
-                        formik.setFieldValue(
-                          "fkBillStatus",
-                          selectedOptions
-                        )
-                      }
-                      // onBlur={formikAssigned.handleBlur}
-                      value={formik.values.fkBillStatus}
-                      name="fkBillStatus"
-                      
-                    />
+                          <Select
+                            options={
+                              billStatusData &&
+                              billStatusData?.map((item) => ({
+                                value: item.id,
+                                label: item?.billStatusName,
+                              }))
+                            }
+                            onChange={(selectedOptions) =>
+                              formik.setFieldValue(
+                                "fkBillStatus",
+                                selectedOptions
+                              )
+                            }
+                            // onBlur={formikAssigned.handleBlur}
+                            value={formik.values.fkBillStatus}
+                            name="fkBillStatus"
+                          />
                           {formik.touched.fkBillStatus &&
                             formik.errors.fkBillStatus && (
                               <div class="invalid-feedback">
                                 {formik.errors.fkBillStatus}
+                              </div>
+                            )}
+                        </div>
+                      </div>
+                      <div className="col">
+                        <div className="mb-3" style={{ position: "relative" }}>
+                          <label className="form-label">Bill Status Date</label>
+                          <span
+                            style={{
+                              position: "absolute",
+                              right: "15px",
+                              top: "36px",
+                              zIndex: 1,
+                              fontSize: "20px",
+                              zIndex: "1",
+                              color: "#666",
+                              cursor: "pointer",
+                            }}
+                            onClick={handleBillStatusCalendarToggle}
+                          >
+                            <FontAwesomeIcon icon={faCalendarAlt} />
+                          </span>
+                          <DatePicker
+                            selected={formik.values.billStatusDate}
+                            onChange={handleBillStatustDateSelect}
+                            onBlur={formik.handleBlur}
+                            className={`form-control ${
+                              formik.touched.billStatusDate &&
+                              formik.errors.billStatusDate
+                                ? "is-invalid"
+                                : ""
+                            }`}
+                            open={isBillStatusDateCalendarOpen}
+                            onClickOutside={() =>
+                              setBillStatusDateCalendarOpen(false)
+                            }
+                            onInputClick={handleBillStatusCalendarToggle}
+                            // onClick={handleCalendarToggle}
+                            maxDate={new Date()}
+                            dateFormat="dd-MM-yyyy"
+                          />
+                          {formik.touched.billStatusDate &&
+                            formik.errors.billStatusDate && (
+                              <div
+                                className="invalid-feedback"
+                                style={{ display: "block" }}
+                              >
+                                {formik.errors.billStatusDate}
                               </div>
                             )}
                         </div>
@@ -852,6 +991,59 @@ const UpdateBills = () => {
                     </div>
 
                     <div className="row">
+                      <div className="col">
+                        <div className="mb-3">
+                          <label className="form-label">Bill Text</label>
+                          <textarea
+                            className={`form-control  ${
+                              formik.touched.billText && formik.errors.billText
+                                ? "is-invalid"
+                                : ""
+                            }`}
+                            id="billText"
+                            name="billText"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            value={formik.values.billText}
+                          ></textarea>
+                          {formik.touched.billText &&
+                            formik.errors.billText && (
+                              <div className="invalid-feedback">
+                                {formik.errors.billText}
+                              </div>
+                            )}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="row">
+                      <div className="col">
+                        <div className="mb-3">
+                          <label className="form-label">Bill Remarks</label>
+                          <textarea
+                            className={`form-control  ${
+                              formik.touched.billRemarks &&
+                              formik.errors.billRemarks
+                                ? "is-invalid"
+                                : ""
+                            }`}
+                            id="billRemarks"
+                            name="billRemarks"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            value={formik.values.billRemarks}
+                          ></textarea>
+                          {formik.touched.billRemarks &&
+                            formik.errors.billRemarks && (
+                              <div className="invalid-feedback">
+                                {formik.errors.billRemarks}
+                              </div>
+                            )}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="row">
                       <div className=" col">
                         <label className="form-label">Senator</label>
                         <Select
@@ -966,7 +1158,7 @@ const UpdateBills = () => {
                             <FontAwesomeIcon icon={faCalendarAlt} />
                           </span>
                           <DatePicker
-                            selected={formik.values.introducedInHouses}
+                            selected={formik.values.introducedInHouseDate}
                             onChange={handleIntroducedDateSelect}
                             onBlur={formik.handleBlur}
                             className="form-control"

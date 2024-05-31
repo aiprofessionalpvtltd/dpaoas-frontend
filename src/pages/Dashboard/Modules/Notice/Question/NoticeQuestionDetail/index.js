@@ -138,11 +138,7 @@ function NoticeQuestionDetail() {
     GetAllQuestionStatus();
   }, []);
 
-  console.log(
-    "location?.state?.questionStatus",
-    location?.state?.question?.questionStatus?.questionStatus
-  );
-  console.log("GetaALl Status", allQuestionStatus);
+  
   // Handle Claneder Toggel
   const handleCalendarToggle = () => {
     setIsCalendarOpen(!isCalendarOpen);

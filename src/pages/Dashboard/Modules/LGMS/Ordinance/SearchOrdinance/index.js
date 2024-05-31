@@ -56,7 +56,7 @@ const SearchOrdinance = () => {
 
   const GetBillStatusApi = async () => {
     try {
-      const response = await getAllBillStatus(currentPage, pageSize);
+      const response = await getAllBillStatus(0, 500);
       console.log("bill statuses", response?.data);
       if (response.success) {
         setBillStatus(response?.data?.billStatus);
@@ -102,12 +102,13 @@ const SearchOrdinance = () => {
         const response = await SearchedOrdinance(page, pageSize, searchParams);
         console.log(response);
         if (response?.success) {
+          showSuccessMessage(response?.message);
           const transformedData = trnasformOridinaceData(
             response.data?.ordinance
           );
           setSearchedOrdinanceData(transformedData);
           setCount(response?.data?.count);
-          showSuccessMessage(response?.message);
+          
         }
         // formik.resetForm();
       } catch (error) {

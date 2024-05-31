@@ -23,7 +23,7 @@ const AllLegislationBillList = () => {
   const [senateBillData, setSenateBillData] = useState([]);
   const [NABillData, setNABillData] = useState([]);
   const [count, setCount] = useState(null);
-  const pageSize = 3;
+  const pageSize = 10;
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked

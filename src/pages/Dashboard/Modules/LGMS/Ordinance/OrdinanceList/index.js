@@ -40,10 +40,11 @@ const AllOrdinanceList = () => {
       dateOfLayingInNationalAssembly: item?.dateOfLayingInTheNA
         ? moment(item?.dateOfLayingInTheNA).format("DD-MM-YYYY")
         : "---",
-      ordinanceStatus: item.ordinanceStatus,
+        ordinanceStatus: item?.billStatuses && item?.billStatuses?.billStatusName,
       documentDate: item?.documentDate
         ? moment(item?.documentDate).format("DD-MM-YYYY")
         : "---",
+        Status: item.ordinanceStatus,
     }));
   };
 
