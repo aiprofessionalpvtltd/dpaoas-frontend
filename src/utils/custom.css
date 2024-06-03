@@ -282,7 +282,11 @@ h1,
 
 .card-body p {
   color: #666;
-  margin-bottom: 35px;
+  /* margin-bottom: 35px; */
+}
+
+.p {
+  margin-bottom: 0 !important;
 }
 
 .card-header {
@@ -2470,7 +2474,7 @@ textarea {
   padding: 15px 0;
   position: fixed;
   bottom: 0;
-  z-index: 2;
+  z-index: 4;
 }
 
 .green-bg {

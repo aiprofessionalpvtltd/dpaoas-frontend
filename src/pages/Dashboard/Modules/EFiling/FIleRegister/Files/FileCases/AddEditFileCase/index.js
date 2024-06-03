@@ -41,6 +41,9 @@ import { TinyEditor } from "../../../../../../../../components/CustomComponents/
 import { getUserData } from "../../../../../../../../api/Auth";
 import ImageGallery from "react-image-gallery";
 import Select from "react-select";
+import TabComponent from "../../../../../../../../components/CustomComponents/TabBar";
+import NoteEditor from "../../../../../../../../components/CustomComponents/DocEditor";
+import DocParas from "../../../../../../../../components/CustomComponents/DocParas";
 
 function AddEditFileCase() {
   const navigate = useNavigate();
@@ -48,6 +51,31 @@ function AddEditFileCase() {
   const [headings, setHeadings] = useState([]);
   const location = useLocation();
   const { fileIdINRegister } = useContext(AuthContext);
+  const [notingTabSubject, setNotingTabSubject] = useState("");
+  const initialNotingTabData = [
+    { title: 'Paragraph 1', description: 'Content for Paragraph 1' },
+    { title: 'Paragraph 2', description: 'Content for Paragraph 2' },
+    { title: 'Paragraph 3', description: 'Content for Paragraph 3' },
+  ];
+
+  const [notingTabData, setNotingTabsData] = useState(initialNotingTabData);
+
+  // const handleEditorChange = (index, content) => {
+  //   const updatedTabs = [...notingTabData];
+  //   updatedTabs[index].description = content;
+  //   setNotingTabsData(updatedTabs);
+  // };
+
+const handleEditorChange = (index, content, isNew = false) => {
+    if (isNew) {
+      setNotingTabsData([...notingTabData, { title: `Paragraph ${notingTabData.length + 1}`, description: content }]);
+      setNotingData({ description: "" }); // Clear the editor after adding
+    } else {
+      const updatedTabs = notingTabData.map((tab, i) => (i === index ? { ...tab, description: content } : tab));
+      setNotingTabsData(updatedTabs);
+    }
+  };
+
   // const [selectedTab, setSelectedTab] = useState(
   //   location.state?.frId ? "FR Noting" : "Noting"
   // );
@@ -376,13 +404,12 @@ function AddEditFileCase() {
   }, []);
 
   const [fileData, setFileData] = useState([]);
-  const [registerId, setRegisterId] = useState(null);
-  const hendleRegisterSelect = async (headID) => {
+
+  const getAllFiles = async () => {
     const searchParams = {
-      userId: userData?.fkUserId,
+      branchId: userData?.fkBranchId,
       currentPage: 0,
       pageSize: 100,
-      mainHeadingNumber: headID,
     };
     try {
       const response = await getFileByRegisterById(searchParams);
@@ -397,57 +424,16 @@ function AddEditFileCase() {
       // showErrorMessage(error?.response?.data?.message);
     }
   };
-  // useEffect(() => {
-  //   getAllFilesAPi()
-  // },[])
-  const [frAttectment, setFRAttechment] = useState(null);
-  const getFreashRecepitByIdApi = async (receptId) => {
-    try {
-      const response = await getFreshReceiptById(receptId);
-      if (response.success) {
-        setFRAttechment(response?.data);
-        // showSuccessMessage(response.message);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  const transformFilesHeadings = (apiData) => {
-    console.log(apiData);
-    return apiData.map((item) => ({
-      HeadingNumber: item?.mainHeadingNumber,
-    }));
-  };
-  const [headcount, setHeadCount] = useState(null);
-  const getAllFileHeadingApi = useCallback(async () => {
-    try {
-      const response = await getAllFileHeading(UserData?.fkBranchId, 0, 1000);
-      if (response.success) {
-        //   showSuccessMessage(response?.message)
-        // setCount(response?.data?.count);
-        const transformedData = transformFilesHeadings(
-          response?.data?.mainHeadings
-        );
-        setHeadCount(transformedData[transformedData.length - 1].HeadingNumber);
-        setHeadings(transformedData);
-        // if (registerDataid) {
-        //   getAllFilesAPi(registerDataid);
-        // }
-      }
-    } catch (error) {
-      // showErrorMessage(error?.response?.data?.message);
-    }
-  }, [headcount]);
+
+  useEffect(() => {
+    getAllFiles();
+  }, [])
 
   const images =
     location?.state?.freshReceiptsAttachments?.map((item) => ({
       original: `http://172.16.170.8:5252${item?.filename}`,
       thumbnail: `http://172.16.170.8:5252${item?.filename}`,
     })) || [];
-
-  useEffect(() => {
-    getAllFileHeadingApi();
-  }, []);
 
   return (
     <Layout
@@ -485,89 +471,15 @@ function AddEditFileCase() {
             style={{
               display: "flex",
               alignItems: "center",
-              justifyContent: "center",
+              justifyContent: "space-between",
+              paddingLeft: 100,
+              paddingRight: 100,
             }}
           >
-            {/* <div
-              style={{
-                width: "30%", // Set width to 50%
-              }}
-            >
-              <label for="formFile" class="form-label mt-3">
-                Select Fresh Receipt
-              </label>
-              <Select
-                options={
-                  allFrs &&
-                  allFrs?.map((item) => ({
-                    value: item.id,
-                    label: `${item.frSubject} - ${item.referenceNumber}`,
-                  }))
-                }
-                onChange={(selectedOptions) => {
-                  setFkFreshReceiptId(selectedOptions);
-                  getFreashRecepitByIdApi(selectedOptions.value);
-                }}
-                // onBlur={formikAssigned.handleBlur}
-                value={fkFreshReceiptId}
-                name="fkFreshReceiptId"
-                // isClearable={true}
-              />
-            </div> */}
             <div
               style={{
                 marginLeft: "20px",
-                width: "30%", // Set width to 50%
-              }}
-            >
-              <label for="formFile" class="form-label mt-3">
-                Select Register
-              </label>
-              <Select
-                options={
-                  registerData &&
-                  registerData?.map((item) => ({
-                    value: item.id,
-                    label: item.year,
-                  }))
-                }
-                onChange={(selectedOptions) =>
-                  setRegisterId(selectedOptions.value)
-                }
-                // onBlur={formikAssigned.handleBlur}
-                // value={fkregisterId}
-                name="fkregisterId"
-                // isClearable={true}
-              />
-            </div>
-            <div
-              style={{
-                marginLeft: "20px",
-                width: "30%", // Set width to 50%
-              }}
-            >
-              <label class="form-label mt-3">Head Number</label>
-              <select
-                class="form-select"
-                placeholder={"Select Head Number"}
-                onChange={(event) => hendleRegisterSelect(event.target.value)}
-                id="headings"
-              >
-                <option selected disabled hidden>
-                  Select
-                </option>
-                {headings &&
-                  headings.map((item) => (
-                    <option value={item.HeadingNumber}>
-                      {item.HeadingNumber}
-                    </option>
-                  ))}
-              </select>
-            </div>
-            <div
-              style={{
-                marginLeft: "20px",
-                width: "30%", // Set width to 50%
+                width: "25%", // Set width to 50%
               }}
             >
               <label for="formFile" class="form-label mt-3">
@@ -588,6 +500,21 @@ function AddEditFileCase() {
                 isClearable={true}
               />
             </div>
+            {!location.state?.view && (
+              <div style={{ marginLeft: "20px", marginTop: "45px" }}>
+                <button
+                  class="btn btn-primary float-end me-4"
+                  type="submit"
+                  onClick={
+                    location.state?.caseId
+                      ? hendleEditFileCase
+                      : hendleCreateFileCase
+                  }
+                >
+                  {location.state?.caseId ? "Update Case" : "Create Case"}
+                </button>
+              </div>
+            )}
           </div>
           <div style={{ padding: "25px" }}>
             <div
@@ -598,34 +525,6 @@ function AddEditFileCase() {
               }}
             >
               <ul className="nav nav-tabs mb-3 mt-3" id="ex1" role="tablist">
-                {/* {location?.state?.freshReceiptsAttachments?.length > 0 && (
-                  <li
-                    className="nav-item"
-                    role="presentation"
-                    onClick={() => {
-                      clearInput();
-                      setSelectedTab("FR Noting");
-                    }}
-                  >
-                    <button
-                      type="button"
-                      className={
-                        selectedTab === "FR Noting"
-                          ? "nav-link active"
-                          : "nav-link"
-                      }
-                      style={{ width: "170px" }}
-                      data-bs-toggle="tab"
-                      role="tab"
-                      aria-controls="ex1-tabs-1"
-                      aria-selected={
-                        selectedTab === "FR Noting" ? "true" : "false"
-                      }
-                    >
-                      FR ({location?.state?.freshReceiptsAttachments?.length})
-                    </button>
-                  </li>
-                )} */}
                 <li
                   className="nav-item"
                   role="presentation"
@@ -683,80 +582,6 @@ function AddEditFileCase() {
                     Correspondence
                   </button>
                 </li>
-                {/* <li
-                  className="nav-item"
-                  role="presentation"
-                  onClick={() => {
-                    clearInput();
-                    setSelectedTab("Sanction");
-                  }}
-                >
-                  <button
-                    type="button"
-                    className={
-                      selectedTab === "Sanction"
-                        ? "nav-link active"
-                        : "nav-link"
-                    }
-                    style={{ width: "170px" }}
-                    data-bs-toggle="tab"
-                    role="tab"
-                    aria-controls="ex1-tabs-1"
-                    aria-selected={
-                      selectedTab === "Sanction" ? "true" : "false"
-                    }
-                  >
-                    Sanction
-                  </button>
-                </li>
-                <li
-                  className="nav-item"
-                  role="presentation"
-                  onClick={() => {
-                    clearInput();
-                    setSelectedTab("Objection");
-                  }}
-                >
-                  <button
-                    type="button"
-                    className={
-                      selectedTab === "Objection"
-                        ? "nav-link active"
-                        : "nav-link"
-                    }
-                    style={{ width: "170px" }}
-                    data-bs-toggle="tab"
-                    role="tab"
-                    aria-controls="ex1-tabs-2"
-                    aria-selected={
-                      selectedTab === "Objection" ? "true" : "false"
-                    }
-                  >
-                    Objection
-                  </button>
-                </li>
-                <li
-                  className="nav-item"
-                  role="presentation"
-                  onClick={() => {
-                    clearInput();
-                    setSelectedTab("Letter");
-                  }}
-                >
-                  <button
-                    type="button"
-                    className={
-                      selectedTab === "Letter" ? "nav-link active" : "nav-link"
-                    }
-                    style={{ width: "170px" }}
-                    data-bs-toggle="tab"
-                    role="tab"
-                    aria-controls="ex1-tabs-2"
-                    aria-selected={selectedTab === "Letter" ? "true" : "false"}
-                  >
-                    Letter
-                  </button>
-                </li> */}
               </ul>
             </div>
             <div className="row">
@@ -957,32 +782,100 @@ function AddEditFileCase() {
                 }}
               >
                 {selectedTab === "Noting" ? (
-                  // Render content for the 'Noting' tab
-                  <section class="mb-5">
-                    <label for="formFile" class="form-label mt-3">
-                      Noting Data
-                    </label>
+                  <div className="container">
+                  {/* First attempt */}
+                    {/* <NoteEditor tabsData={notingTabData} notingTabSubject={notingTabSubject} setNotingTabSubject={setNotingTabSubject} onEditorChange={handleEditorChange} /> */}
 
-                    <TinyEditor
-                      initialContent={""}
-                      setEditorContent={(content) =>
-                        setNotingData((prev) => ({
-                          ...prev,
-                          description: content,
-                        }))
-                      }
-                      editorContent={notingData.description}
-                      multiLanguage={false}
-                      disabled={location.state?.view ? true : false}
-                    />
-                  </section>
+                  {/* Second Attempt */}
+                  {/* <div class="row mb-5">
+                    <div class="col-6">
+                      <label for="formFile" class="form-label">
+                        Added Paragraphs
+                      </label>
+                      <TabComponent tabsData={notingTabData} onEditorChange={handleEditorChange} />
+                    </div>
+                    <div class="col-6">
+                        <label className="form-label">Subject</label>
+                        <input
+                          className={`form-control mb-2`}
+                          id="subject"
+                          placeholder="Subject"
+                          onChange={(e) => setNotingTabSubject(e.target.value)}
+                          value={notingTabSubject}
+                        />
+                        <Editor
+                          title={"Add new paragraph"}
+                          onChange={(content) =>
+                            setNotingData((prev) => ({
+                              ...prev,
+                              description: content,
+                            }))
+                          }
+                          value={notingData.description}
+                          width={"100%"}
+                        />
+                        <button
+                          class="btn btn-primary float-end me-3" 
+                          style={{ marginTop: 60, width: "100px" }}
+                          onClick={() => {}}
+                        >
+                          {'Add'}
+                        </button>
+                    </div>
+                  </div> */}
+
+                  {/* Third attempt */}
+                  <div className="row mb-5">
+        <div className="col-12">
+          <label className="form-label">Subject</label>
+          <input
+            className={`form-control mb-2`}
+            id="subject"
+            placeholder="Subject"
+            onChange={(e) => setNotingTabSubject(e.target.value)}
+            value={notingTabSubject}
+            style={{ width: "50%" }}
+          />
+          <label htmlFor="formFile" className="form-label mt-2">
+            Added Paragraphs
+          </label>
+          <DocParas
+            tabsData={notingTabData}
+            onEditorChange={handleEditorChange}
+          />
+        </div>
+      </div>
+
+      <label className="form-label">Add new paragraph</label>
+      <Editor
+        onChange={(content) => setNotingData({ description: content })}
+        value={notingData.description}
+        width={"100%"}
+        display={"flex"}
+      />
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          marginTop: 5,
+        }}
+      >
+        <button
+          className="btn btn-primary"
+          style={{ marginTop: 60, width: "100px" }}
+          onClick={() => handleEditorChange(null, notingData.description, true)}
+        >
+          {"Add"}
+        </button>
+      </div>
+                  </div>
                 ) : null}
                 {subSelectedTab === "FR" && selectedTab === "Correspondence" ? (
                   <section>
                     {/* <iframe
                       src={`http://172.16.170.8:5252${location?.state?.freshReceiptsAttachments[0]?.filename}`}
                       style={{ width: "700px", height: "400px" }}
-                      frameborder="0"
+                      frameborder="0" 
                     ></iframe> */}
                     <section>
                       <ImageGallery
@@ -1491,24 +1384,6 @@ function AddEditFileCase() {
                 ) : null}
               </div>
             </div>
-
-            {!location.state?.view && (
-              <div class="row mt-4">
-                <div class="col-11 p-0">
-                  <button
-                    class="btn btn-primary float-end me-4"
-                    type="submit"
-                    onClick={
-                      location.state?.caseId
-                        ? hendleEditFileCase
-                        : hendleCreateFileCase
-                    }
-                  >
-                    {location.state?.caseId ? "Update Case" : "Create Case"}
-                  </button>
-                </div>
-              </div>
-            )}
           </div>
         </div>
       </div>

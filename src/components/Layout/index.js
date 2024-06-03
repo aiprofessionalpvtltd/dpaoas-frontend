@@ -364,7 +364,7 @@ export const Layout = ({
               />
               <div
                 className="dashboard-content"
-                style={{ marginTop: location.pathname === "/" ? 5 : 90 }}
+                style={{ marginTop: location.pathname === "/" ? 5 : location.pathname === "/efiling/dashboard" ? 83 : 90, marginBottom: location.pathname === "/efiling/dashboard" ? 0 : "65px"}}
               >
                 <div className="container-fluid">{children}</div>
               </div>

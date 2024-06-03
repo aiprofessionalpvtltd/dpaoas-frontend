@@ -24,6 +24,7 @@ import {
 import moment from "moment";
 import { keyframes } from "@emotion/react";
 import { Box } from "@mui/system";
+import { Calendar } from "../../../../../components/Calendar";
 function MainDashboard() {
   const userData = getUserData();
   const [fileStatsData, setFileStatsData] = useState(null);
@@ -1114,11 +1115,12 @@ const NonBlinkingIndicator = () => {
               className="dash-detail-container mt-3"
               style={{ background: "none" }}
             >
-              <img
+              {/* <img
                 src={CalenderImage}
                 alt="calender"
                 style={{ width: "100%", height: "499px" }}
-              />
+              /> */}
+              <Calendar />
             </div>
           </div>
         </div>
