@@ -61,6 +61,7 @@ function NoticeQuestionDetail() {
   const [currentPage, setCurrentPage] = useState(0);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [allQuestionStatus, setAllQuestionStatus] = useState([]);
+  
   const pageSize = 10;
 
   const handleStatusPageChange = (page) => {
