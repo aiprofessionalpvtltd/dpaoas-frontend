@@ -234,11 +234,7 @@ function CMSUserDashboard() {
 
   const hendleExportExcel = async () => {
     try {
-      const response = await getallcomplaintRecordByUserId(
-        userData.fkUserId,
-        0,
-        100
-      );
+      const response = await getallComplaint();
       if (response?.success) {
         // Export to Excel logic
         const worksheet = XLSX.utils.json_to_sheet(response?.data?.complaints);
