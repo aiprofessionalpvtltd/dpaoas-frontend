@@ -176,7 +176,7 @@ function CMSTonerInstallationReports() {
 
   const hendleExportExcel = async () => {
     try {
-      const response = await getallToners(currentPage, pageSize);
+      const response = await getallToners();
 
       if (response?.success) {
         const DataArray = response?.data?.tonerInstallations;
