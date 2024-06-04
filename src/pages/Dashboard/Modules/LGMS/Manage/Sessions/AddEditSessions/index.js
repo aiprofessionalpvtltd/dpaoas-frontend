@@ -40,7 +40,7 @@ const validationSchema = Yup.object({
 function LGMSAddEditSessionsForm() {
   const location = useLocation();
   const [sessionByIdData, setSessionByIdData] = useState();
-  const { sessions } = useContext(AuthContext);
+  const { sessions, parliamentaryYear } = useContext(AuthContext);
   const formik = useFormik({
     initialValues: {
       sessionNo: "",
@@ -51,7 +51,7 @@ function LGMSAddEditSessionsForm() {
       legislationDiaryNo: "",
       legislationDiaryDate: "",
       businessStatus: "",
-      businessSession: [],
+      businessSessions: [],
       parliamentaryYear: "",
       isAdjourned: false,
       summonDate: "",
@@ -74,25 +74,21 @@ function LGMSAddEditSessionsForm() {
     const data = {
       sessionName: Number(values?.sessionNo),
       calledBy: values.CalledBy,
-      isJointSession: values.isJoint ? Boolean(values.isJoint) : "",
+      isJointSession: values.isJoint ? Boolean(values.isJoint) : false,
       startDate: values.startDate,
       endDate: values.endDate,
       legislationDiaryNo: values.legislationDiaryNo,
       legislationDiaryDate: values.legislationDiaryDate,
       businessStatus: values.businessStatus,
 
-      fkParliamentaryYearId: Number(values.parliamentaryYear),
+      fkParliamentaryYearId: Number(values.parliamentaryYear?.value),
       isQuoraumAdjourned: Boolean(values.isAdjourned),
       summonNoticeDate: values.summonDate,
       summonNoticeTime: values.summonTime,
       jointSessionPurpose: values.jointSessionPurpose,
-
-      ...(values?.businessSessions &&
-        values.businessSessions.length > 0 && {
-          businessSessions: values?.businessSessions.map((session, index) => ({
-            [`businessSessions[${index}]`]: session?.value,
-          })),
-        }),
+      businessSessions: values?.businessSessions
+        ? values.businessSessions.map((session) => session.value)
+        : [],
     };
     console.log("object", data);
     try {
@@ -108,19 +104,21 @@ function LGMSAddEditSessionsForm() {
   const UpdateSessionsApi = async (values) => {
     const data = {
       sessionName: Number(values?.sessionNo),
-      calledBy: values.CalledBy,
-      isJointSession: values.isJoint ? Boolean(values.isJoint) : "",
-      startDate: values.startDate,
-      endDate: values.endDate,
-      legislationDiaryNo: values.legislationDiaryNo,
-      legislationDiaryDate: values.legislationDiaryDate,
-      businessStatus: values.businessStatus,
-      businessSessions: [Number(values.businessSession)],
-      fkParliamentaryYearId: Number(values.parliamentaryYear),
-      isQuoraumAdjourned: Boolean(values.isAdjourned),
-      summonNoticeDate: values.summonDate,
-      summonNoticeTime: values.summonTime,
-      jointSessionPurpose: values.jointSessionPurpose,
+      calledBy: values?.CalledBy,
+      isJointSession: values?.isJoint ? Boolean(values?.isJoint) : false,
+      startDate: values?.startDate,
+      endDate: values?.endDate,
+      legislationDiaryNo: values?.legislationDiaryNo,
+      legislationDiaryDate: values?.legislationDiaryDate,
+      businessStatus: values?.businessStatus,
+      businessSessions: values?.businessSessions
+        ? values.businessSessions.map((session) => session.value)
+        : [],
+      fkParliamentaryYearId: Number(values?.parliamentaryYear?.value),
+      isQuoraumAdjourned: Boolean(values?.isAdjourned),
+      summonNoticeDate: values?.summonDate,
+      summonNoticeTime: values?.summonTime,
+      jointSessionPurpose: values?.jointSessionPurpose,
     };
     try {
       const response = await updateSessions(location.state.id, data);
@@ -162,15 +160,29 @@ function LGMSAddEditSessionsForm() {
         legislationDiaryDate:
           new Date(sessionByIdData.legislationDiaryDate) || "",
         businessStatus: sessionByIdData.businessStatus || "",
-        businessSession: sessionByIdData.businessSessions[0]?.sessionName || "",
-        parliamentaryYear: sessionByIdData.fkParliamentaryYearId || "",
+        // businessSession: sessionByIdData.businessSessions[0]?.sessionName || "",
+        // businessSession: sessionByIdData.businessSessions[0]?.sessionName || "",
+
+        businessSessions: sessionByIdData?.businessSessions
+          ? sessionByIdData?.businessSessions.map((session) => ({
+              value: session?.id,
+              label: session?.sessionName,
+            }))
+          : [],
+        parliamentaryYear: sessionByIdData.parliamentaryYear
+          ? {
+              value: sessionByIdData.parliamentaryYear?.id,
+              label: sessionByIdData.parliamentaryYear?.parliamentaryTenure,
+            }
+          : "",
         isAdjourned: sessionByIdData.isQuoraumAdjourned || "",
         summonDate: new Date(sessionByIdData.summonNoticeDate) || "",
+        summonTime: sessionByIdData.summonNoticeTime || "",
         jointSessionPurpose: sessionByIdData.jointSessionPurpose || "",
       });
     }
   }, [sessionByIdData, formik.setValues]);
-
+  console.log("test", sessionByIdData);
   return (
     <Layout
       module={true}
@@ -238,8 +250,8 @@ function LGMSAddEditSessionsForm() {
                         <option value={""} selected disabled hidden>
                           Select
                         </option>
-                        <option value="President">President</option>
                         <option value="Chairman">Chairman</option>
+                        <option value="President">President</option>
                       </select>
                     </div>
                   </div>
@@ -299,12 +311,13 @@ function LGMSAddEditSessionsForm() {
                           formik.setFieldValue("startDate", date)
                         }
                         onBlur={formik.handleBlur}
-                        minDate={new Date()}
+                        // minDate={new Date()}
                         className={`form-control ${
                           formik.touched.startDate && formik.errors.startDate
                             ? "is-invalid"
                             : ""
                         }`}
+                        dateFormat="dd-MM-yyyy"
                       />
                       {formik.touched.startDate && formik.errors.startDate && (
                         <div className="invalid-feedback">
@@ -336,12 +349,13 @@ function LGMSAddEditSessionsForm() {
                           formik.setFieldValue("endDate", date)
                         }
                         onBlur={formik.handleBlur}
-                        minDate={new Date()}
+                        // minDate={new Date()}
                         className={`form-control ${
                           formik.touched.endDate && formik.errors.endDate
                             ? "is-invalid"
                             : ""
                         }`}
+                        dateFormat="dd-MM-yyyy"
                       />
                       {formik.touched.endDate && formik.errors.endDate && (
                         <div className="invalid-feedback">
@@ -473,12 +487,15 @@ function LGMSAddEditSessionsForm() {
                           label: item?.sessionName,
                         }))
                       }
-                      name="businessSession"
-                      id="businessSession"
+                      name="businessSessions"
+                      id="businessSessions"
                       onChange={(selectedOptions) =>
-                        formik.setFieldValue("businessSession", selectedOptions)
+                        formik.setFieldValue(
+                          "businessSessions",
+                          selectedOptions
+                        )
                       }
-                      value={formik.values.businessSession}
+                      value={formik.values.businessSessions}
                       isMulti={true}
                     />
                   </div>
@@ -487,8 +504,8 @@ function LGMSAddEditSessionsForm() {
                 <div class="row">
                   <div class="col-6">
                     <div class="mb-3">
-                      <label class="form-label">Parliamentary Year ID</label>
-                      <select
+                      <label class="form-label">Parliamentary Year</label>
+                      {/* <select
                         class="form-select"
                         id="parliamentaryYear"
                         name="parliamentaryYear"
@@ -502,7 +519,32 @@ function LGMSAddEditSessionsForm() {
                         <option value={"1"}>Federal</option>
                         <option value={"2"}>Punjab</option>
                         <option value={"3"}>Sindh</option>
-                      </select>
+                      </select> */}
+                      <Select
+                        options={
+                          parliamentaryYear &&
+                          parliamentaryYear?.map((item) => ({
+                            value: item?.id,
+                            label: item?.parliamentaryTenure,
+                          }))
+                        }
+                        onChange={(selectedOptions) =>
+                          formik.setFieldValue(
+                            "parliamentaryYear",
+                            selectedOptions
+                          )
+                        }
+                        // onBlur={formikAssigned.handleBlur}
+                        value={formik.values.parliamentaryYear}
+                        name="parliamentaryYear"
+                      />
+
+                      {formik.touched.parliamentaryYear &&
+                        formik.errors.parliamentaryYear && (
+                          <div className="invalid-feedback">
+                            {formik.errors.parliamentaryYear}
+                          </div>
+                        )}
                     </div>
                   </div>
 
@@ -563,12 +605,13 @@ function LGMSAddEditSessionsForm() {
                           formik.setFieldValue("summonDate", date)
                         }
                         onBlur={formik.handleBlur}
-                        minDate={new Date()}
+                        // minDate={new Date()}
                         className={`form-control ${
                           formik.touched.summonDate && formik.errors.summonDate
                             ? "is-invalid"
                             : ""
                         }`}
+                        dateFormat="dd-MM-yyyy"
                       />
                       {formik.touched.summonDate &&
                         formik.errors.summonDate && (
@@ -595,6 +638,7 @@ function LGMSAddEditSessionsForm() {
                             ? "is-invalid"
                             : ""
                         }`}
+                        
                       />
                       {formik.errors.summonTime &&
                         formik.touched.summonTime && (

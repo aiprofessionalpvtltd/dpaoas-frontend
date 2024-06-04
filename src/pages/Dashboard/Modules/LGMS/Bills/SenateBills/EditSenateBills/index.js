@@ -54,7 +54,7 @@ const EditSenateBill = () => {
     useState(false);
   const [isBillStatusDateCalendarOpen, setBillStatusDateCalendarOpen] =
     useState(false);
-
+    const [filePath, setFilePath] = useState("");
   const GetAllCommittiesApi = async () => {
     try {
       const response = await AllManageCommitties(0, 500);
@@ -264,6 +264,17 @@ const EditSenateBill = () => {
 
   useEffect(() => {
     if (singleSenateBillData) {
+     
+      const file = singleSenateBillData?.billDocuments?.file?.[0];
+      let parsedFile = null;
+      if (file) {
+        try {
+          parsedFile = JSON.parse(file);
+          setFilePath(parsedFile.path);
+        } catch (error) {
+          console.error('Error parsing file:', error);
+        }
+      }
       formik.setValues({
         fkParliamentaryYearId:
           singleSenateBillData?.fkParliamentaryYearId || "",
@@ -521,7 +532,7 @@ const EditSenateBill = () => {
     }
 
     if (values?.file) {
-      formData.append("file", values?.file);
+      formData.append("file", values?.file[0]);
     }
 
     if (values?.senateBillSenatorMovers) {
@@ -1691,16 +1702,43 @@ const EditSenateBill = () => {
                         Choose File
                       </label>
                       <input
-                        type="file"
-                        id="fileInput"
-                        name="fileInput"
                         className="form-control"
+                        type="file"
+                        accept=".pdf, .jpg, .jpeg, .png"
+                        id="file"
+                        name="file"
                         onChange={(event) => {
-                          // Handle file input change event
-                          console.log(event.target.files);
+                          formik.setFieldValue(
+                            "file",
+                            event.currentTarget.files
+                          );
                         }}
                       />
                     </div>
+                    {filePath && (
+                      <div>
+                        <a
+                          href={`http://172.16.170.8:5252${filePath}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        ></a>
+                        <span
+                          class="MultiFile-label"
+                          title={filePath.split("\\").pop().split("/").pop()}
+                        >
+                          <span class="MultiFile-title">
+                            <a
+                              href={`http://172.16.170.8:5252${filePath}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {filePath?.split("\\").pop().split("/").pop()}
+                            </a>
+                          </span>
+                        </span>
+                      </div>
+                    )}
+                   
                     <div className="row mt-3">
                       <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                         <button class="btn btn-primary" type="submit">

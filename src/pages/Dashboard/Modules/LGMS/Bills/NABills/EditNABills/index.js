@@ -55,7 +55,7 @@ const UpdateBills = () => {
     useState(false);
   const [isBillStatusDateCalendarOpen, setBillStatusDateCalendarOpen] =
     useState(false);
-
+  const [filePath, setFilePath] = useState("");
   const GetAllCommittiesApi = async () => {
     try {
       const response = await AllManageCommitties(0, 500);
@@ -277,9 +277,26 @@ const UpdateBills = () => {
 
   useEffect(() => {
     if (singleSenateBillData) {
+      const file = singleSenateBillData?.billDocuments?.file?.[0];
+      let parsedFile = null;
+      if (file) {
+        try {
+          parsedFile = JSON.parse(file);
+          setFilePath(parsedFile.path);
+        } catch (error) {
+          console.error("Error parsing file:", error);
+        }
+      }
+
       formik.setValues({
         fkParliamentaryYearId:
-          singleSenateBillData?.fkParliamentaryYearId || "",
+          (singleSenateBillData?.parliamentaryYears && {
+            value: singleSenateBillData?.parliamentaryYears?.id,
+            label:
+              singleSenateBillData?.parliamentaryYears?.parliamentaryTenure,
+          }) ||
+          "",
+
         fkSessionId: singleSenateBillData?.fkSessionId || "",
         billCategory: singleSenateBillData?.billCategory || "",
         billType: singleSenateBillData?.billType || "",
@@ -398,9 +415,13 @@ const UpdateBills = () => {
     }
   }, [singleSenateBillData, formik.setValues]);
 
+  // console.log("PAAAA FIle", singleSenateBillData?.billDocuments);
   const UpdateNationalAssemblyBill = async (values) => {
     const formData = new FormData();
-    formData.append("fkParliamentaryYearId", values?.fkParliamentaryYearId);
+    formData.append(
+      "fkParliamentaryYearId",
+      values?.fkParliamentaryYearId?.value
+    );
     formData.append("fkSessionId", values?.fkSessionId);
     formData.append("billCategory", values?.billCategory);
     formData.append("billType", values?.billType);
@@ -545,7 +566,7 @@ const UpdateBills = () => {
     }
     formData.append("billFrom", "From NA");
     if (values?.file) {
-      formData.append("file", values?.file);
+      formData.append("file", values?.file[0]);
     }
 
     if (values?.senateBillSenatorMovers) {
@@ -610,7 +631,7 @@ const UpdateBills = () => {
                       <div className="col">
                         <div class="mb-3">
                           <label class="form-label">Parliamentary Year</label>
-                          <select
+                          {/* <select
                             id="fkParliamentaryYearId"
                             name="fkParliamentaryYearId"
                             className="form-select"
@@ -626,7 +647,26 @@ const UpdateBills = () => {
                                   {item.parliamentaryTenure}
                                 </option>
                               ))}
-                          </select>
+                          </select> */}
+                          <Select
+                            options={
+                              parliamentaryYear &&
+                              parliamentaryYear?.map((item) => ({
+                                value: item?.id,
+                                label: item?.parliamentaryTenure,
+                              }))
+                            }
+                            onChange={(selectedOptions) =>
+                              formik.setFieldValue(
+                                "fkParliamentaryYearId",
+                                selectedOptions
+                              )
+                            }
+                            // onBlur={formikAssigned.handleBlur}
+                            value={formik.values.fkParliamentaryYearId}
+                            name="fkParliamentaryYearId"
+                          />
+
                           {formik.touched.fkParliamentaryYearId &&
                             formik.errors.fkParliamentaryYearId && (
                               <div className="invalid-feedback">
@@ -1717,16 +1757,43 @@ const UpdateBills = () => {
                         Choose File
                       </label>
                       <input
-                        type="file"
-                        id="fileInput"
-                        name="fileInput"
                         className="form-control"
+                        type="file"
+                        accept=".pdf, .jpg, .jpeg, .png"
+                        id="file"
+                        name="file"
                         onChange={(event) => {
-                          // Handle file input change event
-                          console.log(event.target.files);
+                          formik.setFieldValue(
+                            "file",
+                            event.currentTarget.files
+                          );
                         }}
                       />
                     </div>
+                    {filePath && (
+                      <div>
+                        <a
+                          href={`http://172.16.170.8:5252${filePath}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        ></a>
+                        <span
+                          class="MultiFile-label"
+                          title={filePath.split("\\").pop().split("/").pop()}
+                        >
+                          <span class="MultiFile-title">
+                            <a
+                              href={`http://172.16.170.8:5252${filePath}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {filePath?.split("\\").pop().split("/").pop()}
+                            </a>
+                          </span>
+                        </span>
+                      </div>
+                    )}
+                   
                     <div className="row mt-3">
                       <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                         <button class="btn btn-primary" type="submit">
