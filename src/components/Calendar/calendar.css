@@ -1,0 +1,24 @@
+/* Calendar.css */
+
+/* Style for active button */
+.fc-button.fc-dayGridMonth-button.fc-button-primary.fc-button-active {
+    background-color: #1a252f; /* Red background for the active "month view" button */
+    color: white; /* White text color for the active "month view" button */
+  }
+
+  .fc-button.fc-timeGridWeek-button.fc-button-primary.fc-button-active {
+    background-color: #1a252f; /* Red background for the active "month view" button */
+    color: white; /* White text color for the active "month view" button */
+  }
+
+  
+  .fc-button.fc-timeGridDay-button.fc-button-primary.fc-button-active {
+    background-color: #1a252f; /* Red background for the active "month view" button */
+    color: white; /* White text color for the active "month view" button */
+  }
+  
+  /* Style for inactive buttons */
+  .fc-button.fc-button-primary {
+    background-color: white; /* White background for inactive buttons */
+    color: black; /* Black text color for inactive buttons */
+  }

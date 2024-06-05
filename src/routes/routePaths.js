@@ -207,6 +207,7 @@ import ResearchBRServices from "../pages/Dashboard/Modules/Research/ResearchServ
 import ResearchAddEditResearchService from "../pages/Dashboard/Modules/Research/ResearchServices/AddEditResearchService";
 import CMSBranches from "../pages/Dashboard/Modules/CMS/AdminCMS/BranchesCMS";
 import CMSAddEditBranch from "../pages/Dashboard/Modules/CMS/AdminCMS/BranchesCMS/AddEditBranchCMS";
+import AddEditCorrespondence from "../pages/Dashboard/Modules/EFiling/FIleRegister/Files/FileCases/AddEditFileCase/AddEditCorrespondence";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -651,6 +652,10 @@ export const ProtectedRoutes = [
   {
     path: "/efiling/dashboard/file-register-list/files-list/addedit-case",
     element: <AddEditFileCase />,
+  },
+  {
+    path: "/efiling/dashboard/file-register-list/files-list/addedit-case/addedit-correspondence",
+    element: <AddEditCorrespondence />,
   },
   {
     path: "/efiling/dashboard/file-heading-list",
