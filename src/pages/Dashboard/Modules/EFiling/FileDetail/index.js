@@ -2,8 +2,9 @@ import React, { useContext, useEffect, useState, useRef } from "react";
 import { Layout } from "../../../../../components/Layout";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
-import { getUserData } from "../../../../../api/Auth";
+import { getCaseIdForDetailPage, getFileIdForDetailPage, getUserData } from "../../../../../api/Auth";
 import {
+  UpdateFIleCase,
   assignFIleCase,
   getAllCorrespondence,
   getCaseDetailByID,
@@ -62,6 +63,7 @@ function FileDetail() {
     CommentStatus: "",
     comment: "",
   });
+  const [filesData, setFilesData] = useState(null);
   const pageSize = 10;
 
   const initialNotingTabData = [
@@ -108,6 +110,24 @@ function FileDetail() {
       // UpdateEfilingApi(values);
     },
   });
+
+  const UpdateEfilingApi = async () => {
+    const data = {
+      notingSubject: notingTabSubject,
+      paragraphArray: notingTabData
+    }
+    try {
+      const response = await UpdateFIleCase(
+        filesData?.caseNoteId,
+        data
+      );
+      if (response?.success) {
+        showSuccessMessage(response?.message);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  }
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
@@ -160,23 +180,6 @@ function FileDetail() {
     }
   };
 
-  const getFilesByID = async () => {
-    try {
-      const response = await getCaseDetailByID(
-        location?.state?.fileId ? location?.state?.fileId : fileIdINRegister,
-        caseId
-      );
-
-      if (response?.success) {
-        setRemarksData(response?.data?.cases?.fileRemarks);
-        const FRSelection =
-          response?.data?.cases?.freshReceipts?.freshReceiptsAttachments;
-      }
-    } catch (error) {
-      showErrorMessage(error?.response?.data?.message);
-    }
-  };
-
   const getEmployeeData = async () => {
     try {
       const response = await getHLEmployee(UserData?.fkUserId);
@@ -208,6 +211,7 @@ function FileDetail() {
           references: [],
         },
       ]);
+      setNotingData("")
     } else if (isReference) {
       const updatedTabs = notingTabData.map((tab, i) =>
         i === index
@@ -250,7 +254,7 @@ function FileDetail() {
   const handleCorrespondences = async () => {
     try {
       const response = await getAllCorrespondence(
-        fkfileId.value,
+        filesData?.cases?.files?.id,
         UserData.fkBranchId,
         currentPage,
         pageSize
@@ -266,23 +270,58 @@ function FileDetail() {
   };
 
   const HandlePrint = async (urlimage) => {
-    const url = `http://10.10.140.200:5152${urlimage}`;
+    const url = `http://172.16.170.8:5252${urlimage}`;
     window.open(url, "_blank");
   };
 
-  useEffect(() => {
-    if (location.state?.id) {
-      getFilesByID();
+  const getFilesByID = async (fileGlobalId, caseGlobalId) => {
+    try {
+      const response = await getCaseDetailByID(
+        fileGlobalId ? fileGlobalId : location?.state?.fileId,
+        caseGlobalId ? caseGlobalId : caseId
+      );
+
+      if (response?.success) {
+        setRemarksData(response?.data?.cases?.casesRemarks);
+        setFilesData(response?.data);
+        const FRSelection =
+          response?.data?.cases?.freshReceipts?.freshReceiptsAttachments;
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
     }
-  }, []);
+  };
+
+  useEffect(() => {
+    const fileId = getFileIdForDetailPage();
+    const caseId = getCaseIdForDetailPage();
+    if(fileId && caseId) {
+      setFKFileId(fileId)
+      getFilesByID(fileId, caseId);
+    }
+  }, [getFileIdForDetailPage]);
 
   useEffect(() => {
     handleCorrespondences();
-  }, [fkfileId]);
+  }, [filesData?.cases?.files?.id]);
 
   useEffect(() => {
     getEmployeeData();
   }, []);
+
+  useEffect(() => {
+    formik.setValues({
+      fileNumber: filesData?.cases?.files?.fileNumber || "",
+      fileSubject: filesData?.cases?.files?.fileSubject || "",
+      // priority: filesData?.cases?.files?.priority || "",
+      fileCategory: filesData?.cases?.files?.fileCategory || "",
+      // fileType: filesData?.cases?.files?.fileType || "",
+      fkBranchId: filesData?.cases?.files?.fkBranchId || "",
+      year: filesData?.cases?.files?.year || "",
+    });
+    setNotingTabSubject(filesData?.notingSubject);
+    setNotingTabsData(filesData?.paragraphArray);
+  }, [filesData])
 
   return (
     <Layout
@@ -565,6 +604,29 @@ function FileDetail() {
                                   ? "none"
                                   : "block",
                               }}
+                              onClick={() => UpdateEfilingApi()} // True means non-editable
+                              disabled={
+                                viewPage
+                                  ? true
+                                  : location?.state?.approved
+                                    ? true
+                                    : false
+                              }
+                            >
+                              Save
+                            </button>
+                          </div>
+
+                          <div class="col-2">
+                            <button
+                              class="btn btn-primary"
+                              type="submit"
+                              style={{
+                                width: "150px",
+                                display: location?.state?.view
+                                  ? "none"
+                                  : "block",
+                              }}
                               onClick={() => handleSubmit(true)} // True means non-editable
                               disabled={
                                 viewPage
@@ -635,6 +697,7 @@ function FileDetail() {
                                     handleEditorChange(
                                       null,
                                       notingData.description,
+                                      null,
                                       false,
                                       true
                                     )
@@ -660,7 +723,7 @@ function FileDetail() {
                                   if (fkfileId) {
                                     navigate(
                                       "/efiling/dashboard/file-register-list/files-list/addedit-case/addedit-correspondence",
-                                      { state: { fileId: fkfileId.value } }
+                                      { state: { fileId: fkfileId, fileDetail: true } }
                                     );
                                   } else {
                                     showErrorMessage(
@@ -683,7 +746,8 @@ function FileDetail() {
                                       {
                                         state: {
                                           item: item,
-                                          fileId: fkfileId.value,
+                                          fileId: fkfileId,
+                                          fileDetail: true
                                         },
                                       }
                                     );
@@ -715,7 +779,7 @@ function FileDetail() {
                   >
                     Comments
                   </h2>
-                  {!location?.state.approved && (
+                  {!location?.state?.approved && (
                     <a onClick={toggleModal}>
                       <button
                         className="btn add-btn"

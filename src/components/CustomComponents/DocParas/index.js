@@ -178,7 +178,7 @@ const DocParas = ({ tabsData, onEditorChange, onDelete }) => {
         </div>
       </Modal>
 
-      {tabsData.map((tab, index) => (
+      {tabsData && tabsData.length > 0 && tabsData.map((tab, index) => (
         <Box
           key={index}
           sx={{

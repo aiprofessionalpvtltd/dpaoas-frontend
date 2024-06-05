@@ -163,8 +163,8 @@ function AddEditCorrespondence() {
     >
       <Header
         dashboardLink={"lgms/dashboard"}
-        addLink1={"/efiling/dashboard/file-register-list/files-list/addedit-case"}
-        title1={"Correspondence"}
+        addLink1={location.state?.fileDetail ? "/efiling/dashboard/fileDetail" : "/efiling/dashboard/file-register-list/files-list/addedit-case"}
+        title1={location.state?.fileDetail ? "File Detail" : "Correspondence"}
         addLink2={"/efiling/dashboard/file-register-list/files-list/addedit-case"}
         title2={location && location.state?.item?.internalId ? "Edit Correspondence" : "Add Correspondence"}
       />

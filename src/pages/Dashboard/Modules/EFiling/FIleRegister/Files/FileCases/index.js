@@ -16,7 +16,7 @@ import {
   getFileByRegisterById,
 } from "../../../../../../../api/APIs/Services/efiling.service";
 import { AuthContext } from "../../../../../../../api/AuthContext";
-import { getUserData } from "../../../../../../../api/Auth";
+import { getUserData, setCaseIdForDetailPage, setFileIdForDetailPage } from "../../../../../../../api/Auth";
 import moment from "moment";
 import Select from "react-select";
 import { showSuccessMessage } from "../../../../../../../utils/ToastAlert";
@@ -303,7 +303,9 @@ function FileCases() {
                 "/efiling/dashboard/file-register-list/files-list/addedit-case"
               )
             }
-            handleEdit={(item) =>
+            handleEdit={(item) => {
+              setFileIdForDetailPage(item?.internalId);
+              setCaseIdForDetailPage(item?.caseId);
               navigate("/efiling/dashboard/fileDetail", {
                 state: {
                   view: false,
@@ -311,14 +313,16 @@ function FileCases() {
                   fileId: item?.internalId,
                 },
               })
-            }
+            }}
             showEditIcon={false}
             pageSize={pageSize}
             totalCount={count}
             singleDataCard={true}
             hideDeleteIcon={true}
             showView={true}
-            handleView={(item) =>
+            handleView={(item) => {
+              setFileIdForDetailPage(item?.internalId);
+              setCaseIdForDetailPage(item?.caseId);
               navigate("/efiling/dashboard/fileDetail", {
                 state: {
                   view: true,
@@ -326,7 +330,7 @@ function FileCases() {
                   fileId: item?.internalId,
                 },
               })
-            }
+            }}
             showAssigned={false}
             // hendleAssigned={(item) => navigate("/efiling/dashboard/fileDetail", { state: { view: true, id: item.caseId } })}
           />

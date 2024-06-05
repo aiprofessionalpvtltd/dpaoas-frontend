@@ -78,6 +78,7 @@ function AddEditFileCase() {
           references: [],
         },
       ]);
+      setNotingData("")
     } else if (isReference) {
       const updatedTabs = notingTabData.map((tab, i) =>
         i === index
@@ -101,8 +102,6 @@ function AddEditFileCase() {
     setNotingTabsData(updatedTabs);
     }
   };
-
-  console.log(notingTabData);
 
   const handleDelete = (index) => {
     const updatedTabs = notingTabData.filter((_, i) => i !== index);
@@ -258,7 +257,7 @@ function AddEditFileCase() {
   }, [fkfileId]);
 
   const HandlePrint = async (urlimage) => {
-    const url = `http://10.10.140.200:5152${urlimage}`;
+    const url = `http://172.16.170.8:5252${urlimage}`;
     window.open(url, "_blank");
     // setPdfUrl(url)
   };
@@ -600,7 +599,7 @@ function AddEditFileCase() {
                         className="btn btn-primary"
                         style={{ marginTop: 60, width: "100px" }}
                         onClick={() =>
-                          handleEditorChange(null, notingData.description, false, true)
+                          handleEditorChange(null, notingData.description, null, false, true)
                         }
                       >
                         {"Add"}

@@ -533,17 +533,17 @@ export const DeleteFileCaseImage = async (id) => {
   }
 };
 
-export const UpdateFIleCase = async (fileId, caseId, data) => {
+export const UpdateFIleCase = async (caseNoteId, data) => {
   try {
     //   const token = getAuthToken();
     const response = await axiosClientMMS.put(
-      `/cases/updateCase/${fileId}/${caseId}`,
+      `/cases/updateCase/${caseNoteId}`,
       data
     );
     // {
     //   headers: {
     //     accept: "application/json",
-    //     "Content-Type": "multipart/form-data",
+    //     "Content-Type": "application/json",
     //   },
     // });
     return response?.data;
