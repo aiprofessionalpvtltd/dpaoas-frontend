@@ -4,31 +4,17 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { getUserData } from "../../../../../api/Auth";
 import {
-  DeleteFileCaseImage,
-  DeleteFreahReceptImage,
-  DeleteNotificationById,
-  UpdateEfiling,
-  UpdateFIleCase,
-  UploadEfilingAttechment,
   assignFIleCase,
   getAllCorrespondence,
   getCaseDetailByID,
-  getEFilesByID,
-  getSignatureByUserId,
 } from "../../../../../api/APIs/Services/efiling.service";
 import { ToastContainer } from "react-toastify";
 import {
   showErrorMessage,
   showSuccessMessage,
 } from "../../../../../utils/ToastAlert";
-import moment from "moment";
 import { AuthContext } from "../../../../../api/AuthContext";
-import {
-  getAllEmployee,
-  getDepartment,
-  getHLEmployee,
-} from "../../../../../api/APIs/Services/organizational.service";
-import { getBranches } from "../../../../../api/APIs/Services/Branches.services";
+import { getHLEmployee } from "../../../../../api/APIs/Services/organizational.service";
 import {
   EfilingSideBarBranchItem,
   EfilingSideBarItem,
@@ -51,84 +37,54 @@ const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
 
 function FileDetail() {
   const location = useLocation();
-  const fileInputRef = useRef(null);
+  const navigate = useNavigate();
   const UserData = getUserData();
+  const fileInputRef = useRef(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
   const [correspondenceTypesData, setCorrespondenceTypesData] = useState([]);
-  const pageSize = 10; // Set your desired page size
   const [showModal, setShowModal] = useState(false);
   const [attachedFiles, setAttachedFiles] = useState([]);
   const [fkfileId, setFKFileId] = useState(null);
-
-  const handlePageChange = (page) => {
-    // Update currentPage when a page link is clicked
-    setCurrentPage(page);
-  };
-
-  const [showSubButtonsCorrespondence, setShowSubButtonsCorrespondence] =
-    useState(false);
-
-  const toggleButtons = () => {
-    setShowSubButtonsCorrespondence(true);
-  };
-
-  const [correspondenceData, setCorrespondenceData] = useState({
-    description: "",
-    attachedFiles: [],
-  });
-
-  const [objection, setObjection] = useState({
-    description: "",
-    attachedFiles: [],
-  });
-
-  const [sanction, setSanction] = useState({
-    description: "",
-    attachedFiles: [],
-  });
-
-  const [letter, setLetter] = useState({
-    description: "",
-    attachedFiles: [],
-  });
-
-  const [circular, setCircular] = useState({
-    description: "",
-    attachedFiles: [],
-  });
-
-  const [misc, setMisc] = useState({
-    description: "",
-    attachedFiles: [],
-  });
-
   const [employeeData, setEmployeeData] = useState([]);
-
-  const [filesData, setFilesData] = useState(null);
   const [viewPage, setViewPage] = useState(location?.state?.view);
-
-  const [documentTypeVal, setDocumentTypeVal] = useState("");
-
-  const { ministryData, fileIdINRegister } = useContext(AuthContext);
-  const [departmentData, setDepartmentData] = useState([]);
-  const [branchesData, setBranchesData] = useState([]);
-
+  const { fileIdINRegister } = useContext(AuthContext);
   const [caseId, setcaseId] = useState(location?.state?.id);
-
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [togleOpan, setTogleOpan] = useState(true);
   const [selectedTab, setSelectedTab] = useState("Noting");
-  const [subSelectedTab, setSubSelectedTab] = useState("Sanction");
   const [remarksData, setRemarksData] = useState([]);
-  const [frAttachments, setFrAttachments] = useState([]);
-  const navigate = useNavigate();
+  const [notingTabSubject, setNotingTabSubject] = useState("");
+  const [notingData, setNotingData] = useState({
+    description: "",
+  });
+  const [modalInputValue, setModalInputValue] = useState({
+    assignedTo: "",
+    CommentStatus: "",
+    comment: "",
+  });
+  const pageSize = 10;
 
-  const clearInput = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.value = null; // Reset the value of the input
-    }
-  };
+  const initialNotingTabData = [
+    {
+      title: "Para 1",
+      description: "Content for Paragraph 1",
+      references: [
+        {
+          flag: "A",
+          id: 2,
+          attachments: [
+            {
+              file: "/public/correspondences/2024-06-04T07-58-31/output_1717395191507.pdf",
+            },
+          ],
+        },
+      ],
+    },
+    { title: "Para 2", description: "Content for Paragraph 2", references: [] },
+    { title: "Para 3", description: "Content for Paragraph 3", references: [] },
+  ];
+
+  const [notingTabData, setNotingTabsData] = useState(initialNotingTabData);
 
   const formik = useFormik({
     initialValues: {
@@ -142,110 +98,30 @@ function FileDetail() {
       fkMinistryId: "",
       receivedOn: "",
       year: "",
-      // notingDescription: "",
-      // correspondingDescription: "",
       assignedTo: "",
       diaryNumber: "",
-      // CommentStatus: filesData ? filesData?.fileRemarks[0]?.CommentStatus : "",
       comment: "",
     },
     // validationSchema: validationSchema,
     onSubmit: (values) => {
       // Handle form submission here
-      UpdateEfilingApi(values);
+      // UpdateEfilingApi(values);
     },
   });
 
-  const [modalInputValue, setModalInputValue] = useState({
-    assignedTo: "",
-    CommentStatus: "",
-    comment: "",
-  });
-
-  const handleFileChangeCorrespondance = (event) => {
-    // Access the files from the event
-    const files = event.target.files;
-    // Convert the files object to an array
-    const fileList = Array.from(files);
-
-    // Merge the new files with the existing ones
-    setCorrespondenceData((prevState) => ({
-      ...prevState,
-      attachedFiles: [...prevState.attachedFiles, ...fileList],
-    }));
+  const handlePageChange = (page) => {
+    // Update currentPage when a page link is clicked
+    setCurrentPage(page);
   };
 
-  const UpdateEfilingApi = async (values) => {
-    const formData = new FormData();
-    // formData.append("submittedBy", UserData?.fkUserId);
-    // formData.append("assignedTo",  values?.assignedTo);
-    // formData.append("CommentStatus", values?.CommentStatus);
-    // formData.append("comment", values?.comment);
+  const clearInput = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.value = null; // Reset the value of the input
+    }
+  };
 
-    // console.log("alues?.isEditable", values?.isEditable);
-
-    formData.append("isEditable", values?.isEditable);
-    formData.append("cases[0][Note][description]", notingData.description);
-    formData.append(
-      "cases[0][Correspondence][description]",
-      correspondenceData.description
-    );
-    formData.append("cases[0][Sanction][description]", sanction.description);
-    formData.append("cases[0][Objection][description]", objection.description);
-    formData.append("cases[0][Letter][description]", letter.description);
-    formData.append("cases[0][Circular][description]", circular.description);
-    formData.append("cases[0][Misc][description]", misc.description);
-    // formData.append("diaryNumber", values?.diaryNumber);
-
-    if (objection.attachedFiles) {
-      objection.attachedFiles.forEach((file, index) => {
-        formData.append(`cases[0][Objection][sections][${index}]`, file);
-      });
-    }
-    if (sanction.attachedFiles) {
-      sanction.attachedFiles.forEach((file, index) => {
-        formData.append(`cases[0][Sanction][sections][${index}]`, file);
-      });
-    }
-    if (letter.attachedFiles) {
-      letter.attachedFiles.forEach((file, index) => {
-        formData.append(`cases[0][Letter][sections][${index}]`, file);
-      });
-    }
-    if (circular.attachedFiles) {
-      circular.attachedFiles.forEach((file, index) => {
-        formData.append(`cases[0][Circular][sections][${index}]`, file);
-      });
-    }
-    if (misc.attachedFiles) {
-      misc.attachedFiles.forEach((file, index) => {
-        formData.append(`cases[0][Misc][sections][${index}]`, file);
-      });
-    }
-    if (correspondenceData.attachedFiles) {
-      correspondenceData.attachedFiles.forEach((file, index) => {
-        formData.append(`cases[0][Correspondence][sections][${index}]`, file);
-      });
-    }
-
-    try {
-      const response = await UpdateFIleCase(
-        location?.state?.fileId
-          ? location?.state?.fileId
-          : fileIdINRegister && fileIdINRegister,
-        location?.state?.id,
-        formData
-      );
-      if (response?.success) {
-        showSuccessMessage(response?.message);
-        // formik.resetForm()
-        // setTimeout(() => {
-        //   navigate("/efiling/dashboard/file-register-list/files-list/cases");
-        // }, 1000);
-      }
-    } catch (error) {
-      showErrorMessage(error?.response?.data?.message);
-    }
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
   };
 
   const hendleAssiginFileCaseApi = async () => {
@@ -258,11 +134,6 @@ function FileDetail() {
         "comment",
         modalInputValue?.CommentStatus ? "" : modalInputValue?.comment
       );
-      formData.append(
-        "signature",
-        uplodedSignature ? uplodedSignature : uplodedSignaturePreviewUrl
-      );
-
       const response = await assignFIleCase(
         location?.state?.fileId ? location?.state?.fileId : fileIdINRegister,
         location?.state?.id,
@@ -289,31 +160,6 @@ function FileDetail() {
     }
   };
 
-  const toggleModal = () => {
-    setIsModalOpen(!isModalOpen);
-    setUplodedSignaturePreview(null);
-  };
-
-  const [uplodedSignature, setUplodedSignature] = useState(null);
-  const [uplodedSignaturePreview, setUplodedSignaturePreview] = useState(null);
-  const [uplodedSignaturePreviewUrl, setUplodedSignaturePreviewUrl] =
-    useState(null);
-
-  // Function to handle file upload
-  const handleFileUpload = (event) => {
-    const file = event.target.files[0];
-    setUplodedSignature(file);
-
-    if (file) {
-      // Read the uploaded file as a data URL
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setUplodedSignaturePreview(e.target.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
   const getFilesByID = async () => {
     try {
       const response = await getCaseDetailByID(
@@ -323,73 +169,11 @@ function FileDetail() {
 
       if (response?.success) {
         setRemarksData(response?.data?.cases?.fileRemarks);
-        setFilesData(response?.data?.cases);
         const FRSelection =
           response?.data?.cases?.freshReceipts?.freshReceiptsAttachments;
-        if (FRSelection?.length > 0) {
-          setSubSelectedTab("FR");
-        }
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
-    }
-  };
-
-  const getUsersSignatureApi = async () => {
-    try {
-      const response = await getSignatureByUserId(UserData?.fkUserId);
-
-      if (response?.success) {
-        setUplodedSignaturePreviewUrl(`${response?.data?.signature}`);
-      }
-    } catch (error) {
-      showErrorMessage(error?.response?.data?.message);
-    }
-  };
-
-  const hendleRemoveImage = async (id) => {
-    try {
-      const response = await DeleteFileCaseImage(id);
-      if (response?.success) {
-        showSuccessMessage(response.message);
-        // if (caseId) {
-        getFilesByID(
-          location?.state?.fileId ? location?.state?.fileId : fileIdINRegister,
-          caseId
-        );
-        // }
-      }
-    } catch (error) {
-      showErrorMessage(error.response.data.message);
-    }
-  };
-
-  useEffect(() => {
-    if (location.state?.id) {
-      getFilesByID();
-      getUsersSignatureApi();
-    }
-  }, []);
-
-  const getDepartmentData = async () => {
-    try {
-      const response = await getDepartment(0, 50);
-      if (response?.success) {
-        setDepartmentData(response?.data?.departments);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const getBranchesapi = async () => {
-    try {
-      const response = await getBranches(0, 50);
-      if (response?.success) {
-        setBranchesData(response?.data?.rows);
-      }
-    } catch (error) {
-      console.log(error);
     }
   };
 
@@ -404,57 +188,17 @@ function FileDetail() {
     }
   };
 
-  const deleteNotification = async (item) => {
-    try {
-      const response = await DeleteNotificationById(
-        location.state?.notificationId,
-        UserData?.fkUserId
-      );
-      // console.log("Notification deleted", response?.data);
-    } catch (error) {
-      console.log(error.response.data.message);
-    }
-  };
-
-  useEffect(() => {
-    if (location.state?.notificationId) {
-      deleteNotification();
-    }
-    getEmployeeData();
-    getBranchesapi();
-    getDepartmentData();
-  }, []);
-
-  const images =
-    (frAttachments &&
-      frAttachments?.map((item) => ({
-        original: `http://172.16.170.8:5252${item?.filename}`,
-        thumbnail: `http://172.16.170.8:5252${item?.filename}`,
-      }))) ||
-    [];
-
-  // const HandlePrint = async (urlimage) => {
-  //   const url = `http://172.16.170.8:5252${urlimage}`;
-  //   window.open(url, "_blank");
-  // };
-
   const handleSubmit = (isDraft) => {
     formik.setFieldValue("isEditable", isDraft); // Set isEdit value based on button clicked
   };
 
-  const [notingTabSubject, setNotingTabSubject] = useState("");
-  const [notingData, setNotingData] = useState({
-    description: "",
-  });
-  
-  const initialNotingTabData = [
-    { title: "Para 1", description: "Content for Paragraph 1", references: [{flag: "A", id: 2, attachments: [{file: "/public/correspondences/2024-06-04T07-58-31/output_1717395191507.pdf"}] }]},
-    { title: "Para 2", description: "Content for Paragraph 2", references: [] },
-    { title: "Para 3", description: "Content for Paragraph 3", references: [] },
-  ];
-  const [notingTabData, setNotingTabsData] = useState(initialNotingTabData);
-
-  const handleEditorChange = (index, content, references, isReference, isNew = false) => {
+  const handleEditorChange = (
+    index,
+    content,
+    references,
+    isReference,
+    isNew = false
+  ) => {
     if (isNew) {
       setNotingTabsData([
         ...notingTabData,
@@ -477,14 +221,14 @@ function FileDetail() {
       setNotingTabsData(updatedTabs);
     } else {
       const updatedTabs = notingTabData.map((tab, i) =>
-      i === index
-        ? {
-            ...tab,
-            description: content,
-          }
-        : tab
-    );
-    setNotingTabsData(updatedTabs);
+        i === index
+          ? {
+              ...tab,
+              description: content,
+            }
+          : tab
+      );
+      setNotingTabsData(updatedTabs);
     }
   };
 
@@ -521,15 +265,24 @@ function FileDetail() {
     }
   };
 
+  const HandlePrint = async (urlimage) => {
+    const url = `http://10.10.140.200:5152${urlimage}`;
+    window.open(url, "_blank");
+  };
+
+  useEffect(() => {
+    if (location.state?.id) {
+      getFilesByID();
+    }
+  }, []);
+
   useEffect(() => {
     handleCorrespondences();
   }, [fkfileId]);
 
-  const HandlePrint = async (urlimage) => {
-    const url = `http://10.10.140.200:5152${urlimage}`;
-    window.open(url, "_blank");
-    // setPdfUrl(url)
-  };
+  useEffect(() => {
+    getEmployeeData();
+  }, []);
 
   return (
     <Layout
@@ -589,7 +342,6 @@ function FileDetail() {
           title="Add Comments"
           isOpen={isModalOpen}
           toggleModal={toggleModal}
-          // hendleSubmit={() => hendleAssiginFileCaseApi()}
         >
           <div class="row">
             <div class="col">
@@ -748,7 +500,6 @@ function FileDetail() {
                         onClick={() => {
                           clearInput();
                           setSelectedTab("Noting");
-                          setShowSubButtonsCorrespondence(false);
                         }}
                       >
                         <button
@@ -791,7 +542,6 @@ function FileDetail() {
                           aria-selected={
                             selectedTab === "Correspondence" ? "true" : "false"
                           }
-                          onClick={toggleButtons}
                         >
                           Correspondence
                           {/* (
@@ -973,12 +723,6 @@ function FileDetail() {
                           display: location?.state?.view ? "none" : "block",
                         }}
                       >
-                        {/* <FontAwesomeIcon
-                          style={{ marginRight: "-5px" }}
-                          // icon={faPlus}
-                          size="md"
-                          width={24}
-                        /> */}
                         Proceed
                       </button>
                     </a>
@@ -1011,15 +755,9 @@ function FileDetail() {
                                   </div>
                                   <div style={{ float: "right" }}>
                                     <small>
-                                      {/* {moment(item?.createdAt).format(
-                                        "DD/MM/YYYY"
-                                      )} */}
                                       {item?.formattedDateCreatedAt}
                                     </small>
                                     <small className="ms-2">
-                                      {/* {moment(item?.createdAt).format(
-                                        "hh:mm A"
-                                      )} */}
                                       {item?.formattedTimeCreatedAt}
                                     </small>
                                   </div>

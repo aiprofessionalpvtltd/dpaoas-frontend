@@ -1,36 +1,23 @@
 import React, {
-  useCallback,
   useContext,
   useEffect,
   useRef,
   useState,
 } from "react";
-import { useFormik } from "formik";
-import * as Yup from "yup";
 import { AuthContext } from "../../../../../../../../api/AuthContext";
 import { Layout } from "../../../../../../../../components/Layout";
 import {
   EfilingSideBarBranchItem,
   EfilingSideBarItem,
 } from "../../../../../../../../utils/sideBarItems";
-import Header from "../../../../../../../../components/Header";
 import { ToastContainer } from "react-toastify";
 import { useLocation } from "react-router";
 import {
-  DeleteFileCaseImage,
   UpdateCase,
   createCase,
-  createFiles,
   getAllCorrespondence,
-  getAllFRs,
-  getAllFileHeading,
-  getAllFileRegister,
-  getAllYear,
   getFileByRegisterById,
-  getFreshReceiptById,
   getSingleCaseByFileId,
-  geteHeadingNumberbyMainHeadingId,
-  geteHeadingbyBranchId,
 } from "../../../../../../../../api/APIs/Services/efiling.service";
 import {
   showErrorMessage,
@@ -38,9 +25,7 @@ import {
 } from "../../../../../../../../utils/ToastAlert";
 import { useNavigate } from "react-router-dom";
 import { Editor } from "../../../../../../../../components/CustomComponents/Editor";
-import { TinyEditor } from "../../../../../../../../components/CustomComponents/Editor/TinyEditor";
 import { getSelectedFileID, getUserData, setSelectedFileID } from "../../../../../../../../api/Auth";
-import ImageGallery from "react-image-gallery";
 import Select from "react-select";
 import TabComponent from "../../../../../../../../components/CustomComponents/TabBar";
 import NoteEditor from "../../../../../../../../components/CustomComponents/DocEditor";
@@ -182,21 +167,6 @@ function AddEditFileCase() {
 
   const createFormData = () => {
     const formData = new FormData();
-    // if(location.state?.frId){
-    //   formData.append("fkFreshReceiptId", location.state?.frId);
-    // }
-
-    // formData.append("cases[0][Note][description]", notingData.description);
-    // formData.append(
-    //   "cases[0][Correspondence][description]",
-    //   correspondenceData.description
-    // );
-    // formData.append("cases[0][Sanction][description]", sanction.description);
-    // formData.append("cases[0][Objection][description]", objection.description);
-    // formData.append("cases[0][Letter][description]", letter.description);
-    // formData.append("cases[0][Circular][description]", circular.description);
-    // formData.append("cases[0][Misc][description]", misc.description);
-
     return formData;
   };
 
