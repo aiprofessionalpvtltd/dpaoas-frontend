@@ -7,6 +7,7 @@ import { getAllResolutions } from "../../api/APIs/Services/Resolution.service";
 import { getAuthToken, logout } from "../../api/Auth";
 import { Link, useNavigate } from "react-router-dom";
 import { getAllMotion } from "../../api/APIs/Services/Motion.service";
+import ScrollButton from "../ScrollButton";
 
 export const Layout = ({
   children,
@@ -366,6 +367,7 @@ export const Layout = ({
                 className="dashboard-content"
                 style={{ marginTop: location.pathname === "/" ? 5 : location.pathname === "/efiling/dashboard" ? 83 : 90, marginBottom: location.pathname === "/efiling/dashboard" ? 0 : "65px"}}
               >
+                <ScrollButton />
                 <div className="container-fluid">{children}</div>
               </div>
             </main>

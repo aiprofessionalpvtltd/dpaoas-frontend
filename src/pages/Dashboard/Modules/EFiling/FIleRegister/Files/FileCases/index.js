@@ -44,7 +44,7 @@ function FileCases() {
   const transformFilesCases = (apiData) => {
     return apiData?.map((item, index) => {
       return {
-        isEditable: item?.isEditable,
+        // isEditable: item?.isEditable,
         caseId: item?.fkCaseId,
         internalId: item?.fileData?.id,
         FileNo: item?.fileData?.fileNumber,
@@ -312,7 +312,7 @@ function FileCases() {
                 },
               })
             }
-            showEditIcon={true}
+            showEditIcon={false}
             pageSize={pageSize}
             totalCount={count}
             singleDataCard={true}

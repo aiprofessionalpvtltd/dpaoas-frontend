@@ -90,3 +90,12 @@ export const setregisterID = (id) => {
 export const getRegisterID = (id) => {
   return localStorage.getItem("registerid", id);
 };
+
+export const setSelectedFileID = (data) => {
+  localStorage.setItem("fileID", JSON.stringify(data));
+};
+
+export const getSelectedFileID = () => {
+  const Data = localStorage.getItem("fileID");
+  return Data && JSON.parse(Data);
+};

@@ -1,24 +1,5 @@
 import React, { useContext, useEffect, useState, useRef } from "react";
 import { Layout } from "../../../../../components/Layout";
-import Header from "../../../../../components/Header";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCalendarAlt, faPlus } from "@fortawesome/free-solid-svg-icons";
-import thumbnail from "./../../../../../assets/profile-img.jpg";
-import DatePicker from "react-datepicker";
-import ImageGallery from "react-image-gallery";
-import {
-  MDBBtn,
-  MDBModal,
-  MDBModalDialog,
-  MDBModalContent,
-  MDBModalHeader,
-  MDBModalTitle,
-  MDBModalBody,
-  MDBModalFooter,
-} from "mdb-react-ui-kit";
-// import Modal from "react-modal";
-import { TinyEditor } from "../../../../../components/CustomComponents/Editor/TinyEditor";
-import NewCaseEfilling from "../AddEditFileForm";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { getUserData } from "../../../../../api/Auth";
@@ -30,6 +11,7 @@ import {
   UpdateFIleCase,
   UploadEfilingAttechment,
   assignFIleCase,
+  getAllCorrespondence,
   getCaseDetailByID,
   getEFilesByID,
   getSignatureByUserId,
@@ -52,6 +34,9 @@ import {
   EfilingSideBarItem,
 } from "../../../../../utils/sideBarItems";
 import { Button, Modal } from "react-bootstrap";
+import CustomTable from "../../../../../components/CustomComponents/CustomTable";
+import DocParas from "../../../../../components/CustomComponents/DocParas";
+import { Editor } from "../../../../../components/CustomComponents/Editor";
 
 const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
   return (
@@ -68,6 +53,18 @@ function FileDetail() {
   const location = useLocation();
   const fileInputRef = useRef(null);
   const UserData = getUserData();
+  const [currentPage, setCurrentPage] = useState(0);
+  const [count, setCount] = useState(null);
+  const [correspondenceTypesData, setCorrespondenceTypesData] = useState([]);
+  const pageSize = 10; // Set your desired page size
+  const [showModal, setShowModal] = useState(false);
+  const [attachedFiles, setAttachedFiles] = useState([]);
+  const [fkfileId, setFKFileId] = useState(null);
+
+  const handlePageChange = (page) => {
+    // Update currentPage when a page link is clicked
+    setCurrentPage(page);
+  };
 
   const [showSubButtonsCorrespondence, setShowSubButtonsCorrespondence] =
     useState(false);
@@ -75,10 +72,6 @@ function FileDetail() {
   const toggleButtons = () => {
     setShowSubButtonsCorrespondence(true);
   };
-
-  const [notingData, setNotingData] = useState({
-    description: "",
-  });
 
   const [correspondenceData, setCorrespondenceData] = useState({
     description: "",
@@ -177,64 +170,6 @@ function FileDetail() {
 
     // Merge the new files with the existing ones
     setCorrespondenceData((prevState) => ({
-      ...prevState,
-      attachedFiles: [...prevState.attachedFiles, ...fileList],
-    }));
-  };
-
-  const handleFileChangeSanction = (event) => {
-    // Access the files from the event
-    const files = event.target.files;
-    // Convert the files object to an array
-    const fileList = Array.from(files);
-    // Store the selected files in state
-    setSanction((prevState) => ({
-      ...prevState,
-      attachedFiles: [...prevState.attachedFiles, ...fileList],
-    }));
-  };
-
-  const handleFileChangeObjection = (event) => {
-    // Access the files from the event
-    const files = event.target.files;
-    // Convert the files object to an array
-    const fileList = Array.from(files);
-    // Store the selected files in state
-    setObjection((prevState) => ({
-      ...prevState,
-      attachedFiles: [...prevState.attachedFiles, ...fileList],
-    }));
-  };
-
-  const handleFileChangeLetter = (event) => {
-    // Access the files from the event
-    const files = event.target.files;
-    // Convert the files object to an array
-    const fileList = Array.from(files);
-    // Store the selected files in state
-    setLetter((prevState) => ({
-      ...prevState,
-      attachedFiles: [...prevState.attachedFiles, ...fileList],
-    }));
-  };
-  const handleFileChangeCircular = (event) => {
-    // Access the files from the event
-    const files = event.target.files;
-    // Convert the files object to an array
-    const fileList = Array.from(files);
-    // Store the selected files in state
-    setCircular((prevState) => ({
-      ...prevState,
-      attachedFiles: [...prevState.attachedFiles, ...fileList],
-    }));
-  };
-  const handleFileChangeMisc = (event) => {
-    // Access the files from the event
-    const files = event.target.files;
-    // Convert the files object to an array
-    const fileList = Array.from(files);
-    // Store the selected files in state
-    setMisc((prevState) => ({
       ...prevState,
       attachedFiles: [...prevState.attachedFiles, ...fileList],
     }));
@@ -359,16 +294,6 @@ function FileDetail() {
     setUplodedSignaturePreview(null);
   };
 
-  // use it (editorContent) when submitting whole file content
-
-  const [directorData, setDirectorData] = useState();
-  const [notingstore, setNotingStore] = useState();
-  const [correspondancestore, setcorrespondanceStore] = useState();
-  const [letterstore, setLetterStore] = useState();
-  const [objectionstore, setbjectionstore] = useState();
-  const [sectionstore, setsectionstore] = useState();
-  const [circularStore, setCircularStore] = useState();
-  const [miscStore, setMiscStore] = useState();
   const [uplodedSignature, setUplodedSignature] = useState(null);
   const [uplodedSignaturePreview, setUplodedSignaturePreview] = useState(null);
   const [uplodedSignaturePreviewUrl, setUplodedSignaturePreviewUrl] =
@@ -397,7 +322,6 @@ function FileDetail() {
       );
 
       if (response?.success) {
-        setDirectorData(response?.data?.cases?.fileDiary);
         setRemarksData(response?.data?.cases?.fileRemarks);
         setFilesData(response?.data?.cases);
         const FRSelection =
@@ -447,89 +371,6 @@ function FileDetail() {
     }
   }, []);
 
-  // console.log("year-----------", filesData?.fileType);
-  useEffect(() => {
-    // Update form values when termsById changes
-    if (filesData) {
-      const noting = filesData?.sections?.filter(
-        (item) => item.sectionType === "Note"
-      );
-      const correspondance = filesData?.sections?.filter(
-        (item) => item.sectionType === "Correspondence"
-      );
-      const letter = filesData?.sections?.filter(
-        (item) => item.sectionType === "Letter"
-      );
-      const Objection = filesData?.sections?.filter(
-        (item) => item.sectionType === "Objection"
-      );
-      const Sanction = filesData?.sections?.filter(
-        (item) => item.sectionType === "Sanction"
-      );
-      const Circular = filesData?.sections?.filter(
-        (item) => item.sectionType === "Circular"
-      );
-      const Misc = filesData?.sections?.filter(
-        (item) => item.sectionType === "Misc"
-      );
-      const frAttachments =
-        filesData?.freshReceipts?.freshReceiptsAttachments?.length > 0 &&
-        filesData?.freshReceipts?.freshReceiptsAttachments;
-      setFrAttachments(frAttachments);
-
-      setNotingStore(noting);
-      setcorrespondanceStore(correspondance);
-      setLetterStore(letter);
-      setbjectionstore(Objection);
-      setsectionstore(Sanction);
-      setCircularStore(Circular);
-      setMiscStore(Misc);
-
-      setCorrespondenceData((prev) => ({
-        ...prev,
-        description: correspondance[0]?.description || "",
-      }));
-      setObjection((prev) => ({
-        ...prev,
-        description: Objection[0]?.description || "",
-      }));
-      setLetter((prev) => ({
-        ...prev,
-        description: letter[0]?.description || "",
-      }));
-      setSanction((prev) => ({
-        ...prev,
-        description: Sanction[0]?.description || "",
-      }));
-      setNotingData((prev) => ({
-        ...prev,
-        description: noting[0]?.description || "",
-      }));
-      setCircular((prev) => ({
-        ...prev,
-        description: Circular[0]?.description || "",
-      }));
-      setMisc((prev) => ({
-        ...prev,
-        description: Misc[0]?.description || "",
-      }));
-
-      formik.setValues({
-        fileNumber: filesData?.fileDetails?.fileNumber || "",
-        fileSubject: filesData?.fileDetails?.fileSubject || "",
-        // priority: filesData?.fileDetails?.priority || "",
-        fileCategory: filesData?.fileDetails?.fileCategory || "",
-        // fileType: filesData?.fileDetails?.fileType || "",
-        fkBranchId: filesData?.fileDetails?.fkBranchId || "",
-        year: filesData?.fileDetails?.year || "",
-      });
-      setDocumentTypeVal(filesData?.fileDetails?.fileType);
-    }
-  }, [filesData, formik.setValues]);
-
-  const handleDocumentType = (e) => {
-    setDocumentTypeVal(e.target.value);
-  };
   const getDepartmentData = async () => {
     try {
       const response = await getDepartment(0, 50);
@@ -584,21 +425,6 @@ function FileDetail() {
     getDepartmentData();
   }, []);
 
-  const hendleFRRemoveImage = async (item) => {
-    try {
-      const response = await DeleteFreahReceptImage(item?.id);
-      if (response?.success) {
-        showSuccessMessage(response.message);
-        getFilesByID(
-          location?.state?.fileId ? location?.state?.fileId : fileIdINRegister,
-          caseId
-        );
-      }
-    } catch (error) {
-      showErrorMessage(error.response.data.message);
-    }
-  };
-
   const images =
     (frAttachments &&
       frAttachments?.map((item) => ({
@@ -616,52 +442,94 @@ function FileDetail() {
     formik.setFieldValue("isEditable", isDraft); // Set isEdit value based on button clicked
   };
 
-  const SanactionImages =
-    (filesData &&
-      filesData?.sections &&
-      sectionstore?.length > 0 &&
-      sectionstore[0]?.caseAttachments.map((item) => ({
-        original: `http://172.16.170.8:5252${item?.fileName}`,
-        thumbnail: `http://172.16.170.8:5252${item?.fileName}`,
-      }))) ||
-    [];
+  const [notingTabSubject, setNotingTabSubject] = useState("");
+  const [notingData, setNotingData] = useState({
+    description: "",
+  });
+  
+  const initialNotingTabData = [
+    { title: "Para 1", description: "Content for Paragraph 1", references: [{flag: "A", id: 2, attachments: [{file: "/public/correspondences/2024-06-04T07-58-31/output_1717395191507.pdf"}] }]},
+    { title: "Para 2", description: "Content for Paragraph 2", references: [] },
+    { title: "Para 3", description: "Content for Paragraph 3", references: [] },
+  ];
+  const [notingTabData, setNotingTabsData] = useState(initialNotingTabData);
 
-  const ObjectionImages =
-    (filesData &&
-      filesData?.sections &&
-      objectionstore?.length > 0 &&
-      objectionstore[0]?.caseAttachments.map((item) => ({
-        original: `http://172.16.170.8:5252${item?.fileName}`,
-        thumbnail: `http://172.16.170.8:5252${item?.fileName}`,
-      }))) ||
-    [];
-  const LetterImages =
-    (filesData &&
-      filesData?.sections &&
-      letterstore?.length > 0 &&
-      letterstore[0]?.caseAttachments.map((item) => ({
-        original: `http://172.16.170.8:5252${item?.fileName}`,
-        thumbnail: `http://172.16.170.8:5252${item?.fileName}`,
-      }))) ||
-    [];
-  const CircularImages =
-    (filesData &&
-      filesData?.sections &&
-      circularStore?.length > 0 &&
-      circularStore[0]?.caseAttachments.map((item) => ({
-        original: `http://172.16.170.8:5252${item?.fileName}`,
-        thumbnail: `http://172.16.170.8:5252${item?.fileName}`,
-      }))) ||
-    [];
-  const MiscImages =
-    (filesData &&
-      filesData?.sections &&
-      miscStore?.length > 0 &&
-      miscStore[0]?.caseAttachments.map((item) => ({
-        original: `http://172.16.170.8:5252${item?.fileName}`,
-        thumbnail: `http://172.16.170.8:5252${item?.fileName}`,
-      }))) ||
-    [];
+  const handleEditorChange = (index, content, references, isReference, isNew = false) => {
+    if (isNew) {
+      setNotingTabsData([
+        ...notingTabData,
+        {
+          title: `Para ${notingTabData.length + 1}`,
+          description: content,
+          references: [],
+        },
+      ]);
+    } else if (isReference) {
+      const updatedTabs = notingTabData.map((tab, i) =>
+        i === index
+          ? {
+              ...tab,
+              description: content,
+              references: [...tab.references, references],
+            }
+          : tab
+      );
+      setNotingTabsData(updatedTabs);
+    } else {
+      const updatedTabs = notingTabData.map((tab, i) =>
+      i === index
+        ? {
+            ...tab,
+            description: content,
+          }
+        : tab
+    );
+    setNotingTabsData(updatedTabs);
+    }
+  };
+
+  const handleDelete = (index) => {
+    const updatedTabs = notingTabData.filter((_, i) => i !== index);
+    setNotingTabsData(updatedTabs);
+  };
+
+  const transformData = (apiData) => {
+    return apiData?.map((item) => ({
+      internalId: item.id,
+      name: item.name,
+      description: item.description,
+      status: item.status,
+      attachmentInternal: item.correspondenceAttachments,
+    }));
+  };
+
+  const handleCorrespondences = async () => {
+    try {
+      const response = await getAllCorrespondence(
+        fkfileId.value,
+        UserData.fkBranchId,
+        currentPage,
+        pageSize
+      );
+      if (response?.success) {
+        setCount(response?.count);
+        const transformedData = transformData(response.data?.correspondences);
+        setCorrespondenceTypesData(transformedData);
+      }
+    } catch (error) {
+      console.log(error?.response?.data?.message);
+    }
+  };
+
+  useEffect(() => {
+    handleCorrespondences();
+  }, [fkfileId]);
+
+  const HandlePrint = async (urlimage) => {
+    const url = `http://10.10.140.200:5152${urlimage}`;
+    window.open(url, "_blank");
+    // setPdfUrl(url)
+  };
 
   return (
     <Layout
@@ -674,6 +542,48 @@ function FileDetail() {
       }
     >
       <div className="dashboard-content">
+        <Modal
+          show={showModal}
+          size="lg"
+          onHide={() => setShowModal(false)}
+          centered
+        >
+          <div>
+            <Modal.Header closeButton>
+              <Modal.Title>Attachments</Modal.Title>
+            </Modal.Header>
+            <Modal.Body style={{ padding: 20 }}>
+              {attachedFiles && attachedFiles.length > 0 ? (
+                attachedFiles?.map((item) => (
+                  <ul class="list-group">
+                    <li
+                      class="list-group-item"
+                      onClick={() => HandlePrint(item?.file)}
+                      style={{ color: "blue", cursor: "pointer" }}
+                    >
+                      {item?.file?.split("\\").pop().split("/").pop()}
+                    </li>
+                  </ul>
+                ))
+              ) : (
+                <ul class="list-group">
+                  <li class="list-group-item">No data found!</li>
+                </ul>
+              )}
+            </Modal.Body>
+
+            <Modal.Footer>
+              <button
+                className="btn btn-primary"
+                type="button"
+                onClick={() => setShowModal(false)}
+              >
+                Close
+              </button>
+            </Modal.Footer>
+          </div>
+        </Modal>
+
         <ToastContainer />
         <EFilingModal
           title="Add Comments"
@@ -702,8 +612,12 @@ function FileDetail() {
                   </option>
                   <option value={"Put Up For"}>Put Up For</option>
                   <option value={"Please Link"}>Please Link</option>
-                  <option value={"For Perusal Please"}>For Perusal Please</option>
-                  <option value={"Submitted For Approval"}>Submitted For Approval</option>
+                  <option value={"For Perusal Please"}>
+                    For Perusal Please
+                  </option>
+                  <option value={"Submitted For Approval"}>
+                    Submitted For Approval
+                  </option>
                 </select>
               </div>
             </div>
@@ -753,41 +667,6 @@ function FileDetail() {
                   disabled={modalInputValue.CommentStatus ? true : false}
                 ></textarea>
               </div>
-            </div>
-          </div>
-
-          <div class="row mb-2">
-            <div class="col">
-              <label for="formFile" class="form-label mt-3">
-                Upload Signature
-              </label>
-              <input
-                class="form-control"
-                type="file"
-                id="formFile"
-                onChange={handleFileUpload}
-              />
-              <div className="clearfix"></div>
-            </div>
-
-            <div class="col">
-              {(uplodedSignaturePreviewUrl || uplodedSignaturePreview) && (
-                <>
-              {uplodedSignaturePreview ? (
-                <img
-                  src={uplodedSignaturePreview}
-                  alt="Uploaded Signature"
-                  className="img-fluid"
-                />
-              ) : (
-                <img
-                  src={`http://172.16.170.8:5252${uplodedSignaturePreviewUrl}`}
-                  alt="Signature"
-                  className="img-fluid"
-                />
-              )}
-              </>
-              )}
             </div>
           </div>
 
@@ -923,212 +802,9 @@ function FileDetail() {
                       </li>
                     </ul>
 
-                    {/* <div className="row">
-                      <div style={{display:"flex", alignItems:"center", justifyContent:"center"}}></div>
-                    </div> */}
-                    {showSubButtonsCorrespondence && (
-                      <div className="row">
-                        <ul
-                          className="nav nav-tabs mb-3 mt-3"
-                          id="ex2"
-                          role="tablist"
-                        >
-                          {filesData?.freshReceipts !== null && (
-                            <li
-                              className="nav-item"
-                              role="presentation"
-                              onClick={() => {
-                                clearInput();
-                                setSubSelectedTab("FR");
-                              }}
-                            >
-                              <button
-                                type="button"
-                                className={
-                                  subSelectedTab === "FR"
-                                    ? "nav-link active"
-                                    : "nav-link"
-                                }
-                                style={{ width: "170px" }}
-                                data-bs-toggle="tab"
-                                role="tab"
-                                aria-controls="ex1-tabs-1"
-                                disabled={frAttachments ? false : true}
-                                aria-selected={
-                                  subSelectedTab === "FR" ? "true" : "false"
-                                }
-                              >
-                                FR ({frAttachments?.length})
-                              </button>
-                            </li>
-                          )}
-                          <li
-                            className="nav-item"
-                            role="presentation"
-                            onClick={() => {
-                              clearInput();
-                              setSubSelectedTab("Sanction");
-                              // setSubSelectedTab("Sanction");
-                            }}
-                          >
-                            <button
-                              type="button"
-                              className={
-                                subSelectedTab === "Sanction"
-                                  ? "nav-link active"
-                                  : "nav-link"
-                              }
-                              style={{ width: "140px" }}
-                              data-bs-toggle="tab"
-                              role="tab"
-                              aria-controls="ex1-tabs-1"
-                              aria-selected={
-                                subSelectedTab === "Sanction" ? "true" : "false"
-                              }
-                            >
-                              Sanction
-                            </button>
-                          </li>
-
-                          <li
-                            className="nav-item"
-                            role="presentation"
-                            onClick={() => {
-                              clearInput();
-                              setSubSelectedTab("Objection");
-                            }}
-                          >
-                            <button
-                              type="button"
-                              className={
-                                subSelectedTab === "Objection"
-                                  ? "nav-link active"
-                                  : "nav-link"
-                              }
-                              style={{ width: "140px" }}
-                              data-bs-toggle="tab"
-                              role="tab"
-                              aria-controls="ex1-tabs-2"
-                              aria-selected={
-                                subSelectedTab === "Objection"
-                                  ? "true"
-                                  : "false"
-                              }
-                            >
-                              Objection
-                            </button>
-                          </li>
-
-                          <li
-                            className="nav-item"
-                            role="presentation"
-                            onClick={() => {
-                              clearInput();
-                              setSubSelectedTab("Letter");
-                            }}
-                          >
-                            <button
-                              type="button"
-                              className={
-                                subSelectedTab === "Letter"
-                                  ? "nav-link active"
-                                  : "nav-link"
-                              }
-                              style={{ width: "140px" }}
-                              data-bs-toggle="tab"
-                              role="tab"
-                              aria-controls="ex1-tabs-2"
-                              aria-selected={
-                                subSelectedTab === "Letter" ? "true" : "false"
-                              }
-                            >
-                              Letter
-                            </button>
-                          </li>
-
-                          <li
-                            className="nav-item"
-                            role="presentation"
-                            onClick={() => {
-                              clearInput();
-                              setSubSelectedTab("Circular");
-                            }}
-                          >
-                            <button
-                              type="button"
-                              className={
-                                subSelectedTab === "Circular"
-                                  ? "nav-link active"
-                                  : "nav-link"
-                              }
-                              style={{ width: "140px" }}
-                              data-bs-toggle="tab"
-                              role="tab"
-                              aria-controls="ex1-tabs-2"
-                              aria-selected={
-                                subSelectedTab === "Circular" ? "true" : "false"
-                              }
-                            >
-                              Circular
-                            </button>
-                          </li>
-
-                          <li
-                            className="nav-item"
-                            role="presentation"
-                            onClick={() => {
-                              clearInput();
-                              setSubSelectedTab("Misc");
-                            }}
-                          >
-                            <button
-                              type="button"
-                              className={
-                                subSelectedTab === "Misc"
-                                  ? "nav-link active"
-                                  : "nav-link"
-                              }
-                              style={{ width: "140px" }}
-                              data-bs-toggle="tab"
-                              role="tab"
-                              aria-controls="ex1-tabs-2"
-                              aria-selected={
-                                subSelectedTab === "Misc" ? "true" : "false"
-                              }
-                            >
-                              Misc
-                            </button>
-                          </li>
-                        </ul>
-                      </div>
-                    )}
-
                     <div class="tab-content" id="ex1-content">
                       <div class="row">
                         <div class="row mt-2 d-flex justify-content-end float-end">
-                          <div class="col-2">
-                            <button
-                              class="btn btn-primary mb-4"
-                              type="submit"
-                              style={{
-                                width: "150px",
-                                display: location?.state?.view
-                                  ? "none"
-                                  : "block",
-                              }}
-                              onClick={() => handleSubmit(false)} // False means editable
-                              disabled={
-                                viewPage
-                                  ? true
-                                  : location?.state?.approved
-                                    ? true
-                                    : false
-                              }
-                            >
-                              Save As Draft
-                            </button>
-                          </div>
-
                           <div class="col-2">
                             <button
                               class="btn btn-primary"
@@ -1148,1054 +824,133 @@ function FileDetail() {
                                     : false
                               }
                             >
-                              Save
+                              Finalize
                             </button>
                           </div>
                         </div>
 
-                        {/* {selectedTab === "Correspondence" && (
-                          <div class="col-2">
-                            {filesData?.sections.length > 0 && (
-                              <div>
-                                <label
-                                  for="formFile"
-                                  class="form-label mt-3 mb-0"
-                                >
-                                  Attached Files
-                                </label>
-                                {filesData?.sections &&
-                                  correspondancestore?.length > 0 &&
-                                  correspondancestore[0]?.caseAttachments.map(
-                                    (file, index) => {
-                                      return (
-                                        <div key={index}>
-                                          <a
-                                            class="MultiFile-remove"
-                                            style={{
-                                              marginRight: "10px",
-                                              color: "red",
-                                              cursor: "pointer",
-                                            }}
-                                            onClick={() =>
-                                              hendleRemoveImage(file?.id)
-                                            }
-                                          >
-                                            x
-                                          </a>
-                                          <a
-                                            href={
-                                              file?.id
-                                                ? `http://172.16.170.8:5252${file?.fileName}`
-                                                : URL.createObjectURL(file)
-                                            }
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                          >
-                                            {file?.id
-                                              ? file?.fileName?.split("/").pop()
-                                              : file.name}
-                                          </a>
-                                        </div>
-                                      );
-                                    }
-                                  )}
-                              </div>
-                            )}
-                          </div>
-                        )} */}
-
                         <div class="col">
-                          {
-                            selectedTab === "Noting" ? (
-                              // Render content for the 'Noting' tab
-                              <section class="mb-5">
-                                <label for="formFile" class="form-label mt-3">
-                                  Description
-                                </label>
+                          {selectedTab === "Noting" ? (
+                            // Render content for the 'Noting' tab
+                            <div className="container">
+                              <div className="row mb-5">
+                                <div className="col-12">
+                                  <label className="form-label">Subject</label>
+                                  <input
+                                    className={`form-control mb-2`}
+                                    id="subject"
+                                    placeholder="Subject"
+                                    onChange={(e) =>
+                                      setNotingTabSubject(e.target.value)
+                                    }
+                                    value={notingTabSubject}
+                                    style={{ width: "50%" }}
+                                  />
+                                  <label
+                                    htmlFor="formFile"
+                                    className="form-label mt-2"
+                                  >
+                                    Added Paragraphs
+                                  </label>
+                                  <DocParas
+                                    tabsData={notingTabData}
+                                    onEditorChange={handleEditorChange}
+                                    onDelete={handleDelete}
+                                  />
+                                </div>
+                              </div>
 
-                                <TinyEditor
-                                  initialContent={""}
-                                  disabled={
-                                    viewPage
-                                      ? true
-                                      : filesData?.isEditable
-                                        ? true
-                                        : false
+                              <label className="form-label">
+                                Add new paragraph
+                              </label>
+                              <Editor
+                                onChange={(content) =>
+                                  setNotingData({ description: content })
+                                }
+                                value={notingData.description}
+                                width={"100%"}
+                                display={"flex"}
+                              />
+                              <div
+                                style={{
+                                  display: "flex",
+                                  justifyContent: "flex-end",
+                                  marginTop: 5,
+                                }}
+                              >
+                                <button
+                                  className="btn btn-primary"
+                                  style={{ marginTop: 60, width: "100px" }}
+                                  onClick={() =>
+                                    handleEditorChange(
+                                      null,
+                                      notingData.description,
+                                      false,
+                                      true
+                                    )
                                   }
-                                  setEditorContent={(content) =>
-                                    setNotingData((prev) => ({
-                                      ...prev,
-                                      description: content,
-                                    }))
+                                >
+                                  {"Add"}
+                                </button>
+                              </div>
+                            </div>
+                          ) : (
+                            <div class="mt-3">
+                              <CustomTable
+                                hidebtn1={false}
+                                addBtnText={"Create Correspondence"}
+                                ActionHide={false}
+                                data={correspondenceTypesData}
+                                tableTitle="Correspondence"
+                                headertitlebgColor={"#666"}
+                                headertitletextColor={"#FFF"}
+                                handlePageChange={handlePageChange}
+                                currentPage={currentPage}
+                                handleAdd={() => {
+                                  if (fkfileId) {
+                                    navigate(
+                                      "/efiling/dashboard/file-register-list/files-list/addedit-case/addedit-correspondence",
+                                      { state: { fileId: fkfileId.value } }
+                                    );
+                                  } else {
+                                    showErrorMessage(
+                                      "Please select file first"
+                                    );
                                   }
-                                  editorContent={notingData.description}
-                                  multiLanguage={false}
-                                  // disabled={location.state?.view ? true : false}
-                                />
-                              </section>
-                            ) : null
-                            // : selectedTab === "Correspondence" ? (
-                            // <section>
-                            //   <label for="formFile" class="form-label mt-3">
-                            //     Description
-                            //   </label>
-
-                            //   <TinyEditor
-                            //     initialContent={""}
-                            //     disabled={
-                            //       viewPage
-                            //         ? true
-                            //         : filesData?.isEditable
-                            //           ? filesData?.isEditable
-                            //           : false
-                            //     }
-                            //     setEditorContent={(content) =>
-                            //       setCorrespondenceData((prev) => ({
-                            //         ...prev,
-                            //         description: content,
-                            //       }))
-                            //     }
-                            //     editorContent={correspondenceData.description}
-                            //     multiLanguage={false}
-                            //     // disabled={location.state?.view ? true : false}
-                            //   />
-                            //   <div class="row">
-                            //     <div class="col">
-                            //       <div class="mb-3 mt-5">
-                            //         <div class="form-group">
-                            //           <div class="row">
-                            //             <label
-                            //               for="formFile"
-                            //               class="form-label mt-3"
-                            //             >
-                            //               Attach File
-                            //             </label>
-                            //             <div class="col-6">
-                            //               <input
-                            //                 ref={fileInputRef}
-                            //                 className="form-control"
-                            //                 type="file"
-                            //                 accept=".pdf, .jpg, .jpeg, .png"
-                            //                 id="correspondance"
-                            //                 name="correspondance"
-                            //                 multiple
-                            //                 onChange={(event) =>
-                            //                   handleFileChangeCorrespondance(
-                            //                     event
-                            //                   )
-                            //                 }
-                            //                 // disabled={location.state?.view ? true : false}
-                            //               />
-                            //             </div>
-                            //           </div>
-                            //         </div>
-                            //       </div>
-                            //     </div>
-                            //   </div>
-                            // </section>
-                            // ) }
-                          }
-                          <div className="row">
-                            {subSelectedTab === "FR" &&
-                            selectedTab === "Correspondence" ? (
-                              <section>
-                                <ImageGallery
-                                  style={{ maxHeight: "calc(100vh 0px)" }}
-                                  items={images}
-                                  showThumbnails={false}
-                                  showFullscreenButton={false}
-                                  showPlayButton={false}
-                                  slideOnThumbnailOver
-                                  renderThumbInner={(item) => (
-                                    <div className="image-gallery-thumbnail-inner">
-                                      <img
-                                        src={item.thumbnail}
-                                        alt={"file"}
-                                        width={92}
-                                        height={80}
-                                      />
-                                      {/* Add any additional elements or styles for the thumbnail */}
-                                    </div>
-                                  )}
-                                />
-                              </section>
-                            ) : subSelectedTab === "Sanction" &&
-                              selectedTab === "Correspondence" ? (
-                              <>
-                                {location?.state && location?.state?.view ? (
-                                  <section>
-                                    <ImageGallery
-                                      style={{ maxHeight: "calc(100vh 0px)" }}
-                                      items={SanactionImages}
-                                      showThumbnails={false}
-                                      showFullscreenButton={false}
-                                      showPlayButton={false}
-                                      slideOnThumbnailOver
-                                      renderThumbInner={(item) => (
-                                        <div className="image-gallery-thumbnail-inner">
-                                          <img
-                                            src={item.thumbnail}
-                                            alt={"file"}
-                                            width={92}
-                                            height={80}
-                                          />
-                                          {/* Add any additional elements or styles for the thumbnail */}
-                                        </div>
-                                      )}
-                                    />
-                                  </section>
-                                ) : (
-                                  <div class="col-2">
-                                    {filesData?.sections.length > 0 && (
-                                      <div>
-                                        <label
-                                          for="formFile"
-                                          class="form-label mt-3 mb-0"
-                                        >
-                                          Sanction Files
-                                        </label>
-                                        {filesData &&
-                                          filesData?.sections &&
-                                          sectionstore?.length > 0 &&
-                                          sectionstore[0]?.caseAttachments.map(
-                                            (file, index) => {
-                                              return (
-                                                <div key={index}>
-                                                  <a
-                                                    class="MultiFile-remove"
-                                                    style={{
-                                                      marginRight: "10px",
-                                                      color: "red",
-                                                      cursor: "pointer",
-                                                    }}
-                                                    onClick={() =>
-                                                      hendleRemoveImage(
-                                                        file?.id
-                                                      )
-                                                    }
-                                                  >
-                                                    x
-                                                  </a>
-                                                  <a
-                                                    href={
-                                                      file?.id
-                                                        ? `http://172.16.170.8:5252${file?.fileName}`
-                                                        : URL.createObjectURL(
-                                                            file
-                                                          )
-                                                    }
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                  >
-                                                    {file?.id
-                                                      ? file?.fileName
-                                                          ?.split("/")
-                                                          .pop()
-                                                      : file.name}
-                                                  </a>
-                                                </div>
-                                              );
-                                            }
-                                          )}
-                                      </div>
-                                    )}
-                                  </div>
-                                )}
-                                <div className="col">
-                                  <section>
-                                    <label
-                                      for="formFile"
-                                      class="form-label mt-3"
-                                    >
-                                      Description
-                                    </label>
-
-                                    <TinyEditor
-                                      initialContent={""}
-                                      disabled={
-                                        viewPage
-                                          ? true
-                                          : filesData?.isEditable
-                                            ? filesData?.isEditable
-                                            : false
+                                }}
+                                pageSize={pageSize}
+                                totalCount={count}
+                                singleDataCard={true}
+                                showView={true}
+                                handleView={(item) => {
+                                  setAttachedFiles(item?.attachmentInternal);
+                                  setShowModal(true);
+                                }}
+                                handleEdit={(item) => {
+                                  if (fkfileId) {
+                                    navigate(
+                                      "/efiling/dashboard/file-register-list/files-list/addedit-case/addedit-correspondence",
+                                      {
+                                        state: {
+                                          item: item,
+                                          fileId: fkfileId.value,
+                                        },
                                       }
-                                      setEditorContent={(content) =>
-                                        setSanction((prev) => ({
-                                          ...prev,
-                                          description: content,
-                                        }))
-                                      }
-                                      editorContent={sanction.description}
-                                      multiLanguage={false}
-                                      // disabled={location.state?.view ? true : false}
-                                    />
-                                    <div
-                                      class="row"
-                                      style={{
-                                        display: location?.state?.view
-                                          ? "none"
-                                          : "block",
-                                      }}
-                                    >
-                                      <div class="col">
-                                        <div class="mb-3 mt-5">
-                                          <div class="form-group">
-                                            <div
-                                              class="row"
-                                              style={{
-                                                display: location?.state?.view
-                                                  ? "none"
-                                                  : "block",
-                                              }}
-                                            >
-                                              <label
-                                                for="formFile"
-                                                class="form-label mt-3"
-                                              >
-                                                Attach File
-                                              </label>
-                                              <div class="col-6">
-                                                <input
-                                                  ref={fileInputRef}
-                                                  className="form-control"
-                                                  type="file"
-                                                  accept=".pdf, .jpg, .jpeg, .png"
-                                                  id="sanction"
-                                                  name="sanction"
-                                                  multiple
-                                                  onChange={(event) =>
-                                                    handleFileChangeSanction(
-                                                      event
-                                                    )
-                                                  }
-                                                  // disabled={location.state?.view ? true : false}
-                                                />
-                                              </div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </section>
-                                </div>
-                              </>
-                            ) : subSelectedTab === "Objection" &&
-                              selectedTab === "Correspondence" ? (
-                              <>
-                                {location?.state?.view ? (
-                                  <section>
-                                    <ImageGallery
-                                      style={{ maxHeight: "calc(100vh 0px)" }}
-                                      items={ObjectionImages}
-                                      showThumbnails={false}
-                                      showFullscreenButton={false}
-                                      showPlayButton={false}
-                                      slideOnThumbnailOver
-                                      renderThumbInner={(item) => (
-                                        <div className="image-gallery-thumbnail-inner">
-                                          <img
-                                            src={item.thumbnail}
-                                            alt={"file"}
-                                            width={92}
-                                            height={80}
-                                          />
-                                          {/* Add any additional elements or styles for the thumbnail */}
-                                        </div>
-                                      )}
-                                    />
-                                  </section>
-                                ) : (
-                                  <div class="col-2">
-                                    {filesData?.sections.length > 0 && (
-                                      <div>
-                                        <label
-                                          for="formFile"
-                                          class="form-label mt-3 mb-0"
-                                        >
-                                          Objection Files
-                                        </label>
-                                        {filesData &&
-                                          filesData?.sections &&
-                                          objectionstore?.length > 0 &&
-                                          objectionstore[0]?.caseAttachments.map(
-                                            (file, index) => {
-                                              return (
-                                                <div key={index}>
-                                                  <a
-                                                    class="MultiFile-remove"
-                                                    style={{
-                                                      marginRight: "10px",
-                                                      color: "red",
-                                                      cursor: "pointer",
-                                                    }}
-                                                    onClick={() =>
-                                                      hendleRemoveImage(
-                                                        file?.id
-                                                      )
-                                                    }
-                                                  >
-                                                    x
-                                                  </a>
-                                                  <a
-                                                    href={
-                                                      file?.id
-                                                        ? `http://172.16.170.8:5252${file?.fileName}`
-                                                        : URL.createObjectURL(
-                                                            file
-                                                          )
-                                                    }
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                  >
-                                                    {file?.id
-                                                      ? file?.fileName
-                                                          ?.split("/")
-                                                          .pop()
-                                                      : file.name}
-                                                  </a>
-                                                </div>
-                                              );
-                                            }
-                                          )}
-                                      </div>
-                                    )}
-                                  </div>
-                                )}
-
-                                <div className="col">
-                                  <section>
-                                    <label
-                                      for="formFile"
-                                      class="form-label mt-3"
-                                    >
-                                      Description
-                                    </label>
-
-                                    <TinyEditor
-                                      initialContent={""}
-                                      disabled={
-                                        viewPage
-                                          ? true
-                                          : filesData?.isEditable
-                                            ? filesData?.isEditable
-                                            : false
-                                      }
-                                      setEditorContent={(content) =>
-                                        setObjection((prev) => ({
-                                          ...prev,
-                                          description: content,
-                                        }))
-                                      }
-                                      editorContent={objection?.description}
-                                      multiLanguage={false}
-                                      // disabled={location.state?.view ? true : false}
-                                    />
-                                    <div class="row">
-                                      <div class="col">
-                                        <div class="mb-3 mt-5">
-                                          <div class="form-group">
-                                            <div
-                                              class="row"
-                                              style={{
-                                                display: location?.state?.view
-                                                  ? "none"
-                                                  : "block",
-                                              }}
-                                            >
-                                              <label
-                                                for="formFile"
-                                                className="form-label mt-3"
-                                              >
-                                                Attach File
-                                              </label>
-                                              <div class="col-6">
-                                                <input
-                                                  ref={fileInputRef}
-                                                  className="form-control"
-                                                  type="file"
-                                                  accept=".pdf, .jpg, .jpeg, .png"
-                                                  id="objection"
-                                                  name="objection"
-                                                  multiple
-                                                  onChange={(event) =>
-                                                    handleFileChangeObjection(
-                                                      event
-                                                    )
-                                                  }
-                                                  // disabled={location.state?.view ? true : false}
-                                                />
-                                              </div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </section>
-                                </div>
-                              </>
-                            ) : subSelectedTab === "Letter" &&
-                              selectedTab === "Correspondence" ? (
-                              <>
-                                {location?.state?.view ? (
-                                  <section>
-                                    <ImageGallery
-                                      style={{ maxHeight: "calc(100vh 0px)" }}
-                                      items={LetterImages}
-                                      showThumbnails={false}
-                                      showFullscreenButton={false}
-                                      showPlayButton={false}
-                                      slideOnThumbnailOver
-                                      renderThumbInner={(item) => (
-                                        <div className="image-gallery-thumbnail-inner">
-                                          <img
-                                            src={item.thumbnail}
-                                            alt={"file"}
-                                            width={92}
-                                            height={80}
-                                          />
-                                          {/* Add any additional elements or styles for the thumbnail */}
-                                        </div>
-                                      )}
-                                    />
-                                  </section>
-                                ) : (
-                                  <div class="col-2">
-                                    {filesData?.sections.length > 0 && (
-                                      <div>
-                                        <label
-                                          for="formFile"
-                                          class="form-label mt-3 mb-0"
-                                        >
-                                          Letter Files
-                                        </label>
-                                        {filesData &&
-                                          filesData?.sections &&
-                                          letterstore?.length > 0 &&
-                                          letterstore[0]?.caseAttachments.map(
-                                            (file, index) => {
-                                              return (
-                                                <div key={index}>
-                                                  <a
-                                                    class="MultiFile-remove"
-                                                    style={{
-                                                      marginRight: "10px",
-                                                      color: "red",
-                                                      cursor: "pointer",
-                                                    }}
-                                                    onClick={() =>
-                                                      hendleRemoveImage(
-                                                        file?.id
-                                                      )
-                                                    }
-                                                  >
-                                                    x
-                                                  </a>
-                                                  <a
-                                                    href={
-                                                      file?.id
-                                                        ? `http://172.16.170.8:5252${file?.fileName}`
-                                                        : URL.createObjectURL(
-                                                            file
-                                                          )
-                                                    }
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                  >
-                                                    {file?.id
-                                                      ? file?.fileName
-                                                          ?.split("/")
-                                                          .pop()
-                                                      : file.name}
-                                                  </a>
-                                                </div>
-                                              );
-                                            }
-                                          )}
-                                      </div>
-                                    )}
-                                  </div>
-                                )}
-
-                                <div className="col">
-                                  <section>
-                                    <label
-                                      for="formFile"
-                                      class="form-label mt-3"
-                                    >
-                                      Description
-                                    </label>
-
-                                    <TinyEditor
-                                      initialContent={""}
-                                      disabled={
-                                        viewPage
-                                          ? true
-                                          : filesData?.isEditable
-                                            ? filesData?.isEditable
-                                            : false
-                                      }
-                                      setEditorContent={(content) =>
-                                        setLetter((prev) => ({
-                                          ...prev,
-                                          description: content,
-                                        }))
-                                      }
-                                      editorContent={letter.description}
-                                      multiLanguage={false}
-                                      // disabled={location.state?.view ? true : false}
-                                    />
-                                    <div class="row">
-                                      <div class="col">
-                                        <div class="mb-3 mt-5">
-                                          <div class="form-group">
-                                            <div
-                                              class="row"
-                                              style={{
-                                                display: location?.state?.view
-                                                  ? "none"
-                                                  : "block",
-                                              }}
-                                            >
-                                              <label
-                                                for="formFile"
-                                                class="form-label mt-3"
-                                              >
-                                                Attach File
-                                              </label>
-                                              <div class="col-6">
-                                                <input
-                                                  ref={fileInputRef}
-                                                  className="form-control"
-                                                  type="file"
-                                                  accept=".pdf, .jpg, .jpeg, .png"
-                                                  id="letter"
-                                                  name="letter"
-                                                  multiple
-                                                  onChange={(event) =>
-                                                    handleFileChangeLetter(
-                                                      event
-                                                    )
-                                                  }
-                                                  // disabled={location.state?.view ? true : false}
-                                                />
-                                              </div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </section>
-                                </div>
-                              </>
-                            ) : subSelectedTab === "Circular" &&
-                              selectedTab === "Correspondence" ? (
-                              <>
-                                {location?.state?.view ? (
-                                  <section>
-                                    <ImageGallery
-                                      style={{ maxHeight: "calc(100vh 0px)" }}
-                                      items={CircularImages}
-                                      showThumbnails={false}
-                                      showFullscreenButton={false}
-                                      showPlayButton={false}
-                                      slideOnThumbnailOver
-                                      renderThumbInner={(item) => (
-                                        <div className="image-gallery-thumbnail-inner">
-                                          <img
-                                            src={item.thumbnail}
-                                            alt={"file"}
-                                            width={92}
-                                            height={80}
-                                          />
-                                          {/* Add any additional elements or styles for the thumbnail */}
-                                        </div>
-                                      )}
-                                    />
-                                  </section>
-                                ) : (
-                                  <div class="col-2">
-                                    {filesData?.sections.length > 0 && (
-                                      <div>
-                                        <label
-                                          for="formFile"
-                                          class="form-label mt-3 mb-0"
-                                        >
-                                          Circular Files
-                                        </label>
-                                        {filesData &&
-                                          filesData?.sections &&
-                                          circularStore?.length > 0 &&
-                                          circularStore[0]?.caseAttachments.map(
-                                            (file, index) => {
-                                              return (
-                                                <div key={index}>
-                                                  <a
-                                                    class="MultiFile-remove"
-                                                    style={{
-                                                      marginRight: "10px",
-                                                      color: "red",
-                                                      cursor: "pointer",
-                                                    }}
-                                                    onClick={() =>
-                                                      hendleRemoveImage(
-                                                        file?.id
-                                                      )
-                                                    }
-                                                  >
-                                                    x
-                                                  </a>
-                                                  <a
-                                                    href={
-                                                      file?.id
-                                                        ? `http://172.16.170.8:5252${file?.fileName}`
-                                                        : URL.createObjectURL(
-                                                            file
-                                                          )
-                                                    }
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                  >
-                                                    {file?.id
-                                                      ? file?.fileName
-                                                          ?.split("/")
-                                                          .pop()
-                                                      : file.name}
-                                                  </a>
-                                                </div>
-                                              );
-                                            }
-                                          )}
-                                      </div>
-                                    )}
-                                  </div>
-                                )}
-
-                                <div className="col">
-                                  <section>
-                                    <label
-                                      for="formFile"
-                                      class="form-label mt-3"
-                                    >
-                                      Description
-                                    </label>
-
-                                    <TinyEditor
-                                      initialContent={""}
-                                      disabled={
-                                        viewPage
-                                          ? true
-                                          : filesData?.isEditable
-                                            ? filesData?.isEditable
-                                            : false
-                                      }
-                                      setEditorContent={(content) =>
-                                        setCircular((prev) => ({
-                                          ...prev,
-                                          description: content,
-                                        }))
-                                      }
-                                      editorContent={circular.description}
-                                      multiLanguage={false}
-                                      // disabled={location.state?.view ? true : false}
-                                    />
-                                    <div class="row">
-                                      <div class="col">
-                                        <div class="mb-3 mt-5">
-                                          <div class="form-group">
-                                            <div
-                                              class="row"
-                                              style={{
-                                                display: location?.state?.view
-                                                  ? "none"
-                                                  : "block",
-                                              }}
-                                            >
-                                              <label
-                                                for="formFile"
-                                                class="form-label mt-3"
-                                              >
-                                                Attach File
-                                              </label>
-                                              <div class="col-6">
-                                                <input
-                                                  ref={fileInputRef}
-                                                  className="form-control"
-                                                  type="file"
-                                                  accept=".pdf, .jpg, .jpeg, .png"
-                                                  id="Circular"
-                                                  name="Circular"
-                                                  multiple
-                                                  onChange={(event) =>
-                                                    handleFileChangeCircular(
-                                                      event
-                                                    )
-                                                  }
-                                                  // disabled={location.state?.view ? true : false}
-                                                />
-                                              </div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </section>
-                                </div>
-                              </>
-                            ) : subSelectedTab === "Misc" &&
-                              selectedTab === "Correspondence" ? (
-                              <>
-                                {location?.state?.view ? (
-                                  <section>
-                                    <ImageGallery
-                                      style={{ maxHeight: "calc(100vh 0px)" }}
-                                      items={MiscImages}
-                                      showThumbnails={false}
-                                      showFullscreenButton={false}
-                                      showPlayButton={false}
-                                      slideOnThumbnailOver
-                                      renderThumbInner={(item) => (
-                                        <div className="image-gallery-thumbnail-inner">
-                                          <img
-                                            src={item.thumbnail}
-                                            alt={"file"}
-                                            width={92}
-                                            height={80}
-                                          />
-                                          {/* Add any additional elements or styles for the thumbnail */}
-                                        </div>
-                                      )}
-                                    />
-                                  </section>
-                                ) : (
-                                  <div class="col-2">
-                                    {filesData?.sections.length > 0 && (
-                                      <div>
-                                        <label
-                                          for="formFile"
-                                          class="form-label mt-3 mb-0"
-                                        >
-                                          Misc Files
-                                        </label>
-                                        {filesData?.sections &&
-                                          miscStore?.length > 0 &&
-                                          miscStore[0]?.caseAttachments.map(
-                                            (file, index) => {
-                                              return (
-                                                <div key={index}>
-                                                  <a
-                                                    class="MultiFile-remove"
-                                                    style={{
-                                                      marginRight: "10px",
-                                                      color: "red",
-                                                      cursor: "pointer",
-                                                    }}
-                                                    onClick={() =>
-                                                      hendleRemoveImage(
-                                                        file?.id
-                                                      )
-                                                    }
-                                                  >
-                                                    x
-                                                  </a>
-                                                  <a
-                                                    href={
-                                                      file?.id
-                                                        ? `http://172.16.170.8:5252${file?.fileName}`
-                                                        : URL.createObjectURL(
-                                                            file
-                                                          )
-                                                    }
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                  >
-                                                    {file?.id
-                                                      ? file?.fileName
-                                                          ?.split("/")
-                                                          .pop()
-                                                      : file.name}
-                                                  </a>
-                                                </div>
-                                              );
-                                            }
-                                          )}
-                                      </div>
-                                    )}
-                                  </div>
-                                )}
-
-                                <div className="col">
-                                  <section>
-                                    <label
-                                      for="formFile"
-                                      class="form-label mt-3"
-                                    >
-                                      Description
-                                    </label>
-
-                                    <TinyEditor
-                                      initialContent={""}
-                                      disabled={
-                                        viewPage
-                                          ? true
-                                          : filesData?.isEditable
-                                            ? filesData?.isEditable
-                                            : false
-                                      }
-                                      setEditorContent={(content) =>
-                                        setMisc((prev) => ({
-                                          ...prev,
-                                          description: content,
-                                        }))
-                                      }
-                                      editorContent={misc.description}
-                                      multiLanguage={false}
-                                      // disabled={location.state?.view ? true : false}
-                                    />
-                                    <div class="row">
-                                      <div class="col">
-                                        <div class="mb-3 mt-5">
-                                          <div class="form-group">
-                                            <div
-                                              class="row"
-                                              style={{
-                                                display: location?.state?.view
-                                                  ? "none"
-                                                  : "block",
-                                              }}
-                                            >
-                                              <label
-                                                for="formFile"
-                                                class="form-label mt-3"
-                                              >
-                                                Attach File
-                                              </label>
-                                              <div class="col-6">
-                                                <input
-                                                  ref={fileInputRef}
-                                                  className="form-control"
-                                                  type="file"
-                                                  accept=".pdf, .jpg, .jpeg, .png"
-                                                  id="Misc"
-                                                  name="Misc"
-                                                  multiple
-                                                  onChange={(event) =>
-                                                    handleFileChangeMisc(event)
-                                                  }
-                                                  // disabled={location.state?.view ? true : false}
-                                                />
-                                              </div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </section>
-                                </div>
-                              </>
-                            ) : null}
-                          </div>
+                                    );
+                                  } else {
+                                    showErrorMessage(
+                                      "Please select file first"
+                                    );
+                                  }
+                                }}
+                              />
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
                   </div>
-
-                  <div className="row mt-4">
-                    <div class="col-8">
-                      <label
-                        class="form-label"
-                        style={{ display: "block", fontWeight: "bold" }}
-                      >
-                        Signatures
-                      </label>
-                    </div>
-                  </div>
-
-                  <div className="row" style={{ textAlign: 'center' }}>
-                    {filesData?.digitalSignature?.map((item, index) => (
-                      <div
-                        key={index}
-                        style={{
-                          width: "200px",
-                          height: "200px",
-                          marginRight: "10px",
-                          marginTop: 30,
-                        }}
-                      >
-                        <img
-                          src={`http://172.16.170.8:5252${item?.signature}`}
-                          alt="Uploaded Signature"
-                          style={{
-                            width: "100%",
-                            height: "100%",
-                            objectFit: "contain",
-                          }}
-                        />
-                        <span
-                          style={{ fontSize: "14px" }}
-                        >{`${item?.users?.employee?.firstName}  ${item?.users?.employee?.lastName} / ${item?.users?.employee?.designations?.designationName}`}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* <div className="row">
-                    <div class="col-6">
-                     
-                      <label class="form-label" style={{ display: "block" }}>
-                        Attached File
-                      </label>
-                      <span
-                        class="MultiFile-label"
-                        style={{ marginBottom: "18px", display: "block" }}
-                        title={filesData?.attachment
-                          ?.split("\\")
-                          .pop()
-                          .split("/")
-                          .pop()}
-                      >
-                        <span class="MultiFile-title">
-                          <a
-                            href={`http://172.16.170.8:5252${filesData?.attachment}`}
-                          >
-                            {filesData?.attachment
-                              ?.split("\\")
-                              .pop()
-                              .split("/")
-                              .pop()}
-                          </a>
-                        </span>
-                      </span>
-                      
-                    </div>
-                  </div> */}
                 </div>
-                {/* 
-                <div className="m-2">
-                  <div class="row mt-4">
-                    <div class="col-6">
-                      <div class="mb-3">
-                        <label class="form-label">Diary Number</label>
-                        <input
-                          type="text"
-                          class="form-control"
-                          placeholder="Diary Number"
-                          id="diaryNumber"
-                          name="diaryNumber"
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          value={formik.values.diaryNumber}
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label for="formFile" class="form-label mt-3">
-                      Upload Signature
-                    </label>
-                    <input class="form-control" type="file" id="formFile" />
-                    <div className="clearfix"></div>
-                  </div>
-                </div> */}
               </form>
             </div>
             <div className="col-md-3" style={{ paddingRight: 0 }}>
@@ -2241,16 +996,6 @@ function FileDetail() {
                             style={{ borderBottom: "1px solid #ddd" }}
                           >
                             <>
-                              {/* <img
-                              style={{
-                                marginBottom: "30px",
-                                marginRight: "15px",
-                              }}
-                              src={thumbnail}
-                              width="40"
-                              height="40"
-                              class="rounded-circle mr-3"
-                            /> */}
                               <div
                                 class="w-100"
                                 style={{ position: "relative" }}
@@ -2262,19 +1007,6 @@ function FileDetail() {
                                         class="mr-2"
                                         style={{ fontSize: "14px" }}
                                       >{`${item?.submittedUser?.employee?.firstName}  ${item?.submittedUser?.employee?.lastName}/ ${item?.submittedUser?.employee?.designations?.designationName}`}</span>
-                                      {/* <small
-                                      style={{
-                                        marginLeft: "0px",
-                                        position: "absolute",
-                                        top: "-21px",
-                                      }}
-                                      class="c-badge"
-                                    >
-                                      {
-                                        item?.submittedUser?.employee
-                                          ?.designations?.designationNam
-                                      }
-                                    </small> */}
                                     </div>
                                   </div>
                                   <div style={{ float: "right" }}>
@@ -2294,26 +1026,22 @@ function FileDetail() {
                                 </div>
                                 <p
                                   class="text-justify comment-text mb-0"
-                                  style={{ fontSize: "18px", color: item?.submittedUser?.employee?.userType === "Officer" ? "green" : item?.submittedUser?.employee?.userType === "Section" ? "blue" : "black" }}
+                                  style={{
+                                    fontSize: "18px",
+                                    color:
+                                      item?.submittedUser?.employee
+                                        ?.userType === "Officer"
+                                        ? "green"
+                                        : item?.submittedUser?.employee
+                                              ?.userType === "Section"
+                                          ? "blue"
+                                          : "black",
+                                  }}
                                 >
                                   {item?.CommentStatus
                                     ? item?.CommentStatus
                                     : item?.comment}
                                 </p>
-                                {/* <small
-                                style={{
-                                  marginBottom: "20px",
-                                  background:
-                                    item?.CommentStatus === "Approved"
-                                      ? "green"
-                                      : item?.CommentStatus === "Rejected"
-                                        ? "red"
-                                        : "grey",
-                                }}
-                                class="c-badge"
-                              >
-                                {item?.CommentStatus}
-                              </small> */}
                               </div>
                             </>
                           </div>
