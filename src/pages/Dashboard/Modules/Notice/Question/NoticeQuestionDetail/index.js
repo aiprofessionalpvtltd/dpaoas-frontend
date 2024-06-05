@@ -61,6 +61,7 @@ function NoticeQuestionDetail() {
   const [currentPage, setCurrentPage] = useState(0);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [allQuestionStatus, setAllQuestionStatus] = useState([]);
+  
   const pageSize = 10;
 
   const handleStatusPageChange = (page) => {
@@ -138,11 +139,7 @@ function NoticeQuestionDetail() {
     GetAllQuestionStatus();
   }, []);
 
-  console.log(
-    "location?.state?.questionStatus",
-    location?.state?.question?.questionStatus?.questionStatus
-  );
-  console.log("GetaALl Status", allQuestionStatus);
+  
   // Handle Claneder Toggel
   const handleCalendarToggle = () => {
     setIsCalendarOpen(!isCalendarOpen);

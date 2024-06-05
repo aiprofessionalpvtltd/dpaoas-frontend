@@ -7,6 +7,7 @@ import { AuthContext } from "../../../../../../api/AuthContext";
 import { useFormik } from "formik";
 import { getAllParliamentaryYears } from "../../../../../../api/APIs/Services/ManageQMS.service";
 import {
+  DeleteLegislationBill,
   getAllBillStatus,
   getAllCommitties,
   mainSearchApi,
@@ -22,7 +23,8 @@ import CustomTable from "../../../../../../components/CustomComponents/CustomTab
 import DatePicker from "react-datepicker";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
-
+import { useNavigate } from "react-router-dom";
+import moment from "moment";
 const validationSchema = Yup.object({
   //   fileNumber: Yup.number().required("File Number  is required"),
   keywords: Yup.string().required("KeyWord is required"),
@@ -34,7 +36,11 @@ const validationSchema = Yup.object({
   // urduText: Yup.string().required('Urdu Text is required'),
 });
 
+
+
+
 const SearchLegislationBills = () => {
+  const navigate = useNavigate();
   const { ministryData, members, sessions } = useContext(AuthContext);
   const [concerndCommitte, setConcerndCommitte] = useState(null);
   const [parliamentaryYears, setParliamentaryYears] = useState([]);
@@ -42,6 +48,7 @@ const SearchLegislationBills = () => {
   const [searchdata, setSearchData] = useState([]);
   const [billdata, setBilldata] = useState([]);
   const [count, setCount] = useState(null);
+  const [pageValue, setPageValue] = useState(null)
   const [isFromNoticeDateCalenderOpen, setIsFromNoticeDateCalenderOpen] =
     useState(false);
   const [isToNoticeDateCalenderOpen, setIsToNoticeDateCalenderOpen] =
@@ -124,6 +131,7 @@ const SearchLegislationBills = () => {
     },
   });
 
+
   const handleParliamentaryYears = async () => {
     try {
       const response = await getAllParliamentaryYears(0, 200);
@@ -188,26 +196,28 @@ const SearchLegislationBills = () => {
       })) || []
     );
   };
+ 
   const handleSearch = useCallback(
     async (values, page) => {
       const data = {
-        fkSenatorId: values.selectedSenator?.value,
-        fkParliamentaryYearId: values.parliamentaryYear,
-        fkMinistryId: values.selectedMinistry?.value,
+        fkSenatorId: values?.selectedSenator?.value,
+        fkParliamentaryYearId: values?.parliamentaryYear,
+        fkMinistryId: values?.selectedMinistry?.value,
         keyword: values?.keywords,
-        fkSessionIdFrom: values.fromSession,
-        fkSessionIdto: values.toSessionId,
+        fkSessionIdFrom: values?.fromSession,
+        fkSessionIdto: values?.toSessionId,
         billFrom: values?.billFrom,
         billCategory: values?.billCategory,
         fkBillStatus: values?.statusId,
         billType: values?.billType,
-        fkManageCommitteeId: values.concerndCommitties?.value,
+        fkManageCommitteeId: values?.concerndCommitties?.value,
         committeeRecomendation: values?.committeeRecomendation?.value,
         // fileNumber: values.fileNumber,
-        noticeDateFrom: values.FromNoticeDate,
-        noticeDateTo: values.ToNoticeDate,
-        introducedInHouseDate: values?.PresetedInHOuseOn,
+        noticeDateFrom: values?.FromNoticeDate && moment(values?.FromNoticeDate).format("YYYY-MM-DD"),
+        noticeDateTo: values?.ToNoticeDate && moment(values?.ToNoticeDate).format("YYYY-MM-DD"),
+        introducedInHouseDate: values?.PresetedInHOuseOn && moment(values?.PresetedInHOuseOn).format("YYYY-MM-DD"),
       };
+      setPageValue(page)
       try {
         const response = await mainSearchApi(page, pageSize, data);
         if (response?.success) {
@@ -228,6 +238,26 @@ const SearchLegislationBills = () => {
   const handleResetForm = () => {
     formik.resetForm();
     setSearchData([]);
+  };
+
+  const handleEditSenateBill = (id) => {
+    navigate("/lgms/dashboard/bills/edit/senate-bills", { state: id });
+  };
+  const handleEditNABill = (id) => {
+    navigate("/lgms/dashboard/bills/edit/NA-bills/", { state: id });
+  };
+  
+  // Handle Delete Bills
+  const handleDeleteLegislationBill = async (id) => {
+    try {
+      const resposne = await DeleteLegislationBill(id);
+      if (resposne?.success) {
+        showSuccessMessage(resposne?.message);
+        handleSearch(formik?.values, pageValue);
+      }
+    } catch (error) {
+      showErrorMessage(error?.message);
+    }
   };
   return (
     <Layout
@@ -515,9 +545,6 @@ const SearchLegislationBills = () => {
                       value={formik.values.concerndCommitties}
                     />
                   </div>
-                </div>
-
-                <div className="row mt-3">
                   <div className="form-group col-3">
                     <label
                       htmlFor="committeeRecomendation"
@@ -551,6 +578,10 @@ const SearchLegislationBills = () => {
                       value={formik.values.committeeRecomendation}
                     />
                   </div>
+                </div>
+
+                <div className="row mt-3">
+                 
 
                   {/* <div className="form-group col-3">
                     <label htmlFor="FromNoticeDate" className="form-label">
@@ -566,7 +597,7 @@ const SearchLegislationBills = () => {
                     />
                   </div> */}
 
-                  <div class="col">
+                  <div class="col-3">
                     <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label">From Notice Date</label>
                       <span
@@ -599,7 +630,7 @@ const SearchLegislationBills = () => {
                       />
                     </div>
                   </div>
-                  <div class="col">
+                  <div class="col-3">
                     <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label">To Notice Date</label>
                       <span
@@ -633,7 +664,7 @@ const SearchLegislationBills = () => {
                     </div>
                   </div>
 
-                  <div class="col">
+                  <div class="col-3">
                     <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label">Presented In House On</label>
                       <span
@@ -722,15 +753,23 @@ const SearchLegislationBills = () => {
                 hidebtn1={true}
                 hideBtn={true}
                 singleDataCard={true}
-                ActionHide={true}
-                hideDeleteIcon={true}
-                hideEditIcon={true}
+                ActionHide={false}
+                hideDeleteIcon={false}
+                hideEditIcon={false}
                 headertitlebgColor={"#666"}
                 headertitletextColor={"#FFF"}
                 handlePageChange={handlePageChange}
                 currentPage={currentPage}
                 pageSize={pageSize}
                 totalCount={count}
+
+                handleEdit={(item) => {
+                  item?.billFrom === "From Senate"
+                    ? handleEditSenateBill(item?.id)
+                    : handleEditNABill(item?.id);
+                }}
+                handleDelete={(item) => handleDeleteLegislationBill(item?.id)}
+                
               />
             </div>
           </div>

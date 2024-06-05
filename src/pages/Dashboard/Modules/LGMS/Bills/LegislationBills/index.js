@@ -18,16 +18,19 @@ import {
 const AllLegislationBillList = () => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(0);
-  const [selectedOption, setSelectedOption] = useState("From Senate");
+  const [selectedOption, setSelectedOption] = useState("All");
   const [legislationBillData, setLegislationBillData] = useState([]);
   const [senateBillData, setSenateBillData] = useState([]);
   const [NABillData, setNABillData] = useState([]);
   const [count, setCount] = useState(null);
-  const pageSize = 3;
+  const pageSize = 10;
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
     setCurrentPage(page);
+    // setTimeout(() => {
+      getBills(page, selectedOption)
+    // }, 1000);
   };
   const transformAllBillData = (apiData) => {
     return apiData?.map((item) => ({
@@ -54,6 +57,7 @@ const AllLegislationBillList = () => {
       parliamentaryYear: item?.parliamentaryYears?.parliamentaryTenure,
       session: item?.sessions?.sessionName,
       billType: item.billType,
+      billFrom: item?.billFrom,
       billCategory: item.billCategory,
       fileNumber: item?.fileNumber,
       noticeDate: item?.noticeDate
@@ -75,6 +79,7 @@ const AllLegislationBillList = () => {
       parliamentaryYear: item?.parliamentaryYears?.parliamentaryTenure,
       session: item?.sessions?.sessionName,
       billType: item.billType,
+      billFrom: item?.billFrom,
       billCategory: item.billCategory,
       fileNumber: item?.fileNumber,
 
@@ -98,17 +103,19 @@ const AllLegislationBillList = () => {
 
   const handleOptionChange = (event) => {
     setSelectedOption(event.target.value);
-    getBills(event.target?.value);
+    setCurrentPage(0)
+    const page = 0
+    getBills(page,event.target?.value);
 
-    // if (event.target.value === "All Bills") {
-    //   getBills();
-    // } else {
-    //   getBills(event.target.value);
-    // }
+    if (event.target.value === "All") {
+      getBills(page);
+    } else {
+      getBills(page,event.target.value);
+    }
   };
 
   const getBills = useCallback(
-    async (option) => {
+    async (page,option) => {
       let searchParams = {}; // Default empty object
 
       if (option === "From Senate") {
@@ -120,9 +127,8 @@ const AllLegislationBillList = () => {
           billFrom: "From NA",
         };
       }
-
       const response = await getAllLegislationBills(
-        currentPage,
+        page,
         pageSize,
         searchParams
       );
@@ -147,9 +153,12 @@ const AllLegislationBillList = () => {
     [count, setCount, pageSize, currentPage]
   );
 
+ 
+
   useEffect(() => {
-    getBills();
-  }, [currentPage]);
+    
+    getBills(currentPage);
+  }, []);
 
   const handleAddSenateBills = () => {
     navigate("/lgms/dashboard/bills/senate-bills");
@@ -170,7 +179,7 @@ const AllLegislationBillList = () => {
       const resposne = await DeleteLegislationBill(id);
       if (resposne?.success) {
         showSuccessMessage(resposne?.message);
-        getBills();
+        getBills(currentPage, selectedOption);
       }
     } catch (error) {
       showErrorMessage(error?.message);
@@ -201,51 +210,55 @@ const AllLegislationBillList = () => {
             <option value="" selected disabled hidden>
               Select
             </option>
-            {/* <option value="All Bills">All Bills Data</option> */}
+            <option value="All">All Bills Data</option>
             <option value="From Senate">Introduced In Senate</option>
             <option value="From NA">Received From NA</option>
           </select>
         </div>
         <div>
           <CustomTable
-            hidebtn1={selectedOption === "" ? true : false}
+            // hidebtn1={selectedOption === "All" ? true : false}
+            hidebtn1={false}
+            hideBtn={selectedOption === "All" ? false : true}
+            addBtnText2="Create National Assembly Bill"
             addBtnText={
-              selectedOption === "From Senate"
+              selectedOption === "All"
                 ? "Create Senate Bill"
-                : "Create National Assembly Bill"
+                : selectedOption === "From Senate"
+                  ? "Create Senate Bill"
+                  : selectedOption === "From NA"
+                    ? "Create National Assembly Bill"
+                    : ""
             }
+            handleAdd={
+              selectedOption === "All"
+                ? handleAddSenateBills
+                : selectedOption === "From Senate"
+                  ? handleAddSenateBills
+                  : selectedOption === "From NA"
+                    ? handleAddNaBills
+                    : null
+            }
+            handleAdd2={handleAddNaBills}
             tableTitle={
-              // selectedOption === ""
-              //   ? "All Bills Data"
-              //   :
-              selectedOption === "From Senate"
-                ? "Senate Bills Data"
-                : "National Assembly Bills"
+              selectedOption === "All"
+                ? "All Bills Data"
+                : selectedOption === "From Senate"
+                  ? "Senate Bills Data"
+                  : "National Assembly Bills"
             }
             data={
-              // selectedOption === ""
-              //   ? legislationBillData
-              //   : selectedOption === "All Bills"
-              //     ? legislationBillData
-              //     :
-              selectedOption === "From Senate" ? senateBillData : NABillData
+              selectedOption === "All"
+                ? legislationBillData
+                : selectedOption === "From Senate"
+                  ? senateBillData
+                  : selectedOption === "From NA"
+                    ? NABillData
+                    : "No Data"
             }
-            hideBtn={true}
-            ActionHide={
-              selectedOption === "From Senate" || selectedOption === "From NA"
-                ? false
-                : true
-            }
-            hideDeleteIcon={
-              selectedOption === "From Senate" || selectedOption === "From NA"
-                ? false
-                : true
-            }
-            hideEditIcon={
-              selectedOption === "From Senate" || selectedOption === "From NA"
-                ? false
-                : true
-            }
+            ActionHide={false}
+            hideDeleteIcon={false}
+            hideEditIcon={false}
             singleDataCard={true}
             headertitlebgColor={"#666"}
             headertitletextColor={"#FFF"}
@@ -253,16 +266,11 @@ const AllLegislationBillList = () => {
             currentPage={currentPage}
             pageSize={pageSize}
             totalCount={count}
-            handleAdd={
-              selectedOption === "From Senate"
-                ? handleAddSenateBills
-                : handleAddNaBills
-            }
-            handleEdit={
-              selectedOption === "From Senate"
-                ? (item) => handleEditSenateBill(item?.id)
-                : (item) => handleEditNABill(item?.id)
-            }
+            handleEdit={(item) => {
+              item?.billFrom === "From Senate"
+                ? handleEditSenateBill(item?.id)
+                : handleEditNABill(item?.id);
+            }}
             handleDelete={(item) => handleDeleteLegislationBill(item?.id)}
           />
         </div>

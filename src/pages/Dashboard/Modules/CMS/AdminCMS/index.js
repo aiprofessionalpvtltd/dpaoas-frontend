@@ -163,7 +163,7 @@ function CMSAdminDashboard() {
 
   const CountComplaints = async () => {
     try {
-      const response = await getallComplaint(0, 100);
+      const response = await getallComplaint();
       if (response?.success) {
         const countInProgress = response?.data?.complaints.filter(
           (item) => item.complaintStatus === "in-progress"
@@ -352,7 +352,7 @@ function CMSAdminDashboard() {
   // Export Admin Complaint
   const hendleExportExcel = async () => {
     try {
-      const response = await getallComplaint(0, 100);
+      const response = await getallComplaint();
       if (response?.success) {
         // Export to Excel logic
         const worksheet = XLSX.utils.json_to_sheet(

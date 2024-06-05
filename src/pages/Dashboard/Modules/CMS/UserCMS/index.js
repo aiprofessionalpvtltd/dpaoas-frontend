@@ -234,11 +234,7 @@ function CMSUserDashboard() {
 
   const hendleExportExcel = async () => {
     try {
-      const response = await getallcomplaintRecordByUserId(
-        userData.fkUserId,
-        0,
-        100
-      );
+      const response = await getallComplaint();
       if (response?.success) {
         // Export to Excel logic
         const worksheet = XLSX.utils.json_to_sheet(response?.data?.complaints);
@@ -252,6 +248,17 @@ function CMSUserDashboard() {
       showErrorMessage(error?.response?.data?.message);
     }
   };
+
+  const hendleEdit = async (id) => {
+    try {
+      const response = await getallcomplaintRecordById(id)
+      if(response.success){
+        navigate("/cms/dashboard/addedit", { state: response?.data })
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   useEffect(() => {
     AllComplaintTypeApi();
@@ -509,18 +516,19 @@ function CMSUserDashboard() {
                   data={complaintData}
                   tableTitle="User Complaint"
                   addBtnText="Add User Complaint"
-                  ActionHide={true}
+                  // ActionHide={true}
                   handleAdd={() => navigate("/cms/dashboard/addedit")}
+                  handleEdit={(item) => hendleEdit(item.id)}
                   // handleEdit={(item) => navigate("/cms/dashboard/addedit", { state: item })}
                   handlePageChange={handlePageChange}
-                  hideEditIcon={true}
+                  // hideEditIcon={true}
                   currentPage={currentPage}
                   pageSize={pageSize}
                   headertitlebgColor={"#666"}
                   headertitletextColor={"#FFF"}
                   totalCount={count}
                   hideDeleteIcon={true}
-                  showPrint={true}
+                  // showPrint={true}
                   handlePrint={(item) => HandlePrint(item.id)}
                 />
                 <div class="d-grid gap-2 d-md-flex justify-content-md-start col">

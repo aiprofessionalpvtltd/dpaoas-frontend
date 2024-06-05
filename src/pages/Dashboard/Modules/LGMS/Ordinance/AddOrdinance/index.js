@@ -16,6 +16,7 @@ import {
 } from "../../../../../../api/APIs/Services/LegislationModule.service";
 import { getUserData } from "../../../../../../api/Auth";
 import { showSuccessMessage } from "../../../../../../utils/ToastAlert";
+import moment from "moment";
 function AddOrdinance() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -87,8 +88,9 @@ function AddOrdinance() {
       fkSessionId: values?.session,
       fkUserId: userData && userData?.id,
       ordinanceTitle: values?.title,
-      dateOfLayingInTheSenate: values?.dateOfLayingSenate,
-      dateOfLayingInTheNA: values?.dateOfLayingNA,
+      dateOfLayingInTheSenate: values?.dateOfLayingSenate && moment(values?.dateOfLayingSenate).format("YYYY-MM-DD"),
+      dateOfLayingInTheNA: values?.dateOfLayingNA && moment(values?.dateOfLayingNA).format("YYYY-MM-DD"),
+      fkOrdinanceStatus:1
     };
 
     try {

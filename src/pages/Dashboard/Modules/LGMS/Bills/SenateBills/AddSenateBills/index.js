@@ -17,7 +17,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { getUserData } from "../../../../../../../api/Auth";
 import { showSuccessMessage } from "../../../../../../../utils/ToastAlert";
-
+import moment from "moment";
 function NewLegislationSenateBill() {
   const userData = getUserData();
   const navigate = useNavigate();
@@ -78,7 +78,11 @@ function NewLegislationSenateBill() {
     formData.append("fkSessionId", values?.session);
     formData.append("fkParliamentaryYearId", values?.parliamentaryYear);
     formData.append("fileNumber", values?.fileNumber);
-    formData.append("noticeDate", values?.noticeDate);
+
+    if (values?.noticeDate) {
+      const formattedDate = moment(values?.noticeDate).format("YYYY-MM-DD");
+      formData.append("noticeDate", formattedDate);
+    }
     formData.append("billCategory", values?.billCategory);
     formData.append("billType", values?.billType);
     formData.append("billTitle", values?.billTitle);
