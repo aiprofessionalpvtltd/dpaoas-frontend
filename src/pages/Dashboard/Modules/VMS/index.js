@@ -12,6 +12,7 @@ import {
 } from "../../../../utils/ToastAlert";
 import { setPassID } from "../../../../api/Auth";
 import moment from "moment";
+import { imagesUrl2 } from "../../../../api/APIs";
 
 function VMSDashboard() {
   const navigate = useNavigate();
@@ -62,7 +63,7 @@ function VMSDashboard() {
     try {
       const response = await getPassPdfBYPassID(id);
       console.log("response", response?.data?.fileLink);
-      const url = `http://172.16.170.8:5152${response?.data?.fileLink}`;
+      const url = `${imagesUrl2}${response?.data?.fileLink}`;
       window.open(url, "_blank");
       // setPdfUrl(url)
     } catch (error) {
