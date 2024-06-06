@@ -28,6 +28,7 @@ import {
 } from "../../../../../../utils/sideBarItems";
 import { Button, Modal } from "react-bootstrap";
 import { TinyEditor } from "../../../../../../components/CustomComponents/Editor/TinyEditor";
+import { imagesUrl } from "../../../../../../api/APIs";
 
 const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
   return (
@@ -156,7 +157,7 @@ function FRDetail() {
   }, []);
 
   const HandlePrint = async (urlimage) => {
-    const url = `http://172.16.170.8:5252${urlimage}`;
+    const url = `${imagesUrl}${urlimage}`;
     window.open(url, "_blank");
     // setPdfUrl(url)
   };
@@ -194,8 +195,8 @@ function FRDetail() {
 
   const images =
     attachments?.map((item) => ({
-      original: `http://172.16.170.8:5252${item?.filename}`,
-      thumbnail: `http://172.16.170.8:5252${item?.filename}`,
+      original: `${imagesUrl}${item?.filename}`,
+      thumbnail: `${imagesUrl}${item?.filename}`,
     })) || [];
 
   // const images = [

@@ -12,6 +12,7 @@ import sanitizeHtml from "sanitize-html";
 import { Modal } from "react-bootstrap";
 import { getAllCorrespondence } from "../../../api/APIs/Services/efiling.service";
 import { getSelectedFileID, getUserData } from "../../../api/Auth";
+import { imagesUrl } from "../../../api/APIs";
 
 const DocParas = ({ tabsData, onEditorChange, onDelete }) => {
   const UserData = getUserData();
@@ -91,7 +92,7 @@ const DocParas = ({ tabsData, onEditorChange, onDelete }) => {
   }, []);
 
   const HandlePrint = async (urlimage) => {
-    const url = `http://10.10.140.200:5152${urlimage}`;
+    const url = `${imagesUrl}${urlimage}`;
     window.open(url, "_blank");
   };
 

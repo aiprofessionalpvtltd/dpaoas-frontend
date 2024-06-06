@@ -18,6 +18,7 @@ import {
 } from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 import { searchAttendanceReportByPartyProvince } from "../../../../../../api/APIs/Services/AttendanceReport.service";
+import { imagesUrl } from "../../../../../../api/APIs";
 
 const validationSchema = Yup.object({
   sessionId: Yup.string().required("Session is required"),
@@ -119,8 +120,7 @@ const PartywiseAttendenceReports = () => {
         if (response?.success) {
           showSuccessMessage(response?.message);
           if (response?.data?.fileLink) {
-            const url = `http://172.16.170.8:5252${response?.data?.fileLink}`;
-            // const url = `http://10.10.140.200:5152${response?.data?.fileLink}`;
+            const url = `${imagesUrl}${response?.data?.fileLink}`;
             setSearchedData(url);
           } else {
             searchedData(null);

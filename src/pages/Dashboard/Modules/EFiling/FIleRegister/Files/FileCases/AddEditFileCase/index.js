@@ -32,6 +32,7 @@ import NoteEditor from "../../../../../../../../components/CustomComponents/DocE
 import DocParas from "../../../../../../../../components/CustomComponents/DocParas";
 import CustomTable from "../../../../../../../../components/CustomComponents/CustomTable";
 import { Modal } from "react-bootstrap";
+import { imagesUrl } from "../../../../../../../../api/APIs";
 
 function AddEditFileCase() {
   const navigate = useNavigate();
@@ -84,7 +85,6 @@ function AddEditFileCase() {
         i === index
           ? {
               ...tab,
-              description: content,
               references: [...tab.references, references],
             }
           : tab
@@ -220,8 +220,8 @@ function AddEditFileCase() {
 
   const images =
     location?.state?.freshReceiptsAttachments?.map((item) => ({
-      original: `http://172.16.170.8:5252${item?.filename}`,
-      thumbnail: `http://172.16.170.8:5252${item?.filename}`,
+      original: `${imagesUrl}${item?.filename}`,
+      thumbnail: `${imagesUrl}${item?.filename}`,
     })) || [];
 
   const transformData = (apiData) => {
@@ -257,7 +257,7 @@ function AddEditFileCase() {
   }, [fkfileId]);
 
   const HandlePrint = async (urlimage) => {
-    const url = `http://172.16.170.8:5252${urlimage}`;
+    const url = `${imagesUrl}${urlimage}`;
     window.open(url, "_blank");
     // setPdfUrl(url)
   };

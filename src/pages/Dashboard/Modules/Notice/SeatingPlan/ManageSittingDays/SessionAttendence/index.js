@@ -27,6 +27,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { getSessionDayAttendanceReport } from "../../../../../../../api/APIs/Services/Notice.service";
 import axios from "axios";
+import { imagesUrl } from "../../../../../../../api/APIs";
 
 function NMSSessionAttendance() {
   const location = useLocation();
@@ -111,7 +112,7 @@ function NMSSessionAttendance() {
     try {
       const res = await getSessionDayAttendanceReport(location?.state?.id);
       console.log("Report", res?.data?.fileLink);
-      handleDownload("http://172.16.170.8:5252" + res?.data?.fileLink);
+      handleDownload(`${imagesUrl}${res?.data?.fileLink}`);
     } catch (error) {
       showErrorMessage(error.response?.data?.message);
     }

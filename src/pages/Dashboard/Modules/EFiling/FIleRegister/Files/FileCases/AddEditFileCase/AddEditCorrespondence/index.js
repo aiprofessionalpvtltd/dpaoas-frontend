@@ -24,6 +24,7 @@ import {
   EfilingSideBarItem,
 } from "../../../../../../../../../utils/sideBarItems";
 import { DeleteAttachedFiles, UpdateCorrespondence, createCorrespondence, getCorrespondenceById } from "../../../../../../../../../api/APIs/Services/efiling.service";
+import { imagesUrl } from "../../../../../../../../../api/APIs";
 
 const validationSchema = Yup.object({
   termName: Yup.string().required("Term name is required"),
@@ -35,6 +36,7 @@ function AddEditCorrespondence() {
   const location = useLocation();
   const [tenures, setTenures] = useState([]);
   const [corrById, setCorrById] = useState();
+  const [corrTitle, setCorrTitle] = useState("");
   const UserData = getUserData();
   const navigate = useNavigate();
 
@@ -57,7 +59,7 @@ function AddEditCorrespondence() {
 
   const handleCreateCorrespondence = async (values) => {
     const formData = new FormData();
-    formData.append("name", values.correspondenceName);
+    formData.append("name", corrTitle === "Other" ? values.correspondenceName : corrTitle);
     formData.append("description", values.correspondenceDescription);
     if (values.attachment) {
       Array.from(values.attachment).forEach((file) => {
@@ -82,7 +84,7 @@ function AddEditCorrespondence() {
 
   const handleEditCorrespondence = async (values) => {
     const formData = new FormData();
-    formData.append("name", values.correspondenceName);
+    formData.append("name", corrTitle === "Other" ? values.correspondenceName : corrTitle);
     formData.append("description", values.correspondenceDescription);
     if (values.attachment) {
       Array.from(values.attachment).forEach((file) => {
@@ -146,7 +148,7 @@ function AddEditCorrespondence() {
   };
 
   const HandlePrint = async (urlimage) => {
-    const url = `http://172.16.170.8:5252${urlimage}`;
+    const url = `${imagesUrl}${urlimage}`;
     window.open(url, "_blank");
     // setPdfUrl(url)
   };
@@ -185,27 +187,48 @@ function AddEditCorrespondence() {
                 <div class="row">
                   <div class="col">
                     <div class="mb-3">
-                      <label class="form-label">Correspondence Name</label>
-                      <input
-                        type="text"
-                        placeholder={"Correspondence Name"}
-                        value={formik.values.correspondenceName}
-                        className={`form-control ${
-                          formik.touched.correspondenceName && formik.errors.correspondenceName
-                            ? "is-invalid"
-                            : ""
-                        }`}
-                        id="correspondenceName"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                      />
-                      {formik.touched.correspondenceName && formik.errors.correspondenceName && (
-                        <div className="invalid-feedback">
-                          {formik.errors.correspondenceName}
-                        </div>
-                      )}
+                      <label class="form-label">Select Correspondence Type</label>
+                      <select
+                        class="form-select"
+                        id="corrTitle"
+                        name="corrTitle"
+                        onChange={(e) => setCorrTitle(e.target.value)}
+                        value={corrTitle}
+                      >
+                        <option value={""}>Select</option>
+                        <option value={"Sanction"}>Sanction</option>
+                        <option value={"Objection"}>Objection</option>
+                        <option value={"Letter"}>Letter</option>
+                        <option value={"Other"}>Other</option>
+                      </select>
                     </div>
                   </div>
+
+                  {corrTitle === "Other" && (
+                    <div class="col">
+                      <div class="mb-3">
+                        <label class="form-label">Correspondence Name</label>
+                        <input
+                          type="text"
+                          placeholder={"Correspondence Name"}
+                          value={formik.values.correspondenceName}
+                          className={`form-control ${
+                            formik.touched.correspondenceName && formik.errors.correspondenceName
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                          id="correspondenceName"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                        />
+                        {formik.touched.correspondenceName && formik.errors.correspondenceName && (
+                          <div className="invalid-feedback">
+                            {formik.errors.correspondenceName}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
 
                   <div class="col">
                     <div class="mb-3">

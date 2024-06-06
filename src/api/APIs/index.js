@@ -1,6 +1,12 @@
 import axios from "axios";
 import { getAuthToken } from "../Auth";
 
+// Image/Files URL (Production)
+export const imagesUrl = "http://172.16.170.8:5252";
+
+// Image/Files URL (Development)
+// export const imagesUrl = "http://10.10.140.200:5152";
+
 // Set config defaults when creating the instance
 export const axiosClient = axios.create({
   baseURL: "http://172.16.170.8:5151/api",

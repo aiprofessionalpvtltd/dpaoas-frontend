@@ -19,6 +19,7 @@ import moment from "moment";
 import { showSuccessMessage } from "../../../../../../../utils/ToastAlert";
 import { getUserData } from "../../../../../../../api/Auth";
 import { ToastContainer } from "react-toastify";
+import { imagesUrl } from "../../../../../../../api/APIs";
 
 const UpdateBills = () => {
   const location = useLocation();
@@ -1773,7 +1774,7 @@ const UpdateBills = () => {
                     {filePath && (
                       <div>
                         <a
-                          href={`http://172.16.170.8:5252${filePath}`}
+                          href={`${imagesUrl}${filePath}`}
                           target="_blank"
                           rel="noopener noreferrer"
                         ></a>
@@ -1783,7 +1784,7 @@ const UpdateBills = () => {
                         >
                           <span class="MultiFile-title">
                             <a
-                              href={`http://172.16.170.8:5252${filePath}`}
+                              href={`${imagesUrl}${filePath}`}
                               target="_blank"
                               rel="noopener noreferrer"
                             >

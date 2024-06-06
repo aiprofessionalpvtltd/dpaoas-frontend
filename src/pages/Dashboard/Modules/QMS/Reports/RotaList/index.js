@@ -28,6 +28,7 @@ import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
 import { getUserData } from "../../../../../../api/Auth";
 import axios from "axios";
+import { imagesUrl } from "../../../../../../api/APIs";
 
 const validationSchema = Yup.object({
   groupNo: Yup.string().required("Group No is required"),
@@ -101,7 +102,7 @@ function QMSRotaList() {
     try {
       const response = await generatedRotaList(Data);
       if (response?.success) {
-        const url = `http://10.10.140.200:5152${response?.data?.fileLink}`;
+        const url = `${imagesUrl}${response?.data?.fileLink}`;
         setPrintFile(url);
         showSuccessMessage(response?.message);
         const transformedData = transformLeavesData(response.data?.rotaList);

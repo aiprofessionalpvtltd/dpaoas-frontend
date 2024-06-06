@@ -24,6 +24,7 @@ import { Button, Modal } from "react-bootstrap";
 import CustomTable from "../../../../../components/CustomComponents/CustomTable";
 import DocParas from "../../../../../components/CustomComponents/DocParas";
 import { Editor } from "../../../../../components/CustomComponents/Editor";
+import { imagesUrl } from "../../../../../api/APIs";
 
 const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
   return (
@@ -217,7 +218,6 @@ function FileDetail() {
         i === index
           ? {
               ...tab,
-              description: content,
               references: [...tab.references, references],
             }
           : tab
@@ -270,7 +270,7 @@ function FileDetail() {
   };
 
   const HandlePrint = async (urlimage) => {
-    const url = `http://172.16.170.8:5252${urlimage}`;
+    const url = `${imagesUrl}${urlimage}`;
     window.open(url, "_blank");
   };
 

@@ -30,6 +30,7 @@ import { AuthContext } from "../../../../../api/AuthContext";
 import Select from "react-select";
 import * as XLSX from "xlsx";
 import { getBranches } from "../../../../../api/APIs/Services/Branches.services";
+import { imagesUrl } from "../../../../../api/APIs";
 
 const customStyles = {
   content: {
@@ -135,7 +136,7 @@ function CMSUserDashboard() {
 
     // Wait for the image to load
     const img = await loadImage(
-      `http://172.16.170.8:5252${printData?.complaintAttachment}`
+      `${imagesUrl}${printData?.complaintAttachment}`
     );
 
     const pdf = new jsPDF();
@@ -301,7 +302,7 @@ function CMSUserDashboard() {
             </p>
           </div>
           <img
-            src={`http://172.16.170.8:5252${printData?.complaintAttachment}`}
+            src={`${imagesUrl}${printData?.complaintAttachment}`}
             alt="Complaint Image"
             style={{
               display: "block",

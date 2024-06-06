@@ -17,6 +17,8 @@ import {
 import { Document, Page } from "@react-pdf/renderer";
 import axios from "axios";
 import { ToastContainer } from "react-toastify";
+import { imagesUrl } from "../../../../../api/APIs";
+
 const AttendenceReports = () => {
   const [showDateField, setShowDateField] = useState(false);
   const [showDateFieldMonthly, setShowDateFieldMonthly] = useState(false);
@@ -119,7 +121,7 @@ const AttendenceReports = () => {
         if (response?.success) {
           showSuccessMessage(response?.message);
 
-          const url = `http://172.16.170.8:5252${response?.data?.fileLink}`;
+          const url = `${imagesUrl}${response?.data?.fileLink}`;
           setSearchedData(url);
         }
         // formik.resetForm();
@@ -141,7 +143,7 @@ const AttendenceReports = () => {
       if (response?.success) {
         showSuccessMessage(response?.message);
 
-        const url = `http://172.16.170.8:5252${response?.data?.fileLink}`;
+        const url = `${imagesUrl}${response?.data?.fileLink}`;
         setSearchedData(url);
       }
       // formik.resetForm();
@@ -159,7 +161,7 @@ const AttendenceReports = () => {
 
       if (response?.success) {
         showSuccessMessage(response?.message);
-        const url = `http://172.16.170.8:5252${response?.data?.fileLink}`;
+        const url = `${imagesUrl}${response?.data?.fileLink}`;
         setSearchedData(url);
       }
       // formik.resetForm();

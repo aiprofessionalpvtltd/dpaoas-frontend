@@ -17,6 +17,7 @@ import {
 import moment from "moment";
 import { getUserData } from "../../../../../api/Auth";
 import axios from "axios";
+import { imagesUrl } from "../../../../../api/APIs";
 
 function CMSSpeechOnDemandDashboard() {
   const navigate = useNavigate();
@@ -161,7 +162,7 @@ function CMSSpeechOnDemandDashboard() {
                   hendleResolve={(item) => HendleCompleted(item)}
                   handleDelete={(item) => handleDelete(item.SR)}
                   showPrint={true}
-                  handlePrint={() => handleDownload(`http://172.16.170.8:5252/public/question/2024-05-15T04-08-30/letter.jpeg`)}
+                  handlePrint={() => handleDownload(`${imagesUrl}/public/question/2024-05-15T04-08-30/letter.jpeg`)}
                 />
               </div>
             </div>

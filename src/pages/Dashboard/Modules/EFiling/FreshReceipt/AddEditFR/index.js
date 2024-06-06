@@ -30,6 +30,7 @@ import Select from "react-select";
 import { getUserData } from "../../../../../../api/Auth";
 import { TinyEditor } from "../../../../../../components/CustomComponents/Editor/TinyEditor";
 import { Modal } from "react-bootstrap";
+import { imagesUrl } from "../../../../../../api/APIs";
 
 const validationSchema = Yup.object().shape({
   // diaryNumber: Yup.string().required("Diary No is required"),
@@ -272,7 +273,7 @@ const AddEditFR = () => {
   }, [receiptData, formik.setValues]);
 
   const HandlePrint = async (urlimage) => {
-    const url = `http://172.16.170.8:5252${urlimage}`;
+    const url = `${imagesUrl}${urlimage}`;
     window.open(url, "_blank");
     // setPdfUrl(url)
   };

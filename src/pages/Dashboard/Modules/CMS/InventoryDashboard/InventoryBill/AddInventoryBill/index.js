@@ -21,6 +21,7 @@ import { useLocation } from "react-router";
 import AddVendorModal from "../../../../../../../components/AddVendorModal";
 import Select from "react-select";
 import * as Yup from "yup";
+import { imagesUrl } from "../../../../../../../api/APIs";
 
 const validationSchema = Yup.object({
   invioceNumber: Yup.string().required("InvioceNumber is required"),
@@ -273,7 +274,7 @@ function CMSAddInventoryBill() {
                         <a
                           href={
                             location?.state
-                              ? `http://172.16.170.8:5252${location?.state?.invoiceAttachment}`
+                              ? `${imagesUrl}${location?.state?.invoiceAttachment}`
                               : ""
                           }
                           target="_blank"

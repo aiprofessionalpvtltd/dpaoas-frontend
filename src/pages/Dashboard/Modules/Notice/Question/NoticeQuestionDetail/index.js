@@ -30,6 +30,7 @@ import {
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import moment from "moment";
 import Select from "react-select";
+import { imagesUrl } from "../../../../../../api/APIs";
 
 const validationSchema = Yup.object({
   sessionNo: Yup.object().required("Session No is required"),
@@ -633,7 +634,7 @@ function NoticeQuestionDetail() {
                     location?.state?.question?.questionImage?.map((item) => (
                       <div class="MultiFile-label mt-3">
                         <a
-                          href={`http://172.16.170.8:5252${item?.path}`}
+                          href={`${imagesUrl}${item?.path}`}
                           target="_blank"
                           rel="noopener noreferrer"
                         >
@@ -648,7 +649,7 @@ function NoticeQuestionDetail() {
                         >
                           <span class="MultiFile-title">
                             <a
-                              href={`http://172.16.170.8:5252${item?.path}`}
+                              href={`${imagesUrl}${item?.path}`}
                               target="_blank"
                               rel="noopener noreferrer"
                             >

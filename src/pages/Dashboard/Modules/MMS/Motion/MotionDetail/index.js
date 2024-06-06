@@ -24,6 +24,7 @@ import { Editor } from "../../../../../../components/CustomComponents/Editor";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
+import { imagesUrl } from "../../../../../../api/APIs";
 
 const validationSchema = Yup.object({
   //   sessionNumber: Yup.number(),
@@ -515,7 +516,7 @@ function MMSMotionDetail() {
                         location?.state?.file?.map((item) => (
                           <div class="MultiFile-label mt-3">
                             <a
-                              href={`http://172.16.170.8:5252${item?.path}`}
+                              href={`${imagesUrl}${item?.path}`}
                               target="_blank"
                               rel="noopener noreferrer"
                             >
@@ -534,7 +535,7 @@ function MMSMotionDetail() {
                             >
                               <span class="MultiFile-title">
                                 <a
-                                  href={`http://172.16.170.8:5252${item?.path}`}
+                                  href={`${imagesUrl}${item?.path}`}
                                   target="_blank"
                                   rel="noopener noreferrer"
                                 >
