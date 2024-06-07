@@ -1734,19 +1734,19 @@ const UpdateBills = () => {
                         <option value="" disabled hidden>
                           Select
                         </option>
-                        <option value="Amendment">Amendment</option>
+                        <option value="Ammendment">Ammendment</option>
                         <option value="Bill">Bill</option>
                         <option value="Committee Report">
                           Committee Report
                         </option>
                         <option value="Gazette">Gazette</option>
-                        <option value="Letter Sent To Senator">
+                        <option value="Letter Sent to Senator">
                           Letter Sent To Senator
                         </option>
-                        <option value="Member Notice For Passage">
+                        <option value="Member Notice for Passage">
                           Member Notice For Passage
                         </option>
-                        <option value="Member Notice For withdrawal">
+                        <option value="Member Notice for Withdrawal">
                           Member Notice For withdrawal
                         </option>
                         <option value="Notice">Notice</option>
