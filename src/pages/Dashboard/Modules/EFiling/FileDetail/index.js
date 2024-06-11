@@ -65,6 +65,7 @@ function FileDetail() {
     comment: "",
   });
   const [filesData, setFilesData] = useState(null);
+  const [FR, setFR] = useState(null);
   const pageSize = 10;
 
   const initialNotingTabData = [
@@ -284,8 +285,12 @@ function FileDetail() {
       if (response?.success) {
         setRemarksData(response?.data?.cases?.casesRemarks);
         setFilesData(response?.data);
-        const FRSelection =
-          response?.data?.cases?.freshReceipts?.freshReceiptsAttachments;
+        const FRSelection = {
+          frId: response?.data?.cases?.freshReceipts?.id,
+          frSubject: response?.data?.cases?.freshReceipts?.frSubject,
+          freshReceiptsAttachments: response?.data?.cases?.freshReceipts?.freshReceiptsAttachments
+        }
+        setFR(FRSelection);
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -668,6 +673,7 @@ function FileDetail() {
                                     tabsData={notingTabData}
                                     onEditorChange={handleEditorChange}
                                     onDelete={handleDelete}
+                                    FR={FR}
                                   />
                                 </div>
                               </div>

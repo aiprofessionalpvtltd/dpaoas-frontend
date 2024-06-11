@@ -14,7 +14,7 @@ import { getAllCorrespondence } from "../../../api/APIs/Services/efiling.service
 import { getSelectedFileID, getUserData } from "../../../api/Auth";
 import { imagesUrl } from "../../../api/APIs";
 
-const DocParas = ({ tabsData, onEditorChange, onDelete }) => {
+const DocParas = ({ tabsData, onEditorChange, onDelete, FR }) => {
   const UserData = getUserData();
   const [correspondenceTypesData, setCorrespondenceTypesData] = useState([]);
   const [editableIndex, setEditableIndex] = useState(null);
@@ -26,6 +26,7 @@ const DocParas = ({ tabsData, onEditorChange, onDelete }) => {
   const [showModalIndex, setShowModalIndex] = useState("");
   const [referenceFlag, setReferenceFlag] = useState("");
   const [referenceAttachment, setReferenceAttachment] = useState(null);
+  const [frAttachment, setFrAttachment] = useState(null);
 
   const handleEditToggle = (index, edited) => {
     const selectedAttachment = correspondenceTypesData.find(
@@ -34,8 +35,8 @@ const DocParas = ({ tabsData, onEditorChange, onDelete }) => {
 
     const ref = {
       flag: referenceFlag,
-      id: referenceAttachment,
-      attachments: selectedAttachment ? selectedAttachment?.attachments : [],
+      id: frAttachment ? frAttachment : referenceAttachment,
+      attachments: frAttachment ? FR?.freshReceiptsAttachments : selectedAttachment ? [selectedAttachment] : [],
     };
 
     if (edited && ref?.id) {
@@ -43,6 +44,7 @@ const DocParas = ({ tabsData, onEditorChange, onDelete }) => {
       setEditableIndex(null); // Reset editable index after saving
       setReferenceFlag("");
       setReferenceAttachment(null);
+      setFrAttachment(null);
     } else if (edited) {
       onEditorChange(index, notingData.description, ref);
       setEditableIndex(null); // Reset editable index after saving
@@ -65,6 +67,7 @@ const DocParas = ({ tabsData, onEditorChange, onDelete }) => {
     return apiData?.map((item) => ({
       id: item.id,
       name: item.name,
+      description: item.description,
       attachments: item.correspondenceAttachments,
     }));
   };
@@ -97,7 +100,7 @@ const DocParas = ({ tabsData, onEditorChange, onDelete }) => {
   };
 
   const getFileName = (filePath) => {
-    return filePath.split('/').pop();
+    return filePath.split("/").pop();
   };
 
   return (
@@ -132,7 +135,31 @@ const DocParas = ({ tabsData, onEditorChange, onDelete }) => {
                   <option value={"D"}>D</option>
                 </select>
               </div>
+            </div>
 
+            {FR?.frId && (
+            <div className="row mb-3">
+              <div className="col">
+                <label className="form-label">Attach FR</label>
+                <select
+                  className="form-select"
+                  id="attachment"
+                  name="attachment"
+                  onChange={(e) => setFrAttachment(e.target.value)}
+                  value={frAttachment}
+                >
+                  <option value="" selected disabled hidden>
+                    Select
+                  </option>
+                  <option key={FR?.frId} value={FR?.frId}>
+                    {FR?.frSubject}
+                  </option>
+                </select>
+              </div>
+            </div>
+            )}
+
+            <div className="row mb-3">
               <div className="col">
                 <label className="form-label">Attachment</label>
                 <select
@@ -141,6 +168,7 @@ const DocParas = ({ tabsData, onEditorChange, onDelete }) => {
                   name="attachment"
                   onChange={(e) => setReferenceAttachment(e.target.value)}
                   value={referenceAttachment}
+                  disabled={frAttachment ? true : false}
                 >
                   <option value="" selected disabled hidden>
                     Select
@@ -149,7 +177,7 @@ const DocParas = ({ tabsData, onEditorChange, onDelete }) => {
                     correspondenceTypesData.length > 0 &&
                     correspondenceTypesData.map((item) => (
                       <option key={item.id} value={item.id}>
-                        {item?.name}
+                        {`${item?.name} (${item.description})`}
                       </option>
                     ))}
                 </select>
@@ -179,141 +207,170 @@ const DocParas = ({ tabsData, onEditorChange, onDelete }) => {
         </div>
       </Modal>
 
-      {tabsData && tabsData.length > 0 && tabsData.map((tab, index) => (
-        <Box
-          key={index}
-          sx={{
-            height: "auto",
-          }}
-        >
+      {tabsData &&
+        tabsData.length > 0 &&
+        tabsData.map((tab, index) => (
           <Box
+            key={index}
             sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              mb: editableIndex !== index ? 2 : 6,
+              height: "auto",
             }}
           >
-            <div
-              style={{
+            <Box
+              sx={{
                 display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
+                flexDirection: "column",
                 alignItems: "center",
-                width: "100%",
+                mb: editableIndex !== index ? 2 : 6,
               }}
             >
-              <label
+              <div
                 style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
                   width: "100%",
-                  fontWeight: "bold",
-                  fontSize: "16px",
-                  marginTop: "8px",
                 }}
               >
-                {tab.title}
-              </label>
-              {editableIndex !== index ? (
-                <>
-                  <button
-                    onClick={() => {
-                      setShowModalIndex(index);
-                      setShowModal(true);
-                    }}
-                    className="btn-xs black circle-btn"
-                    style={{
-                      background: "black",
-                    }}
-                  >
-                    <FontAwesomeIcon icon={faFileExport} />
-                  </button>
-                  <button
-                    onClick={() => onDelete(index)}
-                    className="btn-xs red circle-btn"
-                    style={{
-                      background: "red",
-                    }}
-                  >
-                    <FontAwesomeIcon icon={faTrash} />
-                  </button>
-                  <button
-                    onClick={() => handleEditToggle(index, false)}
-                    className="btn-xs green circle-btn"
-                    style={{
-                      background: "#2dce89",
-                    }}
-                  >
-                    <FontAwesomeIcon icon={faEdit} />
-                  </button>
-                </>
-              ) : (
-                <>
-                  <button
-                    onClick={() => handleEditToggle(index, true)}
-                    className="btn-xs green circle-btn"
-                    style={{
-                      background: "#2dce89",
-                    }}
-                  >
-                    <FontAwesomeIcon icon={faCheckCircle} />
-                  </button>
-                </>
-              )}
-            </div>
-
-            {editableIndex !== index ? (
-              <>
-                <p
+                <label
                   style={{
                     width: "100%",
-                    flexShrink: 0,
-                    color: "text.secondary",
-                    marginBottom: 0,
+                    fontWeight: "bold",
+                    fontSize: "16px",
+                    marginTop: "8px",
                   }}
-                  dangerouslySetInnerHTML={{ __html: cleanHtml(tab.description) }}
-                ></p>
-                {tab?.references && tab?.references?.length > 0 && (
-                  <div className="col" style={{ width: "100%", marginTop: "10px" }}>
-                    {tab.references?.map((item, idx) => (
-                      <div key={idx} style={{ display: 'flex', flexDirection: 'column' }}>
-                        <label>Flag - {item?.flag}</label>
-                        <label>Attachments: </label>
-                        <ul style={{ marginBottom: 0 }}>
-                          {item?.attachments?.map((innerItem, innerIdx) => (
-                            <li key={innerIdx}>
-                              <p onClick={() => HandlePrint(innerItem?.file)} style={{ color: 'blue', cursor: "pointer" }}>{getFileName(innerItem?.file)}</p>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    ))}
-                  </div>
+                >
+                  {tab.title}
+                </label>
+                {editableIndex !== index ? (
+                  <>
+                    <button
+                      onClick={() => {
+                        setShowModalIndex(index);
+                        setShowModal(true);
+                      }}
+                      className="btn-xs black circle-btn"
+                      style={{
+                        background: "black",
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faFileExport} />
+                    </button>
+                    <button
+                      onClick={() => onDelete(index)}
+                      className="btn-xs red circle-btn"
+                      style={{
+                        background: "red",
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faTrash} />
+                    </button>
+                    <button
+                      onClick={() => handleEditToggle(index, false)}
+                      className="btn-xs green circle-btn"
+                      style={{
+                        background: "#2dce89",
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faEdit} />
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => handleEditToggle(index, true)}
+                      className="btn-xs green circle-btn"
+                      style={{
+                        background: "#2dce89",
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faCheckCircle} />
+                    </button>
+                  </>
                 )}
-              </>
-            ) : (
-              <AccordionDetails
-                sx={{
-                  padding: 0,
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  mt: 1,
-                }}
-              >
-                <Editor
-                  onChange={(content) =>
-                    setNotingData({ description: content })
-                  }
-                  value={notingData.description}
-                  width={"100%"}
-                  display={"flex"}
-                />
-              </AccordionDetails>
-            )}
+              </div>
+
+              {editableIndex !== index ? (
+                <>
+                  <p
+                    style={{
+                      width: "100%",
+                      flexShrink: 0,
+                      color: "text.secondary",
+                      marginBottom: 0,
+                    }}
+                    dangerouslySetInnerHTML={{
+                      __html: cleanHtml(tab.description),
+                    }}
+                  ></p>
+                  {tab?.references && tab?.references?.length > 0 && (
+                    <div
+                      className="col"
+                      style={{ width: "100%", marginTop: "10px" }}
+                    >
+                      {tab.references?.map((item, idx) => (
+                        <div
+                          key={idx}
+                          style={{ display: "flex", flexDirection: "column" }}
+                        >
+                          <label>Flag - {item?.flag}</label>
+                          {/* <label>Attachments: </label> */}
+                          <ul style={{ marginBottom: 0 }}>
+                            {item?.attachments?.map((innerItem, innerIdx) => (
+                              <React.Fragment key={innerIdx}>
+                                {innerItem?.filename && (
+                                  <li>
+                                    <p
+                                      onClick={() => HandlePrint(innerItem?.filename)}
+                                      style={{ color: "blue", cursor: "pointer" }}
+                                    >
+                                      {`${getFileName(innerItem?.filename)}`}
+                                    </p>
+                                  </li>
+                                )}
+                                {innerItem?.attachments?.map((nestedItem, nestedItemIdx) => (
+                                  <li key={`${innerIdx}-${nestedItemIdx}`}>
+                                    <p
+                                      onClick={() => HandlePrint(nestedItem?.file)}
+                                      style={{ color: "blue", cursor: "pointer" }}
+                                    >
+                                      {`${innerItem?.name} (${innerItem?.description}) - ${getFileName(nestedItem?.file)}`}
+                                    </p>
+                                  </li>
+                                ))}
+                              </React.Fragment>
+                            ))}
+                          </ul>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </>
+              ) : (
+                <AccordionDetails
+                  sx={{
+                    padding: 0,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    mt: 1,
+                  }}
+                >
+                  <Editor
+                    onChange={(content) =>
+                      setNotingData({ description: content })
+                    }
+                    value={notingData.description}
+                    width={"100%"}
+                    display={"flex"}
+                  />
+                </AccordionDetails>
+              )}
+            </Box>
           </Box>
-        </Box>
-      ))}
+        ))}
     </>
   );
 };
