@@ -45,7 +45,7 @@ function AddEditFileCase() {
   });
   
   const initialNotingTabData = [
-    { title: "Para 1", description: "Content for Paragraph 1", references: [{flag: "A", id: 2, attachments: [{file: "/public/correspondences/2024-06-04T07-58-31/output_1717395191507.pdf"}] }]},
+    { title: "Para 1", description: "Content for Paragraph 1", references: [] },
     { title: "Para 2", description: "Content for Paragraph 2", references: [] },
     { title: "Para 3", description: "Content for Paragraph 3", references: [] },
   ];
@@ -575,6 +575,7 @@ function AddEditFileCase() {
                           tabsData={notingTabData}
                           onEditorChange={handleEditorChange}
                           onDelete={handleDelete}
+                          FR={location.state}
                         />
                       </div>
                     </div>

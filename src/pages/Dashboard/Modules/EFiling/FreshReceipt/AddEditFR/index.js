@@ -29,8 +29,10 @@ import { AuthContext } from "../../../../../../api/AuthContext";
 import Select from "react-select";
 import { getUserData } from "../../../../../../api/Auth";
 import { TinyEditor } from "../../../../../../components/CustomComponents/Editor/TinyEditor";
+import { Editor } from "../../../../../../components/CustomComponents/Editor";
 import { Modal } from "react-bootstrap";
 import { imagesUrl } from "../../../../../../api/APIs";
+import moment from "moment";
 
 const validationSchema = Yup.object().shape({
   // diaryNumber: Yup.string().required("Diary No is required"),
@@ -39,7 +41,7 @@ const validationSchema = Yup.object().shape({
   frType: Yup.string().required("FR Type is required"),
   frSubject: Yup.string().required("Subject is required"),
   referenceNumber: Yup.string().required("Ref No is required"),
-  frDate: Yup.date().required("FR Date is required"),
+  // frDate: Yup.date().required("FR Date is required"),
   // freshReceipt: Yup.string().required("Attachment is required"),
 });
 
@@ -65,7 +67,7 @@ const AddEditFR = () => {
       fkExternalMinistryId: "",
       frSubject: "",
       referenceNumber: "",
-      frDate: "",
+      frDate: new Date(),
       shortDescription: "",
       freshReceipt: "",
     },
@@ -99,7 +101,7 @@ const AddEditFR = () => {
     }
     formdata.append("frSubject", values?.frSubject);
     formdata.append("referenceNumber", values?.referenceNumber);
-    formdata.append("frDate", values?.frDate);
+    formdata.append("frDate", values?.frDate ? values?.frDate : new Date());
     formdata.append("shortDescription", descriptionData);
     //    formdata.append("freshReceipt", values?.freshReceipt)
     if (values?.freshReceipt) {
@@ -139,7 +141,7 @@ const AddEditFR = () => {
     }
     formdata.append("frSubject", values?.frSubject);
     formdata.append("referenceNumber", values?.referenceNumber);
-    formdata.append("frDate", values?.frDate);
+    formdata.append("frDate", values?.frDate ? values?.frDate : new Date());
     formdata.append("shortDescription", descriptionData);
     if (values?.freshReceipt) {
       Array.from(values?.freshReceipt).map((file, index) => {
@@ -453,42 +455,35 @@ const AddEditFR = () => {
                   </div>
                 </div>
 
-                <div class="col-3">
-                  <div class="mb-3" style={{ position: "relative" }}>
-                    <label class="form-label">FR Date</label>
-                    <span
-                      style={{
-                        position: "absolute",
-                        right: "15px",
-                        top: "36px",
-                        zIndex: 1,
-                        fontSize: "20px",
-                        zIndex: "1",
-                        color: "#666",
-                      }}
-                    >
-                      <FontAwesomeIcon icon={faCalendarAlt} />
-                    </span>
-                    <DatePicker
-                      //   minDate={new Date()}
-                      selected={formik.values.frDate}
-                      onChange={(date) => formik.setFieldValue("frDate", date)}
-                      className={`form-control ${
-                        formik.touched.frDate && formik.errors.frDate
-                          ? "is-invalid"
-                          : ""
-                      }`}
-                    />
-                    {formik.touched.frDate && formik.errors.frDate && (
-                      <div
-                        className="invalid-feedback"
-                        style={{ display: "block" }}
-                      >
-                        {formik.errors.frDate}
-                      </div>
-                    )}
-                  </div>
-                </div>
+                <div className="col-3">
+        <div className="mb-3" style={{ position: 'relative' }}>
+          <label className="form-label">FR Date</label>
+          <span
+            style={{
+              position: 'absolute',
+              right: '15px',
+              top: '36px',
+              zIndex: 1,
+              fontSize: '20px',
+              color: '#666',
+            }}
+          >
+            <FontAwesomeIcon icon={faCalendarAlt} />
+          </span>
+          <DatePicker
+            selected={formik.values.frDate ? formik.values.frDate : new Date()}
+            onChange={(date) => formik.setFieldValue('frDate', date)}
+            className={`form-control ${
+              formik.touched.frDate && formik.errors.frDate ? 'is-invalid' : ''
+            }`}
+          />
+          {formik.touched.frDate && formik.errors.frDate && (
+            <div className="invalid-feedback" style={{ display: 'block' }}>
+              {formik.errors.frDate}
+            </div>
+          )}
+        </div>
+      </div>
 
                 <div className="col-3">
                   <label htmlFor="referenceNumber" className="form-label">
@@ -676,18 +671,18 @@ const AddEditFR = () => {
               <div class="row">
                 <div class="col-9">
                   <label className="form-label">F.R Detail</label>
-                  <TinyEditor
-                      initialContent={""}
-                      setEditorContent={(content) =>
-                        setDescriptionData(content)
-                      }
-                      editorContent={descriptionData}
-                      multiLanguage={false}
-                    />
+                  <Editor
+                    onChange={(content) =>
+                      setDescriptionData(content)
+                    }
+                    value={descriptionData}
+                    // width={"100%"}
+                    display={"flex"}
+                  />
                 </div>
               </div>
 
-              <div class="row mt-2">
+              <div class="row mt-4">
                 <div class="col">
                   <button class="btn btn-primary float-end" type="submit">
                     {receptId ? "Update Fresh Receipt" : "Create Fresh Receipt"}
