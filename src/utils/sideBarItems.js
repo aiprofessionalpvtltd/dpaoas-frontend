@@ -1164,3 +1164,55 @@ export const LegislationSideBarItems = [
     ]
   }
 ];
+
+
+// Committees Management System Sidebar Items
+
+
+export const CommitteesSideBarItems = [
+  {
+    itemName: "Dashboard",
+    link: "/committees/dashboard",
+    icon: faHome,
+  },
+ 
+  {
+    itemName: "Committees",
+    link: "/committees/dashboard/committees",
+    icon: faBookOpen,
+    subItems: [
+      {
+        itemName: "Committees List",
+        link: "/committees/dashboard/committees/committees-list",
+        icon: faBookOpen,
+      },
+      {
+        itemName: "Search Committee",
+        link: "/committees/dashboard/committees/search-committee",
+        icon: faBookOpen,
+      },
+    ],
+  },
+  {
+    itemName: "Committee Rooms",
+    link: "/committees/dashboard/committees",
+    icon: faBookOpen,
+    subItems: [
+      {
+        itemName: "Committee Rooms List",
+        link: "/committees/dashboard/committee-rooms",
+        icon: faBookOpen,
+      },
+      {
+        itemName:"Booked Committe Rooms Lists",
+        link: "/committees/dashboard/committee-rooms/booked",
+        icon: faBookOpen,
+      },
+     
+      
+    ],
+  },
+
+ 
+  
+];
