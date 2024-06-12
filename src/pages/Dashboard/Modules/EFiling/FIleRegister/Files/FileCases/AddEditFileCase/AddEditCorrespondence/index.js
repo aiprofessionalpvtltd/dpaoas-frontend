@@ -74,7 +74,7 @@ function AddEditCorrespondence() {
       if (response?.success) {
         showSuccessMessage(response?.message);
         setTimeout(() => {
-          navigate('/efiling/dashboard/file-register-list/files-list/addedit-case');
+          navigate(location.state?.fileDetail ? '/efiling/dashboard/fileDetail' : '/efiling/dashboard/file-register-list/files-list/addedit-case');
         }, 2000);
       }
     } catch (error) {
@@ -99,7 +99,7 @@ function AddEditCorrespondence() {
       if (response?.success) {
         showSuccessMessage(response?.message);
         setTimeout(() => {
-          navigate('/efiling/dashboard/file-register-list/files-list/addedit-case');
+          navigate(location.state?.fileDetail ? '/efiling/dashboard/fileDetail' : '/efiling/dashboard/file-register-list/files-list/addedit-case');
         }, 2000);
       }
     } catch (error) {
@@ -127,6 +127,11 @@ function AddEditCorrespondence() {
   useEffect(() => {
     // Update form values when termsById changes
     if (corrById) {
+      if(corrById.name !== "Sanction" && corrById.name !== "Objection" && corrById.name !== "Letter") {
+        setCorrTitle("Other");
+      } else {
+        setCorrTitle(corrById.name);
+      }
       formik.setValues({
         correspondenceName: corrById.name,
         correspondenceDescription: corrById.description,

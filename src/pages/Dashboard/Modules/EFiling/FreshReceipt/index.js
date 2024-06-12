@@ -142,7 +142,7 @@ function FileReceipt() {
                         showCreateBtn={true}
                         hendleCreateBtn={(item) => {
                           if(item?.internalAttachment) {
-                            navigate("/efiling/dashboard/file-register-list/files-list/addedit-case", {state:{freshReceiptsAttachments:item.internalAttachment, frId: item.id}})
+                            navigate("/efiling/dashboard/file-register-list/files-list/addedit-case", {state:{freshReceiptsAttachments:item.internalAttachment, frId: item.id, frSubject: item.frSubject}})
                           } else {
                             alert("Please select an attachment")
                           }
