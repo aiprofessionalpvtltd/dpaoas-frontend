@@ -203,6 +203,15 @@ function Dashboard() {
       icon: faMailBulk,
       permission: ["Legislation"],
     },
+// Committees Tile
+    {
+      title: "Committees Management System",
+      link: "committees/dashboard",
+      type: "",
+      cardbg: "lightGreen",
+      icon: faMailBulk,
+      permission: ["Legislation"],
+    },
     {
       title: "Telecasting",
       link: "/telecasting/dashboard",

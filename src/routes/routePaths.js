@@ -208,6 +208,15 @@ import ResearchAddEditResearchService from "../pages/Dashboard/Modules/Research/
 import CMSBranches from "../pages/Dashboard/Modules/CMS/AdminCMS/BranchesCMS";
 import CMSAddEditBranch from "../pages/Dashboard/Modules/CMS/AdminCMS/BranchesCMS/AddEditBranchCMS";
 import AddEditCorrespondence from "../pages/Dashboard/Modules/EFiling/FIleRegister/Files/FileCases/AddEditFileCase/AddEditCorrespondence";
+import CommitteesManagementSystemDashboard from "../pages/Dashboard/Modules/Committees";
+import CommitteesManagementSystemCommittees from "../pages/Dashboard/Modules/Committees/Committees";
+import AddEditCommittees from "../pages/Dashboard/Modules/Committees/Committees/AddEditCommittees";
+import SearchCommittees from "../pages/Dashboard/Modules/Committees/Committees/SearchCommittees";
+import CommitteesManagementSystemCommitteeRooms from "../pages/Dashboard/Modules/Committees/CommitteesRooms";
+import CommitteesManagementSystemBookingCommitteeRooms from "../pages/Dashboard/Modules/Committees/CommitteesRooms/BookingCommitteeRooms";
+import CommitteesManagementSystemAddEditBookinginCommitteeRooms from "../pages/Dashboard/Modules/Committees/CommitteesRooms/BookingCommitteeRooms/AddEditBookingCommitteeRooms";
+import AddEditCommitteeRooms from "../pages/Dashboard/Modules/Committees/CommitteesRooms/AddEditCommitteeRooms";
+import CommitteesManagementSystemCommitteeMembers from "../pages/Dashboard/Modules/Committees/Committees/CommitteeMembers";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -805,4 +814,44 @@ export const ProtectedRoutes = [
       path: "/research/research-services/addedit",
       element: <ResearchAddEditResearchService />,
     },
+
+    // Committees Routes Start
+
+  {
+    path: "/committees/dashboard",
+    element: <CommitteesManagementSystemDashboard />,
+  },
+  {
+    path: "/committees/dashboard/committees/committees-list",
+    element: <CommitteesManagementSystemCommittees />,
+  },
+  {
+    path: "/committees/dashboard/committees/addedit",
+    element: <AddEditCommittees />,
+  },
+  {
+    path: "/committees/dashboard/committees/committee-members",
+    element: <CommitteesManagementSystemCommitteeMembers />,
+  },
+  {
+    path: "/committees/dashboard/committees/search-committee",
+    element: <SearchCommittees />,
+  },
+  {
+    path: "/committees/dashboard/committee-rooms",
+    element: <CommitteesManagementSystemCommitteeRooms />,
+  },
+  {
+    path: "/committees/dashboard/committee-rooms/addedit-committee-room",
+    element: <AddEditCommitteeRooms />,
+  },
+  {
+    path: "/committees/dashboard/committee-rooms/booked",
+    element: <CommitteesManagementSystemBookingCommitteeRooms />,
+  },
+ 
+  {
+    path: "/committees/dashboard/committee-rooms/addeditbooking",
+    element: <CommitteesManagementSystemAddEditBookinginCommitteeRooms />,
+  },
 ];
