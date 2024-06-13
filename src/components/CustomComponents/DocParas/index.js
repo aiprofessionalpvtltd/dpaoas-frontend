@@ -23,7 +23,9 @@ const DocParas = ({ tabsData, onEditorChange, onDelete, FR }) => {
     references: [],
   });
   const [showModal, setShowModal] = useState(false);
+  const [showImgModal, setShowImgModal] = useState(false);
   const [showModalIndex, setShowModalIndex] = useState("");
+  const [pdfview, setPdfView] = useState(null)
   const [referenceFlag, setReferenceFlag] = useState("");
   const [referenceAttachment, setReferenceAttachment] = useState(null);
   const [frAttachment, setFrAttachment] = useState(null);
@@ -96,7 +98,10 @@ const DocParas = ({ tabsData, onEditorChange, onDelete, FR }) => {
 
   const HandlePrint = async (urlimage) => {
     const url = `${imagesUrl}${urlimage}`;
-    window.open(url, "_blank");
+    setPdfView(url)
+    if(imagesUrl){
+      setShowImgModal(true)
+    }
   };
 
   const getFileName = (filePath) => {
@@ -206,7 +211,14 @@ const DocParas = ({ tabsData, onEditorChange, onDelete, FR }) => {
           </Modal.Footer>
         </div>
       </Modal>
-
+      <Modal
+        show={showImgModal}
+        size="xl"
+        onHide={() => setShowImgModal(false)}
+        centered
+      >
+       <div><iframe title="PDF Viewer" src={pdfview} width="100%" height="700px" /></div>
+      </Modal>
       {tabsData &&
         tabsData.length > 0 &&
         tabsData.map((tab, index) => (
