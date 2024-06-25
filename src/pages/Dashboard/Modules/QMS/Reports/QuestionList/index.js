@@ -116,9 +116,9 @@ function QMSReportQuestionList() {
       if (response?.success) {
         showSuccessMessage(response?.message);
         // setCount(response?.count);
-        const transformedData = transformLeavesData(response.data?.questionList);
+        const transformedData = transformLeavesData(response.data?.questionList?.questionList);
         setGeneratedItem(true);
-        setGeneratedData(response.data);
+        setGeneratedData(response?.data?.questionList);
         setResData(transformedData);
       }
     } catch (error) {
@@ -146,7 +146,7 @@ function QMSReportQuestionList() {
   };
 
   const handleSaveList = async () => {
-    const questionIds = generatedData.questions.map(question => ({ id: question.id }));
+    const questionIds = generatedData?.questions?.map(question => ({ id: question.id }));
   
     const requestData = {
       questionList: {
@@ -167,6 +167,8 @@ function QMSReportQuestionList() {
       if (response?.success) {
         setGeneratedItem(false);
         showSuccessMessage(response.data.message);
+        const transformedData = transformLeavesData(response?.data);
+        setResData(transformedData)
       }
     } catch (error) {
       showErrorMessage(error.response?.data?.message);
@@ -177,7 +179,7 @@ function QMSReportQuestionList() {
     try {
       const response = await printQuestionsFromList(data);
       if (response?.success) {
-       showSuccessMessage(response.data.message);
+       showSuccessMessage(response.message);
       }
     } catch (error) {
       showErrorMessage(error.response?.data?.message);
@@ -359,7 +361,7 @@ function QMSReportQuestionList() {
                     <button class="btn btn-primary" type="submit">
                       Generate
                     </button>
-                    <button class="btn btn-primary" type="" onClick={handleSaveList}>
+                    <button class="btn btn-primary" type="button" onClick={handleSaveList}>
                       Save
                     </button>
                   </div>

@@ -405,12 +405,11 @@ export const saveQuestionList = async (data) => {
 };
 
 // api needed
-export const printQuestionsFromList = async (data) => {
+export const printQuestionsFromList = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.post(
-      `/questionList/saveQuestionList`,
-      data,
+    const response = await axiosClientMMS.get(
+      `/questionList/${id}`,
       {
         // headers: {
         //   Authorization: `Bearer ${token}`,
