@@ -161,7 +161,7 @@ function PrivateBill() {
             currentPage={currentPage}
             pageSize={pageSize}
             totalCount={count}
-            showAssigned={false}
+            showAssigned={true}
             hendleAssigned={(item) => openModal(item)}
             showSent={true}
             handleSent={(item) => sendBill(item?.id)}

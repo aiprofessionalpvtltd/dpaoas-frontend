@@ -105,7 +105,7 @@ function QMSRotaList() {
         const url = `${imagesUrl}${response?.data?.fileLink}`;
         setPrintFile(url);
         showSuccessMessage(response?.message);
-        const transformedData = transformLeavesData(response.data?.rotaList);
+        const transformedData = transformLeavesData(response.data?.rotaList?.dates);
         setResData(transformedData);
       }
     } catch (error) {
