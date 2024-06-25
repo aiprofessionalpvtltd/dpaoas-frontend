@@ -224,6 +224,7 @@ import CommitteesManagementSystemPreviousMotionHistory from "../pages/Dashboard/
 import CommitteesManagementSystemPreviousResolutionHistory from "../pages/Dashboard/Modules/Committees/Committees/RecievedBusinessPreviousHistory/Resolutions";
 import CommitteesManagementSystemPreviousNoticesHistory from "../pages/Dashboard/Modules/Committees/Committees/RecievedBusinessPreviousHistory/Notices";
 import CommitteesManagementSystemPreviousBillsHistory from "../pages/Dashboard/Modules/Committees/Committees/RecievedBusinessPreviousHistory/Bills";
+import LDUDashboard from "../pages/Dashboard/Modules/LDU";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -889,4 +890,11 @@ export const ProtectedRoutes = [
     path: "/committees/dashboard/committees/search-meeting",
     element: <SearchMeetings />,
   },
+
+  //LDU Module
+  {
+    path: "/LDU/dashboard",
+    element: <LDUDashboard />,
+  }
+
 ];
