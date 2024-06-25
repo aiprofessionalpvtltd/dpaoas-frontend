@@ -217,6 +217,13 @@ import CommitteesManagementSystemBookingCommitteeRooms from "../pages/Dashboard/
 import CommitteesManagementSystemAddEditBookinginCommitteeRooms from "../pages/Dashboard/Modules/Committees/CommitteesRooms/BookingCommitteeRooms/AddEditBookingCommitteeRooms";
 import AddEditCommitteeRooms from "../pages/Dashboard/Modules/Committees/CommitteesRooms/AddEditCommitteeRooms";
 import CommitteesManagementSystemCommitteeMembers from "../pages/Dashboard/Modules/Committees/Committees/CommitteeMembers";
+import CommitteesManagementSystemMeetings from "../pages/Dashboard/Modules/Committees/Meetings";
+import SearchMeetings from "../pages/Dashboard/Modules/Committees/Meetings/SearchMeeting";
+import CommitteesManagementSystemPreviousQuestionHistory from "../pages/Dashboard/Modules/Committees/Committees/RecievedBusinessPreviousHistory/Questions";
+import CommitteesManagementSystemPreviousMotionHistory from "../pages/Dashboard/Modules/Committees/Committees/RecievedBusinessPreviousHistory/Motions";
+import CommitteesManagementSystemPreviousResolutionHistory from "../pages/Dashboard/Modules/Committees/Committees/RecievedBusinessPreviousHistory/Resolutions";
+import CommitteesManagementSystemPreviousNoticesHistory from "../pages/Dashboard/Modules/Committees/Committees/RecievedBusinessPreviousHistory/Notices";
+import CommitteesManagementSystemPreviousBillsHistory from "../pages/Dashboard/Modules/Committees/Committees/RecievedBusinessPreviousHistory/Bills";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -822,6 +829,26 @@ export const ProtectedRoutes = [
     element: <CommitteesManagementSystemDashboard />,
   },
   {
+    path: "/committees/dashboard/received-business-history/questions",
+    element: <CommitteesManagementSystemPreviousQuestionHistory />,
+  },
+  {
+    path: "/committees/dashboard/received-business-history/motions",
+    element: <CommitteesManagementSystemPreviousMotionHistory />,
+  },
+  {
+    path: "/committees/dashboard/received-business-history/resolutions",
+    element: <CommitteesManagementSystemPreviousResolutionHistory />,
+  },
+  {
+    path: "/committees/dashboard/received-business-history/notices",
+    element: <CommitteesManagementSystemPreviousNoticesHistory />,
+  },
+  {
+    path: "/committees/dashboard/received-business-history/bills",
+    element: <CommitteesManagementSystemPreviousBillsHistory />,
+  },
+  {
     path: "/committees/dashboard/committees/committees-list",
     element: <CommitteesManagementSystemCommittees />,
   },
@@ -853,5 +880,13 @@ export const ProtectedRoutes = [
   {
     path: "/committees/dashboard/committee-rooms/addeditbooking",
     element: <CommitteesManagementSystemAddEditBookinginCommitteeRooms />,
+  },
+  {
+    path: "/committees/dashboard/scheduled-meetings",
+    element: <CommitteesManagementSystemMeetings />,
+  },
+  {
+    path: "/committees/dashboard/committees/search-meeting",
+    element: <SearchMeetings />,
   },
 ];
