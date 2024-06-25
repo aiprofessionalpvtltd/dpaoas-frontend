@@ -20,7 +20,45 @@ const customStyles = {
     transform: "translate(-50%, -50%)",
   },
 };
-
+const committeesData = [
+  {
+    id: 1,
+    committeeName:
+      "Committee to consider and make recommendations on the Money Bill 2024",
+    committeeType: "Domestic Committees",
+    chairPerson: "Syed Yousaf Raza Gilani",
+    committeeSecretary: "Syed Hasnain Haider",
+    members: "View Members",
+    status: "active",
+  },
+  {
+    id: 2,
+    committeeName: "Senate House Committee",
+    committeeType: "House Committee",
+    chairPerson: "Syedaal Khan",
+    committeeSecretary: "Muhammad Zubair Thaheem",
+    members: "View Members",
+    status: "inactive",
+  },
+  {
+    id: 3,
+    committeeName: "Senate Finance Committee",
+    committeeType: "Domestic Committee",
+    chairPerson: "Syed Yousaf Raza Gilani",
+    committeeSecretary: "Syed Hasnain Haider",
+    members: "View Members",
+    status: "active",
+  },
+  {
+    id: 4,
+    committeeName: "Business Advisory Committee",
+    committeeType: "Domestic Committee",
+    chairPerson: "Syed Yousaf Raza Gilani",
+    committeeSecretary: "Syed Hasnain Haider",
+    members: "View Members",
+    status: "active",
+  },
+];
 function ScheduleCommitteeRoom({
   isModalOpen,
   handleModal,
@@ -62,12 +100,12 @@ function ScheduleCommitteeRoom({
             className="card-header red-bg"
             style={{ background: "#14ae5c !important" }}
           >
-            <h1>{`Schedule Committee Room No: ${committeeRoom} at Time ${timeSlot}`}</h1>
+            <h1>{`Committee Room No: ${committeeRoom} `}</h1>
           </div>
           <div className="card-body">
             <form onSubmit={formik.handleSubmit}>
               <div className="row">
-                <div className="col">
+                {/* <div className="col">
                   <div className="mb-3">
                     <label className="form-label">Committee Name</label>
                     <input
@@ -79,7 +117,36 @@ function ScheduleCommitteeRoom({
                       value={formik.values.committeeName}
                     />
                   </div>
-                </div>
+                </div> */}
+                <div className="col">
+                      <div className="mb-3">
+                      <label className="form-label">Committee Name</label>
+                      <select
+                          class="form-select"
+                          id="committeeName"
+                          name="committeeName"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.committeeName}
+                        >
+                          <option value={""} selected disabled hidden>
+                            Select
+                          </option>
+                          {committeesData &&
+                            committeesData?.map((item) => (
+                              <option
+                                value={item.id}
+                              >{`${item?.committeeName}`}</option>
+                            ))}
+                        </select>
+                        {formik.touched.committeeName &&
+                          formik.errors.committeeName && (
+                            <div className="invalid-feedback">
+                              {formik.errors.committeeName}
+                            </div>
+                          )}
+                      </div>
+                    </div>
               </div>
               <div className="row">
                 <div className="col-6">

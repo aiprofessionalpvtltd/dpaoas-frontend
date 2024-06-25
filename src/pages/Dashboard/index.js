@@ -228,6 +228,15 @@ function Dashboard() {
       icon: faBookOpenReader,
       permission: ["IPR"],
     },
+    //Change Permission
+    {
+      title: "Legislative Drafting Unit",
+      link: "/LDU/dashboard",
+      type: "",
+      cardbg: "bluebg",
+      icon: faBookOpenReader,
+      permission: ["Legislation"],
+    },
   ];
 
   // Filter tiles based on permissions

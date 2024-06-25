@@ -296,7 +296,7 @@ export const TelecastingSideBarItems = [
     link: "/telecasting/speech-on-demand",
     icon: faHome,
   },
-]
+];
 
 export const ResearchSideBarItems = [
   {
@@ -309,7 +309,7 @@ export const ResearchSideBarItems = [
     link: "/research/research-services",
     icon: faHome,
   },
-]
+];
 
 //Question Management System
 export const QMSSideBarItems = [
@@ -1117,7 +1117,7 @@ export const LegislationSideBarItems = [
         link: "/lgms/dashboard/manage/members/list",
         icon: faBookOpen,
       },
-      
+
       {
         itemName: "Parliamentary Years",
         link: "/lgms/dashboard/manage/parliamentary-year/list",
@@ -1143,7 +1143,6 @@ export const LegislationSideBarItems = [
       //   link: "/lgms/dashboard/manage/committees/list",
       //   icon: faBookOpen,
       // },
-      
     ],
   },
   {
@@ -1161,13 +1160,11 @@ export const LegislationSideBarItems = [
         link: "/lgms/legislation/legislative-bill",
         icon: faFileInvoice,
       },
-    ]
-  }
+    ],
+  },
 ];
 
-
 // Committees Management System Sidebar Items
-
 
 export const CommitteesSideBarItems = [
   {
@@ -1175,7 +1172,7 @@ export const CommitteesSideBarItems = [
     link: "/committees/dashboard",
     icon: faHome,
   },
- 
+
   {
     itemName: "Committees",
     link: "/committees/dashboard/committees",
@@ -1204,15 +1201,37 @@ export const CommitteesSideBarItems = [
         icon: faBookOpen,
       },
       {
-        itemName:"Booked Committe Rooms Lists",
+        itemName: "Booked Committe Rooms Lists",
         link: "/committees/dashboard/committee-rooms/booked",
         icon: faBookOpen,
       },
-     
-      
     ],
   },
 
- 
-  
+  {
+    itemName: "Meetings",
+    link: "/committees/dashboard/meetings",
+    icon: faBookOpen,
+    subItems: [
+      {
+        itemName: "Scheduled Meetings",
+        link: "/committees/dashboard/scheduled-meetings",
+        icon: faBookOpen,
+      },
+      {
+        itemName: "Search Meeting",
+        link: "/committees/dashboard/committees/search-meeting",
+        icon: faBookOpen,
+      },
+    ],
+  },
+];
+
+//LDU Sidebar Items
+export const LDUSideBarItems = [
+  {
+    itemName: "Dashboard",
+    link: "/LDU/dashboard",
+    icon: faHome,
+  },
 ];
