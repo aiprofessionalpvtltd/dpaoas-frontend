@@ -118,7 +118,7 @@ const filteredKeys = keys?.filter((key) => {
   const resolveTooltip = <Tooltip id="print-tooltip">Complete</Tooltip>;
   const assignedTooltip = <Tooltip id="print-tooltip">Assigne</Tooltip>;
   const createTooltip = <Tooltip id="create-tooltip">Create Case</Tooltip>;
-  const attendanceTooltip = <Tooltip id="attendance-tooltip">Mark </Tooltip>;
+  const attendanceTooltip = <Tooltip id="attendance-tooltip">Mark Attendance </Tooltip>;
   const restoreTooltip = <Tooltip id="restore-tooltip">Recover</Tooltip>;
   const listTooltip = <Tooltip id="list-tooltip">List</Tooltip>;
   const attachDocs = <Tooltip id="docs-tooltip">Attach Docs</Tooltip>;
@@ -801,6 +801,21 @@ const filteredKeys = keys?.filter((key) => {
                               </OverlayTrigger>
                             </>
                           )}
+                           {showAttendance && (
+                                <OverlayTrigger
+                                  placement="top"
+                                  overlay={attendanceTooltip}
+                                >
+                                  <button
+                                    onClick={() => hendleAttendance(item)}
+                                    className="btn-xs black circle-btn"
+                                    data-id={item.id}
+                                    style={{ background: "#007bff" }}
+                                  >
+                                    <FontAwesomeIcon icon={faUserCheck} />
+                                  </button>
+                                </OverlayTrigger>
+                              )}
                           {showPrint && (
                             <OverlayTrigger
                               placement="top"

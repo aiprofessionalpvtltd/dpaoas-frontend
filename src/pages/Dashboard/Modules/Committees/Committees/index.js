@@ -111,7 +111,9 @@ function CommitteesManagementSystemCommittees() {
   };
 
   const handleMemberClick = (id) => {
-    navigate(`/committees/dashboard/committees/committee-members`, { state: { committeeId: id } });
+    navigate(`/committees/dashboard/committees/committee-members`, {
+      state: { committeeId: id },
+    });
   };
 
   useEffect(() => {
@@ -168,6 +170,7 @@ function CommitteesManagementSystemCommittees() {
                 state: { id: item?.SR },
               })
             }
+
             // handleDelete={(item) => handleDelete(item.SR)}
             // ActionHide={true}
           />
@@ -178,8 +181,6 @@ function CommitteesManagementSystemCommittees() {
 }
 
 export default CommitteesManagementSystemCommittees;
-
-
 
 // import React, { useCallback, useEffect, useState } from "react";
 // import {

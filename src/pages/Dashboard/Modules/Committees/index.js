@@ -1,4 +1,4 @@
-import React, {  useState } from "react";
+import React, { useState } from "react";
 import { Layout } from "../../../../components/Layout";
 import { CommitteesSideBarItems } from "../../../../utils/sideBarItems";
 import { useNavigate } from "react-router-dom";
@@ -88,19 +88,16 @@ function CommitteesManagementSystemDashboard() {
   const [currentPage, setCurrentPage] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalData, setModalData] = useState(null);
-  const [modalBusinessName,setModalBusinessName] = useState("");
+  const [modalBusinessName, setModalBusinessName] = useState("");
   const pageSize = 4; // Set your desired page size
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
 
-
   // Modal Functions
-  const handleModal = (data,businessName) => {
+  const handleModal = (data, businessName) => {
     setModalBusinessName(businessName);
     setIsModalOpen(true);
-  
-
   };
 
   const handleReceivedBusinessClick = () => {
@@ -311,11 +308,10 @@ function CommitteesManagementSystemDashboard() {
                     // Render content for the 'Noting' tab
                     <section class="mb-5">
                       <CustomTable
-                        hidebtn1={true}
                         ActionHide={false}
-                        hideBtn={true}
+                        addBtnText="View History"
                         data={Questions}
-                        tableTitle="Questions"
+                        tableTitle="Questions history"
                         headertitlebgColor={"#666"}
                         headertitletextColor={"#FFF"}
                         handlePageChange={handlePageChange}
@@ -326,8 +322,9 @@ function CommitteesManagementSystemDashboard() {
                         assignBtn={true}
                         assignClick={(items) => {
                           // console.log("items", items)
-                          handleModal(items,"Question");
+                          handleModal(items, "Question");
                         }}
+                        handleAdd={()=>{navigate("/committees/dashboard/received-business-history/questions")}}
                         pageSize={pageSize}
                         totalCount={count}
                         singleDataCard={true}
@@ -336,81 +333,80 @@ function CommitteesManagementSystemDashboard() {
                   ) : selectedTab === "Motions" ? (
                     <section class="mb-5">
                       <CustomTable
-                       hidebtn1={true}
-                       ActionHide={false}
-                       hideBtn={true}
-                       data={Motions}
-                       tableTitle="Motions"
-                       headertitlebgColor={"#666"}
-                       headertitletextColor={"#FFF"}
-                       handlePageChange={handlePageChange}
-                       currentPage={currentPage}
-                       hideDeleteIcon={true}
-                       showAssigned={false}
-                       showEditIcon={true}
-                       assignBtn={true}
-                       assignClick={(items) => {
-                        handleModal(items,"Motions");
-                       }}
-                       pageSize={pageSize}
-                       totalCount={count}
-                       singleDataCard={true}
+                        addBtnText="View History"
+                        ActionHide={false}
+                        data={Motions}
+                        tableTitle="Motions"
+                        headertitlebgColor={"#666"}
+                        headertitletextColor={"#FFF"}
+                        handlePageChange={handlePageChange}
+                        currentPage={currentPage}
+                        hideDeleteIcon={true}
+                        showAssigned={false}
+                        showEditIcon={true}
+                        assignBtn={true}
+                        assignClick={(items) => {
+                          handleModal(items, "Motions");
+                        }}
+                        handleAdd={()=>{navigate("/committees/dashboard/received-business-history/motions")}}
+                        pageSize={pageSize}
+                        totalCount={count}
+                        singleDataCard={true}
                       />
                     </section>
                   ) : selectedTab === "Resolutions" ? (
                     <section class="mb-5">
                       <CustomTable
-                       hidebtn1={true}
-                       ActionHide={false}
-                       hideBtn={true}
-                       data={Resolution}
-                       tableTitle="Resolutions"
-                       headertitlebgColor={"#666"}
-                       headertitletextColor={"#FFF"}
-                       handlePageChange={handlePageChange}
-                       currentPage={currentPage}
-                       hideDeleteIcon={true}
-                       showAssigned={false}
-                       showEditIcon={true}
-                       assignBtn={true}
-                       assignClick={(items) => {
-                        handleModal(items,"Resolution");
-                       }}
-                       pageSize={pageSize}
-                       totalCount={count}
-                       singleDataCard={true}
+                        ActionHide={false}
+                        addBtnText="View History"
+                        data={Resolution}
+                        tableTitle="Resolutions"
+                        headertitlebgColor={"#666"}
+                        headertitletextColor={"#FFF"}
+                        handlePageChange={handlePageChange}
+                        currentPage={currentPage}
+                        hideDeleteIcon={true}
+                        showAssigned={false}
+                        showEditIcon={true}
+                        assignBtn={true}
+                        assignClick={(items) => {
+                          handleModal(items, "Resolution");
+                        }}
+                        handleAdd={()=>{navigate("/committees/dashboard/received-business-history/resolutions")}}
+                        pageSize={pageSize}
+                        totalCount={count}
+                        singleDataCard={true}
                       />
                     </section>
                   ) : selectedTab === "Notices" ? (
                     <section class="mb-5">
                       <CustomTable
-                      hidebtn1={true}
-                      ActionHide={false}
-                      hideBtn={true}
-                      data={[]}
-                      tableTitle="Notices"
-                      headertitlebgColor={"#666"}
-                      headertitletextColor={"#FFF"}
-                      handlePageChange={handlePageChange}
-                      currentPage={currentPage}
-                      hideDeleteIcon={true}
-                      showAssigned={false}
-                      showEditIcon={true}
-                      assignBtn={true}
-                      assignClick={(items) => {
-                        handleModal(items,"Notice");
-                       }}
-                      pageSize={pageSize}
-                      totalCount={count}
-                      singleDataCard={true}
+                        ActionHide={false}
+                        addBtnText="View History"
+                        data={[]}
+                        tableTitle="Notices"
+                        headertitlebgColor={"#666"}
+                        headertitletextColor={"#FFF"}
+                        handlePageChange={handlePageChange}
+                        currentPage={currentPage}
+                        hideDeleteIcon={true}
+                        showAssigned={false}
+                        showEditIcon={true}
+                        assignBtn={true}
+                        assignClick={(items) => {
+                          handleModal(items, "Notice");
+                        }}
+                        handleAdd={()=>{navigate("/committees/dashboard/received-business-history/notices")}}
+                        pageSize={pageSize}
+                        totalCount={count}
+                        singleDataCard={true}
                       />
                     </section>
                   ) : selectedTab === "Bills" ? (
                     <section class="mb-5">
                       <CustomTable
-                        hidebtn1={true}
                         ActionHide={false}
-                        hideBtn={true}
+                        addBtnText="View History"
                         data={Bills}
                         tableTitle="Bills"
                         headertitlebgColor={"#666"}
@@ -422,8 +418,9 @@ function CommitteesManagementSystemDashboard() {
                         showEditIcon={true}
                         assignBtn={true}
                         assignClick={(items) => {
-                          handleModal(items,"Bill");
-                         }}
+                          handleModal(items, "Bill");
+                        }}
+                        handleAdd={()=>{navigate("/committees/dashboard/received-business-history/bills")}}
                         pageSize={pageSize}
                         totalCount={count}
                         singleDataCard={true}
