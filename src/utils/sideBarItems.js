@@ -200,11 +200,11 @@ export const NoticeSidebarItems = [
       },
     ],
   },
-  // {
-  //   itemName: "Event Calendar",
-  //   link: "/notice/event-calendar",
-  //   icon: faCalendarAlt,
-  // },
+  {
+    itemName: "Event Calendar",
+    link: "/notice/event-calendar",
+    icon: faCalendarAlt,
+  },
 
   // {
   //   itemName: "Research Services",
