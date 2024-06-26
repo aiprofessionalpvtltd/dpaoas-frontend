@@ -12,6 +12,7 @@ import * as Yup from "yup";
 import DatePicker from "react-datepicker";
 import { ToastContainer } from "react-toastify";
 import {
+  DeleteQuestion,
   getAllQuestionByID,
   getAllQuestionStatus,
   searchQuestion,
@@ -88,8 +89,9 @@ function QMSSearchQuestion() {
         SubjectMatter: cleanedSubjectMatter,
         Category: res?.questionCategory,
         // SubmittedBy: res.category,
-        Status: res?.questionStatus?.questionStatus,
-        CreatedBy:res?.questionSentStatus == "inQuestion" && "Question"
+        questionStatus: res?.questionStatus?.questionStatus,
+        CreatedBy:res?.questionSentStatus == "inQuestion" && "Question",
+        Status:res?.questionActive
       };
     });
   };
@@ -156,10 +158,24 @@ function QMSSearchQuestion() {
       console.log("isChecked", data);
 
       const response = await updateQuestionStatus(data);
-      showSuccessMessage(response.message);
-      formik.resetForm({});
+      showSuccessMessage(response.message); 
+      SearchQuestionApi(formik.values) 
+      setQuestionStatus(null)
+      setStatusDate(null)
+      setIsChecked([])
     } catch (error) {
       showErrorMessage(error.response?.data?.message);
+    }
+  };
+  const hendleDelete = async (id) => {
+    try {
+      const response = await DeleteQuestion(id); // Add await here
+      if (response?.success) {
+        showSuccessMessage(response?.message);
+        SearchQuestionApi(formik.values);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
     }
   };
 
@@ -346,12 +362,12 @@ function QMSSearchQuestion() {
                       <label class="form-label">Question Status</label>
                       <select
                         class="form-select"
-                        placeholder={formik.values.questionStatus}
+                        value={formik.values.questionStatus}
                         id="questionStatus"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       >
-                        <option value={""} selected disabled hidden>
+                        <option value="" selected disabled hidden>
                           Select
                         </option>
                         {allquestionStatus &&
@@ -570,6 +586,7 @@ function QMSSearchQuestion() {
                   headerShown={true}
                   data={searchedData}
                   handleEdit={(item) => handleEdit(item.QID)}
+                  handleDelete={(item) => hendleDelete(item.QID)}
                   handlePageChange={handlePageChange}
                   currentPage={currentPage}
                   pageSize={pageSize}

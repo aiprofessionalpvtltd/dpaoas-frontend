@@ -105,7 +105,9 @@ function QMSRotaList() {
         const url = `${imagesUrl}${response?.data?.fileLink}`;
         setPrintFile(url);
         showSuccessMessage(response?.message);
-        const transformedData = transformLeavesData(response.data?.rotaList?.dates);
+        const transformedData = transformLeavesData(
+          response.data?.rotaList?.dates
+        );
         setResData(transformedData);
       }
     } catch (error) {
@@ -173,7 +175,7 @@ function QMSRotaList() {
                         value={sessionId}
                         onBlur={formik.handleBlur}
                       >
-                        <option value="" disabled>
+                        <option value="" selected disabled hidden>
                           Select
                         </option>
                         {sessions &&
@@ -205,7 +207,7 @@ function QMSRotaList() {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       >
-                        <option value="" disabled>
+                        <option value="" selected disabled hidden>
                           Select
                         </option>
                         <option>Regular Days</option>
@@ -235,7 +237,7 @@ function QMSRotaList() {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       >
-                        <option value="" disabled>
+                        <option value="" selected disabled hidden>
                           Select
                         </option>
                         <option value={"1"}>Group 1</option>
@@ -350,7 +352,7 @@ function QMSRotaList() {
                 currentPage={currentPage}
                 pageSize={pageSize}
                 hideDeleteIcon={true}
-                hideEditIcon={true}
+                showEditIcon={true}
                 showView={true}
                 handleView={(item) =>
                   navigate("/qms/reports/rota-list/further-details", {
