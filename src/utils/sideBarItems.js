@@ -1226,3 +1226,12 @@ export const CommitteesSideBarItems = [
     ],
   },
 ];
+
+//LDU Sidebar Items
+export const LDUSideBarItems = [
+  {
+    itemName: "Dashboard",
+    link: "/LDU/dashboard",
+    icon: faHome,
+  },
+];
