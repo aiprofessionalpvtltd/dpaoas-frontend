@@ -1068,7 +1068,7 @@ export const LegislationSideBarItems = [
     icon: faBookOpen,
     subItems: [
       {
-        itemName: "Legislation Bills",
+        itemName: "All Bills",
         link: "/lgms/dashboard/bills/legislation-bills",
         icon: faBookOpen,
       },
