@@ -19,6 +19,7 @@ const AllLegislationBillList = () => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(0);
   const [selectedOption, setSelectedOption] = useState("All");
+  const [selectedBillCategory, setSelectedBillCategory] = useState("");
   const [legislationBillData, setLegislationBillData] = useState([]);
   const [senateBillData, setSenateBillData] = useState([]);
   const [NABillData, setNABillData] = useState([]);
@@ -103,6 +104,7 @@ const AllLegislationBillList = () => {
 
   const handleOptionChange = (event) => {
     setSelectedOption(event.target.value);
+    setSelectedBillCategory("");
     setCurrentPage(0)
     const page = 0
     getBills(page,event.target?.value);
@@ -113,6 +115,9 @@ const AllLegislationBillList = () => {
       getBills(page,event.target.value);
     }
   };
+
+ 
+
 
   const getBills = useCallback(
     async (page,option) => {
@@ -126,6 +131,7 @@ const AllLegislationBillList = () => {
         searchParams = {
           billFrom: "From NA",
         };
+       
       }
       const response = await getAllLegislationBills(
         page,
@@ -137,6 +143,7 @@ const AllLegislationBillList = () => {
         const ALL_BILLS_DATA = response?.data?.senateBills;
         const trnasformAllData = transformAllBillData(ALL_BILLS_DATA);
         setLegislationBillData(trnasformAllData);
+        console.log("All Bill Data", legislationBillData)
         const senateBills = await ALL_BILLS_DATA?.filter(
           (bill) => bill?.billFrom === "From Senate"
         );
@@ -153,13 +160,39 @@ const AllLegislationBillList = () => {
     [count, setCount, pageSize, currentPage]
   );
 
- 
+
+
+
 
   useEffect(() => {
     
     getBills(currentPage);
   }, []);
 
+  const handleBillCategoryOptionChange = (event) => {
+    const selectedCategory = event.target.value;
+    setSelectedBillCategory(selectedCategory);
+
+    if (selectedCategory) {
+      if (selectedOption === "All") {
+        const filteredData = legislationBillData.filter(
+          (bill) => bill.billCategory === selectedCategory
+        );
+        setLegislationBillData(filteredData);
+      } else if (selectedOption === "From Senate") {
+        const filteredData = senateBillData.filter(
+          (bill) => bill.billCategory === selectedCategory
+        );
+        console.log("Sneate Filtered Data", filteredData)
+        setSenateBillData(filteredData);
+      }else if (selectedOption === "From NA") {
+        const filteredData = senateBillData.filter(
+          (bill) => bill.billCategory === selectedCategory
+        );
+        setNABillData(filteredData);
+      }
+    }
+  };
   const handleAddSenateBills = () => {
     navigate("/lgms/dashboard/bills/senate-bills");
   };
@@ -199,6 +232,7 @@ const AllLegislationBillList = () => {
         title1={"All Legislation Bills"}
       />
       <div class="container-fluid">
+        <div className="row">
         <div className="col-3 ms-2 mt-4 mb-4">
           <label htmlFor="SelectBillFrom">Select Bill From:</label>
           <select
@@ -215,19 +249,40 @@ const AllLegislationBillList = () => {
             <option value="From NA">Received From NA</option>
           </select>
         </div>
+        <div className="col-3 ms-2 mt-4 mb-4">
+          <label htmlFor="SelectBillFrom">Bill Category</label>
+          <select
+            className="form-select col-2"
+            value={selectedBillCategory}
+            onChange={handleBillCategoryOptionChange}
+            id="billcategory"
+          >
+            <option value="" selected disabled hidden>
+              Select
+            </option>
+           
+            <option value="Government Bill">Government Bill</option>
+            <option value="Private Member Bill">Private Member Bill</option>
+          </select>
+        </div>
+       
+        </div>
+       
+
+       
         <div>
           <CustomTable
             // hidebtn1={selectedOption === "All" ? true : false}
             hidebtn1={false}
             hideBtn={selectedOption === "All" ? false : true}
-            addBtnText2="Create National Assembly Bill"
+            addBtnText2="Received From NA"
             addBtnText={
               selectedOption === "All"
-                ? "Create Senate Bill"
+                ? "Introduced in Senate"
                 : selectedOption === "From Senate"
-                  ? "Create Senate Bill"
+                  ? "Introduced in Senate"
                   : selectedOption === "From NA"
-                    ? "Create National Assembly Bill"
+                    ? "Received From NA"
                     : ""
             }
             handleAdd={
