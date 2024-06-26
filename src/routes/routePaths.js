@@ -225,6 +225,7 @@ import CommitteesManagementSystemPreviousResolutionHistory from "../pages/Dashbo
 import CommitteesManagementSystemPreviousNoticesHistory from "../pages/Dashboard/Modules/Committees/Committees/RecievedBusinessPreviousHistory/Notices";
 import CommitteesManagementSystemPreviousBillsHistory from "../pages/Dashboard/Modules/Committees/Committees/RecievedBusinessPreviousHistory/Bills";
 import LDUDashboard from "../pages/Dashboard/Modules/LDU";
+import QMSNewResolution from "../pages/Dashboard/Modules/QMS/Resolution/NewResolution";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -454,6 +455,8 @@ export const ProtectedRoutes = [
   { path: "/qms/resolution", element: <QMSQuestionDashboard /> },
   { path: "/qms/resolution/list", element: <QMSResolutionList /> },
   { path: "/qms/resolution/delete", element: <QMSDeleteResolution /> },
+  { path: "/qms/resolution/new", element: <QMSNewResolution /> },
+
 
   { path: "/qms/notice", element: <QMSQuestionDashboard /> },
   { path: "/qms/notice/notice-question", element: <QMSNoticeQuestion /> },

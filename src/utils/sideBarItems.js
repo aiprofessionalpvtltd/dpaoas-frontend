@@ -351,6 +351,11 @@ export const QMSSideBarItems = [
     icon: faClipboardList,
     subItems: [
       {
+        itemName: "New Resolution",
+        link: "/qms/resolution/new",
+        icon: faClipboardList,
+      },
+      {
         itemName: "Resolution List",
         link: "/qms/resolution/list",
         icon: faClipboardList,

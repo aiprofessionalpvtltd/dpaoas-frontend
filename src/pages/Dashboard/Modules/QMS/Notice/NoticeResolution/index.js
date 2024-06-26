@@ -144,7 +144,7 @@ function QMSNoticeResolution() {
     try {
       const response = await getResolutionBYID(id);
       if (response?.success) {
-        navigate("/notice/resolution/edit", {
+        navigate("/qms/notice/notice-resolution-detail", {
           state: response?.data,
         });
       }
@@ -532,7 +532,7 @@ function QMSNoticeResolution() {
                       pageSize={pageSize}
                       headertitlebgColor={"#666"}
                       headertitletextColor={"#FFF"}
-                      ActionHide={true}
+                      // ActionHide={true}
                       handleDelete={(item) => deleteResolutionApi(item.SrNo)}
                       handleEdit={(item) => handleEdit(item.SrNo)}
                       totalCount={count}

@@ -179,7 +179,7 @@ function QMSNoticeQuestion() {
       const { question, history } = await getAllQuestionByID(id);
 
       if (question?.success) {
-        navigate("/notice/question/detail", {
+        navigate("/qms/notice/notice-question-detail", {
           state: { question: question?.data, history: history?.data },
         });
       }
@@ -597,7 +597,7 @@ function QMSNoticeQuestion() {
                     headertitlebgColor={"#666"}
                     headertitletextColor={"#FFF"}
                     showPrint={false}
-                    ActionHide={true}
+                    // ActionHide={true}
                     hideEditIcon={false}
                     hideDeleteIcon={true}
                     handleAdd={(item) => navigate("/")}
