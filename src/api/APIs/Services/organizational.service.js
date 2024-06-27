@@ -271,6 +271,24 @@ export const getAllEmployee = async (currentPage, pageSize) => {
   }
 };
 
+export const getEmployeeById = async (id) => {
+  try {
+    const token = getAuthToken();
+    const response = await axiosClientVMS.get(
+      `/employee/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
 export const getLLEmployee = async (userId) => {
   try {
     const token = getAuthToken();
