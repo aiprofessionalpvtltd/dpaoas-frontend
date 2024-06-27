@@ -231,7 +231,7 @@ function Dashboard() {
     //Change Permission
     {
       title: "Legislative Drafting Unit",
-      link: "/LDU/dashboard",
+      link: "/ldu/dashboard",
       type: "",
       cardbg: "bluebg",
       icon: faBookOpenReader,
