@@ -236,6 +236,7 @@ function CommitteesManagementSystemAddEditBookinginCommitteeRooms() {
                                     backgroundColor,
                                     padding: "4px 5px",
                                     color: "white",
+                                    borderRadius:"3px"
                                   }}
                                 >
                                   {text}

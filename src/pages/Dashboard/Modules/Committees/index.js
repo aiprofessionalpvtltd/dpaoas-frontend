@@ -7,9 +7,11 @@ import NoticeStatsCard from "../../../../components/CustomComponents/NoticeStats
 import {
   faClipboardQuestion,
   faFileImport,
+  faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import CustomTable from "../../../../components/CustomComponents/CustomTable";
 import CommitteeReceievedBusinessModal from "../../../../components/CommitteeModels/RecievedBusinessModal";
+import ScheduleCommitteeRoom from "../../../../components/CommitteeModels/CommitteeRoomModal";
 
 const Questions = [
   {
@@ -87,7 +89,9 @@ function CommitteesManagementSystemDashboard() {
   const [count, setCount] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalData, setModalData] = useState(null);
+  const [isCommitteeMeetingModalOpen, setIsCommitteeMeetingModalOpen] =
+    useState(false);
+  const [selectedCommitteeRoom, setSelectedCommitteeRoom] = useState(null);
   const [modalBusinessName, setModalBusinessName] = useState("");
   const pageSize = 4; // Set your desired page size
   const handlePageChange = (page) => {
@@ -105,6 +109,11 @@ function CommitteesManagementSystemDashboard() {
     setSelectedTab("Questions"); // Reset selected link when toggling links visibility
   };
 
+  // Committee Meeting Modal
+  const handleCommitteeMeetingOpen = (committeeRoom) => {
+    setSelectedCommitteeRoom(committeeRoom);
+    setIsCommitteeMeetingModalOpen(true);
+  };
   return (
     <Layout
       module={true}
@@ -117,6 +126,24 @@ function CommitteesManagementSystemDashboard() {
           modalisOpan={isModalOpen}
           hendleModal={() => setIsModalOpen(!isModalOpen)}
           modalBusinessName={modalBusinessName}
+        />
+      )}
+      {/* {isCommitteeMeetingModalOpen && (
+        <ScheduleCommitteeRoom
+          isModalOpen={isModalOpen}
+          handleModal={() => setIsCommitteeMeetingModalOpen(!isCommitteeMeetingModalOpen)}
+          // committeeRoom={selectedCommitteeRoom}
+          // timeSlot={selectedTimeSlot}
+        />
+      )} */}
+      {isCommitteeMeetingModalOpen && (
+        <ScheduleCommitteeRoom
+          isModalOpen={isCommitteeMeetingModalOpen}
+          handleModal={() =>
+            setIsCommitteeMeetingModalOpen(!isCommitteeMeetingModalOpen)
+          }
+          committeeRoom={selectedCommitteeRoom} // Pass the appropriate committee room number or data
+          // timeSlot={"10:00 AM - 11:00 AM"} // Pass the appropriate time slot data
         />
       )}
 
@@ -149,22 +176,137 @@ function CommitteesManagementSystemDashboard() {
                   icon={faFileImport}
                   overall={true}
                   iconBgColor={"#007bff"}
-                  total={`5`}
+                  total={`4`}
                 />
                 <NoticeStatsCard
                   title={"Received Business"}
                   icon={faFileImport}
                   overall={true}
                   iconBgColor={"#007bff"}
-                  total={`20`}
+                  total={`10`}
                   onClick={handleReceivedBusinessClick}
                 />
               </div>
             </div>
           </div>
         </div>
-
+        <h2
+          style={{
+            fontSize: "22px",
+            fontWeight: "bold",
+            marginBottom: "10px",
+            color: "#fb6340",
+          }}
+        >
+          Schedule Meeting
+        </h2>
         <div className="row">
+          <div className="col-3">
+            <div className="row d-flex flex-column">
+              <NoticeStatsCard
+                title={"Scheduled Meetings"}
+                icon={faUsers}
+                overall={true}
+                iconBgColor={"#FFA500"}
+                total={`3`}
+                ColValue={"col"}
+                onClick={() =>
+                  navigate("/committees/dashboard/committee-rooms/booked")
+                }
+              />
+              <div className="col mt-3 mb-4">
+                <button
+                  className="btn btn-primary"
+                  style={{ width: "100%" }}
+                  onClick={() => {
+                    handleCommitteeMeetingOpen(1);
+                  }}
+                >
+                  Schedule Meeting In Committee Room 1
+                </button>
+              </div>
+            </div>
+          </div>
+          <div className="col-3">
+            <div className="row d-flex flex-column">
+              <NoticeStatsCard
+                title={"Scheduled Meetings"}
+                icon={faUsers}
+                overall={true}
+                iconBgColor={"#FFA500"}
+                total={`2`}
+                ColValue={"col"}
+                onClick={() =>
+                  navigate("/committees/dashboard/committee-rooms/booked")
+                }
+              />
+              <div className="col mt-3 mb-4">
+                <button
+                  className="btn btn-primary"
+                  style={{ width: "100%" }}
+                  onClick={() => {
+                    handleCommitteeMeetingOpen(2);
+                  }}
+                >
+                  Schedule Meeting In Committee Room 2
+                </button>
+              </div>
+            </div>
+          </div>
+          <div className="col-3">
+            <div className="row d-flex flex-column">
+              <NoticeStatsCard
+                title={"Scheduled Meetings"}
+                icon={faUsers}
+                overall={true}
+                iconBgColor={"#FFA500"}
+                total={`0`}
+                ColValue={"col"}
+                onClick={() =>
+                  navigate("/committees/dashboard/committee-rooms/booked")
+                }
+              />
+              <div className="col mt-3 mb-4">
+                <button
+                  className="btn btn-primary"
+                  style={{ width: "100%" }}
+                  onClick={() => {
+                    handleCommitteeMeetingOpen(3);
+                  }}
+                >
+                  Schedule Meeting In Committee Room 3
+                </button>
+              </div>
+            </div>
+          </div>
+          <div className="col-3">
+            <div className="row d-flex flex-column">
+              <NoticeStatsCard
+                title={"Scheduled Meetings"}
+                icon={faUsers}
+                overall={true}
+                iconBgColor={"#FFA500"}
+                total={`5`}
+                ColValue={"col"}
+                onClick={() =>
+                  navigate("/committees/dashboard/committee-rooms/booked")
+                }
+              />
+              <div className="col mt-3 mb-4">
+                <button
+                  className="btn btn-primary"
+                  style={{ width: "100%" }}
+                  onClick={() => {
+                    handleCommitteeMeetingOpen(4);
+                  }}
+                >
+                  Schedule Meeting In Committee Room 4
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="row p-2">
           {showTabs && (
             <div className="card">
               <div className="card-body">
@@ -324,7 +466,11 @@ function CommitteesManagementSystemDashboard() {
                           // console.log("items", items)
                           handleModal(items, "Question");
                         }}
-                        handleAdd={()=>{navigate("/committees/dashboard/received-business-history/questions")}}
+                        handleAdd={() => {
+                          navigate(
+                            "/committees/dashboard/received-business-history/questions"
+                          );
+                        }}
                         pageSize={pageSize}
                         totalCount={count}
                         singleDataCard={true}
@@ -348,7 +494,11 @@ function CommitteesManagementSystemDashboard() {
                         assignClick={(items) => {
                           handleModal(items, "Motions");
                         }}
-                        handleAdd={()=>{navigate("/committees/dashboard/received-business-history/motions")}}
+                        handleAdd={() => {
+                          navigate(
+                            "/committees/dashboard/received-business-history/motions"
+                          );
+                        }}
                         pageSize={pageSize}
                         totalCount={count}
                         singleDataCard={true}
@@ -372,7 +522,11 @@ function CommitteesManagementSystemDashboard() {
                         assignClick={(items) => {
                           handleModal(items, "Resolution");
                         }}
-                        handleAdd={()=>{navigate("/committees/dashboard/received-business-history/resolutions")}}
+                        handleAdd={() => {
+                          navigate(
+                            "/committees/dashboard/received-business-history/resolutions"
+                          );
+                        }}
                         pageSize={pageSize}
                         totalCount={count}
                         singleDataCard={true}
@@ -396,7 +550,11 @@ function CommitteesManagementSystemDashboard() {
                         assignClick={(items) => {
                           handleModal(items, "Notice");
                         }}
-                        handleAdd={()=>{navigate("/committees/dashboard/received-business-history/notices")}}
+                        handleAdd={() => {
+                          navigate(
+                            "/committees/dashboard/received-business-history/notices"
+                          );
+                        }}
                         pageSize={pageSize}
                         totalCount={count}
                         singleDataCard={true}
@@ -420,7 +578,11 @@ function CommitteesManagementSystemDashboard() {
                         assignClick={(items) => {
                           handleModal(items, "Bill");
                         }}
-                        handleAdd={()=>{navigate("/committees/dashboard/received-business-history/bills")}}
+                        handleAdd={() => {
+                          navigate(
+                            "/committees/dashboard/received-business-history/bills"
+                          );
+                        }}
                         pageSize={pageSize}
                         totalCount={count}
                         singleDataCard={true}
