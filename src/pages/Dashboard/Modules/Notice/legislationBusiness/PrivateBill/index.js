@@ -9,7 +9,6 @@ import {
 } from "../../../../../../utils/ToastAlert";
 import {
   deletePrivateBill,
-  getAllPrivateBill,
   getAllPrivateBillNotice,
   sendPrivateBill,
 } from "../../../../../../api/APIs/Services/Legislation.service";

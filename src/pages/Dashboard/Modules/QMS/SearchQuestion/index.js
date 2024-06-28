@@ -3,12 +3,10 @@ import { Layout } from "../../../../../components/Layout";
 import { useNavigate } from "react-router-dom";
 import CustomTable from "../../../../../components/CustomComponents/CustomTable";
 import {
-  MMSSideBarItems,
   QMSSideBarItems,
 } from "../../../../../utils/sideBarItems";
 import Header from "../../../../../components/Header";
 import { useFormik } from "formik";
-import * as Yup from "yup";
 import DatePicker from "react-datepicker";
 import { ToastContainer } from "react-toastify";
 import {
@@ -39,7 +37,7 @@ function QMSSearchQuestion() {
   const [questionStatus, setQuestionStatus] = useState("");
   const [statusDate, setStatusDate] = useState("");
 
-  const [count, setCount] = useState(null);
+  // const [count, setCount] = useState(null);
 
   const pageSize = 4; // Set your desired page size
 
@@ -90,7 +88,7 @@ function QMSSearchQuestion() {
         Category: res?.questionCategory,
         // SubmittedBy: res.category,
         questionStatus: res?.questionStatus?.questionStatus,
-        CreatedBy:res?.questionSentStatus == "inQuestion" && "Question",
+        CreatedBy:res?.questionSentStatus === "inQuestion" && "Question",
         Status:res?.questionActive
       };
     });
@@ -402,7 +400,6 @@ function QMSSearchQuestion() {
                           top: "36px",
                           zIndex: 1,
                           fontSize: "20px",
-                          zIndex: "1",
                           color: "#666",
                         }}
                       >
@@ -428,7 +425,6 @@ function QMSSearchQuestion() {
                           top: "36px",
                           zIndex: 1,
                           fontSize: "20px",
-                          zIndex: "1",
                           color: "#666",
                         }}
                       >
@@ -624,7 +620,6 @@ function QMSSearchQuestion() {
                         top: "36px",
                         zIndex: 1,
                         fontSize: "20px",
-                        zIndex: "1",
                         color: "#666",
                       }}
                     >

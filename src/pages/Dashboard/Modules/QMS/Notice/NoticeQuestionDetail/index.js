@@ -245,7 +245,6 @@ function QMSNoticeQuestionDetail() {
                             top: "36px",
                             zIndex: 1,
                             fontSize: "20px",
-                            zIndex: "1",
                             color: "#666",
                           }}
                         >
