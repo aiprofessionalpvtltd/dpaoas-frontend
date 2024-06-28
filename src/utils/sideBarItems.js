@@ -1233,7 +1233,41 @@ export const CommitteesSideBarItems = [
 export const LDUSideBarItems = [
   {
     itemName: "Dashboard",
-    link: "/LDU/dashboard",
+    link: "/ldu/dashboard",
     icon: faHome,
+  },
+  {
+    itemName: "From Notice Office",
+    link: "/ldu/notice-office",
+    icon: faBookOpen,
+    subItems: [
+      {
+        itemName: "Private Member Bill",
+        link: "/ldu/legislative/ldu-private-bill",
+        icon: faFileInvoice,
+      },
+      {
+        itemName: "Legislative Bill",
+        link: "/ldu/legislative/ldu-legislative-bill",
+        icon: faFileInvoice,
+      },
+    ],
+  },
+  {
+    itemName: "Laws / Acts ",
+    link: "/ldu/notice-office",
+    icon: faBookOpen,
+    subItems: [
+      {
+        itemName: "All List",
+        link: "/ldu/lawActs/all-lisitng",
+        icon: faFileInvoice,
+      },
+      // {
+      //   itemName: "Legislative Bill",
+      //   link: "/lgms/legislation/legislative-bill",
+      //   icon: faFileInvoice,
+      // },
+    ],
   },
 ];
