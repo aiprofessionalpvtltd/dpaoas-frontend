@@ -2531,10 +2531,25 @@ textarea {
   color: #fff;
 }
 .label-pending {
-  background-color: #4276f0;
-  font-size: 13px;
-  padding: 4px 5px;
-  color: #fff;
+  background-color: #c2d4ff;
+  font-size: 11px;
+  padding: 3px 6px;
+  color: #4276f0;
+  border-radius: 4px;
+}
+.label-close {
+  background-color: #ffeff3;
+  font-size: 11px;
+  padding: 3px 6px;
+  color: #f8285a;
+  border-radius: 4px;
+}
+.label-inprogress {
+  background-color: #dfffea;
+  font-size: 11px;
+  padding: 3px 6px;
+  color: #17c653;
+  border-radius: 4px;
 }
 
 .btn.default:not(.btn-outline) {
