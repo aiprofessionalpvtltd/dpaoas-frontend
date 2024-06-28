@@ -22,13 +22,10 @@ import {
   faBook,
   faHeading,
   faBookOpen,
-  faLaptopFile,
   faReceipt,
-  faPeopleGroup,
   faCalendarAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { getUserData } from "../api/Auth";
-import { icon } from "@fortawesome/fontawesome-svg-core";
 
 // LMS Sidebar
 export const LMSsidebarItems = [
@@ -1236,41 +1233,7 @@ export const CommitteesSideBarItems = [
 export const LDUSideBarItems = [
   {
     itemName: "Dashboard",
-    link: "/ldu/dashboard",
+    link: "/LDU/dashboard",
     icon: faHome,
-  },
-  {
-    itemName: "From Notice Office",
-    link: "/LDU/notice-office",
-    icon: faBookOpen,
-    subItems: [
-      {
-        itemName: "Private Member Bill",
-        link: "/ldu/legislative/ldu-private-bill",
-        icon: faFileInvoice,
-      },
-      {
-        itemName: "Legislative Bill",
-        link: "/ldu/legislative/ldu-legislative-bill",
-        icon: faFileInvoice,
-      },
-    ],
-  },
-  {
-    itemName: "Laws / Acts ",
-    link: "/lgms/notice-office",
-    icon: faBookOpen,
-    subItems: [
-      {
-        itemName: "All List",
-        link: "/ldu/lawActs/all-lisitng",
-        icon: faFileInvoice,
-      },
-      // {
-      //   itemName: "Legislative Bill",
-      //   link: "/lgms/legislation/legislative-bill",
-      //   icon: faFileInvoice,
-      // },
-    ],
   },
 ];

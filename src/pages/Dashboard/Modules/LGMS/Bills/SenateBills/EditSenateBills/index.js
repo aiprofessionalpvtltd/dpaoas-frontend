@@ -35,8 +35,8 @@ const EditSenateBill = () => {
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [isIntroducedCalendarOpen, setIntroducedCalendarOpen] = useState(false);
   
-  const [isDateofReciptCalendarOpen, setIsDateofReciptCalendarOpen] =
-    useState(false);
+  // const [isDateofReciptCalendarOpen, setIsDateofReciptCalendarOpen] =
+  //   useState(false);
   const [isReferredCalendarOpen, setReferredCalendarOpen] = useState(false);
   const [isReportPresentationCalendarOpen, setReportPresentationCalendarOpen] =
     useState(false);
@@ -283,7 +283,7 @@ const EditSenateBill = () => {
     if (NA_Bill_ID) {
       getNABillByIdApi();
     }
-  }, []);
+  }, [NA_Bill_ID]);
 
   useEffect(() => {
     if (singleSenateBillData) {
@@ -414,7 +414,7 @@ const EditSenateBill = () => {
           : "",
       });
     }
-  }, [singleSenateBillData, formik.setValues]);
+  }, [singleSenateBillData, formik.setValues, formik]);
 
   const UpdateNationalAssemblyBill = async (values) => {
     const formData = new FormData();
@@ -803,7 +803,6 @@ const EditSenateBill = () => {
                               top: "36px",
                               zIndex: 1,
                               fontSize: "20px",
-                              zIndex: "1",
                               color: "#666",
                               cursor: "pointer",
                             }}
@@ -875,7 +874,6 @@ const EditSenateBill = () => {
                               top: "36px",
                               zIndex: 1,
                               fontSize: "20px",
-                              zIndex: "1",
                               color: "#666",
                               cursor: "pointer",
                             }}
@@ -926,7 +924,6 @@ const EditSenateBill = () => {
                               top: "36px",
                               zIndex: 1,
                               fontSize: "20px",
-                              zIndex: "1",
                               color: "#666",
                               cursor: "pointer",
                             }}
@@ -1156,7 +1153,6 @@ const EditSenateBill = () => {
                               top: "36px",
                               zIndex: 1,
                               fontSize: "20px",
-                              zIndex: "1",
                               color: "#666",
                               cursor: "pointer",
                             }}
@@ -1214,7 +1210,6 @@ const EditSenateBill = () => {
                               top: "36px",
                               zIndex: 1,
                               fontSize: "20px",
-                              zIndex: "1",
                               color: "#666",
                             }}
                             onClick={handleReportPresenatationDayCalendarToggle}
@@ -1288,7 +1283,6 @@ const EditSenateBill = () => {
                               top: "36px",
                               zIndex: 1,
                               fontSize: "20px",
-                              zIndex: "1",
                               color: "#666",
                             }}
                             onClick={handleReferredCalendarToggle}
@@ -1396,7 +1390,6 @@ const EditSenateBill = () => {
                               top: "36px",
                               zIndex: 1,
                               fontSize: "20px",
-                              zIndex: "1",
                               color: "#666",
                               cursor: "pointer",
                             }}
@@ -1429,7 +1422,6 @@ const EditSenateBill = () => {
                               top: "36px",
                               zIndex: 1,
                               fontSize: "20px",
-                              zIndex: "1",
                               color: "#666",
                             }}
                             onClick={handleConsiderationCalendarToggle}
@@ -1463,7 +1455,6 @@ const EditSenateBill = () => {
                               top: "36px",
                               zIndex: 1,
                               fontSize: "20px",
-                              zIndex: "1",
                               color: "#666",
                               cursor:"pointer"
                             }}
@@ -1524,7 +1515,6 @@ const EditSenateBill = () => {
                               top: "36px",
                               zIndex: 1,
                               fontSize: "20px",
-                              zIndex: "1",
                               color: "#666",
                               cursor:"pointer"
                             }}
@@ -1573,7 +1563,6 @@ const EditSenateBill = () => {
                             top: "36px",
                             zIndex: 1,
                             fontSize: "20px",
-                            zIndex: "1",
                             color: "#666",
                           }}
                           onClick={handleRecepitMesageCalendarToggle}
@@ -1608,7 +1597,6 @@ const EditSenateBill = () => {
                             top: "36px",
                             zIndex: 1,
                             fontSize: "20px",
-                            zIndex: "1",
                             color: "#666",
                           }}
                           onClick={handleTransmissionCalendarToggle}
@@ -1642,7 +1630,6 @@ const EditSenateBill = () => {
                             top: "36px",
                             zIndex: 1,
                             fontSize: "20px",
-                            zIndex: "1",
                             color: "#666",
                           }}
                           onClick={handlePassageByNACalendarToggle}
@@ -1675,7 +1662,6 @@ const EditSenateBill = () => {
                             top: "36px",
                             zIndex: 1,
                             fontSize: "20px",
-                            zIndex: "1",
                             color: "#666",
                           }}
                           onClick={handlePassageSenateCalendarToggle}
@@ -1740,7 +1726,6 @@ const EditSenateBill = () => {
                             top: "36px",
                             zIndex: 1,
                             fontSize: "20px",
-                            zIndex: "1",
                             color: "#666",
                           }}
                           onClick={handleDocomentDateCalendarToggle}

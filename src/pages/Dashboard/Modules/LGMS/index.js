@@ -1,30 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Layout } from "../../../../components/Layout";
 import {
   LegislationSideBarItems,
-  NoticeSidebarItems,
 } from "../../../../utils/sideBarItems";
-import { useNavigate } from "react-router-dom";
 import Header from "../../../../components/Header";
 import NoticeStatsCard from "../../../../components/CustomComponents/NoticeStatsCard";
-import { getAllNoticeStats } from "../../../../api/APIs/Services/Notice.service";
 import {
   faClipboardQuestion,
   faFileImport,
-  faObjectGroup,
-  faScaleBalanced,
 } from "@fortawesome/free-solid-svg-icons";
 
 function LegislationManagementSystemDashboard() {
-  const navigate = useNavigate();
-  const [stats, setStats] = useState(null);
-  const [currentPage, setCurrentPage] = useState(0);
-  const pageSize = 4; // Set your desired page size
-
-  const handlePageChange = (page) => {
-    // Update currentPage when a page link is clicked
-    setCurrentPage(page);
-  };
 
   return (
     <Layout

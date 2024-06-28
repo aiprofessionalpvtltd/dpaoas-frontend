@@ -1,18 +1,13 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
 import { QMSSideBarItems } from "../../../../../../utils/sideBarItems";
-import { useNavigate } from "react-router-dom";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import { useFormik } from "formik";
 import DatePicker from "react-datepicker";
-import * as Yup from "yup";
 import {
   DeleteResolutionList,
   RecoverDeleteResolution,
-  UpdateResolution,
-  getAllResolutions,
-  searchResolution,
 } from "../../../../../../api/APIs/Services/Resolution.service";
 import Select from "react-select";
 import {
@@ -22,15 +17,12 @@ import {
 import { AuthContext } from "../../../../../../api/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
-import { getAllQuestionStatus } from "../../../../../../api/APIs/Services/Question.service";
 import { ToastContainer } from "react-toastify";
 
 function QMSDeleteResolution() {
-  const navigate = useNavigate();
   const { members, sessions, resolutionStatus } = useContext(AuthContext);
   const [searchedData, setSearchedData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
-  const [allResolutionStatus, setAllResolutionStatus] = useState([]);
   const pageSize = 10; // Set your desired page size
 
   const handlePageChange = (page) => {
@@ -126,19 +118,6 @@ function QMSDeleteResolution() {
     }
   };
 
-  const GetALlStatus = async () => {
-    try {
-      const response = await getAllQuestionStatus();
-      if (response?.success) {
-        setAllResolutionStatus(response?.data);
-        // showSuccessMessage(response.message);
-      }
-    } catch (error) {
-      console.log(error);
-      showErrorMessage(error?.response?.data?.message);
-    }
-  };
-
   const hendleRecover = async (id) => {
     try {
       const response = await RecoverDeleteResolution(id);
@@ -151,9 +130,6 @@ function QMSDeleteResolution() {
     }
   };
 
-  useEffect(() => {
-    GetALlStatus();
-  }, []);
   const handleResetForm = () => {
     formik.resetForm();
     setSearchedData([]);
@@ -375,7 +351,6 @@ function QMSDeleteResolution() {
                             top: "36px",
                             zIndex: 1,
                             fontSize: "20px",
-                            zIndex: "1",
                             color: "#666",
                           }}
                         >
@@ -402,7 +377,6 @@ function QMSDeleteResolution() {
                             top: "36px",
                             zIndex: 1,
                             fontSize: "20px",
-                            zIndex: "1",
                             color: "#666",
                           }}
                         >

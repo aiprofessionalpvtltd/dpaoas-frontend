@@ -3,7 +3,6 @@ import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
 import { QMSSideBarItems } from "../../../../../../utils/sideBarItems";
 import { useFormik } from "formik";
-import * as Yup from "yup";
 import { useLocation } from "react-router";
 import Select from "react-select";
 import {
@@ -21,32 +20,10 @@ import { AuthContext } from "../../../../../../api/AuthContext";
 import moment from "moment";
 import { imagesUrl } from "../../../../../../api/APIs";
 
-const validationSchema = Yup.object({
-  sessionNo: Yup.number(),
-  noticeOfficeDiaryNo: Yup.number(),
-  noticeOfficeDiaryDate: Yup.string().required(
-    "Notice Office Diary Date is required",
-  ),
-  noticeOfficeDiaryTime: Yup.string().required(
-    "Notice Office Diary Time is required",
-  ),
-  resolutionType: Yup.string(),
-  resolutionStatus: Yup.string(),
-  resolutionMovers: Yup.array(),
-  urduText: Yup.string(),
-  englishText: Yup.string(),
-});
-
 function QMSNoticeResolutionDetail() {
   const location = useLocation();
   const { members, sessions, resolutionStatus } = useContext(AuthContext);
-  console.log("dksfifsdpoipfosdpfiopf", location.state);
-  console.log(
-    "location?.state?.resolutionMoversAssociatio",
-    location?.state?.resolutionMoversAssociation?.map(
-      (item) => item?.memberAssociation?.id
-    )
-  );
+  
   const formik = useFormik({
     initialValues: {
       //   sessionNo: location?.state?.session?.sessionName,
@@ -238,7 +215,6 @@ function QMSNoticeResolutionDetail() {
                           top: "36px",
                           zIndex: 1,
                           fontSize: "20px",
-                          zIndex: "1",
                           color: "#666",
                         }}
                       >
@@ -431,7 +407,6 @@ function QMSNoticeResolutionDetail() {
                           top: "36px",
                           zIndex: 1,
                           fontSize: "20px",
-                          zIndex: "1",
                           color: "#666",
                         }}
                       >
@@ -460,7 +435,6 @@ function QMSNoticeResolutionDetail() {
                           top: "36px",
                           zIndex: 1,
                           fontSize: "20px",
-                          zIndex: "1",
                           color: "#666",
                         }}
                       >
@@ -489,7 +463,6 @@ function QMSNoticeResolutionDetail() {
                           top: "36px",
                           zIndex: 1,
                           fontSize: "20px",
-                          zIndex: "1",
                           color: "#666",
                         }}
                       >

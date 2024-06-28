@@ -1,13 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCalendarAlt, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import { useLocation } from "react-router-dom";
 import { useFormik } from "formik";
-import * as Yup from "yup";
 import DatePicker from "react-datepicker";
 import Header from "../../../../../../../components/Header";
 import { Layout } from "../../../../../../../components/Layout";
-import { LegislationSideBarItems, QMSSideBarItems } from "../../../../../../../utils/sideBarItems";
+import { QMSSideBarItems } from "../../../../../../../utils/sideBarItems";
 import TimePicker from "react-time-picker";
 import {
   createSession,
@@ -21,22 +20,22 @@ import {
 import { ToastContainer } from "react-toastify";
 import { AuthContext } from "../../../../../../../api/AuthContext";
 import Select from "react-select";
-const validationSchema = Yup.object({
-  sessionNo: Yup.string().required("Sesison no is required"),
-  CalledBy: Yup.string().required("Session called by is required"),
-  startDate: Yup.date().required("Start Date is required"),
-  endDate: Yup.date().required("End Date is required"),
-  legislationDiaryNo: Yup.string().required(
-    "Legislation Diary Number is required"
-  ),
-  legislationDiaryDate: Yup.date().required(
-    "Legislation Diary Date is required"
-  ),
-  businessStatus: Yup.object().required("Business Status is required"),
-  businessSession: Yup.string().required("Business Session is required"),
-  parliamentaryYear: Yup.string().required("Parliamentary Year is required"),
-  // jointSessionPurpose: Yup.string().required("Parliamentary Year is required"),
-});
+// const validationSchema = Yup.object({
+//   sessionNo: Yup.string().required("Sesison no is required"),
+//   CalledBy: Yup.string().required("Session called by is required"),
+//   startDate: Yup.date().required("Start Date is required"),
+//   endDate: Yup.date().required("End Date is required"),
+//   legislationDiaryNo: Yup.string().required(
+//     "Legislation Diary Number is required"
+//   ),
+//   legislationDiaryDate: Yup.date().required(
+//     "Legislation Diary Date is required"
+//   ),
+//   businessStatus: Yup.object().required("Business Status is required"),
+//   businessSession: Yup.string().required("Business Session is required"),
+//   parliamentaryYear: Yup.string().required("Parliamentary Year is required"),
+//   // jointSessionPurpose: Yup.string().required("Parliamentary Year is required"),
+// });
 function QMSAddEditSessionsForm() {
   const location = useLocation();
   const [sessionByIdData, setSessionByIdData] = useState();
@@ -181,7 +180,7 @@ function QMSAddEditSessionsForm() {
         jointSessionPurpose: sessionByIdData.jointSessionPurpose || "",
       });
     }
-  }, [sessionByIdData, formik.setValues]);
+  }, [sessionByIdData, formik.setValues, formik]);
   console.log("test", sessionByIdData);
   return (
     <Layout
@@ -299,7 +298,6 @@ function QMSAddEditSessionsForm() {
                           top: "36px",
                           zIndex: 1,
                           fontSize: "20px",
-                          zIndex: "1",
                           color: "#666",
                         }}
                       >
@@ -337,7 +335,6 @@ function QMSAddEditSessionsForm() {
                           top: "36px",
                           zIndex: 1,
                           fontSize: "20px",
-                          zIndex: "1",
                           color: "#666",
                         }}
                       >
@@ -405,7 +402,6 @@ function QMSAddEditSessionsForm() {
                           top: "36px",
                           zIndex: 1,
                           fontSize: "20px",
-                          zIndex: "1",
                           color: "#666",
                         }}
                       >
@@ -593,7 +589,6 @@ function QMSAddEditSessionsForm() {
                           top: "36px",
                           zIndex: 1,
                           fontSize: "20px",
-                          zIndex: "1",
                           color: "#666",
                         }}
                       >
