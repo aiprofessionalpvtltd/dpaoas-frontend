@@ -2474,7 +2474,7 @@ textarea {
   padding: 15px 0;
   position: fixed;
   bottom: 0;
-  z-index: 4;
+  /* z-index: 4; */
 }
 
 .green-bg {

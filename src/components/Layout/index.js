@@ -216,7 +216,7 @@ export const Layout = ({
 
   return (
     <>
-      <div className="container-fluid">
+      <div className="container-fluid" style={{marginBottom:"50px"}}>
         {module && <Sidebar sidebarItems={sidebarItems} />}
         {module ? (
           <>
