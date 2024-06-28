@@ -225,6 +225,13 @@ import CommitteesManagementSystemPreviousResolutionHistory from "../pages/Dashbo
 import CommitteesManagementSystemPreviousNoticesHistory from "../pages/Dashboard/Modules/Committees/Committees/RecievedBusinessPreviousHistory/Notices";
 import CommitteesManagementSystemPreviousBillsHistory from "../pages/Dashboard/Modules/Committees/Committees/RecievedBusinessPreviousHistory/Bills";
 import LDUDashboard from "../pages/Dashboard/Modules/LDU";
+import QMSNewResolution from "../pages/Dashboard/Modules/QMS/Resolution/NewResolution";
+import LDULegislativeBill from "../pages/Dashboard/Modules/LDU/LDULegislativeBill";
+import LDUAddEditLegislativeBill from "../pages/Dashboard/Modules/LDU/LDULegislativeBill/LDUAddEditLegislativeBill";
+import LDUPrivateBill from "../pages/Dashboard/Modules/LDU/LDUPrivateBill";
+import LDUAddEditPrivateBill from "../pages/Dashboard/Modules/LDU/LDUPrivateBill/LDUAddEditPrivateBill";
+import AllFilesListing from "../pages/Dashboard/Modules/LDU/LawActs/AllListing";
+import EditLawActsBill from "../pages/Dashboard/Modules/LDU/LawActs/AllListing/EditLawActsBill";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -454,6 +461,8 @@ export const ProtectedRoutes = [
   { path: "/qms/resolution", element: <QMSQuestionDashboard /> },
   { path: "/qms/resolution/list", element: <QMSResolutionList /> },
   { path: "/qms/resolution/delete", element: <QMSDeleteResolution /> },
+  { path: "/qms/resolution/new", element: <QMSNewResolution /> },
+
 
   { path: "/qms/notice", element: <QMSQuestionDashboard /> },
   { path: "/qms/notice/notice-question", element: <QMSNoticeQuestion /> },
@@ -893,8 +902,32 @@ export const ProtectedRoutes = [
 
   //LDU Module
   {
-    path: "/LDU/dashboard",
+    path: "/ldu/dashboard",
     element: <LDUDashboard />,
-  }
+  },
+  {
+    path: "/ldu/legislative/ldu-legislative-bill",
+    element: <LDULegislativeBill />,
+  },
+  {
+    path: "/ldu/legislative/ldu-legislative-bill/edit-bill",
+    element: <LDUAddEditLegislativeBill />,
+  },
+  {
+    path: "/ldu/legislative/ldu-private-bill",
+    element: <LDUPrivateBill />,
+  },
+  {
+    path: "/ldu/privateMemberBill/ldu-private-Bill/edit-private-bill",
+    element: <LDUAddEditPrivateBill />,
+  },
+  {
+    path: "/ldu/lawActs/all-lisitng",
+    element: <AllFilesListing />,
+  },
+  {
+    path: "/ldu/lawActs/all-lisitng/edit-law-acts-Bill",
+    element: <EditLawActsBill />,
+  },
 
 ];

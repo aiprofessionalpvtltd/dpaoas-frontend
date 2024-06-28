@@ -10,7 +10,7 @@ import {
   UpdateResolution,
   sendResolutionForTranslation,
 } from "../../../../../../api/APIs/Services/Resolution.service";
-import { showSuccessMessage } from "../../../../../../utils/ToastAlert";
+import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 import TimePicker from "react-time-picker";
 import DatePicker from "react-datepicker";
@@ -19,6 +19,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import { AuthContext } from "../../../../../../api/AuthContext";
 import moment from "moment";
+import { imagesUrl } from "../../../../../../api/APIs";
 
 const validationSchema = Yup.object({
   sessionNo: Yup.number(),
@@ -104,7 +105,8 @@ function QMSNoticeResolutionDetail() {
       ? moment(
           location?.state?.dateOfPassing,
         ).toDate()
-      : ""
+      : "",
+      attachment:""
     },
     // validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -134,6 +136,9 @@ function QMSNoticeResolutionDetail() {
 
     data.append("englishText", values.englishText);
     data.append("urduText", values.urduText);
+    if(values?.attachment){
+      data.append("attachment", values?.attachment)
+    }
 
     try {
       const response = await UpdateResolution(location.state.id, data);
@@ -141,7 +146,7 @@ function QMSNoticeResolutionDetail() {
         showSuccessMessage(response.message);
       }
     } catch (error) {
-      console.log(error);
+      showErrorMessage(error?.response?.data?.message);
     }
   };
 
@@ -155,6 +160,8 @@ function QMSNoticeResolutionDetail() {
       console.log(error);
     }
   };
+  const imgArray = JSON.parse(location?.state?.attachment)
+  console.log("location?.state?.attachment", imgArray);
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <ToastContainer />
@@ -169,7 +176,7 @@ function QMSNoticeResolutionDetail() {
             class="card-header red-bg"
             style={{ background: "#14ae5c !important" }}
           >
-            <h1>Notice Resolution Detail</h1>
+            <h1> Resolution Detail</h1>
           </div>
           <div class="card-body">
             <div class="container-fluid">
@@ -501,6 +508,62 @@ function QMSNoticeResolutionDetail() {
                       
                     </div>
                   </div>
+                </div>
+                <div className="row">
+                  <label htmlFor="" className="form-label">
+                    Selected Images
+                  </label>
+                  {imgArray && imgArray ? (
+                  //  imgArray && imgArray?.map((item) => (
+                      <div class="MultiFile-label mt-3">
+                        <a
+                          href={`${imagesUrl}${imgArray?.path}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <i class="fas fa-download"></i>
+                        </a>
+                        <a class="MultiFile-remove" href="#T7">
+                          x
+                        </a>
+                        <span
+                          class="MultiFile-label"
+                          title={imgArray?.path?.split("\\").pop().split("/").pop()}
+                        >
+                          <span class="MultiFile-title">
+                            <a
+                              href={`${imagesUrl}${imgArray?.path}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {imgArray?.path?.split("\\").pop().split("/").pop()}
+                            </a>
+                          </span>
+                        </span>
+                      </div>
+                    // ))
+                  ) : (
+                    <div className="row">
+                      <div className="col-6 ">
+                        <div className="mt-5">
+                          <input
+                            className="form-control"
+                            type="file"
+                            accept=".pdf, .jpg, .jpeg, .png"
+                            id="formFile"
+                            name="attachment"
+                            // multiple
+                            onChange={(event) => {
+                              formik.setFieldValue(
+                                "attachment",
+                                event.currentTarget.files[0]
+                              );
+                            }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
                 <div class="row">
                   <div class="d-grid gap-2 d-md-flex justify-content-md-end">

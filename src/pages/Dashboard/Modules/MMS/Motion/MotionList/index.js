@@ -197,7 +197,7 @@ function MMSMotionList() {
       const response = await getMotionByID(id);
 
       if (response?.success) {
-        navigate("/notice/motion/edit", { state: response?.data });
+        navigate("/mms/motion/detail", { state: response?.data });
         //   navigate("/notice/question/detail", {
         //     state: { question: question?.data, history: history?.data },
         //   });
@@ -571,7 +571,7 @@ function MMSMotionList() {
                     currentPage={currentPage}
                     pageSize={pageSize}
                     totalCount={count}
-                    ActionHide={true}
+                    // ActionHide={true}
                   />
                 </div>
               </form>

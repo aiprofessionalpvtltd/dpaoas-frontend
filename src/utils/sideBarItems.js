@@ -200,11 +200,11 @@ export const NoticeSidebarItems = [
       },
     ],
   },
-  // {
-  //   itemName: "Event Calendar",
-  //   link: "/notice/event-calendar",
-  //   icon: faCalendarAlt,
-  // },
+  {
+    itemName: "Event Calendar",
+    link: "/notice/event-calendar",
+    icon: faCalendarAlt,
+  },
 
   // {
   //   itemName: "Research Services",
@@ -350,6 +350,11 @@ export const QMSSideBarItems = [
     link: "/qms/resolution",
     icon: faClipboardList,
     subItems: [
+      {
+        itemName: "New Resolution",
+        link: "/qms/resolution/new",
+        icon: faClipboardList,
+      },
       {
         itemName: "Resolution List",
         link: "/qms/resolution/list",
@@ -1231,7 +1236,41 @@ export const CommitteesSideBarItems = [
 export const LDUSideBarItems = [
   {
     itemName: "Dashboard",
-    link: "/LDU/dashboard",
+    link: "/ldu/dashboard",
     icon: faHome,
+  },
+  {
+    itemName: "From Notice Office",
+    link: "/LDU/notice-office",
+    icon: faBookOpen,
+    subItems: [
+      {
+        itemName: "Private Member Bill",
+        link: "/ldu/legislative/ldu-private-bill",
+        icon: faFileInvoice,
+      },
+      {
+        itemName: "Legislative Bill",
+        link: "/ldu/legislative/ldu-legislative-bill",
+        icon: faFileInvoice,
+      },
+    ],
+  },
+  {
+    itemName: "Laws / Acts ",
+    link: "/lgms/notice-office",
+    icon: faBookOpen,
+    subItems: [
+      {
+        itemName: "All List",
+        link: "/ldu/lawActs/all-lisitng",
+        icon: faFileInvoice,
+      },
+      // {
+      //   itemName: "Legislative Bill",
+      //   link: "/lgms/legislation/legislative-bill",
+      //   icon: faFileInvoice,
+      // },
+    ],
   },
 ];

@@ -35,23 +35,23 @@ function HRMAddEditEmployee() {
 
   const formik = useFormik({
     initialValues: {
-      firstName: "",
-      lastName: "",
-      userName: "",
-      phoneNo: "",
-      gender: "",
-      email: "",
-      password: "",
-      fileNumber: "",
-      supervisor: "",
-      fkRoleId: "",
-      fkDepartmentId: "",
-      fkDesignationId: "",
+      firstName: location?.state?.firstName ? location?.state?.firstName : "",
+      lastName: location?.state?.lastName ? location?.state?.lastName : "",
+      userName: location?.state?.userName ? location?.state?.userName : "",
+      phoneNo: location?.state?.phoneNo ? location?.state?.phoneNo : "",
+      gender: location?.state?.gender ? location?.state?.gender : "",
+      email: location?.state?.email ? location?.state?.email : "",
+      password: location?.state?.password ? location?.state?.password : "",
+      fileNumber: location?.state?.fileNumber ? location?.state?.fileNumber : "",
+      supervisor: location?.state?.supervisor ? location?.state?.supervisor : "",
+      fkRoleId: location?.state?.fkRoleId ? location?.state?.fkRoleId : "",
+      fkDepartmentId: location?.state?.fkDepartmentId ? location?.state?.fkDepartmentId : "",
+      fkDesignationId: location?.state?.fkDesignationId ? location?.state?.fkDesignationId : "",
     },
     // validationSchema: validationSchema,
     onSubmit: (values) => {
       // Handle form submission here
-      if (location.state) {
+      if (location?.state?.id) {
         UpdateEmployeeApi(values);
       } else {
         CreateEmployeeApi(values);
@@ -161,7 +161,7 @@ function HRMAddEditEmployee() {
         addLink1={"/hrm/employee"}
         title1={"Employee"}
         addLink2={"/hrm/addeditemployee"}
-        title2={location && location?.state ? "Edit Employee" : "Add Employee"}
+        title2={location?.state && location?.state?.id ? "Edit Employee" : "Add Employee"}
       />
       <ToastContainer />
 
@@ -255,8 +255,8 @@ function HRMAddEditEmployee() {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}>
                       <option value="" disabled hidden>Select</option>
-                      <option value="Male">Male</option>
-                      <option value="Female">Female</option>
+                      <option value="male">Male</option>
+                      <option value="female">Female</option>
                     </select>
                   </div>
                 </div>

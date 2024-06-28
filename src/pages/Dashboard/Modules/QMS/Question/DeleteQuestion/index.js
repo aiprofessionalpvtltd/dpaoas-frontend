@@ -166,7 +166,7 @@ function QMSDeleteQuestion() {
       const response = await UpdateQuestionById(id, formData);
       if (response?.success) {
         showSuccessMessage(response?.message);
-        getAllQuestionsApi();
+        handleSearchDeletedQuestion(formik.values);
         formik.resetForm();
       }
     } catch (error) {
