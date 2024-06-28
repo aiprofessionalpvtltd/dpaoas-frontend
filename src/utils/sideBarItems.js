@@ -22,13 +22,10 @@ import {
   faBook,
   faHeading,
   faBookOpen,
-  faLaptopFile,
   faReceipt,
-  faPeopleGroup,
   faCalendarAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { getUserData } from "../api/Auth";
-import { icon } from "@fortawesome/fontawesome-svg-core";
 
 // LMS Sidebar
 export const LMSsidebarItems = [
@@ -200,11 +197,11 @@ export const NoticeSidebarItems = [
       },
     ],
   },
-  // {
-  //   itemName: "Event Calendar",
-  //   link: "/notice/event-calendar",
-  //   icon: faCalendarAlt,
-  // },
+  {
+    itemName: "Event Calendar",
+    link: "/notice/event-calendar",
+    icon: faCalendarAlt,
+  },
 
   // {
   //   itemName: "Research Services",
@@ -296,7 +293,7 @@ export const TelecastingSideBarItems = [
     link: "/telecasting/speech-on-demand",
     icon: faHome,
   },
-]
+];
 
 export const ResearchSideBarItems = [
   {
@@ -309,7 +306,7 @@ export const ResearchSideBarItems = [
     link: "/research/research-services",
     icon: faHome,
   },
-]
+];
 
 //Question Management System
 export const QMSSideBarItems = [
@@ -350,6 +347,11 @@ export const QMSSideBarItems = [
     link: "/qms/resolution",
     icon: faClipboardList,
     subItems: [
+      {
+        itemName: "New Resolution",
+        link: "/qms/resolution/new",
+        icon: faClipboardList,
+      },
       {
         itemName: "Resolution List",
         link: "/qms/resolution/list",
@@ -1068,7 +1070,7 @@ export const LegislationSideBarItems = [
     icon: faBookOpen,
     subItems: [
       {
-        itemName: "Legislation Bills",
+        itemName: "All Bills",
         link: "/lgms/dashboard/bills/legislation-bills",
         icon: faBookOpen,
       },
@@ -1117,7 +1119,7 @@ export const LegislationSideBarItems = [
         link: "/lgms/dashboard/manage/members/list",
         icon: faBookOpen,
       },
-      
+
       {
         itemName: "Parliamentary Years",
         link: "/lgms/dashboard/manage/parliamentary-year/list",
@@ -1143,7 +1145,6 @@ export const LegislationSideBarItems = [
       //   link: "/lgms/dashboard/manage/committees/list",
       //   icon: faBookOpen,
       // },
-      
     ],
   },
   {
@@ -1161,6 +1162,112 @@ export const LegislationSideBarItems = [
         link: "/lgms/legislation/legislative-bill",
         icon: faFileInvoice,
       },
-    ]
-  }
+    ],
+  },
+];
+
+// Committees Management System Sidebar Items
+
+export const CommitteesSideBarItems = [
+  {
+    itemName: "Dashboard",
+    link: "/committees/dashboard",
+    icon: faHome,
+  },
+
+  {
+    itemName: "Committees",
+    link: "/committees/dashboard/committees",
+    icon: faBookOpen,
+    subItems: [
+      {
+        itemName: "Committees List",
+        link: "/committees/dashboard/committees/committees-list",
+        icon: faBookOpen,
+      },
+      {
+        itemName: "Search Committee",
+        link: "/committees/dashboard/committees/search-committee",
+        icon: faBookOpen,
+      },
+    ],
+  },
+  {
+    itemName: "Committee Rooms",
+    link: "/committees/dashboard/committees",
+    icon: faBookOpen,
+    subItems: [
+      {
+        itemName: "Committee Rooms List",
+        link: "/committees/dashboard/committee-rooms",
+        icon: faBookOpen,
+      },
+      {
+        itemName: "Booked Committe Rooms Lists",
+        link: "/committees/dashboard/committee-rooms/booked",
+        icon: faBookOpen,
+      },
+    ],
+  },
+
+  {
+    itemName: "Meetings",
+    link: "/committees/dashboard/meetings",
+    icon: faBookOpen,
+    subItems: [
+      {
+        itemName: "Scheduled Meetings",
+        link: "/committees/dashboard/scheduled-meetings",
+        icon: faBookOpen,
+      },
+      {
+        itemName: "Search Meeting",
+        link: "/committees/dashboard/committees/search-meeting",
+        icon: faBookOpen,
+      },
+    ],
+  },
+];
+
+//LDU Sidebar Items
+export const LDUSideBarItems = [
+  {
+    itemName: "Dashboard",
+    link: "/ldu/dashboard",
+    icon: faHome,
+  },
+  {
+    itemName: "From Notice Office",
+    link: "/ldu/notice-office",
+    icon: faBookOpen,
+    subItems: [
+      {
+        itemName: "Private Member Bill",
+        link: "/ldu/legislative/ldu-private-bill",
+        icon: faFileInvoice,
+      },
+      {
+        itemName: "Legislative Bill",
+        link: "/ldu/legislative/ldu-legislative-bill",
+        icon: faFileInvoice,
+      },
+    ],
+  },
+  {
+    itemName: "Laws / Acts ",
+    link: "/ldu/notice-office",
+    icon: faBookOpen,
+    subItems: [
+      {
+        itemName: "All List",
+        link: "/ldu/lawActs/all-lisitng",
+        icon: faFileInvoice,
+      },
+      // {
+      //   itemName: "Legislative Bill",
+      //   link: "/lgms/legislation/legislative-bill",
+      //   icon: faFileInvoice,
+      // },
+    ],
+  },
 ];

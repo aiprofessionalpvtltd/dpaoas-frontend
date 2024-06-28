@@ -3,14 +3,12 @@ import { Layout } from "../../../../../../components/Layout";
 import { QMSSideBarItems } from "../../../../../../utils/sideBarItems";
 import Header from "../../../../../../components/Header";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
-import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import DatePicker from "react-datepicker";
 import {
   UpdateQuestionById,
   getAllDeletedQuestions,
-  getAllQuestion,
 } from "../../../../../../api/APIs/Services/Question.service";
 import {
   showErrorMessage,
@@ -68,7 +66,6 @@ function QMSDeleteQuestion() {
       handleSearchDeletedQuestion(values);
     },
   });
-  const navigate = useNavigate();
 
   const { members, sessions } = useContext(AuthContext);
   const [currentPage, setCurrentPage] = useState(0);
@@ -166,7 +163,7 @@ function QMSDeleteQuestion() {
       const response = await UpdateQuestionById(id, formData);
       if (response?.success) {
         showSuccessMessage(response?.message);
-        getAllQuestionsApi();
+        handleSearchDeletedQuestion(formik.values);
         formik.resetForm();
       }
     } catch (error) {
@@ -447,7 +444,6 @@ function QMSDeleteQuestion() {
                           top: "36px",
                           zIndex: 1,
                           fontSize: "20px",
-                          zIndex: "1",
                           color: "#666",
                         }}
                       >
@@ -485,7 +481,6 @@ function QMSDeleteQuestion() {
                           top: "36px",
                           zIndex: 1,
                           fontSize: "20px",
-                          zIndex: "1",
                           color: "#666",
                         }}
                       >

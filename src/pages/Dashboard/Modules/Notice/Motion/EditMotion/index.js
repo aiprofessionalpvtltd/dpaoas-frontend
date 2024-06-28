@@ -27,6 +27,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import { useLocation } from "react-router-dom";
 import moment from "moment";
+import { imagesUrl } from "../../../../../../api/APIs";
 
 const validationSchema = Yup.object({
   sessionNumber: Yup.object().required("Session Number is required"),
@@ -590,7 +591,7 @@ function EditMotion() {
                         location?.state?.file?.map((item) => (
                           <div class="MultiFile-label mt-3">
                             <a
-                              href={`http://172.16.170.8:5252${item?.path}`}
+                              href={`${imagesUrl}${item?.path}`}
                               target="_blank"
                               rel="noopener noreferrer"
                             >
@@ -609,7 +610,7 @@ function EditMotion() {
                             >
                               <span class="MultiFile-title">
                                 <a
-                                  href={`http://172.16.170.8:5252${item?.path}`}
+                                  href={`${imagesUrl}${item?.path}`}
                                   target="_blank"
                                   rel="noopener noreferrer"
                                 >

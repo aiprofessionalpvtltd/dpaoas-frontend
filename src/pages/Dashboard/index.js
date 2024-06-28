@@ -5,7 +5,6 @@ import {
   faAddressCard,
   faUserCog,
   faMailBulk,
-  faClipboardList,
   faBullhorn,
   faFileImport,
   faClipboardQuestion,
@@ -203,6 +202,15 @@ function Dashboard() {
       icon: faMailBulk,
       permission: ["Legislation"],
     },
+// Committees Tile
+    {
+      title: "Committees Management System",
+      link: "committees/dashboard",
+      type: "",
+      cardbg: "lightGreen",
+      icon: faMailBulk,
+      permission: ["Legislation"],
+    },
     {
       title: "Telecasting",
       link: "/telecasting/dashboard",
@@ -218,6 +226,15 @@ function Dashboard() {
       cardbg: "bluebg",
       icon: faBookOpenReader,
       permission: ["IPR"],
+    },
+    //Change Permission
+    {
+      title: "Legislative Drafting Unit",
+      link: "/ldu/dashboard",
+      type: "",
+      cardbg: "bluebg",
+      icon: faBookOpenReader,
+      permission: ["Legislation"],
     },
   ];
 

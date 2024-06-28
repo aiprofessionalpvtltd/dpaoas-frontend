@@ -1,30 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Layout } from "../../../../components/Layout";
 import {
   LegislationSideBarItems,
-  NoticeSidebarItems,
 } from "../../../../utils/sideBarItems";
-import { useNavigate } from "react-router-dom";
 import Header from "../../../../components/Header";
 import NoticeStatsCard from "../../../../components/CustomComponents/NoticeStatsCard";
-import { getAllNoticeStats } from "../../../../api/APIs/Services/Notice.service";
 import {
   faClipboardQuestion,
   faFileImport,
-  faObjectGroup,
-  faScaleBalanced,
 } from "@fortawesome/free-solid-svg-icons";
 
 function LegislationManagementSystemDashboard() {
-  const navigate = useNavigate();
-  const [stats, setStats] = useState(null);
-  const [currentPage, setCurrentPage] = useState(0);
-  const pageSize = 4; // Set your desired page size
-
-  const handlePageChange = (page) => {
-    // Update currentPage when a page link is clicked
-    setCurrentPage(page);
-  };
 
   return (
     <Layout
@@ -117,7 +103,7 @@ function LegislationManagementSystemDashboard() {
           </div>
         </div>
 
-        <h2
+        {/* <h2
           style={{
             fontSize: "22px",
             fontWeight: "bold",
@@ -126,8 +112,8 @@ function LegislationManagementSystemDashboard() {
           }}
         >
           Upcoming Session Stats
-        </h2>
-        <div class="row">
+        </h2> */}
+        {/* <div class="row">
           <div class="col-md-12">
             <div class="mt-2 mb-4">
               <div class="row">
@@ -155,7 +141,7 @@ function LegislationManagementSystemDashboard() {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </Layout>
   );

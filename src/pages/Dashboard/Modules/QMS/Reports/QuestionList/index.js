@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { Layout } from "../../../../../../components/Layout";
 import { QMSSideBarItems } from "../../../../../../utils/sideBarItems";
 import Header from "../../../../../../components/Header";
@@ -6,8 +6,7 @@ import { useNavigate } from "react-router-dom";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import { useFormik } from "formik";
 import DatePicker from "react-datepicker";
-import * as Yup from "yup";
-import { delleteQuestionsList, getAllQuesListBySession, getAllQuestion, getAllQuestionByID, getGeneratedQuesList, printQuestionsFromList, saveQuestionList } from "../../../../../../api/APIs/Services/Question.service";
+import { delleteQuestionsList, getAllQuesListBySession, getGeneratedQuesList, printQuestionsFromList, saveQuestionList } from "../../../../../../api/APIs/Services/Question.service";
 import { ToastContainer } from "react-toastify";
 import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
 import { AuthContext } from "../../../../../../api/AuthContext";
@@ -15,15 +14,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
 import { getUserData } from "../../../../../../api/Auth";
-const validationSchema = Yup.object({
-  sessionNumber: Yup.string(),
-  category: Yup.string(),
-  groupNo: Yup.string(),
-  startListNo: Yup.string(),
-  listName: Yup.string(),
-  houseLayDate: Yup.string(),
-  include: Yup.boolean(),
-});
+
 
 function QMSReportQuestionList() {
   const { sessions } = useContext(AuthContext);
@@ -49,7 +40,6 @@ function QMSReportQuestionList() {
       listName: "",
       houseLayDate: "",
     },
-    // validationSchema: validationSchema,
     onSubmit: (values) => {
       console.log(values);
       generateQuestionsList(values);
@@ -57,26 +47,6 @@ function QMSReportQuestionList() {
   });
   const navigate = useNavigate();
 
-  const data = [
-    {
-      "Sr#": 1,
-      "List Name": "21-11-2023",
-      "Session Number": "Saqib khan",
-      "List Date": "Additional Secretary Office",
-      Group: "Personal",
-      Catagory: "AI Professionals Pvt Limited",
-      "Start Number": "21-11-2023",
-    },
-    {
-      "Sr#": 1,
-      "List Name": "21-11-2023",
-      "Session Number": "Saqib khan",
-      "List Date": "Additional Secretary Office",
-      Group: "Personal",
-      Catagory: "AI Professionals Pvt Limited",
-      "Start Number": "21-11-2023",
-    },
-  ];  
 
   const transformLeavesData = (apiData) => {
     return apiData.map((res, index) => {
@@ -116,9 +86,9 @@ function QMSReportQuestionList() {
       if (response?.success) {
         showSuccessMessage(response?.message);
         // setCount(response?.count);
-        const transformedData = transformLeavesData(response.data?.questionList);
+        const transformedData = transformLeavesData(response.data?.questionList?.questionList);
         setGeneratedItem(true);
-        setGeneratedData(response.data);
+        setGeneratedData(response?.data?.questionList);
         setResData(transformedData);
       }
     } catch (error) {
@@ -146,7 +116,7 @@ function QMSReportQuestionList() {
   };
 
   const handleSaveList = async () => {
-    const questionIds = generatedData.questions.map(question => ({ id: question.id }));
+    const questionIds = generatedData?.questions?.map(question => ({ id: question.id }));
   
     const requestData = {
       questionList: {
@@ -167,6 +137,8 @@ function QMSReportQuestionList() {
       if (response?.success) {
         setGeneratedItem(false);
         showSuccessMessage(response.data.message);
+        const transformedData = transformLeavesData(response?.data);
+        setResData(transformedData)
       }
     } catch (error) {
       showErrorMessage(error.response?.data?.message);
@@ -177,7 +149,7 @@ function QMSReportQuestionList() {
     try {
       const response = await printQuestionsFromList(data);
       if (response?.success) {
-       showSuccessMessage(response.data.message);
+       showSuccessMessage(response.message);
       }
     } catch (error) {
       showErrorMessage(error.response?.data?.message);
@@ -323,7 +295,6 @@ function QMSReportQuestionList() {
                           top: "36px",
                           zIndex: 1,
                           fontSize: "20px",
-                          zIndex: "1",
                           color: "#666",
                         }}
                       >
@@ -359,7 +330,7 @@ function QMSReportQuestionList() {
                     <button class="btn btn-primary" type="submit">
                       Generate
                     </button>
-                    <button class="btn btn-primary" type="" onClick={handleSaveList}>
+                    <button class="btn btn-primary" type="button" onClick={handleSaveList}>
                       Save
                     </button>
                   </div>

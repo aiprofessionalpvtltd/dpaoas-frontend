@@ -24,7 +24,7 @@ import DatePicker from "react-datepicker";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
-
+import moment from "moment";
 const validationSchema = Yup.object({
   //   fileNumber: Yup.number().required("File Number  is required"),
   keywords: Yup.string().required("KeyWord is required"),
@@ -54,7 +54,7 @@ const SearchLegislationBills = () => {
   const [isToNoticeDateCalenderOpen, setIsToNoticeDateCalenderOpen] =
     useState(false);
   const [isPresentedCalenderOpen, setIsPresentedCalenderOpen] = useState(false);
-  const pageSize = 4;
+  const pageSize = 10;
 
   const handleFromNoticeCalendarToggle = () => {
     setIsFromNoticeDateCalenderOpen(!isFromNoticeDateCalenderOpen);
@@ -213,9 +213,9 @@ const SearchLegislationBills = () => {
         fkManageCommitteeId: values?.concerndCommitties?.value,
         committeeRecomendation: values?.committeeRecomendation?.value,
         // fileNumber: values.fileNumber,
-        noticeDateFrom: values?.FromNoticeDate,
-        noticeDateTo: values?.ToNoticeDate,
-        introducedInHouseDate: values?.PresetedInHOuseOn,
+        noticeDateFrom: values?.FromNoticeDate && moment(values?.FromNoticeDate).format("YYYY-MM-DD"),
+        noticeDateTo: values?.ToNoticeDate && moment(values?.ToNoticeDate).format("YYYY-MM-DD"),
+        introducedInHouseDate: values?.PresetedInHOuseOn && moment(values?.PresetedInHOuseOn).format("YYYY-MM-DD"),
       };
       setPageValue(page)
       try {
@@ -545,9 +545,6 @@ const SearchLegislationBills = () => {
                       value={formik.values.concerndCommitties}
                     />
                   </div>
-                </div>
-
-                <div className="row mt-3">
                   <div className="form-group col-3">
                     <label
                       htmlFor="committeeRecomendation"
@@ -581,6 +578,10 @@ const SearchLegislationBills = () => {
                       value={formik.values.committeeRecomendation}
                     />
                   </div>
+                </div>
+
+                <div className="row mt-3">
+                 
 
                   {/* <div className="form-group col-3">
                     <label htmlFor="FromNoticeDate" className="form-label">
@@ -596,7 +597,7 @@ const SearchLegislationBills = () => {
                     />
                   </div> */}
 
-                  <div class="col">
+                  <div class="col-3">
                     <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label">From Notice Date</label>
                       <span
@@ -629,7 +630,7 @@ const SearchLegislationBills = () => {
                       />
                     </div>
                   </div>
-                  <div class="col">
+                  <div class="col-3">
                     <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label">To Notice Date</label>
                       <span
@@ -663,7 +664,7 @@ const SearchLegislationBills = () => {
                     </div>
                   </div>
 
-                  <div class="col">
+                  <div class="col-3">
                     <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label">Presented In House On</label>
                       <span

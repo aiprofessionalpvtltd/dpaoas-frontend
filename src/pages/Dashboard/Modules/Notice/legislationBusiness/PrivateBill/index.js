@@ -9,7 +9,6 @@ import {
 } from "../../../../../../utils/ToastAlert";
 import {
   deletePrivateBill,
-  getAllPrivateBill,
   getAllPrivateBillNotice,
   sendPrivateBill,
 } from "../../../../../../api/APIs/Services/Legislation.service";
@@ -161,7 +160,7 @@ function PrivateBill() {
             currentPage={currentPage}
             pageSize={pageSize}
             totalCount={count}
-            showAssigned={false}
+            showAssigned={true}
             hendleAssigned={(item) => openModal(item)}
             showSent={true}
             handleSent={(item) => sendBill(item?.id)}

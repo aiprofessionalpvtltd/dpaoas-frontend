@@ -50,7 +50,6 @@ function SMSInventoryDashboard() {
       manufacturer: item?.manufacturer,
       productCategories: item?.productCategories,
       barCodeLable: item?.barCodeLable,
-      barCodeLable: item?.barCodeLable,
       purchasedDate: moment(item?.purchasedDate).format("MM/DD/YYYY"),
       warrantyExpiredDate: moment(item?.warrantyExpiredDate).format(
         "MM/DD/YYYY"

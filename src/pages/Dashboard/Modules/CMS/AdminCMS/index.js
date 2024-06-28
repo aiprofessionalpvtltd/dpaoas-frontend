@@ -33,6 +33,7 @@ import ComplaintAssignedEmployee from "../../../../../components/ComplaintAssign
 import { CustomAlert } from "../../../../../components/CustomComponents/CustomAlert";
 import * as XLSX from "xlsx";
 import { getBranches } from "../../../../../api/APIs/Services/Branches.services";
+import { imagesUrl } from "../../../../../api/APIs";
 
 const customStyles = {
   content: {
@@ -163,7 +164,7 @@ function CMSAdminDashboard() {
 
   const CountComplaints = async () => {
     try {
-      const response = await getallComplaint(0, 100);
+      const response = await getallComplaint();
       if (response?.success) {
         const countInProgress = response?.data?.complaints.filter(
           (item) => item.complaintStatus === "in-progress"
@@ -200,7 +201,7 @@ function CMSAdminDashboard() {
       const response = await getallcomplaintRecordById(id);
       if (response.success) {
         if (response?.data?.complaintAttachmentFromResolver) {
-          const url = `http://172.16.170.8:5252${response?.data?.complaintAttachmentFromResolver}`;
+          const url = `${imagesUrl}${response?.data?.complaintAttachmentFromResolver}`;
           window.open(url, "_blank");
         } else {
           showSuccessMessage("No Attachment Available");
@@ -289,7 +290,7 @@ function CMSAdminDashboard() {
 
     // Wait for the image to load
     const img = await loadImage(
-      `http://172.16.170.8:5252${printData?.complaintAttachment}`
+      `${imagesUrl}${printData?.complaintAttachment}`
     );
 
     const pdf = new jsPDF();
@@ -352,7 +353,7 @@ function CMSAdminDashboard() {
   // Export Admin Complaint
   const hendleExportExcel = async () => {
     try {
-      const response = await getallComplaint(0, 100);
+      const response = await getallComplaint();
       if (response?.success) {
         // Export to Excel logic
         const worksheet = XLSX.utils.json_to_sheet(
@@ -422,7 +423,7 @@ function CMSAdminDashboard() {
             </p>
           </div>
           <img
-            src={`http://172.16.170.8:5252${printData?.complaintAttachment}`}
+            src={`${imagesUrl}${printData?.complaintAttachment}`}
             alt="Complaint Image"
             style={{
               display: "block",

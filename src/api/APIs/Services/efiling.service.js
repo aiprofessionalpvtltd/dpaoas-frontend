@@ -395,8 +395,8 @@ export const createCase = async (id, userId, frId, data) => {
       data,
       {
         headers: {
-          accept: "multipart/form-data",
-          "Content-Type": "multipart/form-data",
+          accept: "application/json",
+          "Content-Type": "application/json",
         },
       }
     );
@@ -533,17 +533,17 @@ export const DeleteFileCaseImage = async (id) => {
   }
 };
 
-export const UpdateFIleCase = async (fileId, caseId, data) => {
+export const UpdateFIleCase = async (caseNoteId, data) => {
   try {
     //   const token = getAuthToken();
     const response = await axiosClientMMS.put(
-      `/cases/updateCase/${fileId}/${caseId}`,
+      `/cases/updateCase/${caseNoteId}`,
       data
     );
     // {
     //   headers: {
     //     accept: "application/json",
-    //     "Content-Type": "multipart/form-data",
+    //     "Content-Type": "application/json",
     //   },
     // });
     return response?.data;
@@ -921,6 +921,97 @@ export const getSignatureByUserId = async (id) => {
   try {
     //   const token = getAuthToken();
     const response = await axiosClientMMS.get(`/cases/getSignatureByUserId/${id}`);
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+// Correspondence CRUD
+
+export const createCorrespondence = async (data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.post(`/correspondence/createCorrespondence`, data, {
+      headers: {
+        accept: "multipart/form-data",
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const UpdateCorrespondence = async (id, data) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClientMMS.put(
+      `/correspondence/updateCorrespondence/${id}`,
+      data,
+      {
+        headers: {
+          accept: "multipart/form-data",
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const getCorrespondenceById = async (id) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClientMMS.get(`/correspondence/getSingleCorrespondence/${id}`);
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const getAllCorrespondence = async (fileId, branchId, currentPage, pageSize) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClientMMS.get(`/correspondence/getAllCorrespondences?fileId=${fileId}&branchId=${branchId}&currentPage=${currentPage}&pageSize=${pageSize}`);
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const DeleteAttachedFiles = async (id) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClientMMS.delete(
+      `/correspondence/deleteAttachment/${id}`
+    );
     // {
     //   headers: {
     //     accept: "application/json",

@@ -15,6 +15,8 @@ import {
   showSuccessMessage,
 } from "../../../../../../utils/ToastAlert";
 import { NoticeSidebarItems } from "../../../../../../utils/sideBarItems";
+import { imagesUrl } from "../../../../../../api/APIs";
+
 const validationSchema = Yup.object({
   selectedMonth: Yup.string().required("Month is Required"),
   selectedYear: Yup.string().required("Year is required"),
@@ -391,7 +393,7 @@ const AttendanceReport = () => {
           showSuccessMessage(response?.message);
 
           if (response?.data?.fileLink) {
-            const url = `http://172.16.170.8:5252${response?.data?.fileLink}`;
+            const url = `${imagesUrl}${response?.data?.fileLink}`;
 
             setSearchedData(url);
           } else {

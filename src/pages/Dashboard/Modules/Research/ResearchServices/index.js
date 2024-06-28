@@ -19,6 +19,7 @@ import {
 } from "../../../../../api/APIs/Services/Notice.service";
 import axios from "axios";
 import { Modal } from "react-bootstrap";
+import { imagesUrl } from "../../../../../api/APIs";
 
 function ResearchBRServices() {
   const navigate = useNavigate();
@@ -324,7 +325,7 @@ function ResearchBRServices() {
                   showEditIcon={true}
                   hideDeleteIcon={true}
                   showPrint={false}
-                  handleView={(item) => handlePreview(`http://172.16.170.8:5252${item?.attachmentInternal}`)}
+                  handleView={(item) => handlePreview(`${imagesUrl}${item?.attachmentInternal}`)}
                 />
               </div>
             </div>

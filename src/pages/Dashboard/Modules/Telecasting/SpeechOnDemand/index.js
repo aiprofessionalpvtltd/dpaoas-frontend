@@ -22,6 +22,7 @@ import moment from "moment";
 import { getUserData } from "../../../../../api/Auth";
 import axios from "axios";
 import { Modal } from "react-bootstrap";
+import { imagesUrl } from "../../../../../api/APIs";
 
 function TelecastingSpeechOnDemand() {
   const navigate = useNavigate();
@@ -154,7 +155,7 @@ function TelecastingSpeechOnDemand() {
     try {
       const response = await getSpeachOnDemandById(id);
       if (response.success) {
-        handleDownload(`http://172.16.170.8:5252${response?.data?.fileLink}`)
+        handleDownload(`${imagesUrl}${response?.data?.fileLink}`)
       }
     } catch (error) {
       console.log(error?.response?.data?.message);

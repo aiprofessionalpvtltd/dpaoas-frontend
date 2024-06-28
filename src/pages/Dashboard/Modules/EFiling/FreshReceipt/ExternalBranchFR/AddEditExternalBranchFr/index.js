@@ -27,6 +27,7 @@ import {
   showSuccessMessage,
 } from "../../../../../../../utils/ToastAlert";
 import { Layout } from "../../../../../../../components/Layout";
+import { imagesUrl } from "../../../../../../../api/APIs";
 
 const validationSchema = Yup.object().shape({
   // diaryNumber: Yup.string().required("Diary No is required"),
@@ -199,7 +200,7 @@ const AddEditExternalBranchFR = () => {
   }, [receiptData, formik.setValues]);
 
   const HandlePrint = async (urlimage) => {
-    const url = `http://172.16.170.8:5252${urlimage}`;
+    const url = `${imagesUrl}${urlimage}`;
     window.open(url, "_blank");
     // setPdfUrl(url)
   };

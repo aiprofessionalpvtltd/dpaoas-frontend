@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { HRMsidebarItems } from "../../../../../utils/sideBarItems";
 import CustomTable from "../../../../../components/CustomComponents/CustomTable";
 import { ToastContainer } from "react-toastify";
-import { DeleteEmployee, getAllEmployee } from "../../../../../api/APIs/Services/organizational.service";
+import { DeleteEmployee, getAllEmployee, getEmployeeById } from "../../../../../api/APIs/Services/organizational.service";
 import {
   showErrorMessage,
   showSuccessMessage,
@@ -63,6 +63,18 @@ function HRMEmployeeDashboard() {
       showErrorMessage(error.response.data.message);
     }
   };
+
+  const HendleEdit = async (id) => {
+    try {
+      const response = await getEmployeeById(id);
+      if (response.success) {
+        navigate("/hrm/addeditemployee", { state: response?.data })
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     getEmployeeData();
   }, [currentPage]);
@@ -82,9 +94,7 @@ function HRMEmployeeDashboard() {
             tableTitle="Employee List"
             addBtnText="Add Employee"
             handleAdd={() => navigate("/hrm/addeditemployee")}
-            handleEdit={(item) =>
-              navigate("/hrm/addeditemployee", { state: item })
-            }
+            handleEdit={(item) => HendleEdit(item.id)}
             headertitlebgColor={"#666"}
             headertitletextColor={"#FFF"}
             handlePageChange={handlePageChange}

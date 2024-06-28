@@ -1,35 +1,23 @@
 import React, {
-  useCallback,
   useContext,
   useEffect,
   useRef,
   useState,
 } from "react";
-import { useFormik } from "formik";
-import * as Yup from "yup";
 import { AuthContext } from "../../../../../../../../api/AuthContext";
 import { Layout } from "../../../../../../../../components/Layout";
 import {
   EfilingSideBarBranchItem,
   EfilingSideBarItem,
 } from "../../../../../../../../utils/sideBarItems";
-import Header from "../../../../../../../../components/Header";
 import { ToastContainer } from "react-toastify";
 import { useLocation } from "react-router";
 import {
-  DeleteFileCaseImage,
   UpdateCase,
   createCase,
-  createFiles,
-  getAllFRs,
-  getAllFileHeading,
-  getAllFileRegister,
-  getAllYear,
+  getAllCorrespondence,
   getFileByRegisterById,
-  getFreshReceiptById,
   getSingleCaseByFileId,
-  geteHeadingNumberbyMainHeadingId,
-  geteHeadingbyBranchId,
 } from "../../../../../../../../api/APIs/Services/efiling.service";
 import {
   showErrorMessage,
@@ -37,71 +25,94 @@ import {
 } from "../../../../../../../../utils/ToastAlert";
 import { useNavigate } from "react-router-dom";
 import { Editor } from "../../../../../../../../components/CustomComponents/Editor";
-import { TinyEditor } from "../../../../../../../../components/CustomComponents/Editor/TinyEditor";
-import { getUserData } from "../../../../../../../../api/Auth";
-import ImageGallery from "react-image-gallery";
+import { getSelectedFileID, getUserData, setSelectedFileID } from "../../../../../../../../api/Auth";
 import Select from "react-select";
+import TabComponent from "../../../../../../../../components/CustomComponents/TabBar";
+import NoteEditor from "../../../../../../../../components/CustomComponents/DocEditor";
+import DocParas from "../../../../../../../../components/CustomComponents/DocParas";
+import CustomTable from "../../../../../../../../components/CustomComponents/CustomTable";
+import { Modal } from "react-bootstrap";
+import { imagesUrl } from "../../../../../../../../api/APIs";
 
 function AddEditFileCase() {
   const navigate = useNavigate();
   const userData = getUserData();
-  const [headings, setHeadings] = useState([]);
   const location = useLocation();
   const { fileIdINRegister } = useContext(AuthContext);
-  // const [selectedTab, setSelectedTab] = useState(
-  //   location.state?.frId ? "FR Noting" : "Noting"
-  // );
+  const [notingTabSubject, setNotingTabSubject] = useState("");
+  const [notingData, setNotingData] = useState({
+    description: "",
+  });
+  
+  const initialNotingTabData = [
+    { title: "Para 1", description: "Content for Paragraph 1", references: [] },
+    { title: "Para 2", description: "Content for Paragraph 2", references: [] },
+    { title: "Para 3", description: "Content for Paragraph 3", references: [] },
+  ];
+  const [currentPage, setCurrentPage] = useState(0);
+  const [count, setCount] = useState(null);
+  const [correspondenceTypesData, setCorrespondenceTypesData] = useState([]);
+  const pageSize = 10; // Set your desired page size
+  const [showModal, setShowModal] = useState(false);
+  const [attachedFiles, setAttachedFiles] = useState([]);
+
+  const handlePageChange = (page) => {
+    // Update currentPage when a page link is clicked
+    setCurrentPage(page);
+  };
+
+  const [notingTabData, setNotingTabsData] = useState(initialNotingTabData);
+
+  // const handleEditorChange = (index, content) => {
+  //   const updatedTabs = [...notingTabData];
+  //   updatedTabs[index].description = content;
+  //   setNotingTabsData(updatedTabs);
+  // };
+
+  const handleEditorChange = (index, content, references, isReference, isNew = false) => {
+    if (isNew) {
+      setNotingTabsData([
+        ...notingTabData,
+        {
+          title: `Para ${notingTabData.length + 1}`,
+          description: content,
+          references: [],
+        },
+      ]);
+      setNotingData("")
+    } else if (isReference) {
+      const updatedTabs = notingTabData.map((tab, i) =>
+        i === index
+          ? {
+              ...tab,
+              references: [...tab.references, references],
+            }
+          : tab
+      );
+      setNotingTabsData(updatedTabs);
+    } else {
+      const updatedTabs = notingTabData.map((tab, i) =>
+      i === index
+        ? {
+            ...tab,
+            description: content,
+          }
+        : tab
+    );
+    setNotingTabsData(updatedTabs);
+    }
+  };
+
+  const handleDelete = (index) => {
+    const updatedTabs = notingTabData.filter((_, i) => i !== index);
+    setNotingTabsData(updatedTabs);
+  };
+
   const [selectedTab, setSelectedTab] = useState("Noting");
-  const [subSelectedTab, setSubSelectedTab] = useState(
-    location?.state && location?.state?.freshReceiptsAttachments?.length > 0
-      ? "FR"
-      : "Sanction"
-  );
-  const [allFrs, setAllFrs] = useState([]);
-  const [fkFreshReceiptId, setFkFreshReceiptId] = useState(null);
   const [fkfileId, setFKFileId] = useState(null);
 
   const fileInputRef = useRef(null);
   const UserData = getUserData();
-  const [showSubButtonsCorrespondence, setShowSubButtonsCorrespondence] =
-    useState(false);
-
-  const toggleButtons = () => {
-    setShowSubButtonsCorrespondence(true);
-  };
-  const [notingData, setNotingData] = useState({
-    description: "",
-  });
-
-  const [correspondenceData, setCorrespondenceData] = useState({
-    description: "",
-    attachedFiles: [],
-  });
-
-  const [objection, setObjection] = useState({
-    description: "",
-    attachedFiles: [],
-  });
-
-  const [sanction, setSanction] = useState({
-    description: "",
-    attachedFiles: [],
-  });
-
-  const [letter, setLetter] = useState({
-    description: "",
-    attachedFiles: [],
-  });
-
-  const [circular, setCircular] = useState({
-    description: "",
-    attachedFiles: [],
-  });
-
-  const [misc, setMIsc] = useState({
-    description: "",
-    attachedFiles: [],
-  });
 
   const clearInput = () => {
     if (fileInputRef.current) {
@@ -109,87 +120,18 @@ function AddEditFileCase() {
     }
   };
 
-  const handleFileChangeCorrespondance = (event) => {
-    // Access the files from the event
-    const files = event.target.files;
-    // Convert the files object to an array
-    const fileList = Array.from(files);
-
-    // Merge the new files with the existing ones
-    setCorrespondenceData((prevState) => ({
-      ...prevState,
-      attachedFiles: [...prevState.attachedFiles, ...fileList],
-    }));
-  };
-
-  const handleFileChangeSanction = (event) => {
-    // Access the files from the event
-    const files = event.target.files;
-    // Convert the files object to an array
-    const fileList = Array.from(files);
-    // Store the selected files in state
-    setSanction((prevState) => ({
-      ...prevState,
-      attachedFiles: [...prevState.attachedFiles, ...fileList],
-    }));
-  };
-
-  const handleFileChangeObjection = (event) => {
-    // Access the files from the event
-    const files = event.target.files;
-    // Convert the files object to an array
-    const fileList = Array.from(files);
-    // Store the selected files in state
-    setObjection((prevState) => ({
-      ...prevState,
-      attachedFiles: [...prevState.attachedFiles, ...fileList],
-    }));
-  };
-
-  const handleFileChangeLetter = (event) => {
-    // Access the files from the event
-    const files = event.target.files;
-    // Convert the files object to an array
-    const fileList = Array.from(files);
-    // Store the selected files in state
-    setLetter((prevState) => ({
-      ...prevState,
-      attachedFiles: [...prevState.attachedFiles, ...fileList],
-    }));
-  };
-
-  const handleFileChangeCircular = (event) => {
-    // Access the files from the event
-    const files = event.target.files;
-    // Convert the files object to an array
-    const fileList = Array.from(files);
-    // Store the selected files in state
-    setCircular((prevState) => ({
-      ...prevState,
-      attachedFiles: [...prevState.attachedFiles, ...fileList],
-    }));
-  };
-
-  const handleFileChangeMisc = (event) => {
-    // Access the files from the event
-    const files = event.target.files;
-    // Convert the files object to an array
-    const fileList = Array.from(files);
-    // Store the selected files in state
-    setMIsc((prevState) => ({
-      ...prevState,
-      attachedFiles: [...prevState.attachedFiles, ...fileList],
-    }));
-  };
-
   const hendleCreateFileCase = async () => {
     try {
-      const formData = createFormData();
+      const data = {
+        fkBranchId: UserData.fkBranchId,
+        notingSubject: notingTabSubject,
+        paragraphArray: notingTabData
+      }
       const response = await createCase(
         fkfileId.value,
         UserData?.fkUserId,
         location.state?.frId ? location.state?.frId : null,
-        formData
+        data
       );
       showSuccessMessage(response?.message);
       if (response.success) {
@@ -224,52 +166,6 @@ function AddEditFileCase() {
 
   const createFormData = () => {
     const formData = new FormData();
-    // if(location.state?.frId){
-    //   formData.append("fkFreshReceiptId", location.state?.frId);
-    // }
-
-    formData.append("cases[0][Note][description]", notingData.description);
-    formData.append(
-      "cases[0][Correspondence][description]",
-      correspondenceData.description
-    );
-    formData.append("cases[0][Sanction][description]", sanction.description);
-    formData.append("cases[0][Objection][description]", objection.description);
-    formData.append("cases[0][Letter][description]", letter.description);
-    formData.append("cases[0][Circular][description]", circular.description);
-    formData.append("cases[0][Misc][description]", misc.description);
-
-    if (objection.attachedFiles) {
-      objection.attachedFiles.forEach((file, index) => {
-        formData.append(`cases[0][Objection][sections][${index}]`, file);
-      });
-    }
-    if (sanction.attachedFiles) {
-      sanction.attachedFiles.forEach((file, index) => {
-        formData.append(`cases[0][Sanction][sections][${index}]`, file);
-      });
-    }
-    if (letter.attachedFiles) {
-      letter.attachedFiles.forEach((file, index) => {
-        formData.append(`cases[0][Letter][sections][${index}]`, file);
-      });
-    }
-    if (circular.attachedFiles) {
-      letter.attachedFiles.forEach((file, index) => {
-        formData.append(`cases[0][Circular][sections][${index}]`, file);
-      });
-    }
-    if (misc.attachedFiles) {
-      letter.attachedFiles.forEach((file, index) => {
-        formData.append(`cases[0][Misc][sections][${index}]`, file);
-      });
-    }
-    if (correspondenceData.attachedFiles) {
-      correspondenceData.attachedFiles.forEach((file, index) => {
-        formData.append(`cases[0][Correspondence][sections][${index}]`, file);
-      });
-    }
-
     return formData;
   };
 
@@ -279,49 +175,7 @@ function AddEditFileCase() {
       const response = await getSingleCaseByFileId(fileIdINRegister, caseId);
 
       if (response.success) {
-        // Set data in states
-        const { Note, Sanction, Correspondence, Objection, Letter } =
-          response.data[0];
-        // Set noting data
-        setNotingData({
-          description: Note?.description || "",
-          attachedFiles:
-            Note?.caseAttachments?.length > 0 ? Note.caseAttachments : [],
-        });
-
-        // Set sanction data
-        setSanction({
-          description: Sanction?.description || "",
-          attachedFiles:
-            Sanction?.caseAttachments?.length > 0
-              ? Sanction.caseAttachments
-              : [],
-        });
-
-        // Set correspondence data
-        setCorrespondenceData({
-          description: Correspondence?.description || "",
-          attachedFiles:
-            Correspondence?.caseAttachments?.length > 0
-              ? Correspondence.caseAttachments
-              : [],
-        });
-
-        // Set objection data
-        setObjection({
-          description: Objection?.description || "",
-          attachedFiles:
-            Objection?.caseAttachments?.length > 0
-              ? Objection.caseAttachments
-              : [],
-        });
-
-        // Set letter data
-        setLetter({
-          description: Letter?.description || "",
-          attachedFiles:
-            Letter?.caseAttachments?.length > 0 ? Letter.caseAttachments : [],
-        });
+        
       }
     } catch (error) {
       console.error("Error fetching case:", error);
@@ -332,57 +186,15 @@ function AddEditFileCase() {
     if (location.state?.caseId) {
       fetchCaseById(location.state?.caseId);
     }
-    hendleGetAllFRs();
   }, [location.state?.caseId]);
 
-  const hendleRemoveImage = async (item) => {
-    try {
-      const response = await DeleteFileCaseImage(item?.id);
-      if (response?.success) {
-        showSuccessMessage(response.message);
-        if (location.state?.caseId) {
-          fetchCaseById(location.state.caseId);
-        }
-      }
-    } catch (error) {
-      showErrorMessage(error.response.data.message);
-    }
-  };
-
-  const hendleGetAllFRs = async (item) => {
-    try {
-      const response = await getAllFRs(UserData?.fkBranchId);
-      if (response?.success) {
-        setAllFrs(response?.data);
-      }
-    } catch (error) {
-      showErrorMessage(error.response?.data.message);
-    }
-  };
-  const [registerData, setRegisterData] = useState([]);
-  const getAllRegisterApi = async () => {
-    try {
-      const response = await getAllFileRegister(UserData?.fkBranchId, 0, 100);
-      if (response.success) {
-        setRegisterData(response?.data?.fileRegisters);
-      }
-    } catch (error) {
-      // showErrorMessage(error?.response?.data?.message);
-    }
-  };
-
-  useEffect(() => {
-    getAllRegisterApi();
-  }, []);
-
   const [fileData, setFileData] = useState([]);
-  const [registerId, setRegisterId] = useState(null);
-  const hendleRegisterSelect = async (headID) => {
+
+  const getAllFiles = async () => {
     const searchParams = {
-      userId: userData?.fkUserId,
+      branchId: userData?.fkBranchId,
       currentPage: 0,
       pageSize: 100,
-      mainHeadingNumber: headID,
     };
     try {
       const response = await getFileByRegisterById(searchParams);
@@ -397,57 +209,58 @@ function AddEditFileCase() {
       // showErrorMessage(error?.response?.data?.message);
     }
   };
-  // useEffect(() => {
-  //   getAllFilesAPi()
-  // },[])
-  const [frAttectment, setFRAttechment] = useState(null);
-  const getFreashRecepitByIdApi = async (receptId) => {
-    try {
-      const response = await getFreshReceiptById(receptId);
-      if (response.success) {
-        setFRAttechment(response?.data);
-        // showSuccessMessage(response.message);
-      }
-    } catch (error) {
-      console.log(error);
+
+  useEffect(() => {
+    const fileId = getSelectedFileID();
+    if(fileId) {  
+      setFKFileId(fileId);
     }
-  };
-  const transformFilesHeadings = (apiData) => {
-    console.log(apiData);
-    return apiData.map((item) => ({
-      HeadingNumber: item?.mainHeadingNumber,
-    }));
-  };
-  const [headcount, setHeadCount] = useState(null);
-  const getAllFileHeadingApi = useCallback(async () => {
-    try {
-      const response = await getAllFileHeading(UserData?.fkBranchId, 0, 1000);
-      if (response.success) {
-        //   showSuccessMessage(response?.message)
-        // setCount(response?.data?.count);
-        const transformedData = transformFilesHeadings(
-          response?.data?.mainHeadings
-        );
-        setHeadCount(transformedData[transformedData.length - 1].HeadingNumber);
-        setHeadings(transformedData);
-        // if (registerDataid) {
-        //   getAllFilesAPi(registerDataid);
-        // }
-      }
-    } catch (error) {
-      // showErrorMessage(error?.response?.data?.message);
-    }
-  }, [headcount]);
+    getAllFiles();
+  }, []);
 
   const images =
     location?.state?.freshReceiptsAttachments?.map((item) => ({
-      original: `http://172.16.170.8:5252${item?.filename}`,
-      thumbnail: `http://172.16.170.8:5252${item?.filename}`,
+      original: `${imagesUrl}${item?.filename}`,
+      thumbnail: `${imagesUrl}${item?.filename}`,
     })) || [];
 
+  const transformData = (apiData) => {
+    return apiData?.map((item) => ({
+      internalId: item.id,
+      name: item.name,
+      description: item.description,
+      status: item.status,
+      attachmentInternal: item.correspondenceAttachments,
+    }));
+  };
+
+  const handleCorrespondences = async () => {
+    try {
+      const response = await getAllCorrespondence(
+        fkfileId.value,
+        UserData.fkBranchId,
+        currentPage,
+        pageSize
+      );
+      if (response?.success) {
+        setCount(response?.count);
+        const transformedData = transformData(response.data?.correspondences);
+        setCorrespondenceTypesData(transformedData);
+      }
+    } catch (error) {
+      console.log(error?.response?.data?.message);
+    }
+  };
+
   useEffect(() => {
-    getAllFileHeadingApi();
-  }, []);
+    handleCorrespondences();
+  }, [fkfileId]);
+
+  const HandlePrint = async (urlimage) => {
+    const url = `${imagesUrl}${urlimage}`;
+    window.open(url, "_blank");
+    // setPdfUrl(url)
+  };
 
   return (
     <Layout
@@ -471,6 +284,48 @@ function AddEditFileCase() {
       /> */}
       <ToastContainer />
 
+      <Modal
+        show={showModal}
+        size="lg"
+        onHide={() => setShowModal(false)}
+        centered
+      >
+        <div>
+          <Modal.Header closeButton>
+            <Modal.Title>Attachments</Modal.Title>
+          </Modal.Header>
+          <Modal.Body style={{ padding: 20 }}>
+            {attachedFiles && attachedFiles.length > 0 ? (
+              attachedFiles?.map((item) => (
+                <ul class="list-group">
+                  <li
+                    class="list-group-item"
+                    onClick={() => HandlePrint(item?.file)}
+                    style={{ color: "blue", cursor: "pointer" }}
+                  >
+                    {item?.file?.split("\\").pop().split("/").pop()}
+                  </li>
+                </ul>
+              ))
+            ) : (
+              <ul class="list-group">
+                <li class="list-group-item">No data found!</li>
+              </ul>
+            )}
+          </Modal.Body>
+
+          <Modal.Footer>
+            <button
+              className="btn btn-primary"
+              type="button"
+              onClick={() => setShowModal(false)}
+            >
+              Close
+            </button>
+          </Modal.Footer>
+        </div>
+      </Modal>
+
       <div class="card">
         <div class="card-header red-bg" style={{ background: "#14ae5c" }}>
           {location && location.state ? (
@@ -485,93 +340,19 @@ function AddEditFileCase() {
             style={{
               display: "flex",
               alignItems: "center",
-              justifyContent: "center",
+              justifyContent: "space-between",
+              paddingLeft: 100,
+              paddingRight: 100,
             }}
           >
-            {/* <div
-              style={{
-                width: "30%", // Set width to 50%
-              }}
-            >
-              <label for="formFile" class="form-label mt-3">
-                Select Fresh Receipt
-              </label>
-              <Select
-                options={
-                  allFrs &&
-                  allFrs?.map((item) => ({
-                    value: item.id,
-                    label: `${item.frSubject} - ${item.referenceNumber}`,
-                  }))
-                }
-                onChange={(selectedOptions) => {
-                  setFkFreshReceiptId(selectedOptions);
-                  getFreashRecepitByIdApi(selectedOptions.value);
-                }}
-                // onBlur={formikAssigned.handleBlur}
-                value={fkFreshReceiptId}
-                name="fkFreshReceiptId"
-                // isClearable={true}
-              />
-            </div> */}
             <div
               style={{
                 marginLeft: "20px",
-                width: "30%", // Set width to 50%
+                width: "25%", // Set width to 50%
               }}
             >
               <label for="formFile" class="form-label mt-3">
-                Select Register
-              </label>
-              <Select
-                options={
-                  registerData &&
-                  registerData?.map((item) => ({
-                    value: item.id,
-                    label: item.year,
-                  }))
-                }
-                onChange={(selectedOptions) =>
-                  setRegisterId(selectedOptions.value)
-                }
-                // onBlur={formikAssigned.handleBlur}
-                // value={fkregisterId}
-                name="fkregisterId"
-                // isClearable={true}
-              />
-            </div>
-            <div
-              style={{
-                marginLeft: "20px",
-                width: "30%", // Set width to 50%
-              }}
-            >
-              <label class="form-label mt-3">Head Number</label>
-              <select
-                class="form-select"
-                placeholder={"Select Head Number"}
-                onChange={(event) => hendleRegisterSelect(event.target.value)}
-                id="headings"
-              >
-                <option selected disabled hidden>
-                  Select
-                </option>
-                {headings &&
-                  headings.map((item) => (
-                    <option value={item.HeadingNumber}>
-                      {item.HeadingNumber}
-                    </option>
-                  ))}
-              </select>
-            </div>
-            <div
-              style={{
-                marginLeft: "20px",
-                width: "30%", // Set width to 50%
-              }}
-            >
-              <label for="formFile" class="form-label mt-3">
-                Select File
+                * Select File
               </label>
               <Select
                 options={
@@ -581,13 +362,31 @@ function AddEditFileCase() {
                     label: item.fileNumber,
                   }))
                 }
-                onChange={(selectedOptions) => setFKFileId(selectedOptions)}
+                onChange={(selectedOptions) => {
+                  setSelectedFileID(selectedOptions);
+                  setFKFileId(selectedOptions)
+                }}
                 // onBlur={formikAssigned.handleBlur}
                 value={fkfileId}
                 name="fkfileId"
                 isClearable={true}
               />
             </div>
+            {!location.state?.view && (
+              <div style={{ marginLeft: "20px", marginTop: "45px" }}>
+                <button
+                  class="btn btn-primary float-end me-4"
+                  type="submit"
+                  onClick={
+                    location.state?.caseId
+                      ? hendleEditFileCase
+                      : hendleCreateFileCase
+                  }
+                >
+                  {location.state?.caseId ? "Update Case" : "Create Case"}
+                </button>
+              </div>
+            )}
           </div>
           <div style={{ padding: "25px" }}>
             <div
@@ -598,41 +397,12 @@ function AddEditFileCase() {
               }}
             >
               <ul className="nav nav-tabs mb-3 mt-3" id="ex1" role="tablist">
-                {/* {location?.state?.freshReceiptsAttachments?.length > 0 && (
-                  <li
-                    className="nav-item"
-                    role="presentation"
-                    onClick={() => {
-                      clearInput();
-                      setSelectedTab("FR Noting");
-                    }}
-                  >
-                    <button
-                      type="button"
-                      className={
-                        selectedTab === "FR Noting"
-                          ? "nav-link active"
-                          : "nav-link"
-                      }
-                      style={{ width: "170px" }}
-                      data-bs-toggle="tab"
-                      role="tab"
-                      aria-controls="ex1-tabs-1"
-                      aria-selected={
-                        selectedTab === "FR Noting" ? "true" : "false"
-                      }
-                    >
-                      FR ({location?.state?.freshReceiptsAttachments?.length})
-                    </button>
-                  </li>
-                )} */}
                 <li
                   className="nav-item"
                   role="presentation"
                   onClick={() => {
                     clearInput();
                     setSelectedTab("Noting");
-                    setShowSubButtonsCorrespondence(false);
                   }}
                 >
                   <button
@@ -678,85 +448,10 @@ function AddEditFileCase() {
                     aria-selected={
                       selectedTab === "Correspondence" ? "true" : "false"
                     }
-                    onClick={toggleButtons}
                   >
                     Correspondence
                   </button>
                 </li>
-                {/* <li
-                  className="nav-item"
-                  role="presentation"
-                  onClick={() => {
-                    clearInput();
-                    setSelectedTab("Sanction");
-                  }}
-                >
-                  <button
-                    type="button"
-                    className={
-                      selectedTab === "Sanction"
-                        ? "nav-link active"
-                        : "nav-link"
-                    }
-                    style={{ width: "170px" }}
-                    data-bs-toggle="tab"
-                    role="tab"
-                    aria-controls="ex1-tabs-1"
-                    aria-selected={
-                      selectedTab === "Sanction" ? "true" : "false"
-                    }
-                  >
-                    Sanction
-                  </button>
-                </li>
-                <li
-                  className="nav-item"
-                  role="presentation"
-                  onClick={() => {
-                    clearInput();
-                    setSelectedTab("Objection");
-                  }}
-                >
-                  <button
-                    type="button"
-                    className={
-                      selectedTab === "Objection"
-                        ? "nav-link active"
-                        : "nav-link"
-                    }
-                    style={{ width: "170px" }}
-                    data-bs-toggle="tab"
-                    role="tab"
-                    aria-controls="ex1-tabs-2"
-                    aria-selected={
-                      selectedTab === "Objection" ? "true" : "false"
-                    }
-                  >
-                    Objection
-                  </button>
-                </li>
-                <li
-                  className="nav-item"
-                  role="presentation"
-                  onClick={() => {
-                    clearInput();
-                    setSelectedTab("Letter");
-                  }}
-                >
-                  <button
-                    type="button"
-                    className={
-                      selectedTab === "Letter" ? "nav-link active" : "nav-link"
-                    }
-                    style={{ width: "170px" }}
-                    data-bs-toggle="tab"
-                    role="tab"
-                    aria-controls="ex1-tabs-2"
-                    aria-selected={selectedTab === "Letter" ? "true" : "false"}
-                  >
-                    Letter
-                  </button>
-                </li> */}
               </ul>
             </div>
             <div className="row">
@@ -767,183 +462,45 @@ function AddEditFileCase() {
                   justifyContent: "center",
                 }}
               >
-                {showSubButtonsCorrespondence && (
-                  <div className="row">
-                    <ul
-                      className="nav nav-tabs mb-3 mt-3"
-                      id="ex2"
-                      role="tablist"
-                    >
-                      {location?.state &&
-                        location?.state?.freshReceiptsAttachments?.length >
-                          0 && (
-                          <li
-                            className="nav-item"
-                            role="presentation"
-                            onClick={() => {
-                              clearInput();
-                              setSubSelectedTab("FR");
-
-                              // setSelectedTab("FR Noting");
-                              // setSelectedTab("FR Noting");
-                            }}
-                          >
-                            <button
-                              type="button"
-                              className={
-                                subSelectedTab === "FR"
-                                  ? "nav-link active"
-                                  : "nav-link"
-                              }
-                              style={{ width: "170px" }}
-                              data-bs-toggle="tab"
-                              role="tab"
-                              aria-controls="ex1-tabs-1"
-                              aria-selected={
-                                subSelectedTab === "FR" ? "true" : "false"
-                              }
-                            >
-                              FR (
-                              {
-                                location?.state?.freshReceiptsAttachments
-                                  ?.length
-                              }
-                              )
-                            </button>
-                          </li>
-                        )}
-                      <li
-                        className="nav-item"
-                        role="presentation"
-                        onClick={() => {
-                          clearInput();
-                          setSubSelectedTab("Sanction");
-                        }}
-                      >
-                        <button
-                          type="button"
-                          className={
-                            subSelectedTab === "Sanction"
-                              ? "nav-link active"
-                              : "nav-link"
-                          }
-                          style={{ width: "170px" }}
-                          data-bs-toggle="tab"
-                          role="tab"
-                          aria-controls="ex1-tabs-1"
-                          aria-selected={
-                            subSelectedTab === "Sanction" ? "true" : "false"
-                          }
-                        >
-                          Sanction
-                        </button>
-                      </li>
-                      <li
-                        className="nav-item"
-                        role="presentation"
-                        onClick={() => {
-                          clearInput();
-                          setSubSelectedTab("Objection");
-                        }}
-                      >
-                        <button
-                          type="button"
-                          className={
-                            subSelectedTab === "Objection"
-                              ? "nav-link active"
-                              : "nav-link"
-                          }
-                          style={{ width: "170px" }}
-                          data-bs-toggle="tab"
-                          role="tab"
-                          aria-controls="ex1-tabs-2"
-                          aria-selected={
-                            subSelectedTab === "Objection" ? "true" : "false"
-                          }
-                        >
-                          Objection
-                        </button>
-                      </li>
-                      <li
-                        className="nav-item"
-                        role="presentation"
-                        onClick={() => {
-                          clearInput();
-                          setSubSelectedTab("Letter");
-                        }}
-                      >
-                        <button
-                          type="button"
-                          className={
-                            subSelectedTab === "Letter"
-                              ? "nav-link active"
-                              : "nav-link"
-                          }
-                          style={{ width: "170px" }}
-                          data-bs-toggle="tab"
-                          role="tab"
-                          aria-controls="ex1-tabs-2"
-                          aria-selected={
-                            subSelectedTab === "Letter" ? "true" : "false"
-                          }
-                        >
-                          Letter
-                        </button>
-                      </li>
-                      <li
-                        className="nav-item"
-                        role="presentation"
-                        onClick={() => {
-                          clearInput();
-                          setSubSelectedTab("Circular");
-                        }}
-                      >
-                        <button
-                          type="button"
-                          className={
-                            subSelectedTab === "Circular"
-                              ? "nav-link active"
-                              : "nav-link"
-                          }
-                          style={{ width: "170px" }}
-                          data-bs-toggle="tab"
-                          role="tab"
-                          aria-controls="ex1-tabs-1"
-                          aria-selected={
-                            subSelectedTab === "Circular" ? "true" : "false"
-                          }
-                        >
-                          Circular
-                        </button>
-                      </li>
-                      <li
-                        className="nav-item"
-                        role="presentation"
-                        onClick={() => {
-                          clearInput();
-                          setSubSelectedTab("Misc");
-                        }}
-                      >
-                        <button
-                          type="button"
-                          className={
-                            subSelectedTab === "Misc"
-                              ? "nav-link active"
-                              : "nav-link"
-                          }
-                          style={{ width: "170px" }}
-                          data-bs-toggle="tab"
-                          role="tab"
-                          aria-controls="ex1-tabs-1"
-                          aria-selected={
-                            subSelectedTab === "Misc" ? "true" : "false"
-                          }
-                        >
-                          Misc
-                        </button>
-                      </li>
-                    </ul>
-                  </div>
+                {selectedTab === "Correspondence" && (
+                  <CustomTable
+                    hidebtn1={false}
+                    addBtnText={"Create Correspondence"}
+                    ActionHide={false}
+                    data={correspondenceTypesData}
+                    tableTitle="Correspondence"
+                    headertitlebgColor={"#666"}
+                    headertitletextColor={"#FFF"}
+                    handlePageChange={handlePageChange}
+                    currentPage={currentPage}
+                    handleAdd={() => {
+                      if(fkfileId) {
+                        navigate(
+                          "/efiling/dashboard/file-register-list/files-list/addedit-case/addedit-correspondence", {state: {fileId: fkfileId.value}}
+                        )
+                      } else {
+                        showErrorMessage("Please select file first");
+                      }
+                    }}
+                    pageSize={pageSize}
+                    totalCount={count}
+                    singleDataCard={true}
+                    showView={true}
+                    handleView={(item) => {
+                      setAttachedFiles(item?.attachmentInternal);
+                      setShowModal(true);
+                    }}
+                    handleEdit={(item) => {
+                      if(fkfileId) {
+                        navigate(
+                          "/efiling/dashboard/file-register-list/files-list/addedit-case/addedit-correspondence",
+                          { state: {item: item, fileId: fkfileId.value }}
+                        )
+                      } else {
+                        showErrorMessage("Please select file first");
+                      }
+                    }}
+                  />
                 )}
               </div>
             </div>
@@ -957,558 +514,102 @@ function AddEditFileCase() {
                 }}
               >
                 {selectedTab === "Noting" ? (
-                  // Render content for the 'Noting' tab
-                  <section class="mb-5">
-                    <label for="formFile" class="form-label mt-3">
-                      Noting Data
-                    </label>
+                  <div className="container">
+                    {/* First attempt */}
+                    {/* <NoteEditor tabsData={notingTabData} notingTabSubject={notingTabSubject} setNotingTabSubject={setNotingTabSubject} onEditorChange={handleEditorChange} /> */}
 
-                    <TinyEditor
-                      initialContent={""}
-                      setEditorContent={(content) =>
-                        setNotingData((prev) => ({
-                          ...prev,
-                          description: content,
-                        }))
-                      }
-                      editorContent={notingData.description}
-                      multiLanguage={false}
-                      disabled={location.state?.view ? true : false}
-                    />
-                  </section>
-                ) : null}
-                {subSelectedTab === "FR" && selectedTab === "Correspondence" ? (
-                  <section>
-                    {/* <iframe
-                      src={`http://172.16.170.8:5252${location?.state?.freshReceiptsAttachments[0]?.filename}`}
-                      style={{ width: "700px", height: "400px" }}
-                      frameborder="0"
-                    ></iframe> */}
-                    <section>
-                      <ImageGallery
-                        style={{ maxHeight: "calc(100vh 0px)" }}
-                        items={images}
-                        showThumbnails={false}
-                        showFullscreenButton={false}
-                        showPlayButton={false}
-                        slideOnThumbnailOver
-                        renderThumbInner={(item) => (
-                          <div className="image-gallery-thumbnail-inner">
-                            <img
-                              src={item.thumbnail}
-                              alt={"file"}
-                              width={92}
-                              height={80}
-                            />
-                            {/* Add any additional elements or styles for the thumbnail */}
-                          </div>
-                        )}
-                      />
-                    </section>
-                  </section>
-                ) : subSelectedTab === "Sanction" &&
-                  selectedTab === "Correspondence" ? (
-                  <section>
-                    <label for="formFile" class="form-label mt-3">
-                      Sanction Data
-                    </label>
+                    {/* Second Attempt */}
+                    {/* <div class="row mb-5">
+                    <div class="col-6">
+                      <label for="formFile" class="form-label">
+                        Added Paragraphs
+                      </label>
+                      <TabComponent tabsData={notingTabData} onEditorChange={handleEditorChange} />
+                    </div>
+                    <div class="col-6">
+                        <label className="form-label">Subject</label>
+                        <input
+                          className={`form-control mb-2`}
+                          id="subject"
+                          placeholder="Subject"
+                          onChange={(e) => setNotingTabSubject(e.target.value)}
+                          value={notingTabSubject}
+                        />
+                        <Editor
+                          title={"Add new paragraph"}
+                          onChange={(content) =>
+                            setNotingData((prev) => ({
+                              ...prev,
+                              description: content,
+                            }))
+                          }
+                          value={notingData.description}
+                          width={"100%"}
+                        />
+                        <button
+                          class="btn btn-primary float-end me-3" 
+                          style={{ marginTop: 60, width: "100px" }}
+                          onClick={() => {}}
+                        >
+                          {'Add'}
+                        </button>
+                    </div>
+                  </div> */}
 
-                    <TinyEditor
-                      initialContent={""}
-                      setEditorContent={(content) =>
-                        setSanction((prev) => ({
-                          ...prev,
-                          description: content,
-                        }))
-                      }
-                      editorContent={sanction.description}
-                      multiLanguage={false}
-                      disabled={location.state?.view ? true : false}
-                    />
-                    <div class="row">
-                      <div class="col">
-                        <div class="mb-3 mt-5">
-                          <div class="form-group">
-                            <div class="row">
-                              <label for="formFile" class="form-label mt-3">
-                                Attach File
-                              </label>
-
-                              <div class="col-6">
-                                <input
-                                  ref={fileInputRef}
-                                  className="form-control"
-                                  type="file"
-                                  accept=".pdf, .jpg, .jpeg, .png"
-                                  id="sanction"
-                                  name="sanction"
-                                  multiple
-                                  onChange={(event) =>
-                                    handleFileChangeSanction(event)
-                                  }
-                                  disabled={location.state?.view ? true : false}
-                                />
-                                {sanction?.attachedFiles?.length > 0 && (
-                                  <div>
-                                    <label
-                                      for="formFile"
-                                      class="form-label mt-3 mb-0"
-                                    >
-                                      Attached Files
-                                    </label>
-                                    <ul>
-                                      {sanction.attachedFiles?.map(
-                                        (file, index) => {
-                                          return (
-                                            <div key={index}>
-                                              <a
-                                                class="MultiFile-remove"
-                                                style={{
-                                                  marginRight: "10px",
-                                                  color: "red",
-                                                  cursor: "pointer",
-                                                }}
-                                                onClick={() =>
-                                                  hendleRemoveImage(file)
-                                                }
-                                              >
-                                                x
-                                              </a>
-                                              <a
-                                                href={
-                                                  file?.id
-                                                    ? `http://172.16.170.8:5252${file?.fileName}`
-                                                    : URL.createObjectURL(file)
-                                                }
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                              >
-                                                {file?.id
-                                                  ? file?.fileName
-                                                      ?.split("/")
-                                                      .pop()
-                                                  : file.name}
-                                              </a>
-                                            </div>
-                                          );
-                                        }
-                                      )}
-                                    </ul>
-                                  </div>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+                    {/* Third attempt */}
+                    <div className="row mb-5">
+                      <div className="col-12">
+                        <label className="form-label">Subject</label>
+                        <input
+                          className={`form-control mb-2`}
+                          id="subject"
+                          placeholder="Subject"
+                          onChange={(e) => setNotingTabSubject(e.target.value)}
+                          value={notingTabSubject}
+                          style={{ width: "50%" }}
+                        />
+                        <label htmlFor="formFile" className="form-label mt-2">
+                          Added Paragraphs
+                        </label>
+                        <DocParas
+                          tabsData={notingTabData}
+                          onEditorChange={handleEditorChange}
+                          onDelete={handleDelete}
+                          FR={location.state}
+                        />
                       </div>
                     </div>
-                  </section>
-                ) : subSelectedTab === "Objection" &&
-                  selectedTab === "Correspondence" ? (
-                  <section>
-                    <label for="formFile" class="form-label mt-3">
-                      Objection Data
-                    </label>
 
-                    <TinyEditor
-                      initialContent={""}
-                      setEditorContent={(content) =>
-                        setObjection((prev) => ({
-                          ...prev,
-                          description: content,
-                        }))
+                    <label className="form-label">Add new paragraph</label>
+                    <Editor
+                      onChange={(content) =>
+                        setNotingData({ description: content })
                       }
-                      editorContent={objection.description}
-                      multiLanguage={false}
-                      disabled={location.state?.view ? true : false}
+                      value={notingData.description}
+                      width={"100%"}
+                      display={"flex"}
                     />
-                    <div class="row">
-                      <div class="col">
-                        <div class="mb-3 mt-5">
-                          <div class="form-group">
-                            <div class="row">
-                              <label for="formFile" class="form-label mt-3">
-                                Attach File
-                              </label>
-
-                              <div class="col-6">
-                                <input
-                                  ref={fileInputRef}
-                                  className="form-control"
-                                  type="file"
-                                  accept=".pdf, .jpg, .jpeg, .png"
-                                  id="objection"
-                                  name="objection"
-                                  multiple
-                                  onChange={(event) =>
-                                    handleFileChangeObjection(event)
-                                  }
-                                  disabled={location.state?.view ? true : false}
-                                />
-                                {objection.attachedFiles.length > 0 && (
-                                  <div>
-                                    <label
-                                      for="formFile"
-                                      class="form-label mt-3 mb-0"
-                                    >
-                                      Attached Files
-                                    </label>
-                                    <ul>
-                                      {objection.attachedFiles?.map(
-                                        (file, index) => {
-                                          return (
-                                            <div key={index}>
-                                              <a
-                                                class="MultiFile-remove"
-                                                style={{
-                                                  marginRight: "10px",
-                                                  color: "red",
-                                                  cursor: "pointer",
-                                                }}
-                                                onClick={() =>
-                                                  hendleRemoveImage(file)
-                                                }
-                                              >
-                                                x
-                                              </a>
-                                              <a
-                                                href={
-                                                  file?.id
-                                                    ? `http://172.16.170.8:5252${file?.fileName}`
-                                                    : URL.createObjectURL(file)
-                                                }
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                              >
-                                                {file?.id
-                                                  ? file?.fileName
-                                                      ?.split("/")
-                                                      .pop()
-                                                  : file.name}
-                                              </a>
-                                            </div>
-                                          );
-                                        }
-                                      )}
-                                    </ul>
-                                  </div>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "flex-end",
+                        marginTop: 5,
+                      }}
+                    >
+                      <button
+                        className="btn btn-primary"
+                        style={{ marginTop: 60, width: "100px" }}
+                        onClick={() =>
+                          handleEditorChange(null, notingData.description, null, false, true)
+                        }
+                      >
+                        {"Add"}
+                      </button>
                     </div>
-                  </section>
-                ) : subSelectedTab === "Letter" &&
-                  selectedTab === "Correspondence" ? (
-                  <section>
-                    <label for="formFile" class="form-label mt-3">
-                      Letter Data
-                    </label>
-
-                    <TinyEditor
-                      initialContent={""}
-                      setEditorContent={(content) =>
-                        setLetter((prev) => ({ ...prev, description: content }))
-                      }
-                      editorContent={letter.description}
-                      multiLanguage={false}
-                      disabled={location.state?.view ? true : false}
-                    />
-                    <div class="row">
-                      <div class="col">
-                        <div class="mb-3 mt-5">
-                          <div class="form-group">
-                            <div class="row">
-                              <label for="formFile" class="form-label mt-3">
-                                Attach File
-                              </label>
-
-                              <div class="col-6">
-                                <input
-                                  ref={fileInputRef}
-                                  className="form-control"
-                                  type="file"
-                                  accept=".pdf, .jpg, .jpeg, .png"
-                                  id="letter"
-                                  name="letter"
-                                  multiple
-                                  onChange={(event) =>
-                                    handleFileChangeLetter(event)
-                                  }
-                                  disabled={location.state?.view ? true : false}
-                                />
-                                {letter.attachedFiles.length > 0 && (
-                                  <div>
-                                    <label
-                                      for="formFile"
-                                      class="form-label mt-3 mb-0"
-                                    >
-                                      Attached Files
-                                    </label>
-                                    <ul>
-                                      {letter.attachedFiles?.map(
-                                        (file, index) => {
-                                          return (
-                                            <div key={index}>
-                                              <a
-                                                class="MultiFile-remove"
-                                                style={{
-                                                  marginRight: "10px",
-                                                  color: "red",
-                                                  cursor: "pointer",
-                                                }}
-                                                onClick={() =>
-                                                  hendleRemoveImage(file)
-                                                }
-                                              >
-                                                x
-                                              </a>
-                                              <a
-                                                href={
-                                                  file?.id
-                                                    ? `http://172.16.170.8:5252${file?.fileName}`
-                                                    : URL.createObjectURL(file)
-                                                }
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                              >
-                                                {file?.id
-                                                  ? file?.fileName
-                                                      ?.split("/")
-                                                      .pop()
-                                                  : file.name}
-                                              </a>
-                                            </div>
-                                          );
-                                        }
-                                      )}
-                                    </ul>
-                                  </div>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </section>
-                ) : subSelectedTab === "Circular" &&
-                  selectedTab === "Correspondence" ? (
-                  <section>
-                    <label for="formFile" class="form-label mt-3">
-                      Circular Data
-                    </label>
-
-                    <TinyEditor
-                      initialContent={""}
-                      setEditorContent={(content) =>
-                        setCircular((prev) => ({
-                          ...prev,
-                          description: content,
-                        }))
-                      }
-                      editorContent={circular.description}
-                      multiLanguage={false}
-                      disabled={location.state?.view ? true : false}
-                    />
-                    <div class="row">
-                      <div class="col">
-                        <div class="mb-3 mt-5">
-                          <div class="form-group">
-                            <div class="row">
-                              <label for="formFile" class="form-label mt-3">
-                                Attach File
-                              </label>
-
-                              <div class="col-6">
-                                <input
-                                  ref={fileInputRef}
-                                  className="form-control"
-                                  type="file"
-                                  accept=".pdf, .jpg, .jpeg, .png"
-                                  id="circular"
-                                  name="circular"
-                                  multiple
-                                  onChange={(event) =>
-                                    handleFileChangeCircular(event)
-                                  }
-                                  disabled={location.state?.view ? true : false}
-                                />
-                                {circular?.attachedFiles?.length > 0 && (
-                                  <div>
-                                    <label
-                                      for="formFile"
-                                      class="form-label mt-3 mb-0"
-                                    >
-                                      Attached Files
-                                    </label>
-                                    <ul>
-                                      {circular?.attachedFiles?.map(
-                                        (file, index) => {
-                                          return (
-                                            <div key={index}>
-                                              <a
-                                                class="MultiFile-remove"
-                                                style={{
-                                                  marginRight: "10px",
-                                                  color: "red",
-                                                  cursor: "pointer",
-                                                }}
-                                                onClick={() =>
-                                                  hendleRemoveImage(file)
-                                                }
-                                              >
-                                                x
-                                              </a>
-                                              <a
-                                                href={
-                                                  file?.id
-                                                    ? `http://172.16.170.8:5252${file?.fileName}`
-                                                    : URL.createObjectURL(file)
-                                                }
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                              >
-                                                {file?.id
-                                                  ? file?.fileName
-                                                      ?.split("/")
-                                                      .pop()
-                                                  : file.name}
-                                              </a>
-                                            </div>
-                                          );
-                                        }
-                                      )}
-                                    </ul>
-                                  </div>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </section>
-                ) : subSelectedTab === "Misc" &&
-                  selectedTab === "Correspondence" ? (
-                  <section>
-                    <label for="formFile" class="form-label mt-3">
-                      Misc Data
-                    </label>
-
-                    <TinyEditor
-                      initialContent={""}
-                      setEditorContent={(content) =>
-                        setMIsc((prev) => ({
-                          ...prev,
-                          description: content,
-                        }))
-                      }
-                      editorContent={misc?.description}
-                      multiLanguage={false}
-                      disabled={location.state?.view ? true : false}
-                    />
-                    <div class="row">
-                      <div class="col">
-                        <div class="mb-3 mt-5">
-                          <div class="form-group">
-                            <div class="row">
-                              <label for="formFile" class="form-label mt-3">
-                                Attach File
-                              </label>
-
-                              <div class="col-6">
-                                <input
-                                  ref={fileInputRef}
-                                  className="form-control"
-                                  type="file"
-                                  accept=".pdf, .jpg, .jpeg, .png"
-                                  id="misc"
-                                  name="misc"
-                                  multiple
-                                  onChange={(event) =>
-                                    handleFileChangeMisc(event)
-                                  }
-                                  disabled={location.state?.view ? true : false}
-                                />
-                                {misc?.attachedFiles?.length > 0 && (
-                                  <div>
-                                    <label
-                                      for="formFile"
-                                      class="form-label mt-3 mb-0"
-                                    >
-                                      Attached Files
-                                    </label>
-                                    <ul>
-                                      {misc?.attachedFiles?.map(
-                                        (file, index) => {
-                                          return (
-                                            <div key={index}>
-                                              <a
-                                                class="MultiFile-remove"
-                                                style={{
-                                                  marginRight: "10px",
-                                                  color: "red",
-                                                  cursor: "pointer",
-                                                }}
-                                                onClick={() =>
-                                                  hendleRemoveImage(file)
-                                                }
-                                              >
-                                                x
-                                              </a>
-                                              <a
-                                                href={
-                                                  file?.id
-                                                    ? `http://172.16.170.8:5252${file?.fileName}`
-                                                    : URL.createObjectURL(file)
-                                                }
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                              >
-                                                {file?.id
-                                                  ? file?.fileName
-                                                      ?.split("/")
-                                                      .pop()
-                                                  : file.name}
-                                              </a>
-                                            </div>
-                                          );
-                                        }
-                                      )}
-                                    </ul>
-                                  </div>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </section>
+                  </div>
                 ) : null}
               </div>
             </div>
-
-            {!location.state?.view && (
-              <div class="row mt-4">
-                <div class="col-11 p-0">
-                  <button
-                    class="btn btn-primary float-end me-4"
-                    type="submit"
-                    onClick={
-                      location.state?.caseId
-                        ? hendleEditFileCase
-                        : hendleCreateFileCase
-                    }
-                  >
-                    {location.state?.caseId ? "Update Case" : "Create Case"}
-                  </button>
-                </div>
-              </div>
-            )}
           </div>
         </div>
       </div>

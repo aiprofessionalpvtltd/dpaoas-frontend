@@ -19,6 +19,7 @@ import moment from "moment";
 import { showSuccessMessage } from "../../../../../../../utils/ToastAlert";
 import { getUserData } from "../../../../../../../api/Auth";
 import { ToastContainer } from "react-toastify";
+import { imagesUrl } from "../../../../../../../api/APIs";
 
 const EditSenateBill = () => {
   const location = useLocation();
@@ -33,8 +34,9 @@ const EditSenateBill = () => {
   const [committieeData, setCommittieData] = useState([]);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [isIntroducedCalendarOpen, setIntroducedCalendarOpen] = useState(false);
-  const [isDateofReciptCalendarOpen, setIsDateofReciptCalendarOpen] =
-    useState(false);
+  
+  // const [isDateofReciptCalendarOpen, setIsDateofReciptCalendarOpen] =
+  //   useState(false);
   const [isReferredCalendarOpen, setReferredCalendarOpen] = useState(false);
   const [isReportPresentationCalendarOpen, setReportPresentationCalendarOpen] =
     useState(false);
@@ -46,6 +48,8 @@ const EditSenateBill = () => {
 
   const [isconsiderationDateCalendarOpen, setConsiderationDateCalendarOpen] =
     useState(false);
+    const [isGazetteCalendarOpen, setGazetteCalendarOpen] = useState(false);
+    const [isAssentCalendarOpen, setAssentCalendarOpen] = useState(false);
   const [isRecepitMesageDateCalendarOpen, setRecepitMesageDateCalendarOpen] =
     useState(false);
   const [isPassageByNADateCalendarOpen, setPassageByNADateCalendarOpen] =
@@ -54,7 +58,7 @@ const EditSenateBill = () => {
     useState(false);
   const [isBillStatusDateCalendarOpen, setBillStatusDateCalendarOpen] =
     useState(false);
-
+  const [filePath, setFilePath] = useState("");
   const GetAllCommittiesApi = async () => {
     try {
       const response = await AllManageCommitties(0, 500);
@@ -122,6 +126,8 @@ const EditSenateBill = () => {
       fkMemberPassageId: "",
       memeberNoticeDate: "",
       dateOfConsiderationBill: "",
+      dateOfPublishInGazette: "",
+      dateOfAssentByPresident: "",
       fkSessionMemberPassageId: "",
       dateOfPassageBySenate: "",
       dateOfTransmissionToNA: "",
@@ -217,6 +223,23 @@ const EditSenateBill = () => {
     setConsiderationDateCalendarOpen(false);
   };
 
+  const handleGazetteCalendarToggle = () => {
+    setGazetteCalendarOpen(!isGazetteCalendarOpen);
+  };
+  // Handale DateCHange
+  const handleGazetteDateSelect = (date) => {
+    formik.setFieldValue("dateOfPublishInGazette", date);
+    setGazetteCalendarOpen(false);
+  };
+  const handleAssentCalendarToggle = () => {
+    setAssentCalendarOpen(!isAssentCalendarOpen);
+  };
+  // Handale DateCHange
+  const handleAssentDateSelect = (date) => {
+    formik.setFieldValue("dateOfAssentByPresident", date);
+    setAssentCalendarOpen(false);
+  };
+
   const handleRecepitMesageCalendarToggle = () => {
     setRecepitMesageDateCalendarOpen(!isRecepitMesageDateCalendarOpen);
   };
@@ -260,10 +283,20 @@ const EditSenateBill = () => {
     if (NA_Bill_ID) {
       getNABillByIdApi();
     }
-  }, []);
+  }, [NA_Bill_ID]);
 
   useEffect(() => {
     if (singleSenateBillData) {
+      const file = singleSenateBillData?.billDocuments?.file?.[0];
+      let parsedFile = null;
+      if (file) {
+        try {
+          parsedFile = JSON.parse(file);
+          setFilePath(parsedFile.path);
+        } catch (error) {
+          console.error("Error parsing file:", error);
+        }
+      }
       formik.setValues({
         fkParliamentaryYearId:
           singleSenateBillData?.fkParliamentaryYearId || "",
@@ -381,7 +414,7 @@ const EditSenateBill = () => {
           : "",
       });
     }
-  }, [singleSenateBillData, formik.setValues]);
+  }, [singleSenateBillData, formik.setValues, formik]);
 
   const UpdateNationalAssemblyBill = async (values) => {
     const formData = new FormData();
@@ -521,7 +554,7 @@ const EditSenateBill = () => {
     }
 
     if (values?.file) {
-      formData.append("file", values?.file);
+      formData.append("file", values?.file[0]);
     }
 
     if (values?.senateBillSenatorMovers) {
@@ -770,7 +803,6 @@ const EditSenateBill = () => {
                               top: "36px",
                               zIndex: 1,
                               fontSize: "20px",
-                              zIndex: "1",
                               color: "#666",
                               cursor: "pointer",
                             }}
@@ -842,7 +874,6 @@ const EditSenateBill = () => {
                               top: "36px",
                               zIndex: 1,
                               fontSize: "20px",
-                              zIndex: "1",
                               color: "#666",
                               cursor: "pointer",
                             }}
@@ -893,7 +924,6 @@ const EditSenateBill = () => {
                               top: "36px",
                               zIndex: 1,
                               fontSize: "20px",
-                              zIndex: "1",
                               color: "#666",
                               cursor: "pointer",
                             }}
@@ -964,7 +994,7 @@ const EditSenateBill = () => {
                       </div>
                     </div>
 
-                    <div className="row">
+                    {/* <div className="row">
                       <div className="col">
                         <div className="mb-3">
                           <label className="form-label">Bill Text</label>
@@ -988,7 +1018,7 @@ const EditSenateBill = () => {
                             )}
                         </div>
                       </div>
-                    </div>
+                    </div> */}
 
                     <div className="row">
                       <div className="col">
@@ -1123,7 +1153,6 @@ const EditSenateBill = () => {
                               top: "36px",
                               zIndex: 1,
                               fontSize: "20px",
-                              zIndex: "1",
                               color: "#666",
                               cursor: "pointer",
                             }}
@@ -1147,7 +1176,7 @@ const EditSenateBill = () => {
                         </div>
                       </div>
 
-                      <div className="col">
+                      {/* <div className="col">
                         <label className="form-label">
                           Introduced in Session
                         </label>
@@ -1167,6 +1196,41 @@ const EditSenateBill = () => {
                             </option>
                           ))}
                         </select>
+                      </div> */}
+
+                      <div class="col">
+                        <div class="mb-3" style={{ position: "relative" }}>
+                          <label class="form-label">
+                            Date of Presenation of the Report
+                          </label>
+                          <span
+                            style={{
+                              position: "absolute",
+                              right: "15px",
+                              top: "36px",
+                              zIndex: 1,
+                              fontSize: "20px",
+                              color: "#666",
+                            }}
+                            onClick={handleReportPresenatationDayCalendarToggle}
+                          >
+                            <FontAwesomeIcon icon={faCalendarAlt} />
+                          </span>
+                          <DatePicker
+                            selected={formik.values.reportPresentationDate}
+                            onChange={handleReportPresenatationDateSelect}
+                            className={"form-control"}
+                            open={isReportPresentationCalendarOpen}
+                            onClickOutside={() =>
+                              setReportPresentationCalendarOpen(false)
+                            }
+                            onInputClick={
+                              handleReportPresenatationDayCalendarToggle
+                            }
+                            maxDate={new Date()}
+                            dateFormat="dd-MM-yyyy"
+                          />
+                        </div>
                       </div>
 
                       <div className="col">
@@ -1219,7 +1283,6 @@ const EditSenateBill = () => {
                               top: "36px",
                               zIndex: 1,
                               fontSize: "20px",
-                              zIndex: "1",
                               color: "#666",
                             }}
                             onClick={handleReferredCalendarToggle}
@@ -1258,54 +1321,18 @@ const EditSenateBill = () => {
                             Select
                           </option>
                           <option value="Ammended By Standing Committee">
-                            Ammended By Standing Committee
+                            As Reported By Standing Committee
                           </option>
                           <option value="May be Passed as Introduced in the House">
                             May be Passed as Introduced in the House
                           </option>
                           <option value="Passed without sending to Committee">
-                            Passed without sending to Committee
+                            Passed without Referred Standing Committee
                           </option>
-                          <option value="Ammended By Standing Committee">
+                          {/* <option value="Ammended By Standing Committee">
                             Ammended By Standing Committee
-                          </option>
+                          </option> */}
                         </select>
-                      </div>
-
-                      <div class="col-3">
-                        <div class="mb-3" style={{ position: "relative" }}>
-                          <label class="form-label">
-                            Report Presenation Day
-                          </label>
-                          <span
-                            style={{
-                              position: "absolute",
-                              right: "15px",
-                              top: "36px",
-                              zIndex: 1,
-                              fontSize: "20px",
-                              zIndex: "1",
-                              color: "#666",
-                            }}
-                            onClick={handleReportPresenatationDayCalendarToggle}
-                          >
-                            <FontAwesomeIcon icon={faCalendarAlt} />
-                          </span>
-                          <DatePicker
-                            selected={formik.values.reportPresentationDate}
-                            onChange={handleReportPresenatationDateSelect}
-                            className={"form-control"}
-                            open={isReportPresentationCalendarOpen}
-                            onClickOutside={() =>
-                              setReportPresentationCalendarOpen(false)
-                            }
-                            onInputClick={
-                              handleReportPresenatationDayCalendarToggle
-                            }
-                            maxDate={new Date()}
-                            dateFormat="dd-MM-yyyy"
-                          />
-                        </div>
                       </div>
                     </div>
                   </div>
@@ -1322,7 +1349,7 @@ const EditSenateBill = () => {
                 <div className="card-body">
                   <div className="container-fluid">
                     <div className="row">
-                      <div className="form-group col-3">
+                      <div className="form-group col">
                         <label
                           htmlFor="passageWithdrawal"
                           className="form-label"
@@ -1351,7 +1378,7 @@ const EditSenateBill = () => {
                         </select>
                       </div>
 
-                      <div className="col-3">
+                      <div className="col">
                         <div class="mb-3 " style={{ position: "relative" }}>
                           <label class="form-label">
                             Memeber Passage/Withdrawal Notice Date
@@ -1363,7 +1390,6 @@ const EditSenateBill = () => {
                               top: "36px",
                               zIndex: 1,
                               fontSize: "20px",
-                              zIndex: "1",
                               color: "#666",
                               cursor: "pointer",
                             }}
@@ -1384,7 +1410,7 @@ const EditSenateBill = () => {
                         </div>
                       </div>
 
-                      <div className="col-3">
+                      <div className="col">
                         <div class="mb-3 " style={{ position: "relative" }}>
                           <label class="form-label">
                             Date of consideration of the Bill
@@ -1396,7 +1422,6 @@ const EditSenateBill = () => {
                               top: "36px",
                               zIndex: 1,
                               fontSize: "20px",
-                              zIndex: "1",
                               color: "#666",
                             }}
                             onClick={handleConsiderationCalendarToggle}
@@ -1418,7 +1443,43 @@ const EditSenateBill = () => {
                         </div>
                       </div>
 
-                      <div className="form-group col-3">
+                      <div className="col">
+                        <div class="mb-3 " style={{ position: "relative" }}>
+                          <label class="form-label">
+                            Date of Publish in the Gazette
+                          </label>
+                          <span
+                            style={{
+                              position: "absolute",
+                              right: "15px",
+                              top: "36px",
+                              zIndex: 1,
+                              fontSize: "20px",
+                              color: "#666",
+                              cursor:"pointer"
+                            }}
+                            // onClick={handleConsiderationCalendarToggle}
+                            onClick={handleGazetteCalendarToggle}
+                          >
+                            <FontAwesomeIcon icon={faCalendarAlt} />
+                          </span>
+                          <DatePicker
+                            selected={formik.values.dateOfPublishInGazette}
+                            onChange={handleGazetteDateSelect}
+                            className={"form-control"}
+                            open={isGazetteCalendarOpen}
+                            onClickOutside={() =>
+                              setGazetteCalendarOpen(false)
+                            }
+                            onInputClick={handleGazetteCalendarToggle}
+                            maxDate={new Date()}
+                            dateFormat="dd-MM-yyyy"
+                          />
+                        </div>
+                      </div>
+                      
+
+                      {/* <div className="form-group col-3">
                         <label htmlFor="session" className="form-label">
                           Consideration in Session
                         </label>
@@ -1439,6 +1500,42 @@ const EditSenateBill = () => {
                               </option>
                             ))}
                         </select>
+                      </div> */}
+                    </div>
+                    <div className="row">
+                    <div className="col-3">
+                        <div class="mb-3 " style={{ position: "relative" }}>
+                          <label class="form-label">
+                            Date of Assent by President
+                          </label>
+                          <span
+                            style={{
+                              position: "absolute",
+                              right: "15px",
+                              top: "36px",
+                              zIndex: 1,
+                              fontSize: "20px",
+                              color: "#666",
+                              cursor:"pointer"
+                            }}
+                            // onClick={handleConsiderationCalendarToggle}
+                            onClick={handleAssentCalendarToggle}
+                          >
+                            <FontAwesomeIcon icon={faCalendarAlt} />
+                          </span>
+                          <DatePicker
+                            selected={formik.values.dateOfAssentByPresident}
+                            onChange={handleAssentDateSelect}
+                            className={"form-control"}
+                            open={isAssentCalendarOpen}
+                            onClickOutside={() =>
+                              setAssentCalendarOpen(false)
+                            }
+                            onInputClick={handleAssentCalendarToggle}
+                            maxDate={new Date()}
+                            dateFormat="dd-MM-yyyy"
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -1454,10 +1551,10 @@ const EditSenateBill = () => {
               <div className="card-body">
                 <div className="container-fluid">
                   <div className="row">
-                    <div className="col-3">
+                  <div className="col-3">
                       <div class="mb-3 " style={{ position: "relative" }}>
                         <label class="form-label">
-                          Date of Passage by Senate
+                          Date of Receipt of Message from NA
                         </label>
                         <span
                           style={{
@@ -1466,27 +1563,27 @@ const EditSenateBill = () => {
                             top: "36px",
                             zIndex: 1,
                             fontSize: "20px",
-                            zIndex: "1",
                             color: "#666",
                           }}
-                          onClick={handlePassageSenateCalendarToggle}
+                          onClick={handleRecepitMesageCalendarToggle}
                         >
                           <FontAwesomeIcon icon={faCalendarAlt} />
                         </span>
                         <DatePicker
-                          selected={formik.values.dateOfPassageBySenate}
-                          onChange={handlePassageSenateDateSelect}
+                          selected={formik.values.dateOfReceiptMessageFromNA}
+                          onChange={handleRecepitMesageDateSelect}
                           className={"form-control"}
-                          open={isPassageSenateCalendarOpen}
+                          open={isRecepitMesageDateCalendarOpen}
                           onClickOutside={() =>
-                            setPassageSenateCalendarOpen(false)
+                            setRecepitMesageDateCalendarOpen(false)
                           }
-                          onInputClick={handlePassageSenateCalendarToggle}
+                          onInputClick={handleRecepitMesageCalendarToggle}
                           maxDate={new Date()}
                           dateFormat="dd-MM-yyyy"
                         />
                       </div>
                     </div>
+                   
 
                     <div className="col-3">
                       <div class="mb-3 " style={{ position: "relative" }}>
@@ -1500,7 +1597,6 @@ const EditSenateBill = () => {
                             top: "36px",
                             zIndex: 1,
                             fontSize: "20px",
-                            zIndex: "1",
                             color: "#666",
                           }}
                           onClick={handleTransmissionCalendarToggle}
@@ -1522,39 +1618,7 @@ const EditSenateBill = () => {
                       </div>
                     </div>
 
-                    <div className="col-3">
-                      <div class="mb-3 " style={{ position: "relative" }}>
-                        <label class="form-label">
-                          Date of Receipt of Message from NA
-                        </label>
-                        <span
-                          style={{
-                            position: "absolute",
-                            right: "15px",
-                            top: "36px",
-                            zIndex: 1,
-                            fontSize: "20px",
-                            zIndex: "1",
-                            color: "#666",
-                          }}
-                          onClick={handleRecepitMesageCalendarToggle}
-                        >
-                          <FontAwesomeIcon icon={faCalendarAlt} />
-                        </span>
-                        <DatePicker
-                          selected={formik.values.dateOfReceiptMessageFromNA}
-                          onChange={handleRecepitMesageDateSelect}
-                          className={"form-control"}
-                          open={isRecepitMesageDateCalendarOpen}
-                          onClickOutside={() =>
-                            setRecepitMesageDateCalendarOpen(false)
-                          }
-                          onInputClick={handleRecepitMesageCalendarToggle}
-                          maxDate={new Date()}
-                          dateFormat="dd-MM-yyyy"
-                        />
-                      </div>
-                    </div>
+                   
 
                     <div className="col-3">
                       <div class="mb-3 " style={{ position: "relative" }}>
@@ -1566,7 +1630,6 @@ const EditSenateBill = () => {
                             top: "36px",
                             zIndex: 1,
                             fontSize: "20px",
-                            zIndex: "1",
                             color: "#666",
                           }}
                           onClick={handlePassageByNACalendarToggle}
@@ -1582,6 +1645,38 @@ const EditSenateBill = () => {
                             setPassageByNADateCalendarOpen(false)
                           }
                           onInputClick={handlePassageByNACalendarToggle}
+                          maxDate={new Date()}
+                          dateFormat="dd-MM-yyyy"
+                        />
+                      </div>
+                    </div>
+                    <div className="col-3">
+                      <div class="mb-3 " style={{ position: "relative" }}>
+                        <label class="form-label">
+                          Date of Passage by Senate
+                        </label>
+                        <span
+                          style={{
+                            position: "absolute",
+                            right: "15px",
+                            top: "36px",
+                            zIndex: 1,
+                            fontSize: "20px",
+                            color: "#666",
+                          }}
+                          onClick={handlePassageSenateCalendarToggle}
+                        >
+                          <FontAwesomeIcon icon={faCalendarAlt} />
+                        </span>
+                        <DatePicker
+                          selected={formik.values.dateOfPassageBySenate}
+                          onChange={handlePassageSenateDateSelect}
+                          className={"form-control"}
+                          open={isPassageSenateCalendarOpen}
+                          onClickOutside={() =>
+                            setPassageSenateCalendarOpen(false)
+                          }
+                          onInputClick={handlePassageSenateCalendarToggle}
                           maxDate={new Date()}
                           dateFormat="dd-MM-yyyy"
                         />
@@ -1631,7 +1726,6 @@ const EditSenateBill = () => {
                             top: "36px",
                             zIndex: 1,
                             fontSize: "20px",
-                            zIndex: "1",
                             color: "#666",
                           }}
                           onClick={handleDocomentDateCalendarToggle}
@@ -1667,19 +1761,19 @@ const EditSenateBill = () => {
                         <option value="" disabled hidden>
                           Select
                         </option>
-                        <option value="Amendment">Amendment</option>
+                        <option value="Ammendment">Ammendment</option>
                         <option value="Bill">Bill</option>
                         <option value="Committee Report">
                           Committee Report
                         </option>
                         <option value="Gazette">Gazette</option>
-                        <option value="Letter Sent To Senator">
+                        <option value="Letter Sent to Senator">
                           Letter Sent To Senator
                         </option>
-                        <option value="Member Notice For Passage">
+                        <option value="Member Notice for Passage">
                           Member Notice For Passage
                         </option>
-                        <option value="Member Notice For withdrawal">
+                        <option value="Member Notice for Withdrawal">
                           Member Notice For withdrawal
                         </option>
                         <option value="Notice">Notice</option>
@@ -1691,16 +1785,43 @@ const EditSenateBill = () => {
                         Choose File
                       </label>
                       <input
-                        type="file"
-                        id="fileInput"
-                        name="fileInput"
                         className="form-control"
+                        type="file"
+                        accept=".pdf, .jpg, .jpeg, .png"
+                        id="file"
+                        name="file"
                         onChange={(event) => {
-                          // Handle file input change event
-                          console.log(event.target.files);
+                          formik.setFieldValue(
+                            "file",
+                            event.currentTarget.files
+                          );
                         }}
                       />
                     </div>
+                    {filePath && (
+                      <div>
+                        <a
+                          href={`${imagesUrl}${filePath}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        ></a>
+                        <span
+                          class="MultiFile-label"
+                          title={filePath.split("\\").pop().split("/").pop()}
+                        >
+                          <span class="MultiFile-title">
+                            <a
+                              href={`${imagesUrl}${filePath}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {filePath?.split("\\").pop().split("/").pop()}
+                            </a>
+                          </span>
+                        </span>
+                      </div>
+                    )}
+
                     <div className="row mt-3">
                       <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                         <button class="btn btn-primary" type="submit">

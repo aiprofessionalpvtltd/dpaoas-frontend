@@ -137,8 +137,8 @@ function NewLegislationSenateBill() {
     >
       <ToastContainer />
       <Header
-        dashboardLink={"/notice/dashboard"}
-        addLink1={"/notice/question/new"}
+        dashboardLink={"/lgms/dashboard"}
+        addLink1={"/lgms/dashboard/bills/legislation-bills"}
         title1={"New Senate Bill"}
       />
 

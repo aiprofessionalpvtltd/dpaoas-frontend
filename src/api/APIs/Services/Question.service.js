@@ -18,6 +18,18 @@ export const createQuestion = async (data) => {
   }
 };
 
+//DeleteQuestion
+export const DeleteQuestion = async (id) => {
+  try {
+    //   const token = getAuthToken()
+    const response = await axiosClientMMS.put(`/questions/delete/${id}`)
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
 export const getAllQuestion = async (page, pageSize, questionSentStatus) => {
   try {
     // const token = getAuthToken();
@@ -405,12 +417,11 @@ export const saveQuestionList = async (data) => {
 };
 
 // api needed
-export const printQuestionsFromList = async (data) => {
+export const printQuestionsFromList = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.post(
-      `/questionList/saveQuestionList`,
-      data,
+    const response = await axiosClientMMS.get(
+      `/questionList/${id}`,
       {
         // headers: {
         //   Authorization: `Bearer ${token}`,

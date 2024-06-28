@@ -7,7 +7,7 @@ const Quill = ReactQuill.Quill;
 
 Quill.register("modules/imageResize", ImageResize);
 
-export const Editor = ({ onChange, title, value }) => {
+export const Editor = ({ onChange, title, value, display, width, height, readOnly }) => {
   const [isEditorLoaded, setEditorLoaded] = useState(false);
 
   const fonts = useMemo(
@@ -186,16 +186,17 @@ export const Editor = ({ onChange, title, value }) => {
 
   return (
     <div>
-      <div style={{ display: "grid", justifyContent: "start" }}>
+      <div style={{ display: display ? display : "grid", justifyContent: "start" }}>
         <label class="form-label">{title}</label>
         <ReactQuill
           theme="snow"
+          readOnly={readOnly}
           modules={modules}
           formats={formats}
           placeholder="write your content ...."
           value={value}
           onChange={onChange}
-          style={{ height: "300px" }}
+          style={{ height: height ? height : "300px", width: width && width }}
         ></ReactQuill>
       </div>
     </div>

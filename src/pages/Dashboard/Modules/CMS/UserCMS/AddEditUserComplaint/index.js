@@ -210,7 +210,8 @@ function CMSAddEditUserComplaint() {
     try {
       const response = await getAllTonerModels(0, 100);
       if (response.success) {
-        setModalData(response?.data?.tonerModels);
+        const filterData = response?.data?.tonerModels?.filter((item) => item.status === "active")
+        setModalData(filterData);
       }
     } catch (error) {
       console.log(error);

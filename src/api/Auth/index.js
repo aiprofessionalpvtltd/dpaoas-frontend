@@ -90,3 +90,28 @@ export const setregisterID = (id) => {
 export const getRegisterID = (id) => {
   return localStorage.getItem("registerid", id);
 };
+
+export const setSelectedFileID = (data) => {
+  localStorage.setItem("fileID", JSON.stringify(data));
+};
+
+export const getSelectedFileID = () => {
+  const Data = localStorage.getItem("fileID");
+  return Data && JSON.parse(Data);
+};
+
+export const setFileIdForDetailPage = (id) => {
+  localStorage.setItem("fileIdDetail", id);
+};
+
+export const getFileIdForDetailPage = (id) => {
+  return localStorage.getItem("fileIdDetail", id);
+};
+
+export const setCaseIdForDetailPage = (id) => {
+  localStorage.setItem("caseIdDetail", id);
+};
+
+export const getCaseIdForDetailPage = (id) => {
+  return localStorage.getItem("caseIdDetail", id);
+};
