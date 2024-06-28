@@ -117,7 +117,7 @@ function LegislationManagementSystemDashboard() {
           </div>
         </div>
 
-        <h2
+        {/* <h2
           style={{
             fontSize: "22px",
             fontWeight: "bold",
@@ -126,8 +126,8 @@ function LegislationManagementSystemDashboard() {
           }}
         >
           Upcoming Session Stats
-        </h2>
-        <div class="row">
+        </h2> */}
+        {/* <div class="row">
           <div class="col-md-12">
             <div class="mt-2 mb-4">
               <div class="row">
@@ -155,7 +155,7 @@ function LegislationManagementSystemDashboard() {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </Layout>
   );

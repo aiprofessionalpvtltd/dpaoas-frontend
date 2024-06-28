@@ -43,7 +43,7 @@ const committeesData = [
     id: 4,
     committeeRoom: "Committee Room 1",
     date: "02-11-2024",
-    Time: "8:00 AM",
+    Time: "08:00 AM",
     CommitteeName:
       "Standing Committee on Planning Development and Special Initiatives",
     
@@ -52,7 +52,52 @@ const committeesData = [
     id: 5,
     committeeRoom: "Committee Room 2",
     date: "02-11-2024",
-    Time: "8:00 AM",
+    Time: "08:00 AM",
+    CommitteeName:
+      "Standing Committee on Finance and Revenue",
+    
+  },
+  {
+    id: 6,
+    committeeRoom: "Committee Room 3",
+    date: "02-11-2024",
+    Time: "08:00 AM",
+    CommitteeName:
+      "Standing Committee on Finance and Revenue",
+    
+  },
+  {
+    id: 7,
+    committeeRoom: "Committee Room 3",
+    date: "02-05-2024",
+    Time: "10:00 AM",
+    CommitteeName:
+      "Standing Committee on Finance and Revenue",
+    
+  },
+  {
+    id: 8,
+    committeeRoom: "Committee Room 4",
+    date: "05-06-2024",
+    Time: "09:00 AM",
+    CommitteeName:
+      "Standing Committee on Finance and Revenue",
+    
+  },
+  {
+    id: 9,
+    committeeRoom: "Committee Room 4",
+    date: "06-06-2024",
+    Time: "09:00 AM",
+    CommitteeName:
+      "Standing Committee on Finance and Revenue",
+    
+  },
+  {
+    id: 10,
+    committeeRoom: "Committee Room 2",
+    date: "23-06-2024",
+    Time: "11:00 AM",
     CommitteeName:
       "Standing Committee on Finance and Revenue",
     
@@ -66,7 +111,7 @@ function CommitteesManagementSystemBookingCommitteeRooms() {
   const [currentPage, setCurrentPage] = useState(0);
   const [billData, setBillData] = useState([]);
   const [committeeData, setCommitteeData] = useState([]);
-  const pageSize = 5;
+  const pageSize = 10;
 
   const handlePageChange = (page) => {
     setCurrentPage(page);

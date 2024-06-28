@@ -63,7 +63,6 @@ function ScheduleCommitteeRoom({
   isModalOpen,
   handleModal,
   committeeRoom,
-  timeSlot,
 }) {
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const formik = useFormik({
