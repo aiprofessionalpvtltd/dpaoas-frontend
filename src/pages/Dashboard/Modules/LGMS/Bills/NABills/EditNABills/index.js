@@ -278,6 +278,13 @@ const UpdateBills = () => {
 
   useEffect(() => {
     if (singleSenateBillData) {
+
+      let fileNum="";
+      if(singleSenateBillData?.fileNumber){
+        const fileNumberMatch = singleSenateBillData?.fileNumber?.match(/\((\d+)\)/);
+        fileNum = fileNumberMatch ? fileNumberMatch[1] : '';
+
+      }
       const file = singleSenateBillData?.billDocuments?.file?.[0];
       let parsedFile = null;
       if (file) {
@@ -302,7 +309,7 @@ const UpdateBills = () => {
         billCategory: singleSenateBillData?.billCategory || "",
         billType: singleSenateBillData?.billType || "",
         // billStatuses: singleSenateBillData?.billStatuses || "",
-        fileNumber: singleSenateBillData?.fileNumber || "",
+        fileNumber: fileNum || "",
         PassedByNADate: singleSenateBillData?.PassedByNADate
           ? moment(singleSenateBillData?.PassedByNADate).toDate()
           : null,
@@ -340,11 +347,15 @@ const UpdateBills = () => {
         //     }))
         //   : [],
         senateBillMinistryMovers: singleSenateBillData?.senateBillMinistryMovers
-        ? {
-            value: singleSenateBillData?.senateBillMinistryMovers[0]?.ministrie?.id,
-            label: singleSenateBillData?.senateBillMinistryMovers[0]?.ministrie?.ministryName,
-          }
-        : null,
+          ? {
+              value:
+                singleSenateBillData?.senateBillMinistryMovers[0]?.ministrie
+                  ?.id,
+              label:
+                singleSenateBillData?.senateBillMinistryMovers[0]?.ministrie
+                  ?.ministryName,
+            }
+          : null,
         introducedInHouseDate:
           singleSenateBillData?.introducedInHouses &&
           singleSenateBillData?.introducedInHouses?.introducedInHouseDate
@@ -420,7 +431,7 @@ const UpdateBills = () => {
           : "",
       });
     }
-  }, [singleSenateBillData, formik.setValues]);
+  }, [singleSenateBillData]);
 
   // console.log("PAAAA FIle", singleSenateBillData?.billDocuments);
   const UpdateNationalAssemblyBill = async (values) => {
@@ -433,7 +444,8 @@ const UpdateBills = () => {
     formData.append("billCategory", values?.billCategory);
     formData.append("billType", values?.billType);
     formData.append("fkBillStatus", values?.fkBillStatus?.value);
-    formData.append("fileNumber", values?.fileNumber);
+    formData.append("fileNumber",   `09(${values?.fileNumber})/2024`);
+    // formData.append("fileNumber", values?.fileNumber);
     // formData.append("PassedByNADate", values?.PassedByNADate);
     if (values?.PassedByNADate) {
       const formattedDate = moment(values?.PassedByNADate).format("YYYY-MM-DD");
@@ -598,7 +610,10 @@ const UpdateBills = () => {
     //   });
     // }
     if (values?.senateBillMinistryMovers) {
-      formData.append(`senateBillMinistryMovers[${0}][fkMinistryId]`, values?.senateBillMinistryMovers?.value)
+      formData.append(
+        `senateBillMinistryMovers[${0}][fkMinistryId]`,
+        values?.senateBillMinistryMovers?.value
+      );
     }
 
     try {
@@ -844,7 +859,6 @@ const UpdateBills = () => {
                               top: "36px",
                               zIndex: 1,
                               fontSize: "20px",
-                              zIndex: "1",
                               color: "#666",
                               cursor: "pointer",
                             }}
@@ -918,7 +932,6 @@ const UpdateBills = () => {
                               top: "36px",
                               zIndex: 1,
                               fontSize: "20px",
-                              zIndex: "1",
                               color: "#666",
                               cursor: "pointer",
                             }}
@@ -969,7 +982,6 @@ const UpdateBills = () => {
                               top: "36px",
                               zIndex: 1,
                               fontSize: "20px",
-                              zIndex: "1",
                               color: "#666",
                               cursor: "pointer",
                             }}
@@ -1199,7 +1211,6 @@ const UpdateBills = () => {
                               top: "36px",
                               zIndex: 1,
                               fontSize: "20px",
-                              zIndex: "1",
                               color: "#666",
                               cursor: "pointer",
                             }}
@@ -1222,7 +1233,36 @@ const UpdateBills = () => {
                           />
                         </div>
                       </div>
-
+                      <div class="col">
+                        <div class="mb-3" style={{ position: "relative" }}>
+                          <label class="form-label">Refered On</label>
+                          <span
+                            style={{
+                              position: "absolute",
+                              right: "15px",
+                              top: "36px",
+                              zIndex: 1,
+                              fontSize: "20px",
+                              color: "#666",
+                            }}
+                            onClick={handleReferredCalendarToggle}
+                          >
+                            <FontAwesomeIcon icon={faCalendarAlt} />
+                          </span>
+                          <DatePicker
+                            selected={formik.values.referedOnDate}
+                            onChange={handleReferredDateSelect}
+                            className={"form-control"}
+                            open={isReferredCalendarOpen}
+                            onClickOutside={() =>
+                              setReferredCalendarOpen(false)
+                            }
+                            onInputClick={handleReferredCalendarToggle}
+                            maxDate={new Date()}
+                            dateFormat="dd-MM-yyyy"
+                          />
+                        </div>
+                      </div>
                       <div className="col">
                         <label className="form-label">
                           Introduced in Session
@@ -1285,37 +1325,7 @@ const UpdateBills = () => {
                         /> */}
                       </div>
 
-                      <div class="col">
-                        <div class="mb-3" style={{ position: "relative" }}>
-                          <label class="form-label">Refered On</label>
-                          <span
-                            style={{
-                              position: "absolute",
-                              right: "15px",
-                              top: "36px",
-                              zIndex: 1,
-                              fontSize: "20px",
-                              zIndex: "1",
-                              color: "#666",
-                            }}
-                            onClick={handleReferredCalendarToggle}
-                          >
-                            <FontAwesomeIcon icon={faCalendarAlt} />
-                          </span>
-                          <DatePicker
-                            selected={formik.values.referedOnDate}
-                            onChange={handleReferredDateSelect}
-                            className={"form-control"}
-                            open={isReferredCalendarOpen}
-                            onClickOutside={() =>
-                              setReferredCalendarOpen(false)
-                            }
-                            onInputClick={handleReferredCalendarToggle}
-                            maxDate={new Date()}
-                            dateFormat="dd-MM-yyyy"
-                          />
-                        </div>
-                      </div>
+                    
                     </div>
 
                     <div className="row">
@@ -1360,7 +1370,6 @@ const UpdateBills = () => {
                               top: "36px",
                               zIndex: 1,
                               fontSize: "20px",
-                              zIndex: "1",
                               color: "#666",
                             }}
                             onClick={handleReportPresenatationDayCalendarToggle}
@@ -1439,7 +1448,6 @@ const UpdateBills = () => {
                               top: "36px",
                               zIndex: 1,
                               fontSize: "20px",
-                              zIndex: "1",
                               color: "#666",
                               cursor: "pointer",
                             }}
@@ -1472,7 +1480,6 @@ const UpdateBills = () => {
                               top: "36px",
                               zIndex: 1,
                               fontSize: "20px",
-                              zIndex: "1",
                               color: "#666",
                             }}
                             onClick={handleConsiderationCalendarToggle}
@@ -1542,7 +1549,6 @@ const UpdateBills = () => {
                             top: "36px",
                             zIndex: 1,
                             fontSize: "20px",
-                            zIndex: "1",
                             color: "#666",
                           }}
                           onClick={handlePassageSenateCalendarToggle}
@@ -1576,7 +1582,6 @@ const UpdateBills = () => {
                             top: "36px",
                             zIndex: 1,
                             fontSize: "20px",
-                            zIndex: "1",
                             color: "#666",
                           }}
                           onClick={handleTransmissionCalendarToggle}
@@ -1610,7 +1615,6 @@ const UpdateBills = () => {
                             top: "36px",
                             zIndex: 1,
                             fontSize: "20px",
-                            zIndex: "1",
                             color: "#666",
                           }}
                           onClick={handleRecepitMesageCalendarToggle}
@@ -1642,7 +1646,6 @@ const UpdateBills = () => {
                             top: "36px",
                             zIndex: 1,
                             fontSize: "20px",
-                            zIndex: "1",
                             color: "#666",
                           }}
                           onClick={handlePassageByNACalendarToggle}
@@ -1707,7 +1710,6 @@ const UpdateBills = () => {
                             top: "36px",
                             zIndex: 1,
                             fontSize: "20px",
-                            zIndex: "1",
                             color: "#666",
                           }}
                           onClick={handleDocomentDateCalendarToggle}
@@ -1803,7 +1805,7 @@ const UpdateBills = () => {
                         </span>
                       </div>
                     )}
-                   
+
                     <div className="row mt-3">
                       <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                         <button class="btn btn-primary" type="submit">

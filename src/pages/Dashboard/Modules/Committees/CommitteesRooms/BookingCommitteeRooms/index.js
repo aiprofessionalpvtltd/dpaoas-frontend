@@ -1,9 +1,8 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useState } from "react";
 import { ToastContainer } from "react-toastify";
 import { Layout } from "../../../../../../components/Layout";
 import {
   CommitteesSideBarItems,
-  LegislationSideBarItems,
 } from "../../../../../../utils/sideBarItems";
 
 import Header from "../../../../../../components/Header";
@@ -109,28 +108,28 @@ function CommitteesManagementSystemBookingCommitteeRooms() {
   const navigate = useNavigate();
   const [count, setCount] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
-  const [billData, setBillData] = useState([]);
-  const [committeeData, setCommitteeData] = useState([]);
+  // const [billData, setBillData] = useState([]);
+  // const [committeeData, setCommitteeData] = useState([]);
   const pageSize = 10;
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
-  const transformLegislativeData = (apiData) => {
-    return apiData.map((item, index) => ({
-      SR: item?.id,
-      committeeName: item?.title ? item?.title : "",
-      committeeType: item?.session?.sessionName
-        ? item?.session?.sessionName
-        : "",
-      chairpersonConvener: item?.date
-        ? moment(item?.date).format("DD-MM-YYYY")
-        : "",
-      committeeSecretary: item?.description ? item?.description : "",
-      members: item?.device ? item?.device : "",
-      status: item?.isActive ? item?.isActive : "",
-    }));
-  };
+  // const transformLegislativeData = (apiData) => {
+  //   return apiData.map((item, ) => ({
+  //     SR: item?.id,
+  //     committeeName: item?.title ? item?.title : "",
+  //     committeeType: item?.session?.sessionName
+  //       ? item?.session?.sessionName
+  //       : "",
+  //     chairpersonConvener: item?.date
+  //       ? moment(item?.date).format("DD-MM-YYYY")
+  //       : "",
+  //     committeeSecretary: item?.description ? item?.description : "",
+  //     members: item?.device ? item?.device : "",
+  //     status: item?.isActive ? item?.isActive : "",
+  //   }));
+  // };
 
   return (
     <Layout

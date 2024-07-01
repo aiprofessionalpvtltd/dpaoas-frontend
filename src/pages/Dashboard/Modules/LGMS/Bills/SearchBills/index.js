@@ -1,6 +1,5 @@
 import React, { useState, useContext, useEffect, useCallback } from "react";
 import Select from "react-select";
-
 import { ToastContainer } from "react-toastify";
 import { AuthContext } from "../../../../../../api/AuthContext";
 import { useFormik } from "formik";
@@ -606,7 +605,6 @@ const SearchLegislationBills = () => {
                           top: "36px",
                           zIndex: 1,
                           fontSize: "20px",
-                          zIndex: "1",
                           color: "#666",
                           cursor: "pointer",
                         }}
@@ -639,7 +637,6 @@ const SearchLegislationBills = () => {
                           top: "36px",
                           zIndex: 1,
                           fontSize: "20px",
-                          zIndex: "1",
                           color: "#666",
                           cursor: "pointer",
                         }}
@@ -673,7 +670,6 @@ const SearchLegislationBills = () => {
                           top: "36px",
                           zIndex: 1,
                           fontSize: "20px",
-                          zIndex: "1",
                           color: "#666",
                           cursor: "pointer",
                         }}

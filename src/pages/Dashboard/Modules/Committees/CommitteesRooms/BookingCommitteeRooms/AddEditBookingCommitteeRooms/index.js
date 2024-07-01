@@ -1,23 +1,13 @@
-import React, { useCallback, useEffect, useState } from "react";
-import {
-  showErrorMessage,
-  showSuccessMessage,
-} from "../../../../../../../utils/ToastAlert";
+import React, {  useState } from "react";
+
 import { ToastContainer } from "react-toastify";
 import { Layout } from "../../../../../../../components/Layout";
 import {
   CommitteesSideBarItems,
-  LegislationSideBarItems,
 } from "../../../../../../../utils/sideBarItems";
-import {
-  DeleteLegislativeBill,
-  getAllLegislativeBill,
-} from "../../../../../../../api/APIs/Services/Notice.service";
-import Header from "../../../../../../../components/Header";
-import moment from "moment";
-import { useNavigate } from "react-router-dom";
-import CustomTable from "../../../../../../../components/CustomComponents/CustomTable";
+
 import ScheduleCommitteeRoom from "../../../../../../../components/CommitteeModels/CommitteeRoomModal";
+import Header from "../../../../../../../components/Header";
 // import CustomTable from "../../../../../components/CustomComponents/CustomTable";
 
 const CommitteeRooms = [
@@ -135,11 +125,11 @@ function CommitteesManagementSystemAddEditBookinginCommitteeRooms() {
     setIsModalOpen(true);
   };
 
-  const handleClosePopup = () => {
-    setShowPopup(false);
-    setSelectedCommitteeRoom(null);
-    setSelectedTimeSlot(null);
-  };
+  // const handleClosePopup = () => {
+  //   setShowPopup(false);
+  //   setSelectedCommitteeRoom(null);
+  //   setSelectedTimeSlot(null);
+  // };
 
   return (
     <Layout

@@ -14,7 +14,7 @@ import {
   showErrorMessage,
   showSuccessMessage,
 } from "../../../../../../utils/ToastAlert";
-
+import moment from "moment";
 const AllLegislationBill = () => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(0);
@@ -28,20 +28,29 @@ const AllLegislationBill = () => {
     setCurrentPage(page);
   };
   const transformAllBillData = (apiData) => {
+    console.log("Api Data", apiData)
     return apiData?.map((item) => ({
       id: item.id,
-      parliamentaryYear: item?.parliamentaryYears?.parliamentaryTenure,
-      session: item?.sessions?.sessionName,
-      billType: item.billType,
-      billCategory: item.billCategory,
+      billTitle:item?.billTitle,
+      dateOfIntroductionInSenate: item?.introducedInHouses?.introducedInHouseDate ? moment(item?.introducedInHouses?.introducedInHouseDate).format("DD-MM-YYYY"):"---",
+      dateOfPresentationReport: item?.introducedInHouses?.reportPresentationDate ? moment(item?.introducedInHouses?.reportPresentationDate).format("DD-MM-YYYY"):"---",
+      dateOfTransmission: item?.dateOfTransmissionToNA ? moment(item?.dateOfTransmissionToNA).format("DD-MM-YYYY"):"---",
+      remarks: item?.billRemarks,
+      movers: item?.senateBillMnaMovers 
+      ? item?.senateBillMnaMovers.map((mover) => mover?.mna?.mnaName).join(", ")
+      : "---",
+      // parliamentaryYear: item?.parliamentaryYears?.parliamentaryTenure,
+      // session: item?.sessions?.sessionName,
+      // billType: item.billType,
+      // billCategory: item.billCategory,
       fileNumber: item?.fileNumber,
-      billFrom: item?.billFrom,
-      concerndCommittes: item?.introducedInHouses?.manageCommittees
-        ?.committeeName
-        ? item?.introducedInHouses?.manageCommittees?.committeeName
-        : "---",
-      billStatus: item?.billStatuses?.billStatusName,
-      Status: item.billStatus,
+      // billFrom: item?.billFrom,
+      // concerndCommittes: item?.introducedInHouses?.manageCommittees
+      //   ?.committeeName
+      //   ? item?.introducedInHouses?.manageCommittees?.committeeName
+      //   : "---",
+      // billStatus: item?.billStatuses?.billStatusName,
+      // Status: item.billStatus,
     }));
   };
   // Get All Bills
@@ -237,6 +246,7 @@ const AllLegislationBill = () => {
                 ? handleEditSenateBill(item?.id)
                 : handleEditNABill(item?.id);
             }}
+            // handleEdit={(item)=>{handleEditSenateBill(item?.id)}}
             handleDelete={(item) => handleDeleteLegislationBill(item?.id)}
           />
         </div>
