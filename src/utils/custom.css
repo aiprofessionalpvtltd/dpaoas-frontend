@@ -2061,7 +2061,16 @@ textarea {
 }
 
 /*------------------ dashboard new Css Start  -----------------*/
-
+.page-item:not(:first-child) .page-link{
+  border-radius: 10px;
+}
+.page-item.active .page-link{
+  background-color: #1b84ff;
+  border: none;
+}
+.active{
+  background: none !important;
+}
 .dash-card {
   background: #fff;
 }
@@ -2072,7 +2081,9 @@ textarea {
   align-items: stretch;
   flex-wrap: wrap;
   padding: 10px 20px 10px 20px;
-  background: #4285f4;
+  background: #FFF;
+  border-radius: 10px;
+  border: #ddd solid 1px;
 }
 
 .dash-card-header h2 {
@@ -3803,8 +3814,8 @@ button span {
 .circle-btn {
   border-radius: 100%;
   margin-right: 5px;
-  background: black;
-  color: #fff;
+  background: none;
+  color: rgb(171, 178, 196);
   width: 30px;
   height: 30px !important;
   text-align: center;

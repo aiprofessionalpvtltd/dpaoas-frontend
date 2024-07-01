@@ -13,7 +13,7 @@ import {
   faTrashArrowUp,
   faListCheck,
   faPaperPlane,
-  faFile
+  faFile,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
@@ -73,17 +73,16 @@ function CustomTable({
   handleSent,
   showSent,
   showDocs,
-  hendleDocs
+  hendleDocs,
 }) {
   const keys = data?.length > 0 ? Object.keys(data[0]) : [];
-const filteredKeys = keys?.filter((key) => {
-  if (key === "internalAttachment" && data.some(obj => Array.isArray(obj[key]))) {
-    return false; // Skip filtering if it's an array in any object
-  }
-  return key !== "internalAttachment" && key !== "internalId" && key !== "isEditable" && key !== "attachmentInternal";
-});
+  const filteredKeys = keys?.filter((key) => {
+    if (key === "internalAttachment" && data.some((obj) => Array.isArray(obj[key]))) {
+      return false; // Skip filtering if it's an array in any object
+    }
+    return key !== "internalAttachment" && key !== "internalId" && key !== "isEditable" && key !== "attachmentInternal";
+  });
 
-  
   const [totalPages, setTotalPages] = useState(0);
 
   const formatHeader = (key) => {
@@ -96,12 +95,7 @@ const filteredKeys = keys?.filter((key) => {
   // }, [data?.length, pageSize]);
 
   useEffect(() => {
-    setTotalPages((prevTotalPages) =>
-      Math.max(
-        1,
-        Math.ceil((totalCount ? totalCount : data?.length) / pageSize)
-      )
-    );
+    setTotalPages((prevTotalPages) => Math.max(1, Math.ceil((totalCount ? totalCount : data?.length) / pageSize)));
   }, [data?.length, pageSize, totalCount]);
 
   const startIndex = currentPage * pageSize;
@@ -127,7 +121,7 @@ const filteredKeys = keys?.filter((key) => {
     if (totalPages <= 1) {
       return null; // Hide pagination if totalPages is 1 or less
     }
-  
+
     const getPages = () => {
       const pages = [];
       if (totalPages <= 5) {
@@ -145,16 +139,12 @@ const filteredKeys = keys?.filter((key) => {
       }
       return pages;
     };
-  
+
     return (
       <nav aria-label="Page navigation">
         <ul className="pagination">
           <li className={`page-item ${currentPage <= 0 ? "disabled" : ""}`}>
-            <button
-              className="page-link"
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage <= 0}
-            >
+            <button className="page-link" onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage <= 0}>
               Previous
             </button>
           </li>
@@ -166,18 +156,13 @@ const filteredKeys = keys?.filter((key) => {
               {page === -1 ? (
                 <span className="page-link">...</span>
               ) : (
-                <button
-                  className="page-link"
-                  onClick={() => handlePageChange(page)}
-                >
+                <button className="page-link" onClick={() => handlePageChange(page)}>
                   {page + 1}
                 </button>
               )}
             </li>
           ))}
-          <li
-            className={`page-item ${currentPage >= totalPages - 1 ? "disabled" : ""}`}
-          >
+          <li className={`page-item ${currentPage >= totalPages - 1 ? "disabled" : ""}`}>
             <button
               className="page-link"
               onClick={() => handlePageChange(currentPage + 1)}
@@ -190,24 +175,21 @@ const filteredKeys = keys?.filter((key) => {
       </nav>
     );
   };
-  
 
   return (
     <div className="container-fluid">
       <div className={`${singleDataCard ? "card" : ""}`}>
         <div className="dash-card">
           {!headerShown && !headerShown && (
-            <div
-              className="dash-card-header"
-              style={{
-                background: headerBgColor ? headerBgColor : "rgb(20, 174, 92)",
-              }}
-            >
-              <h2 className="float-start mt-2">{tableTitle}</h2>
+            <div className="dash-card-header">
+              <h2 style={{ color: "#666" }} className="float-start mt-2">
+                {tableTitle}
+              </h2>
               {!hideBtn && (
                 <>
                   {handleAdd2 && (
                     <button
+                      style={{ background: "#1b84ff", border: "#1b84ff solid 1px" }}
                       className="btn btn-primary float-end ms-2"
                       type="button"
                       onClick={handleAdd2}
@@ -218,11 +200,7 @@ const filteredKeys = keys?.filter((key) => {
                 </>
               )}
               {!hidebtn1 && (
-                <button
-                  className="btn btn-primary float-end"
-                  type="button"
-                  onClick={handleAdd}
-                >
+                <button className="btn btn-primary float-end" type="button" onClick={handleAdd}>
                   {addBtnText}
                 </button>
               )}
@@ -238,12 +216,7 @@ const filteredKeys = keys?.filter((key) => {
                 marginBottom: "15px",
               }}
             >
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Search"
-                onChange={searchonchange}
-              />
+              <input type="text" className="form-control" placeholder="Search" onChange={searchonchange} />
               <div className="input-group-btn">
                 <button className="btn btn-default" type="submit">
                   <i className="glyphicon glyphicon-search"></i>
@@ -271,7 +244,7 @@ const filteredKeys = keys?.filter((key) => {
             </div>
           )}
           <table
-            className="table table-striped table-responsive red-bg-head"
+            className="table table-responsive red-bg-head"
             style={{ marginTop: "20px", display: block ? "block" : "" }}
           >
             <thead>
@@ -283,12 +256,8 @@ const filteredKeys = keys?.filter((key) => {
                     className="text-center"
                     scope="col"
                     style={{
-                      backgroundColor: headertitlebgColor
-                        ? headertitlebgColor
-                        : "#FFF",
-                      color: headertitletextColor
-                        ? headertitletextColor
-                        : "#666",
+                      backgroundColor: headertitlebgColor ? headertitlebgColor : "#FFF",
+                      color: headertitletextColor ? headertitletextColor : "#666",
                     }}
                   >
                     {formatHeader(key)}
@@ -299,12 +268,8 @@ const filteredKeys = keys?.filter((key) => {
                     className="text-center"
                     style={{
                       width: "180px",
-                      backgroundColor: headertitlebgColor
-                        ? headertitlebgColor
-                        : "#FFF",
-                      color: headertitletextColor
-                        ? headertitletextColor
-                        : "#666",
+                      backgroundColor: headertitlebgColor ? headertitlebgColor : "#FFF",
+                      color: headertitletextColor ? headertitletextColor : "#666",
                     }}
                   >
                     Actions
@@ -323,9 +288,7 @@ const filteredKeys = keys?.filter((key) => {
                             checked={isChecked.includes(item.QID)} // Check if item.QID is in the array of selected IDs
                             onChange={() => {
                               // Toggle the selection of the current item
-                              const updatedChecked = isChecked.includes(
-                                item.QID
-                              )
+                              const updatedChecked = isChecked.includes(item.QID)
                                 ? isChecked.filter((id) => id !== item.QID) // If already selected, remove it from the array
                                 : [...isChecked, item.QID]; // If not selected, add it to the array
                               setIsChecked(updatedChecked);
@@ -347,21 +310,21 @@ const filteredKeys = keys?.filter((key) => {
                           item[key] === "pending" ? (
                             <span
                               className={`label label-sm ${
-                                item[key] === "active" ||
-                                item[key] === "complete"
+                                item[key] === "active" || item[key] === "complete"
                                   ? "label-success"
                                   : item[key] === "pending"
-                                    ? "label-pending" : item[key] === "closed" ? "label-close" : item[key] === "in-progress" ? "label-inprogress" 
-                                    : "label-danger"
+                                    ? "label-pending"
+                                    : item[key] === "closed"
+                                      ? "label-close"
+                                      : item[key] === "in-progress"
+                                        ? "label-inprogress"
+                                        : "label-danger"
                               }`}
                             >
                               {item[key]}
                             </span>
-                          ) : item[key] === "Total Motions" ||
-                            item[key] === "Total Resolution" ? (
-                            <span style={{ fontWeight: "bold" }}>
-                              {item[key]}
-                            </span>
+                          ) : item[key] === "Total Motions" || item[key] === "Total Resolution" ? (
+                            <span style={{ fontWeight: "bold" }}>{item[key]}</span>
                           ) : (
                             <span>{item[key]}</span>
                           )}
@@ -372,10 +335,7 @@ const filteredKeys = keys?.filter((key) => {
                           {!hideEditIcon && !hideEditIcon && (
                             <>
                               {showView && handleView && (
-                                <OverlayTrigger
-                                  placement="top"
-                                  overlay={viewTooltip}
-                                >
+                                <OverlayTrigger placement="top" overlay={viewTooltip}>
                                   <button
                                     onClick={() => handleView(item)}
                                     className="btn-xs black circle-btn"
@@ -387,10 +347,7 @@ const filteredKeys = keys?.filter((key) => {
                                 </OverlayTrigger>
                               )}
                               {item?.attachmentInternal && (
-                                <OverlayTrigger
-                                  placement="top"
-                                  overlay={viewTooltip}
-                                >
+                                <OverlayTrigger placement="top" overlay={viewTooltip}>
                                   <button
                                     onClick={() => handleView(item)}
                                     className="btn-xs black circle-btn"
@@ -403,10 +360,7 @@ const filteredKeys = keys?.filter((key) => {
                               )}
 
                               {showAttendance && (
-                                <OverlayTrigger
-                                  placement="top"
-                                  overlay={attendanceTooltip}
-                                >
+                                <OverlayTrigger placement="top" overlay={attendanceTooltip}>
                                   <button
                                     onClick={() => hendleAttendance(item)}
                                     className="btn-xs black circle-btn"
@@ -419,10 +373,7 @@ const filteredKeys = keys?.filter((key) => {
                               )}
 
                               {showPrint && (
-                                <OverlayTrigger
-                                  placement="top"
-                                  overlay={printTooltip}
-                                >
+                                <OverlayTrigger placement="top" overlay={printTooltip}>
                                   <button
                                     onClick={() => handlePrint(item)}
                                     className="btn-xs black circle-btn"
@@ -434,10 +385,7 @@ const filteredKeys = keys?.filter((key) => {
                               )}
 
                               {showCreateBtn && (
-                                <OverlayTrigger
-                                  placement="top"
-                                  overlay={createTooltip}
-                                >
+                                <OverlayTrigger placement="top" overlay={createTooltip}>
                                   <button
                                     onClick={() => hendleCreateBtn(item)}
                                     className="btn-xs black circle-btn"
@@ -450,10 +398,7 @@ const filteredKeys = keys?.filter((key) => {
                               )}
 
                               {showAssigned && (
-                                <OverlayTrigger
-                                  placement="top"
-                                  overlay={assignedTooltip}
-                                >
+                                <OverlayTrigger placement="top" overlay={assignedTooltip}>
                                   <button
                                     onClick={() => hendleAssigned(item)}
                                     className="btn-xs black circle-btn"
@@ -465,10 +410,7 @@ const filteredKeys = keys?.filter((key) => {
                                 </OverlayTrigger>
                               )}
                               {item?.isEditable && (
-                                <OverlayTrigger
-                                  placement="top"
-                                  overlay={editTooltip}
-                                >
+                                <OverlayTrigger placement="top" overlay={editTooltip}>
                                   <button
                                     onClick={() => handleEdit(item)}
                                     className="btn-xs black circle-btn"
@@ -479,10 +421,7 @@ const filteredKeys = keys?.filter((key) => {
                                 </OverlayTrigger>
                               )}
                               {showSent && showSent && (
-                                <OverlayTrigger
-                                  placement="top"
-                                  overlay={sendTooltip}
-                                >
+                                <OverlayTrigger placement="top" overlay={sendTooltip}>
                                   <button
                                     onClick={() => handleSent(item)}
                                     className="btn-xs black circle-btn"
@@ -493,10 +432,7 @@ const filteredKeys = keys?.filter((key) => {
                                 </OverlayTrigger>
                               )}
                               {!showEditIcon && !showEditIcon && (
-                                <OverlayTrigger
-                                  placement="top"
-                                  overlay={editTooltip}
-                                >
+                                <OverlayTrigger placement="top" overlay={editTooltip}>
                                   <button
                                     onClick={() => handleEdit(item)}
                                     className="btn-xs black circle-btn"
@@ -508,10 +444,7 @@ const filteredKeys = keys?.filter((key) => {
                               )}
 
                               {!hideDeleteIcon && !hideDeleteIcon && (
-                                <OverlayTrigger
-                                  placement="top"
-                                  overlay={deleteTooltip}
-                                >
+                                <OverlayTrigger placement="top" overlay={deleteTooltip}>
                                   <button
                                     onClick={() => handleDelete(item)}
                                     className="btn-xs black circle-btn"
@@ -526,10 +459,7 @@ const filteredKeys = keys?.filter((key) => {
                           )}
                           {hideUserIcon && hideUserIcon && (
                             <>
-                              <OverlayTrigger
-                                placement="top"
-                                overlay={vistorTooltip}
-                              >
+                              <OverlayTrigger placement="top" overlay={vistorTooltip}>
                                 <button
                                   onClick={() => handleUser(item)}
                                   className="btn-xs black circle-btn"
@@ -538,10 +468,7 @@ const filteredKeys = keys?.filter((key) => {
                                   <FontAwesomeIcon icon={faUser} />
                                 </button>
                               </OverlayTrigger>
-                              <OverlayTrigger
-                                placement="top"
-                                overlay={printTooltip}
-                              >
+                              <OverlayTrigger placement="top" overlay={printTooltip}>
                                 <button
                                   onClick={() => handlePrint(item)}
                                   className="btn-xs black circle-btn"
@@ -550,10 +477,7 @@ const filteredKeys = keys?.filter((key) => {
                                   <FontAwesomeIcon icon={faPrint} />
                                 </button>
                               </OverlayTrigger>
-                              <OverlayTrigger
-                                placement="top"
-                                overlay={duplicateTooltip}
-                              >
+                              <OverlayTrigger placement="top" overlay={duplicateTooltip}>
                                 <button
                                   onClick={() => handleDuplicate(item)}
                                   className="btn-xs black circle-btn"
@@ -565,10 +489,7 @@ const filteredKeys = keys?.filter((key) => {
                             </>
                           )}
                           {showResolve && (
-                            <OverlayTrigger
-                              placement="top"
-                              overlay={resolveTooltip}
-                            >
+                            <OverlayTrigger placement="top" overlay={resolveTooltip}>
                               <button
                                 onClick={() => hendleResolve(item)}
                                 className="btn-xs black circle-btn"
@@ -580,10 +501,7 @@ const filteredKeys = keys?.filter((key) => {
                           )}
 
                           {showRecoverIcon && showRecoverIcon && (
-                            <OverlayTrigger
-                              placement="top"
-                              overlay={restoreTooltip}
-                            >
+                            <OverlayTrigger placement="top" overlay={restoreTooltip}>
                               <button
                                 onClick={() => handleRecover(item)}
                                 className="btn-xs black circle-btn"
@@ -595,10 +513,7 @@ const filteredKeys = keys?.filter((key) => {
                           )}
 
                           {showListIcon && showListIcon && (
-                            <OverlayTrigger
-                              placement="top"
-                              overlay={listTooltip}
-                            >
+                            <OverlayTrigger placement="top" overlay={listTooltip}>
                               <button
                                 onClick={() => handleList(item)}
                                 className="btn-xs black circle-btn"
@@ -610,10 +525,7 @@ const filteredKeys = keys?.filter((key) => {
                           )}
 
                           {showDocs && (
-                            <OverlayTrigger
-                              placement="top"
-                              overlay={attachDocs}
-                            >
+                            <OverlayTrigger placement="top" overlay={attachDocs}>
                               <button
                                 onClick={() => hendleDocs(item)}
                                 className="btn-xs black circle-btn"
@@ -636,9 +548,7 @@ const filteredKeys = keys?.filter((key) => {
                             checked={isChecked.includes(item.QID)} // Check if item.QID is in the array of selected IDs
                             onChange={() => {
                               // Toggle the selection of the current item
-                              const updatedChecked = isChecked.includes(
-                                item.QID
-                              )
+                              const updatedChecked = isChecked.includes(item.QID)
                                 ? isChecked.filter((id) => id !== item.QID) // If already selected, remove it from the array
                                 : [...isChecked, item.QID]; // If not selected, add it to the array
                               setIsChecked(updatedChecked);
@@ -652,14 +562,9 @@ const filteredKeys = keys?.filter((key) => {
                         //     {item[key]}
                         // </td>
                         <td className="text-center">
-                          {item[key] === "active" ||
-                          item[key] === "inactive" ? (
+                          {item[key] === "active" || item[key] === "inactive" ? (
                             <span
-                              className={`label label-sm ${
-                                item[key] === "active"
-                                  ? "label-success"
-                                  : "label-danger"
-                              }`}
+                              className={`label label-sm ${item[key] === "active" ? "label-success" : "label-danger"}`}
                             >
                               {item[key]}
                             </span>
@@ -673,10 +578,7 @@ const filteredKeys = keys?.filter((key) => {
                           {!hideEditIcon && !hideEditIcon && (
                             <>
                               {showSent && showSent && (
-                                <OverlayTrigger
-                                  placement="top"
-                                  overlay={sendTooltip}
-                                >
+                                <OverlayTrigger placement="top" overlay={sendTooltip}>
                                   <button
                                     onClick={() => handleSent(item)}
                                     className="btn-xs black circle-btn"
@@ -687,10 +589,7 @@ const filteredKeys = keys?.filter((key) => {
                                 </OverlayTrigger>
                               )}
                               {item?.isEditable && (
-                                <OverlayTrigger
-                                  placement="top"
-                                  overlay={editTooltip}
-                                >
+                                <OverlayTrigger placement="top" overlay={editTooltip}>
                                   <button
                                     onClick={() => handleEdit(item)}
                                     className="btn-xs black circle-btn"
@@ -701,10 +600,7 @@ const filteredKeys = keys?.filter((key) => {
                                 </OverlayTrigger>
                               )}
                               {!showEditIcon && !showEditIcon && (
-                                <OverlayTrigger
-                                  placement="top"
-                                  overlay={editTooltip}
-                                >
+                                <OverlayTrigger placement="top" overlay={editTooltip}>
                                   <button
                                     onClick={() => handleEdit(item)}
                                     className="btn-xs black circle-btn"
@@ -715,10 +611,7 @@ const filteredKeys = keys?.filter((key) => {
                                 </OverlayTrigger>
                               )}
                               {showView && handleView && (
-                                <OverlayTrigger
-                                  placement="top"
-                                  overlay={viewTooltip}
-                                >
+                                <OverlayTrigger placement="top" overlay={viewTooltip}>
                                   <button
                                     onClick={() => handleView(item)}
                                     className="btn-xs black circle-btn"
@@ -731,10 +624,7 @@ const filteredKeys = keys?.filter((key) => {
                               )}
 
                               {!hideDeleteIcon && !hideDeleteIcon && (
-                                <OverlayTrigger
-                                  placement="top"
-                                  overlay={deleteTooltip}
-                                >
+                                <OverlayTrigger placement="top" overlay={deleteTooltip}>
                                   <button
                                     onClick={() => handleDelete(item)}
                                     className="btn-xs black circle-btn"
@@ -765,10 +655,7 @@ const filteredKeys = keys?.filter((key) => {
 
                           {hideUserIcon && hideUserIcon && (
                             <>
-                              <OverlayTrigger
-                                placement="top"
-                                overlay={vistorTooltip}
-                              >
+                              <OverlayTrigger placement="top" overlay={vistorTooltip}>
                                 <button
                                   onClick={() => handleUser(item)}
                                   className="btn-xs black circle-btn"
@@ -777,10 +664,7 @@ const filteredKeys = keys?.filter((key) => {
                                   <FontAwesomeIcon icon={faUser} />
                                 </button>
                               </OverlayTrigger>
-                              <OverlayTrigger
-                                placement="top"
-                                overlay={printTooltip}
-                              >
+                              <OverlayTrigger placement="top" overlay={printTooltip}>
                                 <button
                                   onClick={() => handlePrint(item)}
                                   className="btn-xs black circle-btn"
@@ -789,10 +673,7 @@ const filteredKeys = keys?.filter((key) => {
                                   <FontAwesomeIcon icon={faPrint} />
                                 </button>
                               </OverlayTrigger>
-                              <OverlayTrigger
-                                placement="top"
-                                overlay={duplicateTooltip}
-                              >
+                              <OverlayTrigger placement="top" overlay={duplicateTooltip}>
                                 <button
                                   onClick={() => handleDuplicate(item)}
                                   className="btn-xs black circle-btn"
@@ -803,26 +684,20 @@ const filteredKeys = keys?.filter((key) => {
                               </OverlayTrigger>
                             </>
                           )}
-                           {showAttendance && (
-                                <OverlayTrigger
-                                  placement="top"
-                                  overlay={attendanceTooltip}
-                                >
-                                  <button
-                                    onClick={() => hendleAttendance(item)}
-                                    className="btn-xs black circle-btn"
-                                    data-id={item.id}
-                                    style={{ background: "#007bff" }}
-                                  >
-                                    <FontAwesomeIcon icon={faUserCheck} />
-                                  </button>
-                                </OverlayTrigger>
-                              )}
+                          {showAttendance && (
+                            <OverlayTrigger placement="top" overlay={attendanceTooltip}>
+                              <button
+                                onClick={() => hendleAttendance(item)}
+                                className="btn-xs black circle-btn"
+                                data-id={item.id}
+                                style={{ background: "#007bff" }}
+                              >
+                                <FontAwesomeIcon icon={faUserCheck} />
+                              </button>
+                            </OverlayTrigger>
+                          )}
                           {showPrint && (
-                            <OverlayTrigger
-                              placement="top"
-                              overlay={printTooltip}
-                            >
+                            <OverlayTrigger placement="top" overlay={printTooltip}>
                               <button
                                 onClick={() => handlePrint(item)}
                                 className="btn-xs black circle-btn"
@@ -833,10 +708,7 @@ const filteredKeys = keys?.filter((key) => {
                             </OverlayTrigger>
                           )}
                           {showResolve && (
-                            <OverlayTrigger
-                              placement="top"
-                              overlay={resolveTooltip}
-                            >
+                            <OverlayTrigger placement="top" overlay={resolveTooltip}>
                               <button
                                 onClick={() => hendleResolve(item)}
                                 className="btn-xs black circle-btn"
@@ -847,10 +719,7 @@ const filteredKeys = keys?.filter((key) => {
                             </OverlayTrigger>
                           )}
                           {showRecoverIcon && showRecoverIcon && (
-                            <OverlayTrigger
-                              placement="top"
-                              overlay={restoreTooltip}
-                            >
+                            <OverlayTrigger placement="top" overlay={restoreTooltip}>
                               <button
                                 onClick={() => handleRecover(item)}
                                 className="btn-xs black circle-btn"
@@ -862,10 +731,7 @@ const filteredKeys = keys?.filter((key) => {
                           )}
 
                           {showListIcon && showListIcon && (
-                            <OverlayTrigger
-                              placement="top"
-                              overlay={listTooltip}
-                            >
+                            <OverlayTrigger placement="top" overlay={listTooltip}>
                               <button
                                 onClick={() => handleList(item)}
                                 className="btn-xs black circle-btn"
@@ -876,10 +742,7 @@ const filteredKeys = keys?.filter((key) => {
                             </OverlayTrigger>
                           )}
                           {showDocs && (
-                            <OverlayTrigger
-                              placement="top"
-                              overlay={attachDocs}
-                            >
+                            <OverlayTrigger placement="top" overlay={attachDocs}>
                               <button
                                 onClick={() => hendleDocs(item)}
                                 className="btn-xs black circle-btn"
