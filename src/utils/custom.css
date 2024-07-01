@@ -2474,7 +2474,7 @@ textarea {
   padding: 15px 0;
   position: fixed;
   bottom: 0;
-  z-index: 4;
+  /* z-index: 4; */
 }
 
 .green-bg {
@@ -2531,10 +2531,25 @@ textarea {
   color: #fff;
 }
 .label-pending {
-  background-color: #4276f0;
+  background-color: #c2d4ff;
   font-size: 13px;
-  padding: 4px 5px;
-  color: #fff;
+  padding: 3px 6px;
+  color: #4276f0;
+  border-radius: 4px;
+}
+.label-close {
+  background-color: #ffeff3;
+  font-size: 13px;
+  padding: 3px 6px;
+  color: #f8285a;
+  border-radius: 4px;
+}
+.label-inprogress {
+  background-color: #dfffea;
+  font-size: 13px;
+  padding: 3px 6px;
+  color: #17c653;
+  border-radius: 4px;
 }
 
 .btn.default:not(.btn-outline) {

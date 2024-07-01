@@ -5,7 +5,6 @@ import {
   faAddressCard,
   faUserCog,
   faMailBulk,
-  faClipboardList,
   faBullhorn,
   faFileImport,
   faClipboardQuestion,

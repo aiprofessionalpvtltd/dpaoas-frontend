@@ -342,6 +342,8 @@ const filteredKeys = keys?.filter((key) => {
                           {item[key] === "active" ||
                           item[key] === "inactive" ||
                           item[key] === "complete" ||
+                          item[key] === "closed" ||
+                          item[key] === "in-progress" ||
                           item[key] === "pending" ? (
                             <span
                               className={`label label-sm ${
@@ -349,7 +351,7 @@ const filteredKeys = keys?.filter((key) => {
                                 item[key] === "complete"
                                   ? "label-success"
                                   : item[key] === "pending"
-                                    ? "label-pending"
+                                    ? "label-pending" : item[key] === "closed" ? "label-close" : item[key] === "in-progress" ? "label-inprogress" 
                                     : "label-danger"
                               }`}
                             >

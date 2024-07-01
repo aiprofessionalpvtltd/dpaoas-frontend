@@ -22,13 +22,10 @@ import {
   faBook,
   faHeading,
   faBookOpen,
-  faLaptopFile,
   faReceipt,
-  faPeopleGroup,
   faCalendarAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { getUserData } from "../api/Auth";
-import { icon } from "@fortawesome/fontawesome-svg-core";
 
 // LMS Sidebar
 export const LMSsidebarItems = [
@@ -1241,7 +1238,7 @@ export const LDUSideBarItems = [
   },
   {
     itemName: "From Notice Office",
-    link: "/LDU/notice-office",
+    link: "/ldu/notice-office",
     icon: faBookOpen,
     subItems: [
       {
@@ -1258,7 +1255,7 @@ export const LDUSideBarItems = [
   },
   {
     itemName: "Laws / Acts ",
-    link: "/lgms/notice-office",
+    link: "/ldu/notice-office",
     icon: faBookOpen,
     subItems: [
       {
