@@ -14,8 +14,8 @@ import {
   showErrorMessage,
   showSuccessMessage,
 } from "../../../../../../utils/ToastAlert";
-
-const AllLegislationBillList = () => {
+import moment from "moment";
+const AllLegislationBill = () => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(0);
   const [selectedOption, setSelectedOption] = useState("All");
@@ -34,20 +34,29 @@ const AllLegislationBillList = () => {
     // }, 1000);
   };
   const transformAllBillData = (apiData) => {
+    console.log("Api Data", apiData)
     return apiData?.map((item) => ({
       id: item.id,
-      parliamentaryYear: item?.parliamentaryYears?.parliamentaryTenure,
-      session: item?.sessions?.sessionName,
-      billType: item.billType,
-      billCategory: item.billCategory,
+      billTitle:item?.billTitle,
+      dateOfIntroductionInSenate: item?.introducedInHouses?.introducedInHouseDate ? moment(item?.introducedInHouses?.introducedInHouseDate).format("DD-MM-YYYY"):"---",
+      dateOfPresentationReport: item?.introducedInHouses?.reportPresentationDate ? moment(item?.introducedInHouses?.reportPresentationDate).format("DD-MM-YYYY"):"---",
+      dateOfTransmission: item?.dateOfTransmissionToNA ? moment(item?.dateOfTransmissionToNA).format("DD-MM-YYYY"):"---",
+      remarks: item?.billRemarks,
+      movers: item?.senateBillMnaMovers 
+      ? item?.senateBillMnaMovers.map((mover) => mover?.mna?.mnaName).join(", ")
+      : "---",
+      // parliamentaryYear: item?.parliamentaryYears?.parliamentaryTenure,
+      // session: item?.sessions?.sessionName,
+      // billType: item.billType,
+      // billCategory: item.billCategory,
       fileNumber: item?.fileNumber,
-      billFrom: item?.billFrom,
-      concerndCommittes: item?.introducedInHouses?.manageCommittees
-        ?.committeeName
-        ? item?.introducedInHouses?.manageCommittees?.committeeName
-        : "---",
-      billStatus: item?.billStatuses?.billStatusName,
-      Status: item.billStatus,
+      // billFrom: item?.billFrom,
+      // concerndCommittes: item?.introducedInHouses?.manageCommittees
+      //   ?.committeeName
+      //   ? item?.introducedInHouses?.manageCommittees?.committeeName
+      //   : "---",
+      // billStatus: item?.billStatuses?.billStatusName,
+      // Status: item.billStatus,
     }));
   };
   //   Transform Senate Bill Data
@@ -192,6 +201,51 @@ const AllLegislationBillList = () => {
         setNABillData(filteredData);
       }
     }
+  }
+  
+  // Handle Search
+  const handleSearch = useCallback(
+    async (billFrom, billCategory) => {
+      let data = {};
+
+      if (billFrom && !billCategory) {
+        data = {
+          billFrom: billFrom,
+        };
+      } else if (!billFrom && billCategory) {
+        data = {
+          billCategory: billCategory,
+        };
+      } else if (billFrom && billCategory) {
+        data = {
+          billFrom: billFrom,
+          billCategory: billCategory,
+        };
+      }
+
+      try {
+        const response = await mainSearchApi(currentPage, pageSize, data);
+        if (response?.success) {
+          const transformedData = await transformAllBillData(
+            response?.data?.senateBills
+          );
+          setCount(response?.data?.count);
+          setLegislationBillData(transformedData);
+          showSuccessMessage(response?.message);
+        }
+      } catch (error) {
+        showErrorMessage(error?.response?.message);
+      }
+    },
+    [currentPage, pageSize, setCount, setLegislationBillData]
+  );
+
+  //Handle BillFrom Change
+  const handleBillFromChange = (event) => {
+    const selectedValue = event.target.value;
+    setCurrentPage(0);
+    setSelectedFrom(selectedValue);
+    handleSearch(selectedValue, billCategory);
   };
   const handleAddSenateBills = () => {
     navigate("/lgms/dashboard/bills/senate-bills");
@@ -326,6 +380,7 @@ const AllLegislationBillList = () => {
                 ? handleEditSenateBill(item?.id)
                 : handleEditNABill(item?.id);
             }}
+            // handleEdit={(item)=>{handleEditSenateBill(item?.id)}}
             handleDelete={(item) => handleDeleteLegislationBill(item?.id)}
           />
         </div>
