@@ -25,11 +25,11 @@ function HRMDepartment() {
   };
 
   const transformDepartmentData = (apiData) => {
-    return apiData.map((leave) => ({
-      id: leave?.id,
-      departmentName: leave?.departmentName,
-      description: leave?.description,
-      departmentStatus: leave?.departmentStatus,
+    return apiData.map((item) => ({
+      id: item?.id,
+      departmentName: item?.departmentName,
+      description: item?.description,
+      departmentStatus: item?.departmentStatus,
     }));
   };
   const getDepartmentData = useCallback(async () => {

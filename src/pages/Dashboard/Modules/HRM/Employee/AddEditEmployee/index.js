@@ -27,9 +27,8 @@ const validationSchema = Yup.object({
 });
 function HRMAddEditEmployee() {
   const location = useLocation();
-  const { employeeData } = useContext(AuthContext)
+  const { employeeData, allBranchesData } = useContext(AuthContext)
   const [rolesList, setRolesList] = useState([])
-  const [departmentData, setDepartmentData] = useState([])
   const [designationData, setDesignationData] = useState([])
 
 
@@ -40,12 +39,12 @@ function HRMAddEditEmployee() {
       userName: location?.state?.userName ? location?.state?.userName : "",
       phoneNo: location?.state?.phoneNo ? location?.state?.phoneNo : "",
       gender: location?.state?.gender ? location?.state?.gender : "",
-      email: location?.state?.email ? location?.state?.email : "",
+      email: location?.state?.users?.email ? location?.state?.users?.email : "",
       password: location?.state?.password ? location?.state?.password : "",
       fileNumber: location?.state?.fileNumber ? location?.state?.fileNumber : "",
       supervisor: location?.state?.supervisor ? location?.state?.supervisor : "",
-      fkRoleId: location?.state?.fkRoleId ? location?.state?.fkRoleId : "",
-      fkDepartmentId: location?.state?.fkDepartmentId ? location?.state?.fkDepartmentId : "",
+      fkRoleId: location?.state?.users?.role?.id ? location?.state?.users?.role?.id : "",
+      fkBranchId: location?.state?.fkBranchId ? location?.state?.fkBranchId : "",
       fkDesignationId: location?.state?.fkDesignationId ? location?.state?.fkDesignationId : "",
     },
     // validationSchema: validationSchema,
@@ -71,8 +70,8 @@ function HRMAddEditEmployee() {
       fileNumber: values?.fileNumber,
       supervisor: values?.supervisor,
       fkRoleId: values?.fkRoleId,
-      fkDepartmentId: values?.fkDepartmentId,
       fkDesignationId: values?.fkDesignationId,
+      fkBranchId:values?.fkBranchId
     };
     try {
       const response = await createEmployee(data);
@@ -97,7 +96,7 @@ function HRMAddEditEmployee() {
       fileNumber: values.fileNumber,
       supervisor: values?.supervisor,
       fkRoleId: values?.fkRoleId,
-      fkDepartmentId: values?.fkDepartmentId,
+      fkBranchId: values?.fkBranchId,
       fkDesignationId: values?.fkDesignationId,
     };
     try {
@@ -123,17 +122,7 @@ function HRMAddEditEmployee() {
       console.log(error);
     }
   };
-  const getDepartmentData = async () => {
-    try {
-      const response = await getDepartment(0, 50);
-      if (response?.success) {
-        setDepartmentData(response?.data?.departments);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-
-  }
+  
 
   const getDesignationApi = async () => {
     try {
@@ -148,7 +137,6 @@ function HRMAddEditEmployee() {
 
   useEffect(() => {
     getDesignationApi()
-    getDepartmentData()
     fetchRoles();
   }, []);
 
@@ -285,9 +273,10 @@ function HRMAddEditEmployee() {
                       type="text"
                       class="form-control"
                       id="password"
-                      placeholder={"Password"}
+                      placeholder={location?.state?.id ? "*********":"Password"}
                       value={formik.values.password}
                       onChange={formik.handleChange}
+                      readOnly={location?.state?.id ? true : false} 
                       onBlur={formik.handleBlur}
                     />
                   </div>
@@ -347,18 +336,18 @@ function HRMAddEditEmployee() {
                 <div class="col">
                   <div class="mb-3">
                     <label for="" class="form-label">
-                      Department
+                      Branch
                     </label>
-                    <select class="form-select " id="fkDepartmentId"
-                      value={formik.values.fkDepartmentId}
+                    <select class="form-select " id="fkBranchId"
+                      value={formik.values.fkBranchId}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}>
                       <option value={""} selected disabled hidden>
                         Select
                       </option>
-                      {departmentData &&
-                        departmentData?.map((item) => (
-                          <option value={item.id}>{item.departmentName}</option>
+                      {allBranchesData &&
+                        allBranchesData?.map((item) => (
+                          <option value={item.id}>{item.branchName}</option>
                         ))}
                     </select>
                   </div>

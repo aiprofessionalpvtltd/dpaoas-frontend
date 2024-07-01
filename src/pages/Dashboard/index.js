@@ -209,7 +209,7 @@ function Dashboard() {
       type: "",
       cardbg: "lightGreen",
       icon: faMailBulk,
-      permission: ["Legislation"],
+      permission: ["Committee Mangement System"],
     },
     {
       title: "Telecasting",
@@ -234,7 +234,7 @@ function Dashboard() {
       type: "",
       cardbg: "bluebg",
       icon: faBookOpenReader,
-      permission: ["Legislation"],
+      permission: ["Legislative Drafting Unit"],
     },
   ];
 
