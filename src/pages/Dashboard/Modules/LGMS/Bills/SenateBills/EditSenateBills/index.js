@@ -117,7 +117,7 @@ const EditSenateBill = () => {
       billRemarks: "",
       senateBillSenatorMovers: [],
       senateBillMnaMovers: [],
-      senateBillMinistryMovers: [],
+      senateBillMinistryMovers: null,
       introducedInHouseDate: "",
       fkManageCommitteeId: "",
       referedOnDate: "",
@@ -127,7 +127,7 @@ const EditSenateBill = () => {
       memeberNoticeDate: "",
       dateOfConsiderationBill: "",
       dateOfPublishInGazette: "",
-      dateOfAssentByPresident: "",
+      dateOfAssentByThePresident:"",
       fkSessionMemberPassageId: "",
       dateOfPassageBySenate: "",
       dateOfTransmissionToNA: "",
@@ -236,7 +236,7 @@ const EditSenateBill = () => {
   };
   // Handale DateCHange
   const handleAssentDateSelect = (date) => {
-    formik.setFieldValue("dateOfAssentByPresident", date);
+    formik.setFieldValue("dateOfAssentByThePresident", date);
     setAssentCalendarOpen(false);
   };
 
@@ -334,11 +334,11 @@ const EditSenateBill = () => {
             }))
           : [],
         senateBillMinistryMovers: singleSenateBillData?.senateBillMinistryMovers
-          ? singleSenateBillData?.senateBillMinistryMovers.map((senator) => ({
-              value: senator?.ministrie?.id,
-              label: senator?.ministrie?.ministryName,
-            }))
-          : [],
+          ? {
+              value: singleSenateBillData?.senateBillMinistryMovers[0]?.ministrie?.id,
+              label: singleSenateBillData?.senateBillMinistryMovers[0]?.ministrie?.ministryName,
+            }
+          : null,
         introducedInHouseDate:
           singleSenateBillData?.introducedInHouses &&
           singleSenateBillData?.introducedInHouses?.introducedInHouseDate
@@ -387,6 +387,12 @@ const EditSenateBill = () => {
           : "",
         dateOfPassageBySenate: singleSenateBillData?.dateOfPassageBySenate
           ? moment(singleSenateBillData?.dateOfPassageBySenate).toDate()
+          : "",
+          dateOfPublishInGazette: singleSenateBillData?.dateOfPublishInGazette
+          ? moment(singleSenateBillData?.dateOfPublishInGazette).toDate()
+          : "",
+          dateOfAssentByThePresident: singleSenateBillData?.dateOfAssentByThePresident
+          ? moment(singleSenateBillData?.dateOfAssentByThePresident).toDate()
           : "",
         dateOfTransmissionToNA: singleSenateBillData?.dateOfTransmissionToNA
           ? moment(singleSenateBillData?.dateOfTransmissionToNA).toDate()
@@ -494,6 +500,18 @@ const EditSenateBill = () => {
       );
       formData.append("dateOfConsiderationBill", formattedDate);
     }
+    if (values?.dateOfPublishInGazette) {
+      const formattedDate = moment(values?.dateOfPublishInGazette).format(
+        "YYYY-MM-DD"
+      );
+      formData.append("dateOfPublishInGazette", formattedDate);
+    }
+    if (values?.dateOfAssentByThePresident) {
+      const formattedDate = moment(values?.dateOfAssentByThePresident).format(
+        "YYYY-MM-DD"
+      );
+      formData.append("dateOfAssentByThePresident", formattedDate);
+    }
     if (values?.fkSessionMemberPassageId) {
       formData.append(
         "fkSessionMemberPassageId",
@@ -571,12 +589,7 @@ const EditSenateBill = () => {
       });
     }
     if (values?.senateBillMinistryMovers) {
-      values?.senateBillMinistryMovers?.forEach((ministry, index) => {
-        formData.append(
-          `senateBillMinistryMovers[${index}][fkMinistryId]`,
-          ministry?.value
-        );
-      });
+      formData.append(`senateBillMinistryMovers[${0}][fkMinistryId]`, values?.senateBillMinistryMovers?.value)
     }
 
     try {
@@ -594,6 +607,8 @@ const EditSenateBill = () => {
       console.log("error", error);
     }
   };
+
+  
   return (
     <Layout
       module={true}
@@ -1123,7 +1138,7 @@ const EditSenateBill = () => {
                             )
                           }
                           value={formik.values.senateBillMinistryMovers}
-                          isMulti={true}
+                          // isMulti={true}
                         />
                       </div>
                     </div>
@@ -1524,7 +1539,7 @@ const EditSenateBill = () => {
                             <FontAwesomeIcon icon={faCalendarAlt} />
                           </span>
                           <DatePicker
-                            selected={formik.values.dateOfAssentByPresident}
+                            selected={formik.values.dateOfAssentByThePresident}
                             onChange={handleAssentDateSelect}
                             className={"form-control"}
                             open={isAssentCalendarOpen}
