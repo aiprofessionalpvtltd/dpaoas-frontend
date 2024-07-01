@@ -340,7 +340,7 @@ function CustomTable({
                                     onClick={() => handleView(item)}
                                     className="btn-xs black circle-btn"
                                     data-id={item.id}
-                                    style={{ background: "#2dce89" }}
+                                    style={{ color: "#2dce89" }}
                                   >
                                     <FontAwesomeIcon icon={faEye} />
                                   </button>
@@ -352,7 +352,7 @@ function CustomTable({
                                     onClick={() => handleView(item)}
                                     className="btn-xs black circle-btn"
                                     data-id={item.id}
-                                    style={{ background: "#2dce89" }}
+                                    style={{ color: "#2dce89" }}
                                   >
                                     <FontAwesomeIcon icon={faEye} />
                                   </button>
@@ -365,7 +365,7 @@ function CustomTable({
                                     onClick={() => hendleAttendance(item)}
                                     className="btn-xs black circle-btn"
                                     data-id={item.id}
-                                    style={{ background: "#007bff" }}
+                                    style={{ color: "#007bff" }}
                                   >
                                     <FontAwesomeIcon icon={faUserCheck} />
                                   </button>
@@ -390,7 +390,7 @@ function CustomTable({
                                     onClick={() => hendleCreateBtn(item)}
                                     className="btn-xs black circle-btn"
                                     data-id={item.id}
-                                    style={{ backgroundColor: "darkblue" }}
+                                    style={{ color: "darkblue" }}
                                   >
                                     <FontAwesomeIcon icon={faCirclePlus} />
                                   </button>
@@ -403,7 +403,7 @@ function CustomTable({
                                     onClick={() => hendleAssigned(item)}
                                     className="btn-xs black circle-btn"
                                     data-id={item.id}
-                                    style={{ backgroundColor: "green" }}
+                                    style={{ color: "#007bff" }}
                                   >
                                     <FontAwesomeIcon icon={faFileExport} />
                                   </button>
@@ -415,6 +415,7 @@ function CustomTable({
                                     onClick={() => handleEdit(item)}
                                     className="btn-xs black circle-btn"
                                     data-id={item.id}
+                                    style={{color:"blue"}}
                                   >
                                     <FontAwesomeIcon icon={faEdit} />
                                   </button>
@@ -426,6 +427,7 @@ function CustomTable({
                                     onClick={() => handleSent(item)}
                                     className="btn-xs black circle-btn"
                                     data-id={item.id}
+                                    style={{color:"green"}}
                                   >
                                     <FontAwesomeIcon icon={faPaperPlane} />
                                   </button>
@@ -437,6 +439,7 @@ function CustomTable({
                                     onClick={() => handleEdit(item)}
                                     className="btn-xs black circle-btn"
                                     data-id={item.id}
+                                    style={{color:"#007bff"}}
                                   >
                                     <FontAwesomeIcon icon={faEdit} />
                                   </button>
@@ -449,7 +452,7 @@ function CustomTable({
                                     onClick={() => handleDelete(item)}
                                     className="btn-xs black circle-btn"
                                     data-id={item.id}
-                                    style={{ background: "#fb6340" }}
+                                    style={{ color: "#fb6340" }}
                                   >
                                     <FontAwesomeIcon icon={faTrash} />
                                   </button>
@@ -494,6 +497,7 @@ function CustomTable({
                                 onClick={() => hendleResolve(item)}
                                 className="btn-xs black circle-btn"
                                 data-id={item.id}
+                                style={{color:"green"}}
                               >
                                 <FontAwesomeIcon icon={faCheck} />
                               </button>
@@ -583,6 +587,7 @@ function CustomTable({
                                     onClick={() => handleSent(item)}
                                     className="btn-xs black circle-btn"
                                     data-id={item.id}
+                                    style={{color:"green"}}
                                   >
                                     <FontAwesomeIcon icon={faPaperPlane} />
                                   </button>
@@ -605,6 +610,7 @@ function CustomTable({
                                     onClick={() => handleEdit(item)}
                                     className="btn-xs black circle-btn"
                                     data-id={item.id}
+                                    style={{color:"#007bff"}}
                                   >
                                     <FontAwesomeIcon icon={faEdit} />
                                   </button>
@@ -616,7 +622,7 @@ function CustomTable({
                                     onClick={() => handleView(item)}
                                     className="btn-xs black circle-btn"
                                     data-id={item.id}
-                                    style={{ background: "#2dce89" }}
+                                    style={{ color: "#2dce89" }}
                                   >
                                     <FontAwesomeIcon icon={faEye} />
                                   </button>
@@ -629,7 +635,7 @@ function CustomTable({
                                     onClick={() => handleDelete(item)}
                                     className="btn-xs black circle-btn"
                                     data-id={item.id}
-                                    style={{ background: "#fb6340" }}
+                                    style={{ color: "#fb6340" }}
                                   >
                                     <FontAwesomeIcon icon={faTrash} />
                                   </button>
@@ -690,7 +696,7 @@ function CustomTable({
                                 onClick={() => hendleAttendance(item)}
                                 className="btn-xs black circle-btn"
                                 data-id={item.id}
-                                style={{ background: "#007bff" }}
+                                style={{ color: "#007bff" }}
                               >
                                 <FontAwesomeIcon icon={faUserCheck} />
                               </button>
@@ -713,6 +719,7 @@ function CustomTable({
                                 onClick={() => hendleResolve(item)}
                                 className="btn-xs black circle-btn"
                                 data-id={item.id}
+                                style={{color:"green"}}
                               >
                                 <FontAwesomeIcon icon={faCheck} />
                               </button>

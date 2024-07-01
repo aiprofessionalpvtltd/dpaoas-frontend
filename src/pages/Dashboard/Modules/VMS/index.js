@@ -124,6 +124,7 @@ function VMSDashboard() {
         <div class="col-12">
           <CustomTable
             block={true}
+            singleDataCard={true}
             data={passAllData}
             tableTitle="Passes"
             addBtnText="Add Pass"
