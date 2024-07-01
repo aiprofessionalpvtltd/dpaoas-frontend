@@ -3,15 +3,14 @@ import { Layout } from "../../../../../components/Layout";
 import { useNavigate } from "react-router-dom";
 import CustomTable from "../../../../../components/CustomComponents/CustomTable";
 import {
-  MMSSideBarItems,
   QMSSideBarItems,
 } from "../../../../../utils/sideBarItems";
 import Header from "../../../../../components/Header";
 import { useFormik } from "formik";
-import * as Yup from "yup";
 import DatePicker from "react-datepicker";
 import { ToastContainer } from "react-toastify";
 import {
+  DeleteQuestion,
   getAllQuestionByID,
   getAllQuestionStatus,
   searchQuestion,
@@ -38,7 +37,7 @@ function QMSSearchQuestion() {
   const [questionStatus, setQuestionStatus] = useState("");
   const [statusDate, setStatusDate] = useState("");
 
-  const [count, setCount] = useState(null);
+  // const [count, setCount] = useState(null);
 
   const pageSize = 4; // Set your desired page size
 
@@ -88,8 +87,9 @@ function QMSSearchQuestion() {
         SubjectMatter: cleanedSubjectMatter,
         Category: res?.questionCategory,
         // SubmittedBy: res.category,
-        Status: res?.questionStatus?.questionStatus,
-        CreatedBy:res?.questionSentStatus == "inQuestion" && "Question"
+        questionStatus: res?.questionStatus?.questionStatus,
+        CreatedBy:res?.questionSentStatus === "inQuestion" && "Question",
+        Status:res?.questionActive
       };
     });
   };
@@ -156,10 +156,24 @@ function QMSSearchQuestion() {
       console.log("isChecked", data);
 
       const response = await updateQuestionStatus(data);
-      showSuccessMessage(response.message);
-      formik.resetForm({});
+      showSuccessMessage(response.message); 
+      SearchQuestionApi(formik.values) 
+      setQuestionStatus(null)
+      setStatusDate(null)
+      setIsChecked([])
     } catch (error) {
       showErrorMessage(error.response?.data?.message);
+    }
+  };
+  const hendleDelete = async (id) => {
+    try {
+      const response = await DeleteQuestion(id); // Add await here
+      if (response?.success) {
+        showSuccessMessage(response?.message);
+        SearchQuestionApi(formik.values);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
     }
   };
 
@@ -346,12 +360,12 @@ function QMSSearchQuestion() {
                       <label class="form-label">Question Status</label>
                       <select
                         class="form-select"
-                        placeholder={formik.values.questionStatus}
+                        value={formik.values.questionStatus}
                         id="questionStatus"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       >
-                        <option value={""} selected disabled hidden>
+                        <option value="" selected disabled hidden>
                           Select
                         </option>
                         {allquestionStatus &&
@@ -386,7 +400,6 @@ function QMSSearchQuestion() {
                           top: "36px",
                           zIndex: 1,
                           fontSize: "20px",
-                          zIndex: "1",
                           color: "#666",
                         }}
                       >
@@ -412,7 +425,6 @@ function QMSSearchQuestion() {
                           top: "36px",
                           zIndex: 1,
                           fontSize: "20px",
-                          zIndex: "1",
                           color: "#666",
                         }}
                       >
@@ -570,6 +582,7 @@ function QMSSearchQuestion() {
                   headerShown={true}
                   data={searchedData}
                   handleEdit={(item) => handleEdit(item.QID)}
+                  handleDelete={(item) => hendleDelete(item.QID)}
                   handlePageChange={handlePageChange}
                   currentPage={currentPage}
                   pageSize={pageSize}
@@ -607,7 +620,6 @@ function QMSSearchQuestion() {
                         top: "36px",
                         zIndex: 1,
                         fontSize: "20px",
-                        zIndex: "1",
                         color: "#666",
                       }}
                     >

@@ -12,7 +12,7 @@ function Header({ dashboardLink, addLink1, addLink2, title1, title2, width, marg
             <li>
               <Link to={addLink1}>{title1}</Link>
             </li>
-          ) : (
+          ) : title1 && (
             <li>
               <span>{title1}</span>
             </li>

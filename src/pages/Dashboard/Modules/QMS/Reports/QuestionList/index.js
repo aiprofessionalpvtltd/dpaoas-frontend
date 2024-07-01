@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { Layout } from "../../../../../../components/Layout";
 import { QMSSideBarItems } from "../../../../../../utils/sideBarItems";
 import Header from "../../../../../../components/Header";
@@ -6,8 +6,7 @@ import { useNavigate } from "react-router-dom";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import { useFormik } from "formik";
 import DatePicker from "react-datepicker";
-import * as Yup from "yup";
-import { delleteQuestionsList, getAllQuesListBySession, getAllQuestion, getAllQuestionByID, getGeneratedQuesList, printQuestionsFromList, saveQuestionList } from "../../../../../../api/APIs/Services/Question.service";
+import { delleteQuestionsList, getAllQuesListBySession, getGeneratedQuesList, printQuestionsFromList, saveQuestionList } from "../../../../../../api/APIs/Services/Question.service";
 import { ToastContainer } from "react-toastify";
 import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
 import { AuthContext } from "../../../../../../api/AuthContext";
@@ -15,15 +14,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
 import { getUserData } from "../../../../../../api/Auth";
-const validationSchema = Yup.object({
-  sessionNumber: Yup.string(),
-  category: Yup.string(),
-  groupNo: Yup.string(),
-  startListNo: Yup.string(),
-  listName: Yup.string(),
-  houseLayDate: Yup.string(),
-  include: Yup.boolean(),
-});
+
 
 function QMSReportQuestionList() {
   const { sessions } = useContext(AuthContext);
@@ -49,7 +40,6 @@ function QMSReportQuestionList() {
       listName: "",
       houseLayDate: "",
     },
-    // validationSchema: validationSchema,
     onSubmit: (values) => {
       console.log(values);
       generateQuestionsList(values);
@@ -57,26 +47,6 @@ function QMSReportQuestionList() {
   });
   const navigate = useNavigate();
 
-  const data = [
-    {
-      "Sr#": 1,
-      "List Name": "21-11-2023",
-      "Session Number": "Saqib khan",
-      "List Date": "Additional Secretary Office",
-      Group: "Personal",
-      Catagory: "AI Professionals Pvt Limited",
-      "Start Number": "21-11-2023",
-    },
-    {
-      "Sr#": 1,
-      "List Name": "21-11-2023",
-      "Session Number": "Saqib khan",
-      "List Date": "Additional Secretary Office",
-      Group: "Personal",
-      Catagory: "AI Professionals Pvt Limited",
-      "Start Number": "21-11-2023",
-    },
-  ];  
 
   const transformLeavesData = (apiData) => {
     return apiData.map((res, index) => {
@@ -325,7 +295,6 @@ function QMSReportQuestionList() {
                           top: "36px",
                           zIndex: 1,
                           fontSize: "20px",
-                          zIndex: "1",
                           color: "#666",
                         }}
                       >

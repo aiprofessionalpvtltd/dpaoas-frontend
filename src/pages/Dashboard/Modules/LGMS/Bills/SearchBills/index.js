@@ -1,7 +1,6 @@
 import React, { useState, useContext, useEffect, useCallback } from "react";
 import Select from "react-select";
 import { ToastContainer } from "react-toastify";
-import * as Yup from "yup";
 import { AuthContext } from "../../../../../../api/AuthContext";
 import { useFormik } from "formik";
 import { getAllParliamentaryYears } from "../../../../../../api/APIs/Services/ManageQMS.service";
@@ -24,20 +23,20 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
-const validationSchema = Yup.object({
-  //   fileNumber: Yup.number().required("File Number  is required"),
-  keywords: Yup.string().required("KeyWord is required"),
-  //   parliamentaryYear: Yup.number().required("Parliamentary Year is required"),
-  //   selectedMinistry: Yup.object().required("Ministry is required"),
-  //   selectedSenator: Yup.string().required("Member Name is required"),
-  //   statusId: Yup.string().required("Status is required"),
-  // englishText: Yup.string().required('English Text is required'),
-  // urduText: Yup.string().required('Urdu Text is required'),
-});
+// const validationSchema = Yup.object({
+//   //   fileNumber: Yup.number().required("File Number  is required"),
+//   keywords: Yup.string().required("KeyWord is required"),
+//   //   parliamentaryYear: Yup.number().required("Parliamentary Year is required"),
+//   //   selectedMinistry: Yup.object().required("Ministry is required"),
+//   //   selectedSenator: Yup.string().required("Member Name is required"),
+//   //   statusId: Yup.string().required("Status is required"),
+//   // englishText: Yup.string().required('English Text is required'),
+//   // urduText: Yup.string().required('Urdu Text is required'),
+// });
 
 
 
-
+ 
 const SearchLegislationBills = () => {
   const navigate = useNavigate();
   const { ministryData, members, sessions } = useContext(AuthContext);

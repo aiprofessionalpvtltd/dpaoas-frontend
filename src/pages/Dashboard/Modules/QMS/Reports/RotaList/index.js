@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { Layout } from "../../../../../../components/Layout";
 import { QMSSideBarItems } from "../../../../../../utils/sideBarItems";
 import Header from "../../../../../../components/Header";
@@ -8,14 +8,7 @@ import { useFormik } from "formik";
 import DatePicker from "react-datepicker";
 import * as Yup from "yup";
 import {
-  delleteQuestionsList,
   generatedRotaList,
-  getAllQuesListBySession,
-  getAllQuestion,
-  getAllQuestionByID,
-  getGeneratedQuesList,
-  printQuestionsFromList,
-  saveQuestionList,
 } from "../../../../../../api/APIs/Services/Question.service";
 import { ToastContainer } from "react-toastify";
 import {
@@ -25,8 +18,6 @@ import {
 import { AuthContext } from "../../../../../../api/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
-import moment from "moment";
-import { getUserData } from "../../../../../../api/Auth";
 import axios from "axios";
 import { imagesUrl } from "../../../../../../api/APIs";
 
@@ -39,8 +30,6 @@ const validationSchema = Yup.object({
 
 function QMSRotaList() {
   const { sessions } = useContext(AuthContext);
-  const userData = getUserData();
-  const [generatedData, setGeneratedData] = useState([]);
   const [resData, setResData] = useState([]);
   const [printFile, setPrintFile] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
@@ -48,7 +37,6 @@ function QMSRotaList() {
   const [sessionId, setSessionId] = useState(null);
   const [groupIdVal, setGroupIdVal] = useState(null);
   const [allotmentTypeVal, setAllotmentTypeVal] = useState(null);
-  const [include, setInclude] = useState(false);
   const pageSize = 10; // Set your desired page size
 
   const handlePageChange = (page) => {
@@ -105,7 +93,9 @@ function QMSRotaList() {
         const url = `${imagesUrl}${response?.data?.fileLink}`;
         setPrintFile(url);
         showSuccessMessage(response?.message);
-        const transformedData = transformLeavesData(response.data?.rotaList?.dates);
+        const transformedData = transformLeavesData(
+          response.data?.rotaList?.dates
+        );
         setResData(transformedData);
       }
     } catch (error) {
@@ -173,7 +163,7 @@ function QMSRotaList() {
                         value={sessionId}
                         onBlur={formik.handleBlur}
                       >
-                        <option value="" disabled>
+                        <option value="" selected disabled hidden>
                           Select
                         </option>
                         {sessions &&
@@ -205,7 +195,7 @@ function QMSRotaList() {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       >
-                        <option value="" disabled>
+                        <option value="" selected disabled hidden>
                           Select
                         </option>
                         <option>Regular Days</option>
@@ -235,7 +225,7 @@ function QMSRotaList() {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       >
-                        <option value="" disabled>
+                        <option value="" selected disabled hidden>
                           Select
                         </option>
                         <option value={"1"}>Group 1</option>
@@ -350,7 +340,7 @@ function QMSRotaList() {
                 currentPage={currentPage}
                 pageSize={pageSize}
                 hideDeleteIcon={true}
-                hideEditIcon={true}
+                showEditIcon={true}
                 showView={true}
                 handleView={(item) =>
                   navigate("/qms/reports/rota-list/further-details", {

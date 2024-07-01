@@ -14,11 +14,9 @@ import { useFormik } from "formik";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import {
   getAllMotion,
-  getAllMotionNotice,
   getMotionByID,
   getallMotionStatus,
   searchMotion,
-  sendToMotion,
 } from "../../../../../../api/APIs/Services/Motion.service";
 import { AuthContext } from "../../../../../../api/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -197,7 +195,7 @@ function MMSMotionList() {
       const response = await getMotionByID(id);
 
       if (response?.success) {
-        navigate("/notice/motion/edit", { state: response?.data });
+        navigate("/mms/motion/detail", { state: response?.data });
         //   navigate("/notice/question/detail", {
         //     state: { question: question?.data, history: history?.data },
         //   });
@@ -478,7 +476,6 @@ function MMSMotionList() {
                           top: "36px",
                           zIndex: 1,
                           fontSize: "20px",
-                          zIndex: "1",
                           color: "#666",
                           cursor: "pointer",
                         }}
@@ -515,7 +512,6 @@ function MMSMotionList() {
                           top: "36px",
                           zIndex: 1,
                           fontSize: "20px",
-                          zIndex: "1",
                           color: "#666",
                           cursor: "pointer",
                         }}
@@ -571,7 +567,7 @@ function MMSMotionList() {
                     currentPage={currentPage}
                     pageSize={pageSize}
                     totalCount={count}
-                    ActionHide={true}
+                    // ActionHide={true}
                   />
                 </div>
               </form>

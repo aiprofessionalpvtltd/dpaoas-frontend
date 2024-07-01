@@ -27,31 +27,30 @@ const validationSchema = Yup.object({
 });
 function HRMAddEditEmployee() {
   const location = useLocation();
-  const { employeeData } = useContext(AuthContext)
+  const { employeeData, allBranchesData } = useContext(AuthContext)
   const [rolesList, setRolesList] = useState([])
-  const [departmentData, setDepartmentData] = useState([])
   const [designationData, setDesignationData] = useState([])
 
 
   const formik = useFormik({
     initialValues: {
-      firstName: "",
-      lastName: "",
-      userName: "",
-      phoneNo: "",
-      gender: "",
-      email: "",
-      password: "",
-      fileNumber: "",
-      supervisor: "",
-      fkRoleId: "",
-      fkDepartmentId: "",
-      fkDesignationId: "",
+      firstName: location?.state?.firstName ? location?.state?.firstName : "",
+      lastName: location?.state?.lastName ? location?.state?.lastName : "",
+      userName: location?.state?.userName ? location?.state?.userName : "",
+      phoneNo: location?.state?.phoneNo ? location?.state?.phoneNo : "",
+      gender: location?.state?.gender ? location?.state?.gender : "",
+      email: location?.state?.users?.email ? location?.state?.users?.email : "",
+      password: location?.state?.password ? location?.state?.password : "",
+      fileNumber: location?.state?.fileNumber ? location?.state?.fileNumber : "",
+      supervisor: location?.state?.supervisor ? location?.state?.supervisor : "",
+      fkRoleId: location?.state?.users?.role?.id ? location?.state?.users?.role?.id : "",
+      fkBranchId: location?.state?.fkBranchId ? location?.state?.fkBranchId : "",
+      fkDesignationId: location?.state?.fkDesignationId ? location?.state?.fkDesignationId : "",
     },
     // validationSchema: validationSchema,
     onSubmit: (values) => {
       // Handle form submission here
-      if (location.state) {
+      if (location?.state?.id) {
         UpdateEmployeeApi(values);
       } else {
         CreateEmployeeApi(values);
@@ -71,8 +70,8 @@ function HRMAddEditEmployee() {
       fileNumber: values?.fileNumber,
       supervisor: values?.supervisor,
       fkRoleId: values?.fkRoleId,
-      fkDepartmentId: values?.fkDepartmentId,
       fkDesignationId: values?.fkDesignationId,
+      fkBranchId:values?.fkBranchId
     };
     try {
       const response = await createEmployee(data);
@@ -97,7 +96,7 @@ function HRMAddEditEmployee() {
       fileNumber: values.fileNumber,
       supervisor: values?.supervisor,
       fkRoleId: values?.fkRoleId,
-      fkDepartmentId: values?.fkDepartmentId,
+      fkBranchId: values?.fkBranchId,
       fkDesignationId: values?.fkDesignationId,
     };
     try {
@@ -123,17 +122,7 @@ function HRMAddEditEmployee() {
       console.log(error);
     }
   };
-  const getDepartmentData = async () => {
-    try {
-      const response = await getDepartment(0, 50);
-      if (response?.success) {
-        setDepartmentData(response?.data?.departments);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-
-  }
+  
 
   const getDesignationApi = async () => {
     try {
@@ -148,7 +137,6 @@ function HRMAddEditEmployee() {
 
   useEffect(() => {
     getDesignationApi()
-    getDepartmentData()
     fetchRoles();
   }, []);
 
@@ -161,7 +149,7 @@ function HRMAddEditEmployee() {
         addLink1={"/hrm/employee"}
         title1={"Employee"}
         addLink2={"/hrm/addeditemployee"}
-        title2={location && location?.state ? "Edit Employee" : "Add Employee"}
+        title2={location?.state && location?.state?.id ? "Edit Employee" : "Add Employee"}
       />
       <ToastContainer />
 
@@ -255,8 +243,8 @@ function HRMAddEditEmployee() {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}>
                       <option value="" disabled hidden>Select</option>
-                      <option value="Male">Male</option>
-                      <option value="Female">Female</option>
+                      <option value="male">Male</option>
+                      <option value="female">Female</option>
                     </select>
                   </div>
                 </div>
@@ -285,9 +273,10 @@ function HRMAddEditEmployee() {
                       type="text"
                       class="form-control"
                       id="password"
-                      placeholder={"Password"}
+                      placeholder={location?.state?.id ? "*********":"Password"}
                       value={formik.values.password}
                       onChange={formik.handleChange}
+                      readOnly={location?.state?.id ? true : false} 
                       onBlur={formik.handleBlur}
                     />
                   </div>
@@ -347,18 +336,18 @@ function HRMAddEditEmployee() {
                 <div class="col">
                   <div class="mb-3">
                     <label for="" class="form-label">
-                      Department
+                      Branch
                     </label>
-                    <select class="form-select " id="fkDepartmentId"
-                      value={formik.values.fkDepartmentId}
+                    <select class="form-select " id="fkBranchId"
+                      value={formik.values.fkBranchId}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}>
                       <option value={""} selected disabled hidden>
                         Select
                       </option>
-                      {departmentData &&
-                        departmentData?.map((item) => (
-                          <option value={item.id}>{item.departmentName}</option>
+                      {allBranchesData &&
+                        allBranchesData?.map((item) => (
+                          <option value={item.id}>{item.branchName}</option>
                         ))}
                     </select>
                   </div>

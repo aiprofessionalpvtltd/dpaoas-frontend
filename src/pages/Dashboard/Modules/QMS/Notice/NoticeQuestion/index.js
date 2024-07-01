@@ -10,12 +10,10 @@ import {
 import {
   getAllQuestion,
   getAllQuestionByID,
-  getAllQuestionNotice,
   getAllQuestionStatus,
   searchQuestion,
-  sendToQuestion,
 } from "../../../../../../api/APIs/Services/Question.service";
-import { Field, Form, Formik, useFormik } from "formik";
+import { useFormik } from "formik";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import { ToastContainer } from "react-toastify";
 import DatePicker from "react-datepicker";
@@ -28,7 +26,6 @@ import Select from "react-select";
 function QMSNoticeQuestion() {
   const navigate = useNavigate();
   const { members, sessions } = useContext(AuthContext);
-  const [searchedData, setSearchedData] = useState([]);
   const [resData, setResData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [allquestionStatus, setAllQuestionStatus] = useState([]);
@@ -38,6 +35,7 @@ function QMSNoticeQuestion() {
   const [searchingFlag, setSearchingFlag] = useState(false);
   const pageSize = 10; // Set your desired page size
 
+  console.log(searchingFlag);
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
     setCurrentPage(page);
@@ -170,7 +168,7 @@ function QMSNoticeQuestion() {
         setSearchingFlag(false); // Set searching flag back to false
       }
     },
-    [currentPage, pageSize, setCount, setResData]
+    [pageSize, setCount, setResData]
   );
 
   // HandleEdit
@@ -179,7 +177,7 @@ function QMSNoticeQuestion() {
       const { question, history } = await getAllQuestionByID(id);
 
       if (question?.success) {
-        navigate("/notice/question/detail", {
+        navigate("/qms/notice/notice-question-detail", {
           state: { question: question?.data, history: history?.data },
         });
       }
@@ -496,7 +494,6 @@ function QMSNoticeQuestion() {
                               top: "36px",
                               zIndex: 1,
                               fontSize: "20px",
-                              zIndex: "1",
                               color: "#666",
                               cursor: "pointer",
                             }}
@@ -533,7 +530,6 @@ function QMSNoticeQuestion() {
                               top: "36px",
                               zIndex: 1,
                               fontSize: "20px",
-                              zIndex: "1",
                               color: "#666",
                               cursor: "pointer",
                             }}
@@ -597,7 +593,7 @@ function QMSNoticeQuestion() {
                     headertitlebgColor={"#666"}
                     headertitletextColor={"#FFF"}
                     showPrint={false}
-                    ActionHide={true}
+                    // ActionHide={true}
                     hideEditIcon={false}
                     hideDeleteIcon={true}
                     handleAdd={(item) => navigate("/")}

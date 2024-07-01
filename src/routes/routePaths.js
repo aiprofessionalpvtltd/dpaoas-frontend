@@ -35,7 +35,6 @@ import NewResolution from "../pages/Dashboard/Modules/Notice/Resolution/New";
 import SearchResolution from "../pages/Dashboard/Modules/Notice/Resolution/Search";
 import SentResolution from "../pages/Dashboard/Modules/Notice/Resolution/Sent";
 import ManageSeatingPlan from "../pages/Dashboard/Modules/Notice/SeatingPlan/ManageSeatingPlan";
-import ManageSessionDays from "../pages/Dashboard/Modules/Notice/SeatingPlan/ManageSessionDays";
 import QMSQuestionDashboard from "../pages/Dashboard/Modules/QMS";
 import QMSNoticeQuestion from "../pages/Dashboard/Modules/QMS/Notice/NoticeQuestion";
 import QMSNoticeQuestionDetail from "../pages/Dashboard/Modules/QMS/Notice/NoticeQuestionDetail";
@@ -135,9 +134,7 @@ import AddEditFiles from "../pages/Dashboard/Modules/EFiling/FIleRegister/Files/
 import AddEditPrivateBill from "../pages/Dashboard/Modules/Notice/legislationBusiness/PrivateBill/AddEditPrivateBill";
 import FileHeadingList from "../pages/Dashboard/Modules/EFiling/FileHeading";
 import AddEditFIleHeading from "../pages/Dashboard/Modules/EFiling/FileHeading/AddEditFIleHeading";
-import CMSSpeechOnDemandDashboard from "../pages/Dashboard/Modules/Notice/SpeechOnDemand";
 import CMSResearchServicesDashboard from "../pages/Dashboard/Modules/Notice/ResearchServices";
-import CMSAddEditSpeechOnDemand from "../pages/Dashboard/Modules/Notice/SpeechOnDemand/AddEditSpeechOnDemand";
 import CMSAddEditResearchService from "../pages/Dashboard/Modules/Notice/ResearchServices/AddEditResearchService";
 import NMSMemberSessionAttendance from "../pages/Dashboard/Modules/Notice/SeatingPlan/MemberSessionAttendance";
 import NMSProroguredSessions from "../pages/Dashboard/Modules/Notice/SeatingPlan/ProroguredSessions";
@@ -148,7 +145,6 @@ import FreshReceipt from "../pages/Dashboard/Modules/EFiling/FreshReceipt";
 import AddEditFR from "../pages/Dashboard/Modules/EFiling/FreshReceipt/AddEditFR";
 import LegislativeBillList from "../pages/Dashboard/Modules/Notice/legislationBusiness/LegislativeBill";
 import AddEditLegislativeBill from "../pages/Dashboard/Modules/Notice/legislationBusiness/LegislativeBill/AddEditLegislativeBill";
-import DirectorDashboard from "../pages/Dashboard/Modules/EFiling/DirectorDashboard";
 import PreviousCasesHistory from "../pages/Dashboard/Modules/EFiling/FIleRegister/Files/FileCases/PreviousCasesHistory";
 import NoticeResolutionDetail from "../pages/Dashboard/Modules/Notice/Resolution/ResolutionDetail";
 import PreviousFRsHistory from "../pages/Dashboard/Modules/EFiling/FreshReceipt/PreviousFRsHistory";
@@ -161,7 +157,6 @@ import QuestionPendingUnderProcess from "../pages/Dashboard/Modules/QMS/Reports/
 import SupplementaryList from "../pages/Dashboard/Modules/QMS/Reports/QuestionList/SupplementaryList";
 import QMSRotaList from "../pages/Dashboard/Modules/QMS/Reports/RotaList";
 import RotaListFurtherDetails from "../pages/Dashboard/Modules/QMS/Reports/RotaList/RotaListFurtherDetails";
-import MainDashBoard from "../pages/Dashboard/Modules/EFiling/MainDashBoard";
 import EventCalendar from "../pages/Dashboard/Modules/Notice/EventCalendar";
 import AddEditEventCalendar from "../pages/Dashboard/Modules/Notice/EventCalendar/AddEditEventCalendar";
 // import ExternalBranchFR from "../pages/Dashboard/Modules/EFiling/FreshReceipt/ExternalBranchFR";
@@ -170,20 +165,21 @@ import AddEditEventCalendar from "../pages/Dashboard/Modules/Notice/EventCalenda
 import MainDashboard from "../pages/Dashboard/Modules/EFiling/MainDashBoard";
 import SMSMembers from "../pages/Dashboard/Modules/SMS/Members";
 import SMSMembersAddEditForm from "../pages/Dashboard/Modules/SMS/Members/AddEditMembers";
-import LegislationManagementSystemDashboard from "../pages/Dashboard/Modules/LGMS";
-import SearchLegislationBills from "../pages/Dashboard/Modules/LGMS/Bills/SearchBills";
-import AllOrdinanceList from "../pages/Dashboard/Modules/LGMS/Ordinance/OrdinanceList";
-import SearchOrdinance from "../pages/Dashboard/Modules/LGMS/Ordinance/SearchOrdinance";
 
-import EditOrdinance from "../pages/Dashboard/Modules/LGMS/Ordinance/EditOrdinance";
-import AddOrdinance from "../pages/Dashboard/Modules/LGMS/Ordinance/AddOrdinance";
-import AllLegislationBillList from "../pages/Dashboard/Modules/LGMS/Bills/LegislationBills";
+// import AllLegislationBillList from "../pages/Dashboard/Modules/LGMS/Bills/LegislationBills";
+import SearchLegislationBills from "../pages/Dashboard/Modules/LGMS/Bills/SearchBills";
+import LegislationManagementSystemDashboard from "../pages/Dashboard/Modules/LGMS";
 import NewLegislationNABill from "../pages/Dashboard/Modules/LGMS/Bills/NABills/AddNABills";
+import AllLegislationBill from "../pages/Dashboard/Modules/LGMS/Bills/LegislationBills";
+import AllOrdinanceList from "../pages/Dashboard/Modules/LGMS/Ordinance/OrdinanceList";
+import AddOrdinance from "../pages/Dashboard/Modules/LGMS/Ordinance/AddOrdinance";
 import NewLegislationSenateBill from "../pages/Dashboard/Modules/LGMS/Bills/SenateBills/AddSenateBills";
 import UpdateBills from "../pages/Dashboard/Modules/LGMS/Bills/NABills/EditNABills";
 import EditSenateBill from "../pages/Dashboard/Modules/LGMS/Bills/SenateBills/EditSenateBills";
+import SearchOrdinance from "../pages/Dashboard/Modules/LGMS/Ordinance/SearchOrdinance";
 import AllBillStatuses from "../pages/Dashboard/Modules/LGMS/Manage/ManageBillStatuses";
 import LGMSMembers from "../pages/Dashboard/Modules/LGMS/Manage/Members";
+import EditOrdinance from "../pages/Dashboard/Modules/LGMS/Ordinance/EditOrdinance";
 import LGMSMembersAddEditForm from "../pages/Dashboard/Modules/LGMS/Manage/Members/AddEditMembers";
 import LGMSParliamentaryYear from "../pages/Dashboard/Modules/LGMS/Manage/ParliamentaryYear";
 import LGMSAddEditParliamentaryYearForm from "../pages/Dashboard/Modules/LGMS/Manage/ParliamentaryYear/AddEditParliamentaryYear";
@@ -225,6 +221,13 @@ import CommitteesManagementSystemPreviousResolutionHistory from "../pages/Dashbo
 import CommitteesManagementSystemPreviousNoticesHistory from "../pages/Dashboard/Modules/Committees/Committees/RecievedBusinessPreviousHistory/Notices";
 import CommitteesManagementSystemPreviousBillsHistory from "../pages/Dashboard/Modules/Committees/Committees/RecievedBusinessPreviousHistory/Bills";
 import LDUDashboard from "../pages/Dashboard/Modules/LDU";
+import QMSNewResolution from "../pages/Dashboard/Modules/QMS/Resolution/NewResolution";
+import LDULegislativeBill from "../pages/Dashboard/Modules/LDU/LDULegislativeBill";
+import LDUAddEditLegislativeBill from "../pages/Dashboard/Modules/LDU/LDULegislativeBill/LDUAddEditLegislativeBill";
+import LDUPrivateBill from "../pages/Dashboard/Modules/LDU/LDUPrivateBill";
+import LDUAddEditPrivateBill from "../pages/Dashboard/Modules/LDU/LDUPrivateBill/LDUAddEditPrivateBill";
+import AllFilesListing from "../pages/Dashboard/Modules/LDU/LawActs/AllListing";
+import EditLawActsBill from "../pages/Dashboard/Modules/LDU/LawActs/AllListing/EditLawActsBill";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -454,6 +457,8 @@ export const ProtectedRoutes = [
   { path: "/qms/resolution", element: <QMSQuestionDashboard /> },
   { path: "/qms/resolution/list", element: <QMSResolutionList /> },
   { path: "/qms/resolution/delete", element: <QMSDeleteResolution /> },
+  { path: "/qms/resolution/new", element: <QMSNewResolution /> },
+
 
   { path: "/qms/notice", element: <QMSQuestionDashboard /> },
   { path: "/qms/notice/notice-question", element: <QMSNoticeQuestion /> },
@@ -711,7 +716,7 @@ export const ProtectedRoutes = [
   },
   {
     path: "/lgms/dashboard/bills/legislation-bills",
-    element: <AllLegislationBillList />,
+    element: <AllLegislationBill />,
   },
   {
     path: "/lgms/dashboard/bills/NA-bills",
@@ -893,8 +898,32 @@ export const ProtectedRoutes = [
 
   //LDU Module
   {
-    path: "/LDU/dashboard",
+    path: "/ldu/dashboard",
     element: <LDUDashboard />,
-  }
+  },
+  {
+    path: "/ldu/legislative/ldu-legislative-bill",
+    element: <LDULegislativeBill />,
+  },
+  {
+    path: "/ldu/legislative/ldu-legislative-bill/edit-bill",
+    element: <LDUAddEditLegislativeBill />,
+  },
+  {
+    path: "/ldu/legislative/ldu-private-bill",
+    element: <LDUPrivateBill />,
+  },
+  {
+    path: "/ldu/privateMemberBill/ldu-private-Bill/edit-private-bill",
+    element: <LDUAddEditPrivateBill />,
+  },
+  {
+    path: "/ldu/lawActs/all-lisitng",
+    element: <AllFilesListing />,
+  },
+  {
+    path: "/ldu/lawActs/all-lisitng/edit-law-acts-Bill",
+    element: <EditLawActsBill />,
+  },
 
 ];

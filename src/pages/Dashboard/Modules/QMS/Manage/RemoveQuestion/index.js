@@ -35,9 +35,9 @@ function RemoveQuestion() {
 
   const getAllQuestionsApi = async () => {
     try {
-      const response = await getAllQuestion(0, 1000);
+      const response = await getAllQuestion(0, 1000, "inQuestion");
       if (response?.success) {
-        setAllQuestions(response.data);
+        setAllQuestions(response.data?.questions);
       }
     } catch (error) {
       console.log(error?.response?.data?.message);

@@ -34,7 +34,7 @@ const EditSenateBill = () => {
   const [committieeData, setCommittieData] = useState([]);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [isIntroducedCalendarOpen, setIntroducedCalendarOpen] = useState(false);
-
+  
   // const [isDateofReciptCalendarOpen, setIsDateofReciptCalendarOpen] =
   //   useState(false);
   const [isReferredCalendarOpen, setReferredCalendarOpen] = useState(false);
@@ -117,7 +117,7 @@ const EditSenateBill = () => {
       billRemarks: "",
       senateBillSenatorMovers: [],
       senateBillMnaMovers: [],
-      senateBillMinistryMovers: [],
+      senateBillMinistryMovers: null,
       introducedInHouseDate: "",
       fkManageCommitteeId: "",
       referedOnDate: "",
@@ -236,7 +236,7 @@ const EditSenateBill = () => {
   };
   // Handale DateCHange
   const handleAssentDateSelect = (date) => {
-    formik.setFieldValue("dateOfAssentByPresident", date);
+    formik.setFieldValue("dateOfAssentByThePresident", date);
     setAssentCalendarOpen(false);
   };
 
@@ -283,7 +283,7 @@ const EditSenateBill = () => {
     if (NA_Bill_ID) {
       getNABillByIdApi();
     }
-  }, []);
+  }, [NA_Bill_ID]);
 
   useEffect(() => {
     if (singleSenateBillData) {
@@ -511,6 +511,18 @@ const EditSenateBill = () => {
       );
       formData.append("dateOfConsiderationBill", formattedDate);
     }
+    if (values?.dateOfPublishInGazette) {
+      const formattedDate = moment(values?.dateOfPublishInGazette).format(
+        "YYYY-MM-DD"
+      );
+      formData.append("dateOfPublishInGazette", formattedDate);
+    }
+    if (values?.dateOfAssentByThePresident) {
+      const formattedDate = moment(values?.dateOfAssentByThePresident).format(
+        "YYYY-MM-DD"
+      );
+      formData.append("dateOfAssentByThePresident", formattedDate);
+    }
     if (values?.fkSessionMemberPassageId) {
       formData.append(
         "fkSessionMemberPassageId",
@@ -609,6 +621,8 @@ const EditSenateBill = () => {
       console.log("error", error);
     }
   };
+
+  
   return (
     <Layout
       module={true}
@@ -818,7 +832,6 @@ const EditSenateBill = () => {
                               top: "36px",
                               zIndex: 1,
                               fontSize: "20px",
-                              zIndex: "1",
                               color: "#666",
                               cursor: "pointer",
                             }}
@@ -890,7 +903,6 @@ const EditSenateBill = () => {
                               top: "36px",
                               zIndex: 1,
                               fontSize: "20px",
-                              zIndex: "1",
                               color: "#666",
                               cursor: "pointer",
                             }}
@@ -941,7 +953,6 @@ const EditSenateBill = () => {
                               top: "36px",
                               zIndex: 1,
                               fontSize: "20px",
-                              zIndex: "1",
                               color: "#666",
                               cursor: "pointer",
                             }}
@@ -1141,7 +1152,7 @@ const EditSenateBill = () => {
                             )
                           }
                           value={formik.values.senateBillMinistryMovers}
-                          isMulti={true}
+                          // isMulti={true}
                         />
                       </div>
                     </div>
@@ -1171,7 +1182,6 @@ const EditSenateBill = () => {
                               top: "36px",
                               zIndex: 1,
                               fontSize: "20px",
-                              zIndex: "1",
                               color: "#666",
                               cursor: "pointer",
                             }}
@@ -1205,7 +1215,6 @@ const EditSenateBill = () => {
                               top: "36px",
                               zIndex: 1,
                               fontSize: "20px",
-                              zIndex: "1",
                               color: "#666",
                             }}
                             onClick={handleReferredCalendarToggle}
@@ -1388,7 +1397,6 @@ const EditSenateBill = () => {
                               top: "36px",
                               zIndex: 1,
                               fontSize: "20px",
-                              zIndex: "1",
                               color: "#666",
                               cursor: "pointer",
                             }}
@@ -1421,7 +1429,6 @@ const EditSenateBill = () => {
                               top: "36px",
                               zIndex: 1,
                               fontSize: "20px",
-                              zIndex: "1",
                               color: "#666",
                             }}
                             onClick={handleConsiderationCalendarToggle}
@@ -1455,7 +1462,6 @@ const EditSenateBill = () => {
                               top: "36px",
                               zIndex: 1,
                               fontSize: "20px",
-                              zIndex: "1",
                               color: "#666",
                               cursor: "pointer",
                             }}
@@ -1513,7 +1519,6 @@ const EditSenateBill = () => {
                               top: "36px",
                               zIndex: 1,
                               fontSize: "20px",
-                              zIndex: "1",
                               color: "#666",
                               cursor: "pointer",
                             }}
@@ -1523,7 +1528,7 @@ const EditSenateBill = () => {
                             <FontAwesomeIcon icon={faCalendarAlt} />
                           </span>
                           <DatePicker
-                            selected={formik.values.dateOfAssentByPresident}
+                            selected={formik.values.dateOfAssentByThePresident}
                             onChange={handleAssentDateSelect}
                             className={"form-control"}
                             open={isAssentCalendarOpen}
@@ -1560,7 +1565,6 @@ const EditSenateBill = () => {
                             top: "36px",
                             zIndex: 1,
                             fontSize: "20px",
-                            zIndex: "1",
                             color: "#666",
                           }}
                           onClick={handleRecepitMesageCalendarToggle}
@@ -1594,7 +1598,6 @@ const EditSenateBill = () => {
                             top: "36px",
                             zIndex: 1,
                             fontSize: "20px",
-                            zIndex: "1",
                             color: "#666",
                           }}
                           onClick={handleTransmissionCalendarToggle}
@@ -1626,7 +1629,6 @@ const EditSenateBill = () => {
                             top: "36px",
                             zIndex: 1,
                             fontSize: "20px",
-                            zIndex: "1",
                             color: "#666",
                           }}
                           onClick={handlePassageByNACalendarToggle}
@@ -1660,7 +1662,6 @@ const EditSenateBill = () => {
                             top: "36px",
                             zIndex: 1,
                             fontSize: "20px",
-                            zIndex: "1",
                             color: "#666",
                           }}
                           onClick={handleReportPresenatationDayCalendarToggle}
@@ -1727,7 +1728,6 @@ const EditSenateBill = () => {
                             top: "36px",
                             zIndex: 1,
                             fontSize: "20px",
-                            zIndex: "1",
                             color: "#666",
                           }}
                           onClick={handleDocomentDateCalendarToggle}

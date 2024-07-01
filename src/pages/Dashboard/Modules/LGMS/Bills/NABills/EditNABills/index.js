@@ -115,7 +115,7 @@ const UpdateBills = () => {
       billStatusDate: "",
       senateBillSenatorMovers: [],
       senateBillMnaMovers: [],
-      senateBillMinistryMovers: [],
+      senateBillMinistryMovers: null,
       introducedInHouseDate: "",
       fkManageCommitteeId: "",
       referedOnDate: "",
@@ -340,6 +340,12 @@ const UpdateBills = () => {
               label: senator?.mna?.mnaName,
             }))
           : [],
+        // senateBillMinistryMovers: singleSenateBillData?.senateBillMinistryMovers
+        //   ? singleSenateBillData?.senateBillMinistryMovers.map((senator) => ({
+        //       value: senator?.ministrie?.id,
+        //       label: senator?.ministrie?.ministryName,
+        //     }))
+        //   : [],
         senateBillMinistryMovers: singleSenateBillData?.senateBillMinistryMovers
           ? {
               value:
@@ -595,6 +601,14 @@ const UpdateBills = () => {
         formData.append(`senateBillMnaMovers[${index}][fkMnaId]`, MNA?.value);
       });
     }
+    // if (values?.senateBillMinistryMovers) {
+    //   values?.senateBillMinistryMovers?.forEach((ministry, index) => {
+    //     formData.append(
+    //       `senateBillMinistryMovers[${index}][fkMinistryId]`,
+    //       ministry?.value
+    //     );
+    //   });
+    // }
     if (values?.senateBillMinistryMovers) {
       formData.append(
         `senateBillMinistryMovers[${0}][fkMinistryId]`,
@@ -1167,7 +1181,7 @@ const UpdateBills = () => {
                             )
                           }
                           value={formik.values.senateBillMinistryMovers}
-                          isMulti={true}
+                          // isMulti={true}
                         />
                       </div>
                     </div>

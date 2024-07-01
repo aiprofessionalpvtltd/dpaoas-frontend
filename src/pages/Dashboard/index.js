@@ -5,7 +5,6 @@ import {
   faAddressCard,
   faUserCog,
   faMailBulk,
-  faClipboardList,
   faBullhorn,
   faFileImport,
   faClipboardQuestion,
@@ -210,7 +209,7 @@ function Dashboard() {
       type: "",
       cardbg: "lightGreen",
       icon: faMailBulk,
-      permission: ["Legislation"],
+      permission: ["Committee Mangement System"],
     },
     {
       title: "Telecasting",
@@ -231,11 +230,11 @@ function Dashboard() {
     //Change Permission
     {
       title: "Legislative Drafting Unit",
-      link: "/LDU/dashboard",
+      link: "/ldu/dashboard",
       type: "",
       cardbg: "bluebg",
       icon: faBookOpenReader,
-      permission: ["Legislation"],
+      permission: ["Legislative Drafting Unit"],
     },
   ];
 

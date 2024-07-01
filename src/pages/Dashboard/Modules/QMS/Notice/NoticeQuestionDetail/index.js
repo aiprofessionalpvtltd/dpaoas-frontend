@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
 import { QMSSideBarItems } from "../../../../../../utils/sideBarItems";
@@ -20,6 +20,8 @@ import {
   sendQuestionTranslation,
 } from "../../../../../../api/APIs/Services/Question.service";
 import { ToastContainer } from "react-toastify";
+import moment from "moment";
+import { getAllDivisions } from "../../../../../../api/APIs/Services/ManageQMS.service";
 
 const validationSchema = Yup.object({
   sessionNumber: Yup.string().required("Session No is required"),
@@ -43,24 +45,24 @@ const validationSchema = Yup.object({
 
 function QMSNoticeQuestionDetail() {
   const { members } = useContext(AuthContext);
+  const [alldivisons, setAllDivisions] = useState([]);
   const location = useLocation();
-  console.log(location?.state?.fkQuestionId);
+  console.log(location?.state?.question);
   const formik = useFormik({
     initialValues: {
-      sessionNumber: location?.state?.fkFromSessionId,
-      noticeOfficeDiaryNumber: location?.state?.questionDiary?.questionDiaryNo,
-      noticeOfficeDiaryDate: new Date(
-        location?.state?.noticeOfficeDiary?.noticeOfficeDiaryDate,
-      ),
-      noticeOfficeDiaryTime:
-        location?.state?.noticeOfficeDiary?.noticeOfficeDiaryTime,
-      questionDiaryNumber: location?.state?.questionDiary?.questionDiaryNo,
-      category: "",
-      englishText: "",
-      urduText: location?.state?.urduText,
-      division: location?.state?.divisions?.divisionName,
-      assignedquestionid: location?.state?.questionDiary?.questionID,
-      mover: "",
+      sessionNumber: location?.state?.question?.session?.sessionName,
+      noticeOfficeDiaryNumber: location?.state?.question?.questionDiary?.questionDiaryNo,
+      noticeOfficeDiaryDate: location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryDate ? moment(
+        location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryDate,
+      ).toDate():"",
+      noticeOfficeDiaryTime: location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryTime ? moment(location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryTime).toDate() :"",
+      questionDiaryNumber: location?.state?.question?.questionDiary?.questionDiaryNo,
+      category: location?.state?.question ? location?.state?.question?.questionCategory:"",
+      englishText:  location?.state?.question ? location?.state?.question?.englishText :"",
+      urduText: location?.state?.question?.urduText,
+      division: location?.state?.question ? location?.state?.question?.fkDivisionId:"",
+      assignedquestionid: location?.state?.question?.questionDiary?.questionID,
+      mover: location?.state?.question?.fkMemberId ? location?.state?.question?.fkMemberId : "",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -71,7 +73,7 @@ function QMSNoticeQuestionDetail() {
 
   const updateQuestion = async (values) => {
     const formData = new FormData();
-    formData.append("fkSessionId", values?.sessionNumber);
+    formData.append("fkSessionId", location?.state?.question?.fkSessionId);
     formData.append("noticeOfficeDiaryNo", values?.noticeOfficeDiaryNumber);
     formData.append("noticeOfficeDiaryDate", values?.noticeOfficeDiaryDate);
     formData.append("noticeOfficeDiaryTime", values?.noticeOfficeDiaryTime);
@@ -79,7 +81,7 @@ function QMSNoticeQuestionDetail() {
     formData.append("questionDiaryNo", values?.questionDiaryNumber);
     formData.append("fkMemberId", values?.mover);
     // formData.append("fkGroupId", values?.group);
-    formData.append("fkDivisionId", location?.state?.fkDivisionId);
+    formData.append("fkDivisionId",  values?.division);
     // formData.append("fileStatus", values?.fileStatus);
     // formData.append("replyDate", values?.replyDate);
 
@@ -89,7 +91,7 @@ function QMSNoticeQuestionDetail() {
     // formData.append("originalText", values.originalText);
     try {
       const response = await UpdateQuestionById(
-        location?.state?.fkQuestionId,
+        location?.state?.question?.id,
         formData,
       );
       if (response?.success) {
@@ -103,7 +105,7 @@ function QMSNoticeQuestionDetail() {
   const hendleQuestionTranslation = async () => {
     try {
       const response = await sendQuestionTranslation(
-        location?.state?.fkQuestionId,
+        location?.state?.question?.id,
       );
       if (response?.success) {
         showSuccessMessage(response.message);
@@ -112,6 +114,23 @@ function QMSNoticeQuestionDetail() {
       showErrorMessage(error.response.data.message);
     }
   };
+
+  const GetALLDivsions = async () => {
+    try {
+      const response = await getAllDivisions(0, 100);
+      if (response?.success) {
+        setAllDivisions(response?.data?.divisions);
+        // setCount(response?.data?.count);
+        // setTotalPages(rersponse?.data?.totalPages)
+        // showSuccessMessage(response.message)
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    GetALLDivsions();
+  }, []);
 
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
@@ -141,7 +160,7 @@ function QMSNoticeQuestionDetail() {
                   class="form-control"
                   type="text"
                   readOnly
-                  placeholder={location?.state?.fkQuestionId}
+                  placeholder={location?.state?.question?.id}
                 />
               </div>
             </div>
@@ -149,18 +168,18 @@ function QMSNoticeQuestionDetail() {
               <button class="btn btn-primary me-2" type="submit">
                 Update
               </button>
-              <button class="btn btn-warning me-2" type="">
+              <button class="btn btn-warning me-2" type="button">
                 View File
               </button>
-              <button class="btn btn-primary me-2" type="">
+              <button class="btn btn-primary me-2" type="button">
                 Revive
               </button>
-              <button class="btn btn-primary me-2" type="">
+              <button class="btn btn-primary me-2" type="button">
                 Duplicate
               </button>
-              <button class="btn btn-danger" type="">
+              {/* <button class="btn btn-danger" type="button">
                 Delete
-              </button>
+              </button> */}
             </div>
           </div>
           <div class="card mt-4">
@@ -226,7 +245,6 @@ function QMSNoticeQuestionDetail() {
                             top: "36px",
                             zIndex: 1,
                             fontSize: "20px",
-                            zIndex: "1",
                             color: "#666",
                           }}
                         >
@@ -333,6 +351,7 @@ function QMSNoticeQuestionDetail() {
                           id="category"
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
+                          value={formik?.values?.category}
                         >
                           <option value={""} selected disabled hidden>
                             Select
@@ -361,6 +380,7 @@ function QMSNoticeQuestionDetail() {
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                           id="mover"
+                          value={formik.values?.mover}
                         >
                           <option value={""} selected disabled hidden>
                             select
@@ -382,14 +402,31 @@ function QMSNoticeQuestionDetail() {
                     <div class="col-3">
                       <div class="mb-3">
                         <label class="form-label">Division</label>
-                        <input
+                        {/* <input
                           class="form-control"
                           type="text"
                           placeholder={formik.values.division}
                           id="division"
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
-                        />
+                        /> */}
+                        <select
+                        class="form-select"
+                        value={formik.values.division}
+                        id="division"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      >
+                        <option selected disabled hidden>
+                          Select
+                        </option>
+                        {alldivisons &&
+                          alldivisons.map((item, index) => (
+                            <option value={item.id} key={index}>
+                              {item?.divisionName}
+                            </option>
+                          ))}
+                      </select>
                       </div>
                     </div>
                   </div>
