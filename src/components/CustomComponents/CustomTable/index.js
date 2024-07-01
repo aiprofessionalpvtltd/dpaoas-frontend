@@ -256,8 +256,8 @@ function CustomTable({
                     className="text-center"
                     scope="col"
                     style={{
-                      backgroundColor: headertitlebgColor ? headertitlebgColor : "#FFF",
-                      color: headertitletextColor ? headertitletextColor : "#666",
+                      backgroundColor: "#FFF",
+                      color:  "rgb(171, 178, 196)",
                     }}
                   >
                     {formatHeader(key)}
@@ -268,8 +268,8 @@ function CustomTable({
                     className="text-center"
                     style={{
                       width: "180px",
-                      backgroundColor: headertitlebgColor ? headertitlebgColor : "#FFF",
-                      color: headertitletextColor ? headertitletextColor : "#666",
+                      backgroundColor: "#FFF",
+                      color:  "rgb(171, 178, 196)",
                     }}
                   >
                     Actions
