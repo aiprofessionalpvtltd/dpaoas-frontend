@@ -2068,7 +2068,7 @@ textarea {
   background-color: #1b84ff;
   border: none;
 }
-.active{
+.pagination li.active{
   background: none !important;
 }
 .dash-card {
@@ -3820,6 +3820,7 @@ button span {
   height: 30px !important;
   text-align: center;
   border: none;
+  font-size: 17px;
 }
 
 .comp-card i {
