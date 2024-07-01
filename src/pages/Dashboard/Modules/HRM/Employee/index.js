@@ -18,7 +18,7 @@ function HRMEmployeeDashboard() {
   const [employeeData, setEmployeeData] = useState([]);
 
   const [count, setCount] = useState(null);
-  const pageSize = 5; // Set your desired page size
+  const pageSize = 10; // Set your desired page size
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
@@ -26,16 +26,16 @@ function HRMEmployeeDashboard() {
   };
 
   const transformEmployeeData = (apiData) => {
-    return apiData.map((leave) => ({
-      id: leave.id,
-      firstName: leave.firstName,
-      lastName: leave.lastName,
-      phoneNo: leave.phoneNo,
-      gender: leave.gender,
-      fileNumber: leave.fileNumber,
-      // supervisor: leave.supervisor,
-      departmentName: leave.departments.departmentName,
-      designation: leave.designations.designationName,
+    return apiData.map((item) => ({
+      id: item.id,
+      firstName: item?.firstName,
+      lastName: item?.lastName,
+      phoneNo: item?.phoneNo,
+      gender: item.gender,
+      fileNumber: item?.fileNumber,
+      // supervisor: item.supervisor,
+      branchName:  item?.branches?.branchName,
+      designation: item?.designations?.designationName,
     }));
   };
 
