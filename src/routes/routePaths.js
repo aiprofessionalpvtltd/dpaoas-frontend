@@ -170,20 +170,21 @@ import AddEditEventCalendar from "../pages/Dashboard/Modules/Notice/EventCalenda
 import MainDashboard from "../pages/Dashboard/Modules/EFiling/MainDashBoard";
 import SMSMembers from "../pages/Dashboard/Modules/SMS/Members";
 import SMSMembersAddEditForm from "../pages/Dashboard/Modules/SMS/Members/AddEditMembers";
-import LegislationManagementSystemDashboard from "../pages/Dashboard/Modules/LGMS";
-import SearchLegislationBills from "../pages/Dashboard/Modules/LGMS/Bills/SearchBills";
-import AllOrdinanceList from "../pages/Dashboard/Modules/LGMS/Ordinance/OrdinanceList";
-import SearchOrdinance from "../pages/Dashboard/Modules/LGMS/Ordinance/SearchOrdinance";
 
-import EditOrdinance from "../pages/Dashboard/Modules/LGMS/Ordinance/EditOrdinance";
-import AddOrdinance from "../pages/Dashboard/Modules/LGMS/Ordinance/AddOrdinance";
-import AllLegislationBillList from "../pages/Dashboard/Modules/LGMS/Bills/LegislationBills";
+// import AllLegislationBillList from "../pages/Dashboard/Modules/LGMS/Bills/LegislationBills";
+import SearchLegislationBills from "../pages/Dashboard/Modules/LGMS/Bills/SearchBills";
+import LegislationManagementSystemDashboard from "../pages/Dashboard/Modules/LGMS";
 import NewLegislationNABill from "../pages/Dashboard/Modules/LGMS/Bills/NABills/AddNABills";
+import AllLegislationBill from "../pages/Dashboard/Modules/LGMS/Bills/LegislationBills";
+import AllOrdinanceList from "../pages/Dashboard/Modules/LGMS/Ordinance/OrdinanceList";
+import AddOrdinance from "../pages/Dashboard/Modules/LGMS/Ordinance/AddOrdinance";
 import NewLegislationSenateBill from "../pages/Dashboard/Modules/LGMS/Bills/SenateBills/AddSenateBills";
 import UpdateBills from "../pages/Dashboard/Modules/LGMS/Bills/NABills/EditNABills";
 import EditSenateBill from "../pages/Dashboard/Modules/LGMS/Bills/SenateBills/EditSenateBills";
+import SearchOrdinance from "../pages/Dashboard/Modules/LGMS/Ordinance/SearchOrdinance";
 import AllBillStatuses from "../pages/Dashboard/Modules/LGMS/Manage/ManageBillStatuses";
 import LGMSMembers from "../pages/Dashboard/Modules/LGMS/Manage/Members";
+import EditOrdinance from "../pages/Dashboard/Modules/LGMS/Ordinance/EditOrdinance";
 import LGMSMembersAddEditForm from "../pages/Dashboard/Modules/LGMS/Manage/Members/AddEditMembers";
 import LGMSParliamentaryYear from "../pages/Dashboard/Modules/LGMS/Manage/ParliamentaryYear";
 import LGMSAddEditParliamentaryYearForm from "../pages/Dashboard/Modules/LGMS/Manage/ParliamentaryYear/AddEditParliamentaryYear";
@@ -720,7 +721,7 @@ export const ProtectedRoutes = [
   },
   {
     path: "/lgms/dashboard/bills/legislation-bills",
-    element: <AllLegislationBillList />,
+    element: <AllLegislationBill />,
   },
   {
     path: "/lgms/dashboard/bills/NA-bills",
