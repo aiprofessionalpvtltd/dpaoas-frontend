@@ -3935,3 +3935,15 @@ button span {
 .image-gallery-right-nav {
   right: -25px !important;
 }
+/* hover show all text */
+.truncated-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px; /* Adjust the max-width as needed */
+  display: inline-block;
+  vertical-align: top;
+  cursor: pointer;
+}
+
+

@@ -325,7 +325,11 @@ function CustomTable({
                             </span>
                           ) : item[key] === "Total Motions" || item[key] === "Total Resolution" ? (
                             <span style={{ fontWeight: "bold" }}>{item[key]}</span>
-                          ) : (
+                          ) :  typeof item[key] === "string" && item[key].split(" ").length > 5 ? (
+                            <OverlayTrigger placement="top" overlay={<Tooltip id="see-tooltip"><span>{item[key]}</span></Tooltip>}>
+                                  <span className="truncated-text">{item[key]}</span>
+                                </OverlayTrigger>
+                          ):(
                             <span>{item[key]}</span>
                           )}
                         </td>

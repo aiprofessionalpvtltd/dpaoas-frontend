@@ -14,6 +14,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
 import { getUserData } from "../../../../../../api/Auth";
+import { imagesUrl } from "../../../../../../api/APIs";
 
 
 function QMSReportQuestionList() {
@@ -58,6 +59,7 @@ function QMSReportQuestionList() {
         listName: res?.listName,
         defferedQuestions: res?.defferedQuestions ? "true" : "false",
         questionListStatus: res.questionListStatus ? res?.questionListStatus : "active",
+        internalAttachment: res?.fileLink
       };
     
       // Remove id key from rowData if it's null or undefined
@@ -119,7 +121,7 @@ function QMSReportQuestionList() {
     const questionIds = generatedData?.questions?.map(question => ({ id: question.id }));
   
     const requestData = {
-      questionList: {
+     
         fkSessionId: sessionId,
         questionCategory: formik.values.category,
         fkGroupId: formik.values.groupNo,
@@ -129,7 +131,7 @@ function QMSReportQuestionList() {
         defferedQuestions: include, // Use formik values for include
         fkUserId: userData.fkUserId,
         questionIds: questionIds
-      }
+      
     };
   
     try {
@@ -145,16 +147,16 @@ function QMSReportQuestionList() {
     }
   };  
 
-  const printQuestions = async (data) => {
-    try {
-      const response = await printQuestionsFromList(data);
-      if (response?.success) {
-       showSuccessMessage(response.message);
-      }
-    } catch (error) {
-      showErrorMessage(error.response?.data?.message);
-    }
-  };
+  // const printQuestions = async (data) => {
+  //   try {
+  //     const response = await printQuestionsFromList(data);
+  //     if (response?.success) {
+  //      showSuccessMessage(response.message);
+  //     }
+  //   } catch (error) {
+  //     showErrorMessage(error.response?.data?.message);
+  //   }
+  // };
 
   const deleteList = async (data) => {
     console.log(data);
@@ -171,6 +173,11 @@ function QMSReportQuestionList() {
 
   const handleInclude = () => {
     setInclude(!include);
+  }
+
+  const printQuestion =(url) => {
+    const img = `${imagesUrl}${url}`;
+    window.open(img, "_blank");
   }
 
   return (
@@ -348,7 +355,7 @@ function QMSReportQuestionList() {
                 showEditIcon={true}
                 handleDelete={(item) => deleteList(item.id)}
                 showPrint={true}
-                handlePrint={(item) => printQuestions(item.id)}
+                handlePrint={(item) => printQuestion(item.internalAttachment)}
                 ActionHide={generatedItem ? true : false}
                 showListIcon={true}
                 handleList={(item) => navigate("/qms/reports/question-list/supplementary", { state: { listId: item?.id } })}
