@@ -3813,7 +3813,6 @@ button span {
 }
 .circle-btn {
   border-radius: 100%;
-  margin-right: 5px;
   background: none;
   color: rgb(171, 178, 196);
   width: 30px;
