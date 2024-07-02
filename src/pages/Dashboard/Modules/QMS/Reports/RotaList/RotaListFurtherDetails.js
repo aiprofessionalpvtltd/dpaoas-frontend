@@ -80,7 +80,7 @@ function RotaListFurtherDetails() {
         setPrintFile(url);
         showSuccessMessage(response?.message);
         // setCount(response?.count);
-        const transformedData = transformData(response.data?.rotaList);
+        const transformedData = transformData(response?.data?.furtherAllotmentDays?.dates);
         setResData(transformedData);
       }
     } catch (error) {

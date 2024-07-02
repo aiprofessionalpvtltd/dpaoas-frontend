@@ -136,12 +136,12 @@ function QMSReportQuestionList() {
       const response = await saveQuestionList(requestData);
       if (response?.success) {
         setGeneratedItem(false);
-        showSuccessMessage(response.data.message);
+        showSuccessMessage(response?.message);
         const transformedData = transformLeavesData(response?.data);
         setResData(transformedData)
       }
     } catch (error) {
-      showErrorMessage(error.response?.data?.message);
+      showErrorMessage(error?.response?.data?.message);
     }
   };  
 
