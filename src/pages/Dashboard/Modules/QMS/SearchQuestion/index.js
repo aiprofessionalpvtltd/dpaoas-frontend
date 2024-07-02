@@ -39,7 +39,7 @@ function QMSSearchQuestion() {
 
   // const [count, setCount] = useState(null);
 
-  const pageSize = 4; // Set your desired page size
+  const pageSize = 10; // Set your desired page size
 
   const formik = useFormik({
     initialValues: {

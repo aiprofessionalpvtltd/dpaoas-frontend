@@ -19,7 +19,7 @@ function QuestionGroupDiary() {
   const [currentPage, setCurrentPage] = useState(0);
   const [searchedData, setSearchData] = useState([]);
   const [initialData, setInitialData] = useState(null);
-  const pageSize = 4;
+  const pageSize = 10;
 
   const formik = useFormik({
     initialValues: {

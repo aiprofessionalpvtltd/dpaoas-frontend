@@ -22,7 +22,7 @@ function SMSManageList() {
   const [modalisOpan, setModalisOpan] = useState(false)
   const [selecteditem, setSelecteditem] = useState([])
   const [contactList, setContactList] = useState([])
-  const pageSize = 15; // Set your desired page size
+  const pageSize = 10; // Set your desired page size
 
   const { permissions } = useContext(AuthContext);
   const [permissionsLocal, setPermissionsLocal] = useState([]);

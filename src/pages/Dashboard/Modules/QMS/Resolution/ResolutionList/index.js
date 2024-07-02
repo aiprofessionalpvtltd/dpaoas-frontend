@@ -23,7 +23,7 @@ function QMSResolutionList() {
   const [resolutionListData, setResolutionListData] = useState([]);
   const [ministryData, setMinistryData] = useState([]);
 
-  const pageSize = 4; // Set your desired page size
+  const pageSize = 10; // Set your desired page size
 
   const formik = useFormik({
     initialValues: {

@@ -12,7 +12,7 @@ function QMSDeferQuestionReports() {
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
   const [data, setData] = useState(null);
-  const pageSize = 4; // Set your desired page size
+  const pageSize = 10; // Set your desired page size
   // const data = [
   //   {
   //     "Sr#": 1,

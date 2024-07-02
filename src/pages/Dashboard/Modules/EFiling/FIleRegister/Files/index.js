@@ -27,7 +27,7 @@ function ListFiles() {
   const userData = getUserData();
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
-  const pageSize = 5;
+  const pageSize = 10;
 
   const [fileData, setFileData] = useState([]);
   const [headings, setHeadings] = useState(null);

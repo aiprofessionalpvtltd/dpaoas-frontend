@@ -20,7 +20,7 @@ import moment from "moment";
 
 function PrivateBill() {
   const [currentPage, setCurrentPage] = useState(0);
-  const pageSize = 4; // Set your desired page size
+  const pageSize = 10; // Set your desired page size
   const [count, setCount] = useState();
   const [assignModalOpan, setAssignedModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);

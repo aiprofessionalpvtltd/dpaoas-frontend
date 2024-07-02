@@ -14,7 +14,7 @@ function MMSMotionSummery() {
   const [count, setCount] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [searchedData, setSearchData] = useState([])
-  const pageSize = 4;
+  const pageSize = 10;
 
   
 

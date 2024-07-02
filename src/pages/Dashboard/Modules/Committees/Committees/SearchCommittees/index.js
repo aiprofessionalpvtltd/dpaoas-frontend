@@ -22,9 +22,9 @@ const SearchCommittees = () => {
   const [parliamentaryYearData, setParliamentaryYearData] = useState([]);
   const [searchedCommitteeData, setsearchedCommitteeData] = useState([]);
   const [count, setCount] = useState(null);
-  const pageSize = 4;
+  const pageSize = 10;
 
-  console.log("Oriidnance Data", searchedCommitteeData);
+  
   const handlePageChange = (page) => {
     setCurrentPage(page);
     if (

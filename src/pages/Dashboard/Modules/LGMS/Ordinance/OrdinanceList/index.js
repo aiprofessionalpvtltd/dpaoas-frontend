@@ -20,7 +20,7 @@ const AllOrdinanceList = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [ordinanceData, setOrdinanceData] = useState([]);
   const [count, setCount] = useState(null);
-  const pageSize = 4;
+  const pageSize = 10;
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked

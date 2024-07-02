@@ -22,9 +22,9 @@ const SearchOrdinance = () => {
   const [parliamentaryYearData, setParliamentaryYearData] = useState([]);
   const [searchedOrdinanceData, setSearchedOrdinanceData] = useState([]);
   const [count, setCount] = useState(null);
-  const pageSize = 4;
+  const pageSize = 10;
 
-  console.log("Oriidnance Data", searchedOrdinanceData);
+ 
   const handlePageChange = (page) => {
     setCurrentPage(page);
     if (

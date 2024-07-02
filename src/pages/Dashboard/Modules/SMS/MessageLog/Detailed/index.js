@@ -12,7 +12,7 @@ function SMSDetailedMessageLog() {
   const [currentPage, setCurrentPage] = useState(0);
   const [searchdata, setSearchData] = useState([]);
   const [search, setSearch] = useState("");
-  const pageSize = 8; // Set your desired page size
+  const pageSize = 10; // Set your desired page size
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked

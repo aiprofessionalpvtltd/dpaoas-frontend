@@ -66,7 +66,7 @@ function CommitteesManagementSystemMeetings() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isView, setIsView] = useState(false);
   const [isAttendanceModalOpen, setIsAttendaceModalOpen] = useState(false);
-  const pageSize = 5;
+  const pageSize = 10;
 
   const handlePageChange = (page) => {
     setCurrentPage(page);

@@ -20,7 +20,7 @@ function LGMSLegislativeBill() {
   const [count, setCount] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [billData, setBillData] = useState([]);
-  const pageSize = 5;
+  const pageSize = 10;
 
   const handlePageChange = (page) => {
     setCurrentPage(page);

@@ -24,7 +24,7 @@ function LMSHistory() {
   const [currentPage, setCurrentPage] = useState(0);
   const [showModal, setShowModal] = useState(false);
   // const [count, setCount] = useState(null);
-  const pageSize = 4; // Set your desired page size
+  const pageSize = 10; // Set your desired page size
 
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);

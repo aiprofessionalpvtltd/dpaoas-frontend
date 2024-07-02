@@ -25,7 +25,7 @@ function ApprovedCasesHistory() {
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
   const [approvedCasesData, setApprovedCasesData] = useState([]);
-  const pageSize = 5; // Set your desired page size
+  const pageSize = 10; // Set your desired page size
   const UserData = getUserData();
   const [headings, setHeadings] = useState(null);
   const [registerDataid, setRegisterDataId] = useState(null);
