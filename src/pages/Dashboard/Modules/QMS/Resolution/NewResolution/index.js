@@ -80,7 +80,7 @@ function QMSNewResolution() {
     formData.append("fkResolutionStatus", 1);
     formData.append("attachment", values.attachment);
     formData.append("resolutionSentStatus", 'inResolution');
-    // formData.append("createdByUser",  userData?.fkUserId)
+    formData.append("createdByUser",  userData?.fkUserId)
 
     try {
       const response = await createResolution(formData);
