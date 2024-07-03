@@ -29,6 +29,7 @@ import CustomTable from "../../../../../components/CustomComponents/CustomTable"
 import DocParas from "../../../../../components/CustomComponents/DocParas";
 import { Editor } from "../../../../../components/CustomComponents/Editor";
 import { imagesUrl } from "../../../../../api/APIs";
+import moment from "moment";
 
 const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
   return (
@@ -619,12 +620,12 @@ function FileDetail() {
                                     ? true
                                     : false
                               }
-                            >
+                            > 
                               Save
                             </button>
                           </div>
 
-                          <div class="col-2">
+                          {/* <div class="col-2">
                             <button
                               class="btn btn-primary"
                               type="submit"
@@ -645,7 +646,7 @@ function FileDetail() {
                             >
                               Finalize
                             </button>
-                          </div>
+                          </div> */}
                         </div>
 
                         <div class="col">
@@ -834,10 +835,10 @@ function FileDetail() {
                                   </div>
                                   <div style={{ float: "right" }}>
                                     <small>
-                                      {item?.formattedDateCreatedAt}
+                                      {moment(item?.createdAt).format("DD/MM/YYYY")}
                                     </small>
                                     <small className="ms-2">
-                                      {item?.formattedTimeCreatedAt}
+                                      {moment(item?.createdAt).format("hh:mm a")}
                                     </small>
                                   </div>
                                 </div>

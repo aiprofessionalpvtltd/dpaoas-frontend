@@ -176,8 +176,12 @@ function QMSReportQuestionList() {
   }
 
   const printQuestion =(url) => {
-    const img = `${imagesUrl}${url}`;
-    window.open(img, "_blank");
+    if(url){
+      const img = `${imagesUrl}${url}`;
+      window.open(img, "_blank");
+    }else{
+      showSuccessMessage("No Attachment Available")
+    }
   }
 
   return (

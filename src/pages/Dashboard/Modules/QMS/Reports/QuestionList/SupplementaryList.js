@@ -16,6 +16,7 @@ import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
 import { getUserData } from "../../../../../../api/Auth";
 import { useLocation } from "react-router-dom";
+import { imagesUrl } from "../../../../../../api/APIs";
 
 const validationSchema = Yup.object({
   sessionNumber: Yup.string(),
@@ -64,6 +65,7 @@ function SupplementaryList() {
         houseLayDate: res?.houseLayDate,
         listName: res?.listName,
         supplementaryListStatus: res.supplementaryListStatus ? res?.supplementaryListStatus : "active",
+        internalAttachment: res?.fileLink
       };
     
       // Remove id key from rowData if it's null or undefined
@@ -142,14 +144,12 @@ function SupplementaryList() {
     }
   };  
 
-  const printList = async (data) => {
-    try {
-      const response = await printSuppFromList(data);
-      if (response?.success) {
-       showSuccessMessage(response.data.message);
-      }
-    } catch (error) {
-      showErrorMessage(error.response?.data?.message);
+  const printList = async (url) => {
+    if(url){
+      const img = `${imagesUrl}${url}`;
+      window.open(img, "_blank");
+    }else{
+      showSuccessMessage("No Attachment Available")
     }
   };
 
@@ -247,7 +247,7 @@ function SupplementaryList() {
                 ActionHide={generatedItem ? true : false}
                 handleDelete={(item) => deleteList(item.id)}
                 showPrint={true}
-                handlePrint={(item) => printList(item.id)}
+                handlePrint={(item) => printList(item?.internalAttachment)}
                 totalCount={count}
               />
             </div>
