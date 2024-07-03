@@ -131,8 +131,8 @@ function QMSDeleteQuestion() {
           .filter(Boolean)
           .join(", "),
         Category: res.questionCategory,
-        // SubmittedBy: res.category,
         questionStatus: res.questionStatus?.questionStatus,
+        SubmittedBy: res?.questionSubmittedBy ? `${res?.questionSubmittedBy?.employee?.firstName} ${res?.questionSubmittedBy?.employee?.lastName}`:"--",
         questionActive: res?.questionActive,
       };
     });

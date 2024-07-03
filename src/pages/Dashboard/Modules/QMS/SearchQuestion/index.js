@@ -89,6 +89,7 @@ function QMSSearchQuestion() {
         // SubmittedBy: res.category,
         questionStatus: res?.questionStatus?.questionStatus,
         CreatedBy:res?.questionSentStatus === "inQuestion" && "Question",
+        SubmittedBy: res?.questionSubmittedBy ? `${res?.questionSubmittedBy?.employee?.firstName} ${res?.questionSubmittedBy?.employee?.lastName}`:"--",
         Status:res?.questionActive
       };
     });

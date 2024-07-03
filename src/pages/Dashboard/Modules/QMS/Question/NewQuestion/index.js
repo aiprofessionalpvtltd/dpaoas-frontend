@@ -18,6 +18,7 @@ import { useNavigate } from "react-router";
 import { AuthContext } from "../../../../../../api/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
+import { getUserData } from "../../../../../../api/Auth";
 
 const validationSchema = Yup.object({
   // fkSessionId: Yup.number().required("Session No is required"),
@@ -35,6 +36,7 @@ function QMSNewQuestion() {
   const { members, sessions, allBranchesData } = useContext(AuthContext);
   const [showModal, setShowModal] = useState(false);
   const [formValues, setFormValues] = useState([]);
+  const userData = getUserData();
 
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
@@ -76,6 +78,7 @@ function QMSNewQuestion() {
 
     formData.append("englishText", values.englishText);
     formData.append("urduText", values.urduText);
+    formData.append("submittedBy",  userData?.fkUserId)
     formData.append("questionSentStatus" ,"inQuestion")
 
     try {
