@@ -5,18 +5,21 @@ import { useNavigate } from "react-router-dom";
 import { HRMsidebarItems } from "../../../../../utils/sideBarItems";
 import CustomTable from "../../../../../components/CustomComponents/CustomTable";
 import { ToastContainer } from "react-toastify";
-import { DeleteEmployee, getAllEmployee, getEmployeeById } from "../../../../../api/APIs/Services/organizational.service";
+import {
+  DeleteEmployee,
+  getAllEmployee,
+  getEmployeeById,
+} from "../../../../../api/APIs/Services/organizational.service";
 import {
   showErrorMessage,
   showSuccessMessage,
 } from "../../../../../utils/ToastAlert";
 
-
 function HRMEmployeeDashboard() {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(0);
   const [employeeData, setEmployeeData] = useState([]);
-
+  const [searchTerm, setSearchTerm] = useState("");
   const [count, setCount] = useState(null);
   const pageSize = 10; // Set your desired page size
 
@@ -34,7 +37,7 @@ function HRMEmployeeDashboard() {
       gender: item.gender,
       fileNumber: item?.fileNumber,
       // supervisor: item.supervisor,
-      branchName:  item?.branches?.branchName,
+      branchName: item?.branches?.branchName,
       designation: item?.designations?.designationName,
     }));
   };
@@ -68,7 +71,7 @@ function HRMEmployeeDashboard() {
     try {
       const response = await getEmployeeById(id);
       if (response.success) {
-        navigate("/hrm/addeditemployee", { state: response?.data })
+        navigate("/hrm/addeditemployee", { state: response?.data });
       }
     } catch (error) {
       console.log(error);
@@ -78,6 +81,11 @@ function HRMEmployeeDashboard() {
   useEffect(() => {
     getEmployeeData();
   }, [currentPage]);
+
+  // FIltered Data
+  const filteredEmployee = employeeData.filter((employee) =>
+    employee?.firstName?.toLowerCase().includes(searchTerm?.toLowerCase())
+  );
   return (
     <Layout module={true} sidebarItems={HRMsidebarItems} centerlogohide={true}>
       <Header
@@ -89,8 +97,11 @@ function HRMEmployeeDashboard() {
       <div class="row">
         <div class="col-12">
           <CustomTable
-            data={employeeData}
+            // data={employeeData}
+            data={filteredEmployee}
             singleDataCard={true}
+            seachBarShow={true}
+            searchonchange={(e) => setSearchTerm(e.target.value)}
             tableTitle="Employee List"
             addBtnText="Add Employee"
             handleAdd={() => navigate("/hrm/addeditemployee")}
