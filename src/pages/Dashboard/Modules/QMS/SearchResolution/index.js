@@ -81,6 +81,7 @@ function QMSSerchResolution() {
           ? res.resolutionStatus?.resolutionStatus
           : "",
         Movers: movers ? movers : "",
+        createdByUser: res?.createdBy ? `${res?.createdBy.employee?.firstName} ${res?.createdBy.employee?.lastName}` :"--",
         Status:res?.resolutionActive,
       };
     });
