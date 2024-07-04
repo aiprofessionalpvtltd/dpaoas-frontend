@@ -311,6 +311,11 @@ export const ResearchSideBarItems = [
 //Question Management System
 export const QMSSideBarItems = [
   {
+    itemName: "Dashboard",
+    link: "/qms/dashboard",
+    icon: faClipboardList,
+  },
+  {
     itemName: "Question",
     link: "/qms/question",
     icon: faClipboardList,

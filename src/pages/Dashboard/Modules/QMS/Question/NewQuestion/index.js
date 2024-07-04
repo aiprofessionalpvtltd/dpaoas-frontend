@@ -57,6 +57,7 @@ function QMSNewQuestion() {
       noticeOfficeDiaryTime: "",
       englishText: "",
       urduText: "",
+      memberPosition:""
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -79,6 +80,7 @@ function QMSNewQuestion() {
     formData.append("englishText", values.englishText);
     formData.append("urduText", values.urduText);
     formData.append("submittedBy",  userData?.fkUserId)
+    formData.append("memberPosition",  values?.memberPosition)
     formData.append("questionSentStatus" ,"inQuestion")
 
     try {
@@ -323,6 +325,40 @@ function QMSNewQuestion() {
                       </div>
                     </div>
                   </div>
+                  <div className="row">
+                  <div class="col-6">
+                      <div class="mb-3">
+                        <label class="form-label">Member Position</label>
+                        <select
+                          class={`form-select ${
+                            formik.touched.memberPosition &&
+                            formik.errors.memberPosition
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                          placeholder="Member Position"
+                          value={formik.values.memberPosition}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          name="memberPosition"
+                        >
+                          <option value="" selected disabled hidden>
+                            Select
+                          </option>
+                          <option value={"Treasury"}>Treasury</option>
+                          <option value={"Opposition"}>Opposition</option>
+                          <option value={"Independent"}>Independent</option>
+                          <option value={"Anyside"}>Anyside</option>
+                        </select>
+                        {formik.touched.memberPosition &&
+                          formik.errors.memberPosition && (
+                            <div className="invalid-feedback">
+                              {formik.errors.memberPosition}
+                            </div>
+                          )}
+                      </div>
+                  </div>
+                  </div>
 
                   <div style={{ marginTop: 10 }}>
                     <Editor
@@ -352,6 +388,7 @@ function QMSNewQuestion() {
                     </div>
                   </div>
                 </div>
+               
               </form>
             </div>
           </div>

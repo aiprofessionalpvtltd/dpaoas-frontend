@@ -3945,5 +3945,15 @@ button span {
   vertical-align: top;
   cursor: pointer;
 }
+.rmdp-input{
+height: 37px !important;
+width: 100%;
+}
+.rmdp-container {
+  width: 100%;
+}
+.rmdp-panel{
+max-width:  170px !important;
+}
 
 

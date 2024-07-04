@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Layout } from "../../../../../../components/Layout";
 import { QMSSideBarItems } from "../../../../../../utils/sideBarItems";
 import Header from "../../../../../../components/Header";
@@ -8,6 +8,7 @@ import { useFormik } from "formik";
 import DatePicker from "react-datepicker";
 import * as Yup from "yup";
 import {
+  allRotaList,
   generatedRotaList,
 } from "../../../../../../api/APIs/Services/Question.service";
 import { ToastContainer } from "react-toastify";
@@ -43,58 +44,25 @@ function QMSRotaList() {
     // Update currentPage when a page link is clicked
     setCurrentPage(page);
   };
-  const formik = useFormik({
-    initialValues: {
-      allotmentType: "",
-      groupNo: "",
-      startDate: "",
-      endDate: "",
-    },
-    validationSchema: validationSchema,
-    onSubmit: (values) => {
-      if (sessionId) {
-        setGroupIdVal(values?.groupNo);
-        setAllotmentTypeVal(values?.allotmentType);
-        generateRotaList(values);
-      }
-    },
-  });
+
   const navigate = useNavigate();
 
   const transformLeavesData = (apiData) => {
-    return apiData.map((res, index) => {
-      const divisions = res.Divisions.map(
-        (division, idx) => `${idx + 1}. ${division.divisionName}`
-      ).join("\n");
+    return apiData.map((item) => ({
+      id: item?.id,
+      DateOfCreation: item?.DateOfCreation,
+      DateOfAnswering: item?.DateOfAnswering,
+      Group: item?.Group,
+      Divisions:item.divisions
+    }))}
 
-      const rowData = {
-        DateOfCreation: res?.DateOfCreation,
-        DateOfAnswering: res?.DateOfAnswering,
-        Group: res?.Group?.groupNameStarred,
-        Divisions: divisions,
-      };
-
-      return rowData;
-    });
-  };
-
-  const generateRotaList = async (values) => {
-    const Data = {
-      fkSessionId: sessionId,
-      fkGroupId: values?.groupNo || "",
-      allotmentType: values?.allotmentType,
-      startDate: values?.startDate,
-      endDate: values?.endDate,
-    };
-
+  const GetALlRotaListApi = async () => {
     try {
-      const response = await generatedRotaList(Data);
+      const response = await allRotaList(currentPage,pageSize);
       if (response?.success) {
-        const url = `${imagesUrl}${response?.data?.fileLink}`;
-        setPrintFile(url);
         showSuccessMessage(response?.message);
         const transformedData = transformLeavesData(
-          response.data?.rotaList?.dates
+          response.data
         );
         setResData(transformedData);
       }
@@ -103,10 +71,9 @@ function QMSRotaList() {
     }
   };
 
-  const handleSessionChange = async (e) => {
-    setSessionId(e.target.value);
-  };
-
+useEffect(()=> {
+  GetALlRotaListApi()
+},[currentPage])
   //   Handle Download
   const handleDownload = (fileUrl) => {
     // Check if fileUrl exists
@@ -149,191 +116,12 @@ function QMSRotaList() {
           </div>
           <div class="card-body">
             <div class="container-fluid">
-              <form onSubmit={formik.handleSubmit}>
-                <div className="row">
-                  <div className="col">
-                    <div className="mb-3">
-                      <label className="form-label">Session No</label>
-                      <select
-                        className={`form-select ${
-                          !sessionId ? "is-invalid" : ""
-                        }`}
-                        id="sessionNumber"
-                        onChange={handleSessionChange}
-                        value={sessionId}
-                        onBlur={formik.handleBlur}
-                      >
-                        <option value="" selected disabled hidden>
-                          Select
-                        </option>
-                        {sessions &&
-                          sessions.map((item) => (
-                            <option key={item.id} value={String(item.id)}>
-                              {item?.sessionName}
-                            </option>
-                          ))}
-                      </select>
-                      {!sessionId && (
-                        <div className="invalid-feedback">
-                          {`Session No is required`}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="col">
-                    <div className="mb-3">
-                      <label className="form-label">Allotment Type</label>
-                      <select
-                        className={`form-select ${
-                          formik.touched.allotmentType &&
-                          formik.errors.allotmentType
-                            ? "is-invalid"
-                            : ""
-                        }`}
-                        id="allotmentType"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                      >
-                        <option value="" selected disabled hidden>
-                          Select
-                        </option>
-                        <option>Regular Days</option>
-                        <option>Tuesday/Friday</option>
-                        <option>Wednesday/Friday</option>
-                        <option>Alternate Days</option>
-                      </select>
-                      {formik.touched.allotmentType &&
-                        formik.errors.allotmentType && (
-                          <div className="invalid-feedback">
-                            {formik.errors.allotmentType}
-                          </div>
-                        )}
-                    </div>
-                  </div>
-
-                  <div className="col">
-                    <div className="mb-3">
-                      <label className="form-label">Group No</label>
-                      <select
-                        className={`form-select ${
-                          formik.touched.groupNo && formik.errors.groupNo
-                            ? "is-invalid"
-                            : ""
-                        }`}
-                        id="groupNo"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                      >
-                        <option value="" selected disabled hidden>
-                          Select
-                        </option>
-                        <option value={"1"}>Group 1</option>
-                        <option value={"2"}>Group 2</option>
-                        <option value={"3"}>Group 3</option>
-                        <option value={"4"}>Group 4</option>
-                        <option value={"5"}>Group 5</option>
-                      </select>
-                      {formik.touched.groupNo && formik.errors.groupNo && (
-                        <div className="invalid-feedback">
-                          {formik.errors.groupNo}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="col">
-                    <div className="mb-3" style={{ position: "relative" }}>
-                      <label className="form-label">Start Date</label>
-                      <span
-                        style={{
-                          position: "absolute",
-                          right: "15px",
-                          top: "36px",
-                          zIndex: 1,
-                          fontSize: "20px",
-                          color: "#666",
-                        }}
-                      >
-                        <FontAwesomeIcon icon={faCalendarAlt} />
-                      </span>
-                      <DatePicker
-                        id="startDate"
-                        selected={formik.values.startDate}
-                        onChange={(date) =>
-                          formik.setFieldValue("startDate", date)
-                        }
-                        onBlur={formik.handleBlur}
-                        className={`form-control ${
-                          formik.touched.startDate && formik.errors.startDate
-                            ? "is-invalid"
-                            : ""
-                        }`}
-                      />
-                      {formik.touched.startDate && formik.errors.startDate && (
-                        <div className="invalid-feedback">
-                          {formik.errors.startDate}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="col">
-                    <div className="mb-3" style={{ position: "relative" }}>
-                      <label className="form-label">End Date</label>
-                      <span
-                        style={{
-                          position: "absolute",
-                          right: "15px",
-                          top: "36px",
-                          zIndex: 1,
-                          fontSize: "20px",
-                          color: "#666",
-                        }}
-                      >
-                        <FontAwesomeIcon icon={faCalendarAlt} />
-                      </span>
-                      <DatePicker
-                        id="endDate"
-                        selected={formik.values.endDate}
-                        onChange={(date) =>
-                          formik.setFieldValue("endDate", date)
-                        }
-                        onBlur={formik.handleBlur}
-                        className={`form-control ${
-                          formik.touched.endDate && formik.errors.endDate
-                            ? "is-invalid"
-                            : ""
-                        }`}
-                      />
-                      {formik.touched.endDate && formik.errors.endDate && (
-                        <div className="invalid-feedback">
-                          {formik.errors.endDate}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                <div class="row mb-3">
-                  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                    <button class="btn btn-primary" type="submit">
-                      Generate
-                    </button>
-                    <button
-                      class="btn btn-primary"
-                      disabled={printFile && printFile ? false : true}
-                      onClick={() => handleDownload(printFile)}
-                    >
-                      Print
-                    </button>
-                  </div>
-                </div>
-              </form>
               <CustomTable
                 block={false}
                 hideBtn={true}
-                hidebtn1={true}
+                addBtnText={"Create Rota List"}
+                handleAdd={() => navigate("/qms/reports/rota-list/addedit")}
+                // hidebtn1={true}
                 data={resData}
                 tableTitle="Rota List"
                 handlePageChange={handlePageChange}
