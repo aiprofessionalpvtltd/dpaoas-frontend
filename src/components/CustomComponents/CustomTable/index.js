@@ -249,7 +249,12 @@ function CustomTable({
           >
             <thead>
               <tr>
-                {isCheckbox && <th>Select</th>}
+                {isCheckbox && <th className="text-center"
+                    scope="col"
+                    style={{
+                      backgroundColor: "#FFF",
+                      color:  "rgb(171, 178, 196)",
+                    }}>Select</th>}
                 {filteredKeys?.map((key, index) => (
                   <th
                     key={index}
@@ -285,12 +290,12 @@ function CustomTable({
                         <td className="text-center">
                           <input
                             type="checkbox"
-                            checked={isChecked.includes(item.QID)} // Check if item.QID is in the array of selected IDs
+                            checked={isChecked.includes(item.internalId)} // Check if item.internalId is in the array of selected IDs
                             onChange={() => {
                               // Toggle the selection of the current item
-                              const updatedChecked = isChecked.includes(item.QID)
-                                ? isChecked.filter((id) => id !== item.QID) // If already selected, remove it from the array
-                                : [...isChecked, item.QID]; // If not selected, add it to the array
+                              const updatedChecked = isChecked.includes(item.internalId)
+                                ? isChecked.filter((id) => id !== item.internalId) // If already selected, remove it from the array
+                                : [...isChecked, item.internalId]; // If not selected, add it to the array
                               setIsChecked(updatedChecked);
                             }}
                           />
@@ -553,12 +558,12 @@ function CustomTable({
                         <td className="text-center">
                           <input
                             type="checkbox"
-                            checked={isChecked.includes(item.QID)} // Check if item.QID is in the array of selected IDs
+                            checked={isChecked.includes(item.internalId)} // Check if item.internalId is in the array of selected IDs
                             onChange={() => {
                               // Toggle the selection of the current item
-                              const updatedChecked = isChecked.includes(item.QID)
-                                ? isChecked.filter((id) => id !== item.QID) // If already selected, remove it from the array
-                                : [...isChecked, item.QID]; // If not selected, add it to the array
+                              const updatedChecked = isChecked.includes(item.internalId)
+                                ? isChecked.filter((id) => id !== item.internalId) // If already selected, remove it from the array
+                                : [...isChecked, item.internalId]; // If not selected, add it to the array
                               setIsChecked(updatedChecked);
                             }}
                           />
@@ -576,7 +581,11 @@ function CustomTable({
                             >
                               {item[key]}
                             </span>
-                          ) : (
+                          ) : typeof item[key] === "string" && item[key].split(" ").length > 5 ? (
+                            <OverlayTrigger placement="top" overlay={<Tooltip id="see-tooltip"><span>{item[key]}</span></Tooltip>}>
+                                  <span className="truncated-text">{item[key]}</span>
+                                </OverlayTrigger>
+                          ): (
                             <span>{item[key]}</span>
                           )}
                         </td>

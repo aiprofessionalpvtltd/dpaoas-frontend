@@ -48,7 +48,7 @@ function QMSReportQuestionList() {
   });
   const navigate = useNavigate();
 
-
+ 
   const transformLeavesData = (apiData) => {
     return apiData.map((res, index) => {
       const rowData = {
@@ -364,6 +364,7 @@ function QMSReportQuestionList() {
                 showListIcon={true}
                 handleList={(item) => navigate("/qms/reports/question-list/supplementary", { state: { listId: item?.id } })}
                 totalCount={count}
+             
               />
             </div>
           </div>

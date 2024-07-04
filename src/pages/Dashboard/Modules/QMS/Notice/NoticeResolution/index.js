@@ -531,6 +531,7 @@ function QMSNoticeResolution() {
                       headertitlebgColor={"#666"}
                       headertitletextColor={"#FFF"}
                       // ActionHide={true}
+                      hideDeleteIcon={true}
                       handleDelete={(item) => deleteResolutionApi(item.SrNo)}
                       handleEdit={(item) => handleEdit(item.SrNo)}
                       totalCount={count}

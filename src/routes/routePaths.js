@@ -228,6 +228,7 @@ import LDUPrivateBill from "../pages/Dashboard/Modules/LDU/LDUPrivateBill";
 import LDUAddEditPrivateBill from "../pages/Dashboard/Modules/LDU/LDUPrivateBill/LDUAddEditPrivateBill";
 import AllFilesListing from "../pages/Dashboard/Modules/LDU/LawActs/AllListing";
 import EditLawActsBill from "../pages/Dashboard/Modules/LDU/LawActs/AllListing/EditLawActsBill";
+import AddEditRotaList from "../pages/Dashboard/Modules/QMS/Reports/RotaList/AddEditRotaList.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -437,6 +438,10 @@ export const ProtectedRoutes = [
   {
     path: "/qms/reports/rota-list/further-details",
     element: <RotaListFurtherDetails />,
+  },
+  {
+    path: "/qms/reports/rota-list/addedit",
+    element: <AddEditRotaList />,
   },
 
   //QMS Module
