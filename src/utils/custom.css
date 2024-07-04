@@ -620,8 +620,9 @@ h1,
 }
 
 .table.red-bg-head th {
-  background: #666;
-  color: #fff;
+ 
+  background: #fff;
+  color:rgb(171, 178, 196);
   font-size: 14px;
 }
 .table td {
@@ -826,7 +827,10 @@ hr.horizontal {
 }
 
 .red-bg {
-  background: #14ae5c !important;
+  /* background: #14ae5c !important; */
+  background: #4B90F0 !important;
+  border-radius: 5px 5px 0 0 !important;
+
 }
 
 .red-bg h1 {

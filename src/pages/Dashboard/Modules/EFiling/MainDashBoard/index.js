@@ -239,7 +239,7 @@ const NonBlinkingIndicator = () => {
                 <div className="dash-card">
                   <div
                     className="dash-card-header"
-                    style={{ textAlign: "center", background: "#FFA500" }}
+                    style={{ textAlign: "center", background: "#FFA500" , borderRadius:"0px"}}
                   >
                     <h2 style={{ marginBottom: "0" }}>IN </h2>
                   </div>
@@ -349,7 +349,7 @@ const NonBlinkingIndicator = () => {
                 <div className="dash-card">
                   <div
                     className="dash-card-header"
-                    style={{ textAlign: "center", background: "#4f5966" }}
+                    style={{ textAlign: "center", background: "#4f5966" ,borderRadius:"0px"}}
                   >
                     <h2 style={{ marginBottom: "0" }}>OUT </h2>
                   </div>
@@ -458,7 +458,7 @@ const NonBlinkingIndicator = () => {
                 <div className="dash-card">
                   <div
                     className="dash-card-header"
-                    style={{ textAlign: "center", background: "#007bff" }}
+                    style={{ textAlign: "center", background: "#007bff",borderRadius:"0px" }}
                   >
                     <h2 style={{ marginBottom: "0" }}>Marked</h2>
                   </div>
@@ -1045,7 +1045,7 @@ const NonBlinkingIndicator = () => {
             >
               <div
                 className="dash-card-header"
-                style={{ textAlign: "center", background: "#007bff" }}
+                style={{ textAlign: "center", background: "#007bff",borderRadius:"0px" }}
               >
                 <h2 style={{ marginBottom: "0" }}>Notifications </h2>
               </div>
