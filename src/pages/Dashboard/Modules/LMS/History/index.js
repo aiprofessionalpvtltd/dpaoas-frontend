@@ -225,10 +225,12 @@ function LMSHistory() {
                 <div class="row mt-3">
                   <div class="col-12">
                     <CustomTable
+                      hideBtn={true}
+                      hidebtn1={true}
                       data={historyData?.length > 0 ? historyData : []}
                       tableTitle={"Leave History"}
                       headerBgColor={"#666"}
-                      hideBtn={true}
+                      // hideBtn={true}
                       handleEdit={() =>
                         navigate("/lms/addedit", { state: true })
                       }

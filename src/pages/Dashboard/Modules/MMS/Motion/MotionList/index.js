@@ -372,7 +372,7 @@ function MMSMotionList() {
                         <option>Call Attention Notice</option>
                         <option>Privilege Motion</option>
                         <option>Motion Under Rule 218</option>
-                        <option>Motion Under Rule 60</option>
+                        {/* <option>Motion Under Rule 60</option> */}
                       </select>
                     </div>
                   </div>
