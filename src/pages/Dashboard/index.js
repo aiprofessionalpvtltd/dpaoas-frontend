@@ -156,7 +156,7 @@ function Dashboard() {
     },
     {
       title: "Question Management System",
-      link: "/qms/search/question",
+      link: "/qms/dashboard",
       type: "",
       cardbg: "orangebg",
       icon: faClipboardQuestion,

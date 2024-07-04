@@ -25,6 +25,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
 import { getUserData } from "../../../../../api/Auth";
+import { DeleteModal } from "../../../../../components/DeleteModal";
+import { Button, Modal } from "react-bootstrap";
 
 function QMSSearchQuestion() {
   const navigate = useNavigate();
@@ -36,8 +38,11 @@ function QMSSearchQuestion() {
   const [isChecked, setIsChecked] = useState([]);
   const [questionStatus, setQuestionStatus] = useState("");
   const [statusDate, setStatusDate] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
 
   // const [count, setCount] = useState(null);
+  const[deleteModalRemarksValue,setDeleteModalRemarksValue]= useState(null)
 
   const pageSize = 10; // Set your desired page size
 
@@ -57,15 +62,21 @@ function QMSSearchQuestion() {
       noticeOfficeDiaryNo: "",
       fileStatus: "",
       groups: "",
+      memberPosition:""
     },
     onSubmit: (values) => {
       // Handle form submission here
+      // console.log(values.memberPosition);
       SearchQuestionApi(values);
     },
   });
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
     setCurrentPage(page);
+  };
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
   };
 
   const transformLeavesData = (apiData) => {
@@ -77,6 +88,7 @@ function QMSSearchQuestion() {
       return {
         SrNo: index,
         QID: res?.id,
+        internalId:res?.id,
         QDN: res?.fkQuestionDiaryId,
         NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate,
         NoticeTime: moment(
@@ -88,6 +100,7 @@ function QMSSearchQuestion() {
         Category: res?.questionCategory,
         // SubmittedBy: res.category,
         questionStatus: res?.questionStatus?.questionStatus,
+        memberPosition:res?.memberPosition,
         CreatedBy:res?.questionSentStatus === "inQuestion" && "Question",
         SubmittedBy: res?.questionSubmittedBy ? `${res?.questionSubmittedBy?.employee?.firstName} ${res?.questionSubmittedBy?.employee?.lastName}`:"--",
         Status:res?.questionActive
@@ -110,7 +123,8 @@ function QMSSearchQuestion() {
       fileStatus: values.fileStatus,
       groups: values.groups,
       divisions: values.divisions,
-      questionSentStatus:"inQuestion"
+      memberPosition:values?.memberPosition,
+      questionSentStatus:"inQuestion",
     };
 
     try {
@@ -196,6 +210,43 @@ function QMSSearchQuestion() {
         title1={"Search Queston"}
       />
       <ToastContainer />
+      <DeleteModal
+          title="Delete Question"
+          isOpen={isModalOpen}
+          toggleModal={toggleModal}
+        >
+          <div class="row">
+            <div class="col">
+              <div class="mb-3">
+                <label class="form-label">Remarks</label>
+                <textarea
+                  class="form-control"
+                  id="comment"
+                  name="comment"
+                  onChange={(e) =>
+                    setDeleteModalRemarksValue(e.target.value)
+                  }
+                  value={deleteModalRemarksValue}
+                ></textarea>
+              </div>
+            </div>
+          </div>
+
+          <Modal.Footer>
+            <Button
+              variant="primary"
+              onClick={() => {
+                toggleModal();
+                alert("Api Required")
+              }}
+            >
+              Submit
+            </Button>
+            <Button variant="secondary" onClick={toggleModal}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </DeleteModal>
       <div class="container-fluid">
         <div class="card mt-4">
           <div
@@ -522,6 +573,38 @@ function QMSSearchQuestion() {
                     </div>
                   </div>
                   <div class="col-2">
+                      <div class="mb-3">
+                        <label class="form-label">Member Position</label>
+                        <select
+                          class={`form-select ${
+                            formik.touched.memberPosition &&
+                            formik.errors.memberPosition
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                          placeholder="Member Position"
+                          value={formik.values.memberPosition}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          name="memberPosition"
+                        >
+                          <option value="" selected disabled hidden>
+                            Select
+                          </option>
+                          <option value={"Treasury"}>Treasury</option>
+                          <option value={"Opposition"}>Opposition</option>
+                          <option value={"Independent"}>Independent</option>
+                          <option value={"Anyside"}>Anyside</option>
+                        </select>
+                        {formik.touched.memberPosition &&
+                          formik.errors.memberPosition && (
+                            <div className="invalid-feedback">
+                              {formik.errors.memberPosition}
+                            </div>
+                          )}
+                      </div>
+                  </div>
+                  <div class="col-2">
                     <div class="mb-3">
                       <div class="form-check" style={{ marginTop: "39px" }}>
                         <input
@@ -583,7 +666,7 @@ function QMSSearchQuestion() {
                   headerShown={true}
                   data={searchedData}
                   handleEdit={(item) => handleEdit(item.QID)}
-                  handleDelete={(item) => hendleDelete(item.QID)}
+                  handleDelete={(item) =>toggleModal()}
                   handlePageChange={handlePageChange}
                   currentPage={currentPage}
                   pageSize={pageSize}
