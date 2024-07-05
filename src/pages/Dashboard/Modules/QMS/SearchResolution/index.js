@@ -23,14 +23,17 @@ import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import { getAllQuestionStatus } from "../../../../../api/APIs/Services/Question.service";
 import { DeleteModal } from "../../../../../components/DeleteModal";
 import { Button, Modal } from "react-bootstrap";
+import { getUserData } from "../../../../../api/Auth";
 
 function QMSSerchResolution() {
   const navigate = useNavigate();
+  const userData =getUserData()
   const { members, sessions, resolutionStatus } = useContext(AuthContext);
   const [searchedData, setSearchedData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [allResolutionStatus, setAllResolutionStatus] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState(null)
 
   const[deleteModalRemarksValue,setDeleteModalRemarksValue]= useState(null)
 
@@ -59,6 +62,7 @@ function QMSSerchResolution() {
       toNoticeDate: "",
       colourResNo: "",
       noticeOfficeDiaryNo: "",
+      memberPosition:""
     },
 
     onSubmit: (values) => {
@@ -91,7 +95,10 @@ function QMSSerchResolution() {
           ? res.resolutionStatus?.resolutionStatus
           : "",
         Movers: movers ? movers : "",
+        memberPosition:res?.memberPosition ? res?.memberPosition :"--",
         createdByUser: res?.createdBy ? `${res?.createdBy.employee?.firstName} ${res?.createdBy.employee?.lastName}` :"--",
+        deletedByUser: res?.deletedBy ? `${res?.deletedBy.employee?.firstName} ${res?.deletedBy.employee?.lastName}` :"--",
+        remarks:res?.description,
         Status:res?.resolutionActive,
       };
     });
@@ -110,6 +117,7 @@ function QMSSerchResolution() {
       noticeOfficeDiaryDateFrom: values.fromNoticeDate,
       noticeOfficeDiaryDateTo: values.toNoticeDate,
       resolutionMovers: values?.memberName?.value,
+      memberPosition:values?.memberPosition,
       resolutionSentStatus:"inResolution"
     };
 
@@ -159,12 +167,16 @@ function QMSSerchResolution() {
     }
   };
 
-  const deleteResolutionApi = async (id) => {
+  const deleteResolutionApi = async () => {
+    const Data = {deletedByUser: userData?.fkUserId,
+      description:deleteModalRemarksValue
+    }
     try {
-      const response = await DeleteResolution(id);
+      const response = await DeleteResolution(deleteId, Data);
       if (response?.success) {
         showSuccessMessage(response?.message);
         SearchResolutionApi(formik.values);
+        toggleModal();
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -214,8 +226,8 @@ function QMSSerchResolution() {
             <Button
               variant="primary"
               onClick={() => {
-                toggleModal();
-                alert("Api Required")
+                deleteResolutionApi()
+                
               }}
             >
               Submit
@@ -482,6 +494,38 @@ function QMSSerchResolution() {
                           />
                         </div>
                       </div>
+                      <div class="col-3">
+                      <div class="mb-3">
+                        <label class="form-label">Member Position</label>
+                        <select
+                          class={`form-select ${
+                            formik.touched.memberPosition &&
+                            formik.errors.memberPosition
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                          placeholder="Member Position"
+                          value={formik.values.memberPosition}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          name="memberPosition"
+                        >
+                          <option value="" selected disabled hidden>
+                            Select
+                          </option>
+                          <option value={"Treasury"}>Treasury</option>
+                          <option value={"Opposition"}>Opposition</option>
+                          <option value={"Independent"}>Independent</option>
+                          <option value={"Anyside"}>Anyside</option>
+                        </select>
+                        {formik.touched.memberPosition &&
+                          formik.errors.memberPosition && (
+                            <div className="invalid-feedback">
+                              {formik.errors.memberPosition}
+                            </div>
+                          )}
+                      </div>
+                  </div>
                     </div>
 
                     <div className="row">
@@ -526,7 +570,10 @@ function QMSSerchResolution() {
                     showPrint={false}
                     pageSize={pageSize}
                     handleEdit={(item) => handleEdit(item.RID)}
-                    handleDelete={(item) => toggleModal()}
+                    handleDelete={(item) => {
+                      toggleModal()
+                      setDeleteId(item.RID)
+                    }}
                   />
               </div>
              
