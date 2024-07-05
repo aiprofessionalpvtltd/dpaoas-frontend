@@ -103,13 +103,17 @@ function NewLegislationSenateBill() {
         formData.append(`senateBillMnaMovers[${index}][fkMnaId]`, MNA?.value);
       });
     }
+    // if (values?.selectedMinistry) {
+    //   values?.selectedMinistry?.forEach((ministry, index) => {
+    //     formData.append(
+    //       `senateBillMinistryMovers[${index}][fkMinistryId]`,
+    //       ministry?.value
+    //     ); 
+    //   });
+    // }
+
     if (values?.selectedMinistry) {
-      values?.selectedMinistry?.forEach((ministry, index) => {
-        formData.append(
-          `senateBillMinistryMovers[${index}][fkMinistryId]`,
-          ministry?.value
-        );
-      });
+      formData.append(`senateBillMinistryMovers[${0}][fkMinistryId]`, values?.selectedMinistry?.value)
     }
 
     let formDataObject = {};
@@ -453,7 +457,7 @@ function NewLegislationSenateBill() {
                           )
                         }
                         value={formik.values.selectedMinistry}
-                        isMulti={true}
+                        // isMulti={true}
                       />
                     </div>
                   </div>

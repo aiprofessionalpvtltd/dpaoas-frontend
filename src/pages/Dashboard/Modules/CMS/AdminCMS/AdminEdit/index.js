@@ -31,9 +31,9 @@ function CMSAdminEditComplaint() {
   const formik = useFormik({
     initialValues: {
       fkResolverUserId: "",
-      complaintRemark: "",
-      complaintStatus: "",
-      complaintResolvedDate: new Date(),
+      complaintRemark: location?.state?.complaintRemark ? location?.state?.complaintRemark : "",
+      complaintStatus: location?.state?.complaintStatus ? location?.state?.complaintStatus : "",
+      complaintResolvedDate: location?.state?.complaintResolvedDate ? moment(location?.state?.complaintResolvedDate).toDate(): new Date(),
       complaintAttachmentFromResolver: "",
     },
 

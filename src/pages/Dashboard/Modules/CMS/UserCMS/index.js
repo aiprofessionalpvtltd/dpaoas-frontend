@@ -18,10 +18,7 @@ import { useFormik } from "formik";
 import DatePicker from "react-datepicker";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
-import {
-  showErrorMessage,
-  showSuccessMessage,
-} from "../../../../../utils/ToastAlert";
+import { showErrorMessage, showSuccessMessage } from "../../../../../utils/ToastAlert";
 import jsPDF from "jspdf";
 import Modal from "react-modal";
 import moment from "moment";
@@ -92,11 +89,8 @@ function CMSUserDashboard() {
       BranchOffice: item?.complaintType?.branchName,
       NatureOfComplaint: item?.complaintCategory?.complaintCategoryName,
       AssignTo:
-        item?.resolverUser &&
-        `${item?.resolverUser?.employee?.firstName}${item?.resolverUser?.employee?.lastName}`,
-      complaintIssuedDate:
-        item?.complaintIssuedDate &&
-        moment(item?.complaintIssuedDate).format("DD/MM/YYYY"),
+        item?.resolverUser && `${item?.resolverUser?.employee?.firstName}${item?.resolverUser?.employee?.lastName}`,
+      complaintIssuedDate: item?.complaintIssuedDate && moment(item?.complaintIssuedDate).format("DD/MM/YYYY"),
       TonerModel: item?.tonerModels ? `${item?.tonerModels?.tonerModel}` : "--",
       tonerQuantity: item?.tonerQuantity ? item?.tonerQuantity : "--",
       complaintStatus: item?.complaintStatus,
@@ -112,9 +106,7 @@ function CMSUserDashboard() {
       // );
       if (response?.success) {
         setCount(response?.data?.count);
-        const transformedData = transformDepartmentData(
-          response?.data?.complaints
-        );
+        const transformedData = transformDepartmentData(response?.data?.complaints);
         setComplaintData(transformedData);
       }
     } catch (error) {
@@ -135,33 +127,17 @@ function CMSUserDashboard() {
       });
 
     // Wait for the image to load
-    const img = await loadImage(
-      `${imagesUrl}${printData?.complaintAttachment}`
-    );
+    const img = await loadImage(`${imagesUrl}${printData?.complaintAttachment}`);
 
     const pdf = new jsPDF();
     const imgData = canvas.toDataURL("image/png");
 
     // Add complaint details as text
     pdf.text(`ID: ${printData?.id}`, 10, 10);
-    pdf.text(
-      `Complaint Issued Date: ${new Date(
-        printData?.complaintIssuedDate
-      ).toLocaleString()}`,
-      10,
-      20
-    );
+    pdf.text(`Complaint Issued Date: ${new Date(printData?.complaintIssuedDate).toLocaleString()}`, 10, 20);
     pdf.text(`Description: ${printData?.complaintDescription}`, 10, 30);
-    pdf.text(
-      `ComplaintType: ${printData?.complaintType?.complaintTypeName}`,
-      10,
-      40
-    );
-    pdf.text(
-      `ComplaintCategory: ${printData?.complaintCategory?.complaintCategoryName}`,
-      10,
-      50
-    );
+    pdf.text(`ComplaintType: ${printData?.complaintType?.complaintTypeName}`, 10, 40);
+    pdf.text(`ComplaintCategory: ${printData?.complaintCategory?.complaintCategoryName}`, 10, 50);
 
     // Add complaint image
     pdf.addImage(img, "PNG", 10, 60, pdf.internal.pageSize.getWidth() - 20, 0);
@@ -252,14 +228,14 @@ function CMSUserDashboard() {
 
   const hendleEdit = async (id) => {
     try {
-      const response = await getallcomplaintRecordById(id)
-      if(response.success){
-        navigate("/cms/dashboard/addedit", { state: response?.data })
+      const response = await getallcomplaintRecordById(id);
+      if (response.success) {
+        navigate("/cms/dashboard/addedit", { state: response?.data });
       }
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   useEffect(() => {
     AllComplaintTypeApi();
@@ -283,23 +259,14 @@ function CMSUserDashboard() {
         style={customStyles}
         contentLabel="Example Modal"
       >
-        <div
-          className="d-flex flex-column align-items-center justify-content-center"
-          style={{ background: "white" }}
-        >
+        <div className="d-flex flex-column align-items-center justify-content-center" style={{ background: "white" }}>
           <div id="complaint-details">
             <h1>Complaint Details</h1>
             <p>ID: {printData?.id}</p>
-            <p>
-              Complaint Issued Date:{" "}
-              {new Date(printData?.complaintIssuedDate).toLocaleString()}
-            </p>
+            <p>Complaint Issued Date: {new Date(printData?.complaintIssuedDate).toLocaleString()}</p>
             <p>Description: {printData?.complaintDescription}</p>
             <p>ComplaintType: {printData?.complaintType?.complaintTypeName}</p>
-            <p>
-              ComplaintCategory:{" "}
-              {printData?.complaintCategory?.complaintCategoryName}
-            </p>
+            <p>ComplaintCategory: {printData?.complaintCategory?.complaintCategoryName}</p>
           </div>
           <img
             src={`${imagesUrl}${printData?.complaintAttachment}`}
@@ -312,16 +279,10 @@ function CMSUserDashboard() {
             }}
           />
           <div className="d-flex justify-content-center align-items-center mt-3">
-            <button
-              className="btn btn-primary mx-2"
-              onClick={() => setIsOpen(false)}
-            >
+            <button className="btn btn-primary mx-2" onClick={() => setIsOpen(false)}>
               Cancel
             </button>
-            <button
-              className="btn btn-primary mx-2"
-              onClick={() => generatePDF()}
-            >
+            <button className="btn btn-primary mx-2" onClick={() => generatePDF()}>
               Print
             </button>
           </div>
@@ -365,9 +326,7 @@ function CMSUserDashboard() {
                             label: `${item.firstName}${item.lastName}`,
                           }))
                         }
-                        onChange={(selectedOptions) =>
-                          formik.setFieldValue("resolverUser", selectedOptions)
-                        }
+                        onChange={(selectedOptions) => formik.setFieldValue("resolverUser", selectedOptions)}
                         onBlur={formik.handleBlur}
                         // placeholder="Select"
                         value={formik.values.resolverUser}
@@ -404,9 +363,7 @@ function CMSUserDashboard() {
                           Select
                         </option>
                         {complaintType &&
-                          complaintType.map((item) => (
-                            <option value={item.id}>{item.branchName}</option>
-                          ))}
+                          complaintType.map((item) => <option value={item.id}>{item.branchName}</option>)}
                       </select>
                     </div>
                   </div>
@@ -425,9 +382,7 @@ function CMSUserDashboard() {
                         </option>
                         {complaintCategories &&
                           complaintCategories.map((item) => (
-                            <option value={item.id}>
-                              {item.complaintCategoryName}
-                            </option>
+                            <option value={item.id}>{item.complaintCategoryName}</option>
                           ))}
                       </select>
                     </div>
@@ -453,9 +408,7 @@ function CMSUserDashboard() {
                       </span>
                       <DatePicker
                         selected={formik.values.complaintIssuedDate}
-                        onChange={(date) =>
-                          formik.setFieldValue("complaintIssuedDate", date)
-                        }
+                        onChange={(date) => formik.setFieldValue("complaintIssuedDate", date)}
                         className={"form-control"}
                       />
                     </div>
@@ -478,9 +431,7 @@ function CMSUserDashboard() {
                       </span>
                       <DatePicker
                         selected={formik.values.complaintResolvedDate}
-                        onChange={(date) =>
-                          formik.setFieldValue("complaintResolvedDate", date)
-                        }
+                        onChange={(date) => formik.setFieldValue("complaintResolvedDate", date)}
                         className={"form-control"}
                       />
                     </div>
@@ -525,19 +476,15 @@ function CMSUserDashboard() {
                   // hideEditIcon={true}
                   currentPage={currentPage}
                   pageSize={pageSize}
-                  headertitlebgColor={"#666"}
-                  headertitletextColor={"#FFF"}
+                  headertitlebgColor={"#FFF"}
+                  headertitletextColor={"rgb(171, 178, 196)"}
                   totalCount={count}
                   hideDeleteIcon={true}
                   // showPrint={true}
                   handlePrint={(item) => HandlePrint(item.id)}
                 />
                 <div class="d-grid gap-2 d-md-flex justify-content-md-start col">
-                  <button
-                    class="btn btn-primary"
-                    type="button"
-                    onClick={() => hendleExportExcel()}
-                  >
+                  <button class="btn btn-primary" type="button" onClick={() => hendleExportExcel()}>
                     Export Excel
                   </button>
                 </div>

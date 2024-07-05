@@ -264,7 +264,7 @@ const DocParas = ({ tabsData, onEditorChange, onDelete, FR }) => {
                       }}
                       className="btn-xs black circle-btn"
                       style={{
-                        background: "black",
+                        color: "black",
                       }}
                     >
                       <FontAwesomeIcon icon={faFileExport} />
@@ -273,7 +273,7 @@ const DocParas = ({ tabsData, onEditorChange, onDelete, FR }) => {
                       onClick={() => onDelete(index)}
                       className="btn-xs red circle-btn"
                       style={{
-                        background: "red",
+                        color: "red",
                       }}
                     >
                       <FontAwesomeIcon icon={faTrash} />
@@ -282,7 +282,7 @@ const DocParas = ({ tabsData, onEditorChange, onDelete, FR }) => {
                       onClick={() => handleEditToggle(index, false)}
                       className="btn-xs green circle-btn"
                       style={{
-                        background: "#2dce89",
+                        color: "#2dce89",
                       }}
                     >
                       <FontAwesomeIcon icon={faEdit} />
@@ -294,7 +294,7 @@ const DocParas = ({ tabsData, onEditorChange, onDelete, FR }) => {
                       onClick={() => handleEditToggle(index, true)}
                       className="btn-xs green circle-btn"
                       style={{
-                        background: "#2dce89",
+                        color: "#2dce89",
                       }}
                     >
                       <FontAwesomeIcon icon={faCheckCircle} />

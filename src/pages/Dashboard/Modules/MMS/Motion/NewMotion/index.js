@@ -278,7 +278,7 @@ function MMSNewMotion() {
                           <option value={"Call Attention Notice"}>Call Attention Notice</option>
                           
                           <option value={"Motion Under Rule 218"}>Motion Under Rule 218</option>
-                          <option value={"Motion Under Rule 60"}>Motion Under Rule 60</option>
+                        {/* <option value={"Motion Under Rule 60"}>Motion Under Rule 60</option> */}
                       </select>
                       {formik.errors.motionType &&
                         formik.touched.motionType && (

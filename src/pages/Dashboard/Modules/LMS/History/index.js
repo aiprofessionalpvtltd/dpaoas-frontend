@@ -24,7 +24,7 @@ function LMSHistory() {
   const [currentPage, setCurrentPage] = useState(0);
   const [showModal, setShowModal] = useState(false);
   // const [count, setCount] = useState(null);
-  const pageSize = 4; // Set your desired page size
+  const pageSize = 10; // Set your desired page size
 
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
@@ -225,10 +225,12 @@ function LMSHistory() {
                 <div class="row mt-3">
                   <div class="col-12">
                     <CustomTable
+                      hideBtn={true}
+                      hidebtn1={true}
                       data={historyData?.length > 0 ? historyData : []}
                       tableTitle={"Leave History"}
                       headerBgColor={"#666"}
-                      hideBtn={true}
+                      // hideBtn={true}
                       handleEdit={() =>
                         navigate("/lms/addedit", { state: true })
                       }

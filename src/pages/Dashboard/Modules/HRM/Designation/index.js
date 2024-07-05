@@ -16,7 +16,8 @@ function HRMDesignation() {
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
   const [designationData, setDesignationData] = useState([]);
-  const pageSize = 4; // Set your desired page size
+  const [searchTerm, setSearchTerm] = useState("");
+  const pageSize = 10; // Set your desired page size
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
@@ -59,6 +60,11 @@ function HRMDesignation() {
   useEffect(() => {
     getDesignationApi();
   }, [currentPage]);
+
+    // Filtered Data
+    const filteredDesignation = designationData.filter((designation) =>
+      designation.designationName.toLowerCase().includes(searchTerm.toLowerCase())
+    );
   return (
     <Layout module={true} sidebarItems={HRMsidebarItems} centerlogohide={true}>
       <Header
@@ -70,7 +76,10 @@ function HRMDesignation() {
       <div class="row">
         <div class="col-12">
           <CustomTable
-            data={designationData}
+            data={filteredDesignation}
+            // data={designationData}
+            seachBarShow={true}
+            searchonchange={(e) => setSearchTerm(e.target.value)}
             tableTitle="Designation List"
             addBtnText="Add Designation"
             handleAdd={() => navigate("/hrm/addeditdesignation")}

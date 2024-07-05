@@ -31,7 +31,7 @@ export const CustomNavbar = ({ module, centerlogohide, navItems }) => {
           <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
               <>
-                {navItems &&
+                {navItems && 
                   navItems?.map((item) => (
                     <>
                       {item?.subItems ? (
@@ -53,7 +53,9 @@ export const CustomNavbar = ({ module, centerlogohide, navItems }) => {
                                   (subItem) =>
                                     location.pathname === subItem.link
                                 )
-                                  ? "#14ae5c"
+                                  // ? "#14ae5c"
+                                   ?"#4B90F0"
+                                  
                                   : "",
                               }}
                             >
@@ -84,7 +86,8 @@ export const CustomNavbar = ({ module, centerlogohide, navItems }) => {
                                         : "#000",
                                     backgroundColor:
                                       location.pathname === subItem?.link
-                                        ? "#14ae5c"
+                                        // ? "#14ae5c"
+                                         ?"#4B90F0"
                                         : "",
                                   }}
                                   to={subItem?.link}
@@ -109,7 +112,8 @@ export const CustomNavbar = ({ module, centerlogohide, navItems }) => {
                                   : "#000",
                               backgroundColor:
                                 location.pathname === item?.link
-                                  ? "#14ae5c"
+                                  // ? "#14ae5c"
+                                  ?"#4B90F0"
                                   : "",
                               borderRadius: 5,
                               paddingRight: 10,

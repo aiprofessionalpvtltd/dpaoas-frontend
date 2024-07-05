@@ -18,7 +18,7 @@ function QMSMembers() {
   const [members, setMembers] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
-  const pageSize = 5; // Set your desired page size
+  const pageSize = 10; // Set your desired page size
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
@@ -56,7 +56,7 @@ function QMSMembers() {
 
   useEffect(() => {
     handleMembers();
-  }, []);
+  }, [currentPage]);
 
   const handleDelete = async (id) => {
     try {
@@ -83,7 +83,7 @@ function QMSMembers() {
         <div class="row">
           <div class="col-12">
             <CustomTable
-              block={true}
+              block={false}
               data={members}
               tableTitle="Member List"
               addBtnText="Add Member"

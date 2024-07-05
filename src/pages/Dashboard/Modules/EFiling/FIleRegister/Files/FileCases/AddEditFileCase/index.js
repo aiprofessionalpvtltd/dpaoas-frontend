@@ -44,11 +44,11 @@ function AddEditFileCase() {
     description: "",
   });
   
-  const initialNotingTabData = [
-    { title: "Para 1", description: "Content for Paragraph 1", references: [] },
-    { title: "Para 2", description: "Content for Paragraph 2", references: [] },
-    { title: "Para 3", description: "Content for Paragraph 3", references: [] },
-  ];
+  // const initialNotingTabData = [
+  //   { title: "Para 1", description: "Content for Paragraph 1", references: [] },
+  //   { title: "Para 2", description: "Content for Paragraph 2", references: [] },
+  //   { title: "Para 3", description: "Content for Paragraph 3", references: [] },
+  // ];
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
   const [correspondenceTypesData, setCorrespondenceTypesData] = useState([]);
@@ -61,7 +61,7 @@ function AddEditFileCase() {
     setCurrentPage(page);
   };
 
-  const [notingTabData, setNotingTabsData] = useState(initialNotingTabData);
+  const [notingTabData, setNotingTabsData] = useState([]);
 
   // const handleEditorChange = (index, content) => {
   //   const updatedTabs = [...notingTabData];
@@ -568,9 +568,12 @@ function AddEditFileCase() {
                           value={notingTabSubject}
                           style={{ width: "50%" }}
                         />
-                        <label htmlFor="formFile" className="form-label mt-2">
-                          Added Paragraphs
-                        </label>
+                        {notingTabData.length > 0 && (
+                           <label htmlFor="formFile" className="form-label mt-2">
+                           Added Paragraphs
+                         </label>
+                        ) }
+                       
                         <DocParas
                           tabsData={notingTabData}
                           onEditorChange={handleEditorChange}

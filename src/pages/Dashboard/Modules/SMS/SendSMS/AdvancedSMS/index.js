@@ -14,7 +14,7 @@ function SMSAdvancedSMS() {
     const userData = getUserData();
 
     const [currentPage, setCurrentPage] = useState(0);
-    const pageSize = 4; // Set your desired page size
+    const pageSize = 10; // Set your desired page size
     const [contactList, setContactList] = useState([])
     const [templateList, settemplateList] = useState([])
     const [templateId, settemplateId] = useState(null)

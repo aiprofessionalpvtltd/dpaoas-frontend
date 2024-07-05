@@ -15,7 +15,7 @@ function QMSQuestionSummary() {
   const [count, setCount] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [searchedData, setSearchData] = useState([])
-  const pageSize = 4;
+  const pageSize = 10;
 
   const formik = useFormik({
     initialValues: {

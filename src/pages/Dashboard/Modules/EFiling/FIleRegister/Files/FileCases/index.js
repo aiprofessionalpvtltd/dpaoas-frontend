@@ -31,7 +31,7 @@ function FileCases() {
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
   const [casesData, setCasesData] = useState([]);
-  const pageSize = 4;
+  const pageSize = 10;
   const UserData = getUserData();
   const [fkfileId, setFKFileId] = useState(null);
   const [showHeadings, setShowHeadings] = useState(false);

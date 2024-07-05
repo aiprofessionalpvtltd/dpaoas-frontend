@@ -2,7 +2,11 @@ import React, { useContext, useEffect, useState, useRef } from "react";
 import { Layout } from "../../../../../components/Layout";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
-import { getCaseIdForDetailPage, getFileIdForDetailPage, getUserData } from "../../../../../api/Auth";
+import {
+  getCaseIdForDetailPage,
+  getFileIdForDetailPage,
+  getUserData,
+} from "../../../../../api/Auth";
 import {
   UpdateFIleCase,
   assignFIleCase,
@@ -25,6 +29,7 @@ import CustomTable from "../../../../../components/CustomComponents/CustomTable"
 import DocParas from "../../../../../components/CustomComponents/DocParas";
 import { Editor } from "../../../../../components/CustomComponents/Editor";
 import { imagesUrl } from "../../../../../api/APIs";
+import moment from "moment";
 
 const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
   return (
@@ -68,27 +73,27 @@ function FileDetail() {
   const [FR, setFR] = useState(null);
   const pageSize = 10;
 
-  const initialNotingTabData = [
-    {
-      title: "Para 1",
-      description: "Content for Paragraph 1",
-      references: [
-        {
-          flag: "A",
-          id: 2,
-          attachments: [
-            {
-              file: "/public/correspondences/2024-06-04T07-58-31/output_1717395191507.pdf",
-            },
-          ],
-        },
-      ],
-    },
-    { title: "Para 2", description: "Content for Paragraph 2", references: [] },
-    { title: "Para 3", description: "Content for Paragraph 3", references: [] },
-  ];
+  // const initialNotingTabData = [
+  //   {
+  //     title: "Para 1",
+  //     description: "Content for Paragraph 1",
+  //     references: [
+  //       {
+  //         flag: "A",
+  //         id: 2,
+  //         attachments: [
+  //           {
+  //             file: "/public/correspondences/2024-06-04T07-58-31/output_1717395191507.pdf",
+  //           },
+  //         ],
+  //       },
+  //     ],
+  //   },
+  //   { title: "Para 2", description: "Content for Paragraph 2", references: [] },
+  //   { title: "Para 3", description: "Content for Paragraph 3", references: [] },
+  // ];
 
-  const [notingTabData, setNotingTabsData] = useState(initialNotingTabData);
+  const [notingTabData, setNotingTabsData] = useState([]);
 
   const formik = useFormik({
     initialValues: {
@@ -116,20 +121,17 @@ function FileDetail() {
   const UpdateEfilingApi = async () => {
     const data = {
       notingSubject: notingTabSubject,
-      paragraphArray: notingTabData
-    }
+      paragraphArray: notingTabData,
+    };
     try {
-      const response = await UpdateFIleCase(
-        filesData?.caseNoteId,
-        data
-      );
+      const response = await UpdateFIleCase(filesData?.caseNoteId, data);
       if (response?.success) {
         showSuccessMessage(response?.message);
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
     }
-  }
+  };
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
@@ -208,12 +210,12 @@ function FileDetail() {
       setNotingTabsData([
         ...notingTabData,
         {
-          title: `Para ${notingTabData.length + 1}`,
+          title: `Para ${notingTabData?.length + 1}`,
           description: content,
           references: [],
         },
       ]);
-      setNotingData("")
+      setNotingData("");
     } else if (isReference) {
       const updatedTabs = notingTabData.map((tab, i) =>
         i === index
@@ -288,8 +290,9 @@ function FileDetail() {
         const FRSelection = {
           frId: response?.data?.cases?.freshReceipts?.id,
           frSubject: response?.data?.cases?.freshReceipts?.frSubject,
-          freshReceiptsAttachments: response?.data?.cases?.freshReceipts?.freshReceiptsAttachments
-        }
+          freshReceiptsAttachments:
+            response?.data?.cases?.freshReceipts?.freshReceiptsAttachments,
+        };
         setFR(FRSelection);
       }
     } catch (error) {
@@ -300,8 +303,8 @@ function FileDetail() {
   useEffect(() => {
     const fileId = getFileIdForDetailPage();
     const caseId = getCaseIdForDetailPage();
-    if(fileId && caseId) {
-      setFKFileId(fileId)
+    if (fileId && caseId) {
+      setFKFileId(fileId);
       getFilesByID(fileId, caseId);
     }
   }, [getFileIdForDetailPage]);
@@ -326,7 +329,7 @@ function FileDetail() {
     });
     setNotingTabSubject(filesData?.notingSubject);
     setNotingTabsData(filesData?.paragraphArray);
-  }, [filesData])
+  }, [filesData]);
 
   return (
     <Layout
@@ -617,12 +620,12 @@ function FileDetail() {
                                     ? true
                                     : false
                               }
-                            >
+                            > 
                               Save
                             </button>
                           </div>
 
-                          <div class="col-2">
+                          {/* <div class="col-2">
                             <button
                               class="btn btn-primary"
                               type="submit"
@@ -643,7 +646,7 @@ function FileDetail() {
                             >
                               Finalize
                             </button>
-                          </div>
+                          </div> */}
                         </div>
 
                         <div class="col">
@@ -663,12 +666,14 @@ function FileDetail() {
                                     value={notingTabSubject}
                                     style={{ width: "50%" }}
                                   />
-                                  <label
-                                    htmlFor="formFile"
-                                    className="form-label mt-2"
-                                  >
-                                    Added Paragraphs
-                                  </label>
+                                  {notingTabData?.length > 0 && (
+                                    <label
+                                      htmlFor="formFile"
+                                      className="form-label mt-2"
+                                    >
+                                      Added Paragraphs
+                                    </label>
+                                  )}
                                   <DocParas
                                     tabsData={notingTabData}
                                     onEditorChange={handleEditorChange}
@@ -729,7 +734,12 @@ function FileDetail() {
                                   if (fkfileId) {
                                     navigate(
                                       "/efiling/dashboard/file-register-list/files-list/addedit-case/addedit-correspondence",
-                                      { state: { fileId: fkfileId, fileDetail: true } }
+                                      {
+                                        state: {
+                                          fileId: fkfileId,
+                                          fileDetail: true,
+                                        },
+                                      }
                                     );
                                   } else {
                                     showErrorMessage(
@@ -753,7 +763,7 @@ function FileDetail() {
                                         state: {
                                           item: item,
                                           fileId: fkfileId,
-                                          fileDetail: true
+                                          fileDetail: true,
                                         },
                                       }
                                     );
@@ -825,10 +835,10 @@ function FileDetail() {
                                   </div>
                                   <div style={{ float: "right" }}>
                                     <small>
-                                      {item?.formattedDateCreatedAt}
+                                      {moment(item?.createdAt).format("DD/MM/YYYY")}
                                     </small>
                                     <small className="ms-2">
-                                      {item?.formattedTimeCreatedAt}
+                                      {moment(item?.createdAt).format("hh:mm a")}
                                     </small>
                                   </div>
                                 </div>

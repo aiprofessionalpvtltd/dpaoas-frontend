@@ -57,7 +57,7 @@ function CommitteesManagementSystemCommitteeRooms() {
   const [currentPage, setCurrentPage] = useState(0);
   const [billData, setBillData] = useState([]);
   const [committeeData, setCommitteeData] = useState([]);
-  const pageSize = 5;
+  const pageSize = 10;
 
   const handlePageChange = (page) => {
     setCurrentPage(page);

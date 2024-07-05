@@ -28,7 +28,7 @@ const AttendenceReports = () => {
   const [count, setCount] = useState(null);
   const [searchedData, setSearchedData] = useState(null);
 
-  const pageSize = 4;
+  const pageSize = 10;
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
     setCurrentPage(page);

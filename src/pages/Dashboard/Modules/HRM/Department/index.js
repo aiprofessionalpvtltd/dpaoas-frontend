@@ -17,7 +17,7 @@ function HRMDepartment() {
   const [currentPage, setCurrentPage] = useState(0);
   const [departmentData, setDepartmentData] = useState([]);
   const [count, setCount] = useState(null);
-  const pageSize = 4; // Set your desired page size
+  const pageSize = 10; // Set your desired page size
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
@@ -25,11 +25,11 @@ function HRMDepartment() {
   };
 
   const transformDepartmentData = (apiData) => {
-    return apiData.map((leave) => ({
-      id: leave?.id,
-      departmentName: leave?.departmentName,
-      description: leave?.description,
-      departmentStatus: leave?.departmentStatus,
+    return apiData.map((item) => ({
+      id: item?.id,
+      departmentName: item?.departmentName,
+      description: item?.description,
+      departmentStatus: item?.departmentStatus,
     }));
   };
   const getDepartmentData = useCallback(async () => {

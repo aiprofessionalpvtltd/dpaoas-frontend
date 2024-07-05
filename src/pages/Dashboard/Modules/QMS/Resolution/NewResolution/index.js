@@ -18,6 +18,7 @@ import { ToastContainer } from "react-toastify";
 import { AuthContext } from "../../../../../../api/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
+import { getUserData } from "../../../../../../api/Auth";
 
 const validationSchema = Yup.object({
   fkSessionNo: Yup.number().required("Session No is required"),
@@ -37,6 +38,7 @@ const validationSchema = Yup.object({
 
 function QMSNewResolution() {
   const { members, sessions } = useContext(AuthContext);
+  const userData = getUserData();
 
   const formik = useFormik({
     initialValues: {
@@ -78,6 +80,7 @@ function QMSNewResolution() {
     formData.append("fkResolutionStatus", 1);
     formData.append("attachment", values.attachment);
     formData.append("resolutionSentStatus", 'inResolution');
+    formData.append("createdByUser",  userData?.fkUserId)
 
     try {
       const response = await createResolution(formData);

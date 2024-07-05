@@ -9,7 +9,13 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Stepper, Step, StepLabel } from "@mui/material";
 import DatePicker from "react-datepicker";
-import { UpdateEmployee, createEmployee, getDepartment, getDesignations, getRoles } from "../../../../../../api/APIs/Services/organizational.service";
+import {
+  UpdateEmployee,
+  createEmployee,
+  getDepartment,
+  getDesignations,
+  getRoles,
+} from "../../../../../../api/APIs/Services/organizational.service";
 import { ToastContainer } from "react-toastify";
 import {
   showErrorMessage,
@@ -27,11 +33,9 @@ const validationSchema = Yup.object({
 });
 function HRMAddEditEmployee() {
   const location = useLocation();
-  const { employeeData } = useContext(AuthContext)
-  const [rolesList, setRolesList] = useState([])
-  const [departmentData, setDepartmentData] = useState([])
-  const [designationData, setDesignationData] = useState([])
-
+  const { employeeData, allBranchesData } = useContext(AuthContext);
+  const [rolesList, setRolesList] = useState([]);
+  const [designationData, setDesignationData] = useState([]);
 
   const formik = useFormik({
     initialValues: {
@@ -40,13 +44,27 @@ function HRMAddEditEmployee() {
       userName: location?.state?.userName ? location?.state?.userName : "",
       phoneNo: location?.state?.phoneNo ? location?.state?.phoneNo : "",
       gender: location?.state?.gender ? location?.state?.gender : "",
-      email: location?.state?.email ? location?.state?.email : "",
+      email: location?.state?.users?.email ? location?.state?.users?.email : "",
       password: location?.state?.password ? location?.state?.password : "",
-      fileNumber: location?.state?.fileNumber ? location?.state?.fileNumber : "",
-      supervisor: location?.state?.supervisor ? location?.state?.supervisor : "",
-      fkRoleId: location?.state?.fkRoleId ? location?.state?.fkRoleId : "",
-      fkDepartmentId: location?.state?.fkDepartmentId ? location?.state?.fkDepartmentId : "",
-      fkDesignationId: location?.state?.fkDesignationId ? location?.state?.fkDesignationId : "",
+      fileNumber: location?.state?.fileNumber
+        ? location?.state?.fileNumber
+        : "",
+      supervisor: location?.state?.supervisor
+        ? location?.state?.supervisor
+        : "",
+      fkRoleId: location?.state?.users?.role?.id
+        ? location?.state?.users?.role?.id
+        : "",
+      fkBranchId: location?.state?.fkBranchId
+        ? location?.state?.fkBranchId
+        : "",
+      fkDesignationId: location?.state?.fkDesignationId
+        ? location?.state?.fkDesignationId
+        : "",
+      userType: location?.state?.userType ? location?.state?.userType : "",
+      reportingTo: location?.state?.reportingTo
+        ? location?.state?.reportingTo
+        : "",
     },
     // validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -69,16 +87,19 @@ function HRMAddEditEmployee() {
       email: values.email,
       password: values.password,
       fileNumber: values?.fileNumber,
-      supervisor: values?.supervisor,
+      // supervisor: values?.supervisor,
+      supervisor: 1,
       fkRoleId: values?.fkRoleId,
-      fkDepartmentId: values?.fkDepartmentId,
       fkDesignationId: values?.fkDesignationId,
+      fkBranchId: values?.fkBranchId,
+      ...(values?.userType && { userType: values.userType }),
+      ...(values?.reportingTo && { reportingTo: values.reportingTo }),
     };
     try {
       const response = await createEmployee(data);
       if (response.success) {
         showSuccessMessage(response.message);
-        formik.resetForm()
+        formik.resetForm();
       }
     } catch (error) {
       console.log(error);
@@ -95,45 +116,35 @@ function HRMAddEditEmployee() {
       email: values.email,
       password: values.password,
       fileNumber: values.fileNumber,
-      supervisor: values?.supervisor,
+      // supervisor: values?.supervisor,
+      supervisor: 1,
       fkRoleId: values?.fkRoleId,
-      fkDepartmentId: values?.fkDepartmentId,
+      fkBranchId: values?.fkBranchId,
       fkDesignationId: values?.fkDesignationId,
+      ...(values?.userType && { userType: values.userType }),
+      ...(values?.reportingTo && { reportingTo: values.reportingTo }),
     };
     try {
       const response = await UpdateEmployee(location?.state?.id, data);
       if (response.success) {
         showSuccessMessage(response.message);
-        formik.resetForm()
+        formik.resetForm();
       }
     } catch (error) {
       showErrorMessage(error.response.data.message);
     }
   };
 
-
   const fetchRoles = async () => {
     try {
       const response = await getRoles();
       if (response.success) {
-        setRolesList(response?.data?.roles)
+        setRolesList(response?.data?.roles);
       }
-
     } catch (error) {
       console.log(error);
     }
   };
-  const getDepartmentData = async () => {
-    try {
-      const response = await getDepartment(0, 50);
-      if (response?.success) {
-        setDepartmentData(response?.data?.departments);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-
-  }
 
   const getDesignationApi = async () => {
     try {
@@ -147,12 +158,9 @@ function HRMAddEditEmployee() {
   };
 
   useEffect(() => {
-    getDesignationApi()
-    getDepartmentData()
+    getDesignationApi();
     fetchRoles();
   }, []);
-
-
 
   return (
     <Layout module={true} sidebarItems={HRMsidebarItems} centerlogohide={true}>
@@ -161,7 +169,11 @@ function HRMAddEditEmployee() {
         addLink1={"/hrm/employee"}
         title1={"Employee"}
         addLink2={"/hrm/addeditemployee"}
-        title2={location?.state && location?.state?.id ? "Edit Employee" : "Add Employee"}
+        title2={
+          location?.state && location?.state?.id
+            ? "Edit Employee"
+            : "Add Employee"
+        }
       />
       <ToastContainer />
 
@@ -177,7 +189,6 @@ function HRMAddEditEmployee() {
           <div class="container-fluid">
             <form onSubmit={formik.handleSubmit}>
               <div class="row">
-
                 <div class="col">
                   <div class="mb-3">
                     <label for="" class="form-label">
@@ -249,12 +260,16 @@ function HRMAddEditEmployee() {
                     <label for="" class="form-label">
                       Gender
                     </label>
-                    <select class="form-select"
+                    <select
+                      class="form-select"
                       id="gender"
                       value={formik.values.gender}
                       onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}>
-                      <option value="" disabled hidden>Select</option>
+                      onBlur={formik.handleBlur}
+                    >
+                      <option value="" disabled hidden>
+                        Select
+                      </option>
                       <option value="male">Male</option>
                       <option value="female">Female</option>
                     </select>
@@ -285,9 +300,12 @@ function HRMAddEditEmployee() {
                       type="text"
                       class="form-control"
                       id="password"
-                      placeholder={"Password"}
+                      placeholder={
+                        location?.state?.id ? "*********" : "Password"
+                      }
                       value={formik.values.password}
                       onChange={formik.handleChange}
+                      readOnly={location?.state?.id ? true : false}
                       onBlur={formik.handleBlur}
                     />
                   </div>
@@ -315,14 +333,21 @@ function HRMAddEditEmployee() {
                     <label for="" class="form-label">
                       Supervisor
                     </label>
-                    <select class="form-select " id="supervisor"
+                    <select
+                      class="form-select "
+                      id="supervisor"
                       value={formik.values.supervisor}
                       onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}>
-                      <option value="" disabled hidden>Select</option>
+                      onBlur={formik.handleBlur}
+                    >
+                      <option value="" disabled hidden>
+                        Select
+                      </option>
                       {employeeData &&
                         employeeData?.map((item) => (
-                          <option value={item.fkUserId}>{`${item.firstName}${item.lastName}`}</option>
+                          <option
+                            value={item.fkUserId}
+                          >{`${item.firstName}${item.lastName}`}</option>
                         ))}
                     </select>
                   </div>
@@ -332,11 +357,16 @@ function HRMAddEditEmployee() {
                     <label for="" class="form-label">
                       Roles
                     </label>
-                    <select class="form-select " id="fkRoleId"
+                    <select
+                      class="form-select "
+                      id="fkRoleId"
                       value={formik.values.fkRoleId}
                       onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}>
-                      <option value="" disabled hidden>Select</option>
+                      onBlur={formik.handleBlur}
+                    >
+                      <option value="" disabled hidden>
+                        Select
+                      </option>
                       {rolesList &&
                         rolesList?.map((item) => (
                           <option value={item.id}>{item.name}</option>
@@ -347,18 +377,21 @@ function HRMAddEditEmployee() {
                 <div class="col">
                   <div class="mb-3">
                     <label for="" class="form-label">
-                      Department
+                      Branch
                     </label>
-                    <select class="form-select " id="fkDepartmentId"
-                      value={formik.values.fkDepartmentId}
+                    <select
+                      class="form-select "
+                      id="fkBranchId"
+                      value={formik.values.fkBranchId}
                       onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}>
+                      onBlur={formik.handleBlur}
+                    >
                       <option value={""} selected disabled hidden>
                         Select
                       </option>
-                      {departmentData &&
-                        departmentData?.map((item) => (
-                          <option value={item.id}>{item.departmentName}</option>
+                      {allBranchesData &&
+                        allBranchesData?.map((item) => (
+                          <option value={item.id}>{item.branchName}</option>
                         ))}
                     </select>
                   </div>
@@ -368,18 +401,71 @@ function HRMAddEditEmployee() {
                     <label for="" class="form-label">
                       Designation
                     </label>
-                    <select class="form-select " id="fkDesignationId"
+                    <select
+                      class="form-select "
+                      id="fkDesignationId"
                       value={formik.values.fkDesignationId}
                       onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}>
+                      onBlur={formik.handleBlur}
+                    >
                       <option value={""} selected disabled hidden>
                         Select
                       </option>
                       {designationData &&
                         designationData?.map((item) => (
-                          <option value={item.id}>{item.designationName}</option>
+                          <option value={item.id}>
+                            {item.designationName}
+                          </option>
                         ))}
                     </select>
+                  </div>
+                </div>
+
+                <div className="row">
+                  <div class="col-3">
+                    <div class="mb-3">
+                      <label for="" class="form-label">
+                        User Type
+                      </label>
+                      <select
+                        class="form-select "
+                        id="userType"
+                        value={formik.values.userType}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      >
+                        <option value={""} selected disabled hidden>
+                          Select
+                        </option>
+                        <option>Section</option>
+                        <option>Section User</option>
+                        <option>Officer</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="col-3">
+                    <div class="mb-3">
+                      <label for="" class="form-label">
+                        Reported To
+                      </label>
+                      <select
+                        class="form-select "
+                        id="reportingTo"
+                        value={formik.values.reportingTo}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      >
+                        <option value={""} selected disabled hidden>
+                          Select
+                        </option>
+                        <option>Director</option>
+                        <option>Director General</option>
+                        <option>Senior Director General</option>
+                        <option>Secretary</option>
+                        <option>Chairman</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -397,4 +483,3 @@ function HRMAddEditEmployee() {
 }
 
 export default HRMAddEditEmployee;
-

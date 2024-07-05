@@ -48,8 +48,8 @@ const EditSenateBill = () => {
 
   const [isconsiderationDateCalendarOpen, setConsiderationDateCalendarOpen] =
     useState(false);
-    const [isGazetteCalendarOpen, setGazetteCalendarOpen] = useState(false);
-    const [isAssentCalendarOpen, setAssentCalendarOpen] = useState(false);
+  const [isGazetteCalendarOpen, setGazetteCalendarOpen] = useState(false);
+  const [isAssentCalendarOpen, setAssentCalendarOpen] = useState(false);
   const [isRecepitMesageDateCalendarOpen, setRecepitMesageDateCalendarOpen] =
     useState(false);
   const [isPassageByNADateCalendarOpen, setPassageByNADateCalendarOpen] =
@@ -117,7 +117,7 @@ const EditSenateBill = () => {
       billRemarks: "",
       senateBillSenatorMovers: [],
       senateBillMnaMovers: [],
-      senateBillMinistryMovers: [],
+      senateBillMinistryMovers: null,
       introducedInHouseDate: "",
       fkManageCommitteeId: "",
       referedOnDate: "",
@@ -127,7 +127,7 @@ const EditSenateBill = () => {
       memeberNoticeDate: "",
       dateOfConsiderationBill: "",
       dateOfPublishInGazette: "",
-      dateOfAssentByPresident: "",
+      dateOfAssentByThePresident: "",
       fkSessionMemberPassageId: "",
       dateOfPassageBySenate: "",
       dateOfTransmissionToNA: "",
@@ -236,7 +236,7 @@ const EditSenateBill = () => {
   };
   // Handale DateCHange
   const handleAssentDateSelect = (date) => {
-    formik.setFieldValue("dateOfAssentByPresident", date);
+    formik.setFieldValue("dateOfAssentByThePresident", date);
     setAssentCalendarOpen(false);
   };
 
@@ -287,6 +287,12 @@ const EditSenateBill = () => {
 
   useEffect(() => {
     if (singleSenateBillData) {
+        let fileNum="";
+      if(singleSenateBillData?.fileNumber){
+        const fileNumberMatch = singleSenateBillData?.fileNumber?.match(/\((\d+)\)/);
+        fileNum = fileNumberMatch ? fileNumberMatch[1] : '';
+
+      }
       const file = singleSenateBillData?.billDocuments?.file?.[0];
       let parsedFile = null;
       if (file) {
@@ -313,7 +319,7 @@ const EditSenateBill = () => {
             label: singleSenateBillData?.billStatuses?.billStatusName,
           }) ||
           "",
-        fileNumber: singleSenateBillData?.fileNumber || "",
+        fileNumber: fileNum || "",
         noticeDate: singleSenateBillData?.noticeDate
           ? moment(singleSenateBillData?.noticeDate).toDate()
           : "",
@@ -334,11 +340,15 @@ const EditSenateBill = () => {
             }))
           : [],
         senateBillMinistryMovers: singleSenateBillData?.senateBillMinistryMovers
-          ? singleSenateBillData?.senateBillMinistryMovers.map((senator) => ({
-              value: senator?.ministrie?.id,
-              label: senator?.ministrie?.ministryName,
-            }))
-          : [],
+          ? {
+              value:
+                singleSenateBillData?.senateBillMinistryMovers[0]?.ministrie
+                  ?.id,
+              label:
+                singleSenateBillData?.senateBillMinistryMovers[0]?.ministrie
+                  ?.ministryName,
+            }
+          : null,
         introducedInHouseDate:
           singleSenateBillData?.introducedInHouses &&
           singleSenateBillData?.introducedInHouses?.introducedInHouseDate
@@ -388,6 +398,13 @@ const EditSenateBill = () => {
         dateOfPassageBySenate: singleSenateBillData?.dateOfPassageBySenate
           ? moment(singleSenateBillData?.dateOfPassageBySenate).toDate()
           : "",
+        dateOfPublishInGazette: singleSenateBillData?.dateOfPublishInGazette
+          ? moment(singleSenateBillData?.dateOfPublishInGazette).toDate()
+          : "",
+        dateOfAssentByThePresident:
+          singleSenateBillData?.dateOfAssentByThePresident
+            ? moment(singleSenateBillData?.dateOfAssentByThePresident).toDate()
+            : "",
         dateOfTransmissionToNA: singleSenateBillData?.dateOfTransmissionToNA
           ? moment(singleSenateBillData?.dateOfTransmissionToNA).toDate()
           : "",
@@ -414,7 +431,7 @@ const EditSenateBill = () => {
           : "",
       });
     }
-  }, [singleSenateBillData, formik.setValues, formik]);
+  }, [singleSenateBillData]);
 
   const UpdateNationalAssemblyBill = async (values) => {
     const formData = new FormData();
@@ -427,7 +444,7 @@ const EditSenateBill = () => {
       const formattedDate = moment(values?.billStatusDate).format("YYYY-MM-DD");
       formData.append("billStatusDate", formattedDate);
     }
-    formData.append("fileNumber", values?.fileNumber);
+    formData.append("fileNumber",   `24(${values?.fileNumber})/2024`);
     // formData.append("noticeDate", values?.noticeDate);
     if (values?.noticeDate) {
       const formattedDate = moment(values?.noticeDate).format("YYYY-MM-DD");
@@ -493,6 +510,18 @@ const EditSenateBill = () => {
         "YYYY-MM-DD"
       );
       formData.append("dateOfConsiderationBill", formattedDate);
+    }
+    if (values?.dateOfPublishInGazette) {
+      const formattedDate = moment(values?.dateOfPublishInGazette).format(
+        "YYYY-MM-DD"
+      );
+      formData.append("dateOfPublishInGazette", formattedDate);
+    }
+    if (values?.dateOfAssentByThePresident) {
+      const formattedDate = moment(values?.dateOfAssentByThePresident).format(
+        "YYYY-MM-DD"
+      );
+      formData.append("dateOfAssentByThePresident", formattedDate);
     }
     if (values?.fkSessionMemberPassageId) {
       formData.append(
@@ -571,12 +600,10 @@ const EditSenateBill = () => {
       });
     }
     if (values?.senateBillMinistryMovers) {
-      values?.senateBillMinistryMovers?.forEach((ministry, index) => {
-        formData.append(
-          `senateBillMinistryMovers[${index}][fkMinistryId]`,
-          ministry?.value
-        );
-      });
+      formData.append(
+        `senateBillMinistryMovers[${0}][fkMinistryId]`,
+        values?.senateBillMinistryMovers?.value
+      );
     }
 
     try {
@@ -594,6 +621,8 @@ const EditSenateBill = () => {
       console.log("error", error);
     }
   };
+
+  
   return (
     <Layout
       module={true}
@@ -1123,7 +1152,7 @@ const EditSenateBill = () => {
                             )
                           }
                           value={formik.values.senateBillMinistryMovers}
-                          isMulti={true}
+                          // isMulti={true}
                         />
                       </div>
                     </div>
@@ -1176,103 +1205,6 @@ const EditSenateBill = () => {
                         </div>
                       </div>
 
-                      {/* <div className="col">
-                        <label className="form-label">
-                          Introduced in Session
-                        </label>
-                        <select
-                          id="fkSessionId"
-                          name="fkSessionId"
-                          className="form-select"
-                          onChange={formik.handleChange}
-                          value={formik.values.fkSessionId}
-                        >
-                          <option value="" disabled hidden>
-                            Select Session
-                          </option>
-                          {sessions.map((item) => (
-                            <option key={item.id} value={item.id}>
-                              {item.sessionName}
-                            </option>
-                          ))}
-                        </select>
-                      </div> */}
-
-                      <div class="col">
-                        <div class="mb-3" style={{ position: "relative" }}>
-                          <label class="form-label">
-                            Date of Presenation of the Report
-                          </label>
-                          <span
-                            style={{
-                              position: "absolute",
-                              right: "15px",
-                              top: "36px",
-                              zIndex: 1,
-                              fontSize: "20px",
-                              color: "#666",
-                            }}
-                            onClick={handleReportPresenatationDayCalendarToggle}
-                          >
-                            <FontAwesomeIcon icon={faCalendarAlt} />
-                          </span>
-                          <DatePicker
-                            selected={formik.values.reportPresentationDate}
-                            onChange={handleReportPresenatationDateSelect}
-                            className={"form-control"}
-                            open={isReportPresentationCalendarOpen}
-                            onClickOutside={() =>
-                              setReportPresentationCalendarOpen(false)
-                            }
-                            onInputClick={
-                              handleReportPresenatationDayCalendarToggle
-                            }
-                            maxDate={new Date()}
-                            dateFormat="dd-MM-yyyy"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="col">
-                        <label className="form-label">Concernd Committes</label>
-                        <select
-                          id="fkManageCommitteeId"
-                          name="fkManageCommitteeId"
-                          className="form-select"
-                          onChange={formik.handleChange}
-                          value={formik.values.fkManageCommitteeId}
-                        >
-                          <option value="" disabled hidden>
-                            Select
-                          </option>
-                          {committieeData &&
-                            committieeData.map((item) => (
-                              <option key={item.id} value={item.id}>
-                                {item.committeeName}
-                              </option>
-                            ))}
-                        </select>
-                        {/* <Select
-                          options={
-                            committieeData &&
-                            committieeData?.map((item) => ({
-                              value: item.id,
-                              label: item?.committeeName,
-                            }))
-                          }
-                          id="fkManageCommitteeId"
-                          name="fkManageCommitteeId"
-                          onChange={(selectedOptions) =>
-                            formik.setFieldValue(
-                              "fkManageCommitteeId",
-                              selectedOptions
-                            )
-                          }
-                          value={formik.values.fkManageCommitteeId}
-                          isMulti={true}
-                        /> */}
-                      </div>
-
                       <div class="col">
                         <div class="mb-3" style={{ position: "relative" }}>
                           <label class="form-label">Refered On</label>
@@ -1303,9 +1235,49 @@ const EditSenateBill = () => {
                           />
                         </div>
                       </div>
-                    </div>
 
-                    <div className="row">
+                      {/* <div className="col">
+                        <label className="form-label">
+                          Introduced in Session
+                        </label>
+                        <select
+                          id="fkSessionId"
+                          name="fkSessionId"
+                          className="form-select"
+                          onChange={formik.handleChange}
+                          value={formik.values.fkSessionId}
+                        >
+                          <option value="" disabled hidden>
+                            Select Session
+                          </option>
+                          {sessions.map((item) => (
+                            <option key={item.id} value={item.id}>
+                              {item.sessionName}
+                            </option>
+                          ))}
+                        </select>
+                      </div> */}
+
+                      <div className="col">
+                        <label className="form-label">Concernd Committes</label>
+                        <select
+                          id="fkManageCommitteeId"
+                          name="fkManageCommitteeId"
+                          className="form-select"
+                          onChange={formik.handleChange}
+                          value={formik.values.fkManageCommitteeId}
+                        >
+                          <option value="" disabled hidden>
+                            Select
+                          </option>
+                          {committieeData &&
+                            committieeData.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item.committeeName}
+                              </option>
+                            ))}
+                        </select>
+                      </div>
                       <div className="form-group col-3">
                         <label className="form-label">
                           Committee Recommendation
@@ -1333,6 +1305,41 @@ const EditSenateBill = () => {
                             Ammended By Standing Committee
                           </option> */}
                         </select>
+                      </div>
+                    </div>
+
+                    <div className="row">
+                      <div className="col-3">
+                        <div class="mb-3 " style={{ position: "relative" }}>
+                          <label class="form-label">
+                            Date of Passage by Senate
+                          </label>
+                          <span
+                            style={{
+                              position: "absolute",
+                              right: "15px",
+                              top: "36px",
+                              zIndex: 1,
+                              fontSize: "20px",
+                              color: "#666",
+                            }}
+                            onClick={handlePassageSenateCalendarToggle}
+                          >
+                            <FontAwesomeIcon icon={faCalendarAlt} />
+                          </span>
+                          <DatePicker
+                            selected={formik.values.dateOfPassageBySenate}
+                            onChange={handlePassageSenateDateSelect}
+                            className={"form-control"}
+                            open={isPassageSenateCalendarOpen}
+                            onClickOutside={() =>
+                              setPassageSenateCalendarOpen(false)
+                            }
+                            onInputClick={handlePassageSenateCalendarToggle}
+                            maxDate={new Date()}
+                            dateFormat="dd-MM-yyyy"
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -1456,7 +1463,7 @@ const EditSenateBill = () => {
                               zIndex: 1,
                               fontSize: "20px",
                               color: "#666",
-                              cursor:"pointer"
+                              cursor: "pointer",
                             }}
                             // onClick={handleConsiderationCalendarToggle}
                             onClick={handleGazetteCalendarToggle}
@@ -1468,16 +1475,13 @@ const EditSenateBill = () => {
                             onChange={handleGazetteDateSelect}
                             className={"form-control"}
                             open={isGazetteCalendarOpen}
-                            onClickOutside={() =>
-                              setGazetteCalendarOpen(false)
-                            }
+                            onClickOutside={() => setGazetteCalendarOpen(false)}
                             onInputClick={handleGazetteCalendarToggle}
                             maxDate={new Date()}
                             dateFormat="dd-MM-yyyy"
                           />
                         </div>
                       </div>
-                      
 
                       {/* <div className="form-group col-3">
                         <label htmlFor="session" className="form-label">
@@ -1503,7 +1507,7 @@ const EditSenateBill = () => {
                       </div> */}
                     </div>
                     <div className="row">
-                    <div className="col-3">
+                      <div className="col-3">
                         <div class="mb-3 " style={{ position: "relative" }}>
                           <label class="form-label">
                             Date of Assent by President
@@ -1516,7 +1520,7 @@ const EditSenateBill = () => {
                               zIndex: 1,
                               fontSize: "20px",
                               color: "#666",
-                              cursor:"pointer"
+                              cursor: "pointer",
                             }}
                             // onClick={handleConsiderationCalendarToggle}
                             onClick={handleAssentCalendarToggle}
@@ -1524,13 +1528,11 @@ const EditSenateBill = () => {
                             <FontAwesomeIcon icon={faCalendarAlt} />
                           </span>
                           <DatePicker
-                            selected={formik.values.dateOfAssentByPresident}
+                            selected={formik.values.dateOfAssentByThePresident}
                             onChange={handleAssentDateSelect}
                             className={"form-control"}
                             open={isAssentCalendarOpen}
-                            onClickOutside={() =>
-                              setAssentCalendarOpen(false)
-                            }
+                            onClickOutside={() => setAssentCalendarOpen(false)}
                             onInputClick={handleAssentCalendarToggle}
                             maxDate={new Date()}
                             dateFormat="dd-MM-yyyy"
@@ -1551,7 +1553,7 @@ const EditSenateBill = () => {
               <div className="card-body">
                 <div className="container-fluid">
                   <div className="row">
-                  <div className="col-3">
+                    <div className="col-3">
                       <div class="mb-3 " style={{ position: "relative" }}>
                         <label class="form-label">
                           Date of Receipt of Message from NA
@@ -1583,7 +1585,6 @@ const EditSenateBill = () => {
                         />
                       </div>
                     </div>
-                   
 
                     <div className="col-3">
                       <div class="mb-3 " style={{ position: "relative" }}>
@@ -1618,8 +1619,6 @@ const EditSenateBill = () => {
                       </div>
                     </div>
 
-                   
-
                     <div className="col-3">
                       <div class="mb-3 " style={{ position: "relative" }}>
                         <label class="form-label">Date of Passage by NA</label>
@@ -1650,10 +1649,11 @@ const EditSenateBill = () => {
                         />
                       </div>
                     </div>
-                    <div className="col-3">
-                      <div class="mb-3 " style={{ position: "relative" }}>
+
+                    <div class="col-3">
+                      <div class="mb-3" style={{ position: "relative" }}>
                         <label class="form-label">
-                          Date of Passage by Senate
+                          Date of Presenation of the Report
                         </label>
                         <span
                           style={{
@@ -1664,19 +1664,21 @@ const EditSenateBill = () => {
                             fontSize: "20px",
                             color: "#666",
                           }}
-                          onClick={handlePassageSenateCalendarToggle}
+                          onClick={handleReportPresenatationDayCalendarToggle}
                         >
                           <FontAwesomeIcon icon={faCalendarAlt} />
                         </span>
                         <DatePicker
-                          selected={formik.values.dateOfPassageBySenate}
-                          onChange={handlePassageSenateDateSelect}
+                          selected={formik.values.reportPresentationDate}
+                          onChange={handleReportPresenatationDateSelect}
                           className={"form-control"}
-                          open={isPassageSenateCalendarOpen}
+                          open={isReportPresentationCalendarOpen}
                           onClickOutside={() =>
-                            setPassageSenateCalendarOpen(false)
+                            setReportPresentationCalendarOpen(false)
                           }
-                          onInputClick={handlePassageSenateCalendarToggle}
+                          onInputClick={
+                            handleReportPresenatationDayCalendarToggle
+                          }
                           maxDate={new Date()}
                           dateFormat="dd-MM-yyyy"
                         />
@@ -1761,7 +1763,7 @@ const EditSenateBill = () => {
                         <option value="" disabled hidden>
                           Select
                         </option>
-                        <option value="Ammendment">Ammendment</option>
+                        <option value="Ammendment">Ammendment in Bill</option>
                         <option value="Bill">Bill</option>
                         <option value="Committee Report">
                           Committee Report
@@ -1771,12 +1773,13 @@ const EditSenateBill = () => {
                           Letter Sent To Senator
                         </option>
                         <option value="Member Notice for Passage">
-                          Member Notice For Passage
+                          Notice for Passage Bill
                         </option>
                         <option value="Member Notice for Withdrawal">
-                          Member Notice For withdrawal
+                         Notice for Passage withdrawal Bill
                         </option>
                         <option value="Notice">Notice</option>
+                        <option value="Notice">Proforma</option>
                       </select>
                     </div>
 

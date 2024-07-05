@@ -66,7 +66,7 @@ const SearchMeetings = () => {
   const [isFromOpen, setIsFromOpen] = useState(false);
   const [isToOpen, setIsToOpen] = useState(false);
   const [count, setCount] = useState(null);
-  const pageSize = 4;
+  const pageSize = 10;
 
   const handlePageChange = (page) => {
     setCurrentPage(page);

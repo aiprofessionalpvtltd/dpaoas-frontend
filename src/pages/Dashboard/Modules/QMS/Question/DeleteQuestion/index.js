@@ -71,7 +71,7 @@ function QMSDeleteQuestion() {
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
   const [resData, setResData] = useState([]);
-  const pageSize = 4; // Set your desired page size
+  const pageSize = 10; // Set your desired page size
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
@@ -131,8 +131,8 @@ function QMSDeleteQuestion() {
           .filter(Boolean)
           .join(", "),
         Category: res.questionCategory,
-        // SubmittedBy: res.category,
         questionStatus: res.questionStatus?.questionStatus,
+        SubmittedBy: res?.questionSubmittedBy ? `${res?.questionSubmittedBy?.employee?.firstName} ${res?.questionSubmittedBy?.employee?.lastName}`:"--",
         questionActive: res?.questionActive,
       };
     });

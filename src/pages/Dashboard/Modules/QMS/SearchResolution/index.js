@@ -21,6 +21,8 @@ import { AuthContext } from "../../../../../api/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import { getAllQuestionStatus } from "../../../../../api/APIs/Services/Question.service";
+import { DeleteModal } from "../../../../../components/DeleteModal";
+import { Button, Modal } from "react-bootstrap";
 
 function QMSSerchResolution() {
   const navigate = useNavigate();
@@ -28,11 +30,19 @@ function QMSSerchResolution() {
   const [searchedData, setSearchedData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [allResolutionStatus, setAllResolutionStatus] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const[deleteModalRemarksValue,setDeleteModalRemarksValue]= useState(null)
+
   const pageSize = 10; // Set your desired page size
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
     setCurrentPage(page);
+  };
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
   };
 
   const formik = useFormik({
@@ -81,6 +91,7 @@ function QMSSerchResolution() {
           ? res.resolutionStatus?.resolutionStatus
           : "",
         Movers: movers ? movers : "",
+        createdByUser: res?.createdBy ? `${res?.createdBy.employee?.firstName} ${res?.createdBy.employee?.lastName}` :"--",
         Status:res?.resolutionActive,
       };
     });
@@ -177,6 +188,43 @@ function QMSSerchResolution() {
         title1={"Search Resolution"}
       />
       <ToastContainer />
+      <DeleteModal
+          title="Delete Resolution"
+          isOpen={isModalOpen}
+          toggleModal={toggleModal}
+        >
+          <div class="row">
+            <div class="col">
+              <div class="mb-3">
+                <label class="form-label">Remarks</label>
+                <textarea
+                  class="form-control"
+                  id="comment"
+                  name="comment"
+                  onChange={(e) =>
+                    setDeleteModalRemarksValue(e.target.value)
+                  }
+                  value={deleteModalRemarksValue}
+                ></textarea>
+              </div>
+            </div>
+          </div>
+
+          <Modal.Footer>
+            <Button
+              variant="primary"
+              onClick={() => {
+                toggleModal();
+                alert("Api Required")
+              }}
+            >
+              Submit
+            </Button>
+            <Button variant="secondary" onClick={toggleModal}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </DeleteModal>
       <div class="container-fluid">
         <div class="card mt-4">
           <div
@@ -478,7 +526,7 @@ function QMSSerchResolution() {
                     showPrint={false}
                     pageSize={pageSize}
                     handleEdit={(item) => handleEdit(item.RID)}
-                    handleDelete={(item) => deleteResolutionApi(item.RID)}
+                    handleDelete={(item) => toggleModal()}
                   />
               </div>
              

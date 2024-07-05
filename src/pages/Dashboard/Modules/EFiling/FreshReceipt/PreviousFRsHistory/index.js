@@ -21,7 +21,7 @@ function PreviousFRsHistory() {
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
   const [frHistoryData, setFRHistoryData] = useState([]);
-  const pageSize = 5; // Set your desired page size
+  const pageSize = 10; // Set your desired page size
   const UserData = getUserData();
 
   const handlePageChange = (page) => {

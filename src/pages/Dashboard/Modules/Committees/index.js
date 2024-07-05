@@ -93,7 +93,7 @@ function CommitteesManagementSystemDashboard() {
     useState(false);
   const [selectedCommitteeRoom, setSelectedCommitteeRoom] = useState(null);
   const [modalBusinessName, setModalBusinessName] = useState("");
-  const pageSize = 4; // Set your desired page size
+  const pageSize = 10; // Set your desired page size
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };

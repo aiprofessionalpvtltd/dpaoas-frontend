@@ -18,7 +18,7 @@ function VMSVisitors() {
   const [allvisitorData, setAllVisitorData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   // const [count, setCount] = useState(null);
-  const pageSize = 7; // Set your desired page size
+  const pageSize = 10; // Set your desired page size
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked

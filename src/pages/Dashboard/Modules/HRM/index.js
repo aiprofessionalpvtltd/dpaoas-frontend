@@ -6,13 +6,17 @@ import Header from "../../../../components/Header";
 import CustomTable from "../../../../components/CustomComponents/CustomTable";
 import { showSuccessMessage } from "../../../../utils/ToastAlert";
 import moment from "moment";
-import { DeleteRole, getRoles } from "../../../../api/APIs/Services/organizational.service";
+import {
+  DeleteRole,
+  getRoles,
+} from "../../../../api/APIs/Services/organizational.service";
 
 function HRMDashboard() {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(0);
   const [rolesList, setRolesList] = useState([]);
   // const [count, setCount] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
   const pageSize = 10; // Set your desired page size
 
   const handlePageChange = (page) => {
@@ -33,7 +37,7 @@ function HRMDashboard() {
   const fetchRoles = async () => {
     try {
       const response = await getRoles();
-      const filterData = transformLeavesData(response.data?.roles)
+      const filterData = transformLeavesData(response.data?.roles);
       setRolesList(filterData);
     } catch (error) {
       console.log(error);
@@ -56,6 +60,10 @@ function HRMDashboard() {
     }
   };
 
+  // FIltered Data
+  const filteredRoles = rolesList.filter((role) =>
+    role?.name?.toLowerCase().includes(searchTerm?.toLowerCase())
+  );
   return (
     <Layout module={true} sidebarItems={HRMsidebarItems} centerlogohide={true}>
       <Header
@@ -67,7 +75,10 @@ function HRMDashboard() {
         <div class="col-12">
           <CustomTable
             singleDataCard={true}
-            data={rolesList && rolesList.length > 0 ? rolesList : []}
+            data={filteredRoles}
+            seachBarShow={true}
+            searchonchange={(e) => setSearchTerm(e.target.value)}
+            // data={rolesList && rolesList.length > 0 ? rolesList : []}
             tableTitle="Roles List"
             addBtnText="Add Roles"
             handleAdd={() => navigate("/hrm/addrole")}

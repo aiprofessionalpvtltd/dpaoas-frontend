@@ -181,7 +181,7 @@ function LMSDashboard() {
       <div class="row">
         <div class="col-9">
           <CustomTable
-            block={true}
+            block={false}
             data={leaveData}
             tableTitle="Leave Request"
             addBtnText="Add Leave"

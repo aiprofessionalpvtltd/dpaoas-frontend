@@ -19,7 +19,7 @@ function VMSDashboard() {
 
   const [passAllData, setPassAllData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
-  const pageSize = 5; // Set your desired page size
+  const pageSize = 10; // Set your desired page size
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
@@ -124,6 +124,7 @@ function VMSDashboard() {
         <div class="col-12">
           <CustomTable
             block={true}
+            singleDataCard={true}
             data={passAllData}
             tableTitle="Passes"
             addBtnText="Add Pass"

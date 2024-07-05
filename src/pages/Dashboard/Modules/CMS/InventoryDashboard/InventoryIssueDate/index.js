@@ -36,7 +36,7 @@ function InventoryIssueDate() {
     const [count, setCount] = useState(null);
     const [assignuser, setAssignUser] = useState(null)
     const [currentPage, setCurrentPage] = useState(0);
-    const pageSize = 4;
+    const pageSize = 10;
 
     const formik = useFormik({
         initialValues: {
