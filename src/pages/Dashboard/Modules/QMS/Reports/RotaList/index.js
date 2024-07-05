@@ -10,6 +10,7 @@ import * as Yup from "yup";
 import {
   allRotaList,
   generatedRotaList,
+  getRotaListById,
 } from "../../../../../../api/APIs/Services/Question.service";
 import { ToastContainer } from "react-toastify";
 import {
@@ -21,6 +22,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { imagesUrl } from "../../../../../../api/APIs";
+import moment from "moment";
 
 const validationSchema = Yup.object({
   groupNo: Yup.string().required("Group No is required"),
@@ -50,10 +52,21 @@ function QMSRotaList() {
   const transformLeavesData = (apiData) => {
     return apiData.map((item) => ({
       id: item?.id,
-      DateOfCreation: item?.DateOfCreation,
-      DateOfAnswering: item?.DateOfAnswering,
-      Group: item?.Group,
-      Divisions:item.divisions
+      sessionName:item?.sessionDetails?.sessionName,
+      startDate:moment(item?.startDate).format("DD/MM/YYYY"),
+      endDate:moment(item?.endDate).format("DD/MM/YYYY"),
+      allowedDates: item?.allowedDates
+      ? item.allowedDates.map(date => moment(date).format("DD/MM/YYYY")).join(", ")
+      : "--",
+      weekDays:item.weekDays,
+      // startGroup:item?.startGroup ? item?.startGroup :"--",
+      skipGroups:item?.skipGroups[0] ? item?.skipGroups[0]?.groupId :"--",
+      skipGroupsDate:item?.skipGroups[0] ? moment(item?.skipGroups[0]?.date ).format("DD/MM/YYYY"):"--",
+      internalAttachment:item?.pdfLink
+      // DateOfCreation: item?.DateOfCreation,
+      // DateOfAnswering: item?.DateOfAnswering,
+      // Group: item?.Group,
+      // Divisions:item.divisions
     }))}
 
   const GetALlRotaListApi = async () => {
@@ -61,6 +74,7 @@ function QMSRotaList() {
       const response = await allRotaList(currentPage,pageSize);
       if (response?.success) {
         showSuccessMessage(response?.message);
+        setCount(response?.count)
         const transformedData = transformLeavesData(
           response.data
         );
@@ -71,12 +85,26 @@ function QMSRotaList() {
     }
   };
 
+  const hendleEdit = async (id) => {
+    try {
+      const response = await getRotaListById(id);
+      showSuccessMessage(response?.message)
+        navigate("/qms/reports/rota-list/addedit", {
+          state: response.data,
+        });
+    
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  };
+
 useEffect(()=> {
   GetALlRotaListApi()
 },[currentPage])
   //   Handle Download
-  const handleDownload = (fileUrl) => {
+  const handleDownload = (url) => {
     // Check if fileUrl exists
+    const fileUrl = `${imagesUrl}${url}`
     if (!fileUrl) return;
 
     // Extract the filename from the fileUrl
@@ -128,18 +156,21 @@ useEffect(()=> {
                 currentPage={currentPage}
                 pageSize={pageSize}
                 hideDeleteIcon={true}
-                showEditIcon={true}
-                showView={true}
-                handleView={(item) =>
-                  navigate("/qms/reports/rota-list/further-details", {
-                    state: {
-                      fkSessionId: sessionId,
-                      fkGroupId: groupIdVal,
-                      allotmentType: allotmentTypeVal,
-                      listId: item?.id,
-                    },
-                  })
-                } // pass selected sessionNo, allotmentType and GroupNo too along with itemId
+                showEditIcon={false}
+                showView={false}
+                // handleView={(item) =>
+                //   navigate("/qms/reports/rota-list/further-details", {
+                //     state: {
+                //       fkSessionId: sessionId,
+                //       fkGroupId: groupIdVal,
+                //       allotmentType: allotmentTypeVal,
+                //       listId: item?.id,
+                //     },
+                //   })
+                // } // pass selected sessionNo, allotmentType and GroupNo too along with itemId
+                handleEdit={(item) => hendleEdit(item?.id)}
+                showPrint={true}
+                handlePrint={(item) => handleDownload(item?.internalAttachment)}
                 totalCount={count}
               />
             </div>

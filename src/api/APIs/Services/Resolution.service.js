@@ -125,10 +125,11 @@ export const DeleteResolutionList = async (searchParams, currentPage, pageSize) 
   }
 };
 
-export const DeleteResolution = async (id) => {
+export const DeleteResolution = async (id, Data) => {
+  
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.delete(`/resolution/delete/${id}`);
+    const response = await axiosClientMMS.put(`/resolution/delete/${id}`,Data);
     // {
     //   headers: {
     //     Authorization: `Bearer ${token}`,
@@ -257,7 +258,18 @@ export const allResolutionSummary = async (searchParams, currentPage, pageSize) 
 };
 
 //Resolution List
-  //Create Motion List 
+//GENERATE
+export const generateResolutionListData = async (data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.post(`/resolution/generateResolutionListData`, data)
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+  //Create rESOLUTION List 
   export const createNewResolutionList = async (data) => {
     try {
       // const token = getAuthToken();

@@ -7,6 +7,7 @@ import Header from "../../../../../../components/Header";
 import {
   DeleteResolution,
   createNewResolutionList,
+  generateResolutionListData,
   getAllResolutions,
   getResolutionBYID,
 } from "../../../../../../api/APIs/Services/Resolution.service";
@@ -33,6 +34,7 @@ function QMSResolutionList() {
   // const [count, setCount] = useState(null);
   const [resolutionListData, setResolutionListData] = useState([]);
   const [ministryData, setMinistryData] = useState([]);
+  const[showEdit, setShowEdit] = useState(false)
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -57,7 +59,7 @@ function QMSResolutionList() {
     // validationSchema: validationSchema,
     onSubmit: (values) => {
       // console.log("Form submitted with values:", values);
-      createNewResolutionListApi(values);
+      generateResolutionListApi(values);
     },
   });
 
@@ -69,8 +71,8 @@ function QMSResolutionList() {
   const trenformNewResolution = (apiData) => {
     return apiData.map((item, index) => ({
       SR: `${index + 1}`,
-      internalId: item?.fkSessionId,
-      SessionName: item?.sessionName,
+      internalId: item?.sessionName?.id,
+      SessionName: item?.sessionName?.sessionName,
       listName: item?.listName,
       listDate: moment(item?.listDate).format("YYYY/MM/DD"),
     }));
@@ -90,7 +92,7 @@ function QMSResolutionList() {
     }));
   };
 
-  const createNewResolutionListApi = async (values) => {
+  const generateResolutionListApi = async (values) => {
     const data = {
       fkSessionId: values?.sessionNumber,
       listName: values?.listName,
@@ -98,10 +100,37 @@ function QMSResolutionList() {
     };
 
     try {
+      const response = await generateResolutionListData(data); // Add await here
+      if (response?.success) {
+        setShowEdit(true)
+        showSuccessMessage(response?.message);
+        
+
+        const transformedData = trenformNewResolution(response?.data);
+        
+        const ministryData = transfrerResolutionDetail(
+          response?.data[0]?.resolutions
+        );
+        setResolutionListData(transformedData);
+        setMinistryData(ministryData);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.error);
+    }
+  };
+
+  const SaveResolutionListApi = async () => {
+    const data = {
+      fkSessionId: formik.values?.sessionNumber,
+      listName: formik.values?.listName,
+      listDate: formik.values?.listDate,
+    };
+
+    try {
       const response = await createNewResolutionList(data); // Add await here
       if (response?.success) {
         showSuccessMessage(response?.message);
-        console.log("ryyryryrryry", response?.data);
+        setShowEdit(false)
 
         const transformedData = trenformNewResolution(response?.data);
         console.log("-------------------", transformedData);
@@ -310,6 +339,14 @@ function QMSResolutionList() {
                     <button
                       class="btn btn-primary"
                       type="button"
+                      disabled={showEdit ? false : true}
+                      onClick={() => SaveResolutionListApi()}
+                    >
+                      Save
+                    </button>
+                    <button
+                      class="btn btn-primary"
+                      type="button"
                       onClick={() => formik.resetForm()}
                     >
                       Reset
@@ -334,7 +371,7 @@ function QMSResolutionList() {
                   currentPage={currentPage}
                   pageSize={pageSize}
                   hideDeleteIcon={true}
-                  // showEditIcon={true}
+                  showEditIcon={showEdit}
                   handleEdit={(item) => {
                     setEditModalValue({
                       sessionNumber: item?.internalId ? item?.internalId : "",

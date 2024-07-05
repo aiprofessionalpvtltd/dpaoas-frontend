@@ -639,6 +639,36 @@ export const allRotaList = async (currentPage, pageSize) => {
   }
 };
 
+export const UpdateRotaList = async (id, data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.put(`/new/rota/update/${id}`, data, {
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // }
+    });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const getRotaListById = async (id, data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.get(`/new/rota/getById/${id}`, data, {
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // }
+    });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
 export const generateRotaFurtherAllotmentList = async (data) => {
   try {
     // const token = getAuthToken();

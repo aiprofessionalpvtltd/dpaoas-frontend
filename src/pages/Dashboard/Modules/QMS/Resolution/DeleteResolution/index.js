@@ -77,6 +77,8 @@ function QMSDeleteResolution() {
           : "",
           Movers: movers ? movers : "",
           createdByUser: res?.createdBy ? `${res?.createdBy.employee?.firstName} ${res?.createdBy.employee?.lastName}` :"--",
+          deletedByUser: res?.deletedBy ? `${res?.deletedBy.employee?.firstName} ${res?.deletedBy.employee?.lastName}` :"--",
+        remarks:res?.description,
         Status: res?.resolutionActive,
       };
     });
