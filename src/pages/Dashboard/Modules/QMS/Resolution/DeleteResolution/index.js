@@ -44,6 +44,7 @@ function QMSDeleteResolution() {
       toNoticeDate: "",
       colourResNo: "",
       noticeOfficeDiaryNo: "",
+      memberPosition:""
     },
 
     onSubmit: (values) => {
@@ -97,6 +98,7 @@ function QMSDeleteResolution() {
       noticeOfficeDiaryDateFrom: values.fromNoticeDate,
       noticeOfficeDiaryDateTo: values.toNoticeDate,
       resolutionMovers: values?.memberName?.value,
+      memberPosition:values?.memberPosition
     };
 
     try {
@@ -396,6 +398,27 @@ function QMSDeleteResolution() {
                         />
                       </div>
                     </div>
+                    <div class="col-3">
+                      <div class="mb-3">
+                        <label class="form-label">Member Position</label>
+                        <select
+                          class={`form-select`}
+                          placeholder="Member Position"
+                          value={formik.values.memberPosition}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          name="memberPosition"
+                        >
+                          <option value="" selected disabled hidden>
+                            Select
+                          </option>
+                          <option value={"Treasury"}>Treasury</option>
+                          <option value={"Opposition"}>Opposition</option>
+                          <option value={"Independent"}>Independent</option>
+                          <option value={"Anyside"}>Anyside</option>
+                        </select>
+                      </div>
+                  </div>
                   </div>
 
                   <div className="row">
