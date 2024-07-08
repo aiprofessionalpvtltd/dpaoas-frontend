@@ -41,6 +41,7 @@ const validationSchema = Yup.object({
   mover: Yup.array().required("Mover is required"),
   ministry: Yup.array().required("Ministry is required"),
   englishText: Yup.string(),
+  memberPosition:Yup.string().required("Member Position is required")
   // Add more fields and validations as needed
 });
 
@@ -80,6 +81,7 @@ function MMSNewMotion() {
       ministry: location.state ? location.state.ministry : [],
       englishText: "",
       file: [],
+      memberPosition:""
       // Add more fields as needed
     },
     validationSchema: validationSchema,
@@ -115,6 +117,7 @@ function MMSNewMotion() {
     formData.append("englishText", values.englishText);
     formData.append("urduText", "dkpad");
     formData.append("fkMotionStatus", values?.motionStatus);
+    formData.append("memberPosition",values?.memberPosition)
     formData.append("motionSentStatus", 'inMotion');
     if (values?.file) {
       Array.from(values?.file).map((file, index) => {
@@ -151,6 +154,7 @@ function MMSNewMotion() {
     formData.append("businessType", "Motion");
     formData.append("englishText", "dkals");
     formData.append("urduText", "dkpad");
+    formData.append("memberPosition",values?.memberPosition)
     formData.append("fkMotionStatus", values?.motionStatus);
     try {
       const response = await updateNewMotion(location?.state?.id, formData);
@@ -534,7 +538,39 @@ function MMSNewMotion() {
                   </div>
                 </div>
                 <div className="row">
-                <div class="col-3">
+                <div class="col-6">
+                      <div class="mb-3">
+                        <label class="form-label">Member Position</label>
+                        <select
+                          class={`form-select ${
+                            formik.touched.memberPosition &&
+                            formik.errors.memberPosition
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                          placeholder="Member Position"
+                          value={formik.values.memberPosition}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          name="memberPosition"
+                        >
+                          <option value="" selected disabled hidden>
+                            Select
+                          </option>
+                          <option value={"Treasury"}>Treasury</option>
+                          <option value={"Opposition"}>Opposition</option>
+                          <option value={"Independent"}>Independent</option>
+                          <option value={"Anyside"}>Anyside</option>
+                        </select>
+                        {formik.touched.memberPosition &&
+                          formik.errors.memberPosition && (
+                            <div className="invalid-feedback">
+                              {formik.errors.memberPosition}
+                            </div>
+                          )}
+                      </div>
+                  </div>
+                <div class="col-6">
                       <div class="mb-3">
                         <label for="formFile" class="form-label">
                           Attach Image File{" "}

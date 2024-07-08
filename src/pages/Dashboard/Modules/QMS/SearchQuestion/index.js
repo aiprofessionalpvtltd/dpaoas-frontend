@@ -90,7 +90,7 @@ function QMSSearchQuestion() {
         QID: res?.id,
         internalId:res?.id,
         QDN: res?.fkQuestionDiaryId,
-        NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate,
+        NoticeDate: moment(res?.noticeOfficeDiary?.noticeOfficeDiaryDate).format("DD/MM/YYYY"),
         NoticeTime: moment(
           res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
           "hh:ss:a"
@@ -168,7 +168,6 @@ function QMSSearchQuestion() {
   const handleChangeStatus = async (id) => {
     try {
       const data = { isChecked, questionStatus: questionStatus, statusDate: statusDate, deferredBy: UserData?.fkUserId }; 
-      console.log("isChecked", data);
 
       const response = await updateQuestionStatus(data);
       showSuccessMessage(response.message); 
@@ -182,7 +181,7 @@ function QMSSearchQuestion() {
   };
   const hendleDelete = async (id) => {
     try {
-      const response = await DeleteQuestion(id); // Add await here
+      const response = await DeleteQuestion(id); 
       if (response?.success) {
         showSuccessMessage(response?.message);
         SearchQuestionApi(formik.values);
@@ -572,7 +571,7 @@ function QMSSearchQuestion() {
                       />
                     </div>
                   </div>
-                  <div class="col-2">
+                  <div class="col-3">
                       <div class="mb-3">
                         <label class="form-label">Member Position</label>
                         <select

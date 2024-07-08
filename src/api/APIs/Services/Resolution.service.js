@@ -280,3 +280,16 @@ export const generateResolutionListData = async (data) => {
       throw error;
     }
   };
+
+   //Create rESOLUTION List 
+   export const UpdateResolutionList = async (data) => {
+    try {
+      // const token = getAuthToken();
+      const response = await axiosClientMMS.put(`/resolution/updateResolutionListAndAssociations`, data)
+      return response?.data;
+    } catch (error) {
+      console.error("Error fetching API endpoint:", error);
+      throw error;
+    }
+  };
+
