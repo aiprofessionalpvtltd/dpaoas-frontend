@@ -90,7 +90,7 @@ function QMSSearchQuestion() {
         SrNo: index,
         QID: res?.id,
         internalId:res?.id,
-        QDN: res?.fkQuestionDiaryId,
+        noticeOfficeDiaryNo: res?.noticeOfficeDiary?.noticeOfficeDiaryNo,
         NoticeDate: moment(res?.noticeOfficeDiary?.noticeOfficeDiaryDate).format("DD/MM/YYYY"),
         NoticeTime: moment(
           res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
@@ -668,6 +668,7 @@ function QMSSearchQuestion() {
                   </div>
                 </div>
                 <CustomTable
+                  block={true}
                   headerShown={true}
                   data={searchedData}
                   handleEdit={(item) => handleEdit(item.QID)}
