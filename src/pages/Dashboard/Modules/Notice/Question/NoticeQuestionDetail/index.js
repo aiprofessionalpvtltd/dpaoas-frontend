@@ -127,6 +127,7 @@ function NoticeQuestionDetail() {
         : "",
       ammendedText: "",
       originalText: "",
+      questionImage:[],
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
