@@ -99,6 +99,14 @@ function MMSMotionDetail() {
         : "",
       englishText: location.state ? location.state?.englishText : "",
       urduText: location.state ? location?.state?.urduText : "",
+      memberPosition:location?.state?.memberPosition? location?.state?.memberPosition:"",
+      motionStatus:location?.state?.fkMotionStatus ? location?.state?.fkMotionStatus :"",
+      ministry:location?.state?.motionMinistries?.length > 0
+      ? location?.state?.motionMinistries.map((item) => ({
+          value: item.ministries.id,
+          label: item.ministries?.ministryName,
+        }))
+      : [],
       attachment: null,
     },
     // validationSchema: validationSchema,
@@ -119,6 +127,9 @@ function MMSMotionDetail() {
     values?.mover?.forEach((mover, index) => {
       formData.append(`moverIds[${index}]`, mover.value);
     });
+    values?.ministry.forEach((mover, index) => {
+      formData.append(`ministryIds[${index}]`, mover.value);
+    });
     formData.append(
       "noticeOfficeDiaryDate",
       values?.noticeOfficeDiaryDate &&
@@ -134,7 +145,8 @@ function MMSMotionDetail() {
     formData.append("englishText", values.englishText);
     formData.append("urduText", values.urduText);
     formData.append("motionSentStatus", "fromNotice");
-    formData.append("fkMotionStatus", 1);
+    formData.append("fkMotionStatus", values?.motionStatus);
+    formData.append("memberPosition",values?.memberPosition)
     if (values?.file) {
       Array.from(values?.file).map((file, index) => {
         formData.append(`file`, file);
@@ -494,7 +506,49 @@ function MMSMotionDetail() {
                         />
                       </div>
                     </div>
-                    <div class="col-3"></div>
+                    <div class="col-3">
+                    <div class="mb-3">
+                      <label class="form-label">Motion Status</label>
+                      <select
+                        class="form-select"
+                        // placeholder={formik.values.motionStatus}
+                        value={formik.values.motionStatus}
+                        onChange={formik.handleChange}
+                        id="motionStatus"
+                        onBlur={formik.handleBlur}
+                      >
+                        <option value={""} >
+                          Select
+                        </option>
+                        {motionStatusData &&
+                          motionStatusData.map((item) => (
+                            <option key={item.id} value={item.id}>
+                              {item?.statusName}
+                            </option>
+                          ))}
+                      </select>
+                    </div>
+                  </div>
+                  <div className="col-3">
+                    <div className="mb-3">
+                      <label className="form-label">Ministry</label>
+
+                      <Select
+                        options={ministryData.map((item) => ({
+                          value: item.id,
+                          label: item.ministryName,
+                        }))}
+                        isMulti
+                        onChange={(selectedOptions) =>
+                          formik.setFieldValue("ministry", selectedOptions)
+                        }
+                        onBlur={formik.handleBlur}
+                        value={formik.values.ministry}
+                        name="ministry"
+                      />
+                     
+                    </div>
+                  </div>
                   </div>
 
                   {/* <input
@@ -511,6 +565,27 @@ function MMSMotionDetail() {
                           }}
                         /> */}
                   <div className="row">
+                  <div class="col-3">
+                      <div class="mb-3">
+                        <label class="form-label">Member Position</label>
+                        <select
+                          class={`form-select`}
+                          placeholder="Member Position"
+                          value={formik.values.memberPosition}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          name="memberPosition"
+                        >
+                          <option value="" selected disabled hidden>
+                            Select
+                          </option>
+                          <option value={"Treasury"}>Treasury</option>
+                          <option value={"Opposition"}>Opposition</option>
+                          <option value={"Independent"}>Independent</option>
+                          <option value={"Anyside"}>Anyside</option>
+                        </select>
+                      </div>
+                  </div>
                     <div className="col-3">
                       {location?.state?.file?.length > 0 ? (
                         location?.state?.file?.map((item) => (

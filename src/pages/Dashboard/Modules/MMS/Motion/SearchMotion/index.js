@@ -21,21 +21,21 @@ import { AuthContext } from "../../../../../../api/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 
-const validationSchema = Yup.object({
-  motionDiaryNo: Yup.string(),
-  memberName: Yup.string(),
-  motionID: Yup.string(),
-  keyword: Yup.string(),
-  fromSession: Yup.string(),
-  toSession: Yup.string(),
-  motionType: Yup.string(),
-  motionWeek: Yup.string(),
-  ministry: Yup.string(),
-  motionStatus: Yup.string(),
-  fromNoticeDate: Yup.date(),
-  toNoticeDate: Yup.date(),
-  fileNo: Yup.string(),
-});
+// const validationSchema = Yup.object({
+//   motionDiaryNo: Yup.string(),
+//   memberName: Yup.string(),
+//   motionID: Yup.string(),
+//   keyword: Yup.string(),
+//   fromSession: Yup.string(),
+//   toSession: Yup.string(),
+//   motionType: Yup.string(),
+//   motionWeek: Yup.string(),
+//   ministry: Yup.string(),
+//   motionStatus: Yup.string(),
+//   fromNoticeDate: Yup.date(),
+//   toNoticeDate: Yup.date(),
+//   fileNo: Yup.string(),
+// });
 
 function MMSSearchMotion() {
   const navigate = useNavigate();
@@ -62,6 +62,7 @@ function MMSSearchMotion() {
       motionStatus: "0",
       fromNoticeDate: "",
       toNoticeDate: "",
+      memberPosition:""
     },
     onSubmit: (values) => {
       // Handle form submission here
@@ -111,33 +112,35 @@ function MMSSearchMotion() {
   };
 
   const transformMotionData = (apiData) => {
-    return apiData.map((leave, index) => {
-      const English = [leave?.englishText].filter(Boolean).join(", ");
+    return apiData.map((item, index) => {
+      const English = [item?.englishText].filter(Boolean).join(", ");
       const EnglishText = English.replace(/(<([^>]+)>)/gi, "");
 
-      const Urdu = [leave?.urduText].filter(Boolean).join(", ");
+      const Urdu = [item?.urduText].filter(Boolean).join(", ");
       const UrduText = Urdu.replace(/(<([^>]+)>)/gi, "");
       return {
-        id: leave?.id,
-        SessionName: leave?.sessions?.sessionName
-          ? leave?.sessions?.sessionName
+        id: item?.id,
+        SessionName: item?.sessions?.sessionName
+          ? item?.sessions?.sessionName
           : "",
-        motionType: leave?.motionType ? leave?.motionType : "",
-        noticeOfficeDiaryNo: leave?.noticeOfficeDairies?.noticeOfficeDiaryNo
-          ? leave?.noticeOfficeDairies?.noticeOfficeDiaryNo
+        motionType: item?.motionType ? item?.motionType : "",
+        noticeOfficeDiaryNo: item?.noticeOfficeDairies?.noticeOfficeDiaryNo
+          ? item?.noticeOfficeDairies?.noticeOfficeDiaryNo
           : "",
 
-        noticeOfficeDiaryDate: leave?.noticeOfficeDairies?.noticeOfficeDiaryDate
-          ? moment(leave?.noticeOfficeDairies?.noticeOfficeDiaryDate).format(
+        noticeOfficeDiaryDate: item?.noticeOfficeDairies?.noticeOfficeDiaryDate
+          ? moment(item?.noticeOfficeDairies?.noticeOfficeDiaryDate).format(
               "DD-MM-YYYY"
             )
           : "",
         noticeOfficeDiaryTime: moment(
-          leave?.noticeOfficeDairies?.noticeOfficeDiaryTime,
+          item?.noticeOfficeDairies?.noticeOfficeDiaryTime,
           "hh:ss A"
         ).format("hh:ss A"),
         englishText: EnglishText ? EnglishText : "",
         urduText: UrduText ? UrduText : "",
+        memberPosition:item?.memberPosition,
+        createdBy:item?.motionSentStatus === "toMotion" ? "From Notice Office": item?.motionSentStatus === "inMotion" ? "Motion Branch":"---"
       };
     });
   };
@@ -176,7 +179,8 @@ function MMSSearchMotion() {
       englishText: values?.keyword,
       motionWeek: values?.motionWeek,
       motionType: values?.motionType,
-      motionSentStatus:"inMotion"
+      memberPosition:values?.memberPosition,
+      motionSentStatus:"inMotion",
     };
     setCount(null);
 
@@ -602,6 +606,29 @@ function MMSSearchMotion() {
                         dateFormat={"dd-MM-yyyy"}
                       />
                     </div>
+                  </div>
+                </div>
+                <div className="row">
+                <div class="col-3">
+                      <div class="mb-3">
+                        <label class="form-label">Member Position</label>
+                        <select
+                          class={`form-select`}
+                          placeholder="Member Position"
+                          value={formik.values.memberPosition}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          name="memberPosition"
+                        >
+                          <option value="" selected disabled hidden>
+                            Select
+                          </option>
+                          <option value={"Treasury"}>Treasury</option>
+                          <option value={"Opposition"}>Opposition</option>
+                          <option value={"Independent"}>Independent</option>
+                          <option value={"Anyside"}>Anyside</option>
+                        </select>
+                      </div>
                   </div>
                 </div>
 

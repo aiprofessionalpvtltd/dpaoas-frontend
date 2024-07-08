@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "../../../../../../components/Header";
 import {
   DeleteResolution,
+  UpdateResolutionList,
   createNewResolutionList,
   generateResolutionListData,
   getAllResolutions,
@@ -42,6 +43,7 @@ function QMSResolutionList() {
     sessionNumber: "",
     listName: "",
     listDate: "",
+    id:""
   });
 
   const toggleModal = () => {
@@ -71,6 +73,7 @@ function QMSResolutionList() {
   const trenformNewResolution = (apiData) => {
     return apiData.map((item, index) => ({
       SR: `${index + 1}`,
+      id:item?.id,
       internalId: item?.sessionName?.id,
       SessionName: item?.sessionName?.sessionName,
       listName: item?.listName,
@@ -144,7 +147,35 @@ function QMSResolutionList() {
       showErrorMessage(error?.response?.data?.error);
     }
   };
-  console.log("asd", isChecked);
+
+  const UpdateResolutionListApi = async () => {
+    const data = {
+      fkSessionId: editmodalValue?.sessionNumber,
+      listName: editmodalValue?.listName,
+      listDate: editmodalValue?.listDate,
+      id:editmodalValue?.id
+    };
+
+    try {
+      const response = await UpdateResolutionList(data); // Add await here
+      if (response?.success) {
+        showSuccessMessage(response?.message);
+        setShowEdit(false)
+
+        const transformedData = trenformNewResolution(response?.data);
+        
+        const ministryData = transfrerResolutionDetail(
+          response?.data[0]?.resolutions
+        );
+        setResolutionListData(transformedData);
+        setMinistryData(ministryData);
+        toggleModal()
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.error);
+    }
+  };
+  
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <ToastContainer />
@@ -236,7 +267,7 @@ function QMSResolutionList() {
           <Button
             variant="primary"
             onClick={() => {
-              toggleModal();
+              UpdateResolutionListApi()
             }}
           >
             Update List
@@ -375,6 +406,7 @@ function QMSResolutionList() {
                   handleEdit={(item) => {
                     setEditModalValue({
                       sessionNumber: item?.internalId ? item?.internalId : "",
+                      id:item?.id ? item?.id :"",
                       listName: item?.listName ? item?.listName : "",
                       listDate: item.listDate
                         ? moment(item?.listDate).toDate()

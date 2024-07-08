@@ -47,6 +47,7 @@ function MMSMotionList() {
       fkmotionStatus: "",
       fromNoticeDate: "",
       toNoticeDate: "",
+      memberPosition:"",
     },
     onSubmit: (values) => {
       // Handle form submission here
@@ -123,6 +124,7 @@ function MMSMotionList() {
         englishText: EnglishText ? EnglishText : "",
         urduText: UrduText ? UrduText : "",
         motionStatus: res?.motionStatuses?.statusName,
+        memberPosition:res?.memberPosition,
         createdBy:res?.motionSentStatus === "toMotion" ? "From Notice Office": res?.motionSentStatus === "inMotion" ? "Motion Branch":"---"
       };
     });
@@ -163,6 +165,7 @@ function MMSMotionList() {
       motionWeek: values?.motionWeek,
       motionType: values?.motionType,
       fkMotionStatus: values?.fkmotionStatus,
+      memberPosition:values?.memberPosition,
       motionSentStatus:["inMotion","toMotion"]
     };
 
@@ -537,6 +540,27 @@ function MMSMotionList() {
                         onInputClick={handleToNoticeCalendarToggle}
                       />
                     </div>
+                  </div>
+                  <div class="col-3">
+                      <div class="mb-3">
+                        <label class="form-label">Member Position</label>
+                        <select
+                          class={`form-select`}
+                          placeholder="Member Position"
+                          value={formik.values.memberPosition}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          name="memberPosition"
+                        >
+                          <option value="" selected disabled hidden>
+                            Select
+                          </option>
+                          <option value={"Treasury"}>Treasury</option>
+                          <option value={"Opposition"}>Opposition</option>
+                          <option value={"Independent"}>Independent</option>
+                          <option value={"Anyside"}>Anyside</option>
+                        </select>
+                      </div>
                   </div>
                 </div>
 
