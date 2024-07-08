@@ -37,6 +37,7 @@ const validationSchema = Yup.object({
   notInReligion: Yup.string(),
   completeText: Yup.string(),
   division: Yup.string(),
+  memberPosition:Yup.string()
 });
 
 function QMSDeleteQuestion() {
@@ -59,6 +60,7 @@ function QMSDeleteQuestion() {
       notInReligion: "",
       completeText: "",
       division: "",
+      memberPosition:""
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -97,6 +99,7 @@ function QMSDeleteQuestion() {
       notInReligion: values?.notInReligion || "",
       completeText: values?.completeText || "",
       divisions: values?.division || "",
+      memberPosition:values?.memberPosition || ""
     };
 
     try {
@@ -129,10 +132,11 @@ function QMSDeleteQuestion() {
         SessionNumber: res?.session?.sessionName,
         SubjectMatter: [res?.englishText, res?.urduText]
           .filter(Boolean)
-          .join(", "),
+          .join(", ").replace(/(<([^>]+)>)/gi, ""),
         Category: res.questionCategory,
         questionStatus: res.questionStatus?.questionStatus,
         SubmittedBy: res?.questionSubmittedBy ? `${res?.questionSubmittedBy?.employee?.firstName} ${res?.questionSubmittedBy?.employee?.lastName}`:"--",
+        deletedByUser: res?.questionDeletedBy ? `${res?.questionDeletedBy.employee?.firstName} ${res?.questionDeletedBy.employee?.lastName}` :"--",
         questionActive: res?.questionActive,
       };
     });
@@ -601,6 +605,27 @@ function QMSDeleteQuestion() {
                         </div>
                       )}
                     </div>
+                  </div>
+                  <div class="col-3">
+                      <div class="mb-3">
+                        <label class="form-label">Member Position</label>
+                        <select
+                          class={`form-select`}
+                          placeholder="Member Position"
+                          value={formik.values.memberPosition}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          name="memberPosition"
+                        >
+                          <option value="" selected disabled hidden>
+                            Select
+                          </option>
+                          <option value={"Treasury"}>Treasury</option>
+                          <option value={"Opposition"}>Opposition</option>
+                          <option value={"Independent"}>Independent</option>
+                          <option value={"Anyside"}>Anyside</option>
+                        </select>
+                      </div>
                   </div>
                 </div>
                 <div class="row">

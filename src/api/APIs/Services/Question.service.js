@@ -19,10 +19,10 @@ export const createQuestion = async (data) => {
 };
 
 //DeleteQuestion
-export const DeleteQuestion = async (id) => {
+export const DeleteQuestion = async (id, Data) => {
   try {
     //   const token = getAuthToken()
-    const response = await axiosClientMMS.put(`/questions/delete/${id}`)
+    const response = await axiosClientMMS.put(`/questions/delete/${id}`, Data)
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);

@@ -39,6 +39,7 @@ function QMSSearchQuestion() {
   const [questionStatus, setQuestionStatus] = useState("");
   const [statusDate, setStatusDate] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState(null)
 
 
   // const [count, setCount] = useState(null);
@@ -103,6 +104,8 @@ function QMSSearchQuestion() {
         memberPosition:res?.memberPosition,
         CreatedBy:res?.questionSentStatus === "inQuestion" && "Question",
         SubmittedBy: res?.questionSubmittedBy ? `${res?.questionSubmittedBy?.employee?.firstName} ${res?.questionSubmittedBy?.employee?.lastName}`:"--",
+        deletedByUser: res?.questionDeletedBy ? `${res?.questionDeletedBy.employee?.firstName} ${res?.questionDeletedBy.employee?.lastName}` :"--",
+        remarks:res?.description,
         Status:res?.questionActive
       };
     });
@@ -179,12 +182,16 @@ function QMSSearchQuestion() {
       showErrorMessage(error.response?.data?.message);
     }
   };
-  const hendleDelete = async (id) => {
+  const hendleDelete = async () => {
+    const Data = {deletedBy: UserData?.fkUserId,
+      description:deleteModalRemarksValue
+    }
     try {
-      const response = await DeleteQuestion(id); 
+      const response = await DeleteQuestion(deleteId,Data); 
       if (response?.success) {
         showSuccessMessage(response?.message);
         SearchQuestionApi(formik.values);
+        toggleModal();
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -235,8 +242,7 @@ function QMSSearchQuestion() {
             <Button
               variant="primary"
               onClick={() => {
-                toggleModal();
-                alert("Api Required")
+                hendleDelete()
               }}
             >
               Submit
@@ -665,7 +671,9 @@ function QMSSearchQuestion() {
                   headerShown={true}
                   data={searchedData}
                   handleEdit={(item) => handleEdit(item.QID)}
-                  handleDelete={(item) =>toggleModal()}
+                  handleDelete={(item) =>{
+                    toggleModal()
+                    setDeleteId(item.QID)}}
                   handlePageChange={handlePageChange}
                   currentPage={currentPage}
                   pageSize={pageSize}
