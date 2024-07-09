@@ -25,6 +25,9 @@ import moment from "moment";
 import { useFormik } from "formik";
 import { DeleteModal } from "../../../../../../components/DeleteModal";
 import { Button, Modal } from "react-bootstrap";
+import html2pdf from 'html2pdf.js';
+import BallotResolutionPdfTemplate from "../../../../../../components/BallotResolutionPDFTemplate";
+
 
 function QMSResolutionList() {
   const navigate = useNavigate();
@@ -36,6 +39,12 @@ function QMSResolutionList() {
   const [resolutionListData, setResolutionListData] = useState([]);
   const [ministryData, setMinistryData] = useState([]);
   const[showEdit, setShowEdit] = useState(false)
+
+  const [ballotData, setBallot] = useState([
+    // {id:"1",
+    // moverName:"Muhammad Saqib Khan",
+    // detail:"Nothing the Prevalence of th practice of substandard research publishing by university teachers in order to fulfill promotion criteria by means of predatory and clone research journals that offer online publishing of substandard research papers."},
+  ])
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -176,6 +185,21 @@ function QMSResolutionList() {
     }
   };
   
+
+const handleBallotPrint = () => {
+    const element = document.getElementById('template-container');
+    const opt = {
+      // pending:2,
+      margin: 0.1,
+      filename: 'ResolutionBallot.pdf',
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 3 },
+      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+    };
+    
+    html2pdf().set(opt).from(element).save();
+  };
+
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <ToastContainer />
@@ -438,17 +462,29 @@ function QMSResolutionList() {
                 isCheckbox={true}
               />
             </div>
+            <BallotResolutionPdfTemplate data={ballotData}>
             <div class="row">
-              <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                <button
-                  class="btn btn-primary"
-                  type="submit"
-                  disabled={isChecked.length === 0 ? true : false}
-                >
-                  Print pdf
-                </button>
-              </div>
-            </div>
+                  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button
+                      class="btn btn-primary"
+                      type="button"
+                      onClick={handleBallotPrint}
+                      disabled={isChecked.length === 0 ? true : false}
+                    >
+                      Request To Ballot
+                    </button>
+                    <button
+                      class="btn btn-primary"
+                      type="button"
+                      onClick={handleBallotPrint}
+                      disabled={ballotData.length === 0 ? true : false}
+                    >
+                      Print pdf
+                    </button>
+                  </div>
+                </div>
+            </BallotResolutionPdfTemplate>
+           
           </div>
         </div>
       </div>
