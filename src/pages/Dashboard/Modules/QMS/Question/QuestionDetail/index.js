@@ -94,7 +94,7 @@ function QMSQuestionDetail() {
         location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryTime,
       priority: "",
       questionId: location?.state?.question?.id,
-      questionDiaryNo: location?.state?.question?.fkNoticeDiary,
+      questionDiaryNo: location?.state?.question?.questionDiary?.questionDiaryNo,
       category: location?.state?.question?.questionCategory,
       questionStatus: location?.state?.question?.fkQuestionStatus,
       // replyDate: location?.state?.question?.replyDate,

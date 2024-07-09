@@ -372,19 +372,27 @@ function QMSDeleteQuestion() {
                       </select>
                     </div>
                   </div>
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Group</label>
-                      <select
-                        class="form-control form-select"
-                        id="group"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                      >
-                        <option>Group1</option>
-                        <option>Group1</option>
-                      </select>
-                    </div>
+                  
+                   <div class="col">
+                      <div class="mb-3">
+                        <label class="form-label">Member Position</label>
+                        <select
+                          class={`form-select`}
+                          placeholder="Member Position"
+                          value={formik.values.memberPosition}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          name="memberPosition"
+                        >
+                          <option value="" selected disabled hidden>
+                            Select
+                          </option>
+                          <option value={"Treasury"}>Treasury</option>
+                          <option value={"Opposition"}>Opposition</option>
+                          <option value={"Independent"}>Independent</option>
+                          <option value={"Anyside"}>Anyside</option>
+                        </select>
+                      </div>
                   </div>
                 </div>
                 <div class="row">
@@ -513,7 +521,7 @@ function QMSDeleteQuestion() {
                     </div>
                   </div>
                 </div>
-                <div class="row">
+                {/* <div class="row">
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Gender</label>
@@ -582,8 +590,8 @@ function QMSDeleteQuestion() {
                       </div>
                     </div>
                   </div>
-                </div>
-                <div class="row">
+                </div> */}
+                {/* <div class="row">
                   <div class="col-3">
                     <div class="mb-3">
                       <label class="form-label">Division</label>
@@ -607,27 +615,20 @@ function QMSDeleteQuestion() {
                     </div>
                   </div>
                   <div class="col-3">
-                      <div class="mb-3">
-                        <label class="form-label">Member Position</label>
-                        <select
-                          class={`form-select`}
-                          placeholder="Member Position"
-                          value={formik.values.memberPosition}
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          name="memberPosition"
-                        >
-                          <option value="" selected disabled hidden>
-                            Select
-                          </option>
-                          <option value={"Treasury"}>Treasury</option>
-                          <option value={"Opposition"}>Opposition</option>
-                          <option value={"Independent"}>Independent</option>
-                          <option value={"Anyside"}>Anyside</option>
-                        </select>
-                      </div>
+                    <div class="mb-3">
+                      <label class="form-label">Group</label>
+                      <select
+                        class="form-control form-select"
+                        id="group"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      >
+                        <option>Group1</option>
+                        <option>Group1</option>
+                      </select>
+                    </div>
                   </div>
-                </div>
+                </div> */}
                 <div class="row">
                   <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                     <button class="btn btn-primary" type="submit">
