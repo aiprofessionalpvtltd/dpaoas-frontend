@@ -293,3 +293,25 @@ export const generateResolutionListData = async (data) => {
     }
   };
 
+  //getBallotRecord
+  export const getBallotRecord = async (data) => {
+    try {
+      // const token = getAuthToken();
+      const response = await axiosClientMMS.post(`/resolution/pdfResolutionList`, data)
+      return response?.data;
+    } catch (error) {
+      console.error("Error fetching API endpoint:", error);
+      throw error;
+    }
+  };
+
+  export const resolutionStatusCount = async () => {
+    try {
+      // const token = getAuthToken();
+      const response = await axiosClientMMS.get(`/resolution/resolutionsByStatus`)
+      return response?.data;
+    } catch (error) {
+      console.error("Error fetching API endpoint:", error);
+      throw error;
+    }
+  };

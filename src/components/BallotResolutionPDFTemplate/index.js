@@ -45,13 +45,13 @@ function BallotResolutionPdfTemplate({data, children}) {
           </tr>
         </thead>
         <tbody>
-            {data?.map((item, index) => (
+            {data && data?.map((item, index) => (
                <tr>
                <td align="left" style={{ padding: '15px', verticalAlign: 'top' }}>{`${index + 1}`}</td>
-               <td align="left" style={{ padding: '15px', verticalAlign: 'top' }}>{item?.moverName}</td>
+               <td align="left" style={{ padding: '15px', verticalAlign: 'top' }}>{item?.resolutionMoversAssociation[0]?.memberAssociation?.memberName}</td>
                <td align="left" style={{ padding: '15px' }}>
                  <p style={{ margin: '0', textAlign: 'justify' }}>
-                   {item?.detail}
+                   {item?.englishText?.replace(/(<([^>]+)>)/gi, "")}
                  </p>
                </td>
              </tr> 

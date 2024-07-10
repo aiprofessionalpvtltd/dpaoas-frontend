@@ -574,17 +574,7 @@ function QMSNoticeResolutionDetail() {
                     </div>
                   )}
                 </div>
-                <div class="row">
-                  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                    <button
-                      class="btn btn-primary"
-                      type="button"
-                      onClick={() => hendleSendResolutionForTranslation()}
-                    >
-                      Send for Translation
-                    </button>
-                  </div>
-                </div>
+               
 
                 <div style={{ marginTop: 10 }}>
                   <Editor
@@ -606,9 +596,16 @@ function QMSNoticeResolutionDetail() {
                 </div>
 
                 <div class="row">
-                  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                  <div class="d-grid gap-4 d-md-flex justify-content-md-end">
                     <button class="btn btn-primary" type="submit">
                       Submit
+                    </button>
+                    <button
+                      class="btn btn-primary"
+                      type="button"
+                      onClick={() => hendleSendResolutionForTranslation()}
+                    >
+                      Send for Translation
                     </button>
                   </div>
                 </div>
