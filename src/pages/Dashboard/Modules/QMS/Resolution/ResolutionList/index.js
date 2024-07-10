@@ -10,6 +10,7 @@ import {
   createNewResolutionList,
   generateResolutionListData,
   getAllResolutions,
+  getBallotRecord,
   getResolutionBYID,
 } from "../../../../../../api/APIs/Services/Resolution.service";
 import {
@@ -40,7 +41,7 @@ function QMSResolutionList() {
   const [ministryData, setMinistryData] = useState([]);
   const[showEdit, setShowEdit] = useState(false)
 
-  const [ballotData, setBallot] = useState([
+  const [ballotData, setBallotData] = useState([
     // {id:"1",
     // moverName:"Muhammad Saqib Khan",
     // detail:"Nothing the Prevalence of th practice of substandard research publishing by university teachers in order to fulfill promotion criteria by means of predatory and clone research journals that offer online publishing of substandard research papers."},
@@ -185,6 +186,19 @@ function QMSResolutionList() {
     }
   };
   
+
+  const hendleBallot = async () => {
+    // const resolutionIds = {isChecked}
+    try {
+      const response = await getBallotRecord(isChecked); // Add await here
+      if (response?.success) {
+        setBallotData(response?.data?.resolutions)
+        showSuccessMessage(response?.message);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.error);
+    }
+  };
 
 const handleBallotPrint = () => {
     const element = document.getElementById('template-container');
@@ -468,7 +482,7 @@ const handleBallotPrint = () => {
                     <button
                       class="btn btn-primary"
                       type="button"
-                      onClick={handleBallotPrint}
+                      onClick={hendleBallot}
                       disabled={isChecked.length === 0 ? true : false}
                     >
                       Request To Ballot

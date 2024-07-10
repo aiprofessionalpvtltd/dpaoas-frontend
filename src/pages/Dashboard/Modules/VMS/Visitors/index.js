@@ -82,6 +82,7 @@ function VMSVisitors() {
       <div class="row">
         <div class="col-12">
           <CustomTable
+            singleDataCard={true}
             data={allvisitorData}
             tableTitle="Visitors Detail"
             addBtnText="Add Visitor"

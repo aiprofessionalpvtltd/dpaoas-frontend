@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Layout } from "../../../../../components/Layout";
 import Header from "../../../../../components/Header";
 import CustomTable from "../../../../../components/CustomComponents/CustomTable";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { QMSSideBarItems } from "../../../../../utils/sideBarItems";
 import DatePicker from "react-datepicker";
 import Select from "react-select";
@@ -27,6 +27,8 @@ import { getUserData } from "../../../../../api/Auth";
 
 function QMSSerchResolution() {
   const navigate = useNavigate();
+  const location =useLocation()
+
   const userData =getUserData()
   const { members, sessions, resolutionStatus } = useContext(AuthContext);
   const [searchedData, setSearchedData] = useState([]);
@@ -191,6 +193,13 @@ function QMSSerchResolution() {
     formik.resetForm();
     setSearchedData([]);
   };
+
+  useEffect(() =>{
+    if(location?.state){
+      const dashboardData = transformLeavesData(location?.state)
+      setSearchedData(dashboardData)
+    }
+  },[location?.state])
 
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>

@@ -1,13 +1,43 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { QMSSideBarItems } from "../../../../utils/sideBarItems";
 import { Layout } from "../../../../components/Layout";
 import Header from "../../../../components/Header";
 import { useNavigate } from "react-router-dom";
 import NoticeStatsCard from "../../../../components/CustomComponents/NoticeStatsCard";
 import { faClipboardQuestion, faRectangleList } from "@fortawesome/free-solid-svg-icons";
+import { resolutionStatusCount } from "../../../../api/APIs/Services/Resolution.service";
 
 function QMSQuestionDashboard() {
   const navigate = useNavigate()
+  const[routResolutionData, setRoutResolutionData]=useState({
+    inResolutionData:[],
+    toResolutionData:[]
+  })
+  const [resolutionCount, setResolutionCount] = useState({
+    toResolutionCount:0,
+    inResolutionCount:0
+  })
+  const ResolutionCountAPi = async () => {
+    try {
+      const response = await resolutionStatusCount();
+      if (response?.success) {
+        setResolutionCount({
+          toResolutionCount: response?.data?.counts?.toResolution || 0,
+          inResolutionCount: response?.data?.counts?.inResolution || 0
+      });
+      setRoutResolutionData({
+        toResolutionData: response?.data?.toResolutionResolutions || [],
+        inResolutionData: response?.data?.inResolutionResolutions || []
+    })
+      }
+    } catch (error) {
+      console.log(error.response.data.message);
+    }
+  };
+  console.log("resolutionCount",resolutionCount);
+  useEffect(() => {
+    ResolutionCountAPi()
+  },[])
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <Header
@@ -41,7 +71,7 @@ function QMSQuestionDashboard() {
                   icon={faRectangleList}
                   overall={true}
                   iconBgColor={"#007bff"}
-                  total={"50"}
+                  total={resolutionCount?.toResolutionCount}
                   onClick={() => navigate("/qms/notice/notice-resolution")}
                 />
               </div>
@@ -77,8 +107,8 @@ function QMSQuestionDashboard() {
                   icon={faRectangleList}
                   overall={true}
                   iconBgColor={"#007bff"}
-                  total={"3"}
-                  onClick={() => navigate("/qms/search/resolution")}
+                  total={resolutionCount?.inResolutionCount}
+                  onClick={() => navigate("/qms/search/resolution",{state:routResolutionData?.inResolutionData})}
                 />
               </div>
             </div>
