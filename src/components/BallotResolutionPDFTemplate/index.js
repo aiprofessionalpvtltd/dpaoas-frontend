@@ -36,7 +36,7 @@ function BallotResolutionPdfTemplate({data, children}) {
       <div className="clearfix"></div>
     </div>
     <div className="template-detail">
-      <table style={{ borderSpacing: '0', borderCollapse: 'separate' }}>
+      <table style={{ borderSpacing: '0', borderCollapse: 'separate', width:"100%" }}>
         <thead>
           <tr>
             <th align="center" style={{ backgroundColor: '#acacac' }}>S#</th>
