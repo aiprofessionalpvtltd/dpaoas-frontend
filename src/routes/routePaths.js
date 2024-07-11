@@ -230,6 +230,7 @@ import AllFilesListing from "../pages/Dashboard/Modules/LDU/LawActs/AllListing";
 import EditLawActsBill from "../pages/Dashboard/Modules/LDU/LawActs/AllListing/EditLawActsBill";
 import AddEditRotaList from "../pages/Dashboard/Modules/QMS/Reports/RotaList/AddEditRotaList.js";
 import TestingSeatingPlan from "../pages/Dashboard/Modules/Notice/SeatingPlan/ManageSeatingPlan/test.js";
+import SeatingPlanTest from "../pages/Dashboard/Modules/Notice/SeatingPlan/ManageSeatingPlan/SeatPlanTest.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -360,7 +361,7 @@ export const ProtectedRoutes = [
   },
   {
     path: "/notice/manage/manage-seating-plan",
-    element:<TestingSeatingPlan />
+    element:<SeatingPlanTest />
     // element: <ManageSeatingPlan />,
   },
 

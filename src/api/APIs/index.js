@@ -24,4 +24,5 @@ export const axiosClientMMS = axios.create({
   // baseURL: "http://10.10.140.89:5152/api",
   // baseURL: "http://10.10.140.200:5152/api",
   // baseURL: "http://10.10.140.200:8080/api",
+  // baseURL: "http://10.10.140.42:5152/api"
 });
