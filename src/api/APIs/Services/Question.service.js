@@ -706,3 +706,16 @@ export const updateQuestionStatus = async (data) => {
     throw error;
   }
 };
+
+export const allquestionsByStatus = async (data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/questions/questionsByStatus`,
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};

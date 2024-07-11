@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import NoticeStatsCard from "../../../../components/CustomComponents/NoticeStatsCard";
 import { faClipboardQuestion, faRectangleList } from "@fortawesome/free-solid-svg-icons";
 import { resolutionStatusCount } from "../../../../api/APIs/Services/Resolution.service";
+import { allquestionsByStatus } from "../../../../api/APIs/Services/Question.service";
 
 function QMSQuestionDashboard() {
   const navigate = useNavigate()
@@ -17,6 +18,15 @@ function QMSQuestionDashboard() {
     toResolutionCount:0,
     inResolutionCount:0
   })
+  const [questionCount, setQuestionCount] = useState({
+    toQuestionCount:0,
+    inQuestionCount:0
+  })
+  const[routQuestionData, setRoutQUestionData]=useState({
+    inQuestionData:[],
+    toQuestionData:[]
+  })
+
   const ResolutionCountAPi = async () => {
     try {
       const response = await resolutionStatusCount();
@@ -34,8 +44,26 @@ function QMSQuestionDashboard() {
       console.log(error.response.data.message);
     }
   };
-  console.log("resolutionCount",resolutionCount);
+
+  const QuestionCountAPi = async () => {
+    try {
+      const response = await allquestionsByStatus();
+      if (response?.success) {
+        setQuestionCount({
+          toQuestionCount: response?.data?.counts?.toQuestion || 0,
+          inQuestionCount: response?.data?.counts?.inQuestion || 0
+      });
+      setRoutQUestionData({
+        toQuestionData: response?.data?.toQuestionQuestions || [],
+        inQuestionData: response?.data?.inQuestionQuestions || []
+    })
+      }
+    } catch (error) {
+      console.log(error.response.data.message);
+    }
+  };
   useEffect(() => {
+    QuestionCountAPi()
     ResolutionCountAPi()
   },[])
   return (
@@ -63,7 +91,7 @@ function QMSQuestionDashboard() {
                   icon={faClipboardQuestion}
                   overall={true}
                   iconBgColor={"#FFA500"}
-                  total={"10"}
+                  total={questionCount?.toQuestionCount}
                   onClick={() => navigate("/qms/notice/notice-question")}
                 />
                 <NoticeStatsCard
@@ -99,8 +127,8 @@ function QMSQuestionDashboard() {
                   icon={faClipboardQuestion}
                   overall={true}
                   iconBgColor={"#FFA500"}
-                  total={"6"}
-                  onClick={() => navigate("/qms/search/question")}
+                  total={questionCount?.inQuestionCount}
+                  onClick={() => navigate("/qms/search/question",{state:routQuestionData?.inQuestionData})}
                 />
                 <NoticeStatsCard
                   title={"Resolutions"}

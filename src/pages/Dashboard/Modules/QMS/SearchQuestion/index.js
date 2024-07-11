@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Layout } from "../../../../../components/Layout";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import CustomTable from "../../../../../components/CustomComponents/CustomTable";
 import {
   QMSSideBarItems,
@@ -30,6 +30,7 @@ import { Button, Modal } from "react-bootstrap";
 
 function QMSSearchQuestion() {
   const navigate = useNavigate();
+  const location =useLocation()
   const { members, sessions } = useContext(AuthContext);
   const UserData = getUserData();
   const [currentPage, setCurrentPage] = useState(0);
@@ -199,15 +200,26 @@ function QMSSearchQuestion() {
     }
   };
 
+  
+
   useEffect(() => {
     GetALlStatus();
   }, []);
+
+  useEffect(() =>{
+    if(location?.state){
+      const dashboardData = transformLeavesData(location?.state)
+      setSearchedData(dashboardData)
+    }
+  },[location?.state])
 
   // Handle Reset Form
 
   const handleResetForm = () => {
     formik.resetForm({});
   };
+
+
 
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>

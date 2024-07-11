@@ -186,7 +186,7 @@ function AddEditRotaList() {
                         <option value={"Wednesday-Friday"}>
                           Wednesday/Friday
                         </option>
-                        <option value={"Alternate Days"}>Alternate Days</option>
+                        {/* <option value={"Alternate Days"}>Alternate Days</option> */}
                       </select>
                       {formik.touched.allotmentType &&
                         formik.errors.allotmentType && (
