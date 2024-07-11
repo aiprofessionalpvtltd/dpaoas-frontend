@@ -19,10 +19,10 @@ export const createQuestion = async (data) => {
 };
 
 //DeleteQuestion
-export const DeleteQuestion = async (id) => {
+export const DeleteQuestion = async (id, Data) => {
   try {
     //   const token = getAuthToken()
-    const response = await axiosClientMMS.put(`/questions/delete/${id}`)
+    const response = await axiosClientMMS.put(`/questions/delete/${id}`, Data)
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -639,6 +639,36 @@ export const allRotaList = async (currentPage, pageSize) => {
   }
 };
 
+export const UpdateRotaList = async (id, data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.put(`/new/rota/update/${id}`, data, {
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // }
+    });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const getRotaListById = async (id, data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.get(`/new/rota/getById/${id}`, data, {
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // }
+    });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
 export const generateRotaFurtherAllotmentList = async (data) => {
   try {
     // const token = getAuthToken();
@@ -669,6 +699,19 @@ export const updateQuestionStatus = async (data) => {
         //   Authorization: `Bearer ${token}`,
         // }
       }
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const allquestionsByStatus = async (data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/questions/questionsByStatus`,
     );
     return response?.data;
   } catch (error) {

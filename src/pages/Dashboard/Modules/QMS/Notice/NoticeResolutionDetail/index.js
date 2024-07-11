@@ -83,6 +83,7 @@ function QMSNoticeResolutionDetail() {
           location?.state?.dateOfPassing,
         ).toDate()
       : "",
+      memberPosition:location?.state?.memberPosition ? location?.state?.memberPosition :"",
       attachment:""
     },
     // validationSchema: validationSchema,
@@ -113,6 +114,7 @@ function QMSNoticeResolutionDetail() {
 
     data.append("englishText", values.englishText);
     data.append("urduText", values.urduText);
+    data.append("memberPosition",  values?.memberPosition)
     if(values?.attachment){
       data.append("attachment", values?.attachment)
     }
@@ -137,7 +139,7 @@ function QMSNoticeResolutionDetail() {
       console.log(error);
     }
   };
-  const imgArray = JSON.parse(location?.state?.attachment)
+  const imgArray = location?.state?.attachment.length > 0 ? JSON?.parse(location?.state?.attachment) : null
   console.log("location?.state?.attachment", imgArray);
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
@@ -483,6 +485,40 @@ function QMSNoticeResolutionDetail() {
                   </div>
                 </div>
                 <div className="row">
+                  <div className="col-3">
+                <div class="mb-2">
+                        <label class="form-label">Member Position</label>
+                        <select
+                          class={`form-select ${
+                            formik.touched.memberPosition &&
+                            formik.errors.memberPosition
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                          placeholder="Member Position"
+                          value={formik.values.memberPosition}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          name="memberPosition"
+                        >
+                          <option value="" selected disabled hidden>
+                            Select
+                          </option>
+                          <option value={"Treasury"}>Treasury</option>
+                          <option value={"Opposition"}>Opposition</option>
+                          <option value={"Independent"}>Independent</option>
+                          <option value={"Anyside"}>Anyside</option>
+                        </select>
+                        {formik.touched.memberPosition &&
+                          formik.errors.memberPosition && (
+                            <div className="invalid-feedback">
+                              {formik.errors.memberPosition}
+                            </div>
+                          )}
+                      </div>
+                      </div>
+                </div>
+                <div className="row">
                   <label htmlFor="" className="form-label">
                     Selected Images
                   </label>
@@ -538,17 +574,7 @@ function QMSNoticeResolutionDetail() {
                     </div>
                   )}
                 </div>
-                <div class="row">
-                  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                    <button
-                      class="btn btn-primary"
-                      type="button"
-                      onClick={() => hendleSendResolutionForTranslation()}
-                    >
-                      Send for Translation
-                    </button>
-                  </div>
-                </div>
+               
 
                 <div style={{ marginTop: 10 }}>
                   <Editor
@@ -570,9 +596,16 @@ function QMSNoticeResolutionDetail() {
                 </div>
 
                 <div class="row">
-                  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                  <div class="d-grid gap-4 d-md-flex justify-content-md-end">
                     <button class="btn btn-primary" type="submit">
                       Submit
+                    </button>
+                    <button
+                      class="btn btn-primary"
+                      type="button"
+                      onClick={() => hendleSendResolutionForTranslation()}
+                    >
+                      Send for Translation
                     </button>
                   </div>
                 </div>

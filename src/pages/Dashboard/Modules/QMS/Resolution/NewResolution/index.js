@@ -51,6 +51,7 @@ function QMSNewResolution() {
       englishText: "",
       urduText: "",
       fkResolutionStatus: null,
+      memberPosition:"",
       attachment: null,
     },
     validationSchema: validationSchema,
@@ -81,6 +82,7 @@ function QMSNewResolution() {
     formData.append("attachment", values.attachment);
     formData.append("resolutionSentStatus", 'inResolution');
     formData.append("createdByUser",  userData?.fkUserId)
+    formData.append("memberPosition",  values?.memberPosition)
 
     try {
       const response = await createResolution(formData);
@@ -302,6 +304,38 @@ function QMSNewResolution() {
                         />
                       </div>
                     </div>
+                  <div class="col-3">
+                      <div class="mb-3">
+                        <label class="form-label">Member Position</label>
+                        <select
+                          class={`form-select ${
+                            formik.touched.memberPosition &&
+                            formik.errors.memberPosition
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                          placeholder="Member Position"
+                          value={formik.values.memberPosition}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          name="memberPosition"
+                        >
+                          <option value="" selected disabled hidden>
+                            Select
+                          </option>
+                          <option value={"Treasury"}>Treasury</option>
+                          <option value={"Opposition"}>Opposition</option>
+                          <option value={"Independent"}>Independent</option>
+                          <option value={"Anyside"}>Anyside</option>
+                        </select>
+                        {formik.touched.memberPosition &&
+                          formik.errors.memberPosition && (
+                            <div className="invalid-feedback">
+                              {formik.errors.memberPosition}
+                            </div>
+                          )}
+                      </div>
+                  </div>
                     <div className="col-3">
                       <div className="mb-3">
                         <label htmlFor="formFile" className="form-label">

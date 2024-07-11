@@ -119,7 +119,7 @@ function NewQuestion() {
     formData.append("submittedBy", LoggedInUserID);
     formData.append("englishText", values.englishText);
     formData.append("urduText", values.urduText);
-    formData.append("questionSentStatus", "fromNotice");
+    formData.append("questionSentStatus", "inNotice");
     // formData.append("questionImage", values.questionImage);
     // Array.from(values.questionImage).forEach((file, index) => {
     //   formData.append(`questionImage[${index}]`, file);

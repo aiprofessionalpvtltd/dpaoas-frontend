@@ -11,8 +11,10 @@ import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons'
 // import DatePicker from "react-datepicker";
 import DatePicker, { DateObject } from "react-multi-date-picker";
 import DatePanel from "react-multi-date-picker/plugins/date_panel";
-import { CreateRotaList } from '../../../../../../../api/APIs/Services/Question.service'
+import { CreateRotaList, UpdateRotaList } from '../../../../../../../api/APIs/Services/Question.service'
 import { showErrorMessage, showSuccessMessage } from '../../../../../../../utils/ToastAlert'
+import { useLocation } from 'react-router-dom'
+import moment from 'moment'
 
 const validationSchema = Yup.object({
     groupNo: Yup.string().required("Group No is required"),
@@ -25,38 +27,44 @@ const validationSchema = Yup.object({
 
 function AddEditRotaList() {
     const { sessions } = useContext(AuthContext);
+    const location = useLocation()
     const formik = useFormik({
         initialValues: {
-          allotmentType: "",
-          groupNo: "",
-          startDate: "",
-          endDate: "",
-          sessionId:"",
-          allowedDates:[],
-          skipGroupsID:"",
-          skipGroupsDate:""
+          allotmentType: location?.state ? location?.state?.weekDays :  "",
+          groupNo: location?.state ? location?.state?.fkGroupId : "",
+          startDate: location?.state?.startDate ? moment(location?.state?.startDate).toDate() : "",
+          endDate:  location?.state?.endDate ? moment(location?.state?.endDate).toDate() : "",
+          sessionId:location?.state ? location?.state?.fkSessionId: "",
+          allowedDates: location?.state?.allowedDates ? location?.state?.allowedDates : [],
+          skipGroupsID: location?.state?.skipGroups[0] ? location?.state?.skipGroups[0]?.groupId:"",
+          skipGroupsDate:location?.state?.skipGroups[0] ? moment(location?.state?.skipGroups[0]?.date).toDate():""
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
-          console.log("Values",values.allowedDates.map((date) => date.format()));
-          CreateRotaListApi(values)
+        //   console.log("Values",values.allowedDates.map((date) => date));
+        if(location?.state?.id){
+            UpdateRotaListApi(values)
+        }else{
+            CreateRotaListApi(values)
+        }
         },
       });
-
+  
+      console.log(formik.values?.startDate)
       const CreateRotaListApi = async (values) => {
         const Data = {
           fkSessionId: values?.sessionId,
           fkGroupId: values?.groupNo || "",
           weekDays: values?.allotmentType,
-          startDate: values?.startDate.format(),
-          endDate: values?.endDate.format(),
-          allowedDates:values?.allowedDates?.map((date) => date.format()),
+          startDate: values?.startDate,
+          endDate: values?.endDate,
+          allowedDates:values?.allowedDates?.map((date) => date?.format()),
           ...(values?.skipGroupsDate
             ? {
                 skipGroups: [
                   {
                     groupId: values?.skipGroupsID || "",
-                    date: values?.skipGroupsDate.format() || "",
+                    date: values?.skipGroupsDate || "",
                   },
                 ],
               }
@@ -71,7 +79,35 @@ function AddEditRotaList() {
           showErrorMessage(error?.response?.data?.message);
         }
       };
-    
+      const UpdateRotaListApi = async (values) => {
+        const Data = {
+          fkSessionId: values?.sessionId,
+          fkGroupId: values?.groupNo || "",
+          weekDays: values?.allotmentType,
+          startDate: values?.startDate ,
+          endDate: values?.endDate,
+          allowedDates:values?.allowedDates?.map((date) => date),
+          ...(values?.skipGroupsDate
+            ? {
+                skipGroups: [
+                  {
+                    groupId: values?.skipGroupsID || "",
+                    date: values?.skipGroupsDate || "",
+                  },
+                ],
+              }
+            : { skipGroups: [] })
+        };
+        console.log("Data", Data);
+        try {
+          const response = await UpdateRotaList(location?.state?.id ,Data);
+           
+            showSuccessMessage(response?.message)
+          
+        } catch (error) {
+          showErrorMessage(error?.response?.data?.message);
+        }
+      };
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <Header
@@ -79,7 +115,7 @@ function AddEditRotaList() {
         addLink1={"/qms/reports/rota-list"}
         title1={"Rota List"}
         addLink2={""}
-        title2={"Add Rota List"}
+        title2={location?.state?.id ? "Edit Rota List" :"Add Rota List"}
       />
       <ToastContainer />
 
@@ -89,7 +125,7 @@ function AddEditRotaList() {
             class="card-header red-bg"
             style={{ background: "#14ae5c !important" }}
           >
-            <h1>Create Rota List</h1>
+            <h1> {location?.state?.id ? "Update Rota List" : "Create Rota List"}</h1>
           </div>
           <div class="card-body">
             <div class="container-fluid">
@@ -105,6 +141,7 @@ function AddEditRotaList() {
                             : ""
                         }`}
                         id="sessionId"
+                        value={formik.values.sessionId}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       >
@@ -137,6 +174,7 @@ function AddEditRotaList() {
                             : ""
                         }`}
                         id="allotmentType"
+                        value={formik?.values?.allotmentType}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       >
@@ -148,7 +186,7 @@ function AddEditRotaList() {
                         <option value={"Wednesday-Friday"}>
                           Wednesday/Friday
                         </option>
-                        <option value={"Alternate Days"}>Alternate Days</option>
+                        {/* <option value={"Alternate Days"}>Alternate Days</option> */}
                       </select>
                       {formik.touched.allotmentType &&
                         formik.errors.allotmentType && (
@@ -171,6 +209,7 @@ function AddEditRotaList() {
                         id="groupNo"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
+                        value={formik.values.groupNo}
                       >
                         <option value="" selected disabled hidden>
                           Select
@@ -208,9 +247,12 @@ function AddEditRotaList() {
                       </span>
                       <DatePicker
                         id="startDate"
-                        selected={formik.values.startDate}
-                        onChange={(date) =>
-                          formik.setFieldValue("startDate", date)
+                        format='DD/MM/YYYY'
+                        value={formik.values.startDate}
+                        onChange={(date) =>{
+                            // const formattedDate = moment(date).format('DD/MM/YYYY');
+                            formik.setFieldValue("startDate", date)
+                        }
                         }
                         onBlur={formik.handleBlur}
                         className={`form-control ${
@@ -248,9 +290,12 @@ function AddEditRotaList() {
                       </span>
                       <DatePicker
                         id="endDate"
-                        selected={formik.values.endDate}
-                        onChange={(date) =>
-                          formik.setFieldValue("endDate", date)
+                        format='DD/MM/YYYY'
+                        value={formik.values.endDate}
+                        onChange={(date) =>{
+                            // const formattedDate = moment(date).format('DD/MM/YYYY');
+                            formik.setFieldValue("endDate", date)
+                        }
                         }
                         onBlur={formik.handleBlur}
                         className={`form-control ${
@@ -286,7 +331,10 @@ function AddEditRotaList() {
                       <DatePicker
                         value={formik.values.allowedDates}
                         onChange={(date) =>
-                          formik.setFieldValue("allowedDates", date)
+                            {
+                                // const formattedDate = moment(date).format('DD/MM/YYYY');
+                                formik.setFieldValue("allowedDates", date)
+                            }
                         }
                         multiple
                         sort
@@ -306,7 +354,7 @@ function AddEditRotaList() {
                   <div className="col-3">
                     <div className="mb-3" style={{ position: "relative" }}>
                       <label style={{ width: "100%" }} className="form-label">
-                        Skip Qroups Date
+                        Skip Groups Date
                       </label>
                       <span
                         style={{
@@ -321,10 +369,13 @@ function AddEditRotaList() {
                         <FontAwesomeIcon icon={faCalendarAlt} />
                       </span>
                       <DatePicker
+                        format='DD/MM/YYYY'
                         id="skipGroupsDate"
-                        selected={formik.values.skipGroupsDate}
+                        value={formik.values.skipGroupsDate}
                         onChange={(date) =>
-                          formik.setFieldValue("skipGroupsDate", date)
+{
+                            // const formattedDate = moment(date).format('DD/MM/YYYY');
+                          formik.setFieldValue("skipGroupsDate", date)}
                         }
                         onBlur={formik.handleBlur}
                         className={`form-control`}
@@ -344,6 +395,7 @@ function AddEditRotaList() {
                         id="skipGroupsID"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
+                        value={formik.values.skipGroupsID}
                       >
                         <option value="" selected disabled hidden>
                           Select
@@ -368,7 +420,7 @@ function AddEditRotaList() {
                 <div class="row mb-3">
                   <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                     <button class="btn btn-primary" type="submit">
-                      Create Rota List
+                        {location?.state?.id ? "Update Rota List" : "Create Rota List"}
                     </button>
                   </div>
                 </div>

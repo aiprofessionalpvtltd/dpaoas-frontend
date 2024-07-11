@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Layout } from "../../../../../components/Layout";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import CustomTable from "../../../../../components/CustomComponents/CustomTable";
 import {
   QMSSideBarItems,
@@ -30,6 +30,7 @@ import { Button, Modal } from "react-bootstrap";
 
 function QMSSearchQuestion() {
   const navigate = useNavigate();
+  const location =useLocation()
   const { members, sessions } = useContext(AuthContext);
   const UserData = getUserData();
   const [currentPage, setCurrentPage] = useState(0);
@@ -39,6 +40,7 @@ function QMSSearchQuestion() {
   const [questionStatus, setQuestionStatus] = useState("");
   const [statusDate, setStatusDate] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState(null)
 
 
   // const [count, setCount] = useState(null);
@@ -89,8 +91,8 @@ function QMSSearchQuestion() {
         SrNo: index,
         QID: res?.id,
         internalId:res?.id,
-        QDN: res?.fkQuestionDiaryId,
-        NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate,
+        noticeOfficeDiaryNo: res?.noticeOfficeDiary?.noticeOfficeDiaryNo,
+        NoticeDate: moment(res?.noticeOfficeDiary?.noticeOfficeDiaryDate).format("DD/MM/YYYY"),
         NoticeTime: moment(
           res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
           "hh:ss:a"
@@ -103,6 +105,8 @@ function QMSSearchQuestion() {
         memberPosition:res?.memberPosition,
         CreatedBy:res?.questionSentStatus === "inQuestion" && "Question",
         SubmittedBy: res?.questionSubmittedBy ? `${res?.questionSubmittedBy?.employee?.firstName} ${res?.questionSubmittedBy?.employee?.lastName}`:"--",
+        deletedByUser: res?.questionDeletedBy ? `${res?.questionDeletedBy.employee?.firstName} ${res?.questionDeletedBy.employee?.lastName}` :"--",
+        remarks:res?.description,
         Status:res?.questionActive
       };
     });
@@ -125,6 +129,7 @@ function QMSSearchQuestion() {
       divisions: values.divisions,
       memberPosition:values?.memberPosition,
       questionSentStatus:"inQuestion",
+      noticeOfficeDiaryNo:values?.noticeOfficeDiaryNo
     };
 
     try {
@@ -168,7 +173,6 @@ function QMSSearchQuestion() {
   const handleChangeStatus = async (id) => {
     try {
       const data = { isChecked, questionStatus: questionStatus, statusDate: statusDate, deferredBy: UserData?.fkUserId }; 
-      console.log("isChecked", data);
 
       const response = await updateQuestionStatus(data);
       showSuccessMessage(response.message); 
@@ -180,27 +184,42 @@ function QMSSearchQuestion() {
       showErrorMessage(error.response?.data?.message);
     }
   };
-  const hendleDelete = async (id) => {
+  const hendleDelete = async () => {
+    const Data = {deletedBy: UserData?.fkUserId,
+      description:deleteModalRemarksValue
+    }
     try {
-      const response = await DeleteQuestion(id); // Add await here
+      const response = await DeleteQuestion(deleteId,Data); 
       if (response?.success) {
         showSuccessMessage(response?.message);
         SearchQuestionApi(formik.values);
+        toggleModal();
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
     }
   };
 
+  
+
   useEffect(() => {
     GetALlStatus();
   }, []);
+
+  useEffect(() =>{
+    if(location?.state){
+      const dashboardData = transformLeavesData(location?.state)
+      setSearchedData(dashboardData)
+    }
+  },[location?.state])
 
   // Handle Reset Form
 
   const handleResetForm = () => {
     formik.resetForm({});
   };
+
+
 
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
@@ -236,8 +255,7 @@ function QMSSearchQuestion() {
             <Button
               variant="primary"
               onClick={() => {
-                toggleModal();
-                alert("Api Required")
+                hendleDelete()
               }}
             >
               Submit
@@ -266,7 +284,7 @@ function QMSSearchQuestion() {
                         type="text"
                         className={"form-control"}
                         id="questionDiaryNo"
-                        placeholder={formik.values.questionDiaryNo}
+                        value={formik.values.questionDiaryNo}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
@@ -278,7 +296,7 @@ function QMSSearchQuestion() {
                       <input
                         class="form-control"
                         type="text"
-                        placeholder={formik.values.questionID}
+                        value={formik.values.questionID}
                         className={"form-control"}
                         id="questionID"
                         onChange={formik.handleChange}
@@ -292,7 +310,7 @@ function QMSSearchQuestion() {
                       <input
                         class="form-control"
                         type="text"
-                        placeholder={formik.values.keyword}
+                        value={formik.values.keyword}
                         className={"form-control"}
                         id="keyword"
                         onChange={formik.handleChange}
@@ -305,12 +323,12 @@ function QMSSearchQuestion() {
                       <label class="form-label">Member Name</label>
                       <select
                         class="form-select"
-                        placeholder={formik.values.memberName}
+                        value={formik.values.memberName}
                         onChange={formik.handleChange}
                         id="memberName"
                         onBlur={formik.handleBlur}
                       >
-                        <option selected disabled hidden>
+                        <option value={""} selected disabled hidden>
                           Select
                         </option>
                         {members &&
@@ -329,12 +347,12 @@ function QMSSearchQuestion() {
                       <label class="form-label">From Session</label>
                       <select
                         class="form-select"
-                        placeholder={formik.values.fromSession}
+                        value={formik.values.fromSession}
                         id="fromSession"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       >
-                        <option selected disabled hidden>
+                        <option value={""} selected disabled hidden>
                           Select
                         </option>
                         {sessions &&
@@ -351,12 +369,12 @@ function QMSSearchQuestion() {
                       <label class="form-label">To Session</label>
                       <select
                         class="form-select"
-                        placeholder={formik.values.toSession}
+                        value={formik.values.toSession}
                         id="toSession"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       >
-                        <option selected disabled hidden>
+                        <option value={""} selected disabled hidden>
                           Select
                         </option>
                         {sessions &&
@@ -373,7 +391,7 @@ function QMSSearchQuestion() {
                       <label class="form-label">Category</label>
                       <select
                         class="form-select"
-                        placeholder={formik.values.category}
+                        value={formik.values.category}
                         id="category"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -387,23 +405,37 @@ function QMSSearchQuestion() {
                       </select>
                     </div>
                   </div>
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Group</label>
-                      <select
-                        class="form-select"
-                        placeholder={formik.values.groups}
-                        id="groups"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                      >
-                        <option value={""} selected disabled hidden>
-                          Selected
-                        </option>
-                        <option value={"1"}>saqib</option>
-                        <option value={"2"}>saqib</option>
-                      </select>
-                    </div>
+                   <div class="col">
+                      <div class="mb-3">
+                        <label class="form-label">Member Position</label>
+                        <select
+                          class={`form-select ${
+                            formik.touched.memberPosition &&
+                            formik.errors.memberPosition
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                          placeholder="Member Position"
+                          value={formik.values.memberPosition}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          name="memberPosition"
+                        >
+                          <option value="" selected disabled hidden>
+                            Select
+                          </option>
+                          <option value={"Treasury"}>Treasury</option>
+                          <option value={"Opposition"}>Opposition</option>
+                          <option value={"Independent"}>Independent</option>
+                          <option value={"Anyside"}>Anyside</option>
+                        </select>
+                        {formik.touched.memberPosition &&
+                          formik.errors.memberPosition && (
+                            <div className="invalid-feedback">
+                              {formik.errors.memberPosition}
+                            </div>
+                          )}
+                      </div>
                   </div>
                 </div>
                 <div class="row">
@@ -435,7 +467,7 @@ function QMSSearchQuestion() {
                       <input
                         class="form-control"
                         type="text"
-                        placeholder={formik.values.noticeOfficeDiaryNo}
+                        value={formik.values.noticeOfficeDiaryNo}
                         id="noticeOfficeDiaryNo"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -458,7 +490,6 @@ function QMSSearchQuestion() {
                         <FontAwesomeIcon icon={faCalendarAlt} />
                       </span>
                       <DatePicker
-                        minDate={new Date()}
                         selected={formik.values.fromNoticeDate}
                         onChange={(date) =>
                           formik.setFieldValue("fromNoticeDate", date)
@@ -484,7 +515,6 @@ function QMSSearchQuestion() {
                       </span>
                       <DatePicker
                         selected={formik.values.toNoticeDate}
-                        minDate={new Date()}
                         onChange={(date) =>
                           formik.setFieldValue("toNoticeDate", date)
                         }
@@ -493,7 +523,7 @@ function QMSSearchQuestion() {
                     </div>
                   </div>
                 </div>
-                <div class="row">
+                {/* <div class="row">
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Gender</label>
@@ -510,7 +540,7 @@ function QMSSearchQuestion() {
                     <div class="mb-3">
                       <label class="form-label">Religion</label>
                       <select
-                        name="ctl00$ContentPlaceHolder3$ReligionDDL"
+                        name="ctl00$Contentvalue3$ReligionDDL"
                         id="ReligionDDL"
                         class="form-select"
                       >
@@ -543,7 +573,7 @@ function QMSSearchQuestion() {
                       <label class="form-label">File Status</label>
                       <select
                         class="form-select"
-                        placeholder={formik.values.fileStatus}
+                        value={formik.values.fileStatus}
                         id="fileStatus"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -557,53 +587,39 @@ function QMSSearchQuestion() {
                       </select>
                     </div>
                   </div>
-                </div>
-                <div class="row">
+                </div> */}
+                {/* <div class="row">
                   <div class="col-3">
                     <div class="mb-3">
                       <label class="form-label">Division</label>
                       <input
                         class="form-control"
                         type="text"
-                        placeholder={formik.values.divisions}
+                        value={formik.values.divisions}
                         id="divisions"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
                     </div>
                   </div>
-                  <div class="col-2">
-                      <div class="mb-3">
-                        <label class="form-label">Member Position</label>
-                        <select
-                          class={`form-select ${
-                            formik.touched.memberPosition &&
-                            formik.errors.memberPosition
-                              ? "is-invalid"
-                              : ""
-                          }`}
-                          placeholder="Member Position"
-                          value={formik.values.memberPosition}
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          name="memberPosition"
-                        >
-                          <option value="" selected disabled hidden>
-                            Select
-                          </option>
-                          <option value={"Treasury"}>Treasury</option>
-                          <option value={"Opposition"}>Opposition</option>
-                          <option value={"Independent"}>Independent</option>
-                          <option value={"Anyside"}>Anyside</option>
-                        </select>
-                        {formik.touched.memberPosition &&
-                          formik.errors.memberPosition && (
-                            <div className="invalid-feedback">
-                              {formik.errors.memberPosition}
-                            </div>
-                          )}
-                      </div>
-                  </div>
+                  <div class="col-3">
+                    <div class="mb-3">
+                      <label class="form-label">Group</label>
+                      <select
+                        class="form-select"
+                        value={formik.values.groups}
+                        id="groups"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      >
+                        <option value={""} selected disabled hidden>
+                          Selected
+                        </option>
+                        <option value={"1"}>saqib</option>
+                        <option value={"2"}>saqib</option>
+                      </select>
+                    </div>
+                  </div> 
                   <div class="col-2">
                     <div class="mb-3">
                       <div class="form-check" style={{ marginTop: "39px" }}>
@@ -632,7 +648,7 @@ function QMSSearchQuestion() {
                       </div>
                     </div>
                   </div>
-                </div>
+                </div> */}
                 <div class="row">
                   <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                     <button class="btn btn-primary" type="submit">
@@ -663,10 +679,13 @@ function QMSSearchQuestion() {
                   </div>
                 </div>
                 <CustomTable
+                  block={true}
                   headerShown={true}
                   data={searchedData}
                   handleEdit={(item) => handleEdit(item.QID)}
-                  handleDelete={(item) =>toggleModal()}
+                  handleDelete={(item) =>{
+                    toggleModal()
+                    setDeleteId(item.QID)}}
                   handlePageChange={handlePageChange}
                   currentPage={currentPage}
                   pageSize={pageSize}

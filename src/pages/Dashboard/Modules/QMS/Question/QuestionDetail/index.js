@@ -24,6 +24,7 @@ import { AuthContext } from "../../../../../../api/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import { getAllDivisions } from "../../../../../../api/APIs/Services/ManageQMS.service";
+import { imagesUrl } from "../../../../../../api/APIs";
 const validationSchema = Yup.object({
   sessionNo: Yup.string(),
   noticeOfficeDiaryNo: Yup.string(),
@@ -93,7 +94,7 @@ function QMSQuestionDetail() {
         location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryTime,
       priority: "",
       questionId: location?.state?.question?.id,
-      questionDiaryNo: location?.state?.question?.fkNoticeDiary,
+      questionDiaryNo: location?.state?.question?.questionDiary?.questionDiaryNo,
       category: location?.state?.question?.questionCategory,
       questionStatus: location?.state?.question?.fkQuestionStatus,
       // replyDate: location?.state?.question?.replyDate,
@@ -106,6 +107,7 @@ function QMSQuestionDetail() {
       urduText: location?.state?.question?.urduText,
       ammendedText: "",
       originalText: "",
+      questionImage:[],
       memberPosition: location?.state?.question?.memberPosition ? location?.state?.question?.memberPosition :""
     },
     // validationSchema: validationSchema,
@@ -134,6 +136,11 @@ function QMSQuestionDetail() {
     formData.append("englishText", values.englishText);
     formData.append("originalText", values.originalText);
     formData.append("memberPosition", values.memberPosition);
+    if (values?.questionImage) {
+      Array.from(values?.questionImage).map((file, index) => {
+        formData.append(`questionImage`, file);
+      });
+    }
 
     try {
       const response = await UpdateQuestionById(
@@ -869,7 +876,7 @@ function QMSQuestionDetail() {
                       </select>
                     </div>
                   </div>
-                  <div class="col">
+                  {/* <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Group</label>
                       <select
@@ -888,94 +895,8 @@ function QMSQuestionDetail() {
                         <option>5th Group</option>
                       </select>
                     </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Division</label>
-                      <select
-                        class="form-select"
-                        placeholder={formik.values.tonerModel}
-                        id="division"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                      >
-                        <option selected disabled hidden>
-                          Select
-                        </option>
-                        {alldivisons &&
-                          alldivisons.map((item, index) => (
-                            <option value={item.id} key={index}>
-                              {item?.divisionName}
-                            </option>
-                          ))}
-                      </select>
-                      {/* <select
-                        class="form-control small-control"
-                        id="division"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.division}
-                        name="division"
-                      >
-                        <option value={""} selected disabled hidden>
-                          Select
-                        </option>
-                        {alldivisons &&
-                          alldivisons.map((item) => (
-                            <option key={item.id} value={item.id}>
-                              {item?.divisionname}
-                            </option>
-                          ))}
-                      </select> */}
-                      {/* <option value={"1"}>Aviation Division</option>
-                        <option>Cabinet Division</option>
-                        <option>
-                          Capital Administration &amp; Development Div.
-                        </option>
-                        <option>
-                          Climate Change and Environmental Coordination
-                        </option>
-                        <option>Establishment Division</option>
-                        <option>Housing and Works Division</option>
-                        <option>
-                          Information Technology &amp; Telecommunications
-                          Division
-                        </option>
-                        <option>National Security Division</option>
-                        <option>
-                          Poverty Alleviation and Social Safety Division
-                        </option>
-                        <option>Textile Division</option> */}
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">File Status</label>
-                      <select
-                        class="form-control small-control"
-                        id="fileStatus"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                      >
-                        <option value={""} selected disabled hidden>
-                          select
-                        </option>
-                        <option value={"Available"}>Available</option>
-                        <option value={"Missing"}>Missing</option>
-                        <option value={"Moved for Approval"}>
-                          Moved for Approval
-                        </option>
-                        <option value={"Moved for Advance Copy"}>
-                          Moved for Advance Copy
-                        </option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                <div className="row">
-                <div class="col-6">
+                  </div> */}
+                  <div class="col-3">
                       <div class="mb-3">
                         <label class="form-label">Member Position</label>
                         <select
@@ -1008,7 +929,54 @@ function QMSQuestionDetail() {
                       </div>
                   </div>
                 </div>
-                <div style={{ marginTop: 10 }}>
+                {/* <div class="row">
+                  <div class="col">
+                    <div class="mb-3">
+                      <label class="form-label">Division</label>
+                      <select
+                        class="form-select"
+                        placeholder={formik.values.tonerModel}
+                        id="division"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      >
+                        <option selected disabled hidden>
+                          Select
+                        </option>
+                        {alldivisons &&
+                          alldivisons.map((item, index) => (
+                            <option value={item.id} key={index}>
+                              {item?.divisionName}
+                            </option>
+                          ))}
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="mb-3">
+                      <label class="form-label">File Status</label>
+                      <select
+                        class="form-control small-control"
+                        id="fileStatus"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      >
+                        <option value={""} selected disabled hidden>
+                          select
+                        </option>
+                        <option value={"Available"}>Available</option>
+                        <option value={"Missing"}>Missing</option>
+                        <option value={"Moved for Approval"}>
+                          Moved for Approval
+                        </option>
+                        <option value={"Moved for Advance Copy"}>
+                          Moved for Advance Copy
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                </div> */}
+                {/* <div style={{ marginTop: 10 }}>
                   <Editor
                     title={"Original Text"}
                     onChange={(content) =>
@@ -1016,8 +984,8 @@ function QMSQuestionDetail() {
                     }
                     value={formik.values.originalText}
                   />
-                </div>
-                <div style={{ marginTop: 70, marginBottom: 40 }}>
+                </div> */}
+                {/* <div style={{ marginTop: 70, marginBottom: 40 }}>
                   <Editor
                     title={"Ammended Text"}
                     onChange={(content) =>
@@ -1025,7 +993,72 @@ function QMSQuestionDetail() {
                     }
                     value={formik.values.ammendedText}
                   />
+                </div> */}
+                 <div className="row">
+                  <label htmlFor="" className="form-label">
+                    Selected Images
+                  </label>
+                  {location?.state?.question?.questionImage?.length > 0 ? (
+                    location?.state?.question?.questionImage?.map((item) => (
+                      <div class="MultiFile-label mt-3">
+                        <a
+                          href={`${imagesUrl}${item?.path}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <i class="fas fa-download"></i>
+                        </a>
+                        <a class="MultiFile-remove" href="#T7">
+                          x
+                        </a>
+                        <span
+                          class="MultiFile-label"
+                          title={item?.path?.split("\\").pop().split("/").pop()}
+                        >
+                          <span class="MultiFile-title">
+                            <a
+                              href={`${imagesUrl}${item?.path}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {item?.path?.split("\\").pop().split("/").pop()}
+                            </a>
+                          </span>
+                        </span>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="row">
+                      <div className="col-6 ">
+                        <div className="mt-5">
+                          <input
+                            className="form-control"
+                            type="file"
+                            accept=".pdf, .jpg, .jpeg, .png"
+                            id="formFile"
+                            name="questionImage"
+                            multiple
+                            onChange={(event) => {
+                              formik.setFieldValue(
+                                "questionImage",
+                                event.currentTarget.files
+                              );
+                            }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
+                 <div style={{marginTop: 10, marginBottom: 40 }}>
+                <Editor
+                  title={"English Text"}
+                  onChange={(content) =>
+                    formik.setFieldValue("englishText", content)
+                  }
+                  value={formik.values.englishText}
+                />
+              </div>
                 <div style={{ marginTop: 70, marginBottom: 40 }}>
                   <Editor
                     title={"Urdu Text"}
@@ -1042,7 +1075,7 @@ function QMSQuestionDetail() {
                   <button class="btn btn-primary" type="submit">
                     Update
                   </button>
-                  <button class="btn btn-primary" type="">
+                  {/* <button class="btn btn-primary" type="">
                     Print Ammended Question
                   </button>
                   <button class="btn btn-primary" type="">
@@ -1053,18 +1086,10 @@ function QMSQuestionDetail() {
                   </button>
                   <button class="btn btn-danger" type="">
                     Delete
-                  </button>
+                  </button> */}
                 </div>
               </form>
-              <div style={{ marginTop: 10 }}>
-                <Editor
-                  title={"English Text"}
-                  onChange={(content) =>
-                    formik.setFieldValue("englishText", content)
-                  }
-                  value={formik.values.englishText}
-                />
-              </div>
+             
               <div
                 class="dash-detail-container"
                 style={{ marginTop: 70, marginBottom: 40 }}

@@ -286,7 +286,7 @@ function QMSNewQuestion() {
                         </span>
                         <DatePicker
                           selected={formik.values.noticeOfficeDiaryDate}
-                          minDate={new Date()}
+                          // minDate={new Date()}
                           onChange={(date) =>
                             formik.setFieldValue("noticeOfficeDiaryDate", date)
                           }

@@ -6,8 +6,11 @@ import { useNavigate } from "react-router-dom";
 import Header from "../../../../../../components/Header";
 import {
   DeleteResolution,
+  UpdateResolutionList,
   createNewResolutionList,
+  generateResolutionListData,
   getAllResolutions,
+  getBallotRecord,
   getResolutionBYID,
 } from "../../../../../../api/APIs/Services/Resolution.service";
 import {
@@ -23,6 +26,9 @@ import moment from "moment";
 import { useFormik } from "formik";
 import { DeleteModal } from "../../../../../../components/DeleteModal";
 import { Button, Modal } from "react-bootstrap";
+import html2pdf from 'html2pdf.js';
+import BallotResolutionPdfTemplate from "../../../../../../components/BallotResolutionPDFTemplate";
+
 
 function QMSResolutionList() {
   const navigate = useNavigate();
@@ -33,6 +39,13 @@ function QMSResolutionList() {
   // const [count, setCount] = useState(null);
   const [resolutionListData, setResolutionListData] = useState([]);
   const [ministryData, setMinistryData] = useState([]);
+  const[showEdit, setShowEdit] = useState(false)
+
+  const [ballotData, setBallotData] = useState([
+    // {id:"1",
+    // moverName:"Muhammad Saqib Khan",
+    // detail:"Nothing the Prevalence of th practice of substandard research publishing by university teachers in order to fulfill promotion criteria by means of predatory and clone research journals that offer online publishing of substandard research papers."},
+  ])
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -40,6 +53,7 @@ function QMSResolutionList() {
     sessionNumber: "",
     listName: "",
     listDate: "",
+    id:""
   });
 
   const toggleModal = () => {
@@ -57,7 +71,7 @@ function QMSResolutionList() {
     // validationSchema: validationSchema,
     onSubmit: (values) => {
       // console.log("Form submitted with values:", values);
-      createNewResolutionListApi(values);
+      generateResolutionListApi(values);
     },
   });
 
@@ -69,8 +83,9 @@ function QMSResolutionList() {
   const trenformNewResolution = (apiData) => {
     return apiData.map((item, index) => ({
       SR: `${index + 1}`,
-      internalId: item?.fkSessionId,
-      SessionName: item?.sessionName,
+      id:item?.id,
+      internalId: item?.sessionName?.id,
+      SessionName: item?.sessionName?.sessionName,
       listName: item?.listName,
       listDate: moment(item?.listDate).format("YYYY/MM/DD"),
     }));
@@ -90,7 +105,7 @@ function QMSResolutionList() {
     }));
   };
 
-  const createNewResolutionListApi = async (values) => {
+  const generateResolutionListApi = async (values) => {
     const data = {
       fkSessionId: values?.sessionNumber,
       listName: values?.listName,
@@ -98,10 +113,37 @@ function QMSResolutionList() {
     };
 
     try {
+      const response = await generateResolutionListData(data); // Add await here
+      if (response?.success) {
+        setShowEdit(true)
+        showSuccessMessage(response?.message);
+        
+
+        const transformedData = trenformNewResolution(response?.data);
+        
+        const ministryData = transfrerResolutionDetail(
+          response?.data[0]?.resolutions
+        );
+        setResolutionListData(transformedData);
+        setMinistryData(ministryData);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.error);
+    }
+  };
+
+  const SaveResolutionListApi = async () => {
+    const data = {
+      fkSessionId: formik.values?.sessionNumber,
+      listName: formik.values?.listName,
+      listDate: formik.values?.listDate,
+    };
+
+    try {
       const response = await createNewResolutionList(data); // Add await here
       if (response?.success) {
         showSuccessMessage(response?.message);
-        console.log("ryyryryrryry", response?.data);
+        setShowEdit(false)
 
         const transformedData = trenformNewResolution(response?.data);
         console.log("-------------------", transformedData);
@@ -115,7 +157,63 @@ function QMSResolutionList() {
       showErrorMessage(error?.response?.data?.error);
     }
   };
-  console.log("asd", isChecked);
+
+  const UpdateResolutionListApi = async () => {
+    const data = {
+      fkSessionId: editmodalValue?.sessionNumber,
+      listName: editmodalValue?.listName,
+      listDate: editmodalValue?.listDate,
+      id:editmodalValue?.id
+    };
+
+    try {
+      const response = await UpdateResolutionList(data); // Add await here
+      if (response?.success) {
+        showSuccessMessage(response?.message);
+        setShowEdit(false)
+
+        const transformedData = trenformNewResolution(response?.data);
+        
+        const ministryData = transfrerResolutionDetail(
+          response?.data[0]?.resolutions
+        );
+        setResolutionListData(transformedData);
+        setMinistryData(ministryData);
+        toggleModal()
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.error);
+    }
+  };
+  
+
+  const hendleBallot = async () => {
+    // const resolutionIds = {isChecked}
+    try {
+      const response = await getBallotRecord(isChecked); // Add await here
+      if (response?.success) {
+        setBallotData(response?.data?.resolutions)
+        showSuccessMessage(response?.message);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.error);
+    }
+  };
+
+const handleBallotPrint = () => {
+    const element = document.getElementById('template-container');
+    const opt = {
+      // pending:2,
+      margin: 0.2,
+      filename: 'ResolutionBallot.pdf',
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 3 },
+      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+    };
+    
+    html2pdf().set(opt).from(element).save();
+  };
+
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <ToastContainer />
@@ -207,7 +305,7 @@ function QMSResolutionList() {
           <Button
             variant="primary"
             onClick={() => {
-              toggleModal();
+              UpdateResolutionListApi()
             }}
           >
             Update List
@@ -310,6 +408,14 @@ function QMSResolutionList() {
                     <button
                       class="btn btn-primary"
                       type="button"
+                      disabled={showEdit ? false : true}
+                      onClick={() => SaveResolutionListApi()}
+                    >
+                      Save
+                    </button>
+                    <button
+                      class="btn btn-primary"
+                      type="button"
                       onClick={() => formik.resetForm()}
                     >
                       Reset
@@ -334,10 +440,11 @@ function QMSResolutionList() {
                   currentPage={currentPage}
                   pageSize={pageSize}
                   hideDeleteIcon={true}
-                  // showEditIcon={true}
+                  showEditIcon={showEdit}
                   handleEdit={(item) => {
                     setEditModalValue({
                       sessionNumber: item?.internalId ? item?.internalId : "",
+                      id:item?.id ? item?.id :"",
                       listName: item?.listName ? item?.listName : "",
                       listDate: item.listDate
                         ? moment(item?.listDate).toDate()
@@ -369,17 +476,29 @@ function QMSResolutionList() {
                 isCheckbox={true}
               />
             </div>
+            <BallotResolutionPdfTemplate data={ballotData}>
             <div class="row">
-              <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                <button
-                  class="btn btn-primary"
-                  type="submit"
-                  disabled={isChecked.length === 0 ? true : false}
-                >
-                  Print pdf
-                </button>
-              </div>
-            </div>
+                  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button
+                      class="btn btn-primary"
+                      type="button"
+                      onClick={hendleBallot}
+                      disabled={isChecked.length === 0 ? true : false}
+                    >
+                      Request To Ballot
+                    </button>
+                    <button
+                      class="btn btn-primary"
+                      type="button"
+                      onClick={handleBallotPrint}
+                      disabled={ballotData.length === 0 ? true : false}
+                    >
+                      Print pdf
+                    </button>
+                  </div>
+                </div>
+            </BallotResolutionPdfTemplate>
+           
           </div>
         </div>
       </div>
