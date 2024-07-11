@@ -36,6 +36,7 @@ function HRMAddEditEmployee() {
   const { employeeData, allBranchesData } = useContext(AuthContext);
   const [rolesList, setRolesList] = useState([]);
   const [designationData, setDesignationData] = useState([]);
+  const [isSubmitting , setIsSubmitting] = useState(false)
 
   const formik = useFormik({
     initialValues: {
@@ -68,7 +69,7 @@ function HRMAddEditEmployee() {
     },
     // validationSchema: validationSchema,
     onSubmit: (values) => {
-      // Handle form submission here
+      setIsSubmitting(true);
       if (location?.state?.id) {
         UpdateEmployeeApi(values);
       } else {
@@ -101,8 +102,10 @@ function HRMAddEditEmployee() {
         showSuccessMessage(response.message);
         formik.resetForm();
       }
+      setIsSubmitting(false);
     } catch (error) {
       console.log(error);
+      setIsSubmitting(false);
     }
   };
 
@@ -470,8 +473,8 @@ function HRMAddEditEmployee() {
                 </div>
               </div>
               <div className="d-grid gap-2 d-md-flex justify-content-md-end">
-                <button className="btn btn-primary" type="submit">
-                  Submit
+                <button className="btn btn-primary" type="submit" disabled={isSubmitting}>
+                  {isSubmitting ? "Submitting..." : "Submit"}
                 </button>
               </div>
             </form>

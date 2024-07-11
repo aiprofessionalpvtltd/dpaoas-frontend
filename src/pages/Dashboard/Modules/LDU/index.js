@@ -31,7 +31,7 @@ function LDUDashboard() {
             <div class="mt-2 mb-4">
               <div class="row">
                 <NoticeStatsCard
-                  title={"NA Bills"}
+                title={"Private Member Bills"}
                   icon={faClipboardQuestion}
                   iconBgColor={"#FFA500"}
                   total={`20`}
@@ -39,7 +39,7 @@ function LDUDashboard() {
                   received={5}
                 />
                 <NoticeStatsCard
-                  title={"Senate Bills"}
+                  title={"Legislative Bills"}
                   icon={faFileImport}
                   iconBgColor={"#007bff"}
                   total={`5`}
@@ -47,7 +47,7 @@ function LDUDashboard() {
                   received={"44"}
                 />
                 <NoticeStatsCard
-                  title={"Ordinance"}
+                  title={"Laws & Acts"}
                   icon={faFileImport}
                   iconBgColor={"#007bff"}
                   total={`15`}
@@ -74,21 +74,21 @@ function LDUDashboard() {
             <div class="mt-2 mb-4">
               <div class="row">
                 <NoticeStatsCard
-                  title={"NA Bills"}
+                  title={"Private Member Bills"}
                   icon={faClipboardQuestion}
                   overall={true}
                   iconBgColor={"#FFA500"}
                   total={`50`}
                 />
                 <NoticeStatsCard
-                  title={"Senate Bills"}
+                  title={"Legislative Bills"}
                   icon={faFileImport}
                   overall={true}
                   iconBgColor={"#007bff"}
                   total={`40`}
                 />
                 <NoticeStatsCard
-                  title={"Ordinance"}
+                  title={"Laws & Acts"}
                   icon={faFileImport}
                   overall={true}
                   iconBgColor={"#007bff"}
@@ -115,21 +115,21 @@ function LDUDashboard() {
               <div class="row">
                 <NoticeStatsCard
                   upcoming={true}
-                  title={"NA Bills"}
+                  title={"Private Members Bills"}
                   icon={faClipboardQuestion}
                   iconBgColor={"#FFA500"}
                   total={`4`}
                 />
                 <NoticeStatsCard
                   upcoming={true}
-                  title={"Senate Bills"}
+                  title={"Legislative Bills"}
                   icon={faFileImport}
                   iconBgColor={"#007bff"}
                   total={`4`}
                 />
                 <NoticeStatsCard
                   upcoming={true}
-                  title={"Ordinance"}
+                  title={"Law & Acts"}
                   icon={faFileImport}
                   iconBgColor={"#007bff"}
                   total={`4`}
