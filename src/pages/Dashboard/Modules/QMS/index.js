@@ -4,7 +4,7 @@ import { Layout } from "../../../../components/Layout";
 import Header from "../../../../components/Header";
 import { useNavigate } from "react-router-dom";
 import NoticeStatsCard from "../../../../components/CustomComponents/NoticeStatsCard";
-import { faClipboardQuestion, faRectangleList } from "@fortawesome/free-solid-svg-icons";
+import { faClipboardQuestion, faHandshake } from "@fortawesome/free-solid-svg-icons";
 import { resolutionStatusCount } from "../../../../api/APIs/Services/Resolution.service";
 import { allquestionsByStatus } from "../../../../api/APIs/Services/Question.service";
 
@@ -96,7 +96,7 @@ function QMSQuestionDashboard() {
                 />
                 <NoticeStatsCard
                   title={"Resolutions"}
-                  icon={faRectangleList}
+                  icon={faHandshake}
                   overall={true}
                   iconBgColor={"#007bff"}
                   total={resolutionCount?.toResolutionCount}
@@ -132,7 +132,7 @@ function QMSQuestionDashboard() {
                 />
                 <NoticeStatsCard
                   title={"Resolutions"}
-                  icon={faRectangleList}
+                  icon={faHandshake}
                   overall={true}
                   iconBgColor={"#007bff"}
                   total={resolutionCount?.inResolutionCount}
