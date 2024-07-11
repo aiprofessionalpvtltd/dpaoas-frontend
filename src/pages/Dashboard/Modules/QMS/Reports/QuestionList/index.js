@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Layout } from "../../../../../../components/Layout";
 import { QMSSideBarItems } from "../../../../../../utils/sideBarItems";
 import Header from "../../../../../../components/Header";
@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import { useFormik } from "formik";
 import DatePicker from "react-datepicker";
-import { delleteQuestionsList, getAllQuesListBySession, getGeneratedQuesList, printQuestionsFromList, saveQuestionList } from "../../../../../../api/APIs/Services/Question.service";
+import { delleteQuestionsList, getAllQuesListBySession, getGeneratedQuesList, printQuestionsFromList, saveQuestionList, updateGenaratedQuestion } from "../../../../../../api/APIs/Services/Question.service";
 import { ToastContainer } from "react-toastify";
 import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
 import { AuthContext } from "../../../../../../api/AuthContext";
@@ -27,46 +27,113 @@ function QMSReportQuestionList() {
   const [sessionId, setSessionId] = useState(null);
   const [include, setInclude] = useState(false);
   const [generatedItem, setGeneratedItem] = useState(false);
-  const pageSize = 10; // Set your desired page size
+  const [isEditing, setIsEditing] = useState(false);
+  const [selectedQuestionList, setSelectedQuestionList] = useState(null);
+  const [generateResData , setGeneratedResData] = useState([])
 
+  const pageSize = 10; // Set your desired page size
+  console.log("selectedQuestionList", selectedQuestionList);
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
     setCurrentPage(page);
   };
   const formik = useFormik({
     initialValues: {
-      category: "",
-      groupNo: "",
-      startListNo: "",
-      listName: "",
-      houseLayDate: "",
+      category: selectedQuestionList ? selectedQuestionList.questionCategory: "",
+      groupId: selectedQuestionList ? selectedQuestionList.fkGroupId : "",
+      startListNo: selectedQuestionList ? selectedQuestionList.startListNo : "",
+      listName: selectedQuestionList ? selectedQuestionList.listName : "",
+      houseLayDate: selectedQuestionList ? moment(selectedQuestionList.houseLayDate).toDate() : "",
     },
     onSubmit: (values) => {
-      console.log(values);
-      generateQuestionsList(values);
+      if (isEditing) {
+        updateQuestionsList(values);
+      } else {
+        generateQuestionsList(values);
+      }
     },
+    enableReinitialize: true,
   });
+
   const navigate = useNavigate();
 
- 
+  const updateQuestionsList = async (values) => {
+    const Data = {
+      // ...values,
+      fkUserId: userData?.fkUserId,
+      fkSessionId: sessionId,
+      fkGroupId: values?.groupId,
+      houseLayDate: moment(values?.houseLayDate).format("YYYY-MM-DD") || "",
+      defferedQuestions: include,
+      id: selectedQuestionList.id,
+      questionCategory: values?.category,
+      listName: values?.listName,
+      startListNo: values?.startListNo
+
+    };
+    console.log("grop id", selectedQuestionList);
+
+    try {
+      const response = await updateGenaratedQuestion(Data);
+      if (response?.success) {
+        formik.resetForm()
+        showSuccessMessage(response?.message);
+        setIsEditing(false);
+        setSelectedQuestionList(null);
+        setGeneratedItem(false);
+        const transformedData = transformLeavesData(response?.data);
+        setResData(transformedData);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  };
+
+
+
   const transformLeavesData = (apiData) => {
     return apiData.map((res, index) => {
       const rowData = {
         SrNo: index,
         id: res?.id, // Show id as the second column
         questionCategory: res?.questionCategory,
-        houseLayDate: res?.houseLayDate,
+        houseLayDate: moment(res?.houseLayDate).format('YYYY-MM-DD'),
         listName: res?.listName,
         defferedQuestions: res?.defferedQuestions ? "true" : "false",
+        startListNo: res?.startListNo,
         questionListStatus: res.questionListStatus ? res?.questionListStatus : "active",
-        internalAttachment: res?.fileLink
+        internalAttachment: res?.fileLink,
+        fkGroupId: res?.fkGroupId
       };
-    
+
       // Remove id key from rowData if it's null or undefined
       if (rowData.id == null) {
         delete rowData.id;
       }
-    
+
+      return rowData;
+    });
+  };
+
+  const transformQuestionsData = (apiData) => {
+    return apiData.map((res, index) => {
+      const rowData = {
+        // SrNo: index,
+        id: res?.id, // Show id as the second column
+        questionCategory: res?.questionCategory,
+        sessionName: res?.sessionName,
+        ministryName: res?.ministryName,
+        questionStatus: res.questionStatus ,
+        englishText: res?.englishText.replace(/(<([^>]+)>)/gi, ""),
+        // urduText: res?.urduText.replace(/(<([^>]+)>)/gi, ""),
+        questionActive: res?.questionActive,
+      };
+
+      // Remove id key from rowData if it's null or undefined
+      if (rowData.id == null) {
+        delete rowData.id;
+      }
+
       return rowData;
     });
   };
@@ -89,8 +156,10 @@ function QMSReportQuestionList() {
         showSuccessMessage(response?.message);
         // setCount(response?.count);
         const transformedData = transformLeavesData(response.data?.questionList?.questionList);
+        const transformedQuestionData = transformQuestionsData(response.data?.questionList?.questions)
         setGeneratedItem(true);
         setGeneratedData(response?.data?.questionList);
+        setGeneratedResData(transformedQuestionData)
         setResData(transformedData);
       }
     } catch (error) {
@@ -106,11 +175,15 @@ function QMSReportQuestionList() {
   const getQuestionsListBySessionApi = async (sessionId) => {
     try {
       const response = await getAllQuesListBySession(sessionId, currentPage, pageSize);
-      if (response?.success) {  
+      if (response?.success) {
         setCount(response?.count);
         setGeneratedItem(false);
         const transformedData = transformLeavesData(response.data?.questionList);
         setResData(transformedData)
+        if(response?.data?.questionList?.length > 0){
+          const StartNo = response?.data?.questionList[response?.data?.questionList?.length - 1]?.startListNo || 0 ;
+          formik.setFieldValue("startListNo", StartNo+1);
+        }
       }
     } catch (error) {
       console.log(error?.response?.data?.message);
@@ -119,33 +192,35 @@ function QMSReportQuestionList() {
 
   const handleSaveList = async () => {
     const questionIds = generatedData?.questions?.map(question => ({ id: question.id }));
-  
+    console.log("Question", questionIds);
+
     const requestData = {
-     
-        fkSessionId: sessionId,
-        questionCategory: formik.values.category,
-        fkGroupId: formik.values.groupNo,
-        startListNo: formik.values.startListNo,
-        listName: formik.values.listName,
-        houseLayDate: moment(formik.values.houseLayDate).format("YYYY-MM-DD"),
-        defferedQuestions: include, // Use formik values for include
-        fkUserId: userData.fkUserId,
-        questionIds: questionIds
-      
+
+      fkSessionId: sessionId,
+      questionCategory: formik.values.category,
+      fkGroupId: formik.values.groupNo,
+      startListNo: formik.values?.startListNo,
+      listName: formik.values?.listName,
+      houseLayDate: moment(formik.values?.houseLayDate).format("YYYY-MM-DD"),
+      defferedQuestions: include, // Use formik values for include
+      fkUserId: userData.fkUserId,
+      questionIds: questionIds
+
     };
-  
+
     try {
       const response = await saveQuestionList(requestData);
       if (response?.success) {
+        formik.resetForm()
         setGeneratedItem(false);
         showSuccessMessage(response?.message);
         const transformedData = transformLeavesData(response?.data);
         setResData(transformedData)
       }
     } catch (error) {
-      showErrorMessage(error?.response?.data?.message);
+      showErrorMessage(JSON.stringify(error?.response?.data?.message));
     }
-  };  
+  };
 
   // const printQuestions = async (data) => {
   //   try {
@@ -163,8 +238,8 @@ function QMSReportQuestionList() {
     try {
       const response = await delleteQuestionsList(data);
       if (response?.success) {
-       showSuccessMessage(response.message);
-       getQuestionsListBySessionApi(sessionId);
+        showSuccessMessage(response.message);
+        getQuestionsListBySessionApi(sessionId);
       }
     } catch (error) {
       showErrorMessage(error.response?.data?.message);
@@ -175,14 +250,18 @@ function QMSReportQuestionList() {
     setInclude(!include);
   }
 
-  const printQuestion =(url) => {
-    if(url){
+  const printQuestion = (url) => {
+    if (url) {
       const img = `${imagesUrl}${url}`;
       window.open(img, "_blank");
-    }else{
+    } else {
       showSuccessMessage("No Attachment Available")
     }
   }
+  const handleEdit = (item) => {
+    setSelectedQuestionList(item);
+    setIsEditing(true);
+  };
 
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
@@ -251,10 +330,12 @@ function QMSReportQuestionList() {
                         id="category"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
+                        value={formik.values.category}
                       >
-                        <option>Starred</option>
-                        <option>Un-Starred</option>
-                        <option>Short Notice</option>
+                        <option value={""} selected hidden disabled>Select</option>
+                        <option value={"Starred"}>Starred</option>
+                        <option value={"Un-Starred"}>Un-Starred</option>
+                        <option value={"Short Notice"}>Short Notice</option>
                       </select>
                     </div>
                   </div>
@@ -264,6 +345,7 @@ function QMSReportQuestionList() {
                       <input
                         class="form-control"
                         id="groupNo"
+                        value={formik.values.groupNo}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         type="text"
@@ -276,6 +358,7 @@ function QMSReportQuestionList() {
                       <input
                         class="form-control"
                         id="startListNo"
+                        value={formik.values.startListNo}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         type="text"
@@ -290,6 +373,7 @@ function QMSReportQuestionList() {
                       <input
                         class="form-control"
                         id="listName"
+                        value={formik.values.listName}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         type="text"
@@ -338,13 +422,22 @@ function QMSReportQuestionList() {
                 </div>
                 <div class="row mb-3">
                   <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                    <button class="btn btn-primary" type="submit">
-                      Generate
-                    </button>
-                    <button class="btn btn-primary" type="button" onClick={handleSaveList}>
-                      Save
-                    </button>
+                    {!isEditing ? (
+                      <>
+                        <button class="btn btn-primary" type="submit">
+                          Generate
+                        </button>
+                        <button class="btn btn-primary" type="button" onClick={handleSaveList}>
+                          Save
+                        </button>
+                      </>
+                    ) : (
+                      <button class="btn btn-primary" type="submit">
+                        Update
+                      </button>
+                    )}
                   </div>
+
                 </div>
               </form>
               <CustomTable
@@ -352,11 +445,11 @@ function QMSReportQuestionList() {
                 hideBtn={true}
                 hidebtn1={true}
                 data={resData}
-                tableTitle="Questions"
+                tableTitle="Questions List"
                 handlePageChange={handlePageChange}
                 currentPage={currentPage}
                 pageSize={pageSize}
-                showEditIcon={true}
+                handleEdit={(item) => handleEdit(item)}
                 handleDelete={(item) => deleteList(item.id)}
                 showPrint={true}
                 handlePrint={(item) => printQuestion(item.internalAttachment)}
@@ -364,7 +457,22 @@ function QMSReportQuestionList() {
                 showListIcon={true}
                 handleList={(item) => navigate("/qms/reports/question-list/supplementary", { state: { listId: item?.id } })}
                 totalCount={count}
-             
+
+              />
+            </div>
+
+            <div>
+            <CustomTable
+                block={false}
+                hideBtn={true}
+                hidebtn1={true}
+                data={generateResData}
+                tableTitle="Questions Detail" 
+                currentPage={currentPage}
+                pageSize={pageSize}
+                ActionHide={true}
+                showListIcon={true}
+                totalCount={count}
               />
             </div>
           </div>
