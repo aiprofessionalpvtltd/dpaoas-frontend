@@ -719,3 +719,13 @@ export const allquestionsByStatus = async (data) => {
     throw error;
   }
 };
+
+export const updateGenaratedQuestion = async(data)=>{
+  try {
+    const response = await axiosClientMMS.put(`/questionList/editQuestionList`,data)
+    return response?.data
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+}

@@ -32,7 +32,6 @@ function QMSReportQuestionList() {
   const [generateResData , setGeneratedResData] = useState([])
 
   const pageSize = 10; // Set your desired page size
-  console.log("selectedQuestionList", selectedQuestionList);
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
     setCurrentPage(page);
@@ -71,7 +70,6 @@ function QMSReportQuestionList() {
       startListNo: values?.startListNo
 
     };
-    console.log("grop id", selectedQuestionList);
 
     try {
       const response = await updateGenaratedQuestion(Data);
@@ -192,7 +190,6 @@ function QMSReportQuestionList() {
 
   const handleSaveList = async () => {
     const questionIds = generatedData?.questions?.map(question => ({ id: question.id }));
-    console.log("Question", questionIds);
 
     const requestData = {
 
