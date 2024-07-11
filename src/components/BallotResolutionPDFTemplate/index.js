@@ -50,7 +50,7 @@ function BallotResolutionPdfTemplate({data, children}) {
                <td align="left" style={{ padding: '15px', verticalAlign: 'top' }}>{`${index + 1}`}</td>
                <td align="left" style={{ padding: '15px', verticalAlign: 'top' }}>{item?.resolutionMoversAssociation[0]?.memberAssociation?.memberName}</td>
                <td align="left" style={{ padding: '15px' }}>
-                 <p style={{ margin: '0', textAlign: 'justify' }}>
+                 <p style={{ margin: '0', textAlign: 'justify', lineHeight: '26px' }}>
                    {item?.englishText?.replace(/(<([^>]+)>)/gi, "")}
                  </p>
                </td>
@@ -66,8 +66,8 @@ function BallotResolutionPdfTemplate({data, children}) {
       <p style={{ fontWeight: 'bold', textDecoration: 'underline' }}>
         Copy forwarded for information and necessary action to:-
       </p>
-      <ol>
-        <li style={{ lineHeight: '22px', marginBottom: '7px' }}>
+      <ol style={{ listStylePosition: 'inside' }}> 
+        <li style={{ lineHeight: '26px', marginLeft: '10px',paddingBottom:"15px" }}>
           Secretaries Ministry of Federal Education and Professional Training and Ministry of National Health
           Services, Regulations and Coordination with a request to depute an officer not below the rank of Joint
           Secretary of the Ministry/Division dealing with the subject matter of these Resolution to attend the
@@ -75,31 +75,31 @@ function BallotResolutionPdfTemplate({data, children}) {
           Resolution, relating to their Ministry/Division, to the office of the Leader of the House in the Senate
           before commencement of the Session.
         </li>
-        <li style={{ lineHeight: '22px', marginBottom: '7px' }}>
+        <li style={{ lineHeight: '22px', marginLeft: '10px',paddingBottom:"15px" }}>
           The Director Staff, Leader of the House, Senate Secretariat, Islamabad.
         </li>
-        <li style={{ lineHeight: '22px', marginBottom: '7px' }}>
+        <li style={{ lineHeight: '22px', marginLeft: '10px',paddingBottom:"15px" }}>
           The Director Staff to the Secretary Senate, Senate Secretariat, Islamabad.
         </li>
-        <li style={{ lineHeight: '22px', marginBottom: '7px' }}>
+        <li style={{ lineHeight: '22px', marginLeft: '10px',paddingBottom:"15px" }}>
           The Joint Secretary (Legis), Senate Secretariat, Islamabad.
         </li>
-        <li style={{ lineHeight: '22px', marginBottom: '7px' }}>
+        <li style={{ lineHeight: '22px', marginLeft: '10px',paddingBottom:"15px" }}>
           The Section Officer (Council), Ministry of Federal Education and Professional Training, Islamabad.
         </li>
-        <li style={{ lineHeight: '22px', marginBottom: '7px' }}>
+        <li style={{ lineHeight: '22px', marginLeft: '10px',paddingBottom:"15px" }}>
           The Section Officer (Council), Ministry of National Health Services, Regulations and Coordination,
           Islamabad.
         </li>
-        <li style={{ lineHeight: '22px', marginBottom: '7px' }}>
+        <li style={{ lineHeight: '22px', marginLeft: '10px',paddingBottom:"15px" }}>
           The Assistant Secretary (Council), Ministry of Parliamentary Affairs, Islamabad.
         </li>
-        <li style={{ lineHeight: '22px', marginBottom: '7px' }}>
+        <li style={{ lineHeight: '22px', marginLeft: '10px',paddingBottom:"15px" }}>
           Personal Secretary to the Minister for Parliamentary Affairs / Minister In charge of the Prime Minister’s
           Office Public Affairs and Grievances Wing, ”R” Block Pak-Secretariat, Islamabad.
         </li>
-        <li style={{ lineHeight: '22px', marginBottom: '7px' }}>The Legislation Branch, Senate Secretariat, Islamabad.</li>
-        <li style={{ lineHeight: '22px', marginBottom: '7px' }}>
+        <li style={{ lineHeight: '22px', marginLeft: '10px',paddingBottom:"15px" }}>The Legislation Branch, Senate Secretariat, Islamabad.</li>
+        <li style={{ lineHeight: '22px', marginLeft: '10px',paddingBottom:"15px" }}>
           Director to (IT), Senate Secretariat, Islamabad. (With a request for online transmission to all Members of the
           Senate)
         </li>

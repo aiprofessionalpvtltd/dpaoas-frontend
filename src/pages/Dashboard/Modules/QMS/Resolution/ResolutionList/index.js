@@ -204,7 +204,7 @@ const handleBallotPrint = () => {
     const element = document.getElementById('template-container');
     const opt = {
       // pending:2,
-      margin: 0.1,
+      margin: 0.2,
       filename: 'ResolutionBallot.pdf',
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas: { scale: 3 },
