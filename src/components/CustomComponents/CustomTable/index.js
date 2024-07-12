@@ -14,6 +14,7 @@ import {
   faListCheck,
   faPaperPlane,
   faFile,
+  faBacon,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
@@ -74,6 +75,8 @@ function CustomTable({
   showSent,
   showDocs,
   hendleDocs,
+  showBallot,
+  hendleBallot
 }) {
   const keys = data?.length > 0 ? Object.keys(data[0]) : [];
   const filteredKeys = keys?.filter((key) => {
@@ -116,6 +119,8 @@ function CustomTable({
   const restoreTooltip = <Tooltip id="restore-tooltip">Recover</Tooltip>;
   const listTooltip = <Tooltip id="list-tooltip">List</Tooltip>;
   const attachDocs = <Tooltip id="docs-tooltip">Attach Docs</Tooltip>;
+  const ballotList = <Tooltip id="docs-tooltip">Ballot</Tooltip>;
+
 
   const renderPagination = () => {
     if (totalPages <= 1) {
@@ -548,6 +553,17 @@ function CustomTable({
                               </button>
                             </OverlayTrigger>
                           )}
+                          {showBallot && (
+                            <OverlayTrigger placement="top" overlay={ballotList}>
+                              <button
+                                onClick={() => hendleBallot(item)}
+                                className="btn-xs black circle-btn"
+                                data-id={item.id}
+                              >
+                                <FontAwesomeIcon icon={faBacon} />
+                              </button>
+                            </OverlayTrigger>
+                          )}
                         </td>
                       )}
                     </tr>
@@ -769,6 +785,17 @@ function CustomTable({
                                 data-id={item.id}
                               >
                                 <FontAwesomeIcon icon={faFile} />
+                              </button>
+                            </OverlayTrigger>
+                          )}
+                           {showBallot && (
+                            <OverlayTrigger placement="top" overlay={ballotList}>
+                              <button
+                                onClick={() => hendleBallot(item)}
+                                className="btn-xs black circle-btn"
+                                data-id={item.id}
+                              >
+                                <FontAwesomeIcon icon={faBacon} />
                               </button>
                             </OverlayTrigger>
                           )}
