@@ -2,16 +2,13 @@ import React, { useContext, useEffect, useState } from "react";
 import { Layout } from "../../../../../../components/Layout";
 import { QMSSideBarItems } from "../../../../../../utils/sideBarItems";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
-import { useNavigate } from "react-router-dom";
 import Header from "../../../../../../components/Header";
 import {
-  DeleteResolution,
   UpdateResolutionList,
+  allResolutionList,
   createNewResolutionList,
+  deleteResolutionListByID,
   generateResolutionListData,
-  getAllResolutions,
-  getBallotRecord,
-  getResolutionBYID,
 } from "../../../../../../api/APIs/Services/Resolution.service";
 import {
   showErrorMessage,
@@ -26,26 +23,16 @@ import moment from "moment";
 import { useFormik } from "formik";
 import { DeleteModal } from "../../../../../../components/DeleteModal";
 import { Button, Modal } from "react-bootstrap";
-import html2pdf from 'html2pdf.js';
-import BallotResolutionPdfTemplate from "../../../../../../components/BallotResolutionPDFTemplate";
+import { useNavigate } from "react-router-dom";
 
 
 function QMSResolutionList() {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const { sessions } = useContext(AuthContext);
-
   const [currentPage, setCurrentPage] = useState(0);
-  const [isChecked, setIsChecked] = useState([]);
-  // const [count, setCount] = useState(null);
-  const [resolutionListData, setResolutionListData] = useState([]);
-  const [ministryData, setMinistryData] = useState([]);
+  const [count, setCount] = useState(null);
+  const [resolutionListsData, setResolutionListsData] = useState([]);
   const[showEdit, setShowEdit] = useState(false)
-
-  const [ballotData, setBallotData] = useState([
-    // {id:"1",
-    // moverName:"Muhammad Saqib Khan",
-    // detail:"Nothing the Prevalence of th practice of substandard research publishing by university teachers in order to fulfill promotion criteria by means of predatory and clone research journals that offer online publishing of substandard research papers."},
-  ])
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -82,28 +69,17 @@ function QMSResolutionList() {
 
   const trenformNewResolution = (apiData) => {
     return apiData.map((item, index) => ({
-      SR: `${index + 1}`,
+      // SR: `${index + 1}`,
       id:item?.id,
       internalId: item?.sessionName?.id,
       SessionName: item?.sessionName?.sessionName,
       listName: item?.listName,
       listDate: moment(item?.listDate).format("YYYY/MM/DD"),
+      Status:item?.resolutionListStatus
     }));
   };
 
-  const transfrerResolutionDetail = (apiData) => {
-    return apiData.map((item, index) => ({
-      internalId: item.id,
-      id: item.id,
-      Date: moment(item?.createdAt).format("YYYY/MM/DD"),
-      NameOfTheMover: item?.memberNames
-        .map((mover) => mover.memberName)
-        .join(", "),
-      ContentsOfTheMotion: item?.englishText.replace(/(<([^>]+)>)/gi, ""),
-      Status: item?.resolutionStatus?.resolutionStatus,
-      // motionMinistries: item?.motionMinistries.length > 0 ? item?.motionMinistries[0]?.ministries?.ministryName:"----",
-    }));
-  };
+ 
 
   const generateResolutionListApi = async (values) => {
     const data = {
@@ -117,15 +93,8 @@ function QMSResolutionList() {
       if (response?.success) {
         setShowEdit(true)
         showSuccessMessage(response?.message);
-        
-
         const transformedData = trenformNewResolution(response?.data);
-        
-        const ministryData = transfrerResolutionDetail(
-          response?.data[0]?.resolutions
-        );
-        setResolutionListData(transformedData);
-        setMinistryData(ministryData);
+        setResolutionListsData(transformedData);
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.error);
@@ -144,14 +113,7 @@ function QMSResolutionList() {
       if (response?.success) {
         showSuccessMessage(response?.message);
         setShowEdit(false)
-
-        const transformedData = trenformNewResolution(response?.data);
-        console.log("-------------------", transformedData);
-        const ministryData = transfrerResolutionDetail(
-          response?.data[0]?.resolutions
-        );
-        setResolutionListData(transformedData);
-        setMinistryData(ministryData);
+        allResolutionListApi()
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.error);
@@ -170,15 +132,8 @@ function QMSResolutionList() {
       const response = await UpdateResolutionList(data); // Add await here
       if (response?.success) {
         showSuccessMessage(response?.message);
-        setShowEdit(false)
-
-        const transformedData = trenformNewResolution(response?.data);
-        
-        const ministryData = transfrerResolutionDetail(
-          response?.data[0]?.resolutions
-        );
-        setResolutionListData(transformedData);
-        setMinistryData(ministryData);
+        setShowEdit(false)   
+        allResolutionListApi()     
         toggleModal()
       }
     } catch (error) {
@@ -186,34 +141,37 @@ function QMSResolutionList() {
     }
   };
   
-
-  const hendleBallot = async () => {
-    // const resolutionIds = {isChecked}
+  const allResolutionListApi = async () => {
     try {
-      const response = await getBallotRecord(isChecked); // Add await here
+      const response = await allResolutionList(currentPage,pageSize); // Add await here
       if (response?.success) {
-        setBallotData(response?.data?.resolutions)
         showSuccessMessage(response?.message);
+        setShowEdit(false)
+        setCount(response?.data?.count)
+        const transformedData = trenformNewResolution(response?.data?.resolutionList);
+        setResolutionListsData(transformedData);
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.error);
     }
   };
 
-const handleBallotPrint = () => {
-    const element = document.getElementById('template-container');
-    const opt = {
-      // pending:2,
-      margin: 0.2,
-      filename: 'ResolutionBallot.pdf',
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 3 },
-      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-    };
-    
-    html2pdf().set(opt).from(element).save();
+  const hendleDeleteApi = async (id) => {
+    try {
+      const response = await deleteResolutionListByID(id);
+      if (response.success) {
+        showSuccessMessage(response?.message);
+        allResolutionListApi()
+      }
+    } catch (error) {
+      showErrorMessage(error?.response.data.message);
+    }
   };
+ 
 
+  useEffect(() => {
+    allResolutionListApi()
+  },[currentPage])
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <ToastContainer />
@@ -429,18 +387,19 @@ const handleBallotPrint = () => {
                   block={false}
                   hideBtn={true}
                   hidebtn1={true}
-                  data={resolutionListData}
+                  data={resolutionListsData}
                   tableTitle="Resolution List"
                   // headerShown={true}
-                  // handleDelete={(item) => alert(item.id)}
-                  // handleEdit={(item) => handleEdit(item.id)}
+                  handleDelete={(item) => hendleDeleteApi(item.id)}
                   headertitlebgColor={"#666"}
                   headertitletextColor={"#FFF"}
                   handlePageChange={handlePageChange}
                   currentPage={currentPage}
+                  showBallot={true}
+                  hendleBallot={(item) => navigate(`/qms/rsolution/list/ballot/${item.id}`)}
                   pageSize={pageSize}
-                  hideDeleteIcon={true}
                   showEditIcon={showEdit}
+                  totalCount={count}
                   handleEdit={(item) => {
                     setEditModalValue({
                       sessionNumber: item?.internalId ? item?.internalId : "",
@@ -454,51 +413,7 @@ const handleBallotPrint = () => {
                   }}
                 />
               </div>
-              <CustomTable
-                hidebtn1={true}
-                data={ministryData}
-                tableTitle="Resolution Detail"
-                // headerShown={true}
-                hideBtn={true}
-                // handleDelete={(item) => alert(item.id)}
-                // handleEdit={(item) =>
-                //   navigate("/mms/motion/detail", { state: item })
-                // }
-                headertitlebgColor={"#666"}
-                headertitletextColor={"#FFF"}
-                handlePageChange={handlePageChange}
-                currentPage={currentPage}
-                pageSize={pageSize}
-                hideEditIcon={true}
-                ActionHide={true}
-                isChecked={isChecked}
-                setIsChecked={setIsChecked}
-                isCheckbox={true}
-              />
             </div>
-            <BallotResolutionPdfTemplate data={ballotData}>
-            <div class="row">
-                  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                    <button
-                      class="btn btn-primary"
-                      type="button"
-                      onClick={hendleBallot}
-                      disabled={isChecked.length === 0 ? true : false}
-                    >
-                      Request To Ballot
-                    </button>
-                    <button
-                      class="btn btn-primary"
-                      type="button"
-                      onClick={handleBallotPrint}
-                      disabled={ballotData.length === 0 ? true : false}
-                    >
-                      Print pdf
-                    </button>
-                  </div>
-                </div>
-            </BallotResolutionPdfTemplate>
-           
           </div>
         </div>
       </div>
