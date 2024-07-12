@@ -58,7 +58,7 @@ function BallotResolutionPdfTemplate({data, children}) {
             ))}
         </tbody>
       </table>
-      <p style={{ float: 'right', textAlign: 'center', fontWeight: 'bold', fontSize: '22px' }}>
+      <p style={{ float: 'right', textAlign: 'center', fontWeight: 'bold', fontSize: '18px',lineHeight:"26px", }}>
         Syed Hasnain Haider<br />
         Secretary
       </p>
