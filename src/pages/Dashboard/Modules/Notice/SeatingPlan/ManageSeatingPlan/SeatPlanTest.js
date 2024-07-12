@@ -23,18 +23,18 @@ const customStyles = {
 const Seat = ({ item, onDrop, side, onClick }) => {
   const getColorByGovernmentType = (governmentType) => {
     switch (governmentType) {
-      case 'Government':
-        return 'green';
-      case 'Opposition':
-        return 'red';
-      case 'Independent':
-        return 'blue';
-      case 'Request':
-        return 'gray';
-      case 'Minister':
-        return 'orange';
+      case "Government":
+        return "green";
+      case "Opposition":
+        return "red";
+      case "Independent":
+        return "blue";
+      case "Request":
+        return "gray";
+      case "Minister":
+        return "orange";
       default:
-        return 'white';
+        return "white";
     }
   };
 
@@ -64,7 +64,7 @@ const Seat = ({ item, onDrop, side, onClick }) => {
           borderRadius: "5px",
           border: "1px solid",
           background: getColorByGovernmentType(item?.member?.governmentType),
-          cursor: "pointer"
+          cursor: "pointer",
         }}
       >
         <h2>{item?.member?.memberName || ""}</h2>
@@ -131,40 +131,41 @@ function ManageSeatingPlan() {
   };
 
   const moveSeat = async (fromItem, toItem) => {
-    // if(toItem?.member) {
-        try {
-            const swapData = {
-                seatNumber1: fromItem.seatNumber,
-                seatNumber2: toItem.seatNumber
-            }
-            const response = await swapSeats(swapData);
-            if (response?.success) {
-              // Update UI with new seat data after swap
-              getAllSeatsApi();
-              // Show alert for seat swap
-              showSuccessMessage(`Swapped seats: ${fromItem.member?.memberName} <-> ${toItem.member?.memberName}`);
-            }
-          } catch (error) {
-            showErrorMessage(error?.response?.data?.message || "Error swapping seats.");
-          }
-    // } else {
-        // // Place fromItem member to toItem member
-        // try {
-        //     const placeData = {
-        //         seatNumber1: fromItem,
-        //         seatNumber2: toItem
-        //     }
-        //     const response = await placeSeat(placeData);
-        //     if (response?.success) {
-        //         // Update UI to reflect the placed member in toItem
-        //         getAllSeatsApi();
-        //         // Show alert for member placement
-        //         showSuccessMessage(`Placed member: ${fromItem.member?.memberName} to seat ${toItem.seatNumber}`);
-        //     }
-        // } catch (error) {
-        //     showErrorMessage(error?.response?.data?.message || "Error placing member.");
-        // }
-    // }
+    console.log("Item", fromItem, toItem);
+    if (toItem?.member) {
+      try {
+        const swapData = {
+          seatNumber1: fromItem.seatNumber,
+          seatNumber2: toItem.seatNumber,
+        };
+        const response = await swapSeats(swapData);
+        if (response?.success) {
+          // Update UI with new seat data after swap
+          getAllSeatsApi();
+          // Show alert for seat swap
+          showSuccessMessage(`Swapped seats: ${fromItem.member?.memberName} <-> ${toItem.member?.memberName}`);
+        }
+      } catch (error) {
+        showErrorMessage(error?.response?.data?.message || "Error swapping seats.");
+      }
+    } else {
+      // Place fromItem member to toItem member
+      try {
+        const placeData = {
+          seatNumber1: fromItem,
+          seatNumber2: toItem,
+        };
+        const response = await placeSeat(placeData);
+        if (response?.success) {
+          // Update UI to reflect the placed member in toItem
+          getAllSeatsApi();
+          // Show alert for member placement
+          showSuccessMessage(`Placed member: ${fromItem.member?.memberName} to seat ${toItem.seatNumber}`);
+        }
+      } catch (error) {
+        showErrorMessage(error?.response?.data?.message || "Error placing member.");
+      }
+    }
   };
 
   return (
@@ -265,12 +266,12 @@ function ManageSeatingPlan() {
       >
         <div className="dashboard-content">
           <div className="container-fluid">
-            <div className="sitting-plan-main" style={{ marginTop: '60px' }}>
+            <div className="sitting-plan-main" style={{ marginTop: "60px" }}>
               <div className="sitting-row">
                 <div>
                   {["F", "E", "D", "C", "B", "A"].map((rowLetter) => (
                     <div className="row" key={rowLetter}>
-                      <div className="col" style={{ marginBottom: "10px", rotate: '-10deg' }}>
+                      <div className="col" style={{ marginBottom: "10px", rotate: "-10deg" }}>
                         {seats &&
                           seats
                             .filter((item) => item.rowNumber === rowLetter)
@@ -287,7 +288,7 @@ function ManageSeatingPlan() {
                       <div className="col-1 text-center">
                         <strong style={{ marginTop: "35px", display: "block" }}>{rowLetter}</strong>
                       </div>
-                      <div className="col" style={{ rotate: '10deg' }}>
+                      <div className="col" style={{ rotate: "10deg" }}>
                         {govseat &&
                           govseat
                             .filter((item) => item.rowNumber === rowLetter)
