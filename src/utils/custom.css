@@ -3441,7 +3441,7 @@ textarea {
 } */
 .sitting-card-left h2 {
   font-size: 18px;
-  margin-top: 35px;
+  margin-top: 20px;
   color: white;
   position: absolute;
   top: 24px;
@@ -3450,7 +3450,7 @@ textarea {
 }
 .sitting-card-right h2 {
   font-size: 18px;
-  margin-top: 35px;
+  margin-top: 20px;
   color: white;
 }
 .sitting-plan-main {
@@ -3538,7 +3538,7 @@ textarea {
 }
 .sitting-card-right h2 {
   font-size: 14px;
-  margin-top: 35px;
+  margin-top: 20px;
   color: white;
   position: absolute;
   top: 25px;
