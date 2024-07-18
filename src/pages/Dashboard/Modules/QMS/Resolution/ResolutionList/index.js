@@ -279,7 +279,14 @@ function QMSResolutionList() {
             class="card-header red-bg"
             style={{ background: "#14ae5c !important" }}
           >
-            <h1>Resolution List</h1>
+            <h1 style={{paddingTop:"10px"}}>Resolution List</h1>
+            <button
+                      style={{ background: "#007236", border: "#1b84ff solid 1px" }}
+                      className="btn btn-primary float-end ms-2"
+                      type="button"
+
+                      onClick={{}}
+                    >Generate PDF Template</button>
           </div>
           <div class="card-body">
             <div class="container-fluid">
