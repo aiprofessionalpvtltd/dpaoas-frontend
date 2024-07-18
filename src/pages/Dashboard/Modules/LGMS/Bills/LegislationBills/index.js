@@ -10,10 +10,7 @@ import {
 import { ToastContainer } from "react-toastify";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import { useNavigate } from "react-router-dom";
-import {
-  showErrorMessage,
-  showSuccessMessage,
-} from "../../../../../../utils/ToastAlert";
+import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
 import moment from "moment";
 const AllLegislationBill = () => {
   const navigate = useNavigate();
@@ -28,17 +25,23 @@ const AllLegislationBill = () => {
     setCurrentPage(page);
   };
   const transformAllBillData = (apiData) => {
-    console.log("Api Data", apiData)
+    console.log("Api Data", apiData);
     return apiData?.map((item) => ({
       id: item.id,
-      billTitle:item?.billTitle,
-      dateOfIntroductionInSenate: item?.introducedInHouses?.introducedInHouseDate ? moment(item?.introducedInHouses?.introducedInHouseDate).format("DD-MM-YYYY"):"---",
-      dateOfPresentationReport: item?.introducedInHouses?.reportPresentationDate ? moment(item?.introducedInHouses?.reportPresentationDate).format("DD-MM-YYYY"):"---",
-      dateOfTransmission: item?.dateOfTransmissionToNA ? moment(item?.dateOfTransmissionToNA).format("DD-MM-YYYY"):"---",
+      billTitle: item?.billTitle,
+      dateOfIntroductionInSenate: item?.introducedInHouses?.introducedInHouseDate
+        ? moment(item?.introducedInHouses?.introducedInHouseDate).format("DD-MM-YYYY")
+        : "---",
+      dateOfPresentationReport: item?.introducedInHouses?.reportPresentationDate
+        ? moment(item?.introducedInHouses?.reportPresentationDate).format("DD-MM-YYYY")
+        : "---",
+      dateOfTransmission: item?.dateOfTransmissionToNA
+        ? moment(item?.dateOfTransmissionToNA).format("DD-MM-YYYY")
+        : "---",
       remarks: item?.billRemarks,
-      movers: item?.senateBillMnaMovers 
-      ? item?.senateBillMnaMovers.map((mover) => mover?.mna?.mnaName).join(", ")
-      : "---",
+      movers: item?.senateBillMnaMovers
+        ? item?.senateBillMnaMovers.map((mover) => mover?.mna?.mnaName).join(", ")
+        : "---",
       // parliamentaryYear: item?.parliamentaryYears?.parliamentaryTenure,
       // session: item?.sessions?.sessionName,
       // billType: item.billType,
@@ -58,11 +61,7 @@ const AllLegislationBill = () => {
     async (page) => {
       let searchParams = {};
 
-      const response = await getAllLegislationBills(
-        page,
-        pageSize,
-        searchParams
-      );
+      const response = await getAllLegislationBills(page, pageSize, searchParams);
       if (response?.success) {
         setCount(response?.data?.count);
         const ALL_BILLS_DATA = response?.data?.senateBills;
@@ -80,7 +79,7 @@ const AllLegislationBill = () => {
       getBills(currentPage);
     }
   }, [currentPage, selectedbillFrom, billCategory]);
-  
+
   // Handle Search
   const handleSearch = useCallback(
     async (billFrom, billCategory) => {
@@ -104,12 +103,10 @@ const AllLegislationBill = () => {
       try {
         const response = await mainSearchApi(currentPage, pageSize, data);
         if (response?.success) {
-          const transformedData = await transformAllBillData(
-            response?.data?.senateBills
-          );
+          const transformedData = await transformAllBillData(response?.data?.senateBills);
           setCount(response?.data?.count);
           setLegislationBillData(transformedData);
-          showSuccessMessage(response?.message);
+          // showSuccessMessage(response?.message);
         }
       } catch (error) {
         showErrorMessage(error?.response?.message);
@@ -138,14 +135,21 @@ const AllLegislationBill = () => {
     setBillCategory("");
     getBills(currentPage, pageSize);
   };
-  //Handle Add Senate Bills
-  const handleAddSenateBills = () => {
-    navigate("/lgms/dashboard/bills/senate-bills");
+
+  const handlePrivateMemberBill = () => {
+    navigate("/lgms/dashboard/bills/selectbillfrom");
   };
-  //Handle Add NA Bills
-  const handleAddNaBills = () => {
-    navigate("/lgms/dashboard/bills/NA-bills");
+  const handleGovernmentBill = () => {
+    navigate("/lgms/dashboard/bills/selectbillfrom");
   };
+  // //Handle Add Senate Bills
+  // const handleAddSenateBills = () => {
+  //   navigate("/lgms/dashboard/bills/senate-bills");
+  // };
+  // //Handle Add NA Bills
+  // const handleAddNaBills = () => {
+  //   navigate("/lgms/dashboard/bills/NA-bills");
+  // };
   //Handle Edit Senate Bills
   const handleEditSenateBill = (id) => {
     navigate("/lgms/dashboard/bills/edit/senate-bills", { state: id });
@@ -169,11 +173,7 @@ const AllLegislationBill = () => {
   };
 
   return (
-    <Layout
-      module={true}
-      sidebarItems={LegislationSideBarItems}
-      centerlogohide={true}
-    >
+    <Layout module={true} sidebarItems={LegislationSideBarItems} centerlogohide={true}>
       <ToastContainer />
       <Header
         dashboardLink={"/lgms/dashboard"}
@@ -183,23 +183,9 @@ const AllLegislationBill = () => {
       <div class="container-fluid">
         <div className="row">
           <div className="col-3 ms-2 mt-4 mb-4">
-            <label htmlFor="SelectBillFrom">Select Bill From:</label>
-            <select
-              className="form-select col-2"
-              value={selectedbillFrom || ""}
-              onChange={handleBillFromChange}
-              id="billFrom"
-              name="billFrom"
-            >
-              <option value="" disabled hidden>
-                Select
-              </option>
-              <option value="From Senate">Introduced In Senate</option>
-              <option value="From NA">Received From NA</option>
-            </select>
-          </div>
-          <div className="col-3 ms-2 mt-4 mb-4">
-            <label htmlFor="SelectBillFrom">Bill Category</label>
+            <label htmlFor="SelectBillFrom" className="form-label">
+              Bill Category
+            </label>
             <select
               className="form-select col-2"
               value={billCategory || ""}
@@ -214,6 +200,25 @@ const AllLegislationBill = () => {
               <option value="Private Member Bill">Private Member Bill</option>
             </select>
           </div>
+          <div className="col-3 ms-2 mt-4 mb-4">
+            <label htmlFor="SelectBillFrom" className="form-label">
+              Select Bill From:
+            </label>
+            <select
+              className="form-select col-2"
+              value={selectedbillFrom || ""}
+              onChange={handleBillFromChange}
+              id="billFrom"
+              name="billFrom"
+            >
+              <option value="" disabled hidden>
+                Select
+              </option>
+              <option value="From Senate">Introduced In Senate</option>
+              <option value="From NA">Received From NA</option>
+            </select>
+          </div>
+
           <div className="col-2 ms-2 mt-5 ">
             <button className="btn btn-primary" onClick={handleClick}>
               Clear Filter
@@ -221,7 +226,7 @@ const AllLegislationBill = () => {
           </div>
         </div>
 
-        <div>
+        {/* <div>
           <CustomTable
             hidebtn1={false}
             hideBtn={false}
@@ -242,9 +247,34 @@ const AllLegislationBill = () => {
             pageSize={pageSize}
             totalCount={count}
             handleEdit={(item) => {
-              item?.billFrom === "From Senate"
-                ? handleEditSenateBill(item?.id)
-                : handleEditNABill(item?.id);
+              item?.billFrom === "From Senate" ? handleEditSenateBill(item?.id) : handleEditNABill(item?.id);
+            }}
+            // handleEdit={(item)=>{handleEditSenateBill(item?.id)}}
+            handleDelete={(item) => handleDeleteLegislationBill(item?.id)}
+          />
+        </div> */}
+        <div>
+          <CustomTable
+            hidebtn1={false}
+            hideBtn={false}
+            addBtnText2="Private Member Bill"
+            addBtnText={"Government Bill"}
+            handleAdd={handlePrivateMemberBill}
+            handleAdd2={handleGovernmentBill}
+            tableTitle={"All Bills Data"}
+            data={legislationBillData}
+            ActionHide={false}
+            hideDeleteIcon={false}
+            hideEditIcon={false}
+            singleDataCard={true}
+            headertitlebgColor={"#666"}
+            headertitletextColor={"#FFF"}
+            handlePageChange={handlePageChange}
+            currentPage={currentPage}
+            pageSize={pageSize}
+            totalCount={count}
+            handleEdit={(item) => {
+              item?.billFrom === "From Senate" ? handleEditSenateBill(item?.id) : handleEditNABill(item?.id);
             }}
             // handleEdit={(item)=>{handleEditSenateBill(item?.id)}}
             handleDelete={(item) => handleDeleteLegislationBill(item?.id)}

@@ -8,6 +8,14 @@ import { AuthContext } from "../../../../../../api/AuthContext";
 import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
+const colorInfo = [
+  { color: "red", text: "Opposition" },
+  { color: "green", text: "Treasury" },
+  { color: "orange", text: "Minister" },
+  { color: "gray", text: "Request" },
+  { color: "blue", text: "Independent" }, // added yellow for completeness
+];
+
 const customStyles = {
   content: {
     top: "50%",
@@ -131,7 +139,6 @@ function ManageSeatingPlan() {
   };
 
   const moveSeat = async (fromItem, toItem) => {
-    console.log("Item", fromItem, toItem);
     if (toItem?.member) {
       try {
         const swapData = {
@@ -169,151 +176,170 @@ function ManageSeatingPlan() {
   };
 
   return (
-    <DndProvider backend={HTML5Backend}>
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={() => setIsOpen(false)}
-        style={customStyles}
-        contentLabel="Example Modal"
-      >
-        <div className="card">
-          <div className="card-header red-bg" style={{ background: "#14ae5c !important" }}>
-            <h1>Add/Edit Seat</h1>
-          </div>
-          <div className="card-body">
-            <div className="row">
-              <div className="col-8">
-                <div className="mb-3">
-                  <label className="form-label">Seat No</label>
-                  <input
-                    type="text"
-                    className={`form-control`}
-                    id="seatNo"
-                    placeholder={selectedItem?.seatNo}
-                    disabled
-                  />
+    <>
+      <DndProvider backend={HTML5Backend}>
+        <Modal
+          isOpen={modalIsOpen}
+          onRequestClose={() => setIsOpen(false)}
+          style={customStyles}
+          contentLabel="Example Modal"
+        >
+          <div className="card">
+            <div className="card-header red-bg" style={{ background: "#14ae5c !important" }}>
+              <h1>Add/Edit Seat</h1>
+            </div>
+            <div className="card-body">
+              <div className="row">
+                <div className="col-8">
+                  <div className="mb-3">
+                    <label className="form-label">Seat No</label>
+                    <input
+                      type="text"
+                      className={`form-control`}
+                      id="seatNo"
+                      placeholder={selectedItem?.seatNo}
+                      disabled
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="row">
-              <div className="col-8">
-                <div>
-                  <label className="form-label">Member Name</label>
-                  <select
-                    className="form-select"
-                    value={selectedItem?.id || ""}
-                    onChange={(e) => {
-                      setSelectedItem({ ...selectedItem, id: e.target.value });
+              <div className="row">
+                <div className="col-8">
+                  <div>
+                    <label className="form-label">Member Name</label>
+                    <select
+                      className="form-select"
+                      value={selectedItem?.id || ""}
+                      onChange={(e) => {
+                        setSelectedItem({ ...selectedItem, id: e.target.value });
+                      }}
+                    >
+                      <option value={""} disabled hidden>
+                        Select
+                      </option>
+                      {members &&
+                        members.map((item) => (
+                          <option key={item.id} value={item.id}>
+                            {item?.memberName}
+                          </option>
+                        ))}
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div className="d-flex row justify-content-center align-items-center">
+                <div className="col-4" style={{ marginTop: "30px" }}>
+                  <Button variant="primary" type="submit" style={{ width: 150 }} onClick={() => setIsOpen(false)}>
+                    Cancel
+                  </Button>
+                </div>
+                <div className="col-4" style={{ marginTop: "30px" }}>
+                  <Button
+                    variant="success"
+                    type="submit"
+                    style={{ width: 150 }}
+                    onClick={() => {
+                      handleAssignAndUnassign(true);
+                      setIsOpen(false);
                     }}
                   >
-                    <option value={""} disabled hidden>
-                      Select
-                    </option>
-                    {members &&
-                      members.map((item) => (
-                        <option key={item.id} value={item.id}>
-                          {item?.memberName}
-                        </option>
-                      ))}
-                  </select>
+                    Assign
+                  </Button>
+                </div>
+                <div className="col-4" style={{ marginTop: "30px" }}>
+                  <Button
+                    variant="success"
+                    type="submit"
+                    style={{ width: 150 }}
+                    onClick={() => {
+                      handleAssignAndUnassign(false);
+                      setIsOpen(false);
+                    }}
+                  >
+                    Unassign
+                  </Button>
                 </div>
               </div>
             </div>
-
-            <div className="d-flex row justify-content-center align-items-center">
-              <div className="col-4" style={{ marginTop: "30px" }}>
-                <Button variant="primary" type="submit" style={{ width: 150 }} onClick={() => setIsOpen(false)}>
-                  Cancel
-                </Button>
+          </div>
+        </Modal>
+        <ToastContainer />
+        <div
+          style={{
+            overflowY: "auto",
+            maxHeight: "100%",
+            background: "#F0F2F5",
+          }}
+        >
+          <div className="dashboard-content">
+            <div className="container-fluid">
+              <div className="sitting-plan-main" style={{ marginTop: "60px" }}>
+                <div className="sitting-row">
+                  <div>
+                    {["F", "E", "D", "C", "B", "A"].map((rowLetter) => (
+                      <div className="row" key={rowLetter}>
+                        <div className="col" style={{ marginBottom: "10px", rotate: "-10deg" }}>
+                          {seats &&
+                            seats
+                              .filter((item) => item.rowNumber === rowLetter)
+                              .map((item, index) => (
+                                <Seat
+                                  key={index}
+                                  item={item}
+                                  onDrop={moveSeat}
+                                  side="left"
+                                  onClick={() => openModal(item)}
+                                />
+                              ))}
+                        </div>
+                        <div className="col-1 text-center">
+                          <strong style={{ marginTop: "35px", display: "block" }}>{rowLetter}</strong>
+                        </div>
+                        <div className="col" style={{ rotate: "10deg" }}>
+                          {govseat &&
+                            govseat
+                              .filter((item) => item.rowNumber === rowLetter)
+                              .map((item, index) => (
+                                <Seat
+                                  key={index}
+                                  item={item}
+                                  onDrop={moveSeat}
+                                  side="right"
+                                  onClick={() => openModal(item)}
+                                />
+                              ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="center-content mt-2">
+                  <h3>CHAIRMAN</h3>
+                </div>
               </div>
-              <div className="col-4" style={{ marginTop: "30px" }}>
-                <Button
-                  variant="success"
-                  type="submit"
-                  style={{ width: 150 }}
-                  onClick={() => {
-                    handleAssignAndUnassign(true);
-                    setIsOpen(false);
-                  }}
-                >
-                  Assign
-                </Button>
-              </div>
-              <div className="col-4" style={{ marginTop: "30px" }}>
-                <Button
-                  variant="success"
-                  type="submit"
-                  style={{ width: 150 }}
-                  onClick={() => {
-                    handleAssignAndUnassign(false);
-                    setIsOpen(false);
-                  }}
-                >
-                  Unassign
-                </Button>
+            </div>
+          </div>
+          <div className="container  d-flex flex-column" style={{ minHeight: "400px", marginRight: "70px" }}>
+            {/* <div className="flex-grow-1"></div> */}
+            <div className="row justify-content-end mb-4">
+              <div className="col-auto">
+                <table className="table">
+                  <tbody>
+                    {colorInfo.map((item, index) => (
+                      <tr key={index}>
+                        <td style={{ backgroundColor: item.color, width: "150px" }}></td>
+                        <td style={{ width: "250px" }}>{item.text}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
         </div>
-      </Modal>
-      <ToastContainer />
-      <div
-        style={{
-          overflowY: "auto",
-          maxHeight: "100%",
-          background: "#F0F2F5",
-        }}
-      >
-        <div className="dashboard-content">
-          <div className="container-fluid">
-            <div className="sitting-plan-main" style={{ marginTop: "60px" }}>
-              <div className="sitting-row">
-                <div>
-                  {["F", "E", "D", "C", "B", "A"].map((rowLetter) => (
-                    <div className="row" key={rowLetter}>
-                      <div className="col" style={{ marginBottom: "10px", rotate: "-10deg" }}>
-                        {seats &&
-                          seats
-                            .filter((item) => item.rowNumber === rowLetter)
-                            .map((item, index) => (
-                              <Seat
-                                key={index}
-                                item={item}
-                                onDrop={moveSeat}
-                                side="left"
-                                onClick={() => openModal(item)}
-                              />
-                            ))}
-                      </div>
-                      <div className="col-1 text-center">
-                        <strong style={{ marginTop: "35px", display: "block" }}>{rowLetter}</strong>
-                      </div>
-                      <div className="col" style={{ rotate: "10deg" }}>
-                        {govseat &&
-                          govseat
-                            .filter((item) => item.rowNumber === rowLetter)
-                            .map((item, index) => (
-                              <Seat
-                                key={index}
-                                item={item}
-                                onDrop={moveSeat}
-                                side="right"
-                                onClick={() => openModal(item)}
-                              />
-                            ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="center-content mt-2">
-                <h3>CHAIRMAN</h3>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </DndProvider>
+      </DndProvider>
+    </>
   );
 }
 

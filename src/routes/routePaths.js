@@ -231,6 +231,7 @@ import EditLawActsBill from "../pages/Dashboard/Modules/LDU/LawActs/AllListing/E
 import AddEditRotaList from "../pages/Dashboard/Modules/QMS/Reports/RotaList/AddEditRotaList.js";
 import TestingSeatingPlan from "../pages/Dashboard/Modules/Notice/SeatingPlan/ManageSeatingPlan/test.js";
 import SeatingPlanTest from "../pages/Dashboard/Modules/Notice/SeatingPlan/ManageSeatingPlan/SeatPlanTest.js";
+import BillFromSelection from "../pages/Dashboard/Modules/LGMS/Bills/LegislationBills/BillFrom/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -291,7 +292,6 @@ export const ProtectedRoutes = [
   { path: "/notice/legislation/government-bill", element: <GovernmentBill /> },
   { path: "/notice/legislation/private-bill", element: <PrivateBill /> },
 
-  
   {
     path: "/notice/legislation/private-bill/addedit",
     element: <AddEditPrivateBill />,
@@ -361,7 +361,7 @@ export const ProtectedRoutes = [
   },
   {
     path: "/notice/manage/manage-seating-plan",
-    element:<SeatingPlanTest />
+    element: <SeatingPlanTest />,
     // element: <ManageSeatingPlan />,
   },
 
@@ -467,10 +467,9 @@ export const ProtectedRoutes = [
   { path: "/qms/resolution/delete", element: <QMSDeleteResolution /> },
   { path: "/qms/resolution/new", element: <QMSNewResolution /> },
 
-
   { path: "/qms/notice", element: <QMSQuestionDashboard /> },
   { path: "/qms/notice/notice-question", element: <QMSNoticeQuestion /> },
-  
+
   {
     path: "/qms/notice/notice-question-detail",
     element: <QMSNoticeQuestionDetail />,
@@ -609,8 +608,8 @@ export const ProtectedRoutes = [
   { path: "/cms/admin/inventory/vendor-list", element: <CMSVendorList /> },
   { path: "/cms/admin/inventory/vendor-list/edit", element: <CMSEditVendor /> },
   { path: "/cms/admin/inventory/vendor-list/add", element: <CMSEditVendor /> },
-  {path:"/cms/admin/branch/list", element: <CMSBranches />},
-  {path:"/cms/admin/branch/addedit", element: <CMSAddEditBranch />},
+  { path: "/cms/admin/branch/list", element: <CMSBranches /> },
+  { path: "/cms/admin/branch/addedit", element: <CMSAddEditBranch /> },
 
   // E-Filing
   // { path: "/efiling/dashboard", element: <DirectorDashboard /> },
@@ -705,6 +704,10 @@ export const ProtectedRoutes = [
   {
     path: "/lgms/dashboard/bills/search-bills",
     element: <SearchLegislationBills />,
+  },
+  {
+    path: "/lgms/dashboard/bills/selectbillfrom",
+    element: <BillFromSelection />,
   },
   {
     path: "/lgms/dashboard/ordinances/ordinance-list",
@@ -820,23 +823,23 @@ export const ProtectedRoutes = [
     element: <LGMSAddEditLegislativeBill />,
   },
 
-    // Telecasting branch
-    { path: "/telecasting/dashboard", element: <TelecastingDashboard /> },
-    { path: "/telecasting/speech-on-demand", element: <TelecastingSpeechOnDemand /> },
-    {
-      path: "/telecasting/speech-on-demand/addedit",
-      element: <TelecastingAddEditSpeechOnDemand />,
-    },
+  // Telecasting branch
+  { path: "/telecasting/dashboard", element: <TelecastingDashboard /> },
+  { path: "/telecasting/speech-on-demand", element: <TelecastingSpeechOnDemand /> },
+  {
+    path: "/telecasting/speech-on-demand/addedit",
+    element: <TelecastingAddEditSpeechOnDemand />,
+  },
 
-    // Research branch
-    { path: "/research/dashboard", element: <ResearchDashboard /> },
-    { path: "/research/research-services", element: <ResearchBRServices /> },
-    {
-      path: "/research/research-services/addedit",
-      element: <ResearchAddEditResearchService />,
-    },
+  // Research branch
+  { path: "/research/dashboard", element: <ResearchDashboard /> },
+  { path: "/research/research-services", element: <ResearchBRServices /> },
+  {
+    path: "/research/research-services/addedit",
+    element: <ResearchAddEditResearchService />,
+  },
 
-    // Committees Routes Start
+  // Committees Routes Start
 
   {
     path: "/committees/dashboard",
@@ -890,7 +893,7 @@ export const ProtectedRoutes = [
     path: "/committees/dashboard/committee-rooms/booked",
     element: <CommitteesManagementSystemBookingCommitteeRooms />,
   },
- 
+
   {
     path: "/committees/dashboard/committee-rooms/addeditbooking",
     element: <CommitteesManagementSystemAddEditBookinginCommitteeRooms />,
@@ -933,5 +936,4 @@ export const ProtectedRoutes = [
     path: "/ldu/lawActs/all-lisitng/edit-law-acts-Bill",
     element: <EditLawActsBill />,
   },
-
 ];
