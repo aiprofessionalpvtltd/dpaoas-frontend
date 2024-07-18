@@ -68,11 +68,11 @@ function QMSDivisions() {
     />
     <ToastContainer />
 
-    <div class="container-fluid dash-detail-container card">
     <div class="row">
       <div class="col-12">
         <CustomTable
           data={divisions}
+          singleDataCard={true}
           tableTitle="Divisions List"
           addBtnText="Add Divisions"
           handleAdd={() => navigate("/qms/manage/divisions/addedit")}
@@ -88,7 +88,6 @@ function QMSDivisions() {
           totalCount={count}
         />
       </div>
-    </div>
     </div>
   </Layout>
   )

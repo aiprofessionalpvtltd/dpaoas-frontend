@@ -79,11 +79,11 @@ function QMSMembers() {
       />
       <ToastContainer />
 
-      <div class="container-fluid dash-detail-container card">
         <div class="row">
           <div class="col-12">
             <CustomTable
               block={false}
+              singleDataCard={true}
               data={members}
               tableTitle="Member List"
               addBtnText="Add Member"
@@ -100,7 +100,6 @@ function QMSMembers() {
               totalCount={count}
             />
           </div>
-        </div>
       </div>
     </Layout>
   );

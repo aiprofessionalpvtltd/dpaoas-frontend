@@ -68,10 +68,10 @@ function QMSPoliticalParty() {
     />
     <ToastContainer />
 
-    <div class="container-fluid dash-detail-container card">
     <div class="row">
       <div class="col-12">
         <CustomTable
+        singleDataCard={true}
           data={politicalParties}
           tableTitle="Political Party List"
           addBtnText="Add Political Party"
@@ -88,7 +88,6 @@ function QMSPoliticalParty() {
           totalCount={count}
         />
       </div>
-    </div>
     </div>
   </Layout>
   )

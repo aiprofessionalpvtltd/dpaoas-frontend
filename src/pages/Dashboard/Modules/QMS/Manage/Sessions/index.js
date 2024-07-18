@@ -74,11 +74,11 @@ function QMSSessions() {
       <Header dashboardLink={"/qms/manage"} addLink1={"/qms/manage/sessions"} title1={"Sessions"} />
       <ToastContainer />
 
-      <div class="container-fluid dash-detail-container card">
         <div class="row">
           <div class="col-12">
             <CustomTable
               block={false}
+              singleDataCard={true}
               data={sessions}
               tableTitle="Sessions List"
               addBtnText="Add Sessions"
@@ -93,7 +93,6 @@ function QMSSessions() {
           totalCount={count}
             />
           </div>
-        </div>
       </div>
     </Layout>
   );

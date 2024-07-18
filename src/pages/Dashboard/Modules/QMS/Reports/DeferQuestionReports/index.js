@@ -52,9 +52,9 @@ function QMSDeferQuestionReports() {
     return apiData.map((res, index) => {
       return {
         id: res.id,
-        deferredDate: res?.deferredDate,
-        deferredSession: res?.deferredSession?.sessionName,
-        deferredBy: res?.deferredByUser?.employee?.firstName + res?.deferredByUser?.employee?.lastName,
+        deferredDate: moment(res?.deferredDate).format("DD/MM/YYYY"),
+        deferredSession: res?.deferredSession?.sessionName ? res?.deferredSession?.sessionName :"--",
+        deferredBy: res?.deferredByUser?.employee ? res?.deferredByUser?.employee?.firstName + res?.deferredByUser?.employee?.lastName :"--",
       };
     });
   };
