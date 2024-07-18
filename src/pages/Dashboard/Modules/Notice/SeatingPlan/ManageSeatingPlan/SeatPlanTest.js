@@ -647,7 +647,8 @@ function ManageSeatingPlan() {
                   </div>
                 </div>
                 <div className="center-content mt-2">
-                  <h3>CHAIRMAN</h3>
+                  <h3 style={{ paddingTop: "5px" }}>1</h3>
+                  <h3 style={{ paddingTop: "5px" }}>CHAIRMAN</h3>
                 </div>
               </div>
             </div>
@@ -705,65 +706,6 @@ function ManageSeatingPlan() {
             </div>
           </div>
         </Modal>
-
-        <ToastContainer />
-        <div
-          style={{
-            overflowY: "auto",
-            maxHeight: "100%",
-            background: "#F0F2F5",
-          }}
-        >
-          <div className="dashboard-content">
-            <div className="container-fluid">
-              <div className="sitting-plan-main" style={{ marginTop: "60px" }}>
-                <div className="sitting-row">
-                  <div>
-                    {["F", "E", "D", "C", "B", "A"].map((rowLetter) => (
-                      <div className="row" key={rowLetter}>
-                        <div className="col" style={{ marginBottom: "10px", rotate: "-10deg" }}>
-                          {seats &&
-                            seats
-                              .filter((item) => item.rowNumber === rowLetter)
-                              .map((item, index) => (
-                                <Seat
-                                  key={index}
-                                  item={item}
-                                  onDrop={moveSeat}
-                                  side="left"
-                                  onClick={() => openModal(item)}
-                                />
-                              ))}
-                        </div>
-                        <div className="col-1 text-center">
-                          <strong style={{ marginTop: "35px", display: "block" }}>{rowLetter}</strong>
-                        </div>
-                        <div className="col" style={{ rotate: "10deg" }}>
-                          {govseat &&
-                            govseat
-                              .filter((item) => item.rowNumber === rowLetter)
-                              .map((item, index) => (
-                                <Seat
-                                  key={index}
-                                  item={item}
-                                  onDrop={moveSeat}
-                                  side="right"
-                                  onClick={() => openModal(item)}
-                                />
-                              ))}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div className="center-content mt-2">
-                  <h3 style={{ paddingTop: "5px" }}>1</h3>
-                  <h3 style={{ paddingTop: "5px" }}>CHAIRMAN</h3>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
       </DndProvider>
     </>
   );
