@@ -70,11 +70,11 @@ function QMSTerms() {
     />
     <ToastContainer />
 
-    <div class="container-fluid dash-detail-container card">
     <div class="row">
       <div class="col-12">
         <CustomTable
           data={terms}
+          singleDataCard={true}
           tableTitle="Terms List"
           addBtnText="Add Terms"
           handleAdd={() => navigate("/qms/manage/terms/addedit")}
@@ -90,7 +90,6 @@ function QMSTerms() {
           totalCount={count}
         />
       </div>
-    </div>
     </div>
   </Layout>
   )

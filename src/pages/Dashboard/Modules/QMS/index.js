@@ -41,7 +41,7 @@ function QMSQuestionDashboard() {
     })
       }
     } catch (error) {
-      console.log(error.response.data.message);
+      console.log(error?.response?.data?.message);
     }
   };
 
@@ -59,7 +59,7 @@ function QMSQuestionDashboard() {
     })
       }
     } catch (error) {
-      console.log(error.response.data.message);
+      console.log(error?.response?.data?.message);
     }
   };
   useEffect(() => {

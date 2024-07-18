@@ -215,7 +215,7 @@ function SupplementaryList() {
                       </span>
                       <DatePicker
                         selected={formik.values.houseLayDate}
-                        minDate={new Date()}
+                        // minDate={new Date()}
                         onChange={(date) => formik.setFieldValue("houseLayDate", date)}
                         onBlur={formik.handleBlur}
                         className={`form-control`}

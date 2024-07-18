@@ -273,7 +273,7 @@ function QMSResolutionList() {
           </Button>
         </Modal.Footer>
       </DeleteModal>
-      <div class="container-fluid dash-detail-container">
+      <div class="container-fluid">
         <div class="card mt-4">
           <div
             class="card-header red-bg"

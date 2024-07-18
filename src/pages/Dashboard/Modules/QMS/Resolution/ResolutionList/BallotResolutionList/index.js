@@ -5,7 +5,7 @@ import CustomTable from '../../../../../../../components/CustomComponents/Custom
 import BallotResolutionPdfTemplate from '../../../../../../../components/BallotResolutionPDFTemplate'
 import { showErrorMessage, showSuccessMessage } from '../../../../../../../utils/ToastAlert'
 import { ToastContainer } from 'react-toastify'
-import { getBallotRecord } from '../../../../../../../api/APIs/Services/Resolution.service'
+import { allBallotByResolutionListId, getBallotRecord } from '../../../../../../../api/APIs/Services/Resolution.service'
 import html2pdf from 'html2pdf.js';
 import moment from 'moment'
 import { useParams } from 'react-router-dom'
@@ -28,12 +28,11 @@ function QMSBallotResolutionList() {
       internalId: item.id,
       id: item.id,
       Date: moment(item?.createdAt).format("YYYY/MM/DD"),
-    //   NameOfTheMover: item?.memberNames
-    //     .map((mover) => mover.memberName)
-    //     .join(", "),
-    //   ContentsOfTheMotion: item?.englishText.replace(/(<([^>]+)>)/gi, ""),
-    //   Status: item?.resolutionStatus?.resolutionStatus,
-      // motionMinistries: item?.motionMinistries.length > 0 ? item?.motionMinistries[0]?.ministries?.ministryName:"----",
+      NameOfTheMover: item?.memberNames
+        .map((mover) => mover.memberName)
+        .join(", "),
+      ContentsOfTheMotion: item?.englishText.replace(/(<([^>]+)>)/gi, ""),
+      Status: item?.resolutionStatus?.resolutionStatus,
     }));
   };
   const hendleBallot = async () => {
@@ -49,44 +48,55 @@ function QMSBallotResolutionList() {
     }
   };
 
-const handleBallotPrint = () => {
+  const handleBallotPrint = () => {
     const element = document.getElementById('template-container');
     const opt = {
-      // pending:2,
       margin: 0.2,
       filename: 'ResolutionBallot.pdf',
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas: { scale: 3 },
       jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
     };
-    
-    html2pdf().set(opt).from(element).save();
+  
+    html2pdf().set(opt).from(element).toPdf().outputPdf('blob').then((pdfBlob) => {
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+      window.open(pdfUrl);
+    });
   };
 
-//   const getResolutionsListByIDApi = async () => {
-//     try {
-//       const response = await getAllResolutions(0, 4, "toResolution");
-//       if (response?.success) {
-//         const transferData = transfrerResolutionDetail(response?.data?.resolution)
-//        setResolutionData(transferData)
-//       }
-//     } catch (error) {
-//       // Handle error
-//     }
-//   };
-//   useEffect(() => {
-//     getResolutionsListByIDApi()
-//   },[])
+  const getBallotResolutionsListByIDApi = async () => {
+    try {
+      const response = await allBallotByResolutionListId(id);
+      if (response?.success) {
+        const transferData = transfrerResolutionDetail(response?.data[0]?.resolutions)
+        console.log("transferData", transferData);
+       setResolutionData(transferData)
+      }
+    } catch (error) {
+      // Handle error
+    }
+  };
+  useEffect(() => {
+    getBallotResolutionsListByIDApi()
+  },[])
   return (
     <Layout sidebarItems={QMSSideBarItems}>
         <ToastContainer />
+        <div class="container-fluid">
+        <div class="card">
+          <div
+            class="card-header red-bg"
+            style={{ background: "#14ae5c !important" }}
+          >
+            <h1>Resolution Detail For Ballot</h1>
+          </div>
          <div class="row">
          <div class="col">
          <CustomTable
                 hidebtn1={true}
                 data={resolutionData}
                 tableTitle="Resolution Detail For Ballot"
-                // headerShown={true}
+                headerShown={true}
                 hideBtn={true}
                 // handleDelete={(item) => alert(item.id)}
                 // handleEdit={(item) =>
@@ -104,7 +114,7 @@ const handleBallotPrint = () => {
                 isCheckbox={true}
               /></div></div>
               <BallotResolutionPdfTemplate data={ballotData}>
-            <div class="row">
+            <div class="row mb-2" style={{marginRight:"20px"}}>
                   <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                     <button
                       class="btn btn-primary"
@@ -125,6 +135,8 @@ const handleBallotPrint = () => {
                   </div>
                 </div>
             </BallotResolutionPdfTemplate>
+            </div>
+            </div>
     </Layout>
   )
 }

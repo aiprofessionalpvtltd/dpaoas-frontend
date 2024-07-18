@@ -269,7 +269,7 @@ function QMSReportQuestionList() {
       />
       <ToastContainer />
 
-      <div class="container-fluid dash-detail-container">
+      <div class="container-fluid">
         <div class="card mt-4">
           <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
             <h1>Question List</h1>
