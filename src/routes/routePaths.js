@@ -232,6 +232,7 @@ import AddEditRotaList from "../pages/Dashboard/Modules/QMS/Reports/RotaList/Add
 import TestingSeatingPlan from "../pages/Dashboard/Modules/Notice/SeatingPlan/ManageSeatingPlan/test.js";
 import SeatingPlanTest from "../pages/Dashboard/Modules/Notice/SeatingPlan/ManageSeatingPlan/SeatPlanTest.js";
 import BillFromSelection from "../pages/Dashboard/Modules/LGMS/Bills/LegislationBills/BillFrom/index.js";
+import QMSBallotResolutionList from "../pages/Dashboard/Modules/QMS/Resolution/ResolutionList/BallotResolutionList/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -454,6 +455,7 @@ export const ProtectedRoutes = [
 
   { path: "/qms/resolution", element: <QMSQuestionDashboard /> },
   { path: "/qms/rsolution/list", element: <QMSResolutionList /> },
+  { path: "/qms/rsolution/list/ballot/:id", element: <QMSBallotResolutionList /> },
   { path: "/qms/resolution/delete", element: <QMSDeleteResolution /> },
 
   { path: "/qms/question", element: <QMSQuestionDashboard /> },

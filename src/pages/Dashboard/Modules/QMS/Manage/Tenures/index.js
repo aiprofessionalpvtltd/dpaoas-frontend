@@ -70,10 +70,10 @@ function QMSTenures() {
     />
     <ToastContainer />
 
-    <div class="container-fluid dash-detail-container card">
     <div class="row">
       <div class="col-12">
         <CustomTable
+        singleDataCard={true}
           data={tenures}
           tableTitle="Tenures List"
           addBtnText="Add Tenures"
@@ -90,7 +90,6 @@ function QMSTenures() {
           totalCount={count}
         />
       </div>
-    </div>
     </div>
   </Layout>
   )

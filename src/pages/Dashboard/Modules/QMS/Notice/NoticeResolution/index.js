@@ -198,7 +198,7 @@ function QMSNoticeResolution() {
         title1={"Notice Resolution"}
       />
       <div>
-        <div class="container-fluid dash-detail-container">
+        <div class="container-fluid">
           <div class="card mt-1">
             <div
               class="card-header red-bg"

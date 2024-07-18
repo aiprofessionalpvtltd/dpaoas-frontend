@@ -49,13 +49,13 @@ function QuestionGroupDiary() {
     return apiData.map((item, index) => ({
       SrNo: index + 1,
       QID: item?.id,
-      QDN: item?.questionDiary,
+      QDN: item?.questionDiary?.questionDiaryNo,
       mover: item?.member?.memberName,
       subject: [item?.englishText, item?.urduText]
         .filter(Boolean)
         .join(", ")
         .replace(/(<([^>]+)>)/gi, ""),
-      divisions: item?.divisions,
+      divisions: item?.divisions?.divisionName,
       NoticeDiaryDate: item?.noticeOfficeDiary?.noticeOfficeDiaryDate,
       currentStatus: item?.questionStatus?.questionStatus,
     }));

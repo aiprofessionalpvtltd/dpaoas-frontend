@@ -281,7 +281,7 @@ export const generateResolutionListData = async (data) => {
     }
   };
 
-   //Create rESOLUTION List 
+   //Update rESOLUTION List 
    export const UpdateResolutionList = async (data) => {
     try {
       // const token = getAuthToken();
@@ -292,6 +292,28 @@ export const generateResolutionListData = async (data) => {
       throw error;
     }
   };
+
+  export const allResolutionList = async (currentPage, pageSize) => {
+    try {
+      // const token = getAuthToken();
+      const response = await axiosClientMMS.get(`/resolution/resolutionLists?currentPage=${currentPage}&pageSize=${pageSize}`)
+      return response?.data;
+    } catch (error) {
+      console.error("Error fetching API endpoint:", error);
+      throw error;
+    }
+  }
+
+  export const deleteResolutionListByID = async (id) => {
+    try {
+      // const token = getAuthToken();
+      const response = await axiosClientMMS.delete(`/resolution/resolutionlists/${id}`)
+      return response?.data;
+    } catch (error) {
+      console.error("Error fetching API endpoint:", error);
+      throw error;
+    }
+  }
 
   //getBallotRecord
   export const getBallotRecord = async (data) => {
@@ -309,6 +331,17 @@ export const generateResolutionListData = async (data) => {
     try {
       // const token = getAuthToken();
       const response = await axiosClientMMS.get(`/resolution/resolutionsByStatus`)
+      return response?.data;
+    } catch (error) {
+      console.error("Error fetching API endpoint:", error);
+      throw error;
+    }
+  };
+
+  export const allBallotByResolutionListId = async (id) => {
+    try {
+      // const token = getAuthToken();
+      const response = await axiosClientMMS.get(`/resolution/getSingleResolutionData/${id}`)
       return response?.data;
     } catch (error) {
       console.error("Error fetching API endpoint:", error);

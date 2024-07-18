@@ -49,13 +49,13 @@ function QuestionPendingUnderProcess() {
     return apiData.map((item, index) => ({
       SrNo: index + 1,
       QID: item?.id,
-      QDN: item?.questionDiary,
+      QDN: item?.questionDiary?.questionDiaryNo,
       mover: item?.member?.memberName,
       subject: [item?.englishText, item?.urduText]
         .filter(Boolean)
         .join(", ")
         .replace(/(<([^>]+)>)/gi, ""),
-      divisions: item?.divisions,
+      divisions: item?.divisions?.divisionName,
       NoticeDiaryDate: item?.noticeOfficeDiary?.noticeOfficeDiaryDate,
       currentStatus: item?.questionStatus?.questionStatus,
     }));
@@ -191,6 +191,7 @@ function QuestionPendingUnderProcess() {
                   // pageSize={pageSize}
                   // handleDelete={(item) => handleDelete(item?.QID)}
                   // totalCount={count}
+                  hidePagination={true}
                 />
               </div>
             </div>

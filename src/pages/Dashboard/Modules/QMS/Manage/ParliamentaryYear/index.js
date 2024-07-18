@@ -71,11 +71,11 @@ function QMSParliamentaryYear() {
     />
     <ToastContainer />
 
-    <div class="container-fluid dash-detail-container card">
     <div class="row">
       <div class="col-12">
         <CustomTable
           data={parliamentaryYears}
+          singleDataCard={true}
           tableTitle="Parliamentary Year List"
           addBtnText="Add Parliamentary Year"
           handleAdd={() => navigate("/qms/manage/parliamentary-year/addedit")}
@@ -91,7 +91,6 @@ function QMSParliamentaryYear() {
           totalCount={count}
         />
       </div>
-    </div>
     </div>
   </Layout>
   )

@@ -50,7 +50,7 @@ function BallotResolutionPdfTemplate({data, children}) {
                <td align="left" style={{ padding: '15px', verticalAlign: 'top' }}>{`${index + 1}`}</td>
                <td align="left" style={{ padding: '15px', verticalAlign: 'top' }}>{item?.resolutionMoversAssociation[0]?.memberAssociation?.memberName}</td>
                <td align="left" style={{ padding: '15px' }}>
-                 <p style={{ margin: '0', textAlign: 'justify', lineHeight: '26px' }}>
+                 <p style={{ margin: '0', textAlign: 'justify', lineHeight: '26px', paddingBottom:"11px" }}>
                    {item?.englishText?.replace(/(<([^>]+)>)/gi, "")}
                  </p>
                </td>

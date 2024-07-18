@@ -337,7 +337,7 @@ function NoticeSummary() {
                     </tbody>
                   </table>
                 </div>
-                <h2 style={{ color: "#666", marginTop: "30px" }}>Motions</h2>
+                {/* <h2 style={{ color: "#666", marginTop: "30px" }}>Motions</h2>
                 <div
                   class="dash-detail-container"
                   style={{ marginTop: "20px" }}
@@ -384,7 +384,7 @@ function NoticeSummary() {
                                 : ""}
                             </td>
                             <td class="text-center">
-                              {/* {item?.noticeOfficeDairies?.noticeOfficeDiaryDate} */}
+                              
                               {item?.noticeOfficeDairies?.noticeOfficeDiaryDate
                                 ? moment(
                                     item?.noticeOfficeDairies
@@ -419,7 +419,7 @@ function NoticeSummary() {
                         ))}
                     </tbody>
                   </table>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
