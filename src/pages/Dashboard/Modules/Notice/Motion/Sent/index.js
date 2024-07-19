@@ -13,11 +13,9 @@ import { ToastContainer } from "react-toastify";
 import { useFormik } from "formik";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import {
-  getAllMotion,
   getAllMotionNotice,
   getMotionByID,
   getallMotionStatus,
-  searchMotion,
   searchMotionNotice,
   sendToMotion,
 } from "../../../../../../api/APIs/Services/Motion.service";
@@ -498,7 +496,6 @@ function SentMotion() {
                           top: "36px",
                           zIndex: 1,
                           fontSize: "20px",
-                          zIndex: "1",
                           color: "#666",
                           cursor: "pointer",
                         }}
@@ -535,7 +532,6 @@ function SentMotion() {
                           top: "36px",
                           zIndex: 1,
                           fontSize: "20px",
-                          zIndex: "1",
                           color: "#666",
                           cursor: "pointer",
                         }}
