@@ -1,14 +1,59 @@
 import React from "react";
+import html2pdf from 'html2pdf.js';
 
 function BallotResolutionPdfTemplate({data, children}) {
- 
+  
+  const handleBallotPrint = () => {
+    const element = document.getElementById('template-container');
+    const opt = {
+      margin: 0.2,
+      filename: 'ResolutionBallot.pdf',
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 3 },
+      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+    };
+  
+    html2pdf().set(opt).from(element).toPdf().outputPdf('blob').then((pdfBlob) => {
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+      const iframe = document.createElement('iframe');
+      iframe.style.position = 'fixed';
+      iframe.style.width = '100%';
+      iframe.style.height = '100%';
+      iframe.style.left = '0';
+      iframe.style.top = '0';
+      iframe.style.zIndex = '-1';
+      iframe.style.visibility = 'hidden';
+      iframe.src = pdfUrl;
+  
+      document.body.appendChild(iframe);
+  
+      iframe.onload = () => {
+        iframe.style.visibility = 'visible';
+        iframe.contentWindow.focus();
+        iframe.contentWindow.print();
+        iframe.style.visibility = 'hidden';
+      };
+    });
+  };
   return (
     // <AuthProvider>
     //   <NavigationRoutes />
     // </AuthProvider>
     <>
-    <div style={{ display: 'none' }}>
-      <div id="template-container" style={{ background: '#fff', fontFamily: 'Arial, Helvetica, sans-serif', width: '700px',paddingRight:"50px", margin: '0 auto' }}>
+     <div class="row mb-2 mt-5" style={{marginRight:"20px"}}>
+                  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    
+                    <button
+                      class="btn btn-primary"
+                      type="button"
+                      onClick={handleBallotPrint}
+                    >
+                      Print
+                    </button>
+                  </div>
+                </div>
+    {/* <div style={{  }}> */}
+      <div id="template-container" style={{  fontFamily: 'Arial, Helvetica, sans-serif', width: '700px',paddingRight:"50px", margin: '0 auto' }}>
       <div className="template-head">
       <h1 style={{ textAlign: 'center', fontSize: '20px', textDecoration: 'underline' }}>SENATE SECRETARIAT</h1>
       <div style={{ float: 'left' }}>
@@ -67,7 +112,7 @@ function BallotResolutionPdfTemplate({data, children}) {
         Copy forwarded for information and necessary action to:-
       </p>
       <ol style={{ listStylePosition: 'inside' }}> 
-        <li style={{ lineHeight: '26px', marginLeft: '10px',paddingBottom:"15px" }}>
+        <li style={{ lineHeight: '28px', marginLeft: '10px',paddingBottom:"15px" }}>
           Secretaries Ministry of Federal Education and Professional Training and Ministry of National Health
           Services, Regulations and Coordination with a request to depute an officer not below the rank of Joint
           Secretary of the Ministry/Division dealing with the subject matter of these Resolution to attend the
@@ -107,7 +152,7 @@ function BallotResolutionPdfTemplate({data, children}) {
       <p style={{ borderBottom: 'dotted 4px', width: '100%', marginTop: '20px' }}></p>
     </div>
       </div>
-    </div>
+    {/* </div> */}
     {/* <div className="d-flex justify-content-center align-items-center mt-3">
       <button className="btn btn-primary mx-2" onClick={handleBallotPrint}>Print</button>
     </div> */}

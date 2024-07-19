@@ -100,6 +100,31 @@ export const searchResolution = async (searchParams, currentPage, pageSize) => {
   }
 };
 
+//Annual Resolution Api
+export const resolutionAnnualReport = async (searchParams, currentPage, pageSize) => {
+  try {
+    // const token = getAuthToken();
+
+    // Filter out empty values
+    const filteredSearchParams = Object.fromEntries(
+      Object.entries(searchParams).filter(([_, value]) => value !== "")
+    );
+
+    const response = await axiosClientMMS.get(
+      `/resolution/searchQuery/annual-report?currentPage=${currentPage}&pageSize=${pageSize}`,
+      {
+        params: filteredSearchParams,
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // },
+      }
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
 export const DeleteResolutionList = async (searchParams, currentPage, pageSize) => {
   try {
     // const token = getAuthToken();

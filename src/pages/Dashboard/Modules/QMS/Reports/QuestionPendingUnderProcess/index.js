@@ -161,16 +161,16 @@ function QuestionPendingUnderProcess() {
                     <button class="btn btn-primary" type="submit">
                       Generate
                     </button>
-                    <button class="btn btn-primary" onClick={() => {}}>
+                    {/* <button class="btn btn-primary" onClick={() => {}}>
                       Print
-                    </button>
+                    </button> */}
                   </div>
                 </div>
               </form>
 
               <div class="" style={{ marginTop: "20px" }}>
                 <div style={{ marginLeft: 10 }}>
-                  <h5>Total Questions: {initialData?.totalQuestions}</h5>
+                  <h5>Total Questions: {initialData?.questions?.length}</h5>
                   <h5>Session No: {initialData?.sessionName}</h5>
                   <h5>Group: {initialData?.groupNameStarred}</h5>
                 </div>
