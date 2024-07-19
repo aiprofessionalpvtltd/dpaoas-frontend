@@ -1,0 +1,28 @@
+import axios from "axios";
+import { getAuthToken } from "../Auth";
+
+// Image/Files URL (Production)
+export const imagesUrl = "http://172.16.170.8:5252";
+
+//Image Url
+export const imagesUrl2 = "http://172.16.170.8:5152";
+
+// Image/Files URL (Development)
+// export const imagesUrl = "http://10.10.140.200:5152";
+
+// Set config defaults when creating the instance
+export const axiosClient = axios.create({
+  baseURL: "http://172.16.170.8:5151/api",
+});
+
+export const axiosClientVMS = axios.create({
+  baseURL: "http://172.16.170.8:5152/api",
+});
+
+export const axiosClientMMS = axios.create({
+  baseURL: "http://172.16.170.8:5252/api",
+  // baseURL: "http://10.10.140.89:5152/api",
+  // baseURL: "http://10.10.140.200:5152/api",
+  // baseURL: "http://10.10.140.200:8080/api",
+  // baseURL: "http://10.10.140.42:5152/api",
+});
