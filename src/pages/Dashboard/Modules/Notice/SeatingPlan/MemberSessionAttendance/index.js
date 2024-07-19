@@ -68,7 +68,7 @@ function NMSMemberSessionAttendance() {
       startDate: "",
       endDate: "",
     },
-    validationSchema: validationSchema,
+    // validationSchema: validationSchema,
     onSubmit: (values) => {
       markMemberAttendance(values);
     },

@@ -415,6 +415,7 @@ function ManageSeatingPlan() {
     name: "",
     seatNo: 0,
     rowNumber: "",
+    isRequested: false
   });
 
   const [fromItem, setFromItem] = useState(null);
@@ -442,6 +443,7 @@ function ManageSeatingPlan() {
       name: item?.member?.memberName,
       seatNo: item?.seatNumber,
       rowNumber: item?.rowNumber,
+      isRequested: item?.isRequested,
     });
     setIsOpen(true);
   };
@@ -457,7 +459,10 @@ function ManageSeatingPlan() {
       fkMemberId: assign ? selectedItem?.id : null,
       rowNumber: selectedItem?.rowNumber,
       assignStatus: assign ? true : false,
+      isRequest: selectedItem?.isRequested
     };
+
+
     try {
       const response = await updateSeat(selectedItem.seatNo, Data);
       if (response?.success) {
@@ -556,6 +561,22 @@ function ManageSeatingPlan() {
                           </option>
                         ))}
                     </select>
+                  </div>
+                </div>
+                <div className="col">
+                  <div className="form-check" style={{ marginTop: "40px" }}>
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      id="isRequested"
+                      checked={selectedItem?.isRequested}
+                      onChange={(e) =>
+                        setSelectedItem({ ...selectedItem, isRequested: e.target.checked })
+                      }
+                    />
+                    <label className="form-check-label" htmlFor="isRequested">
+                      Is Requested
+                    </label>
                   </div>
                 </div>
               </div>
