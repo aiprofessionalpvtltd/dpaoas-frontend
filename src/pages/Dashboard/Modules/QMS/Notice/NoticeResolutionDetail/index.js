@@ -114,7 +114,9 @@ function QMSNoticeResolutionDetail() {
 
     data.append("englishText", values.englishText);
     data.append("urduText", values.urduText);
-    data.append("memberPosition",  values?.memberPosition)
+    if(values?.memberPosition){
+      data.append("memberPosition",  values?.memberPosition)
+    }
     if(values?.attachment){
       data.append("attachment", values?.attachment)
     }

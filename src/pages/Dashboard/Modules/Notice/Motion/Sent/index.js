@@ -164,7 +164,8 @@ function SentMotion() {
       englishText: values?.keyword,
       motionWeek: values?.motionWeek,
       motionType: values?.motionType,
-      fkMotionStatus: values?.motionStatus
+      fkMotionStatus: values?.motionStatus,
+      motionSentStatus:["inNotice", "toMotion"]
     };
 
 
