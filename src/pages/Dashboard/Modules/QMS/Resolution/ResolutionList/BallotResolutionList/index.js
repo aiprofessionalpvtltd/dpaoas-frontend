@@ -2,22 +2,18 @@ import React, { useEffect, useState } from 'react'
 import { Layout } from '../../../../../../../components/Layout'
 import { QMSSideBarItems } from '../../../../../../../utils/sideBarItems'
 import CustomTable from '../../../../../../../components/CustomComponents/CustomTable'
-import BallotResolutionPdfTemplate from '../../../../../../../components/BallotResolutionPDFTemplate'
 import { showErrorMessage, showSuccessMessage } from '../../../../../../../utils/ToastAlert'
 import { ToastContainer } from 'react-toastify'
 import { allBallotByResolutionListId, getBallotRecord } from '../../../../../../../api/APIs/Services/Resolution.service'
-import html2pdf from 'html2pdf.js';
 import moment from 'moment'
-import { useParams } from 'react-router-dom'
-
+import { useNavigate, useParams } from 'react-router-dom'
 
 function QMSBallotResolutionList() {
     const {id} = useParams()
+   const navigation = useNavigate()
     const [currentPage, setCurrentPage] = useState(0);
     const [isChecked, setIsChecked] = useState([]);
-    const [count, setCount] = useState(null);
     const pageSize = 10
-    const [ballotData, setBallotData] = useState([])
     const [resolutionData,setResolutionData]=useState([])
     const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
@@ -40,28 +36,15 @@ function QMSBallotResolutionList() {
     try {
       const response = await getBallotRecord(isChecked); // Add await here
       if (response?.success) {
-        setBallotData(response?.data?.resolutions)
-        showSuccessMessage(response?.message);
+          showSuccessMessage(response?.message);
+        const jsonString = JSON.stringify(response?.data?.resolutions);
+        const encodedJsonString = encodeURIComponent(jsonString);
+        const url = `/qms/rsolution/list/ballot/preview-pdf?state=${encodedJsonString}`;
+        window.open(url, "_blank");
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.error);
     }
-  };
-
-  const handleBallotPrint = () => {
-    const element = document.getElementById('template-container');
-    const opt = {
-      margin: 0.2,
-      filename: 'ResolutionBallot.pdf',
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 3 },
-      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-    };
-  
-    html2pdf().set(opt).from(element).toPdf().outputPdf('blob').then((pdfBlob) => {
-      const pdfUrl = URL.createObjectURL(pdfBlob);
-      window.open(pdfUrl);
-    });
   };
 
   const getBallotResolutionsListByIDApi = async () => {
@@ -74,6 +57,7 @@ function QMSBallotResolutionList() {
       }
     } catch (error) {
       // Handle error
+      showErrorMessage(error?.response?.data?.message);
     }
   };
   useEffect(() => {
@@ -98,10 +82,6 @@ function QMSBallotResolutionList() {
                 tableTitle="Resolution Detail For Ballot"
                 headerShown={true}
                 hideBtn={true}
-                // handleDelete={(item) => alert(item.id)}
-                // handleEdit={(item) =>
-                //   navigate("/mms/motion/detail", { state: item })
-                // }
                 headertitlebgColor={"#666"}
                 headertitletextColor={"#FFF"}
                 handlePageChange={handlePageChange}
@@ -113,7 +93,6 @@ function QMSBallotResolutionList() {
                 setIsChecked={setIsChecked}
                 isCheckbox={true}
               /></div></div>
-              <BallotResolutionPdfTemplate data={ballotData}>
             <div class="row mb-2" style={{marginRight:"20px"}}>
                   <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                     <button
@@ -124,17 +103,8 @@ function QMSBallotResolutionList() {
                     >
                       Request To Ballot
                     </button>
-                    <button
-                      class="btn btn-primary"
-                      type="button"
-                      onClick={handleBallotPrint}
-                      disabled={ballotData.length === 0 ? true : false}
-                    >
-                      Print pdf
-                    </button>
                   </div>
                 </div>
-            </BallotResolutionPdfTemplate>
             </div>
             </div>
     </Layout>

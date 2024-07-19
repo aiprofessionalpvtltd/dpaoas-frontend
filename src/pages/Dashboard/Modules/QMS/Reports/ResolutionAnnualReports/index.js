@@ -7,7 +7,7 @@ import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import DatePicker from "react-datepicker";
 import { getAllQuestionStatus } from "../../../../../../api/APIs/Services/Question.service";
 import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
-import { searchResolution } from "../../../../../../api/APIs/Services/Resolution.service";
+import { resolutionAnnualReport, searchResolution } from "../../../../../../api/APIs/Services/Resolution.service";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../../../../../api/AuthContext";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
@@ -42,11 +42,12 @@ function QMSResolutionAnnualReports() {
       toNoticeDate: "",
       colourResNo: "",
       noticeOfficeDiaryNo: "",
+      memberPosition:""
     },
 
     onSubmit: (values) => {
       // Handle form submission here
-      SearchResolutionApi(values);
+      SearchResolutionAnnualReportApi(values);
     },
   });
 
@@ -74,7 +75,7 @@ function QMSResolutionAnnualReports() {
     });
   };
 
-  const SearchResolutionApi = async (values) => {
+  const SearchResolutionAnnualReportApi = async (values) => {
     const searchParams = {
       fkSessionNoFrom: values.fromSession,
       fkSessionNoTo: values.toSession,
@@ -87,10 +88,11 @@ function QMSResolutionAnnualReports() {
       noticeOfficeDiaryDateFrom: values.fromNoticeDate,
       noticeOfficeDiaryDateTo: values.toNoticeDate,
       resolutionMovers: values?.memberName?.value,
+      memberPosition:values?.memberPosition
     };
 
     try {
-      const response = await searchResolution(
+      const response = await resolutionAnnualReport(
         searchParams,
         currentPage,
         pageSize
@@ -394,6 +396,27 @@ function QMSResolutionAnnualReports() {
                           />
                         </div>
                       </div>
+                      <div class="col-3">
+                      <div class="mb-3">
+                        <label class="form-label">Member Position</label>
+                        <select
+                          class={`form-select`}
+                          placeholder="Member Position"
+                          value={formik.values.memberPosition}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          name="memberPosition"
+                        >
+                          <option value="" selected disabled hidden>
+                            Select
+                          </option>
+                          <option value={"Treasury"}>Treasury</option>
+                          <option value={"Opposition"}>Opposition</option>
+                          <option value={"Independent"}>Independent</option>
+                          <option value={"Anyside"}>Anyside</option>
+                        </select>
+                      </div>
+                  </div>
                     </div>
 
                     <div className="row">

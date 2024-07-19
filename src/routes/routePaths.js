@@ -233,6 +233,7 @@ import TestingSeatingPlan from "../pages/Dashboard/Modules/Notice/SeatingPlan/Ma
 import SeatingPlanTest from "../pages/Dashboard/Modules/Notice/SeatingPlan/ManageSeatingPlan/SeatPlanTest.js";
 import BillFromSelection from "../pages/Dashboard/Modules/LGMS/Bills/LegislationBills/BillFrom/index.js";
 import QMSBallotResolutionList from "../pages/Dashboard/Modules/QMS/Resolution/ResolutionList/BallotResolutionList/index.js";
+import PreviewBallotResolutionList from "../pages/Dashboard/Modules/QMS/Resolution/ResolutionList/PreviewBallotResolutionList/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -456,6 +457,7 @@ export const ProtectedRoutes = [
   { path: "/qms/resolution", element: <QMSQuestionDashboard /> },
   { path: "/qms/rsolution/list", element: <QMSResolutionList /> },
   { path: "/qms/rsolution/list/ballot/:id", element: <QMSBallotResolutionList /> },
+  { path: "/qms/rsolution/list/ballot/preview-pdf", element: <PreviewBallotResolutionList /> },
   { path: "/qms/resolution/delete", element: <QMSDeleteResolution /> },
 
   { path: "/qms/question", element: <QMSQuestionDashboard /> },

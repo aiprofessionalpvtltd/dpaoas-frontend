@@ -161,9 +161,9 @@ function QuestionGroupDiary() {
                     <button class="btn btn-primary" type="submit">
                       Generate
                     </button>
-                    <button class="btn btn-primary" onClick={() => {}}>
+                    {/* <button class="btn btn-primary" onClick={() => {}}>
                       Print
-                    </button>
+                    </button> */}
                   </div>
                 </div>
               </form>
