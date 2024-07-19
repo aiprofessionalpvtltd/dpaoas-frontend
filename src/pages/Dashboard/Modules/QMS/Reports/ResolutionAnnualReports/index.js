@@ -1,14 +1,12 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
 import { QMSSideBarItems } from "../../../../../../utils/sideBarItems";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import DatePicker from "react-datepicker";
-import { getAllQuestionStatus } from "../../../../../../api/APIs/Services/Question.service";
 import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
-import { resolutionAnnualReport, searchResolution } from "../../../../../../api/APIs/Services/Resolution.service";
-import { useNavigate } from "react-router-dom";
+import { resolutionAnnualReport } from "../../../../../../api/APIs/Services/Resolution.service";
 import { AuthContext } from "../../../../../../api/AuthContext";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import { ToastContainer } from "react-toastify";
@@ -16,11 +14,9 @@ import { useFormik } from "formik";
 import Select from "react-select";
 
 function QMSResolutionAnnualReports() {
-  const navigate = useNavigate();
   const { members, sessions, resolutionStatus } = useContext(AuthContext);
   const [searchedData, setSearchedData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
-  const [allResolutionStatus, setAllResolutionStatus] = useState([]);
   const pageSize = 10; // Set your desired page size
 
   const handlePageChange = (page) => {
@@ -57,10 +53,10 @@ function QMSResolutionAnnualReports() {
         .filter(Boolean)
         .join(", ");
       const cleanedSubjectMatter = subjectMatter.replace(/(<([^>]+)>)/gi, "");
-      const movers =
-        res?.resolutionMoversAssociation.map(
-          (item) => item?.memberAssociation?.memberName
-        ) || [];
+      // const movers =
+      //   res?.resolutionMoversAssociation.map(
+      //     (item) => item?.memberAssociation?.memberName
+      //   ) || [];
 
       return {
         // RID: res.id,
@@ -110,23 +106,7 @@ function QMSResolutionAnnualReports() {
     }
   };
 
-  const GetALlStatus = async () => {
-    try {
-      const response = await getAllQuestionStatus();
-      if (response?.success) {
-        setAllResolutionStatus(response?.data);
-        // showSuccessMessage(response.message);
-      }
-    } catch (error) {
-      console.log(error);
-      showErrorMessage(error?.response?.data?.message);
-    }
-  };
-  
 
-  useEffect(() => {
-    GetALlStatus();
-  }, []);
   const handleResetForm = () => {
     formik.resetForm();
     setSearchedData([]);
@@ -352,7 +332,6 @@ function QMSResolutionAnnualReports() {
                               top: "36px",
                               zIndex: 1,
                               fontSize: "20px",
-                              zIndex: "1",
                               color: "#666",
                             }}
                           >
@@ -379,7 +358,6 @@ function QMSResolutionAnnualReports() {
                               top: "36px",
                               zIndex: 1,
                               fontSize: "20px",
-                              zIndex: "1",
                               color: "#666",
                             }}
                           >
