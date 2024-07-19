@@ -278,6 +278,12 @@ export const MMSSideBarItems = [
         link: "/mms/reports/motion-summary",
         icon: faClipboardList,
       },
+      {
+        itemName: "Motion List Report",
+        link: "/mms/reports/motion-list",
+        icon: faClipboardList,
+      },
+      
     ],
   },
 ];

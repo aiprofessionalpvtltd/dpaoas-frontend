@@ -21,6 +21,7 @@ import DatePicker from "react-datepicker";
 import { AuthContext } from "../../../../../../api/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
+import moment from "moment";
 
 function SearchResolution() {
   const navigate = useNavigate();
@@ -81,7 +82,7 @@ function SearchResolution() {
           ? res.resolutionStatus?.resolutionStatus
           : "",
         Movers: movers ? movers : "",
-        SentDate: res?.resolutionSentDate,
+        SentDate:res?.resolutionSentDate? moment(res?.resolutionSentDate).format("DD-MM-YYYY"):"--",
         createdBy:res?.resolutionSentStatus === "inNotice" ? "Notice Office": "---"
       };
     });
