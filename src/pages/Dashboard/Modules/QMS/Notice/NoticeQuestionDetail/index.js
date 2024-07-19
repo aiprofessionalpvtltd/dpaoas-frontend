@@ -22,6 +22,7 @@ import {
 import { ToastContainer } from "react-toastify";
 import moment from "moment";
 import { getAllDivisions } from "../../../../../../api/APIs/Services/ManageQMS.service";
+import { imagesUrl } from "../../../../../../api/APIs";
 
 const validationSchema = Yup.object({
   sessionNumber: Yup.string().required("Session No is required"),
@@ -51,11 +52,11 @@ function QMSNoticeQuestionDetail() {
   const formik = useFormik({
     initialValues: {
       sessionNumber: location?.state?.question?.session?.sessionName,
-      noticeOfficeDiaryNumber: location?.state?.question?.questionDiary?.questionDiaryNo,
+      noticeOfficeDiaryNumber: location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryNo,
       noticeOfficeDiaryDate: location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryDate ? moment(
         location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryDate,
       ).toDate():"",
-      noticeOfficeDiaryTime: location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryTime ? moment(location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryTime).toDate() :"",
+      noticeOfficeDiaryTime: location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryTime ? moment(location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryTime, "hh:mm a").toDate() :"",
       questionDiaryNumber: location?.state?.question?.questionDiary?.questionDiaryNo,
       category: location?.state?.question ? location?.state?.question?.questionCategory:"",
       englishText:  location?.state?.question ? location?.state?.question?.englishText :"",
@@ -168,15 +169,23 @@ function QMSNoticeQuestionDetail() {
               <button class="btn btn-primary me-2" type="submit">
                 Update
               </button>
-              <button class="btn btn-warning me-2" type="button">
+              <button class="btn btn-warning me-2" type="button"  onClick={() => {
+    const imagePath = location?.state?.question?.questionImage[0]?.path;
+    if (imagePath) {
+      const url = `${imagesUrl}${imagePath}`;
+      window.open(url, "_blank");
+    } else {
+      console.error("Image path is not defined.");
+    }
+  }}>
                 View File
               </button>
-              <button class="btn btn-primary me-2" type="button">
+              {/* <button class="btn btn-primary me-2" type="button">
                 Revive
               </button>
               <button class="btn btn-primary me-2" type="button">
                 Duplicate
-              </button>
+              </button> */}
               {/* <button class="btn btn-danger" type="button">
                 Delete
               </button> */}

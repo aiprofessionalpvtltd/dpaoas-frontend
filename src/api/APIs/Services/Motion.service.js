@@ -243,14 +243,74 @@ export const allMotionSummary = async (searchParams, currentPage, pageSize) => {
   }
 };
 
-//Create Motion List
-export const createNewMotionList = async (data) => {
+// //Create Motion List
+// export const createNewMotionList = async (data) => {
+//   try {
+//     // const token = getAuthToken();
+//     const response = await axiosClientMMS.post(`/motion/motion-lists`, data);
+//     return response?.data;
+//   } catch (error) {
+//     console.error("Error fetching API endpoint:", error);
+//     throw error;
+//   }
+// };
+
+// Motion List Report
+export const allMotionList = async (currentPage, pageSize) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.post(`/motion/motion-lists`, data);
+    const response = await axiosClientMMS.get(``)
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+}
+
+//GENERATE
+export const generateMotionList = async (data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.post(``, data)
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
     throw error;
   }
 };
+
+//Save Motion List
+ export const saveNewMotionList = async (data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.post(``, data)
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+//Update Motion List
+export const UpdateMotionList = async (data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.put(``, data)
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+//Delete Motion List 
+export const deleteMotionListByID = async (id) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClientMMS.delete(``)
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+}

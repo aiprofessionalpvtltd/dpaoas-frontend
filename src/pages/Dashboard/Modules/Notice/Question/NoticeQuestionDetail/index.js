@@ -723,9 +723,9 @@ function NoticeQuestionDetail() {
                   {/* <button class="btn btn-primary" type="">
                     Upload File
                   </button> */}
-                  <button class="btn btn-danger" type="">
+                  {/* <button class="btn btn-danger" type="">
                     Delete
-                  </button>
+                  </button> */}
                 </div>
               </form>
               <CustomTable

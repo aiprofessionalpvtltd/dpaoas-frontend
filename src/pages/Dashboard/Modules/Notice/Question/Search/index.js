@@ -100,7 +100,7 @@ function SearchQuestion() {
         Status: res.questionStatus?.questionStatus
           ? res.questionStatus?.questionStatus
           : "",
-        SentDate: res?.questionSentDate,
+        SentDate:res?.questionSentDate? moment(res?.questionSentDate).format("DD-MM-YYYY"):"--",
         createdBy : res?.questionSentStatus === "inNotice" ? "Notice Office" : res?.questionSentStatus == "toQuestion" ? "From Notice Office":"--"
       };
     });
