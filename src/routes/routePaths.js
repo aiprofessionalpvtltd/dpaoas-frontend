@@ -34,7 +34,7 @@ import BusinessSummary from "../pages/Dashboard/Modules/Notice/Reports/BusinessS
 import NewResolution from "../pages/Dashboard/Modules/Notice/Resolution/New";
 import SearchResolution from "../pages/Dashboard/Modules/Notice/Resolution/Search";
 import SentResolution from "../pages/Dashboard/Modules/Notice/Resolution/Sent";
-import ManageSeatingPlan from "../pages/Dashboard/Modules/Notice/SeatingPlan/ManageSeatingPlan";
+// import ManageSeatingPlan from "../pages/Dashboard/Modules/Notice/SeatingPlan/ManageSeatingPlan";
 import QMSQuestionDashboard from "../pages/Dashboard/Modules/QMS";
 import QMSNoticeQuestion from "../pages/Dashboard/Modules/QMS/Notice/NoticeQuestion";
 import QMSNoticeQuestionDetail from "../pages/Dashboard/Modules/QMS/Notice/NoticeQuestionDetail";
@@ -229,7 +229,6 @@ import LDUAddEditPrivateBill from "../pages/Dashboard/Modules/LDU/LDUPrivateBill
 import AllFilesListing from "../pages/Dashboard/Modules/LDU/LawActs/AllListing";
 import EditLawActsBill from "../pages/Dashboard/Modules/LDU/LawActs/AllListing/EditLawActsBill";
 import AddEditRotaList from "../pages/Dashboard/Modules/QMS/Reports/RotaList/AddEditRotaList.js";
-import TestingSeatingPlan from "../pages/Dashboard/Modules/Notice/SeatingPlan/ManageSeatingPlan/test.js";
 import SeatingPlanTest from "../pages/Dashboard/Modules/Notice/SeatingPlan/ManageSeatingPlan/SeatPlanTest.js";
 import BillFromSelection from "../pages/Dashboard/Modules/LGMS/Bills/LegislationBills/BillFrom/index.js";
 import QMSBallotResolutionList from "../pages/Dashboard/Modules/QMS/Resolution/ResolutionList/BallotResolutionList/index.js";
