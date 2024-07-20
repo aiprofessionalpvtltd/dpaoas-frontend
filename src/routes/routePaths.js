@@ -234,6 +234,8 @@ import BillFromSelection from "../pages/Dashboard/Modules/LGMS/Bills/Legislation
 import QMSBallotResolutionList from "../pages/Dashboard/Modules/QMS/Resolution/ResolutionList/BallotResolutionList/index.js";
 import PreviewBallotResolutionList from "../pages/Dashboard/Modules/QMS/Resolution/ResolutionList/PreviewBallotResolutionList/index.js";
 import MMSMotionListReport from "../pages/Dashboard/Modules/MMS/Reports/MotionListReport/index.js";
+import MMSBallotMotionList from "../pages/Dashboard/Modules/MMS/Reports/MotionListReport/BallotMotionList/index.js";
+import PreviewBallotMotionList from "../pages/Dashboard/Modules/MMS/Reports/MotionListReport/PreviewBallotMotionList/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -395,7 +397,8 @@ export const ProtectedRoutes = [
   { path: "/mms/reports", element: <MMSMotionDashboard /> },
   { path: "/mms/reports/motion-summary", element: <MMSMotionSummery /> },
   { path: "/mms/reports/motion-list", element : <MMSMotionListReport />},
-  // { path: "/qms/rsolution/list/ballot/:id", element: <QMSBallotResolutionList /> },
+  { path: "/mms/reports/motion-list/ballot/:id", element: <MMSBallotMotionList /> },
+  {path: "/mms/reports/motion-list/ballot/preview-pdf", element: <PreviewBallotMotionList />},
 
   //QMS Module
   { path: "/qms/dashboard", element: <QMSQuestionDashboard /> },

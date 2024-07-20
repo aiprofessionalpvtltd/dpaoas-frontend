@@ -9,7 +9,10 @@
 // export default MotionListReport
 import React, { useContext, useEffect, useState } from "react";
 import { Layout } from "../../../../../../components/Layout";
-import { MMSSideBarItems, QMSSideBarItems } from "../../../../../../utils/sideBarItems";
+import {
+  MMSSideBarItems,
+  QMSSideBarItems,
+} from "../../../../../../utils/sideBarItems";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import Header from "../../../../../../components/Header";
 import {
@@ -26,16 +29,21 @@ import { useFormik } from "formik";
 import { DeleteModal } from "../../../../../../components/DeleteModal";
 import { Button, Modal } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { UpdateMotionList, allMotionList, deleteMotionListByID, generateMotionList, saveNewMotionList } from "../../../../../../api/APIs/Services/Motion.service";
-
+import {
+  UpdateMotionList,
+  allMotionList,
+  deleteMotionListByID,
+  generateMotionList,
+  saveNewMotionList,
+} from "../../../../../../api/APIs/Services/Motion.service";
 
 function MMSMotionListReport() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { sessions } = useContext(AuthContext);
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
   const [motionListData, setMotionListData] = useState([]);
-  const[showEdit, setShowEdit] = useState(false)
+  const [showEdit, setShowEdit] = useState(false);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -43,7 +51,9 @@ function MMSMotionListReport() {
     sessionNumber: "",
     listName: "",
     listDate: "",
-    id:""
+    id: "",
+    motionType: "",
+    motionWeek: "",
   });
 
   const toggleModal = () => {
@@ -57,6 +67,8 @@ function MMSMotionListReport() {
       sessionNumber: "",
       listName: "",
       listDate: "",
+      motionWeek: "",
+      motionType: "",
     },
     // validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -73,28 +85,30 @@ function MMSMotionListReport() {
   const trenformNewMotion = (apiData) => {
     return apiData.map((item, index) => ({
       // SR: `${index + 1}`,
-      id:item?.id,
+      id: item?.id,
       internalId: item?.sessionName?.id,
       SessionName: item?.sessionName?.sessionName,
       listName: item?.listName,
       listDate: moment(item?.listDate).format("YYYY/MM/DD"),
-      Status:item?.resolutionListStatus
+      motionType: item?.motionType,
+      motionWeek: item?.motionWeek,
+      Status: item?.motionListStatus,
     }));
   };
-
- 
 
   const generateMotionListApi = async (values) => {
     const data = {
       fkSessionId: values?.sessionNumber,
       listName: values?.listName,
       listDate: values?.listDate,
+      motionType: values?.motionType,
+      motionWeek: values?.motionWeek,
     };
 
     try {
       const response = await generateMotionList(data); // Add await here
       if (response?.success) {
-        setShowEdit(true)
+        setShowEdit(true);
         showSuccessMessage(response?.message);
         const transformedData = trenformNewMotion(response?.data);
         setMotionListData(transformedData);
@@ -109,14 +123,16 @@ function MMSMotionListReport() {
       fkSessionId: formik.values?.sessionNumber,
       listName: formik.values?.listName,
       listDate: formik.values?.listDate,
+      motionType: formik.values?.motionType,
+      motionWeek: formik.values?.motionWeek,
     };
 
     try {
       const response = await saveNewMotionList(data); // Add await here
       if (response?.success) {
         showSuccessMessage(response?.message);
-        setShowEdit(false)
-        allMotionListApi()
+        setShowEdit(false);
+        allMotionListApi();
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.error);
@@ -128,30 +144,32 @@ function MMSMotionListReport() {
       fkSessionId: editmodalValue?.sessionNumber,
       listName: editmodalValue?.listName,
       listDate: editmodalValue?.listDate,
-      id:editmodalValue?.id
+      id: editmodalValue?.id,
+      motionType: editmodalValue?.motionType,
+      motionWeek: editmodalValue?.motionWeek,
     };
 
     try {
       const response = await UpdateMotionList(data); // Add await here
       if (response?.success) {
         showSuccessMessage(response?.message);
-        setShowEdit(false)   
-        allMotionListApi()     
-        toggleModal()
+        setShowEdit(false);
+        allMotionListApi();
+        toggleModal();
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.error);
     }
   };
-  
+
   const allMotionListApi = async () => {
     try {
-      const response = await allMotionList(currentPage,pageSize); // Add await here
+      const response = await allMotionList(currentPage, pageSize); // Add await here
       if (response?.success) {
-        showSuccessMessage(response?.message);
-        setShowEdit(false)
-        setCount(response?.data?.count)
-        const transformedData = trenformNewMotion(response?.data?.resolutionList);
+        // showSuccessMessage(response?.message);
+        setShowEdit(false);
+        setCount(response?.data?.count);
+        const transformedData = trenformNewMotion(response?.data?.motionList);
         setMotionListData(transformedData);
       }
     } catch (error) {
@@ -164,17 +182,16 @@ function MMSMotionListReport() {
       const response = await deleteMotionListByID(id);
       if (response.success) {
         showSuccessMessage(response?.message);
-        allMotionListApi()
+        allMotionListApi();
       }
     } catch (error) {
       showErrorMessage(error?.response.data.message);
     }
   };
- 
 
-//   useEffect(() => {
-//     allMotionListApi()
-//   },[currentPage])
+  useEffect(() => {
+    allMotionListApi();
+  }, [currentPage]);
   return (
     <Layout module={true} sidebarItems={MMSSideBarItems} centerlogohide={true}>
       <ToastContainer />
@@ -261,12 +278,78 @@ function MMSMotionListReport() {
             </div>
           </div>
         </div>
+        <div className="row">
+          <div class="col-4">
+            <div class="mb-3">
+              <label class="form-label">Motion Type</label>
+              <select
+                class="form-select"
+                // placeholder={formik.values.motionType}
+                value={editmodalValue.motionType}
+                onChange={(e) =>
+                  setEditModalValue((prevState) => ({
+                    ...prevState,
+                    motionType: e.target.value,
+                  }))
+                }
+                id="motionType"
+                onBlur={formik.handleBlur}
+              >
+                <option value={""} selected disabled hidden>
+                  Select
+                </option>
+
+                <option value={"Adjournment Motion"}>Adjournment Motion</option>
+                <option value={"Call Attention Notice"}>
+                  Call Attention Notice
+                </option>
+
+                <option value={"Motion Under Rule 218"}>
+                  Motion Under Rule 218
+                </option>
+                {/* <option value={"Motion Under Rule 60"}>
+                          Motion Under Rule 60
+                        </option> */}
+              </select>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="mb-3">
+              <label class="form-label">Motion Week</label>
+              <select
+                class="form-select"
+                // placeholder={formik.values.motionWeek}
+                value={editmodalValue.motionWeek}
+                onChange={(e) =>
+                  setEditModalValue((prevState) => ({
+                    ...prevState,
+                    motionWeek: e.target.value,
+                  }))
+                }
+                id="motionWeek"
+                onBlur={formik.handleBlur}
+              >
+                <option value={""} selected disabled hidden>
+                  Select
+                </option>
+                {/* <option>Motion Week</option>
+                        <option>Not Applicable</option> */}
+                <option value={"Not Applicable"}>Not Applicable</option>
+                <option value={"1st Week"}>1st Week</option>
+                <option value={"2nd Week"}>2nd Week</option>
+                <option value={"3rd Week"}>3rd Week</option>
+                <option value={"4th Week"}>4th Week</option>
+                <option value={"5th Week"}>5th Week</option>
+              </select>
+            </div>
+          </div>
+        </div>
 
         <Modal.Footer>
           <Button
             variant="primary"
             onClick={() => {
-              UpdateResolutionListApi()
+              UpdateResolutionListApi();
             }}
           >
             Update List
@@ -368,6 +451,64 @@ function MMSMotionListReport() {
                     </div>
                   </div>
                 </div>
+                <div className="row">
+                  <div class="col-4">
+                    <div class="mb-3">
+                      <label class="form-label">Motion Type</label>
+                      <select
+                        class="form-select"
+                        // placeholder={formik.values.motionType}
+                        value={formik.values.motionType}
+                        onChange={formik.handleChange}
+                        id="motionType"
+                        onBlur={formik.handleBlur}
+                      >
+                        <option value={""} selected disabled hidden>
+                          Select
+                        </option>
+
+                        <option value={"Adjournment Motion"}>
+                          Adjournment Motion
+                        </option>
+                        <option value={"Call Attention Notice"}>
+                          Call Attention Notice
+                        </option>
+
+                        <option value={"Motion Under Rule 218"}>
+                          Motion Under Rule 218
+                        </option>
+                        {/* <option value={"Motion Under Rule 60"}>
+                          Motion Under Rule 60
+                        </option> */}
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-4">
+                    <div class="mb-3">
+                      <label class="form-label">Motion Week</label>
+                      <select
+                        class="form-select"
+                        // placeholder={formik.values.motionWeek}
+                        value={formik.values.motionWeek}
+                        onChange={formik.handleChange}
+                        id="motionWeek"
+                        onBlur={formik.handleBlur}
+                      >
+                        <option value={""} selected disabled hidden>
+                          Select
+                        </option>
+                        {/* <option>Motion Week</option>
+                        <option>Not Applicable</option> */}
+                        <option value={"Not Applicable"}>Not Applicable</option>
+                        <option value={"1st Week"}>1st Week</option>
+                        <option value={"2nd Week"}>2nd Week</option>
+                        <option value={"3rd Week"}>3rd Week</option>
+                        <option value={"4th Week"}>4th Week</option>
+                        <option value={"5th Week"}>5th Week</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
 
                 <div class="row">
                   <div class="d-grid gap-2 d-md-flex justify-content-md-end">
@@ -401,20 +542,25 @@ function MMSMotionListReport() {
                   data={motionListData}
                   tableTitle="Motion List"
                   // headerShown={true}
+                  ActionHide={showEdit}
                   handleDelete={(item) => hendleDeleteApi(item.id)}
                   headertitlebgColor={"#666"}
                   headertitletextColor={"#FFF"}
                   handlePageChange={handlePageChange}
                   currentPage={currentPage}
                   showBallot={true}
-                  hendleBallot={(item) => navigate(`/qms/rsolution/list/ballot/${item.id}`)}
+                  hendleBallot={(item) =>
+                    navigate(`/mms/reports/motion-list/ballot/${item.id}`)
+                  }
                   pageSize={pageSize}
                   showEditIcon={showEdit}
                   totalCount={count}
                   handleEdit={(item) => {
                     setEditModalValue({
                       sessionNumber: item?.internalId ? item?.internalId : "",
-                      id:item?.id ? item?.id :"",
+                      id: item?.id ? item?.id : "",
+                      motionType: item?.motionType ? item?.motionType : "",
+                      motionWeek: item?.motionWeek ? item?.motionWeek : "",
                       listName: item?.listName ? item?.listName : "",
                       listDate: item.listDate
                         ? moment(item?.listDate).toDate()
