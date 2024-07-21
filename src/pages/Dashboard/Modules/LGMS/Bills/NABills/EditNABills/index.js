@@ -281,6 +281,7 @@ const UpdateBills = () => {
 
       let fileNum="";
       if(singleSenateBillData?.fileNumber){
+        console.log("",singleSenateBillData?.fileNumber)
         const fileNumberMatch = singleSenateBillData?.fileNumber?.match(/\((\d+)\)/);
         fileNum = fileNumberMatch ? fileNumberMatch[1] : '';
 

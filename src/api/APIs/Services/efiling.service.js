@@ -468,13 +468,39 @@ export const getSingleCaseByFileId = async (fileId, caseId) => {
 export const getUserCaseHistory = async (
   fileId,
   branchId,
+  userId,
   currentPage,
   pageSize
 ) => {
   try {
     //   const token = getAuthToken();
     const response = await axiosClientMMS.get(
-      `/cases/getCasesHistory/${fileId}/${branchId}?currentPage=${currentPage}&pageSize=${pageSize}`
+      `/cases/getCasesHistory/${fileId}/${branchId}/${userId}?currentPage=${currentPage}&pageSize=${pageSize}`
+    );
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const getUserAllCaseHistory = async (
+  fileId,
+  branchId,
+  userId,
+  currentPage,
+  pageSize
+) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClientMMS.get(
+      `/cases/getAllCasesHistory/${fileId}/${branchId}/${userId}?currentPage=${currentPage}&pageSize=${pageSize}`
     );
     // {
     //   headers: {

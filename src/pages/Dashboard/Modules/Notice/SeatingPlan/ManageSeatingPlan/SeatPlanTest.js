@@ -392,7 +392,7 @@ const Seat = ({ item, onDrop, side, onClick }) => {
         style={{
           borderRadius: "5px",
           border: "1px solid",
-          background: getColorByGovernmentType(item?.member?.governmentType),
+          background: item?.isRequest===true ? "gray" : item?.member?.isMinister===true ? "orange" : item?.member?.governmentType ? getColorByGovernmentType(item?.member?.governmentType): "white",
           cursor: "pointer",
         }}
       >
