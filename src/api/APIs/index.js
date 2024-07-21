@@ -1,21 +1,15 @@
+import React from "react";
 import axios from "axios";
- 
-// const NODE_APP_API_URL = "http://127.0.0.1:5152";
-const NODE_APP_API_URL = process.env.NODE_APP_API_URL;
 
-// Get APP_IP from environment variables with a fallback
-const APP_IP = NODE_APP_API_URL || "http://localhost:5152";
+const API_URL = process.env.REACT_APP_API_URL;
+const TINY_EDITOR_API_KEY = process.env.REACT_APP_TINY_EDITOR_API_KEY;
 
+console.log("API URL:", API_URL); // This should log the API URL from .env
+console.log("Tiny Editor API Key:", TINY_EDITOR_API_KEY); // This should log the API key from .env
 
-console.log("this is env var", process.env.REACT_APP_API_URL);
+export const imagesUrl = API_URL;
+export const imagesUrl2 = API_URL;
 
-// Image/Files URL (Production)
-export const imagesUrl = APP_IP;
-
-// Image Url
-export const imagesUrl2 = APP_IP;
-
-// Function to create an axios instance with a base URL
 const createAxiosClient = (baseURL) => {
   return axios.create({
     baseURL: baseURL,
@@ -25,8 +19,6 @@ const createAxiosClient = (baseURL) => {
   });
 };
 
-// Create axios clients with base URL
-export const axiosClient = createAxiosClient(`${APP_IP}/api`);
-export const axiosClientVMS = createAxiosClient(`${APP_IP}/api`);
-export const axiosClientMMS = createAxiosClient(`${APP_IP}/api`);
- 
+export const axiosClient = createAxiosClient(`${API_URL}/api`);
+export const axiosClientVMS = createAxiosClient(`${API_URL}/api`);
+export const axiosClientMMS = createAxiosClient(`${API_URL}/api`);
