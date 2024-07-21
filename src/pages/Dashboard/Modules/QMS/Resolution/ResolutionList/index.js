@@ -25,14 +25,13 @@ import { DeleteModal } from "../../../../../../components/DeleteModal";
 import { Button, Modal } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
-
 function QMSResolutionList() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { sessions } = useContext(AuthContext);
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
   const [resolutionListsData, setResolutionListsData] = useState([]);
-  const[showEdit, setShowEdit] = useState(false)
+  const [showEdit, setShowEdit] = useState(false);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -40,7 +39,7 @@ function QMSResolutionList() {
     sessionNumber: "",
     listName: "",
     listDate: "",
-    id:""
+    id: "",
   });
 
   const toggleModal = () => {
@@ -70,16 +69,14 @@ function QMSResolutionList() {
   const trenformNewResolution = (apiData) => {
     return apiData.map((item, index) => ({
       // SR: `${index + 1}`,
-      id:item?.id,
+      id: item?.id,
       internalId: item?.sessionName?.id,
       SessionName: item?.sessionName?.sessionName,
       listName: item?.listName,
       listDate: moment(item?.listDate).format("YYYY/MM/DD"),
-      Status:item?.resolutionListStatus
+      Status: item?.resolutionListStatus,
     }));
   };
-
- 
 
   const generateResolutionListApi = async (values) => {
     const data = {
@@ -91,7 +88,7 @@ function QMSResolutionList() {
     try {
       const response = await generateResolutionListData(data); // Add await here
       if (response?.success) {
-        setShowEdit(true)
+        setShowEdit(true);
         showSuccessMessage(response?.message);
         const transformedData = trenformNewResolution(response?.data);
         setResolutionListsData(transformedData);
@@ -112,8 +109,8 @@ function QMSResolutionList() {
       const response = await createNewResolutionList(data); // Add await here
       if (response?.success) {
         showSuccessMessage(response?.message);
-        setShowEdit(false)
-        allResolutionListApi()
+        setShowEdit(false);
+        allResolutionListApi();
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.error);
@@ -125,30 +122,32 @@ function QMSResolutionList() {
       fkSessionId: editmodalValue?.sessionNumber,
       listName: editmodalValue?.listName,
       listDate: editmodalValue?.listDate,
-      id:editmodalValue?.id
+      id: editmodalValue?.id,
     };
 
     try {
       const response = await UpdateResolutionList(data); // Add await here
       if (response?.success) {
         showSuccessMessage(response?.message);
-        setShowEdit(false)   
-        allResolutionListApi()     
-        toggleModal()
+        setShowEdit(false);
+        allResolutionListApi();
+        toggleModal();
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.error);
     }
   };
-  
+
   const allResolutionListApi = async () => {
     try {
-      const response = await allResolutionList(currentPage,pageSize); // Add await here
+      const response = await allResolutionList(currentPage, pageSize); // Add await here
       if (response?.success) {
-        showSuccessMessage(response?.message);
-        setShowEdit(false)
-        setCount(response?.data?.count)
-        const transformedData = trenformNewResolution(response?.data?.resolutionList);
+        // showSuccessMessage(response?.message);
+        setShowEdit(false);
+        setCount(response?.data?.count);
+        const transformedData = trenformNewResolution(
+          response?.data?.resolutionList
+        );
         setResolutionListsData(transformedData);
       }
     } catch (error) {
@@ -161,17 +160,16 @@ function QMSResolutionList() {
       const response = await deleteResolutionListByID(id);
       if (response.success) {
         showSuccessMessage(response?.message);
-        allResolutionListApi()
+        allResolutionListApi();
       }
     } catch (error) {
       showErrorMessage(error?.response.data.message);
     }
   };
- 
 
   useEffect(() => {
-    allResolutionListApi()
-  },[currentPage])
+    allResolutionListApi();
+  }, [currentPage]);
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <ToastContainer />
@@ -263,7 +261,7 @@ function QMSResolutionList() {
           <Button
             variant="primary"
             onClick={() => {
-              UpdateResolutionListApi()
+              UpdateResolutionListApi();
             }}
           >
             Update List
@@ -404,14 +402,17 @@ function QMSResolutionList() {
                   handlePageChange={handlePageChange}
                   currentPage={currentPage}
                   showBallot={true}
-                  hendleBallot={(item) => navigate(`/qms/rsolution/list/ballot/${item.id}`)}
+                  hendleBallot={(item) =>
+                    navigate(`/qms/rsolution/list/ballot/${item.id}`)
+                  }
                   pageSize={pageSize}
+                  ActionHide={showEdit}
                   showEditIcon={showEdit}
                   totalCount={count}
                   handleEdit={(item) => {
                     setEditModalValue({
                       sessionNumber: item?.internalId ? item?.internalId : "",
-                      id:item?.id ? item?.id :"",
+                      id: item?.id ? item?.id : "",
                       listName: item?.listName ? item?.listName : "",
                       listDate: item.listDate
                         ? moment(item?.listDate).toDate()

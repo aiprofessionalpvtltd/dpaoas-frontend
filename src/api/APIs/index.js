@@ -1,28 +1,32 @@
 import axios from "axios";
-import { getAuthToken } from "../Auth";
+ 
+// const NODE_APP_API_URL = "http://127.0.0.1:5152";
+const NODE_APP_API_URL = process.env.NODE_APP_API_URL;
+
+// Get APP_IP from environment variables with a fallback
+const APP_IP = NODE_APP_API_URL || "http://localhost:5152";
+
+
+console.log("this is env var", process.env.REACT_APP_API_URL);
 
 // Image/Files URL (Production)
-export const imagesUrl = "http://172.16.170.8:5252";
+export const imagesUrl = APP_IP;
 
-//Image Url
-export const imagesUrl2 = "http://172.16.170.8:5152";
+// Image Url
+export const imagesUrl2 = APP_IP;
 
-// Image/Files URL (Development)
-// export const imagesUrl = "http://10.10.140.200:5152";
+// Function to create an axios instance with a base URL
+const createAxiosClient = (baseURL) => {
+  return axios.create({
+    baseURL: baseURL,
+    headers: {
+      // Add any default headers here
+    },
+  });
+};
 
-// Set config defaults when creating the instance
-export const axiosClient = axios.create({
-  baseURL: "http://172.16.170.8:5151/api",
-});
-
-export const axiosClientVMS = axios.create({
-  baseURL: "http://172.16.170.8:5152/api",
-});
-
-export const axiosClientMMS = axios.create({
-  baseURL: "http://172.16.170.8:5252/api",
-  // baseURL: "http://10.10.140.89:5152/api",
-  // baseURL: "http://10.10.140.200:5152/api",
-  // baseURL: "http://10.10.140.200:8080/api",
-  // baseURL: "http://10.10.140.42:5152/api",
-});
+// Create axios clients with base URL
+export const axiosClient = createAxiosClient(`${APP_IP}/api`);
+export const axiosClientVMS = createAxiosClient(`${APP_IP}/api`);
+export const axiosClientMMS = createAxiosClient(`${APP_IP}/api`);
+ 
