@@ -25,6 +25,7 @@ function FileCases() {
   const navigate = useNavigate();
   const { setFileIdInRegister, fileIdINRegister } = useContext(AuthContext);
   const userData = getUserData();
+  console.log("userData", userData)
   const location = useLocation();
   const [headings, setHeadings] = useState(null);
   const [headcount, setHeadCount] = useState(null);
@@ -36,7 +37,7 @@ function FileCases() {
   const [fkfileId, setFKFileId] = useState(null);
   const [showHeadings, setShowHeadings] = useState(false);
   const [showFiles, setShowFiles] = useState(false);
-
+  console.log("test", location.state?.internalId)
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
@@ -44,7 +45,7 @@ function FileCases() {
   const transformFilesCases = (apiData) => {
     return apiData?.map((item, index) => {
       return {
-        // isEditable: item?.isEditable,
+        isEditable: item?.isEditable,
         caseId: item?.fkCaseId,
         internalId: item?.fileData?.id,
         FileNo: item?.fileData?.fileNumber,
@@ -78,6 +79,7 @@ function FileCases() {
       currentPage: currentPage,
       pageSize: pageSize,
       fileId: fkfileId?.value ? fkfileId?.value : location.state?.internalId,
+      // fkBranchId:userData && userData?.fkBranchId
     };
     try {
       const response = await getAllCasesThroughSearchParams(searchParams);
@@ -138,6 +140,7 @@ function FileCases() {
       currentPage: currentPage,
       pageSize: pageSize,
       mainHeadingNumber: headID,
+      
     };
     try {
       const response = await getFileByRegisterById(searchParams);
@@ -192,7 +195,7 @@ function FileCases() {
       }
     >
       <ToastContainer />
-      {userData?.userType === "Officer" && (
+      {/* {userData?.userType === "Officer" && ( */}
       <div class="row">
         <div
           className="col-2"
@@ -217,7 +220,7 @@ function FileCases() {
           </button>
         </div>
       </div>
-      )}
+      {/* )} */}
 
       <div className="row" style={{ marginBottom: "20px", marginLeft: "3px" }}>
         <div className="col-4">
@@ -314,7 +317,7 @@ function FileCases() {
                 },
               })
             }}
-            showEditIcon={false}
+            showEditIcon={true}
             pageSize={pageSize}
             totalCount={count}
             singleDataCard={true}

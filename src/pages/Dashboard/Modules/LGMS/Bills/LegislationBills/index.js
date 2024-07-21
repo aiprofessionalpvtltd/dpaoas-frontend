@@ -47,7 +47,7 @@ const AllLegislationBill = () => {
       // billType: item.billType,
       // billCategory: item.billCategory,
       fileNumber: item?.fileNumber,
-      // billFrom: item?.billFrom,
+      billFrom: item?.billFrom,
       // concerndCommittes: item?.introducedInHouses?.manageCommittees
       //   ?.committeeName
       //   ? item?.introducedInHouses?.manageCommittees?.committeeName
@@ -137,10 +137,10 @@ const AllLegislationBill = () => {
   };
 
   const handlePrivateMemberBill = () => {
-    navigate("/lgms/dashboard/bills/selectbillfrom");
+    navigate("/lgms/dashboard/bills/selectbillfrom", {state:{category:"Private Member Bill"}});
   };
   const handleGovernmentBill = () => {
-    navigate("/lgms/dashboard/bills/selectbillfrom");
+    navigate("/lgms/dashboard/bills/selectbillfrom", {state:{category:"Government Bill"}});
   };
   // //Handle Add Senate Bills
   // const handleAddSenateBills = () => {
@@ -257,8 +257,8 @@ const AllLegislationBill = () => {
           <CustomTable
             hidebtn1={false}
             hideBtn={false}
-            addBtnText2="Private Member Bill"
-            addBtnText={"Government Bill"}
+            addBtnText2="Government Bill"
+            addBtnText={"Private Member Bill"}
             handleAdd={handlePrivateMemberBill}
             handleAdd2={handleGovernmentBill}
             tableTitle={"All Bills Data"}
@@ -274,7 +274,7 @@ const AllLegislationBill = () => {
             pageSize={pageSize}
             totalCount={count}
             handleEdit={(item) => {
-              item?.billFrom === "From Senate" ? handleEditSenateBill(item?.id) : handleEditNABill(item?.id);
+              item?.billFrom === "From Senate" ? handleEditSenateBill(item?.id) :  handleEditNABill(item?.id);
             }}
             // handleEdit={(item)=>{handleEditSenateBill(item?.id)}}
             handleDelete={(item) => handleDeleteLegislationBill(item?.id)}

@@ -3,7 +3,7 @@ import { ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router";
 import { useLocation } from "react-router-dom";
 import { getUserData } from "../../../../../../../../api/Auth";
-import { getUserCaseHistory } from "../../../../../../../../api/APIs/Services/efiling.service";
+import { getUserAllCaseHistory, getUserCaseHistory } from "../../../../../../../../api/APIs/Services/efiling.service";
 import {
   EfilingSideBarBranchItem,
   EfilingSideBarItem,
@@ -38,40 +38,36 @@ function PreviousCasesHistory() {
       FileNo: item?.fileData?.fileNumber,
       AssignedBy:
         item?.fileRemarksData?.length > 0
-          ? `${
-              item?.fileRemarksData[item?.fileRemarksData.length - 1]
-                ?.submittedUser?.employee?.firstName
-            } ${
-              item?.fileRemarksData[item?.fileRemarksData.length - 1]
-                ?.submittedUser?.employee?.lastName
-            }`
+          ? `${item?.fileRemarksData[0]
+            ?.submittedUser?.employee?.firstName
+          } ${item?.fileRemarksData[0]
+            ?.submittedUser?.employee?.lastName
+          }`
           : "---",
       AssignedTo:
         item?.fileRemarksData?.length > 0
-          ? `${
-              item?.fileRemarksData[item?.fileRemarksData.length - 1]
-                ?.assignedUser?.employee?.firstName
-            } ${
-              item?.fileRemarksData[item?.fileRemarksData.length - 1]
-                ?.assignedUser?.employee?.lastName
-            }`
+          ? `${item?.fileRemarksData[0]
+            ?.assignedUser?.employee?.firstName
+          } ${item?.fileRemarksData[0]
+            ?.assignedUser?.employee?.lastName
+          }`
           : "---",
       Status:
         item?.fileRemarksData?.length > 0
           ? item?.fileRemarksData[item?.fileRemarksData.length - 1]
-              ?.CommentStatus
+            ?.CommentStatus
           : "Draft",
       MarkedDate:
         item?.fileRemarksData?.length > 0
           ? moment(
-              item?.fileRemarksData[item?.fileRemarksData.length - 1]?.createdAt
-            ).format("DD/MM/YYYY")
+            item?.fileRemarksData[item?.fileRemarksData.length - 1]?.createdAt
+          ).format("DD/MM/YYYY")
           : "---",
       MarkedTime:
         item?.fileRemarksData?.length > 0
           ? moment(
-              item?.fileRemarksData[item?.fileRemarksData.length - 1]?.createdAt
-            ).format("hh:mm A")
+            item?.fileRemarksData[item?.fileRemarksData.length - 1]?.createdAt
+          ).format("hh:mm A")
           : "---",
     }));
   };
@@ -97,13 +93,25 @@ function PreviousCasesHistory() {
   };
 
   const getAllCasesApi = async () => {
+    let response = {};
     try {
-      const response = await getUserCaseHistory(
-        location?.state?.fileId,
-        UserData?.fkBranchId,
-        currentPage,
-        pageSize
-      );
+      if (UserData && UserData?.userType === "Officer") {
+         response = await getUserAllCaseHistory(
+          location?.state?.fileId,
+          UserData?.fkBranchId,
+          UserData?.fkUserId,
+          currentPage,
+          pageSize
+        );
+      } else {
+         response = await getUserCaseHistory(
+          location?.state?.fileId,
+          UserData?.fkBranchId,
+          UserData?.fkUserId,
+          currentPage,
+          pageSize
+        );
+      }
       if (response.success) {
         setCount(response?.data?.count);
 
