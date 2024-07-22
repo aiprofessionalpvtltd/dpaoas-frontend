@@ -1,54 +1,56 @@
 import React, { useEffect, useState } from "react";
 import { Layout } from "../../../../../../../components/Layout";
-import { QMSSideBarItems } from "../../../../../../../utils/sideBarItems";
+import { MMSSideBarItems } from "../../../../../../../utils/sideBarItems";
 import CustomTable from "../../../../../../../components/CustomComponents/CustomTable";
 import {
   showErrorMessage,
   showSuccessMessage,
 } from "../../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
-import {
-  allBallotByResolutionListId,
-  getBallotRecord,
-} from "../../../../../../../api/APIs/Services/Resolution.service";
 import moment from "moment";
 import { useNavigate, useParams } from "react-router-dom";
+import {
+  allBallotByMotionListId,
+  getBallotMotionRecord,
+} from "../../../../../../../api/APIs/Services/Motion.service";
 
-function QMSBallotResolutionList() {
+function MMSBallotMotionList() {
   const { id } = useParams();
   const navigation = useNavigate();
   const [currentPage, setCurrentPage] = useState(0);
   const [isChecked, setIsChecked] = useState([]);
   const pageSize = 10;
-  const [resolutionData, setResolutionData] = useState([]);
+  const [motionListData, setMotionListData] = useState([]);
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
     setCurrentPage(page);
   };
-  const transfrerResolutionDetail = (apiData) => {
+  const transfrerMotionDetail = (apiData) => {
     return apiData.map((item, index) => ({
       internalId: item.id,
       id: item.id,
-      Date: moment(item?.createdAt).format("YYYY/MM/DD"),
-      NameOfTheMover: item?.memberNames
-        .map((mover) => mover.memberName)
+      Date: item?.createdAt
+        ? moment(item?.createdAt).format("YYYY/MM/DD")
+        : "--",
+      NameOfTheMover: item?.motionMovers
+        .map((mover) => mover.members.memberName)
         .join(", "),
       ContentsOfTheMotion: item?.englishText.replace(/(<([^>]+)>)/gi, ""),
-      Status: item?.resolutionStatus?.resolutionStatus,
+      Status: item?.motionStatuses?.statusName,
     }));
   };
   const hendleBallot = async () => {
     // const resolutionIds = {isChecked}
     try {
-      const response = await getBallotRecord(isChecked); // Add await here
+      const response = await getBallotMotionRecord(isChecked); // Add await here
       if (response?.success) {
         showSuccessMessage(response?.message);
-        const jsonString = JSON.stringify(response?.data?.resolutions);
+        const jsonString = JSON.stringify(response?.data?.motions);
         const encodedJsonString = encodeURIComponent(jsonString);
-        const url = `/qms/rsolution/list/ballot/preview-pdf?state=${encodedJsonString}`;
+        const url = `/mms/reports/motion-list/ballot/preview-pdf?state=${encodedJsonString}`;
         window.open(url, "_blank");
         const handleFocus = () => {
-          getBallotResolutionsListByIDApi();
+          getBallotMotionListByIDApi();
           window.removeEventListener("focus", handleFocus); // Remove listener after it fires
         };
 
@@ -59,15 +61,12 @@ function QMSBallotResolutionList() {
     }
   };
 
-  const getBallotResolutionsListByIDApi = async () => {
+  const getBallotMotionListByIDApi = async () => {
     try {
-      const response = await allBallotByResolutionListId(id);
+      const response = await allBallotByMotionListId(id);
       if (response?.success) {
-        const transferData = transfrerResolutionDetail(
-          response?.data[0]?.resolutions
-        );
-        console.log("transferData", transferData);
-        setResolutionData(transferData);
+        const transferData = transfrerMotionDetail(response?.data[0]?.motions);
+        setMotionListData(transferData);
       }
     } catch (error) {
       // Handle error
@@ -75,10 +74,10 @@ function QMSBallotResolutionList() {
     }
   };
   useEffect(() => {
-    getBallotResolutionsListByIDApi();
+    getBallotMotionListByIDApi();
   }, []);
   return (
-    <Layout sidebarItems={QMSSideBarItems}>
+    <Layout sidebarItems={MMSSideBarItems}>
       <ToastContainer />
       <div class="container-fluid">
         <div class="card">
@@ -86,14 +85,14 @@ function QMSBallotResolutionList() {
             class="card-header red-bg"
             style={{ background: "#14ae5c !important" }}
           >
-            <h1>Resolution Detail For Ballot</h1>
+            <h1>Motion Detail For Ballot</h1>
           </div>
           <div class="row">
             <div class="col">
               <CustomTable
                 hidebtn1={true}
-                data={resolutionData}
-                tableTitle="Resolution Detail For Ballot"
+                data={motionListData}
+                tableTitle="Motion Detail For Ballot"
                 headerShown={true}
                 hideBtn={true}
                 headertitlebgColor={"#666"}
@@ -127,4 +126,4 @@ function QMSBallotResolutionList() {
   );
 }
 
-export default QMSBallotResolutionList;
+export default MMSBallotMotionList;

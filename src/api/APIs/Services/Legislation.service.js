@@ -1,13 +1,13 @@
 
 // Leave Module
 
-import { axiosClientMMS } from "..";
+import { axiosClient } from "..";
 import { getAuthToken } from "../../Auth";
 
 export const createPrivateBill = async (data) => {
     try {
       //   const token = getAuthToken()
-      const response = await axiosClientMMS.post(`/privateMemberBills/create`, data, {
+      const response = await axiosClient.post(`/privateMemberBills/create`, data, {
         headers: {
           accept: "application/json",
           "Content-Type": "application/json",
@@ -23,7 +23,7 @@ export const createPrivateBill = async (data) => {
 export const getAllPrivateBill = async (page, pageSize) => {
     try {
         const token = getAuthToken();
-        const response = await axiosClientMMS.get(
+        const response = await axiosClient.get(
             `/privateMemberBills/findall?currentPage=${page}&pageSize=${pageSize}`,
         );
         return response?.data;
@@ -36,7 +36,7 @@ export const getAllPrivateBill = async (page, pageSize) => {
 export const getAllPrivateBillNotice = async (page, pageSize) => {
   try {
       const token = getAuthToken();
-      const response = await axiosClientMMS.get(
+      const response = await axiosClient.get(
           `/privateMemberBills/inNotice?currentPage=${page}&pageSize=${pageSize}`,
       );
       return response?.data;
@@ -49,7 +49,7 @@ export const getAllPrivateBillNotice = async (page, pageSize) => {
 export const getPrivateBillById = async (id) => {
     try {
         const token = getAuthToken();
-        const response = await axiosClientMMS.get(
+        const response = await axiosClient.get(
             `/privateMemberBills/${id}`,
         );
         return response?.data;
@@ -62,7 +62,7 @@ export const getPrivateBillById = async (id) => {
 export const updatePrivateBill = async (id, data) => {
     try {
         const token = getAuthToken();
-        const response = await axiosClientMMS.put(
+        const response = await axiosClient.put(
             `/privateMemberBills/update/${id}`, data
         );
         return response?.data;
@@ -75,7 +75,7 @@ export const updatePrivateBill = async (id, data) => {
 export const deletePrivateBill = async (id) => {
     try {
       //   const token = getAuthToken();
-      const response = await axiosClientMMS.delete(
+      const response = await axiosClient.delete(
         `/privateMemberBills/delete/${id}`
         // {
         //   headers: {
@@ -93,7 +93,7 @@ export const deletePrivateBill = async (id) => {
   export const sendPrivateBill = async (id, data) => {
     try {
       // const token = getAuthToken();
-      const response = await axiosClientMMS.put(
+      const response = await axiosClient.put(
         `/privateMemberBills/sendToLegislation/${id}`, data,
         {
           // headers: {

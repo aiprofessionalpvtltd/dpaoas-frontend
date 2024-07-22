@@ -1,11 +1,11 @@
-import { axiosClientMMS } from "..";
+import { axiosClient } from "..";
 import { getAuthToken } from "../../Auth";
 
 //Motion Management System
 export const createNewMotion = async (data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.post(`/motion/create`, data, {
+    const response = await axiosClient.post(`/motion/create`, data, {
       headers: {
         accept: "application/json",
         "Content-Type": "multipart/form-data",
@@ -21,7 +21,7 @@ export const createNewMotion = async (data) => {
 export const getAllMinistry = async () => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/motion/ministries`);
+    const response = await axiosClient.get(`/motion/ministries`);
     // {
     //   headers: {
     //     Authorization: `Bearer ${token}`,
@@ -37,7 +37,7 @@ export const getAllMinistry = async () => {
 export const getMotionByID = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/motion/${id}`);
+    const response = await axiosClient.get(`/motion/${id}`);
     // {
     //   headers: {
     //     Authorization: `Bearer ${token}`,
@@ -53,7 +53,7 @@ export const getMotionByID = async (id) => {
 export const getAllMotion = async (currentPage, pageSize,motionSentStatus, motiontoStatus) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/motion/all?page=${currentPage}&pageSize=${pageSize}&motionSentStatus=${motionSentStatus}&motionSentStatus=${motiontoStatus}`
     );
     // {
@@ -71,7 +71,7 @@ export const getAllMotion = async (currentPage, pageSize,motionSentStatus, motio
 export const getAllMotionNotice = async (currentPage, pageSize, motionSentStatus) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/motion/inNotice?page=${currentPage}&pageSize=${pageSize}&motionSentStatus=${motionSentStatus}`
     );
     // {
@@ -89,7 +89,7 @@ export const getAllMotionNotice = async (currentPage, pageSize, motionSentStatus
 export const updateNewMotion = async (id, data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.put(`/motion/${id}`, data, {
+    const response = await axiosClient.put(`/motion/${id}`, data, {
       headers: {
         accept: "application/json",
         "Content-Type": "multipart/form-data",
@@ -110,7 +110,7 @@ export const searchMotion = async (currentPage, pageSize, data) => {
     const filteredSearchParams = Object.fromEntries(
       Object.entries(data).filter(([_, value]) => value !== "")
     );
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/motion/all?page=${currentPage}&pageSize=${pageSize}`,
       {
         params: filteredSearchParams,
@@ -132,7 +132,7 @@ export const searchMotionNotice = async (currentPage, pageSize, data) => {
     const filteredSearchParams = Object.fromEntries(
       Object.entries(data).filter(([_, value]) => value !== "")
     );
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/motion/inNotice?page=${currentPage}&pageSize=${pageSize}`,
       {
         params: filteredSearchParams,
@@ -152,7 +152,7 @@ export const searchMotionNotice = async (currentPage, pageSize, data) => {
 export const getallMotionStatus = async () => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/motion/motionStatuses`, {
+    const response = await axiosClient.get(`/motion/motionStatuses`, {
       // headers: {
       //   Authorization: `Bearer ${token}`,
       // }
@@ -167,7 +167,7 @@ export const getallMotionStatus = async () => {
 export const getallMembers = async (currentPage, pageSize) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/members/all?currentPage=${currentPage}&pageSize=${pageSize}`,
       {
         // headers: {
@@ -185,7 +185,7 @@ export const getallMembers = async (currentPage, pageSize) => {
 export const sendToMotion = async (id, data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.put(
+    const response = await axiosClient.put(
       `/motion/sendToMotion/${id}`, data,
       {
         // headers: {
@@ -203,7 +203,7 @@ export const sendToMotion = async (id, data) => {
 export const sendMotionForTranslation = async (id) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.put(
+    const response = await axiosClient.put(
       `/motion/sendForTranslation/${id}`,
       {
         // headers: {
@@ -227,7 +227,7 @@ export const allMotionSummary = async (searchParams, currentPage, pageSize) => {
       Object.entries(searchParams).filter(([_, value]) => value !== "")
     );
 
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/motion/summary?currentPage=${currentPage}&pageSize=${pageSize}`,
       {
         params: filteredSearchParams,
@@ -247,7 +247,7 @@ export const allMotionSummary = async (searchParams, currentPage, pageSize) => {
 // export const createNewMotionList = async (data) => {
 //   try {
 //     // const token = getAuthToken();
-//     const response = await axiosClientMMS.post(`/motion/motion-lists`, data);
+//     const response = await axiosClient.post(`/motion/motion-lists`, data);
 //     return response?.data;
 //   } catch (error) {
 //     console.error("Error fetching API endpoint:", error);
@@ -259,7 +259,7 @@ export const allMotionSummary = async (searchParams, currentPage, pageSize) => {
 export const allMotionList = async (currentPage, pageSize) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(``)
+    const response = await axiosClient.get(`/motion/motionLists?currentPage=${currentPage}&pageSize=${pageSize}`)
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -271,7 +271,7 @@ export const allMotionList = async (currentPage, pageSize) => {
 export const generateMotionList = async (data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.post(``, data)
+    const response = await axiosClient.post(`/motion/generateMotionListData`, data)
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -283,7 +283,7 @@ export const generateMotionList = async (data) => {
  export const saveNewMotionList = async (data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.post(``, data)
+    const response = await axiosClient.post(`/motion/motion-lists`, data)
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -295,7 +295,7 @@ export const generateMotionList = async (data) => {
 export const UpdateMotionList = async (data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.put(``, data)
+    const response = await axiosClient.put(`/motion/updateMotionListAndAssociations`, data)
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -307,10 +307,33 @@ export const UpdateMotionList = async (data) => {
 export const deleteMotionListByID = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.delete(``)
+    const response = await axiosClient.delete(`/motion/motionlists/${id}`)
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
     throw error;
   }
 }
+
+//MotionBallotRecord
+export const getBallotMotionRecord = async (data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClient.post(`/motion/pdfMotionList`, data)
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const allBallotByMotionListId = async (id) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClient.get(`/motion/getSingleMotionData/${id}`)
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};

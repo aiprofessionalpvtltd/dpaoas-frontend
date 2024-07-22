@@ -1,10 +1,10 @@
-import { axiosClientMMS } from "..";
+import { axiosClient } from "..";
 import { getAuthToken } from "../../Auth";
 
 export const getBranches = async (currentPage, pageSize) => {
     try {
         //   const token = getAuthToken();
-        const response = await axiosClientMMS.get(
+        const response = await axiosClient.get(
             `/branches?page=${currentPage}&pageSize=${pageSize}`,
             // {
             //   headers: {
@@ -22,7 +22,7 @@ export const getBranches = async (currentPage, pageSize) => {
 export const createBranches = async (data) => {
     try {
         //   const token = getAuthToken();
-        const response = await axiosClientMMS.post(
+        const response = await axiosClient.post(
             `/branches/createBranch`,
             data
             // {
@@ -41,7 +41,7 @@ export const createBranches = async (data) => {
 export const updateBranches = async (id, data) => {
     try {
         //   const token = getAuthToken();
-        const response = await axiosClientMMS.put(
+        const response = await axiosClient.put(
             `/branches/update/${id}`,
             data
             // {
@@ -60,7 +60,7 @@ export const updateBranches = async (id, data) => {
 export const deleteBranches = async (id) => {
     try {
         //   const token = getAuthToken();
-        const response = await axiosClientMMS.delete(
+        const response = await axiosClient.delete(
             `/branches/delete/${id}`,
             // {
             //   headers: {

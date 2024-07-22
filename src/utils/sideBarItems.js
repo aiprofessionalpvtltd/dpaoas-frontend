@@ -283,7 +283,7 @@ export const MMSSideBarItems = [
         link: "/mms/reports/motion-list",
         icon: faClipboardList,
       },
-      
+
     ],
   },
 ];
@@ -482,25 +482,26 @@ export const QMSSideBarItems = [
         icon: faClipboardList,
       },
       {
-        itemName: "Terms",
-        link: "/qms/manage/terms",
-        icon: faClipboardList,
-      },
-      {
         itemName: "Tenures",
         link: "/qms/manage/tenures",
         icon: faClipboardList,
       },
       {
+        itemName: "Terms",
+        link: "/qms/manage/terms",
+        icon: faClipboardList,
+      },
+
+      {
         itemName: "Members",
         link: "/qms/manage/members",
         icon: faClipboardList,
       },
-      {
-        itemName: "Sitting Days",
-        link: "/qms/manage/sitting-days",
-        icon: faClipboardList,
-      },
+      // {
+      //   itemName: "Sitting Days",
+      //   link: "/qms/manage/sitting-days",
+      //   icon: faClipboardList,
+      // },
       // {
       //   itemName: "Ministries",
       //   link: "/qms/manage/ministries",

@@ -1,11 +1,11 @@
-import { axiosClientMMS } from "..";
+import { axiosClient } from "..";
 import { getAuthToken } from "../../Auth";
 
 // Notice Stats API
 export const getAllNoticeStats = async () => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/noticeOfficeReport/getStats`, {
+    const response = await axiosClient.get(`/noticeOfficeReport/getStats`, {
       // headers: {
       //   Authorization: `Bearer ${token}`,
       // }
@@ -22,7 +22,7 @@ export const getAllNoticeStats = async () => {
 export const getSessionDayAttendanceReport = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/manageSession/getAttendanceByProvince/${id}`,
       {
         // headers: {
@@ -41,7 +41,7 @@ export const getSessionDayAttendanceReport = async (id) => {
 export const createSpeachOnDemand = async (data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.post(
+    const response = await axiosClient.post(
       `/senator/speech-on-demand`,
       data
       // {
@@ -60,7 +60,7 @@ export const createSpeachOnDemand = async (data) => {
 export const getAllSpeachOnDemand = async (currentPage, pageSize, isActive) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/senator/speech-on-demand/findall?currentPage=${currentPage}&pageSize=${pageSize}&isActive=${isActive}`
       // {
       //   // headers: {
@@ -78,7 +78,7 @@ export const getAllSpeachOnDemand = async (currentPage, pageSize, isActive) => {
 export const getSpeachOnDemandStats = async () => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/senator/speech-on-demand/stats`
       // {
       //   // headers: {
@@ -96,7 +96,7 @@ export const getSpeachOnDemandStats = async () => {
 export const getSpeachOnDemandById = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/senator/speech-on-demand/${id}`
       // {
       //   // headers: {
@@ -114,7 +114,7 @@ export const getSpeachOnDemandById = async (id) => {
 export const UpdateSpeachOnDemand = async (id, data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.put(
+    const response = await axiosClient.put(
       `/senator/speech-on-demand/${id}`,
       data
       // {
@@ -133,7 +133,7 @@ export const UpdateSpeachOnDemand = async (id, data) => {
 export const DeleteSpeachOnDemand = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.delete(
+    const response = await axiosClient.delete(
       `/senator/speech-on-demand/${id}`
       // {
       //   // headers: {
@@ -152,7 +152,7 @@ export const DeleteSpeachOnDemand = async (id) => {
 export const createResearchServices = async (data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.post(
+    const response = await axiosClient.post(
       `/senator/request-research`,
       data
       // {
@@ -171,7 +171,7 @@ export const createResearchServices = async (data) => {
 export const UpdateResearchServices = async (id, data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.put(
+    const response = await axiosClient.put(
       `/senator/request-research/${id}`,
       data,
       {
@@ -191,7 +191,7 @@ export const UpdateResearchServices = async (id, data) => {
 export const getResearchServicesById = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/senator/request-research/${id}`
       // {
       //   // headers: {
@@ -209,7 +209,7 @@ export const getResearchServicesById = async (id) => {
 export const getAllResarchServices = async (currentPage, pageSize, isActive) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/senator/request-research/findall?currentPage=${currentPage}&pageSize=${pageSize}&isActive=${isActive}`
       // {
       //   // headers: {
@@ -227,7 +227,7 @@ export const getAllResarchServices = async (currentPage, pageSize, isActive) => 
 export const getResearchServicesStats = async () => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/senator/request-research/stats`
       // {
       //   // headers: {
@@ -245,7 +245,7 @@ export const getResearchServicesStats = async () => {
 export const DeleteResearchServices = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.delete(
+    const response = await axiosClient.delete(
       `/senator/request-research/${id}`
       // {
       //   // headers: {
@@ -264,7 +264,7 @@ export const DeleteResearchServices = async (id) => {
 export const getAllLegislativeBill = async (currentPage, pageSize) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/legislativeBills/findall?currentPage=${currentPage}&pageSize=${pageSize}`
       // {
       //   // headers: {
@@ -282,7 +282,7 @@ export const getAllLegislativeBill = async (currentPage, pageSize) => {
 export const getAllLegislativeBillNotice = async (currentPage, pageSize) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/legislativeBills/inNotice?currentPage=${currentPage}&pageSize=${pageSize}`
       // {
       //   // headers: {
@@ -300,7 +300,7 @@ export const getAllLegislativeBillNotice = async (currentPage, pageSize) => {
 export const sendLegislativeBill = async (id, data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.put(
+    const response = await axiosClient.put(
       `/legislativeBills/sendToLegislation/${id}`, data,
       {
         // headers: {
@@ -318,7 +318,7 @@ export const sendLegislativeBill = async (id, data) => {
 export const DeleteLegislativeBill = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.delete(
+    const response = await axiosClient.delete(
       `/legislativeBills/${id}`
       // {
       //   // headers: {
@@ -337,7 +337,7 @@ export const DeleteLegislativeBill = async (id) => {
 export const getLegislativeBillById = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/legislativeBills/${id}`
       // {
       //   // headers: {
@@ -355,7 +355,7 @@ export const getLegislativeBillById = async (id) => {
 export const UpdateLegislativeBillById = async (id, data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.put(
+    const response = await axiosClient.put(
       `/legislativeBills/${id}`,
       data,
       {

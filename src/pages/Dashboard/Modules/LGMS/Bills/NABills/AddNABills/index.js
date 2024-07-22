@@ -16,10 +16,12 @@ import {
   getAllMNALists,
 } from "../../../../../../../api/APIs/Services/LegislationModule.service";
 import { showSuccessMessage } from "../../../../../../../utils/ToastAlert";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import moment from "moment";
 function NewLegislationNABill() {
   const navigate = useNavigate();
+  const location = useLocation();
+  console.log("location from Add NA",location?.state?.category)
   const { sessions, members, ministryData, parliamentaryYear } = useContext(AuthContext);
   const userData = getUserData();
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
@@ -46,7 +48,7 @@ function NewLegislationNABill() {
       parliamentaryYear: "",
       session: "",
       fileNumber: "",
-      passedByNADate: "",
+      PassedByNADate: "",
       receiptMessageDateFromNA: "",
       billCategory: "",
       billType: "",
@@ -66,18 +68,18 @@ function NewLegislationNABill() {
   const handleCalendarToggle = () => {
     setIsCalendarOpen(!isCalendarOpen);
   };
-  // Handale DateCHange
-  const handleDateSelect = (date) => {
-    formik.setFieldValue("passedByNADate", date);
-    setIsCalendarOpen(false);
-  };
+// Handale DateCHange
+const handleDateSelect = (date) => {
+  formik.setFieldValue("PassedByNADate", date);
+  setIsCalendarOpen(false);
+};
   // Handle Claneder Toggel
   const handleReciptCalendarToggle = () => {
     setIsDateofReciptCalendarOpen(!isDateofReciptCalendarOpen);
   };
   // Handale DateCHange
   const handleReciptDateSelect = (date) => {
-    formik.setFieldValue("receiptMessageDateFromNA", date);
+    formik.setFieldValue("DateOfReceiptOfMessageFromNA", date);
     setIsDateofReciptCalendarOpen(false);
   };
 
@@ -85,7 +87,13 @@ function NewLegislationNABill() {
     const formData = new FormData();
     formData.append("fkSessionId", values?.session);
     formData.append("fkParliamentaryYearId", values?.parliamentaryYear);
-    formData.append("fileNumber", values?.fileNumber);
+    // formData.append("fileNumber", values?.fileNumber);
+    // formData.append("fileNumber", `24 (${values?.fileNumber})/ 2024`);
+    if (location?.state && location.state.category === "Private Member Bill") {
+      formData.append("fileNumber", `09/(${values?.fileNumber})/2024`);
+    } else {
+      formData.append("fileNumber", `24/(${values?.fileNumber})/2024`);
+    }
     // formData.append("PassedByNADate", values?.passedByNADate);
     if (values?.PassedByNADate) {
       const formattedDate = moment(values?.PassedByNADate).format("YYYY-MM-DD");
@@ -99,7 +107,8 @@ function NewLegislationNABill() {
       const formattedDate = moment(values?.receiptMessageDateFromNA).format("YYYY-MM-DD");
       formData.append("receiptMessageDateFromNA", formattedDate);
     }
-    formData.append("billCategory", values?.billCategory);
+    formData.append("billCategory", location && location?.state && location?.state?.category && location?.state?.category);
+    // formData.append("billCategory", values?.billCategory);
     formData.append("billType", values?.billType);
     formData.append("billTitle", values?.billTitle);
     formData.append("billFrom", "From NA");
@@ -278,7 +287,7 @@ function NewLegislationNABill() {
                       </div>
                     </div>
                     <div className="col-3">
-                      <div className="mb-3" style={{ position: "relative" }}>
+                      {/* <div className="mb-3" style={{ position: "relative" }}>
                         <label className="form-label">Passed By NA Date</label>
                         <span
                           style={{
@@ -316,11 +325,110 @@ function NewLegislationNABill() {
                             {formik.errors.passedByNADate}
                           </div>
                         )}
-                      </div>
+                      </div> */}
+                       <div className="mb-3" style={{ position: "relative" }}>
+                          <label className="form-label">
+                            Passed By NA Date
+                          </label>
+                          <span
+                            style={{
+                              position: "absolute",
+                              right: "15px",
+                              top: "36px",
+                              zIndex: 1,
+                              fontSize: "20px",
+                              color: "#666",
+                              cursor: "pointer",
+                            }}
+                            onClick={handleCalendarToggle}
+                          >
+                            <FontAwesomeIcon icon={faCalendarAlt} />
+                          </span>
+
+                          <DatePicker
+                            selected={formik.values.PassedByNADate}
+                            onChange={handleDateSelect}
+                            onBlur={formik.handleBlur}
+                            className={`form-control ${
+                              formik.touched.PassedByNADate &&
+                              formik.errors.PassedByNADate
+                                ? "is-invalid"
+                                : ""
+                            }`}
+                            open={isCalendarOpen}
+                            onClickOutside={() => setIsCalendarOpen(false)}
+                            onInputClick={handleCalendarToggle}
+                            // onClick={handleCalendarToggle}
+                            maxDate={new Date()}
+                            dateFormat="dd-MM-yyyy"
+                          />
+
+                          {formik.touched.PassedByNADate &&
+                            formik.errors.PassedByNADate && (
+                              <div
+                                className="invalid-feedback"
+                                style={{ display: "block" }}
+                              >
+                                {formik.errors.PassedByNADate}
+                              </div>
+                            )}
+                        </div>
                     </div>
 
                     <div className="col-3">
-                      <div className="mb-3" style={{ position: "relative" }}>
+                    <div className="mb-3" style={{ position: "relative" }}>
+                          <label className="form-label">
+                            Date of Recipt of Message From NA
+                          </label>
+                          <span
+                            style={{
+                              position: "absolute",
+                              right: "15px",
+                              top: "36px",
+                              zIndex: 1,
+                              fontSize: "20px",
+                              color: "#666",
+                              cursor: "pointer",
+                            }}
+                            onClick={handleReciptCalendarToggle}
+                          >
+                            <FontAwesomeIcon icon={faCalendarAlt} />
+                          </span>
+
+                          <DatePicker
+                            selected={
+                              formik.values.DateOfReceiptOfMessageFromNA
+                            }
+                            onChange={handleReciptDateSelect}
+                            onBlur={formik.handleBlur}
+                            className={`form-control ${
+                              formik.touched.DateOfReceiptOfMessageFromNA &&
+                              formik.errors.DateOfReceiptOfMessageFromNA
+                                ? "is-invalid"
+                                : ""
+                            }`}
+                            name="DateOfReceiptOfMessageFromNA"
+                            open={isDateofReciptCalendarOpen}
+                            onClickOutside={() =>
+                              setIsDateofReciptCalendarOpen(false)
+                            }
+                            onInputClick={handleReciptCalendarToggle}
+                            // onClick={handleCalendarToggle}
+                            maxDate={new Date()}
+                            dateFormat="dd-MM-yyyy"
+                          />
+
+                          {formik.touched.DateOfReceiptOfMessageFromNA &&
+                            formik.errors.DateOfReceiptOfMessageFromNA && (
+                              <div
+                                className="invalid-feedback"
+                                style={{ display: "block" }}
+                              >
+                                {formik.errors.DateOfReceiptOfMessageFromNA}
+                              </div>
+                            )}
+                        </div>
+                      {/* <div className="mb-3" style={{ position: "relative" }}>
                         <label className="form-label">Date of Recipt of Message From NA</label>
                         <span
                           style={{
@@ -361,7 +469,7 @@ function NewLegislationNABill() {
                             {formik.errors.receiptMessageDateFromNA}
                           </div>
                         )}
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                   <div className="row">

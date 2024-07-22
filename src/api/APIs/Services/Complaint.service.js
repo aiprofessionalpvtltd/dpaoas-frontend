@@ -1,11 +1,11 @@
-import { axiosClientMMS } from "..";
+import { axiosClient } from "..";
 import { getAuthToken } from "../../Auth";
 
 //CMS Api
 export const getallComplaint = async (currentPage, pageSize) => {
     try {
       // const token = getAuthToken();
-      const response = await axiosClientMMS.get(
+      const response = await axiosClient.get(
         `/complaints/?currentPage=${currentPage}&pageSize=${pageSize}`,
         // {
         //   headers: {
@@ -23,7 +23,7 @@ export const getallComplaint = async (currentPage, pageSize) => {
   export const getallcomplaintTypes = async () => {
     try {
       // const token = getAuthToken();
-      const response = await axiosClientMMS.get(
+      const response = await axiosClient.get(
         `/complaints/complaintTypes/?currentPage=${0}&pageSize=${1000}`,
         // {
         //   headers: {
@@ -41,7 +41,7 @@ export const getallComplaint = async (currentPage, pageSize) => {
   export const getallcomplaintCategories = async () => {
     try {
       // const token = getAuthToken();
-      const response = await axiosClientMMS.get(
+      const response = await axiosClient.get(
         `/complaints/complaintCategories/?currentPage=${0}&pageSize=${1000}`,
         // {
         //   headers: {
@@ -59,7 +59,7 @@ export const getallComplaint = async (currentPage, pageSize) => {
   export const createComplaint = async (data) => {
     try {
       // const token = getAuthToken();
-      const response = await axiosClientMMS.post(`/complaints/issueComplaint`, data) 
+      const response = await axiosClient.post(`/complaints/issueComplaint`, data) 
       // {
       //   headers: {
       //     accept: "application/json",
@@ -76,7 +76,7 @@ export const getallComplaint = async (currentPage, pageSize) => {
   export const UpdateComplaint = async (id, data) => {
     try {
       // const token = getAuthToken();
-      const response = await axiosClientMMS.put(
+      const response = await axiosClient.put(
         `/complaints/updateComplaint/${id}`,
         data)
         // {
@@ -95,7 +95,7 @@ export const getallComplaint = async (currentPage, pageSize) => {
   export const UpdateComplaintByAdmin = async (id, data) => {
     try {
       // const token = getAuthToken();
-      const response = await axiosClientMMS.put(`/complaints/resolveComplaint/${id}`, data,
+      const response = await axiosClient.put(`/complaints/resolveComplaint/${id}`, data,
       {
         headers: {
           accept: "application/json",
@@ -113,7 +113,7 @@ export const getallComplaint = async (currentPage, pageSize) => {
   export const assignedComplaintByAdmin = async (id, Data) => {
     try {
       // const token = getAuthToken();
-      const response = await axiosClientMMS.post(
+      const response = await axiosClient.post(
         `/complaints/assignToResolver/${id}`,
         Data
         // {
@@ -132,7 +132,7 @@ export const getallComplaint = async (currentPage, pageSize) => {
   export const getallcomplaintRecordById = async (id) => {
     try {
       // const token = getAuthToken();
-      const response = await axiosClientMMS.get(
+      const response = await axiosClient.get(
         `/complaints/${id}`,
         // {
         //   headers: {
@@ -150,7 +150,7 @@ export const getallComplaint = async (currentPage, pageSize) => {
   export const getallcomplaintRecordByUserId = async (id, currentPage, pageSize) => {
     try {
       // const token = getAuthToken();
-      const response = await axiosClientMMS.get(
+      const response = await axiosClient.get(
         `/complaints/ByComplainee/${id}?currentPage=${currentPage}&pageSize=${pageSize}`,
         // {
         //   headers: {
@@ -171,7 +171,7 @@ export const getallComplaint = async (currentPage, pageSize) => {
     );
     try {
       const token = getAuthToken();
-      const response = await axiosClientMMS.get(
+      const response = await axiosClient.get(
         `/complaints/searchComplaint`, {
         params: filteredSearchParams,
   
@@ -193,7 +193,7 @@ export const getallComplaint = async (currentPage, pageSize) => {
   export const complaintDelete = async (id) => {
     try {
       // const token = getAuthToken();
-      const response = await axiosClientMMS.delete(
+      const response = await axiosClient.delete(
         `/complaints/delete/${id}`,
         // {
         //   headers: {
@@ -212,7 +212,7 @@ export const getallComplaint = async (currentPage, pageSize) => {
 export const getAllInventory = async (currentPage, pageSize) => {
     try {
       // const token = getAuthToken();
-      const response = await axiosClientMMS.get(
+      const response = await axiosClient.get(
         `/inventory/?currentPage=${currentPage}&pageSize=${pageSize}`,
         // {
         //   headers: {
@@ -229,7 +229,7 @@ export const getAllInventory = async (currentPage, pageSize) => {
   export const createInventory = async (Data) => {
     try {
       // const token = getAuthToken();
-      const response = await axiosClientMMS.post(
+      const response = await axiosClient.post(
         `/inventory/create`,
         Data
         // {
@@ -250,7 +250,7 @@ export const getAllInventory = async (currentPage, pageSize) => {
     );
     try {
       const token = getAuthToken();
-      const response = await axiosClientMMS.get(
+      const response = await axiosClient.get(
         `/inventory/searchInventory`, {
         params: filteredSearchParams,
   
@@ -272,7 +272,7 @@ export const getAllInventory = async (currentPage, pageSize) => {
   export const getInventoryRecordByUserId = async (id) => {
     try {
       // const token = getAuthToken();
-      const response = await axiosClientMMS.get(
+      const response = await axiosClient.get(
         `/userInventory/inventoryOfUser/${id}`,
         // {
         //   headers: {
@@ -292,7 +292,7 @@ export const getAllInventory = async (currentPage, pageSize) => {
   export const createInventoryBill = async (Data) => {
     try {
       // const token = getAuthToken();
-      const response = await axiosClientMMS.post(
+      const response = await axiosClient.post(
         `/inventoryBills/create`,
         Data
         // {
@@ -310,7 +310,7 @@ export const getAllInventory = async (currentPage, pageSize) => {
   export const getAllInvoiceBill = async (currentPage, pageSize) => {
     try {
       // const token = getAuthToken();
-      const response = await axiosClientMMS.get(
+      const response = await axiosClient.get(
         `/inventoryBills?currentPage=${currentPage}&pageSize=${pageSize}`,
         // {
         //   headers: {
@@ -328,7 +328,7 @@ export const getAllInventory = async (currentPage, pageSize) => {
   export const SearchInvoiceBill = async (search) => {
     try {
       const token = getAuthToken();
-      const response = await axiosClientMMS.get(
+      const response = await axiosClient.get(
         `/inventoryBills/searchBill?invoiceNumber=${search}`,
         // {
         //   headers: {
@@ -346,7 +346,7 @@ export const getAllInventory = async (currentPage, pageSize) => {
   export const invoiceBillDelete = async (id) => {
     try {
       const token = getAuthToken();
-      const response = await axiosClientMMS.delete(
+      const response = await axiosClient.delete(
         `/inventoryBills/delete/${id}`,
         // {
         //   headers: {
@@ -364,7 +364,7 @@ export const getAllInventory = async (currentPage, pageSize) => {
   export const UpdateInventoryBill = async (id, data) => {
     try {
       // const token = getAuthToken();
-      const response = await axiosClientMMS.put(`/inventoryBills/update/${id}`, data, {
+      const response = await axiosClient.put(`/inventoryBills/update/${id}`, data, {
         headers: {
           accept: "application/json",
           "Content-Type": "multipart/form-data",
@@ -379,7 +379,7 @@ export const getAllInventory = async (currentPage, pageSize) => {
   export const getInventoryBillsById = async (id) => {
     try {
       // const token = getAuthToken();
-      const response = await axiosClientMMS.get(`/inventoryBills/${id}`)
+      const response = await axiosClient.get(`/inventoryBills/${id}`)
      
   
       return response?.data;
@@ -392,7 +392,7 @@ export const getAllInventory = async (currentPage, pageSize) => {
   export const inventoryDelete = async (id) => {
     try {
       const token = getAuthToken();
-      const response = await axiosClientMMS.delete(
+      const response = await axiosClient.delete(
         `/inventory/delete/${id}`);
       return response?.data;
     } catch (error) {
@@ -403,7 +403,7 @@ export const getAllInventory = async (currentPage, pageSize) => {
   export const getInventoryById = async (id) => {
     try {
       // const token = getAuthToken();
-      const response = await axiosClientMMS.get(`/inventory/${id}`)
+      const response = await axiosClient.get(`/inventory/${id}`)
       return response?.data;
     } catch (error) {
       console.error("Error fetching API endpoint:", error);
@@ -413,7 +413,7 @@ export const getAllInventory = async (currentPage, pageSize) => {
   export const UpdateInventoryById = async (id, data) => {
     try {
       // const token = getAuthToken();
-      const response = await axiosClientMMS.put(`/inventory/update/${id}`, data)
+      const response = await axiosClient.put(`/inventory/update/${id}`, data)
       // {
       //   headers: {
       //     accept: "application/json",
@@ -429,7 +429,7 @@ export const getAllInventory = async (currentPage, pageSize) => {
   export const SearchInventoryBySerailNo = async (search) => {
     try {
       const token = getAuthToken();
-      const response = await axiosClientMMS.get(
+      const response = await axiosClient.get(
         `/userInventory/searchInventory?serialNo=${search}`,
         // {
         //   headers: {
@@ -448,7 +448,7 @@ export const getAllInventory = async (currentPage, pageSize) => {
     console.log("ddd", Data);
     try {
       // const token = getAuthToken();
-      const response = await axiosClientMMS.post(
+      const response = await axiosClient.post(
         `/userInventory/issueProduct/${id}`,
         Data
       );
@@ -462,7 +462,7 @@ export const getAllInventory = async (currentPage, pageSize) => {
     console.log("Data", Data);
     try {
       // const token = getAuthToken();
-      const response = await axiosClientMMS.put(
+      const response = await axiosClient.put(
         `/userInventory/returnProduct/${id}`,
         Data
       );
@@ -476,7 +476,7 @@ export const getAllInventory = async (currentPage, pageSize) => {
 export const createVandor = async (data) => {
     try {
       // const token = getAuthToken();
-      const response = await axiosClientMMS.post(
+      const response = await axiosClient.post(
         `/vendors/create`,
         data
       );
@@ -489,7 +489,7 @@ export const createVandor = async (data) => {
   export const getAllVendor = async (currentPage, pageSize) => {
     try {
       // const token = getAuthToken();
-      const response = await axiosClientMMS.get(
+      const response = await axiosClient.get(
         `/vendors?currentPage=${currentPage}&pageSize=${pageSize}`,
       );
       return response?.data;
@@ -502,7 +502,7 @@ export const createVandor = async (data) => {
   export const DeleteVendor = async (id) => {
     try {
     //   const token = getAuthToken();
-      const response = await axiosClientMMS.delete(
+      const response = await axiosClient.delete(
         `/vendors/delete/${id}`,
       );
       return response?.data;
@@ -515,7 +515,7 @@ export const createVandor = async (data) => {
   export const UpdateVendor = async (id, data) => {
     try {
       // const token = getAuthToken();
-      const response = await axiosClientMMS.put(
+      const response = await axiosClient.put(
         `/vendors/update/${id}`,
         data
       );
@@ -529,7 +529,7 @@ export const createVandor = async (data) => {
   export const searchVendor = async (search) => {
     try {
       const token = getAuthToken();
-      const response = await axiosClientMMS.get(
+      const response = await axiosClient.get(
         `/vendors/searchVendor?vendorName=${search}`)
         return response?.data;
       } catch (error) {

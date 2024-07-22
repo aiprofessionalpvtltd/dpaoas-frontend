@@ -1,11 +1,11 @@
-import { axiosClientMMS } from "..";
+import { axiosClient } from "..";
 import { getAuthToken } from "../../Auth";
 
 //Template
 export const getContactTemplate = async (currentPage, pageSize) => {
     try {
       // const token = getAuthToken();
-      const response = await axiosClientMMS.get(
+      const response = await axiosClient.get(
         `/contactTemplate?currentPage=${currentPage}&pageSize=${pageSize}`,
         // {
         //   headers: {
@@ -23,7 +23,7 @@ export const getContactTemplate = async (currentPage, pageSize) => {
   export const getSignalContactTemplateByid = async (id) => {
     try {
       // const token = getAuthToken();
-      const response = await axiosClientMMS.get(
+      const response = await axiosClient.get(
         `contactTemplate/${id}`,
         // {
         //   headers: {
@@ -41,7 +41,7 @@ export const getContactTemplate = async (currentPage, pageSize) => {
   export const createContactTemplate = async (data) => {
     try {
       // const token = getAuthToken();
-      const response = await axiosClientMMS.post(`/contactTemplate/create`, data)
+      const response = await axiosClient.post(`/contactTemplate/create`, data)
       // {
       //   headers: {
       //     Authorization: `Bearer ${token}`,
@@ -57,7 +57,7 @@ export const getContactTemplate = async (currentPage, pageSize) => {
   export const UpdateContactTemplate = async (id, data) => {
     try {
       // const token = getAuthToken();
-      const response = await axiosClientMMS.put(
+      const response = await axiosClient.put(
         `/contactTemplate/update/${id}`,
         data,
         // {
@@ -76,7 +76,7 @@ export const getContactTemplate = async (currentPage, pageSize) => {
   export const DeleteContactTemplate = async (id) => {
     try {
       const token = getAuthToken();
-      const response = await axiosClientMMS.delete(`/contactTemplate/delete/${id}`, {
+      const response = await axiosClient.delete(`/contactTemplate/delete/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -93,7 +93,7 @@ export const getContactTemplate = async (currentPage, pageSize) => {
   export const getContactList = async (currentPage, pageSize) => {
     try {
       // const token = getAuthToken();
-      const response = await axiosClientMMS.get(
+      const response = await axiosClient.get(
         `/contactList?currentPage=${currentPage}&pageSize=${pageSize}`,
         // {
         //   headers: {
@@ -111,7 +111,7 @@ export const getContactTemplate = async (currentPage, pageSize) => {
   export const getSignalContactListByid = async (id) => {
     try {
       // const token = getAuthToken();
-      const response = await axiosClientMMS.get(
+      const response = await axiosClient.get(
         `/contactList/${id}`,
         // {
         //   headers: {
@@ -129,7 +129,7 @@ export const getContactTemplate = async (currentPage, pageSize) => {
   export const createContactList = async (data) => {
     try {
       // const token = getAuthToken();
-      const response = await axiosClientMMS.post(`/contactList/create`, data)
+      const response = await axiosClient.post(`/contactList/create`, data)
       // {
       //   headers: {
       //     Authorization: `Bearer ${token}`,
@@ -145,7 +145,7 @@ export const getContactTemplate = async (currentPage, pageSize) => {
   export const UpdateContactList = async (id, data) => {
     try {
       // const token = getAuthToken();
-      const response = await axiosClientMMS.put(
+      const response = await axiosClient.put(
         `/contactList/update/${id}`,
         data,
         // {
@@ -164,7 +164,7 @@ export const getContactTemplate = async (currentPage, pageSize) => {
   export const DeleteContactList = async (id) => {
     try {
       // const token = getAuthToken();
-      const response = await axiosClientMMS.delete(`/contactList/delete/${id}`)
+      const response = await axiosClient.delete(`/contactList/delete/${id}`)
       //  {
       //   headers: {
       //     Authorization: `Bearer ${token}`,
@@ -181,7 +181,7 @@ export const getContactTemplate = async (currentPage, pageSize) => {
   export const getSMSLog = async (currentPage, pageSize) => {
     try {
       // const token = getAuthToken();
-      const response = await axiosClientMMS.get(
+      const response = await axiosClient.get(
         `/sms?currentPage=${currentPage}&pageSize=${pageSize}`,
         // {
         //   headers: {
@@ -199,7 +199,7 @@ export const getContactTemplate = async (currentPage, pageSize) => {
   export const createSendSMS = async (data) => {
     try {
     //   const token = getAuthToken();
-      const response = await axiosClientMMS.post(`sms/create`, data)
+      const response = await axiosClient.post(`sms/create`, data)
       // {
       //   headers: {
       //     Authorization: `Bearer ${token}`,

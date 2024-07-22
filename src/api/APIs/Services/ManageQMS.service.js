@@ -1,11 +1,11 @@
-import { axiosClientMMS } from "..";
+import { axiosClient } from "..";
 import { getAuthToken } from "../../Auth";
 
 //Terms Management System
 export const createTerm = async (data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.post(`/terms/create`, data, {
+    const response = await axiosClient.post(`/terms/create`, data, {
       headers: {
         accept: "application/json",
         "Content-Type": "application/json",
@@ -21,7 +21,7 @@ export const createTerm = async (data) => {
 export const getAllTerms = async (currentPage, pageSize) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/terms?currentPage=${currentPage}&pageSize=${pageSize}`
     );
     // {
@@ -39,7 +39,7 @@ export const getAllTerms = async (currentPage, pageSize) => {
 export const getTermByID = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/terms/${id}`);
+    const response = await axiosClient.get(`/terms/${id}`);
     // {
     //   headers: {
     //     Authorization: `Bearer ${token}`,
@@ -56,7 +56,7 @@ export const getTermByID = async (id) => {
 export const retriveEmployeesAsEngineers = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/complaints/retrieveEmployeesAsEngineers?currentPage=${0}&pageSize=${100}`
       // {
       //   headers: {
@@ -73,7 +73,7 @@ export const retriveEmployeesAsEngineers = async (id) => {
 export const updateTerm = async (id, data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.put(`/terms/update/${id}`, data, {
+    const response = await axiosClient.put(`/terms/update/${id}`, data, {
       headers: {
         accept: "application/json",
         "Content-Type": "application/json",
@@ -89,7 +89,7 @@ export const updateTerm = async (id, data) => {
 export const deleteTerms = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.delete(
+    const response = await axiosClient.delete(
       `/terms/delete/${id}`
       // {
       //   headers: {
@@ -108,7 +108,7 @@ export const deleteTerms = async (id) => {
 export const createTenure = async (data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.post(`/tenures/create`, data, {
+    const response = await axiosClient.post(`/tenures/create`, data, {
       headers: {
         accept: "application/json",
         "Content-Type": "application/json",
@@ -124,7 +124,7 @@ export const createTenure = async (data) => {
 export const getAllTenures = async (currentPage, pageSize) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/tenures?currentPage=${currentPage}&pageSize=${pageSize}`
     );
     // {
@@ -144,7 +144,7 @@ export const getAllTenures = async (currentPage, pageSize) => {
 export const getTenureByID = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/tenures/${id}`);
+    const response = await axiosClient.get(`/tenures/${id}`);
     // {
     //   headers: {
     //     Authorization: `Bearer ${token}`,
@@ -160,7 +160,7 @@ export const getTenureByID = async (id) => {
 export const updateTenure = async (id, data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.put(`/tenures/update/${id}`, data, {
+    const response = await axiosClient.put(`/tenures/update/${id}`, data, {
       // headers: {
       //   accept: "application/json",
       //   "Content-Type": "multipart/form-data",
@@ -177,7 +177,7 @@ export const updateTenure = async (id, data) => {
 export const deleteTenures = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.delete(
+    const response = await axiosClient.delete(
       `/tenures/delete/${id}`
       // {
       //   headers: {
@@ -196,7 +196,7 @@ export const deleteTenures = async (id) => {
 export const createMember = async (data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.post(`/members/create`, data, {
+    const response = await axiosClient.post(`/members/create`, data, {
       headers: {
         accept: "application/json",
         "Content-Type": "application/json",
@@ -212,7 +212,7 @@ export const createMember = async (data) => {
 // export const getAllMembers = async (currentPage, pageSize) => {
 //   try {
 //     // const token = getAuthToken();
-//     const response = await axiosClientMMS.get(
+//     const response = await axiosClient.get(
 //       `/members/all?currentPage=${currentPage}&pageSize=${pageSize}`
 //     );
 //     // {
@@ -232,7 +232,7 @@ export const createMember = async (data) => {
 export const getMembersByID = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/members/${id}`);
+    const response = await axiosClient.get(`/members/${id}`);
     // {
     //   headers: {
     //     Authorization: `Bearer ${token}`,
@@ -248,7 +248,7 @@ export const getMembersByID = async (id) => {
 export const updateMembers = async (id, data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.put(`/members/${id}`, data, {
+    const response = await axiosClient.put(`/members/${id}`, data, {
       headers: {
         accept: "application/json",
         "Content-Type": "application/json",
@@ -265,7 +265,7 @@ export const updateMembers = async (id, data) => {
 export const deleteMembers = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.delete(
+    const response = await axiosClient.delete(
       `/members/delete/${id}`
       // {
       //   headers: {
@@ -284,7 +284,7 @@ export const deleteMembers = async (id) => {
 export const createDivision = async (data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.post(`/divisions/create`, data, {
+    const response = await axiosClient.post(`/divisions/create`, data, {
       headers: {
         accept: "application/json",
         "Content-Type": "application/json",
@@ -300,7 +300,7 @@ export const createDivision = async (data) => {
 export const getAllDivisions = async (currentPage, pageSize) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/divisions?currentPage=${currentPage}&pageSize=${pageSize}`
     );
     // {
@@ -318,7 +318,7 @@ export const getAllDivisions = async (currentPage, pageSize) => {
 export const getDivisionsByID = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/divisions/${id}`);
+    const response = await axiosClient.get(`/divisions/${id}`);
     // {
     //   headers: {
     //     Authorization: `Bearer ${token}`,
@@ -334,7 +334,7 @@ export const getDivisionsByID = async (id) => {
 export const updateDivisions = async (id, data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.put(`/divisions/update/${id}`, data, {
+    const response = await axiosClient.put(`/divisions/update/${id}`, data, {
       headers: {
         accept: "application/json",
         "Content-Type": "application/json",
@@ -351,7 +351,7 @@ export const updateDivisions = async (id, data) => {
 export const deleteDivisions = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.delete(
+    const response = await axiosClient.delete(
       `/divisions/delete/${id}`
       // {
       //   headers: {
@@ -370,7 +370,7 @@ export const deleteDivisions = async (id) => {
 export const createPoliticalParties = async (data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.post(
+    const response = await axiosClient.post(
       `/politicalParties/create`,
       data,
       {
@@ -390,7 +390,7 @@ export const createPoliticalParties = async (data) => {
 export const getAllPoliticalParties = async (currentPage, pageSize) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/politicalParties?currentPage=${currentPage}&pageSize=${pageSize}`
     );
     // {
@@ -408,7 +408,7 @@ export const getAllPoliticalParties = async (currentPage, pageSize) => {
 export const getPoliticalPartiesByID = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/politicalParties/${id}`);
+    const response = await axiosClient.get(`/politicalParties/${id}`);
     // {
     //   headers: {
     //     Authorization: `Bearer ${token}`,
@@ -424,7 +424,7 @@ export const getPoliticalPartiesByID = async (id) => {
 export const updatePoliticalParties = async (id, data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.put(
+    const response = await axiosClient.put(
       `/politicalParties/update/${id}`,
       data,
       {
@@ -445,7 +445,7 @@ export const updatePoliticalParties = async (id, data) => {
 export const deletePoliticalParties = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.delete(
+    const response = await axiosClient.delete(
       `/politicalParties/delete/${id}`
       // {
       //   headers: {
@@ -464,7 +464,7 @@ export const deletePoliticalParties = async (id) => {
 export const createParliamentaryYears = async (data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.post(
+    const response = await axiosClient.post(
       `/parliamentaryYears/create`,
       data,
       {
@@ -484,7 +484,7 @@ export const createParliamentaryYears = async (data) => {
 export const getAllParliamentaryYears = async (currentPage, pageSize) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/parliamentaryYears?currentPage=${currentPage}&pageSize=${pageSize}`
     );
     // {
@@ -502,7 +502,7 @@ export const getAllParliamentaryYears = async (currentPage, pageSize) => {
 export const getParliamentaryYearsByID = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/parliamentaryYears/${id}`);
+    const response = await axiosClient.get(`/parliamentaryYears/${id}`);
     // {
     //   headers: {
     //     Authorization: `Bearer ${token}`,
@@ -518,7 +518,7 @@ export const getParliamentaryYearsByID = async (id) => {
 export const updateParliamentaryYears = async (id, data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.put(
+    const response = await axiosClient.put(
       `/parliamentaryYears/update/${id}`,
       data,
       {
@@ -539,7 +539,7 @@ export const updateParliamentaryYears = async (id, data) => {
 export const deleteParliamentaryYears = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.delete(
+    const response = await axiosClient.delete(
       `/parliamentaryYears/delete/${id}`
       // {
       //   headers: {
@@ -558,7 +558,7 @@ export const deleteParliamentaryYears = async (id) => {
 export const createGroup = async (data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.post(`/groups/create`, data, {
+    const response = await axiosClient.post(`/groups/create`, data, {
       headers: {
         accept: "application/json",
         "Content-Type": "application/json",
@@ -574,7 +574,7 @@ export const createGroup = async (data) => {
 export const getDivisionsBySessionId = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/groups/retrieveDivisionForGroup/${id}`
     );
     // {
@@ -592,7 +592,7 @@ export const getDivisionsBySessionId = async (id) => {
 export const updateDivisionsAndGroups = async (id, data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.post(
+    const response = await axiosClient.post(
       `/groups/manageDivisionInGroup/${id}`,
       data,
       {
@@ -613,7 +613,7 @@ export const updateDivisionsAndGroups = async (id, data) => {
 export const createSession = async (data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.post(`/sessions/create`, data, {
+    const response = await axiosClient.post(`/sessions/create`, data, {
       headers: {
         accept: "application/json",
         "Content-Type": "application/json",
@@ -629,7 +629,7 @@ export const createSession = async (data) => {
 export const getAllSessions = async (currentPage, pageSize) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/sessions?currentPage=${currentPage ? currentPage : 0}&pageSize=${
         pageSize ? pageSize : 100
       }`,
@@ -650,7 +650,7 @@ export const getAllSessions = async (currentPage, pageSize) => {
 export const getProroguedSession = async (currentPage, pageSize) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/manageSession/proroguedSessions?currentPage=${
         currentPage ? currentPage : 0
       }&pageSize=${pageSize ? pageSize : 100}`,
@@ -670,7 +670,7 @@ export const getProroguedSession = async (currentPage, pageSize) => {
 export const getSessionByID = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/sessions/${id}`);
+    const response = await axiosClient.get(`/sessions/${id}`);
     // {
     //   headers: {
     //     Authorization: `Bearer ${token}`,
@@ -686,7 +686,7 @@ export const getSessionByID = async (id) => {
 export const updateSessions = async (id, data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.put(`/sessions/update/${id}`, data, {
+    const response = await axiosClient.put(`/sessions/update/${id}`, data, {
       headers: {
         accept: "application/json",
         "Content-Type": "application/json",
@@ -702,7 +702,7 @@ export const updateSessions = async (id, data) => {
 export const deleteSessions = async (id) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.delete(
+    const response = await axiosClient.delete(
       `/sessions/delete/${id}`
       // {
       //   headers: {
@@ -721,7 +721,7 @@ export const deleteSessions = async (id) => {
 export const getSessionSitting = async (id, currentPage, pageSize) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/manageSession/sessionSittings/${id}?currentPage=${currentPage}&pageSize=${pageSize}`
     );
     {
@@ -740,7 +740,7 @@ export const getSessionSitting = async (id, currentPage, pageSize) => {
 export const deleteSessionsSitting = async (id) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.delete(
+    const response = await axiosClient.delete(
       `/manageSession/delete/${id}`
       // {
       //   headers: {

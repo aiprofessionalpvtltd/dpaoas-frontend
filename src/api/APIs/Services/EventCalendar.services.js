@@ -1,11 +1,11 @@
-import { axiosClientMMS } from "..";
+import { axiosClient } from "..";
 import { getAuthToken } from "../../Auth";
 
 
 export const createEventCalendar = async (data) => {
     try {
       //   const token = getAuthToken()
-      const response = await axiosClientMMS.post(`/event-calender`, data, {
+      const response = await axiosClient.post(`/event-calender`, data, {
         headers: {
           accept: "application/json",
           "Content-Type": "application/json",
@@ -21,7 +21,7 @@ export const createEventCalendar = async (data) => {
 export const getAllEventCalendar = async (page, pageSize) => {
     try {
         const token = getAuthToken();
-        const response = await axiosClientMMS.get(
+        const response = await axiosClient.get(
             `/event-calender?currentPage=${page}&pageSize=${pageSize}`,
         );
         return response?.data;
@@ -34,7 +34,7 @@ export const getAllEventCalendar = async (page, pageSize) => {
 export const getEventCalendarById = async (id) => {
     try {
         const token = getAuthToken();
-        const response = await axiosClientMMS.get(
+        const response = await axiosClient.get(
             `/event-calender/${id}`,
         );
         return response?.data;
@@ -47,7 +47,7 @@ export const getEventCalendarById = async (id) => {
 export const UpdateEventCalendar = async (id, data) => {
     try {
         const token = getAuthToken();
-        const response = await axiosClientMMS.put(
+        const response = await axiosClient.put(
             `/event-calender/update/${id}`, data, {
                 headers: {
                   accept: "application/json",
@@ -64,7 +64,7 @@ export const UpdateEventCalendar = async (id, data) => {
 export const DeleteEventCalendar = async (id) => {
     try {
       //   const token = getAuthToken();
-      const response = await axiosClientMMS.delete(
+      const response = await axiosClient.delete(
         `/event-calender/delete/${id}`
         // {
         //   headers: {

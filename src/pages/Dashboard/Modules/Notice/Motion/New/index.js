@@ -147,8 +147,10 @@ function NewMotion() {
       <ToastContainer />
       <Header
         dashboardLink={"/notice/dashboard"}
-        addLink1={"/notice/motion/new"}
-        title1={"New Motion"}
+        addLink1={"/notice/motion/sent"}
+        title1={"Motion Lists"}
+        addLink2={"/notice/motion/new"}
+        title2={"New Motion"}
       />
 
       <CustomAlert

@@ -1,12 +1,12 @@
 // Seating Plan
 
-import { axiosClientMMS } from "..";
+import { axiosClient } from "..";
 import { getAuthToken } from "../../Auth";
 
 export const updateSeat = async (seatNo, data) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.put(
+    const response = await axiosClient.put(
       `/seatingPlan/seatAssignment/${seatNo}`,
       data
       // {
@@ -26,7 +26,7 @@ export const updateSeat = async (seatNo, data) => {
 export const swapSeats = async (data) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.post(
+    const response = await axiosClient.post(
       `/seatingPlan/swapSeats`,
       data
       // {
@@ -46,7 +46,7 @@ export const swapSeats = async (data) => {
 export const placeSeat = async (data) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.post(
+    const response = await axiosClient.post(
       `/seatingPlan/placeSeat`,
       data
       // {
@@ -66,7 +66,7 @@ export const placeSeat = async (data) => {
 export const getAllSeats = async () => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/seatingPlan/allSeats`, {
+    const response = await axiosClient.get(`/seatingPlan/allSeats`, {
       // headers: {
       //   Authorization: `Bearer ${token}`,
       // }
@@ -81,7 +81,7 @@ export const getAllSeats = async () => {
 export const createManageSession = async (data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.post(`/manageSession/create`, data, {
+    const response = await axiosClient.post(`/manageSession/create`, data, {
       headers: {
         accept: "application/json",
         "Content-Type": "application/json",
@@ -97,7 +97,7 @@ export const createManageSession = async (data) => {
 export const updateManageSession = async (id, data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.put(
+    const response = await axiosClient.put(
       `/manageSession/update/${id}`,
       data,
       {
@@ -118,7 +118,7 @@ export const updateManageSession = async (id, data) => {
 export const getAllManageSessions = async (page, pageSize) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/manageSession/all?currentPage=${page}&pageSize=${pageSize}`,
       {
         // headers: {
@@ -136,7 +136,7 @@ export const getAllManageSessions = async (page, pageSize) => {
 export const getManageSessionById = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/manageSession/${id}`, {
+    const response = await axiosClient.get(`/manageSession/${id}`, {
       // headers: {
       //   Authorization: `Bearer ${token}`,
       // }
@@ -151,7 +151,7 @@ export const getManageSessionById = async (id) => {
 export const getSeatById = async (seatNo) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/seatingPlan/getSeat/${seatNo}}`,
       {
         // headers: {
@@ -171,7 +171,7 @@ export const getSeatById = async (seatNo) => {
 export const getAllMemberAttendence = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/manageSession/getAttendance/${id}`,
       {
         // headers: {
@@ -189,7 +189,7 @@ export const getAllMemberAttendence = async (id) => {
 export const updateMemberattendace = async (id, data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.post(
+    const response = await axiosClient.post(
       `/manageSession/markAttendance/${id}`,
       data
       // {
@@ -210,7 +210,7 @@ export const updateMemberattendace = async (id, data) => {
 export const getThreePreseidingMembers = async () => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/manageSession/getTop3Members`, {
+    const response = await axiosClient.get(`/manageSession/getTop3Members`, {
       // headers: {
       //   Authorization: `Bearer ${token}`,
       // }

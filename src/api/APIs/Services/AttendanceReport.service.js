@@ -1,6 +1,6 @@
-import { axiosClientMMS } from "..";
+import { axiosClient } from "..";
 
-// import { axiosClientMMS } from "..";
+// import { axiosClient } from "..";
 export const searchAttendanceReportByDateWise = async (searchParams) => {
   try {
     // const token = getAuthToken();
@@ -10,7 +10,7 @@ export const searchAttendanceReportByDateWise = async (searchParams) => {
       Object.entries(searchParams).filter(([_, value]) => value !== "")
     );
 
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/manageSession/getAttendance`,
 
       {
@@ -36,7 +36,7 @@ export const searchAttendanceReportByPartyProvince = async (searchParams) => {
       Object.entries(searchParams).filter(([_, value]) => value !== "")
     );
 
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/manageSession/getAttendanceBySittings`,
 
       {
@@ -62,7 +62,7 @@ export const createSingleMemberAttendance = async (data) => {
   );
   try {
     const queryString = new URLSearchParams(filteredSearchParams).toString();
-    const response = await axiosClientMMS.post(
+    const response = await axiosClient.post(
       `/manageSession/markAttendanceToLeave?${queryString}`
 
       // {

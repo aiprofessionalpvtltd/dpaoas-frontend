@@ -1,6 +1,6 @@
 /* Notice Management System (APIs) */
 
-import { axiosClientMMS } from "..";
+import { axiosClient } from "..";
 import { getAuthToken } from "../../Auth";
 
 // Resolution Module
@@ -8,7 +8,7 @@ import { getAuthToken } from "../../Auth";
 export const createResolution = async (data) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.post(`/resolution/create`, data, {
+    const response = await axiosClient.post(`/resolution/create`, data, {
       headers: {
         accept: "application/json",
         "Content-Type": "multipart/form-data",
@@ -24,7 +24,7 @@ export const createResolution = async (data) => {
 export const getAllResolutions = async (page, pageSize, resolutionSentStatus) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/resolution/all?currentPage=${page}&pageSize=${pageSize}&resolutionSentStatus=${resolutionSentStatus}`,
       {
         // headers: {
@@ -42,7 +42,7 @@ export const getAllResolutions = async (page, pageSize, resolutionSentStatus) =>
 export const getAllResolutionsNotice = async (page, pageSize) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/resolution/inNotice?currentPage=${page}&pageSize=${pageSize}`,
       {
         // headers: {
@@ -60,7 +60,7 @@ export const getAllResolutionsNotice = async (page, pageSize) => {
 export const getAllResolutionStatus = async () => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/resolution/resolutionStatuses`,
       {
         // headers: {
@@ -84,7 +84,7 @@ export const searchResolution = async (searchParams, currentPage, pageSize) => {
       Object.entries(searchParams).filter(([_, value]) => value !== "")
     );
 
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/resolution/searchQuery?currentPage=${currentPage}&pageSize=${pageSize}`,
       {
         params: filteredSearchParams,
@@ -110,7 +110,7 @@ export const resolutionAnnualReport = async (searchParams, currentPage, pageSize
       Object.entries(searchParams).filter(([_, value]) => value !== "")
     );
 
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/resolution/searchQuery/annual-report?currentPage=${currentPage}&pageSize=${pageSize}`,
       {
         params: filteredSearchParams,
@@ -134,7 +134,7 @@ export const DeleteResolutionList = async (searchParams, currentPage, pageSize) 
       Object.entries(searchParams).filter(([_, value]) => value !== "")
     );
 
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/resolution/searchInactiveResoultion?currentPage=${currentPage}&pageSize=${pageSize}`,
       {
         params: filteredSearchParams,
@@ -154,7 +154,7 @@ export const DeleteResolution = async (id, Data) => {
   
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.put(`/resolution/delete/${id}`,Data);
+    const response = await axiosClient.put(`/resolution/delete/${id}`,Data);
     // {
     //   headers: {
     //     Authorization: `Bearer ${token}`,
@@ -170,7 +170,7 @@ export const DeleteResolution = async (id, Data) => {
 export const RecoverDeleteResolution = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.delete(`/resolution/reActive/${id}`);
+    const response = await axiosClient.delete(`/resolution/reActive/${id}`);
     // {
     //   headers: {
     //     Authorization: `Bearer ${token}`,
@@ -186,7 +186,7 @@ export const RecoverDeleteResolution = async (id) => {
 export const getResolutionBYID = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/resolution/${id}`);
+    const response = await axiosClient.get(`/resolution/${id}`);
     // {
     //   headers: {
     //     Authorization: `Bearer ${token}`,
@@ -202,7 +202,7 @@ export const getResolutionBYID = async (id) => {
 export const UpdateResolution = async (id, data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.put(
+    const response = await axiosClient.put(
       `/resolution/update/${id}`,
       data,
       {
@@ -222,7 +222,7 @@ export const UpdateResolution = async (id, data) => {
 export const sendToResolution = async (id, data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.put(
+    const response = await axiosClient.put(
       `/resolution/sendToResolution/${id}`, data,
       {
         // headers: {
@@ -240,7 +240,7 @@ export const sendToResolution = async (id, data) => {
 export const sendResolutionForTranslation = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.put(
+    const response = await axiosClient.put(
       `/resolution/sendTranslation/${id}`
     );
     //  {
@@ -266,7 +266,7 @@ export const allResolutionSummary = async (searchParams, currentPage, pageSize) 
       Object.entries(searchParams).filter(([_, value]) => value !== "")
     );
 
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/resolution/summary?currentPage=${currentPage}&pageSize=${pageSize}`,
       {
         params: filteredSearchParams,
@@ -287,7 +287,7 @@ export const allResolutionSummary = async (searchParams, currentPage, pageSize) 
 export const generateResolutionListData = async (data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.post(`/resolution/generateResolutionListData`, data)
+    const response = await axiosClient.post(`/resolution/generateResolutionListData`, data)
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -298,7 +298,7 @@ export const generateResolutionListData = async (data) => {
   export const createNewResolutionList = async (data) => {
     try {
       // const token = getAuthToken();
-      const response = await axiosClientMMS.post(`/resolution/resolution-lists`, data)
+      const response = await axiosClient.post(`/resolution/resolution-lists`, data)
       return response?.data;
     } catch (error) {
       console.error("Error fetching API endpoint:", error);
@@ -310,7 +310,7 @@ export const generateResolutionListData = async (data) => {
    export const UpdateResolutionList = async (data) => {
     try {
       // const token = getAuthToken();
-      const response = await axiosClientMMS.put(`/resolution/updateResolutionListAndAssociations`, data)
+      const response = await axiosClient.put(`/resolution/updateResolutionListAndAssociations`, data)
       return response?.data;
     } catch (error) {
       console.error("Error fetching API endpoint:", error);
@@ -321,7 +321,7 @@ export const generateResolutionListData = async (data) => {
   export const allResolutionList = async (currentPage, pageSize) => {
     try {
       // const token = getAuthToken();
-      const response = await axiosClientMMS.get(`/resolution/resolutionLists?currentPage=${currentPage}&pageSize=${pageSize}`)
+      const response = await axiosClient.get(`/resolution/resolutionLists?currentPage=${currentPage}&pageSize=${pageSize}`)
       return response?.data;
     } catch (error) {
       console.error("Error fetching API endpoint:", error);
@@ -332,7 +332,7 @@ export const generateResolutionListData = async (data) => {
   export const deleteResolutionListByID = async (id) => {
     try {
       // const token = getAuthToken();
-      const response = await axiosClientMMS.delete(`/resolution/resolutionlists/${id}`)
+      const response = await axiosClient.delete(`/resolution/resolutionlists/${id}`)
       return response?.data;
     } catch (error) {
       console.error("Error fetching API endpoint:", error);
@@ -344,7 +344,7 @@ export const generateResolutionListData = async (data) => {
   export const getBallotRecord = async (data) => {
     try {
       // const token = getAuthToken();
-      const response = await axiosClientMMS.post(`/resolution/pdfResolutionList`, data)
+      const response = await axiosClient.post(`/resolution/pdfResolutionList`, data)
       return response?.data;
     } catch (error) {
       console.error("Error fetching API endpoint:", error);
@@ -355,7 +355,7 @@ export const generateResolutionListData = async (data) => {
   export const resolutionStatusCount = async () => {
     try {
       // const token = getAuthToken();
-      const response = await axiosClientMMS.get(`/resolution/resolutionsByStatus`)
+      const response = await axiosClient.get(`/resolution/resolutionsByStatus`)
       return response?.data;
     } catch (error) {
       console.error("Error fetching API endpoint:", error);
@@ -366,7 +366,7 @@ export const generateResolutionListData = async (data) => {
   export const allBallotByResolutionListId = async (id) => {
     try {
       // const token = getAuthToken();
-      const response = await axiosClientMMS.get(`/resolution/getSingleResolutionData/${id}`)
+      const response = await axiosClient.get(`/resolution/getSingleResolutionData/${id}`)
       return response?.data;
     } catch (error) {
       console.error("Error fetching API endpoint:", error);

@@ -293,6 +293,7 @@ function CustomTable({
                     <tr key={rowIndex}>
                       {isCheckbox && (
                         <td className="text-center">
+                
                           <input
                             type="checkbox"
                             checked={isChecked.includes(item.internalId)} // Check if item.internalId is in the array of selected IDs
@@ -572,6 +573,7 @@ function CustomTable({
                     <tr key={rowIndex}>
                       {isCheckbox && (
                         <td className="text-center">
+                          {isChecked.includes(item.internalId) ? isChecked.indexOf(item.internalId) + 1 : ''}
                           <input
                             type="checkbox"
                             checked={isChecked.includes(item.internalId)} // Check if item.internalId is in the array of selected IDs

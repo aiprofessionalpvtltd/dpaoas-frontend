@@ -5,10 +5,12 @@ import { Layout } from "../../../../../../../components/Layout";
 import { LegislationSideBarItems } from "../../../../../../../utils/sideBarItems";
 import NoticeStatsCard from "../../../../../../../components/CustomComponents/NoticeStatsCard";
 import Header from "../../../../../../../components/Header";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function BillFromSelection() {
   const navigate = useNavigate();
+  const location = useLocation();
+  console.log("loca", location?.state)
   return (
     <Layout module={true} sidebarItems={LegislationSideBarItems} centerlogohide={true}>
       <Header dashboardLink={"/"} title1={"Select The Bill From"} />
@@ -57,7 +59,7 @@ function BillFromSelection() {
             <div
               className="card text-center  shadow-lg"
               style={{ height: "150px", cursor: "pointer" }}
-              onClick={() => navigate("/lgms/dashboard/bills/senate-bills")}
+              onClick={() => navigate("/lgms/dashboard/bills/senate-bills", {state:{category:location?.state?.category}})}
             >
               <div className="card-body d-flex align-items-center justify-content-center">
                 <h5 className="card-title mb-0 text-primary">Introduced In Senate</h5>
@@ -68,7 +70,7 @@ function BillFromSelection() {
             <div
               className="card text-center  shadow-lg"
               style={{ height: "150px", cursor: "pointer" }}
-              onClick={() => navigate("/lgms/dashboard/bills/NA-bills")}
+              onClick={() => navigate("/lgms/dashboard/bills/NA-bills",{state:{category:location?.state?.category}})}
             >
               <div className="card-body d-flex align-items-center justify-content-center">
                 <h5 className="card-title mb-0 text-success">Recieved From NA</h5>

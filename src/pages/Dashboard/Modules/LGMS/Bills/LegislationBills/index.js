@@ -45,9 +45,9 @@ const AllLegislationBill = () => {
       // parliamentaryYear: item?.parliamentaryYears?.parliamentaryTenure,
       // session: item?.sessions?.sessionName,
       // billType: item.billType,
-      // billCategory: item.billCategory,
+      billCategory: item.billCategory,
       fileNumber: item?.fileNumber,
-      // billFrom: item?.billFrom,
+      billFrom: item?.billFrom,
       // concerndCommittes: item?.introducedInHouses?.manageCommittees
       //   ?.committeeName
       //   ? item?.introducedInHouses?.manageCommittees?.committeeName
@@ -137,10 +137,10 @@ const AllLegislationBill = () => {
   };
 
   const handlePrivateMemberBill = () => {
-    navigate("/lgms/dashboard/bills/selectbillfrom");
+    navigate("/lgms/dashboard/bills/selectbillfrom", {state:{category:"Private Member Bill"}});
   };
   const handleGovernmentBill = () => {
-    navigate("/lgms/dashboard/bills/selectbillfrom");
+    navigate("/lgms/dashboard/bills/selectbillfrom", {state:{category:"Government Bill"}});
   };
   // //Handle Add Senate Bills
   // const handleAddSenateBills = () => {
@@ -151,12 +151,12 @@ const AllLegislationBill = () => {
   //   navigate("/lgms/dashboard/bills/NA-bills");
   // };
   //Handle Edit Senate Bills
-  const handleEditSenateBill = (id) => {
-    navigate("/lgms/dashboard/bills/edit/senate-bills", { state: id });
+  const handleEditSenateBill = (id, item) => {
+    navigate("/lgms/dashboard/bills/edit/senate-bills",  { state: {id, item} });
   };
   //Handle Edit NA Bills
-  const handleEditNABill = (id) => {
-    navigate("/lgms/dashboard/bills/edit/NA-bills/", { state: id });
+  const handleEditNABill = (id,item) => {
+    navigate("/lgms/dashboard/bills/edit/NA-bills/", { state: {id,item}});
   };
 
   // Handle Delete Bills
@@ -219,8 +219,8 @@ const AllLegislationBill = () => {
             </select>
           </div>
 
-          <div className="col-2 ms-2 mt-5 ">
-            <button className="btn btn-primary" onClick={handleClick}>
+          <div className="col-2 ms-2 mt-5 " >
+            <button className="btn btn-primary" onClick={handleClick} style={{marginTop:"5px"}}>
               Clear Filter
             </button>
           </div>
@@ -257,8 +257,8 @@ const AllLegislationBill = () => {
           <CustomTable
             hidebtn1={false}
             hideBtn={false}
-            addBtnText2="Private Member Bill"
-            addBtnText={"Government Bill"}
+            addBtnText2="Government Bill"
+            addBtnText={"Private Member Bill"}
             handleAdd={handlePrivateMemberBill}
             handleAdd2={handleGovernmentBill}
             tableTitle={"All Bills Data"}
@@ -274,7 +274,7 @@ const AllLegislationBill = () => {
             pageSize={pageSize}
             totalCount={count}
             handleEdit={(item) => {
-              item?.billFrom === "From Senate" ? handleEditSenateBill(item?.id) : handleEditNABill(item?.id);
+              item?.billFrom === "From Senate" ? handleEditSenateBill(item?.id, item) :  handleEditNABill(item?.id, item);
             }}
             // handleEdit={(item)=>{handleEditSenateBill(item?.id)}}
             handleDelete={(item) => handleDeleteLegislationBill(item?.id)}

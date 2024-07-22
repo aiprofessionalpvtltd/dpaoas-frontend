@@ -1,8 +1,8 @@
-import { axiosClientVMS } from "..";
+import { axiosClient } from "..";
 
 export const loginUser = async (data) => {
     try {
-      const response = await axiosClientVMS.post(`/users/login`, data, {
+      const response = await axiosClient.post(`/users/login`, data, {
         headers: {
           "Content-Type": "application/json",
         },

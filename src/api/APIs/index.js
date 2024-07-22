@@ -1,28 +1,23 @@
+import React from "react";
 import axios from "axios";
-import { getAuthToken } from "../Auth";
 
-// Image/Files URL (Production)
-export const imagesUrl = "http://172.16.170.8:5252";
+const API_URL = process.env.REACT_APP_API_URL;
+const TINY_EDITOR_API_KEY = process.env.REACT_APP_TINY_EDITOR_API_KEY;
 
-//Image Url
-export const imagesUrl2 = "http://172.16.170.8:5152";
+console.log("API URL:", API_URL); // This should log the API URL from .env
+console.log("Tiny Editor API Key:", TINY_EDITOR_API_KEY); // This should log the API key from .env
 
-// Image/Files URL (Development)
-// export const imagesUrl = "http://10.10.140.200:5152";
+export const imagesUrl = API_URL;
 
-// Set config defaults when creating the instance
-export const axiosClient = axios.create({
-  baseURL: "http://172.16.170.8:5151/api",
-});
 
-export const axiosClientVMS = axios.create({
-  baseURL: "http://172.16.170.8:5152/api",
-});
+const createAxiosClient = (baseURL) => {
+  return axios.create({
+    baseURL: baseURL,
+    headers: {
+      // Add any default headers here
+    },
+  });
+};
 
-export const axiosClientMMS = axios.create({
-  baseURL: "http://172.16.170.8:5252/api",
-  // baseURL: "http://10.10.140.89:5152/api",
-  // baseURL: "http://10.10.140.200:5152/api",
-  // baseURL: "http://10.10.140.200:8080/api",
-  // baseURL: "http://10.10.140.42:5152/api",
-});
+export const axiosClient = createAxiosClient(`${API_URL}/api`);
+

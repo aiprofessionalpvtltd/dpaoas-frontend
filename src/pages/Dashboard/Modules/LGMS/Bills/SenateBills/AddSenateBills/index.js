@@ -14,17 +14,18 @@ import {
   createNewLegislationBill,
   getAllMNALists,
 } from "../../../../../../../api/APIs/Services/LegislationModule.service";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { getUserData } from "../../../../../../../api/Auth";
 import { showSuccessMessage } from "../../../../../../../utils/ToastAlert";
 import moment from "moment";
 function NewLegislationSenateBill() {
+  const location = useLocation();
   const userData = getUserData();
   const navigate = useNavigate();
   const { sessions, members, ministryData, parliamentaryYear } = useContext(AuthContext);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [MNAData, setMNAData] = useState([]);
-
+  console.log("locat", location?.state)
   // Getting All MNA
   // Getting All MNA
   const getAllMNA = async () => {
@@ -58,7 +59,6 @@ function NewLegislationSenateBill() {
     },
     // validationSchema: validationSchema,
     onSubmit: (values) => {
-      console.log("Create Question Data", values);
       CreateSenateBill(values);
     },
   });
@@ -76,13 +76,22 @@ function NewLegislationSenateBill() {
     const formData = new FormData();
     formData.append("fkSessionId", values?.session);
     formData.append("fkParliamentaryYearId", values?.parliamentaryYear);
-    formData.append("fileNumber", values?.fileNumber);
+    // formData.append("fileNumber", `09 ${(values?.fileNumber)`});
+    // formData.append("fileNumber", `09/(${values?.fileNumber})/2024`);
+
+    
+  if (location?.state && location.state.category === "Private Member Bill") {
+    formData.append("fileNumber", `09/(${values?.fileNumber})/2024`);
+  } else {
+    formData.append("fileNumber", `24/(${values?.fileNumber})/2024`);
+  }
 
     if (values?.noticeDate) {
       const formattedDate = moment(values?.noticeDate).format("YYYY-MM-DD");
       formData.append("noticeDate", formattedDate);
     }
-    formData.append("billCategory", values?.billCategory);
+    // formData.append("billCategory", values?.billCategory);
+    formData.append("billCategory", location && location?.state && location?.state?.category && location?.state?.category);
     formData.append("billType", values?.billType);
     formData.append("billTitle", values?.billTitle);
     formData.append("billFrom", "From Senate");
@@ -112,11 +121,6 @@ function NewLegislationSenateBill() {
       formData.append(`senateBillMinistryMovers[${0}][fkMinistryId]`, values?.selectedMinistry?.value);
     }
 
-    let formDataObject = {};
-    for (let [key, value] of formData.entries()) {
-      formDataObject[key] = value;
-    }
-    console.log("formData", formDataObject);
     try {
       const response = await createNewLegislationBill(formData);
       if (response.success) {
@@ -238,7 +242,7 @@ function NewLegislationSenateBill() {
                     </div>
                   </div>
                   <div class="row">
-                    <div className="col">
+                    <div className="col-4">
                       <div className="mb-3">
                         <label className="form-label">File Number</label>
 
@@ -257,7 +261,7 @@ function NewLegislationSenateBill() {
                         )}
                       </div>
                     </div>
-                    <div class="col">
+                    {/* <div class="col">
                       <div class="mb-3">
                         <label class="form-label">Bill Category </label>
                         <select
@@ -279,8 +283,8 @@ function NewLegislationSenateBill() {
                           <div class="invalid-feedback">{formik.errors.billCategory}</div>
                         )}
                       </div>
-                    </div>
-                    <div className="col">
+                    </div> */}
+                    <div className="col-4">
                       <div class="mb-3">
                         <label class="form-label">Bill Type </label>
                         <select
