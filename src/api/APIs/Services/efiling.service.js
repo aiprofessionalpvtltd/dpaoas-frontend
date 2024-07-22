@@ -1,10 +1,10 @@
-import { axiosClientMMS } from "..";
+import { axiosClient } from "..";
 import { getAuthToken } from "../../Auth";
 
 export const createEfiling = async (data) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.post(`/files/createFile`, data, {
+    const response = await axiosClient.post(`/files/createFile`, data, {
       headers: {
         accept: "application/json",
         "Content-Type": "multipart/form-data",
@@ -19,7 +19,7 @@ export const createEfiling = async (data) => {
 export const getAllEfiling = async (currentPage, pageSize, userId) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/files?page=${currentPage}&pageSize=${pageSize}&userId=${userId}`
     );
     return response?.data;
@@ -32,7 +32,7 @@ export const getAllEfiling = async (currentPage, pageSize, userId) => {
 export const DeleteEfiling = async (id) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.put(`/files/delete/${id}`);
+    const response = await axiosClient.put(`/files/delete/${id}`);
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -43,7 +43,7 @@ export const DeleteEfiling = async (id) => {
 export const UpdateEfiling = async (id, data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.put(`files/update/${id}`, data);
+    const response = await axiosClient.put(`files/update/${id}`, data);
     // {
     //   headers: {
     //     accept: "application/json",
@@ -60,7 +60,7 @@ export const UpdateEfiling = async (id, data) => {
 export const getEFilesByID = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/files/${id}`);
+    const response = await axiosClient.get(`/files/${id}`);
     // {
     //   headers: {
     //     Authorization: `Bearer ${token}`,
@@ -77,7 +77,7 @@ export const getEFilesByID = async (id) => {
 export const getCaseDetailByID = async (fileId, caseId) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/cases/getCaseDetails/${fileId}/${caseId}`
     );
     // {
@@ -95,7 +95,7 @@ export const getCaseDetailByID = async (fileId, caseId) => {
 export const UploadEfilingAttechment = async (userId, fileId, data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.put(
+    const response = await axiosClient.put(
       `/files/corresponding/${userId}/${fileId}`,
       data,
       {
@@ -116,7 +116,7 @@ export const UploadEfilingAttechment = async (userId, fileId, data) => {
 export const createFIleRegister = async (data) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.post(`/fileRegisters/create`, data);
+    const response = await axiosClient.post(`/fileRegisters/create`, data);
     // {
     //   headers: {
     //     accept: "application/json",
@@ -133,7 +133,7 @@ export const createFIleRegister = async (data) => {
 export const getAllFileRegister = async (branchId, currentPage, pageSize) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/fileRegisters/${branchId}?currentPage=${currentPage}&pageSize=${pageSize}`
     );
     // {
@@ -153,7 +153,7 @@ export const getAllFileRegister = async (branchId, currentPage, pageSize) => {
 export const getAllYear = async (data) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/files/years/`, data);
+    const response = await axiosClient.get(`/files/years/`, data);
     // {
     //   headers: {
     //     accept: "application/json",
@@ -171,7 +171,7 @@ export const getAllYear = async (data) => {
 export const createFIleHeading = async (data) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.post(`/mainHeading/create`, data);
+    const response = await axiosClient.post(`/mainHeading/create`, data);
     // {
     //   headers: {
     //     accept: "application/json",
@@ -188,7 +188,7 @@ export const createFIleHeading = async (data) => {
 export const getAllFileHeading = async (branchId, currentPage, pageSize) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/mainHeading/getAllHeadings/${branchId}?currentPage=${currentPage}&pageSize=${pageSize}`
     );
     // {
@@ -207,7 +207,7 @@ export const getAllFileHeading = async (branchId, currentPage, pageSize) => {
 export const registerRecordByRegisterId = async (id) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/fileRegisters/singleRegister/${id}`
     );
     // {
@@ -226,7 +226,7 @@ export const registerRecordByRegisterId = async (id) => {
 export const UpdateFIleHeading = async (id, data) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.put(
+    const response = await axiosClient.put(
       `/mainHeading/update/${id}`,
       data
     );
@@ -246,7 +246,7 @@ export const UpdateFIleHeading = async (id, data) => {
 export const getSingleHeadingbyId = async (id) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/mainHeading/${id}`);
+    const response = await axiosClient.get(`/mainHeading/${id}`);
     // {
     //   headers: {
     //     accept: "application/json",
@@ -265,7 +265,7 @@ export const getSingleHeadingbyId = async (id) => {
 export const geteHeadingbyBranchId = async (id) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/mainHeading/byBranch/${id}`);
+    const response = await axiosClient.get(`/mainHeading/byBranch/${id}`);
     // {
     //   headers: {
     //     accept: "application/json",
@@ -281,7 +281,7 @@ export const geteHeadingbyBranchId = async (id) => {
 export const geteHeadingNumberbyMainHeadingId = async (id) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/mainHeading/byHeading/${id}`);
+    const response = await axiosClient.get(`/mainHeading/byHeading/${id}`);
     // {
     //   headers: {
     //     accept: "application/json",
@@ -299,7 +299,7 @@ export const geteHeadingNumberbyMainHeadingId = async (id) => {
 export const createFiles = async (id, data) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.post(`/files/createFile/${id}`, data);
+    const response = await axiosClient.post(`/files/createFile/${id}`, data);
     // {
     //   headers: {
     //     accept: "application/json",
@@ -316,7 +316,7 @@ export const createFiles = async (id, data) => {
 // export const getFileByRegisterById = async (id, currentPage, pageSize) => {
 //   try {
 //     //   const token = getAuthToken();
-//     const response = await axiosClientMMS.get(
+//     const response = await axiosClient.get(
 //       `/files/byFileRegister/${id}?currentPage=${currentPage}&pageSize=${pageSize}`)
 //       // {
 //       //   headers: {
@@ -339,7 +339,7 @@ export const getFileByRegisterById = async (searchParams) => {
 
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/files/byFileRegister`, {
+    const response = await axiosClient.get(`/files/byFileRegister`, {
       params: filteredSearchParams,
       // headers: {
       //   Authorization: `Bearer ${token}`,
@@ -355,7 +355,7 @@ export const getFileByRegisterById = async (searchParams) => {
 export const getFileStates = async () => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/filesDashboard/stats`);
+    const response = await axiosClient.get(`/filesDashboard/stats`);
     // {
     //   headers: {
     //     accept: "application/json",
@@ -372,7 +372,7 @@ export const getFileStates = async () => {
 export const DeleteHeading = async (id) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.delete(`/mainHeading/delete/${id}`);
+    const response = await axiosClient.delete(`/mainHeading/delete/${id}`);
     // {
     //   headers: {
     //     accept: "application/json",
@@ -390,7 +390,7 @@ export const DeleteHeading = async (id) => {
 export const createCase = async (id, userId, frId, data) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.post(
+    const response = await axiosClient.post(
       `/cases/createCase/${id}/${userId}/${frId}`,
       data,
       {
@@ -410,7 +410,7 @@ export const createCase = async (id, userId, frId, data) => {
 export const UpdateCase = async (fileId, userId, caseId, data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.put(
+    const response = await axiosClient.put(
       `cases/updateCase/${fileId}/${userId}/${caseId}`,
       data,
       {
@@ -433,7 +433,7 @@ export const getAllCasesThroughSearchParams = async (searchParams) => {
   );
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/cases/getCasesByFileId`, {
+    const response = await axiosClient.get(`/cases/getCasesByFileId`, {
       params: filteredSearchParams,
       // headers: {
       //   Authorization: `Bearer ${token}`,
@@ -449,7 +449,7 @@ export const getAllCasesThroughSearchParams = async (searchParams) => {
 export const getSingleCaseByFileId = async (fileId, caseId) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/cases/getCase/${fileId}/${caseId}`
     );
     // {
@@ -474,7 +474,7 @@ export const getUserCaseHistory = async (
 ) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/cases/getCasesHistory/${fileId}/${branchId}/${userId}?currentPage=${currentPage}&pageSize=${pageSize}`
     );
     // {
@@ -499,7 +499,7 @@ export const getUserAllCaseHistory = async (
 ) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/cases/getAllCasesHistory/${fileId}/${branchId}/${userId}?currentPage=${currentPage}&pageSize=${pageSize}`
     );
     // {
@@ -521,7 +521,7 @@ export const getUserApprovedCaseHistory = async (searchParams) => {
   );
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/cases/getApprovedCasesHistory`,
       {
         params: filteredSearchParams,
@@ -543,7 +543,7 @@ export const getUserApprovedCaseHistory = async (searchParams) => {
 export const DeleteFileCaseImage = async (id) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.delete(
+    const response = await axiosClient.delete(
       `/cases/deleteAttachment/${id}`
     );
     // {
@@ -562,7 +562,7 @@ export const DeleteFileCaseImage = async (id) => {
 export const UpdateFIleCase = async (caseNoteId, data) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.put(
+    const response = await axiosClient.put(
       `/cases/updateCase/${caseNoteId}`,
       data
     );
@@ -582,7 +582,7 @@ export const UpdateFIleCase = async (caseNoteId, data) => {
 export const assignFIleCase = async (fileId, caseId, data) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.post(
+    const response = await axiosClient.post(
       `/cases/assignCase/${fileId}/${caseId}`,
       data
     );
@@ -603,7 +603,7 @@ export const assignFIleCase = async (fileId, caseId, data) => {
 export const createFreshReceipt = async (userId, data) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.post(
+    const response = await axiosClient.post(
       `/freshReceipt/createFR/${userId}`,
       data,
       {
@@ -623,7 +623,7 @@ export const createFreshReceipt = async (userId, data) => {
 export const assignFR = async (frId, data) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.post(
+    const response = await axiosClient.post(
       `/freshReceipt/assignFR/${frId}`,
       data
     );
@@ -643,7 +643,7 @@ export const assignFR = async (frId, data) => {
 export const getAllFreshReceipt = async (userId, currentPage, pageSize) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/freshReceipt/${userId}?currentPage=${currentPage}&pageSize=${pageSize}`
     );
     // {
@@ -662,7 +662,7 @@ export const getAllFreshReceipt = async (userId, currentPage, pageSize) => {
 export const getFreshReceiptById = async (id) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/freshReceipt/getFR/${id}`);
+    const response = await axiosClient.get(`/freshReceipt/getFR/${id}`);
     // {
     //   headers: {
     //     accept: "application/json",
@@ -679,7 +679,7 @@ export const getFreshReceiptById = async (id) => {
 export const createReceivedFromBranches = async (data) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.post(
+    const response = await axiosClient.post(
       `/freshReceipt/createExternal`,
       data,
       // {
@@ -699,7 +699,7 @@ export const createReceivedFromBranches = async (data) => {
 export const getReceivedFromBranches = async () => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/freshReceipt/getExternal?currentPage=0&pageSize=1000`);
+    const response = await axiosClient.get(`/freshReceipt/getExternal?currentPage=0&pageSize=1000`);
     // {
     //   headers: {
     //     accept: "application/json",
@@ -716,7 +716,7 @@ export const getReceivedFromBranches = async () => {
 export const UpdateFreshReceipt = async (id, data) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.put(
+    const response = await axiosClient.put(
       `/freshReceipt/updateFR/${id}`,
       data,
       {
@@ -736,7 +736,7 @@ export const UpdateFreshReceipt = async (id, data) => {
 export const DeleteFreshReceipt = async (id) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.delete(
+    const response = await axiosClient.delete(
       `/freshReceipt/deleteFR/${id}`
     );
     // {
@@ -755,7 +755,7 @@ export const DeleteFreshReceipt = async (id) => {
 export const DeleteFreahReceptImage = async (id) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.delete(
+    const response = await axiosClient.delete(
       `/freshReceipt/deleteAttachment/${id}`
     );
     // {
@@ -774,7 +774,7 @@ export const DeleteFreahReceptImage = async (id) => {
 export const getAllFileDiary = async (branchId, currentPage, pageSize) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/fileDiary/${branchId}?currentPage=${currentPage}&pageSize=${pageSize}`
     );
     // {
@@ -793,7 +793,7 @@ export const getAllFileDiary = async (branchId, currentPage, pageSize) => {
 export const getsentAndRecievedFilesStats = async (id) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/filesDashboard/sentAndRecievedFiles/${id}`
     );
     // {
@@ -812,7 +812,7 @@ export const getsentAndRecievedFilesStats = async (id) => {
 export const getsentAndRecievedFRStats = async (id) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/filesDashboard/sentAndRecievedFRs/${id}`
     );
     // {
@@ -831,7 +831,7 @@ export const getsentAndRecievedFRStats = async (id) => {
 export const getApprovelStats = async (id) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/filesDashboard/approvalStats/${id}`
     );
     // {
@@ -851,7 +851,7 @@ export const getApprovelStats = async (id) => {
 export const getEfilingNotifications = async (userId) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/filesDashboard/notifiedFiles/${userId}`,
       {
         // headers: {
@@ -869,7 +869,7 @@ export const getEfilingNotifications = async (userId) => {
 export const DeleteNotificationById = async (notificationId, userId) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.delete(
+    const response = await axiosClient.delete(
       `/filesDashboard/makeNotificationDecrease/${notificationId}/${userId}`,
     );
     // {
@@ -889,7 +889,7 @@ export const DeleteNotificationById = async (notificationId, userId) => {
 export const getFRHistory = async (branchId, currentPage, pageSize) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/freshReceipt/frsHistory/${branchId}?currentPage=${currentPage}&pageSize=${pageSize}`,
       {
         // headers: {
@@ -908,7 +908,7 @@ export const getFRHistory = async (branchId, currentPage, pageSize) => {
 export const assiginFR = async (id, data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.post(
+    const response = await axiosClient.post(
       `/freshReceipt/assignFR/${id}`,
       data
       // {
@@ -927,7 +927,7 @@ export const assiginFR = async (id, data) => {
 export const getAllFRs = async (branchId) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/freshReceipt/ByBranch/${branchId}`
     );
     // {
@@ -946,7 +946,7 @@ export const getAllFRs = async (branchId) => {
 export const getSignatureByUserId = async (id) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/cases/getSignatureByUserId/${id}`);
+    const response = await axiosClient.get(`/cases/getSignatureByUserId/${id}`);
     // {
     //   headers: {
     //     accept: "application/json",
@@ -965,7 +965,7 @@ export const getSignatureByUserId = async (id) => {
 export const createCorrespondence = async (data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.post(`/correspondence/createCorrespondence`, data, {
+    const response = await axiosClient.post(`/correspondence/createCorrespondence`, data, {
       headers: {
         accept: "multipart/form-data",
         "Content-Type": "multipart/form-data",
@@ -981,7 +981,7 @@ export const createCorrespondence = async (data) => {
 export const UpdateCorrespondence = async (id, data) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.put(
+    const response = await axiosClient.put(
       `/correspondence/updateCorrespondence/${id}`,
       data,
       {
@@ -1001,7 +1001,7 @@ export const UpdateCorrespondence = async (id, data) => {
 export const getCorrespondenceById = async (id) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/correspondence/getSingleCorrespondence/${id}`);
+    const response = await axiosClient.get(`/correspondence/getSingleCorrespondence/${id}`);
     // {
     //   headers: {
     //     accept: "application/json",
@@ -1018,7 +1018,7 @@ export const getCorrespondenceById = async (id) => {
 export const getAllCorrespondence = async (fileId, branchId, currentPage, pageSize) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/correspondence/getAllCorrespondences?fileId=${fileId}&branchId=${branchId}&currentPage=${currentPage}&pageSize=${pageSize}`);
+    const response = await axiosClient.get(`/correspondence/getAllCorrespondences?fileId=${fileId}&branchId=${branchId}&currentPage=${currentPage}&pageSize=${pageSize}`);
     // {
     //   headers: {
     //     accept: "application/json",
@@ -1035,7 +1035,7 @@ export const getAllCorrespondence = async (fileId, branchId, currentPage, pageSi
 export const DeleteAttachedFiles = async (id) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.delete(
+    const response = await axiosClient.delete(
       `/correspondence/deleteAttachment/${id}`
     );
     // {
@@ -1055,7 +1055,7 @@ export const DeleteAttachedFiles = async (id) => {
 export const ApprovedFIleCase = async (data) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.put(
+    const response = await axiosClient.put(
       `/cases/updateCaseStatus`,
       data
     );

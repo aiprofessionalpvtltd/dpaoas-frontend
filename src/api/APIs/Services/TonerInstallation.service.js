@@ -1,4 +1,4 @@
-import { axiosClientMMS } from "..";
+import { axiosClient } from "..";
 import { getAuthToken } from "../../Auth";
 
 // Start of Tonar Model
@@ -7,7 +7,7 @@ import { getAuthToken } from "../../Auth";
 export const getAllTonerModels = async (currentPage, pageSize) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/tonerModel?currentPage=${currentPage}&pageSize=${pageSize}`
     );
     return response?.data;
@@ -20,7 +20,7 @@ export const getAllTonerModels = async (currentPage, pageSize) => {
 // Get Single TonerModels By ID
 export const getTonersModelById = async (id) => {
   try {
-    const response = await axiosClientMMS.get(`/tonerModel/${id}`);
+    const response = await axiosClient.get(`/tonerModel/${id}`);
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -31,7 +31,7 @@ export const getTonersModelById = async (id) => {
 // Get By Search  TonerModels
 export const searchTonerModels = async (search) => {
   try {
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/tonerModel/searchTonerModel?tonerModel=${search}`
     );
     return response?.data;
@@ -45,7 +45,7 @@ export const searchTonerModels = async (search) => {
 export const createTonarModal = async (data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.post(`/tonerModel/create`, data);
+    const response = await axiosClient.post(`/tonerModel/create`, data);
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -57,7 +57,7 @@ export const createTonarModal = async (data) => {
 export const UpdateTonnerModel = async (id, data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.put(
+    const response = await axiosClient.put(
       `/tonerModel/update/${id}`,
       data,
       {
@@ -77,7 +77,7 @@ export const UpdateTonnerModel = async (id, data) => {
 // Delete Toner Model
 export const tonerModelDelete = async (id) => {
   try {
-    const response = await axiosClientMMS.delete(`/tonerModel/delete/${id}`);
+    const response = await axiosClient.delete(`/tonerModel/delete/${id}`);
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -92,7 +92,7 @@ export const tonerModelDelete = async (id) => {
 export const getallToners = async (currentPage, pageSize) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/tonerInstallation/?currentPage=${currentPage}&pageSize=${pageSize}`
     );
     return response?.data;
@@ -105,7 +105,7 @@ export const getallToners = async (currentPage, pageSize) => {
 // Get Single Toner By ID
 export const getTonersById = async (id) => {
   try {
-    const response = await axiosClientMMS.get(`/tonerInstallation/${id}`);
+    const response = await axiosClient.get(`/tonerInstallation/${id}`);
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -120,7 +120,7 @@ export const SearchToner = async (data) => {
   );
   try {
     const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/tonerInstallation/searchTonerInstallation`,
       {
         params: filteredSearchParams,
@@ -143,7 +143,7 @@ export const SearchToner = async (data) => {
 export const createTonar = async (data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.post(
+    const response = await axiosClient.post(
       `/tonerInstallation/create`,
       data
     );
@@ -158,7 +158,7 @@ export const createTonar = async (data) => {
 export const UpdateTonner = async (id, data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.put(
+    const response = await axiosClient.put(
       `/tonerInstallation/update/${id}`,
       data,
       {
@@ -178,7 +178,7 @@ export const UpdateTonner = async (id, data) => {
 //   Delete Toner
 export const tonerDelete = async (id) => {
   try {
-    const response = await axiosClientMMS.delete(
+    const response = await axiosClient.delete(
       `/tonerInstallation/delete/${id}`
     );
     return response?.data;

@@ -1,11 +1,11 @@
-import { axiosClientMMS } from "..";
+import { axiosClient } from "..";
 import { getAuthToken } from "../../Auth";
 
 // Question Module
 export const createQuestion = async (data) => {
   try {
     //   const token = getAuthToken()
-    const response = await axiosClientMMS.post(`/questions/create`, data, {
+    const response = await axiosClient.post(`/questions/create`, data, {
       headers: {
         accept: "application/json",
         "Content-Type": "multipart/form-data",
@@ -22,7 +22,7 @@ export const createQuestion = async (data) => {
 export const DeleteQuestion = async (id, Data) => {
   try {
     //   const token = getAuthToken()
-    const response = await axiosClientMMS.put(`/questions/delete/${id}`, Data)
+    const response = await axiosClient.put(`/questions/delete/${id}`, Data)
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -33,7 +33,7 @@ export const DeleteQuestion = async (id, Data) => {
 export const getAllQuestion = async (page, pageSize, questionSentStatus) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/questions/all?currentPage=${page}&pageSize=${pageSize}&questionSentStatus=${questionSentStatus}`,
       {
         // headers: {
@@ -51,7 +51,7 @@ export const getAllQuestion = async (page, pageSize, questionSentStatus) => {
 export const getAllQuestionNotice = async (page, pageSize) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/questions/inNotice?currentPage=${page}&pageSize=${pageSize}`,
       {
         // headers: {
@@ -75,7 +75,7 @@ export const searchQuestion = async (searchParams, currentPage, pageSize) => {
       Object.entries(searchParams).filter(([_, value]) => value !== "")
     );
     console.log("filtered", filteredSearchParams);
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/questions/searchQuestion?currentPage=${currentPage}&pageSize=${pageSize}`,
       {
         params: filteredSearchParams,
@@ -95,7 +95,7 @@ export const searchQuestion = async (searchParams, currentPage, pageSize) => {
 export const getAllQuestionStatus = async () => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/questions/quesStatuses`, {
+    const response = await axiosClient.get(`/questions/quesStatuses`, {
       // headers: {
       //   Authorization: `Bearer ${token}`,
       // }
@@ -111,7 +111,7 @@ export const getAllQuestionStatus = async () => {
 export const sendToQuestion = async (id, data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.put(
+    const response = await axiosClient.put(
       `/questions/sendToQuestion/${id}`, data,
       {
         // headers: {
@@ -130,7 +130,7 @@ export const sendToQuestion = async (id, data) => {
 export const sendQuestionTranslation = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.put(
+    const response = await axiosClient.put(
       `/questions/sendForTranslation/${id}`,
       {
         // headers: {
@@ -149,12 +149,12 @@ export const getAllQuestionByID = async (id) => {
   try {
     // const token = getAuthToken();
     const [questionResponse, historyResponse] = await Promise.all([
-      axiosClientMMS.get(`/questions/${id}`, {
+      axiosClient.get(`/questions/${id}`, {
         // headers: {
         //   Authorization: `Bearer ${token}`,
         // }
       }),
-      axiosClientMMS.get(`/questions/getQuestionHistories/${id}`, {
+      axiosClient.get(`/questions/getQuestionHistories/${id}`, {
         // headers: {
         //   Authorization: `Bearer ${token}`,
         // }
@@ -174,7 +174,7 @@ export const getAllQuestionByID = async (id) => {
 export const UpdateQuestionById = async (id, data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.put(`/questions/update/${id}`, data, {
+    const response = await axiosClient.put(`/questions/update/${id}`, data, {
       // headers: {
       //   Authorization: `Bearer ${token}`,
       // }
@@ -190,7 +190,7 @@ export const createDefferQuestion = async (id, DefferData) => {
   console.log("iwefjiouios".DefferData);
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.post(
+    const response = await axiosClient.post(
       `/questions/deferQuestion/${id}`,
       DefferData,
       {
@@ -210,7 +210,7 @@ export const createDefferQuestion = async (id, DefferData) => {
 export const createReviveQuestion = async (id, reviveData) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.post(
+    const response = await axiosClient.post(
       `/questions/reviveQuestion/${id}`,
       reviveData,
       {
@@ -230,7 +230,7 @@ export const createReviveQuestion = async (id, reviveData) => {
 export const allRevivedQuestions = async () => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/questions/allRevivedQuestions?currentPage=${0}&pageSize=${100}`
     );
     return response?.data;
@@ -243,7 +243,7 @@ export const allRevivedQuestions = async () => {
 export const RevivedQuestionsBYID = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/questions/getReviveQuestion/${id}`
     );
     return response?.data;
@@ -256,7 +256,7 @@ export const RevivedQuestionsBYID = async (id) => {
 export const noticeBusinessReport = async (fromDate, toDate) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/noticeOfficeReport/?noticeOfficeDiaryDateFrom=${fromDate}&noticeOfficeDiaryDateTo=${toDate}`
     );
     return response?.data;
@@ -279,7 +279,7 @@ export const allQuestionSummary = async (
       Object.entries(searchParams).filter(([_, value]) => value !== "")
     );
 
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/questions/getQuestionsSummary`,
       {
         params: filteredSearchParams,
@@ -298,7 +298,7 @@ export const allQuestionSummary = async (
 export const deleteQuestionFromList = async (id) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClientMMS.delete(
+    const response = await axiosClient.delete(
       `/questions/removeQuestion/${id}`
       // {
       //   headers: {
@@ -321,7 +321,7 @@ export const getAllDeletedQuestions = async (page, pageSize, searchParams) => {
     );
 
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/questions/getDeletedQuestions?currentPage=${page}&pageSize=${pageSize}`,
       {
         params: filteredSearchParams,
@@ -340,7 +340,7 @@ export const getAllDeletedQuestions = async (page, pageSize, searchParams) => {
 export const getAllDeferedQuestions = async (page, pageSize) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/questions/getDeferredQuestions?currentPage=${page}&pageSize=${pageSize}`,
       {
         // headers: {
@@ -358,7 +358,7 @@ export const getAllDeferedQuestions = async (page, pageSize) => {
 export const getAllQuesListBySession = async (sessionId, page, pageSize) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/questionList/getBySessionId/${sessionId}?currentPage=${page}&pageSize=${pageSize}`,
       {
         // headers: {
@@ -381,7 +381,7 @@ export const getGeneratedQuesList = async (data) => {
     );
 
     // const token = getAuthToken();
-    const response = await axiosClientMMS.post(
+    const response = await axiosClient.post(
       `/questionList/generateQuestionList`,
       data,
       {
@@ -400,7 +400,7 @@ export const getGeneratedQuesList = async (data) => {
 export const saveQuestionList = async (data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.post(
+    const response = await axiosClient.post(
       `/questionList/saveQuestionList`,
       data,
       {
@@ -420,7 +420,7 @@ export const saveQuestionList = async (data) => {
 export const printQuestionsFromList = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/questionList/${id}`,
       {
         // headers: {
@@ -438,7 +438,7 @@ export const printQuestionsFromList = async (id) => {
 export const delleteQuestionsList = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.delete(
+    const response = await axiosClient.delete(
       `/questionList/deleteQuestionList/${id}`,
       {
         // headers: {
@@ -462,7 +462,7 @@ export const getQuestionGroupDiaries = async (searchParams) => {
       Object.entries(searchParams).filter(([_, value]) => value !== "")
     );
 
-    const response = await axiosClientMMS.get(`/questions/getGroupDiary`, {
+    const response = await axiosClient.get(`/questions/getGroupDiary`, {
       params: filteredSearchParams,
       // headers: {
       //   Authorization: `Bearer ${token}`,
@@ -484,7 +484,7 @@ export const getUnderProcessQuestions = async (searchParams) => {
       Object.entries(searchParams).filter(([_, value]) => value !== "")
     );
 
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/questions/getUnderProcessQuestions`,
       {
         params: filteredSearchParams,
@@ -504,7 +504,7 @@ export const getUnderProcessQuestions = async (searchParams) => {
 export const getAllSupplementaryLists = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/questionList/getByQuestionListId/${id}`,
       {
         // headers: {
@@ -522,7 +522,7 @@ export const getAllSupplementaryLists = async (id) => {
 export const getGeneratedSuppList = async (id, data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.post(
+    const response = await axiosClient.post(
       `/questionList/generateSupplementaryList/${id}`,
       data,
       {
@@ -541,7 +541,7 @@ export const getGeneratedSuppList = async (id, data) => {
 export const saveSuppList = async (id, data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.post(
+    const response = await axiosClient.post(
       `/questionList/saveSupplementaryList/${id}`,
       data,
       {
@@ -561,7 +561,7 @@ export const saveSuppList = async (id, data) => {
 export const printSuppFromList = async (data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.post(
+    const response = await axiosClient.post(
       `/questionList/saveQuestionList`,
       data,
       {
@@ -580,7 +580,7 @@ export const printSuppFromList = async (data) => {
 export const deleteSuppList = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.delete(
+    const response = await axiosClient.delete(
       `/questionList/deleteSupplementaryList/${id}`,
       {
         // headers: {
@@ -599,7 +599,7 @@ export const deleteSuppList = async (id) => {
 export const generatedRotaList = async (data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.post(`/rota/create`, data, {
+    const response = await axiosClient.post(`/rota/create`, data, {
       // headers: {
       //   Authorization: `Bearer ${token}`,
       // }
@@ -615,7 +615,7 @@ export const generatedRotaList = async (data) => {
 export const CreateRotaList = async (data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.post(`/new/rota/create`, data, {
+    const response = await axiosClient.post(`/new/rota/create`, data, {
       // headers: {
       //   Authorization: `Bearer ${token}`,
       // }
@@ -631,7 +631,7 @@ export const CreateRotaList = async (data) => {
 export const allRotaList = async (currentPage, pageSize) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/new/rota/getAll?currentPage=${currentPage}&pageSize=${pageSize}`)
+    const response = await axiosClient.get(`/new/rota/getAll?currentPage=${currentPage}&pageSize=${pageSize}`)
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -642,7 +642,7 @@ export const allRotaList = async (currentPage, pageSize) => {
 export const UpdateRotaList = async (id, data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.put(`/new/rota/update/${id}`, data, {
+    const response = await axiosClient.put(`/new/rota/update/${id}`, data, {
       // headers: {
       //   Authorization: `Bearer ${token}`,
       // }
@@ -657,7 +657,7 @@ export const UpdateRotaList = async (id, data) => {
 export const getRotaListById = async (id, data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(`/new/rota/getById/${id}`, data, {
+    const response = await axiosClient.get(`/new/rota/getById/${id}`, data, {
       // headers: {
       //   Authorization: `Bearer ${token}`,
       // }
@@ -672,7 +672,7 @@ export const getRotaListById = async (id, data) => {
 export const generateRotaFurtherAllotmentList = async (data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.post(
+    const response = await axiosClient.post(
       `/rota/createFurtherAllotment`,
       data,
       {
@@ -691,7 +691,7 @@ export const generateRotaFurtherAllotmentList = async (data) => {
 export const updateQuestionStatus = async (data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.put(
+    const response = await axiosClient.put(
       `/questions/changeQuestionStatus`,
       data,
       {
@@ -710,7 +710,7 @@ export const updateQuestionStatus = async (data) => {
 export const allquestionsByStatus = async (data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/questions/questionsByStatus`,
     );
     return response?.data;
@@ -722,7 +722,7 @@ export const allquestionsByStatus = async (data) => {
 
 export const updateGenaratedQuestion = async(data)=>{
   try {
-    const response = await axiosClientMMS.put(`/questionList/editQuestionList`,data)
+    const response = await axiosClient.put(`/questionList/editQuestionList`,data)
     return response?.data
   } catch (error) {
     console.error("Error fetching API endpoint:", error);

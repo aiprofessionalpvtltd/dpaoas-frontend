@@ -1,4 +1,4 @@
-import { axiosClientMMS, axiosClientVMS } from "..";
+import { axiosClient } from "..";
 import { getAuthToken } from "../../Auth";
 
 /* Organizational Management System (APIs) */
@@ -8,7 +8,7 @@ import { getAuthToken } from "../../Auth";
 export const getRoles = async () => {
     try {
       const token = getAuthToken();
-      const response = await axiosClientVMS.get(
+      const response = await axiosClient.get(
         `/roles?currentPage=${0}&pageSize=${1000}`,
         {
           headers: {
@@ -26,7 +26,7 @@ export const getRoles = async () => {
   export const getRoleById = async (id) => {
     try {
       const token = getAuthToken();
-      const response = await axiosClientVMS.get(`/roles/${id}`, {
+      const response = await axiosClient.get(`/roles/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -41,7 +41,7 @@ export const getRoles = async () => {
   export const createRole = async (data) => {
     try {
       const token = getAuthToken();
-      const response = await axiosClientVMS.post(`/roles/create`, data, {
+      const response = await axiosClient.post(`/roles/create`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -56,7 +56,7 @@ export const getRoles = async () => {
   export const updateRole = async (id, data) => {
     try {
       const token = getAuthToken();
-      const response = await axiosClientVMS.put(`/roles/updateRole/${id}`, data, {
+      const response = await axiosClient.put(`/roles/updateRole/${id}`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -71,7 +71,7 @@ export const getRoles = async () => {
   export const DeleteRole = async (id) => {
     try {
       const token = getAuthToken();
-      const response = await axiosClientVMS.delete(`/roles/delete/${id}`, {
+      const response = await axiosClient.delete(`/roles/delete/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -86,7 +86,7 @@ export const getRoles = async () => {
   export const getModules = async () => {
     try {
       const token = getAuthToken();
-      const response = await axiosClientVMS.get(
+      const response = await axiosClient.get(
         `/permissions/modulesPermissions`,
         {
           headers: {
@@ -105,7 +105,7 @@ export const getRoles = async () => {
 export const getDepartment = async (currentPage, pageSize) => {
   try {
     const token = getAuthToken();
-    const response = await axiosClientVMS.get(
+    const response = await axiosClient.get(
       `/departments/?currentPage=${currentPage}&pageSize=${pageSize}`,
       {
         headers: {
@@ -123,7 +123,7 @@ export const getDepartment = async (currentPage, pageSize) => {
 export const createDepartment = async (data) => {
   try {
     const token = getAuthToken();
-    const response = await axiosClientVMS.post(`/departments/create`, data, {
+    const response = await axiosClient.post(`/departments/create`, data, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -138,7 +138,7 @@ export const createDepartment = async (data) => {
 export const UpdateDepartment = async (id, data) => {
   try {
     const token = getAuthToken();
-    const response = await axiosClientVMS.put(
+    const response = await axiosClient.put(
       `/departments/update/${id}`,
       data,
       {
@@ -157,7 +157,7 @@ export const UpdateDepartment = async (id, data) => {
 export const DeleteDepartment = async (id) => {
   try {
     const token = getAuthToken();
-    const response = await axiosClientVMS.delete(`/departments/delete/${id}`, {
+    const response = await axiosClient.delete(`/departments/delete/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -173,7 +173,7 @@ export const DeleteDepartment = async (id) => {
 export const getDesignations = async (currentPage, pageSize) => {
   try {
     const token = getAuthToken();
-    const response = await axiosClientVMS.get(
+    const response = await axiosClient.get(
       `/designations/?currentPage=${currentPage}&pageSize=${pageSize}`,
       {
         headers: {
@@ -191,7 +191,7 @@ export const getDesignations = async (currentPage, pageSize) => {
 export const createDesignation = async (data) => {
   try {
     const token = getAuthToken();
-    const response = await axiosClientVMS.post(`/designations/create`, data, {
+    const response = await axiosClient.post(`/designations/create`, data, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -206,7 +206,7 @@ export const createDesignation = async (data) => {
 export const UpdateDesignation = async (id, data) => {
   try {
     const token = getAuthToken();
-    const response = await axiosClientVMS.put(
+    const response = await axiosClient.put(
       `/designations/update/${id}`,
       data,
       {
@@ -225,7 +225,7 @@ export const UpdateDesignation = async (id, data) => {
 export const DeleteDesignation = async (id) => {
   try {
     const token = getAuthToken();
-    const response = await axiosClientVMS.delete(`/designations/delete/${id}`, {
+    const response = await axiosClient.delete(`/designations/delete/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -241,7 +241,7 @@ export const DeleteDesignation = async (id) => {
 export const createEmployee = async (data) => {
   try {
     const token = getAuthToken();
-    const response = await axiosClientVMS.post(`/employee/create`, data, {
+    const response = await axiosClient.post(`/employee/create`, data, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -256,7 +256,7 @@ export const createEmployee = async (data) => {
 export const getAllEmployee = async (currentPage, pageSize) => {
   try {
     const token = getAuthToken();
-    const response = await axiosClientVMS.get(
+    const response = await axiosClient.get(
       `/employee/?currentPage=${currentPage}&pageSize=${pageSize}`,
       {
         headers: {
@@ -274,7 +274,7 @@ export const getAllEmployee = async (currentPage, pageSize) => {
 export const getEmployeeById = async (id) => {
   try {
     const token = getAuthToken();
-    const response = await axiosClientVMS.get(
+    const response = await axiosClient.get(
       `/employee/${id}`,
       {
         headers: {
@@ -292,7 +292,7 @@ export const getEmployeeById = async (id) => {
 export const getLLEmployee = async (userId) => {
   try {
     const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/cases/getLLEmployee/${userId}`,
       {
         headers: {
@@ -310,7 +310,7 @@ export const getLLEmployee = async (userId) => {
 export const getHLEmployee = async (userId) => {
   try {
     const token = getAuthToken();
-    const response = await axiosClientMMS.get(
+    const response = await axiosClient.get(
       `/cases/getHLEmployees/${userId}`,
       {
         headers: {
@@ -328,7 +328,7 @@ export const getHLEmployee = async (userId) => {
 export const DeleteEmployee = async (id) => {
   try {
     const token = getAuthToken();
-    const response = await axiosClientVMS.delete(`/employee/delete/${id}`, {
+    const response = await axiosClient.delete(`/employee/delete/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -342,7 +342,7 @@ export const DeleteEmployee = async (id) => {
 export const UpdateEmployee = async (id, data) => {
   try {
     const token = getAuthToken();
-    const response = await axiosClientVMS.put(`/employee/update/${id}`, data, {
+    const response = await axiosClient.put(`/employee/update/${id}`, data, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

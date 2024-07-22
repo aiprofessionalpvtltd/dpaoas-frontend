@@ -8,7 +8,7 @@ console.log("API URL:", API_URL); // This should log the API URL from .env
 console.log("Tiny Editor API Key:", TINY_EDITOR_API_KEY); // This should log the API key from .env
 
 export const imagesUrl = API_URL;
-export const imagesUrl2 = API_URL;
+
 
 const createAxiosClient = (baseURL) => {
   return axios.create({
@@ -20,5 +20,4 @@ const createAxiosClient = (baseURL) => {
 };
 
 export const axiosClient = createAxiosClient(`${API_URL}/api`);
-export const axiosClientVMS = createAxiosClient(`${API_URL}/api`);
-export const axiosClientMMS = createAxiosClient(`${API_URL}/api`);
+
