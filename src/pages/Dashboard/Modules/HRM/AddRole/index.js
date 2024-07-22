@@ -8,13 +8,14 @@ import * as Yup from "yup";
 import { showSuccessMessage } from "../../../../../utils/ToastAlert";
 import { createRole } from "../../../../../api/APIs/Services/organizational.service";
 import { ToastContainer } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const validationSchema = Yup.object({
   roleName: Yup.string().required("Role name is required"),
   roledescription: Yup.string().required("Description is required"),
 });
 function HRMAddRole() {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const initialValues = {
     roleName: "",
     roledescription: "",
@@ -29,7 +30,7 @@ function HRMAddRole() {
       const response = await createRole(data);
       if (response.success) {
         showSuccessMessage(response?.message);
-        // navigate("/hrm/dashboard");
+        navigate("/hrm/dashboard");
       }
     } catch (error) {
       console.log(error);
@@ -67,7 +68,9 @@ function HRMAddRole() {
                 <div className="row">
                   <div className="col-6">
                     <div className="mb-3">
-                      <label className="form-label">Role name * </label>
+                    <label className="form-label">
+                      Role name <span className="text-danger">*</span>
+                      </label>
                       <input
                         type="text"
                         className={`form-control ${
@@ -91,7 +94,7 @@ function HRMAddRole() {
                 <div className="row">
                   <div className="col-6">
                     <div className="mb-3">
-                      <label className="form-label">Description</label>
+                      <label className="form-label">Description <span className="text-danger">*</span></label>
                       <textarea
                         placeholder={formik.values.roledescription}
                         className={`form-control ${

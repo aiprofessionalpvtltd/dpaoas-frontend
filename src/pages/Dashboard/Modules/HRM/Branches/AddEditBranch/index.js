@@ -12,6 +12,7 @@ import {
 } from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 import { createBranches, updateBranches } from "../../../../../../api/APIs/Services/Branches.services";
+import { useNavigate } from "react-router-dom";
 
 const validationSchema = Yup.object({
   branchName: Yup.string().required("Branch name is required"),
@@ -20,7 +21,7 @@ const validationSchema = Yup.object({
 });
 function HRMAddEditBranch() {
   const location = useLocation();
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: {
@@ -48,9 +49,10 @@ function HRMAddEditBranch() {
     };
     try {
       const response = await createBranches(data);
-      if (response.success) {
-        showSuccessMessage(response.message);
+      if (response?.success === true) {
+        showSuccessMessage(response?.message);
         formik.resetForm()
+        navigate('/hrm/branches')
       }
     } catch (error) {
       showErrorMessage(error.response.data.message);
@@ -69,6 +71,7 @@ function HRMAddEditBranch() {
       if (response.success) {
         showSuccessMessage(response.message);
         formik.resetForm()
+        navigate('/hrm/branches')
       }
     } catch (error) {
       console.log(error);
@@ -77,6 +80,7 @@ function HRMAddEditBranch() {
 
   return (
     <Layout module={true} sidebarItems={HRMsidebarItems} centerlogohide={true}>
+      <ToastContainer />
       <Header
         dashboardLink={"/hrm/branches"}
         addLink1={"/hrm/branches"}
@@ -84,7 +88,7 @@ function HRMAddEditBranch() {
         addLink2={"/hrm/addeditbranches"}
         title2={location && location?.state ? "Edit Branch" : "Add Branch"}
       />
-      <ToastContainer />
+      
       <div className="container-fluid">
         <div className="card">
           <div className="card-header red-bg" style={{ background: "#666" }}>
@@ -100,7 +104,7 @@ function HRMAddEditBranch() {
                 <div className="row">
                   <div className="col-6">
                     <div className="mb-3">
-                      <label className="form-label">Branch name * </label>
+                      <label className="form-label">Branch name <span className="text-danger">*</span> </label>
                       <input
                         type="text"
                         className={`form-control ${formik.touched.branchName && formik.errors.branchName
@@ -123,7 +127,7 @@ function HRMAddEditBranch() {
                   {location && location?.state && (
                     <div class="col-6">
                       <div class="mb-3">
-                        <label class="form-label">branchStatus</label>
+                        <label class="form-label">Branch Status <span className="text-danger">*</span></label>
                         <select
                           class="form-select"
                           id="branchStatus"
@@ -147,7 +151,7 @@ function HRMAddEditBranch() {
                 <div className="row">
                   <div className="col-6">
                     <div className="mb-3">
-                      <label className="form-label">Description</label>
+                      <label className="form-label">Description <span className="text-danger">*</span></label>
                       <textarea
                         placeholder={formik.values.description}
                         className={`form-control ${formik.touched.description &&

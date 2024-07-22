@@ -70,12 +70,13 @@ function HRMBranches() {
   );
   return (
     <Layout module={true} sidebarItems={HRMsidebarItems} centerlogohide={true}>
+      <ToastContainer />
       <Header
         dashboardLink={"/hrm/branches"}
         addLink1={"/hrm/branches"}
         title1={"Branches"}
       />
-      <ToastContainer />
+      
       <div class="row">
         <div class="col-12">
           <CustomTable
@@ -83,7 +84,7 @@ function HRMBranches() {
             seachBarShow={true}
             searchonchange={(e) => setSearchTerm(e.target.value)}
             tableTitle="Branches List"
-            addBtnText="Add Branches"
+            addBtnText="Add New Branch"
             handleAdd={() => navigate("/hrm/addeditbranches")}
             handleEdit={(item) =>
               navigate("/hrm/addeditbranches", { state: item })
