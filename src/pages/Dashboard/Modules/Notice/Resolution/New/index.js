@@ -97,6 +97,10 @@ function NewResolution() {
       if (response?.success) {
         showSuccessMessage(response?.message);
         formik.resetForm();
+        setTimeout(() => {
+          navigate("/notice/resolution/sent");
+        }, 2500);
+
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);

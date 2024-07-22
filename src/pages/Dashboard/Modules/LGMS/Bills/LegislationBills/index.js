@@ -45,7 +45,7 @@ const AllLegislationBill = () => {
       // parliamentaryYear: item?.parliamentaryYears?.parliamentaryTenure,
       // session: item?.sessions?.sessionName,
       // billType: item.billType,
-      // billCategory: item.billCategory,
+      billCategory: item.billCategory,
       fileNumber: item?.fileNumber,
       billFrom: item?.billFrom,
       // concerndCommittes: item?.introducedInHouses?.manageCommittees
@@ -151,12 +151,12 @@ const AllLegislationBill = () => {
   //   navigate("/lgms/dashboard/bills/NA-bills");
   // };
   //Handle Edit Senate Bills
-  const handleEditSenateBill = (id) => {
-    navigate("/lgms/dashboard/bills/edit/senate-bills", { state: id });
+  const handleEditSenateBill = (id, item) => {
+    navigate("/lgms/dashboard/bills/edit/senate-bills",  { state: {id, item} });
   };
   //Handle Edit NA Bills
-  const handleEditNABill = (id) => {
-    navigate("/lgms/dashboard/bills/edit/NA-bills/", { state: id });
+  const handleEditNABill = (id,item) => {
+    navigate("/lgms/dashboard/bills/edit/NA-bills/", { state: {id,item}});
   };
 
   // Handle Delete Bills
@@ -219,8 +219,8 @@ const AllLegislationBill = () => {
             </select>
           </div>
 
-          <div className="col-2 ms-2 mt-5 ">
-            <button className="btn btn-primary" onClick={handleClick}>
+          <div className="col-2 ms-2 mt-5 " >
+            <button className="btn btn-primary" onClick={handleClick} style={{marginTop:"5px"}}>
               Clear Filter
             </button>
           </div>
@@ -274,7 +274,7 @@ const AllLegislationBill = () => {
             pageSize={pageSize}
             totalCount={count}
             handleEdit={(item) => {
-              item?.billFrom === "From Senate" ? handleEditSenateBill(item?.id) :  handleEditNABill(item?.id);
+              item?.billFrom === "From Senate" ? handleEditSenateBill(item?.id, item) :  handleEditNABill(item?.id, item);
             }}
             // handleEdit={(item)=>{handleEditSenateBill(item?.id)}}
             handleDelete={(item) => handleDeleteLegislationBill(item?.id)}

@@ -88,7 +88,12 @@ const handleDateSelect = (date) => {
     formData.append("fkSessionId", values?.session);
     formData.append("fkParliamentaryYearId", values?.parliamentaryYear);
     // formData.append("fileNumber", values?.fileNumber);
-    formData.append("fileNumber", `24 (${values?.fileNumber})/ 2024`);
+    // formData.append("fileNumber", `24 (${values?.fileNumber})/ 2024`);
+    if (location?.state && location.state.category === "Private Member Bill") {
+      formData.append("fileNumber", `09/(${values?.fileNumber})/2024`);
+    } else {
+      formData.append("fileNumber", `24/(${values?.fileNumber})/2024`);
+    }
     // formData.append("PassedByNADate", values?.passedByNADate);
     if (values?.PassedByNADate) {
       const formattedDate = moment(values?.PassedByNADate).format("YYYY-MM-DD");

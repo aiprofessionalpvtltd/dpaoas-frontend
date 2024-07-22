@@ -20,13 +20,12 @@ import { showSuccessMessage } from "../../../../../../../utils/ToastAlert";
 import moment from "moment";
 function NewLegislationSenateBill() {
   const location = useLocation();
-  console.log("location from Add Senate",location?.state?.category)
   const userData = getUserData();
   const navigate = useNavigate();
   const { sessions, members, ministryData, parliamentaryYear } = useContext(AuthContext);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [MNAData, setMNAData] = useState([]);
-
+  console.log("locat", location?.state)
   // Getting All MNA
   // Getting All MNA
   const getAllMNA = async () => {
@@ -60,7 +59,6 @@ function NewLegislationSenateBill() {
     },
     // validationSchema: validationSchema,
     onSubmit: (values) => {
-      console.log("Create Question Data", values);
       CreateSenateBill(values);
     },
   });
@@ -79,7 +77,14 @@ function NewLegislationSenateBill() {
     formData.append("fkSessionId", values?.session);
     formData.append("fkParliamentaryYearId", values?.parliamentaryYear);
     // formData.append("fileNumber", `09 ${(values?.fileNumber)`});
-    formData.append("fileNumber", `09 (${values?.fileNumber})/ 2024`);
+    // formData.append("fileNumber", `09/(${values?.fileNumber})/2024`);
+
+    
+  if (location?.state && location.state.category === "Private Member Bill") {
+    formData.append("fileNumber", `09/(${values?.fileNumber})/2024`);
+  } else {
+    formData.append("fileNumber", `24/(${values?.fileNumber})/2024`);
+  }
 
     if (values?.noticeDate) {
       const formattedDate = moment(values?.noticeDate).format("YYYY-MM-DD");
@@ -116,11 +121,6 @@ function NewLegislationSenateBill() {
       formData.append(`senateBillMinistryMovers[${0}][fkMinistryId]`, values?.selectedMinistry?.value);
     }
 
-    let formDataObject = {};
-    for (let [key, value] of formData.entries()) {
-      formDataObject[key] = value;
-    }
-    console.log("formData", formDataObject);
     try {
       const response = await createNewLegislationBill(formData);
       if (response.success) {
