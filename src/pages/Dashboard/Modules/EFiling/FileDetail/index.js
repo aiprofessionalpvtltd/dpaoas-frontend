@@ -8,6 +8,7 @@ import {
   getUserData,
 } from "../../../../../api/Auth";
 import {
+  ApprovedFIleCase,
   UpdateFIleCase,
   assignFIleCase,
   getAllCorrespondence,
@@ -195,8 +196,23 @@ function FileDetail() {
     }
   };
 
-  const handleSubmit = (isDraft) => {
-    formik.setFieldValue("isEditable", isDraft); // Set isEdit value based on button clicked
+  const handleSubmit = async () => {
+    try {
+      const data = {
+        caseId: caseId,
+        newStatus: "approved",
+      };
+
+      const response = await ApprovedFIleCase(data);
+      if (response?.success) {
+        showSuccessMessage(response?.message);
+        setTimeout(() => {
+          navigate("/efiling/dashboard/file-register-list/files-list/cases");
+        }, 1000);
+      }
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   const handleEditorChange = (
@@ -220,9 +236,9 @@ function FileDetail() {
       const updatedTabs = notingTabData.map((tab, i) =>
         i === index
           ? {
-              ...tab,
-              references: [...tab.references, references],
-            }
+            ...tab,
+            references: [...tab.references, references],
+          }
           : tab
       );
       setNotingTabsData(updatedTabs);
@@ -230,9 +246,9 @@ function FileDetail() {
       const updatedTabs = notingTabData.map((tab, i) =>
         i === index
           ? {
-              ...tab,
-              description: content,
-            }
+            ...tab,
+            description: content,
+          }
           : tab
       );
       setNotingTabsData(updatedTabs);
@@ -620,33 +636,35 @@ function FileDetail() {
                                     ? true
                                     : false
                               }
-                            > 
+                            >
                               Save
                             </button>
                           </div>
 
-                          {/* <div class="col-2">
-                            <button
-                              class="btn btn-primary"
-                              type="submit"
-                              style={{
-                                width: "150px",
-                                display: location?.state?.view
-                                  ? "none"
-                                  : "block",
-                              }}
-                              onClick={() => handleSubmit(true)} // True means non-editable
-                              disabled={
-                                viewPage
-                                  ? true
-                                  : location?.state?.approved
+                          {UserData && UserData?.userType === "Officer" && (
+                            <div class="col-2">
+                              <button
+                                class="btn btn-primary"
+                                type="submit"
+                                style={{
+                                  width: "150px",
+                                  display: location?.state?.view
+                                    ? "none"
+                                    : "block",
+                                }}
+                                onClick={() => handleSubmit(true)} // True means non-editable
+                                disabled={
+                                  viewPage
                                     ? true
-                                    : false
-                              }
-                            >
-                              Finalize
-                            </button>
-                          </div> */}
+                                    : location?.state?.approved
+                                      ? true
+                                      : false
+                                }
+                              >
+                                Approve Case
+                              </button>
+                            </div>
+                          )}
                         </div>
 
                         <div class="col">
@@ -814,7 +832,7 @@ function FileDetail() {
                     remarksData.map((item) => (
                       <>
                         {item?.CommentStatus !== null ||
-                        item?.comment !== null ? (
+                          item?.comment !== null ? (
                           <div
                             class="d-flex flex-row p-3 ps-3"
                             style={{ borderBottom: "1px solid #ddd" }}
@@ -851,7 +869,7 @@ function FileDetail() {
                                         ?.userType === "Officer"
                                         ? "green"
                                         : item?.submittedUser?.employee
-                                              ?.userType === "Section"
+                                          ?.userType === "Section"
                                           ? "blue"
                                           : "black",
                                   }}
