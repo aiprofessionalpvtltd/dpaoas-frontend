@@ -25,7 +25,8 @@ const UpdateBills = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const userData = getUserData();
-  const NA_Bill_ID = location?.state;
+  const NA_Bill_ID = location?.state && location?.state?.id;
+  const BillCategory = location?.state && location?.state?.item?.billCategory;
   const { ministryData, members, sessions, parliamentaryYear } =
     useContext(AuthContext);
   const [billStatusData, setBillStatusesData] = useState([]);
@@ -81,7 +82,7 @@ const UpdateBills = () => {
       console.log(error);
     }
   };
-
+ console.log("location", location?.state)
   const getAllBillStatusData = async () => {
     try {
       const response = await getAllBillStatus(0, 500);
@@ -281,7 +282,6 @@ const UpdateBills = () => {
 
       let fileNum="";
       if(singleSenateBillData?.fileNumber){
-        console.log("",singleSenateBillData?.fileNumber)
         const fileNumberMatch = singleSenateBillData?.fileNumber?.match(/\((\d+)\)/);
         fileNum = fileNumberMatch ? fileNumberMatch[1] : '';
 
@@ -445,7 +445,12 @@ const UpdateBills = () => {
     formData.append("billCategory", values?.billCategory);
     formData.append("billType", values?.billType);
     formData.append("fkBillStatus", values?.fkBillStatus?.value);
-    formData.append("fileNumber",   `09(${values?.fileNumber})/2024`);
+    if (BillCategory === "Private Member Bill") {
+      formData.append("fileNumber", `09/(${values?.fileNumber})/2024`);
+    } else {
+      formData.append("fileNumber", `24/(${values?.fileNumber})/2024`);
+    }
+    // formData.append("fileNumber",   `09(${values?.fileNumber})/2024`);
     // formData.append("fileNumber", values?.fileNumber);
     // formData.append("PassedByNADate", values?.PassedByNADate);
     if (values?.PassedByNADate) {

@@ -17,6 +17,7 @@ import { createSingleMemberAttendance } from "../../../../../../api/APIs/Service
 import { getSessionSitting } from "../../../../../../api/APIs/Services/ManageQMS.service";
 import moment from "moment";
 import * as Yup from "yup";
+import { useNavigate } from "react-router-dom";
 const validationSchema = Yup.object({
   memberName: Yup.string().required("Member Name is required"),
   sessionId: Yup.string().required("Session Number required"),
@@ -26,6 +27,7 @@ const validationSchema = Yup.object({
   endDate: Yup.string().required("End Date is required"),
 });
 function NMSMemberSessionAttendance() {
+  const navigate = useNavigate();
   const { members, sessions } = useContext(AuthContext);
   const [currentPage, setCurrentPage] = useState(0);
   const [selectedOptions, setSelectedOptions] = useState("");
@@ -171,6 +173,10 @@ function NMSMemberSessionAttendance() {
       const response = await createSingleMemberAttendance(Data);
       if (response?.success) {
         showSuccessMessage(response?.message);
+        formik.resetForm();
+        setTimeout(() => {
+          navigate("/notice/manage/manage-session/member-attendence")
+        }, 1000)
       }
     } catch (error) {
       console.log(error);

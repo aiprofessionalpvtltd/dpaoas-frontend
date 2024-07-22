@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt, faPlus } from "@fortawesome/free-solid-svg-icons";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import DatePicker from "react-datepicker";
@@ -20,6 +20,7 @@ const validationSchema = Yup.object({
 });
 function LGMSAddEditTermsForm() {
   const location = useLocation();
+  const navigate = useNavigate();
   const [tenures, setTenures] = useState([]);
   const [termsById, setTermsById] = useState();
 
@@ -53,6 +54,10 @@ function LGMSAddEditTermsForm() {
       const response = await createTerm(data);
       if (response?.success) {
         showSuccessMessage(response?.message);
+        formik.resetForm()
+        setTimeout(() => {
+          navigate("/lgms/dashboard/manage/terms/list")
+        }, 3000)
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -70,6 +75,10 @@ function LGMSAddEditTermsForm() {
       const response = await updateTerm(location?.state?.id, data);
       if (response?.success) {
         showSuccessMessage(response?.message);
+        formik.resetForm()
+        setTimeout(() => {
+          navigate("/lgms/dashboard/manage/terms/list")
+        }, 3000)
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -200,7 +209,7 @@ function LGMSAddEditTermsForm() {
                           formik.setFieldValue("startDate", date)
                         }
                         onBlur={formik.handleBlur}
-                        minDate={new Date()}
+                        // minDate={new Date()}
                         className={`form-control ${
                           formik.touched.startDate && formik.errors.startDate
                             ? "is-invalid"
@@ -237,7 +246,7 @@ function LGMSAddEditTermsForm() {
                           formik.setFieldValue("endDate", date)
                         }
                         onBlur={formik.handleBlur}
-                        minDate={new Date()}
+                        // minDate={new Date()}
                         className={`form-control ${
                           formik.touched.endDate && formik.errors.endDate
                             ? "is-invalid"

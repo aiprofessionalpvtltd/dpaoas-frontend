@@ -3,11 +3,10 @@ import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
 import {
   NoticeSidebarItems,
-  QMSSideBarItems,
 } from "../../../../../../utils/sideBarItems";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import {
   UpdateResolution,
   sendResolutionForTranslation,
@@ -40,6 +39,7 @@ const validationSchema = Yup.object({
 
 function NoticeResolutionDetail() {
   const location = useLocation();
+  const navigate = useNavigate();
   const { members, sessions, resolutionStatus } = useContext(AuthContext);
   console.log("dksfifsdpoipfosdpfiopf", location.state);
   console.log(
@@ -117,6 +117,9 @@ function NoticeResolutionDetail() {
       const response = await UpdateResolution(location.state.id, data);
       if (response?.success) {
         showSuccessMessage(response.message);
+        setTimeout(() => {
+          navigate("/notice/resolution/sent");
+        }, 2500);
       }
     } catch (error) {
       console.log(error);

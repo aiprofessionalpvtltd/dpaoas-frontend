@@ -252,7 +252,7 @@ function SentMotion() {
       <Header
         dashboardLink={"/notice/dashboard"}
         addLink1={"/notice/motion/sent"}
-        title1={"Sent Motion"}
+        title1={"Motion Lists"}
       />
       <div>
         <div class="container-fluid dash-detail-container">

@@ -70,7 +70,7 @@ function ApprovedCasesHistory() {
       }`
       : "---",
       markDate: moment(item?.fileData?.createdAt).format("DD/MM/YYYY"),
-      Status: item?.fileRemarksData?.CommentStatus,
+      // caseStatus: item?.fileRemarksData?.CommentStatus,
 
       // Status: item?.fileData?.map((status) => status?.fileStatus),
     }));

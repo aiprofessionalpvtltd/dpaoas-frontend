@@ -167,8 +167,10 @@ function NewQuestion() {
       <ToastContainer />
       <Header
         dashboardLink={"/notice/dashboard"}
-        addLink1={"/notice/question/new"}
-        title1={"New Question"}
+        title1={"Questions List"}
+        addLink1={"/notice/question/sent"}
+        title2={"New Question"}
+        addLink2={"/notice/question/new"}
       />
 
       <CustomAlert
