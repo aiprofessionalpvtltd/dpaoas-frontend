@@ -1050,3 +1050,24 @@ export const DeleteAttachedFiles = async (id) => {
     throw error;
   }
 };
+
+// Approved Case
+export const ApprovedFIleCase = async (data) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClientMMS.put(
+      `/cases/updateCaseStatus`,
+      data
+    );
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "application/json",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
