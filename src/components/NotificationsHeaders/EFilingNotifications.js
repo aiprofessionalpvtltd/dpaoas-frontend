@@ -1,14 +1,19 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { getEfilingNotifications } from "../../api/APIs/Services/efiling.service";
 import { getUserData } from "../../api/Auth";
 import moment from "moment";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ListGroup } from "react-bootstrap";
 import { Badge } from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import { AuthContext } from "../../api/AuthContext";
 
 export const EFilingNotifications = (notificationType) => {
   const [count, setCount] = useState(null);
+ const  navigate = useNavigate()
+ const {setFileDetail} = useContext(AuthContext)
+ const location = useLocation()
+ const [key, setKey] = React.useState(Date.now());
 
   const [modal, setModal] = useState(false);
   const [notificationData, setNotificationData] = useState([]);
@@ -45,6 +50,30 @@ export const EFilingNotifications = (notificationType) => {
       // Handle error
     }
   };
+  const handleClick = (item) => {
+    console.log("location.pathname  ",location.pathname);
+    if (location.pathname === "/efiling/dashboard/fileDetail") {
+      console.log("sisisiis");
+      navigate("/efiling/dashboard/fileDetail", {
+        state: {
+          view: false,
+          fileId: item?.fileId,
+          id: item?.caseId,
+          notificationId: item?.notificationId,
+        },
+      });
+      setKey(Date.now());
+      setModal(false)
+    }
+    
+  };
+  useEffect(() => {
+    if (location.pathname === "/efiling/dashboard/fileDetail" && location.state) {
+      // Handle the state update or any other logic here
+      console.log("Updated state:", location.state);
+      setFileDetail(location.state)
+    }
+  }, [location, key]);
 
   useEffect(() => {
     getAllQuestionsApi();
@@ -107,6 +136,7 @@ export const EFilingNotifications = (notificationType) => {
                   notificationId: item?.notificationId,
                 }}
                 style={{ color: "black" }}
+                onClick={(item) => handleClick(item)}
                 className="link"
               >
                 <span>
