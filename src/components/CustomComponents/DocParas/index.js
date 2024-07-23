@@ -17,6 +17,7 @@ import { AuthContext } from "../../../api/AuthContext";
 
 const DocParas = ({ tabsData, onEditorChange, onDelete, FR, selectedFileId }) => {
   const UserData = getUserData();
+  console.log("tabs data++++", tabsData)
   const {fildetailsAqain} = useContext(AuthContext)
   const [correspondenceTypesData, setCorrespondenceTypesData] = useState([]);
   const [editableIndex, setEditableIndex] = useState(null);
@@ -259,7 +260,9 @@ const DocParas = ({ tabsData, onEditorChange, onDelete, FR, selectedFileId }) =>
                 >
                   {tab.title}
                 </label>
+                {/* {tab.createdBy === UserData?.fkUserId && (
                 {editableIndex !== index ? (
+                
                   <>
                     <button
                       onClick={() => {
@@ -305,6 +308,56 @@ const DocParas = ({ tabsData, onEditorChange, onDelete, FR, selectedFileId }) =>
                     </button>
                   </>
                 )}
+              )} */}
+              {tab.createdBy === UserData?.fkUserId && (
+  editableIndex !== index ? (
+    <>
+      <button
+        onClick={() => {
+          setShowModalIndex(index);
+          setShowModal(true);
+        }}
+        className="btn-xs black circle-btn"
+        style={{
+          color: "black",
+        }}
+      >
+        <FontAwesomeIcon icon={faFileExport} />
+      </button>
+      <button
+        onClick={() => onDelete(index)}
+        className="btn-xs red circle-btn"
+        style={{
+          color: "red",
+        }}
+      >
+        <FontAwesomeIcon icon={faTrash} />
+      </button>
+      <button
+        onClick={() => handleEditToggle(index, false)}
+        className="btn-xs green circle-btn"
+        style={{
+          color: "#2dce89",
+        }}
+      >
+        <FontAwesomeIcon icon={faEdit} />
+      </button>
+    </>
+  ) : (
+    <>
+      <button
+        onClick={() => handleEditToggle(index, true)}
+        className="btn-xs green circle-btn"
+        style={{
+          color: "#2dce89",
+        }}
+      >
+        <FontAwesomeIcon icon={faCheckCircle} />
+      </button>
+    </>
+  )
+)}
+
               </div>
 
               {editableIndex !== index ? (
