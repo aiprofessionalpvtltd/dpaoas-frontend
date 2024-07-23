@@ -701,6 +701,7 @@ function FileDetail() {
                                     onEditorChange={handleEditorChange}
                                     onDelete={handleDelete}
                                     FR={FR}
+                                    selectedFileId={location?.state?.fileId || fildetailsAqain?.fileId}
                                   />
                                 </div>
                               </div>

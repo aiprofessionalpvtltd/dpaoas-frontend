@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Box, AccordionDetails } from "@mui/material";
 import { Editor } from "../Editor";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -13,9 +13,11 @@ import { Modal } from "react-bootstrap";
 import { getAllCorrespondence } from "../../../api/APIs/Services/efiling.service";
 import { getSelectedFileID, getUserData } from "../../../api/Auth";
 import { imagesUrl } from "../../../api/APIs";
+import { AuthContext } from "../../../api/AuthContext";
 
-const DocParas = ({ tabsData, onEditorChange, onDelete, FR }) => {
+const DocParas = ({ tabsData, onEditorChange, onDelete, FR, selectedFileId }) => {
   const UserData = getUserData();
+  const {fildetailsAqain} = useContext(AuthContext)
   const [correspondenceTypesData, setCorrespondenceTypesData] = useState([]);
   const [editableIndex, setEditableIndex] = useState(null);
   const [notingData, setNotingData] = useState({
@@ -76,15 +78,17 @@ const DocParas = ({ tabsData, onEditorChange, onDelete, FR }) => {
 
   const handleCorrespondences = async () => {
     const fileId = getSelectedFileID();
+
     try {
       const response = await getAllCorrespondence(
-        fileId?.value,
-        UserData.fkBranchId,
+        selectedFileId ? selectedFileId : fileId?.value ,
+        UserData?.fkBranchId,
         0,
         1000
       );
       if (response?.success) {
         const transformedData = transformData(response.data?.correspondences);
+        console.log("--------------------, ", response.data?.correspondences);
         setCorrespondenceTypesData(transformedData);
       }
     } catch (error) {
@@ -94,7 +98,7 @@ const DocParas = ({ tabsData, onEditorChange, onDelete, FR }) => {
 
   useEffect(() => {
     handleCorrespondences();
-  }, []);
+  }, [fildetailsAqain,selectedFileId]);
 
   const HandlePrint = async (urlimage) => {
     const url = `${imagesUrl}${urlimage}`;
