@@ -45,6 +45,9 @@ const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
 
 function FileDetail() {
   const location = useLocation();
+  console.log("location", location)
+  const {fildetailsAqain} = useContext(AuthContext)
+  console.log("fildetailsAqain",fildetailsAqain);
   const navigate = useNavigate();
   const UserData = getUserData();
   const fileInputRef = useRef(null);
@@ -57,7 +60,8 @@ function FileDetail() {
   const [employeeData, setEmployeeData] = useState([]);
   const [viewPage, setViewPage] = useState(location?.state?.view);
   const { fileIdINRegister } = useContext(AuthContext);
-  const [caseId, setcaseId] = useState(location?.state?.id);
+  const [caseId, setcaseId] = useState(location?.state?.id || fildetailsAqain?.id);
+  console.log("caseid",caseId)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTab, setSelectedTab] = useState("Noting");
   const [remarksData, setRemarksData] = useState([]);
@@ -160,8 +164,8 @@ function FileDetail() {
         modalInputValue?.CommentStatus ? "" : modalInputValue?.comment
       );
       const response = await assignFIleCase(
-        location?.state?.fileId ? location?.state?.fileId : fileIdINRegister,
-        location?.state?.id,
+        location?.state?.fileId || fildetailsAqain?.fileId ? location?.state?.fileId || fildetailsAqain?.fileId : fileIdINRegister,
+        location?.state?.id || caseId,
         formData
       );
 
@@ -296,8 +300,8 @@ function FileDetail() {
   const getFilesByID = async (fileGlobalId, caseGlobalId) => {
     try {
       const response = await getCaseDetailByID(
-        fileGlobalId ? fileGlobalId : location?.state?.fileId,
-        caseGlobalId ? caseGlobalId : caseId
+        fileGlobalId ? fileGlobalId : location?.state?.fileId || fildetailsAqain?.fileId,
+        caseGlobalId ? caseGlobalId : location?.state?.id || fildetailsAqain?.id
       );
 
       if (response?.success) {
@@ -317,13 +321,13 @@ function FileDetail() {
   };
 
   useEffect(() => {
-    const fileId = getFileIdForDetailPage();
-    const caseId = getCaseIdForDetailPage();
+    const fileId =location?.state?.fileId || fildetailsAqain?.fileId;
+    const caseId = location?.state?.id || fildetailsAqain?.id;
     if (fileId && caseId) {
       setFKFileId(fileId);
       getFilesByID(fileId, caseId);
     }
-  }, [getFileIdForDetailPage]);
+  }, [getFileIdForDetailPage, location?.state?.fileId || fildetailsAqain?.fileId, caseId]);
 
   useEffect(() => {
     handleCorrespondences();

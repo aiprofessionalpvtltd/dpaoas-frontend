@@ -25,6 +25,7 @@ export const AuthProvider = ({ children }) => {
   const [members, setMembers] = useState([]);
   const [parliamentaryYear, setParliamentaryYear] = useState([]);
   const [fileIdINRegister, setFileIdInRegister] = useState(null);
+  const [fildetailsAqain, setFileDetail] = useState(null)
 
   const login = async (data) => {
     try {
@@ -167,6 +168,7 @@ export const AuthProvider = ({ children }) => {
         parliamentaryYear,
         setFileIdInRegister,
         fileIdINRegister,
+        fildetailsAqain, setFileDetail
       }}
     >
       {children}
