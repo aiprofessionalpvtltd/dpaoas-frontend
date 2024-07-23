@@ -128,6 +128,7 @@ function FileDetail() {
       notingSubject: notingTabSubject,
       paragraphArray: notingTabData,
     };
+    console.log("data=====", data)
     try {
       const response = await UpdateFIleCase(filesData?.caseNoteId, data);
       if (response?.success) {
@@ -232,7 +233,8 @@ function FileDetail() {
         {
           title: `Para ${notingTabData?.length + 1}`,
           description: content,
-          references: [],
+          references: [],          
+      createdBy: UserData && UserData?.fkUserId,
         },
       ]);
       setNotingData("");

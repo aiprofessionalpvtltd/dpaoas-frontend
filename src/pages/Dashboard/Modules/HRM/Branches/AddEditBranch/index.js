@@ -108,7 +108,7 @@ function HRMAddEditBranch() {
                             : ""
                           }`}
                         id="branchName"
-                        placeholder={formik.values.branchName}
+                        value={formik.values.branchName}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
