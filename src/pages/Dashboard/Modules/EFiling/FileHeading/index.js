@@ -4,7 +4,6 @@ import {
   EfilingSideBarBranchItem,
   EfilingSideBarItem,
 } from "../../../../../utils/sideBarItems";
-import Header from "../../../../../components/Header";
 import { ToastContainer } from "react-toastify";
 import CustomTable from "../../../../../components/CustomComponents/CustomTable";
 import { useNavigate } from "react-router-dom";
@@ -25,6 +24,8 @@ function FileHeadingList() {
   const [count, setCount] = useState(null);
   const pageSize = 10; // Set your desired page size
   const [headingData, setHedingData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
@@ -41,6 +42,7 @@ function FileHeadingList() {
       status: item?.status,
     }));
   };
+
   const getAllFileHeadingApi = useCallback(async () => {
     try {
       const response = await getAllFileHeading(
@@ -55,11 +57,12 @@ function FileHeadingList() {
           response?.data?.mainHeadings
         );
         setHedingData(transformedData);
+        setFilteredData(transformedData); // Initialize filtered data
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
     }
-  }, [currentPage, pageSize, setCount, setHedingData]);
+  }, [currentPage, pageSize, userData?.fkBranchId]);
 
   const handleDelete = async (id) => {
     try {
@@ -73,9 +76,29 @@ function FileHeadingList() {
     }
   };
 
+  const onSearchChange = (event) => {
+    const query = event.target.value;
+    setSearchQuery(query);
+
+    if (query) {
+      const filtered = headingData.filter((item) => {
+        return (
+          item.HeadNumber.toLowerCase().includes(query.toLowerCase()) ||
+          item.mainHead.toLowerCase().includes(query.toLowerCase()) ||
+          item.branch.toLowerCase().includes(query.toLowerCase()) ||
+          item.status.toLowerCase().includes(query.toLowerCase())
+        );
+      });
+      setFilteredData(filtered);
+    } else {
+      setFilteredData(headingData);
+    }
+  };
+
   useEffect(() => {
     getAllFileHeadingApi();
   }, [getAllFileHeadingApi]);
+
   return (
     <Layout
       module={false}
@@ -86,15 +109,13 @@ function FileHeadingList() {
           : EfilingSideBarBranchItem
       }
     >
-      {/* <Header dashboardLink={"/efiling/dashboard"} addLink1={"/efiling/dashboard"} title1={"File Heading"} width={"500px"} /> */}
       <ToastContainer />
-      <div class="row">
-        <div class="col-12">
+      <div className="row">
+        <div className="col-12">
           <CustomTable
-            // hidebtn1={true}
             hideBtn={false}
             addBtnText={"Create File Head"}
-            data={headingData}
+            data={filteredData}
             tableTitle="File Headings"
             headertitlebgColor={"#666"}
             headertitletextColor={"#FFF"}
@@ -106,7 +127,8 @@ function FileHeadingList() {
             pageSize={pageSize}
             totalCount={count}
             singleDataCard={true}
-            // hideDeleteIcon={true}
+            seachBarShow={true}
+            searchonchange={onSearchChange}
             handleDelete={(item) => handleDelete(item.internalId)}
             showEditIcon={false}
             handleEdit={(item) =>

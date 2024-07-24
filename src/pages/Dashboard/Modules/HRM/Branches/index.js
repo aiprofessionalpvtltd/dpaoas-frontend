@@ -52,7 +52,7 @@ function HRMBranches() {
   const handleDelete = async (id) => {
     try {
       const response = await deleteBranches(id);
-      if (response?.success) {
+      if (response?.success === true) {
         showSuccessMessage(response.message);
         getBranchesapi();
       }

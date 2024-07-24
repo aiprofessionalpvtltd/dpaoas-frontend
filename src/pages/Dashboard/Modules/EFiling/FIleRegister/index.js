@@ -20,6 +20,8 @@ function ListFileRegister() {
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
   const [registerData, setRegisterData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const pageSize = 10; // Set your desired page size
   const UserData = getUserData();
 
@@ -52,11 +54,31 @@ function ListFileRegister() {
         );
         setCount(response?.data?.count);
         setRegisterData(transferData);
+        setFilteredData(transferData); // Initialize filtered data
       }
     } catch (error) {
       // showErrorMessage(error?.response?.data?.message);
     }
   }, [currentPage, pageSize, setCount, setRegisterData]);
+
+  const onSearchChange = (event) => {
+    const query = event.target.value;
+    setSearchQuery(query);
+
+    if (query) {
+      const filtered = registerData.filter((item) => {
+        return (
+          item.registerNumber.toLowerCase().includes(query.toLowerCase()) ||
+          item.branch.toLowerCase().includes(query.toLowerCase()) ||
+          item.Subject.toLowerCase().includes(query.toLowerCase()) ||
+          item.year.toString().includes(query)
+        );
+      });
+      setFilteredData(filtered);
+    } else {
+      setFilteredData(registerData);
+    }
+  };
 
   useEffect(() => {
     getAllRegisterApi();
@@ -72,21 +94,19 @@ function ListFileRegister() {
           : EfilingSideBarBranchItem
       }
     >
-      {/* <Header dashboardLink={"/efiling/dashboard"} addLink1={"/efiling/dashboard"} title1={"File Registers"} width={"500px"} /> */}
       <ToastContainer />
-      <div class="row">
-        <div class="col-12">
+      <div className="row">
+        <div className="col-12">
           <CustomTable
-            // hidebtn1={true}
             hideBtn={false}
             addBtnText={"Create File Register"}
-            data={registerData}
+            data={filteredData}
             tableTitle="File Registers"
             addBtnText2="Create File"
             headertitlebgColor={"#666"}
             headertitletextColor={"#FFF"}
             handlePageChange={handlePageChange}
-            ActionHide={true}
+            ActionHide={false}
             currentPage={currentPage}
             handleAdd={() =>
               navigate("/efiling/dashboard/addedit-file-register")
@@ -94,8 +114,8 @@ function ListFileRegister() {
             pageSize={pageSize}
             totalCount={count}
             singleDataCard={true}
-            hideDeleteIcon={true}
-            showEditIcon={true}
+            seachBarShow={true}
+            searchonchange={onSearchChange}
             showView={true}
             handleView={(item) => {
               setregisterID(item?.id);

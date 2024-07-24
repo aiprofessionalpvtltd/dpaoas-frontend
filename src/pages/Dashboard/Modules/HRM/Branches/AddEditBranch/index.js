@@ -6,13 +6,11 @@ import { useLocation } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { UpdateDepartment, createDepartment } from "../../../../../../api/APIs";
-import {
-  showErrorMessage,
-  showSuccessMessage,
-} from "../../../../../../utils/ToastAlert";
+
 import { ToastContainer } from "react-toastify";
 import { createBranches, updateBranches } from "../../../../../../api/APIs/Services/Branches.services";
 import { useNavigate } from "react-router-dom";
+import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
 
 const validationSchema = Yup.object({
   branchName: Yup.string().required("Branch name is required"),
@@ -51,8 +49,9 @@ function HRMAddEditBranch() {
       const response = await createBranches(data);
       if (response?.success === true) {
         showSuccessMessage(response?.message);
-        formik.resetForm()
-        navigate('/hrm/branches')
+        setTimeout(() => {
+          navigate("/hrm/branches")
+        }, 3000)
       }
     } catch (error) {
       showErrorMessage(error.response.data.message);
@@ -68,10 +67,12 @@ function HRMAddEditBranch() {
 
     try {
       const response = await updateBranches(location.state.id, data);
-      if (response.success) {
+      if (response?.success === true) {
         showSuccessMessage(response.message);
-        formik.resetForm()
-        navigate('/hrm/branches')
+        setTimeout(() => {
+          navigate("/hrm/branches")
+        }, 3000)
+       
       }
     } catch (error) {
       console.log(error);

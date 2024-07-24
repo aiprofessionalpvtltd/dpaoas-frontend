@@ -200,9 +200,12 @@ function HRMEditRole() {
 
     try {
       const response = await updateRole(roleId, data);
-      if (response.success) {
+      if (response?.success) {
         showSuccessMessage(response?.message);
-        navigate("/hrm/dashboard");
+        setTimeout(() => {
+          navigate("/hrm/dashboard");
+        }, 3000);
+       
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);

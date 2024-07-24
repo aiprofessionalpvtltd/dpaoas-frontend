@@ -129,7 +129,7 @@ function AddEditFIleHeading() {
               <div class="row">
                 <div class="col-6">
                   <div class="mb-3">
-                    <label class="form-label">Head</label>
+                    <label class="form-label">Head <span className='text-danger'>*</span></label>
                     <input
                       type="text"
                       placeholder={"Head"}
@@ -153,7 +153,7 @@ function AddEditFIleHeading() {
                 </div>
                 <div class="col-6">
                   <div class="mb-3">
-                    <label class="form-label">Head Number</label>
+                    <label class="form-label">Head Number <span className='text-danger'>*</span></label>
                      <input
                       type="text"
                       placeholder={"Head Number"}

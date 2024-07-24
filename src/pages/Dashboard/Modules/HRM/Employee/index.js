@@ -39,6 +39,7 @@ function HRMEmployeeDashboard() {
       // supervisor: item.supervisor,
       branchName: item?.branches?.branchName,
       designation: item?.designations?.designationName,
+      status : item?.employeeStatus,
     }));
   };
 
