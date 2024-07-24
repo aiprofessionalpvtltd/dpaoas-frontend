@@ -463,7 +463,7 @@ function FileDetail() {
                   {employeeData &&
                     employeeData?.map((item) => (
                       <option
-                        value={item.id}
+                        value={item.fkUserId}
                       >{`${item.designations?.designationName}`}</option>
                     ))}
                 </select>
