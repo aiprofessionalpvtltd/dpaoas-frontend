@@ -25,7 +25,8 @@ const EditSenateBill = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const userData = getUserData();
-  const NA_Bill_ID = location?.state;
+  const NA_Bill_ID = location?.state &&location?.state?.id;
+  const BillCategory = location?.state && location?.state?.item?.billCategory;
   const { ministryData, members, sessions, parliamentaryYear } =
     useContext(AuthContext);
   const [billStatusData, setBillStatusesData] = useState([]);
@@ -271,7 +272,6 @@ const EditSenateBill = () => {
   const getNABillByIdApi = async () => {
     try {
       const response = await getSingleNABillByID(NA_Bill_ID && NA_Bill_ID);
-      console.log("response by single NA BIll", response);
       if (response?.success) {
         setSingleSenateBillData(response?.data[0]);
       }
@@ -444,7 +444,12 @@ const EditSenateBill = () => {
       const formattedDate = moment(values?.billStatusDate).format("YYYY-MM-DD");
       formData.append("billStatusDate", formattedDate);
     }
-    formData.append("fileNumber",   `24(${values?.fileNumber})/2024`);
+    if (BillCategory === "Private Member Bill") {
+      formData.append("fileNumber", `09/(${values?.fileNumber})/2024`);
+    } else {
+      formData.append("fileNumber", `24/(${values?.fileNumber})/2024`);
+    }
+    // formData.append("fileNumber",   `09/(${values?.fileNumber})/2024`);
     // formData.append("noticeDate", values?.noticeDate);
     if (values?.noticeDate) {
       const formattedDate = moment(values?.noticeDate).format("YYYY-MM-DD");

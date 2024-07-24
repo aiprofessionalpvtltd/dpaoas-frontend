@@ -77,6 +77,7 @@ function AddEditFileCase() {
           title: `Para ${notingTabData.length + 1}`,
           description: content,
           references: [],
+          createdBy:UserData && UserData?.fkUserId
         },
       ]);
       setNotingData("")

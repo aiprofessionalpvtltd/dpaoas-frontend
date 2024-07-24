@@ -11,7 +11,7 @@ import Header from "../../../../../../components/Header";
 import { useLocation, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import {
-  DeleteFreahReceptImage,
+  DeleteFreahReceptImage, 
   UpdateFreshReceipt,
   createFreshReceipt,
   createReceivedFromBranches,
