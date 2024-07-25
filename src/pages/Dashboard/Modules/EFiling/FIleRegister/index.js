@@ -107,10 +107,10 @@ function ListFileRegister() {
             headertitletextColor={"#FFF"}
             handlePageChange={handlePageChange}
             ActionHide={false}
+            // handleEdit={false}
+            showEditIcon={true}
             currentPage={currentPage}
-            handleAdd={() =>
-              navigate("/efiling/dashboard/addedit-file-register")
-            }
+            handleAdd={() => navigate("/efiling/dashboard/addedit-file-register")}
             pageSize={pageSize}
             totalCount={count}
             singleDataCard={true}

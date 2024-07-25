@@ -276,7 +276,7 @@ function HRMEditRole() {
                   <div className="col">
                     <div className="mb-3">
                       <label className="form-label">
-                        Role name <span className="text-danger">*</span>
+                        Role Name <span className="text-danger">*</span>
                       </label>
 
                       <input
@@ -286,7 +286,7 @@ function HRMEditRole() {
                             : ""
                           }`}
                         id="roleName"
-                        placeholder={"Role name"}
+                        placeholder={"Role Name"}
                         value={formik.values.roleName}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
