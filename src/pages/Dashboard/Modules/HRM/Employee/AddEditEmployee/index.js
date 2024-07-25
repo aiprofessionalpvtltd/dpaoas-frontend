@@ -209,7 +209,7 @@ function HRMAddEditEmployee() {
                       type="text"
                       class="form-control"
                       id="firstName"
-                      placeholder={"firstName"}
+                      placeholder={"First Name"}
                       value={formik.values.firstName}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
@@ -225,7 +225,7 @@ function HRMAddEditEmployee() {
                       type="text"
                       class="form-control"
                       id="lastName"
-                      placeholder={"lastName"}
+                      placeholder={"Last Name"}
                       value={formik.values.lastName}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
@@ -241,7 +241,7 @@ function HRMAddEditEmployee() {
                       type="text"
                       class="form-control"
                       id="userName"
-                      placeholder={"userName"}
+                      placeholder={"User Name"}
                       value={formik.values.userName}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
@@ -273,7 +273,7 @@ function HRMAddEditEmployee() {
                     </label>
                     <select
                       class="form-select"
-                      id="gender"
+                      id="Gender"
                       value={formik.values.gender}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}

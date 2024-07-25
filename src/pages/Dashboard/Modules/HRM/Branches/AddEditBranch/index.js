@@ -105,7 +105,7 @@ function HRMAddEditBranch() {
                 <div className="row">
                   <div className="col-6">
                     <div className="mb-3">
-                      <label className="form-label">Branch name <span className="text-danger">*</span> </label>
+                      <label className="form-label">Branch Name <span className="text-danger">*</span> </label>
                       <input
                         type="text"
                         className={`form-control ${formik.touched.branchName && formik.errors.branchName

@@ -353,7 +353,7 @@ function AddEditFileCase() {
               }}
             >
               <label for="formFile" class="form-label mt-3">
-                * Select File
+                <span className="text-danger">*</span> Select File
               </label>
               <Select
                 options={
@@ -415,8 +415,7 @@ function AddEditFileCase() {
                     data-bs-toggle="tab"
                     role="tab"
                     aria-controls="ex1-tabs-1"
-                    aria-selected={selectedTab === "Noting" ? "true" : "false"}
-                  >
+                    aria-selected={selectedTab === "Noting" ? "true" : "false"}>
                     Noting
                   </button>
                 </li>

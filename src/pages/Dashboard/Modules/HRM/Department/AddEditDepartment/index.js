@@ -105,7 +105,7 @@ function HRMAddEditDepartment() {
                 <div className="row">
                   <div className="col-6">
                     <div className="mb-3">
-                      <label className="form-label">Department name <span className="text-danger">*</span></label>
+                      <label className="form-label">Department Name <span className="text-danger">*</span></label>
                       <input
                         type="text"
                         className={`form-control ${
