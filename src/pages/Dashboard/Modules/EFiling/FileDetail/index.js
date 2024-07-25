@@ -261,9 +261,21 @@ function FileDetail() {
     }
   };
 
+  // const handleDelete = (index) => {
+  //   const updatedTabs = notingTabData.filter((_, i) => i !== index);
+  //   setNotingTabsData(updatedTabs);
+  // };
   const handleDelete = (index) => {
+    // Remove the item at the specified index
     const updatedTabs = notingTabData.filter((_, i) => i !== index);
-    setNotingTabsData(updatedTabs);
+    
+    // Update the titles of the remaining items
+    const renumberedTabs = updatedTabs.map((tab, i) => ({
+      ...tab,
+      title: `Para ${i + 1}`
+    }));
+  
+    setNotingTabsData(renumberedTabs);
   };
 
   const transformData = (apiData) => {
@@ -316,6 +328,7 @@ function FileDetail() {
             response?.data?.cases?.freshReceipts?.freshReceiptsAttachments,
         };
         setFR(FRSelection);
+        console.log("FR Attachements", FRSelection?.freshReceiptsAttachments)
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
