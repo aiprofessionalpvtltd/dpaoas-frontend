@@ -45,9 +45,9 @@ const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
 
 function FileDetail() {
   const location = useLocation();
-  console.log("location", location)
-  const {fildetailsAqain} = useContext(AuthContext)
-  console.log("fildetailsAqain",fildetailsAqain);
+  console.log("location", location);
+  const { fildetailsAqain } = useContext(AuthContext);
+  console.log("fildetailsAqain", fildetailsAqain);
   const navigate = useNavigate();
   const UserData = getUserData();
   const fileInputRef = useRef(null);
@@ -60,8 +60,10 @@ function FileDetail() {
   const [employeeData, setEmployeeData] = useState([]);
   const [viewPage, setViewPage] = useState(location?.state?.view);
   const { fileIdINRegister } = useContext(AuthContext);
-  const [caseId, setcaseId] = useState(location?.state?.id || fildetailsAqain?.id);
-  console.log("caseid",caseId)
+  const [caseId, setcaseId] = useState(
+    location?.state?.id || fildetailsAqain?.id
+  );
+  console.log("caseid", caseId);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTab, setSelectedTab] = useState("Noting");
   const [remarksData, setRemarksData] = useState([]);
@@ -128,7 +130,7 @@ function FileDetail() {
       notingSubject: notingTabSubject,
       paragraphArray: notingTabData,
     };
-    console.log("data=====", data)
+    console.log("data=====", data);
     try {
       const response = await UpdateFIleCase(filesData?.caseNoteId, data);
       if (response?.success) {
@@ -165,7 +167,9 @@ function FileDetail() {
         modalInputValue?.CommentStatus ? "" : modalInputValue?.comment
       );
       const response = await assignFIleCase(
-        location?.state?.fileId || fildetailsAqain?.fileId ? location?.state?.fileId || fildetailsAqain?.fileId : fileIdINRegister,
+        location?.state?.fileId || fildetailsAqain?.fileId
+          ? location?.state?.fileId || fildetailsAqain?.fileId
+          : fileIdINRegister,
         location?.state?.id || caseId,
         formData
       );
@@ -216,7 +220,7 @@ function FileDetail() {
         }, 1000);
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
 
@@ -233,8 +237,8 @@ function FileDetail() {
         {
           title: `Para ${notingTabData?.length + 1}`,
           description: content,
-          references: [],          
-      createdBy: UserData && UserData?.fkUserId,
+          references: [],
+          createdBy: UserData && UserData?.fkUserId,
         },
       ]);
       setNotingData("");
@@ -242,9 +246,9 @@ function FileDetail() {
       const updatedTabs = notingTabData.map((tab, i) =>
         i === index
           ? {
-            ...tab,
-            references: [...tab.references, references],
-          }
+              ...tab,
+              references: [...tab.references, references],
+            }
           : tab
       );
       setNotingTabsData(updatedTabs);
@@ -252,9 +256,9 @@ function FileDetail() {
       const updatedTabs = notingTabData.map((tab, i) =>
         i === index
           ? {
-            ...tab,
-            description: content,
-          }
+              ...tab,
+              description: content,
+            }
           : tab
       );
       setNotingTabsData(updatedTabs);
@@ -265,16 +269,17 @@ function FileDetail() {
   //   const updatedTabs = notingTabData.filter((_, i) => i !== index);
   //   setNotingTabsData(updatedTabs);
   // };
+
   const handleDelete = (index) => {
     // Remove the item at the specified index
     const updatedTabs = notingTabData.filter((_, i) => i !== index);
-    
+
     // Update the titles of the remaining items
     const renumberedTabs = updatedTabs.map((tab, i) => ({
       ...tab,
-      title: `Para ${i + 1}`
+      title: `Para ${i + 1}`,
     }));
-  
+
     setNotingTabsData(renumberedTabs);
   };
 
@@ -314,7 +319,9 @@ function FileDetail() {
   const getFilesByID = async (fileGlobalId, caseGlobalId) => {
     try {
       const response = await getCaseDetailByID(
-        fileGlobalId ? fileGlobalId : location?.state?.fileId || fildetailsAqain?.fileId,
+        fileGlobalId
+          ? fileGlobalId
+          : location?.state?.fileId || fildetailsAqain?.fileId,
         caseGlobalId ? caseGlobalId : location?.state?.id || fildetailsAqain?.id
       );
 
@@ -328,7 +335,7 @@ function FileDetail() {
             response?.data?.cases?.freshReceipts?.freshReceiptsAttachments,
         };
         setFR(FRSelection);
-        console.log("FR Attachements", FRSelection?.freshReceiptsAttachments)
+        console.log("FR Attachements", FRSelection?.freshReceiptsAttachments);
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -336,13 +343,17 @@ function FileDetail() {
   };
 
   useEffect(() => {
-    const fileId =location?.state?.fileId || fildetailsAqain?.fileId;
+    const fileId = location?.state?.fileId || fildetailsAqain?.fileId;
     const caseId = location?.state?.id || fildetailsAqain?.id;
     if (fileId && caseId) {
       setFKFileId(fileId);
       getFilesByID(fileId, caseId);
     }
-  }, [getFileIdForDetailPage, location?.state?.fileId || fildetailsAqain?.fileId, caseId]);
+  }, [
+    getFileIdForDetailPage,
+    location?.state?.fileId || fildetailsAqain?.fileId,
+    caseId,
+  ]);
 
   useEffect(() => {
     handleCorrespondences();
@@ -374,15 +385,13 @@ function FileDetail() {
         UserData && UserData?.userType === "Officer"
           ? EfilingSideBarItem
           : EfilingSideBarBranchItem
-      }
-    >
+      }>
       <div className="dashboard-content">
         <Modal
           show={showModal}
           size="lg"
           onHide={() => setShowModal(false)}
-          centered
-        >
+          centered>
           <div>
             <Modal.Header closeButton>
               <Modal.Title>Attachments</Modal.Title>
@@ -394,8 +403,7 @@ function FileDetail() {
                     <li
                       class="list-group-item"
                       onClick={() => HandlePrint(item?.file)}
-                      style={{ color: "blue", cursor: "pointer" }}
-                    >
+                      style={{ color: "blue", cursor: "pointer" }}>
                       {item?.file?.split("\\").pop().split("/").pop()}
                     </li>
                   </ul>
@@ -411,8 +419,7 @@ function FileDetail() {
               <button
                 className="btn btn-primary"
                 type="button"
-                onClick={() => setShowModal(false)}
-              >
+                onClick={() => setShowModal(false)}>
                 Close
               </button>
             </Modal.Footer>
@@ -423,8 +430,7 @@ function FileDetail() {
         <EFilingModal
           title="Add Comments"
           isOpen={isModalOpen}
-          toggleModal={toggleModal}
-        >
+          toggleModal={toggleModal}>
           <div class="row">
             <div class="col">
               <div class="mb-3">
@@ -439,8 +445,7 @@ function FileDetail() {
                       CommentStatus: e.target.value,
                     }))
                   }
-                  value={modalInputValue.CommentStatus}
-                >
+                  value={modalInputValue.CommentStatus}>
                   <option value="" selected>
                     Select
                   </option>
@@ -468,16 +473,16 @@ function FileDetail() {
                       assignedTo: e.target.value,
                     }))
                   }
-                  value={modalInputValue.assignedTo}
-                >
+                  value={modalInputValue.assignedTo}>
                   <option value={""} selected>
                     Select
                   </option>
                   {employeeData &&
                     employeeData?.map((item) => (
                       <option
-                        value={item.fkUserId}
-                      >{`${item.designations?.designationName}`}</option>
+                        value={
+                          item.fkUserId
+                        }>{`${item.designations?.designationName}`}</option>
                     ))}
                 </select>
               </div>
@@ -498,8 +503,9 @@ function FileDetail() {
                     }))
                   }
                   value={modalInputValue.comment}
-                  disabled={modalInputValue.CommentStatus ? true : false}
-                ></textarea>
+                  disabled={
+                    modalInputValue.CommentStatus ? true : false
+                  }></textarea>
               </div>
             </div>
           </div>
@@ -510,8 +516,7 @@ function FileDetail() {
               onClick={() => {
                 hendleAssiginFileCaseApi();
                 toggleModal();
-              }}
-            >
+              }}>
               Submit
             </Button>
             <Button variant="secondary" onClick={toggleModal}>
@@ -574,16 +579,14 @@ function FileDetail() {
                     <ul
                       className="nav nav-tabs mb-3 mt-3"
                       id="ex1"
-                      role="tablist"
-                    >
+                      role="tablist">
                       <li
                         className="nav-item"
                         role="presentation"
                         onClick={() => {
                           clearInput();
                           setSelectedTab("Noting");
-                        }}
-                      >
+                        }}>
                         <button
                           type="button"
                           className={
@@ -597,8 +600,7 @@ function FileDetail() {
                           aria-controls="ex1-tabs-1"
                           aria-selected={
                             selectedTab === "Noting" ? "true" : "false"
-                          }
-                        >
+                          }>
                           Noting
                         </button>
                       </li>
@@ -608,8 +610,7 @@ function FileDetail() {
                         onClick={() => {
                           clearInput();
                           setSelectedTab("Correspondence");
-                        }}
-                      >
+                        }}>
                         <button
                           type="button"
                           className={
@@ -623,8 +624,7 @@ function FileDetail() {
                           aria-controls="ex1-tabs-2"
                           aria-selected={
                             selectedTab === "Correspondence" ? "true" : "false"
-                          }
-                        >
+                          }>
                           Correspondence
                           {/* (
                           {correspondancestore &&
@@ -654,8 +654,7 @@ function FileDetail() {
                                   : location?.state?.approved
                                     ? true
                                     : false
-                              }
-                            >
+                              }>
                               Save
                             </button>
                           </div>
@@ -678,8 +677,7 @@ function FileDetail() {
                                     : location?.state?.approved
                                       ? true
                                       : false
-                                }
-                              >
+                                }>
                                 Approve Case
                               </button>
                             </div>
@@ -706,8 +704,7 @@ function FileDetail() {
                                   {notingTabData?.length > 0 && (
                                     <label
                                       htmlFor="formFile"
-                                      className="form-label mt-2"
-                                    >
+                                      className="form-label mt-2">
                                       Added Paragraphs
                                     </label>
                                   )}
@@ -716,7 +713,10 @@ function FileDetail() {
                                     onEditorChange={handleEditorChange}
                                     onDelete={handleDelete}
                                     FR={FR}
-                                    selectedFileId={location?.state?.fileId || fildetailsAqain?.fileId}
+                                    selectedFileId={
+                                      location?.state?.fileId ||
+                                      fildetailsAqain?.fileId
+                                    }
                                   />
                                 </div>
                               </div>
@@ -737,8 +737,7 @@ function FileDetail() {
                                   display: "flex",
                                   justifyContent: "flex-end",
                                   marginTop: 5,
-                                }}
-                              >
+                                }}>
                                 <button
                                   className="btn btn-primary"
                                   style={{ marginTop: 60, width: "100px" }}
@@ -750,8 +749,7 @@ function FileDetail() {
                                       false,
                                       true
                                     )
-                                  }
-                                >
+                                  }>
                                   {"Add"}
                                 </button>
                               </div>
@@ -824,13 +822,11 @@ function FileDetail() {
             <div className="col-md-3" style={{ paddingRight: 0 }}>
               <div
                 className="custom-editor-main"
-                style={{ marginTop: 0, borderLeft: "1px solid #ddd" }}
-              >
+                style={{ marginTop: 0, borderLeft: "1px solid #ddd" }}>
                 <div className="comment-heading">
                   <h2
                     class="ps-3"
-                    style={{ fontWeight: "bold", paddingTop: "7px" }}
-                  >
+                    style={{ fontWeight: "bold", paddingTop: "7px" }}>
                     Comments
                   </h2>
                   {!location?.state?.approved && (
@@ -839,8 +835,7 @@ function FileDetail() {
                         className="btn add-btn"
                         style={{
                           display: location?.state?.view ? "none" : "block",
-                        }}
-                      >
+                        }}>
                         Proceed
                       </button>
                     </a>
@@ -852,31 +847,34 @@ function FileDetail() {
                     remarksData.map((item) => (
                       <>
                         {item?.CommentStatus !== null ||
-                          item?.comment !== null ? (
+                        item?.comment !== null ? (
                           <div
                             class="d-flex flex-row p-3 ps-3"
-                            style={{ borderBottom: "1px solid #ddd" }}
-                          >
+                            style={{ borderBottom: "1px solid #ddd" }}>
                             <>
                               <div
                                 class="w-100"
-                                style={{ position: "relative" }}
-                              >
+                                style={{ position: "relative" }}>
                                 <div class="d-flex justify-content-between align-items-center">
                                   <div class="d-flex flex-row align-items-center">
                                     <div style={{ float: "left" }}>
                                       <span
                                         class="mr-2"
-                                        style={{ fontSize: "14px" }}
-                                      >{`${item?.submittedUser?.employee?.firstName}  ${item?.submittedUser?.employee?.lastName}/ ${item?.submittedUser?.employee?.designations?.designationName}`}</span>
+                                        style={{
+                                          fontSize: "14px",
+                                        }}>{`${item?.submittedUser?.employee?.firstName}  ${item?.submittedUser?.employee?.lastName}/ ${item?.submittedUser?.employee?.designations?.designationName}`}</span>
                                     </div>
                                   </div>
                                   <div style={{ float: "right" }}>
                                     <small>
-                                      {moment(item?.createdAt).format("DD/MM/YYYY")}
+                                      {moment(item?.createdAt).format(
+                                        "DD/MM/YYYY"
+                                      )}
                                     </small>
                                     <small className="ms-2">
-                                      {moment(item?.createdAt).format("hh:mm a")}
+                                      {moment(item?.createdAt).format(
+                                        "hh:mm a"
+                                      )}
                                     </small>
                                   </div>
                                 </div>
@@ -889,11 +887,10 @@ function FileDetail() {
                                         ?.userType === "Officer"
                                         ? "green"
                                         : item?.submittedUser?.employee
-                                          ?.userType === "Section"
+                                              ?.userType === "Section"
                                           ? "blue"
                                           : "black",
-                                  }}
-                                >
+                                  }}>
                                   {item?.CommentStatus
                                     ? item?.CommentStatus
                                     : item?.comment}
@@ -909,8 +906,7 @@ function FileDetail() {
                               width: "350px",
                               margin: "0 auto",
                               textAlign: "center",
-                            }}
-                          >
+                            }}>
                             No data found
                           </div>
                         )}
@@ -924,8 +920,7 @@ function FileDetail() {
                         width: "350px",
                         margin: "0 auto",
                         textAlign: "center",
-                      }}
-                    >
+                      }}>
                       No data found
                     </div>
                   )}
