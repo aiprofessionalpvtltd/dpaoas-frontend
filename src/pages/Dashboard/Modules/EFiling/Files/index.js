@@ -12,9 +12,11 @@ function Files() {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
-  const [fileData, setFileData] = useState([])
+  const [fileData, setFileData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const pageSize = 10; // Set your desired page size
-  const UserData = getUserData()
+  const UserData = getUserData();
 
   console.log("Login User", UserData);
 
@@ -23,8 +25,6 @@ function Files() {
     setCurrentPage(page);
   };
 
-
-
   const transformFilesdata = (apiData) => {
     console.log(apiData);
     return apiData.map((item) => ({
@@ -32,9 +32,10 @@ function Files() {
       fileNumber: item?.fileNumber,
       subject: item?.fileSubject,
       branch: item?.branches?.branchName,
-      fileStatus: item?.fileStatus
+      fileStatus: item?.fileStatus,
     }));
   };
+
   const getAllFilesAPi = useCallback(async () => {
     try {
       const response = await getAllEfiling(currentPage, pageSize, UserData?.fkUserId);
@@ -42,55 +43,75 @@ function Files() {
         const transformedData = transformFilesdata(response?.data?.rows);
         setCount(response?.data?.count);
         setFileData(transformedData);
+        setFilteredData(transformedData); // Initialize filtered data
       }
     } catch (error) {
       console.log(error);
     }
-  }, [currentPage, pageSize, setCount, setFileData]);
-
+  }, [currentPage, pageSize, UserData?.fkUserId]);
 
   const handleDelete = async (id) => {
     try {
-      const response = await DeleteEfiling(id)
+      const response = await DeleteEfiling(id);
       if (response.success) {
-        showSuccessMessage(response?.message)
-        getAllFilesAPi()
+        showSuccessMessage(response?.message);
+        getAllFilesAPi();
       }
     } catch (error) {
-      showErrorMessage(error?.response?.data?.message)
+      showErrorMessage(error?.response?.data?.message);
     }
-  }
+  };
+
+  const onSearchChange = (event) => {
+    const query = event.target.value;
+    setSearchQuery(query);
+
+    if (query) {
+      const filtered = fileData.filter((item) => {
+        return (
+          item.fileNumber.toLowerCase().includes(query.toLowerCase()) ||
+          item.subject.toLowerCase().includes(query.toLowerCase()) ||
+          item.branch.toLowerCase().includes(query.toLowerCase()) ||
+          item.fileStatus.toLowerCase().includes(query.toLowerCase())
+        );
+      });
+      setFilteredData(filtered);
+    } else {
+      setFilteredData(fileData);
+    }
+  };
 
   useEffect(() => {
-    getAllFilesAPi()
-  }, [getAllFilesAPi])
+    getAllFilesAPi();
+  }, [getAllFilesAPi]);
 
   return (
     <Layout centerlogohide={true}>
       <div className="dashboard-content" style={{ marginTop: 80 }}>
         <Header dashboardLink={"/"} addLink1={"/efiling/dashboard"} title1={"E-Filing"} width={"500px"} />
         <ToastContainer />
-          <div class="row">
-            <div class="col-12">
-              <CustomTable
-                hidebtn1={true}
-
-                data={fileData}
-                tableTitle="Files List"
-                addBtnText2="Create File"
-                handleAdd2={() => navigate("/efiling/dashboard/addedit")}
-                handleEdit={(item) => navigate("/efiling/dashboard/fileDetail", { state: { view: false, id: item.id } })}
-                handleView={(item) => navigate("/efiling/dashboard/fileDetail", { state: { view: true, id: item.id } })}
-                showView={true}
-                headertitlebgColor={"#666"}
-                headertitletextColor={"#FFF"}
-                handlePageChange={handlePageChange}
-                currentPage={currentPage}
-                pageSize={pageSize}
-                totalCount={count}
-                singleDataCard={true}
-                handleDelete={(item) => handleDelete(item.id)}
-              />
+        <div className="row">
+          <div className="col-12">
+            <CustomTable
+              hidebtn1={true}
+              data={filteredData}
+              tableTitle="Files List"
+              addBtnText2="Create File"
+              handleAdd2={() => navigate("/efiling/dashboard/addedit")}
+              handleEdit={(item) => navigate("/efiling/dashboard/fileDetail", { state: { view: false, id: item.id } })}
+              handleView={(item) => navigate("/efiling/dashboard/fileDetail", { state: { view: true, id: item.id } })}
+              showView={true}
+              headertitlebgColor={"#666"}
+              headertitletextColor={"#FFF"}
+              handlePageChange={handlePageChange}
+              currentPage={currentPage}
+              pageSize={pageSize}
+              totalCount={count}
+              singleDataCard={true}
+              handleDelete={(item) => handleDelete(item.id)}
+              seachBarShow={true}
+              searchonchange={onSearchChange}
+            />
           </div>
         </div>
       </div>

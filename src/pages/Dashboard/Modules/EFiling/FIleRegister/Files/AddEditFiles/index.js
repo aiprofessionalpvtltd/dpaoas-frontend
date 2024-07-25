@@ -254,7 +254,7 @@ function AddEditFiles() {
                   </div>
                   <div class="col">
                     <div class="mb-3">
-                      <label class="form-label">Main Head</label>
+                      <label class="form-label">Main Head <span className="text-danger">*</span></label>
                       <select
                         className={`form-select ${
                           formik.touched.mainHeading &&
@@ -435,7 +435,7 @@ function AddEditFiles() {
                   </div>
                   <div class="col-6">
                     <div class="mb-3">
-                      <label class="form-label">Subject</label>
+                      <label class="form-label">Subject <span className="text-danger">*</span></label>
                       <input
                         type="text"
                         placeholder={"Subject"}

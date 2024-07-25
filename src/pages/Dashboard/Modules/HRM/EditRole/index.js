@@ -10,12 +10,13 @@ import * as Yup from "yup";
 import { showErrorMessage, showSuccessMessage } from "../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 import { updateRole, getModules, getRoleById } from "../../../../../api/APIs/Services/organizational.service";
-
+import { useNavigate } from "react-router-dom";
 const validationSchema = Yup.object({
   roleName: Yup.string().required("Role name is required"),
 });
 
 function HRMEditRole() {
+  const navigate = useNavigate()
   const [hiddenItems, setHiddenItems] = useState(null);
   const handleHideShow = (id) => {
     setHiddenItems((prevHiddenItems) => (prevHiddenItems === id ? null : id));
@@ -53,10 +54,10 @@ function HRMEditRole() {
         return prevCheckedItems.map((item) =>
           item.itemId === itemId && item.permission === permission
             ? {
-                itemId: itemId,
-                permission: permission,
-                option: item.option.filter((opt) => opt.id !== optionId),
-              }
+              itemId: itemId,
+              permission: permission,
+              option: item.option.filter((opt) => opt.id !== optionId),
+            }
             : item,
         );
       });
@@ -86,41 +87,41 @@ function HRMEditRole() {
 
   const filteredItems = permissionsArray.length
     ? allItems.map((item) => {
-        const checkedItem = checkedItems.find(
-          (checked) => checked.itemId === item.id,
-        );
+      const checkedItem = checkedItems.find(
+        (checked) => checked.itemId === item.id,
+      );
 
-        return {
-          ...item,
-          hasAccess: item.hasAccess.filter(
-            (access) =>
-              !(
-                checkedItem &&
-                checkedItem.option.some(
-                  (checkedOption) => checkedOption.id === access.id,
-                )
-              ),
-          ),
-        };
-      })
+      return {
+        ...item,
+        hasAccess: item.hasAccess.filter(
+          (access) =>
+            !(
+              checkedItem &&
+              checkedItem.option.some(
+                (checkedOption) => checkedOption.id === access.id,
+              )
+            ),
+        ),
+      };
+    })
     : allItems.map((item) => {
-        const checkedItem = checkedItems.find(
-          (checked) => checked.itemId === item.id,
-        );
+      const checkedItem = checkedItems.find(
+        (checked) => checked.itemId === item.id,
+      );
 
-        return {
-          ...item,
-          hasAccess: item.hasAccess.filter(
-            (access) =>
-              !(
-                checkedItem &&
-                checkedItem.option.some(
-                  (checkedOption) => checkedOption.id === access.id,
-                )
-              ),
-          ),
-        };
-      });
+      return {
+        ...item,
+        hasAccess: item.hasAccess.filter(
+          (access) =>
+            !(
+              checkedItem &&
+              checkedItem.option.some(
+                (checkedOption) => checkedOption.id === access.id,
+              )
+            ),
+        ),
+      };
+    });
 
   useEffect(() => {
     const initialCheckedItems = permissionsArray.flatMap((permission) =>
@@ -199,8 +200,12 @@ function HRMEditRole() {
 
     try {
       const response = await updateRole(roleId, data);
-      if (response.success) {
+      if (response?.success) {
         showSuccessMessage(response?.message);
+        setTimeout(() => {
+          navigate("/hrm/dashboard");
+        }, 3000);
+       
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -270,14 +275,16 @@ function HRMEditRole() {
                 <div className="row">
                   <div className="col">
                     <div className="mb-3">
-                      <label className="form-label">Role name * </label>
+                      <label className="form-label">
+                        Role name <span className="text-danger">*</span>
+                      </label>
+
                       <input
                         type="text"
-                        className={`form-control ${
-                          formik.touched.roleName && formik.errors.roleName
+                        className={`form-control ${formik.touched.roleName && formik.errors.roleName
                             ? "is-invalid"
                             : ""
-                        }`}
+                          }`}
                         id="roleName"
                         placeholder={"Role name"}
                         value={formik.values.roleName}
@@ -291,15 +298,14 @@ function HRMEditRole() {
                       )}
                     </div>
                     <div className="mb-3">
-                      <label className="form-label">Description</label>
+                      <label className="form-label">Description <span className="text-danger">*</span></label>
                       <textarea
                         placeholder={formik.values.roledescription}
-                        className={`form-control ${
-                          formik.touched.roledescription &&
-                          formik.errors.roledescription
+                        className={`form-control ${formik.touched.roledescription &&
+                            formik.errors.roledescription
                             ? "is-invalid"
                             : ""
-                        }`}
+                          }`}
                         id="roledescription"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -313,34 +319,34 @@ function HRMEditRole() {
                         )}
                     </div>
                     <div className="col">
-                    <div className="mb-3">
-                      <label className="form-label">Role Status</label>
-                      <select
-                        class={`form-select ${formik.touched.status &&
+                      <div className="mb-3">
+                        <label className="form-label">Role Status <span className="text-danger">*</span></label>
+                        <select
+                          class={`form-select ${formik.touched.status &&
                             formik.errors.status
                             ? "is-invalid"
                             : ""
                             }`}
-                        id="status"
-                        name="status"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.status}
-                      >
-                        <option value={""} selected disabled hidden>
-                          Select
-                        </option>
-                        <option value="active">Active</option>
-                        <option value="inactive">InActive</option>
-                      </select>
-                      {formik.touched.status &&
-                        formik.errors.status && (
-                          <div className="invalid-feedback">
-                            {formik.errors.status}
-                          </div>
-                        )}
+                          id="status"
+                          name="status"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.status}
+                        >
+                          <option value={""} selected disabled hidden>
+                            Select
+                          </option>
+                          <option value="active">Active</option>
+                          <option value="inactive">InActive</option>
+                        </select>
+                        {formik.touched.status &&
+                          formik.errors.status && (
+                            <div className="invalid-feedback">
+                              {formik.errors.status}
+                            </div>
+                          )}
+                      </div>
                     </div>
-                  </div>
                     {checkedItems
                       .sort((a, b) => {
                         const itemIdA = String(a?.itemId || ""); // Convert to string

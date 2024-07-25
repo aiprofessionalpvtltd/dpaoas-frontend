@@ -6,6 +6,7 @@ import Header from "../../../../components/Header";
 import CustomTable from "../../../../components/CustomComponents/CustomTable";
 import { showSuccessMessage } from "../../../../utils/ToastAlert";
 import moment from "moment";
+import { ToastContainer } from "react-toastify";
 import {
   DeleteRole,
   getRoles,
@@ -51,7 +52,7 @@ function HRMDashboard() {
   const handleDelete = async (id) => {
     try {
       const response = await DeleteRole(id);
-      if (response.success) {
+      if (response?.success === true) {
         showSuccessMessage(response?.message);
         fetchRoles();
       }
@@ -66,6 +67,7 @@ function HRMDashboard() {
   );
   return (
     <Layout module={true} sidebarItems={HRMsidebarItems} centerlogohide={true}>
+    <ToastContainer />
       <Header
         dashboardLink={"/hrm/dashboard"}
         addLink1={"/hrm/dashboard"}
@@ -80,7 +82,7 @@ function HRMDashboard() {
             searchonchange={(e) => setSearchTerm(e.target.value)}
             // data={rolesList && rolesList.length > 0 ? rolesList : []}
             tableTitle="Roles List"
-            addBtnText="Add Roles"
+            addBtnText="Add Role"
             handleAdd={() => navigate("/hrm/addrole")}
             handleEdit={(item) => navigate("/hrm/editrole", { state: item })}
             headertitlebgColor={"#666"}

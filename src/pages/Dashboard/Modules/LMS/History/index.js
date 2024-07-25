@@ -117,7 +117,7 @@ function LMSHistory() {
                 <div class="row">
                   <div class="col">
                     <div class="mb-3">
-                      <label class="form-label">Department</label>
+                      <label class="form-label">Department <span className="text-danger">*</span></label>
                       <select
                         class="form-select"
                         placeholder={formik.values.departmentName}
@@ -138,7 +138,7 @@ function LMSHistory() {
                   {formik.values.departmentName && (
                     <div class="col">
                       <div class="mb-3">
-                        <label class="form-label">Name</label>
+                        <label class="form-label">Name <span className="text-danger">*</span></label>
                         <select
                           class="form-select"
                           placeholder={formik.values.employeeName}
@@ -161,7 +161,7 @@ function LMSHistory() {
                   <div class="col">
                     <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label" style={{ display: "block" }}>
-                        Start Date
+                        Start Date <span className="text-danger">*</span>
                       </label>
                       <span
                         style={{
@@ -189,7 +189,7 @@ function LMSHistory() {
                   <div class="col">
                     <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label" style={{ display: "block" }}>
-                        End Date
+                        End Date <span className="text-danger">*</span>
                       </label>
                       <span
                         style={{

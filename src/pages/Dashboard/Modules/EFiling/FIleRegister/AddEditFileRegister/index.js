@@ -91,7 +91,7 @@ function AddEditFileRegister() {
                 <div class="row">
                   <div class="col-6">
                     <div class="mb-3">
-                      <label class="form-label">Register Number</label>
+                      <label class="form-label">Register Number <span className='text-danger'>*</span></label>
                       <input
                         type="text"
                         placeholder={"Register Number"}
@@ -115,7 +115,7 @@ function AddEditFileRegister() {
                   </div>
                   <div class="col-6">
                     <div class="mb-3">
-                      <label class="form-label">Year</label>
+                      <label class="form-label">Year <span className='text-danger'>*</span></label>
                       <select
                         className={`form-select ${formik.touched.year &&
                             formik.errors.year
@@ -152,7 +152,7 @@ function AddEditFileRegister() {
                   
                   <div class="col-6">
                     <div class="mb-3">
-                      <label class="form-label">Subject</label>
+                      <label class="form-label">Subject <span className='text-danger'>*</span></label>
                       <input
                         type="text"
                         placeholder={"Subject"}

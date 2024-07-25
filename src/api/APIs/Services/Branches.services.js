@@ -59,14 +59,8 @@ export const updateBranches = async (id, data) => {
 
 export const deleteBranches = async (id) => {
     try {
-        //   const token = getAuthToken();
-        const response = await axiosClient.delete(
+        const response = await axiosClient.put(
             `/branches/delete/${id}`,
-            // {
-            //   headers: {
-            //     Authorization: `Bearer ${token}`,
-            //   },
-            // },
         );
         return response?.data;
     } catch (error) {

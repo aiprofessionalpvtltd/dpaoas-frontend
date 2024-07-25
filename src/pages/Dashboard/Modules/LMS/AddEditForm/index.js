@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { LMSsidebarItems } from "../../../../../utils/sideBarItems";
 import { Layout } from "../../../../../components/Layout";
 import logoImage from "../../../../../assets/profile-img.jpg";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Header from "../../../../../components/Header";
@@ -35,6 +35,7 @@ const validationSchema = Yup.object({
 });
 function LMSAddEdit() {
   const location = useLocation();
+  const navigate =  useNavigate()
 
   const [showModal, setShowModal] = useState(false);
   const [formValues, setFormValues] = useState();
@@ -178,6 +179,9 @@ function LMSAddEdit() {
       const response = await createLeave(formData);
       if (response?.success) {
         showSuccessMessage(response?.message);
+        setTimeout(() => {
+          navigate("/lms/dashboard")
+        }, 3000)  
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -215,6 +219,9 @@ function LMSAddEdit() {
       const response = await UpdateLeaveById(location?.state?.id, data);
       if (response?.success) {
         showSuccessMessage(response?.message);
+        setTimeout(() => {
+          navigate("/lms/dashboard")
+        }, 3000)
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -260,7 +267,7 @@ function LMSAddEdit() {
                           onChange={handleCheckboxChange}
                         />
                         <label class="form-check-label" for="flexCheckDefault">
-                          Leave on behalf
+                          Leave on behalf <span className="text-danger">*</span>
                         </label>
                       </div>
                     </div>
@@ -302,7 +309,7 @@ function LMSAddEdit() {
                 <div class="row">
                   <div class="col">
                     <div class="mb-3">
-                      <label class="form-label">Submitted To</label>
+                      <label class="form-label">Submitted To <span className="text-danger">*</span></label>
                       <select
                         class={`form-select ${
                           formik.touched.submittedTo &&
@@ -340,7 +347,7 @@ function LMSAddEdit() {
 
                   <div class="col">
                     <div class="mb-3">
-                      <label class="form-label">Status</label>
+                      <label class="form-label">Status <span className="text-danger">*</span></label>
                       <select
                         class={`form-select ${
                           formik.touched.status && formik.errors.status
@@ -372,7 +379,7 @@ function LMSAddEdit() {
                 <div class="row">
                   <div class="col">
                     <div class="mb-3">
-                      <label class="form-label">Leave Type</label>
+                      <label class="form-label">Leave Type <span className="text-danger">*</span></label>
                       <select
                         class={`form-select ${
                           formik.touched.leaveType && formik.errors.leaveType
@@ -405,7 +412,7 @@ function LMSAddEdit() {
 
                   <div class="col">
                     <div class="mb-3">
-                      <label class="form-label">Leave Subtype</label>
+                      <label class="form-label">Leave Subtype <span className="text-danger">*</span></label>
                       <select
                         class={`form-select ${
                           formik.touched.leaveSubtype &&
@@ -441,7 +448,7 @@ function LMSAddEdit() {
                 <div class="row">
                   <div className="col">
                     <div className="mb-3" style={{ position: "relative" }}>
-                      <label className="form-label">Start Date</label>
+                      <label className="form-label">Start Date <span className="text-danger">*</span></label>
                       <span
                         style={{
                           position: "absolute",
@@ -478,7 +485,7 @@ function LMSAddEdit() {
 
                   <div className="col">
                     <div className="mb-3" style={{ position: "relative" }}>
-                      <label className="form-label">End Date</label>
+                      <label className="form-label">End Date <span className="text-danger">*</span></label>
                       <span
                         style={{
                           position: "absolute",
@@ -518,7 +525,7 @@ function LMSAddEdit() {
                   <div className="col-6">
                     <div className="mb-3">
                       <label htmlFor="formFile" className="form-label">
-                        Attachment
+                        Attachment <span className="text-danger">*</span>
                       </label>
                       <input
                         className="form-control"
@@ -556,7 +563,7 @@ function LMSAddEdit() {
                           }
                         />
                         <label class="form-check-label" for="flexCheckDefault">
-                          Leave Station
+                          Leave Station <span className="text-danger">*</span>
                         </label>
                         {formik.touched.leaveStation &&
                           formik.errors.leaveStation && (
@@ -572,7 +579,7 @@ function LMSAddEdit() {
                 <div class="row">
                   <div class="col">
                     <div class="mb-3">
-                      <label class="form-label">Reason</label>
+                      <label class="form-label">Reason <span className="text-danger">*</span></label>
                       <textarea
                         cols="30"
                         rows="10"
@@ -599,7 +606,7 @@ function LMSAddEdit() {
                   {location.state?.id && (
                     <div class="col">
                       <div class="mb-3">
-                        <label class="form-label">Comment</label>
+                        <label class="form-label">Comment <span className="text-danger">*</span></label>
                         <textarea
                           cols="30"
                           rows="10"
