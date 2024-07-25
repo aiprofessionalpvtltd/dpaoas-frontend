@@ -23,6 +23,7 @@ import {
 } from "../../../../../../utils/ToastAlert";
 import { Button } from "react-bootstrap";
 import { AuthContext } from "../../../../../../api/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const validationSchema = Yup.object({
   employeename: Yup.string().required("Employee name is required"),
@@ -33,6 +34,7 @@ const validationSchema = Yup.object({
 });
 function HRMAddEditEmployee() {
   const location = useLocation();
+  const navigate = useNavigate()
   const { employeeData, allBranchesData } = useContext(AuthContext);
   const [rolesList, setRolesList] = useState([]);
   const [designationData, setDesignationData] = useState([]);
@@ -101,6 +103,9 @@ function HRMAddEditEmployee() {
       if (response.success) {
         showSuccessMessage(response.message);
         formik.resetForm();
+        setTimeout(() => {
+          navigate("/hrm/employee")
+        }, 3000)
       }
       setIsSubmitting(false);
     } catch (error) {
@@ -132,6 +137,9 @@ function HRMAddEditEmployee() {
       if (response.success) {
         showSuccessMessage(response.message);
         formik.resetForm();
+        setTimeout(() => {
+          navigate("/hrm/employee")
+        }, 3000)
       }
     } catch (error) {
       showErrorMessage(error.response.data.message);
@@ -195,7 +203,7 @@ function HRMAddEditEmployee() {
                 <div class="col">
                   <div class="mb-3">
                     <label for="" class="form-label">
-                      First Name
+                      First Name <span className="text-danger">*</span>
                     </label>
                     <input
                       type="text"
@@ -281,7 +289,7 @@ function HRMAddEditEmployee() {
                 <div class="col">
                   <div class="mb-3">
                     <label for="" class="form-label">
-                      Email
+                      Email <span className="text-danger">*</span>
                     </label>
                     <input
                       type="text"
@@ -297,7 +305,7 @@ function HRMAddEditEmployee() {
                 <div class="col">
                   <div class="mb-3">
                     <label for="" class="form-label">
-                      Password
+                      Password <span className="text-danger">*</span>
                     </label>
                     <input
                       type="text"
@@ -358,7 +366,7 @@ function HRMAddEditEmployee() {
                 <div class="col">
                   <div class="mb-3">
                     <label for="" class="form-label">
-                      Roles
+                      Roles <span className="text-danger">*</span>
                     </label>
                     <select
                       class="form-select "
@@ -380,7 +388,7 @@ function HRMAddEditEmployee() {
                 <div class="col">
                   <div class="mb-3">
                     <label for="" class="form-label">
-                      Branch
+                      Branch <span className="text-danger">*</span>
                     </label>
                     <select
                       class="form-select "
@@ -402,7 +410,7 @@ function HRMAddEditEmployee() {
                 <div class="col">
                   <div class="mb-3">
                     <label for="" class="form-label">
-                      Designation
+                      Designation <span className="text-danger">*</span> 
                     </label>
                     <select
                       class="form-select "

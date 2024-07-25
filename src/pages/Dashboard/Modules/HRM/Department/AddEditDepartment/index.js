@@ -11,7 +11,7 @@ import {
 } from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 import { UpdateDepartment, createDepartment } from "../../../../../../api/APIs/Services/organizational.service";
-
+import { useNavigate } from "react-router-dom";
 const validationSchema = Yup.object({
   departmentName: Yup.string().required("Department name is required"),
   description: Yup.string().required("description is required"),
@@ -19,6 +19,7 @@ const validationSchema = Yup.object({
 });
 function HRMAddEditDepartment() {
   const location = useLocation();
+  const navigate = useNavigate()
   console.log(location.state);
   // const navigate = useNavigate();
 
@@ -49,6 +50,9 @@ function HRMAddEditDepartment() {
       const response = await createDepartment(data);
       if (response.success) {
         showSuccessMessage(response.message);
+        setTimeout(() => {
+          navigate("/hrm/department")
+        }, 3000)
       }
     } catch (error) {
       showErrorMessage(error.response.data.message);
@@ -65,6 +69,9 @@ function HRMAddEditDepartment() {
       const response = await UpdateDepartment(location.state.id, data);
       if (response.success) {
         showSuccessMessage(response.message);
+        setTimeout(() => {
+          navigate("/hrm/department")
+        }, 3000)
       }
     } catch (error) {
       console.log(error);
@@ -98,7 +105,7 @@ function HRMAddEditDepartment() {
                 <div className="row">
                   <div className="col-6">
                     <div className="mb-3">
-                      <label className="form-label">Department name * </label>
+                      <label className="form-label">Department name <span className="text-danger">*</span></label>
                       <input
                         type="text"
                         className={`form-control ${
@@ -124,7 +131,7 @@ function HRMAddEditDepartment() {
                   {location && location?.state && (
                     <div className="col-6">
                     <div className="mb-3">
-                      <label className="form-label">Status</label>
+                      <label className="form-label">Department Status</label>
                       <select
                         class={`form-select ${formik.touched.status &&
                             formik.errors.status

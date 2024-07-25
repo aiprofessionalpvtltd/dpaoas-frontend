@@ -11,7 +11,7 @@ import {
 } from "../../../../../../api/APIs/Services/organizational.service";
 import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
-
+// import { useNavigate } from "react-router-dom";
 const validationSchema = Yup.object({
   designationname: Yup.string().required("Designation name is required"),
   designationdescription: Yup.string().required("description is required"),
@@ -47,6 +47,9 @@ function HRMAddEditDesignation() {
       const response = await createDesignation(data);
       if (response.success) {
         showSuccessMessage(response.message);
+        setTimeout(() => {
+          navigate("/hrm/designation")
+        }, 3000)
       }
     } catch (error) {
       console.log(error);
@@ -63,6 +66,9 @@ function HRMAddEditDesignation() {
       const response = await UpdateDesignation(location?.state?.id, data);
       if (response.success) {
         showSuccessMessage(response.message);
+        setTimeout(() => {
+          navigate("/hrm/designation")
+        }, 3000)
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message)
@@ -97,7 +103,7 @@ function HRMAddEditDesignation() {
                 <div className="row">
                   <div className="col-6">
                     <div className="mb-3">
-                      <label className="form-label">Designation name * </label>
+                      <label className="form-label">Designation name <span className="text-danger">*</span></label>
                       <input
                         type="text"
                         placeholder={"Designation Name"}
@@ -123,7 +129,7 @@ function HRMAddEditDesignation() {
                   {location && location?.state && (
                     <div className="col-6">
                     <div className="mb-3">
-                      <label className="form-label">Status</label>
+                      <label className="form-label">Designation Status</label>
                       <select
                         class={`form-select ${formik.touched.status &&
                             formik.errors.status
@@ -156,7 +162,7 @@ function HRMAddEditDesignation() {
                 <div className="row">
                   <div className="col-6">
                     <div className="mb-3">
-                      <label className="form-label">Description</label>
+                      <label className="form-label">Description  <span className="text-danger">*</span></label>
                       <textarea
                         placeholder={formik.values.designationdescription}
                         className={`form-control ${
