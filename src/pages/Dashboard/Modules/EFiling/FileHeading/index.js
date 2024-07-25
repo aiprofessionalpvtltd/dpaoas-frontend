@@ -107,8 +107,7 @@ function FileHeadingList() {
         userData && userData?.userType === "Officer"
           ? EfilingSideBarItem
           : EfilingSideBarBranchItem
-      }
-    >
+      }>
       <ToastContainer />
       <div className="row">
         <div className="col-12">
@@ -130,12 +129,12 @@ function FileHeadingList() {
             seachBarShow={true}
             searchonchange={onSearchChange}
             handleDelete={(item) => handleDelete(item.internalId)}
-            showEditIcon={false}
-            handleEdit={(item) =>
-              navigate("/efiling/dashboard/addedit-file-heading", {
-                state: item,
-              })
-            }
+            showEditIcon={true}
+            // handleEdit={(item) =>
+            //   navigate("/efiling/dashboard/addedit-file-heading", {
+            //     state: item,
+            //   })
+            // }
           />
         </div>
       </div>
