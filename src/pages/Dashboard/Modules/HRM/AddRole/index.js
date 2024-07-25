@@ -69,7 +69,7 @@ function HRMAddRole() {
                   <div className="col-6">
                     <div className="mb-3">
                     <label className="form-label">
-                      Role name <span className="text-danger">*</span>
+                      Role Name <span className="text-danger">*</span>
                       </label>
                       <input
                         type="text"

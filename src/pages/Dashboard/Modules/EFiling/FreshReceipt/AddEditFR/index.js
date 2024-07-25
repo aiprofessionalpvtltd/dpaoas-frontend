@@ -433,7 +433,7 @@ const AddEditFR = () => {
                 <div className="col-6">
                   <div className="mb-3">
                     <label htmlFor="frSubject" className="form-label">
-                      Subject
+                      Subject <span className="text-danger">*</span>
                     </label>
                     <input
                       className={`form-control ${
@@ -487,7 +487,7 @@ const AddEditFR = () => {
 
                 <div className="col-3">
                   <label htmlFor="referenceNumber" className="form-label">
-                    Ref No
+                    Ref No <span className="text-danger">*</span>
                   </label>
                   <input
                     type="text"
@@ -574,7 +574,7 @@ const AddEditFR = () => {
                 
                 <div className=" mb-3 col-3">
                   <label htmlFor="frType" className="form-label">
-                    FR Type
+                    FR Type <span className="text-danger">*</span>
                   </label>
                   <select
                     id="frType"
