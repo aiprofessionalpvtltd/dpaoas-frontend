@@ -18,8 +18,6 @@ function Files() {
   const pageSize = 10; // Set your desired page size
   const UserData = getUserData();
 
-  console.log("Login User", UserData);
-
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
     setCurrentPage(page);

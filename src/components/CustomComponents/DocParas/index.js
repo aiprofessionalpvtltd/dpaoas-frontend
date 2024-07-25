@@ -121,8 +121,7 @@ const DocParas = ({ tabsData, onEditorChange, onDelete, FR, selectedFileId, hend
         show={showModal}
         size="lg"
         onHide={() => setShowModal(false)}
-        centered
-      >
+        centered>
         <div>
           <Modal.Header closeButton>
             <Modal.Title>Assign Flag</Modal.Title>
@@ -136,8 +135,7 @@ const DocParas = ({ tabsData, onEditorChange, onDelete, FR, selectedFileId, hend
                   id="flag"
                   name="flag"
                   onChange={(e) => setReferenceFlag(e.target.value)}
-                  value={referenceFlag}
-                >
+                  value={referenceFlag}>
                   <option value="" selected disabled hidden>
                     Select
                   </option>
@@ -145,6 +143,11 @@ const DocParas = ({ tabsData, onEditorChange, onDelete, FR, selectedFileId, hend
                   <option value={"B"}>B</option>
                   <option value={"C"}>C</option>
                   <option value={"D"}>D</option>
+                  <option value={"Note"}>Note</option>
+                  <option value={"FR"}>FR</option>
+                  <option value={"None"}>None</option>
+                  <option value={"Blank"}>Blank</option>
+                  <option value={"-"}>-</option>
                 </select>
               </div>
             </div>
@@ -180,8 +183,7 @@ const DocParas = ({ tabsData, onEditorChange, onDelete, FR, selectedFileId, hend
                   name="attachment"
                   onChange={(e) => setReferenceAttachment(e.target.value)}
                   value={referenceAttachment}
-                  disabled={frAttachment ? true : false}
-                >
+                  disabled={frAttachment ? true : false}>
                   <option value="" selected disabled hidden>
                     Select
                   </option>
@@ -204,15 +206,13 @@ const DocParas = ({ tabsData, onEditorChange, onDelete, FR, selectedFileId, hend
               onClick={() => {
                 handleEditToggle(showModalIndex, true);
                 setShowModal(false);
-              }}
-            >
+              }}>
               Submit
             </button>
             <button
               className="btn btn-primary"
               type="button"
-              onClick={() => setShowModal(false)}
-            >
+              onClick={() => setShowModal(false)}>
               Close
             </button>
           </Modal.Footer>
@@ -233,16 +233,14 @@ const DocParas = ({ tabsData, onEditorChange, onDelete, FR, selectedFileId, hend
             key={index}
             sx={{
               height: "auto",
-            }}
-          >
+            }}>
             <Box
               sx={{
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
                 mb: editableIndex !== index ? 2 : 6,
-              }}
-            >
+              }}>
               <div
                 style={{
                   display: "flex",
@@ -250,16 +248,14 @@ const DocParas = ({ tabsData, onEditorChange, onDelete, FR, selectedFileId, hend
                   justifyContent: "space-between",
                   alignItems: "center",
                   width: "100%",
-                }}
-              >
+                }}>
                 <label
                   style={{
                     width: "100%",
                     fontWeight: "bold",
                     fontSize: "16px",
                     marginTop: "8px",
-                  }}
-                >
+                  }}>
                   {tab.title}
                 </label>
                 {/* {tab.createdBy === UserData?.fkUserId && (
@@ -373,18 +369,15 @@ const DocParas = ({ tabsData, onEditorChange, onDelete, FR, selectedFileId, hend
                     }}
                     dangerouslySetInnerHTML={{
                       __html: cleanHtml(tab.description),
-                    }}
-                  ></p>
+                    }}></p>
                   {tab?.references && tab?.references?.length > 0 && (
                     <div
                       className="col"
-                      style={{ width: "100%", marginTop: "10px" }}
-                    >
+                      style={{ width: "100%", marginTop: "10px" }}>
                       {tab.references?.map((item, idx) => (
                         <div
                           key={idx}
-                          style={{ display: "flex", flexDirection: "column" }}
-                        >
+                          style={{ display: "flex", flexDirection: "column" }}>
                           <label>Flag - {item?.flag}</label>
                           {/* <label>Attachments: </label> */}
                           <ul style={{ marginBottom: 0 }}>
@@ -393,9 +386,13 @@ const DocParas = ({ tabsData, onEditorChange, onDelete, FR, selectedFileId, hend
                                 {innerItem?.filename && (
                                   <li>
                                     <p
-                                      onClick={() => HandlePrint(innerItem?.filename)}
-                                      style={{ color: "blue", cursor: "pointer" }}
-                                    >
+                                      onClick={() =>
+                                        HandlePrint(innerItem?.filename)
+                                      }
+                                      style={{
+                                        color: "blue",
+                                        cursor: "pointer",
+                                      }}>
                                       {`${getFileName(innerItem?.filename)}`}
                                     </p>
                                   </li>
@@ -433,8 +430,7 @@ const DocParas = ({ tabsData, onEditorChange, onDelete, FR, selectedFileId, hend
                     alignItems: "center",
                     justifyContent: "center",
                     mt: 1,
-                  }}
-                >
+                  }}>
                   <Editor
                     onChange={(content) =>
                       setNotingData({ description: content })
