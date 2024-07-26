@@ -19,9 +19,10 @@ import { getSelectedFileID, getUserData } from "../../../api/Auth";
 import { imagesUrl } from "../../../api/APIs";
 import { AuthContext } from "../../../api/AuthContext";
 
+
 const DocParas = ({ tabsData, onEditorChange, onDelete, FR, selectedFileId, hendleDeleteAttach }) => {
   const UserData = getUserData();
-
+ console.log("tabsData==>", tabsData)
   const { fildetailsAqain } = useContext(AuthContext)
   const [correspondenceTypesData, setCorrespondenceTypesData] = useState([]);
   const [editableIndex, setEditableIndex] = useState(null);
@@ -423,6 +424,9 @@ const DocParas = ({ tabsData, onEditorChange, onDelete, FR, selectedFileId, hend
                               </React.Fragment>
                             ))}
                           </ul>
+                          <div style={{display:"flex", alignItems:"flex-end", justifyContent:"flex-end"}}>
+                          <div>Created By: <p style={{fontStyle:"italic", textTransform:"capitalize"}}>{tab?.createdByUser && tab?.createdByUser}</p></div>
+                        </div>
                         </div>
                       ))}
                     </div>
