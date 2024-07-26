@@ -10,6 +10,7 @@ import {
   faEdit,
   faFileExport,
   faTrash,
+  faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import sanitizeHtml from "sanitize-html";
 import { Modal } from "react-bootstrap";
@@ -402,14 +403,20 @@ const DocParas = ({ tabsData, onEditorChange, onDelete, FR, selectedFileId, hend
                                   <>
                                   
                                   <li key={`${innerIdx}-${nestedItemIdx}`}>
-                                  
+                                  <div style={{flexDirection:"row", display:"flex", }}>
+
                                     <p
                                       onClick={() => HandlePrint(nestedItem?.file)}
                                       style={{ color: "blue", cursor: "pointer" }}
                                     >
                                       {`${innerItem?.name} (${innerItem?.description}) - ${getFileName(nestedItem?.file)}`}
                                     </p>
-                                    <p onClick={() => hendleDeleteAttach(item, innerIdx)}>Cross</p>
+                                    <div style={{marginLeft:"10px", cursor:"pointer"}}>
+                                    <FontAwesomeIcon  onClick={() => hendleDeleteAttach(item, innerIdx)} color={"red"} icon={faXmark}/>
+
+                                    </div>
+
+                                  </div>
                                   </li>
                                   </>
                                 ))}
