@@ -104,7 +104,22 @@ function AddEditFileCase() {
     }
   };
 
-  const handleDelete = (index) => {
+  const handleAttachDelete = async (item, tabIndex) => {
+
+    const updatedTabs = notingTabData.map((tab, tIndex) => {
+      console.log("ididididi",item?.attachments[0]?.attachments[0]?.id, item?.attachments[0]?.attachments[0]?.id);
+      if (item?.attachments[0]?.attachments[0]?.id === item?.attachments[0]?.attachments[0]?.id) {
+        return {
+          ...tab,
+          references: [] // Remove all references by setting to an empty array
+        };
+      }
+      return tab;
+    });
+
+    setNotingTabsData(updatedTabs);
+    }
+  const handleDelete = (item, index) => {
     const updatedTabs = notingTabData.filter((_, i) => i !== index);
     setNotingTabsData(updatedTabs);
   };
@@ -577,7 +592,8 @@ function AddEditFileCase() {
                         <DocParas
                           tabsData={notingTabData}
                           onEditorChange={handleEditorChange}
-                          onDelete={handleDelete}
+                          onDelete={handleDelete}             
+                          hendleDeleteAttach= {(item, innerIdx) =>  handleAttachDelete(item, innerIdx)}
                           FR={location.state}
                         />
                       </div>
