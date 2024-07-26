@@ -9,6 +9,8 @@ import {
 } from "../../../../../api/Auth";
 import {
   ApprovedFIleCase,
+  DeletePara,
+  DeleteParaAttachement,
   UpdateFIleCase,
   assignFIleCase,
   getAllCorrespondence,
@@ -45,9 +47,7 @@ const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
 
 function FileDetail() {
   const location = useLocation();
-  console.log("location", location);
-  const { fildetailsAqain } = useContext(AuthContext);
-  console.log("fildetailsAqain", fildetailsAqain);
+  const { fildetailsAqain } = useContext(AuthContext)
   const navigate = useNavigate();
   const UserData = getUserData();
   const fileInputRef = useRef(null);
@@ -60,10 +60,7 @@ function FileDetail() {
   const [employeeData, setEmployeeData] = useState([]);
   const [viewPage, setViewPage] = useState(location?.state?.view);
   const { fileIdINRegister } = useContext(AuthContext);
-  const [caseId, setcaseId] = useState(
-    location?.state?.id || fildetailsAqain?.id
-  );
-  console.log("caseid", caseId);
+  const [caseId, setcaseId] = useState(location?.state?.id || fildetailsAqain?.id);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTab, setSelectedTab] = useState("Noting");
   const [remarksData, setRemarksData] = useState([]);
@@ -265,23 +262,101 @@ function FileDetail() {
     }
   };
 
+
+
   // const handleDelete = (index) => {
   //   const updatedTabs = notingTabData.filter((_, i) => i !== index);
   //   setNotingTabsData(updatedTabs);
   // };
-
-  const handleDelete = (index) => {
+  const handleDelete = async ( item, index) => {
     // Remove the item at the specified index
-    const updatedTabs = notingTabData.filter((_, i) => i !== index);
 
-    // Update the titles of the remaining items
+    console.log("corspondence", item?.isSave)
+    if(item?.isSave){
+      try {
+        const response = await DeletePara(caseId, item?.references[0]?.id, item.id)
+        if(response?.success){
+          showSuccessMessage(response?.message)
+          getFilesByID()
+        }
+      } catch (error) {
+        showErrorMessage(error?.response?.data?.message)
+      }
+    }else{
+      const updatedTabs = notingTabData.filter((_, i) => i !== index);
+
+    // // Update the titles of the remaining items
     const renumberedTabs = updatedTabs.map((tab, i) => ({
       ...tab,
       title: `Para ${i + 1}`,
     }));
 
     setNotingTabsData(renumberedTabs);
+    }
+
+
   };
+
+  const handleAttachDelete = async (item, tabIndex) => {
+
+    console.log("indexxsdadsa", tabIndex);
+  //   const updatedTabs = notingTabData.map((tab, tIndex) => {
+      
+  //   });
+  // console.log("updatedTabs", updatedTabs);
+  //   setNotingTabsData(updatedTabs);
+//  console.log("renumberedTabs",renumberedTabs);
+//  setNotingTabsData({
+//   ...notingTabData,
+//   references: renumberedTabs
+// });
+
+    console.log("corspondence", tabIndex)
+    console.log("para",tabIndex)
+
+    if(item?.attachments[0]?.attachments[0]?.isSave){
+      try {
+        const response = await DeleteParaAttachement(caseId,item?.attachments[0]?.attachments[0]?.correspondenceId,item?.attachments[0]?.attachments[0]?.paraID)
+        if(response?.success){
+          showSuccessMessage(response?.message)
+          getFilesByID()
+        }
+      } catch (error) {
+        showErrorMessage(error?.response?.data?.message)
+      }
+    }else{
+      // const tabIndex= 0
+      const updatedTabs = notingTabData.map((tab, tIndex) => {
+        console.log("ididididi",item?.attachments[0]?.attachments[0]?.id, item?.attachments[0]?.attachments[0]?.id);
+        if (item?.attachments[0]?.attachments[0]?.id === item?.attachments[0]?.attachments[0]?.id) {
+          return {
+            ...tab,
+            references: [] // Remove all references by setting to an empty array
+          };
+        }
+        return tab;
+      });
+  
+      setNotingTabsData(updatedTabs);
+    }
+    }
+    
+  
+    // else{
+      // "test"
+    //   const updatedTabs = notingTabData.filter((_, i) => i !== index);
+
+    // // // Update the titles of the remaining items
+    // const renumberedTabs = updatedTabs.map((tab, i) => ({
+    //   ...tab,
+    //   title: `Para ${i + 1}`
+    // }));
+
+    // setNotingTabsData(renumberedTabs);
+    
+
+
+  
 
   const transformData = (apiData) => {
     return apiData?.map((item) => ({
@@ -711,7 +786,8 @@ function FileDetail() {
                                   <DocParas
                                     tabsData={notingTabData}
                                     onEditorChange={handleEditorChange}
-                                    onDelete={handleDelete}
+                                    onDelete={handleDelete}             
+                                    hendleDeleteAttach= {(item, innerIdx) =>  handleAttachDelete(item, innerIdx)}
                                     FR={FR}
                                     selectedFileId={
                                       location?.state?.fileId ||

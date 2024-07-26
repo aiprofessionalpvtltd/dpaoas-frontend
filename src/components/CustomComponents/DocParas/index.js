@@ -1,3 +1,6 @@
+
+
+
 import React, { useContext, useEffect, useState } from "react";
 import { Box, AccordionDetails } from "@mui/material";
 import { Editor } from "../Editor";
@@ -15,10 +18,10 @@ import { getSelectedFileID, getUserData } from "../../../api/Auth";
 import { imagesUrl } from "../../../api/APIs";
 import { AuthContext } from "../../../api/AuthContext";
 
-const DocParas = ({ tabsData, onEditorChange, onDelete, FR, selectedFileId }) => {
+const DocParas = ({ tabsData, onEditorChange, onDelete, FR, selectedFileId, hendleDeleteAttach }) => {
   const UserData = getUserData();
-  console.log("tabs data++++", tabsData)
-  const {fildetailsAqain} = useContext(AuthContext)
+
+  const { fildetailsAqain } = useContext(AuthContext)
   const [correspondenceTypesData, setCorrespondenceTypesData] = useState([]);
   const [editableIndex, setEditableIndex] = useState(null);
   const [notingData, setNotingData] = useState({
@@ -82,14 +85,13 @@ const DocParas = ({ tabsData, onEditorChange, onDelete, FR, selectedFileId }) =>
 
     try {
       const response = await getAllCorrespondence(
-        selectedFileId ? selectedFileId : fileId?.value ,
+        selectedFileId ? selectedFileId : fileId?.value,
         UserData?.fkBranchId,
         0,
         1000
       );
       if (response?.success) {
         const transformedData = transformData(response.data?.correspondences);
-        console.log("--------------------, ", response.data?.correspondences);
         setCorrespondenceTypesData(transformedData);
       }
     } catch (error) {
@@ -99,12 +101,12 @@ const DocParas = ({ tabsData, onEditorChange, onDelete, FR, selectedFileId }) =>
 
   useEffect(() => {
     handleCorrespondences();
-  }, [fildetailsAqain,selectedFileId]);
+  }, [fildetailsAqain, selectedFileId]);
 
   const HandlePrint = async (urlimage) => {
     const url = `${imagesUrl}${urlimage}`;
     setPdfView(url)
-    if(imagesUrl){
+    if (imagesUrl) {
       setShowImgModal(true)
     }
   };
@@ -159,7 +161,8 @@ const DocParas = ({ tabsData, onEditorChange, onDelete, FR, selectedFileId }) =>
                     id="attachment"
                     name="attachment"
                     onChange={(e) => setFrAttachment(e.target.value)}
-                    value={frAttachment}>
+                    value={frAttachment}
+                  >
                     <option value="" selected disabled hidden>
                       Select
                     </option>
@@ -219,15 +222,9 @@ const DocParas = ({ tabsData, onEditorChange, onDelete, FR, selectedFileId }) =>
         show={showImgModal}
         size="xl"
         onHide={() => setShowImgModal(false)}
-        centered>
-        <div>
-          <iframe
-            title="PDF Viewer"
-            src={pdfview}
-            width="100%"
-            height="700px"
-          />
-        </div>
+        centered
+      >
+        <div><iframe title="PDF Viewer" src={pdfview} width="100%" height="700px" /></div>
       </Modal>
       {tabsData &&
         tabsData.length > 0 &&
@@ -310,8 +307,8 @@ const DocParas = ({ tabsData, onEditorChange, onDelete, FR, selectedFileId }) =>
                   </>
                 )}
               )} */}
-                {tab.createdBy === UserData?.fkUserId &&
-                  (editableIndex !== index ? (
+                {tab.createdBy === UserData?.fkUserId && (
+                  editableIndex !== index ? (
                     <>
                       <button
                         onClick={() => {
@@ -321,15 +318,17 @@ const DocParas = ({ tabsData, onEditorChange, onDelete, FR, selectedFileId }) =>
                         className="btn-xs black circle-btn"
                         style={{
                           color: "black",
-                        }}>
+                        }}
+                      >
                         <FontAwesomeIcon icon={faFileExport} />
                       </button>
                       <button
-                        onClick={() => onDelete(index)}
+                        onClick={() => onDelete(tab, index)}
                         className="btn-xs red circle-btn"
                         style={{
                           color: "red",
-                        }}>
+                        }}
+                      >
                         <FontAwesomeIcon icon={faTrash} />
                       </button>
                       <button
@@ -337,7 +336,8 @@ const DocParas = ({ tabsData, onEditorChange, onDelete, FR, selectedFileId }) =>
                         className="btn-xs green circle-btn"
                         style={{
                           color: "#2dce89",
-                        }}>
+                        }}
+                      >
                         <FontAwesomeIcon icon={faEdit} />
                       </button>
                     </>
@@ -348,11 +348,14 @@ const DocParas = ({ tabsData, onEditorChange, onDelete, FR, selectedFileId }) =>
                         className="btn-xs green circle-btn"
                         style={{
                           color: "#2dce89",
-                        }}>
+                        }}
+                      >
                         <FontAwesomeIcon icon={faCheckCircle} />
                       </button>
                     </>
-                  ))}
+                  )
+                )}
+
               </div>
 
               {editableIndex !== index ? (
@@ -394,24 +397,22 @@ const DocParas = ({ tabsData, onEditorChange, onDelete, FR, selectedFileId }) =>
                                     </p>
                                   </li>
                                 )}
-                                {innerItem?.attachments?.map(
-                                  (nestedItem, nestedItemIdx) => (
-                                    <li key={`${innerIdx}-${nestedItemIdx}`}>
-                                      <p
-                                        onClick={() =>
-                                          HandlePrint(nestedItem?.file)
-                                        }
-                                        style={{
-                                          color: "blue",
-                                          cursor: "pointer",
-                                        }}>
-                                        {`${innerItem?.name} (${
-                                          innerItem?.description
-                                        }) - ${getFileName(nestedItem?.file)}`}
-                                      </p>
-                                    </li>
-                                  )
-                                )}
+                                {console.log("attach", innerItem?.attachments)}
+                                {innerItem?.attachments?.map((nestedItem, nestedItemIdx) => (
+                                  <>
+                                  
+                                  <li key={`${innerIdx}-${nestedItemIdx}`}>
+                                  
+                                    <p
+                                      onClick={() => HandlePrint(nestedItem?.file)}
+                                      style={{ color: "blue", cursor: "pointer" }}
+                                    >
+                                      {`${innerItem?.name} (${innerItem?.description}) - ${getFileName(nestedItem?.file)}`}
+                                    </p>
+                                    <p onClick={() => hendleDeleteAttach(item, innerIdx)}>Cross</p>
+                                  </li>
+                                  </>
+                                ))}
                               </React.Fragment>
                             ))}
                           </ul>

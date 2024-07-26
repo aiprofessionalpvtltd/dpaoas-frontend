@@ -1072,3 +1072,39 @@ export const ApprovedFIleCase = async (data) => {
     throw error;
   }
 };
+
+// Delete Given Paragraph of Case
+export const DeletePara = async (caseId,correspondenceID, paraID) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.get(`/cases/deleteSingleCorrespondence?caseId=${caseId}&correspondenceID=${correspondenceID}&paraID=${paraID}`);
+    // /deleteSingleCorrespondence?caseId=63&correspondenceID=30
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+export const DeleteParaAttachement = async (caseId,correspondenceID,paraID ) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.get(`/cases/deleteCorrespondenceAttachment?caseId=${caseId}&correspondenceID=${correspondenceID}&paraID=${paraID}`)
+   
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
