@@ -236,6 +236,8 @@ import PreviewBallotResolutionList from "../pages/Dashboard/Modules/QMS/Resoluti
 import MMSMotionListReport from "../pages/Dashboard/Modules/MMS/Reports/MotionListReport/index.js";
 import MMSBallotMotionList from "../pages/Dashboard/Modules/MMS/Reports/MotionListReport/BallotMotionList/index.js";
 import PreviewBallotMotionList from "../pages/Dashboard/Modules/MMS/Reports/MotionListReport/PreviewBallotMotionList/index.js";
+import AllBallotResolutionList from "../pages/Dashboard/Modules/QMS/Resolution/AllBallotResolutionList/index.js";
+import PreviewResolutionList from "../pages/Dashboard/Modules/QMS/SearchResolution/PreviewResolution/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -458,12 +460,15 @@ export const ProtectedRoutes = [
   { path: "/qms/dashboard", element: <QMSQuestionDashboard /> },
   { path: "/qms/search/question", element: <QMSSearchQuestion /> },
   { path: "/qms/search/resolution", element: <QMSSerchResolution /> },
+  { path: "/qms/search/resolution/preview", element: <PreviewResolutionList /> },
+
 
   { path: "/qms/resolution", element: <QMSQuestionDashboard /> },
   { path: "/qms/rsolution/list", element: <QMSResolutionList /> },
   { path: "/qms/rsolution/list/ballot/:id", element: <QMSBallotResolutionList /> },
   { path: "/qms/rsolution/list/ballot/preview-pdf", element: <PreviewBallotResolutionList /> },
   { path: "/qms/resolution/delete", element: <QMSDeleteResolution /> },
+  { path: "/qms/resolution/ballot/list", element: <AllBallotResolutionList /> },
 
   { path: "/qms/question", element: <QMSQuestionDashboard /> },
   { path: "/qms/question/list", element: <QMSQuestionList /> },
