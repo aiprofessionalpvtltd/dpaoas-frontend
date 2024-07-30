@@ -213,18 +213,10 @@ const SearchLegislationBills = () => {
       movers: item?.senateBillMnaMovers
         ? item?.senateBillMnaMovers.map((mover) => mover?.mna?.mnaName).join(", ")
         : "---",
-      // parliamentaryYear: item?.parliamentaryYears?.parliamentaryTenure,
-      // session: item?.sessions?.sessionName,
-      // billType: item.billType,
       billCategory: item?.billCategory,
       fileNumber: item?.fileNumber,
       billFrom: item?.billFrom,
-      // concerndCommittes: item?.introducedInHouses?.manageCommittees
-      //   ?.committeeName
-      //   ? item?.introducedInHouses?.manageCommittees?.committeeName
-      //   : "---",
-      // billStatus: item?.billStatuses?.billStatusName,
-      // Status: item.billStatus,
+      
     }))|| [];
   };
  
@@ -271,13 +263,20 @@ const SearchLegislationBills = () => {
     setSearchData([]);
   };
 
-  const handleEditSenateBill = (id) => {
-    navigate("/lgms/dashboard/bills/edit/senate-bills", { state: id });
-  };
-  const handleEditNABill = (id) => {
-    navigate("/lgms/dashboard/bills/edit/NA-bills/", { state: id });
-  };
+  // const handleEditSenateBill = (id) => {
+  //   navigate("/lgms/dashboard/bills/edit/senate-bills", { state: id });
+  // };
+  // const handleEditNABill = (id) => {
+  //   navigate("/lgms/dashboard/bills/edit/NA-bills/", { state: id });
+  // };
   
+  const handleEditSenateBill = (id, item) => {
+    navigate("/lgms/dashboard/bills/edit/senate-bills",  { state: {id, item} });
+  };
+  //Handle Edit NA Bills
+  const handleEditNABill = (id,item) => {
+    navigate("/lgms/dashboard/bills/edit/NA-bills/", { state: {id,item}});
+  };
   // Handle Delete Bills
   const handleDeleteLegislationBill = async (id) => {
     try {
