@@ -10,6 +10,7 @@ import {
   faEdit,
   faFileExport,
   faTrash,
+  faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import sanitizeHtml from "sanitize-html";
 import { Modal } from "react-bootstrap";
@@ -18,9 +19,10 @@ import { getSelectedFileID, getUserData } from "../../../api/Auth";
 import { imagesUrl } from "../../../api/APIs";
 import { AuthContext } from "../../../api/AuthContext";
 
+
 const DocParas = ({ tabsData, onEditorChange, onDelete, FR, selectedFileId, hendleDeleteAttach }) => {
   const UserData = getUserData();
-
+ console.log("tabsData==>", tabsData)
   const { fildetailsAqain } = useContext(AuthContext)
   const [correspondenceTypesData, setCorrespondenceTypesData] = useState([]);
   const [editableIndex, setEditableIndex] = useState(null);
@@ -402,20 +404,29 @@ const DocParas = ({ tabsData, onEditorChange, onDelete, FR, selectedFileId, hend
                                   <>
                                   
                                   <li key={`${innerIdx}-${nestedItemIdx}`}>
-                                  
+                                  <div style={{flexDirection:"row", display:"flex", }}>
+
                                     <p
                                       onClick={() => HandlePrint(nestedItem?.file)}
                                       style={{ color: "blue", cursor: "pointer" }}
                                     >
                                       {`${innerItem?.name} (${innerItem?.description}) - ${getFileName(nestedItem?.file)}`}
                                     </p>
-                                    <p onClick={() => hendleDeleteAttach(item, innerIdx)}>Cross</p>
+                                    <div style={{marginLeft:"10px", cursor:"pointer"}}>
+                                    <FontAwesomeIcon  onClick={() => hendleDeleteAttach(item, innerIdx)} color={"red"} icon={faXmark}/>
+
+                                    </div>
+
+                                  </div>
                                   </li>
                                   </>
                                 ))}
                               </React.Fragment>
                             ))}
                           </ul>
+                          <div style={{display:"flex", alignItems:"flex-end", justifyContent:"flex-end"}}>
+                          <div>Created By: <p style={{fontStyle:"italic", textTransform:"capitalize"}}>{tab?.createdByUser && tab?.createdByUser}</p></div>
+                        </div>
                         </div>
                       ))}
                     </div>

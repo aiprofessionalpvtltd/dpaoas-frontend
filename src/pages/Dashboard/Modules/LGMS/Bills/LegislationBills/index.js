@@ -29,14 +29,14 @@ const AllLegislationBill = () => {
     return apiData?.map((item) => ({
       id: item.id,
       billTitle: item?.billTitle,
-      dateOfIntroductionInSenate: item?.introducedInHouses?.introducedInHouseDate
-        ? moment(item?.introducedInHouses?.introducedInHouseDate).format("DD-MM-YYYY")
-        : "---",
+      // dateOfIntroductionInSenate: item?.introducedInHouses?.introducedInHouseDate
+      //   ? moment(item?.introducedInHouses?.introducedInHouseDate).format("DD-MM-YYYY")
+      //   : "---",
       dateOfPresentationReport: item?.introducedInHouses?.reportPresentationDate
-        ? moment(item?.introducedInHouses?.reportPresentationDate).format("DD-MM-YYYY")
+        ? moment(item?.introducedInHouses?.reportPresentationDate,"YYYY-MM-DD" ).format("DD-MM-YYYY")
         : "---",
       dateOfTransmission: item?.dateOfTransmissionToNA
-        ? moment(item?.dateOfTransmissionToNA).format("DD-MM-YYYY")
+        ? moment(item?.dateOfTransmissionToNA,"YYYY-MM-DD").format("DD-MM-YYYY")
         : "---",
       remarks: item?.billRemarks,
       movers: item?.senateBillMnaMovers
@@ -45,7 +45,7 @@ const AllLegislationBill = () => {
       // parliamentaryYear: item?.parliamentaryYears?.parliamentaryTenure,
       // session: item?.sessions?.sessionName,
       // billType: item.billType,
-      billCategory: item.billCategory,
+      billCategory: item?.billCategory,
       fileNumber: item?.fileNumber,
       billFrom: item?.billFrom,
       // concerndCommittes: item?.introducedInHouses?.manageCommittees
