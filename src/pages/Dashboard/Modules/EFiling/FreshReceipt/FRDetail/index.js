@@ -26,7 +26,7 @@ import {
   EfilingSideBarBranchItem,
   EfilingSideBarItem,
 } from "../../../../../../utils/sideBarItems";
-import { Button, Modal } from "react-bootstrap";
+import { Button, Modal, Spinner } from "react-bootstrap";
 import { TinyEditor } from "../../../../../../components/CustomComponents/Editor/TinyEditor";
 import { imagesUrl } from "../../../../../../api/APIs";
 
@@ -43,7 +43,7 @@ const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
 
 function FRDetail() {
   const location = useLocation();
-
+  const [loading, setLoading] = useState(true);
   const [employeeData, setEmployeeData] = useState([]);
   const UserData = getUserData();
   const [filesData, setFilesData] = useState(null);
@@ -193,26 +193,50 @@ function FRDetail() {
     }
   };
 
-  const images =
-    attachments?.map((item) => ({
-      original: `${imagesUrl}${item?.filename}`,
-      thumbnail: `${imagesUrl}${item?.filename}`,
-    })) || [];
+  // const images =
+  //   attachments?.map((item) => ({
+  //     original: `${imagesUrl}${item?.filename}`,
+  //     thumbnail: `${imagesUrl}${item?.filename}`,
+  //   })) || [];
 
-  // const images = [
-  //   {
-  //     original: "https://picsum.photos/id/1018/1000/600/",
-  //     thumbnail: "https://picsum.photos/id/1018/250/150/",
-  //   },
-  //   {
-  //     original: "https://picsum.photos/id/1015/1000/600/",
-  //     thumbnail: "https://picsum.photos/id/1015/250/150/",
-  //   },
-  //   {
-  //     original: "https://picsum.photos/id/1019/1000/600/",
-  //     thumbnail: "https://picsum.photos/id/1019/250/150/",
-  //   },
-  // ];
+    const images =
+    attachments?.map((item) => {
+      const fileUrl = `${imagesUrl}${item?.filename}`;
+      const isPdf = item?.filename?.toLowerCase().endsWith('.pdf');
+  
+      return {
+        original: fileUrl,
+        thumbnail: fileUrl,
+        isPdf: isPdf, // Custom property to identify PDFs
+      };
+    }) || [];
+
+    // Component to render PDF preview
+const PdfPreview = ({ pdfUrl }) => {
+  return (
+    <div style={{ position: 'relative', marginBottom: '20px' }}>
+      {loading && (
+        <div style={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          zIndex: 10,
+        }}>
+           <Spinner />
+        </div>
+      )}
+      <iframe
+        src={pdfUrl}
+        width="100%"
+        height="600px"
+        style={{ border: 'none', display: loading ? 'none' : 'block' }}
+        title="PDF Preview"
+        onLoad={() => setLoading(false)} // Event listener for when the PDF is fully loaded
+      />
+    </div>
+  );
+};
 
   return (
     <Layout
@@ -350,6 +374,10 @@ function FRDetail() {
         <div className="row">
           <div className="col-7">
             <section>
+            {images.map((item, index) =>
+              item.isPdf ? (
+                <PdfPreview pdfUrl={item.original} key={index} />
+              ) : (
               <ImageGallery
                 style={{ maxHeight: "calc(100vh 0px)" }}
                 items={images}
@@ -369,6 +397,8 @@ function FRDetail() {
                   </div>
                 )}
               />
+              )
+              )}
             </section>
 
             <label className="form-label mt-4">F.R Detail</label>

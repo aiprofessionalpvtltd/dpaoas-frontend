@@ -31,7 +31,7 @@ import TabComponent from "../../../../../../../../components/CustomComponents/Ta
 import NoteEditor from "../../../../../../../../components/CustomComponents/DocEditor";
 import DocParas from "../../../../../../../../components/CustomComponents/DocParas";
 import CustomTable from "../../../../../../../../components/CustomComponents/CustomTable";
-import { Modal } from "react-bootstrap";
+import { Modal, Spinner } from "react-bootstrap";
 import { imagesUrl } from "../../../../../../../../api/APIs";
 import { Jodit } from "../../../../../../../../components/CustomComponents/Editor/Jodit";
 import { CKEditorComp } from "../../../../../../../../components/CustomComponents/Editor/CKEditorComp";
@@ -41,6 +41,7 @@ import "react-image-gallery/styles/css/image-gallery.css";
 function AddEditFileCase() {
   const navigate = useNavigate();
   const userData = getUserData();
+  const [loading, setLoading] = useState(true);
   const location = useLocation();
   const { fileIdINRegister } = useContext(AuthContext);
   const [notingTabSubject, setNotingTabSubject] = useState("");
@@ -252,11 +253,39 @@ function AddEditFileCase() {
     getAllFiles();
   }, []);
 
-  const images =
-    location?.state?.freshReceiptsAttachments?.map((item) => ({
-      original: `${imagesUrl}${item?.filename}`,
-      thumbnail: `${imagesUrl}${item?.filename}`,
-    })) || [];
+    const images =
+    location?.state?.freshReceiptsAttachments?.map((item) => {
+      const fileUrl = `${imagesUrl}${item?.filename}`;
+      const isPdf = item?.filename?.toLowerCase().endsWith('.pdf');
+  
+      return {
+        original: fileUrl,
+        thumbnail: fileUrl,
+        isPdf: isPdf, // Custom property to identify PDFs
+      };
+    }) || [];
+
+    const PdfPreview = ({ pdfUrl }) => {
+      return (
+        <>
+          {loading && (
+            <div style={{
+              marginTop: '20px',
+            }}>
+               <Spinner />
+            </div>
+          )}
+        <iframe
+            src={pdfUrl}
+            width="70%"
+            height="600px"
+            style={{ border: 'none', display: loading ? 'none' : 'block' }}
+            title="PDF Preview"
+            onLoad={() => setLoading(false)} // Event listener for when the PDF is fully loaded
+          />
+          </>
+      );
+    };
 
   const transformData = (apiData) => {
     return apiData?.map((item) => ({
@@ -697,6 +726,11 @@ function AddEditFileCase() {
                 }}
               >
                 {selectedTab === "FR" && (
+                  <>
+                  {images?.map((item, index) =>
+              item.isPdf ? (
+                <PdfPreview pdfUrl={item.original} key={index} />
+              ) : (
                   <section>
                     <ImageGallery
                       style={{ maxHeight: "calc(100vh 0px)" }}
@@ -718,6 +752,9 @@ function AddEditFileCase() {
                       )}
                     />
                   </section>
+                  )
+                  )}
+                  </>
                 )}
               </div>
             </div>
