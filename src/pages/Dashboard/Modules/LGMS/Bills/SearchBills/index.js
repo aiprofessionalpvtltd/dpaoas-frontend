@@ -178,21 +178,54 @@ const SearchLegislationBills = () => {
     getCommitties();
   }, []);
 
+  // const transFormsearchData = (apiData) => {
+  //   return (
+  //     apiData?.map((item) => ({
+  //       id: item.id,
+  //       parliamentaryYear: item?.parliamentaryYears?.parliamentaryTenure,
+  //       session: item?.sessions?.sessionName,
+  //       billType: item.billType,
+  //       billCategory: item.billCategory,
+  //       billFrom: item.billFrom,
+  //       concerndCommittes:
+  //         item?.introducedInHouses?.manageCommittees?.committeeName,
+  //       billStatus: item?.billStatuses?.billStatusName,
+  //       Status: item.billStatus,
+  //     })) || []
+  //   );
+  // };
+
   const transFormsearchData = (apiData) => {
-    return (
-      apiData?.map((item) => ({
-        id: item.id,
-        parliamentaryYear: item?.parliamentaryYears?.parliamentaryTenure,
-        session: item?.sessions?.sessionName,
-        billType: item.billType,
-        billCategory: item.billCategory,
-        billFrom: item.billFrom,
-        concerndCommittes:
-          item?.introducedInHouses?.manageCommittees?.committeeName,
-        billStatus: item?.billStatuses?.billStatusName,
-        Status: item.billStatus,
-      })) || []
-    );
+   
+    return apiData?.map((item) => ({
+      id: item.id,
+      billTitle: item?.billTitle,
+      // dateOfIntroductionInSenate: item?.introducedInHouses?.introducedInHouseDate
+      //   ? moment(item?.introducedInHouses?.introducedInHouseDate).format("DD-MM-YYYY")
+      //   : "---",
+      dateOfPresentationReport: item?.introducedInHouses?.reportPresentationDate
+        ? moment(item?.introducedInHouses?.reportPresentationDate,"YYYY-MM-DD" ).format("DD-MM-YYYY")
+        : "---",
+      dateOfTransmission: item?.dateOfTransmissionToNA
+        ? moment(item?.dateOfTransmissionToNA,"YYYY-MM-DD").format("DD-MM-YYYY")
+        : "---",
+      remarks: item?.billRemarks,
+      movers: item?.senateBillMnaMovers
+        ? item?.senateBillMnaMovers.map((mover) => mover?.mna?.mnaName).join(", ")
+        : "---",
+      // parliamentaryYear: item?.parliamentaryYears?.parliamentaryTenure,
+      // session: item?.sessions?.sessionName,
+      // billType: item.billType,
+      billCategory: item?.billCategory,
+      fileNumber: item?.fileNumber,
+      billFrom: item?.billFrom,
+      // concerndCommittes: item?.introducedInHouses?.manageCommittees
+      //   ?.committeeName
+      //   ? item?.introducedInHouses?.manageCommittees?.committeeName
+      //   : "---",
+      // billStatus: item?.billStatuses?.billStatusName,
+      // Status: item.billStatus,
+    }))|| [];
   };
  
   const handleSearch = useCallback(
