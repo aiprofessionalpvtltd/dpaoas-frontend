@@ -31,7 +31,10 @@ import { Button, Modal } from "react-bootstrap";
 import CustomTable from "../../../../../components/CustomComponents/CustomTable";
 import DocParas from "../../../../../components/CustomComponents/DocParas";
 import { Editor } from "../../../../../components/CustomComponents/Editor";
+import CKEditorComp from "../../../../../components/CustomComponents/Editor/CKEditorComp";
 import { imagesUrl } from "../../../../../api/APIs";
+import ImageGallery from "react-image-gallery";
+import "react-image-gallery/styles/css/image-gallery.css";
 import moment from "moment";
 
 const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
@@ -47,7 +50,7 @@ const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
 
 function FileDetail() {
   const location = useLocation();
-  const { fildetailsAqain } = useContext(AuthContext)
+  const { fildetailsAqain } = useContext(AuthContext);
   const navigate = useNavigate();
   const UserData = getUserData();
   const fileInputRef = useRef(null);
@@ -60,7 +63,9 @@ function FileDetail() {
   const [employeeData, setEmployeeData] = useState([]);
   const [viewPage, setViewPage] = useState(location?.state?.view);
   const { fileIdINRegister } = useContext(AuthContext);
-  const [caseId, setcaseId] = useState(location?.state?.id || fildetailsAqain?.id);
+  const [caseId, setcaseId] = useState(
+    location?.state?.id || fildetailsAqain?.id
+  );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTab, setSelectedTab] = useState("Noting");
   const [remarksData, setRemarksData] = useState([]);
@@ -262,28 +267,24 @@ function FileDetail() {
     }
   };
 
-
-
   // const handleDelete = (index) => {
   //   const updatedTabs = notingTabData.filter((_, i) => i !== index);
   //   setNotingTabsData(updatedTabs);
   // };
-  const handleDelete = async ( item, index) => {
+  const handleDelete = async (item, index) => {
     // Remove the item at the specified index
-
-    console.log("corspondence", item?.isSave)
-    if(item?.isSave){
-      try {
-        const response = await DeletePara(caseId, item?.references[0]?.id, item.id)
-        if(response?.success){
-          showSuccessMessage(response?.message)
-          getFilesByID()
-        }
-      } catch (error) {
-        showErrorMessage(error?.response?.data?.message)
-      }
-    }else{
-      const updatedTabs = notingTabData.filter((_, i) => i !== index);
+    // if(item?.isSave){
+    //   try {
+    //     const response = await DeletePara(caseId, item?.references[0]?.id, item.id)
+    //     if(response?.success){
+    //       showSuccessMessage(response?.message)
+    //       getFilesByID()
+    //     }
+    //   } catch (error) {
+    //     showErrorMessage(error?.response?.data?.message)
+    //   }
+    // }else{
+    const updatedTabs = notingTabData.filter((_, i) => i !== index);
 
     // // Update the titles of the remaining items
     const renumberedTabs = updatedTabs.map((tab, i) => ({
@@ -292,71 +293,74 @@ function FileDetail() {
     }));
 
     setNotingTabsData(renumberedTabs);
-    }
-
-
+    // }
   };
 
   const handleAttachDelete = async (item, tabIndex) => {
-
     console.log("indexxsdadsa", tabIndex);
-  //   const updatedTabs = notingTabData.map((tab, tIndex) => {
-      
-  //   });
-  // console.log("updatedTabs", updatedTabs);
-  //   setNotingTabsData(updatedTabs);
-//  console.log("renumberedTabs",renumberedTabs);
-//  setNotingTabsData({
-//   ...notingTabData,
-//   references: renumberedTabs
-// });
+    //   const updatedTabs = notingTabData.map((tab, tIndex) => {
 
-    console.log("corspondence", tabIndex)
-    console.log("para",tabIndex)
+    //   });
+    // console.log("updatedTabs", updatedTabs);
+    //   setNotingTabsData(updatedTabs);
+    //  console.log("renumberedTabs",renumberedTabs);
+    //  setNotingTabsData({
+    //   ...notingTabData,
+    //   references: renumberedTabs
+    // });
 
-    if(item?.attachments[0]?.attachments[0]?.isSave){
+    console.log("corspondence", tabIndex);
+    console.log("para", tabIndex);
+
+    if (item?.attachments[0]?.attachments[0]?.isSave) {
       try {
-        const response = await DeleteParaAttachement(caseId,item?.attachments[0]?.attachments[0]?.correspondenceId,item?.attachments[0]?.attachments[0]?.paraID)
-        if(response?.success){
-          showSuccessMessage(response?.message)
-          getFilesByID()
+        const response = await DeleteParaAttachement(
+          caseId,
+          item?.attachments[0]?.attachments[0]?.correspondenceId,
+          item?.attachments[0]?.attachments[0]?.paraID
+        );
+        if (response?.success) {
+          showSuccessMessage(response?.message);
+          getFilesByID();
         }
       } catch (error) {
-        showErrorMessage(error?.response?.data?.message)
+        showErrorMessage(error?.response?.data?.message);
       }
-    }else{
+    } else {
       // const tabIndex= 0
       const updatedTabs = notingTabData.map((tab, tIndex) => {
-        console.log("ididididi",item?.attachments[0]?.attachments[0]?.id, item?.attachments[0]?.attachments[0]?.id);
-        if (item?.attachments[0]?.attachments[0]?.id === item?.attachments[0]?.attachments[0]?.id) {
+        console.log(
+          "ididididi",
+          item?.attachments[0]?.attachments[0]?.id,
+          item?.attachments[0]?.attachments[0]?.id
+        );
+        if (
+          item?.attachments[0]?.attachments[0]?.id ===
+          item?.attachments[0]?.attachments[0]?.id
+        ) {
           return {
             ...tab,
-            references: [] // Remove all references by setting to an empty array
+            references: [], // Remove all references by setting to an empty array
           };
         }
         return tab;
       });
-  
+
       setNotingTabsData(updatedTabs);
     }
-    }
-    
-  
-    // else{
-      // "test"
-    //   const updatedTabs = notingTabData.filter((_, i) => i !== index);
+  };
 
-    // // // Update the titles of the remaining items
-    // const renumberedTabs = updatedTabs.map((tab, i) => ({
-    //   ...tab,
-    //   title: `Para ${i + 1}`
-    // }));
+  // else{
+  // "test"
+  //   const updatedTabs = notingTabData.filter((_, i) => i !== index);
 
-    // setNotingTabsData(renumberedTabs);
-    
+  // // // Update the titles of the remaining items
+  // const renumberedTabs = updatedTabs.map((tab, i) => ({
+  //   ...tab,
+  //   title: `Para ${i + 1}`
+  // }));
 
-
-  
+  // setNotingTabsData(renumberedTabs);
 
   const transformData = (apiData) => {
     return apiData?.map((item) => ({
@@ -410,7 +414,6 @@ function FileDetail() {
             response?.data?.cases?.freshReceipts?.freshReceiptsAttachments,
         };
         setFR(FRSelection);
-        console.log("FR Attachements", FRSelection?.freshReceiptsAttachments);
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -452,6 +455,12 @@ function FileDetail() {
     setNotingTabsData(filesData?.paragraphArray);
   }, [filesData]);
 
+  const images =
+    FR?.freshReceiptsAttachments?.map((item) => ({
+      original: `${imagesUrl}${item?.filename}`,
+      thumbnail: `${imagesUrl}${item?.filename}`,
+    })) || [];
+
   return (
     <Layout
       centerlogohide={true}
@@ -460,13 +469,15 @@ function FileDetail() {
         UserData && UserData?.userType === "Officer"
           ? EfilingSideBarItem
           : EfilingSideBarBranchItem
-      }>
+      }
+    >
       <div className="dashboard-content">
         <Modal
           show={showModal}
           size="lg"
           onHide={() => setShowModal(false)}
-          centered>
+          centered
+        >
           <div>
             <Modal.Header closeButton>
               <Modal.Title>Attachments</Modal.Title>
@@ -478,7 +489,8 @@ function FileDetail() {
                     <li
                       class="list-group-item"
                       onClick={() => HandlePrint(item?.file)}
-                      style={{ color: "blue", cursor: "pointer" }}>
+                      style={{ color: "blue", cursor: "pointer" }}
+                    >
                       {item?.file?.split("\\").pop().split("/").pop()}
                     </li>
                   </ul>
@@ -494,7 +506,8 @@ function FileDetail() {
               <button
                 className="btn btn-primary"
                 type="button"
-                onClick={() => setShowModal(false)}>
+                onClick={() => setShowModal(false)}
+              >
                 Close
               </button>
             </Modal.Footer>
@@ -505,7 +518,8 @@ function FileDetail() {
         <EFilingModal
           title="Add Comments"
           isOpen={isModalOpen}
-          toggleModal={toggleModal}>
+          toggleModal={toggleModal}
+        >
           <div class="row">
             <div class="col">
               <div class="mb-3">
@@ -520,7 +534,8 @@ function FileDetail() {
                       CommentStatus: e.target.value,
                     }))
                   }
-                  value={modalInputValue.CommentStatus}>
+                  value={modalInputValue.CommentStatus}
+                >
                   <option value="" selected>
                     Select
                   </option>
@@ -548,16 +563,16 @@ function FileDetail() {
                       assignedTo: e.target.value,
                     }))
                   }
-                  value={modalInputValue.assignedTo}>
+                  value={modalInputValue.assignedTo}
+                >
                   <option value={""} selected>
                     Select
                   </option>
                   {employeeData &&
                     employeeData?.map((item) => (
                       <option
-                        value={
-                          item.fkUserId
-                        }>{`${item.designations?.designationName}`}</option>
+                        value={item.fkUserId}
+                      >{`${item.designations?.designationName}`}</option>
                     ))}
                 </select>
               </div>
@@ -578,9 +593,8 @@ function FileDetail() {
                     }))
                   }
                   value={modalInputValue.comment}
-                  disabled={
-                    modalInputValue.CommentStatus ? true : false
-                  }></textarea>
+                  disabled={modalInputValue.CommentStatus ? true : false}
+                ></textarea>
               </div>
             </div>
           </div>
@@ -591,7 +605,8 @@ function FileDetail() {
               onClick={() => {
                 hendleAssiginFileCaseApi();
                 toggleModal();
-              }}>
+              }}
+            >
               Submit
             </Button>
             <Button variant="secondary" onClick={toggleModal}>
@@ -654,14 +669,16 @@ function FileDetail() {
                     <ul
                       className="nav nav-tabs mb-3 mt-3"
                       id="ex1"
-                      role="tablist">
+                      role="tablist"
+                    >
                       <li
                         className="nav-item"
                         role="presentation"
                         onClick={() => {
                           clearInput();
                           setSelectedTab("Noting");
-                        }}>
+                        }}
+                      >
                         <button
                           type="button"
                           className={
@@ -675,7 +692,8 @@ function FileDetail() {
                           aria-controls="ex1-tabs-1"
                           aria-selected={
                             selectedTab === "Noting" ? "true" : "false"
-                          }>
+                          }
+                        >
                           Noting
                         </button>
                       </li>
@@ -685,7 +703,8 @@ function FileDetail() {
                         onClick={() => {
                           clearInput();
                           setSelectedTab("Correspondence");
-                        }}>
+                        }}
+                      >
                         <button
                           type="button"
                           className={
@@ -699,7 +718,8 @@ function FileDetail() {
                           aria-controls="ex1-tabs-2"
                           aria-selected={
                             selectedTab === "Correspondence" ? "true" : "false"
-                          }>
+                          }
+                        >
                           Correspondence
                           {/* (
                           {correspondancestore &&
@@ -707,6 +727,34 @@ function FileDetail() {
                           ) */}
                         </button>
                       </li>
+                      {FR?.freshReceiptsAttachments?.length > 0 && (
+                        <li
+                          className="nav-item"
+                          role="presentation"
+                          onClick={() => {
+                            clearInput();
+                            setSelectedTab("FR");
+                          }}
+                        >
+                          <button
+                            type="button"
+                            className={
+                              selectedTab === "FR"
+                                ? "nav-link active"
+                                : "nav-link"
+                            }
+                            style={{ width: "170px" }}
+                            data-bs-toggle="tab"
+                            role="tab"
+                            aria-controls="ex1-tabs-2"
+                            aria-selected={
+                              selectedTab === "FR" ? "true" : "false"
+                            }
+                          >
+                            FR
+                          </button>
+                        </li>
+                      )}
                     </ul>
 
                     <div class="tab-content" id="ex1-content">
@@ -729,7 +777,8 @@ function FileDetail() {
                                   : location?.state?.approved
                                     ? true
                                     : false
-                              }>
+                              }
+                            >
                               Save
                             </button>
                           </div>
@@ -752,7 +801,8 @@ function FileDetail() {
                                     : location?.state?.approved
                                       ? true
                                       : false
-                                }>
+                                }
+                              >
                                 Approve Case
                               </button>
                             </div>
@@ -760,6 +810,30 @@ function FileDetail() {
                         </div>
 
                         <div class="col">
+                          {selectedTab === "FR" ? (
+                            <section>
+                              <ImageGallery
+                                style={{ maxHeight: "calc(100vh 0px)" }}
+                                items={images}
+                                showThumbnails={false}
+                                showFullscreenButton={false}
+                                showPlayButton={false}
+                                slideOnThumbnailOver
+                                renderThumbInner={(item) => (
+                                  <div className="image-gallery-thumbnail-inner">
+                                    <img
+                                      src={item.thumbnail}
+                                      alt={"file"}
+                                      width={92}
+                                      height={80}
+                                    />
+                                    {/* Add any additional elements or styles for the thumbnail */}
+                                  </div>
+                                )}
+                              />
+                            </section>
+                          ) : null}
+
                           {selectedTab === "Noting" ? (
                             // Render content for the 'Noting' tab
                             <div className="container">
@@ -779,15 +853,18 @@ function FileDetail() {
                                   {notingTabData?.length > 0 && (
                                     <label
                                       htmlFor="formFile"
-                                      className="form-label mt-2">
+                                      className="form-label mt-2"
+                                    >
                                       Added Paragraphs
                                     </label>
                                   )}
                                   <DocParas
                                     tabsData={notingTabData}
                                     onEditorChange={handleEditorChange}
-                                    onDelete={handleDelete}             
-                                    hendleDeleteAttach= {(item, innerIdx) =>  handleAttachDelete(item, innerIdx)}
+                                    onDelete={handleDelete}
+                                    hendleDeleteAttach={(item, innerIdx) =>
+                                      handleAttachDelete(item, innerIdx)
+                                    }
                                     FR={FR}
                                     selectedFileId={
                                       location?.state?.fileId ||
@@ -800,20 +877,28 @@ function FileDetail() {
                               <label className="form-label">
                                 Add new paragraph
                               </label>
-                              <Editor
+                              <CKEditorComp
+                                onChange={(data) =>
+                                  setNotingData({ description: data })
+                                }
+                                value={notingData.description}
+                              />
+
+                              {/* <Editor
                                 onChange={(content) =>
                                   setNotingData({ description: content })
                                 }
                                 value={notingData.description}
                                 width={"100%"}
                                 display={"flex"}
-                              />
+                              /> */}
                               <div
                                 style={{
                                   display: "flex",
                                   justifyContent: "flex-end",
                                   marginTop: 5,
-                                }}>
+                                }}
+                              >
                                 <button
                                   className="btn btn-primary"
                                   style={{ marginTop: 60, width: "100px" }}
@@ -825,12 +910,15 @@ function FileDetail() {
                                       false,
                                       true
                                     )
-                                  }>
+                                  }
+                                >
                                   {"Add"}
                                 </button>
                               </div>
                             </div>
-                          ) : (
+                          ) : null}
+
+                          {selectedTab === "Correspondence" ? (
                             <div class="mt-3">
                               <CustomTable
                                 hidebtn1={false}
@@ -887,7 +975,7 @@ function FileDetail() {
                                 }}
                               />
                             </div>
-                          )}
+                          ) : null}
                         </div>
                       </div>
                     </div>
@@ -898,11 +986,13 @@ function FileDetail() {
             <div className="col-md-3" style={{ paddingRight: 0 }}>
               <div
                 className="custom-editor-main"
-                style={{ marginTop: 0, borderLeft: "1px solid #ddd" }}>
+                style={{ marginTop: 0, borderLeft: "1px solid #ddd" }}
+              >
                 <div className="comment-heading">
                   <h2
                     class="ps-3"
-                    style={{ fontWeight: "bold", paddingTop: "7px" }}>
+                    style={{ fontWeight: "bold", paddingTop: "7px" }}
+                  >
                     Comments
                   </h2>
                   {!location?.state?.approved && (
@@ -911,7 +1001,8 @@ function FileDetail() {
                         className="btn add-btn"
                         style={{
                           display: location?.state?.view ? "none" : "block",
-                        }}>
+                        }}
+                      >
                         Proceed
                       </button>
                     </a>
@@ -926,11 +1017,13 @@ function FileDetail() {
                         item?.comment !== null ? (
                           <div
                             class="d-flex flex-row p-3 ps-3"
-                            style={{ borderBottom: "1px solid #ddd" }}>
+                            style={{ borderBottom: "1px solid #ddd" }}
+                          >
                             <>
                               <div
                                 class="w-100"
-                                style={{ position: "relative" }}>
+                                style={{ position: "relative" }}
+                              >
                                 <div class="d-flex justify-content-between align-items-center">
                                   <div class="d-flex flex-row align-items-center">
                                     <div style={{ float: "left" }}>
@@ -938,7 +1031,8 @@ function FileDetail() {
                                         class="mr-2"
                                         style={{
                                           fontSize: "14px",
-                                        }}>{`${item?.submittedUser?.employee?.firstName}  ${item?.submittedUser?.employee?.lastName}/ ${item?.submittedUser?.employee?.designations?.designationName}`}</span>
+                                        }}
+                                      >{`${item?.submittedUser?.employee?.firstName}  ${item?.submittedUser?.employee?.lastName}/ ${item?.submittedUser?.employee?.designations?.designationName}`}</span>
                                     </div>
                                   </div>
                                   <div style={{ float: "right" }}>
@@ -966,7 +1060,8 @@ function FileDetail() {
                                               ?.userType === "Section"
                                           ? "blue"
                                           : "black",
-                                  }}>
+                                  }}
+                                >
                                   {item?.CommentStatus
                                     ? item?.CommentStatus
                                     : item?.comment}
@@ -982,7 +1077,8 @@ function FileDetail() {
                               width: "350px",
                               margin: "0 auto",
                               textAlign: "center",
-                            }}>
+                            }}
+                          >
                             No data found
                           </div>
                         )}
@@ -996,7 +1092,8 @@ function FileDetail() {
                         width: "350px",
                         margin: "0 auto",
                         textAlign: "center",
-                      }}>
+                      }}
+                    >
                       No data found
                     </div>
                   )}

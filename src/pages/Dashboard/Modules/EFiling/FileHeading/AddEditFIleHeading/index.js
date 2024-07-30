@@ -18,18 +18,18 @@ const validationSchema = Yup.object({
   });
 
 function AddEditFIleHeading() {
-    const location = useLocation()
+    const location = useLocation();
   const userData = getUserData()
 
     const navigate = useNavigate()
   const { allBranchesData } = useContext(AuthContext)
   const [filesData, setFileData] = useState([])
-  const [fileId, setFIleId] = useState(location?.state?.id);
+  const [fileId, setFIleId] = useState(location?.state?.internalId);
 
   const formik = useFormik({
     initialValues: {
       mainHeading:  "",
-      mainHeadingNumber: "",
+      mainHeadingNumber: ""
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {

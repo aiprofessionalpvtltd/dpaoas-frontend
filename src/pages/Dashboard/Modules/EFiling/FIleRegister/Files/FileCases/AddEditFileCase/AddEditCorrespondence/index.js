@@ -142,7 +142,7 @@ function AddEditCorrespondence() {
 
   const hendleRemoveImage = async (item) => {
     try {
-      const response = await DeleteAttachedFiles(item?.internalId);
+      const response = await DeleteAttachedFiles(item?.id);
       if (response?.success) {
         showSuccessMessage(response.message);
         getCorrespondenceByIdApi();
@@ -276,7 +276,6 @@ function AddEditCorrespondence() {
                         name="attachment"
                         multiple
                         onChange={(event) => {
-                          console.log(event.currentTarget.files);
                           formik.setFieldValue(
                             "attachment",
                             event.currentTarget.files

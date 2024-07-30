@@ -131,6 +131,26 @@ export const createFIleRegister = async (data) => {
   }
 };
 
+export const UpdateFIleRegister = async (id, data) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.put(
+      `/fileRegisters/update/${id}`,
+      data
+    );
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
 export const getAllFileRegister = async (branchId, currentPage, pageSize) => {
   try {
     //   const token = getAuthToken();
