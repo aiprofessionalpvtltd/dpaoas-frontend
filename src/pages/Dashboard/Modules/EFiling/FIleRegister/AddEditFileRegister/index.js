@@ -5,10 +5,10 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { AuthContext } from '../../../../../../api/AuthContext';
 import Header from '../../../../../../components/Header';
-import { createFIleRegister, getAllYear } from '../../../../../../api/APIs/Services/efiling.service';
+import { UpdateFIleHeading, UpdateFIleRegister, createFIleRegister, getAllYear, registerRecordByRegisterId } from '../../../../../../api/APIs/Services/efiling.service';
 import { ToastContainer } from 'react-toastify';
 import { showErrorMessage, showSuccessMessage } from '../../../../../../utils/ToastAlert';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { getUserData } from '../../../../../../api/Auth';
 
 const validationSchema = Yup.object({
@@ -21,9 +21,10 @@ const validationSchema = Yup.object({
 function AddEditFileRegister() {
   const { allBranchesData } = useContext(AuthContext)
   const userData = getUserData()
-  console.log("userData", userData);
+  const location = useLocation();
   const navigate = useNavigate()
-  const [yearData, setYearData] = useState([])
+  const [yearData, setYearData] = useState([]);
+  const [regData, setRegData] = useState();
   const formik = useFormik({
     initialValues: {
       registerNumber: "",
@@ -34,7 +35,11 @@ function AddEditFileRegister() {
     validationSchema: validationSchema,
     onSubmit: (values) => {
       // Handle form submission here
-      hendleCreateRegister(values);
+      if(location.state?.id) {
+        hendleUpdateRegister(values);
+      } else {
+        hendleCreateRegister(values);
+      }
     },
   });
 
@@ -47,6 +52,27 @@ function AddEditFileRegister() {
     }
     try {
       const response = await createFIleRegister(Data)
+      if (response.success) {
+        showSuccessMessage(response?.message)
+        formik.resetForm()
+        setTimeout(() => {
+          navigate("/efiling/dashboard/file-register-list");
+        }, 1000)
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  }
+
+  const hendleUpdateRegister = async (values) => {
+    const Data = {
+      fkBranchId: userData?.fkBranchId,
+      registerNumber: values?.registerNumber,
+      year: values?.year,
+      registerSubject:values?.registerSubject
+    }
+    try {
+      const response = await UpdateFIleRegister(location?.state?.id, Data)
       if (response.success) {
         showSuccessMessage(response?.message)
         formik.resetForm()
@@ -75,6 +101,34 @@ function AddEditFileRegister() {
     getAllYearApi()
   }, [])
 
+  const getRegisterByIdApi = async () => {
+    try {
+      const response = await registerRecordByRegisterId(location.state?.id);
+      if (response?.success) {
+        setRegData(response?.data);
+      }
+    } catch (error) {
+      // showErrorMessage(error?.response?.data?.message);
+    }
+  };
+
+  useEffect(() => {
+    if (location.state?.id) {
+      getRegisterByIdApi();
+    }
+  }, []);
+
+  useEffect(() => {
+    // Update form values when termsById changes
+    if (regData) {
+      formik.setValues({
+        registerNumber: regData?.registerNumber,
+        year: regData?.year,
+        registerSubject: regData?.registerSubject,
+      });
+    }
+  }, [regData, formik.setValues]);
+
 
   return (
     <Layout sidebarItems={userData && userData?.userType === "Officer" ? EfilingSideBarItem : EfilingSideBarBranchItem} centerlogohide={true} module={false}>
@@ -83,7 +137,7 @@ function AddEditFileRegister() {
       <div class="container-fluid">
         <div class="card">
           <div class="card-header red-bg" style={{ background: "#14ae5c" }}>
-            <h1>Create File Register</h1>
+            <h1>{location.state?.id ? `Edit File Register` : `Create File Register`}</h1>
           </div>
           <div class="card-body">
             <form onSubmit={formik.handleSubmit}>
@@ -178,7 +232,7 @@ function AddEditFileRegister() {
                 <div class="row">
                   <div class="col">
                     <button class="btn btn-primary float-end" type="submit">
-                      Create Register
+                      {location.state?.id ? `Update Register` : `Create Register`}
                     </button>
                   </div>
                 </div>

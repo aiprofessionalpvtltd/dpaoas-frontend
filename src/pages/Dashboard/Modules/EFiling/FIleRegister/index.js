@@ -108,9 +108,10 @@ function ListFileRegister() {
             handlePageChange={handlePageChange}
             ActionHide={false}
             // handleEdit={false}
-            showEditIcon={true}
+            showEditIcon={false}
             currentPage={currentPage}
             handleAdd={() => navigate("/efiling/dashboard/addedit-file-register")}
+            handleEdit={(item) => navigate("/efiling/dashboard/addedit-file-register", { state: item })}
             pageSize={pageSize}
             totalCount={count}
             singleDataCard={true}

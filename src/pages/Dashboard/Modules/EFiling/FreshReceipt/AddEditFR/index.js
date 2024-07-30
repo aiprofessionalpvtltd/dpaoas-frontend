@@ -487,7 +487,7 @@ const AddEditFR = () => {
 
                 <div className="col-3">
                   <label htmlFor="referenceNumber" className="form-label">
-                    Ref No <span className="text-danger">*</span>
+                    Ref No / Bill No / Invoice No <span className="text-danger">*</span>
                   </label>
                   <input
                     type="text"

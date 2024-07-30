@@ -129,12 +129,12 @@ function FileHeadingList() {
             seachBarShow={true}
             searchonchange={onSearchChange}
             handleDelete={(item) => handleDelete(item.internalId)}
-            showEditIcon={true}
-            // handleEdit={(item) =>
-            //   navigate("/efiling/dashboard/addedit-file-heading", {
-            //     state: item,
-            //   })
-            // }
+            showEditIcon={false}
+            handleEdit={(item) =>
+              navigate("/efiling/dashboard/addedit-file-heading", {
+                state: item,
+              })
+            }
           />
         </div>
       </div>

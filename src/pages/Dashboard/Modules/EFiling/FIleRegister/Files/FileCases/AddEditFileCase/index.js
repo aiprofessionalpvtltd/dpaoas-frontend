@@ -33,6 +33,10 @@ import DocParas from "../../../../../../../../components/CustomComponents/DocPar
 import CustomTable from "../../../../../../../../components/CustomComponents/CustomTable";
 import { Modal } from "react-bootstrap";
 import { imagesUrl } from "../../../../../../../../api/APIs";
+import { Jodit } from "../../../../../../../../components/CustomComponents/Editor/Jodit";
+import { CKEditorComp } from "../../../../../../../../components/CustomComponents/Editor/CKEditorComp";
+import ImageGallery from "react-image-gallery";
+import "react-image-gallery/styles/css/image-gallery.css";
 
 function AddEditFileCase() {
   const navigate = useNavigate();
@@ -119,9 +123,19 @@ function AddEditFileCase() {
 
     setNotingTabsData(updatedTabs);
     }
+
   const handleDelete = (item, index) => {
     const updatedTabs = notingTabData.filter((_, i) => i !== index);
-    setNotingTabsData(updatedTabs);
+
+    // Update the titles of the remaining items
+    const renumberedTabs = updatedTabs.map((tab, i) => ({
+      ...tab,
+      title: `Para ${i + 1}`,
+    }));
+
+    console.log(renumberedTabs);
+
+    setNotingTabsData(renumberedTabs);
   };
 
   const [selectedTab, setSelectedTab] = useState("Noting");
@@ -143,17 +157,21 @@ function AddEditFileCase() {
         notingSubject: notingTabSubject,
         paragraphArray: notingTabData
       }
-      const response = await createCase(
-        fkfileId.value,
-        UserData?.fkUserId,
-        location.state?.frId ? location.state?.frId : null,
-        data
-      );
-      showSuccessMessage(response?.message);
-      if (response.success) {
-        setTimeout(() => {
-          navigate("/efiling/dashboard/file-register-list/files-list/cases");
-        }, 1000);
+      if(data?.notingSubject && data?.paragraphArray?.length > 0) {
+        const response = await createCase(
+          fkfileId.value,
+          UserData?.fkUserId,
+          location.state?.frId ? location.state?.frId : null,
+          data
+        );
+        showSuccessMessage(response?.message);
+        if (response.success) {
+          setTimeout(() => {
+            navigate("/efiling/dashboard/file-register-list/files-list/cases");
+          }, 1000);
+        }
+      } else {
+        showErrorMessage("Please enter details first!")
       }
     } catch (error) {
       console.error("Error creating case:", error);
@@ -467,8 +485,45 @@ function AddEditFileCase() {
                     Correspondence
                   </button>
                 </li>
+                
+                {location?.state?.freshReceiptsAttachments?.length > 0 && (
+                <li
+                  className="nav-item"
+                  role="presentation"
+                  onClick={() => {
+                    clearInput();
+                    setSelectedTab("FR");
+                    // setSelectedTab("FR Noting");
+                    // setSelectedTab(
+                    //   location?.state?.freshReceiptsAttachments?.length > 0
+                    //     ? "FR Noting"
+                    //     : "Sanction"
+                    // );
+                  }}
+                >
+                  <button
+                    type="button"
+                    className={
+                      selectedTab === "FR"
+                        ? "nav-link active"
+                        : "nav-link"
+                    }
+                    style={{ width: "170px" }}
+                    data-bs-toggle="tab"
+                    role="tab"
+                    aria-controls="ex1-tabs-2"
+                    aria-selected={
+                      selectedTab === "FR" ? "true" : "false"
+                    }
+                  >
+                    FR
+                  </button>
+                </li>
+                )}
+                
               </ul>
             </div>
+            
             <div className="row">
               <div
                 style={{
@@ -600,14 +655,17 @@ function AddEditFileCase() {
                     </div>
 
                     <label className="form-label">Add new paragraph</label>
-                    <Editor
+                    {/* <Editor
                       onChange={(content) =>
                         setNotingData({ description: content })
                       }
                       value={notingData.description}
                       width={"100%"}
                       display={"flex"}
-                    />
+                    /> */}
+
+                    {/* <Jodit /> */}
+                    <CKEditorComp onChange={(data) => setNotingData({ description: data })} value={notingData.description} />
                     <div
                       style={{
                         display: "flex",
@@ -627,6 +685,40 @@ function AddEditFileCase() {
                     </div>
                   </div>
                 ) : null}
+              </div>
+            </div>
+
+            <div className="row">
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                {selectedTab === "FR" && (
+                  <section>
+                    <ImageGallery
+                      style={{ maxHeight: "calc(100vh 0px)" }}
+                      items={images}
+                      showThumbnails={false}
+                      showFullscreenButton={false}
+                      showPlayButton={false}
+                      slideOnThumbnailOver
+                      renderThumbInner={(item) => (
+                        <div className="image-gallery-thumbnail-inner">
+                          <img
+                            src={item.thumbnail}
+                            alt={"file"}
+                            width={92}
+                            height={80}
+                          />
+                          {/* Add any additional elements or styles for the thumbnail */}
+                        </div>
+                      )}
+                    />
+                  </section>
+                )}
               </div>
             </div>
           </div>
