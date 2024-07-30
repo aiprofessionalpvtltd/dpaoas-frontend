@@ -25,7 +25,8 @@ function NewLegislationNABill() {
   const { sessions, members, ministryData, parliamentaryYear } = useContext(AuthContext);
   const userData = getUserData();
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
-  const [isDateofReciptCalendarOpen, setIsDateofReciptCalendarOpen] = useState(false);
+  const [isDateofReciptCalendarOpen, setIsDateofReciptCalendarOpen] =
+  useState(false);
   const [MNAData, setMNAData] = useState([]);
 
   // Getting All MNA
@@ -374,9 +375,8 @@ const handleDateSelect = (date) => {
                             )}
                         </div>
                     </div>
-
-                    <div className="col-3">
-                    <div className="mb-3" style={{ position: "relative" }}>
+                    <div className="col">
+                        <div className="mb-3" style={{ position: "relative" }}>
                           <label className="form-label">
                             Date of Recipt of Message From NA
                           </label>
@@ -428,49 +428,8 @@ const handleDateSelect = (date) => {
                               </div>
                             )}
                         </div>
-                      {/* <div className="mb-3" style={{ position: "relative" }}>
-                        <label className="form-label">Date of Recipt of Message From NA</label>
-                        <span
-                          style={{
-                            position: "absolute",
-                            right: "15px",
-                            top: "36px",
-                            zIndex: 1,
-                            fontSize: "20px",
-                            zIndex: "1",
-                            color: "#666",
-                            cursor: "pointer",
-                          }}
-                          onClick={handleReciptCalendarToggle}
-                        >
-                          <FontAwesomeIcon icon={faCalendarAlt} />
-                        </span>
-
-                        <DatePicker
-                          selected={formik.values.receiptMessageDateFromNA}
-                          onChange={handleReciptDateSelect}
-                          onBlur={formik.handleBlur}
-                          className={`form-control ${
-                            formik.touched.receiptMessageDateFromNA && formik.errors.receiptMessageDateFromNA
-                              ? "is-invalid"
-                              : ""
-                          }`}
-                          name="receiptMessageDateFromNA"
-                          open={isDateofReciptCalendarOpen}
-                          onClickOutside={() => setIsDateofReciptCalendarOpen(false)}
-                          onInputClick={handleReciptCalendarToggle}
-                          // onClick={handleCalendarToggle}
-                          maxDate={new Date()}
-                          dateFormat="dd-MM-yyyy"
-                        />
-
-                        {formik.touched.receiptMessageDateFromNA && formik.errors.receiptMessageDateFromNA && (
-                          <div className="invalid-feedback" style={{ display: "block" }}>
-                            {formik.errors.receiptMessageDateFromNA}
-                          </div>
-                        )}
-                      </div> */}
-                    </div>
+                      </div>
+                   
                   </div>
                   <div className="row">
                     <div className="col">

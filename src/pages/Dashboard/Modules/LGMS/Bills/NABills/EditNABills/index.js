@@ -82,7 +82,6 @@ const UpdateBills = () => {
       console.log(error);
     }
   };
- console.log("location", location?.state)
   const getAllBillStatusData = async () => {
     try {
       const response = await getAllBillStatus(0, 500);
@@ -312,12 +311,12 @@ const UpdateBills = () => {
         // billStatuses: singleSenateBillData?.billStatuses || "",
         fileNumber: fileNum || "",
         PassedByNADate: singleSenateBillData?.PassedByNADate
-          ? moment(singleSenateBillData?.PassedByNADate).toDate()
+          ? moment(singleSenateBillData?.PassedByNADate,"YYYY-MM-DD").toDate()
           : null,
         DateOfReceiptOfMessageFromNA:
           singleSenateBillData?.DateOfReceiptOfMessageFromNA
             ? moment(
-                singleSenateBillData?.DateOfReceiptOfMessageFromNA
+                singleSenateBillData?.DateOfReceiptOfMessageFromNA,"YYYY-MM-DD"
               ).toDate()
             : null,
         billTitle: singleSenateBillData?.billTitle || "",
@@ -361,14 +360,14 @@ const UpdateBills = () => {
           singleSenateBillData?.introducedInHouses &&
           singleSenateBillData?.introducedInHouses?.introducedInHouseDate
             ? moment(
-                singleSenateBillData?.introducedInHouses?.introducedInHouseDate
+                singleSenateBillData?.introducedInHouses?.introducedInHouseDate,"YYYY-MM-DD"
               ).toDate()
             : null,
         referedOnDate:
           singleSenateBillData?.introducedInHouses &&
           singleSenateBillData?.introducedInHouses?.referedOnDate
             ? moment(
-                singleSenateBillData?.introducedInHouses?.referedOnDate
+                singleSenateBillData?.introducedInHouses?.referedOnDate,"YYYY-MM-DD"
               ).toDate()
             : null,
         fkManageCommitteeId: singleSenateBillData?.introducedInHouses
@@ -381,7 +380,7 @@ const UpdateBills = () => {
         reportPresentationDate: singleSenateBillData?.introducedInHouses
           ?.reportPresentationDate
           ? moment(
-              singleSenateBillData?.introducedInHouses?.reportPresentationDate
+              singleSenateBillData?.introducedInHouses?.reportPresentationDate,"YYYY-MM-DD"
             ).toDate()
           : "",
         fkMemberPassageId: singleSenateBillData?.memberPassages
@@ -390,31 +389,31 @@ const UpdateBills = () => {
         memeberNoticeDate: singleSenateBillData?.memberPassages
           ?.memeberNoticeDate
           ? moment(
-              singleSenateBillData?.memberPassages?.memeberNoticeDate
+              singleSenateBillData?.memberPassages?.memeberNoticeDate,"YYYY-MM-DD"
             ).toDate()
           : "",
         dateOfConsiderationBill:
           singleSenateBillData?.memberPassages &&
           singleSenateBillData?.memberPassages?.dateOfConsiderationBill
             ? moment(
-                singleSenateBillData?.memberPassages?.dateOfConsiderationBill
+                singleSenateBillData?.memberPassages?.dateOfConsiderationBill,"YYYY-MM-DD"
               ).toDate()
             : "",
         fkSessionMemberPassageId: singleSenateBillData?.memberPassages
           ? singleSenateBillData?.memberPassages?.fkSessionMemberPassageId
           : "",
         dateOfPassageBySenate: singleSenateBillData?.dateOfPassageBySenate
-          ? moment(singleSenateBillData?.dateOfPassageBySenate).toDate()
+          ? moment(singleSenateBillData?.dateOfPassageBySenate,"YYYY-MM-DD").toDate()
           : "",
         dateOfTransmissionToNA: singleSenateBillData?.dateOfTransmissionToNA
-          ? moment(singleSenateBillData?.dateOfTransmissionToNA).toDate()
+          ? moment(singleSenateBillData?.dateOfTransmissionToNA,"YYYY-MM-DD").toDate()
           : "",
         dateOfReceiptMessageFromNA:
           singleSenateBillData?.dateOfReceiptMessageFromNA
-            ? moment(singleSenateBillData?.dateOfReceiptMessageFromNA).toDate()
+            ? moment(singleSenateBillData?.dateOfReceiptMessageFromNA,"YYYY-MM-DD").toDate()
             : "",
         dateOfPassageByNA: singleSenateBillData?.dateOfPassageByNA
-          ? moment(singleSenateBillData?.dateOfPassageByNA).toDate()
+          ? moment(singleSenateBillData?.dateOfPassageByNA,"YYYY-MM-DD").toDate()
           : "",
         documentDiscription: singleSenateBillData?.billDocuments
           ? singleSenateBillData?.billDocuments?.documentDiscription
@@ -422,13 +421,13 @@ const UpdateBills = () => {
         documentDate:
           singleSenateBillData?.billDocuments &&
           singleSenateBillData?.billDocuments?.documentDate
-            ? moment(singleSenateBillData?.billDocuments?.documentDate).toDate()
+            ? moment(singleSenateBillData?.billDocuments?.documentDate,"YYYY-MM-DD").toDate()
             : "",
         documentType: singleSenateBillData?.billDocuments
           ? singleSenateBillData?.billDocuments?.documentType
           : "",
         billStatusDate: singleSenateBillData?.billStatusDate
-          ? moment(singleSenateBillData?.billStatusDate).toDate()
+          ? moment(singleSenateBillData?.billStatusDate,"YYYY-MM-DD").toDate()
           : "",
       });
     }
@@ -736,7 +735,7 @@ const UpdateBills = () => {
                         </div>
                       </div>
 
-                      <div class="col">
+                      {/* <div class="col">
                         <div class="mb-3">
                           <label class="form-label">Bill Category </label>
                           <select
@@ -768,48 +767,8 @@ const UpdateBills = () => {
                               </div>
                             )}
                         </div>
-                      </div>
-
-                      <div class="col-3">
-                        <div class="mb-3">
-                          <label class="form-label">Bill Type </label>
-                          <select
-                            id="billType"
-                            name="billType"
-                            className={`form-select ${
-                              formik.touched.billType && formik.errors.billType
-                                ? "is-invalid"
-                                : ""
-                            }`}
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            value={formik.values.billType}
-                          >
-                            <option value="" disabled hidden>
-                              Select
-                            </option>
-                            <option value="Amendment Bill">
-                              Amendment Bill
-                            </option>
-                            <option value="Constitutional Amendment Bill">
-                              Constitutional Amendment Bill
-                            </option>
-                            <option value="Finance Bill">Finance Bill</option>
-                            <option value="Money Bill">Money Bill</option>
-                            <option value="New Bill">New Bill</option>
-                          </select>
-                          {formik.touched.billType &&
-                            formik.errors.billType && (
-                              <div class="invalid-feedback">
-                                {formik.errors.billType}
-                              </div>
-                            )}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="row">
-                      <div class="col">
+                      </div> */}
+                       <div class="col">
                         <div class="mb-3">
                           <label class="form-label">Bill Status</label>
                           {/* <select
@@ -898,6 +857,46 @@ const UpdateBills = () => {
                                 style={{ display: "block" }}
                               >
                                 {formik.errors.billStatusDate}
+                              </div>
+                            )}
+                        </div>
+                      </div>
+                     
+                    </div>
+
+                    <div className="row">
+                    <div class="col-3">
+                        <div class="mb-3">
+                          <label class="form-label">Bill Type </label>
+                          <select
+                            id="billType"
+                            name="billType"
+                            className={`form-select ${
+                              formik.touched.billType && formik.errors.billType
+                                ? "is-invalid"
+                                : ""
+                            }`}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            value={formik.values.billType}
+                          >
+                            <option value="" disabled hidden>
+                              Select
+                            </option>
+                            <option value="Amendment Bill">
+                              Amendment Bill
+                            </option>
+                            <option value="Constitutional Amendment Bill">
+                              Constitutional Amendment Bill
+                            </option>
+                            <option value="Finance Bill">Finance Bill</option>
+                            <option value="Money Bill">Money Bill</option>
+                            <option value="New Bill">New Bill</option>
+                          </select>
+                          {formik.touched.billType &&
+                            formik.errors.billType && (
+                              <div class="invalid-feedback">
+                                {formik.errors.billType}
                               </div>
                             )}
                         </div>

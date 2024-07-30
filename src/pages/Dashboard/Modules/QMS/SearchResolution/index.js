@@ -16,6 +16,7 @@ import {
   DeleteResolution,
   getResolutionBYID,
   searchResolution,
+  searchResolutionbyColumn,
 } from "../../../../../api/APIs/Services/Resolution.service";
 import { AuthContext } from "../../../../../api/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -34,6 +35,7 @@ function QMSSerchResolution() {
   const [searchedData, setSearchedData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [allResolutionStatus, setAllResolutionStatus] = useState([]);
+  const [isChecked, setIsChecked] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleteId, setDeleteId] = useState(null)
 
@@ -85,22 +87,22 @@ function QMSSerchResolution() {
         ) || [];
 
       return {
-        RID: res.id,
+        id: res.id,
         // ResDN: res.resolutionDiaries,
-        SessionNumber: res.session?.sessionName ? res.session?.sessionName : "",
-        ResolutionType: res.resolutionType ? res.resolutionType : "",
-        SubjectMatter: cleanedSubjectMatter ? cleanedSubjectMatter : "",
-        NoticeNo: res.noticeDiary?.noticeOfficeDiaryNo
+        sessionName: res.session?.sessionName ? res.session?.sessionName : "",
+        resolutionType: res.resolutionType ? res.resolutionType : "",
+        englishText: cleanedSubjectMatter ? cleanedSubjectMatter : "",
+        noticeOfficeDiaryNo: res.noticeDiary?.noticeOfficeDiaryNo
           ? res.noticeDiary?.noticeOfficeDiaryNo
           : "",
-        ResolutionStatus: res.resolutionStatus?.resolutionStatus
+          resolutionStatus: res.resolutionStatus?.resolutionStatus
           ? res.resolutionStatus?.resolutionStatus
           : "",
-        Movers: movers ? movers : "",
-        memberPosition:res?.memberPosition ? res?.memberPosition :"--",
+          memberName: movers ? movers : "",
+          memberPosition:res?.memberPosition ? res?.memberPosition :"--",
         createdByUser: res?.createdBy ? `${res?.createdBy.employee?.firstName} ${res?.createdBy.employee?.lastName}` :"--",
         deletedByUser: res?.deletedBy ? `${res?.deletedBy.employee?.firstName} ${res?.deletedBy.employee?.lastName}` :"--",
-        remarks:res?.description,
+        description:res?.description,
         Status:res?.resolutionActive,
       };
     });
@@ -194,13 +196,42 @@ function QMSSerchResolution() {
     setSearchedData([]);
   };
 
+  const hendlepreview = async () => {
+    const searchParams = {
+      fkSessionNoFrom: formik.values.fromSession,
+      fkSessionNoTo: formik.values.toSession,
+      resolutionType: formik.values.resolutionType,
+      keyword: formik.values.keyword,
+      resolutionId: formik.values.resolutionID,
+      resolutionDiaryNo: formik.values.resolutionDiaryNo,
+      fkResolutionStatus: formik.values.resolutionStatus?.value,
+      noticeOfficeDiaryNo: "",
+      noticeOfficeDiaryDateFrom: formik.values.fromNoticeDate,
+      noticeOfficeDiaryDateTo: formik.values.toNoticeDate,
+      resolutionMovers: formik.values?.memberName?.value,
+      memberPosition:formik.values?.memberPosition,
+      resolutionSentStatus:"inResolution"
+    };
+    try {
+      const response = await searchResolutionbyColumn(searchParams, isChecked)
+      if (response.success) {
+        const jsonString = JSON.stringify(response?.data?.resolutions);
+        const encodedJsonString = encodeURIComponent(jsonString);
+        const url = `/qms/search/resolution/preview?state=${encodedJsonString}`;
+        window.open(url, "_blank");
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message)
+    }
+  }
+
   useEffect(() =>{
     if(location?.state){
       const dashboardData = transformLeavesData(location?.state)
       setSearchedData(dashboardData)
     }
   },[location?.state])
-
+console.log("isChecked", isChecked);
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <Header
@@ -526,6 +557,7 @@ function QMSSerchResolution() {
                           <option value={"Opposition"}>Opposition</option>
                           <option value={"Independent"}>Independent</option>
                           <option value={"Anyside"}>Anyside</option>
+                          <option value={"Joint Resolution"}>Joint Resolution</option>
                         </select>
                         {formik.touched.memberPosition &&
                           formik.errors.memberPosition && (
@@ -569,8 +601,10 @@ function QMSSerchResolution() {
                     block={false}
                     hideBtn={true}
                     data={searchedData}
-                    hidebtn1={true}
+                    hidebtn1={isChecked?.length > 0 ? false:true}
+                    addBtnText={"Preview Pdf"}
                     // ActionHide={true}
+                    handleAdd={hendlepreview}
                     tableTitle="Resolutions"
                     handlePageChange={handlePageChange}
                     currentPage={currentPage}
@@ -578,11 +612,14 @@ function QMSSerchResolution() {
                     headertitletextColor={"#FFF"}
                     showPrint={false}
                     pageSize={pageSize}
-                    handleEdit={(item) => handleEdit(item.RID)}
+                    handleEdit={(item) => handleEdit(item.id)}
                     handleDelete={(item) => {
                       toggleModal()
-                      setDeleteId(item.RID)
+                      setDeleteId(item.id)
                     }}
+                    iscolumnCheckbox={isChecked}
+                    isColumncheck={true}
+                    setIsColumnCheckBox={setIsChecked}
                   />
               </div>
              
