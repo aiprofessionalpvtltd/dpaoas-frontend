@@ -1,9 +1,4 @@
-import React, {
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "../../../../../../../../api/AuthContext";
 import { Layout } from "../../../../../../../../components/Layout";
 import {
@@ -25,7 +20,11 @@ import {
 } from "../../../../../../../../utils/ToastAlert";
 import { useNavigate } from "react-router-dom";
 import { Editor } from "../../../../../../../../components/CustomComponents/Editor";
-import { getSelectedFileID, getUserData, setSelectedFileID } from "../../../../../../../../api/Auth";
+import {
+  getSelectedFileID,
+  getUserData,
+  setSelectedFileID,
+} from "../../../../../../../../api/Auth";
 import Select from "react-select";
 import TabComponent from "../../../../../../../../components/CustomComponents/TabBar";
 import NoteEditor from "../../../../../../../../components/CustomComponents/DocEditor";
@@ -48,7 +47,7 @@ function AddEditFileCase() {
   const [notingData, setNotingData] = useState({
     description: "",
   });
-  
+
   // const initialNotingTabData = [
   //   { title: "Para 1", description: "Content for Paragraph 1", references: [] },
   //   { title: "Para 2", description: "Content for Paragraph 2", references: [] },
@@ -74,7 +73,13 @@ function AddEditFileCase() {
   //   setNotingTabsData(updatedTabs);
   // };
 
-  const handleEditorChange = (index, content, references, isReference, isNew = false) => {
+  const handleEditorChange = (
+    index,
+    content,
+    references,
+    isReference,
+    isNew = false
+  ) => {
     if (isNew) {
       setNotingTabsData([
         ...notingTabData,
@@ -82,10 +87,10 @@ function AddEditFileCase() {
           title: `Para ${notingTabData.length + 1}`,
           description: content,
           references: [],
-          createdBy:UserData && UserData?.fkUserId
+          createdBy: UserData && UserData?.fkUserId,
         },
       ]);
-      setNotingData("")
+      setNotingData("");
     } else if (isReference) {
       const updatedTabs = notingTabData.map((tab, i) =>
         i === index
@@ -98,32 +103,38 @@ function AddEditFileCase() {
       setNotingTabsData(updatedTabs);
     } else {
       const updatedTabs = notingTabData.map((tab, i) =>
-      i === index
-        ? {
-            ...tab,
-            description: content,
-          }
-        : tab
-    );
-    setNotingTabsData(updatedTabs);
+        i === index
+          ? {
+              ...tab,
+              description: content,
+            }
+          : tab
+      );
+      setNotingTabsData(updatedTabs);
     }
   };
 
   const handleAttachDelete = async (item, tabIndex) => {
-
     const updatedTabs = notingTabData.map((tab, tIndex) => {
-      console.log("ididididi",item?.attachments[0]?.attachments[0]?.id, item?.attachments[0]?.attachments[0]?.id);
-      if (item?.attachments[0]?.attachments[0]?.id === item?.attachments[0]?.attachments[0]?.id) {
+      console.log(
+        "ididididi",
+        item?.attachments[0]?.attachments[0]?.id,
+        item?.attachments[0]?.attachments[0]?.id
+      );
+      if (
+        item?.attachments[0]?.attachments[0]?.id ===
+        item?.attachments[0]?.attachments[0]?.id
+      ) {
         return {
           ...tab,
-          references: [] // Remove all references by setting to an empty array
+          references: [], // Remove all references by setting to an empty array
         };
       }
       return tab;
     });
 
     setNotingTabsData(updatedTabs);
-    }
+  };
 
   const handleDelete = (item, index) => {
     const updatedTabs = notingTabData.filter((_, i) => i !== index);
@@ -156,9 +167,9 @@ function AddEditFileCase() {
       const data = {
         fkBranchId: UserData.fkBranchId,
         notingSubject: notingTabSubject,
-        paragraphArray: notingTabData
-      }
-      if(data?.notingSubject && data?.paragraphArray?.length > 0) {
+        paragraphArray: notingTabData,
+      };
+      if (data?.notingSubject && data?.paragraphArray?.length > 0) {
         const response = await createCase(
           fkfileId.value,
           UserData?.fkUserId,
@@ -172,7 +183,7 @@ function AddEditFileCase() {
           }, 1000);
         }
       } else {
-        showErrorMessage("Please enter details first!")
+        showErrorMessage("Please enter details first!");
       }
     } catch (error) {
       console.error("Error creating case:", error);
@@ -210,7 +221,6 @@ function AddEditFileCase() {
       const response = await getSingleCaseByFileId(fileIdINRegister, caseId);
 
       if (response.success) {
-        
       }
     } catch (error) {
       console.error("Error fetching case:", error);
@@ -247,17 +257,17 @@ function AddEditFileCase() {
 
   useEffect(() => {
     const fileId = getSelectedFileID();
-    if(fileId) {  
+    if (fileId) {
       setFKFileId(fileId);
     }
     getAllFiles();
   }, []);
 
-    const images =
+  const images =
     location?.state?.freshReceiptsAttachments?.map((item) => {
       const fileUrl = `${imagesUrl}${item?.filename}`;
-      const isPdf = item?.filename?.toLowerCase().endsWith('.pdf');
-  
+      const isPdf = item?.filename?.toLowerCase().endsWith(".pdf");
+
       return {
         original: fileUrl,
         thumbnail: fileUrl,
@@ -265,27 +275,32 @@ function AddEditFileCase() {
       };
     }) || [];
 
-    const PdfPreview = ({ pdfUrl }) => {
-      return (
-        <>
-          {loading && (
-            <div style={{
-              marginTop: '20px',
-            }}>
-               <Spinner />
-            </div>
-          )}
+  // Filter out images from the items
+  const imageItems = images.filter((item) => !item.isPdf);
+
+  const PdfPreview = ({ pdfUrl }) => {
+    return (
+      <>
+        {loading && (
+          <div
+            style={{
+              marginTop: "20px",
+            }}
+          >
+            <Spinner />
+          </div>
+        )}
         <iframe
-            src={pdfUrl}
-            width="70%"
-            height="600px"
-            style={{ border: 'none', display: loading ? 'none' : 'block' }}
-            title="PDF Preview"
-            onLoad={() => setLoading(false)} // Event listener for when the PDF is fully loaded
-          />
-          </>
-      );
-    };
+          src={pdfUrl}
+          width="70%"
+          height="600px"
+          style={{ border: "none", display: loading ? "none" : "block" }}
+          title="PDF Preview"
+          onLoad={() => setLoading(false)} // Event listener for when the PDF is fully loaded
+        />
+      </>
+    );
+  };
 
   const transformData = (apiData) => {
     return apiData?.map((item) => ({
@@ -427,7 +442,7 @@ function AddEditFileCase() {
                 }
                 onChange={(selectedOptions) => {
                   setSelectedFileID(selectedOptions);
-                  setFKFileId(selectedOptions)
+                  setFKFileId(selectedOptions);
                 }}
                 // onBlur={formikAssigned.handleBlur}
                 value={fkfileId}
@@ -477,7 +492,8 @@ function AddEditFileCase() {
                     data-bs-toggle="tab"
                     role="tab"
                     aria-controls="ex1-tabs-1"
-                    aria-selected={selectedTab === "Noting" ? "true" : "false"}>
+                    aria-selected={selectedTab === "Noting" ? "true" : "false"}
+                  >
                     Noting
                   </button>
                 </li>
@@ -514,45 +530,40 @@ function AddEditFileCase() {
                     Correspondence
                   </button>
                 </li>
-                
+
                 {location?.state?.freshReceiptsAttachments?.length > 0 && (
-                <li
-                  className="nav-item"
-                  role="presentation"
-                  onClick={() => {
-                    clearInput();
-                    setSelectedTab("FR");
-                    // setSelectedTab("FR Noting");
-                    // setSelectedTab(
-                    //   location?.state?.freshReceiptsAttachments?.length > 0
-                    //     ? "FR Noting"
-                    //     : "Sanction"
-                    // );
-                  }}
-                >
-                  <button
-                    type="button"
-                    className={
-                      selectedTab === "FR"
-                        ? "nav-link active"
-                        : "nav-link"
-                    }
-                    style={{ width: "170px" }}
-                    data-bs-toggle="tab"
-                    role="tab"
-                    aria-controls="ex1-tabs-2"
-                    aria-selected={
-                      selectedTab === "FR" ? "true" : "false"
-                    }
+                  <li
+                    className="nav-item"
+                    role="presentation"
+                    onClick={() => {
+                      clearInput();
+                      setSelectedTab("FR");
+                      // setSelectedTab("FR Noting");
+                      // setSelectedTab(
+                      //   location?.state?.freshReceiptsAttachments?.length > 0
+                      //     ? "FR Noting"
+                      //     : "Sanction"
+                      // );
+                    }}
                   >
-                    FR
-                  </button>
-                </li>
+                    <button
+                      type="button"
+                      className={
+                        selectedTab === "FR" ? "nav-link active" : "nav-link"
+                      }
+                      style={{ width: "170px" }}
+                      data-bs-toggle="tab"
+                      role="tab"
+                      aria-controls="ex1-tabs-2"
+                      aria-selected={selectedTab === "FR" ? "true" : "false"}
+                    >
+                      FR
+                    </button>
+                  </li>
                 )}
-                
               </ul>
             </div>
-            
+
             <div className="row">
               <div
                 style={{
@@ -573,10 +584,11 @@ function AddEditFileCase() {
                     handlePageChange={handlePageChange}
                     currentPage={currentPage}
                     handleAdd={() => {
-                      if(fkfileId) {
+                      if (fkfileId) {
                         navigate(
-                          "/efiling/dashboard/file-register-list/files-list/addedit-case/addedit-correspondence", {state: {fileId: fkfileId.value}}
-                        )
+                          "/efiling/dashboard/file-register-list/files-list/addedit-case/addedit-correspondence",
+                          { state: { fileId: fkfileId.value } }
+                        );
                       } else {
                         showErrorMessage("Please select file first");
                       }
@@ -590,11 +602,11 @@ function AddEditFileCase() {
                       setShowModal(true);
                     }}
                     handleEdit={(item) => {
-                      if(fkfileId) {
+                      if (fkfileId) {
                         navigate(
                           "/efiling/dashboard/file-register-list/files-list/addedit-case/addedit-correspondence",
-                          { state: {item: item, fileId: fkfileId.value }}
-                        )
+                          { state: { item: item, fileId: fkfileId.value } }
+                        );
                       } else {
                         showErrorMessage("Please select file first");
                       }
@@ -668,16 +680,18 @@ function AddEditFileCase() {
                           style={{ width: "50%" }}
                         />
                         {notingTabData.length > 0 && (
-                           <label htmlFor="formFile" className="form-label mt-2">
-                           Added Paragraphs
-                         </label>
-                        ) }
-                       
+                          <label htmlFor="formFile" className="form-label mt-2">
+                            Added Paragraphs
+                          </label>
+                        )}
+
                         <DocParas
                           tabsData={notingTabData}
                           onEditorChange={handleEditorChange}
-                          onDelete={handleDelete}             
-                          hendleDeleteAttach= {(item, innerIdx) =>  handleAttachDelete(item, innerIdx)}
+                          onDelete={handleDelete}
+                          hendleDeleteAttach={(item, innerIdx) =>
+                            handleAttachDelete(item, innerIdx)
+                          }
                           FR={location.state}
                         />
                       </div>
@@ -694,7 +708,10 @@ function AddEditFileCase() {
                     /> */}
 
                     {/* <Jodit /> */}
-                    <CKEditorComp onChange={(data) => setNotingData({ description: data })} value={notingData.description} />
+                    <CKEditorComp
+                      onChange={(data) => setNotingData({ description: data })}
+                      value={notingData.description}
+                    />
                     <div
                       style={{
                         display: "flex",
@@ -706,7 +723,13 @@ function AddEditFileCase() {
                         className="btn btn-primary"
                         style={{ marginTop: 60, width: "100px" }}
                         onClick={() =>
-                          handleEditorChange(null, notingData.description, null, false, true)
+                          handleEditorChange(
+                            null,
+                            notingData.description,
+                            null,
+                            false,
+                            true
+                          )
                         }
                       >
                         {"Add"}
@@ -717,46 +740,52 @@ function AddEditFileCase() {
               </div>
             </div>
 
-            <div className="row">
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                {selectedTab === "FR" && (
-                  <>
-                  {images?.map((item, index) =>
-              item.isPdf ? (
-                <PdfPreview pdfUrl={item.original} key={index} />
-              ) : (
-                  <section>
-                    <ImageGallery
-                      style={{ maxHeight: "calc(100vh 0px)" }}
-                      items={images}
-                      showThumbnails={false}
-                      showFullscreenButton={false}
-                      showPlayButton={false}
-                      slideOnThumbnailOver
-                      renderThumbInner={(item) => (
-                        <div className="image-gallery-thumbnail-inner">
-                          <img
-                            src={item.thumbnail}
-                            alt={"file"}
-                            width={92}
-                            height={80}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              {selectedTab === "FR" && (
+                <>
+                  <div className="row">
+                    <div className="col-12">
+                      <section>
+                        {/* Render the ImageGallery once for all image items */}
+                        {imageItems.length > 0 && (
+                          <ImageGallery
+                            style={{ maxHeight: "calc(100vh 0px)" }}
+                            items={imageItems}
+                            showThumbnails={false}
+                            showFullscreenButton={false}
+                            showPlayButton={false}
+                            slideOnThumbnailOver
+                            renderThumbInner={(item) => (
+                              <div className="image-gallery-thumbnail-inner">
+                                <img
+                                  src={item.thumbnail}
+                                  alt="file"
+                                  width={92}
+                                  height={80}
+                                  style={{ objectFit: "cover" }}
+                                />
+                              </div>
+                            )}
                           />
-                          {/* Add any additional elements or styles for the thumbnail */}
-                        </div>
-                      )}
-                    />
-                  </section>
-                  )
+                        )}
+                      </section>
+                    </div>
+                  </div>
+
+                  {/* Render PDF previews separately */}
+                  {images.map((item, index) =>
+                    item.isPdf ? (
+                      <PdfPreview pdfUrl={item.original} key={index} />
+                    ) : null
                   )}
-                  </>
-                )}
-              </div>
+                </>
+              )}
             </div>
           </div>
         </div>
