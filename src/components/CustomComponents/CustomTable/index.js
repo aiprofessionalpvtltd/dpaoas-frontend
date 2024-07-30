@@ -76,7 +76,10 @@ function CustomTable({
   showDocs,
   hendleDocs,
   showBallot,
-  hendleBallot
+  hendleBallot,
+  iscolumnCheckbox,
+  setIsColumnCheckBox,
+  isColumncheck
 }) {
   const keys = data?.length > 0 ? Object.keys(data[0]) : [];
   const filteredKeys = keys?.filter((key) => {
@@ -253,7 +256,9 @@ function CustomTable({
             style={{ marginTop: "20px", display: block ? "block" : "" }}
           >
             <thead>
+              
               <tr>
+                {/* <th>slsl</th> */}
                 {isCheckbox && <th className="text-center"
                     scope="col"
                     style={{
@@ -271,6 +276,22 @@ function CustomTable({
                     }}
                   >
                     {formatHeader(key)}
+                    {isColumncheck && (
+                        <td className="text-center">
+                          {/* {isChecked.includes(key) ? isChecked.indexOf(key) + 1 : ''} */}
+                          <input
+                            type="checkbox"
+                            checked={iscolumnCheckbox.includes(key)} // Check if item.internalId is in the array of selected IDs
+                            onChange={() => {
+                              // Toggle the selection of the current item
+                              const updatedChecked = iscolumnCheckbox.includes(key)
+                                ? iscolumnCheckbox.filter((id) => id !== key) // If already selected, remove it from the array
+                                : [...iscolumnCheckbox, key]; // If not selected, add it to the array
+                              setIsColumnCheckBox(updatedChecked);
+                            }}
+                          />
+                        </td>
+                      )}
                   </th>
                 ))}
                 {data?.length > 0 && !ActionHide && (
