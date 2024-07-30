@@ -321,7 +321,7 @@ const EditSenateBill = () => {
           "",
         fileNumber: fileNum || "",
         noticeDate: singleSenateBillData?.noticeDate
-          ? moment(singleSenateBillData?.noticeDate).toDate()
+          ? moment(singleSenateBillData?.noticeDate, "YYYY-MM-DD").toDate()
           : "",
 
         billTitle: singleSenateBillData?.billTitle || "",
@@ -354,13 +354,13 @@ const EditSenateBill = () => {
           singleSenateBillData?.introducedInHouses?.introducedInHouseDate
             ? moment(
                 singleSenateBillData?.introducedInHouses?.introducedInHouseDate
-              ).toDate()
+              ,"YYYY-MM-DD").toDate()
             : "",
         referedOnDate:
           singleSenateBillData?.introducedInHouses &&
           singleSenateBillData?.introducedInHouses?.referedOnDate
             ? moment(
-                singleSenateBillData?.introducedInHouses?.referedOnDate
+                singleSenateBillData?.introducedInHouses?.referedOnDate,"YYYY-MM-DD"
               ).toDate()
             : "",
         fkManageCommitteeId: singleSenateBillData?.introducedInHouses
@@ -373,7 +373,7 @@ const EditSenateBill = () => {
         reportPresentationDate: singleSenateBillData?.introducedInHouses
           ?.reportPresentationDate
           ? moment(
-              singleSenateBillData?.introducedInHouses?.reportPresentationDate
+              singleSenateBillData?.introducedInHouses?.reportPresentationDate,"YYYY-MM-DD"
             ).toDate()
           : "",
         fkMemberPassageId: singleSenateBillData?.memberPassages
@@ -382,38 +382,38 @@ const EditSenateBill = () => {
         memeberNoticeDate: singleSenateBillData?.memberPassages
           ?.memeberNoticeDate
           ? moment(
-              singleSenateBillData?.memberPassages?.memeberNoticeDate
+              singleSenateBillData?.memberPassages?.memeberNoticeDate,"YYYY-MM-DD"
             ).toDate()
           : "",
         dateOfConsiderationBill:
           singleSenateBillData?.memberPassages &&
           singleSenateBillData?.memberPassages?.dateOfConsiderationBill
             ? moment(
-                singleSenateBillData?.memberPassages?.dateOfConsiderationBill
+                singleSenateBillData?.memberPassages?.dateOfConsiderationBill,"YYYY-MM-DD"
               ).toDate()
             : "",
         fkSessionMemberPassageId: singleSenateBillData?.memberPassages
           ? singleSenateBillData?.memberPassages?.fkSessionMemberPassageId
           : "",
         dateOfPassageBySenate: singleSenateBillData?.dateOfPassageBySenate
-          ? moment(singleSenateBillData?.dateOfPassageBySenate).toDate()
+          ? moment(singleSenateBillData?.dateOfPassageBySenate,"YYYY-MM-DD").toDate()
           : "",
         dateOfPublishInGazette: singleSenateBillData?.dateOfPublishInGazette
-          ? moment(singleSenateBillData?.dateOfPublishInGazette).toDate()
+          ? moment(singleSenateBillData?.dateOfPublishInGazette,"YYYY-MM-DD").toDate()
           : "",
         dateOfAssentByThePresident:
           singleSenateBillData?.dateOfAssentByThePresident
-            ? moment(singleSenateBillData?.dateOfAssentByThePresident).toDate()
+            ? moment(singleSenateBillData?.dateOfAssentByThePresident,"YYYY-MM-DD").toDate()
             : "",
         dateOfTransmissionToNA: singleSenateBillData?.dateOfTransmissionToNA
-          ? moment(singleSenateBillData?.dateOfTransmissionToNA).toDate()
+          ? moment(singleSenateBillData?.dateOfTransmissionToNA,"YYYY-MM-DD").toDate()
           : "",
         dateOfReceiptMessageFromNA:
           singleSenateBillData?.dateOfReceiptMessageFromNA
-            ? moment(singleSenateBillData?.dateOfReceiptMessageFromNA).toDate()
+            ? moment(singleSenateBillData?.dateOfReceiptMessageFromNA,"YYYY-MM-DD").toDate()
             : "",
         dateOfPassageByNA: singleSenateBillData?.dateOfPassageByNA
-          ? moment(singleSenateBillData?.dateOfPassageByNA).toDate()
+          ? moment(singleSenateBillData?.dateOfPassageByNA,"YYYY-MM-DD").toDate()
           : "",
         documentDiscription: singleSenateBillData?.billDocuments
           ? singleSenateBillData?.billDocuments?.documentDiscription
@@ -421,13 +421,13 @@ const EditSenateBill = () => {
         documentDate:
           singleSenateBillData?.billDocuments &&
           singleSenateBillData?.billDocuments?.documentDate
-            ? moment(singleSenateBillData?.billDocuments?.documentDate).toDate()
+            ? moment(singleSenateBillData?.billDocuments?.documentDate,"YYYY-MM-DD").toDate()
             : "",
         documentType: singleSenateBillData?.billDocuments
           ? singleSenateBillData?.billDocuments?.documentType
           : "",
         billStatusDate: singleSenateBillData?.billStatusDate
-          ? moment(singleSenateBillData?.billStatusDate).toDate()
+          ? moment(singleSenateBillData?.billStatusDate,"YYYY-MM-DD").toDate()
           : "",
       });
     }
