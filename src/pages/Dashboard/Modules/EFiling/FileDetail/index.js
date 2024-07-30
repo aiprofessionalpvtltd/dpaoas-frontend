@@ -459,8 +459,8 @@ function FileDetail() {
   const images =
     FR?.freshReceiptsAttachments?.map((item) => {
       const fileUrl = `${imagesUrl}${item?.filename}`;
-      const isPdf = item?.filename?.toLowerCase().endsWith('.pdf');
-  
+      const isPdf = item?.filename?.toLowerCase().endsWith(".pdf");
+
       return {
         original: fileUrl,
         thumbnail: fileUrl,
@@ -468,30 +468,37 @@ function FileDetail() {
       };
     }) || [];
 
-    console.log("nanjnjasnjsnjsjns", images);
+      // Filter out images from the items
+  const imageItems = images.filter((item) => !item.isPdf);
 
-    const PdfPreview = ({ pdfUrl }) => {
-      return (
-        <>
-          {loading && (
-            <div style={{
-              marginTop: '20px',
-              marginLeft: '50px'
-            }}>
-               <Spinner />
-            </div>
-          )}
+  const PdfPreview = ({ pdfUrl }) => {
+    return (
+      <>
+        {loading && (
+          <div
+            style={{
+              marginTop: "20px",
+              marginLeft: "50px",
+            }}
+          >
+            <Spinner />
+          </div>
+        )}
         <iframe
-            src={pdfUrl}
-            width="100%"
-            height="600px"
-            style={{ border: 'none', display: loading ? 'none' : 'block', marginTop: "20px" }}
-            title="PDF Preview"
-            onLoad={() => setLoading(false)} // Event listener for when the PDF is fully loaded
-          />
-          </>
-      );
-    };
+          src={pdfUrl}
+          width="100%"
+          height="600px"
+          style={{
+            border: "none",
+            display: loading ? "none" : "block",
+            marginTop: "20px",
+          }}
+          title="PDF Preview"
+          onLoad={() => setLoading(false)} // Event listener for when the PDF is fully loaded
+        />
+      </>
+    );
+  };
 
   return (
     <Layout
@@ -841,51 +848,58 @@ function FileDetail() {
                           )}
                         </div>
 
-                        <div className="row">
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                          {selectedTab === "FR" ? (
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          {selectedTab === "FR" && (
                             <>
-                  {images?.map((item, index) =>
-              item.isPdf ? (
-                <PdfPreview pdfUrl={item.original} key={index} />
-              ) : (
-                <section>
-                              <ImageGallery
-                                style={{ maxHeight: "calc(100vh 0px)" }}
-                                items={images}
-                                showThumbnails={false}
-                                showFullscreenButton={false}
-                                showPlayButton={false}
-                                slideOnThumbnailOver
-                                renderThumbInner={(item) => (
-                                  <div className="image-gallery-thumbnail-inner">
-                                    <img
-                                      src={item.thumbnail}
-                                      alt={"file"}
-                                      width={92}
-                                      height={80}
-                                    />
-                                    {/* Add any additional elements or styles for the thumbnail */}
-                                  </div>
-                                )}
-                              />
+                              <div className="row">
+                                <div className="col-12">
+                                  <section>
+                                    {/* Render the ImageGallery once for all image items */}
+                                    {imageItems.length > 0 && (
+                                      <ImageGallery
+                                        style={{ maxHeight: "calc(100vh 0px)" }}
+                                        items={imageItems}
+                                        showThumbnails={false}
+                                        showFullscreenButton={false}
+                                        showPlayButton={false}
+                                        slideOnThumbnailOver
+                                        renderThumbInner={(item) => (
+                                          <div className="image-gallery-thumbnail-inner">
+                                            <img
+                                              src={item.thumbnail}
+                                              alt="file"
+                                              width={92}
+                                              height={80}
+                                              style={{ objectFit: "cover" }}
+                                            />
+                                          </div>
+                                        )}
+                                      />
+                                    )}
+                                  </section>
+                                </div>
+                              </div>
 
-                            </section>
-                            )
+                              {/* Render PDF previews separately */}
+                              {images.map((item, index) =>
+                                item.isPdf ? (
+                                  <PdfPreview
+                                    pdfUrl={item.original}
+                                    key={index}
+                                  />
+                                ) : null
                               )}
-                              </>
-                          ) : null}
-                          </div>
-                          </div>
+                            </>
+                          )}
+                        </div>
 
                         <div class="col">
-
                           {selectedTab === "Noting" ? (
                             // Render content for the 'Noting' tab
                             <div className="container">
