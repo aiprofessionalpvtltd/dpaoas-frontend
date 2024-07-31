@@ -209,13 +209,14 @@ const SearchLegislationBills = () => {
       dateOfTransmission: item?.dateOfTransmissionToNA
         ? moment(item?.dateOfTransmissionToNA,"YYYY-MM-DD").format("DD-MM-YYYY")
         : "---",
-      remarks: item?.billRemarks,
-      movers: item?.senateBillMnaMovers
-        ? item?.senateBillMnaMovers.map((mover) => mover?.mna?.mnaName).join(", ")
-        : "---",
+      
+      // movers: item?.senateBillMnaMovers
+      //   ? item?.senateBillMnaMovers.map((mover) => mover?.mna?.mnaName).join(", ")
+      //   : "---",
       billCategory: item?.billCategory,
       fileNumber: item?.fileNumber,
       billFrom: item?.billFrom,
+      remarks: item?.billRemarks,
       
     }))|| [];
   };
