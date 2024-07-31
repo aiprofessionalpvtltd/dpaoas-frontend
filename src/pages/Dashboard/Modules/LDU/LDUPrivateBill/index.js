@@ -6,7 +6,7 @@ import PrivateBillModal from '../../../../../components/PrivateBillModal';
 import { ToastContainer } from 'react-toastify';
 import { LDUSideBarItems , LegislationSideBarItems} from '../../../../../utils/sideBarItems';
 import { showErrorMessage, showSuccessMessage } from '../../../../../utils/ToastAlert';
-import { deletePrivateBill, getAllPrivateBill } from '../../../../../api/APIs/Services/Legislation.service';
+import { deletePrivateBill, getAllPrivateBill, getAllPrivateBillNotice } from '../../../../../api/APIs/Services/Legislation.service';
 import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
 import { Layout } from '../../../../../components/Layout';
@@ -30,23 +30,26 @@ const LDUPrivateBill = () => {
     const transformPrivateData = (apiData) => {
       return apiData.map((item) => ({
         id: item?.id,
+        memberName:item?.member?.memberName,
         SerialNo: item?.SerialNo ? item?.SerialNo : "",
         fileNo: item?.fileNo ? item?.fileNo : "",
         date: item?.date ? moment(item?.date).format("DD-MM-YYYY") : "",
         fromReceived: item?.fromReceived ? item?.fromReceived : "",
         briefSubject: item?.briefSubject ? item?.briefSubject : "",
         remarks: item?.remarks ? item?.remarks : "",
+        device:item?.device,
         AssignedTo: item?.branch?.branchName
           ? item?.branch?.branchName
           : ""
             ? item?.branch?.branchName
             : "Notice",
-        status: item?.billStatuses?.billStatus ? item?.billStatuses?.billStatus : "",
+            device:item?.device,
+        status: item?.billStatuses?.billStatusName ? item?.billStatuses?.billStatusName : "",
       }));
     };
     const getAllPrivateBillApi = useCallback(async () => {
       try {
-        const response = await getAllPrivateBill(currentPage, pageSize);
+        const response = await getAllPrivateBillNotice(currentPage, pageSize);
         if (response?.success) {
           const transformedData = transformPrivateData(
             response?.data?.privateMemberBills
@@ -104,7 +107,7 @@ const LDUPrivateBill = () => {
         <Header
           dashboardLink={"/ldu/dashboard"}
           // addLink1={"/notice/question/sent"}
-          title1={"Private Member Bill"}
+          title1={"Drafting of Private Member Bills"}
         />
   
         <CustomAlert
@@ -118,8 +121,8 @@ const LDUPrivateBill = () => {
             <CustomTable
               singleDataCard={true}
               data={data}
-              tableTitle="Private Member Bill"
-              hidebtn1={false}
+              tableTitle="Drafting of Private Member Bill"
+              hidebtn1={true}
               addBtnText={"Create Private Bill"}
               handleAdd={() =>
                 navigate("/ldu/privateMemberBill/ldu-private-Bill/edit-private-bill")

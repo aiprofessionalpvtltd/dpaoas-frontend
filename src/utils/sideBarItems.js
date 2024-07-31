@@ -153,17 +153,17 @@ export const NoticeSidebarItems = [
     ],
   },
   {
-    itemName: "Legislation Business",
+    itemName: "Private Member Bill",
     link: "/notice/legislation",
     icon: faScaleBalanced,
     subItems: [
       {
-        itemName: "Private Member Bill",
-        link: "/notice/legislation/private-bill",
+        itemName: "Search Private Member Bill",
+        link: "",
         icon: faFileInvoice,
       },
       {
-        itemName: "Legislative Bill",
+        itemName: "List Private Member Bill",
         link: "/notice/legislation/legislative-bill",
         icon: faFileInvoice,
       },
@@ -197,11 +197,11 @@ export const NoticeSidebarItems = [
       },
     ],
   },
-  {
-    itemName: "Event Calendar",
-    link: "/notice/event-calendar",
-    icon: faCalendarAlt,
-  },
+  // {
+  //   itemName: "Event Calendar",
+  //   link: "/notice/event-calendar",
+  //   icon: faCalendarAlt,
+  // },
 
   // {
   //   itemName: "Research Services",
@@ -1169,13 +1169,13 @@ export const LegislationSideBarItems = [
     link: "/lgms/notice-office",
     icon: faBookOpen,
     subItems: [
+      // {
+      //   itemName: "Private Member Bill",
+      //   link: "/lgms/legislation/private-bill",
+      //   icon: faFileInvoice,
+      // },
       {
-        itemName: "Private Member Bill",
-        link: "/lgms/legislation/private-bill",
-        icon: faFileInvoice,
-      },
-      {
-        itemName: "Legislative Bill",
+        itemName: "List Private Member Bill",
         link: "/lgms/legislation/legislative-bill",
         icon: faFileInvoice,
       },
@@ -1254,20 +1254,20 @@ export const LDUSideBarItems = [
     icon: faHome,
   },
   {
-    itemName: "From Notice Office",
+    itemName: "Drafting of Private Member Bill",
     link: "/ldu/notice-office",
     icon: faBookOpen,
     subItems: [
       {
-        itemName: "Private Member Bill",
+        itemName: "List Drafting of Private Member Bill",
         link: "/ldu/legislative/ldu-private-bill",
         icon: faFileInvoice,
       },
-      {
-        itemName: "Legislative Bill",
-        link: "/ldu/legislative/ldu-legislative-bill",
-        icon: faFileInvoice,
-      },
+      // {
+      //   itemName: "Legislative Bill",
+      //   link: "/ldu/legislative/ldu-legislative-bill",
+      //   icon: faFileInvoice,
+      // },
     ],
   },
   {

@@ -103,6 +103,7 @@ function SentMotion() {
 
       return {
         id: res?.id,
+        memberName: res?.motionMovers[0]?.members?.memberName,
         SessionName: res?.sessions?.sessionName
           ? res?.sessions?.sessionName
           : "",
@@ -124,7 +125,9 @@ function SentMotion() {
         englishText: EnglishText ? EnglishText : "",
         urduText: UrduText ? UrduText : "",
         motionStatus: res?.motionStatuses?.statusName,
-        createdBy:res?.motionSentStatus === "inNotice" ? "Notice Office": "---"
+        device:res?.device
+
+        // createdBy:res?.motionSentStatus === "inNotice" ? "Notice Office": "---"
       };
     });
   };

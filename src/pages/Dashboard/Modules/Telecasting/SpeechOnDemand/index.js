@@ -44,6 +44,7 @@ function TelecastingSpeechOnDemand() {
       isEditable: item.isEditable,
       internalId: item?.session?.id ? item?.session?.id : "",
       SR: item?.id,
+      memberName:item?.member?.memberName,
       sessionno: item?.session?.sessionName ? item?.session?.sessionName : "",
       fromdate: item?.date_from
         ? moment(item?.date_from).format("DD-MM-YYYY")
@@ -52,6 +53,7 @@ function TelecastingSpeechOnDemand() {
       deliverOn: item?.delivery_on ? item?.delivery_on : "",
       whatsappnumber: item?.whatsapp_number ? item?.whatsapp_number : "",
       justification: item?.justification ? item?.justification : "",
+      requestDate:moment(item?.createdAt).format("DD-MM-YYYY"),
       status: item?.isActive ? item?.isActive : "",
     }));
   };
