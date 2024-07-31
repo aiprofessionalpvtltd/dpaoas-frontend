@@ -25,7 +25,6 @@ const AllLegislationBill = () => {
     setCurrentPage(page);
   };
   const transformAllBillData = (apiData) => {
-    console.log("Api Data", apiData);
     return apiData?.map((item) => ({
       id: item.id,
       billTitle: item?.billTitle,
@@ -38,22 +37,24 @@ const AllLegislationBill = () => {
       dateOfTransmission: item?.dateOfTransmissionToNA
         ? moment(item?.dateOfTransmissionToNA,"YYYY-MM-DD").format("DD-MM-YYYY")
         : "---",
-      remarks: item?.billRemarks,
-      movers: item?.senateBillMnaMovers
-        ? item?.senateBillMnaMovers.map((mover) => mover?.mna?.mnaName).join(", ")
-        : "---",
+      
+      // movers: item?.senateBillMnaMovers
+      //   ? item?.senateBillMnaMovers.map((mover) => mover?.mna?.mnaName).join(", ")
+      //   : "---",
       // parliamentaryYear: item?.parliamentaryYears?.parliamentaryTenure,
       // session: item?.sessions?.sessionName,
       // billType: item.billType,
       billCategory: item?.billCategory,
       fileNumber: item?.fileNumber,
-      billFrom: item?.billFrom,
+      billFrom:  item?.billFrom  ,
       // concerndCommittes: item?.introducedInHouses?.manageCommittees
       //   ?.committeeName
       //   ? item?.introducedInHouses?.manageCommittees?.committeeName
       //   : "---",
       // billStatus: item?.billStatuses?.billStatusName,
-      // Status: item.billStatus,
+      // Status: item.billStatus,remarks: item?.billRemarks,
+      remarks: item?.billRemarks,
+
     }));
   };
   // Get All Bills

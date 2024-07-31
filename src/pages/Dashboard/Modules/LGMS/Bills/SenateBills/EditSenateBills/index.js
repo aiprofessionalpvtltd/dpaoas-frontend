@@ -276,9 +276,12 @@ const EditSenateBill = () => {
         setSingleSenateBillData(response?.data[0]);
       }
     } catch (error) {
+      console.log("error", error)
       // showErrorMessage(error?.response?.data?.message);
     }
   };
+
+  // Getting Data By Single ID and Setting It
   useEffect(() => {
     if (NA_Bill_ID) {
       getNABillByIdApi();
@@ -433,11 +436,14 @@ const EditSenateBill = () => {
     }
   }, [singleSenateBillData]);
 
+
+// Updating Senate Bills
   const UpdateNationalAssemblyBill = async (values) => {
     const formData = new FormData();
     formData.append("fkParliamentaryYearId", values?.fkParliamentaryYearId);
     formData.append("fkSessionId", values?.fkSessionId);
-    formData.append("billCategory", values?.billCategory);
+    // formData.append("billCategory", values?.billCategory);
+    formData.append("billCategory", BillCategory);
     formData.append("billType", values?.billType);
     formData.append("fkBillStatus", values?.fkBillStatus?.value);
     if (values?.billStatusDate) {
@@ -445,9 +451,9 @@ const EditSenateBill = () => {
       formData.append("billStatusDate", formattedDate);
     }
     if (BillCategory === "Private Member Bill") {
-      formData.append("fileNumber", `09/(${values?.fileNumber})/2024`);
-    } else {
       formData.append("fileNumber", `24/(${values?.fileNumber})/2024`);
+    } else {
+      formData.append("fileNumber", `09/(${values?.fileNumber})/2024`);
     }
     // formData.append("fileNumber",   `09/(${values?.fileNumber})/2024`);
     // formData.append("noticeDate", values?.noticeDate);
@@ -613,7 +619,6 @@ const EditSenateBill = () => {
 
     try {
       const response = await UpdateNABill(NA_Bill_ID, formData);
-      console.log("response", response);
       if (response?.success) {
         showSuccessMessage(response?.message);
 
@@ -708,7 +713,7 @@ const EditSenateBill = () => {
                         </div>
                       </div>
 
-                      <div class="col">
+                      {/* <div class="col">
                         <div class="mb-3">
                           <label class="form-label">Bill Category </label>
                           <select
@@ -740,9 +745,9 @@ const EditSenateBill = () => {
                               </div>
                             )}
                         </div>
-                      </div>
+                      </div> */}
 
-                      <div class="col-3">
+                      <div class="col">
                         <div class="mb-3">
                           <label class="form-label">Bill Type </label>
                           <select
@@ -778,10 +783,7 @@ const EditSenateBill = () => {
                             )}
                         </div>
                       </div>
-                    </div>
-
-                    <div className="row">
-                      <div class="col-3">
+                      <div class="col">
                         <div class="mb-3">
                           <label class="form-label">Bill Status</label>
                           {/* <select
@@ -827,7 +829,11 @@ const EditSenateBill = () => {
                             )}
                         </div>
                       </div>
-                      <div className="col-3">
+                    </div>
+
+                    <div className="row">
+                     
+                      {/* <div className="col-3">
                         <div className="mb-3" style={{ position: "relative" }}>
                           <label className="form-label">Bill Status Date</label>
                           <span
@@ -873,7 +879,7 @@ const EditSenateBill = () => {
                               </div>
                             )}
                         </div>
-                      </div>
+                      </div> */}
                       <div className="col-3">
                         <div className="mb-3">
                           <label className="form-label">File Number</label>
@@ -1016,7 +1022,7 @@ const EditSenateBill = () => {
                             name="billTitle"
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
-                            value={formik.values.billTitle}
+                            value={formik.values.billTitle || ""}
                           ></textarea>
                           {formik.touched.billTitle &&
                             formik.errors.billTitle && (
@@ -1240,7 +1246,40 @@ const EditSenateBill = () => {
                           />
                         </div>
                       </div>
-
+                      <div class="col">
+                      <div class="mb-3" style={{ position: "relative" }}>
+                        <label class="form-label">
+                          Date of Presenation of the Report
+                        </label>
+                        <span
+                          style={{
+                            position: "absolute",
+                            right: "15px",
+                            top: "36px",
+                            zIndex: 1,
+                            fontSize: "20px",
+                            color: "#666",
+                          }}
+                          onClick={handleReportPresenatationDayCalendarToggle}
+                        >
+                          <FontAwesomeIcon icon={faCalendarAlt} />
+                        </span>
+                        <DatePicker
+                          selected={formik.values.reportPresentationDate}
+                          onChange={handleReportPresenatationDateSelect}
+                          className={"form-control"}
+                          open={isReportPresentationCalendarOpen}
+                          onClickOutside={() =>
+                            setReportPresentationCalendarOpen(false)
+                          }
+                          onInputClick={
+                            handleReportPresenatationDayCalendarToggle
+                          }
+                          maxDate={new Date()}
+                          dateFormat="dd-MM-yyyy"
+                        />
+                      </div>
+                    </div>
                       {/* <div className="col">
                         <label className="form-label">
                           Introduced in Session
@@ -1283,7 +1322,7 @@ const EditSenateBill = () => {
                             ))}
                         </select>
                       </div>
-                      <div className="form-group col-3">
+                      <div className="form-group col">
                         <label className="form-label">
                           Committee Recommendation
                         </label>
@@ -1314,38 +1353,7 @@ const EditSenateBill = () => {
                     </div>
 
                     <div className="row">
-                      <div className="col-3">
-                        <div class="mb-3 " style={{ position: "relative" }}>
-                          <label class="form-label">
-                            Date of Passage by Senate
-                          </label>
-                          <span
-                            style={{
-                              position: "absolute",
-                              right: "15px",
-                              top: "36px",
-                              zIndex: 1,
-                              fontSize: "20px",
-                              color: "#666",
-                            }}
-                            onClick={handlePassageSenateCalendarToggle}
-                          >
-                            <FontAwesomeIcon icon={faCalendarAlt} />
-                          </span>
-                          <DatePicker
-                            selected={formik.values.dateOfPassageBySenate}
-                            onChange={handlePassageSenateDateSelect}
-                            className={"form-control"}
-                            open={isPassageSenateCalendarOpen}
-                            onClickOutside={() =>
-                              setPassageSenateCalendarOpen(false)
-                            }
-                            onInputClick={handlePassageSenateCalendarToggle}
-                            maxDate={new Date()}
-                            dateFormat="dd-MM-yyyy"
-                          />
-                        </div>
-                      </div>
+                      
                     </div>
                   </div>
                 </div>
@@ -1361,7 +1369,7 @@ const EditSenateBill = () => {
                 <div className="card-body">
                   <div className="container-fluid">
                     <div className="row">
-                      <div className="form-group col">
+                      {/* <div className="form-group col">
                         <label
                           htmlFor="passageWithdrawal"
                           className="form-label"
@@ -1388,7 +1396,7 @@ const EditSenateBill = () => {
                           <option value={"Passage"}>Passage</option>
                           <option value={"withdrawal"}>withdrawal</option>
                         </select>
-                      </div>
+                      </div> */}
 
                       <div className="col">
                         <div class="mb-3 " style={{ position: "relative" }}>
@@ -1454,8 +1462,127 @@ const EditSenateBill = () => {
                           />
                         </div>
                       </div>
+                      <div className="col-3">
+                        <div class="mb-3 " style={{ position: "relative" }}>
+                          <label class="form-label">
+                            Date of Passage by Senate
+                          </label>
+                          <span
+                            style={{
+                              position: "absolute",
+                              right: "15px",
+                              top: "36px",
+                              zIndex: 1,
+                              fontSize: "20px",
+                              color: "#666",
+                            }}
+                            onClick={handlePassageSenateCalendarToggle}
+                          >
+                            <FontAwesomeIcon icon={faCalendarAlt} />
+                          </span>
+                          <DatePicker
+                            selected={formik.values.dateOfPassageBySenate}
+                            onChange={handlePassageSenateDateSelect}
+                            className={"form-control"}
+                            open={isPassageSenateCalendarOpen}
+                            onClickOutside={() =>
+                              setPassageSenateCalendarOpen(false)
+                            }
+                            onInputClick={handlePassageSenateCalendarToggle}
+                            maxDate={new Date()}
+                            dateFormat="dd-MM-yyyy"
+                          />
+                        </div>
+                      </div>
+                      <div className="col-3">
+                      <div class="mb-3 " style={{ position: "relative" }}>
+                        <label class="form-label">
+                          Date of Transmission to NA
+                        </label>
+                        <span
+                          style={{
+                            position: "absolute",
+                            right: "15px",
+                            top: "36px",
+                            zIndex: 1,
+                            fontSize: "20px",
+                            color: "#666",
+                          }}
+                          onClick={handleTransmissionCalendarToggle}
+                        >
+                          <FontAwesomeIcon icon={faCalendarAlt} />
+                        </span>
+                        <DatePicker
+                          selected={formik.values.dateOfTransmissionToNA}
+                          onChange={handleTransmissionDateSelect}
+                          className={"form-control"}
+                          open={isTransmissionDateCalendarOpen}
+                          onClickOutside={() =>
+                            setTransmissionDateCalendarOpen(false)
+                          }
+                          onInputClick={handleTransmissionCalendarToggle}
+                          maxDate={new Date()}
+                          dateFormat="dd-MM-yyyy"
+                        />
+                      </div>
+                    </div>
+                      
 
-                      <div className="col">
+                      {/* <div className="form-group col-3">
+                        <label htmlFor="session" className="form-label">
+                          Consideration in Session
+                        </label>
+                        <select
+                          id="fkSessionMemberPassageId"
+                          name="fkSessionMemberPassageId"
+                          className="form-control"
+                          onChange={formik.handleChange}
+                          value={formik.values.fkSessionMemberPassageId}
+                        >
+                          <option value="" disabled hidden>
+                            Select
+                          </option>
+                          {sessions &&
+                            sessions.map((item) => (
+                              <option value={item.id}>
+                                {item.sessionName}
+                              </option>
+                            ))}
+                        </select>
+                      </div> */}
+                    </div>
+                    <div className="row">
+                    <div className="col-3">
+                      <div class="mb-3 " style={{ position: "relative" }}>
+                        <label class="form-label">Date of Passage by NA</label>
+                        <span
+                          style={{
+                            position: "absolute",
+                            right: "15px",
+                            top: "36px",
+                            zIndex: 1,
+                            fontSize: "20px",
+                            color: "#666",
+                          }}
+                          onClick={handlePassageByNACalendarToggle}
+                        >
+                          <FontAwesomeIcon icon={faCalendarAlt} />
+                        </span>
+                        <DatePicker
+                          selected={formik.values.dateOfPassageByNA}
+                          onChange={handlePassageByNADateSelect}
+                          className={"form-control"}
+                          open={isPassageByNADateCalendarOpen}
+                          onClickOutside={() =>
+                            setPassageByNADateCalendarOpen(false)
+                          }
+                          onInputClick={handlePassageByNACalendarToggle}
+                          maxDate={new Date()}
+                          dateFormat="dd-MM-yyyy"
+                        />
+                      </div>
+                    </div>
+                    <div className="col-3">
                         <div class="mb-3 " style={{ position: "relative" }}>
                           <label class="form-label">
                             Date of Publish in the Gazette
@@ -1487,31 +1614,6 @@ const EditSenateBill = () => {
                           />
                         </div>
                       </div>
-
-                      {/* <div className="form-group col-3">
-                        <label htmlFor="session" className="form-label">
-                          Consideration in Session
-                        </label>
-                        <select
-                          id="fkSessionMemberPassageId"
-                          name="fkSessionMemberPassageId"
-                          className="form-control"
-                          onChange={formik.handleChange}
-                          value={formik.values.fkSessionMemberPassageId}
-                        >
-                          <option value="" disabled hidden>
-                            Select
-                          </option>
-                          {sessions &&
-                            sessions.map((item) => (
-                              <option value={item.id}>
-                                {item.sessionName}
-                              </option>
-                            ))}
-                        </select>
-                      </div> */}
-                    </div>
-                    <div className="row">
                       <div className="col-3">
                         <div class="mb-3 " style={{ position: "relative" }}>
                           <label class="form-label">
@@ -1553,7 +1655,7 @@ const EditSenateBill = () => {
 
           {/* 4th card */}
 
-          <div className="container-fluid mt-2">
+          {/* <div className="container-fluid mt-2">
             <div class="card mt-1">
               <div className="card-body">
                 <div className="container-fluid">
@@ -1591,109 +1693,16 @@ const EditSenateBill = () => {
                       </div>
                     </div>
 
-                    <div className="col-3">
-                      <div class="mb-3 " style={{ position: "relative" }}>
-                        <label class="form-label">
-                          Date of Transmission to NA
-                        </label>
-                        <span
-                          style={{
-                            position: "absolute",
-                            right: "15px",
-                            top: "36px",
-                            zIndex: 1,
-                            fontSize: "20px",
-                            color: "#666",
-                          }}
-                          onClick={handleTransmissionCalendarToggle}
-                        >
-                          <FontAwesomeIcon icon={faCalendarAlt} />
-                        </span>
-                        <DatePicker
-                          selected={formik.values.dateOfTransmissionToNA}
-                          onChange={handleTransmissionDateSelect}
-                          className={"form-control"}
-                          open={isTransmissionDateCalendarOpen}
-                          onClickOutside={() =>
-                            setTransmissionDateCalendarOpen(false)
-                          }
-                          onInputClick={handleTransmissionCalendarToggle}
-                          maxDate={new Date()}
-                          dateFormat="dd-MM-yyyy"
-                        />
-                      </div>
-                    </div>
+                   
 
-                    <div className="col-3">
-                      <div class="mb-3 " style={{ position: "relative" }}>
-                        <label class="form-label">Date of Passage by NA</label>
-                        <span
-                          style={{
-                            position: "absolute",
-                            right: "15px",
-                            top: "36px",
-                            zIndex: 1,
-                            fontSize: "20px",
-                            color: "#666",
-                          }}
-                          onClick={handlePassageByNACalendarToggle}
-                        >
-                          <FontAwesomeIcon icon={faCalendarAlt} />
-                        </span>
-                        <DatePicker
-                          selected={formik.values.dateOfPassageByNA}
-                          onChange={handlePassageByNADateSelect}
-                          className={"form-control"}
-                          open={isPassageByNADateCalendarOpen}
-                          onClickOutside={() =>
-                            setPassageByNADateCalendarOpen(false)
-                          }
-                          onInputClick={handlePassageByNACalendarToggle}
-                          maxDate={new Date()}
-                          dateFormat="dd-MM-yyyy"
-                        />
-                      </div>
-                    </div>
+                   
 
-                    <div class="col-3">
-                      <div class="mb-3" style={{ position: "relative" }}>
-                        <label class="form-label">
-                          Date of Presenation of the Report
-                        </label>
-                        <span
-                          style={{
-                            position: "absolute",
-                            right: "15px",
-                            top: "36px",
-                            zIndex: 1,
-                            fontSize: "20px",
-                            color: "#666",
-                          }}
-                          onClick={handleReportPresenatationDayCalendarToggle}
-                        >
-                          <FontAwesomeIcon icon={faCalendarAlt} />
-                        </span>
-                        <DatePicker
-                          selected={formik.values.reportPresentationDate}
-                          onChange={handleReportPresenatationDateSelect}
-                          className={"form-control"}
-                          open={isReportPresentationCalendarOpen}
-                          onClickOutside={() =>
-                            setReportPresentationCalendarOpen(false)
-                          }
-                          onInputClick={
-                            handleReportPresenatationDayCalendarToggle
-                          }
-                          maxDate={new Date()}
-                          dateFormat="dd-MM-yyyy"
-                        />
-                      </div>
-                    </div>
+                    
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
 
           {/* 5th card */}
 

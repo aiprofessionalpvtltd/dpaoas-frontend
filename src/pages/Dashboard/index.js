@@ -220,7 +220,7 @@ function Dashboard() {
       permission: ["Telecasting"],
     },
     {
-      title: "IPR",
+      title: "Research Services",
       link: "/research/dashboard",
       type: "",
       cardbg: "bluebg",

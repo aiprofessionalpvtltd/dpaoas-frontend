@@ -18,11 +18,12 @@ import { getAllCorrespondence } from "../../../api/APIs/Services/efiling.service
 import { getSelectedFileID, getUserData } from "../../../api/Auth";
 import { imagesUrl } from "../../../api/APIs";
 import { AuthContext } from "../../../api/AuthContext";
+import CKEditorComp from "../Editor/CKEditorComp";
+import { showErrorMessage } from "../../../utils/ToastAlert";
 
 
 const DocParas = ({ tabsData, onEditorChange, onDelete, FR, selectedFileId, hendleDeleteAttach }) => {
   const UserData = getUserData();
- console.log("tabsData==>", tabsData)
   const { fildetailsAqain } = useContext(AuthContext)
   const [correspondenceTypesData, setCorrespondenceTypesData] = useState([]);
   const [editableIndex, setEditableIndex] = useState(null);
@@ -154,7 +155,7 @@ const DocParas = ({ tabsData, onEditorChange, onDelete, FR, selectedFileId, hend
               </div>
             </div>
 
-            {FR?.frId && (
+            {/* {FR?.frId && (
               <div className="row mb-3">
                 <div className="col">
                   <label className="form-label">Attach FR</label>
@@ -174,7 +175,7 @@ const DocParas = ({ tabsData, onEditorChange, onDelete, FR, selectedFileId, hend
                   </select>
                 </div>
               </div>
-            )}
+            )} */}
 
             <div className="row mb-3">
               <div className="col">
@@ -360,18 +361,18 @@ const DocParas = ({ tabsData, onEditorChange, onDelete, FR, selectedFileId, hend
 
               </div>
 
-              {editableIndex !== index ? (
-                <>
-                  <p
-                    style={{
-                      width: "100%",
-                      flexShrink: 0,
-                      color: "text.secondary",
-                      marginBottom: 0,
-                    }}
-                    dangerouslySetInnerHTML={{
-                      __html: cleanHtml(tab.description),
-                    }}></p>
+              <div
+                  style={{
+                    padding: 0,
+                    display: "block",
+                    width: "100%",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginTop: "5px",
+                  }}>
+                    <CKEditorComp onChange={(data) => setNotingData({ description: data })} value={tab.description} disabled={editableIndex !== index ? true : false} />
+                </div>
                   {tab?.references && tab?.references?.length > 0 && (
                     <div
                       className="col"
@@ -399,7 +400,6 @@ const DocParas = ({ tabsData, onEditorChange, onDelete, FR, selectedFileId, hend
                                     </p>
                                   </li>
                                 )}
-                                {console.log("attach", innerItem?.attachments)}
                                 {innerItem?.attachments?.map((nestedItem, nestedItemIdx) => (
                                   <>
                                   
@@ -412,10 +412,10 @@ const DocParas = ({ tabsData, onEditorChange, onDelete, FR, selectedFileId, hend
                                     >
                                       {`${innerItem?.name} (${innerItem?.description}) - ${getFileName(nestedItem?.file)}`}
                                     </p>
-                                    <div style={{marginLeft:"10px", cursor:"pointer"}}>
+                                    {/* <div style={{marginLeft:"10px", cursor:"pointer"}}>
                                     <FontAwesomeIcon  onClick={() => hendleDeleteAttach(item, innerIdx)} color={"red"} icon={faXmark}/>
 
-                                    </div>
+                                    </div> */}
 
                                   </div>
                                   </li>
@@ -424,34 +424,16 @@ const DocParas = ({ tabsData, onEditorChange, onDelete, FR, selectedFileId, hend
                               </React.Fragment>
                             ))}
                           </ul>
-                          <div style={{display:"flex", alignItems:"flex-end", justifyContent:"flex-end"}}>
-                          <div>Created By: <p style={{fontStyle:"italic", textTransform:"capitalize"}}>{tab?.createdByUser && tab?.createdByUser}</p></div>
-                        </div>
+                          {tab?.createdByUser && (
+                            <div style={{display:"flex", alignItems:"flex-end", justifyContent:"flex-end"}}>
+                              <div>Created By: <p style={{fontStyle:"italic", textTransform:"capitalize"}}>{tab?.createdByUser && tab?.createdByUser}</p></div>
+                            </div>
+                          )}
                         </div>
                       ))}
                     </div>
                   )}
-                </>
-              ) : (
-                <AccordionDetails
-                  sx={{
-                    padding: 0,
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    mt: 1,
-                  }}>
-                  <Editor
-                    onChange={(content) =>
-                      setNotingData({ description: content })
-                    }
-                    value={notingData.description}
-                    width={"100%"}
-                    display={"flex"}
-                  />
-                </AccordionDetails>
-              )}
+
             </Box>
           </Box>
         ))}
