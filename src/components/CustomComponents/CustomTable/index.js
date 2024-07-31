@@ -86,7 +86,7 @@ function CustomTable({
     if (key === "internalAttachment" && data.some((obj) => Array.isArray(obj[key]))) {
       return false; // Skip filtering if it's an array in any object
     }
-    return key !== "internalAttachment" && key !== "internalId" && key !== "isEditable" && key !== "attachmentInternal";
+    return key !== "internalAttachment" && key !== "internalId" && key !== "isEditable" && key !== "attachmentInternal" && key !=="billFrom" && key !=="billCategory";
   });
 
   const [totalPages, setTotalPages] = useState(0);
