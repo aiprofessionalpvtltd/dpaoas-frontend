@@ -238,6 +238,7 @@ import MMSBallotMotionList from "../pages/Dashboard/Modules/MMS/Reports/MotionLi
 import PreviewBallotMotionList from "../pages/Dashboard/Modules/MMS/Reports/MotionListReport/PreviewBallotMotionList/index.js";
 import AllBallotResolutionList from "../pages/Dashboard/Modules/QMS/Resolution/AllBallotResolutionList/index.js";
 import PreviewResolutionList from "../pages/Dashboard/Modules/QMS/SearchResolution/PreviewResolution/index.js";
+import PreviewQuestionList from "../pages/Dashboard/Modules/QMS/Reports/QuestionList/PreviewQuestionList/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -545,6 +546,11 @@ export const ProtectedRoutes = [
     path: "/qms/manage/remove-question",
     element: <RemoveQuestion />,
   },
+  {
+    path: "/qms/questionList/priveiw-question-list",
+    element: <PreviewQuestionList />,
+  },
+
 
   //SMS Module routes
   { path: "/sms/dashboard", element: <SMSDashboard /> },
