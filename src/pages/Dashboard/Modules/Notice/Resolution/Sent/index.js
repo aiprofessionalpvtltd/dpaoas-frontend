@@ -73,6 +73,7 @@ function SentResolution() {
       const cleanedSubjectMatter = subjectMatter.replace(/(<([^>]+)>)/gi, "");
       return {
         SrNo: leave.id,
+        memberName: leave?.resolutionMoversAssociation[0]?.memberAssociation?.memberName,
         SessionNumber: leave?.session?.sessionName
           ? leave?.session?.sessionName
           : "",
@@ -85,6 +86,7 @@ function SentResolution() {
           ? leave?.resolutionStatus?.resolutionStatus
           : "",
         Status: leave?.resolutionActive ? leave?.resolutionActive : "",
+        device : leave?.device,
         createdBy:leave?.resolutionSentStatus === "inNotice" ? "Notice Office": "---"
       };
     });

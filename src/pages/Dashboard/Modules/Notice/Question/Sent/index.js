@@ -108,6 +108,7 @@ function SentQuestion() {
       return {
         // SrNo: index + 1,
         Id: res?.id,
+        MemberName: res?.member ? res?.member?.memberName :"--",
         noticeOfficeDiaryNumber: res?.noticeOfficeDiary?.noticeOfficeDiaryNo
           ? res?.noticeOfficeDiary?.noticeOfficeDiaryNo
           : "",
@@ -130,6 +131,7 @@ function SentQuestion() {
         Status: res.questionStatus?.questionStatus
           ? res.questionStatus?.questionStatus
           : "",
+          device:res?.device,
           createdBy:res?.questionSentStatus === "inNotice" ? "Notice Office": "---"
       };
     });

@@ -103,6 +103,7 @@ function MMSMotionList() {
 
       return {
         id: res?.id,
+        memberName: res?.motionMovers[0]?.members?.memberName,
         SessionName: res?.sessions?.sessionName
           ? res?.sessions?.sessionName
           : "",
@@ -125,6 +126,7 @@ function MMSMotionList() {
         urduText: UrduText ? UrduText : "",
         motionStatus: res?.motionStatuses?.statusName,
         memberPosition:res?.memberPosition,
+        device:res?.device,
         createdBy:res?.motionSentStatus === "toMotion" ? "From Notice Office": res?.motionSentStatus === "inMotion" ? "Motion Branch":"---"
       };
     });
