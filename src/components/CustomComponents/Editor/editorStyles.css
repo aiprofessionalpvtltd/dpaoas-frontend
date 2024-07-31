@@ -1,5 +1,13 @@
 /* Fonts Loaded styles */
 
+.button span {
+  background: none !important;
+}
+
+.ck-editor__editable {
+    min-height: 150px;
+}
+
 .ql-picker.ql-font {
     .ql-picker-item {
       font-size: 0;
