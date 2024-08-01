@@ -11,12 +11,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import { useLocation } from "react-router";
 import { AuthContext } from "../../../../../../api/AuthContext";
+import Select from "react-select";
 import {
   showErrorMessage,
   showSuccessMessage,
 } from "../../../../../../utils/ToastAlert";
 import {
   UpdateQuestionById,
+  getAllQuestionStatus,
   sendQuestionTranslation,
 } from "../../../../../../api/APIs/Services/Question.service";
 import { ToastContainer } from "react-toastify";
@@ -45,27 +47,58 @@ const validationSchema = Yup.object({
 });
 
 function QMSNoticeQuestionDetail() {
-  const { members } = useContext(AuthContext);
+  const { members, sessions } = useContext(AuthContext);
   const [alldivisons, setAllDivisions] = useState([]);
+  const [allQuestionStatus, setAllQuestionStatus] = useState([]);
   const location = useLocation();
-  console.log(location?.state?.question);
+  console.log("sessions", sessions);
   const formik = useFormik({
     initialValues: {
-      sessionNumber: location?.state?.question?.session?.sessionName,
-      noticeOfficeDiaryNumber: location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryNo,
-      noticeOfficeDiaryDate: location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryDate ? moment(
-        location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryDate,
-      ).toDate():"",
-      noticeOfficeDiaryTime: location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryTime ? moment(location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryTime, "hh:mm a").toDate() :"",
-      questionDiaryNumber: location?.state?.question?.questionDiary?.questionDiaryNo,
-      category: location?.state?.question ? location?.state?.question?.questionCategory:"",
-      englishText:  location?.state?.question ? location?.state?.question?.englishText :"",
+      sessionNumber: location.state
+        ? {
+            value: location?.state?.question?.session?.id,
+            label: location?.state?.question?.session?.sessionName,
+          }
+        : "",
+      noticeOfficeDiaryNumber:
+        location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryNo,
+      noticeOfficeDiaryDate: location?.state?.question?.noticeOfficeDiary
+        ?.noticeOfficeDiaryDate
+        ? moment(
+            location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryDate
+          ).toDate()
+        : "",
+      noticeOfficeDiaryTime: location?.state?.question?.noticeOfficeDiary
+        ?.noticeOfficeDiaryTime
+        ? moment(
+            location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryTime,
+            "hh:mm a"
+          ).toDate()
+        : "",
+      questionDiaryNumber:
+        location?.state?.question?.questionDiary?.questionDiaryNo,
+      category: location?.state?.question
+        ? location?.state?.question?.questionCategory
+        : "",
+      englishText: location?.state?.question
+        ? location?.state?.question?.englishText
+        : "",
       urduText: location?.state?.question?.urduText,
-      division: location?.state?.question ? location?.state?.question?.fkDivisionId:"",
+      division: location?.state?.question
+        ? location?.state?.question?.fkDivisionId
+        : "",
       assignedquestionid: location?.state?.question?.questionDiary?.questionID,
-      mover: location?.state?.question?.fkMemberId ? location?.state?.question?.fkMemberId : "",
+      mover: location?.state?.question?.fkMemberId
+        ? location?.state?.question?.fkMemberId
+        : "",
+      questionStatus: location?.state?.question?.questionStatus
+        ? {
+            value: location?.state?.question?.questionStatus?.id,
+            label: location?.state?.question?.questionStatus?.questionStatus,
+          }
+        : "",
     },
-    validationSchema: validationSchema,
+    // validationSchema: validationSchema,
     onSubmit: (values) => {
       // Handle form submission here
       updateQuestion(values);
@@ -74,7 +107,7 @@ function QMSNoticeQuestionDetail() {
 
   const updateQuestion = async (values) => {
     const formData = new FormData();
-    formData.append("fkSessionId", location?.state?.question?.fkSessionId);
+    formData.append("fkSessionId", values?.sessionNumber?.value);
     formData.append("noticeOfficeDiaryNo", values?.noticeOfficeDiaryNumber);
     formData.append("noticeOfficeDiaryDate", values?.noticeOfficeDiaryDate);
     formData.append("noticeOfficeDiaryTime", values?.noticeOfficeDiaryTime);
@@ -89,6 +122,7 @@ function QMSNoticeQuestionDetail() {
     // formData.append("ammendedText", values.ammendedText);
     formData.append("urduText", values.urduText);
     formData.append("englishText", values.englishText);
+    formData.append("fkQuestionStatus", values?.questionStatus?.value);
     // formData.append("originalText", values.originalText);
     try {
       const response = await UpdateQuestionById(
@@ -129,7 +163,22 @@ function QMSNoticeQuestionDetail() {
       console.log(error);
     }
   };
+
+  // Getting Question Statuses
+  const GetAllQuestionStatus = async () => {
+    try {
+      const response = await getAllQuestionStatus();
+      if (response?.success) {
+        setAllQuestionStatus(response?.data);
+        // showSuccessMessage(response.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
+    GetAllQuestionStatus()
     GetALLDivsions();
   }, []);
 
@@ -202,20 +251,31 @@ function QMSNoticeQuestionDetail() {
               <div class="container-fluid">
                 <div class="dash-detail-container mb-4">
                   <div class="row">
-                    <div class="col">
-                      <div class="mb-3">
-                        <label class="form-label">Session No</label>
-                        <input
-                          readOnly={true}
-                          type="text"
-                          placeholder={formik.values.sessionNumber}
-                          className={`form-control`}
-                          id="sessionNumber"
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                        />
-                      </div>
+                  <div class="col">
+                    <div class="mb-3">
+                      <label class="form-label">Session No</label>
+
+                      <Select
+                        options={
+                          sessions &&
+                          sessions?.map((item) => ({
+                            value: item?.id,
+                            label: item?.sessionName,
+                          }))
+                        }
+                        onChange={(selectedOptions) => {
+                          formik.setFieldValue("sessionNumber", selectedOptions);
+                        }}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.sessionNumber}
+                        name="sessionNumber"
+                        isClearable={true}
+                        className={``}
+                        style={{ border: "none" }}
+                      />
+                      
                     </div>
+                  </div>
                     <div class="col">
                       <div class="mb-3">
                         <label class="form-label">
@@ -309,6 +369,32 @@ function QMSNoticeQuestionDetail() {
                           )}
                       </div>
                     </div>
+                    <div className="col">
+                      <div className="mb-3">
+                      <label class="form-label">Question Status</label>
+                      <Select
+                        options={
+                          allQuestionStatus &&
+                          allQuestionStatus?.map((item) => ({
+                            value: item?.id,
+                            label: item?.questionStatus,
+                          }))
+                        }
+                        onChange={(selectedOptions) => {
+                          formik.setFieldValue(
+                            "questionStatus",
+                            selectedOptions
+                          );
+                        }}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.questionStatus}
+                        name="questionStatus"
+                        isClearable={true}
+                        // className={``}
+                      />
+                      </div>
+
+                    </div>
                   </div>
                   <div class="row">
                     <div class="col">
@@ -335,7 +421,7 @@ function QMSNoticeQuestionDetail() {
                           )}
                       </div>
                     </div>
-                    <div class="col">
+                    {/* <div class="col">
                       <div class="mb-3">
                         <label class="form-label">Assigned Question ID</label>
                         <input
@@ -347,7 +433,7 @@ function QMSNoticeQuestionDetail() {
                           onBlur={formik.handleBlur}
                         />
                       </div>
-                    </div>
+                    </div> */}
                     <div class="col">
                       <div class="mb-3">
                         <label class="form-label">Category</label>
