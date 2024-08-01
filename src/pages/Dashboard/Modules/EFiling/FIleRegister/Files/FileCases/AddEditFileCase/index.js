@@ -210,6 +210,23 @@ function AddEditFileCase() {
     }
   };
 
+  const handleFlagDeleteFunc = (tabIndex, flagIndex) => {
+    // Function to handle deletion of a flag
+    const updatedTabs = notingTabData.map((tab, tIndex) => {
+      if (tIndex === tabIndex) {
+        return {
+          ...tab,
+          references: tab.references.filter((_, fIndex) => fIndex !== flagIndex),
+        };
+      }
+      return tab;
+    });
+
+    console.log(updatedTabs);
+
+    setNotingData(updatedTabs)
+  }
+
   const createFormData = () => {
     const formData = new FormData();
     return formData;
@@ -692,6 +709,7 @@ function AddEditFileCase() {
                           hendleDeleteAttach={(item, innerIdx) =>
                             handleAttachDelete(item, innerIdx)
                           }
+                          handleFlagDelete={(tabIndex, flagIndex) => handleFlagDeleteFunc(tabIndex, flagIndex)}
                           FR={location.state}
                         />
                       </div>

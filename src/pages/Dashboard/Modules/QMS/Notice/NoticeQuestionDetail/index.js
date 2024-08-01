@@ -29,16 +29,16 @@ import { imagesUrl } from "../../../../../../api/APIs";
 const validationSchema = Yup.object({
   sessionNumber: Yup.string().required("Session No is required"),
   noticeOfficeDiaryNumber: Yup.string().required(
-    "Notice Office Diary Number is required",
+    "Notice Office Diary Number is required"
   ),
   noticeOfficeDiaryDate: Yup.string().required(
-    "Notice Office Diary Date is required",
+    "Notice Office Diary Date is required"
   ),
   noticeOfficeDiaryTime: Yup.string().required(
-    "Notice Office Diary Time is required",
+    "Notice Office Diary Time is required"
   ),
   questionDiaryNumber: Yup.string().required(
-    "Question Diary Number is required",
+    "Question Diary Number is required"
   ),
   category: Yup.string().required("Question Category is required"),
   englishText: Yup.string(),
@@ -115,7 +115,7 @@ function QMSNoticeQuestionDetail() {
     formData.append("questionDiaryNo", values?.questionDiaryNumber);
     formData.append("fkMemberId", values?.mover);
     // formData.append("fkGroupId", values?.group);
-    formData.append("fkDivisionId",  values?.division);
+    formData.append("fkDivisionId", values?.division);
     // formData.append("fileStatus", values?.fileStatus);
     // formData.append("replyDate", values?.replyDate);
 
@@ -127,7 +127,7 @@ function QMSNoticeQuestionDetail() {
     try {
       const response = await UpdateQuestionById(
         location?.state?.question?.id,
-        formData,
+        formData
       );
       if (response?.success) {
         showSuccessMessage(response?.message);
@@ -140,7 +140,7 @@ function QMSNoticeQuestionDetail() {
   const hendleQuestionTranslation = async () => {
     try {
       const response = await sendQuestionTranslation(
-        location?.state?.question?.id,
+        location?.state?.question?.id
       );
       if (response?.success) {
         showSuccessMessage(response.message);
@@ -178,7 +178,7 @@ function QMSNoticeQuestionDetail() {
   };
 
   useEffect(() => {
-    GetAllQuestionStatus()
+    GetAllQuestionStatus();
     GetALLDivsions();
   }, []);
 
@@ -218,15 +218,20 @@ function QMSNoticeQuestionDetail() {
               <button class="btn btn-primary me-2" type="submit">
                 Update
               </button>
-              <button class="btn btn-warning me-2" type="button"  onClick={() => {
-    const imagePath = location?.state?.question?.questionImage[0]?.path;
-    if (imagePath) {
-      const url = `${imagesUrl}${imagePath}`;
-      window.open(url, "_blank");
-    } else {
-      console.error("Image path is not defined.");
-    }
-  }}>
+              <button
+                class="btn btn-warning me-2"
+                type="button"
+                onClick={() => {
+                  const imagePath =
+                    location?.state?.question?.questionImage[0]?.path;
+                  if (imagePath) {
+                    const url = `${imagesUrl}${imagePath}`;
+                    window.open(url, "_blank");
+                  } else {
+                    console.error("Image path is not defined.");
+                  }
+                }}
+              >
                 View File
               </button>
               {/* <button class="btn btn-primary me-2" type="button">
@@ -251,31 +256,33 @@ function QMSNoticeQuestionDetail() {
               <div class="container-fluid">
                 <div class="dash-detail-container mb-4">
                   <div class="row">
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Session No</label>
+                    <div class="col">
+                      <div class="mb-3">
+                        <label class="form-label">Session No</label>
 
-                      <Select
-                        options={
-                          sessions &&
-                          sessions?.map((item) => ({
-                            value: item?.id,
-                            label: item?.sessionName,
-                          }))
-                        }
-                        onChange={(selectedOptions) => {
-                          formik.setFieldValue("sessionNumber", selectedOptions);
-                        }}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.sessionNumber}
-                        name="sessionNumber"
-                        isClearable={true}
-                        className={``}
-                        style={{ border: "none" }}
-                      />
-                      
+                        <Select
+                          options={
+                            sessions &&
+                            sessions?.map((item) => ({
+                              value: item?.id,
+                              label: item?.sessionName,
+                            }))
+                          }
+                          onChange={(selectedOptions) => {
+                            formik.setFieldValue(
+                              "sessionNumber",
+                              selectedOptions
+                            );
+                          }}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.sessionNumber}
+                          name="sessionNumber"
+                          isClearable={true}
+                          className={``}
+                          style={{ border: "none" }}
+                        />
+                      </div>
                     </div>
-                  </div>
                     <div class="col">
                       <div class="mb-3">
                         <label class="form-label">
@@ -371,29 +378,28 @@ function QMSNoticeQuestionDetail() {
                     </div>
                     <div className="col">
                       <div className="mb-3">
-                      <label class="form-label">Question Status</label>
-                      <Select
-                        options={
-                          allQuestionStatus &&
-                          allQuestionStatus?.map((item) => ({
-                            value: item?.id,
-                            label: item?.questionStatus,
-                          }))
-                        }
-                        onChange={(selectedOptions) => {
-                          formik.setFieldValue(
-                            "questionStatus",
-                            selectedOptions
-                          );
-                        }}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.questionStatus}
-                        name="questionStatus"
-                        isClearable={true}
-                        // className={``}
-                      />
+                        <label class="form-label">Question Status</label>
+                        <Select
+                          options={
+                            allQuestionStatus &&
+                            allQuestionStatus?.map((item) => ({
+                              value: item?.id,
+                              label: item?.questionStatus,
+                            }))
+                          }
+                          onChange={(selectedOptions) => {
+                            formik.setFieldValue(
+                              "questionStatus",
+                              selectedOptions
+                            );
+                          }}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.questionStatus}
+                          name="questionStatus"
+                          isClearable={true}
+                          // className={``}
+                        />
                       </div>
-
                     </div>
                   </div>
                   <div class="row">
@@ -506,22 +512,22 @@ function QMSNoticeQuestionDetail() {
                           onBlur={formik.handleBlur}
                         /> */}
                         <select
-                        class="form-select"
-                        value={formik.values.division}
-                        id="division"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                      >
-                        <option selected disabled hidden>
-                          Select
-                        </option>
-                        {alldivisons &&
-                          alldivisons.map((item, index) => (
-                            <option value={item.id} key={index}>
-                              {item?.divisionName}
-                            </option>
-                          ))}
-                      </select>
+                          class="form-select"
+                          value={formik.values.division}
+                          id="division"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                        >
+                          <option selected disabled hidden>
+                            Select
+                          </option>
+                          {alldivisons &&
+                            alldivisons.map((item, index) => (
+                              <option value={item.id} key={index}>
+                                {item?.divisionName}
+                              </option>
+                            ))}
+                        </select>
                       </div>
                     </div>
                   </div>

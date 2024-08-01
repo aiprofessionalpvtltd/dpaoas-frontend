@@ -124,7 +124,7 @@ function CustomTable({
   const printTooltip = <Tooltip id="print-tooltip">Print</Tooltip>;
   const duplicateTooltip = <Tooltip id="duplicate-tooltip">Duplicate</Tooltip>;
   const resolveTooltip = <Tooltip id="print-tooltip">Complete</Tooltip>;
-  const assignedTooltip = <Tooltip id="print-tooltip">Assigne</Tooltip>;
+  const assignedTooltip = <Tooltip id="print-tooltip">Assign</Tooltip>;
   const createTooltip = <Tooltip id="create-tooltip">Create Case</Tooltip>;
   const attendanceTooltip = (
     <Tooltip id="attendance-tooltip">Mark Attendance </Tooltip>

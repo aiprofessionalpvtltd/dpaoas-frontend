@@ -74,13 +74,50 @@ function AddEditFiles() {
       movement: "",
       fileCategory: null,
       registerDataid: "",
+      status: ""
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       // Handle form submission here
-      hendleSubmit(values);
+      if(location.state) {
+        hendleEdit(values);
+      } else {
+        hendleSubmit(values);
+      }
     },
   });
+
+  const hendleEdit = async (values) => {
+    const Data = {
+      fkBranchId: userData?.fkBranchId,
+      fkMainHeadingId: values?.mainHeading,
+      year: registerData?.year,
+      serialNumber: values?.serialNumber,
+      fileNumber: values?.fileNumber,
+      fileSubject: values?.subject,
+      fileType: null,
+      dateOfRecording: values?.dateOfRecord,
+      fileClassification: values?.classification,
+      fileMovement: values?.movement,
+      status: values?.status,
+      ...(values?.fileCategory && { fileCategory: values?.fileCategory }),
+    };
+    try {
+      const response = await createFiles(
+        location.state ? registerId : registerData?.id,
+        Data
+      );
+      if (response.success) {
+        showSuccessMessage(response?.message);
+        formik.resetForm();
+        setTimeout(() => {
+          navigate("/efiling/dashboard/file-register-list/files-list");
+        }, 1000);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  };
 
   const hendleSubmit = async (values) => {
     const Data = {
@@ -356,6 +393,28 @@ function AddEditFiles() {
                         )}
                     </div>
                   </div>
+
+                  {location.state && (
+                  <div class="col">
+                    <div className="mb-3">
+                      <label className="form-label">Status</label>
+                      <select
+                        className="form-select"
+                        id="status"
+                        name="status"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.status}
+                      >
+                        <option value="" selected disabled hidden>
+                          Select
+                        </option>
+                        <option value={"active"}>Active</option>
+                        <option value={"inactive"}>InActive</option>
+                      </select>
+                    </div>
+                  </div>
+                  )}
                   {/* <div class="col-3">
                     <div class="mb-3">
                       <label class="form-label">Year</label>
@@ -570,7 +629,7 @@ function AddEditFiles() {
                 <div class="row mt-4">
                   <div class="col p-0">
                     <button class="btn btn-primary float-end" type="submit">
-                      Create FIle
+                      Submit
                     </button>
                   </div>
                 </div>
