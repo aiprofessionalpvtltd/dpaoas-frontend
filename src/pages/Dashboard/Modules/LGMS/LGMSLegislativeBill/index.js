@@ -29,6 +29,7 @@ function LGMSLegislativeBill() {
     return apiData.map((item, index) => ({
       SR: item?.id,
       title: item?.title ? item?.title : "",
+      memberName:item?.member?.memberName,
       sessionno: item?.session?.sessionName ? item?.session?.sessionName : "",
       date: item?.date ? moment(item?.date).format("DD-MM-YYYY") : "",
       description: item?.description ? item?.description : "",
@@ -77,7 +78,7 @@ function LGMSLegislativeBill() {
       <Header
         dashboardLink={"/notice/dashboard"}
         addLink1={"/"}
-        title1={"Legislative Bill"}
+        title1={"Private Member Bills"}
       />
       <div class="row mt-5">
         <div class="col-12">
@@ -87,7 +88,7 @@ function LGMSLegislativeBill() {
             data={billData}
             hidebtn1={true}
             // addBtnText={"Create Speech On Demand"}
-            tableTitle="Legislative Bill"
+            tableTitle="Private Member Bills"
             handlePageChange={handlePageChange}
             hideBtn={true}
             currentPage={currentPage}

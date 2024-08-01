@@ -31,11 +31,14 @@ function LegislativeBillList() {
     return apiData.map((item, index) => ({
       SR: item?.id,
       title: item?.title ? item?.title : "",
+      memberName:item?.member?.memberName,
       sessionno: item?.session?.sessionName ? item?.session?.sessionName : "",
       date: item?.date ? moment(item?.date).format("DD-MM-YYYY") : "",
       description: item?.description ? item?.description : "",
       device: item?.device ? item?.device : "",
+      SubmittedOn:moment(item?.createdAt).format("DD-MM-YYYY"),
       isActive: item?.isActive ? item?.isActive : "",
+
     }));
   };
 
@@ -95,7 +98,7 @@ function LegislativeBillList() {
       <Header
         dashboardLink={"/notice/dashboard"}
         addLink1={"/"}
-        title1={"Legislative Bill"}
+        title1={"Private Member Bills"}
       />
       <div class="row mt-5">
         <div class="col-12">

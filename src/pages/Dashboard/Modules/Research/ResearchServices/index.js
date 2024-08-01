@@ -20,6 +20,7 @@ import {
 import axios from "axios";
 import { Modal } from "react-bootstrap";
 import { imagesUrl } from "../../../../../api/APIs";
+import moment from "moment";
 
 function ResearchBRServices() {
   const navigate = useNavigate();
@@ -45,10 +46,12 @@ function ResearchBRServices() {
       const transformedItem = {
         isEditable: item.isEditable,
         SR: item?.id,
+        memberName:item?.member?.memberName,
         serviceType: item?.service_type,
         details: item?.details,
         status: item?.isActive,
-        remarks: item?.remarks ? item.remarks : "------"
+        SubmittedOn:moment(item?.createdAt).format("DD-MM-YYYY"),
+        remarks: item?.remarks ? item.remarks : ""
       };
     
       if (item?.attachment) {

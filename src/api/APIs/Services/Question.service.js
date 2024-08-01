@@ -729,3 +729,16 @@ export const updateGenaratedQuestion = async(data)=>{
     throw error;
   }
 }
+
+export const getSingleQuestionList = async (id)=>{
+  try {
+    const response = await axiosClient.get(`/questionList/${id}`)
+    return response?.data
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+}
+
+
+
