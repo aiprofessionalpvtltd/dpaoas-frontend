@@ -157,11 +157,11 @@ export const NoticeSidebarItems = [
     link: "/notice/legislation",
     icon: faScaleBalanced,
     subItems: [
-      {
-        itemName: "Search Private Member Bill",
-        link: "",
-        icon: faFileInvoice,
-      },
+      // {
+      //   itemName: "Search Private Member Bill",
+      //   link: "",
+      //   icon: faFileInvoice,
+      // },
       {
         itemName: "List Private Member Bill",
         link: "/notice/legislation/legislative-bill",
