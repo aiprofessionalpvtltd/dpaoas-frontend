@@ -383,6 +383,11 @@ export const QMSSideBarItems = [
         link: "/qms/resolution/ballot/list",
         icon: faClipboardList,
       },
+      {
+        itemName: "Resolution Summary Detail",
+        link: "/qms/resolution/summary-detail",
+        icon: faClipboardList,
+      },
     ],
   },
   {
