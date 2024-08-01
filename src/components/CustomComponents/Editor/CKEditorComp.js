@@ -6,7 +6,6 @@ import { ClassicEditor, Bold, Essentials, Italic, Underline, Strikethrough, Alig
 import 'ckeditor5/ckeditor5.css';
 
 export const CKEditorComp = ({ onChange, value, disabled }) => {
-    console.log(value, "value");
   return (
     <div className="ckeditor-container">
       <CKEditor
@@ -60,6 +59,21 @@ export const CKEditorComp = ({ onChange, value, disabled }) => {
           ],
           alignment: {
             options: ['left', 'center', 'right', 'justify']
+          },
+          link: {
+            addTargetToExternalLinks: true, // Automatically adds target="_blank" to external links
+            defaultProtocol: "http://",
+            decorators: {
+              openInNewTab: {
+                mode: 'manual',
+                label: 'Open in a new tab',
+                defaultValue: true, // Default to open links in new tab
+                attributes: {
+                  target: '_blank',
+                  rel: 'noopener noreferrer'
+                }
+              }
+            }
           },
           table: {
             contentToolbar: [

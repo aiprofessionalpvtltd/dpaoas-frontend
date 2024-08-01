@@ -240,6 +240,8 @@ import AllBallotResolutionList from "../pages/Dashboard/Modules/QMS/Resolution/A
 import PreviewResolutionList from "../pages/Dashboard/Modules/QMS/SearchResolution/PreviewResolution/index.js";
 import PreviewQuestionList from "../pages/Dashboard/Modules/QMS/Reports/QuestionList/PreviewQuestionList/index.js";
 import QMSResolutionSummaryDetail from "../pages/Dashboard/Modules/QMS/Resolution/ResolutionSummaryDetail/index.js";
+import FlagsList from "../pages/Dashboard/Modules/EFiling/Flags/index.js";
+import AddEditFlags from "../pages/Dashboard/Modules/EFiling/Flags/AddEditFIags/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -716,6 +718,15 @@ export const ProtectedRoutes = [
   {
     path: "/efiling/dashboard/addedit-file-heading",
     element: <AddEditFIleHeading />,
+  },
+
+  {
+    path: "/efiling/dashboard/flags",
+    element: <FlagsList />,
+  },
+  {
+    path: "/efiling/dashboard/addedit-flags",
+    element: <AddEditFlags />,
   },
 
   // Legislation Routes Start

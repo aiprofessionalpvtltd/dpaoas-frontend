@@ -77,9 +77,9 @@ function ListFiles() {
     }
   };
   const transformFilesHeadings = (apiData) => {
-    console.log(apiData);
     return apiData.map((item) => ({
       HeadingNumber: item?.mainHeadingNumber,
+      mainHead: item?.mainHeading,
     }));
   };
 
@@ -211,7 +211,7 @@ function ListFiles() {
                   registerData &&
                   registerData?.map((item) => ({
                     value: item.id,
-                    label: item.year,
+                    label: `${item.registerSubject} (${item.year})`,
                   }))
                 }
                 onChange={(selectedOptions) => {
@@ -235,7 +235,7 @@ function ListFiles() {
                 {headings &&
                   headings.map((item) => (
                     <option value={item.HeadingNumber}>
-                      {item.HeadingNumber}
+                      {item.mainHead}
                     </option>
                   ))}
               </select>

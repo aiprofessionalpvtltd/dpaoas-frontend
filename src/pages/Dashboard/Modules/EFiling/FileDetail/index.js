@@ -133,7 +133,6 @@ function FileDetail() {
       notingSubject: notingTabSubject,
       paragraphArray: notingTabData,
     };
-    console.log("data=====", data);
     try {
       const response = await UpdateFIleCase(filesData?.caseNoteId, data);
       if (response?.success) {
@@ -157,6 +156,11 @@ function FileDetail() {
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
+    setModalInputValue({
+      assignedTo: "",
+      CommentStatus: "",
+      comment: "",
+    })
   };
 
   const hendleAssiginFileCaseApi = async () => {
@@ -296,9 +300,22 @@ function FileDetail() {
     setNotingTabsData(renumberedTabs);
     // }
   };
+  const handleFlagDeleteFunc = (tabIndex, flagIndex) => {
+    // Function to handle deletion of a flag
+    const updatedTabs = notingTabData.map((tab, tIndex) => {
+      if (tIndex === tabIndex) {
+        return {
+          ...tab,
+          references: tab.references.filter((_, fIndex) => fIndex !== flagIndex),
+        };
+      }
+      return tab;
+    });
+    setNotingTabsData(updatedTabs);
+  }
+
 
   const handleAttachDelete = async (item, tabIndex) => {
-    console.log("indexxsdadsa", tabIndex);
     //   const updatedTabs = notingTabData.map((tab, tIndex) => {
 
     //   });
@@ -309,9 +326,6 @@ function FileDetail() {
     //   ...notingTabData,
     //   references: renumberedTabs
     // });
-
-    console.log("corspondence", tabIndex);
-    console.log("para", tabIndex);
 
     if (item?.attachments[0]?.attachments[0]?.isSave) {
       try {
@@ -330,11 +344,6 @@ function FileDetail() {
     } else {
       // const tabIndex= 0
       const updatedTabs = notingTabData.map((tab, tIndex) => {
-        console.log(
-          "ididididi",
-          item?.attachments[0]?.attachments[0]?.id,
-          item?.attachments[0]?.attachments[0]?.id
-        );
         if (
           item?.attachments[0]?.attachments[0]?.id ===
           item?.attachments[0]?.attachments[0]?.id
@@ -909,6 +918,7 @@ function FileDetail() {
                                   <input
                                     className={`form-control mb-2`}
                                     id="subject"
+                                    disabled={location?.state?.view ? true : false}
                                     placeholder="Subject"
                                     onChange={(e) =>
                                       setNotingTabSubject(e.target.value)
@@ -926,11 +936,14 @@ function FileDetail() {
                                   )}
                                   <DocParas
                                     tabsData={notingTabData}
+                                    disabled={location?.state?.view ? true : false}
                                     onEditorChange={handleEditorChange}
                                     onDelete={handleDelete}
                                     hendleDeleteAttach={(item, innerIdx) =>
                                       handleAttachDelete(item, innerIdx)
                                     }
+                                    handleFlagDelete={(tabIndex, flagIndex) => handleFlagDeleteFunc(tabIndex, flagIndex)}
+
                                     FR={FR}
                                     selectedFileId={
                                       location?.state?.fileId ||
@@ -948,6 +961,7 @@ function FileDetail() {
                                   setNotingData({ description: data })
                                 }
                                 value={notingData.description}
+                                disabled={location?.state?.view ? true : false}
                               />
 
                               {/* <Editor
@@ -968,6 +982,7 @@ function FileDetail() {
                                 <button
                                   className="btn btn-primary"
                                   style={{ marginTop: 60, width: "100px" }}
+                                  disabled={location?.state?.view ? true : false}
                                   onClick={() =>
                                     handleEditorChange(
                                       null,
@@ -987,7 +1002,7 @@ function FileDetail() {
                           {selectedTab === "Correspondence" ? (
                             <div class="mt-3">
                               <CustomTable
-                                hidebtn1={false}
+                                hidebtn1={location.state?.view ? true : false}
                                 addBtnText={"Create Correspondence"}
                                 ActionHide={false}
                                 data={correspondenceTypesData}
@@ -1021,6 +1036,8 @@ function FileDetail() {
                                   setAttachedFiles(item?.attachmentInternal);
                                   setShowModal(true);
                                 }}
+                                showEditIcon={location.state?.view ? true : false}
+                                hideDeleteIcon={location.state?.view ? true : false}
                                 handleEdit={(item) => {
                                   if (fkfileId) {
                                     navigate(

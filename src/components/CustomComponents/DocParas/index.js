@@ -7,6 +7,7 @@ import { Editor } from "../Editor";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCheckCircle,
+  faClipboard,
   faEdit,
   faFileExport,
   faTrash,
@@ -14,15 +15,15 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import sanitizeHtml from "sanitize-html";
 import { Modal } from "react-bootstrap";
-import { getAllCorrespondence } from "../../../api/APIs/Services/efiling.service";
+import { getAllBranchFlagsApi, getAllCorrespondence } from "../../../api/APIs/Services/efiling.service";
 import { getSelectedFileID, getUserData } from "../../../api/Auth";
 import { imagesUrl } from "../../../api/APIs";
 import { AuthContext } from "../../../api/AuthContext";
 import CKEditorComp from "../Editor/CKEditorComp";
-import { showErrorMessage } from "../../../utils/ToastAlert";
+import { showErrorMessage, showSuccessMessage } from "../../../utils/ToastAlert";
 
 
-const DocParas = ({ tabsData, onEditorChange, onDelete, FR, selectedFileId, hendleDeleteAttach }) => {
+const DocParas = ({ tabsData, onEditorChange, onDelete, FR, selectedFileId, hendleDeleteAttach, handleFlagDelete, disabled }) => {
   const UserData = getUserData();
   const { fildetailsAqain } = useContext(AuthContext)
   const [correspondenceTypesData, setCorrespondenceTypesData] = useState([]);
@@ -38,6 +39,8 @@ const DocParas = ({ tabsData, onEditorChange, onDelete, FR, selectedFileId, hend
   const [referenceFlag, setReferenceFlag] = useState("");
   const [referenceAttachment, setReferenceAttachment] = useState(null);
   const [frAttachment, setFrAttachment] = useState(null);
+  const userData = getUserData();
+  const [flagsData, setFlagsData] = useState([]);
 
   const handleEditToggle = (index, edited) => {
     const selectedAttachment = correspondenceTypesData.find(
@@ -118,6 +121,49 @@ const DocParas = ({ tabsData, onEditorChange, onDelete, FR, selectedFileId, hend
     return filePath.split("/").pop();
   };
 
+  // Function to copy text to clipboard
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text).then(
+      () => {
+        showSuccessMessage('Link copied to clipboard!');
+      },
+      (err) => {
+        console.error('Failed to copy text: ', err);
+      }
+    );
+  };
+
+  const transformFilesHeadingdata = (apiData) => {
+    return apiData.map((item) => ({
+      SrNo: item?.id,
+      flag: item?.flag,
+      branch: item?.branches?.branchName,
+    }));
+  };
+
+  const getBranchFlags = async () => {
+    try {
+      const response = await getAllBranchFlagsApi(
+        userData?.fkBranchId,
+        0,
+        100
+      );
+      if (response.success) {
+        //   showSuccessMessage(response?.message)
+        const transformedData = transformFilesHeadingdata(
+          response?.data
+        );
+        setFlagsData(transformedData);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  }
+
+  useEffect(() => {
+    getBranchFlags();
+  }, [])
+
   return (
     <>
       <Modal
@@ -142,15 +188,9 @@ const DocParas = ({ tabsData, onEditorChange, onDelete, FR, selectedFileId, hend
                   <option value="" selected disabled hidden>
                     Select
                   </option>
-                  <option value={"A"}>A</option>
-                  <option value={"B"}>B</option>
-                  <option value={"C"}>C</option>
-                  <option value={"D"}>D</option>
-                  <option value={"Note"}>Note</option>
-                  <option value={"FR"}>FR</option>
-                  <option value={"None"}>None</option>
-                  <option value={"Blank"}>Blank</option>
-                  <option value={"-"}>-</option>
+                  {flagsData && flagsData?.length > 0 && flagsData.map((item) => (
+                    <option value={item?.flag}>{item?.flag}</option>
+                  ))}
                 </select>
               </div>
             </div>
@@ -313,6 +353,8 @@ const DocParas = ({ tabsData, onEditorChange, onDelete, FR, selectedFileId, hend
                 {tab.createdBy === UserData?.fkUserId && (
                   editableIndex !== index ? (
                     <>
+                      {!disabled && (
+                        <>
                       <button
                         onClick={() => {
                           setShowModalIndex(index);
@@ -343,6 +385,8 @@ const DocParas = ({ tabsData, onEditorChange, onDelete, FR, selectedFileId, hend
                       >
                         <FontAwesomeIcon icon={faEdit} />
                       </button>
+                      </>
+                      )}
                     </>
                   ) : (
                     <>
@@ -381,7 +425,14 @@ const DocParas = ({ tabsData, onEditorChange, onDelete, FR, selectedFileId, hend
                         <div
                           key={idx}
                           style={{ display: "flex", flexDirection: "column" }}>
+                          <div style={{ display: "flex", flexDirection: "row" }}>
                           <label>Flag - {item?.flag}</label>
+                          <div
+                            style={{ marginLeft: "20px", color: "red", cursor: "pointer" }}
+                          >
+                            <FontAwesomeIcon icon={faXmark} onClick={() => handleFlagDelete(index, idx)} />
+                          </div>
+                          </div>
                           {/* <label>Attachments: </label> */}
                           <ul style={{ marginBottom: 0 }}>
                             {item?.attachments?.map((innerItem, innerIdx) => (
@@ -416,7 +467,16 @@ const DocParas = ({ tabsData, onEditorChange, onDelete, FR, selectedFileId, hend
                                     <FontAwesomeIcon  onClick={() => hendleDeleteAttach(item, innerIdx)} color={"red"} icon={faXmark}/>
 
                                     </div> */}
-
+                                    <div
+                                      style={{
+                                        marginLeft: '10px',
+                                        cursor: 'pointer',
+                                      }}
+                                      onClick={() => copyToClipboard(`${`http://172.16.170.8:3000`}${nestedItem?.file}`)}
+                                      title="Copy Link"
+                                    >
+                                      <FontAwesomeIcon icon={faClipboard} color={"rgb(45, 206, 137)"} />
+                                    </div>
                                   </div>
                                   </li>
                                   </>

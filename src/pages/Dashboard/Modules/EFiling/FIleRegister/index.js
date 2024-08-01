@@ -8,7 +8,7 @@ import {
   EfilingSideBarItem,
 } from "../../../../../utils/sideBarItems";
 import { useNavigate } from "react-router";
-import { getAllFileRegister } from "../../../../../api/APIs/Services/efiling.service";
+import { deleteFileRegisterApi, getAllFileRegister } from "../../../../../api/APIs/Services/efiling.service";
 import {
   showErrorMessage,
   showSuccessMessage,
@@ -37,6 +37,7 @@ function ListFileRegister() {
       branch: item?.branches?.branchName,
       Subject: item?.registerSubject,
       year: item?.year,
+      status: item?.status
     }));
   };
 
@@ -84,6 +85,18 @@ function ListFileRegister() {
     getAllRegisterApi();
   }, [getAllRegisterApi]);
 
+  const handleDelete = async (id) => {
+    try {
+      const response = await deleteFileRegisterApi(id);
+      if (response?.success) {
+        showSuccessMessage(response.message);
+        getAllRegisterApi();
+      }
+    } catch (error) {
+      showErrorMessage(error.response.data.message);
+    }
+  };
+
   return (
     <Layout
       module={false}
@@ -112,6 +125,7 @@ function ListFileRegister() {
             currentPage={currentPage}
             handleAdd={() => navigate("/efiling/dashboard/addedit-file-register")}
             handleEdit={(item) => navigate("/efiling/dashboard/addedit-file-register", { state: item })}
+            handleDelete={(item) => handleDelete(item.id)}
             pageSize={pageSize}
             totalCount={count}
             singleDataCard={true}

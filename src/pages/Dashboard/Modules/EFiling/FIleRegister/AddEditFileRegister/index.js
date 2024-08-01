@@ -31,6 +31,7 @@ function AddEditFileRegister() {
       // fkBranchId: "",
       year: "",
       registerSubject:"",
+      status: ""
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -48,7 +49,7 @@ function AddEditFileRegister() {
       fkBranchId: userData?.fkBranchId,
       registerNumber: values?.registerNumber,
       year: values?.year,
-      registerSubject:values?.registerSubject
+      registerSubject:values?.registerSubject,
     }
     try {
       const response = await createFIleRegister(Data)
@@ -69,7 +70,8 @@ function AddEditFileRegister() {
       fkBranchId: userData?.fkBranchId,
       registerNumber: values?.registerNumber,
       year: values?.year,
-      registerSubject:values?.registerSubject
+      registerSubject:values?.registerSubject,
+      status: values?.status
     }
     try {
       const response = await UpdateFIleRegister(location?.state?.id, Data)
@@ -125,6 +127,7 @@ function AddEditFileRegister() {
         registerNumber: regData?.registerNumber,
         year: regData?.year,
         registerSubject: regData?.registerSubject,
+        status: regData?.status
       });
     }
   }, [regData, formik.setValues]);
@@ -228,6 +231,29 @@ function AddEditFileRegister() {
                         )}
                     </div>
                   </div>
+
+                  {location.state?.id && (
+                  <div class="col-6">
+                    <div className="mb-3">
+                      <label className="form-label">Status</label>
+                      <select
+                        className="form-select"
+                        id="status"
+                        name="status"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.status}
+                      >
+                        <option value="" selected disabled hidden>
+                          Select
+                        </option>
+                        <option value={"active"}>Active</option>
+                        <option value={"inactive"}>InActive</option>
+                      </select>
+                    </div>
+                  </div>
+                  )}
+
                 </div>
                 <div class="row">
                   <div class="col">

@@ -34,7 +34,7 @@ const ScrollButton = () => {
       onClick={isAtTop ? scrollToBottom : scrollToTop}
       style={{
         position: 'fixed',
-        bottom: '100px',
+        bottom: '60px',
         right: '70px',
         background: '#2dce89',
         color: '#fff',
