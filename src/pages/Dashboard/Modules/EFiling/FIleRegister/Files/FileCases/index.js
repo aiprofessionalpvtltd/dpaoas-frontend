@@ -159,6 +159,7 @@ function FileCases() {
   const transformFilesHeadings = (apiData) => {
     return apiData?.map((item) => ({
       HeadingNumber: item?.mainHeadingNumber,
+      mainHead: item?.mainHeading
     }));
   };
 
@@ -232,7 +233,7 @@ function FileCases() {
               registerData &&
               registerData?.map((item) => ({
                 value: item.id,
-                label: item.year,
+                label: `${item.registerSubject} (${item.year})`,
               }))
             }
             onChange={handleRegisterDropDownChange}
@@ -256,7 +257,7 @@ function FileCases() {
                 {headings &&
                   headings?.map((item) => (
                     <option value={item.HeadingNumber}>
-                      {item.HeadingNumber}
+                      {item.mainHead}
                     </option>
                   ))}
               </select>

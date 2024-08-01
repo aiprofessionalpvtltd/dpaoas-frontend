@@ -31,12 +31,11 @@ function PreviousCasesHistory() {
     setCurrentPage(page);
   };
 
-  console.log("LocatCasesAll", location?.state);
   const transformFilesCases = (apiData) => {
     return apiData.map((item, index) => ({
       caseId: item?.fkCaseId,
       FileNo: item?.fileData?.fileNumber,
-      AssignedBy:
+      SubmittedBy:
         item?.fileRemarksData?.length > 0
           ? `${item?.fileRemarksData[0]
             ?.submittedUser?.employee?.firstName

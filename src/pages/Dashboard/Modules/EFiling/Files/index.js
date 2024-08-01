@@ -24,13 +24,13 @@ function Files() {
   };
 
   const transformFilesdata = (apiData) => {
-    console.log(apiData);
     return apiData.map((item) => ({
       id: item?.id,
       fileNumber: item?.fileNumber,
       subject: item?.fileSubject,
       branch: item?.branches?.branchName,
       fileStatus: item?.fileStatus,
+      status: item?.status
     }));
   };
 
@@ -96,7 +96,8 @@ function Files() {
               tableTitle="Files List"
               addBtnText2="Create File"
               handleAdd2={() => navigate("/efiling/dashboard/addedit")}
-              handleEdit={(item) => navigate("/efiling/dashboard/fileDetail", { state: { view: false, id: item.id } })}
+              showEditIcon={false}
+              handleEdit={(item) => navigate("/efiling/dashboard/addedit", { state: { view: false, id: item.id } })}
               handleView={(item) => navigate("/efiling/dashboard/fileDetail", { state: { view: true, id: item.id } })}
               showView={true}
               headertitlebgColor={"#666"}
