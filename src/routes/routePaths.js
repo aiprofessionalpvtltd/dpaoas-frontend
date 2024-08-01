@@ -239,6 +239,7 @@ import PreviewBallotMotionList from "../pages/Dashboard/Modules/MMS/Reports/Moti
 import AllBallotResolutionList from "../pages/Dashboard/Modules/QMS/Resolution/AllBallotResolutionList/index.js";
 import PreviewResolutionList from "../pages/Dashboard/Modules/QMS/SearchResolution/PreviewResolution/index.js";
 import PreviewQuestionList from "../pages/Dashboard/Modules/QMS/Reports/QuestionList/PreviewQuestionList/index.js";
+import QMSResolutionSummaryDetail from "../pages/Dashboard/Modules/QMS/Resolution/ResolutionSummaryDetail/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -470,6 +471,8 @@ export const ProtectedRoutes = [
   { path: "/qms/rsolution/list/ballot/preview-pdf", element: <PreviewBallotResolutionList /> },
   { path: "/qms/resolution/delete", element: <QMSDeleteResolution /> },
   { path: "/qms/resolution/ballot/list", element: <AllBallotResolutionList /> },
+  { path: "/qms/resolution/summary-detail", element: <QMSResolutionSummaryDetail /> },
+
 
   { path: "/qms/question", element: <QMSQuestionDashboard /> },
   { path: "/qms/question/list", element: <QMSQuestionList /> },
