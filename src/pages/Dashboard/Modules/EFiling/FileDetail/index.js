@@ -9,6 +9,7 @@ import {
 } from "../../../../../api/Auth";
 import {
   ApprovedFIleCase,
+  DeleteCorrApi,
   DeletePara,
   DeleteParaAttachement,
   UpdateFIleCase,
@@ -507,6 +508,18 @@ function FileDetail() {
         />
       </>
     );
+  };
+
+  const handleDeleteCorr = async (id) => {
+    try {
+      const response = await DeleteCorrApi(id);
+      if (response?.success) {
+        showSuccessMessage(response.message);
+        handleCorrespondences();
+      }
+    } catch (error) {
+      showErrorMessage(error.response.data.message);
+    }
   };
 
   return (
@@ -1038,6 +1051,7 @@ function FileDetail() {
                                 }}
                                 showEditIcon={location.state?.view ? true : false}
                                 hideDeleteIcon={location.state?.view ? true : false}
+                                handleDelete={(item) => handleDeleteCorr(item.internalId)}
                                 handleEdit={(item) => {
                                   if (fkfileId) {
                                     navigate(
@@ -1096,8 +1110,8 @@ function FileDetail() {
                   {remarksData?.length > 0 ? (
                     remarksData.map((item) => (
                       <>
-                        {item?.CommentStatus !== null ||
-                        item?.comment !== null ? (
+                        {(item?.CommentStatus !== null ||
+                        item?.comment !== null) && (
                           <div
                             class="d-flex flex-row p-3 ps-3"
                             style={{ borderBottom: "1px solid #ddd" }}
@@ -1151,18 +1165,6 @@ function FileDetail() {
                                 </p>
                               </div>
                             </>
-                          </div>
-                        ) : (
-                          <div
-                            class="alert alert-danger mt-5"
-                            role="alert"
-                            style={{
-                              width: "350px",
-                              margin: "0 auto",
-                              textAlign: "center",
-                            }}
-                          >
-                            No data found
                           </div>
                         )}
                       </>

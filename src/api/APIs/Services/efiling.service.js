@@ -446,6 +446,42 @@ export const createFiles = async (id, data) => {
   }
 };
 
+export const updateFiles = async (id, data) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.put(`/files/update/${id}`, data);
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const getSingleFileById = async (fileId) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.get(
+      `/files/singleFile/${fileId}`
+    );
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
 // export const getFileByRegisterById = async (id, currentPage, pageSize) => {
 //   try {
 //     //   const token = getAuthToken();
@@ -1152,6 +1188,25 @@ export const getAllCorrespondence = async (fileId, branchId, currentPage, pageSi
   try {
     //   const token = getAuthToken();
     const response = await axiosClient.get(`/correspondence/getAllCorrespondences?fileId=${fileId}&branchId=${branchId}&currentPage=${currentPage}&pageSize=${pageSize}`);
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const DeleteCorrApi = async (id) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.delete(
+      `/correspondence/deleteCorrespondence/${id}`
+    );
     // {
     //   headers: {
     //     accept: "application/json",

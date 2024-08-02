@@ -47,6 +47,7 @@ function ListFiles() {
       // year: item.year,
       fileNumber: item?.fileNumber,
       fileSubject: item?.fileSubject,
+      status: item?.status
     }));
   };
   const [registerHistory, setRegisterHistory] = useState(null);
@@ -270,7 +271,8 @@ function ListFiles() {
             totalCount={count}
             singleDataCard={true}
             hideDeleteIcon={true}
-            showEditIcon={true}
+            showEditIcon={false}
+            handleEdit={(item) => navigate("/efiling/dashboard/file-register-list/files-list/addedit-file", { state: { view: false, id: item.internalId } })}
             showView={true}
             handleView={(item) =>
               navigate(

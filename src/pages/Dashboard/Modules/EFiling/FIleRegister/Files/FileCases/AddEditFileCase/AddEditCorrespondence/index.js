@@ -44,7 +44,8 @@ function AddEditCorrespondence() {
     initialValues: {
       correspondenceName: "",
       correspondenceDescription: "",
-      attachment: null
+      attachment: null,
+      status: ""
     },
     // validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -93,6 +94,7 @@ function AddEditCorrespondence() {
     }
     formData.append("fkBranchId", UserData.fkBranchId);
     formData.append("fkFileId", location?.state?.fileId);
+    formData.append("status", values.status);
 
     try {
       const response = await UpdateCorrespondence(location.state?.item?.internalId, formData);
@@ -135,7 +137,8 @@ function AddEditCorrespondence() {
       formik.setValues({
         correspondenceName: corrById.name,
         correspondenceDescription: corrById.description,
-        attachment: corrById.attachment
+        attachment: corrById.attachment,
+        status: corrById.status
       });
     }
   }, [corrById, formik.setValues]);
@@ -322,6 +325,28 @@ function AddEditCorrespondence() {
                         ))}
                     </div>
                   </div>
+
+                  {location.state?.item?.internalId && (
+                        <div class="col">
+                          <div className="mb-3">
+                            <label className="form-label">Status</label>
+                            <select
+                              className="form-select"
+                              id="status"
+                              name="status"
+                              onChange={formik.handleChange}
+                              onBlur={formik.handleBlur}
+                              value={formik.values.status}
+                            >
+                              <option value="" selected disabled hidden>
+                                Select
+                              </option>
+                              <option value={"active"}>Active</option>
+                              <option value={"inactive"}>InActive</option>
+                            </select>
+                          </div>
+                        </div>
+                  )}
                 </div>
 
                 <div class="row">

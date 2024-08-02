@@ -19,7 +19,7 @@ import {
 } from "../../../../../utils/ToastAlert";
 import moment from "moment";
 import FreshReceiptModal from "../../../../../components/FreshReceiptModal";
-import { getUserData } from "../../../../../api/Auth";
+import { getUserData, setFRAttachmentsData, setFRId } from "../../../../../api/Auth";
 
 function FileReceipt() {
   const navigate = useNavigate();
@@ -141,6 +141,8 @@ function FileReceipt() {
                         hendleAssigned={(item) => navigate("/efiling/dashboard/fresh-receipt/frdetail", {state:{id:item.id, view: false}})}
                         showCreateBtn={true}
                         hendleCreateBtn={(item) => {
+                          setFRId(item.id);
+                          setFRAttachmentsData(item.internalAttachment);
                           if(item?.internalAttachment) {
                             navigate("/efiling/dashboard/file-register-list/files-list/addedit-case", {state:{freshReceiptsAttachments:item.internalAttachment, frId: item.id, frSubject: item.frSubject}})
                           } else {
