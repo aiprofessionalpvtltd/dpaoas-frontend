@@ -121,8 +121,9 @@ const DocParas = ({ tabsData, onEditorChange, onDelete, FR, selectedFileId, hend
     return filePath.split("/").pop();
   };
 
-  // Function to copy text to clipboard
-  const copyToClipboard = (text) => {
+// Function to copy text to clipboard
+const copyToClipboard = (text) => {
+  if (navigator && navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(text).then(
       () => {
         showSuccessMessage('Link copied to clipboard!');
@@ -131,7 +132,32 @@ const DocParas = ({ tabsData, onEditorChange, onDelete, FR, selectedFileId, hend
         console.error('Failed to copy text: ', err);
       }
     );
-  };
+  } else {
+    // Fallback to execCommand if clipboard API is not supported
+    fallbackCopyToClipboard(text);
+  }
+};
+
+// Fallback method using document.execCommand('copy')
+const fallbackCopyToClipboard = (text) => {
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  // Position the textarea off-screen
+  textarea.style.position = 'fixed';
+  textarea.style.left = '-9999px';
+  document.body.appendChild(textarea);
+  textarea.select();
+  
+  try {
+    const successful = document.execCommand('copy');
+    const msg = successful ? 'Link copied to clipboard!' : 'Failed to copy text!';
+    showSuccessMessage(msg);
+  } catch (err) {
+    console.error('Fallback: Unable to copy', err);
+  }
+
+  document.body.removeChild(textarea);
+};
 
   const transformFilesHeadingdata = (apiData) => {
     return apiData.map((item) => ({
