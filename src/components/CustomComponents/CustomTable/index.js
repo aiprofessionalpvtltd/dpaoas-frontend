@@ -398,7 +398,9 @@ function CustomTable({
                           item[key] === "complete" ||
                           item[key] === "closed" ||
                           item[key] === "in-progress" ||
-                          item[key] === "pending" ? (
+                          item[key] === "pending" ||
+                          item[key] === "approved"
+                           ? (
                             <span
                               className={`label label-sm ${
                                 item[key] === "active" ||
@@ -407,6 +409,8 @@ function CustomTable({
                                   : item[key] === "pending"
                                     ? "label-pending"
                                     : item[key] === "closed"
+                                      ? "label-close" : 
+                                      item[key] === "closed" 
                                       ? "label-close"
                                       : item[key] === "in-progress"
                                         ? "label-inprogress"

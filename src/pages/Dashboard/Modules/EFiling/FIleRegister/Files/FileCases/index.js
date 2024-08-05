@@ -57,10 +57,7 @@ function FileCases() {
           item?.fileRemarksData?.length > 0
             ? item?.fileRemarksData[0]?.assignedUser?.employee?.firstName
             : "---",
-        Status:
-          item?.fileRemarksData?.length > 0
-            ? item?.fileRemarksData[0]?.CommentStatus
-            : "Draft",
+        Status: item?.caseStatus || "-",
         MarkedDate:
           item?.fileRemarksData?.length > 0
             ? moment(item?.fileRemarksData[0]?.createdAt).format("DD/MM/YYYY")

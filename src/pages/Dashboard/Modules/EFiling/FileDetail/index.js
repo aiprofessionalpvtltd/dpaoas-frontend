@@ -169,7 +169,7 @@ function FileDetail() {
       const formData = new FormData();
       formData.append("submittedBy", UserData?.fkUserId);
       formData.append("assignedTo", modalInputValue?.assignedTo);
-      formData.append("CommentStatus", modalInputValue?.CommentStatus);
+      // formData.append("CommentStatus", modalInputValue?.CommentStatus);
       formData.append(
         "comment",
         modalInputValue?.CommentStatus ? "" : modalInputValue?.comment
@@ -206,7 +206,8 @@ function FileDetail() {
     try {
       const response = await getHLEmployee(UserData?.fkUserId);
       if (response?.success) {
-        setEmployeeData(response?.data);
+        const filteredData = response?.data?.filter((item) => item?.userName !== UserData?.userName);
+        setEmployeeData(filteredData);
       }
     } catch (error) {
       console.log(error);
