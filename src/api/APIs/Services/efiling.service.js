@@ -521,6 +521,23 @@ export const getFileByRegisterById = async (searchParams) => {
   }
 };
 
+export const deleteFileById = async (id) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.delete(`files/deleteFile/${id}`);
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
 export const getFileStates = async () => {
   try {
     //   const token = getAuthToken();
