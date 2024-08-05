@@ -25,6 +25,7 @@ import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
 import { getUserData } from "../../../../../../api/Auth";
 import { imagesUrl } from "../../../../../../api/APIs";
+import { getSingleQuestionList } from "../../../../../../api/APIs/Services/Question.service";
 
 function QMSReportQuestionList() {
   const { sessions } = useContext(AuthContext);
@@ -39,6 +40,7 @@ function QMSReportQuestionList() {
   const [isEditing, setIsEditing] = useState(false);
   const [selectedQuestionList, setSelectedQuestionList] = useState(null);
   const [generateResData, setGeneratedResData] = useState([]);
+  const [checked , setChecked] = useState([])
 
   const pageSize = 10; // Set your desired page size
   const handlePageChange = (page) => {
@@ -82,7 +84,7 @@ function QMSReportQuestionList() {
       questionCategory: values?.category,
       listName: values?.listName,
       startListNo: values?.startListNo,
-      questionIds: values.selectedQuestions ? values.selectedQuestions : [],
+      questionDetails: checked,
     };
 
     try {
@@ -128,26 +130,17 @@ function QMSReportQuestionList() {
   };
 
   const transformQuestionsData = (apiData) => {
-    return apiData.map((res, index) => {
-      const rowData = {
-        // SrNo: index,
-        id: res?.id, // Show id as the second column
-        questionCategory: res?.questionCategory,
-        sessionName: res?.sessionName,
-        ministryName: res?.ministryName,
-        questionStatus: res.questionStatus,
-        englishText: res?.englishText.replace(/(<([^>]+)>)/gi, ""),
-        // urduText: res?.urduText.replace(/(<([^>]+)>)/gi, ""),
-        questionActive: res?.questionActive,
-      };
-
-      // Remove id key from rowData if it's null or undefined
-      if (rowData.id == null) {
-        delete rowData.id;
-      }
-
-      return rowData;
-    });
+    return apiData.map((res, index) => ({
+      internalId:res?.id,
+      id: res?.id, // Show id as the second column
+      questionCategory: res?.questionCategory,
+      sessionName: res?.session?.sessionName,
+      ministryName: res?.divisions?.divisionName,
+      questionStatus: res?.questionStatus?.questionStatus,
+      englishText: res?.englishText?.replace(/(<([^>]+)>)/gi, ""),
+      // urduText: res?.urduText?.replace(/(<([^>]+)>)/gi, ""),
+      questionActive: res?.questionActive,
+    }));
   };
 
   const generateQuestionsList = async (values) => {
@@ -170,12 +163,10 @@ function QMSReportQuestionList() {
         const transformedData = transformLeavesData(
           response.data?.questionList?.questionList
         );
-        const transformedQuestionData = transformQuestionsData(
-          response.data?.questionList?.questions
-        );
+
         setGeneratedItem(true);
         setGeneratedData(response?.data?.questionList);
-        setGeneratedResData(transformedQuestionData);
+
         setResData(transformedData);
       }
     } catch (error) {
@@ -282,15 +273,58 @@ function QMSReportQuestionList() {
       showSuccessMessage("No Attachment Available");
     }
   };
-  const handleEdit = (item) => {
-    setSelectedQuestionList(item);
-    setIsEditing(true);
+  // const handleEdit = (item) => {
+  //   setSelectedQuestionList(item);
+  //   setIsEditing(true);
+  // };
+  const handleEdit = async (data) => {
+    try {
+      const response = await getSingleQuestionList(data?.id);
+      if (response?.success) {
+        const questionList = response?.data;
+        const transformedQuestionData = transformQuestionsData(
+          response?.data
+        );
+        setGeneratedResData(transformedQuestionData);
+        setIsEditing(true);
+        setSelectedQuestionList(questionList);
+
+        formik.setValues({
+          category: questionList.questionCategory || "",
+          groupId: questionList.fkGroupId || "",
+          startListNo: questionList.startListNo || "",
+          listName: questionList.listName || "",
+          houseLayDate: questionList.houseLayDate
+            ? moment(questionList.houseLayDate).toDate()
+            : "",
+          selectedQuestions: questionList.questions || [],
+        });
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
   };
   const handlePrivewPage = (id) => {
     const encodedJsonString = encodeURIComponent(id);
     const url = `/qms/questionList/priveiw-question-list?state=${encodedJsonString}`;
     window.open(url, "_blank");
   };
+
+
+  const handleCheckboxChange = (event) => {
+    const { value, checked } = event.target;
+    let updatedSelectedQuestions = [...formik.values.selectedQuestions];
+
+    if (checked) {
+      updatedSelectedQuestions.push(value);
+    } else {
+      updatedSelectedQuestions = updatedSelectedQuestions.filter((id) => id !== value);
+    }
+
+    formik.setFieldValue("selectedQuestions", updatedSelectedQuestions);
+  };
+
+
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <Header
@@ -444,12 +478,13 @@ function QMSReportQuestionList() {
                         <label className="form-label">Selected Questions</label>
                         <input
                           className="form-control"
+                          readOnly
                           id="selectedQuestions"
-                          value={formik.values.selectedQuestions}
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
+                          // value={formik.values.selectedQuestions}
+                          // onChange={formik.handleChange}
+                          // onBlur={formik.handleBlur}
                           type="text"
-                          placeholder=" "
+                          placeholder={checked}
                         />
                       </div>
                     </div>
@@ -531,10 +566,9 @@ function QMSReportQuestionList() {
                 showListIcon={true}
                 totalCount={count}
                 isCheckbox={true}
-                isChecked={formik.values.selectedQuestions}
-                setIsChecked={(e) =>
-                  formik.setFieldValue("selectedQuestions", e.target.value)
-                }
+                isChecked={checked}
+                setIsChecked={setChecked}
+
               />
             </div>
           </div>
