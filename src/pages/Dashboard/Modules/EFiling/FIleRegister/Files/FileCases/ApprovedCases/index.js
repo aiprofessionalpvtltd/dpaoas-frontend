@@ -50,7 +50,6 @@ function ApprovedCasesHistory() {
   };
 
   const transformApprovedCases = (apiData) => {
-    console.log("API Response", apiData);
     return apiData.map((item, index) => ({
       caseId: item?.fkCaseId,
       internalId: item?.fileData?.id,
@@ -69,10 +68,8 @@ function ApprovedCasesHistory() {
         ?.assignedUser?.employee?.lastName
       }`
       : "---",
+      Status: item?.caseStatus,
       markDate: moment(item?.fileData?.createdAt).format("DD/MM/YYYY"),
-      // caseStatus: item?.fileRemarksData?.CommentStatus,
-
-      // Status: item?.fileData?.map((status) => status?.fileStatus),
     }));
   };
 
@@ -308,9 +305,9 @@ function ApprovedCasesHistory() {
               navigate("/efiling/dashboard/fileDetail", {
                 state: {
                   approved: true,
+                  view: true,
                   id: item?.caseId,
                   fileId: item?.internalId,
-
                 },
               })
             }

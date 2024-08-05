@@ -9,6 +9,7 @@ import {
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import Header from "../../../../../../components/Header";
 import {
+  deleteFileById,
   getAllFileHeading,
   getAllFileRegister,
   getFileByRegisterById,
@@ -41,12 +42,13 @@ function ListFiles() {
   const transformFilesHeadingdata = (apiData) => {
     return apiData.map((item) => ({
       internalId: item?.id,
-      SNo: item?.id,
+      SrNo: item?.id,
       HeadNumber: item?.mainHeading?.mainHeadingNumber,
       mainHead: item?.mainHeading?.mainHeading,
       // year: item.year,
       fileNumber: item?.fileNumber,
       fileSubject: item?.fileSubject,
+      status: item?.status
     }));
   };
   const [registerHistory, setRegisterHistory] = useState(null);
@@ -121,6 +123,18 @@ function ListFiles() {
   useEffect(() => {
     getAllRegisterApi();
   }, []);
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await deleteFileById(id);
+      if (response?.success) {
+        showSuccessMessage(response.message);
+        getAllFilesAPi();
+      }
+    } catch (error) {
+      showErrorMessage(error.response.data.message);
+    }
+  };
 
   return (
     <Layout
@@ -269,8 +283,10 @@ function ListFiles() {
             }
             totalCount={count}
             singleDataCard={true}
-            hideDeleteIcon={true}
-            showEditIcon={true}
+            hideDeleteIcon={false}
+            showEditIcon={false}
+            handleEdit={(item) => navigate("/efiling/dashboard/file-register-list/files-list/addedit-file", { state: { view: false, id: item.internalId } })}
+            handleDelete={(item) => handleDelete(item.SrNo)}
             showView={true}
             handleView={(item) =>
               navigate(

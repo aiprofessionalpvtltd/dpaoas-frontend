@@ -19,8 +19,10 @@ import {
   createFiles,
   getAllFileRegister,
   getAllYear,
+  getSingleFileById,
   geteHeadingNumberbyMainHeadingId,
   geteHeadingbyBranchId,
+  updateFiles,
 } from "../../../../../../../api/APIs/Services/efiling.service";
 import {
   showErrorMessage,
@@ -53,6 +55,7 @@ function AddEditFiles() {
   const [yearData, setYearData] = useState([]);
   const [mainheadingData, setMainHeadingData] = useState([]);
   const [numberMainHeading, setNumberMainHeading] = useState([]);
+  const [fileData, setFileData] = useState([]);
   const [registerData, setRegisterData] = useState({});
   const [fileNumberValid, setFileNumberValid] = useState(true);
   const [selectedHeadNumber, setSelectedHeadNumber] = useState("");
@@ -103,8 +106,8 @@ function AddEditFiles() {
       ...(values?.fileCategory && { fileCategory: values?.fileCategory }),
     };
     try {
-      const response = await createFiles(
-        location.state ? registerId : registerData?.id,
+      const response = await updateFiles(
+        location.state && location.state?.id,
         Data
       );
       if (response.success) {
@@ -182,7 +185,7 @@ function AddEditFiles() {
   const hendleMainHeading = async (event) => {
     try {
       const response = await geteHeadingNumberbyMainHeadingId(
-        event?.target?.value
+        event?.target ? event?.target?.value : event
       );
       if (response.success) {
         // showSuccessMessage(response?.message)
@@ -222,6 +225,55 @@ function AddEditFiles() {
   const handleFileNumberChange = (e) => {
     formik.handleChange(e);
   };
+
+  const getSingleFileAPi = async () => {
+   
+    try {
+      const response = await getSingleFileById(location.state?.id);
+      if (response.success) {
+        // showSuccessMessage(response?.message)
+        setFileData(response?.data)
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  }
+
+  useEffect(() => {
+    if(location.state?.id) {
+      getSingleFileAPi();
+    }
+  }, [])
+
+  useEffect(() => {
+    // Update form values when termsById changes
+    if (fileData) {
+      const regData = {
+        id: fileData?.fileRegister?.id,
+        year: fileData?.fileRegister?.year,
+      }
+      setRegisterData(regData);
+      if(fileData?.mainHeading?.id) {
+        hendleMainHeading(fileData?.mainHeading?.id);
+      }
+      formik.setValues({
+        mainHeading: fileData?.mainHeading?.id  || "",
+        numberOfMainHeading: fileData?.mainHeading || "",
+        year: fileData?.year || "",
+        serialNumber: fileData?.serialNumber || "",
+        fileNumber: fileData?.fileNumber || "",
+        fileNumberDerived: fileData?.fileNumberDerived || true,
+        subject: fileData?.fileSubject || "",
+        // fileType:fileData?. || "",
+        dateOfRecord: fileData?.dateOfRecord || "",
+        classification: fileData?.classification || "",
+        movement: fileData?.movement || "",
+        fileCategory: fileData?.fileCategory || null,
+        registerDataid: fileData?.registerDataid || "",
+        status: fileData?.status || ""
+      });
+    }
+  }, [fileData, formik.setValues]);
 
   return (
     <Layout

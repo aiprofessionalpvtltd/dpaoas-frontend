@@ -96,7 +96,7 @@ function Files() {
               tableTitle="Files List"
               addBtnText2="Create File"
               handleAdd2={() => navigate("/efiling/dashboard/addedit")}
-              showEditIcon={false}
+              showEditIcon={true}
               handleEdit={(item) => navigate("/efiling/dashboard/addedit", { state: { view: false, id: item.id } })}
               handleView={(item) => navigate("/efiling/dashboard/fileDetail", { state: { view: true, id: item.id } })}
               showView={true}

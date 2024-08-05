@@ -115,3 +115,20 @@ export const setCaseIdForDetailPage = (id) => {
 export const getCaseIdForDetailPage = (id) => {
   return localStorage.getItem("caseIdDetail", id);
 };
+
+export const setFRId = (id) => {
+  localStorage.setItem("frId", id);
+};
+
+export const getFRId = (id) => {
+  return localStorage.getItem("frId", id);
+};
+
+export const setFRAttachmentsData = (data) => {
+  localStorage.setItem("frAttachments", JSON.stringify(data));
+};
+
+export const getFRAttachmentsData = () => {
+  const Data = localStorage.getItem("frAttachments");
+  return Data && JSON.parse(Data);
+};

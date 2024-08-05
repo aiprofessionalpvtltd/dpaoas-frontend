@@ -9,6 +9,7 @@ import {
 } from "../../../../../api/Auth";
 import {
   ApprovedFIleCase,
+  DeleteCorrApi,
   DeletePara,
   DeleteParaAttachement,
   UpdateFIleCase,
@@ -168,7 +169,7 @@ function FileDetail() {
       const formData = new FormData();
       formData.append("submittedBy", UserData?.fkUserId);
       formData.append("assignedTo", modalInputValue?.assignedTo);
-      formData.append("CommentStatus", modalInputValue?.CommentStatus);
+      // formData.append("CommentStatus", modalInputValue?.CommentStatus);
       formData.append(
         "comment",
         modalInputValue?.CommentStatus ? "" : modalInputValue?.comment
@@ -205,7 +206,8 @@ function FileDetail() {
     try {
       const response = await getHLEmployee(UserData?.fkUserId);
       if (response?.success) {
-        setEmployeeData(response?.data);
+        const filteredData = response?.data?.filter((item) => item?.userName !== UserData?.userName);
+        setEmployeeData(filteredData);
       }
     } catch (error) {
       console.log(error);
@@ -507,6 +509,18 @@ function FileDetail() {
         />
       </>
     );
+  };
+
+  const handleDeleteCorr = async (id) => {
+    try {
+      const response = await DeleteCorrApi(id);
+      if (response?.success) {
+        showSuccessMessage(response.message);
+        handleCorrespondences();
+      }
+    } catch (error) {
+      showErrorMessage(error.response.data.message);
+    }
   };
 
   return (
@@ -1038,6 +1052,7 @@ function FileDetail() {
                                 }}
                                 showEditIcon={location.state?.view ? true : false}
                                 hideDeleteIcon={location.state?.view ? true : false}
+                                handleDelete={(item) => handleDeleteCorr(item.internalId)}
                                 handleEdit={(item) => {
                                   if (fkfileId) {
                                     navigate(
@@ -1096,8 +1111,8 @@ function FileDetail() {
                   {remarksData?.length > 0 ? (
                     remarksData.map((item) => (
                       <>
-                        {item?.CommentStatus !== null ||
-                        item?.comment !== null ? (
+                        {(item?.CommentStatus !== null ||
+                        item?.comment !== null) && (
                           <div
                             class="d-flex flex-row p-3 ps-3"
                             style={{ borderBottom: "1px solid #ddd" }}
@@ -1151,18 +1166,6 @@ function FileDetail() {
                                 </p>
                               </div>
                             </>
-                          </div>
-                        ) : (
-                          <div
-                            class="alert alert-danger mt-5"
-                            role="alert"
-                            style={{
-                              width: "350px",
-                              margin: "0 auto",
-                              textAlign: "center",
-                            }}
-                          >
-                            No data found
                           </div>
                         )}
                       </>

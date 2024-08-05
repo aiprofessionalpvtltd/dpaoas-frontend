@@ -128,7 +128,8 @@ function FRDetail() {
     try {
       const response = await getLLEmployee(UserData?.fkUserId);
       if (response?.success) {
-        setEmployeeData(response?.data);
+        const filteredData = response?.data?.filter((item) => item?.userName !== UserData?.userName);
+        setEmployeeData(filteredData);
       }
     } catch (error) {
       console.log(error);
