@@ -125,7 +125,7 @@ function Dashboard() {
       icon: faBuilding,
       // permission: null,
       permission: [
-        userRole?.role?.name == "Super Admin"
+        userRole?.role?.name === "Super Admin"
           ? "Roles"
           : "Organizational Dashboard",
       ],

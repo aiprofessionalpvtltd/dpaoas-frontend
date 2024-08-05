@@ -1,4 +1,3 @@
-import React from "react";
 
 export const CheckPermission = (role, roles, permissions) => {
   const roleNames = roles?.map((role) => role.name);

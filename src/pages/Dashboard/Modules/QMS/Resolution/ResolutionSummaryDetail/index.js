@@ -70,7 +70,7 @@ function QMSResolutionSummaryDetail() {
     try {
       const response = await allResolutionSummaryDetail(Data, page, pageSize);
       if (response?.success) {
-        showSuccessMessage(response.message);
+        // showSuccessMessage(response.message);
         setCount(response?.data?.count);
         const transformedData = transResolutionSummaryData(
           response?.data?.resolutions
