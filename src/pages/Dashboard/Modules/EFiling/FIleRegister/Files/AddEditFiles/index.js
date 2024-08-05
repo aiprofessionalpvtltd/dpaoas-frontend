@@ -268,7 +268,7 @@ function AddEditFiles() {
         dateOfRecord: fileData?.dateOfRecord || "",
         classification: fileData?.classification || "",
         movement: fileData?.movement || "",
-        fileCategory: fileData?.status || null,
+        fileCategory: fileData?.fileCategory || null,
         registerDataid: fileData?.registerDataid || "",
         status: fileData?.status || ""
       });
