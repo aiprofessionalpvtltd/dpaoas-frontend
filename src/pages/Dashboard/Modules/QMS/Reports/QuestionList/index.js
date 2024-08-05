@@ -47,12 +47,13 @@ function QMSReportQuestionList() {
     // Update currentPage when a page link is clicked
     setCurrentPage(page);
   };
+  console.log("selectedQuestionListselectedQuestionList",selectedQuestionList);
   const formik = useFormik({
     initialValues: {
       category: selectedQuestionList
         ? selectedQuestionList.questionCategory
         : "",
-      groupId: selectedQuestionList ? selectedQuestionList.fkGroupId : "",
+      groupNo: selectedQuestionList ? selectedQuestionList.fkGroupId : "",
       startListNo: selectedQuestionList ? selectedQuestionList.startListNo : "",
       listName: selectedQuestionList ? selectedQuestionList.listName : "",
       houseLayDate: selectedQuestionList
@@ -73,11 +74,12 @@ function QMSReportQuestionList() {
   const navigate = useNavigate();
 
   const updateQuestionsList = async (values) => {
+    console.log("selectedQuestionList",selectedQuestionList);
     const Data = {
       // ...values,
       fkUserId: userData?.fkUserId,
       fkSessionId: sessionId,
-      fkGroupId: values?.groupId,
+      fkGroupId: values?.groupNo,
       houseLayDate: moment(values?.houseLayDate).format("YYYY-MM-DD") || "",
       defferedQuestions: include,
       id: selectedQuestionList.id,
@@ -281,7 +283,7 @@ function QMSReportQuestionList() {
     try {
       const response = await getSingleQuestionList(data?.id);
       if (response?.success) {
-        const questionList = response?.data;
+        const questionList = response?.questionList;
         const transformedQuestionData = transformQuestionsData(
           response?.data
         );
@@ -291,13 +293,13 @@ function QMSReportQuestionList() {
 
         formik.setValues({
           category: questionList.questionCategory || "",
-          groupId: questionList.fkGroupId || "",
+          groupNo: questionList.fkGroupId || "",
           startListNo: questionList.startListNo || "",
           listName: questionList.listName || "",
           houseLayDate: questionList.houseLayDate
             ? moment(questionList.houseLayDate).toDate()
             : "",
-          selectedQuestions: questionList.questions || [],
+          // selectedQuestions: questionList.data || [],
         });
       }
     } catch (error) {
