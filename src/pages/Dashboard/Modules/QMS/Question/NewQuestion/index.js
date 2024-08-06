@@ -34,16 +34,9 @@ const validationSchema = Yup.object({
 
 function QMSNewQuestion() {
   const { members, sessions, allBranchesData } = useContext(AuthContext);
-  const [showModal, setShowModal] = useState(false);
-  const [formValues, setFormValues] = useState([]);
   const userData = getUserData();
 
-  const handleShow = () => setShowModal(true);
-  const handleClose = () => setShowModal(false);
-  const handleOkClick = () => {
-    CreateQuestionApi(formValues);
-    handleClose();
-  };
+  
 
   const formik = useFormik({
     initialValues: {
@@ -61,8 +54,9 @@ function QMSNewQuestion() {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      handleShow();
-      setFormValues(values);
+      // handleShow();
+      // setFormValues(values);
+      CreateQuestionApi(values)
     },
     enableReinitialize: true,
   });
@@ -103,11 +97,6 @@ function QMSNewQuestion() {
         dashboardLink={"/"}
         addLink1={"/qms/question/new"}
         title1={"New Question"}
-      />
-      <CustomAlert
-        showModal={showModal}
-        handleClose={handleClose}
-        handleOkClick={handleOkClick}
       />
 
       <div>
