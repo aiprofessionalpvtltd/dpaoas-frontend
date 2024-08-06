@@ -524,12 +524,28 @@ export const createMinister = async (data) => {
     throw error;
   }
 };
-
+// Get Single Minister
+export const getSingleMinisterByID = async (id) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.get(`/mnas/${id}`);
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
 // Update New Bill Status
-export const updatedAllMinisters = async (id, data) => {
+export const updateMinisters = async (id, data) => {
   try {
     const response = await axiosClient.put(
-      `bill-status/update/${id}`,
+      `/mnas/update/${id}`,
       data
       // {
       //   headers: {

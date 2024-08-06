@@ -37,6 +37,9 @@ function LGMSMinisters() {
             .map((ministries) => ministries?.ministryName)
             .join(" , ")
         : "---",
+      phoneNumber: item?.phone ? item?.phone : "",
+      constituency: item?.constituency ? item?.constituency : "",
+      address: item?.address ? item?.address : "",
     }));
   };
 
@@ -97,7 +100,8 @@ function LGMSMinisters() {
                   state: item,
                 })
               }
-              handleDelete={(item) => handleDelete(item.id)}
+              hideDeleteIcon={true}
+              // handleDelete={(item) => handleDelete(item.id)}
               headertitlebgColor={"#666"}
               headertitletextColor={"#FFF"}
               handlePageChange={handlePageChange}
