@@ -27,6 +27,7 @@ const UpdateBills = () => {
   const userData = getUserData();
   const NA_Bill_ID = location?.state && location?.state?.id;
   const BillCategory = location?.state && location?.state?.item?.billCategory;
+  const BillFrom = location?.state && location?.state?.item?.billFrom;
   const { ministryData, members, sessions, parliamentaryYear } =
     useContext(AuthContext);
   const [billStatusData, setBillStatusesData] = useState([]);
@@ -278,12 +279,11 @@ const UpdateBills = () => {
 
   useEffect(() => {
     if (singleSenateBillData) {
-
-      let fileNum="";
-      if(singleSenateBillData?.fileNumber){
-        const fileNumberMatch = singleSenateBillData?.fileNumber?.match(/\((\d+)\)/);
-        fileNum = fileNumberMatch ? fileNumberMatch[1] : '';
-
+      let fileNum = "";
+      if (singleSenateBillData?.fileNumber) {
+        const fileNumberMatch =
+          singleSenateBillData?.fileNumber?.match(/\((\d+)\)/);
+        fileNum = fileNumberMatch ? fileNumberMatch[1] : "";
       }
       const file = singleSenateBillData?.billDocuments?.file?.[0];
       let parsedFile = null;
@@ -311,12 +311,13 @@ const UpdateBills = () => {
         // billStatuses: singleSenateBillData?.billStatuses || "",
         fileNumber: fileNum || "",
         PassedByNADate: singleSenateBillData?.PassedByNADate
-          ? moment(singleSenateBillData?.PassedByNADate,"YYYY-MM-DD").toDate()
+          ? moment(singleSenateBillData?.PassedByNADate, "YYYY-MM-DD").toDate()
           : null,
         DateOfReceiptOfMessageFromNA:
           singleSenateBillData?.DateOfReceiptOfMessageFromNA
             ? moment(
-                singleSenateBillData?.DateOfReceiptOfMessageFromNA,"YYYY-MM-DD"
+                singleSenateBillData?.DateOfReceiptOfMessageFromNA,
+                "YYYY-MM-DD"
               ).toDate()
             : null,
         billTitle: singleSenateBillData?.billTitle || "",
@@ -360,14 +361,16 @@ const UpdateBills = () => {
           singleSenateBillData?.introducedInHouses &&
           singleSenateBillData?.introducedInHouses?.introducedInHouseDate
             ? moment(
-                singleSenateBillData?.introducedInHouses?.introducedInHouseDate,"YYYY-MM-DD"
+                singleSenateBillData?.introducedInHouses?.introducedInHouseDate,
+                "YYYY-MM-DD"
               ).toDate()
             : null,
         referedOnDate:
           singleSenateBillData?.introducedInHouses &&
           singleSenateBillData?.introducedInHouses?.referedOnDate
             ? moment(
-                singleSenateBillData?.introducedInHouses?.referedOnDate,"YYYY-MM-DD"
+                singleSenateBillData?.introducedInHouses?.referedOnDate,
+                "YYYY-MM-DD"
               ).toDate()
             : null,
         fkManageCommitteeId: singleSenateBillData?.introducedInHouses
@@ -380,7 +383,8 @@ const UpdateBills = () => {
         reportPresentationDate: singleSenateBillData?.introducedInHouses
           ?.reportPresentationDate
           ? moment(
-              singleSenateBillData?.introducedInHouses?.reportPresentationDate,"YYYY-MM-DD"
+              singleSenateBillData?.introducedInHouses?.reportPresentationDate,
+              "YYYY-MM-DD"
             ).toDate()
           : "",
         fkMemberPassageId: singleSenateBillData?.memberPassages
@@ -389,31 +393,45 @@ const UpdateBills = () => {
         memeberNoticeDate: singleSenateBillData?.memberPassages
           ?.memeberNoticeDate
           ? moment(
-              singleSenateBillData?.memberPassages?.memeberNoticeDate,"YYYY-MM-DD"
+              singleSenateBillData?.memberPassages?.memeberNoticeDate,
+              "YYYY-MM-DD"
             ).toDate()
           : "",
         dateOfConsiderationBill:
           singleSenateBillData?.memberPassages &&
           singleSenateBillData?.memberPassages?.dateOfConsiderationBill
             ? moment(
-                singleSenateBillData?.memberPassages?.dateOfConsiderationBill,"YYYY-MM-DD"
+                singleSenateBillData?.memberPassages?.dateOfConsiderationBill,
+                "YYYY-MM-DD"
               ).toDate()
             : "",
         fkSessionMemberPassageId: singleSenateBillData?.memberPassages
           ? singleSenateBillData?.memberPassages?.fkSessionMemberPassageId
           : "",
         dateOfPassageBySenate: singleSenateBillData?.dateOfPassageBySenate
-          ? moment(singleSenateBillData?.dateOfPassageBySenate,"YYYY-MM-DD").toDate()
+          ? moment(
+              singleSenateBillData?.dateOfPassageBySenate,
+              "YYYY-MM-DD"
+            ).toDate()
           : "",
         dateOfTransmissionToNA: singleSenateBillData?.dateOfTransmissionToNA
-          ? moment(singleSenateBillData?.dateOfTransmissionToNA,"YYYY-MM-DD").toDate()
+          ? moment(
+              singleSenateBillData?.dateOfTransmissionToNA,
+              "YYYY-MM-DD"
+            ).toDate()
           : "",
         dateOfReceiptMessageFromNA:
           singleSenateBillData?.dateOfReceiptMessageFromNA
-            ? moment(singleSenateBillData?.dateOfReceiptMessageFromNA,"YYYY-MM-DD").toDate()
+            ? moment(
+                singleSenateBillData?.dateOfReceiptMessageFromNA,
+                "YYYY-MM-DD"
+              ).toDate()
             : "",
         dateOfPassageByNA: singleSenateBillData?.dateOfPassageByNA
-          ? moment(singleSenateBillData?.dateOfPassageByNA,"YYYY-MM-DD").toDate()
+          ? moment(
+              singleSenateBillData?.dateOfPassageByNA,
+              "YYYY-MM-DD"
+            ).toDate()
           : "",
         documentDiscription: singleSenateBillData?.billDocuments
           ? singleSenateBillData?.billDocuments?.documentDiscription
@@ -421,13 +439,16 @@ const UpdateBills = () => {
         documentDate:
           singleSenateBillData?.billDocuments &&
           singleSenateBillData?.billDocuments?.documentDate
-            ? moment(singleSenateBillData?.billDocuments?.documentDate,"YYYY-MM-DD").toDate()
+            ? moment(
+                singleSenateBillData?.billDocuments?.documentDate,
+                "YYYY-MM-DD"
+              ).toDate()
             : "",
         documentType: singleSenateBillData?.billDocuments
           ? singleSenateBillData?.billDocuments?.documentType
           : "",
         billStatusDate: singleSenateBillData?.billStatusDate
-          ? moment(singleSenateBillData?.billStatusDate,"YYYY-MM-DD").toDate()
+          ? moment(singleSenateBillData?.billStatusDate, "YYYY-MM-DD").toDate()
           : "",
       });
     }
@@ -445,9 +466,9 @@ const UpdateBills = () => {
     formData.append("billType", values?.billType);
     formData.append("fkBillStatus", values?.fkBillStatus?.value);
     if (BillCategory === "Private Member Bill") {
-      formData.append("fileNumber", `09/(${values?.fileNumber})/2024`);
-    } else {
       formData.append("fileNumber", `24/(${values?.fileNumber})/2024`);
+    } else {
+      formData.append("fileNumber", `09/(${values?.fileNumber})/2024`);
     }
     // formData.append("fileNumber",   `09(${values?.fileNumber})/2024`);
     // formData.append("fileNumber", values?.fileNumber);
@@ -627,9 +648,32 @@ const UpdateBills = () => {
       if (response?.success) {
         showSuccessMessage(response?.message);
 
-        setTimeout(() => {
-          navigate("/lgms/dashboard/bills/legislation-bills");
-        }, [3000]);
+        if (
+          BillCategory &&
+          BillCategory === "Government Bill" &&
+          BillFrom &&
+          BillFrom === "From NA"
+        ) {
+          setTimeout(() => {
+            navigate(
+              "/lgms/dashboard/bills/legislation-bills/government-bills/recieved-from-na"
+            );
+          }, [3000]);
+        } else if (
+          BillCategory &&
+          BillCategory === "Private Member Bill" &&
+          BillFrom &&
+          BillFrom === "From NA"
+        ) {
+          setTimeout(() => {
+            navigate(
+              "/lgms/dashboard/bills/legislation-bills/private-member-bills/recieved-from-na"
+            );
+          }, [3000]);
+        }
+        // setTimeout(() => {
+        //   navigate("/lgms/dashboard/bills/legislation-bills");
+        // }, [3000]);
         formik.resetForm();
       }
     } catch (error) {
@@ -768,7 +812,7 @@ const UpdateBills = () => {
                             )}
                         </div>
                       </div> */}
-                       <div class="col">
+                      <div class="col">
                         <div class="mb-3">
                           <label class="form-label">Bill Status</label>
                           {/* <select
@@ -861,11 +905,10 @@ const UpdateBills = () => {
                             )}
                         </div>
                       </div>
-                     
                     </div>
 
                     <div className="row">
-                    <div class="col-3">
+                      <div class="col-3">
                         <div class="mb-3">
                           <label class="form-label">Bill Type </label>
                           <select
@@ -1329,8 +1372,6 @@ const UpdateBills = () => {
                           isMulti={true}
                         /> */}
                       </div>
-
-                    
                     </div>
 
                     <div className="row">
