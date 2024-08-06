@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { Layout } from "../../../../../../components/Layout";
 import { QMSSideBarItems } from "../../../../../../utils/sideBarItems";
 import Header from "../../../../../../components/Header";
@@ -10,7 +10,6 @@ import {
   delleteQuestionsList,
   getAllQuesListBySession,
   getGeneratedQuesList,
-  printQuestionsFromList,
   saveQuestionList,
   updateGenaratedQuestion,
 } from "../../../../../../api/APIs/Services/Question.service";
@@ -24,8 +23,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
 import { getUserData } from "../../../../../../api/Auth";
-import { imagesUrl } from "../../../../../../api/APIs";
 import { getSingleQuestionList } from "../../../../../../api/APIs/Services/Question.service";
+import { CustomAlert } from "../../../../../../components/CustomComponents/CustomAlert";
 
 function QMSReportQuestionList() {
   const { sessions } = useContext(AuthContext);
@@ -41,10 +40,11 @@ function QMSReportQuestionList() {
   const [selectedQuestionList, setSelectedQuestionList] = useState(null);
   const [generateResData, setGeneratedResData] = useState([]);
   const [checked , setChecked] = useState([])
+  const [showModal, setShowModal] = useState(false);
+  const [deleteId, setDeleteId] = useState(null)
 
   const pageSize = 10; // Set your desired page size
   const handlePageChange = (page) => {
-    // Update currentPage when a page link is clicked
     setCurrentPage(page);
   };
   console.log("selectedQuestionListselectedQuestionList",selectedQuestionList);
@@ -76,7 +76,6 @@ function QMSReportQuestionList() {
   const updateQuestionsList = async (values) => {
     console.log("selectedQuestionList",selectedQuestionList);
     const Data = {
-      // ...values,
       fkUserId: userData?.fkUserId,
       fkSessionId: sessionId,
       fkGroupId: values?.groupNo,
@@ -161,7 +160,6 @@ function QMSReportQuestionList() {
       const response = await getGeneratedQuesList(Data);
       if (response?.success) {
         showSuccessMessage(response?.message);
-        // setCount(response?.count);
         const transformedData = transformLeavesData(
           response.data?.questionList?.questionList
         );
@@ -239,16 +237,6 @@ function QMSReportQuestionList() {
     }
   };
 
-  // const printQuestions = async (data) => {
-  //   try {
-  //     const response = await printQuestionsFromList(data);
-  //     if (response?.success) {
-  //      showSuccessMessage(response.message);
-  //     }
-  //   } catch (error) {
-  //     showErrorMessage(error.response?.data?.message);
-  //   }
-  // };
 
   const deleteList = async (data) => {
     console.log(data);
@@ -267,18 +255,7 @@ function QMSReportQuestionList() {
     setInclude(!include);
   };
 
-  const printQuestion = (url) => {
-    if (url) {
-      const img = `${imagesUrl}${url}`;
-      window.open(img, "_blank");
-    } else {
-      showSuccessMessage("No Attachment Available");
-    }
-  };
-  // const handleEdit = (item) => {
-  //   setSelectedQuestionList(item);
-  //   setIsEditing(true);
-  // };
+  
   const handleEdit = async (data) => {
     try {
       const response = await getSingleQuestionList(data?.id);
@@ -313,17 +290,11 @@ function QMSReportQuestionList() {
   };
 
 
-  const handleCheckboxChange = (event) => {
-    const { value, checked } = event.target;
-    let updatedSelectedQuestions = [...formik.values.selectedQuestions];
-
-    if (checked) {
-      updatedSelectedQuestions.push(value);
-    } else {
-      updatedSelectedQuestions = updatedSelectedQuestions.filter((id) => id !== value);
-    }
-
-    formik.setFieldValue("selectedQuestions", updatedSelectedQuestions);
+  const handleShow = () => setShowModal(true);
+  const handleClose = () => setShowModal(false);
+  const handleOkClick = () => {
+    deleteList(deleteId)
+    handleClose();
   };
 
 
@@ -335,6 +306,11 @@ function QMSReportQuestionList() {
         title1={"Question List"}
       />
       <ToastContainer />
+      <CustomAlert
+        showModal={showModal}
+        handleClose={handleClose}
+        handleOkClick={handleOkClick}
+      />
 
       <div class="container-fluid">
         <div class="card mt-4">
@@ -351,25 +327,6 @@ function QMSReportQuestionList() {
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Session No</label>
-                      {/* <input
-                        type="text"
-                        placeholder={formik.values.sessionNumber}
-                        className={`form-control ${
-                          formik.touched.sessionNumber &&
-                          formik.errors.sessionNumber
-                            ? "is-invalid"
-                            : ""
-                        }`}
-                        id="sessionNumber"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                      />
-                      {formik.touched.sessionNumber &&
-                        formik.errors.sessionNumber && (
-                          <div className="invalid-feedback">
-                            {formik.errors.sessionNumber}
-                          </div>
-                        )} */}
                       <select
                         class="form-select"
                         id="sessionNumber"
@@ -482,9 +439,6 @@ function QMSReportQuestionList() {
                           className="form-control"
                           readOnly
                           id="selectedQuestions"
-                          // value={formik.values.selectedQuestions}
-                          // onChange={formik.handleChange}
-                          // onBlur={formik.handleBlur}
                           type="text"
                           placeholder={checked}
                         />
@@ -541,7 +495,10 @@ function QMSReportQuestionList() {
                 currentPage={currentPage}
                 pageSize={pageSize}
                 handleEdit={(item) => handleEdit(item)}
-                handleDelete={(item) => deleteList(item.id)}
+                handleDelete={(item) =>{ 
+                  handleShow()
+                  setDeleteId(item.id)
+                }}
                 showPrint={true}
                 handlePrint={(item) => handlePrivewPage(item.id)}
                 ActionHide={generatedItem ? true : false}
