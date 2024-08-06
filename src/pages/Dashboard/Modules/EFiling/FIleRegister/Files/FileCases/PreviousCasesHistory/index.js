@@ -31,12 +31,11 @@ function PreviousCasesHistory() {
     setCurrentPage(page);
   };
 
-  console.log("LocatCasesAll", location?.state);
   const transformFilesCases = (apiData) => {
     return apiData.map((item, index) => ({
       caseId: item?.fkCaseId,
       FileNo: item?.fileData?.fileNumber,
-      AssignedBy:
+      SubmittedBy:
         item?.fileRemarksData?.length > 0
           ? `${item?.fileRemarksData[0]
             ?.submittedUser?.employee?.firstName
@@ -52,11 +51,7 @@ function PreviousCasesHistory() {
             ?.assignedUser?.employee?.lastName
           }`
           : "---",
-      Status:
-        item?.fileRemarksData?.length > 0
-          ? item?.fileRemarksData[item?.fileRemarksData.length - 1]
-            ?.CommentStatus
-          : "Draft",
+      Status: item?.caseStatus || "-",
       MarkedDate:
         item?.fileRemarksData?.length > 0
           ? moment(
@@ -82,7 +77,7 @@ function PreviousCasesHistory() {
       AssignedTo: item?.assignedUser?.employee
         ? `${item?.assignedUser?.employee?.firstName} ${item?.assignedUser?.employee?.lastName}`
         : "---",
-      Status: item?.CommentStatus,
+      Status: item?.caseStatus,
       MarkedDate: item?.createdAt
         ? moment(item?.createdAt).format("DD/MM/YYYY")
         : "---",
@@ -118,7 +113,6 @@ function PreviousCasesHistory() {
         const approvedFilter = response?.data?.cases[0]?.fileRemarksData.filter(
           (item) => item.CommentStatus == "Approved"
         );
-        console.log("approvedFilter-----------", approvedFilter);
         const transferomapprove = transformApprovedCases(approvedFilter);
         setApprovedCaseData(transferomapprove);
         const transferData = transformFilesCases(response?.data?.cases);

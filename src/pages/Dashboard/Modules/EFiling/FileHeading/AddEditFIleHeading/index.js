@@ -24,12 +24,13 @@ function AddEditFIleHeading() {
     const navigate = useNavigate()
   const { allBranchesData } = useContext(AuthContext)
   const [filesData, setFileData] = useState([])
-  const [fileId, setFIleId] = useState(location?.state?.internalId);
+  const [fileId, setFIleId] = useState(location?.state?.id);
 
   const formik = useFormik({
     initialValues: {
       mainHeading:  "",
-      mainHeadingNumber: ""
+      mainHeadingNumber: "",
+      status: ""
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -66,7 +67,8 @@ function AddEditFIleHeading() {
     const Data = {
       fkBranchId: userData?.fkBranchId,
       mainHeading: values?.mainHeading,
-      mainHeadingNumber: values?.mainHeadingNumber
+      mainHeadingNumber: values?.mainHeadingNumber,
+      status: values?.status
     }
     try {
       const response = await UpdateFIleHeading(filesData?.id, Data)
@@ -108,6 +110,7 @@ function AddEditFIleHeading() {
         // fkBranchId: filesData?.fkBranchId || "",
         mainHeading: filesData?.mainHeading || "",
         mainHeadingNumber: filesData?.mainHeadingNumber || "",
+        status: filesData?.status || "",
       });
     }
   }, [filesData, formik.setValues]);
@@ -177,6 +180,30 @@ function AddEditFIleHeading() {
                 </div>
 
               </div>
+
+                {fileId && (
+              <div class="row">
+                  <div class="col-6">
+                    <div className="mb-3">
+                      <label className="form-label">Status</label>
+                      <select
+                        className="form-select"
+                        id="status"
+                        name="status"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.status}
+                      >
+                        <option value="" selected disabled hidden>
+                          Select
+                        </option>
+                        <option value={"active"}>Active</option>
+                        <option value={"inactive"}>InActive</option>
+                      </select>
+                    </div>
+                  </div>
+              </div>
+                  )}
 
              
               <div class="row">

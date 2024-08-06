@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import logo from "../../assets/logo.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faLock, faEyeSlash, faEye } from "@fortawesome/free-solid-svg-icons";
@@ -6,7 +6,6 @@ import { AuthContext } from "../../api/AuthContext";
 import { useNavigate } from "react-router";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { getAuthToken } from "../../api/Auth";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -15,7 +14,7 @@ const validationSchema = Yup.object({
   password: Yup.string().required("Password is required"),
 });
 export const Login = () => {
-  const { login, userLoginToken } = useContext(AuthContext);
+  const { login } = useContext(AuthContext);
   const navigation = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 

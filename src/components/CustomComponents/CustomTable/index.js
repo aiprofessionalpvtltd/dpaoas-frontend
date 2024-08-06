@@ -124,7 +124,7 @@ function CustomTable({
   const printTooltip = <Tooltip id="print-tooltip">Print</Tooltip>;
   const duplicateTooltip = <Tooltip id="duplicate-tooltip">Duplicate</Tooltip>;
   const resolveTooltip = <Tooltip id="print-tooltip">Complete</Tooltip>;
-  const assignedTooltip = <Tooltip id="print-tooltip">Assigne</Tooltip>;
+  const assignedTooltip = <Tooltip id="print-tooltip">Assign</Tooltip>;
   const createTooltip = <Tooltip id="create-tooltip">Create Case</Tooltip>;
   const attendanceTooltip = (
     <Tooltip id="attendance-tooltip">Mark Attendance </Tooltip>
@@ -398,7 +398,9 @@ function CustomTable({
                           item[key] === "complete" ||
                           item[key] === "closed" ||
                           item[key] === "in-progress" ||
-                          item[key] === "pending" ? (
+                          item[key] === "pending" ||
+                          item[key] === "approved"
+                           ? (
                             <span
                               className={`label label-sm ${
                                 item[key] === "active" ||
@@ -407,6 +409,8 @@ function CustomTable({
                                   : item[key] === "pending"
                                     ? "label-pending"
                                     : item[key] === "closed"
+                                      ? "label-close" : 
+                                      item[key] === "closed" 
                                       ? "label-close"
                                       : item[key] === "in-progress"
                                         ? "label-inprogress"

@@ -33,7 +33,7 @@ function PreviousFRsHistory() {
     return apiData.map((item, index) => ({
       id: item?.id,
       frType: item?.frType,
-      AssignedBy:
+      SubmittedBy:
         item?.freshReceipt?.length > 0
           ? item?.freshReceipt[item?.freshReceipt?.length - 1]?.submittedUser
               ?.employee?.firstName
@@ -67,6 +67,7 @@ function PreviousFRsHistory() {
     try {
       const response = await getFRHistory(
         UserData?.fkBranchId,
+        UserData?.fkUserId,
         currentPage,
         pageSize
       );

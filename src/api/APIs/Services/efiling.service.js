@@ -170,6 +170,23 @@ export const getAllFileRegister = async (branchId, currentPage, pageSize) => {
   }
 };
 
+export const deleteFileRegisterApi = async (id) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.delete(`/fileRegisters/delete/${id}`);
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
 //All Year
 export const getAllYear = async (data) => {
   try {
@@ -281,6 +298,101 @@ export const getSingleHeadingbyId = async (id) => {
   }
 };
 
+
+
+// Flags APIs
+export const createFlagApi = async (data) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.post(`/flags/create`, data);
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const getAllBranchFlagsApi = async (branchId, currentPage, pageSize) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.get(
+      `/flags/branch/${branchId}?currentPage=${currentPage}&pageSize=${pageSize}`
+    );
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const UpdateFlagApi = async (id, data) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.put(
+      `/flags/update/${id}`,
+      data
+    );
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const getSingleFlagById = async (id) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.get(`/flags/${id}`);
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const DeleteFlagApi = async (id) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.delete(`/flags/delete/${id}`);
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+
+
 //heading retrive on the basis on branch id
 
 export const geteHeadingbyBranchId = async (id) => {
@@ -334,6 +446,42 @@ export const createFiles = async (id, data) => {
   }
 };
 
+export const updateFiles = async (id, data) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.put(`/files/update/${id}`, data);
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const getSingleFileById = async (fileId) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.get(
+      `/files/singleFile/${fileId}`
+    );
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
 // export const getFileByRegisterById = async (id, currentPage, pageSize) => {
 //   try {
 //     //   const token = getAuthToken();
@@ -366,6 +514,23 @@ export const getFileByRegisterById = async (searchParams) => {
       //   Authorization: `Bearer ${token}`,
       // },
     });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const deleteFileById = async (id) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.delete(`files/deleteFile/${id}`);
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -907,11 +1072,11 @@ export const DeleteNotificationById = async (notificationId, userId) => {
 };
 
 //FR History
-export const getFRHistory = async (branchId, currentPage, pageSize) => {
+export const getFRHistory = async (branchId, userId, currentPage, pageSize) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClient.get(
-      `/freshReceipt/frsHistory/${branchId}?currentPage=${currentPage}&pageSize=${pageSize}`,
+      `/freshReceipt/frsHistory/${branchId}/${userId}?currentPage=${currentPage}&pageSize=${pageSize}`,
       {
         // headers: {
         //   Authorization: `Bearer ${token}`,
@@ -1040,6 +1205,25 @@ export const getAllCorrespondence = async (fileId, branchId, currentPage, pageSi
   try {
     //   const token = getAuthToken();
     const response = await axiosClient.get(`/correspondence/getAllCorrespondences?fileId=${fileId}&branchId=${branchId}&currentPage=${currentPage}&pageSize=${pageSize}`);
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const DeleteCorrApi = async (id) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.delete(
+      `/correspondence/deleteCorrespondence/${id}`
+    );
     // {
     //   headers: {
     //     accept: "application/json",

@@ -8,6 +8,7 @@ import {
 import { ToastContainer } from "react-toastify";
 import { useLocation } from "react-router";
 import {
+  DeleteCorrApi,
   UpdateCase,
   createCase,
   getAllCorrespondence,
@@ -21,6 +22,8 @@ import {
 import { useNavigate } from "react-router-dom";
 import { Editor } from "../../../../../../../../components/CustomComponents/Editor";
 import {
+  getFRAttachmentsData,
+  getFRId,
   getSelectedFileID,
   getUserData,
   setSelectedFileID,
@@ -59,6 +62,8 @@ function AddEditFileCase() {
   const pageSize = 10; // Set your desired page size
   const [showModal, setShowModal] = useState(false);
   const [attachedFiles, setAttachedFiles] = useState([]);
+  const [globalFRId, setGlobalFRId] = useState();
+  const [globalFRAttachments, setGlobalFRAttachments] = useState([]);
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
@@ -116,11 +121,6 @@ function AddEditFileCase() {
 
   const handleAttachDelete = async (item, tabIndex) => {
     const updatedTabs = notingTabData.map((tab, tIndex) => {
-      console.log(
-        "ididididi",
-        item?.attachments[0]?.attachments[0]?.id,
-        item?.attachments[0]?.attachments[0]?.id
-      );
       if (
         item?.attachments[0]?.attachments[0]?.id ===
         item?.attachments[0]?.attachments[0]?.id
@@ -144,8 +144,6 @@ function AddEditFileCase() {
       ...tab,
       title: `Para ${i + 1}`,
     }));
-
-    console.log(renumberedTabs);
 
     setNotingTabsData(renumberedTabs);
   };
@@ -173,7 +171,7 @@ function AddEditFileCase() {
         const response = await createCase(
           fkfileId.value,
           UserData?.fkUserId,
-          location.state?.frId ? location.state?.frId : null,
+          globalFRId ? globalFRId : null,
           data
         );
         showSuccessMessage(response?.message);
@@ -209,6 +207,21 @@ function AddEditFileCase() {
       console.error("Error creating case:", error);
     }
   };
+
+  const handleFlagDeleteFunc = (tabIndex, flagIndex) => {
+    // Function to handle deletion of a flag
+    const updatedTabs = notingTabData.map((tab, tIndex) => {
+      if (tIndex === tabIndex) {
+        return {
+          ...tab,
+          references: tab.references.filter((_, fIndex) => fIndex !== flagIndex),
+        };
+      }
+      return tab;
+    });
+
+    setNotingData(updatedTabs)
+  }
 
   const createFormData = () => {
     const formData = new FormData();
@@ -257,16 +270,26 @@ function AddEditFileCase() {
 
   useEffect(() => {
     const fileId = getSelectedFileID();
+    const frId = getFRId();
+    const frAttachments = getFRAttachmentsData();
     if (fileId) {
       setFKFileId(fileId);
+    }
+    if(frId) {
+      setGlobalFRId(frId)
+    }
+    if(frAttachments) {
+      setGlobalFRAttachments(frAttachments);
     }
     getAllFiles();
   }, []);
 
   const images =
-    location?.state?.freshReceiptsAttachments?.map((item) => {
+    globalFRAttachments?.map((item) => {
       const fileUrl = `${imagesUrl}${item?.filename}`;
       const isPdf = item?.filename?.toLowerCase().endsWith(".pdf");
+
+  console.log("Loading files...", fileUrl);
 
       return {
         original: fileUrl,
@@ -338,6 +361,18 @@ function AddEditFileCase() {
     const url = `${imagesUrl}${urlimage}`;
     window.open(url, "_blank");
     // setPdfUrl(url)
+  };
+
+  const handleDeleteCorr = async (id) => {
+    try {
+      const response = await DeleteCorrApi(id);
+      if (response?.success) {
+        showSuccessMessage(response.message);
+        handleCorrespondences();
+      }
+    } catch (error) {
+      showErrorMessage(error.response.data.message);
+    }
   };
 
   return (
@@ -531,7 +566,7 @@ function AddEditFileCase() {
                   </button>
                 </li>
 
-                {location?.state?.freshReceiptsAttachments?.length > 0 && (
+                {globalFRAttachments?.length > 0 && (
                   <li
                     className="nav-item"
                     role="presentation"
@@ -540,7 +575,7 @@ function AddEditFileCase() {
                       setSelectedTab("FR");
                       // setSelectedTab("FR Noting");
                       // setSelectedTab(
-                      //   location?.state?.freshReceiptsAttachments?.length > 0
+                      //   globalFRAttachments?.length > 0
                       //     ? "FR Noting"
                       //     : "Sanction"
                       // );
@@ -601,6 +636,7 @@ function AddEditFileCase() {
                       setAttachedFiles(item?.attachmentInternal);
                       setShowModal(true);
                     }}
+                    handleDelete={(item) => handleDeleteCorr(item.internalId)}
                     handleEdit={(item) => {
                       if (fkfileId) {
                         navigate(
@@ -692,6 +728,7 @@ function AddEditFileCase() {
                           hendleDeleteAttach={(item, innerIdx) =>
                             handleAttachDelete(item, innerIdx)
                           }
+                          handleFlagDelete={(tabIndex, flagIndex) => handleFlagDeleteFunc(tabIndex, flagIndex)}
                           FR={location.state}
                         />
                       </div>

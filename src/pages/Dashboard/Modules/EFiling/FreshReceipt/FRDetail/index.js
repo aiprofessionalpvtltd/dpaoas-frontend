@@ -128,7 +128,8 @@ function FRDetail() {
     try {
       const response = await getLLEmployee(UserData?.fkUserId);
       if (response?.success) {
-        setEmployeeData(response?.data);
+        const filteredData = response?.data?.filter((item) => item?.userName !== UserData?.userName);
+        setEmployeeData(filteredData);
       }
     } catch (error) {
       console.log(error);
@@ -162,7 +163,14 @@ function FRDetail() {
     // setPdfUrl(url)
   };
 
-  const toggleModal = () => setIsModalOpen(!isModalOpen);
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+    setModalInputValue({
+      assignedTo: "",
+      CommentStatus: "",
+      comment: "",
+    })
+  };
 
   const hendleAssiginFileCaseApi = async () => {
     const data = {
@@ -314,7 +322,7 @@ const PdfPreview = ({ pdfUrl }) => {
                   employeeData?.map((item) => (
                     <option
                       value={item.fkUserId}
-                    >{`${item.designations?.designationName}`}</option>
+                    >{`${item?.firstName} ${item?.lastName} (${item.designations?.designationName})`}</option>
                   ))}
               </select>
             </div>
