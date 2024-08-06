@@ -83,6 +83,7 @@ function FileDetail() {
   const [filesData, setFilesData] = useState(null);
   const [FR, setFR] = useState(null);
   const pageSize = 10;
+  const [order, setOrder] = useState("DESC");
 
   // const initialNotingTabData = [
   //   {
@@ -407,13 +408,14 @@ function FileDetail() {
     window.open(url, "_blank");
   };
 
-  const getFilesByID = async (fileGlobalId, caseGlobalId) => {
+  const getFilesByID = async (fileGlobalId, caseGlobalId, orderBy) => {
     try {
       const response = await getCaseDetailByID(
         fileGlobalId
           ? fileGlobalId
           : location?.state?.fileId || fildetailsAqain?.fileId,
-        caseGlobalId ? caseGlobalId : location?.state?.id || fildetailsAqain?.id
+        caseGlobalId ? caseGlobalId : location?.state?.id || fildetailsAqain?.id,
+        orderBy ? orderBy : "DESC"
       );
 
       if (response?.success) {
@@ -522,6 +524,14 @@ function FileDetail() {
       showErrorMessage(error.response.data.message);
     }
   };
+
+  useEffect(() => {
+    const fileId = location?.state?.fileId || fildetailsAqain?.fileId;
+    const caseId = location?.state?.id || fildetailsAqain?.id;
+    if(fileId && caseId) {
+      getFilesByID(fileId, caseId, order);
+    }
+  }, [order])
 
   return (
     <Layout
@@ -822,6 +832,26 @@ function FileDetail() {
                     <div class="tab-content" id="ex1-content">
                       <div class="row">
                         <div class="row mt-2 d-flex justify-content-end float-end">
+                        <div class="col-4">
+                          <div style={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
+                            <label style={{
+    display: 'flex',
+    width: '20%',
+    alignItems: 'center'
+                              }}
+                            >Order By:</label>
+                            <select
+                              className="form-select w-75"
+                              id="status"
+                              name="status"
+                              onChange={(e) => setOrder(e.target.value)}
+                              value={order}
+                            >
+                              <option value={"ASC"}>Ascending</option>
+                              <option value={"DESC"} selected>Descending</option>
+                            </select>
+                          </div>
+                        </div>
                           <div class="col-2">
                             <button
                               class="btn btn-primary"

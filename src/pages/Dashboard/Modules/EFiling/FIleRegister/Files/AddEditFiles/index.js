@@ -59,7 +59,8 @@ function AddEditFiles() {
   const [registerData, setRegisterData] = useState({});
   const [fileNumberValid, setFileNumberValid] = useState(true);
   const [selectedHeadNumber, setSelectedHeadNumber] = useState("");
-  
+  const [defaultFileNo, setDefaultFileNo] = useState(true);
+
   // const [divisionById, setDivisionById] = useState();
 
   const formik = useFormik({
@@ -77,12 +78,12 @@ function AddEditFiles() {
       movement: "",
       fileCategory: null,
       registerDataid: "",
-      status: ""
+      status: "",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       // Handle form submission here
-      if(location.state) {
+      if (location.state) {
         hendleEdit(values);
       } else {
         hendleSubmit(values);
@@ -190,7 +191,7 @@ function AddEditFiles() {
       if (response.success) {
         // showSuccessMessage(response?.message)
         setNumberMainHeading(response?.data);
-        setSelectedHeadNumber(response?.data[0]?.mainHeadingNumber)
+        setSelectedHeadNumber(response?.data[0]?.mainHeadingNumber);
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -215,49 +216,59 @@ function AddEditFiles() {
     handleBranch();
   }, []);
 
+  // Determine if we're in edit mode based on location state
+  const isEditMode = Boolean(location.state && location.state?.id);
+
   useEffect(() => {
-    // Set the value of the fileNumber field if it's derived
+    if (!defaultFileNo) {
+      console.log(!defaultFileNo, "sddd");
+      // Set the value of the fileNumber field if it's derived
       const fileNumber = `F.No. ${selectedHeadNumber} (${formik.values.serialNumber}) - ${registerData?.year}`;
       formik.setFieldValue("fileNumber", fileNumber);
-  }, [selectedHeadNumber, formik.values.serialNumber, registerData]);
-  
+    }
+  }, [
+    selectedHeadNumber,
+    formik.values.serialNumber,
+    registerData,
+    defaultFileNo,
+  ]);
+
   // Handle onChange event for the fileNumber field
   const handleFileNumberChange = (e) => {
     formik.handleChange(e);
   };
 
   const getSingleFileAPi = async () => {
-   
     try {
       const response = await getSingleFileById(location.state?.id);
       if (response.success) {
         // showSuccessMessage(response?.message)
-        setFileData(response?.data)
+        setFileData(response?.data);
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
     }
-  }
+  };
 
   useEffect(() => {
-    if(location.state?.id) {
+    if (location.state?.id) {
       getSingleFileAPi();
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     // Update form values when termsById changes
-    if (fileData) {
+    if (fileData && isEditMode) {
       const regData = {
         id: fileData?.fileRegister?.id,
         year: fileData?.fileRegister?.year,
-      }
+      };
       setRegisterData(regData);
-      if(fileData?.mainHeading?.id) {
+      if (fileData?.mainHeading?.id) {
         hendleMainHeading(fileData?.mainHeading?.id);
       }
       formik.setValues({
-        mainHeading: fileData?.mainHeading?.id  || "",
+        mainHeading: fileData?.mainHeading?.id || "",
         numberOfMainHeading: fileData?.mainHeading || "",
         year: fileData?.year || "",
         serialNumber: fileData?.serialNumber || "",
@@ -270,7 +281,7 @@ function AddEditFiles() {
         movement: fileData?.movement || "",
         fileCategory: fileData?.fileCategory || null,
         registerDataid: fileData?.registerDataid || "",
-        status: fileData?.status || ""
+        status: fileData?.status || "",
       });
     }
   }, [fileData, formik.setValues]);
@@ -336,14 +347,18 @@ function AddEditFiles() {
                         ))} */}
                         {/* {registerData &&
                           registerData.map((item) => ( */}
-                            <option value={registerData?.id}>{registerData?.year}</option>
-                          {/* ))} */}
+                        <option value={registerData?.id}>
+                          {registerData?.year}
+                        </option>
+                        {/* ))} */}
                       </select>
                     </div>
                   </div>
                   <div class="col">
                     <div class="mb-3">
-                      <label class="form-label">Main Head <span className="text-danger">*</span></label>
+                      <label class="form-label">
+                        Main Head <span className="text-danger">*</span>
+                      </label>
                       <select
                         className={`form-select ${
                           formik.touched.mainHeading &&
@@ -356,6 +371,7 @@ function AddEditFiles() {
                         onChange={(event) => {
                           formik.handleChange(event);
                           hendleMainHeading(event); // Call handleBranch function
+                          setDefaultFileNo(false);
                         }}
                         onBlur={formik.handleBlur}
                         value={formik.values.mainHeading}
@@ -447,25 +463,25 @@ function AddEditFiles() {
                   </div>
 
                   {location.state && (
-                  <div class="col">
-                    <div className="mb-3">
-                      <label className="form-label">Status</label>
-                      <select
-                        className="form-select"
-                        id="status"
-                        name="status"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.status}
-                      >
-                        <option value="" selected disabled hidden>
-                          Select
-                        </option>
-                        <option value={"active"}>Active</option>
-                        <option value={"inactive"}>InActive</option>
-                      </select>
+                    <div class="col">
+                      <div className="mb-3">
+                        <label className="form-label">Status</label>
+                        <select
+                          className="form-select"
+                          id="status"
+                          name="status"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.status}
+                        >
+                          <option value="" selected disabled hidden>
+                            Select
+                          </option>
+                          <option value={"active"}>Active</option>
+                          <option value={"inactive"}>InActive</option>
+                        </select>
+                      </div>
                     </div>
-                  </div>
                   )}
                   {/* <div class="col-3">
                     <div class="mb-3">
@@ -534,9 +550,8 @@ function AddEditFiles() {
                           id="fileNumberEdit"
                           checked={fileNumberValid}
                           onChange={() => {
-                              setFileNumberValid(!fileNumberValid);
-                            }
-                          }
+                            setFileNumberValid(!fileNumberValid);
+                          }}
                         />
                         <label class="form-check-label" for="fileNumberEdit">
                           Valid
@@ -546,7 +561,9 @@ function AddEditFiles() {
                   </div>
                   <div class="col-6">
                     <div class="mb-3">
-                      <label class="form-label">Subject <span className="text-danger">*</span></label>
+                      <label class="form-label">
+                        Subject <span className="text-danger">*</span>
+                      </label>
                       <input
                         type="text"
                         placeholder={"Subject"}

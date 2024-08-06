@@ -26,11 +26,21 @@ import { AuthContext } from "../../../../../../api/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 const validationSchema = Yup.object({
-  employeename: Yup.string().required("Employee name is required"),
-  filenumber: Yup.string().required("File Number is required"),
-  fatherhusbandname: Yup.string().required("Father/Husband Name is required"),
-  cnicnumber: Yup.string().required("CNIC Number is required"),
-  permanentaddress: Yup.string().required("Permanent Address is required"),
+  firstName: Yup.string().required("First name is required"),
+  lastName: Yup.string().required("Last name is required"),
+  userName: Yup.string().required("User name is required"),
+  phoneNo: Yup.string().required("Phone Number is required"),
+  gender: Yup.string().required("Gender is required"),
+  email : Yup.string().required("Email is required"),
+  password : Yup.string().optional(),
+  fileNumber:Yup.string().required("File Number is required"),
+  fkRoleId:Yup.string().required("Role is required"),
+  supervisor:Yup.string().optional(),
+  fkBranchId :Yup.string().required("Branch is required"),
+  fkDesignationId  :Yup.string().required("Designation  is required"),
+  userType:Yup.string().optional(),
+  reportingTo:Yup.string().optional()
+
 });
 function HRMAddEditEmployee() {
   const location = useLocation();
@@ -69,7 +79,7 @@ function HRMAddEditEmployee() {
         ? location?.state?.reportingTo
         : "",
     },
-    // validationSchema: validationSchema,
+    validationSchema: validationSchema,
     onSubmit: (values) => {
       setIsSubmitting(true);
       if (location?.state?.id) {
@@ -207,13 +217,24 @@ function HRMAddEditEmployee() {
                     </label>
                     <input
                       type="text"
-                      class="form-control"
+                      className={`form-control  ${
+                        formik.touched.firstName &&
+                        formik.errors.firstName
+                          ? "is-invalid"
+                          : ""
+                      }`}
                       id="firstName"
                       placeholder={"First Name"}
                       value={formik.values.firstName}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                     />
+                    {formik.touched.firstName &&
+                      formik.errors.firstName && (
+                        <div className="invalid-feedback">
+                          {formik.errors.firstName}
+                        </div>
+                      )}
                   </div>
                 </div>
                 <div class="col">
@@ -223,13 +244,24 @@ function HRMAddEditEmployee() {
                     </label>
                     <input
                       type="text"
-                      class="form-control"
+                      className={`form-control  ${
+                        formik.touched.lastName &&
+                        formik.errors.lastName
+                          ? "is-invalid"
+                          : ""
+                      }`}
                       id="lastName"
                       placeholder={"Last Name"}
                       value={formik.values.lastName}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                     />
+                    {formik.touched.lastName &&
+                      formik.errors.lastName && (
+                        <div className="invalid-feedback">
+                          {formik.errors.lastName}
+                        </div>
+                      )}
                   </div>
                 </div>
                 <div class="col">
@@ -239,13 +271,24 @@ function HRMAddEditEmployee() {
                     </label>
                     <input
                       type="text"
-                      class="form-control"
+                      className={`form-control  ${
+                        formik.touched.userName &&
+                        formik.errors.userName
+                          ? "is-invalid"
+                          : ""
+                      }`}
                       id="userName"
                       placeholder={"User Name"}
                       value={formik.values.userName}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                     />
+                    {formik.touched.userName &&
+                      formik.errors.userName && (
+                        <div className="invalid-feedback">
+                          {formik.errors.userName}
+                        </div>
+                      )}
                   </div>
                 </div>
                 <div class="col">
@@ -255,13 +298,24 @@ function HRMAddEditEmployee() {
                     </label>
                     <input
                       type="text"
-                      class="form-control"
+                      className={`form-control  ${
+                        formik.touched.phoneNo &&
+                        formik.errors.phoneNo
+                          ? "is-invalid"
+                          : ""
+                      }`}
                       id="phoneNo"
                       placeholder={"Phone No"}
                       value={formik.values.phoneNo}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                     />
+                     {formik.touched.phoneNo &&
+                      formik.errors.phoneNo && (
+                        <div className="invalid-feedback">
+                          {formik.errors.phoneNo}
+                        </div>
+                      )}
                   </div>
                 </div>
               </div>
@@ -272,8 +326,13 @@ function HRMAddEditEmployee() {
                       Gender
                     </label>
                     <select
-                      class="form-select"
-                      id="Gender"
+                      className={`form-select  ${
+                        formik.touched.gender &&
+                        formik.errors.gender
+                          ? "is-invalid"
+                          : ""
+                      }`}
+                      id="gender"
                       value={formik.values.gender}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
@@ -284,6 +343,12 @@ function HRMAddEditEmployee() {
                       <option value="male">Male</option>
                       <option value="female">Female</option>
                     </select>
+                    {formik.touched.gender &&
+                      formik.errors.gender && (
+                        <div className="invalid-feedback">
+                          {formik.errors.gender}
+                        </div>
+                      )}
                   </div>
                 </div>
                 <div class="col">
@@ -293,13 +358,24 @@ function HRMAddEditEmployee() {
                     </label>
                     <input
                       type="text"
-                      class="form-control"
+                      className={`form-control  ${
+                        formik.touched.email &&
+                        formik.errors.email
+                          ? "is-invalid"
+                          : ""
+                      }`}
                       id="email"
                       placeholder={"Email"}
                       value={formik.values.email}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                     />
+                    {formik.touched.email &&
+                      formik.errors.email && (
+                        <div className="invalid-feedback">
+                          {formik.errors.email}
+                        </div>
+                      )}
                   </div>
                 </div>
                 <div class="col">
@@ -309,7 +385,12 @@ function HRMAddEditEmployee() {
                     </label>
                     <input
                       type="text"
-                      class="form-control"
+                      className={`form-control  ${
+                        formik.touched.password &&
+                        formik.errors.password
+                          ? "is-invalid"
+                          : ""
+                      }`}
                       id="password"
                       placeholder={
                         location?.state?.id ? "*********" : "Password"
@@ -319,6 +400,12 @@ function HRMAddEditEmployee() {
                       readOnly={location?.state?.id ? true : false}
                       onBlur={formik.handleBlur}
                     />
+                     {formik.touched.password &&
+                      formik.errors.password && (
+                        <div className="invalid-feedback">
+                          {formik.errors.password}
+                        </div>
+                      )}
                   </div>
                 </div>
                 <div class="col">
@@ -328,13 +415,24 @@ function HRMAddEditEmployee() {
                     </label>
                     <input
                       type="text"
-                      class="form-control"
+                      className={`form-control  ${
+                        formik.touched.fileNumber &&
+                        formik.errors.fileNumber
+                          ? "is-invalid"
+                          : ""
+                      }`}
                       id="fileNumber"
                       placeholder={"File Number"}
                       value={formik.values.fileNumber}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                     />
+                     {formik.touched.fileNumber &&
+                      formik.errors.fileNumber && (
+                        <div className="invalid-feedback">
+                          {formik.errors.fileNumber}
+                        </div>
+                      )}
                   </div>
                 </div>
               </div>
@@ -345,7 +443,12 @@ function HRMAddEditEmployee() {
                       Supervisor
                     </label>
                     <select
-                      class="form-select "
+                      className={`form-select  ${
+                        formik.touched.supervisor &&
+                        formik.errors.supervisor
+                          ? "is-invalid"
+                          : ""
+                      }`}
                       id="supervisor"
                       value={formik.values.supervisor}
                       onChange={formik.handleChange}
@@ -361,6 +464,13 @@ function HRMAddEditEmployee() {
                           >{`${item.firstName}${item.lastName}`}</option>
                         ))}
                     </select>
+                    {formik.touched.supervisor &&
+                      formik.errors.supervisor && (
+                        <div className="invalid-feedback">
+                          {formik.errors.supervisor}
+                        </div>
+                      )}
+                    
                   </div>
                 </div>
                 <div class="col">
@@ -369,7 +479,12 @@ function HRMAddEditEmployee() {
                       Roles <span className="text-danger">*</span>
                     </label>
                     <select
-                      class="form-select "
+                      className={`form-select  ${
+                        formik.touched.fkRoleId &&
+                        formik.errors.fkRoleId
+                          ? "is-invalid"
+                          : ""
+                      }`}
                       id="fkRoleId"
                       value={formik.values.fkRoleId}
                       onChange={formik.handleChange}
@@ -383,6 +498,12 @@ function HRMAddEditEmployee() {
                           <option value={item.id}>{item.name}</option>
                         ))}
                     </select>
+                    {formik.touched.fkRoleId &&
+                      formik.errors.fkRoleId && (
+                        <div className="invalid-feedback">
+                          {formik.errors.fkRoleId}
+                        </div>
+                      )}
                   </div>
                 </div>
                 <div class="col">
@@ -391,7 +512,12 @@ function HRMAddEditEmployee() {
                       Branch <span className="text-danger">*</span>
                     </label>
                     <select
-                      class="form-select "
+                      className={`form-select  ${
+                        formik.touched.fkBranchId &&
+                        formik.errors.fkBranchId
+                          ? "is-invalid"
+                          : ""
+                      }`}
                       id="fkBranchId"
                       value={formik.values.fkBranchId}
                       onChange={formik.handleChange}
@@ -405,6 +531,12 @@ function HRMAddEditEmployee() {
                           <option value={item.id}>{item.branchName}</option>
                         ))}
                     </select>
+                    {formik.touched.fkBranchId &&
+                      formik.errors.fkBranchId && (
+                        <div className="invalid-feedback">
+                          {formik.errors.fkBranchId}
+                        </div>
+                      )}
                   </div>
                 </div>
                 <div class="col">
@@ -413,7 +545,12 @@ function HRMAddEditEmployee() {
                       Designation <span className="text-danger">*</span> 
                     </label>
                     <select
-                      class="form-select "
+                     className={`form-select  ${
+                      formik.touched.fkDesignationId &&
+                      formik.errors.fkDesignationId
+                        ? "is-invalid"
+                        : ""
+                    }`}
                       id="fkDesignationId"
                       value={formik.values.fkDesignationId}
                       onChange={formik.handleChange}
@@ -429,6 +566,12 @@ function HRMAddEditEmployee() {
                           </option>
                         ))}
                     </select>
+                    {formik.touched.fkDesignationId &&
+                      formik.errors.fkDesignationId && (
+                        <div className="invalid-feedback">
+                          {formik.errors.fkDesignationId}
+                        </div>
+                      )}
                   </div>
                 </div>
 

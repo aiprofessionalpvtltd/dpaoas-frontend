@@ -74,12 +74,11 @@ export const getEFilesByID = async (id) => {
 };
 
 //case Detail
-export const getCaseDetailByID = async (fileId, caseId) => {
-  console.log("sss", fileId, caseId);
+export const getCaseDetailByID = async (fileId, caseId, orderBy) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClient.get(
-      `/cases/getCaseDetails/${fileId}/${caseId}`
+      `/cases/getCaseDetails/${fileId}/${caseId}/${orderBy}`
     );
     // {
     //   headers: {
