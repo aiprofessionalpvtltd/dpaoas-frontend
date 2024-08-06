@@ -14,31 +14,32 @@ import {
   showSuccessMessage,
 } from "../../../../../../../utils/ToastAlert";
 import {
-  createMember,
   getAllPoliticalParties,
-  getAllTenures,
-  getMembersByID,
   updateMembers,
 } from "../../../../../../../api/APIs/Services/ManageQMS.service";
 import { ToastContainer } from "react-toastify";
 import { AuthContext } from "../../../../../../../api/AuthContext";
-import { createMinister } from "../../../../../../../api/APIs/Services/LegislationModule.service";
+import {
+  createMinister,
+  getSingleMinisterByID,
+  updateMinisters,
+} from "../../../../../../../api/APIs/Services/LegislationModule.service";
 
 const validationSchema = Yup.object({
   mnaName: Yup.string().required("Member name is required"),
   politicalParty: Yup.string().required("political party is required"),
   phone: Yup.string().required("Phone no is required"),
   constituency: Yup.string().required("Constituency is required"),
-  //   ministryIds: Yup.array().required("Ministry is required"),
+  ministryIds: Yup.object().required("Ministry is required"),
 });
 function LGMSMinisterAddEditForm() {
   const location = useLocation();
   const navigate = useNavigate();
   const [tenures, setTenures] = useState([]);
-  const [memberById, setMemberById] = useState();
+  const [ministerByID, setMinisterByID] = useState();
   const [allparties, setAllParties] = useState([]);
   const { ministryData } = useContext(AuthContext);
-
+  console.log("location", location?.state);
   const formik = useFormik({
     initialValues: {
       mnaName: "",
@@ -48,18 +49,18 @@ function LGMSMinisterAddEditForm() {
       address: "",
       ministryIds: [],
     },
-    validationSchema: validationSchema,
+    // validationSchema: validationSchema,
     onSubmit: (values) => {
       // Handle form submission here
       if (location?.state) {
-        handleEditMembers(values);
+        handleEditMinisters(values);
       } else {
-        handleCreateMembers(values);
+        handleCreateMinisters(values);
       }
     },
   });
-
-  const handleCreateMembers = async (values) => {
+  console.log("formik.vlaues", formik?.values);
+  const handleCreateMinisters = async (values) => {
     const data = {
       mnaData: {
         mnaName: values?.mnaName,
@@ -69,7 +70,8 @@ function LGMSMinisterAddEditForm() {
         address: values?.address,
       },
       ministryIds:
-        values?.ministryIds?.map((ministry) => ministry?.value) || [],
+        values?.ministryIds &&
+        values?.ministryIds?.map((ministry) => ministry?.value),
     };
 
     try {
@@ -86,39 +88,6 @@ function LGMSMinisterAddEditForm() {
     }
   };
 
-  const handleEditMembers = async (values) => {
-    const data = {
-      mnaName: values.mnaName,
-      politicalParty: Number(values.politicalParty),
-      phone: values.phone,
-      constituency: values?.constituency,
-      address: values?.address,
-    };
-
-    try {
-      const response = await updateMembers(location?.state?.id, data);
-      if (response?.success) {
-        showSuccessMessage(response?.message);
-        // setTimeout(() => {
-        //   navigate("/qms/manage/members");
-        // }, 3000);
-      }
-    } catch (error) {
-      showErrorMessage(error?.response?.data?.message);
-    }
-  };
-
-  const getMemberByIdApi = async () => {
-    try {
-      const response = await getMembersByID(location.state?.id);
-      if (response?.success) {
-        setMemberById(response?.data);
-      }
-    } catch (error) {
-      // showErrorMessage(error?.response?.data?.message);
-    }
-  };
-
   //Get Political Party
   const AllPoliticalPartiesList = async () => {
     try {
@@ -128,39 +97,74 @@ function LGMSMinisterAddEditForm() {
         //   response?.data?.tonerModels
         // );
         setAllParties(response?.data?.politicalParties);
-        // setTonerModels(transformedData);
       }
     } catch (error) {
       console.log(error);
     }
   };
 
+  // Calling API
+  const getMinisterByIdApi = async () => {
+    try {
+      const response = await getSingleMinisterByID(
+        location.state?.id && location.state?.id
+      );
+      if (response?.success) {
+        setMinisterByID(response?.data[0]);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  };
   useEffect(() => {
     AllPoliticalPartiesList();
     if (location.state?.id) {
-      getMemberByIdApi();
+      getMinisterByIdApi();
     }
   }, []);
 
   useEffect(() => {
     // Update form values when termsById changes
-    if (memberById) {
+    if (ministerByID) {
       formik.setValues({
-        mnaName: memberById.mnaName || "",
-        memberTenure: memberById.fkTenureId || "",
-        memberStatus: memberById.memberStatus || "",
-        politicalParty: memberById.politicalParty || "",
-        electionType: memberById.electionType || "",
-        gender: memberById.gender || "",
-        isMinister: memberById.isMinister || "",
-        phone: memberById.phone || "",
-        constituency: memberById?.constituency || "",
-        governmentType: memberById?.governmentType || "",
-        memberProvince: memberById?.memberProvince || "",
-        reason: memberById?.reason || "",
+        mnaName: ministerByID?.mnaName || "",
+        constituency: ministerByID?.constituency || "",
+        phone: ministerByID?.phone || "",
+        politicalParty: ministerByID?.politicalParty || "",
+        address: ministerByID?.address || "",
+        ministryIds:
+          ministerByID?.ministries?.map((ministry) => ({
+            value: ministry?.id,
+            label: ministry?.ministryName,
+          })) || [],
       });
     }
-  }, [memberById, formik.setValues]);
+  }, [ministerByID, formik.setValues]);
+  const handleEditMinisters = async (values) => {
+    const data = {
+      mnaData: {
+        mnaName: values?.mnaName,
+        politicalParty: Number(values?.politicalParty),
+        phone: String(values?.phone),
+        constituency: values?.constituency,
+        address: values?.address,
+      },
+      ministryIds:
+        values?.ministryIds?.map((ministry) => ministry?.value) || [],
+    };
+
+    try {
+      const response = await updateMinisters(location?.state?.id, data);
+      if (response?.success) {
+        showSuccessMessage(response?.message);
+        setTimeout(() => {
+          navigate("/lgms/dashboard/manage/ministers/list");
+        }, 3000);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  };
 
   return (
     <Layout
@@ -203,6 +207,7 @@ function LGMSMinisterAddEditForm() {
                             : ""
                         }`}
                         id="mnaName"
+                        name="mnaName"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
@@ -227,6 +232,7 @@ function LGMSMinisterAddEditForm() {
                             : ""
                         }`}
                         id="constituency"
+                        name="constituency"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
@@ -262,7 +268,9 @@ function LGMSMinisterAddEditForm() {
                         </option>
                         {allparties &&
                           allparties.map((item) => (
-                            <option value={item.id}>{item.shortName}</option>
+                            <option value={item.id} key={item?.id}>
+                              {item.shortName}
+                            </option>
                           ))}
                       </select>
                       {formik.touched.politicalParty &&

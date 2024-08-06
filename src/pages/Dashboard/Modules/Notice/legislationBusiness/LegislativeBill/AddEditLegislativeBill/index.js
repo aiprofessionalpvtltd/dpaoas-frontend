@@ -32,6 +32,7 @@ function AddEditLegislativeBill() {
       status: "",
       attachment: "",
       description: "",
+      diary_number: "",
     },
     // validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -54,6 +55,7 @@ function AddEditLegislativeBill() {
     }
     formData.append("date", values?.billdate);
     formData.append("status", values?.status);
+    formData.append("diary_number", values?.diary_number);
     // formData.append("device", "Web")
 
     try {
@@ -104,6 +106,7 @@ function AddEditLegislativeBill() {
         status: billData[0]?.status || "",
         description: billData[0]?.description || "",
         title: billData[0]?.title || "",
+        diary_number: billData[0]?.diary_number || "",
       });
     }
   }, [billData, formik.setValues]);
@@ -248,6 +251,20 @@ function AddEditLegislativeBill() {
                             event.currentTarget.files[0]
                           );
                         }}
+                      />
+                    </div>
+                  </div>
+                  <div className="col-4">
+                    <div className="mb-3">
+                      <label className="form-label">Diary Number</label>
+                      <input
+                        className={`form-control`}
+                        type="text"
+                        id="diary_number"
+                        value={formik.values.diary_number}
+                        name="diary_number"
+                        onBlur={formik.handleBlur}
+                        onChange={formik.handleChange}
                       />
                     </div>
                   </div>

@@ -126,7 +126,11 @@ function NMSSessionAttendance() {
     >
       <div
         class="row"
-        style={{ display: "flex", alignItems:"center", justifyContent: "space-between" }}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
       >
         <div class="col-3">
           <Header
@@ -169,7 +173,7 @@ function NMSSessionAttendance() {
               // style={{ width: width ? width : "500px" }}
             >
               <div className="row">
-                <div className="col-4">
+                <div className="col">
                   <div className="row">
                     <div className="col-6">Session:</div>
                     <div className="col-6">
@@ -182,7 +186,7 @@ function NMSSessionAttendance() {
                     </div>
                   </div>
                 </div>
-                <div className="col-4">
+                <div className="col">
                   <div className="row">
                     <div className="col-4">Date:</div>
                     <div className="col-4">
@@ -196,7 +200,33 @@ function NMSSessionAttendance() {
                     </div>
                   </div>
                 </div>
-                <div className="col-4">
+                <div className="col">
+                  <div className="row">
+                    <div className="col-9">Sitting Start Time</div>
+                    <div className="col-3">
+                      <span className="text-primary">
+                        {location?.state?.data &&
+                        location?.state?.data?.sittingStartTime
+                          ? location?.state?.data?.sittingStartTime
+                          : ""}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div className="col">
+                  <div className="row">
+                    <div className="col-9">Sitting End Time</div>
+                    <div className="col-3">
+                      <span className="text-primary">
+                        {location?.state?.data &&
+                        location?.state?.data?.sittingEndTime
+                          ? location?.state?.data?.sittingEndTime
+                          : ""}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div className="col">
                   <div className="row">
                     <div className="col-9">Is Adjourned:</div>
                     <div className="col-3">
