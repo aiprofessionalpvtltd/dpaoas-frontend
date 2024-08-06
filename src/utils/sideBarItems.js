@@ -283,7 +283,6 @@ export const MMSSideBarItems = [
         link: "/mms/reports/motion-list",
         icon: faClipboardList,
       },
-
     ],
   },
 ];
@@ -1081,14 +1080,69 @@ export const LegislationSideBarItems = [
     link: "/lgms/dashboard",
     icon: faHome,
   },
+  // {
+  //   itemName: "Bills",
+  //   link: "/lgms/dashboard/bills",
+  //   icon: faBookOpen,
+  //   subItems: [
+  //     // {
+  //     //   itemName: "All Bills",
+  //     //   link: "/lgms/dashboard/bills/legislation-bills",
+  //     //   icon: faBookOpen,
+  //     // },
+  //     {
+  //       itemName: "Government Bills",
+  //       link: "/lgms/dashboard/bills/legislation-bills/government-bills",
+  //       icon: faBookOpen,
+  //     },
+  //     {
+  //       itemName: "Private Member Bills",
+  //       link: "/lgms/dashboard/bills/legislation-bills/private-member-bills",
+  //       icon: faBookOpen,
+  //     },
+  //     {
+  //       itemName: "Search Bills",
+  //       link: "/lgms/dashboard/bills/search-bills",
+  //       icon: faBookOpen,
+  //     },
+  //   ],
+  // },
   {
-    itemName: "Bills",
+    itemName: "Government Bills",
     link: "/lgms/dashboard/bills",
     icon: faBookOpen,
     subItems: [
       {
-        itemName: "All Bills",
-        link: "/lgms/dashboard/bills/legislation-bills",
+        itemName: "Bills Introduced In Senate",
+        link: "/lgms/dashboard/bills/legislation-bills/government-bills/introduced-in-senate",
+        icon: faBookOpen,
+      },
+      {
+        itemName: "Bills Recieved From NA",
+        link: "/lgms/dashboard/bills/legislation-bills/government-bills/recieved-from-na",
+        icon: faBookOpen,
+      },
+      {
+        itemName: "Search Bills",
+        link: "/lgms/dashboard/bills/search-bills",
+        icon: faBookOpen,
+      },
+    ],
+  },
+
+  {
+    itemName: "Private Member Bills",
+    link: "/lgms/dashboard/bills",
+    icon: faBookOpen,
+    subItems: [
+      {
+        itemName: "Bills Introduced In Senate",
+        link: "/lgms/dashboard/bills/legislation-bills/private-member-bills/introduced-in-senate",
+        icon: faBookOpen,
+      },
+      {
+        itemName: "Bills Recieved From NA",
+        link: "/lgms/dashboard/bills/legislation-bills/private-member-bills/recieved-from-na",
         icon: faBookOpen,
       },
       {
@@ -1126,11 +1180,21 @@ export const LegislationSideBarItems = [
         link: "/lgms/dashboard/bill/manage-bill-statuses",
         icon: faBookOpen,
       },
-      // {
-      //   itemName: "Manage Committees",
-      //   link: "/lgms/dashboard/committees/manage-committees",
-      //   icon: faBookOpen,
-      // },
+      {
+        itemName: "Manage Committees",
+        link: "/lgms/dashboard/manage/committees/list",
+        icon: faBookOpen,
+      },
+      {
+        itemName: "Manage Committees Recommendation",
+        link: "/lgms/dashboard/manage/committee-recomendation/list",
+        icon: faBookOpen,
+      },
+      {
+        itemName: "Ministers",
+        link: "/lgms/dashboard/manage/ministers/list",
+        icon: faBookOpen,
+      },
       {
         itemName: "Members",
         link: "/lgms/dashboard/manage/members/list",

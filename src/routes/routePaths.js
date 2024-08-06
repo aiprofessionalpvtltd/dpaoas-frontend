@@ -170,7 +170,6 @@ import SMSMembersAddEditForm from "../pages/Dashboard/Modules/SMS/Members/AddEdi
 import SearchLegislationBills from "../pages/Dashboard/Modules/LGMS/Bills/SearchBills";
 import LegislationManagementSystemDashboard from "../pages/Dashboard/Modules/LGMS";
 import NewLegislationNABill from "../pages/Dashboard/Modules/LGMS/Bills/NABills/AddNABills";
-import AllLegislationBill from "../pages/Dashboard/Modules/LGMS/Bills/LegislationBills";
 import AllOrdinanceList from "../pages/Dashboard/Modules/LGMS/Ordinance/OrdinanceList";
 import AddOrdinance from "../pages/Dashboard/Modules/LGMS/Ordinance/AddOrdinance";
 import NewLegislationSenateBill from "../pages/Dashboard/Modules/LGMS/Bills/SenateBills/AddSenateBills";
@@ -189,8 +188,6 @@ import LGMSTenures from "../pages/Dashboard/Modules/LGMS/Manage/Tenures";
 import LGMSAddEditTenuresForm from "../pages/Dashboard/Modules/LGMS/Manage/Tenures/AddEditTenures";
 import LGMSTerms from "../pages/Dashboard/Modules/LGMS/Manage/Terms";
 import LGMSAddEditTermsForm from "../pages/Dashboard/Modules/LGMS/Manage/Terms/AddEditTerms";
-import LGMSCommittees from "../pages/Dashboard/Modules/LGMS/Manage/Committees";
-import LGMSAddEditCommiteesForm from "../pages/Dashboard/Modules/LGMS/Manage/Committees/AddEditCommittees";
 import LGMSPrivateBill from "../pages/Dashboard/Modules/LGMS/LGMSPrivateBill";
 import LGMSLegislativeBill from "../pages/Dashboard/Modules/LGMS/LGMSLegislativeBill";
 import LGMSAddEditPrivateBill from "../pages/Dashboard/Modules/LGMS/LGMSPrivateBill/LGMSAddEditPrivateBill";
@@ -239,6 +236,16 @@ import PreviewBallotMotionList from "../pages/Dashboard/Modules/MMS/Reports/Moti
 import AllBallotResolutionList from "../pages/Dashboard/Modules/QMS/Resolution/AllBallotResolutionList/index.js";
 import PreviewResolutionList from "../pages/Dashboard/Modules/QMS/SearchResolution/PreviewResolution/index.js";
 import PreviewQuestionList from "../pages/Dashboard/Modules/QMS/Reports/QuestionList/PreviewQuestionList/index.js";
+import AllManageCommitteeRecoomendation from "../pages/Dashboard/Modules/LGMS/Manage/CommitteeRecomendation/index.js";
+import LGMSAddEditCommittees from "../pages/Dashboard/Modules/LGMS/Manage/ManageCommittees/AddEditCommittees/index.js";
+import LGMSCommitteess from "../pages/Dashboard/Modules/LGMS/Manage/ManageCommittees/index.js";
+import LGMSAddEditCommitteesRecommendation from "../pages/Dashboard/Modules/LGMS/Manage/CommitteeRecomendation/AddEditCommitteeRecomendation/index.js";
+import AllGovernmentSenateBills from "../pages/Dashboard/Modules/LGMS/Bills/GovernmentBill/IntroducedinSenate/index.js";
+import AllGovernmentRecievedNABills from "../pages/Dashboard/Modules/LGMS/Bills/GovernmentBill/RecievefromNA/index.js";
+import AllPrivateMemberSenateBills from "../pages/Dashboard/Modules/LGMS/Bills/PrivateMemberBill/IntroducedInSenate/index.js";
+import AllPrivateMemberBillFromNA from "../pages/Dashboard/Modules/LGMS/Bills/PrivateMemberBill/RecievedFromNA/index.js";
+import LGMSMinisters from "../pages/Dashboard/Modules/LGMS/Manage/Ministers/index.js";
+import LGMSMinisterAddEditForm from "../pages/Dashboard/Modules/LGMS/Manage/Ministers/AddEditMinisters/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -399,9 +406,15 @@ export const ProtectedRoutes = [
 
   { path: "/mms/reports", element: <MMSMotionDashboard /> },
   { path: "/mms/reports/motion-summary", element: <MMSMotionSummery /> },
-  { path: "/mms/reports/motion-list", element : <MMSMotionListReport />},
-  { path: "/mms/reports/motion-list/ballot/:id", element: <MMSBallotMotionList /> },
-  {path: "/mms/reports/motion-list/ballot/preview-pdf", element: <PreviewBallotMotionList />},
+  { path: "/mms/reports/motion-list", element: <MMSMotionListReport /> },
+  {
+    path: "/mms/reports/motion-list/ballot/:id",
+    element: <MMSBallotMotionList />,
+  },
+  {
+    path: "/mms/reports/motion-list/ballot/preview-pdf",
+    element: <PreviewBallotMotionList />,
+  },
 
   //QMS Module
   { path: "/qms/dashboard", element: <QMSQuestionDashboard /> },
@@ -461,13 +474,21 @@ export const ProtectedRoutes = [
   { path: "/qms/dashboard", element: <QMSQuestionDashboard /> },
   { path: "/qms/search/question", element: <QMSSearchQuestion /> },
   { path: "/qms/search/resolution", element: <QMSSerchResolution /> },
-  { path: "/qms/search/resolution/preview", element: <PreviewResolutionList /> },
-
+  {
+    path: "/qms/search/resolution/preview",
+    element: <PreviewResolutionList />,
+  },
 
   { path: "/qms/resolution", element: <QMSQuestionDashboard /> },
   { path: "/qms/rsolution/list", element: <QMSResolutionList /> },
-  { path: "/qms/rsolution/list/ballot/:id", element: <QMSBallotResolutionList /> },
-  { path: "/qms/rsolution/list/ballot/preview-pdf", element: <PreviewBallotResolutionList /> },
+  {
+    path: "/qms/rsolution/list/ballot/:id",
+    element: <QMSBallotResolutionList />,
+  },
+  {
+    path: "/qms/rsolution/list/ballot/preview-pdf",
+    element: <PreviewBallotResolutionList />,
+  },
   { path: "/qms/resolution/delete", element: <QMSDeleteResolution /> },
   { path: "/qms/resolution/ballot/list", element: <AllBallotResolutionList /> },
 
@@ -550,7 +571,6 @@ export const ProtectedRoutes = [
     path: "/qms/questionList/priveiw-question-list",
     element: <PreviewQuestionList />,
   },
-
 
   //SMS Module routes
   { path: "/sms/dashboard", element: <SMSDashboard /> },
@@ -745,10 +765,24 @@ export const ProtectedRoutes = [
     path: "/lgms/dashboard/ordinances/edit/ordinance",
     element: <EditOrdinance />,
   },
+
   {
-    path: "/lgms/dashboard/bills/legislation-bills",
-    element: <AllLegislationBill />,
+    path: "/lgms/dashboard/bills/legislation-bills/government-bills/introduced-in-senate",
+    element: <AllGovernmentSenateBills />,
   },
+  {
+    path: "/lgms/dashboard/bills/legislation-bills/government-bills/recieved-from-na",
+    element: <AllGovernmentRecievedNABills />,
+  },
+  {
+    path: "/lgms/dashboard/bills/legislation-bills/private-member-bills/introduced-in-senate",
+    element: <AllPrivateMemberSenateBills />,
+  },
+  {
+    path: "/lgms/dashboard/bills/legislation-bills/private-member-bills/recieved-from-na",
+    element: <AllPrivateMemberBillFromNA />,
+  },
+
   {
     path: "/lgms/dashboard/bills/NA-bills",
     element: <NewLegislationNABill />,
@@ -769,7 +803,31 @@ export const ProtectedRoutes = [
     path: "/lgms/dashboard/bill/manage-bill-statuses",
     element: <AllBillStatuses />,
   },
+  {
+    path: "/lgms/dashboard/manage/committees/list",
+    element: <LGMSCommitteess />,
+  },
+  {
+    path: "/lgms/dashboard/bill/manage-committeess/addedit",
+    element: <LGMSAddEditCommittees />,
+  },
+  {
+    path: "/lgms/dashboard/manage/committee-recomendation/list",
+    element: <AllManageCommitteeRecoomendation />,
+  },
+  {
+    path: "/lgms/dashboard/manage/committee-recomendation/addedit",
+    element: <LGMSAddEditCommitteesRecommendation />,
+  },
 
+  {
+    path: "/lgms/dashboard/manage/ministers/list",
+    element: <LGMSMinisters />,
+  },
+  {
+    path: "/lgms/dashboard/manage/ministers/addedit",
+    element: <LGMSMinisterAddEditForm />,
+  },
   {
     path: "/lgms/dashboard/manage/members/list",
     element: <LGMSMembers />,
@@ -815,15 +873,6 @@ export const ProtectedRoutes = [
   },
 
   {
-    path: "/lgms/dashboard/manage/committees/list",
-    element: <LGMSCommittees />,
-  },
-  {
-    path: "/lgms/dashboard/manage/committees/addedit",
-    element: <LGMSAddEditCommiteesForm />,
-  },
-
-  {
     path: "/lgms/legislation/private-bill",
     element: <LGMSPrivateBill />,
   },
@@ -845,7 +894,10 @@ export const ProtectedRoutes = [
 
   // Telecasting branch
   { path: "/telecasting/dashboard", element: <TelecastingDashboard /> },
-  { path: "/telecasting/speech-on-demand", element: <TelecastingSpeechOnDemand /> },
+  {
+    path: "/telecasting/speech-on-demand",
+    element: <TelecastingSpeechOnDemand />,
+  },
   {
     path: "/telecasting/speech-on-demand/addedit",
     element: <TelecastingAddEditSpeechOnDemand />,
