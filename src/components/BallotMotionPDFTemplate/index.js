@@ -76,7 +76,7 @@ function BallotMotionPdfTemplate({ data, children }) {
             SENATE SECRETARIAT
           </h1>
           <div style={{ float: "left" }}>
-            <p style={{ marginTop: "33px" }}>No. F.2(1)/2023-Q</p>
+            <p style={{ marginTop: "33px" }}>MD. No. 17 (339th)/2024-M</p>
           </div>
           <div style={{ float: "right" }}>
             <p style={{ marginTop: "33px" }}>
@@ -100,15 +100,12 @@ function BallotMotionPdfTemplate({ data, children }) {
                 marginBottom: "35px",
               }}
             >
-              BALLOT OF PRIVATE MEMBER'S RESOLUTIONS
+              MOTION UNDER RULE 218 MD. NO.17 (339)/2024-M
             </span>
           </p>
-          <p>Dear Madam/Sir,</p>
+          <p>Respected Madam/Sir,</p>
           <p style={{ marginLeft: "110px", lineHeight: "26px" }}>
-            I am directed to inform you that the following Private Member's
-            Resolution will be set down in the Orders of the Day for the sitting
-            of the Senate to be held on Monday, the 8<sup>th</sup> July, 2024,
-            which will be a Private Member's Day:-
+          I am directed to refer to your Motion under rule 218 (copy enclosed), the notice ofwhich was received in this Secretariat on 6th June 2024,for the current session and to state that thematter pertains to power and functions of the Senate cannot be discussed by way of a motion underrule 218 as it is not the concern of the Government.
           </p>
           <div className="clearfix"></div>
         </div>
@@ -122,14 +119,20 @@ function BallotMotionPdfTemplate({ data, children }) {
           >
             <thead>
               <tr>
-                <th align="center" style={{ backgroundColor: "#acacac" }}>
+                <th align="center" style={{ backgroundColor: "#acacac", textAlign:"center" }}>
                   S#
                 </th>
-                <th align="center" style={{ background: "#acacac" }}>
+                <th align="center" style={{ background: "#acacac", textAlign:"center" }}>
+                  MID No. & Date
+                </th>
+                <th align="center" style={{ background: "#acacac", textAlign:"center" }}>
                   NAME OF MOVER
                 </th>
-                <th align="center" style={{ background: "#acacac" }}>
-                  CONTENT OF RESOLUTION
+                <th align="center" style={{ background: "#acacac", textAlign:"center" }}>
+                  SUBJECT
+                </th>
+                <th align="center" style={{ background: "#acacac", textAlign:"center" }}>
+                  Remarks
                 </th>
               </tr>
             </thead>
@@ -141,6 +144,10 @@ function BallotMotionPdfTemplate({ data, children }) {
                       align="left"
                       style={{ padding: "15px", verticalAlign: "top" }}
                     >{`${index + 1}`}</td>
+                    <td
+                      align="center"
+                      style={{ padding: "15px", verticalAlign: "top" }}
+                    >(01) (341) 06.07.24</td>
                     <td
                       align="left"
                       style={{ padding: "15px", verticalAlign: "top" }}
@@ -161,6 +168,10 @@ function BallotMotionPdfTemplate({ data, children }) {
                         {item?.englishText?.replace(/(<([^>]+)>)/gi, "")}
                       </p>
                     </td>
+                    <td
+                      align="left"
+                      style={{ padding: "15px", verticalAlign: "top" }}
+                    >Admitted</td>
                   </tr>
                 ))}
             </tbody>
@@ -174,13 +185,17 @@ function BallotMotionPdfTemplate({ data, children }) {
               lineHeight: "26px",
             }}
           >
-            Syed Hasnain Haider
+           (HAFSA FAROOQ)
             <br />
-            Secretary
+            Section Officer (M)
+            <br />
+            Ph.051-9201575
+
           </p>
           <div style={{ clear: "both" }}></div>
+          <p>Encl: <span style={{textDecoration:"underline"}}>As above</span></p>
           <p style={{ fontWeight: "bold", textDecoration: "underline" }}>
-            Copy forwarded for information and necessary action to:-
+           Copy for information to:-
           </p>
           <ol style={{ listStylePosition: "inside" }}>
             <li
@@ -190,15 +205,7 @@ function BallotMotionPdfTemplate({ data, children }) {
                 paddingBottom: "15px",
               }}
             >
-              Secretaries Ministry of Federal Education and Professional
-              Training and Ministry of National Health Services, Regulations and
-              Coordination with a request to depute an officer not below the
-              rank of Joint Secretary of the Ministry/Division dealing with the
-              subject matter of these Resolution to attend the proceedings of
-              the Sitting of the Senate. They are also requested to send a copy
-              of the brief on the Resolution, relating to their
-              Ministry/Division, to the office of the Leader of the House in the
-              Senate before commencement of the Session.
+             The Director Staff to Secretary, Senate Secretariat, Islamabad.
             </li>
             <li
               style={{
@@ -207,8 +214,7 @@ function BallotMotionPdfTemplate({ data, children }) {
                 paddingBottom: "20px",
               }}
             >
-              The Director Staff, Leader of the House, Senate Secretariat,
-              Islamabad.
+              The APS to Joint Secretary (Legis), Senate Secretariat, Islamabad.
             </li>
             <li
               style={{
@@ -217,86 +223,12 @@ function BallotMotionPdfTemplate({ data, children }) {
                 paddingBottom: "20px",
               }}
             >
-              The Director Staff to the Secretary Senate, Senate Secretariat,
-              Islamabad.
+              The Director(IT) Senate Secretariat, Islamabad. (For online transmission to concerned Member)
             </li>
-            <li
-              style={{
-                lineHeight: "22px",
-                marginLeft: "10px",
-                paddingBottom: "20px",
-              }}
-            >
-              The Joint Secretary (Legis), Senate Secretariat, Islamabad.
-            </li>
-            <li
-              style={{
-                lineHeight: "22px",
-                marginLeft: "10px",
-                paddingBottom: "20px",
-              }}
-            >
-              The Section Officer (Council), Ministry of Federal Education and
-              Professional Training, Islamabad.
-            </li>
-            <li
-              style={{
-                lineHeight: "22px",
-                marginLeft: "10px",
-                paddingBottom: "20px",
-              }}
-            >
-              The Section Officer (Council), Ministry of National Health
-              Services, Regulations and Coordination, Islamabad.
-            </li>
-            <li
-              style={{
-                lineHeight: "22px",
-                marginLeft: "10px",
-                paddingBottom: "20px",
-              }}
-            >
-              The Assistant Secretary (Council), Ministry of Parliamentary
-              Affairs, Islamabad.
-            </li>
-            <li
-              style={{
-                lineHeight: "22px",
-                marginLeft: "10px",
-                paddingBottom: "20px",
-              }}
-            >
-              Personal Secretary to the Minister for Parliamentary Affairs /
-              Minister In charge of the Prime Minister’s Office Public Affairs
-              and Grievances Wing, ”R” Block Pak-Secretariat, Islamabad.
-            </li>
-            <li
-              style={{
-                lineHeight: "22px",
-                marginLeft: "10px",
-                paddingBottom: "20px",
-              }}
-            >
-              The Legislation Branch, Senate Secretariat, Islamabad.
-            </li>
-            <li
-              style={{
-                lineHeight: "22px",
-                marginLeft: "10px",
-                paddingBottom: "20px",
-              }}
-            >
-              Director to (IT), Senate Secretariat, Islamabad. (With a request
-              for online transmission to all Members of the Senate)
-            </li>
+           
+          
           </ol>
-          <p
-            style={{
-              borderBottom: "dotted 4px",
-              width: "100%",
-              marginTop: "20px",
-            }}
-          ></p>
+         
         </div>
       </div>
       {/* </div> */}
