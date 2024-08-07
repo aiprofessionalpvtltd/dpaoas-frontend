@@ -21,6 +21,7 @@ function MMSBallotMotionList() {
   const [isChecked, setIsChecked] = useState([]);
   const pageSize = 10;
   const [motionListData, setMotionListData] = useState([]);
+  const [motionListId, setMotionListid] = useState(null)
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
     setCurrentPage(page);
@@ -41,8 +42,12 @@ function MMSBallotMotionList() {
   };
   const hendleBallot = async () => {
     // const resolutionIds = {isChecked}
+    const motionData = {
+      motionsIds:isChecked,
+      motionListId:motionListId
+    }
     try {
-      const response = await getBallotMotionRecord(isChecked); // Add await here
+      const response = await getBallotMotionRecord(motionData); // Add await here
       if (response?.success) {
         showSuccessMessage(response?.message);
         const jsonString = JSON.stringify(response?.data?.motions);
@@ -67,6 +72,7 @@ function MMSBallotMotionList() {
       if (response?.success) {
         const transferData = transfrerMotionDetail(response?.data[0]?.motions);
         setMotionListData(transferData);
+        setMotionListid(response?.data[0]?.id)
       }
     } catch (error) {
       // Handle error
