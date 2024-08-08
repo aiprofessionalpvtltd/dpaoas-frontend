@@ -204,6 +204,42 @@ export const getAllYear = async (data) => {
   }
 };
 
+export const getAllYearNew = async (data) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.get(`/years?currentPage=0&pageSize=100`, data);
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const createYearNew = async (data) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.post(`/years/create`, data);
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+
+
 //Create Heading
 export const createFIleHeading = async (data) => {
   try {

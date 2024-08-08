@@ -5,11 +5,13 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { AuthContext } from '../../../../../../api/AuthContext';
 import Header from '../../../../../../components/Header';
-import { UpdateFIleHeading, UpdateFIleRegister, createFIleRegister, getAllYear, registerRecordByRegisterId } from '../../../../../../api/APIs/Services/efiling.service';
+import { UpdateFIleHeading, UpdateFIleRegister, createFIleRegister, createYearNew, getAllYear, getAllYearNew, registerRecordByRegisterId } from '../../../../../../api/APIs/Services/efiling.service';
 import { ToastContainer } from 'react-toastify';
 import { showErrorMessage, showSuccessMessage } from '../../../../../../utils/ToastAlert';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { getUserData } from '../../../../../../api/Auth';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlusSquare } from '@fortawesome/free-solid-svg-icons';
 
 const validationSchema = Yup.object({
   registerNumber: Yup.string().required("Register Number is required"),
@@ -25,6 +27,7 @@ function AddEditFileRegister() {
   const navigate = useNavigate()
   const [yearData, setYearData] = useState([]);
   const [regData, setRegData] = useState();
+  const [otherValue, setOtherValue] = useState("");
   const formik = useFormik({
     initialValues: {
       registerNumber: "",
@@ -89,10 +92,10 @@ function AddEditFileRegister() {
 
   const getAllYearApi = async () => {
     try {
-      const response = await getAllYear()
+      const response = await getAllYearNew()
       if (response.success) {
         // showSuccessMessage(response?.message)
-        setYearData(response?.data)
+        setYearData(response?.data?.years)
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -132,6 +135,24 @@ function AddEditFileRegister() {
     }
   }, [regData, formik.setValues]);
 
+  const handleAddNewReg = async () => {
+    if (otherValue) {
+      const Data = {
+        year: otherValue
+      }
+      try {
+        const response = await createYearNew(Data)
+        if (response.success) {
+          showSuccessMessage(response?.message);
+          getAllYearApi();
+          setOtherValue("");
+        }
+      } catch (error) {
+        showErrorMessage(error?.response?.data?.message);
+      }
+    }
+  }
+
 
   return (
     <Layout sidebarItems={userData && userData?.userType === "Officer" ? EfilingSideBarItem : EfilingSideBarBranchItem} centerlogohide={true} module={false}>
@@ -146,7 +167,7 @@ function AddEditFileRegister() {
             <form onSubmit={formik.handleSubmit}>
               <div class="container-fluid">
                 <div class="row">
-                  <div class="col-6">
+                  <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Register Number <span className='text-danger'>*</span></label>
                       <input
@@ -170,7 +191,7 @@ function AddEditFileRegister() {
                         )}
                     </div>
                   </div>
-                  <div class="col-6">
+                  <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Year <span className='text-danger'>*</span></label>
                       <select
@@ -193,6 +214,7 @@ function AddEditFileRegister() {
                             {item?.year}
                           </option>
                         ))}
+                        <option value={"other"}>Other</option>
                       </select>
                       {formik.touched.year &&
                         formik.errors.year && (
@@ -202,6 +224,37 @@ function AddEditFileRegister() {
                         )}
                     </div>
                   </div>
+
+                  {formik.values.year === "other" && (
+                    <>
+                    <div class="col">
+                      <div class="mb-3">
+                        <label class="form-label">Add New Year</label>
+                        <input
+                          type="text"
+                          placeholder={"Add New Year"}
+                          value={otherValue}
+                          className={`form-control`}
+                          id="otherYear"
+                          onChange={(e) => setOtherValue(e.target.value)}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="col-1">
+                        <FontAwesomeIcon
+                          icon={faPlusSquare}
+                          style={{
+                            fontSize: "30px",
+                            color: "#14ae5c",
+                            cursor: "pointer",
+                            marginTop: "33px",
+                          }}
+                          onClick={() => handleAddNewReg()}
+                        />
+                      </div>
+                      </>
+                  )}
 
                 </div>
 

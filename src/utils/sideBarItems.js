@@ -798,11 +798,11 @@ export const EfilingSideBarBranchItem = [
     icon: faHome,
   },
 
-  {
-    itemName: "Diary Register",
-    link: "/efiling/dashboard/diary",
-    icon: faBook,
-  },
+  // {
+  //   itemName: "Diary Register",
+  //   link: "/efiling/dashboard/diary",
+  //   icon: faBook,
+  // },
   {
     itemName: "Register",
     link: "/efiling/dashboard/file-register",
