@@ -2049,7 +2049,7 @@ const EditSenateBill = () => {
                           Notice for Passage withdrawal Bill
                         </option>
                         <option value="Notice">Notice</option>
-                        <option value="Notice">Proforma</option>
+                        <option value="Proforma">Proforma</option>
                       </select>
                     </div>
 
