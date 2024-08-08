@@ -52,6 +52,8 @@ export const logout = () => {
   localStorage.removeItem("roles");
   localStorage.removeItem("permissions");
   localStorage.removeItem("userData");
+  localStorage.removeItem("frId");
+  localStorage.removeItem("frAttachments");
 };
 
 // Roles
