@@ -236,6 +236,11 @@ export const NoticeSidebarItems = [
 
 export const MMSSideBarItems = [
   {
+      itemName: "Dashboard",
+      link: "/mms/dashboard",
+      icon: faClipboardList,
+    },
+  {
     itemName: "Motion",
     link: "/mms/motion",
     icon: faClipboardList,

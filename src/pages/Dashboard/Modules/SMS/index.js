@@ -23,7 +23,7 @@ function SMSDashboard() {
       listName: item?.listName,
       listDescription: item?.listDescription,
       listActive: item?.listActive,
-      UserEmail: item.user.email,
+      UserEmail: item?.user?.email,
       PublicList: JSON.stringify(item?.isPublicList),
       createdAt: moment(item?.createdAt).format("YYYY/MM/DD"),
       updatedAt: moment(item?.updatedAt).format("YYYY/MM/DD"),

@@ -401,7 +401,7 @@ export const ProtectedRoutes = [
   //MMS Module
   { path: "/mms/dashboard", element: <MMSMotionDashboard /> },
 
-  { path: "/mms/motion", element: <MMSMotionDashboard /> },
+  // { path: "/mms/motion", element: <MMSMotionDashboard /> },
   { path: "/mms/motion/new", element: <MMSNewMotion /> },
   { path: "/mms/motion/search", element: <MMSSearchMotion /> },
   { path: "/mms/motion/detail", element: <MMSMotionDetail /> },
@@ -410,7 +410,7 @@ export const ProtectedRoutes = [
   { path: "/mms/question/search", element: <MMSSearchQuestion /> },
   { path: "/mms/resolution/search", element: <MMSSearchResolution /> },
 
-  { path: "/mms/reports", element: <MMSMotionDashboard /> },
+  // { path: "/mms/reports", element: <MMSMotionDashboard /> },
   { path: "/mms/reports/motion-summary", element: <MMSMotionSummery /> },
   { path: "/mms/reports/motion-list", element: <MMSMotionListReport /> },
   {

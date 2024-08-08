@@ -148,7 +148,7 @@ function Dashboard() {
     },
     {
       title: "Motion Management System",
-      link: "/mms/motion/list",
+      link: "/mms/dashboard",
       type: "",
       cardbg: "lightGreen",
       icon: faFileImport,

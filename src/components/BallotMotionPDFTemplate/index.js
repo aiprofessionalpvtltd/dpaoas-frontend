@@ -76,7 +76,7 @@ function BallotMotionPdfTemplate({ data, children }) {
             SENATE SECRETARIAT
           </h1>
           <div style={{ float: "left" }}>
-            <p style={{ marginTop: "33px" }}>No. F.2(1)/2023-Q</p>
+            <p style={{ marginTop: "33px" }}>No. F.3(1)/2024-M</p>
           </div>
           <div style={{ float: "right" }}>
             <p style={{ marginTop: "33px" }}>
@@ -100,15 +100,12 @@ function BallotMotionPdfTemplate({ data, children }) {
                 marginBottom: "35px",
               }}
             >
-              BALLOT OF PRIVATE MEMBER'S RESOLUTIONS
+              BALLOT OF PRIVATE MEMBER'S Motions <span>{data && data?.motionType}</span>
             </span>
           </p>
           <p>Dear Madam/Sir,</p>
           <p style={{ marginLeft: "110px", lineHeight: "26px" }}>
-            I am directed to inform you that the following Private Member's
-            Resolution will be set down in the Orders of the Day for the sitting
-            of the Senate to be held on Monday, the 8<sup>th</sup> July, 2024,
-            which will be a Private Member's Day:-
+            I am directed to inform you that the following <span>{data && data?.motionType}</span> will be set down in the Orders of the Day for the next Private Members' Day:-
           </p>
           <div className="clearfix"></div>
         </div>
@@ -123,19 +120,19 @@ function BallotMotionPdfTemplate({ data, children }) {
             <thead>
               <tr>
                 <th align="center" style={{ backgroundColor: "#acacac" }}>
-                  S#
+                  Sr. No.
                 </th>
                 <th align="center" style={{ background: "#acacac" }}>
                   NAME OF MOVER
                 </th>
                 <th align="center" style={{ background: "#acacac" }}>
-                  CONTENT OF RESOLUTION
+                  CONTENT OF Motions
                 </th>
               </tr>
             </thead>
             <tbody>
               {data &&
-                data?.map((item, index) => (
+                data?.motions?.map((item, index) => (
                   <tr>
                     <td
                       align="left"

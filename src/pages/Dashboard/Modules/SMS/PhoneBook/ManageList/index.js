@@ -37,10 +37,10 @@ function SMSManageList() {
   const transformData = (apiData) => {
     return apiData.map((item) => ({
       id: item?.id,
-      listName: item.isPublicList === true ? `*${item?.listName}` : item?.listName,
+      listName: item?.isPublicList === true ? `*${item?.listName}` : item?.listName,
       listDescription: item?.listDescription,
       listActive: item?.listActive,
-      UserName: `${item.user.employee?.firstName}${item.user.employee?.lastName}`,
+      UserName: item?.user?.employee ? `${item?.user?.employee?.firstName}${item?.user?.employee?.lastName}`:"--",
       isPublicList: JSON.stringify(item?.isPublicList),
       createdAt: moment(item?.createdAt).format("YYYY/MM/DD"),
       updatedAt: moment(item?.updatedAt).format("YYYY/MM/DD")
