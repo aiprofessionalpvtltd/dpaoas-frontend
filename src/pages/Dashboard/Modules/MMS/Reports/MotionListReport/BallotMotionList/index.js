@@ -13,6 +13,7 @@ import {
   allBallotByMotionListId,
   getBallotMotionRecord,
 } from "../../../../../../../api/APIs/Services/Motion.service";
+import Header from "../../../../../../../components/Header";
 
 function MMSBallotMotionList() {
   const { id } = useParams();
@@ -85,6 +86,13 @@ function MMSBallotMotionList() {
   return (
     <Layout sidebarItems={MMSSideBarItems}>
       <ToastContainer />
+      <Header
+        dashboardLink={"/mms/dashboard"}
+        addLink1={"/mms/reports/motion-list"}
+        title1={"Motion List"}
+        addLink2={"/"}
+        title2={"Ballot List"}
+      />
       <div class="container-fluid">
         <div class="card">
           <div

@@ -80,7 +80,7 @@ function MMSMotionSummery() {
     <Layout module={true} sidebarItems={MMSSideBarItems} centerlogohide={true}>
         <ToastContainer />
       <Header
-        dashboardLink={"/"}
+        dashboardLink={"/mms/dashboard"}
         addLink1={"/mms/reports/motion-summary"}
         title1={"Motion Summary"}
       />

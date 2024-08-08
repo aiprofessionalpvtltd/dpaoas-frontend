@@ -39,15 +39,15 @@ function QMSReportQuestionList() {
   const [isEditing, setIsEditing] = useState(false);
   const [selectedQuestionList, setSelectedQuestionList] = useState(null);
   const [generateResData, setGeneratedResData] = useState([]);
-  const [checked , setChecked] = useState([])
+  const [checked, setChecked] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [deleteId, setDeleteId] = useState(null)
+  const [deleteId, setDeleteId] = useState(null);
 
   const pageSize = 10; // Set your desired page size
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
-  console.log("selectedQuestionListselectedQuestionList",selectedQuestionList);
+  console.log("selectedQuestionListselectedQuestionList", selectedQuestionList);
   const formik = useFormik({
     initialValues: {
       category: selectedQuestionList
@@ -74,7 +74,7 @@ function QMSReportQuestionList() {
   const navigate = useNavigate();
 
   const updateQuestionsList = async (values) => {
-    console.log("selectedQuestionList",selectedQuestionList);
+    console.log("selectedQuestionList", selectedQuestionList);
     const Data = {
       fkUserId: userData?.fkUserId,
       fkSessionId: sessionId,
@@ -130,17 +130,19 @@ function QMSReportQuestionList() {
     });
   };
 
+ 
   const transformQuestionsData = (apiData) => {
-    return apiData.map((res, index) => ({
-      internalId:res?.id,
-      id: res?.id, // Show id as the second column
-      questionCategory: res?.questionCategory,
-      sessionName: res?.session?.sessionName,
-      ministryName: res?.divisions?.divisionName,
-      questionStatus: res?.questionStatus?.questionStatus,
-      englishText: res?.englishText?.replace(/(<([^>]+)>)/gi, ""),
-      // urduText: res?.urduText?.replace(/(<([^>]+)>)/gi, ""),
-      questionActive: res?.questionActive,
+    console.log("apiData", apiData);
+    return apiData.map((item) => ({
+      internalId: item?.id,
+      id: item?.id, // Show id as the second column
+      questionCategory: item?.questionCategory,
+      sessionName: item?.session?.sessionName,
+      memberName: item?.member?.memberName,
+      questionStatus: item?.questionStatus?.questionStatus,
+      englishText: item?.englishText?.replace(/(<([^>]+)>)/gi, ""),
+      // urduText: item?.urduText?.replace(/(<([^>]+)>)/gi, ""),
+      questionActive: item?.questionActive,
     }));
   };
 
@@ -237,7 +239,6 @@ function QMSReportQuestionList() {
     }
   };
 
-
   const deleteList = async (data) => {
     console.log(data);
     try {
@@ -255,15 +256,13 @@ function QMSReportQuestionList() {
     setInclude(!include);
   };
 
-  
   const handleEdit = async (data) => {
     try {
       const response = await getSingleQuestionList(data?.id);
       if (response?.success) {
         const questionList = response?.questionList;
-        const transformedQuestionData = transformQuestionsData(
-          response?.data
-        );
+        const transformedQuestionData = transformQuestionsData(response?.data);
+        console.log("response?.data", transformedQuestionData);
         setGeneratedResData(transformedQuestionData);
         setIsEditing(true);
         setSelectedQuestionList(questionList);
@@ -289,14 +288,12 @@ function QMSReportQuestionList() {
     window.open(url, "_blank");
   };
 
-
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
   const handleOkClick = () => {
-    deleteList(deleteId)
+    deleteList(deleteId);
     handleClose();
   };
-
 
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
@@ -495,9 +492,9 @@ function QMSReportQuestionList() {
                 currentPage={currentPage}
                 pageSize={pageSize}
                 handleEdit={(item) => handleEdit(item)}
-                handleDelete={(item) =>{ 
-                  handleShow()
-                  setDeleteId(item.id)
+                handleDelete={(item) => {
+                  handleShow();
+                  setDeleteId(item.id);
                 }}
                 showPrint={true}
                 handlePrint={(item) => handlePrivewPage(item.id)}
@@ -517,17 +514,16 @@ function QMSReportQuestionList() {
                 block={false}
                 hideBtn={true}
                 hidebtn1={true}
-                data={generateResData}
+                data={generateResData && generateResData}
                 tableTitle="Questions Detail"
-                currentPage={currentPage}
-                pageSize={pageSize}
+                currentPage={0}
+                pageSize={100}
                 ActionHide={true}
                 showListIcon={true}
                 totalCount={count}
                 isCheckbox={true}
                 isChecked={checked}
                 setIsChecked={setChecked}
-
               />
             </div>
           </div>
