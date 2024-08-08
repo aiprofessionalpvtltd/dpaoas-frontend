@@ -12,7 +12,7 @@ import { Layout } from "../../../../../../../components/Layout";
 import { NoticeSidebarItems } from "../../../../../../../utils/sideBarItems";
 import Header from "../../../../../../../components/Header";
 import { useLocation, useNavigate } from "react-router-dom";
-import { AuthContext } from "../../../../../../../api/AuthContext";
+
 import {
   getAllMemberAttendence,
   updateMemberattendace,
@@ -35,7 +35,6 @@ function NMSSessionAttendance() {
   const sessionID = location.state ? location?.state?.id : "";
   const [attendenceMemberData, setAttendanceMemberData] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  console.log("location from Mark", location?.state);
   const GetSessionMembersWithStatus = useCallback(async () => {
     try {
       const response = await getAllMemberAttendence(sessionID);
@@ -167,107 +166,52 @@ function NMSSessionAttendance() {
       </div>
       <div className="container-fluid">
         <div className="row mb-4 align-items-center">
-          <div className="col-7 ">
-            <div
-              className="bg-white p-3 border rounded"
-              // style={{ width: width ? width : "500px" }}
-            >
+          <div className="col-md-7">
+            <div className="bg-white p-3 border rounded">
               <div className="row">
-                <div className="col">
-                  <div className="row">
-                    <div className="col-6">Session:</div>
-                    <div className="col-6">
-                      <span className="text-primary">
-                        {" "}
-                        {location?.state?.data && location?.state?.data?.session
-                          ? location?.state?.data?.session
-                          : "No Session"}
-                      </span>
-                    </div>
+                <div className="col-4 d-flex">
+                  <div className="fw-bold me-1">Session:</div>
+                  <div className="text-primary">
+                    {location?.state?.data?.session || "No Session"}
                   </div>
                 </div>
-                <div className="col">
-                  <div className="row">
-                    <div className="col-4">Date:</div>
-                    <div className="col-4">
-                      <span className="text-primary">
-                        {" "}
-                        {location?.state?.data &&
-                        location?.state?.data?.sittingDate
-                          ? location?.state?.data?.sittingDate
-                          : "No Date"}
-                      </span>
-                    </div>
+                <div className="col-4 d-flex">
+                  <div className="fw-bold me-1">Date:</div>
+                  <div className="text-primary">
+                    {location?.state?.data?.sittingDate || "No Date"}
                   </div>
                 </div>
-                <div className="col">
-                  <div className="row">
-                    <div className="col-9">Sitting Start Time</div>
-                    <div className="col-3">
-                      <span className="text-primary">
-                        {location?.state?.data &&
-                        location?.state?.data?.sittingStartTime
-                          ? location?.state?.data?.sittingStartTime
-                          : ""}
-                      </span>
-                    </div>
+                <div className="col-4 d-flex">
+                  <div className="fw-bold me-1">Sitting Start Time:</div>
+                  <div className="text-primary">
+                    {location?.state?.data?.sittingStartTime || ""}
                   </div>
                 </div>
-                <div className="col">
-                  <div className="row">
-                    <div className="col-9">Sitting End Time</div>
-                    <div className="col-3">
-                      <span className="text-primary">
-                        {location?.state?.data &&
-                        location?.state?.data?.sittingEndTime
-                          ? location?.state?.data?.sittingEndTime
-                          : ""}
-                      </span>
-                    </div>
+
+                <div className="col-4 d-flex">
+                  <div className="fw-bold me-1">Sitting End Time:</div>
+                  <div className="text-primary">
+                    {location?.state?.data?.sittingEndTime || ""}
                   </div>
                 </div>
-                <div className="col">
-                  <div className="row">
-                    <div className="col-9">Is Adjourned:</div>
-                    <div className="col-3">
-                      <span className="text-primary">
-                        {location?.state?.data &&
-                        location?.state?.data?.sessionAdjourned
-                          ? location?.state?.data?.sessionAdjourned
-                          : "Not Selected"}
-                      </span>
-                    </div>
+                <div className="col-4 d-flex">
+                  <div className="fw-bold me-1">Is Adjourned:</div>
+                  <div className="text-primary">
+                    {location?.state?.data?.sessionAdjourned || "Not Selected"}
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div className="col-5" style={{ marginLeft: 0 }}>
-            <div className="row">
-              <div className="col-5"></div>
-              {/* <div className="col">
-                {location?.state?.view && location?.state?.view === true ? (
-                  ""
-                ) : (
-                  <div>
-                    <button className="btn btn-primary float-end" type="submit">
-                      Mark Attendance
-                    </button>
-                  </div>
-                )}
-              </div> */}
-
-              <div className="col">
-                <div>
-                  <button
-                    className="btn btn-primary float-end"
-                    onClick={handleReport}
-                  >
-                    Print Report
-                  </button>
-                </div>
-              </div>
-            </div>
+          <div className="col-md-5 d-flex justify-content-end">
+            {!location?.state?.view ? (
+              <button className="btn btn-primary me-2" type="submit">
+                Mark Attendance
+              </button>
+            ) : null}
+            <button className="btn btn-primary" onClick={handleReport}>
+              Print Report
+            </button>
           </div>
         </div>
       </div>

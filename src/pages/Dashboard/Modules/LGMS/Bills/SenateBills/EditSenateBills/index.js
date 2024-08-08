@@ -16,10 +16,14 @@ import {
   getSingleNABillByID,
 } from "../../../../../../../api/APIs/Services/LegislationModule.service";
 import moment from "moment";
-import { showSuccessMessage } from "../../../../../../../utils/ToastAlert";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../../../utils/ToastAlert";
 import { getUserData } from "../../../../../../../api/Auth";
 import { ToastContainer } from "react-toastify";
 import { imagesUrl } from "../../../../../../../api/APIs";
+import { getSingleMinisteryByMinisterID } from "../../../../../../../api/APIs/Services/Motion.service";
 
 const EditSenateBill = () => {
   const location = useLocation();
@@ -36,7 +40,10 @@ const EditSenateBill = () => {
   const [committieeData, setCommittieData] = useState([]);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [isIntroducedCalendarOpen, setIntroducedCalendarOpen] = useState(false);
-
+  const [ministerID, setMinisterID] = useState(null);
+  const [editTimeMinisterID, setEditTimeMinister] = useState(null);
+  console.log("edit time Id", editTimeMinisterID);
+  const [ministryDataOnMinister, setMinistryDataOnMinister] = useState([]);
   // const [isDateofReciptCalendarOpen, setIsDateofReciptCalendarOpen] =
   //   useState(false);
   const [isReferredCalendarOpen, setReferredCalendarOpen] = useState(false);
@@ -104,7 +111,10 @@ const EditSenateBill = () => {
     getAllBillStatusData();
     getAllMNA();
     GetAllCommittiesApi();
-  }, []);
+    if (ministerID) {
+      getMinisteryByMinisterIdApi();
+    }
+  }, [ministerID]);
   const formik = useFormik({
     initialValues: {
       // Define your initial form values here
@@ -121,8 +131,8 @@ const EditSenateBill = () => {
       billTitle: "",
       billText: "",
       billRemarks: "",
-      senateBillSenatorMovers: [],
-      senateBillMnaMovers: [],
+      senateBillSenatorMovers: null,
+      senateBillMnaMovers: null,
       senateBillMinistryMovers: null,
       introducedInHouseDate: "",
       fkManageCommitteeId: "",
@@ -292,6 +302,7 @@ const EditSenateBill = () => {
       const response = await getSingleNABillByID(NA_Bill_ID && NA_Bill_ID);
       if (response?.success) {
         setSingleSenateBillData(response?.data[0]);
+        setMinisterID(response?.data[0]?.senateBillMnaMovers[0]?.fkMnaId);
       }
     } catch (error) {
       console.log("error", error);
@@ -305,7 +316,7 @@ const EditSenateBill = () => {
       getNABillByIdApi();
     }
   }, [NA_Bill_ID]);
-
+  console.log("singleSenateBillData", singleSenateBillData);
   useEffect(() => {
     if (singleSenateBillData) {
       let fileNum = "";
@@ -324,6 +335,11 @@ const EditSenateBill = () => {
           console.error("Error parsing file:", error);
         }
       }
+      // let id =
+      //   singleSenateBillData?.length > 0 &&
+      //   singleSenateBillData?.senateBillMnaMovers[0]?.fkMnaId;
+      // console.log("ddddd", id);
+
       formik.setValues({
         fkParliamentaryYearId:
           singleSenateBillData?.fkParliamentaryYearId || "",
@@ -490,6 +506,23 @@ const EditSenateBill = () => {
       });
     }
   }, [singleSenateBillData]);
+
+  const getMinisteryByMinisterIdApi = async () => {
+    try {
+      const response = await getSingleMinisteryByMinisterID(
+        ministerID && ministerID
+      );
+      if (response?.success) {
+        setMinistryDataOnMinister(response?.data?.ministries?.ministries);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  };
+  console.log(
+    "senateBillMnaMovers senateBillMnaMovers",
+    formik.values.senateBillMnaMovers
+  );
 
   // Updating Senate Bills
   const UpdateNationalAssemblyBill = async (values) => {
@@ -668,10 +701,16 @@ const EditSenateBill = () => {
         );
       });
     }
+    // if (values?.senateBillMnaMovers) {
+    //   values?.senateBillMnaMovers?.forEach((MNA, index) => {
+    //     formData.append(`senateBillMnaMovers[${index}][fkMnaId]`, MNA?.value);
+    //   });
+    // }
     if (values?.senateBillMnaMovers) {
-      values?.senateBillMnaMovers?.forEach((MNA, index) => {
-        formData.append(`senateBillMnaMovers[${index}][fkMnaId]`, MNA?.value);
-      });
+      formData.append(
+        `senateBillMnaMovers[${0}][fkMnaId]`,
+        values?.senateBillMnaMovers?.value
+      );
     }
     if (values?.senateBillMinistryMovers) {
       formData.append(
@@ -725,10 +764,7 @@ const EditSenateBill = () => {
           <div>
             <div className="container-fluid">
               <div class="card mt-1">
-                <div
-                  class="card-header red-bg"
-                  style={{ background: "#14ae5c !important" }}
-                >
+                <div class="card-header red-bg">
                   <h1>Update Senate Bill</h1>
                 </div>
                 <div className="card-body">
@@ -1190,6 +1226,43 @@ const EditSenateBill = () => {
                       </div>
                       <div class="col">
                         <div class="mb-3">
+                          <label class="form-label">Select Minister</label>
+                          <Select
+                            options={MNAData.map((item) => ({
+                              value: item.id,
+                              label: item.mnaName,
+                            }))}
+                            onChange={(selectedOption) => {
+                              formik.setFieldValue(
+                                "senateBillMnaMovers",
+                                selectedOption
+                              );
+                              formik.setFieldValue(
+                                "senateBillMinistryMovers",
+                                null
+                              );
+                              setMinisterID(selectedOption?.value);
+                            }}
+                            onBlur={formik.handleBlur}
+                            value={formik.values.senateBillMnaMovers}
+                            name="senateBillMnaMovers"
+                            className={` ${
+                              formik.touched.senateBillMnaMovers &&
+                              formik.errors.senateBillMnaMovers
+                                ? "is-invalid"
+                                : ""
+                            }`}
+                            // isMulti
+                          />
+
+                          {formik.touched.senateBillMnaMovers &&
+                            formik.errors.senateBillMnaMovers && (
+                              <div class="invalid-feedback">
+                                {formik.errors.senateBillMnaMovers}
+                              </div>
+                            )}
+                        </div>
+                        {/* <div class="mb-3">
                           <label class="form-label">Select MNA</label>
                           <Select
                             options={MNAData.map((item) => ({
@@ -1220,14 +1293,14 @@ const EditSenateBill = () => {
                                 {formik.errors.senateBillMnaMovers}
                               </div>
                             )}
-                        </div>
+                        </div> */}
                       </div>
                       <div className="col">
                         <label className="form-label">Select Ministry</label>
                         <Select
                           options={
-                            ministryData &&
-                            ministryData?.map((item) => ({
+                            ministryDataOnMinister &&
+                            ministryDataOnMinister?.map((item) => ({
                               value: item.id,
                               label: item?.ministryName,
                             }))

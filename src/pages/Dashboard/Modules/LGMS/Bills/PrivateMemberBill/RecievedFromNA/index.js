@@ -143,9 +143,9 @@ const AllPrivateMemberBillFromNA = () => {
       />
       <div class="container-fluid">
         <RecievedFromNA
-          addBtnText={"Private Member Bill (Recieved From NA)"}
+          addBtnText={"Private Member Bill (Received From NA)"}
           handleAdd={handlePrivateNABill}
-          tableTitle={"Private Member Bill Data (Recieved From NA)"}
+          tableTitle={"Private Member Bill Data (Received From NA)"}
           data={privateMemberNABill}
           handleEdit={(item) => {
             item?.billFrom === "From Senate"

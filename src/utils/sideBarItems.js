@@ -978,7 +978,7 @@ export const LegislationSideBarItems = [
         icon: faBookOpen,
       },
       {
-        itemName: "Bills Recieved From NA",
+        itemName: "Bills Received From NA",
         link: "/lgms/dashboard/bills/legislation-bills/government-bills/recieved-from-na",
         icon: faBookOpen,
       },
@@ -1001,7 +1001,7 @@ export const LegislationSideBarItems = [
         icon: faBookOpen,
       },
       {
-        itemName: "Bills Recieved From NA",
+        itemName: "Bills Received From NA",
         link: "/lgms/dashboard/bills/legislation-bills/private-member-bills/recieved-from-na",
         icon: faBookOpen,
       },
@@ -1100,7 +1100,7 @@ export const LegislationSideBarItems = [
       // },
       {
         itemName: "List Private Member Bill",
-        link: "/lgms/legislation/legislative-bill",
+        link: "/lgms/legislation/private-bill",
         icon: faFileInvoice,
       },
     ],

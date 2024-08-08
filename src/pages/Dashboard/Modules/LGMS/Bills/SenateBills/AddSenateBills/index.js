@@ -16,8 +16,28 @@ import {
 } from "../../../../../../../api/APIs/Services/LegislationModule.service";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getUserData } from "../../../../../../../api/Auth";
-import { showSuccessMessage } from "../../../../../../../utils/ToastAlert";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../../../utils/ToastAlert";
+import * as Yup from "yup";
 import moment from "moment";
+import { getSingleMinisteryByMinisterID } from "../../../../../../../api/APIs/Services/Motion.service";
+
+// Validation Schema
+
+const validationSchema = Yup.object({
+  parliamentaryYear: Yup.string().required("Parliamentary Year is required"),
+  session: Yup.string().required("Session is required"),
+  noticeDate: Yup.string().required("Notice Date is required"),
+  fileNumber: Yup.string().required("File Number is required"),
+  billType: Yup.string().required("Bill Type is required"),
+  billTitle: Yup.string().required("Bill Title is required"),
+  selectedSenator: Yup.array().required("Senator is required"),
+  selectedMNA: Yup.object().required("Minister is required"),
+  selectedMinistry: Yup.object().required("Ministery is required"),
+});
+
 function NewLegislationSenateBill() {
   const location = useLocation();
   const userData = getUserData();
@@ -26,7 +46,8 @@ function NewLegislationSenateBill() {
     useContext(AuthContext);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [MNAData, setMNAData] = useState([]);
-  console.log("location", location?.state);
+  const [ministerID, setMinisterID] = useState(null);
+  const [ministryDataOnMinister, setMinistryDataOnMinister] = useState([]);
 
   const isGovernmentBill =
     location?.state?.category &&
@@ -46,9 +67,25 @@ function NewLegislationSenateBill() {
       console.log(error);
     }
   };
+
+  const getMinisteryByMinisterIdApi = async () => {
+    try {
+      const response = await getSingleMinisteryByMinisterID(
+        ministerID && ministerID
+      );
+      if (response?.success) {
+        setMinistryDataOnMinister(response?.data?.ministries?.ministries);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  };
   useEffect(() => {
     getAllMNA();
-  }, []);
+    if (ministerID) {
+      getMinisteryByMinisterIdApi();
+    }
+  }, [ministerID]);
 
   const formik = useFormik({
     initialValues: {
@@ -59,12 +96,12 @@ function NewLegislationSenateBill() {
       billCategory: "",
       billType: "",
       billTitle: "",
-      selectedSenator: [],
-      selectedMNA: [],
-      selectedMinistry: [],
+      selectedSenator: null,
+      selectedMNA: null,
+      selectedMinistry: null,
       billFrom: "From Senate",
     },
-    // validationSchema: validationSchema,
+    validationSchema: validationSchema,
     onSubmit: (values) => {
       CreateSenateBill(values);
     },
@@ -114,10 +151,16 @@ function NewLegislationSenateBill() {
       });
     }
     if (values?.selectedMNA) {
-      values?.selectedMNA?.forEach((MNA, index) => {
-        formData.append(`senateBillMnaMovers[${index}][fkMnaId]`, MNA?.value);
-      });
+      formData.append(
+        `senateBillMnaMovers[${0}][fkMnaId]`,
+        values?.selectedMNA?.value
+      );
     }
+    // if (values?.selectedMNA) {
+    //   values?.selectedMNA?.forEach((MNA, index) => {
+    //     formData.append(`senateBillMnaMovers[${index}][fkMnaId]`, MNA?.value);
+    //   });
+    // }
     // if (values?.selectedMinistry) {
     //   values?.selectedMinistry?.forEach((ministry, index) => {
     //     formData.append(
@@ -133,6 +176,11 @@ function NewLegislationSenateBill() {
         values?.selectedMinistry?.value
       );
     }
+    let formDataObject = {};
+    for (let [key, value] of formData.entries()) {
+      formDataObject[key] = value;
+    }
+    console.log("formData", formDataObject);
 
     try {
       const response = await createNewLegislationBill(formData);
@@ -168,8 +216,10 @@ function NewLegislationSenateBill() {
       <ToastContainer />
       <Header
         dashboardLink={"/lgms/dashboard"}
-        addLink1={"/lgms/dashboard/bills/selectbillfrom"}
-        title1={"Select Bill From"}
+        addLink1={
+          "/lgms/dashboard/bills/legislation-bills/government-bills/introduced-in-senate"
+        }
+        title1={"List of Senate Bills"}
         addLink2={"/lgms/dashboard/bills/senate-bills"}
         title2={"Introduced In Senate"}
       />
@@ -177,10 +227,7 @@ function NewLegislationSenateBill() {
       <div>
         <div class="container-fluid">
           <div class="card mt-1">
-            <div
-              class="card-header red-bg"
-              style={{ background: "#14ae5c !important" }}
-            >
+            <div class="card-header red-bg">
               <h1>Create Senate Bill</h1>
             </div>
             <div class="card-body">
@@ -193,7 +240,13 @@ function NewLegislationSenateBill() {
                         <select
                           id="parliamentaryYear"
                           name="parliamentaryYear"
-                          className="form-select"
+                          className={`form-select  ${
+                            formik.touched.parliamentaryYear &&
+                            formik.errors.parliamentaryYear
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                          onBlur={formik.handleBlur}
                           onChange={formik.handleChange}
                           value={formik.values.parliamentaryYear}
                         >
@@ -222,7 +275,11 @@ function NewLegislationSenateBill() {
                         <select
                           id="session"
                           name="session"
-                          className="form-control"
+                          className={`form-control  ${
+                            formik.touched.session && formik.errors.session
+                              ? "is-invalid"
+                              : ""
+                          }`}
                           onChange={formik.handleChange}
                           value={formik.values.session}
                         >
@@ -302,7 +359,13 @@ function NewLegislationSenateBill() {
                           type="text"
                           id="fileNumber"
                           name="fileNumber"
-                          className="form-control"
+                          className={`form-control ${
+                            formik.touched.fileNumber &&
+                            formik.errors.fileNumber
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                          onBlur={formik.handleBlur}
                           onChange={formik.handleChange}
                           value={formik.values.fileNumber}
                         />
@@ -420,21 +483,35 @@ function NewLegislationSenateBill() {
                           }
                           value={formik.values.selectedSenator}
                           isMulti={true}
+                          className={` ${
+                            formik.touched.selectedSenator &&
+                            formik.errors.selectedSenator
+                              ? "is-invalid"
+                              : ""
+                          }`}
                         />
+                        {formik.touched.selectedSenator &&
+                          formik.errors.selectedSenator && (
+                            <div class="invalid-feedback">
+                              {formik.errors.selectedSenator}
+                            </div>
+                          )}
                       </div>
                     </div>
 
                     <div class="col">
                       <div class="mb-3">
-                        <label class="form-label">Select MNA</label>
+                        <label class="form-label">Select Minister</label>
                         <Select
                           options={MNAData.map((item) => ({
                             value: item.id,
                             label: item.mnaName,
                           }))}
-                          onChange={(selectedOption) =>
-                            formik.setFieldValue("selectedMNA", selectedOption)
-                          }
+                          onChange={(selectedOption) => {
+                            formik.setFieldValue("selectedMNA", selectedOption);
+                            formik.setFieldValue("selectedMinistry", null);
+                            setMinisterID(selectedOption?.value);
+                          }}
                           onBlur={formik.handleBlur}
                           value={formik.values.selectedMNA}
                           name="selectedMNA"
@@ -444,7 +521,7 @@ function NewLegislationSenateBill() {
                               ? "is-invalid"
                               : ""
                           }`}
-                          isMulti
+                          // isMulti
                         />
 
                         {formik.touched.selectedMNA &&
@@ -460,8 +537,8 @@ function NewLegislationSenateBill() {
                       <label className="form-label">Select Ministry</label>
                       <Select
                         options={
-                          ministryData &&
-                          ministryData?.map((item) => ({
+                          ministryDataOnMinister &&
+                          ministryDataOnMinister?.map((item) => ({
                             value: item.id,
                             label: item?.ministryName,
                           }))
@@ -474,9 +551,21 @@ function NewLegislationSenateBill() {
                             selectedOptions
                           )
                         }
+                        className={` ${
+                          formik.touched.selectedMinistry &&
+                          formik.errors.selectedMinistry
+                            ? "is-invalid"
+                            : ""
+                        }`}
                         value={formik.values.selectedMinistry}
                         // isMulti={true}
                       />
+                      {formik.touched.selectedMinistry &&
+                        formik.errors.selectedMinistry && (
+                          <div class="invalid-feedback">
+                            {formik.errors.selectedMinistry}
+                          </div>
+                        )}
                     </div>
                   </div>
 

@@ -561,3 +561,5 @@ export const updateMinisters = async (id, data) => {
     throw error;
   }
 };
+
+// Get Ministry on The Base of Minister ID

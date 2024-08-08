@@ -84,7 +84,7 @@ const AllPrivateMemberSenateBills = () => {
   };
 
   const handlePrivateMemberSenateBill = () => {
-    navigate("/lgms/dashboard/bills/selectbillfrom", {
+    navigate("/lgms/dashboard/bills/senate-bills", {
       state: { category: "Private Member Bill", billFrom: "From NA" },
     });
   };
