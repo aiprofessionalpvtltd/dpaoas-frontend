@@ -141,9 +141,9 @@ const AllGovernmentRecievedNABills = () => {
       />
       <div class="container-fluid">
         <RecievedFromNA
-          addBtnText={"Government Bill (Recieved From NA)"}
+          addBtnText={"Government Bill (Received From NA)"}
           handleAdd={handleGovernmentNABill}
-          tableTitle={"Government Bills Data (Recieved From NA)"}
+          tableTitle={"Government Bills Data (Received From NA)"}
           data={governmentNABill}
           handleEdit={(item) => {
             item?.billFrom === "From Senate"

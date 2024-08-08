@@ -34,6 +34,23 @@ export const getAllMinistry = async () => {
   }
 };
 
+export const getSingleMinisteryByMinisterID = async (id) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.get(`/mnas/${id}/ministries`);
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
 export const getMotionByID = async (id) => {
   try {
     // const token = getAuthToken();
@@ -50,7 +67,12 @@ export const getMotionByID = async (id) => {
   }
 };
 
-export const getAllMotion = async (currentPage, pageSize,motionSentStatus, motiontoStatus) => {
+export const getAllMotion = async (
+  currentPage,
+  pageSize,
+  motionSentStatus,
+  motiontoStatus
+) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClient.get(
@@ -68,7 +90,11 @@ export const getAllMotion = async (currentPage, pageSize,motionSentStatus, motio
   }
 };
 
-export const getAllMotionNotice = async (currentPage, pageSize, motionSentStatus) => {
+export const getAllMotionNotice = async (
+  currentPage,
+  pageSize,
+  motionSentStatus
+) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClient.get(
@@ -185,14 +211,11 @@ export const getallMembers = async (currentPage, pageSize) => {
 export const sendToMotion = async (id, data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClient.put(
-      `/motion/sendToMotion/${id}`, data,
-      {
-        // headers: {
-        //   Authorization: `Bearer ${token}`,
-        // }
-      }
-    );
+    const response = await axiosClient.put(`/motion/sendToMotion/${id}`, data, {
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // }
+    });
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -203,14 +226,11 @@ export const sendToMotion = async (id, data) => {
 export const sendMotionForTranslation = async (id) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClient.put(
-      `/motion/sendForTranslation/${id}`,
-      {
-        // headers: {
-        //   Authorization: `Bearer ${token}`,
-        // }
-      }
-    );
+    const response = await axiosClient.put(`/motion/sendForTranslation/${id}`, {
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // }
+    });
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -259,19 +279,24 @@ export const allMotionSummary = async (searchParams, currentPage, pageSize) => {
 export const allMotionList = async (currentPage, pageSize) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClient.get(`/motion/motionLists?currentPage=${currentPage}&pageSize=${pageSize}`)
+    const response = await axiosClient.get(
+      `/motion/motionLists?currentPage=${currentPage}&pageSize=${pageSize}`
+    );
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
     throw error;
   }
-}
+};
 
 //GENERATE
 export const generateMotionList = async (data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClient.post(`/motion/generateMotionListData`, data)
+    const response = await axiosClient.post(
+      `/motion/generateMotionListData`,
+      data
+    );
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -280,10 +305,10 @@ export const generateMotionList = async (data) => {
 };
 
 //Save Motion List
- export const saveNewMotionList = async (data) => {
+export const saveNewMotionList = async (data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClient.post(`/motion/motion-lists`, data)
+    const response = await axiosClient.post(`/motion/motion-lists`, data);
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -295,7 +320,10 @@ export const generateMotionList = async (data) => {
 export const UpdateMotionList = async (data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClient.put(`/motion/updateMotionListAndAssociations`, data)
+    const response = await axiosClient.put(
+      `/motion/updateMotionListAndAssociations`,
+      data
+    );
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -303,23 +331,23 @@ export const UpdateMotionList = async (data) => {
   }
 };
 
-//Delete Motion List 
+//Delete Motion List
 export const deleteMotionListByID = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClient.delete(`/motion/motionlists/${id}`)
+    const response = await axiosClient.delete(`/motion/motionlists/${id}`);
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
     throw error;
   }
-}
+};
 
 //MotionBallotRecord
 export const getBallotMotionRecord = async (data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClient.post(`/motion/pdfMotionList`, data)
+    const response = await axiosClient.post(`/motion/pdfMotionList`, data);
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -330,7 +358,7 @@ export const getBallotMotionRecord = async (data) => {
 export const allBallotByMotionListId = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClient.get(`/motion/getSingleMotionData/${id}`)
+    const response = await axiosClient.get(`/motion/getSingleMotionData/${id}`);
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);

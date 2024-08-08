@@ -191,10 +191,7 @@ function NewLegislationNABill() {
       <div>
         <div class="container-fluid">
           <div class="card mt-1">
-            <div
-              class="card-header red-bg"
-              style={{ background: "#14ae5c !important" }}
-            >
+            <div class="card-header red-bg">
               <h1> Create National Assembly Bill</h1>
             </div>
             <div class="card-body">

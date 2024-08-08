@@ -167,18 +167,32 @@ import SMSMembers from "../pages/Dashboard/Modules/SMS/Members";
 import SMSMembersAddEditForm from "../pages/Dashboard/Modules/SMS/Members/AddEditMembers";
 
 // import AllLegislationBillList from "../pages/Dashboard/Modules/LGMS/Bills/LegislationBills";
-import SearchLegislationBills from "../pages/Dashboard/Modules/LGMS/Bills/SearchBills";
-import LegislationManagementSystemDashboard from "../pages/Dashboard/Modules/LGMS";
 import NewLegislationNABill from "../pages/Dashboard/Modules/LGMS/Bills/NABills/AddNABills";
-import AllOrdinanceList from "../pages/Dashboard/Modules/LGMS/Ordinance/OrdinanceList";
-import AddOrdinance from "../pages/Dashboard/Modules/LGMS/Ordinance/AddOrdinance";
 import NewLegislationSenateBill from "../pages/Dashboard/Modules/LGMS/Bills/SenateBills/AddSenateBills";
 import UpdateBills from "../pages/Dashboard/Modules/LGMS/Bills/NABills/EditNABills";
 import EditSenateBill from "../pages/Dashboard/Modules/LGMS/Bills/SenateBills/EditSenateBills";
-import SearchOrdinance from "../pages/Dashboard/Modules/LGMS/Ordinance/SearchOrdinance";
-import AllBillStatuses from "../pages/Dashboard/Modules/LGMS/Manage/ManageBillStatuses";
-import LGMSMembers from "../pages/Dashboard/Modules/LGMS/Manage/Members";
+
+// LGMS ROUTES START
+import LegislationManagementSystemDashboard from "../pages/Dashboard/Modules/LGMS";
+import AllGovernmentSenateBills from "../pages/Dashboard/Modules/LGMS/Bills/GovernmentBill/IntroducedinSenate/index.js";
+import AllGovernmentRecievedNABills from "../pages/Dashboard/Modules/LGMS/Bills/GovernmentBill/RecievefromNA/index.js";
+import AllPrivateMemberSenateBills from "../pages/Dashboard/Modules/LGMS/Bills/PrivateMemberBill/IntroducedInSenate/index.js";
+import AllPrivateMemberBillFromNA from "../pages/Dashboard/Modules/LGMS/Bills/PrivateMemberBill/RecievedFromNA/index.js";
+import SearchLegislationBills from "../pages/Dashboard/Modules/LGMS/Bills/SearchBills";
+import AllOrdinanceList from "../pages/Dashboard/Modules/LGMS/Ordinance/OrdinanceList";
+import AddOrdinance from "../pages/Dashboard/Modules/LGMS/Ordinance/AddOrdinance";
 import EditOrdinance from "../pages/Dashboard/Modules/LGMS/Ordinance/EditOrdinance";
+import SearchOrdinance from "../pages/Dashboard/Modules/LGMS/Ordinance/SearchOrdinance";
+
+//--->Manage Part
+import AllBillStatuses from "../pages/Dashboard/Modules/LGMS/Manage/ManageBillStatuses";
+import LGMSCommitteess from "../pages/Dashboard/Modules/LGMS/Manage/ManageCommittees/index.js";
+import LGMSAddEditCommittees from "../pages/Dashboard/Modules/LGMS/Manage/ManageCommittees/AddEditCommittees/index.js";
+import AllManageCommitteeRecoomendation from "../pages/Dashboard/Modules/LGMS/Manage/CommitteeRecomendation/index.js";
+import LGMSAddEditCommitteesRecommendation from "../pages/Dashboard/Modules/LGMS/Manage/CommitteeRecomendation/AddEditCommitteeRecomendation/index.js";
+import LGMSMinisters from "../pages/Dashboard/Modules/LGMS/Manage/Ministers/index.js";
+import LGMSMinisterAddEditForm from "../pages/Dashboard/Modules/LGMS/Manage/Ministers/AddEditMinisters/index.js";
+import LGMSMembers from "../pages/Dashboard/Modules/LGMS/Manage/Members";
 import LGMSMembersAddEditForm from "../pages/Dashboard/Modules/LGMS/Manage/Members/AddEditMembers";
 import LGMSParliamentaryYear from "../pages/Dashboard/Modules/LGMS/Manage/ParliamentaryYear";
 import LGMSAddEditParliamentaryYearForm from "../pages/Dashboard/Modules/LGMS/Manage/ParliamentaryYear/AddEditParliamentaryYear";
@@ -189,7 +203,7 @@ import LGMSAddEditTenuresForm from "../pages/Dashboard/Modules/LGMS/Manage/Tenur
 import LGMSTerms from "../pages/Dashboard/Modules/LGMS/Manage/Terms";
 import LGMSAddEditTermsForm from "../pages/Dashboard/Modules/LGMS/Manage/Terms/AddEditTerms";
 import LGMSPrivateBill from "../pages/Dashboard/Modules/LGMS/LGMSPrivateBill";
-import LGMSLegislativeBill from "../pages/Dashboard/Modules/LGMS/LGMSLegislativeBill";
+
 import LGMSAddEditPrivateBill from "../pages/Dashboard/Modules/LGMS/LGMSPrivateBill/LGMSAddEditPrivateBill";
 import LGMSAddEditLegislativeBill from "../pages/Dashboard/Modules/LGMS/LGMSLegislativeBill/LGMSAddEditLegislativeBill";
 import TelecastingDashboard from "../pages/Dashboard/Modules/Telecasting";
@@ -227,7 +241,6 @@ import AllFilesListing from "../pages/Dashboard/Modules/LDU/LawActs/AllListing";
 import EditLawActsBill from "../pages/Dashboard/Modules/LDU/LawActs/AllListing/EditLawActsBill";
 import AddEditRotaList from "../pages/Dashboard/Modules/QMS/Reports/RotaList/AddEditRotaList.js";
 import SeatingPlanTest from "../pages/Dashboard/Modules/Notice/SeatingPlan/ManageSeatingPlan/SeatPlanTest.js";
-import BillFromSelection from "../pages/Dashboard/Modules/LGMS/Bills/LegislationBills/BillFrom/index.js";
 import QMSBallotResolutionList from "../pages/Dashboard/Modules/QMS/Resolution/ResolutionList/BallotResolutionList/index.js";
 import PreviewBallotResolutionList from "../pages/Dashboard/Modules/QMS/Resolution/ResolutionList/PreviewBallotResolutionList/index.js";
 import MMSMotionListReport from "../pages/Dashboard/Modules/MMS/Reports/MotionListReport/index.js";
@@ -236,16 +249,6 @@ import PreviewBallotMotionList from "../pages/Dashboard/Modules/MMS/Reports/Moti
 import AllBallotResolutionList from "../pages/Dashboard/Modules/QMS/Resolution/AllBallotResolutionList/index.js";
 import PreviewResolutionList from "../pages/Dashboard/Modules/QMS/SearchResolution/PreviewResolution/index.js";
 import PreviewQuestionList from "../pages/Dashboard/Modules/QMS/Reports/QuestionList/PreviewQuestionList/index.js";
-import AllManageCommitteeRecoomendation from "../pages/Dashboard/Modules/LGMS/Manage/CommitteeRecomendation/index.js";
-import LGMSAddEditCommittees from "../pages/Dashboard/Modules/LGMS/Manage/ManageCommittees/AddEditCommittees/index.js";
-import LGMSCommitteess from "../pages/Dashboard/Modules/LGMS/Manage/ManageCommittees/index.js";
-import LGMSAddEditCommitteesRecommendation from "../pages/Dashboard/Modules/LGMS/Manage/CommitteeRecomendation/AddEditCommitteeRecomendation/index.js";
-import AllGovernmentSenateBills from "../pages/Dashboard/Modules/LGMS/Bills/GovernmentBill/IntroducedinSenate/index.js";
-import AllGovernmentRecievedNABills from "../pages/Dashboard/Modules/LGMS/Bills/GovernmentBill/RecievefromNA/index.js";
-import AllPrivateMemberSenateBills from "../pages/Dashboard/Modules/LGMS/Bills/PrivateMemberBill/IntroducedInSenate/index.js";
-import AllPrivateMemberBillFromNA from "../pages/Dashboard/Modules/LGMS/Bills/PrivateMemberBill/RecievedFromNA/index.js";
-import LGMSMinisters from "../pages/Dashboard/Modules/LGMS/Manage/Ministers/index.js";
-import LGMSMinisterAddEditForm from "../pages/Dashboard/Modules/LGMS/Manage/Ministers/AddEditMinisters/index.js";
 import QMSResolutionSummaryDetail from "../pages/Dashboard/Modules/QMS/Resolution/ResolutionSummaryDetail/index.js";
 import FlagsList from "../pages/Dashboard/Modules/EFiling/Flags/index.js";
 import AddEditFlags from "../pages/Dashboard/Modules/EFiling/Flags/AddEditFIags/index.js";
@@ -757,30 +760,6 @@ export const ProtectedRoutes = [
     path: "lgms/dashboard",
     element: <LegislationManagementSystemDashboard />,
   },
-  {
-    path: "/lgms/dashboard/bills/search-bills",
-    element: <SearchLegislationBills />,
-  },
-  {
-    path: "/lgms/dashboard/bills/selectbillfrom",
-    element: <BillFromSelection />,
-  },
-  {
-    path: "/lgms/dashboard/ordinances/ordinance-list",
-    element: <AllOrdinanceList />,
-  },
-  {
-    path: "/lgms/dashboard/ordinances/search-ordinance",
-    element: <SearchOrdinance />,
-  },
-  {
-    path: "/lgms/dashboard/ordinances/add/ordinance",
-    element: <AddOrdinance />,
-  },
-  {
-    path: "/lgms/dashboard/ordinances/edit/ordinance",
-    element: <EditOrdinance />,
-  },
 
   {
     path: "/lgms/dashboard/bills/legislation-bills/government-bills/introduced-in-senate",
@@ -800,21 +779,26 @@ export const ProtectedRoutes = [
   },
 
   {
-    path: "/lgms/dashboard/bills/NA-bills",
-    element: <NewLegislationNABill />,
+    path: "/lgms/dashboard/bills/search-bills",
+    element: <SearchLegislationBills />,
   },
   {
-    path: "/lgms/dashboard/bills/edit/NA-bills/",
-    element: <UpdateBills />,
+    path: "/lgms/dashboard/ordinances/ordinance-list",
+    element: <AllOrdinanceList />,
   },
   {
-    path: "/lgms/dashboard/bills/senate-bills",
-    element: <NewLegislationSenateBill />,
+    path: "/lgms/dashboard/ordinances/search-ordinance",
+    element: <SearchOrdinance />,
   },
   {
-    path: "/lgms/dashboard/bills/edit/senate-bills",
-    element: <EditSenateBill />,
+    path: "/lgms/dashboard/ordinances/add/ordinance",
+    element: <AddOrdinance />,
   },
+  {
+    path: "/lgms/dashboard/ordinances/edit/ordinance",
+    element: <EditOrdinance />,
+  },
+
   {
     path: "/lgms/dashboard/bill/manage-bill-statuses",
     element: <AllBillStatuses />,
@@ -894,19 +878,37 @@ export const ProtectedRoutes = [
   },
 
   {
-    path: "/lgms/legislation/legislative-bill",
-    element: <LGMSLegislativeBill />,
+    path: "/lgms/dashboard/bills/NA-bills",
+    element: <NewLegislationNABill />,
+  },
+  {
+    path: "/lgms/dashboard/bills/edit/NA-bills/",
+    element: <UpdateBills />,
+  },
+  {
+    path: "/lgms/dashboard/bills/senate-bills",
+    element: <NewLegislationSenateBill />,
+  },
+  {
+    path: "/lgms/dashboard/bills/edit/senate-bills",
+    element: <EditSenateBill />,
   },
 
   {
     path: "/lgms/legislation/private-bill/addedit",
     element: <LGMSAddEditPrivateBill />,
   },
+  // {
+  //   path: "/lgms/legislation/legislative-bill",
+  //   element: <LGMSLegislativeBill />,
+  // },
 
   {
     path: "/lgms/legislation/legislative-bill/addedit",
     element: <LGMSAddEditLegislativeBill />,
   },
+
+  // End of LGMS Routes
 
   // Telecasting branch
   { path: "/telecasting/dashboard", element: <TelecastingDashboard /> },

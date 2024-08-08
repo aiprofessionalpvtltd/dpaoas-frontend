@@ -34,10 +34,16 @@ export const AttendanceCard = ({
                   float: "right",
                   background:
                     attendance === "Present"
-                      ? "#19bc28"
+                      ? "rgb(0, 128, 0)"
                       : attendance === "Leave"
-                        ? "#125cc7"
-                        : attendance === "Absent" ?  "rgb(130, 0, 1)" : "",
+                        ? "rgb(0, 0, 255)"
+                        : attendance === "Absent"
+                          ? "rgb(255, 0, 0)"
+                          : attendance === "Vacant"
+                            ? "rgb(128, 128, 128)"
+                            : attendance === "Suspended"
+                              ? "rgb(255, 165, 0)"
+                              : "",
                   color: "#FFF",
                 }}
               >
@@ -53,6 +59,8 @@ export const AttendanceCard = ({
                   <option value="Present">Present</option>
                   <option value="Absent">Absent</option>
                   <option value="Leave">Leave</option>
+                  <option value="Vacant">Vacant</option>
+                  <option value="Suspended">Suspended</option>
                 </Field>
               </span>
             )}
