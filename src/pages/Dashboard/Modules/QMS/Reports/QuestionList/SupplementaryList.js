@@ -136,6 +136,8 @@ function SupplementaryList() {
     try {
       const response = await saveSuppList(location.state?.listId, requestData);
       if (response?.success) {
+      const  transformedData = transformData(response.data?.savedSupplementaryList)
+        setResData(transformedData)
         setGeneratedItem(false);
         showSuccessMessage(response.message);
       }
@@ -144,12 +146,15 @@ function SupplementaryList() {
     }
   };  
 
-  const printList = async (url) => {
-    if(url){
-      const img = `${imagesUrl}${url}`;
-      window.open(img, "_blank");
-    }else{
-      showSuccessMessage("No Attachment Available")
+  const printList = async (id) => {
+    try {
+      const response = await printSuppFromList(id)
+      if(response.success){
+        showSuccessMessage(response?.message)
+        // render this Data in preview Pdf
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message)
     }
   };
 
@@ -228,7 +233,7 @@ function SupplementaryList() {
                     <button class="btn btn-primary" type="submit">
                       Generate
                     </button>
-                    <button class="btn btn-primary" type="" onClick={handleSaveList}>
+                    <button class="btn btn-primary" type="button" onClick={handleSaveList}>
                       Save
                     </button>
                   </div>
@@ -247,7 +252,7 @@ function SupplementaryList() {
                 ActionHide={generatedItem ? true : false}
                 handleDelete={(item) => deleteList(item.id)}
                 showPrint={true}
-                handlePrint={(item) => printList(item?.internalAttachment)}
+                handlePrint={(item) => printList(item?.id)}
                 totalCount={count}
               />
             </div>

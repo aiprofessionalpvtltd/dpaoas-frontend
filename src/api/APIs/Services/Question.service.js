@@ -558,17 +558,11 @@ export const saveSuppList = async (id, data) => {
 };
 
 // api needed
-export const printSuppFromList = async (data) => {
+export const printSuppFromList = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClient.post(
-      `/questionList/saveQuestionList`,
-      data,
-      {
-        // headers: {
-        //   Authorization: `Bearer ${token}`,
-        // }
-      }
+    const response = await axiosClient.get(
+      `questionList/getBySupplementaryListId/${id}`
     );
     return response?.data;
   } catch (error) {
