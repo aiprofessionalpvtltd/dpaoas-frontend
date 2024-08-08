@@ -182,6 +182,12 @@ function NMSSessionAttendance() {
                   </div>
                 </div>
                 <div className="col-4 d-flex">
+                  <div className="fw-bold me-1">Is Adjourned:</div>
+                  <div className="text-primary">
+                    {location?.state?.data?.sessionAdjourned || "Not Selected"}
+                  </div>
+                </div>
+                <div className="col-4 d-flex">
                   <div className="fw-bold me-1">Sitting Start Time:</div>
                   <div className="text-primary">
                     {location?.state?.data?.sittingStartTime || ""}
@@ -194,21 +200,15 @@ function NMSSessionAttendance() {
                     {location?.state?.data?.sittingEndTime || ""}
                   </div>
                 </div>
-                <div className="col-4 d-flex">
-                  <div className="fw-bold me-1">Is Adjourned:</div>
-                  <div className="text-primary">
-                    {location?.state?.data?.sessionAdjourned || "Not Selected"}
-                  </div>
-                </div>
               </div>
             </div>
           </div>
           <div className="col-md-5 d-flex justify-content-end">
-            {!location?.state?.view ? (
+            {/* {!location?.state?.view ? (
               <button className="btn btn-primary me-2" type="submit">
                 Mark Attendance
               </button>
-            ) : null}
+            ) : null} */}
             <button className="btn btn-primary" onClick={handleReport}>
               Print Report
             </button>
@@ -243,20 +243,7 @@ function NMSSessionAttendance() {
                         </div>
                       ))}
                   </div>
-                  {/* {location?.state?.view && location?.state?.view === true ? (
-                    ""
-                  ) : (
-                    <div className="row mt-2">
-                      <div className="col">
-                        <button
-                          className="btn btn-primary float-end"
-                          type="submit"
-                        >
-                          Mark Attendance
-                        </button>
-                      </div>
-                    </div>
-                  )} */}
+
                   {location?.state?.view && location?.state?.view === true ? (
                     ""
                   ) : (
@@ -267,7 +254,7 @@ function NMSSessionAttendance() {
                         // bottom: 610,
                         // left: 500,
                         right: 180,
-                        top: 212.9,
+                        top: 224.9,
                       }}
                     >
                       <div className="col">
