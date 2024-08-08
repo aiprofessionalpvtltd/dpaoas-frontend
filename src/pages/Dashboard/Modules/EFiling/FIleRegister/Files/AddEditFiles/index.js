@@ -19,6 +19,7 @@ import {
   createFiles,
   getAllFileRegister,
   getAllYear,
+  getAllYearNew,
   getSingleFileById,
   geteHeadingNumberbyMainHeadingId,
   geteHeadingbyBranchId,
@@ -156,10 +157,10 @@ function AddEditFiles() {
 
   const getAllYearApi = async () => {
     try {
-      const response = await getAllYear();
+      const response = await getAllYearNew();
       if (response.success) {
         // showSuccessMessage(response?.message)
-        setYearData(response?.data);
+        setYearData(response?.data?.years);
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);

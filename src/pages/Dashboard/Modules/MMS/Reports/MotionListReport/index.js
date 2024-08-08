@@ -196,7 +196,7 @@ function MMSMotionListReport() {
     <Layout module={true} sidebarItems={MMSSideBarItems} centerlogohide={true}>
       <ToastContainer />
       <Header
-        dashboardLink={"/"}
+        dashboardLink={"/mms/dashboard"}
         addLink1={"/mms/reports/motion-list"}
         title1={"Motion List"}
       />

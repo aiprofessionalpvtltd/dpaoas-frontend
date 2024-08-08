@@ -234,7 +234,7 @@ function MMSMotionList() {
   return (
     <Layout module={true} sidebarItems={MMSSideBarItems} centerlogohide={true}>
       <Header
-        dashboardLink={"/"}
+        dashboardLink={"/mms/dashboard"}
         addLink1={"/mms/motion/list"}
         title1={"Motion List"}
       />
