@@ -10,6 +10,7 @@ import { Layout } from "../../../../../../../components/Layout";
 import { LegislationSideBarItems } from "../../../../../../../utils/sideBarItems";
 import {
   AllManageCommitties,
+  DeleteBillDocumentTypeAttachemnt,
   UpdateNABill,
   getAllBillStatus,
   getAllMNALists,
@@ -29,14 +30,14 @@ const EditSenateBill = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const userData = getUserData();
-  const NA_Bill_ID = location?.state && location?.state?.id;
+  const GovSenateBillID = location?.state && location?.state?.id;
   const BillCategory = location?.state && location?.state?.item?.billCategory;
   const BillFrom = location?.state && location?.state?.item?.billFrom;
-  const { ministryData, members, sessions, parliamentaryYear } =
-    useContext(AuthContext);
+  const { members, sessions, parliamentaryYear } = useContext(AuthContext);
   const [billStatusData, setBillStatusesData] = useState([]);
   const [MNAData, setMNAData] = useState([]);
   const [singleSenateBillData, setSingleSenateBillData] = useState([]);
+  console.log("singleSenateBillData ==>", singleSenateBillData);
   const [committieeData, setCommittieData] = useState([]);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [isIntroducedCalendarOpen, setIntroducedCalendarOpen] = useState(false);
@@ -299,7 +300,9 @@ const EditSenateBill = () => {
   // Get Single Record
   const getNABillByIdApi = async () => {
     try {
-      const response = await getSingleNABillByID(NA_Bill_ID && NA_Bill_ID);
+      const response = await getSingleNABillByID(
+        GovSenateBillID && GovSenateBillID
+      );
       if (response?.success) {
         setSingleSenateBillData(response?.data[0]);
         setMinisterID(response?.data[0]?.senateBillMnaMovers[0]?.fkMnaId);
@@ -309,13 +312,33 @@ const EditSenateBill = () => {
       // showErrorMessage(error?.response?.data?.message);
     }
   };
+  // Remove Bill Attachemnts
+  const hendleRemoveImage = async (docType, fileId) => {
+    const data = {
+      documentType: docType,
+      fileId: fileId,
+    };
+    console.log("data", data);
+    try {
+      const response = await DeleteBillDocumentTypeAttachemnt(
+        GovSenateBillID,
+        data
+      );
+      if (response?.success) {
+        getNABillByIdApi();
+        showSuccessMessage(response.message);
+      }
+    } catch (error) {
+      showErrorMessage(error.response.data.message);
+    }
+  };
 
   // Getting Data By Single ID and Setting It
   useEffect(() => {
-    if (NA_Bill_ID) {
+    if (GovSenateBillID) {
       getNABillByIdApi();
     }
-  }, [NA_Bill_ID]);
+  }, [GovSenateBillID]);
   console.log("singleSenateBillData", singleSenateBillData);
   useEffect(() => {
     if (singleSenateBillData) {
@@ -339,7 +362,12 @@ const EditSenateBill = () => {
       //   singleSenateBillData?.length > 0 &&
       //   singleSenateBillData?.senateBillMnaMovers[0]?.fkMnaId;
       // console.log("ddddd", id);
-
+      // Extracting the first document's details
+      const firstDocument = singleSenateBillData?.billDocuments?.[0];
+      let parsedFiles = [];
+      if (firstDocument && firstDocument.file) {
+        parsedFiles = firstDocument.file.map((file) => file.path);
+      }
       formik.setValues({
         fkParliamentaryYearId:
           singleSenateBillData?.fkParliamentaryYearId || "",
@@ -370,12 +398,18 @@ const EditSenateBill = () => {
               label: senator?.member?.memberName,
             }))
           : [],
+        // senateBillMnaMovers: singleSenateBillData?.senateBillMnaMovers
+        //   ? singleSenateBillData?.senateBillMnaMovers.map((senator) => ({
+        //       value: senator?.mna?.id,
+        //       label: senator?.mna?.mnaName,
+        //     }))
+        //   : [],
         senateBillMnaMovers: singleSenateBillData?.senateBillMnaMovers
-          ? singleSenateBillData?.senateBillMnaMovers.map((senator) => ({
-              value: senator?.mna?.id,
-              label: senator?.mna?.mnaName,
-            }))
-          : [],
+          ? {
+              value: singleSenateBillData?.senateBillMnaMovers[0]?.mna?.id,
+              label: singleSenateBillData?.senateBillMnaMovers[0]?.mna?.mnaName,
+            }
+          : null,
         senateBillMinistryMovers: singleSenateBillData?.senateBillMinistryMovers
           ? {
               value:
@@ -486,20 +520,28 @@ const EditSenateBill = () => {
               "YYYY-MM-DD"
             ).toDate()
           : "",
-        documentDiscription: singleSenateBillData?.billDocuments
-          ? singleSenateBillData?.billDocuments?.documentDiscription
+        // documentDiscription: singleSenateBillData?.billDocuments
+        //   ? singleSenateBillData?.billDocuments?.documentDiscription
+        //   : "",
+        // documentDiscription: firstDocument?.documentDiscription || "",
+        // documentDate: firstDocument?.documentDate
+        //   ? moment(firstDocument?.documentDate, "YYYY-MM-DD").toDate()
+        //   : "",
+        // documentType: firstDocument?.documentType || "",
+        billStatusDate: singleSenateBillData?.billStatusDate
+          ? moment(singleSenateBillData?.billStatusDate, "YYYY-MM-DD").toDate()
           : "",
-        documentDate:
-          singleSenateBillData?.billDocuments &&
-          singleSenateBillData?.billDocuments?.documentDate
-            ? moment(
-                singleSenateBillData?.billDocuments?.documentDate,
-                "YYYY-MM-DD"
-              ).toDate()
-            : "",
-        documentType: singleSenateBillData?.billDocuments
-          ? singleSenateBillData?.billDocuments?.documentType
-          : "",
+        // documentDate:
+        //   singleSenateBillData?.billDocuments &&
+        //   singleSenateBillData?.billDocuments?.documentDate
+        //     ? moment(
+        //         singleSenateBillData?.billDocuments?.documentDate,
+        //         "YYYY-MM-DD"
+        //       ).toDate()
+        //     : "",
+        // documentType: singleSenateBillData?.billDocuments
+        //   ? singleSenateBillData?.billDocuments?.documentType
+        //   : "",
         billStatusDate: singleSenateBillData?.billStatusDate
           ? moment(singleSenateBillData?.billStatusDate, "YYYY-MM-DD").toDate()
           : "",
@@ -689,10 +731,15 @@ const EditSenateBill = () => {
       formData.append("documentType", values?.documentType);
     }
 
-    if (values?.file) {
-      formData.append("file", values?.file[0]);
-    }
+    // if (values?.file) {
+    //   formData.append("file", values?.file[0]);
+    // }
 
+    if (values?.file) {
+      Array.from(values?.file).map((file, index) => {
+        formData.append("file", file);
+      });
+    }
     if (values?.senateBillSenatorMovers) {
       values?.senateBillSenatorMovers?.forEach((senator, index) => {
         formData.append(
@@ -720,7 +767,7 @@ const EditSenateBill = () => {
     }
 
     try {
-      const response = await UpdateNABill(NA_Bill_ID, formData);
+      const response = await UpdateNABill(GovSenateBillID, formData);
       if (response?.success) {
         showSuccessMessage(response?.message);
 
@@ -2016,6 +2063,7 @@ const EditSenateBill = () => {
                         accept=".pdf, .jpg, .jpeg, .png"
                         id="file"
                         name="file"
+                        multiple
                         onChange={(event) => {
                           formik.setFieldValue(
                             "file",
@@ -2024,29 +2072,83 @@ const EditSenateBill = () => {
                         }}
                       />
                     </div>
-                    {filePath && (
-                      <div>
-                        <a
-                          href={`${imagesUrl}${filePath}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        ></a>
-                        <span
-                          class="MultiFile-label"
-                          title={filePath.split("\\").pop().split("/").pop()}
-                        >
-                          <span class="MultiFile-title">
-                            <a
-                              href={`${imagesUrl}${filePath}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
+
+                    {singleSenateBillData &&
+                      singleSenateBillData.billDocuments &&
+                      singleSenateBillData.billDocuments.map((doc) => (
+                        <div key={doc.id} className="document-section">
+                          {doc.documentType && (
+                            <div
+                              className="document-type"
+                              style={{
+                                display: "flex",
+                                color: "black",
+                                alignItems: "center",
+                              }}
                             >
-                              {filePath?.split("\\").pop().split("/").pop()}
-                            </a>
-                          </span>
-                        </span>
-                      </div>
-                    )}
+                              <h6
+                                style={{
+                                  display: "flex",
+                                  color: "black",
+                                  fontSize: "14px",
+                                  marginTop: "15px",
+                                }}
+                              >
+                                {doc.documentType}
+                              </h6>
+                              <h6
+                                style={{
+                                  display: "flex",
+                                  color: "black",
+                                  fontSize: "10px",
+                                  fontWeight: "bold",
+                                  marginTop: "15px",
+                                  marginLeft: "14px",
+                                }}
+                              >
+                                {moment(doc?.documentDate).format("DD-MM-YYYY")}
+                              </h6>
+                            </div>
+                          )}
+                          {doc.file?.map((file) => (
+                            <div className="MultiFile-label mt-1" key={file.id}>
+                              <a
+                                className="MultiFile-remove"
+                                style={{
+                                  marginRight: "10px",
+                                  color: "red",
+                                  cursor: "pointer",
+                                }}
+                                // onClick={() =>
+                                //   alert(
+                                //     `File ID: ${file.id}, Document Type: ${doc.documentType}`
+                                //   )
+                                // }
+                                onClick={() =>
+                                  hendleRemoveImage(doc?.documentType, file?.id)
+                                }
+                              >
+                                x
+                              </a>
+                              <span
+                                className="MultiFile-label"
+                                title={file.path.split("/").pop()}
+                              >
+                                <span className="MultiFile-title">
+                                  <a
+                                    href={`${imagesUrl}${file.path}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    style={{ cursor: "pointer" }}
+                                  >
+                                    {file.path.split("/").pop()}
+                                  </a>
+                                </span>
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      ))}
 
                     <div className="row mt-3">
                       <div class="d-grid gap-2 d-md-flex justify-content-md-end">
