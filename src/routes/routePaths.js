@@ -253,6 +253,7 @@ import QMSResolutionSummaryDetail from "../pages/Dashboard/Modules/QMS/Resolutio
 import FlagsList from "../pages/Dashboard/Modules/EFiling/Flags/index.js";
 import AddEditFlags from "../pages/Dashboard/Modules/EFiling/Flags/AddEditFIags/index.js";
 import PreviewSuplementryList from "../pages/Dashboard/Modules/QMS/Reports/QuestionList/PreviewSuplementryList/index.js";
+import TransportDashboard from "../pages/Dashboard/Modules/Transport/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -1030,5 +1031,13 @@ export const ProtectedRoutes = [
   {
     path: "/ldu/lawActs/all-lisitng/edit-law-acts-Bill",
     element: <EditLawActsBill />,
+  },
+
+
+
+  //Transport Module
+  {
+    path: "/transport/dashboard",
+    element: <TransportDashboard />,
   },
 ];
