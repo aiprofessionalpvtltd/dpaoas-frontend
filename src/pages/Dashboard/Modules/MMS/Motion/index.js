@@ -188,6 +188,7 @@ const [filterData, setFIlterData] = useState([])
                   data={filterData}
                   hideBtn={true}
                   hidebtn1={true}
+                  block={true}
                   tableTitle="Motion Detail"
                   headertitlebgColor={"#666"}
                   singleDataCard={true}
