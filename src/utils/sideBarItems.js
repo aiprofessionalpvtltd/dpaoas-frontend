@@ -1212,3 +1212,30 @@ export const LDUSideBarItems = [
     ],
   },
 ];
+
+
+
+// Transport Management
+
+export const TransportSideBarItems = [
+  {
+    itemName: "Dashboard",
+    link: "/transport/dashboard",
+    icon: faClipboardList,
+  },
+  {
+    itemName: "Log Book",
+    link: "/mms/dashboard",
+    icon: faClipboardList,
+  },
+  {
+    itemName: "Vehicle Movement",
+    link: "/mms/dashboard",
+    icon: faClipboardList,
+  },
+  {
+    itemName: "Fleet Management",
+    link: "/mms/dashboard",
+    icon: faClipboardList,
+  },
+];

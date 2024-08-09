@@ -12,6 +12,7 @@ import {
   faBuilding,
   faTelevision,
   faBookOpenReader,
+  faVanShuttle,
 } from "@fortawesome/free-solid-svg-icons";
 import { AuthContext } from "../../api/AuthContext";
 import {
@@ -236,7 +237,16 @@ function Dashboard() {
       icon: faBookOpenReader,
       permission: ["Legislative Drafting Unit"],
     },
+    {
+      title: "Transport",
+      link: "/transport/dashboard",
+      type: "",
+      cardbg: "mehroonBg",
+      icon: faVanShuttle,
+      permission: ["Telecasting"],
+    },
   ];
+
 
   // Filter tiles based on permissions
   const filteredTiles = tilesData.filter((tile) => {
