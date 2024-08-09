@@ -562,4 +562,21 @@ export const updateMinisters = async (id, data) => {
   }
 };
 
-// Get Ministry on The Base of Minister ID
+// Delete APi of File Attachements Added on The Base Document Type.
+
+export const DeleteBillDocumentTypeAttachemnt = async (id, data) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.put(`/senate-bill/${id}/file`, data);
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
