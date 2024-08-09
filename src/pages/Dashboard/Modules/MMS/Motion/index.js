@@ -8,11 +8,13 @@ import {
   faHandshake,
 } from "@fortawesome/free-solid-svg-icons";
 import { showErrorMessage } from "../../../../../utils/ToastAlert";
-import { dashboardMotionStats } from "../../../../../api/APIs/Services/Motion.service";
+import { dashboardMotionStats, getMotionByID } from "../../../../../api/APIs/Services/Motion.service";
 import CustomTable from "../../../../../components/CustomComponents/CustomTable";
 import moment from "moment";
+import { useNavigate } from "react-router-dom";
 
 function MMSMotionDashboard() {
+  const navigate = useNavigate()
   const [stats, setStats] = useState(null);
   const [count, setCount] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
@@ -78,10 +80,24 @@ const [filterData, setFIlterData] = useState([])
     getAllMotionDashboardAPi();
       
   }, []);
-  // useEffect(() => {
-  //  const datas =  transformMotionData(data)
-  //  setFIlterData(datas)
-  // },[data])
+  
+  const hendleEdit = async (id) => {
+    try {
+      const response = await getMotionByID(id);
+
+      if (response?.success) {
+        navigate("/mms/motion/detail", { state: response?.data });
+      }
+    } catch (error) {
+      showErrorMessage(error.response?.data?.message);
+    }
+  };
+  const hendlePrint = async (id) => {
+    const encodedJsonString = encodeURIComponent(id);
+    const url = `/mms/motion/preview-pdf?state=${encodedJsonString}`;
+    window.open(url, "_blank");
+  };
+
   return (
     <Layout module={true} sidebarItems={MMSSideBarItems} centerlogohide={true}>
       <Header
@@ -170,22 +186,20 @@ const [filterData, setFIlterData] = useState([])
             {filterData && filterData.length > 0 && (
                 <CustomTable
                   data={filterData}
-                
-                  // seachBarShow={true}
                   hideBtn={true}
                   hidebtn1={true}
-                  // searchonchange={(e) => setSearchTerm(e.target.value)}
                   tableTitle="Motion Detail"
-                  ActionHide={true}
                   headertitlebgColor={"#666"}
                   singleDataCard={true}
                   headertitletextColor={"#FFF"}
                   handlePageChange={handlePageChange}
                   currentPage={currentPage}
                   pageSize={pageSize}
-                  // handlePrint={}
-                  // handleUser={}
                   totalCount={count}
+                  showPrint={true}
+                  handlePrint={(item) => hendlePrint(item?.id)}
+                  hideDeleteIcon={true}
+                  handleEdit={(item) => hendleEdit(item?.id)}
                 />
               )}
           </div>

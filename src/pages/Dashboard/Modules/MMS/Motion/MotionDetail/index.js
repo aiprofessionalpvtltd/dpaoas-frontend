@@ -69,6 +69,8 @@ function MMSMotionDetail() {
             label: location?.state?.sessions?.sessionName,
           }
         : "",
+        motionWeek: location?.state ? location?.state?.motionWeek:"",
+        fileNumber:location?.state ? location?.state?.fileNumber:"",
       // sessionNumber: location.state
       //   ? location?.state?.sessions?.sessionName
       //   : "",
@@ -122,6 +124,8 @@ function MMSMotionDetail() {
     const formData = new FormData();
     formData.append("fkSessionId", values?.sessionNumber?.value);
     formData.append("motionType", values?.motionType);
+    formData.append("motionWeek", values?.motionWeek);
+    formData.append("fileNumber", values?.fileNumber)
     formData.append("noticeOfficeDiaryNo", values?.noticeOfficeDiaryNo);
     // formData.append("moverIds[]", values?.mover);
     values?.mover?.forEach((mover, index) => {
@@ -302,31 +306,7 @@ function MMSMotionDetail() {
                         />
                       </div>
                     </div>
-                    {/* <div class="col">
-                      <div class="mb-3">
-                        <label class="form-label">Group</label>
-                        <select
-                          class={`form-select ${
-                            formik.touched.motionType &&
-                            formik.errors.motionType
-                              ? "is-invalid"
-                              : ""
-                          }`}
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          value={formik.values.motionWeek || ""}
-                          name="motionWeek"
-                        >
-                          <option value={""} selected disabled hidden>
-                            Select
-                          </option>
-                          <option value="1">1st Week</option>
-                          <option value="2">2nd Week</option>
-                          <option value="3">3rd Week</option>
-                          <option value="4">4th Week</option>
-                        </select>
-                      </div>
-                    </div> */}
+                    
                     <div className="col">
                       <div className="mb-3">
                         <label className="form-label">Motion Type</label>
@@ -627,16 +607,7 @@ function MMSMotionDetail() {
                       ) : (
                         <div class="col-12">
                           <div class="mb-3">
-                            {/* {location?.state?.file?.length > 0 &&
-                            location?.state?.file ? (
-                              <label for="formFile" class="form-label">
-                                Selected Images
-                              </label>
-                            ) : (
-                              <label for="formFile" class="form-label">
-                                Attach Image Files
-                              </label>
-                            )} */}
+                            
                             {Array.isArray(location?.state?.file) &&
                             location?.state?.file.length > 0 ? (
                               <label htmlFor="formFile" className="form-label">
@@ -666,6 +637,45 @@ function MMSMotionDetail() {
                         </div>
                       )}
                     </div>
+                    <div class="col-3">
+                    <div class="mb-3">
+                      <label class="form-label">Motion Week</label>
+                      <select
+                        class="form-select"
+                        // placeholder={formik.values.motionWeek}
+                        value={formik.values.motionWeek}
+                        onChange={formik.handleChange}
+                        id="motionWeek"
+                        onBlur={formik.handleBlur}
+                      >
+                        <option value={""} selected disabled hidden>
+                          Select
+                        </option>
+                        {/* <option>Motion Week</option>
+                        <option>Not Applicable</option> */}
+                        <option value={"Not Applicable"}>Not Applicable</option>
+                        <option value={"1st Week"}>1st Week</option>
+                        <option value={"2nd Week"}>2nd Week</option>
+                        <option value={"3rd Week"}>3rd Week</option>
+                        <option value={"4th Week"}>4th Week</option>
+                        <option value={"5th Week"}>5th Week</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-3">
+                    <div class="mb-3">
+                      <label class="form-label">File Number</label>
+                      <input
+                          class={`form-control`}
+                          type="text"
+                          id="fileNumber"
+                          value={formik.values.fileNumber}
+                          name="fileNumber"
+                          onBlur={formik.handleBlur}
+                          onChange={formik.handleChange}
+                        />
+                    </div>
+                  </div>
                   </div>
 
                   <div style={{ marginTop: 10 }}>
