@@ -67,12 +67,12 @@ function SupplementaryList() {
         supplementaryListStatus: res.supplementaryListStatus ? res?.supplementaryListStatus : "active",
         internalAttachment: res?.fileLink
       };
-    
+
       // Remove id key from rowData if it's null or undefined
       if (rowData.id == null) {
         delete rowData.id;
       }
-    
+
       return rowData;
     });
   };
@@ -106,7 +106,7 @@ function SupplementaryList() {
   const getSupplementaryListsApi = async () => {
     try {
       const response = await getAllSupplementaryLists(location.state?.listId);
-      if (response?.success) {  
+      if (response?.success) {
         // setCount(response?.count);
         setGeneratedItem(false);
         const transformedData = transformData(response.data?.supplementaryList);
@@ -123,7 +123,7 @@ function SupplementaryList() {
 
   const handleSaveList = async () => {
     const questionIds = generatedData.supplementaryQuestions.map(question => ({ id: question.id }));
-  
+
     const requestData = {
       supplementaryList: {
         listName: formik.values.listName,
@@ -132,11 +132,11 @@ function SupplementaryList() {
         supplementaryQuestionsIds: questionIds
       }
     };
-  
+
     try {
       const response = await saveSuppList(location.state?.listId, requestData);
       if (response?.success) {
-      const  transformedData = transformData(response.data?.savedSupplementaryList)
+        const transformedData = transformData(response.data?.savedSupplementaryList)
         setResData(transformedData)
         setGeneratedItem(false);
         showSuccessMessage(response.message);
@@ -144,14 +144,17 @@ function SupplementaryList() {
     } catch (error) {
       showErrorMessage(error.response?.data?.message);
     }
-  };  
+  };
 
   const printList = async (id) => {
     try {
       const response = await printSuppFromList(id)
-      if(response.success){
+      if (response.success) {
         showSuccessMessage(response?.message)
-        // render this Data in preview Pdf
+        const jsonString = JSON.stringify(response?.data);
+        const encodedJsonString = encodeURIComponent(jsonString);
+        const url = `/qms/questionList/priveiw-suplementry-list?state=${encodedJsonString}`;
+        window.open(url, "_blank");
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message)
@@ -162,8 +165,8 @@ function SupplementaryList() {
     try {
       const response = await deleteSuppList(data);
       if (response?.success) {
-       showSuccessMessage(response.message);
-       getSupplementaryListsApi();
+        showSuccessMessage(response.message);
+        getSupplementaryListsApi();
       }
     } catch (error) {
       showErrorMessage(error.response?.data?.message);

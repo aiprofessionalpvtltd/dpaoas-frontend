@@ -252,6 +252,7 @@ import PreviewQuestionList from "../pages/Dashboard/Modules/QMS/Reports/Question
 import QMSResolutionSummaryDetail from "../pages/Dashboard/Modules/QMS/Resolution/ResolutionSummaryDetail/index.js";
 import FlagsList from "../pages/Dashboard/Modules/EFiling/Flags/index.js";
 import AddEditFlags from "../pages/Dashboard/Modules/EFiling/Flags/AddEditFIags/index.js";
+import PreviewSuplementryList from "../pages/Dashboard/Modules/QMS/Reports/QuestionList/PreviewSuplementryList/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -580,6 +581,10 @@ export const ProtectedRoutes = [
   {
     path: "/qms/questionList/priveiw-question-list",
     element: <PreviewQuestionList />,
+  },
+  {
+    path: "/qms/questionList/priveiw-suplementry-list",
+    element: <PreviewSuplementryList />,
   },
 
   //SMS Module routes

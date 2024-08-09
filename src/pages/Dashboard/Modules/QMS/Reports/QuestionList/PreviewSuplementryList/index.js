@@ -1,31 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { getSingleQuestionList } from '../../../../../../../api/APIs/Services/Question.service';
 import moment from 'moment';
 
-const PreviewQuestionList = () => {
+const PreviewSuplementryList = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const encodedJsonString = queryParams.get("state");
   const stateData = JSON.parse(decodeURIComponent(encodedJsonString));
-  const [data, setData] = useState(null);
+  console.log("hshshhs",stateData)
+//   const [data, setData] = useState(stateData);
 
-  useEffect(() => {
-    const getSingleQuestionData = async () => {
-      try {
-        const response = await getSingleQuestionList(stateData);
-        setData(response);
-      } catch (error) {
-        console.error(error.message);
-      }
-    };
-
-    getSingleQuestionData();
-  }, [stateData]);
 
   return (
     <div style={{ background: '#fff', fontFamily: 'Arial, Helvetica, sans-serif', minHeight: '100vh', display: 'flex', justifyContent: 'center' }}>
-      {data && (
+      {stateData && (
         <>
           <div
             style={{
@@ -41,12 +29,12 @@ const PreviewQuestionList = () => {
               userSelect: 'none', /* Non-prefixed version */
             }}
           >
-            {data.memberQuestionCount?.map((item, index) => (
+            {stateData?.memberQuestionCount?.map((item, index) => (
               <p key={index}>{item?.name}: {item?.count}</p>
             ))}
           </div>
 
-          {data.data?.map((item, index) => (
+          {stateData?.questions?.map((item, index) => (
             <div key={index} className="template" style={{ width: '940px', margin: '20px auto' }}>
               <div className="template-head">
                 <h1 style={{ textAlign: 'center', fontSize: '20px', textDecoration: 'underline', marginTop: "20px" }}>SENATE OF PAKISTAN</h1>
@@ -97,7 +85,7 @@ const PreviewQuestionList = () => {
                 </div>
 
                 <div style={{ marginTop: '35px', fontWeight: 'bold', textDecoration: 'underline' }}>
-                  {data.memberQuestionCount?.map((question, idx) => (
+                  {stateData?.memberQuestionCount?.map((question, idx) => (
                     <p key={idx}>*QUESTION NO. 1 {question?.name}</p>
                   ))}
                 </div>
@@ -118,7 +106,7 @@ const PreviewQuestionList = () => {
   );
 };
 
-export default PreviewQuestionList;
+export default PreviewSuplementryList;
 
 
 
