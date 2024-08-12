@@ -252,6 +252,9 @@ import PreviewQuestionList from "../pages/Dashboard/Modules/QMS/Reports/Question
 import QMSResolutionSummaryDetail from "../pages/Dashboard/Modules/QMS/Resolution/ResolutionSummaryDetail/index.js";
 import FlagsList from "../pages/Dashboard/Modules/EFiling/Flags/index.js";
 import AddEditFlags from "../pages/Dashboard/Modules/EFiling/Flags/AddEditFIags/index.js";
+import MotionPreviewPDF from "../components/MotionPDFPreview/index.js";
+import PreviewSuplementryList from "../pages/Dashboard/Modules/QMS/Reports/QuestionList/PreviewSuplementryList/index.js";
+import TransportDashboard from "../pages/Dashboard/Modules/Transport/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -406,6 +409,8 @@ export const ProtectedRoutes = [
   { path: "/mms/motion/search", element: <MMSSearchMotion /> },
   { path: "/mms/motion/detail", element: <MMSMotionDetail /> },
   { path: "/mms/motion/list", element: <MMSMotionList /> },
+  { path: "/mms/motion/preview-pdf", element: <MotionPreviewPDF /> },
+
 
   { path: "/mms/question/search", element: <MMSSearchQuestion /> },
   { path: "/mms/resolution/search", element: <MMSSearchResolution /> },
@@ -580,6 +585,10 @@ export const ProtectedRoutes = [
   {
     path: "/qms/questionList/priveiw-question-list",
     element: <PreviewQuestionList />,
+  },
+  {
+    path: "/qms/questionList/priveiw-suplementry-list",
+    element: <PreviewSuplementryList />,
   },
 
   //SMS Module routes
@@ -1025,5 +1034,13 @@ export const ProtectedRoutes = [
   {
     path: "/ldu/lawActs/all-lisitng/edit-law-acts-Bill",
     element: <EditLawActsBill />,
+  },
+
+
+
+  //Transport Module
+  {
+    path: "/transport/dashboard",
+    element: <TransportDashboard />,
   },
 ];

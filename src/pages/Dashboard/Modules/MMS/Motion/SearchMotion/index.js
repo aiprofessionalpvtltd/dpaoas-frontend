@@ -231,6 +231,11 @@ function MMSSearchMotion() {
       showErrorMessage(error.response?.data?.message);
     }
   };
+  const hendlePrint = async (id) => {
+    const encodedJsonString = encodeURIComponent(id);
+    const url = `/mms/motion/preview-pdf?state=${encodedJsonString}`;
+    window.open(url, "_blank");
+  };
 
   return (
     <Layout module={true} sidebarItems={MMSSideBarItems} centerlogohide={true}>
@@ -658,6 +663,8 @@ function MMSSearchMotion() {
                     currentPage={currentPage}
                     pageSize={pageSize}
                     totalCount={count}
+                    showPrint={true}
+                    handlePrint={(item) => hendlePrint(item?.id)}
                   />
                 </div>
               </form>

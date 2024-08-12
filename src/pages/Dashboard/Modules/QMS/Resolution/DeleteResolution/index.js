@@ -451,7 +451,7 @@ function QMSDeleteResolution() {
                 </div> */}
                 <div class="clearfix"></div>
                 <CustomTable
-                  block={false}
+                  block={true}
                   hideBtn={true}
                   data={searchedData}
                   hidebtn1={true}

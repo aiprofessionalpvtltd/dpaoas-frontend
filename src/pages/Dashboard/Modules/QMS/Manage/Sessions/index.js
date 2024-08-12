@@ -77,7 +77,7 @@ function QMSSessions() {
         <div class="row">
           <div class="col-12">
             <CustomTable
-              block={false}
+              block={true}
               singleDataCard={true}
               data={sessions}
               tableTitle="Sessions List"

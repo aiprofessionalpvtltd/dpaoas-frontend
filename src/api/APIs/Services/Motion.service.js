@@ -365,3 +365,13 @@ export const allBallotByMotionListId = async (id) => {
     throw error;
   }
 };
+
+export const dashboardMotionStats = async () => {
+  try {
+    const response = await axiosClient.get(`/motion/motion-dashboard-stats`);
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
