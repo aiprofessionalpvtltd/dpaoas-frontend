@@ -105,7 +105,7 @@ const [filterData, setFIlterData] = useState([])
         addLink1={"/mms/dashboard"}
         title1={"Motion"}
       />
-      <div style={{ marginLeft: 15 }}>
+        <div className="container-fluid">
         <h2
           style={{
             fontSize: "22px",
@@ -181,6 +181,7 @@ const [filterData, setFIlterData] = useState([])
             </div>
           </div>
         </div>
+        </div>
         <div class="row">
           <div class="col-12">
             {filterData && filterData.length > 0 && (
@@ -205,7 +206,6 @@ const [filterData, setFIlterData] = useState([])
               )}
           </div>
         </div>
-      </div>
     </Layout>
   );
 }

@@ -524,6 +524,7 @@ function QMSNoticeResolution() {
                     <CustomTable
                       hideBtn={true}
                       data={resData}
+                      block={true}
                       hidebtn1={true}
                       tableTitle="Resolutions"
                       handlePageChange={handlePageChange}
