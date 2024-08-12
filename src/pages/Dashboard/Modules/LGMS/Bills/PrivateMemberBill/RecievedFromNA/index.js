@@ -29,19 +29,29 @@ const AllPrivateMemberBillFromNA = () => {
 
   // Transform Government Bill Data
   const transformPrivateNABillData = (apiData) => {
+    console.log("Private Member Bill NA", apiData);
     return apiData?.map((item) => ({
       id: item.id,
       // internalId: item?.id,
       fileNumber: item?.fileNumber,
-      billTitle: item?.billTitle,
+      titleOfTheBill: item?.billTitle,
       // nameOfMinisters: item?.senateBillSenatorMovers
       //   ? item?.senateBillSenatorMovers
       //       .map((mover) => mover?.mna?.mnaName)
       //       .join(", ")
       //   : "---",
+      dateOnWhichBillWasPassedByNA: item?.PassedByNADate
+        ? moment(item?.PassedByNADate, "YYYY-MM-DD").format("DD-MM-YYYY")
+        : "---",
+      dateOfReceiptOfMessageFromNA: item?.DateOfReceiptOfMessageFromNA
+        ? moment(item?.DateOfReceiptOfMessageFromNA, "YYYY-MM-DD").format(
+            "DD-MM-YYYY"
+          )
+        : "---",
       dateOfReceiptOfNotice: item?.noticeDate
         ? moment(item?.noticeDate, "YYYY-MM-DD").format("DD-MM-YYYY")
         : "---",
+
       dateOfIntroductionReferenceToStandingCommittee: item?.introducedInHouses
         ?.introducedInHouseDate
         ? moment(

@@ -25,16 +25,13 @@ const AllGovernmentSenateBills = () => {
   // Transform Government Bill Data
   const transformGovernmentSenateBillData = (apiData) => {
     console.log("Government Bill", apiData);
-    return apiData?.map((item) => ({
+    return apiData?.map((item, index) => ({
+      SNo: index + 1,
       id: item.id,
       // internalId: item?.id,
       fileNumber: item?.fileNumber,
       billTitle: item?.billTitle,
-      // nameOfMinisters: item?.senateBillSenatorMovers
-      //   ? item?.senateBillSenatorMovers
-      //       .map((mover) => mover?.mna?.mnaName)
-      //       .join(", ")
-      //   : "---",
+      nameOfMinisters: item?.senateBillMnaMovers?.[0]?.mna?.mnaName || "---",
       dateOfReceiptOfNotice: item?.noticeDate
         ? moment(item?.noticeDate, "YYYY-MM-DD").format("DD-MM-YYYY")
         : "---",
@@ -71,6 +68,7 @@ const AllGovernmentSenateBills = () => {
       billCategory: item?.billCategory,
       billFrom: item?.billFrom,
       remarks: item?.billRemarks,
+      billDocuments: item?.billDocuments,
     }));
   };
 
@@ -137,6 +135,7 @@ const AllGovernmentSenateBills = () => {
         addLink1={"/lgms/dashboard/bills/legislation-bills"}
         title1={"All Government Bills"}
       />
+
       <div class="container-fluid">
         <IntroducedInSenate
           addBtnText={"Government Bill (Introduced In Senate)"}

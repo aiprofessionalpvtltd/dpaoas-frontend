@@ -70,8 +70,9 @@
 
 // export default IntroducedInSenate;
 
-import React from "react";
+import React, { useState } from "react";
 import CustomTable from "../../CustomComponents/CustomTable";
+import BillAttachedDocsModal from "../../BillAttachedDocsModal";
 
 const IntroducedInSenate = ({
   addBtnText,
@@ -84,8 +85,29 @@ const IntroducedInSenate = ({
   pageSize,
   totalCount,
 }) => {
+  const [showModal, setShowModal] = useState(false);
+  const [attachDocs, setAttachDocs] = useState([]);
+  const openModal = () => {
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
+  const handleViewAttach = (item) => {
+    console.log("item", item);
+    setAttachDocs(item?.billDocuments);
+    openModal();
+  };
   return (
     <div>
+      {showModal && showModal && (
+        <BillAttachedDocsModal
+          showModal={showModal}
+          AttachDocsData={attachDocs}
+          closeModal={closeModal}
+        />
+      )}
       <CustomTable
         hidebtn1={false}
         hideBtn={true}
@@ -104,6 +126,10 @@ const IntroducedInSenate = ({
         pageSize={pageSize}
         totalCount={totalCount}
         handleEdit={handleEdit}
+        isRemarksAttachhments={true}
+        handleViewAttachment={(item) => {
+          handleViewAttach(item);
+        }}
       />
     </div>
   );

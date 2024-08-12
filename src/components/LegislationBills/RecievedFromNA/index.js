@@ -15,6 +15,7 @@ const RecievedFromNA = ({
   return (
     <div>
       <CustomTable
+        block={true}
         hidebtn1={false}
         hideBtn={true}
         addBtnText={addBtnText}
@@ -22,6 +23,8 @@ const RecievedFromNA = ({
         tableTitle={tableTitle}
         data={data}
         ActionHide={false}
+        isRemarksAttachhments={true}
+        handleViewAttachment={(item) => console.log(item)}
         hideDeleteIcon={true}
         hideEditIcon={false}
         singleDataCard={true}

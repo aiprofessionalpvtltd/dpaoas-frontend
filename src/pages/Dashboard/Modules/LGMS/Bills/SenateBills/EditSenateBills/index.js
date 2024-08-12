@@ -13,6 +13,7 @@ import {
   DeleteBillDocumentTypeAttachemnt,
   UpdateNABill,
   getAllBillStatus,
+  getAllCommitteeRecommendation,
   getAllMNALists,
   getSingleNABillByID,
 } from "../../../../../../../api/APIs/Services/LegislationModule.service";
@@ -37,13 +38,11 @@ const EditSenateBill = () => {
   const [billStatusData, setBillStatusesData] = useState([]);
   const [MNAData, setMNAData] = useState([]);
   const [singleSenateBillData, setSingleSenateBillData] = useState([]);
-  console.log("singleSenateBillData ==>", singleSenateBillData);
   const [committieeData, setCommittieData] = useState([]);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [isIntroducedCalendarOpen, setIntroducedCalendarOpen] = useState(false);
   const [ministerID, setMinisterID] = useState(null);
   const [editTimeMinisterID, setEditTimeMinister] = useState(null);
-  console.log("edit time Id", editTimeMinisterID);
   const [ministryDataOnMinister, setMinistryDataOnMinister] = useState([]);
   // const [isDateofReciptCalendarOpen, setIsDateofReciptCalendarOpen] =
   //   useState(false);
@@ -71,7 +70,22 @@ const EditSenateBill = () => {
   const [isJointSettingDateCalendarOpen, setJointsettingDateCalendarOpen] =
     useState(false);
   const [filePath, setFilePath] = useState("");
+  const [commiteeRecommendations, setCommitteeRecommendations] = useState([]);
 
+  //  Getting All Committees Recommendation
+  const GetAllCommittiesRecommendation = async () => {
+    try {
+      const response = await getAllCommitteeRecommendation(0, 500);
+
+      if (response?.success) {
+        setCommitteeRecommendations(
+          response?.data?.manageCommitteeRecomendation
+        );
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   //  Getting All Committees API
   const GetAllCommittiesApi = async () => {
     try {
@@ -112,6 +126,7 @@ const EditSenateBill = () => {
     getAllBillStatusData();
     getAllMNA();
     GetAllCommittiesApi();
+    GetAllCommittiesRecommendation();
     if (ministerID) {
       getMinisteryByMinisterIdApi();
     }
@@ -446,8 +461,17 @@ const EditSenateBill = () => {
           : "",
 
         committeeRecomendation: singleSenateBillData?.introducedInHouses
-          ? singleSenateBillData?.introducedInHouses?.committeeRecomendation
-          : "",
+          ?.manageCommitteeRecomendations
+          ? {
+              value:
+                singleSenateBillData?.introducedInHouses
+                  ?.manageCommitteeRecomendations?.id,
+              label:
+                singleSenateBillData?.introducedInHouses
+                  ?.manageCommitteeRecomendations?.committeeRecom,
+            }
+          : null,
+
         reportPresentationDate: singleSenateBillData?.introducedInHouses
           ?.reportPresentationDate
           ? moment(
@@ -548,7 +572,7 @@ const EditSenateBill = () => {
       });
     }
   }, [singleSenateBillData]);
-
+  // Get Ministery By Minister
   const getMinisteryByMinisterIdApi = async () => {
     try {
       const response = await getSingleMinisteryByMinisterID(
@@ -619,7 +643,10 @@ const EditSenateBill = () => {
     }
 
     if (values?.committeeRecomendation) {
-      formData.append("committeeRecomendation", values?.committeeRecomendation);
+      formData.append(
+        "fkManageCommitteeRecomendationId",
+        values?.committeeRecomendation?.value
+      );
     }
     // if (values?.reportPresentationDate) {
     //   formData.append("reportPresentationDate", values?.reportPresentationDate);
@@ -784,7 +811,7 @@ const EditSenateBill = () => {
         } else {
           setTimeout(() => {
             navigate(
-              "/lgms/dashboard/bills/legislation-bills/private-member-bills"
+              "/lgms/dashboard/bills/legislation-bills/private-member-bills/introduced-in-senate"
             );
           }, [3000]);
         }
@@ -1524,29 +1551,49 @@ const EditSenateBill = () => {
                         <label className="form-label">
                           Committee Recommendation
                         </label>
-                        <select
+                        <Select
+                          options={
+                            commiteeRecommendations &&
+                            commiteeRecommendations.map((item) => ({
+                              value: item.id,
+                              label: item.committeeRecomendation,
+                            }))
+                          }
+                          onChange={(selectedOption) => {
+                            formik.setFieldValue(
+                              "committeeRecomendation",
+                              selectedOption
+                            );
+                          }}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.committeeRecomendation}
+                          name="committeeRecomendation"
+                          className={` ${
+                            formik.touched.committeeRecomendation &&
+                            formik.errors.committeeRecomendation
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                          // isMulti
+                        />
+                        {/* <select
                           class="form-select"
                           value={formik.values.committeeRecomendation}
                           id="committeeRecomendation"
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                         >
-                          <option selected disabled hidden>
+                          <option value="" selected disabled hidden>
                             Select
                           </option>
-                          <option value="Ammended By Standing Committee">
-                            As Reported By Standing Committee
-                          </option>
-                          <option value="May be Passed as Introduced in the House">
-                            May be Passed as Introduced in the House
-                          </option>
-                          <option value="Passed without sending to Committee">
-                            Passed without Referred Standing Committee
-                          </option>
-                          {/* <option value="Ammended By Standing Committee">
-                            Ammended By Standing Committee
-                          </option> */}
-                        </select>
+                          {commiteeRecommendations &&
+                            commiteeRecommendations?.map((item) => (
+                              <option
+                                value={item.id}
+                              >{`${item?.committeeRecomendation}`}</option>
+                            ))}
+                         
+                        </select> */}
                       </div>
                     </div>
 
@@ -2106,7 +2153,11 @@ const EditSenateBill = () => {
                                   marginLeft: "14px",
                                 }}
                               >
-                                {moment(doc?.documentDate).format("DD-MM-YYYY")}
+                                {doc?.documentDate
+                                  ? moment(doc?.documentDate).format(
+                                      "DD-MM-YYYY"
+                                    )
+                                  : ""}
                               </h6>
                             </div>
                           )}

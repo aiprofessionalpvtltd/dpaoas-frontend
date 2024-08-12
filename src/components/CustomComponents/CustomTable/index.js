@@ -69,6 +69,8 @@ function CustomTable({
   showCreateBtn,
   hendleCreateBtn,
   isCheckbox,
+  isRemarksAttachhments,
+  handleViewAttachment,
   isChecked,
   setIsChecked,
   handleSent,
@@ -89,7 +91,15 @@ function CustomTable({
     ) {
       return false; // Skip filtering if it's an array in any object
     }
-    return key !== "internalAttachment" && key !== "internalId" && key !== "isEditable" && key !== "attachmentInternal" && key !=="billFrom" && key !=="billCategory";
+    return (
+      key !== "internalAttachment" &&
+      key !== "internalId" &&
+      key !== "isEditable" &&
+      key !== "attachmentInternal" &&
+      key !== "billFrom" &&
+      key !== "billCategory" &&
+      key !== "billDocuments"
+    );
   });
 
   const [totalPages, setTotalPages] = useState(0);
@@ -350,6 +360,18 @@ function CustomTable({
                     )}
                   </th>
                 ))}
+                {isRemarksAttachhments && (
+                  <th
+                    className="text-center"
+                    scope="col"
+                    style={{
+                      backgroundColor: "#FFF",
+                      color: "rgb(171, 178, 196)",
+                    }}
+                  >
+                    Attached Docs
+                  </th>
+                )}
                 {data?.length > 0 && !ActionHide && (
                   <th
                     className="text-center"
@@ -399,8 +421,7 @@ function CustomTable({
                           item[key] === "closed" ||
                           item[key] === "in-progress" ||
                           item[key] === "pending" ||
-                          item[key] === "approved"
-                           ? (
+                          item[key] === "approved" ? (
                             <span
                               className={`label label-sm ${
                                 item[key] === "active" ||
@@ -409,12 +430,12 @@ function CustomTable({
                                   : item[key] === "pending"
                                     ? "label-pending"
                                     : item[key] === "closed"
-                                      ? "label-close" : 
-                                      item[key] === "closed" 
                                       ? "label-close"
-                                      : item[key] === "in-progress"
-                                        ? "label-inprogress"
-                                        : "label-danger"
+                                      : item[key] === "closed"
+                                        ? "label-close"
+                                        : item[key] === "in-progress"
+                                          ? "label-inprogress"
+                                          : "label-danger"
                               }`}
                             >
                               {item[key]}
@@ -443,6 +464,20 @@ function CustomTable({
                           )}
                         </td>
                       ))}
+                      {isRemarksAttachhments && (
+                        <td className="text-center">
+                          <OverlayTrigger placement="top" overlay={viewTooltip}>
+                            <button
+                              onClick={() => handleViewAttachment(item)}
+                              className="btn-xs black circle-btn"
+                              data-id={item.id}
+                              style={{ color: "#2dce89" }}
+                            >
+                              <FontAwesomeIcon icon={faFileExport} />
+                            </button>
+                          </OverlayTrigger>
+                        </td>
+                      )}
                       {!ActionHide && (
                         <td className="text-center">
                           {!hideEditIcon && !hideEditIcon && (
@@ -781,6 +816,21 @@ function CustomTable({
                           )}
                         </td>
                       ))}
+
+                      {isRemarksAttachhments && (
+                        <td className="text-center">
+                          <OverlayTrigger placement="top" overlay={viewTooltip}>
+                            <button
+                              onClick={() => handleViewAttachment(item)}
+                              className="btn-xs black circle-btn"
+                              data-id={item.id}
+                              style={{ color: "#2dce89" }}
+                            >
+                              <FontAwesomeIcon icon={faFileExport} />
+                            </button>
+                          </OverlayTrigger>
+                        </td>
+                      )}
                       {!ActionHide && (
                         <td className="text-center">
                           {!hideEditIcon && !hideEditIcon && (
