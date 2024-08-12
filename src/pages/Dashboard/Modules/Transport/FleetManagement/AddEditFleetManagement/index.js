@@ -140,6 +140,31 @@ function AddEditFleetManagement() {
                       )}
                   </div>
                 </div>
+
+                <div class="col-6">
+                  <div class="mb-3">
+                    <label class="form-label">Flag <span className='text-danger'>*</span></label>
+                    <input
+                      type="text"
+                      placeholder={"Flag"}
+                      value={formik.values.flagName}
+                      className={`form-control ${formik.touched.flagName &&
+                          formik.errors.flagName
+                          ? "is-invalid"
+                          : ""
+                        }`}
+                      id="flagName"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                    />
+                    {formik.touched.flagName &&
+                      formik.errors.flagName && (
+                        <div className="invalid-feedback">
+                          {formik.errors.flagName}
+                        </div>
+                      )}
+                  </div>
+                </div>
               </div>
 
              
