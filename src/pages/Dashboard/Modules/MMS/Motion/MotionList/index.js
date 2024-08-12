@@ -209,6 +209,11 @@ function MMSMotionList() {
       showErrorMessage(error.response?.data?.message);
     }
   };
+  const hendlePrint = async (id) => {
+    const encodedJsonString = encodeURIComponent(id);
+    const url = `/mms/motion/preview-pdf?state=${encodedJsonString}`;
+    window.open(url, "_blank");
+  };
 
   useEffect(() => {
     getMotionStatus();
@@ -583,6 +588,7 @@ function MMSMotionList() {
                 <div class="" style={{ marginTop: "20px" }}>
                   <CustomTable
                     data={motionData}
+                    block={true}
                     headerShown={true}
                     hideDeleteIcon={true}
                     // handleDelete={(item) => alert(item.id)}
@@ -593,6 +599,8 @@ function MMSMotionList() {
                     currentPage={currentPage}
                     pageSize={pageSize}
                     totalCount={count}
+                    showPrint={true}
+                    handlePrint={(item) => hendlePrint(item?.id)}
                     // ActionHide={true}
                   />
                 </div>
