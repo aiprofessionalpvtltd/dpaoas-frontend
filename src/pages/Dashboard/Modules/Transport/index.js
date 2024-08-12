@@ -99,6 +99,7 @@ function TransportDashboard() {
                   overall={true}
                   iconBgColor={"#FFA500"}
                   total={`${stats?.monthlyQuestions}`}
+                  onClick={() => navigate("/transport/logbook")}
                 />
                 <NoticeStatsCard
                   title={"Vehicle Movement"}
@@ -106,13 +107,15 @@ function TransportDashboard() {
                   overall={true}
                   iconBgColor={"#007bff"}
                   total={`${stats?.monthlyMotions}`}
+                  onClick={() => navigate("/transport/vehicle-movement")}
                 />
                 <NoticeStatsCard
                   title={"Fleet Management"}
                   icon={faTruckMonster}
                   overall={true}
-                  iconBgColor={"#007bff"}
+                  iconBgColor={"rgb(45, 206, 137)"}
                   total={`${stats?.monthlyMotions}`}
+                  onClick={() => navigate("/transport/fleet")}
                 />
               </div>
             </div>

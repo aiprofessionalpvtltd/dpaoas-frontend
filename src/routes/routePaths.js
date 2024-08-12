@@ -254,6 +254,16 @@ import FlagsList from "../pages/Dashboard/Modules/EFiling/Flags/index.js";
 import AddEditFlags from "../pages/Dashboard/Modules/EFiling/Flags/AddEditFIags/index.js";
 import PreviewSuplementryList from "../pages/Dashboard/Modules/QMS/Reports/QuestionList/PreviewSuplementryList/index.js";
 import TransportDashboard from "../pages/Dashboard/Modules/Transport/index.js";
+import LogBookList from "../pages/Dashboard/Modules/Transport/LogBook/index.js";
+import AddEditLogBook from "../pages/Dashboard/Modules/Transport/LogBook/AddEditLogBook/index.js";
+import VehicleMovementList from "../pages/Dashboard/Modules/Transport/VehicleMovement/index.js";
+import AddEditVehicleMovement from "../pages/Dashboard/Modules/Transport/VehicleMovement/AddEditVehicleMovement/index.js";
+import FleetManagementList from "../pages/Dashboard/Modules/Transport/FleetManagement/index.js";
+import AddEditFleetManagement from "../pages/Dashboard/Modules/Transport/FleetManagement/AddEditFleetManagement/index.js";
+import PurchasesMadeList from "../pages/Dashboard/Modules/Transport/LogBook/PurchasesMade/index.js";
+import AddEditPurchasesMade from "../pages/Dashboard/Modules/Transport/LogBook/PurchasesMade/AddEditPurchasesMade/index.js";
+import PetrolMileageList from "../pages/Dashboard/Modules/Transport/LogBook/PetrolMileage/index.js";
+import AddEditPetrolMileage from "../pages/Dashboard/Modules/Transport/LogBook/PetrolMileage/AddEditPetrolMileage/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -1039,5 +1049,45 @@ export const ProtectedRoutes = [
   {
     path: "/transport/dashboard",
     element: <TransportDashboard />,
+  },
+  {
+    path: "/transport/logbook",
+    element: <LogBookList />,
+  },
+  {
+    path: "/transport/logbook/addedit",
+    element: <AddEditLogBook />,
+  },
+  {
+    path: "/transport/purchases",
+    element: <PurchasesMadeList />,
+  },
+  {
+    path: "/transport/purchases/addedit",
+    element: <AddEditPurchasesMade />,
+  },
+  {
+    path: "/transport/petrol-mileage",
+    element: <PetrolMileageList />,
+  },
+  {
+    path: "/transport/petrol-mileage/addedit",
+    element: <AddEditPetrolMileage />,
+  },
+  {
+    path: "/transport/vehicle-movement",
+    element: <VehicleMovementList />,
+  },
+  {
+    path: "/transport/vehicle-movement/addedit",
+    element: <AddEditVehicleMovement />,
+  },
+  {
+    path: "/transport/fleet",
+    element: <FleetManagementList />,
+  },
+  {
+    path: "/transport/fleet/addedit",
+    element: <AddEditFleetManagement />,
   },
 ];
