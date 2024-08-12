@@ -11,6 +11,8 @@ import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import RecievedFromNA from "../../../../../../../components/LegislationBills/RecievedFromNA";
 import { Layout } from "../../../../../../../components/Layout";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye } from "@fortawesome/free-solid-svg-icons";
 
 const AllGovernmentRecievedNABills = () => {
   const navigate = useNavigate();
@@ -28,6 +30,7 @@ const AllGovernmentRecievedNABills = () => {
 
   // Transform Government Bill Data
   const transformGovernmentSenateBillData = (apiData) => {
+    console.log("Government Bill NA", apiData);
     return apiData?.map((item) => ({
       id: item.id,
       // internalId: item?.id,
@@ -38,17 +41,24 @@ const AllGovernmentRecievedNABills = () => {
       //       .map((mover) => mover?.mna?.mnaName)
       //       .join(", ")
       //   : "---",
+      dateOnWhichBillWasPassedByNA: item?.PassedByNADate
+        ? moment(item?.PassedByNADate, "YYYY-MM-DD").format("DD-MM-YYYY")
+        : "---",
       dateOfReceiptOfNotice: item?.noticeDate
         ? moment(item?.noticeDate, "YYYY-MM-DD").format("DD-MM-YYYY")
         : "---",
-      dateOfIntroductionReferenceToStandingCommittee: item?.introducedInHouses
-        ?.introducedInHouseDate
-        ? moment(
-            item?.introducedInHouses?.introducedInHouseDate,
-            "YYYY-MM-DD"
-          ).format("DD-MM-YYYY")
+      dateOfReceiptOfMessageFromNA: item?.DateOfReceiptOfMessageFromNA
+        ? moment(item?.DateOfReceiptOfMessageFromNA, "YYYY-MM-DD").format(
+            "DD-MM-YYYY"
+          )
         : "---",
 
+      dateOfReferencetoStandingCommittee: item?.introducedInHouses
+        ?.referedOnDate
+        ? moment(item?.introducedInHouses?.referedOnDate, "YYYY-MM-DD").format(
+            "DD-MM-YYYY"
+          )
+        : "---",
       dateOfPresentationOfTheReport: item?.introducedInHouses
         ?.reportPresentationDate
         ? moment(
@@ -68,6 +78,16 @@ const AllGovernmentRecievedNABills = () => {
         : "---",
       dateOnWhichTheBillTransmittedToNA: item?.dateOfTransmissionToNA
         ? moment(item?.dateOfTransmissionToNA, "YYYY-MM-DD").format(
+            "DD-MM-YYYY"
+          )
+        : "---",
+      dateOfAssentByThePresident: item?.dateOfAssentByThePresident
+        ? moment(item?.dateOfAssentByThePresident, "YYYY-MM-DD").format(
+            "DD-MM-YYYY"
+          )
+        : "---",
+      dateOfPublishInTheGazette: item?.dateOfPublishInGazette
+        ? moment(item?.dateOfPublishInGazette, "YYYY-MM-DD").format(
             "DD-MM-YYYY"
           )
         : "---",
