@@ -102,7 +102,7 @@ function MotionPreviewPDF() {
           >
             ({data && data?.motionType})
           </h2>
-          <div style={{ float: "right" }} className="row">
+          <div style={{ float: "right" }}>
             <div className="col">
               <p>File Number:</p>
             </div>
@@ -110,44 +110,49 @@ function MotionPreviewPDF() {
               <p>{data && data?.fileNumber}</p>
             </div>
           </div>
-          <div style={{ float: "left" }} className="row">
-            <div className="col">
-              <p style={{ marginTop: "33px" }}>SESSION NO / MID:</p>
+          <div style={{clear:"both"}}>
+
+          </div>
+          <div style={{ float: "left", width:"50%" }}>
+            <div style={{float:"left", width:"165px"}}>
+              <p style={{ marginTop: "33px", fontSize:"14px" }}>SESSION NO / MID:</p>
             </div>
-            <div className="col">
-              <p style={{ marginTop: "33px" }}>{`${
+            <div style={{float:"left"}}>
+              <p style={{ marginTop: "33px", fontSize:"14px"  }}>{`${
                 data && data?.sessions?.sessionName
               }/${data && data?.id}`}</p>
             </div>
-            <div className="col">
-              <p style={{ marginTop: "33px" }}>MOTION WEEK:</p>
+            <div style={{float:"left", width:"165px"}}>
+              <p style={{ marginTop: "33px", fontSize:"14px" }}>NOTICE RECEIVED ON:</p>
             </div>
-            <div className="col">
-              <p style={{ marginTop: "33px" }}>
-                {data && data?.motionWeek ? data?.motionWeek : "--"}
-              </p>
-            </div>
-          </div>
-          <div style={{ float: "left" }} className="row">
-            <div className="col">
-              <p style={{ marginTop: "33px" }}>NOTICE RECEIVED ON:</p>
-            </div>
-            <div className="col">
-              <p style={{ marginTop: "33px" }}>
+            <div style={{float:"left"}}>
+              <p style={{ marginTop: "33px", fontSize:"14px" }}>
                 {data &&
                   moment(
                     data?.noticeOfficeDairies?.noticeOfficeDiaryDate
                   ).format("DD/MM/YYYY")}
               </p>
             </div>
-            <div className="col">
-              <p style={{ marginTop: "33px" }}>STATUS:</p>
+            
+          </div>
+          <div style={{ float: "left", width:"50%" }}>
+           <div style={{float:"left", width:"190px"}}>
+              <p style={{ marginTop: "33px", fontSize:"14px" }}>MOTION WEEK:</p>
             </div>
-            <div className="col">
-              <p style={{ marginTop: "33px" }}>
+            <div style={{float:"left"}}>
+              <p style={{ marginTop: "33px", fontSize:"14px" }}>
+                {data && data?.motionWeek ? data?.motionWeek : "--"}
+              </p>
+            </div>
+           <div style={{float:"left", width:"120px"}}>
+              <p style={{ marginTop: "33px", fontSize:"14px" }}>STATUS:</p>
+            </div>
+            <div style={{float:"left"}}>
+              <p style={{ marginTop: "33px", fontSize:"14px" }}>
                 {data && data?.motionStatuses?.statusName}
               </p>
             </div>
+            
           </div>
           <div style={{ clear: "both" }}></div>
           <p style={{ lineHeight: "26px" }}>

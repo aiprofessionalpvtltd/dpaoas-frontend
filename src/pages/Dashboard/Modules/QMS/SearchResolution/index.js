@@ -598,7 +598,7 @@ console.log("isChecked", isChecked);
               </div> */}
               <div className="mt-3">
               <CustomTable
-                    block={false}
+                    block={true}
                     hideBtn={true}
                     data={searchedData}
                     hidebtn1={isChecked?.length > 0 ? false:true}
