@@ -654,6 +654,7 @@ function QMSDeleteQuestion() {
                 </div> */}
                 <CustomTable
                   hidebtn1={true}
+                  block={true}
                   data={resData || []}
                   tableTitle="Deleted Questions"
                   handlePageChange={handlePageChange}
