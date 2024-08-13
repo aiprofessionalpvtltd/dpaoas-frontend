@@ -22,12 +22,18 @@ const AllPrivateMemberSenateBills = () => {
   const [count, setCount] = useState(null);
   const pageSize = 10;
   const [selectedbillFrom, setSelectedFrom] = useState(null);
-
+  const [remarksAttachmentVal, setRemarksAttachmentVal] = useState();
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
 
   const transformPrivateMemberBillSenate = (apiData) => {
+    const docs = apiData?.map((item) => item?.billDocuments);
+    if (docs?.length > 0) {
+      setRemarksAttachmentVal(true);
+    } else {
+      setRemarksAttachmentVal(false);
+    }
     return apiData?.map((item) => ({
       id: item.id,
       fileNumber: item?.fileNumber,
@@ -69,6 +75,7 @@ const AllPrivateMemberSenateBills = () => {
       billCategory: item?.billCategory,
       billFrom: item?.billFrom,
       remarks: item?.billRemarks,
+      billDocuments: item?.billDocuments,
     }));
   };
 
@@ -160,6 +167,7 @@ const AllPrivateMemberSenateBills = () => {
           handleAdd={handlePrivateMemberSenateBill}
           tableTitle={"Private Member Bill Data (Introduced In Senate)"}
           data={privateMemberSenateBill}
+          remarksAttachmentVal={remarksAttachmentVal}
           handleEdit={(item) => {
             item?.billFrom === "From Senate"
               ? handleEditSenateBill(item?.id, item)

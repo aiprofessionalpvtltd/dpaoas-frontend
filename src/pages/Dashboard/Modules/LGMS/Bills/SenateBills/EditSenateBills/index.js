@@ -333,7 +333,6 @@ const EditSenateBill = () => {
       documentType: docType,
       fileId: fileId,
     };
-    console.log("data", data);
     try {
       const response = await DeleteBillDocumentTypeAttachemnt(
         GovSenateBillID,
@@ -354,7 +353,6 @@ const EditSenateBill = () => {
       getNABillByIdApi();
     }
   }, [GovSenateBillID]);
-  console.log("singleSenateBillData", singleSenateBillData);
   useEffect(() => {
     if (singleSenateBillData) {
       let fileNum = "";
@@ -585,10 +583,6 @@ const EditSenateBill = () => {
       showErrorMessage(error?.response?.data?.message);
     }
   };
-  console.log(
-    "senateBillMnaMovers senateBillMnaMovers",
-    formik.values.senateBillMnaMovers
-  );
 
   // Updating Senate Bills
   const UpdateNationalAssemblyBill = async (values) => {

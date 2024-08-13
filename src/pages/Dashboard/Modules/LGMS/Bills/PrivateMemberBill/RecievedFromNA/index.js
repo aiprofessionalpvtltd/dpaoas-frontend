@@ -19,7 +19,7 @@ const AllPrivateMemberBillFromNA = () => {
   const [privateMemberNABill, setPrivateMemberNABill] = useState([]);
   const [count, setCount] = useState(null);
   const [selectedbillFrom, setSelectedFrom] = useState(null);
-
+  const [remarksAttachmentVal, setRemarksAttachmentVal] = useState();
   const pageSize = 10;
 
   // Handle Page CHange
@@ -29,7 +29,12 @@ const AllPrivateMemberBillFromNA = () => {
 
   // Transform Government Bill Data
   const transformPrivateNABillData = (apiData) => {
-    console.log("Private Member Bill NA", apiData);
+    const docs = apiData?.map((item) => item?.billDocuments);
+    if (docs?.length > 0) {
+      setRemarksAttachmentVal(true);
+    } else {
+      setRemarksAttachmentVal(false);
+    }
     return apiData?.map((item) => ({
       id: item.id,
       // internalId: item?.id,
@@ -85,6 +90,7 @@ const AllPrivateMemberBillFromNA = () => {
       billCategory: item?.billCategory,
       billFrom: item?.billFrom,
       remarks: item?.billRemarks,
+      billDocuments: item?.billDocuments,
     }));
   };
 
@@ -157,6 +163,7 @@ const AllPrivateMemberBillFromNA = () => {
           handleAdd={handlePrivateNABill}
           tableTitle={"Private Member Bill Data (Received From NA)"}
           data={privateMemberNABill}
+          remarksAttachmentVal={remarksAttachmentVal}
           handleEdit={(item) => {
             item?.billFrom === "From Senate"
               ? handleEditSenateBill(item?.id, item)

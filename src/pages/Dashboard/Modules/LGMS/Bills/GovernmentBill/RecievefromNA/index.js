@@ -20,7 +20,7 @@ const AllGovernmentRecievedNABills = () => {
   const [governmentNABill, setGovernmantNABill] = useState([]);
   const [count, setCount] = useState(null);
   const [selectedbillFrom, setSelectedFrom] = useState(null);
-
+  const [remarksAttachmentVal, setRemarksAttachmentVal] = useState();
   const pageSize = 10;
 
   // Handle Page CHange
@@ -30,7 +30,12 @@ const AllGovernmentRecievedNABills = () => {
 
   // Transform Government Bill Data
   const transformGovernmentSenateBillData = (apiData) => {
-    console.log("Government Bill NA", apiData);
+    const docs = apiData?.map((item) => item?.billDocuments);
+    if (docs?.length > 0) {
+      setRemarksAttachmentVal(true);
+    } else {
+      setRemarksAttachmentVal(false);
+    }
     return apiData?.map((item) => ({
       id: item.id,
       // internalId: item?.id,
@@ -44,13 +49,13 @@ const AllGovernmentRecievedNABills = () => {
       dateOnWhichBillWasPassedByNA: item?.PassedByNADate
         ? moment(item?.PassedByNADate, "YYYY-MM-DD").format("DD-MM-YYYY")
         : "---",
-      dateOfReceiptOfNotice: item?.noticeDate
-        ? moment(item?.noticeDate, "YYYY-MM-DD").format("DD-MM-YYYY")
-        : "---",
       dateOfReceiptOfMessageFromNA: item?.DateOfReceiptOfMessageFromNA
         ? moment(item?.DateOfReceiptOfMessageFromNA, "YYYY-MM-DD").format(
             "DD-MM-YYYY"
           )
+        : "---",
+      dateOfReceiptOfNotice: item?.noticeDate
+        ? moment(item?.noticeDate, "YYYY-MM-DD").format("DD-MM-YYYY")
         : "---",
 
       dateOfReferencetoStandingCommittee: item?.introducedInHouses
@@ -94,6 +99,7 @@ const AllGovernmentRecievedNABills = () => {
       billCategory: item?.billCategory,
       billFrom: item?.billFrom,
       remarks: item?.billRemarks,
+      billDocuments: item?.billDocuments,
     }));
   };
 
@@ -165,6 +171,7 @@ const AllGovernmentRecievedNABills = () => {
           handleAdd={handleGovernmentNABill}
           tableTitle={"Government Bills Data (Received From NA)"}
           data={governmentNABill}
+          remarksAttachmentVal={remarksAttachmentVal}
           handleEdit={(item) => {
             item?.billFrom === "From Senate"
               ? handleEditSenateBill(item?.id, item)

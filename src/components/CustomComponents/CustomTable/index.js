@@ -83,6 +83,8 @@ function CustomTable({
   setIsColumnCheckBox,
   isColumncheck,
 }) {
+  console.log("zdcsdvxvx", isRemarksAttachhments);
+
   const keys = data?.length > 0 ? Object.keys(data[0]) : [];
   const filteredKeys = keys?.filter((key) => {
     if (
