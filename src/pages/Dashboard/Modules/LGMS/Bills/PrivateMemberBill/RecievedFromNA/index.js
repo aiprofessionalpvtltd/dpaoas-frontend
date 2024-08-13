@@ -35,7 +35,8 @@ const AllPrivateMemberBillFromNA = () => {
     } else {
       setRemarksAttachmentVal(false);
     }
-    return apiData?.map((item) => ({
+    return apiData?.map((item, index) => ({
+      SNo: index + 1,
       id: item.id,
       // internalId: item?.id,
       fileNumber: item?.fileNumber,
@@ -50,6 +51,11 @@ const AllPrivateMemberBillFromNA = () => {
         : "---",
       dateOfReceiptOfMessageFromNA: item?.DateOfReceiptOfMessageFromNA
         ? moment(item?.DateOfReceiptOfMessageFromNA, "YYYY-MM-DD").format(
+            "DD-MM-YYYY"
+          )
+        : "---",
+      dateOfCirculationOfBill: item?.dateOfCirculationOfBill
+        ? moment(item?.dateOfCirculationOfBill, "YYYY-MM-DD").format(
             "DD-MM-YYYY"
           )
         : "---",
@@ -82,8 +88,18 @@ const AllPrivateMemberBillFromNA = () => {
       dateOfPassingTheBillByTheSenate: item?.dateOfPassageBySenate
         ? moment(item?.dateOfPassageBySenate, "YYYY-MM-DD").format("DD-MM-YYYY")
         : "---",
-      dateOnWhichTheBillTransmittedToNA: item?.dateOfTransmissionToNA
+      dateOfTransmissionOfMessageToNA: item?.dateOfTransmissionToNA
         ? moment(item?.dateOfTransmissionToNA, "YYYY-MM-DD").format(
+            "DD-MM-YYYY"
+          )
+        : "---",
+      dateOfAssentByThePresident: item?.dateOfAssentByThePresident
+        ? moment(item?.dateOfAssentByThePresident, "YYYY-MM-DD").format(
+            "DD-MM-YYYY"
+          )
+        : "---",
+      dateOfPublishInTheGazette: item?.dateOfPublishInGazette
+        ? moment(item?.dateOfPublishInGazette, "YYYY-MM-DD").format(
             "DD-MM-YYYY"
           )
         : "---",

@@ -26,6 +26,21 @@ import { getUserData } from "../../../../../../../api/Auth";
 import { ToastContainer } from "react-toastify";
 import { imagesUrl } from "../../../../../../../api/APIs";
 import { getSingleMinisteryByMinisterID } from "../../../../../../../api/APIs/Services/Motion.service";
+import * as Yup from "yup";
+
+const validationSchema = Yup.object({
+  fkParliamentaryYearId: Yup.string().required(
+    "Parliamentary Year is required"
+  ),
+  fkSessionId: Yup.string().required("Session is required"),
+  noticeDate: Yup.string().required("Notice Date is required"),
+  fileNumber: Yup.string().required("File Number is required"),
+  billType: Yup.string().required("Bill Type is required"),
+  billTitle: Yup.string().required("Bill Title is required"),
+  senateBillSenatorMovers: Yup.array().required("Senator is required"),
+  senateBillMnaMovers: Yup.object().required("Minister is required"),
+  senateBillMinistryMovers: Yup.object().required("Ministery is required"),
+});
 
 const EditSenateBill = () => {
   const location = useLocation();
@@ -172,7 +187,7 @@ const EditSenateBill = () => {
       documentType: "",
       file: "",
     },
-
+    validationSchema: validationSchema,
     onSubmit: (values) => {
       UpdateNationalAssemblyBill(values);
     },
@@ -844,7 +859,12 @@ const EditSenateBill = () => {
                           <select
                             id="fkParliamentaryYearId"
                             name="fkParliamentaryYearId"
-                            className="form-select"
+                            className={`form-select  ${
+                              formik.touched.fkParliamentaryYearId &&
+                              formik.errors.fkParliamentaryYearId
+                                ? "is-invalid"
+                                : ""
+                            }`}
                             onChange={formik.handleChange}
                             value={formik.values.fkParliamentaryYearId}
                           >
@@ -873,7 +893,13 @@ const EditSenateBill = () => {
                           <select
                             id="fkSessionId"
                             name="fkSessionId"
-                            className="form-control"
+                            className={`form-control  ${
+                              formik.touched.fkSessionId &&
+                              formik.errors.fkSessionId
+                                ? "is-invalid"
+                                : ""
+                            }`}
+                            onBlur={formik.handleBlur}
                             onChange={formik.handleChange}
                             value={formik.values.fkSessionId}
                           >
@@ -1070,7 +1096,12 @@ const EditSenateBill = () => {
                             type="text"
                             id="fileNumber"
                             name="fileNumber"
-                            className="form-control"
+                            className={`form-control ${
+                              formik.touched.fileNumber &&
+                              formik.errors.fileNumber
+                                ? "is-invalid"
+                                : ""
+                            }`}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             value={formik.values.fileNumber}
@@ -1290,7 +1321,19 @@ const EditSenateBill = () => {
                           }
                           value={formik.values.senateBillSenatorMovers}
                           isMulti={true}
+                          className={` ${
+                            formik.touched.senateBillSenatorMovers &&
+                            formik.errors.senateBillSenatorMovers
+                              ? "is-invalid"
+                              : ""
+                          }`}
                         />
+                        {formik.touched.senateBillSenatorMovers &&
+                          formik.errors.senateBillSenatorMovers && (
+                            <div class="invalid-feedback">
+                              {formik.errors.senateBillSenatorMovers}
+                            </div>
+                          )}
                       </div>
                       <div class="col">
                         <div class="mb-3">
@@ -1383,7 +1426,19 @@ const EditSenateBill = () => {
                           }
                           value={formik.values.senateBillMinistryMovers}
                           // isMulti={true}
+                          className={` ${
+                            formik.touched.senateBillMinistryMovers &&
+                            formik.errors.senateBillMinistryMovers
+                              ? "is-invalid"
+                              : ""
+                          }`}
                         />
+                        {formik.touched.senateBillMinistryMovers &&
+                          formik.errors.senateBillMinistryMovers && (
+                            <div class="invalid-feedback">
+                              {formik.errors.senateBillMinistryMovers}
+                            </div>
+                          )}
                       </div>
                     </div>
                   </div>

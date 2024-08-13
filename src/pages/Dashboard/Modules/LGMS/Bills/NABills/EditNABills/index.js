@@ -70,6 +70,8 @@ const UpdateBills = () => {
     useState(false);
   const [isGazetteCalendarOpen, setGazetteCalendarOpen] = useState(false);
   const [isAssentCalendarOpen, setAssentCalendarOpen] = useState(false);
+  const [isCirculationCalendarOpen, setIsCirculationCalendarOpen] =
+    useState(false);
   const [filePath, setFilePath] = useState("");
   const GetAllCommittiesApi = async () => {
     try {
@@ -170,6 +172,7 @@ const UpdateBills = () => {
       fkMemberPassageId: "",
       memeberNoticeDate: "",
       dateOfPublishInGazette: "",
+      dateOfCirculationOfBill: "",
       dateOfAssentByThePresident: "",
       dateOfConsiderationBill: "",
       fkSessionMemberPassageId: "",
@@ -253,6 +256,14 @@ const UpdateBills = () => {
     setReportPresentationCalendarOpen(false);
   };
 
+  const handleCirculationCalendarToggle = () => {
+    setIsCirculationCalendarOpen(!isCirculationCalendarOpen);
+  };
+  // Handale DateCHange
+  const handleCirculationDateSelect = (date) => {
+    formik.setFieldValue("dateOfCirculationOfBill", date);
+    setIsCirculationCalendarOpen(false);
+  };
   const handleGazetteCalendarToggle = () => {
     setGazetteCalendarOpen(!isGazetteCalendarOpen);
   };
@@ -572,6 +583,12 @@ const UpdateBills = () => {
                 "YYYY-MM-DD"
               ).toDate()
             : "",
+        dateOfCirculationOfBill: singleSenateBillData?.dateOfCirculationOfBill
+          ? moment(
+              singleSenateBillData?.dateOfCirculationOfBill,
+              "YYYY-MM-DD"
+            ).toDate()
+          : "",
 
         documentDiscription: singleSenateBillData?.billDocuments
           ? singleSenateBillData?.billDocuments?.documentDiscription
@@ -758,6 +775,12 @@ const UpdateBills = () => {
         "YYYY-MM-DD"
       );
       formData.append("dateOfPassageByNA", formattedDate);
+    }
+    if (values?.dateOfCirculationOfBill) {
+      const formattedDate = moment(values?.dateOfCirculationOfBill).format(
+        "YYYY-MM-DD"
+      );
+      formData.append("dateOfCirculationOfBill", formattedDate);
     }
     if (values?.documentDiscription) {
       formData.append("documentDiscription", values?.documentDiscription);
@@ -1077,7 +1100,9 @@ const UpdateBills = () => {
                       </div> */}
                       <div className="col">
                         <div className="mb-3" style={{ position: "relative" }}>
-                          <label className="form-label">Notice Date</label>
+                          <label className="form-label">
+                            Date of Recipt of Notice
+                          </label>
                           <span
                             style={{
                               position: "absolute",
@@ -1778,6 +1803,39 @@ const UpdateBills = () => {
                             onInputClick={
                               handleReportPresenatationDayCalendarToggle
                             }
+                            maxDate={new Date()}
+                            dateFormat="dd-MM-yyyy"
+                          />
+                        </div>
+                      </div>
+
+                      <div class="col-3">
+                        <div class="mb-3" style={{ position: "relative" }}>
+                          <label class="form-label">
+                            Date of Circulation Of Bill
+                          </label>
+                          <span
+                            style={{
+                              position: "absolute",
+                              right: "15px",
+                              top: "36px",
+                              zIndex: 1,
+                              fontSize: "20px",
+                              color: "#666",
+                            }}
+                            onClick={handleCirculationCalendarToggle}
+                          >
+                            <FontAwesomeIcon icon={faCalendarAlt} />
+                          </span>
+                          <DatePicker
+                            selected={formik.values.dateOfCirculationOfBill}
+                            onChange={handleCirculationDateSelect}
+                            className={"form-control"}
+                            open={isCirculationCalendarOpen}
+                            onClickOutside={() =>
+                              setIsCirculationCalendarOpen(false)
+                            }
+                            onInputClick={handleCirculationCalendarToggle}
                             maxDate={new Date()}
                             dateFormat="dd-MM-yyyy"
                           />
