@@ -10,7 +10,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const validationSchema = Yup.object({
-  username: Yup.string().required("Email is required"),
+  username: Yup.string().required("Username is required"),
   password: Yup.string().required("Password is required"),
 });
 export const Login = () => {
@@ -50,8 +50,13 @@ export const Login = () => {
   });
 
   const handleLogin = (values) => {
+    if (values.username.includes("@")) {
+      showErrorMessage("Just type your username without '@' or domain.");
+      return;
+    }
+    
     const data = {
-      email: values.username,
+      email: `${values.username}@senate.gov.pk`,
       password: values.password,
     };
     login(data)
@@ -96,7 +101,7 @@ export const Login = () => {
               <img src={logo} alt="" />
             </div>
             <div class="wrap-input">
-              <span class="label-input">Email</span>
+              <span class="label-input">Username</span>
               {/* <input class="input-field1" type="text" name="username" placeholder="Type your username" /> */}
               <input
                 type="text"
@@ -107,7 +112,7 @@ export const Login = () => {
                     : ""
                 }`}
                 id="username"
-                placeholder={formik.values.username}
+                placeholder={"Please enter your username"}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               />

@@ -580,6 +580,19 @@ function CustomTable({
                               )}
                               {(item?.isEditable && caseEditable) ? (
                                 <>
+                                <OverlayTrigger
+                                  placement="top"
+                                  overlay={viewTooltip}
+                                >
+                                  <button
+                                    onClick={() => handleView(item)}
+                                    className="btn-xs black circle-btn"
+                                    data-id={item.id}
+                                    style={{ color: "#2dce89" }}
+                                  >
+                                    <FontAwesomeIcon icon={faEye} />
+                                  </button>
+                                </OverlayTrigger>
                                   <OverlayTrigger
                                     placement="top"
                                     overlay={editTooltip}

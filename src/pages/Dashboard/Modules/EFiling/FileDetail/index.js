@@ -10,6 +10,7 @@ import {
 import {
   ApprovedFIleCase,
   DeleteCorrApi,
+  DeleteNotificationById,
   DeletePara,
   DeleteParaAttachement,
   UpdateFIleCase,
@@ -80,6 +81,7 @@ function FileDetail() {
   const [modalInputValue, setModalInputValue] = useState({
     assignedTo: "",
     CommentStatus: "",
+    priority: "",
     comment: "",
   });
   const [filesData, setFilesData] = useState(null);
@@ -169,6 +171,7 @@ function FileDetail() {
     setModalInputValue({
       assignedTo: "",
       CommentStatus: "",
+      priority: "",
       comment: "",
     })
   };
@@ -178,6 +181,7 @@ function FileDetail() {
       const formData = new FormData();
       formData.append("submittedBy", UserData?.fkUserId);
       formData.append("assignedTo", modalInputValue?.assignedTo);
+      formData.append("priority", modalInputValue?.priority);
       // formData.append("CommentStatus", modalInputValue?.CommentStatus);
       formData.append(
         "comment",
@@ -199,6 +203,7 @@ function FileDetail() {
         setModalInputValue({
           assignedTo: "",
           CommentStatus: "",
+          priority: "",
           comment: "",
         });
 
@@ -541,6 +546,21 @@ function FileDetail() {
     }
   }, [order])
 
+  const deleteNotification = async (item) => {
+    try {
+      const response = await DeleteNotificationById(
+        location.state?.notificationId,
+        UserData?.fkUserId
+      );
+    } catch (error) {
+      console.log(error.response.data.message);
+    }
+  };
+
+  useEffect(() => {
+    deleteNotification();
+  }, []);
+
   return (
     <Layout
       centerlogohide={true}
@@ -635,6 +655,31 @@ function FileDetail() {
                 </select>
               </div>
             </div>
+            <div class="col">
+            <div class="mb-3">
+              <label class="form-label">Priority</label>
+              <select
+                className="form-select"
+                id="priority"
+                name="priority"
+                onChange={(e) =>
+                  setModalInputValue((prevState) => ({
+                    ...prevState,
+                    priority: e.target.value,
+                  }))
+                }
+                value={modalInputValue.priority}
+                disabled={viewPage ? true : false}
+              >
+                <option value="" selected disabled hidden>
+                  Select
+                </option>
+                  <option value={"Confidential"}>Confidential</option>
+                  <option value={"Immediate"}>Immediate</option>
+                  <option value={"Routine"}>Routine</option>
+              </select>
+            </div>
+          </div>
             <div class="col">
               <div class="mb-3">
                 <label class="form-label">Mark To</label>
