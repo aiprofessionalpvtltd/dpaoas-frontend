@@ -134,12 +134,13 @@ function FileReceipt() {
                         pageSize={pageSize}
                         totalCount={count}
                         singleDataCard={true}
+                        hideDeleteIcon={true}
                         handleDelete={(item) => handleDelete(item.id)}
                         showEditIcon={true}
                         handleEdit={(item) => navigate("/efiling/dashboard/fresh-receipt/addedit", {state:{id:item.id, view: true}})}
-                        showAssigned={true}
+                        showAssigned={false}
                         hendleAssigned={(item) => navigate("/efiling/dashboard/fresh-receipt/frdetail", {state:{id:item.id, view: false}})}
-                        showCreateBtn={true}
+                        showCreateBtn={false}
                         hendleCreateBtn={(item) => {
                           setFRId(item.id);
                           setFRAttachmentsData(item.internalAttachment);
@@ -149,6 +150,12 @@ function FileReceipt() {
                             alert("Please select an attachment")
                           }
                         }}
+                        showView={false}
+                        handleView={(item) =>
+                          navigate("/efiling/dashboard/fresh-receipt/frdetail", {
+                            state: { id: item.id, view: true },
+                          })
+                        }
                     />
                     
                 </div>

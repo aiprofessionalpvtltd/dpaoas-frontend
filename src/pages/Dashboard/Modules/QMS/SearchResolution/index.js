@@ -31,7 +31,7 @@ function QMSSerchResolution() {
   const location =useLocation()
 
   const userData =getUserData()
-  const { members, sessions, resolutionStatus } = useContext(AuthContext);
+  const { members, sessions, resolutionStatus, currentSession } = useContext(AuthContext);
   const [searchedData, setSearchedData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [allResolutionStatus, setAllResolutionStatus] = useState([]);
@@ -124,7 +124,6 @@ function QMSSerchResolution() {
       memberPosition:values?.memberPosition,
       resolutionSentStatus:"inResolution"
     };
-
     try {
       const response = await searchResolution(
         searchParams,
@@ -229,9 +228,11 @@ function QMSSerchResolution() {
     if(location?.state){
       const dashboardData = transformLeavesData(location?.state)
       setSearchedData(dashboardData)
+    }else {
+      const values = { fromSession: currentSession?.id };
+      SearchResolutionApi(values);
     }
-  },[location?.state])
-console.log("isChecked", isChecked);
+  },[location?.state, currentSession])
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <Header

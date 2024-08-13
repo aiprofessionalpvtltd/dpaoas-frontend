@@ -23,7 +23,6 @@ import { Editor } from "../../../../../../components/CustomComponents/Editor";
 import { AuthContext } from "../../../../../../api/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
-import { getAllDivisions } from "../../../../../../api/APIs/Services/ManageQMS.service";
 import { imagesUrl } from "../../../../../../api/APIs";
 const validationSchema = Yup.object({
   sessionNo: Yup.string(),
@@ -51,8 +50,7 @@ function QMSQuestionDetail() {
   // const English = location?.state && location?.state?.question?.englishText;
   // const Urdu = location?.state && location?.state?.question?.urduText;
   // console.log("location states", location?.state?.question?.urduText);
-  const { members, sessions } = useContext(AuthContext);
-  const [alldivisons, setAllDivisions] = useState([]);
+  const { members, sessions, divisions } = useContext(AuthContext);
 
   console.log(
     "Question Detail Data",
@@ -298,23 +296,9 @@ function QMSQuestionDetail() {
   const QuestionFileHistoryData = transfrerFilerHistoryData(
     location?.state?.history?.questionFileHistory
   );
-  // Getting All Divisions
-  const GetALLDivsions = async () => {
-    try {
-      const response = await getAllDivisions(0, 100);
-      if (response?.success) {
-        setAllDivisions(response?.data?.divisions);
-        // setCount(response?.data?.count);
-        // setTotalPages(rersponse?.data?.totalPages)
-        // showSuccessMessage(response.message)
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  
   useEffect(() => {
     GetALlStatus();
-    GetALLDivsions();
   }, []);
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
@@ -929,8 +913,8 @@ function QMSQuestionDetail() {
                       </div>
                   </div>
                 </div>
-                {/* <div class="row">
-                  <div class="col">
+                <div class="row">
+                  <div class="col-3">
                     <div class="mb-3">
                       <label class="form-label">Division</label>
                       <select
@@ -943,8 +927,8 @@ function QMSQuestionDetail() {
                         <option selected disabled hidden>
                           Select
                         </option>
-                        {alldivisons &&
-                          alldivisons.map((item, index) => (
+                        {divisions &&
+                          divisions.map((item, index) => (
                             <option value={item.id} key={index}>
                               {item?.divisionName}
                             </option>
@@ -952,7 +936,33 @@ function QMSQuestionDetail() {
                       </select>
                     </div>
                   </div>
-                  <div class="col">
+                  <div class="col-3">
+                    <div class="mb-3">
+                      <label class="form-label">Group</label>
+                      {/* APi Required with base on Division ID */}
+                      <select
+                        class="form-select"
+                        placeholder={formik.values.tonerModel}
+                        id="group"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      >
+                        <option selected disabled hidden>
+                          Select
+                        </option>
+                        <option value="1">
+                              Group 1
+                            </option>
+                        {/* {divisions &&
+                          divisions.map((item, index) => (
+                            <option value={item.id} key={index}>
+                              {item?.divisionName}
+                            </option>
+                          ))} */}
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-3">
                     <div class="mb-3">
                       <label class="form-label">File Status</label>
                       <select
@@ -975,7 +985,7 @@ function QMSQuestionDetail() {
                       </select>
                     </div>
                   </div>
-                </div> */}
+                </div>
                 {/* <div style={{ marginTop: 10 }}>
                   <Editor
                     title={"Original Text"}
