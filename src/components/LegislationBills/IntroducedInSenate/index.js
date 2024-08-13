@@ -70,7 +70,7 @@
 
 // export default IntroducedInSenate;
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CustomTable from "../../CustomComponents/CustomTable";
 import BillAttachedDocsModal from "../../BillAttachedDocsModal";
 
@@ -79,6 +79,7 @@ const IntroducedInSenate = ({
   handleAdd,
   tableTitle,
   data,
+  remarksAttachmentVal,
   handleEdit,
   handlePageChange,
   currentPage,
@@ -95,7 +96,6 @@ const IntroducedInSenate = ({
     setShowModal(false);
   };
   const handleViewAttach = (item) => {
-    console.log("item", item);
     setAttachDocs(item?.billDocuments);
     openModal();
   };
@@ -126,7 +126,7 @@ const IntroducedInSenate = ({
         pageSize={pageSize}
         totalCount={totalCount}
         handleEdit={handleEdit}
-        isRemarksAttachhments={true}
+        isRemarksAttachhments={remarksAttachmentVal}
         handleViewAttachment={(item) => {
           handleViewAttach(item);
         }}

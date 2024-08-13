@@ -1,7 +1,9 @@
 import { Modal } from "react-bootstrap";
 import { imagesUrl } from "../../api/APIs";
+import React from "react";
 
 function BillAttachedDocsModal({ showModal, closeModal, AttachDocsData }) {
+  console.log("AttachDocsData", AttachDocsData);
   return (
     <>
       <Modal show={showModal} onHide={closeModal} size="lg" centered>
@@ -12,30 +14,33 @@ function BillAttachedDocsModal({ showModal, closeModal, AttachDocsData }) {
           <Modal.Body style={{ padding: 20 }}>
             {AttachDocsData && AttachDocsData.length > 0 ? (
               AttachDocsData.map((item, index) => (
-                <ul className="list-group" key={index}>
-                  {item?.file?.map((fileItem, fileIndex) => {
-                    // Parse the JSON string to extract the path
-                    const fileData = JSON.parse(fileItem);
-                    const fileName = fileData.path
-                      .split("\\")
-                      .pop()
-                      .split("/")
-                      .pop();
+                <React.Fragment key={index}>
+                  <h6 style={{ marginTop: "10px" }}>{item?.documentType}</h6>
+                  <ul className="list-group">
+                    {item?.file?.map((fileItem, fileIndex) => {
+                      // Parse the JSON string to extract the path
+                      const fileData = JSON.parse(fileItem);
+                      const fileName = fileData.path
+                        .split("\\")
+                        .pop()
+                        .split("/")
+                        .pop();
 
-                    return (
-                      <li className="list-group-item" key={fileIndex}>
-                        <a
-                          href={`${imagesUrl}${fileData.path}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          style={{ color: "blue", cursor: "pointer" }}
-                        >
-                          {fileName}
-                        </a>
-                      </li>
-                    );
-                  })}
-                </ul>
+                      return (
+                        <li className="list-group-item" key={fileIndex}>
+                          <a
+                            href={`${imagesUrl}${fileData.path}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{ color: "blue", cursor: "pointer" }}
+                          >
+                            {fileName}
+                          </a>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </React.Fragment>
               ))
             ) : (
               <ul className="list-group">

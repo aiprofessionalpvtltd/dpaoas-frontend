@@ -14,6 +14,7 @@ const AllGovernmentSenateBills = () => {
   const [governmentSenateBill, setGovernmantSenateBill] = useState([]);
   const [count, setCount] = useState(null);
   const [selectedbillFrom, setSelectedFrom] = useState(null);
+  const [remarksAttachmentVal, setRemarksAttachmentVal] = useState();
 
   const pageSize = 10;
 
@@ -24,7 +25,12 @@ const AllGovernmentSenateBills = () => {
 
   // Transform Government Bill Data
   const transformGovernmentSenateBillData = (apiData) => {
-    console.log("Government Bill", apiData);
+    const docs = apiData?.map((item) => item?.billDocuments);
+    if (docs?.length > 0) {
+      setRemarksAttachmentVal(true);
+    } else {
+      setRemarksAttachmentVal(false);
+    }
     return apiData?.map((item, index) => ({
       SNo: index + 1,
       id: item.id,
@@ -142,6 +148,7 @@ const AllGovernmentSenateBills = () => {
           handleAdd={handleGovernmentSenateBill}
           tableTitle={"Government Bills Data (Introduced In Senate)"}
           data={governmentSenateBill}
+          remarksAttachmentVal={remarksAttachmentVal}
           handleEdit={(item) => {
             item?.billFrom === "From Senate"
               ? handleEditSenateBill(item?.id, item)

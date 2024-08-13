@@ -10,8 +10,10 @@ import { Layout } from "../../../../../../../components/Layout";
 import { LegislationSideBarItems } from "../../../../../../../utils/sideBarItems";
 import {
   AllManageCommitties,
+  DeleteBillDocumentTypeAttachemnt,
   UpdateNABill,
   getAllBillStatus,
+  getAllCommitteeRecommendation,
   getAllMNALists,
   getSingleNABillByID,
 } from "../../../../../../../api/APIs/Services/LegislationModule.service";
@@ -34,6 +36,7 @@ const UpdateBills = () => {
   const BillFrom = location?.state && location?.state?.item?.billFrom;
   const { ministryData, members, sessions, parliamentaryYear } =
     useContext(AuthContext);
+  const [commiteeRecommendations, setCommitteeRecommendations] = useState([]);
   const [billStatusData, setBillStatusesData] = useState([]);
   const [ministryDataOnMinister, setMinistryDataOnMinister] = useState([]);
   const [ministerID, setMinisterID] = useState(null);
@@ -80,6 +83,20 @@ const UpdateBills = () => {
     }
   };
 
+  //  Getting All Committees Recommendation
+  const GetAllCommittiesRecommendationApi = async () => {
+    try {
+      const response = await getAllCommitteeRecommendation(0, 1000);
+
+      if (response?.success) {
+        setCommitteeRecommendations(
+          response?.data?.manageCommitteeRecomendation
+        );
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   // Getting All MNA
   const getAllMNA = async () => {
     try {
@@ -121,6 +138,7 @@ const UpdateBills = () => {
     getAllMNA();
     GetAllCommittiesApi();
     getAllBillStatusData();
+    GetAllCommittiesRecommendationApi();
     if (ministerID) {
       getMinisteryByMinisterIdApi();
     }
@@ -334,6 +352,23 @@ const UpdateBills = () => {
     }
   }, []);
 
+  // Remove Bill Attachemnts
+  const hendleRemoveImage = async (docType, fileId) => {
+    const data = {
+      documentType: docType,
+      fileId: fileId,
+    };
+    try {
+      const response = await DeleteBillDocumentTypeAttachemnt(NA_Bill_ID, data);
+      if (response?.success) {
+        getNABillByIdApi();
+        showSuccessMessage(response.message);
+      }
+    } catch (error) {
+      showErrorMessage(error.response.data.message);
+    }
+  };
+
   useEffect(() => {
     if (singleSenateBillData) {
       let fileNum = "";
@@ -351,6 +386,11 @@ const UpdateBills = () => {
         } catch (error) {
           console.error("Error parsing file:", error);
         }
+      }
+      const firstDocument = singleSenateBillData?.billDocuments?.[0];
+      let parsedFiles = [];
+      if (firstDocument && firstDocument.file) {
+        parsedFiles = firstDocument.file.map((file) => file.path);
       }
 
       formik.setValues({
@@ -468,8 +508,16 @@ const UpdateBills = () => {
           : "",
 
         committeeRecomendation: singleSenateBillData?.introducedInHouses
-          ? singleSenateBillData?.introducedInHouses?.committeeRecomendation
-          : "",
+          ?.manageCommitteeRecomendations
+          ? {
+              value:
+                singleSenateBillData?.introducedInHouses
+                  ?.manageCommitteeRecomendations?.id,
+              label:
+                singleSenateBillData?.introducedInHouses
+                  ?.manageCommitteeRecomendations?.committeeRecom,
+            }
+          : null,
         reportPresentationDate: singleSenateBillData?.introducedInHouses
           ?.reportPresentationDate
           ? moment(
@@ -607,8 +655,14 @@ const UpdateBills = () => {
       const formattedDate = moment(values?.referedOnDate).format("YYYY-MM-DD");
       formData.append("referedOnDate", formattedDate);
     }
+    // if (values?.committeeRecomendation) {
+    //   formData.append("committeeRecomendation", values?.committeeRecomendation);
+    // }
     if (values?.committeeRecomendation) {
-      formData.append("committeeRecomendation", values?.committeeRecomendation);
+      formData.append(
+        "fkManageCommitteeRecomendationId",
+        values?.committeeRecomendation?.value
+      );
     }
     // if (values?.reportPresentationDate) {
     //   formData.append("reportPresentationDate", values?.reportPresentationDate);
@@ -719,10 +773,15 @@ const UpdateBills = () => {
       formData.append("documentType", values?.documentType);
     }
     formData.append("billFrom", "From NA");
-    if (values?.file) {
-      formData.append("file", values?.file[0]);
-    }
+    // if (values?.file) {
+    //   formData.append("file", values?.file[0]);
+    // }
 
+    if (values?.file) {
+      Array.from(values?.file).map((file, index) => {
+        formData.append("file", file);
+      });
+    }
     // if (values?.referedOnDate) {
     //   const formattedDate = moment(values?.referedOnDate).format("YYYY-MM-DD");
     //   formData.append("referedOnDate", formattedDate);
@@ -1632,7 +1691,37 @@ const UpdateBills = () => {
 
                     <div className="row">
                       <div className="form-group col-3">
-                        <label className="form-label">
+                        <div className="form-group col">
+                          <label className="form-label">
+                            Committee Recommendation
+                          </label>
+                          <Select
+                            options={
+                              commiteeRecommendations &&
+                              commiteeRecommendations.map((item) => ({
+                                value: item?.id,
+                                label: item?.committeeRecomendation,
+                              }))
+                            }
+                            onChange={(selectedOption) => {
+                              formik.setFieldValue(
+                                "committeeRecomendation",
+                                selectedOption
+                              );
+                            }}
+                            onBlur={formik.handleBlur}
+                            value={formik.values.committeeRecomendation}
+                            name="committeeRecomendation"
+                            className={` ${
+                              formik.touched.committeeRecomendation &&
+                              formik.errors.committeeRecomendation
+                                ? "is-invalid"
+                                : ""
+                            }`}
+                            // isMulti
+                          />
+                        </div>
+                        {/* <label className="form-label">
                           Committee Recommendation
                         </label>
                         <select
@@ -1657,7 +1746,7 @@ const UpdateBills = () => {
                           <option value="Ammended By Standing Committee">
                             Ammended By Standing Committee
                           </option>
-                        </select>
+                        </select> */}
                       </div>
 
                       <div class="col-3">
@@ -2131,7 +2220,7 @@ const UpdateBills = () => {
                       </select>
                     </div>
 
-                    <div className="form-group col-4">
+                    {/* <div className="form-group col-4">
                       <label htmlFor="fileInput" className="form-label">
                         Choose File
                       </label>
@@ -2148,30 +2237,106 @@ const UpdateBills = () => {
                           );
                         }}
                       />
+                    </div> */}
+                    <div className="form-group col-4">
+                      <label htmlFor="fileInput" className="form-label">
+                        Choose File
+                      </label>
+                      <input
+                        className="form-control"
+                        type="file"
+                        accept=".pdf, .jpg, .jpeg, .png"
+                        id="file"
+                        name="file"
+                        multiple
+                        onChange={(event) => {
+                          formik.setFieldValue(
+                            "file",
+                            event.currentTarget.files
+                          );
+                        }}
+                      />
                     </div>
-                    {filePath && (
-                      <div>
-                        <a
-                          href={`${imagesUrl}${filePath}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        ></a>
-                        <span
-                          class="MultiFile-label"
-                          title={filePath.split("\\").pop().split("/").pop()}
-                        >
-                          <span class="MultiFile-title">
-                            <a
-                              href={`${imagesUrl}${filePath}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
+                    {singleSenateBillData &&
+                      singleSenateBillData.billDocuments &&
+                      singleSenateBillData.billDocuments.map((doc) => (
+                        <div key={doc.id} className="document-section">
+                          {doc.documentType && (
+                            <div
+                              className="document-type"
+                              style={{
+                                display: "flex",
+                                color: "black",
+                                alignItems: "center",
+                              }}
                             >
-                              {filePath?.split("\\").pop().split("/").pop()}
-                            </a>
-                          </span>
-                        </span>
-                      </div>
-                    )}
+                              <h6
+                                style={{
+                                  display: "flex",
+                                  color: "black",
+                                  fontSize: "14px",
+                                  marginTop: "15px",
+                                }}
+                              >
+                                {doc.documentType}
+                              </h6>
+                              <h6
+                                style={{
+                                  display: "flex",
+                                  color: "black",
+                                  fontSize: "10px",
+                                  fontWeight: "bold",
+                                  marginTop: "15px",
+                                  marginLeft: "14px",
+                                }}
+                              >
+                                {doc?.documentDate
+                                  ? moment(doc?.documentDate).format(
+                                      "DD-MM-YYYY"
+                                    )
+                                  : ""}
+                              </h6>
+                            </div>
+                          )}
+                          {doc.file?.map((file) => (
+                            <div className="MultiFile-label mt-1" key={file.id}>
+                              <a
+                                className="MultiFile-remove"
+                                style={{
+                                  marginRight: "10px",
+                                  color: "red",
+                                  cursor: "pointer",
+                                }}
+                                // onClick={() =>
+                                //   alert(
+                                //     `File ID: ${file.id}, Document Type: ${doc.documentType}`
+                                //   )
+                                // }
+                                onClick={() =>
+                                  hendleRemoveImage(doc?.documentType, file?.id)
+                                }
+                              >
+                                x
+                              </a>
+                              <span
+                                className="MultiFile-label"
+                                title={file.path.split("/").pop()}
+                              >
+                                <span className="MultiFile-title">
+                                  <a
+                                    href={`${imagesUrl}${file.path}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    style={{ cursor: "pointer" }}
+                                  >
+                                    {file.path.split("/").pop()}
+                                  </a>
+                                </span>
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      ))}
 
                     <div className="row mt-3">
                       <div class="d-grid gap-2 d-md-flex justify-content-md-end">
