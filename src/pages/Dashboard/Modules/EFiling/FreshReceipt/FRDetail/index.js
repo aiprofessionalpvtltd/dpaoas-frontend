@@ -182,7 +182,8 @@ function FRDetail() {
     try {
       const response = await assignFR(receptId, data);
       if (response?.success) {
-        showSuccessMessage(response?.message);
+        
+        showSuccessMessage(response?.message, true);
 
         toggleModal();
         getFreashRecepitByIdApi();

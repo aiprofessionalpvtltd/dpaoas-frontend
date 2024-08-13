@@ -1,5 +1,6 @@
 import React, { createContext, useEffect, useState } from "react";
 import {
+  getAllDivisions,
   getAllParliamentaryYears,
   getAllSessions,
   retriveEmployeesAsEngineers,
@@ -18,12 +19,15 @@ export const AuthProvider = ({ children }) => {
   const [permissions, setPermissions] = useState([]);
   const [ministryData, setMinistryData] = useState([]);
   const [sessions, setSessions] = useState([]);
+  const [currentSession, setCurrentSession] = useState(null);
+
   const [employeeData, setEmployeeData] = useState([]);
   const [resolutionStatus, setResolutionStatus] = useState([]);
   const [employeesAsEngineersData, setemployeesAsEngineersData] = useState([]);
   const [allBranchesData, setallBranchesData] = useState([]);
   const [members, setMembers] = useState([]);
   const [parliamentaryYear, setParliamentaryYear] = useState([]);
+  const [divisions, setDivisions] = useState([]);
   const [fileIdINRegister, setFileIdInRegister] = useState(null);
   const [fildetailsAqain, setFileDetail] = useState(null)
 
@@ -69,6 +73,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await getAllSessions();
       if (response?.success) {
+        setCurrentSession( response?.data?.sessions[0])
         setSessions(response?.data?.sessions);
       }
     } catch (error) {
@@ -90,6 +95,19 @@ export const AuthProvider = ({ children }) => {
       showErrorMessage(error?.response?.data?.error);
     }
   };
+
+  const handleDivisionsAPi = async () => {
+    try {
+      const response = await getAllDivisions(0, 1000);
+      if (response?.success) {
+        setDivisions(response.data?.divisions);
+      }
+    } catch (error) {
+      console.log(error?.response?.data?.message);
+    }
+  }    
+
+  
 
   const getAllResolutionStatusApi = async () => {
     try {
@@ -149,6 +167,7 @@ export const AuthProvider = ({ children }) => {
     getretriveEmployeesAsEngineers();
     AllBranchesData();
     getAllParliamnetaryYears();
+    handleDivisionsAPi()
   }, []);
 
   return (
@@ -168,7 +187,8 @@ export const AuthProvider = ({ children }) => {
         parliamentaryYear,
         setFileIdInRegister,
         fileIdINRegister,
-        fildetailsAqain, setFileDetail
+        fildetailsAqain, setFileDetail,divisions,
+        currentSession
       }}
     >
       {children}

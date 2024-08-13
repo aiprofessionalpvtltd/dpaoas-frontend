@@ -2,9 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Layout } from "../../../../../components/Layout";
 import { useLocation, useNavigate } from "react-router-dom";
 import CustomTable from "../../../../../components/CustomComponents/CustomTable";
-import {
-  QMSSideBarItems,
-} from "../../../../../utils/sideBarItems";
+import { QMSSideBarItems } from "../../../../../utils/sideBarItems";
 import Header from "../../../../../components/Header";
 import { useFormik } from "formik";
 import DatePicker from "react-datepicker";
@@ -30,8 +28,8 @@ import { Button, Modal } from "react-bootstrap";
 
 function QMSSearchQuestion() {
   const navigate = useNavigate();
-  const location =useLocation()
-  const { members, sessions } = useContext(AuthContext);
+  const location = useLocation();
+  const { members, sessions, currentSession } = useContext(AuthContext);
   const UserData = getUserData();
   const [currentPage, setCurrentPage] = useState(0);
   const [searchedData, setSearchedData] = useState([]);
@@ -40,13 +38,13 @@ function QMSSearchQuestion() {
   const [questionStatus, setQuestionStatus] = useState("");
   const [statusDate, setStatusDate] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [deleteId, setDeleteId] = useState(null)
-
+  const [deleteId, setDeleteId] = useState(null);
 
   // const [count, setCount] = useState(null);
-  const[deleteModalRemarksValue,setDeleteModalRemarksValue]= useState(null)
+  const [deleteModalRemarksValue, setDeleteModalRemarksValue] = useState(null);
 
   const pageSize = 10; // Set your desired page size
+  console.log("currentSession", currentSession);
 
   const formik = useFormik({
     initialValues: {
@@ -64,7 +62,7 @@ function QMSSearchQuestion() {
       noticeOfficeDiaryNo: "",
       fileStatus: "",
       groups: "",
-      memberPosition:""
+      memberPosition: "",
     },
     onSubmit: (values) => {
       // Handle form submission here
@@ -90,9 +88,11 @@ function QMSSearchQuestion() {
       return {
         SrNo: index,
         QID: res?.id,
-        internalId:res?.id,
+        internalId: res?.id,
         noticeOfficeDiaryNo: res?.noticeOfficeDiary?.noticeOfficeDiaryNo,
-        NoticeDate: moment(res?.noticeOfficeDiary?.noticeOfficeDiaryDate).format("DD/MM/YYYY"),
+        NoticeDate: moment(
+          res?.noticeOfficeDiary?.noticeOfficeDiaryDate
+        ).format("DD/MM/YYYY"),
         NoticeTime: moment(
           res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
           "hh:ss:a"
@@ -102,12 +102,12 @@ function QMSSearchQuestion() {
         Category: res?.questionCategory,
         // SubmittedBy: res.category,
         questionStatus: res?.questionStatus?.questionStatus,
-        memberPosition:res?.memberPosition,
-        CreatedBy:res?.questionSentStatus === "inQuestion" && "Question",
-        SubmittedBy: res?.questionSubmittedBy ? `${res?.questionSubmittedBy?.employee?.firstName} ${res?.questionSubmittedBy?.employee?.lastName}`:"--",
-        deletedByUser: res?.questionDeletedBy ? `${res?.questionDeletedBy.employee?.firstName} ${res?.questionDeletedBy.employee?.lastName}` :"--",
-        remarks:res?.description,
-        Status:res?.questionActive
+        // memberPosition:res?.memberPosition,
+        // CreatedBy:res?.questionSentStatus === "inQuestion" && "Question",
+        // SubmittedBy: res?.questionSubmittedBy ? `${res?.questionSubmittedBy?.employee?.firstName} ${res?.questionSubmittedBy?.employee?.lastName}`:"--",
+        // deletedByUser: res?.questionDeletedBy ? `${res?.questionDeletedBy.employee?.firstName} ${res?.questionDeletedBy.employee?.lastName}` :"--",
+        // remarks:res?.description,
+        // Status:res?.questionActive
       };
     });
   };
@@ -127,13 +127,17 @@ function QMSSearchQuestion() {
       fileStatus: values.fileStatus,
       groups: values.groups,
       divisions: values.divisions,
-      memberPosition:values?.memberPosition,
-      questionSentStatus:"inQuestion",
-      noticeOfficeDiaryNo:values?.noticeOfficeDiaryNo
+      memberPosition: values?.memberPosition,
+      questionSentStatus: "inQuestion",
+      noticeOfficeDiaryNo: values?.noticeOfficeDiaryNo,
     };
 
     try {
-      const response = await searchQuestion(searchParams, currentPage, pageSize);
+      const response = await searchQuestion(
+        searchParams,
+        currentPage,
+        pageSize
+      );
       if (response?.success) {
         showSuccessMessage(response?.message);
         const transformedData = transformLeavesData(response?.data?.questions);
@@ -172,24 +176,30 @@ function QMSSearchQuestion() {
 
   const handleChangeStatus = async (id) => {
     try {
-      const data = { isChecked, questionStatus: questionStatus, statusDate: statusDate, deferredBy: UserData?.fkUserId }; 
+      const data = {
+        isChecked,
+        questionStatus: questionStatus,
+        statusDate: statusDate,
+        deferredBy: UserData?.fkUserId,
+      };
 
       const response = await updateQuestionStatus(data);
-      showSuccessMessage(response.message); 
-      SearchQuestionApi(formik.values) 
-      setQuestionStatus(null)
-      setStatusDate(null)
-      setIsChecked([])
+      showSuccessMessage(response.message);
+      SearchQuestionApi(formik.values);
+      setQuestionStatus(null);
+      setStatusDate(null);
+      setIsChecked([]);
     } catch (error) {
       showErrorMessage(error.response?.data?.message);
     }
   };
   const hendleDelete = async () => {
-    const Data = {deletedBy: UserData?.fkUserId,
-      description:deleteModalRemarksValue
-    }
+    const Data = {
+      deletedBy: UserData?.fkUserId,
+      description: deleteModalRemarksValue,
+    };
     try {
-      const response = await DeleteQuestion(deleteId,Data); 
+      const response = await DeleteQuestion(deleteId, Data);
       if (response?.success) {
         showSuccessMessage(response?.message);
         SearchQuestionApi(formik.values);
@@ -200,26 +210,25 @@ function QMSSearchQuestion() {
     }
   };
 
-  
-
   useEffect(() => {
     GetALlStatus();
   }, []);
 
-  useEffect(() =>{
-    if(location?.state){
-      const dashboardData = transformLeavesData(location?.state)
-      setSearchedData(dashboardData)
+  useEffect(() => {
+    if (location?.state) {
+      const dashboardData = transformLeavesData(location?.state);
+      setSearchedData(dashboardData);
+    } else {
+      const values = { fromSession: currentSession?.id };
+      SearchQuestionApi(values);
     }
-  },[location?.state])
+  }, [location?.state, currentSession]);
 
   // Handle Reset Form
 
   const handleResetForm = () => {
     formik.resetForm({});
   };
-
-
 
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
@@ -230,41 +239,39 @@ function QMSSearchQuestion() {
       />
       <ToastContainer />
       <DeleteModal
-          title="Delete Question"
-          isOpen={isModalOpen}
-          toggleModal={toggleModal}
-        >
-          <div class="row">
-            <div class="col">
-              <div class="mb-3">
-                <label class="form-label">Remarks</label>
-                <textarea
-                  class="form-control"
-                  id="comment"
-                  name="comment"
-                  onChange={(e) =>
-                    setDeleteModalRemarksValue(e.target.value)
-                  }
-                  value={deleteModalRemarksValue}
-                ></textarea>
-              </div>
+        title="Delete Question"
+        isOpen={isModalOpen}
+        toggleModal={toggleModal}
+      >
+        <div class="row">
+          <div class="col">
+            <div class="mb-3">
+              <label class="form-label">Remarks</label>
+              <textarea
+                class="form-control"
+                id="comment"
+                name="comment"
+                onChange={(e) => setDeleteModalRemarksValue(e.target.value)}
+                value={deleteModalRemarksValue}
+              ></textarea>
             </div>
           </div>
+        </div>
 
-          <Modal.Footer>
-            <Button
-              variant="primary"
-              onClick={() => {
-                hendleDelete()
-              }}
-            >
-              Submit
-            </Button>
-            <Button variant="secondary" onClick={toggleModal}>
-              Close
-            </Button>
-          </Modal.Footer>
-        </DeleteModal>
+        <Modal.Footer>
+          <Button
+            variant="primary"
+            onClick={() => {
+              hendleDelete();
+            }}
+          >
+            Submit
+          </Button>
+          <Button variant="secondary" onClick={toggleModal}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </DeleteModal>
       <div class="container-fluid">
         <div class="card mt-4">
           <div
@@ -405,37 +412,37 @@ function QMSSearchQuestion() {
                       </select>
                     </div>
                   </div>
-                   <div class="col">
-                      <div class="mb-3">
-                        <label class="form-label">Member Position</label>
-                        <select
-                          class={`form-select ${
-                            formik.touched.memberPosition &&
-                            formik.errors.memberPosition
-                              ? "is-invalid"
-                              : ""
-                          }`}
-                          placeholder="Member Position"
-                          value={formik.values.memberPosition}
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          name="memberPosition"
-                        >
-                          <option value="" selected disabled hidden>
-                            Select
-                          </option>
-                          <option value={"Treasury"}>Treasury</option>
-                          <option value={"Opposition"}>Opposition</option>
-                          <option value={"Independent"}>Independent</option>
-                          <option value={"Anyside"}>Anyside</option>
-                        </select>
-                        {formik.touched.memberPosition &&
-                          formik.errors.memberPosition && (
-                            <div className="invalid-feedback">
-                              {formik.errors.memberPosition}
-                            </div>
-                          )}
-                      </div>
+                  <div class="col">
+                    <div class="mb-3">
+                      <label class="form-label">Member Position</label>
+                      <select
+                        class={`form-select ${
+                          formik.touched.memberPosition &&
+                          formik.errors.memberPosition
+                            ? "is-invalid"
+                            : ""
+                        }`}
+                        placeholder="Member Position"
+                        value={formik.values.memberPosition}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        name="memberPosition"
+                      >
+                        <option value="" selected disabled hidden>
+                          Select
+                        </option>
+                        <option value={"Treasury"}>Treasury</option>
+                        <option value={"Opposition"}>Opposition</option>
+                        <option value={"Independent"}>Independent</option>
+                        <option value={"Anyside"}>Anyside</option>
+                      </select>
+                      {formik.touched.memberPosition &&
+                        formik.errors.memberPosition && (
+                          <div className="invalid-feedback">
+                            {formik.errors.memberPosition}
+                          </div>
+                        )}
+                    </div>
                   </div>
                 </div>
                 <div class="row">
@@ -683,9 +690,10 @@ function QMSSearchQuestion() {
                   headerShown={true}
                   data={searchedData}
                   handleEdit={(item) => handleEdit(item.QID)}
-                  handleDelete={(item) =>{
-                    toggleModal()
-                    setDeleteId(item.QID)}}
+                  handleDelete={(item) => {
+                    toggleModal();
+                    setDeleteId(item.QID);
+                  }}
                   handlePageChange={handlePageChange}
                   currentPage={currentPage}
                   pageSize={pageSize}
@@ -700,7 +708,10 @@ function QMSSearchQuestion() {
                 <div class="col">
                   <div class="mb-3">
                     <label class="form-label">Question Status</label>
-                    <select class="form-select" onChange={(e) => setQuestionStatus(e.target.value)}>
+                    <select
+                      class="form-select"
+                      onChange={(e) => setQuestionStatus(e.target.value)}
+                    >
                       <option value={""} selected>
                         Select
                       </option>

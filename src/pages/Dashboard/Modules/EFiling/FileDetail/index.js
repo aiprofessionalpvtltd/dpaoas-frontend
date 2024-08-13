@@ -37,6 +37,7 @@ import { imagesUrl } from "../../../../../api/APIs";
 import ImageGallery from "react-image-gallery";
 import "react-image-gallery/styles/css/image-gallery.css";
 import moment from "moment";
+import { CustomAlert } from "../../../../../components/CustomComponents/CustomAlert";
 
 const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
   return (
@@ -51,6 +52,7 @@ const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
 
 function FileDetail() {
   const location = useLocation();
+  const [showApproveModal, setShowApproveModal] = useState(false);
   const { fildetailsAqain } = useContext(AuthContext);
   const navigate = useNavigate();
   const UserData = getUserData();
@@ -84,6 +86,12 @@ function FileDetail() {
   const [FR, setFR] = useState(null);
   const pageSize = 10;
   const [order, setOrder] = useState("DESC");
+  const handleShow = () => setShowApproveModal(true);
+  const handleClose = () => setShowApproveModal(false);
+  const handleOkClick = () => {
+    handleSubmit(true)
+    handleClose();
+  };
 
   // const initialNotingTabData = [
   //   {
@@ -184,7 +192,7 @@ function FileDetail() {
       );
 
       if (response?.success) {
-        showSuccessMessage(response?.message);
+        showSuccessMessage(response?.message, true);
         toggleModal();
         getFilesByID();
         // Clear all fields in modalInputValue
@@ -543,6 +551,11 @@ function FileDetail() {
           : EfilingSideBarBranchItem
       }
     >
+      <CustomAlert
+        showModal={showApproveModal}
+        handleClose={handleClose}
+        handleOkClick={handleOkClick}
+      />
       <div className="dashboard-content">
         <Modal
           show={showModal}
@@ -886,7 +899,7 @@ function FileDetail() {
                                     ? "none"
                                     : "block",
                                 }}
-                                onClick={() => handleSubmit(true)} // True means non-editable
+                                onClick={() => handleShow()} // True means non-editable
                                 disabled={
                                   viewPage
                                     ? true

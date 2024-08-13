@@ -82,6 +82,7 @@ function CustomTable({
   iscolumnCheckbox,
   setIsColumnCheckBox,
   isColumncheck,
+  caseEditable
 }) {
   console.log("zdcsdvxvx", isRemarksAttachhments);
 
@@ -577,7 +578,49 @@ function CustomTable({
                                   </button>
                                 </OverlayTrigger>
                               )}
-                              {item?.isEditable && (
+                              {(item?.isEditable && caseEditable) ? (
+                                <>
+                                  <OverlayTrigger
+                                    placement="top"
+                                    overlay={editTooltip}
+                                  >
+                                    <button
+                                      onClick={() => handleEdit(item)}
+                                      className="btn-xs black circle-btn"
+                                      data-id={item.id}
+                                      style={{ color: "blue" }}
+                                    >
+                                      <FontAwesomeIcon icon={faEdit} />
+                                    </button>
+                                  </OverlayTrigger>
+                                </>
+                              ) : item?.isEditable ?  (                             <>
+                                <OverlayTrigger
+                                  placement="top"
+                                  overlay={createTooltip}
+                                >
+                                  <button
+                                    onClick={() => hendleCreateBtn(item)}
+                                    className="btn-xs black circle-btn"
+                                    data-id={item.id}
+                                    style={{ color: "darkblue" }}
+                                  >
+                                    <FontAwesomeIcon icon={faCirclePlus} />
+                                  </button>
+                                </OverlayTrigger>
+                                <OverlayTrigger
+                                  placement="top"
+                                  overlay={assignedTooltip}
+                                >
+                                  <button
+                                    onClick={() => hendleAssigned(item)}
+                                    className="btn-xs black circle-btn"
+                                    data-id={item.id}
+                                    style={{ color: "#007bff" }}
+                                  >
+                                    <FontAwesomeIcon icon={faFileExport} />
+                                  </button>
+                                </OverlayTrigger>
                                 <OverlayTrigger
                                   placement="top"
                                   overlay={editTooltip}
@@ -591,7 +634,34 @@ function CustomTable({
                                     <FontAwesomeIcon icon={faEdit} />
                                   </button>
                                 </OverlayTrigger>
-                              )}
+                                <OverlayTrigger
+                                  placement="top"
+                                  overlay={deleteTooltip}
+                                >
+                                  <button
+                                    onClick={() => handleDelete(item)}
+                                    className="btn-xs black circle-btn"
+                                    data-id={item.id}
+                                    style={{ color: "#fb6340" }}
+                                  >
+                                    <FontAwesomeIcon icon={faTrash} />
+                                  </button>
+                                </OverlayTrigger>
+                              </>) : item?.isEditable === false  ? (
+                                <OverlayTrigger
+                                  placement="top"
+                                  overlay={viewTooltip}
+                                >
+                                  <button
+                                    onClick={() => handleView(item)}
+                                    className="btn-xs black circle-btn"
+                                    data-id={item.id}
+                                    style={{ color: "#2dce89" }}
+                                  >
+                                    <FontAwesomeIcon icon={faEye} />
+                                  </button>
+                                </OverlayTrigger>
+                              ):null}
                               {showSent && showSent && (
                                 <OverlayTrigger
                                   placement="top"

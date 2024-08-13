@@ -320,7 +320,8 @@ function FileCases() {
             totalCount={count}
             singleDataCard={true}
             hideDeleteIcon={true}
-            showView={true}
+            showView={false}
+            caseEditable = {true}
             handleView={(item) => {
               setFileIdForDetailPage(item?.internalId);
               setCaseIdForDetailPage(item?.caseId);
