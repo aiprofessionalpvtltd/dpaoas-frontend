@@ -280,6 +280,7 @@ function NewLegislationSenateBill() {
                               ? "is-invalid"
                               : ""
                           }`}
+                          onBlur={formik.handleBlur}
                           onChange={formik.handleChange}
                           value={formik.values.session}
                         >

@@ -34,7 +34,8 @@ const AllPrivateMemberSenateBills = () => {
     } else {
       setRemarksAttachmentVal(false);
     }
-    return apiData?.map((item) => ({
+    return apiData?.map((item, index) => ({
+      SNo: index + 1,
       id: item.id,
       fileNumber: item?.fileNumber,
       TitleOfTheBill: item?.billTitle,

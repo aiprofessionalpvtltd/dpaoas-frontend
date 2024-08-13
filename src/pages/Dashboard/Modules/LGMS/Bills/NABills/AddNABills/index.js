@@ -82,7 +82,7 @@ function NewLegislationNABill() {
       session: "",
       fileNumber: "",
       PassedByNADate: "",
-      dateOfReceiptOfMessageFromNA: "",
+      DateOfReceiptOfMessageFromNA: "",
       billCategory: "",
       billType: "",
       billTitle: "",
@@ -112,7 +112,7 @@ function NewLegislationNABill() {
   };
   // Handale DateCHange
   const handleReciptDateSelect = (date) => {
-    formik.setFieldValue("dateOfReceiptOfMessageFromNA", date);
+    formik.setFieldValue("DateOfReceiptOfMessageFromNA", date);
     setIsDateofReciptCalendarOpen(false);
   };
 
@@ -131,14 +131,14 @@ function NewLegislationNABill() {
       formData.append("PassedByNADate", formattedDate);
     }
     // formData.append(
-    //   "dateOfReceiptOfMessageFromNA",
+    //   "DateOfReceiptOfMessageFromNA",
     //   values?.receiptMessageDateFromNA
     // );
-    if (values?.dateOfReceiptOfMessageFromNA) {
-      const formattedDate = moment(values?.dateOfReceiptOfMessageFromNA).format(
+    if (values?.DateOfReceiptOfMessageFromNA) {
+      const formattedDate = moment(values?.DateOfReceiptOfMessageFromNA).format(
         "YYYY-MM-DD"
       );
-      formData.append("dateOfReceiptOfMessageFromNA", formattedDate);
+      formData.append("DateOfReceiptOfMessageFromNA", formattedDate);
     }
     formData.append(
       "billCategory",
@@ -488,16 +488,16 @@ function NewLegislationNABill() {
                         </span>
 
                         <DatePicker
-                          selected={formik.values.dateOfReceiptOfMessageFromNA}
+                          selected={formik.values.DateOfReceiptOfMessageFromNA}
                           onChange={handleReciptDateSelect}
                           onBlur={formik.handleBlur}
                           className={`form-control ${
-                            formik.touched.dateOfReceiptOfMessageFromNA &&
-                            formik.errors.dateOfReceiptOfMessageFromNA
+                            formik.touched.DateOfReceiptOfMessageFromNA &&
+                            formik.errors.DateOfReceiptOfMessageFromNA
                               ? "is-invalid"
                               : ""
                           }`}
-                          name="dateOfReceiptOfMessageFromNA"
+                          name="DateOfReceiptOfMessageFromNA"
                           open={isDateofReciptCalendarOpen}
                           onClickOutside={() =>
                             setIsDateofReciptCalendarOpen(false)
@@ -508,13 +508,13 @@ function NewLegislationNABill() {
                           dateFormat="dd-MM-yyyy"
                         />
 
-                        {formik.touched.dateOfReceiptOfMessageFromNA &&
-                          formik.errors.dateOfReceiptOfMessageFromNA && (
+                        {formik.touched.DateOfReceiptOfMessageFromNA &&
+                          formik.errors.DateOfReceiptOfMessageFromNA && (
                             <div
                               className="invalid-feedback"
                               style={{ display: "block" }}
                             >
-                              {formik.errors.dateOfReceiptOfMessageFromNA}
+                              {formik.errors.DateOfReceiptOfMessageFromNA}
                             </div>
                           )}
                       </div>

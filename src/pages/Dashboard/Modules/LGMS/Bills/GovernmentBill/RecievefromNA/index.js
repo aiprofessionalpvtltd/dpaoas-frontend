@@ -36,7 +36,8 @@ const AllGovernmentRecievedNABills = () => {
     } else {
       setRemarksAttachmentVal(false);
     }
-    return apiData?.map((item) => ({
+    return apiData?.map((item, index) => ({
+      SNo: index + 1,
       id: item.id,
       // internalId: item?.id,
       fileNumber: item?.fileNumber,
@@ -81,7 +82,7 @@ const AllGovernmentRecievedNABills = () => {
       dateOfPassingTheBillByTheSenate: item?.dateOfPassageBySenate
         ? moment(item?.dateOfPassageBySenate, "YYYY-MM-DD").format("DD-MM-YYYY")
         : "---",
-      dateOnWhichTheBillTransmittedToNA: item?.dateOfTransmissionToNA
+      dateOfTransmissionOfMessageToNA: item?.dateOfTransmissionToNA
         ? moment(item?.dateOfTransmissionToNA, "YYYY-MM-DD").format(
             "DD-MM-YYYY"
           )
