@@ -71,7 +71,15 @@ function RemoveQuestion() {
                 <div class="col-4">
                   <div class="mb-3">
                     <label class="form-label">Questions</label>
-                    <select className={`form-select`}
+                    <input
+                            className="form-control"
+                            type="number"
+                            id="question"
+                            value={formik.values.question}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                          />
+                    {/* <select className={`form-select`}
                           // placeholder="Session No"
                           value={formik.values.question}
                           onChange={formik.handleChange}
@@ -89,7 +97,7 @@ function RemoveQuestion() {
                                 {item.id}
                               </option>
                             ))}
-                    </select>
+                    </select> */}
                   </div>
                 </div>
 

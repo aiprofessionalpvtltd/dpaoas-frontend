@@ -98,18 +98,18 @@ function MainDashboard() {
     try {
       const response = await getsentAndRecievedFilesStats(userData?.fkUserId);
       if (response?.success) {
-        setFileSentCount(response?.data?.sentFiles?.count);
-        setFileRecivedCount(response?.data?.receivedFiles?.count);
-        const transformsendData = transformFilesdata(
-          response?.data?.sentFiles?.rows,
-          1
-        );
-        setFilesentData(transformsendData);
-        const transformrecivedData = transformFilesdata(
-          response?.data?.receivedFiles?.rows,
-          0
-        );
-        setFileRecivedData(transformrecivedData);
+        setFileSentCount(response?.data?.sentFiles);
+        setFileRecivedCount(response?.data?.receivedFiles);
+        // const transformsendData = transformFilesdata(
+        //   response?.data?.sentFiles?.rows,
+        //   1
+        // );
+        // setFilesentData(transformsendData);
+        // const transformrecivedData = transformFilesdata(
+        //   response?.data?.receivedFiles?.rows,
+        //   0
+        // );
+        // setFileRecivedData(transformrecivedData);
         setFileStatsData(response?.data);
       }
     } catch (error) {
@@ -188,7 +188,7 @@ const BlinkingIndicator = () => {
   );
 };
 
-const NonBlinkingIndicator = () => {
+const NonBlinkingIndicator = (color) => {
   return (
     <Box
       sx={{
@@ -196,7 +196,7 @@ const NonBlinkingIndicator = () => {
         height: 15,
         marginTop: "5px",
         borderRadius: '50%',
-        backgroundColor: 'blue',
+        backgroundColor: color ? color : 'blue',
       }}
     ></Box>
   );
@@ -239,7 +239,7 @@ const NonBlinkingIndicator = () => {
                 <div className="dash-card">
                   <div
                     className="dash-card-header"
-                    style={{ textAlign: "center", background: "#FFA500" , borderRadius:"0px"}}
+                    style={{ textAlign: "center", background: "#4f5966" , borderRadius:"0px"}}
                   >
                     <h2 style={{ marginBottom: "0" }}>IN </h2>
                   </div>
@@ -247,10 +247,10 @@ const NonBlinkingIndicator = () => {
                   <div className="float-start" style={{ width: "50%" }}>
                     <div
                       className="count"
-                      style={{ width: "100%", height: 90, background: "#FFF" }}
+                      style={{ width: "100%", height: 135, background: "#FFF" }}
                     >
-                      <span style={{ display: "inline-flex" }}>
-                        F.Rs <span style={{ marginLeft: 5 }}>({frStatsData && frStatsData?.receivedFRs?.count})</span>
+                      <span style={{ display: "inline-flex", marginTop: 10 }}>
+                        <h4>F.Rs<span style={{ marginLeft: 5 }}>({(frStatsData && frStatsData?.receivedFRs?.totalCount) ? frStatsData?.receivedFRs?.totalCount : 0})</span></h4>
                       </span>
                       <div className="clearfix" />
 
@@ -271,7 +271,7 @@ const NonBlinkingIndicator = () => {
                       }}
                     >
                       <span style={{ display: "flex" }}>
-                        {BlinkingIndicator()} <span style={{ marginLeft: 5 }}>Immediate (0)</span>
+                        {BlinkingIndicator()} <span style={{ marginLeft: 5 }}>Immediate ({(frStatsData && frStatsData?.receivedFRs?.priorityCounts?.Immediate) ? frStatsData?.receivedFRs?.priorityCounts?.Immediate : 0})</span>
                       </span>
                       <div className="clearfix" />
                     </div>
@@ -285,7 +285,21 @@ const NonBlinkingIndicator = () => {
                       }}
                     >
                       <span style={{ display: "flex" }}>
-                      {NonBlinkingIndicator()} <span style={{ marginLeft: 5 }}>Routine (0)</span>
+                      {NonBlinkingIndicator("blue")} <span style={{ marginLeft: 5 }}>Routine ({(frStatsData && frStatsData?.receivedFRs?.priorityCounts?.Routine) ? frStatsData?.receivedFRs?.priorityCounts?.Routine : 0})</span>
+                      </span>
+                      <div className="clearfix" />
+                    </div>
+                    <div
+                      className="count"
+                      style={{
+                        borderLeft: "#ddd solid 1px",
+                        width: "100%",
+                        background: "#FFF",
+                        height: 45,
+                      }}
+                    >
+                      <span style={{ display: "flex" }}>
+                      {NonBlinkingIndicator("green")} <span style={{ marginLeft: 5 }}>Confidential ({(frStatsData && frStatsData?.receivedFRs?.priorityCounts?.Confidential) ? frStatsData?.receivedFRs?.priorityCounts?.Confidential : 0})</span>
                       </span>
                       <div className="clearfix" />
                     </div>
@@ -295,10 +309,10 @@ const NonBlinkingIndicator = () => {
                   <div className="float-start" style={{ width: "50%" }}>
                     <div
                       className="count"
-                      style={{ width: "100%", height: 90, background: "#FFF" }}
+                      style={{ width: "100%", height: 135, background: "#FFF" }}
                     >
-                      <span style={{ display: "inline-flex" }}>
-                        Files <span style={{ marginLeft: 5 }}>({fileStatsData && fileStatsData?.receivedFiles?.count})</span>
+                      <span style={{ display: "inline-flex", marginTop: 10 }}>
+                        <h4>Files <span style={{ marginLeft: 5 }}>({(fileStatsData && fileStatsData?.receivedFiles?.totalCount) ? fileStatsData?.receivedFiles?.totalCount : 0})</span></h4>
                       </span>
                       <div className="clearfix" />
 
@@ -319,7 +333,7 @@ const NonBlinkingIndicator = () => {
                       }}
                     >
                       <span style={{ display: "flex" }}>
-                        {BlinkingIndicator()} <span style={{ marginLeft: 5 }}>Immediate (0)</span>
+                        {BlinkingIndicator()} <span style={{ marginLeft: 5 }}>Immediate ({(fileStatsData && fileStatsData?.receivedFiles?.priorityCounts?.Immediate) ? fileStatsData?.receivedFiles?.priorityCounts?.Immediate : 0})</span>
                       </span>
                       <div className="clearfix" />
                     </div>
@@ -333,7 +347,21 @@ const NonBlinkingIndicator = () => {
                       }}
                     >
                       <span style={{ display: "flex" }}>
-                      {NonBlinkingIndicator()} <span style={{ marginLeft: 5 }}>Routine (0)</span>
+                      {NonBlinkingIndicator("blue")} <span style={{ marginLeft: 5 }}>Routine ({(fileStatsData && fileStatsData?.receivedFiles?.priorityCounts?.Routine) ? fileStatsData?.receivedFiles?.priorityCounts?.Routine : 0})</span>
+                      </span>
+                      <div className="clearfix" />
+                    </div>
+                    <div
+                      className="count"
+                      style={{
+                        borderLeft: "#ddd solid 1px",
+                        width: "100%",
+                        background: "#FFF",
+                        height: 45,
+                      }}
+                    >
+                      <span style={{ display: "flex" }}>
+                      {NonBlinkingIndicator("green")} <span style={{ marginLeft: 5 }}>Confidential ({(fileStatsData && fileStatsData?.receivedFiles?.priorityCounts?.Confidential) ? fileStatsData?.receivedFiles?.priorityCounts?.Confidential : 0})</span>
                       </span>
                       <div className="clearfix" />
                     </div>
@@ -357,10 +385,10 @@ const NonBlinkingIndicator = () => {
                   <div className="float-start" style={{ width: "50%" }}>
                     <div
                       className="count"
-                      style={{ width: "100%", height: 90, background: "#FFF" }}
+                      style={{ width: "100%", height: 135, background: "#FFF" }}
                     >
-                      <span style={{ display: "inline-flex" }}>
-                        F.Rs <span style={{ marginLeft: 5 }}>({frStatsData && frStatsData?.sentFiles?.count})</span>
+                      <span style={{ display: "inline-flex", marginTop: 10 }}>
+                        <h4>F.Rs <span style={{ marginLeft: 5 }}>({(frStatsData && frStatsData?.sentFRs?.totalCount) ? frStatsData?.sentFRs?.totalCount : 0})</span></h4>
                       </span>
                       <div className="clearfix" />
 
@@ -381,7 +409,7 @@ const NonBlinkingIndicator = () => {
                       }}
                     >
                       <span style={{ display: "flex" }}>
-                        {BlinkingIndicator()} <span style={{ marginLeft: 5 }}>Immediate (0)</span>
+                        {BlinkingIndicator()} <span style={{ marginLeft: 5 }}>Immediate ({(frStatsData && frStatsData?.sentFRs?.priorityCounts?.Immediate) ? frStatsData?.sentFRs?.priorityCounts?.Immediate : 0})</span>
                       </span>
                       <div className="clearfix" />
                     </div>
@@ -395,7 +423,21 @@ const NonBlinkingIndicator = () => {
                       }}
                     >
                       <span style={{ display: "flex" }}>
-                      {NonBlinkingIndicator()} <span style={{ marginLeft: 5 }}>Routine (0)</span>
+                      {NonBlinkingIndicator("blue")} <span style={{ marginLeft: 5 }}>Routine ({(frStatsData && frStatsData?.sentFRs?.priorityCounts?.Routine) ? frStatsData?.sentFRs?.priorityCounts?.Routine : 0})</span>
+                      </span>
+                      <div className="clearfix" />
+                    </div>
+                    <div
+                      className="count"
+                      style={{
+                        borderLeft: "#ddd solid 1px",
+                        width: "100%",
+                        background: "#FFF",
+                        height: 45,
+                      }}
+                    >
+                      <span style={{ display: "flex" }}>
+                      {NonBlinkingIndicator("green")} <span style={{ marginLeft: 5 }}>Confidential ({(frStatsData && frStatsData?.sentFRs?.priorityCounts?.Confidential) ? frStatsData?.sentFRs?.priorityCounts?.Confidential : 0})</span>
                       </span>
                       <div className="clearfix" />
                     </div>
@@ -405,10 +447,10 @@ const NonBlinkingIndicator = () => {
                   <div className="float-start" style={{ width: "50%" }}>
                     <div
                       className="count"
-                      style={{ width: "100%", height: 90, background: "#FFF" }}
+                      style={{ width: "100%", height: 135, background: "#FFF" }}
                     >
-                      <span style={{ display: "inline-flex" }}>
-                        Files <span style={{ marginLeft: 5 }}>({fileStatsData && fileStatsData?.receivedFiles?.count})</span>
+                      <span style={{ display: "inline-flex", marginTop: 10 }}>
+                        <h4>Files <span style={{ marginLeft: 5 }}>({(fileStatsData && fileStatsData?.sentFiles?.totalCount) ? fileStatsData?.sentFiles?.totalCount : 0})</span></h4>
                       </span>
                       <div className="clearfix" />
 
@@ -429,7 +471,7 @@ const NonBlinkingIndicator = () => {
                       }}
                     >
                       <span style={{ display: "flex" }}>
-                        {BlinkingIndicator()} <span style={{ marginLeft: 5 }}>Immediate (0)</span>
+                        {BlinkingIndicator()} <span style={{ marginLeft: 5 }}>Immediate ({(fileStatsData && fileStatsData?.sentFiles?.priorityCounts?.Immediate) ? fileStatsData?.sentFiles?.priorityCounts?.Immediate : 0})</span>
                       </span>
                       <div className="clearfix" />
                     </div>
@@ -443,7 +485,21 @@ const NonBlinkingIndicator = () => {
                       }}
                     >
                       <span style={{ display: "flex" }}>
-                      {NonBlinkingIndicator()} <span style={{ marginLeft: 5 }}>Routine (0)</span>
+                      {NonBlinkingIndicator()} <span style={{ marginLeft: 5 }}>Routine ({(fileStatsData && fileStatsData?.sentFiles?.priorityCounts?.Routine) ? fileStatsData?.sentFiles?.priorityCounts?.Routine : 0})</span>
+                      </span>
+                      <div className="clearfix" />
+                    </div>
+                    <div
+                      className="count"
+                      style={{
+                        borderLeft: "#ddd solid 1px",
+                        width: "100%",
+                        background: "#FFF",
+                        height: 45,
+                      }}
+                    >
+                      <span style={{ display: "flex" }}>
+                      {NonBlinkingIndicator("green")} <span style={{ marginLeft: 5 }}>Confidential ({(fileStatsData && fileStatsData?.sentFiles?.priorityCounts?.Confidential) ? fileStatsData?.sentFiles?.priorityCounts?.Confidential : 0})</span>
                       </span>
                       <div className="clearfix" />
                     </div>
@@ -464,10 +520,10 @@ const NonBlinkingIndicator = () => {
                   </div>
                   <div
                     className="count"
-                    style={{ borderLeft: "#ddd solid 1px", width: "100%" }}
+                    style={{ borderLeft: "#ddd solid 1px", width: "100%", height: "135px" }}
                   >
-                    <span style={{ display: "inline-flex" }}>
-                      Out Mark <span style={{ marginLeft: "5px" }}>(0)</span>
+                    <span style={{ display: "inline-flex", marginTop: 15 }}>
+                      <h4>Out Mark <span style={{ marginLeft: "5px" }}>(0)</span></h4>
                     </span>
                     <div class="clearfix"></div>
                     <FontAwesomeIcon
@@ -481,10 +537,10 @@ const NonBlinkingIndicator = () => {
                   </div>
                   <div
                     className="count"
-                    style={{ borderLeft: "#ddd solid 1px", width: "100%" }}
+                    style={{ borderLeft: "#ddd solid 1px", width: "100%", height: "135px" }}
                   >
-                    <span sstyle={{ display: "inline-flex" }}>
-                      In Mark <span style={{ marginLeft: "5px" }}>(0)</span>
+                    <span style={{ display: "inline-flex", marginTop: 15 }}>
+                      <h4>In Mark <span style={{ marginLeft: "5px" }}>(0)</span></h4>
                     </span>
                     <div class="clearfix"></div>
                     <FontAwesomeIcon

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useLocation } from "react-router-dom";
@@ -8,24 +8,33 @@ import DatePicker from "react-datepicker";
 import Header from "../../../../../../../components/Header";
 import { Layout } from "../../../../../../../components/Layout";
 import { QMSSideBarItems } from "../../../../../../../utils/sideBarItems";
-import { createDivision, getDivisionsByID, updateDivisions } from "../../../../../../../api/APIs/Services/ManageQMS.service";
-import { showErrorMessage, showSuccessMessage } from "../../../../../../../utils/ToastAlert";
+import {
+  createDivision,
+  getDivisionsByID,
+  updateDivisions,
+} from "../../../../../../../api/APIs/Services/ManageQMS.service";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
+import { AuthContext } from "../../../../../../../api/AuthContext";
 
 const validationSchema = Yup.object({
   ministry: Yup.string().required("Ministry is required"),
   division: Yup.string().required("Division is required"),
-  active: Yup.boolean().required("Status is required"),
+  active: Yup.string().required("Status is required"),
 });
 function QMSAddEditDivisionsForm() {
   const location = useLocation();
+  const { ministryData } = useContext(AuthContext);
   const [divisionById, setDivisionById] = useState();
 
   const formik = useFormik({
     initialValues: {
-      ministry: '',
-      division: '',
-      active: false
+      ministry: "",
+      division: "",
+      active: "",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -42,8 +51,8 @@ function QMSAddEditDivisionsForm() {
     const data = {
       fkMinistryId: Number(values.ministry),
       divisionName: values.division,
-      divisionStatus: values.active
-    }
+      divisionStatus: values.active,
+    };
 
     try {
       const response = await createDivision(data);
@@ -53,14 +62,14 @@ function QMSAddEditDivisionsForm() {
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
     }
-  }
+  };
 
   const handleEditDivision = async (values) => {
     const data = {
       fkMinistryId: Number(values.ministry),
       divisionName: values.division,
-      divisionStatus: values.active
-    }
+      divisionStatus: values.active,
+    };
 
     try {
       const response = await updateDivisions(location?.state?.id, data);
@@ -70,7 +79,7 @@ function QMSAddEditDivisionsForm() {
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
     }
-  }
+  };
 
   const getDivisionByIdApi = async () => {
     try {
@@ -87,7 +96,7 @@ function QMSAddEditDivisionsForm() {
     if (location.state?.id) {
       getDivisionByIdApi();
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     // Update form values when termsById changes
@@ -95,23 +104,21 @@ function QMSAddEditDivisionsForm() {
       formik.setValues({
         ministry: divisionById.fkMinistryId || "",
         division: divisionById.divisionName || "",
-        active: divisionById.divisionStatus || false,
+        active: divisionById.divisionStatus || "",
       });
     }
   }, [divisionById, formik.setValues]);
 
   return (
-    <Layout
-      module={true}
-      sidebarItems={QMSSideBarItems}
-      centerlogohide={true}
-    >
+    <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <Header
         dashboardLink={"/qms/dashboard"}
         addLink1={"/qms/manage/divisions"}
         title1={"Divisions"}
         addLink2={"/qms/manage/divisions/addedit"}
-        title2={location && location?.state ? "Edit Divisions" : "Add Divisions"}
+        title2={
+          location && location?.state ? "Edit Divisions" : "Add Divisions"
+        }
       />
       <ToastContainer />
 
@@ -136,21 +143,26 @@ function QMSAddEditDivisionsForm() {
                         placeholder={"Division"}
                         value={formik.values.division}
                         className={`form-control ${
-                          formik.touched.division && formik.errors.division ? "is-invalid" : ""
+                          formik.touched.division && formik.errors.division
+                            ? "is-invalid"
+                            : ""
                         }`}
                         id="division"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
                       {formik.touched.division && formik.errors.division && (
-                        <div className="invalid-feedback">{formik.errors.division}</div>
+                        <div className="invalid-feedback">
+                          {formik.errors.division}
+                        </div>
                       )}
                     </div>
                   </div>
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Ministry</label>
-                      <select class="form-select"
+                      <select
+                        class="form-select"
                         id="ministry"
                         name="ministry"
                         onChange={formik.handleChange}
@@ -160,8 +172,12 @@ function QMSAddEditDivisionsForm() {
                         <option value={""} selected disabled hidden>
                           Select
                         </option>
-                          <option value="1">Ministry1</option>
-                          <option value="2">Ministry2</option>
+                        {ministryData &&
+                          ministryData?.map((item) => (
+                            <option key={item.id} value={item.id}>
+                              {item?.ministryName}
+                            </option>
+                          ))}
                       </select>
                     </div>
                   </div>
@@ -170,7 +186,8 @@ function QMSAddEditDivisionsForm() {
                   <div class="col-6">
                     <div class="mb-3">
                       <label class="form-label">Active</label>
-                      <select class="form-select"
+                      <select
+                        class="form-select"
                         id="active"
                         name="active"
                         onChange={formik.handleChange}
@@ -180,8 +197,8 @@ function QMSAddEditDivisionsForm() {
                         <option value={""} selected disabled hidden>
                           select
                         </option>
-                          <option value={true}>Yes</option>
-                          <option value={false}>No</option>
+                        <option value={"active"}>Yes</option>
+                        <option value={"inactive"}>No</option>
                       </select>
                     </div>
                   </div>

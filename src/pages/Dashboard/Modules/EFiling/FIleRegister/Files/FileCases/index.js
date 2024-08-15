@@ -66,6 +66,7 @@ function FileCases() {
           item?.fileRemarksData?.length > 0
             ? moment(item?.fileRemarksData[0]?.createdAt).format("hh:mm A")
             : "---",
+        Priority: item?.fileRemarksData?.length > 0 ? item?.fileRemarksData[0]?.priority : "---",
       };
     });
   };  
@@ -320,7 +321,8 @@ function FileCases() {
             totalCount={count}
             singleDataCard={true}
             hideDeleteIcon={true}
-            showView={true}
+            showView={false}
+            caseEditable = {true}
             handleView={(item) => {
               setFileIdForDetailPage(item?.internalId);
               setCaseIdForDetailPage(item?.caseId);

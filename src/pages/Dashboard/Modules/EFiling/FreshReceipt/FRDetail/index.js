@@ -29,10 +29,11 @@ import {
 import { Button, Modal, Spinner } from "react-bootstrap";
 import { TinyEditor } from "../../../../../../components/CustomComponents/Editor/TinyEditor";
 import { imagesUrl } from "../../../../../../api/APIs";
+import { Editor } from "../../../../../../components/CustomComponents/Editor";
 
 const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
   return (
-    <Modal show={isOpen} onHide={toggleModal} centered>
+    <Modal size="lg" show={isOpen} onHide={toggleModal} centered>
       <Modal.Header closeButton>
         <Modal.Title>{title}</Modal.Title>
       </Modal.Header>
@@ -149,7 +150,6 @@ function FRDetail() {
   };
 
   useEffect(() => {
-    console.log("location.state?.notificationId)", location.state);
     deleteNotification();
     if (receptId) {
       getFreashRecepitByIdApi();
@@ -168,6 +168,7 @@ function FRDetail() {
     setModalInputValue({
       assignedTo: "",
       CommentStatus: "",
+      priority: "",
       comment: "",
     })
   };
@@ -176,13 +177,15 @@ function FRDetail() {
     const data = {
       submittedBy: UserData?.fkUserId,
       assignedTo: modalInputValue?.assignedTo,
+      priority: modalInputValue?.priority,
       CommentStatus: modalInputValue?.CommentStatus,
-      comment: modalInputValue?.comment,
+      comment: modalInputValue?.CommentStatus ? "" : modalInputValue?.comment,
     };
     try {
       const response = await assignFR(receptId, data);
       if (response?.success) {
-        showSuccessMessage(response?.message);
+        
+        showSuccessMessage(response?.message, true);
 
         toggleModal();
         getFreashRecepitByIdApi();
@@ -190,6 +193,7 @@ function FRDetail() {
         setModalInputValue({
           assignedTo: "",
           CommentStatus: "",
+          priority: "",
           comment: "",
         });
         setTimeout(() => {
@@ -293,10 +297,35 @@ const PdfPreview = ({ pdfUrl }) => {
                 <option value="" selected disabled hidden>
                   Select
                 </option>
-                  <option value={"Put Up For"}>Put Up For</option>
+                  <option value={"Please Put Up"}>Please Put Up</option>
                   <option value={"Please Link"}>Please Link</option>
                   <option value={"For Perusal Please"}>For Perusal Please</option>
                   <option value={"Submitted For Approval"}>Submitted For Approval</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="mb-3">
+              <label class="form-label">Priority</label>
+              <select
+                className="form-select"
+                id="priority"
+                name="priority"
+                onChange={(e) =>
+                  setModalInputValue((prevState) => ({
+                    ...prevState,
+                    priority: e.target.value,
+                  }))
+                }
+                value={modalInputValue.priority}
+                disabled={viewPage ? true : false}
+              >
+                <option value="" selected disabled hidden>
+                  Select
+                </option>
+                  <option value={"Confidential"}>Confidential</option>
+                  <option value={"Immediate"}>Immediate</option>
+                  <option value={"Routine"}>Routine</option>
               </select>
             </div>
           </div>
@@ -409,16 +438,15 @@ const PdfPreview = ({ pdfUrl }) => {
               )}
             </section>
 
-            <label className="form-label mt-4">F.R Detail</label>
-                  <TinyEditor
-                      initialContent={""}
-                      setEditorContent={(content) =>
-                        setDescriptionData(content)
-                      }
-                      editorContent={descriptionData}
-                      multiLanguage={false}
-                      disabled={true}
-                    />
+            <label className="form-label">F.R Detail</label>
+            <Editor
+              onChange={(content) =>
+                setDescriptionData(content)
+              }
+              value={descriptionData}
+              // width={"100%"}
+              display={"flex"}
+            />
           </div>
 
           <div className="col-5" style={{ paddingRight: 0 }}>
@@ -451,8 +479,8 @@ const PdfPreview = ({ pdfUrl }) => {
                 {remarksData?.length > 0 ? (
                   remarksData.map((item) => (
                     <>
-                    {item?.CommentStatus !== null ||
-                        item?.comment !== null ? (
+                    {(item?.CommentStatus !== null ||
+                        item?.comment !== null) && (
                         <div
                           class="d-flex flex-row p-3 ps-3"
                           style={{ borderBottom: "1px solid #ddd" }}
@@ -528,18 +556,6 @@ const PdfPreview = ({ pdfUrl }) => {
                               </small> */}
                             </div>
                           </>
-                        </div>
-                      ) : (
-                        <div
-                          class="alert alert-danger mt-5"
-                          role="alert"
-                          style={{
-                            width: "350px",
-                            margin: "0 auto",
-                            textAlign: "center",
-                          }}
-                        >
-                          No data found
                         </div>
                       )}
                     </>

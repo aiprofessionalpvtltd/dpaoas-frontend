@@ -330,16 +330,7 @@ export const QMSSideBarItems = [
     link: "/qms/question",
     icon: faClipboardList,
     subItems: [
-      // {
-      //   itemName: "Question List",
-      //   link: "/qms/question/list",
-      //   icon: faClipboardList,
-      // },
-      // {
-      //     itemName: "Question Detail",
-      //     link: "/qms/question/detail",
-      //     icon: faClipboardList
-      // },
+      
       {
         itemName: "New Question",
         link: "/qms/question/new",
@@ -353,6 +344,11 @@ export const QMSSideBarItems = [
       {
         itemName: "Search Question",
         link: "/qms/search/question",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Question List Report",
+        link: "/qms/reports/question-list",
         icon: faClipboardList,
       },
     ],
@@ -452,11 +448,7 @@ export const QMSSideBarItems = [
         icon: faClipboardList,
       },
 
-      {
-        itemName: "Question List Report",
-        link: "/qms/reports/question-list",
-        icon: faClipboardList,
-      },
+      
 
       {
         itemName: "Resolution Annual Reports",
