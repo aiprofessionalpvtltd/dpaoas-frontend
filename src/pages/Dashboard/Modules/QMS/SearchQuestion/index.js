@@ -174,6 +174,12 @@ function QMSSearchQuestion() {
     }
   };
 
+  const hendlePrint = async (id) => {
+    const encodedJsonString = encodeURIComponent(id);
+    const url = `/qms/search/question/preview-pdf?state=${encodedJsonString}`;
+    window.open(url, "_blank");
+  };
+
   const handleChangeStatus = async (id) => {
     try {
       const data = {
@@ -234,7 +240,7 @@ function QMSSearchQuestion() {
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <Header
         dashboardLink={"/"}
-        addLink1={"/qms/question/search"}
+        addLink1={"/qms/search/question"}
         title1={"Search Queston"}
       />
       <ToastContainer />
@@ -702,6 +708,8 @@ function QMSSearchQuestion() {
                   isChecked={isChecked}
                   setIsChecked={setIsChecked}
                   isCheckbox={true}
+                  showPrint={true}
+                  handlePrint={(item) => hendlePrint(item.QID)}
                 />
               </div>
               <div class="row mt-4">
