@@ -66,6 +66,7 @@ function FileCases() {
           item?.fileRemarksData?.length > 0
             ? moment(item?.fileRemarksData[0]?.createdAt).format("hh:mm A")
             : "---",
+        Priority: item?.fileRemarksData?.length > 0 ? item?.fileRemarksData[0]?.priority : "---",
       };
     });
   };  

@@ -644,7 +644,7 @@ function FileDetail() {
                   <option value="" selected>
                     Select
                   </option>
-                  <option value={"Put Up For"}>Put Up For</option>
+                  <option value={"Please Put Up"}>Please Put Up</option>
                   <option value={"Please Link"}>Please Link</option>
                   <option value={"For Perusal Please"}>
                     For Perusal Please

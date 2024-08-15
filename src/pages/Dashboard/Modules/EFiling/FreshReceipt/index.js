@@ -47,7 +47,8 @@ function FileReceipt() {
           frSubject:item?.frSubject,
           referenceNumber: item?.referenceNumber,
           frDate: moment(item?.frDate).format("DD/MM/YYYY"),
-          internalAttachment: item?.freshReceiptsAttachments
+          internalAttachment: item?.freshReceiptsAttachments,
+          Priority: item?.freshReceipt.length > 0 ? item?.freshReceipt[0]?.priority : "---",
         }));
       };
       const getAllFreshReceiptAPi = useCallback(async () => {

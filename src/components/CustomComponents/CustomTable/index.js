@@ -424,7 +424,10 @@ function CustomTable({
                           item[key] === "closed" ||
                           item[key] === "in-progress" ||
                           item[key] === "pending" ||
-                          item[key] === "approved" ? (
+                          item[key] === "approved" || 
+                          item[key] === "Immediate" ||
+                          item[key] === "Routine" ||
+                          item[key] === "Confidential" ? (
                             <span
                               className={`label label-sm ${
                                 item[key] === "active" ||
@@ -438,6 +441,12 @@ function CustomTable({
                                         ? "label-close"
                                         : item[key] === "in-progress"
                                           ? "label-inprogress"
+                                        : item[key] === "Immediate"
+                                          ? "label-inprogress"
+                                        : item[key] === "Routine"
+                                          ? "label-pending"
+                                        : item[key] === "Confidential"
+                                          ? "label-danger"
                                           : "label-danger"
                               }`}
                             >
