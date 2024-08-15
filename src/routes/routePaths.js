@@ -255,6 +255,8 @@ import AddEditFlags from "../pages/Dashboard/Modules/EFiling/Flags/AddEditFIags/
 import MotionPreviewPDF from "../components/MotionPDFPreview/index.js";
 import PreviewSuplementryList from "../pages/Dashboard/Modules/QMS/Reports/QuestionList/PreviewSuplementryList/index.js";
 import TransportDashboard from "../pages/Dashboard/Modules/Transport/index.js";
+import ResolutionDataPreview from "../pages/Dashboard/Modules/QMS/Resolution/ResolutionDataPrintPreview/index.js";
+import QuestionDataPreviewPDF from "../pages/Dashboard/Modules/QMS/Question/PreviewQuestionDataPDF/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -411,7 +413,6 @@ export const ProtectedRoutes = [
   { path: "/mms/motion/list", element: <MMSMotionList /> },
   { path: "/mms/motion/preview-pdf", element: <MotionPreviewPDF /> },
 
-
   { path: "/mms/question/search", element: <MMSSearchQuestion /> },
   { path: "/mms/resolution/search", element: <MMSSearchResolution /> },
 
@@ -429,17 +430,11 @@ export const ProtectedRoutes = [
 
   //QMS Module
   { path: "/qms/dashboard", element: <QMSQuestionDashboard /> },
-  { path: "/qms/question/search", element: <QMSSearchQuestion /> },
-  { path: "/qms/resolution/search", element: <QMSSerchResolution /> },
-
-  { path: "/qms/reports", element: <QMSQuestionDashboard /> },
+  { path: "/qms/search/question", element: <QMSSearchQuestion /> },
+  { path: "/qms/search/resolution", element: <QMSSerchResolution /> },
   {
     path: "/qms/reports/question-group-diary",
     element: <QuestionGroupDiary />,
-  },
-  {
-    path: "/qms/reports/question-pending-under-process",
-    element: <QuestionPendingUnderProcess />,
   },
   {
     path: "/qms/reports/resolution-summary",
@@ -447,6 +442,10 @@ export const ProtectedRoutes = [
   },
   { path: "/qms/reports/question-summary", element: <QMSQuestionSummary /> },
   { path: "/qms/reports/notice-summary", element: <NoticeSummary /> },
+  {
+    path: "/qms/reports/question-pending-under-process",
+    element: <QuestionPendingUnderProcess />,
+  },
   {
     path: "/qms/reports/resolution-annual-reports",
     element: <QMSResolutionAnnualReports />,
@@ -458,6 +457,18 @@ export const ProtectedRoutes = [
   {
     path: "/qms/reports/defer-question-reports",
     element: <QMSDeferQuestionReports />,
+  },
+  {
+    path: "/qms/search/resolution/list/preview",
+    element: <PreviewResolutionList />,
+  },
+  {
+    path: "/qms/search/resolution/preview-pdf",
+    element: <ResolutionDataPreview />,
+  },
+  {
+    path: "/qms/search/question/preview-pdf",
+    element: <QuestionDataPreviewPDF />,
   },
   {
     path: "/qms/reports/question-list",
@@ -479,15 +490,6 @@ export const ProtectedRoutes = [
   {
     path: "/qms/reports/rota-list/addedit",
     element: <AddEditRotaList />,
-  },
-
-  //QMS Module
-  { path: "/qms/dashboard", element: <QMSQuestionDashboard /> },
-  { path: "/qms/search/question", element: <QMSSearchQuestion /> },
-  { path: "/qms/search/resolution", element: <QMSSerchResolution /> },
-  {
-    path: "/qms/search/resolution/preview",
-    element: <PreviewResolutionList />,
   },
 
   { path: "/qms/resolution", element: <QMSQuestionDashboard /> },
@@ -1035,8 +1037,6 @@ export const ProtectedRoutes = [
     path: "/ldu/lawActs/all-lisitng/edit-law-acts-Bill",
     element: <EditLawActsBill />,
   },
-
-
 
   //Transport Module
   {
