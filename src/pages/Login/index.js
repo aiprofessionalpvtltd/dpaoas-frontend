@@ -137,7 +137,7 @@ export const Login = () => {
                     : ""
                 }`}
                 id="password"
-                placeholder={formik.values.password}
+                placeholder={"Please enter your password"}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               />
