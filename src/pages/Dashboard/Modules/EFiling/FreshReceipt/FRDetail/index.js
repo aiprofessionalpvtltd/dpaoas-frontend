@@ -179,7 +179,7 @@ function FRDetail() {
       assignedTo: modalInputValue?.assignedTo,
       priority: modalInputValue?.priority,
       CommentStatus: modalInputValue?.CommentStatus,
-      comment: modalInputValue?.comment,
+      comment: modalInputValue?.CommentStatus ? "" : modalInputValue?.comment,
     };
     try {
       const response = await assignFR(receptId, data);

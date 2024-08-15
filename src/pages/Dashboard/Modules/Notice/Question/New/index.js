@@ -64,8 +64,8 @@ function NewQuestion() {
       questionCategory: "",
       noticeOfficeDiaryNo: null,
       fkMemberId: null,
-      noticeOfficeDiaryDate: "",
-      noticeOfficeDiaryTime: "",
+      noticeOfficeDiaryDate: moment(new Date()).format("YYYY-MM-DD"),
+      noticeOfficeDiaryTime: moment().format("HH:mm A"),
       englishText: "",
       urduText: "",
       questionImage: [],
@@ -88,7 +88,11 @@ function NewQuestion() {
   };
   // Handale DateCHange
   const handleDateSelect = (date) => {
-    formik.setFieldValue("noticeOfficeDiaryDate", date);
+    // formik.setFieldValue("noticeOfficeDiaryDate", date);
+    formik.setFieldValue(
+      "noticeOfficeDiaryDate",
+      moment(date).format("YYYY-MM-DD")
+    );
     setIsCalendarOpen(false);
   };
 
@@ -337,7 +341,14 @@ function NewQuestion() {
                         </span>
 
                         <DatePicker
-                          selected={formik.values.noticeOfficeDiaryDate}
+                          // selected={
+                          //   formik.values.noticeOfficeDiaryDate &&
+                          //   formik.values.noticeOfficeDiaryDate
+                          // }
+                          selected={moment(
+                            formik.values.noticeOfficeDiaryDate,
+                            "YYYY-MM-DD"
+                          ).toDate()}
                           onChange={handleDateSelect}
                           onBlur={formik.handleBlur}
                           className={`form-control ${

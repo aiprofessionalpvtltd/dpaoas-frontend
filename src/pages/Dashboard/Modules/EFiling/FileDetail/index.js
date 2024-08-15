@@ -182,7 +182,7 @@ function FileDetail() {
       formData.append("submittedBy", UserData?.fkUserId);
       formData.append("assignedTo", modalInputValue?.assignedTo);
       formData.append("priority", modalInputValue?.priority);
-      // formData.append("CommentStatus", modalInputValue?.CommentStatus);
+      formData.append("CommentStatus", modalInputValue?.CommentStatus);
       formData.append(
         "comment",
         modalInputValue?.CommentStatus ? "" : modalInputValue?.comment
