@@ -8,6 +8,7 @@ import {
   faCheck,
   faFileExport,
   faEye,
+  faFileCircleCheck,
   faUserCheck,
   faCirclePlus,
   faTrashArrowUp,
@@ -483,9 +484,9 @@ function CustomTable({
                               onClick={() => handleViewAttachment(item)}
                               className="btn-xs black circle-btn"
                               data-id={item.id}
-                              style={{ color: "#2dce89" }}
+                              style={{ color: "#fb923c" }}
                             >
-                              <FontAwesomeIcon icon={faFileExport} />
+                              <FontAwesomeIcon icon={faFileCircleCheck} />
                             </button>
                           </OverlayTrigger>
                         </td>
@@ -918,9 +919,9 @@ function CustomTable({
                               onClick={() => handleViewAttachment(item)}
                               className="btn-xs black circle-btn"
                               data-id={item.id}
-                              style={{ color: "#2dce89" }}
+                              style={{ color: "#fb923c" }}
                             >
-                              <FontAwesomeIcon icon={faFileExport} />
+                              <FontAwesomeIcon icon={faFileCircleCheck} />
                             </button>
                           </OverlayTrigger>
                         </td>
