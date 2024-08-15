@@ -51,6 +51,8 @@ function Sessions() {
         <div class="card">
           <div class="col-12">
             <CustomTable
+              // block={true}
+              hidebtn1={true}
               data={data}
               tableTitle="Sessions List"
               addBtnText="Add Session"

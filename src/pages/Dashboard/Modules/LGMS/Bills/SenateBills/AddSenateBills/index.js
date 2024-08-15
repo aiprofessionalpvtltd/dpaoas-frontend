@@ -217,9 +217,11 @@ function NewLegislationSenateBill() {
       <Header
         dashboardLink={"/lgms/dashboard"}
         addLink1={
-          "/lgms/dashboard/bills/legislation-bills/government-bills/introduced-in-senate"
+          isGovernmentBill && isFromSenate
+            ? "/lgms/dashboard/bills/legislation-bills/government-bills/introduced-in-senate"
+            : "/lgms/dashboard/bills/legislation-bills/private-member-bills/introduced-in-senate"
         }
-        title1={"List of Senate Bills"}
+        title1={"List of Bills"}
         addLink2={"/lgms/dashboard/bills/senate-bills"}
         title2={"Introduced In Senate"}
       />

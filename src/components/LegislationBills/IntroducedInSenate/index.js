@@ -109,6 +109,7 @@ const IntroducedInSenate = ({
         />
       )}
       <CustomTable
+        block={true}
         hidebtn1={false}
         hideBtn={true}
         addBtnText={addBtnText}

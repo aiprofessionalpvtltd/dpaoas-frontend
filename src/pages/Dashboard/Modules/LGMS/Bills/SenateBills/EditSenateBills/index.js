@@ -848,7 +848,14 @@ const EditSenateBill = () => {
             <div className="container-fluid">
               <div class="card mt-1">
                 <div class="card-header red-bg">
-                  <h1>Update Senate Bill</h1>
+                  {/* <h1>Update Senate Bill</h1> */}
+                  <h1>
+                    {BillCategory &&
+                    BillCategory === "Government Bill" &&
+                    BillFrom === "From Senate"
+                      ? "Update Government Bill Introduced in Senate"
+                      : "Update Private Member Bill Introduced in Senate"}
+                  </h1>
                 </div>
                 <div className="card-body">
                   <div className="container-fluid">
