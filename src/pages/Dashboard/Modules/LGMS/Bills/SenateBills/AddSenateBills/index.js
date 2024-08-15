@@ -196,7 +196,7 @@ function NewLegislationSenateBill() {
         } else {
           setTimeout(() => {
             navigate(
-              "/lgms/dashboard/bills/legislation-bills/private-member-bills"
+              "http://localhost:3000/lgms/dashboard/bills/legislation-bills/private-member-bills/introduced-in-senate"
             );
           }, [3000]);
         }
@@ -280,6 +280,7 @@ function NewLegislationSenateBill() {
                               ? "is-invalid"
                               : ""
                           }`}
+                          onBlur={formik.handleBlur}
                           onChange={formik.handleChange}
                           value={formik.values.session}
                         >

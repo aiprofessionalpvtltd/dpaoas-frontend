@@ -14,9 +14,13 @@ import {
   createNewLegislationBill,
   getAllMNALists,
 } from "../../../../../../../api/APIs/Services/LegislationModule.service";
-import { showSuccessMessage } from "../../../../../../../utils/ToastAlert";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../../../utils/ToastAlert";
 import { useLocation, useNavigate } from "react-router-dom";
 import moment from "moment";
+import { getSingleMinisteryByMinisterID } from "../../../../../../../api/APIs/Services/Motion.service";
 function NewLegislationNABill() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -26,8 +30,34 @@ function NewLegislationNABill() {
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [isDateofReciptCalendarOpen, setIsDateofReciptCalendarOpen] =
     useState(false);
-  const [MNAData, setMNAData] = useState([]);
 
+  const isGovernmentBill =
+    location?.state?.category &&
+    location?.state?.category === "Government Bill";
+  const isPrivateMemberBill =
+    location?.state?.category &&
+    location?.state?.category === "Private Member Bill";
+  const isFromSenate =
+    location?.state?.billFrom && location?.state?.billFrom === "From Senate";
+  const isFromNA =
+    location?.state?.billFrom && location?.state?.billFrom === "From NA";
+  const [MNAData, setMNAData] = useState([]);
+  const [ministerID, setMinisterID] = useState(null);
+  const [ministryDataOnMinister, setMinistryDataOnMinister] = useState([]);
+
+  // Getting Ministry
+  const getMinisteryByMinisterIdApi = async () => {
+    try {
+      const response = await getSingleMinisteryByMinisterID(
+        ministerID && ministerID
+      );
+      if (response?.success) {
+        setMinistryDataOnMinister(response?.data?.ministries?.ministries);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  };
   // Getting All MNA
   const getAllMNA = async () => {
     try {
@@ -42,14 +72,17 @@ function NewLegislationNABill() {
   };
   useEffect(() => {
     getAllMNA();
-  }, []);
+    if (ministerID) {
+      getMinisteryByMinisterIdApi();
+    }
+  }, [ministerID]);
   const formik = useFormik({
     initialValues: {
       parliamentaryYear: "",
       session: "",
       fileNumber: "",
       PassedByNADate: "",
-      receiptMessageDateFromNA: "",
+      DateOfReceiptOfMessageFromNA: "",
       billCategory: "",
       billType: "",
       billTitle: "",
@@ -101,11 +134,11 @@ function NewLegislationNABill() {
     //   "DateOfReceiptOfMessageFromNA",
     //   values?.receiptMessageDateFromNA
     // );
-    if (values?.receiptMessageDateFromNA) {
-      const formattedDate = moment(values?.receiptMessageDateFromNA).format(
+    if (values?.DateOfReceiptOfMessageFromNA) {
+      const formattedDate = moment(values?.DateOfReceiptOfMessageFromNA).format(
         "YYYY-MM-DD"
       );
-      formData.append("receiptMessageDateFromNA", formattedDate);
+      formData.append("DateOfReceiptOfMessageFromNA", formattedDate);
     }
     formData.append(
       "billCategory",
@@ -130,18 +163,30 @@ function NewLegislationNABill() {
       });
     }
     if (values?.selectedMNA) {
-      values?.selectedMNA?.forEach((MNA, index) => {
-        formData.append(`senateBillMnaMovers[${index}][fkMnaId]`, MNA?.value);
-      });
+      formData.append(
+        `senateBillMnaMovers[${0}][fkMnaId]`,
+        values?.selectedMNA?.value
+      );
     }
     if (values?.selectedMinistry) {
-      values?.selectedMinistry?.forEach((ministry, index) => {
-        formData.append(
-          `senateBillMinistryMovers[${index}][fkMinistryId]`,
-          ministry?.value
-        );
-      });
+      formData.append(
+        `senateBillMinistryMovers[${0}][fkMinistryId]`,
+        values?.selectedMinistry?.value
+      );
     }
+    // if (values?.selectedMNA) {
+    //   values?.selectedMNA?.forEach((MNA, index) => {
+    //     formData.append(`senateBillMnaMovers[${index}][fkMnaId]`, MNA?.value);
+    //   });
+    // }
+    // if (values?.selectedMinistry) {
+    //   values?.selectedMinistry?.forEach((ministry, index) => {
+    //     formData.append(
+    //       `senateBillMinistryMovers[${index}][fkMinistryId]`,
+    //       ministry?.value
+    //     );
+    //   });
+    // }
 
     let formDataObject = {};
     for (let [key, value] of formData.entries()) {
@@ -153,24 +198,23 @@ function NewLegislationNABill() {
       if (response.success) {
         showSuccessMessage(response?.message);
         formik.resetForm();
-        if (
-          location?.state?.category &&
-          location?.state?.category === "Government Bill"
-        ) {
+        if (isGovernmentBill && isFromNA) {
           setTimeout(() => {
             navigate(
-              "/lgms/dashboard/bills/legislation-bills/government-bills"
+              "/lgms/dashboard/bills/legislation-bills/government-bills/recieved-from-na"
             );
           }, [3000]);
-        } else {
+        } else if (isPrivateMemberBill && isFromNA) {
           setTimeout(() => {
             navigate(
-              "/lgms/dashboard/bills/legislation-bills/private-member-bills"
+              "/lgms/dashboard/bills/legislation-bills/private-member-bills/recieved-from-na"
             );
           }, [3000]);
         }
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log("error", error);
+    }
   };
 
   return (
@@ -526,7 +570,7 @@ function NewLegislationNABill() {
                       </div>
                     </div>
 
-                    <div class="col">
+                    {/* <div class="col">
                       <div class="mb-3">
                         <label class="form-label">Select MNA</label>
                         <Select
@@ -556,9 +600,42 @@ function NewLegislationNABill() {
                             </div>
                           )}
                       </div>
+                    </div> */}
+                    <div class="col">
+                      <div class="mb-3">
+                        <label class="form-label">Select Minister</label>
+                        <Select
+                          options={MNAData.map((item) => ({
+                            value: item.id,
+                            label: item.mnaName,
+                          }))}
+                          onChange={(selectedOption) => {
+                            formik.setFieldValue("selectedMNA", selectedOption);
+                            formik.setFieldValue("selectedMinistry", null);
+                            setMinisterID(selectedOption?.value);
+                          }}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.selectedMNA}
+                          name="selectedMNA"
+                          className={` ${
+                            formik.touched.selectedMNA &&
+                            formik.errors.selectedMNA
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                          // isMulti
+                        />
+
+                        {formik.touched.selectedMNA &&
+                          formik.errors.selectedMNA && (
+                            <div class="invalid-feedback">
+                              {formik.errors.selectedMNA}
+                            </div>
+                          )}
+                      </div>
                     </div>
 
-                    <div className="col">
+                    {/* <div className="col">
                       <label className="form-label">Select Ministry</label>
                       <Select
                         options={
@@ -579,6 +656,40 @@ function NewLegislationNABill() {
                         value={formik.values.selectedMinistry}
                         isMulti={true}
                       />
+                    </div> */}
+                    <div className="col">
+                      <label className="form-label">Select Ministry</label>
+                      <Select
+                        options={
+                          ministryDataOnMinister &&
+                          ministryDataOnMinister?.map((item) => ({
+                            value: item.id,
+                            label: item?.ministryName,
+                          }))
+                        }
+                        name="selectedMinistry"
+                        id="selectedMinistry"
+                        onChange={(selectedOptions) =>
+                          formik.setFieldValue(
+                            "selectedMinistry",
+                            selectedOptions
+                          )
+                        }
+                        className={` ${
+                          formik.touched.selectedMinistry &&
+                          formik.errors.selectedMinistry
+                            ? "is-invalid"
+                            : ""
+                        }`}
+                        value={formik.values.selectedMinistry}
+                        // isMulti={true}
+                      />
+                      {formik.touched.selectedMinistry &&
+                        formik.errors.selectedMinistry && (
+                          <div class="invalid-feedback">
+                            {formik.errors.selectedMinistry}
+                          </div>
+                        )}
                     </div>
                   </div>
 

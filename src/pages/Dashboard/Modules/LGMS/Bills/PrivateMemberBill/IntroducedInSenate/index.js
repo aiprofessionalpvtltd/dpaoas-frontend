@@ -22,25 +22,61 @@ const AllPrivateMemberSenateBills = () => {
   const [count, setCount] = useState(null);
   const pageSize = 10;
   const [selectedbillFrom, setSelectedFrom] = useState(null);
-
+  const [remarksAttachmentVal, setRemarksAttachmentVal] = useState();
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
 
   const transformPrivateMemberBillSenate = (apiData) => {
-    return apiData?.map((item) => ({
+    const docs = apiData?.map((item) => item?.billDocuments);
+    if (docs?.length > 0) {
+      setRemarksAttachmentVal(true);
+    } else {
+      setRemarksAttachmentVal(false);
+    }
+    return apiData?.map((item, index) => ({
+      SNo: index + 1,
       id: item.id,
       fileNumber: item?.fileNumber,
-      billTitle: item?.billTitle,
-      dateOfPresentationReport: item?.introducedInHouses?.reportPresentationDate
+      TitleOfTheBill: item?.billTitle,
+      nameOfMinisters: item?.senateBillMnaMovers?.[0]?.mna?.mnaName || "---",
+      dateOfReceiptOfNotice: item?.noticeDate
+        ? moment(item?.noticeDate, "YYYY-MM-DD").format("DD-MM-YYYY")
+        : "---",
+      dateOfIntroductionReferenceToStandingCommittee: item?.introducedInHouses
+        ?.introducedInHouseDate
+        ? moment(
+            item?.introducedInHouses?.introducedInHouseDate,
+            "YYYY-MM-DD"
+          ).format("DD-MM-YYYY")
+        : "---",
+
+      dateOfPresentationOfTheReport: item?.introducedInHouses
+        ?.reportPresentationDate
         ? moment(
             item?.introducedInHouses?.reportPresentationDate,
             "YYYY-MM-DD"
           ).format("DD-MM-YYYY")
         : "---",
+      dateOfConsiderationOfTheBillBySenate: item?.memberPassages
+        ?.dateOfConsiderationBill
+        ? moment(
+            item?.memberPassages?.dateOfConsiderationBill,
+            "YYYY-MM-DD"
+          ).format("DD-MM-YYYY")
+        : "---",
+      dateOfPassingTheBillByTheSenate: item?.dateOfPassageBySenate
+        ? moment(item?.dateOfPassageBySenate, "YYYY-MM-DD").format("DD-MM-YYYY")
+        : "---",
+      dateOnWhichTheBillTransmittedToNA: item?.dateOfTransmissionToNA
+        ? moment(item?.dateOfTransmissionToNA, "YYYY-MM-DD").format(
+            "DD-MM-YYYY"
+          )
+        : "---",
       billCategory: item?.billCategory,
       billFrom: item?.billFrom,
       remarks: item?.billRemarks,
+      billDocuments: item?.billDocuments,
     }));
   };
 
@@ -132,6 +168,7 @@ const AllPrivateMemberSenateBills = () => {
           handleAdd={handlePrivateMemberSenateBill}
           tableTitle={"Private Member Bill Data (Introduced In Senate)"}
           data={privateMemberSenateBill}
+          remarksAttachmentVal={remarksAttachmentVal}
           handleEdit={(item) => {
             item?.billFrom === "From Senate"
               ? handleEditSenateBill(item?.id, item)

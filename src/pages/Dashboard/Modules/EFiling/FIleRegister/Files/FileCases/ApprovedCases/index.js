@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { getUserData } from "../../../../../../../../api/Auth";
+import { getUserData, setCaseIdForDetailPage, setFileIdForDetailPage } from "../../../../../../../../api/Auth";
 import { Layout } from "../../../../../../../../components/Layout";
 import {
   EfilingSideBarBranchItem,
@@ -298,7 +298,7 @@ function ApprovedCasesHistory() {
             pageSize={pageSize}
             totalCount={count}
             singleDataCard={true}
-            showEditIcon={true}
+            showEditIcon={UserData && UserData?.designation?.designationName === "Section Officer" ? false :true}
             hideDeleteIcon={true}
             showView={true}
             handleView={(item) =>
@@ -311,6 +311,17 @@ function ApprovedCasesHistory() {
                 },
               })
             }
+            handleEdit={(item) => {
+              setFileIdForDetailPage(item?.internalId);
+              setCaseIdForDetailPage(item?.caseId);
+              navigate("/efiling/dashboard/fileDetail", {
+                state: {
+                  view: false,
+                  id: item?.caseId,
+                  fileId: item?.internalId,
+                },
+              })
+            }}
           />
         </div>
       </div>
