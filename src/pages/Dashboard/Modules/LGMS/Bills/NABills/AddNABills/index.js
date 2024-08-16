@@ -21,6 +21,23 @@ import {
 import { useLocation, useNavigate } from "react-router-dom";
 import moment from "moment";
 import { getSingleMinisteryByMinisterID } from "../../../../../../../api/APIs/Services/Motion.service";
+import * as Yup from "yup";
+const validationSchema = Yup.object({
+  parliamentaryYear: Yup.string().required("Parliamentary Year is required"),
+  session: Yup.string().required("Session is required"),
+  noticeDate: Yup.string().required("Notice Date is required"),
+  fileNumber: Yup.string().required("File Number is required"),
+  billType: Yup.string().required("Bill Type is required"),
+  PassedByNADate: Yup.string().required("Passing By NA Date is required"),
+  DateOfReceiptOfMessageFromNA: Yup.string().required(
+    "Date of Receipt is required"
+  ),
+  billTitle: Yup.string().required("Bill Title is required"),
+  selectedSenator: Yup.array().required("Senator is required"),
+  selectedMNA: Yup.object().required("Minister is required"),
+  selectedMinistry: Yup.object().required("Ministery is required"),
+});
+
 function NewLegislationNABill() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -86,12 +103,12 @@ function NewLegislationNABill() {
       billCategory: "",
       billType: "",
       billTitle: "",
-      selectedSenator: [],
-      selectedMNA: [],
-      selectedMinistry: [],
+      selectedSenator: null,
+      selectedMNA: null,
+      selectedMinistry: null,
       billFrom: "From NA",
     },
-    // validationSchema: validationSchema,
+    validationSchema: validationSchema,
     onSubmit: (values) => {
       console.log("Create Question Data", values);
       CreateNABill(values);
@@ -226,8 +243,12 @@ function NewLegislationNABill() {
       <ToastContainer />
       <Header
         dashboardLink={"/lgms/dashboard"}
-        addLink1={"/lgms/dashboard/bills/selectbillfrom"}
-        title1={"Select Bill From"}
+        addLink1={
+          isGovernmentBill && isFromNA
+            ? "/lgms/dashboard/bills/legislation-bills/government-bills/recieved-from-na"
+            : "/lgms/dashboard/bills/legislation-bills/private-member-bills/recieved-from-na"
+        }
+        title1={"Bills List"}
         addLink2={"/lgms/dashboard/bills/legislation-bills"}
         title2={"National Assembly Bill"}
       />
@@ -248,7 +269,12 @@ function NewLegislationNABill() {
                         <select
                           id="parliamentaryYear"
                           name="parliamentaryYear"
-                          className="form-select"
+                          className={`form-select  ${
+                            formik.touched.parliamentaryYear &&
+                            formik.errors.parliamentaryYear
+                              ? "is-invalid"
+                              : ""
+                          }`}
                           onChange={formik.handleChange}
                           value={formik.values.parliamentaryYear}
                         >
@@ -277,7 +303,11 @@ function NewLegislationNABill() {
                         <select
                           id="session"
                           name="session"
-                          className="form-control"
+                          className={`form-control  ${
+                            formik.touched.session && formik.errors.session
+                              ? "is-invalid"
+                              : ""
+                          }`}
                           onChange={formik.handleChange}
                           value={formik.values.session}
                         >
@@ -363,7 +393,12 @@ function NewLegislationNABill() {
                           type="text"
                           id="fileNumber"
                           name="fileNumber"
-                          className="form-control"
+                          className={`form-control ${
+                            formik.touched.fileNumber &&
+                            formik.errors.fileNumber
+                              ? "is-invalid"
+                              : ""
+                          }`}
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                           value={formik.values.fileNumber}
@@ -566,7 +601,19 @@ function NewLegislationNABill() {
                           }
                           value={formik.values.selectedSenator}
                           isMulti={true}
+                          className={` ${
+                            formik.touched.selectedSenator &&
+                            formik.errors.selectedSenator
+                              ? "is-invalid"
+                              : ""
+                          }`}
                         />
+                        {formik.touched.selectedSenator &&
+                          formik.errors.selectedSenator && (
+                            <div class="invalid-feedback">
+                              {formik.errors.selectedSenator}
+                            </div>
+                          )}
                       </div>
                     </div>
 

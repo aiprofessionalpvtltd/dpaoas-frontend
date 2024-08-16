@@ -418,7 +418,25 @@ export const QMSSideBarItems = [
     ],
   },
   {
-    itemName: "Reports",
+    itemName: "Resolution Reports",
+    link: "/qms/reports",
+    icon: faClipboardList,
+    subItems: [
+      
+        {
+          itemName: "Resolution Summary",
+          link: "/qms/reports/resolution-summary",
+          icon: faClipboardList,
+        },
+        {
+          itemName: "Resolution Annual Reports",
+          link: "/qms/reports/resolution-annual-reports",
+          icon: faClipboardList,
+        },
+     ]
+  },
+  {
+    itemName: "Question Reports",
     link: "/qms/reports",
     icon: faClipboardList,
     subItems: [
@@ -432,11 +450,7 @@ export const QMSSideBarItems = [
         link: "/qms/reports/question-pending-under-process",
         icon: faClipboardList,
       },
-      {
-        itemName: "Resolution Summary",
-        link: "/qms/reports/resolution-summary",
-        icon: faClipboardList,
-      },
+      
       {
         itemName: "Notice Summary",
         link: "/qms/reports/notice-summary",
@@ -445,14 +459,6 @@ export const QMSSideBarItems = [
       {
         itemName: "Question Summary",
         link: "/qms/reports/question-summary",
-        icon: faClipboardList,
-      },
-
-      
-
-      {
-        itemName: "Resolution Annual Reports",
-        link: "/qms/reports/resolution-annual-reports",
         icon: faClipboardList,
       },
       // {

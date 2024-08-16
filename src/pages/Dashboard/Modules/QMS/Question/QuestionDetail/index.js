@@ -630,9 +630,10 @@ function QMSQuestionDetail() {
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Session No</label>
-                      {/* <select
+                      <select
                         class="form-select"
                         id="sessionNo"
+                        value={formik.values.sessionNo}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       >
@@ -645,8 +646,8 @@ function QMSQuestionDetail() {
                               {item?.sessionName}
                             </option>
                           ))}
-                      </select> */}
-                      <input
+                      </select>
+                      {/* <input
                         // readOnly={true}
                         placeholder={formik.values.sessionNo}
                         type="text"
@@ -654,7 +655,7 @@ function QMSQuestionDetail() {
                         id="sessionNo"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                      />
+                      /> */}
                     </div>
                   </div>
                   <div class="col">
