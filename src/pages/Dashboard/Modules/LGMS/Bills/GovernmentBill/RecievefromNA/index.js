@@ -11,6 +11,8 @@ import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import RecievedFromNA from "../../../../../../../components/LegislationBills/RecievedFromNA";
 import { Layout } from "../../../../../../../components/Layout";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye } from "@fortawesome/free-solid-svg-icons";
 
 const AllGovernmentRecievedNABills = () => {
   const navigate = useNavigate();
@@ -18,7 +20,7 @@ const AllGovernmentRecievedNABills = () => {
   const [governmentNABill, setGovernmantNABill] = useState([]);
   const [count, setCount] = useState(null);
   const [selectedbillFrom, setSelectedFrom] = useState(null);
-
+  const [remarksAttachmentVal, setRemarksAttachmentVal] = useState();
   const pageSize = 10;
 
   // Handle Page CHange
@@ -28,7 +30,14 @@ const AllGovernmentRecievedNABills = () => {
 
   // Transform Government Bill Data
   const transformGovernmentSenateBillData = (apiData) => {
-    return apiData?.map((item) => ({
+    const docs = apiData?.map((item) => item?.billDocuments);
+    if (docs?.length > 0) {
+      setRemarksAttachmentVal(true);
+    } else {
+      setRemarksAttachmentVal(false);
+    }
+    return apiData?.map((item, index) => ({
+      SNo: index + 1,
       id: item.id,
       // internalId: item?.id,
       fileNumber: item?.fileNumber,
@@ -38,17 +47,24 @@ const AllGovernmentRecievedNABills = () => {
       //       .map((mover) => mover?.mna?.mnaName)
       //       .join(", ")
       //   : "---",
+      dateOnWhichBillWasPassedByNA: item?.PassedByNADate
+        ? moment(item?.PassedByNADate, "YYYY-MM-DD").format("DD-MM-YYYY")
+        : "---",
+      dateOfReceiptOfMessageFromNA: item?.DateOfReceiptOfMessageFromNA
+        ? moment(item?.DateOfReceiptOfMessageFromNA, "YYYY-MM-DD").format(
+            "DD-MM-YYYY"
+          )
+        : "---",
       dateOfReceiptOfNotice: item?.noticeDate
         ? moment(item?.noticeDate, "YYYY-MM-DD").format("DD-MM-YYYY")
         : "---",
-      dateOfIntroductionReferenceToStandingCommittee: item?.introducedInHouses
-        ?.introducedInHouseDate
-        ? moment(
-            item?.introducedInHouses?.introducedInHouseDate,
-            "YYYY-MM-DD"
-          ).format("DD-MM-YYYY")
-        : "---",
 
+      dateOfReferencetoStandingCommittee: item?.introducedInHouses
+        ?.referedOnDate
+        ? moment(item?.introducedInHouses?.referedOnDate, "YYYY-MM-DD").format(
+            "DD-MM-YYYY"
+          )
+        : "---",
       dateOfPresentationOfTheReport: item?.introducedInHouses
         ?.reportPresentationDate
         ? moment(
@@ -66,14 +82,25 @@ const AllGovernmentRecievedNABills = () => {
       dateOfPassingTheBillByTheSenate: item?.dateOfPassageBySenate
         ? moment(item?.dateOfPassageBySenate, "YYYY-MM-DD").format("DD-MM-YYYY")
         : "---",
-      dateOnWhichTheBillTransmittedToNA: item?.dateOfTransmissionToNA
+      dateOfTransmissionOfMessageToNA: item?.dateOfTransmissionToNA
         ? moment(item?.dateOfTransmissionToNA, "YYYY-MM-DD").format(
+            "DD-MM-YYYY"
+          )
+        : "---",
+      dateOfAssentByThePresident: item?.dateOfAssentByThePresident
+        ? moment(item?.dateOfAssentByThePresident, "YYYY-MM-DD").format(
+            "DD-MM-YYYY"
+          )
+        : "---",
+      dateOfPublishInTheGazette: item?.dateOfPublishInGazette
+        ? moment(item?.dateOfPublishInGazette, "YYYY-MM-DD").format(
             "DD-MM-YYYY"
           )
         : "---",
       billCategory: item?.billCategory,
       billFrom: item?.billFrom,
       remarks: item?.billRemarks,
+      billDocuments: item?.billDocuments,
     }));
   };
 
@@ -145,6 +172,7 @@ const AllGovernmentRecievedNABills = () => {
           handleAdd={handleGovernmentNABill}
           tableTitle={"Government Bills Data (Received From NA)"}
           data={governmentNABill}
+          remarksAttachmentVal={remarksAttachmentVal}
           handleEdit={(item) => {
             item?.billFrom === "From Senate"
               ? handleEditSenateBill(item?.id, item)

@@ -13,6 +13,7 @@ import {
   DeleteBillDocumentTypeAttachemnt,
   UpdateNABill,
   getAllBillStatus,
+  getAllCommitteeRecommendation,
   getAllMNALists,
   getSingleNABillByID,
 } from "../../../../../../../api/APIs/Services/LegislationModule.service";
@@ -25,6 +26,21 @@ import { getUserData } from "../../../../../../../api/Auth";
 import { ToastContainer } from "react-toastify";
 import { imagesUrl } from "../../../../../../../api/APIs";
 import { getSingleMinisteryByMinisterID } from "../../../../../../../api/APIs/Services/Motion.service";
+import * as Yup from "yup";
+
+const validationSchema = Yup.object({
+  fkParliamentaryYearId: Yup.string().required(
+    "Parliamentary Year is required"
+  ),
+  fkSessionId: Yup.string().required("Session is required"),
+  noticeDate: Yup.string().required("Notice Date is required"),
+  fileNumber: Yup.string().required("File Number is required"),
+  billType: Yup.string().required("Bill Type is required"),
+  billTitle: Yup.string().required("Bill Title is required"),
+  senateBillSenatorMovers: Yup.array().required("Senator is required"),
+  senateBillMnaMovers: Yup.object().required("Minister is required"),
+  senateBillMinistryMovers: Yup.object().required("Ministery is required"),
+});
 
 const EditSenateBill = () => {
   const location = useLocation();
@@ -37,13 +53,11 @@ const EditSenateBill = () => {
   const [billStatusData, setBillStatusesData] = useState([]);
   const [MNAData, setMNAData] = useState([]);
   const [singleSenateBillData, setSingleSenateBillData] = useState([]);
-  console.log("singleSenateBillData ==>", singleSenateBillData);
   const [committieeData, setCommittieData] = useState([]);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [isIntroducedCalendarOpen, setIntroducedCalendarOpen] = useState(false);
   const [ministerID, setMinisterID] = useState(null);
   const [editTimeMinisterID, setEditTimeMinister] = useState(null);
-  console.log("edit time Id", editTimeMinisterID);
   const [ministryDataOnMinister, setMinistryDataOnMinister] = useState([]);
   // const [isDateofReciptCalendarOpen, setIsDateofReciptCalendarOpen] =
   //   useState(false);
@@ -71,7 +85,22 @@ const EditSenateBill = () => {
   const [isJointSettingDateCalendarOpen, setJointsettingDateCalendarOpen] =
     useState(false);
   const [filePath, setFilePath] = useState("");
+  const [commiteeRecommendations, setCommitteeRecommendations] = useState([]);
 
+  //  Getting All Committees Recommendation
+  const GetAllCommittiesRecommendation = async () => {
+    try {
+      const response = await getAllCommitteeRecommendation(0, 500);
+
+      if (response?.success) {
+        setCommitteeRecommendations(
+          response?.data?.manageCommitteeRecomendation
+        );
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   //  Getting All Committees API
   const GetAllCommittiesApi = async () => {
     try {
@@ -112,6 +141,7 @@ const EditSenateBill = () => {
     getAllBillStatusData();
     getAllMNA();
     GetAllCommittiesApi();
+    GetAllCommittiesRecommendation();
     if (ministerID) {
       getMinisteryByMinisterIdApi();
     }
@@ -157,7 +187,7 @@ const EditSenateBill = () => {
       documentType: "",
       file: "",
     },
-
+    validationSchema: validationSchema,
     onSubmit: (values) => {
       UpdateNationalAssemblyBill(values);
     },
@@ -318,7 +348,6 @@ const EditSenateBill = () => {
       documentType: docType,
       fileId: fileId,
     };
-    console.log("data", data);
     try {
       const response = await DeleteBillDocumentTypeAttachemnt(
         GovSenateBillID,
@@ -339,7 +368,6 @@ const EditSenateBill = () => {
       getNABillByIdApi();
     }
   }, [GovSenateBillID]);
-  console.log("singleSenateBillData", singleSenateBillData);
   useEffect(() => {
     if (singleSenateBillData) {
       let fileNum = "";
@@ -446,8 +474,17 @@ const EditSenateBill = () => {
           : "",
 
         committeeRecomendation: singleSenateBillData?.introducedInHouses
-          ? singleSenateBillData?.introducedInHouses?.committeeRecomendation
-          : "",
+          ?.manageCommitteeRecomendations
+          ? {
+              value:
+                singleSenateBillData?.introducedInHouses
+                  ?.manageCommitteeRecomendations?.id,
+              label:
+                singleSenateBillData?.introducedInHouses
+                  ?.manageCommitteeRecomendations?.committeeRecom,
+            }
+          : null,
+
         reportPresentationDate: singleSenateBillData?.introducedInHouses
           ?.reportPresentationDate
           ? moment(
@@ -548,7 +585,7 @@ const EditSenateBill = () => {
       });
     }
   }, [singleSenateBillData]);
-
+  // Get Ministery By Minister
   const getMinisteryByMinisterIdApi = async () => {
     try {
       const response = await getSingleMinisteryByMinisterID(
@@ -561,10 +598,6 @@ const EditSenateBill = () => {
       showErrorMessage(error?.response?.data?.message);
     }
   };
-  console.log(
-    "senateBillMnaMovers senateBillMnaMovers",
-    formik.values.senateBillMnaMovers
-  );
 
   // Updating Senate Bills
   const UpdateNationalAssemblyBill = async (values) => {
@@ -619,7 +652,10 @@ const EditSenateBill = () => {
     }
 
     if (values?.committeeRecomendation) {
-      formData.append("committeeRecomendation", values?.committeeRecomendation);
+      formData.append(
+        "fkManageCommitteeRecomendationId",
+        values?.committeeRecomendation?.value
+      );
     }
     // if (values?.reportPresentationDate) {
     //   formData.append("reportPresentationDate", values?.reportPresentationDate);
@@ -784,7 +820,7 @@ const EditSenateBill = () => {
         } else {
           setTimeout(() => {
             navigate(
-              "/lgms/dashboard/bills/legislation-bills/private-member-bills"
+              "/lgms/dashboard/bills/legislation-bills/private-member-bills/introduced-in-senate"
             );
           }, [3000]);
         }
@@ -823,7 +859,12 @@ const EditSenateBill = () => {
                           <select
                             id="fkParliamentaryYearId"
                             name="fkParliamentaryYearId"
-                            className="form-select"
+                            className={`form-select  ${
+                              formik.touched.fkParliamentaryYearId &&
+                              formik.errors.fkParliamentaryYearId
+                                ? "is-invalid"
+                                : ""
+                            }`}
                             onChange={formik.handleChange}
                             value={formik.values.fkParliamentaryYearId}
                           >
@@ -852,7 +893,13 @@ const EditSenateBill = () => {
                           <select
                             id="fkSessionId"
                             name="fkSessionId"
-                            className="form-control"
+                            className={`form-control  ${
+                              formik.touched.fkSessionId &&
+                              formik.errors.fkSessionId
+                                ? "is-invalid"
+                                : ""
+                            }`}
+                            onBlur={formik.handleBlur}
                             onChange={formik.handleChange}
                             value={formik.values.fkSessionId}
                           >
@@ -1049,7 +1096,12 @@ const EditSenateBill = () => {
                             type="text"
                             id="fileNumber"
                             name="fileNumber"
-                            className="form-control"
+                            className={`form-control ${
+                              formik.touched.fileNumber &&
+                              formik.errors.fileNumber
+                                ? "is-invalid"
+                                : ""
+                            }`}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             value={formik.values.fileNumber}
@@ -1269,7 +1321,19 @@ const EditSenateBill = () => {
                           }
                           value={formik.values.senateBillSenatorMovers}
                           isMulti={true}
+                          className={` ${
+                            formik.touched.senateBillSenatorMovers &&
+                            formik.errors.senateBillSenatorMovers
+                              ? "is-invalid"
+                              : ""
+                          }`}
                         />
+                        {formik.touched.senateBillSenatorMovers &&
+                          formik.errors.senateBillSenatorMovers && (
+                            <div class="invalid-feedback">
+                              {formik.errors.senateBillSenatorMovers}
+                            </div>
+                          )}
                       </div>
                       <div class="col">
                         <div class="mb-3">
@@ -1362,7 +1426,19 @@ const EditSenateBill = () => {
                           }
                           value={formik.values.senateBillMinistryMovers}
                           // isMulti={true}
+                          className={` ${
+                            formik.touched.senateBillMinistryMovers &&
+                            formik.errors.senateBillMinistryMovers
+                              ? "is-invalid"
+                              : ""
+                          }`}
                         />
+                        {formik.touched.senateBillMinistryMovers &&
+                          formik.errors.senateBillMinistryMovers && (
+                            <div class="invalid-feedback">
+                              {formik.errors.senateBillMinistryMovers}
+                            </div>
+                          )}
                       </div>
                     </div>
                   </div>
@@ -1524,29 +1600,49 @@ const EditSenateBill = () => {
                         <label className="form-label">
                           Committee Recommendation
                         </label>
-                        <select
+                        <Select
+                          options={
+                            commiteeRecommendations &&
+                            commiteeRecommendations.map((item) => ({
+                              value: item.id,
+                              label: item.committeeRecomendation,
+                            }))
+                          }
+                          onChange={(selectedOption) => {
+                            formik.setFieldValue(
+                              "committeeRecomendation",
+                              selectedOption
+                            );
+                          }}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.committeeRecomendation}
+                          name="committeeRecomendation"
+                          className={` ${
+                            formik.touched.committeeRecomendation &&
+                            formik.errors.committeeRecomendation
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                          // isMulti
+                        />
+                        {/* <select
                           class="form-select"
                           value={formik.values.committeeRecomendation}
                           id="committeeRecomendation"
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                         >
-                          <option selected disabled hidden>
+                          <option value="" selected disabled hidden>
                             Select
                           </option>
-                          <option value="Ammended By Standing Committee">
-                            As Reported By Standing Committee
-                          </option>
-                          <option value="May be Passed as Introduced in the House">
-                            May be Passed as Introduced in the House
-                          </option>
-                          <option value="Passed without sending to Committee">
-                            Passed without Referred Standing Committee
-                          </option>
-                          {/* <option value="Ammended By Standing Committee">
-                            Ammended By Standing Committee
-                          </option> */}
-                        </select>
+                          {commiteeRecommendations &&
+                            commiteeRecommendations?.map((item) => (
+                              <option
+                                value={item.id}
+                              >{`${item?.committeeRecomendation}`}</option>
+                            ))}
+                         
+                        </select> */}
                       </div>
                     </div>
 
@@ -2106,7 +2202,11 @@ const EditSenateBill = () => {
                                   marginLeft: "14px",
                                 }}
                               >
-                                {moment(doc?.documentDate).format("DD-MM-YYYY")}
+                                {doc?.documentDate
+                                  ? moment(doc?.documentDate).format(
+                                      "DD-MM-YYYY"
+                                    )
+                                  : ""}
                               </h6>
                             </div>
                           )}

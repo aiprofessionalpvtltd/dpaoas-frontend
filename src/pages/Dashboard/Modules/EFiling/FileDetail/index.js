@@ -10,6 +10,7 @@ import {
 import {
   ApprovedFIleCase,
   DeleteCorrApi,
+  DeleteNotificationById,
   DeletePara,
   DeleteParaAttachement,
   UpdateFIleCase,
@@ -37,6 +38,7 @@ import { imagesUrl } from "../../../../../api/APIs";
 import ImageGallery from "react-image-gallery";
 import "react-image-gallery/styles/css/image-gallery.css";
 import moment from "moment";
+import { CustomAlert } from "../../../../../components/CustomComponents/CustomAlert";
 
 const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
   return (
@@ -51,6 +53,7 @@ const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
 
 function FileDetail() {
   const location = useLocation();
+  const [showApproveModal, setShowApproveModal] = useState(false);
   const { fildetailsAqain } = useContext(AuthContext);
   const navigate = useNavigate();
   const UserData = getUserData();
@@ -78,12 +81,19 @@ function FileDetail() {
   const [modalInputValue, setModalInputValue] = useState({
     assignedTo: "",
     CommentStatus: "",
+    priority: "",
     comment: "",
   });
   const [filesData, setFilesData] = useState(null);
   const [FR, setFR] = useState(null);
   const pageSize = 10;
   const [order, setOrder] = useState("DESC");
+  const handleShow = () => setShowApproveModal(true);
+  const handleClose = () => setShowApproveModal(false);
+  const handleOkClick = () => {
+    handleSubmit(true)
+    handleClose();
+  };
 
   // const initialNotingTabData = [
   //   {
@@ -161,6 +171,7 @@ function FileDetail() {
     setModalInputValue({
       assignedTo: "",
       CommentStatus: "",
+      priority: "",
       comment: "",
     })
   };
@@ -170,7 +181,8 @@ function FileDetail() {
       const formData = new FormData();
       formData.append("submittedBy", UserData?.fkUserId);
       formData.append("assignedTo", modalInputValue?.assignedTo);
-      // formData.append("CommentStatus", modalInputValue?.CommentStatus);
+      formData.append("priority", modalInputValue?.priority);
+      formData.append("CommentStatus", modalInputValue?.CommentStatus);
       formData.append(
         "comment",
         modalInputValue?.CommentStatus ? "" : modalInputValue?.comment
@@ -184,13 +196,14 @@ function FileDetail() {
       );
 
       if (response?.success) {
-        showSuccessMessage(response?.message);
+        showSuccessMessage(response?.message, true);
         toggleModal();
         getFilesByID();
         // Clear all fields in modalInputValue
         setModalInputValue({
           assignedTo: "",
           CommentStatus: "",
+          priority: "",
           comment: "",
         });
 
@@ -533,6 +546,21 @@ function FileDetail() {
     }
   }, [order])
 
+  const deleteNotification = async (item) => {
+    try {
+      const response = await DeleteNotificationById(
+        location.state?.notificationId,
+        UserData?.fkUserId
+      );
+    } catch (error) {
+      console.log(error.response.data.message);
+    }
+  };
+
+  useEffect(() => {
+    deleteNotification();
+  }, []);
+
   return (
     <Layout
       centerlogohide={true}
@@ -543,6 +571,11 @@ function FileDetail() {
           : EfilingSideBarBranchItem
       }
     >
+      <CustomAlert
+        showModal={showApproveModal}
+        handleClose={handleClose}
+        handleOkClick={handleOkClick}
+      />
       <div className="dashboard-content">
         <Modal
           show={showModal}
@@ -611,7 +644,7 @@ function FileDetail() {
                   <option value="" selected>
                     Select
                   </option>
-                  <option value={"Put Up For"}>Put Up For</option>
+                  <option value={"Please Put Up"}>Please Put Up</option>
                   <option value={"Please Link"}>Please Link</option>
                   <option value={"For Perusal Please"}>
                     For Perusal Please
@@ -622,6 +655,31 @@ function FileDetail() {
                 </select>
               </div>
             </div>
+            <div class="col">
+            <div class="mb-3">
+              <label class="form-label">Priority</label>
+              <select
+                className="form-select"
+                id="priority"
+                name="priority"
+                onChange={(e) =>
+                  setModalInputValue((prevState) => ({
+                    ...prevState,
+                    priority: e.target.value,
+                  }))
+                }
+                value={modalInputValue.priority}
+                disabled={viewPage ? true : false}
+              >
+                <option value="" selected disabled hidden>
+                  Select
+                </option>
+                  <option value={"Confidential"}>Confidential</option>
+                  <option value={"Immediate"}>Immediate</option>
+                  <option value={"Routine"}>Routine</option>
+              </select>
+            </div>
+          </div>
             <div class="col">
               <div class="mb-3">
                 <label class="form-label">Mark To</label>
@@ -886,7 +944,7 @@ function FileDetail() {
                                     ? "none"
                                     : "block",
                                 }}
-                                onClick={() => handleSubmit(true)} // True means non-editable
+                                onClick={() => handleShow()} // True means non-editable
                                 disabled={
                                   viewPage
                                     ? true
