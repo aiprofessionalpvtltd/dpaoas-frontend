@@ -667,6 +667,25 @@ export const getAllCasesThroughSearchParams = async (searchParams) => {
   }
 };
 
+export const getPendingCasesThroughSearchParams = async (searchParams) => {
+  const filteredSearchParams = Object.fromEntries(
+    Object.entries(searchParams).filter(([_, value]) => value !== "")
+  );
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.get(`/cases/getAllPendingCases`, {
+      params: filteredSearchParams,
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // },
+    });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
 export const getSingleCaseByFileId = async (fileId, caseId) => {
   try {
     //   const token = getAuthToken();
@@ -866,6 +885,25 @@ export const getAllFreshReceipt = async (userId, currentPage, pageSize) => {
     //   const token = getAuthToken();
     const response = await axiosClient.get(
       `/freshReceipt/${userId}?currentPage=${currentPage}&pageSize=${pageSize}`
+    );
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const getPendingFreshReceipts = async (userId, currentPage, pageSize) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.get(
+      `/freshReceipt/getAllPendingFRs/${userId}?currentPage=${currentPage}&pageSize=${pageSize}`
     );
     // {
     //   headers: {
@@ -1112,6 +1150,24 @@ export const getFRHistory = async (branchId, userId, currentPage, pageSize) => {
     // const token = getAuthToken();
     const response = await axiosClient.get(
       `/freshReceipt/frsHistory/${branchId}/${userId}?currentPage=${currentPage}&pageSize=${pageSize}`,
+      {
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // }
+      }
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const getOfficerFRHistory = async (branchId, userId, currentPage, pageSize) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClient.get(
+      `/freshReceipt/frsUpperHerarchyHistory/${branchId}/${userId}?currentPage=${currentPage}&pageSize=${pageSize}`,
       {
         // headers: {
         //   Authorization: `Bearer ${token}`,

@@ -12,7 +12,7 @@ import {
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
-import { getFRHistory } from "../../../../../../api/APIs/Services/efiling.service";
+import { getFRHistory, getOfficerFRHistory } from "../../../../../../api/APIs/Services/efiling.service";
 
 function PreviousFRsHistory() {
   const navigate = useNavigate();
@@ -33,6 +33,7 @@ function PreviousFRsHistory() {
     return apiData.map((item, index) => ({
       id: item?.id,
       frType: item?.frType,
+      initiatedBy: item?.createdByUser?.employee?.firstName,
       SubmittedBy:
         item?.freshReceipt?.length > 0
           ? item?.freshReceipt[item?.freshReceipt?.length - 1]?.submittedUser
@@ -43,10 +44,10 @@ function PreviousFRsHistory() {
           ? item?.freshReceipt[item?.freshReceipt?.length - 1]?.assignedUser
               ?.employee?.firstName
           : "---",
-      Status:
-        item?.freshReceipt?.length > 0
-          ? item?.freshReceipt[item?.freshReceipt?.length - 1]?.CommentStatus
-          : "---",
+      // Status:
+      //   item?.freshReceipt?.length > 0
+      //     ? item?.freshReceipt[item?.freshReceipt?.length - 1]?.CommentStatus
+      //     : "---",
       AssignedDate:
         item?.freshReceipt?.length > 0
           ? moment(
@@ -64,13 +65,23 @@ function PreviousFRsHistory() {
   };
 
   const getAllFRHistoryApi = async () => {
+    let response = {};
+      if (UserData && UserData?.userType === "Officer") {
+        response = await getOfficerFRHistory(
+          UserData?.fkBranchId,
+          UserData?.fkUserId,
+          currentPage,
+          pageSize
+        );
+      } else {
+        response = await getFRHistory(
+          UserData?.fkBranchId,
+          UserData?.fkUserId,
+          currentPage,
+          pageSize
+        );
+    }
     try {
-      const response = await getFRHistory(
-        UserData?.fkBranchId,
-        UserData?.fkUserId,
-        currentPage,
-        pageSize
-      );
       if (response.success) {
         setCount(response?.data?.count);
         const transferData = transformFRHistory(response?.data?.freshReceipts);
