@@ -1238,6 +1238,7 @@ export const TransportSideBarItems = [
         link: "/transport/petrol-mileage",
         icon: faFileInvoice,
       },
+     
     ],
   },
   {
@@ -1250,4 +1251,21 @@ export const TransportSideBarItems = [
     link: "/transport/fleet",
     icon: faClipboardList,
   },
+  {
+    itemName:"Drivers & Vehicles",
+    link:"/transport/drivers_Vehicle",
+    icon:faClipboardList,
+    subItems:[
+      {
+        itemName: "Vehicles",
+        link: "/transport/vehicles", // need to be changed /vehicles
+        icon: faFileInvoice,
+      }, // added 
+      {
+        itemName: "Drivers",
+        link: "/transport/driver",  // need to be changed /drivers
+        icon: faFileInvoice,
+      }
+    ]
+  }
 ];

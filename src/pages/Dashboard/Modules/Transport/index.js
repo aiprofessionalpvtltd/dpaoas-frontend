@@ -117,6 +117,7 @@ function TransportDashboard() {
                   total={`${stats?.monthlyMotions}`}
                   onClick={() => navigate("/transport/fleet")}
                 />
+               
               </div>
             </div>
           </div>

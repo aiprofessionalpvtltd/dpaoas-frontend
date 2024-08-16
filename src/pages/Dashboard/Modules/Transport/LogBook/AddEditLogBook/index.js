@@ -17,7 +17,8 @@ const validationSchema = Yup.object({
 function AddEditLogBook() {
     const location = useLocation();
   const userData = getUserData()
-
+  //  console.log(location.pathname);
+   
     const navigate = useNavigate()
   const [filesData, setFileData] = useState([])
   const [fileId, setFIleId] = useState(location?.state?.SrNo);

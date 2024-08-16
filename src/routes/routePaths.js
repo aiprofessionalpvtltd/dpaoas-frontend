@@ -265,6 +265,14 @@ import PurchasesMadeList from "../pages/Dashboard/Modules/Transport/LogBook/Purc
 import AddEditPurchasesMade from "../pages/Dashboard/Modules/Transport/LogBook/PurchasesMade/AddEditPurchasesMade/index.js";
 import PetrolMileageList from "../pages/Dashboard/Modules/Transport/LogBook/PetrolMileage/index.js";
 import AddEditPetrolMileage from "../pages/Dashboard/Modules/Transport/LogBook/PetrolMileage/AddEditPetrolMileage/index.js";
+import AddVehicles from "../pages/Dashboard/Modules/Transport/DriversAndVehicles/Vehicles/AddVehicles/index.js";
+import Vehicle from '../pages/Dashboard/Modules/Transport/DriversAndVehicles/Vehicles';
+
+import { elementClosest } from "@fullcalendar/core/internal";
+import AddEditDrivers from "../pages/Dashboard/Modules/Transport/DriversAndVehicles/Drivers/AddEditDrivers/index.js";
+import Drivers from "../pages/Dashboard/Modules/Transport/DriversAndVehicles/Drivers/index.js";
+
+
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -1093,4 +1101,22 @@ export const ProtectedRoutes = [
     path: "/transport/fleet/addedit",
     element: <AddEditFleetManagement />,
   },
+  {
+    path:"/transport/vehicles",
+    element: <Vehicle/>
+  },
+
+  {
+    path:"/transport/driver",
+    element:<Drivers/>
+  },
+
+  {
+    path:"/transport/vehicles/addeditVehicles",  // this will be changed
+    element: <AddVehicles/>
+  },
+  {
+    path:"/transport/driver/addeditDrivers",  // this will be changed
+    element: <AddEditDrivers/>
+  }
 ];
