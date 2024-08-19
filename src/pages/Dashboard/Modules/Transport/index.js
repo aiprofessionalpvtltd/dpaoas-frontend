@@ -6,7 +6,7 @@ import Header from "../../../../components/Header";
 import NoticeStatsCard from "../../../../components/CustomComponents/NoticeStatsCard";
 import { getAllNoticeStats, getAllResarchServices, getAllSpeachOnDemand } from "../../../../api/APIs/Services/Notice.service";
 import {
-    faBook, faTruckMonster,
+    faBook, faGasPump, faTruckMonster,
     faVanShuttle
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -94,26 +94,42 @@ function TransportDashboard() {
             <div class="mt-2 mb-4">
               <div class="row">
                 <NoticeStatsCard
-                  title={"Log Book"}
+                  title={"Repairs & Purchases Made"}
                   icon={faBook}
                   overall={true}
                   iconBgColor={"#FFA500"}
+                  ColValue={"col-3"}
                   total={`${stats?.monthlyQuestions}`}
+                  onClick={() => navigate("/transport/purchases")}
+                />
+                <NoticeStatsCard
+                  title={"Petrol Mileage"}
+                  icon={faGasPump}
+                  overall={true}
+                  ColValue={"col-3"}
+                  iconBgColor={"green"}
+                  total={`${stats?.monthlyMotions}`}
+                  onClick={() => navigate("/transport/petrol-mileage")}
                 />
                 <NoticeStatsCard
                   title={"Vehicle Movement"}
                   icon={faVanShuttle}
                   overall={true}
+                  ColValue={"col-3"}
                   iconBgColor={"#007bff"}
                   total={`${stats?.monthlyMotions}`}
+                  onClick={() => navigate("/transport/vehicle-movement")}
                 />
                 <NoticeStatsCard
                   title={"Fleet Management"}
                   icon={faTruckMonster}
                   overall={true}
-                  iconBgColor={"#007bff"}
+                  ColValue={"col-3"}
+                  iconBgColor={"rgb(45, 206, 137)"}
                   total={`${stats?.monthlyMotions}`}
+                  onClick={() => navigate("/transport/fleet")}
                 />
+               
               </div>
             </div>
           </div>

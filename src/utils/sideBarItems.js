@@ -1223,17 +1223,47 @@ export const TransportSideBarItems = [
   },
   {
     itemName: "Log Book",
-    link: "/mms/dashboard",
+    link: "/transport/logbook",
     icon: faClipboardList,
+    subItems: [
+      {
+        itemName: "Repairs Executed & Purchases Made",
+        link: "/transport/purchases",
+        icon: faFileInvoice,
+      },
+      {
+        itemName: "Petrol Mileage",
+        link: "/transport/petrol-mileage",
+        icon: faFileInvoice,
+      },
+     
+    ],
   },
   {
     itemName: "Vehicle Movement",
-    link: "/mms/dashboard",
+    link: "/transport/vehicle-movement",
     icon: faClipboardList,
   },
   {
     itemName: "Fleet Management",
-    link: "/mms/dashboard",
+    link: "/transport/fleet",
     icon: faClipboardList,
   },
+  {
+    itemName:"Drivers & Vehicles",
+    link:"/transport/drivers_Vehicle",
+    icon:faClipboardList,
+    subItems:[
+      {
+        itemName: "Vehicles",
+        link: "/transport/vehicles", // need to be changed /vehicles
+        icon: faFileInvoice,
+      }, // added 
+      {
+        itemName: "Drivers",
+        link: "/transport/driver",  // need to be changed /drivers
+        icon: faFileInvoice,
+      }
+    ]
+  }
 ];
