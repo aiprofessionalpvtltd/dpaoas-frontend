@@ -275,6 +275,7 @@ import Drivers from "../pages/Dashboard/Modules/Transport/DriversAndVehicles/Dri
 
 import ResolutionDataPreview from "../pages/Dashboard/Modules/QMS/Resolution/ResolutionDataPrintPreview/index.js";
 import QuestionDataPreviewPDF from "../pages/Dashboard/Modules/QMS/Question/PreviewQuestionDataPDF/index.js";
+import MainDashBoardDemo from "../pages/Dashboard/Modules/EFiling/MainDashBoardDemo/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -692,7 +693,8 @@ export const ProtectedRoutes = [
 
   // E-Filing
   // { path: "/efiling/dashboard", element: <DirectorDashboard /> },
-  { path: "/efiling/dashboard", element: <MainDashboard /> },
+  // { path: "/efiling/dashboard", element: <MainDashboard /> },
+  { path: "/efiling/dashboard", element: <MainDashBoardDemo /> },
   // { path: "/efiling/dashboard", element: <UpdatedDashboard /> },
   { path: "/efiling/director-dashboard", element: <EFilingDashboard /> },
 

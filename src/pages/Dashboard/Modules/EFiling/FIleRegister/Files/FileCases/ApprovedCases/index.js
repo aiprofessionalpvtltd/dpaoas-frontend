@@ -54,6 +54,7 @@ function ApprovedCasesHistory() {
       caseId: item?.fkCaseId,
       internalId: item?.fileData?.id,
       FileNo: item?.fileData?.fileNumber,
+      initiatedBy: item?.createdByUser?.firstName,
       Sender: item?.fileRemarksData?.length > 0
       ? `${item?.fileRemarksData[0]
         ?.submittedUser?.employee?.firstName
