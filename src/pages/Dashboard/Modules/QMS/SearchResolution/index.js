@@ -100,10 +100,11 @@ function QMSSerchResolution() {
           : "",
           memberName: movers ? movers : "",
           memberPosition:res?.memberPosition ? res?.memberPosition :"--",
+          colourResNo:res?.colourResNo ? res?.colourResNo:"--",
         createdByUser: res?.createdBy ? `${res?.createdBy.employee?.firstName} ${res?.createdBy.employee?.lastName}` :"--",
         deletedByUser: res?.deletedBy ? `${res?.deletedBy.employee?.firstName} ${res?.deletedBy.employee?.lastName}` :"--",
-        description:res?.description,
-        Status:res?.resolutionActive,
+        description:res?.description ? res?.description:"--",
+        // Status:res?.resolutionActive,
       };
     });
   };
@@ -216,13 +217,19 @@ function QMSSerchResolution() {
       if (response.success) {
         const jsonString = JSON.stringify(response?.data?.resolutions);
         const encodedJsonString = encodeURIComponent(jsonString);
-        const url = `/qms/search/resolution/preview?state=${encodedJsonString}`;
+        const url = `/qms/search/resolution/list/preview?state=${encodedJsonString}`;
         window.open(url, "_blank");
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message)
     }
   }
+
+  const hendlePrint = async (id) => {
+    const encodedJsonString = encodeURIComponent(id);
+    const url = `/qms/search/resolution/preview-pdf?state=${encodedJsonString}`;
+    window.open(url, "_blank");
+  };
 
   useEffect(() =>{
     if(location?.state){
@@ -237,7 +244,7 @@ function QMSSerchResolution() {
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <Header
         dashboardLink={"/"}
-        addLink1={"/qms/resolution/search"}
+        addLink1={"/qms/search/resolution"}
         title1={"Search Resolution"}
       />
       <ToastContainer />
@@ -611,7 +618,7 @@ function QMSSerchResolution() {
                     currentPage={currentPage}
                     headertitlebgColor={"#666"}
                     headertitletextColor={"#FFF"}
-                    showPrint={false}
+                    showPrint={true}
                     pageSize={pageSize}
                     handleEdit={(item) => handleEdit(item.id)}
                     handleDelete={(item) => {
@@ -621,6 +628,8 @@ function QMSSerchResolution() {
                     iscolumnCheckbox={isChecked}
                     isColumncheck={true}
                     setIsColumnCheckBox={setIsChecked}
+                    handlePrint={(item) => hendlePrint(item?.id)}
+                  
                   />
               </div>
              

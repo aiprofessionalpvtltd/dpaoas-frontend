@@ -16,7 +16,7 @@ import {
   getFileByRegisterById,
 } from "../../../../../../../api/APIs/Services/efiling.service";
 import { AuthContext } from "../../../../../../../api/AuthContext";
-import { getUserData, setCaseIdForDetailPage, setFileIdForDetailPage } from "../../../../../../../api/Auth";
+import { getSelectedFileID, getUserData, setCaseIdForDetailPage, setFileIdForDetailPage } from "../../../../../../../api/Auth";
 import moment from "moment";
 import Select from "react-select";
 import { showSuccessMessage } from "../../../../../../../utils/ToastAlert";
@@ -25,7 +25,6 @@ function FileCases() {
   const navigate = useNavigate();
   const { setFileIdInRegister, fileIdINRegister } = useContext(AuthContext);
   const userData = getUserData();
-  console.log("userData", userData)
   const location = useLocation();
   const [headings, setHeadings] = useState(null);
   const [headcount, setHeadCount] = useState(null);
@@ -37,7 +36,6 @@ function FileCases() {
   const [fkfileId, setFKFileId] = useState(null);
   const [showHeadings, setShowHeadings] = useState(false);
   const [showFiles, setShowFiles] = useState(false);
-  console.log("test", location.state?.internalId)
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
@@ -49,6 +47,7 @@ function FileCases() {
         caseId: item?.fkCaseId,
         internalId: item?.fileData?.id,
         FileNo: item?.fileData?.fileNumber,
+        initiatedBy: item?.createdByUser?.firstName,
         Sender:
           item?.fileRemarksData?.length > 0
             ? item?.fileRemarksData[0]?.submittedUser?.employee?.firstName
@@ -72,6 +71,7 @@ function FileCases() {
   };  
 
   const getAllCasesApi = async () => {
+    if(fkfileId) {
     const searchParams = {
       userId: userData?.fkUserId,
       currentPage: currentPage,
@@ -79,6 +79,7 @@ function FileCases() {
       fileId: fkfileId?.value ? fkfileId?.value : location.state?.internalId,
       // fkBranchId:userData && userData?.fkBranchId
     };
+    
     try {
       const response = await getAllCasesThroughSearchParams(searchParams);
       console.log(response);
@@ -92,6 +93,7 @@ function FileCases() {
     } catch (error) {
       console.log(error);
     }
+  }
   };
 
   useEffect(() => {
@@ -180,6 +182,10 @@ function FileCases() {
   }, [headcount]);
 
   useEffect(() => {
+    const fileId = getSelectedFileID();
+    if(fileId) {
+      setFKFileId(fileId);
+    }
     getAllFileHeadingApi();
   }, []);
 

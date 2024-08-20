@@ -36,6 +36,7 @@ function CustomTable({
   handlePageChange,
   tableTitle,
   headerBgColor,
+  headerTitleColor,
   hideBtn,
   addBtnText,
   addBtnText2,
@@ -238,8 +239,16 @@ function CustomTable({
       <div className={`${singleDataCard ? "card" : ""}`}>
         <div className="dash-card">
           {!headerShown && !headerShown && (
-            <div className="dash-card-header">
-              <h2 style={{ color: "#666" }} className="float-start mt-2">
+            <div
+              className="dash-card-header"
+              style={{
+                backgroundColor: headerBgColor ? headerBgColor : "#fff",
+              }}
+            >
+              <h2
+                style={{ color: headerTitleColor ? headerTitleColor : "#666" }}
+                className="float-start mt-2"
+              >
                 {tableTitle}
               </h2>
               {!hideBtn && (
@@ -422,7 +431,9 @@ function CustomTable({
                           item[key] === "complete" ||
                           item[key] === "closed" ||
                           item[key] === "in-progress" ||
+                          item[key] === "draft" ||
                           item[key] === "pending" ||
+                          item[key] === "sent" ||
                           item[key] === "approved" ||
                           item[key] === "Immediate" ||
                           item[key] === "Routine" ||
@@ -432,21 +443,25 @@ function CustomTable({
                                 item[key] === "active" ||
                                 item[key] === "complete"
                                   ? "label-success"
-                                  : item[key] === "pending"
-                                    ? "label-pending"
-                                    : item[key] === "closed"
-                                      ? "label-close"
-                                      : item[key] === "closed"
-                                        ? "label-close"
-                                        : item[key] === "in-progress"
-                                          ? "label-inprogress"
-                                          : item[key] === "Immediate"
-                                            ? "label-inprogress"
-                                            : item[key] === "Routine"
-                                              ? "label-pending"
-                                              : item[key] === "Confidential"
-                                                ? "label-danger"
-                                                : "label-danger"
+                                  : item[key] === "draft"
+                                    ? "label-inprogress"
+                                    : item[key] === "pending"
+                                      ? "label-pending"
+                                      : item[key] === "sent"
+                                        ? "label-success"
+                                        : item[key] === "closed"
+                                          ? "label-close"
+                                          : item[key] === "closed"
+                                            ? "label-close"
+                                            : item[key] === "in-progress"
+                                              ? "label-inprogress"
+                                              : item[key] === "Immediate"
+                                                ? "label-inprogress"
+                                                : item[key] === "Routine"
+                                                  ? "label-pending"
+                                                  : item[key] === "Confidential"
+                                                    ? "label-danger"
+                                                    : "label-danger"
                               }`}
                             >
                               {item[key]}

@@ -256,6 +256,26 @@ import PreviewSuplementryList from "../pages/Dashboard/Modules/QMS/Reports/Quest
 import TransportDashboard from "../pages/Dashboard/Modules/Transport/index.js";
 import SearchLegislationGovernmentBills from "../pages/Dashboard/Modules/LGMS/Bills/SearchBills/GovernmentBills/index.js";
 import SearchLegislationPrivateMemberBill from "../pages/Dashboard/Modules/LGMS/Bills/SearchBills/PrivateMemberBills/index.js";
+import LogBookList from "../pages/Dashboard/Modules/Transport/LogBook/index.js";
+import AddEditLogBook from "../pages/Dashboard/Modules/Transport/LogBook/AddEditLogBook/index.js";
+import VehicleMovementList from "../pages/Dashboard/Modules/Transport/VehicleMovement/index.js";
+import AddEditVehicleMovement from "../pages/Dashboard/Modules/Transport/VehicleMovement/AddEditVehicleMovement/index.js";
+import FleetManagementList from "../pages/Dashboard/Modules/Transport/FleetManagement/index.js";
+import AddEditFleetManagement from "../pages/Dashboard/Modules/Transport/FleetManagement/AddEditFleetManagement/index.js";
+import PurchasesMadeList from "../pages/Dashboard/Modules/Transport/LogBook/PurchasesMade/index.js";
+import AddEditPurchasesMade from "../pages/Dashboard/Modules/Transport/LogBook/PurchasesMade/AddEditPurchasesMade/index.js";
+import PetrolMileageList from "../pages/Dashboard/Modules/Transport/LogBook/PetrolMileage/index.js";
+import AddEditPetrolMileage from "../pages/Dashboard/Modules/Transport/LogBook/PetrolMileage/AddEditPetrolMileage/index.js";
+import AddVehicles from "../pages/Dashboard/Modules/Transport/DriversAndVehicles/Vehicles/AddVehicles/index.js";
+import Vehicle from "../pages/Dashboard/Modules/Transport/DriversAndVehicles/Vehicles";
+
+import { elementClosest } from "@fullcalendar/core/internal";
+import AddEditDrivers from "../pages/Dashboard/Modules/Transport/DriversAndVehicles/Drivers/AddEditDrivers/index.js";
+import Drivers from "../pages/Dashboard/Modules/Transport/DriversAndVehicles/Drivers/index.js";
+
+import ResolutionDataPreview from "../pages/Dashboard/Modules/QMS/Resolution/ResolutionDataPrintPreview/index.js";
+import QuestionDataPreviewPDF from "../pages/Dashboard/Modules/QMS/Question/PreviewQuestionDataPDF/index.js";
+import MainDashBoardDemo from "../pages/Dashboard/Modules/EFiling/MainDashBoardDemo/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -429,17 +449,11 @@ export const ProtectedRoutes = [
 
   //QMS Module
   { path: "/qms/dashboard", element: <QMSQuestionDashboard /> },
-  { path: "/qms/question/search", element: <QMSSearchQuestion /> },
-  { path: "/qms/resolution/search", element: <QMSSerchResolution /> },
-
-  { path: "/qms/reports", element: <QMSQuestionDashboard /> },
+  { path: "/qms/search/question", element: <QMSSearchQuestion /> },
+  { path: "/qms/search/resolution", element: <QMSSerchResolution /> },
   {
     path: "/qms/reports/question-group-diary",
     element: <QuestionGroupDiary />,
-  },
-  {
-    path: "/qms/reports/question-pending-under-process",
-    element: <QuestionPendingUnderProcess />,
   },
   {
     path: "/qms/reports/resolution-summary",
@@ -447,6 +461,10 @@ export const ProtectedRoutes = [
   },
   { path: "/qms/reports/question-summary", element: <QMSQuestionSummary /> },
   { path: "/qms/reports/notice-summary", element: <NoticeSummary /> },
+  {
+    path: "/qms/reports/question-pending-under-process",
+    element: <QuestionPendingUnderProcess />,
+  },
   {
     path: "/qms/reports/resolution-annual-reports",
     element: <QMSResolutionAnnualReports />,
@@ -458,6 +476,18 @@ export const ProtectedRoutes = [
   {
     path: "/qms/reports/defer-question-reports",
     element: <QMSDeferQuestionReports />,
+  },
+  {
+    path: "/qms/search/resolution/list/preview",
+    element: <PreviewResolutionList />,
+  },
+  {
+    path: "/qms/search/resolution/preview-pdf",
+    element: <ResolutionDataPreview />,
+  },
+  {
+    path: "/qms/search/question/preview-pdf",
+    element: <QuestionDataPreviewPDF />,
   },
   {
     path: "/qms/reports/question-list",
@@ -479,15 +509,6 @@ export const ProtectedRoutes = [
   {
     path: "/qms/reports/rota-list/addedit",
     element: <AddEditRotaList />,
-  },
-
-  //QMS Module
-  { path: "/qms/dashboard", element: <QMSQuestionDashboard /> },
-  { path: "/qms/search/question", element: <QMSSearchQuestion /> },
-  { path: "/qms/search/resolution", element: <QMSSerchResolution /> },
-  {
-    path: "/qms/search/resolution/preview",
-    element: <PreviewResolutionList />,
   },
 
   { path: "/qms/resolution", element: <QMSQuestionDashboard /> },
@@ -672,7 +693,8 @@ export const ProtectedRoutes = [
 
   // E-Filing
   // { path: "/efiling/dashboard", element: <DirectorDashboard /> },
-  { path: "/efiling/dashboard", element: <MainDashboard /> },
+  // { path: "/efiling/dashboard", element: <MainDashboard /> },
+  { path: "/efiling/dashboard", element: <MainDashBoardDemo /> },
   // { path: "/efiling/dashboard", element: <UpdatedDashboard /> },
   { path: "/efiling/director-dashboard", element: <EFilingDashboard /> },
 
@@ -1044,5 +1066,63 @@ export const ProtectedRoutes = [
   {
     path: "/transport/dashboard",
     element: <TransportDashboard />,
+  },
+  {
+    path: "/transport/logbook",
+    element: <LogBookList />,
+  },
+  {
+    path: "/transport/logbook/addedit",
+    element: <AddEditLogBook />,
+  },
+  {
+    path: "/transport/purchases",
+    element: <PurchasesMadeList />,
+  },
+  {
+    path: "/transport/purchases/addedit",
+    element: <AddEditPurchasesMade />,
+  },
+  {
+    path: "/transport/petrol-mileage",
+    element: <PetrolMileageList />,
+  },
+  {
+    path: "/transport/petrol-mileage/addedit",
+    element: <AddEditPetrolMileage />,
+  },
+  {
+    path: "/transport/vehicle-movement",
+    element: <VehicleMovementList />,
+  },
+  {
+    path: "/transport/vehicle-movement/addedit",
+    element: <AddEditVehicleMovement />,
+  },
+  {
+    path: "/transport/fleet",
+    element: <FleetManagementList />,
+  },
+  {
+    path: "/transport/fleet/addedit",
+    element: <AddEditFleetManagement />,
+  },
+  {
+    path: "/transport/vehicles",
+    element: <Vehicle />,
+  },
+
+  {
+    path: "/transport/driver",
+    element: <Drivers />,
+  },
+
+  {
+    path: "/transport/vehicles/addeditVehicles", // this will be changed
+    element: <AddVehicles />,
+  },
+  {
+    path: "/transport/driver/addeditDrivers", // this will be changed
+    element: <AddEditDrivers />,
   },
 ];

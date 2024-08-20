@@ -81,6 +81,9 @@ function PreviewResolutionList() {
       if (res.description) {
         transformedItem.description = res.description;
       }
+      if(res.colourResNo){
+        transformedItem.colourResNo= res.colourResNo
+      }
       if (res.resolutionActive) {
         transformedItem.Status = res.resolutionActive;
       }
@@ -145,7 +148,7 @@ function PreviewResolutionList() {
           <thead>
             <tr>
               {headers.map((header, index) => (
-                <th key={index} scope="col" style={{ fontSize: "14px", textAlign: "center" }}>
+                <th key={index} scope="col" style={{ fontSize: "14px", textAlign: "center", width: header === "englishText" && "350px" }}>
                   {header}
                 </th>
               ))}

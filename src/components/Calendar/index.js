@@ -44,7 +44,7 @@ export const Calendar = () => {
           minute: '2-digit',
           hour12: true, // Show AM/PM
         }}
-        height={500}
+        height={430}
         themeSystem="cosmo"
       />
     </div>

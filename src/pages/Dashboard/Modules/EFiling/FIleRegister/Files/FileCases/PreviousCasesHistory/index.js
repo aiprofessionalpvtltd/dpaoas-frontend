@@ -35,6 +35,7 @@ function PreviousCasesHistory() {
     return apiData.map((item, index) => ({
       caseId: item?.fkCaseId,
       FileNo: item?.fileData?.fileNumber,
+      initiatedBy: item?.createdByUser?.firstName,
       SubmittedBy:
         item?.fileRemarksData?.length > 0
           ? `${item?.fileRemarksData[0]
@@ -71,6 +72,7 @@ function PreviousCasesHistory() {
     return apiData.map((item, index) => ({
       caseId: item?.fkCaseId,
       // FileNo: item?.fileData?.fileNumber,
+      initiatedBy: item?.createdByUser?.firstName,
       AssignedBy: item?.submittedUser?.employee
         ? item?.submittedUser?.employee?.firstName
         : "---",
