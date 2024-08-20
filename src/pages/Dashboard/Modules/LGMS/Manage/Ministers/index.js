@@ -58,7 +58,7 @@ function LGMSMinisters() {
 
   useEffect(() => {
     getAllMinisterApi();
-  }, []);
+  }, [currentPage]);
 
   const handleDelete = async (id) => {
     try {

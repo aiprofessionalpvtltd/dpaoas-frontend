@@ -23,7 +23,7 @@ const AllGovernmentSenateBills = () => {
     setCurrentPage(page);
   };
 
-  // Transform Government Bill Data
+  // Transform Government Bill Introduced In Senate Data
   const transformGovernmentSenateBillData = (apiData) => {
     const docs = apiData?.map((item) => item?.billDocuments);
     if (docs?.length > 0) {

@@ -85,6 +85,7 @@ const IntroducedInSenate = ({
   currentPage,
   pageSize,
   totalCount,
+  hideTableTopButton,
 }) => {
   const [showModal, setShowModal] = useState(false);
   const [attachDocs, setAttachDocs] = useState([]);
@@ -110,7 +111,7 @@ const IntroducedInSenate = ({
       )}
       <CustomTable
         block={true}
-        hidebtn1={false}
+        hidebtn1={hideTableTopButton ? true : false}
         hideBtn={true}
         addBtnText={addBtnText}
         handleAdd={handleAdd}
@@ -120,7 +121,7 @@ const IntroducedInSenate = ({
         hideDeleteIcon={true}
         hideEditIcon={false}
         singleDataCard={true}
-        headertitlebgColor={"#666"}
+        headertitlebgColor={"#4b90f0"}
         headertitletextColor={"#FFF"}
         handlePageChange={handlePageChange}
         currentPage={currentPage}

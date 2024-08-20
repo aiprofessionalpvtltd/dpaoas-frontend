@@ -21,7 +21,7 @@ function LGMSMembers() {
   const [members, setMembers] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
-  const pageSize = 10; // Set your desired page size
+  const pageSize = 200; // Set your desired page size
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
@@ -59,7 +59,7 @@ function LGMSMembers() {
 
   useEffect(() => {
     handleMembers();
-  }, []);
+  }, [currentPage]);
 
   const handleDelete = async (id) => {
     try {

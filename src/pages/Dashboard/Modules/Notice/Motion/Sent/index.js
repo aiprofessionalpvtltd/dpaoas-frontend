@@ -67,7 +67,8 @@ function SentMotion() {
       formik?.values?.toSession ||
       formik?.values?.motionType ||
       formik?.values?.fromNoticeDate ||
-      formik?.values?.toNoticeDate || formik?.values?.motionStatus
+      formik?.values?.toNoticeDate ||
+      formik?.values?.motionStatus
     ) {
       searchMotionList(formik?.values, page);
     }
@@ -125,7 +126,7 @@ function SentMotion() {
         englishText: EnglishText ? EnglishText : "",
         urduText: UrduText ? UrduText : "",
         motionStatus: res?.motionStatuses?.statusName,
-        device:res?.device
+        device: res?.device,
 
         // createdBy:res?.motionSentStatus === "inNotice" ? "Notice Office": "---"
       };
@@ -133,9 +134,13 @@ function SentMotion() {
   };
 
   const getMotionListDataa = useCallback(async () => {
-    const motionSentStatus = "inNotice"
+    const motionSentStatus = "inNotice";
     try {
-      const response = await getAllMotionNotice(currentPage, pageSize, motionSentStatus);
+      const response = await getAllMotionNotice(
+        currentPage,
+        pageSize,
+        motionSentStatus
+      );
       if (response?.success) {
         const transformedData = transformMotionData(response?.data?.rows);
         setCount(response?.data?.count);
@@ -166,9 +171,8 @@ function SentMotion() {
       motionWeek: values?.motionWeek,
       motionType: values?.motionType,
       fkMotionStatus: values?.motionStatus,
-      motionSentStatus:["inNotice", "toMotion"]
+      motionSentStatus: ["inNotice", "toMotion"],
     };
-
 
     try {
       const response = await searchMotionNotice(page, pageSize, data); // Add await here
@@ -223,7 +227,8 @@ function SentMotion() {
       formik?.values?.toSession ||
       formik?.values?.motionType ||
       formik?.values?.fromNoticeDate ||
-      formik?.values?.toNoticeDate || formik?.values?.motionStatus
+      formik?.values?.toNoticeDate ||
+      formik?.values?.motionStatus
     ) {
       return;
     }
@@ -233,8 +238,8 @@ function SentMotion() {
   const sendMotion = async (id) => {
     try {
       const data = {
-        motionSentDate: new Date()
-      }
+        motionSentDate: new Date(),
+      };
       const response = await sendToMotion(id, data);
       if (response?.success) {
         showSuccessMessage(response.message);
@@ -258,7 +263,7 @@ function SentMotion() {
         title1={"Motion Lists"}
       />
       <div>
-        <div class="container-fluid dash-detail-container">
+        <div class="container-fluid">
           <div class="card mt-1">
             <div
               class="card-header red-bg"
@@ -582,6 +587,7 @@ function SentMotion() {
                     data={motionData}
                     headerShown={true}
                     hideDeleteIcon={true}
+                    tableTitle={"Motions List"}
                     // handleDelete={(item) => alert(item.id)}
                     handleEdit={(item) => hendleEdit(item?.id)}
                     headertitlebgColor={"#666"}

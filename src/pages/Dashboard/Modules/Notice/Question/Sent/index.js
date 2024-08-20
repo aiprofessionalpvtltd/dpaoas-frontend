@@ -108,7 +108,7 @@ function SentQuestion() {
       return {
         // SrNo: index + 1,
         Id: res?.id,
-        MemberName: res?.member ? res?.member?.memberName :"--",
+        MemberName: res?.member ? res?.member?.memberName : "--",
         noticeOfficeDiaryNumber: res?.noticeOfficeDiary?.noticeOfficeDiaryNo
           ? res?.noticeOfficeDiary?.noticeOfficeDiaryNo
           : "",
@@ -131,8 +131,9 @@ function SentQuestion() {
         Status: res.questionStatus?.questionStatus
           ? res.questionStatus?.questionStatus
           : "",
-          device:res?.device,
-          createdBy:res?.questionSentStatus === "inNotice" ? "Notice Office": "---"
+        device: res?.device,
+        createdBy:
+          res?.questionSentStatus === "inNotice" ? "Notice Office" : "---",
       };
     });
   };
@@ -154,7 +155,7 @@ function SentQuestion() {
         noticeOfficeDiaryDateTo:
           values?.toNoticeDate &&
           moment(values?.toNoticeDate).format("YYYY-MM-DD"),
-         questionSentStatus : ["inNotice", "toQuestion"]
+        questionSentStatus: ["inNotice", "toQuestion"],
       };
       try {
         const response = await searchQuestion(searchParams, page, pageSize);
@@ -162,8 +163,8 @@ function SentQuestion() {
         if (response?.success) {
           showSuccessMessage(response?.message);
           setCount(response?.data?.count);
-            const transformedData = transformLeavesData(response.data?.questions);
-            setResData(transformedData);
+          const transformedData = transformLeavesData(response.data?.questions);
+          setResData(transformedData);
         }
         // formik.resetForm();
       } catch (error) {
@@ -249,8 +250,8 @@ function SentQuestion() {
   const sendQuestion = async (id) => {
     try {
       const data = {
-        questionSentDate: new Date()
-      }
+        questionSentDate: new Date(),
+      };
       const response = await sendToQuestion(id, data);
       if (response?.success) {
         showSuccessMessage(response.message);
@@ -599,10 +600,7 @@ function SentQuestion() {
                   </div>
                 </form>
 
-                <div
-                  class="dash-detail-container"
-                  style={{ marginTop: "20px" }}
-                >
+                <div class="" style={{ marginTop: "20px" }}>
                   <CustomTable
                     // block={true}
                     hideBtn={true}

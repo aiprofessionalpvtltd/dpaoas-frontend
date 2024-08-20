@@ -178,7 +178,6 @@ import AllGovernmentSenateBills from "../pages/Dashboard/Modules/LGMS/Bills/Gove
 import AllGovernmentRecievedNABills from "../pages/Dashboard/Modules/LGMS/Bills/GovernmentBill/RecievefromNA/index.js";
 import AllPrivateMemberSenateBills from "../pages/Dashboard/Modules/LGMS/Bills/PrivateMemberBill/IntroducedInSenate/index.js";
 import AllPrivateMemberBillFromNA from "../pages/Dashboard/Modules/LGMS/Bills/PrivateMemberBill/RecievedFromNA/index.js";
-import SearchLegislationBills from "../pages/Dashboard/Modules/LGMS/Bills/SearchBills";
 import AllOrdinanceList from "../pages/Dashboard/Modules/LGMS/Ordinance/OrdinanceList";
 import AddOrdinance from "../pages/Dashboard/Modules/LGMS/Ordinance/AddOrdinance";
 import EditOrdinance from "../pages/Dashboard/Modules/LGMS/Ordinance/EditOrdinance";
@@ -255,6 +254,8 @@ import AddEditFlags from "../pages/Dashboard/Modules/EFiling/Flags/AddEditFIags/
 import MotionPreviewPDF from "../components/MotionPDFPreview/index.js";
 import PreviewSuplementryList from "../pages/Dashboard/Modules/QMS/Reports/QuestionList/PreviewSuplementryList/index.js";
 import TransportDashboard from "../pages/Dashboard/Modules/Transport/index.js";
+import SearchLegislationGovernmentBills from "../pages/Dashboard/Modules/LGMS/Bills/SearchBills/GovernmentBills/index.js";
+import SearchLegislationPrivateMemberBill from "../pages/Dashboard/Modules/LGMS/Bills/SearchBills/PrivateMemberBills/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -410,7 +411,6 @@ export const ProtectedRoutes = [
   { path: "/mms/motion/detail", element: <MMSMotionDetail /> },
   { path: "/mms/motion/list", element: <MMSMotionList /> },
   { path: "/mms/motion/preview-pdf", element: <MotionPreviewPDF /> },
-
 
   { path: "/mms/question/search", element: <MMSSearchQuestion /> },
   { path: "/mms/resolution/search", element: <MMSSearchResolution /> },
@@ -788,8 +788,12 @@ export const ProtectedRoutes = [
   },
 
   {
-    path: "/lgms/dashboard/bills/search-bills",
-    element: <SearchLegislationBills />,
+    path: "/lgms/dashboard/bills/search-government-bills",
+    element: <SearchLegislationGovernmentBills />,
+  },
+  {
+    path: "/lgms/dashboard/bills/search-private-bills",
+    element: <SearchLegislationPrivateMemberBill />,
   },
   {
     path: "/lgms/dashboard/ordinances/ordinance-list",
@@ -1035,8 +1039,6 @@ export const ProtectedRoutes = [
     path: "/ldu/lawActs/all-lisitng/edit-law-acts-Bill",
     element: <EditLawActsBill />,
   },
-
-
 
   //Transport Module
   {

@@ -219,12 +219,12 @@ export const NoticeSidebarItems = [
         icon: faSquarePollHorizontal,
       },
       {
-        itemName: "Attendence Reports",
+        itemName: "Date Wise Attendance Report",
         link: "/notice/reports/attendence-reports",
         icon: faClipboardList,
       },
       {
-        itemName: "Party/Province Reports",
+        itemName: "Party/Province Wise Attendance Reports",
         link: "/notice/reports/party-province-annual-attendence-reports",
         icon: faClipboardList,
       },
@@ -236,10 +236,10 @@ export const NoticeSidebarItems = [
 
 export const MMSSideBarItems = [
   {
-      itemName: "Dashboard",
-      link: "/mms/dashboard",
-      icon: faClipboardList,
-    },
+    itemName: "Dashboard",
+    link: "/mms/dashboard",
+    icon: faClipboardList,
+  },
   {
     itemName: "Motion",
     link: "/mms/motion",
@@ -330,7 +330,6 @@ export const QMSSideBarItems = [
     link: "/qms/question",
     icon: faClipboardList,
     subItems: [
-      
       {
         itemName: "New Question",
         link: "/qms/question/new",
@@ -447,8 +446,6 @@ export const QMSSideBarItems = [
         link: "/qms/reports/question-summary",
         icon: faClipboardList,
       },
-
-      
 
       {
         itemName: "Resolution Annual Reports",
@@ -976,7 +973,7 @@ export const LegislationSideBarItems = [
       },
       {
         itemName: "Search Bills",
-        link: "/lgms/dashboard/bills/search-bills",
+        link: "/lgms/dashboard/bills/search-government-bills",
         icon: faBookOpen,
       },
     ],
@@ -999,7 +996,7 @@ export const LegislationSideBarItems = [
       },
       {
         itemName: "Search Bills",
-        link: "/lgms/dashboard/bills/search-bills",
+        link: "/lgms/dashboard/bills/search-private-bills",
         icon: faBookOpen,
       },
     ],
@@ -1204,8 +1201,6 @@ export const LDUSideBarItems = [
     ],
   },
 ];
-
-
 
 // Transport Management
 
