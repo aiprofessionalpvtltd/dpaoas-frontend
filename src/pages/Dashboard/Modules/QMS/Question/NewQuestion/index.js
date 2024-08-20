@@ -9,7 +9,10 @@ import {
   showErrorMessage,
   showSuccessMessage,
 } from "../../../../../../utils/ToastAlert";
-import { createQuestion } from "../../../../../../api/APIs/Services/Question.service";
+import {
+  createQuestion,
+  getGroupbyDevisionId,
+} from "../../../../../../api/APIs/Services/Question.service";
 import { CustomAlert } from "../../../../../../components/CustomComponents/CustomAlert";
 import { ToastContainer } from "react-toastify";
 import DatePicker from "react-datepicker";
@@ -49,9 +52,9 @@ function QMSNewQuestion() {
       noticeOfficeDiaryTime: "",
       englishText: "",
       urduText: "",
-      memberPosition: "",
       fkDivisionId: "",
-      fkQuestionDiaryId: "",
+      questionDiaryNo: "",
+      fkGroupId: "",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -75,10 +78,10 @@ function QMSNewQuestion() {
     formData.append("englishText", values.englishText);
     formData.append("urduText", values.urduText);
     formData.append("submittedBy", userData?.fkUserId);
-    formData.append("memberPosition", values?.memberPosition);
     formData.append("questionSentStatus", "inQuestion");
     formData.append("fkDivisionId", values?.fkDivisionId);
-    formData.append("fkQuestionDiaryId", values?.fkQuestionDiaryId);
+    formData.append("questionDiaryNo", values?.questionDiaryNo);
+    formData.append("fkGroupId", values?.fkGroupId);
 
     try {
       const response = await createQuestion(formData);
@@ -90,8 +93,20 @@ function QMSNewQuestion() {
     }
   };
 
-  const handleProcedureContentChange = (content) => {
-    console.log(content);
+  const getGroupbyDevisionIdAPi = async (e) => {
+    try {
+      const response = await getGroupbyDevisionId(e.target.value);
+
+      if (response?.success) {
+        const groupId = response?.data?.fkGroupId || "";
+        formik.setFieldValue("fkGroupId", groupId);
+      } else {
+        formik.setFieldValue("fkGroupId", "");
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+      formik.setFieldValue("fkGroupId", "");
+    }
   };
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
@@ -317,55 +332,7 @@ function QMSNewQuestion() {
                       </div>
                     </div>
                   </div>
-                  <div className="row">
-                    <div class="col-6">
-                      <div class="mb-3">
-                        <label class="form-label">Member Position</label>
-                        <select
-                          class={`form-select ${
-                            formik.touched.memberPosition &&
-                            formik.errors.memberPosition
-                              ? "is-invalid"
-                              : ""
-                          }`}
-                          placeholder="Member Position"
-                          value={formik.values.memberPosition}
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          name="memberPosition"
-                        >
-                          <option value="" selected disabled hidden>
-                            Select
-                          </option>
-                          <option value={"Treasury"}>Treasury</option>
-                          <option value={"Opposition"}>Opposition</option>
-                          <option value={"Independent"}>Independent</option>
-                          <option value={"Anyside"}>Anyside</option>
-                        </select>
-                        {formik.touched.memberPosition &&
-                          formik.errors.memberPosition && (
-                            <div className="invalid-feedback">
-                              {formik.errors.memberPosition}
-                            </div>
-                          )}
-                      </div>
-                    </div>
-
-                    <div class="col-6">
-                      <div class="mb-3">
-                        <label class="form-label">Question Diary No</label>
-                        <input
-                          class={`form-control`}
-                          type="number"
-                          id="fkQuestionDiaryId"
-                          value={formik.values.fkQuestionDiaryId}
-                          name="fkQuestionDiaryId"
-                          onBlur={formik.handleBlur}
-                          onChange={formik.handleChange}
-                        />
-                      </div>
-                    </div>
-                  </div>
+                  
                   <div className="row">
                     <div class="col-6">
                       <div class="mb-3">
@@ -374,7 +341,10 @@ function QMSNewQuestion() {
                           class={`form-select`}
                           placeholder="Division"
                           value={formik.values.fkDivisionId}
-                          onChange={formik.handleChange}
+                          onChange={(event) => {
+                            formik.handleChange(event);
+                            getGroupbyDevisionIdAPi(event);
+                          }}
                           onBlur={formik.handleBlur}
                           name="fkDivisionId"
                         >
@@ -388,6 +358,43 @@ function QMSNewQuestion() {
                               </option>
                             ))}
                         </select>
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="mb-3">
+                        <label class="form-label">Group</label>
+                        <select
+                          class="form-select"
+                          value={formik.values.fkGroupId}
+                          id="fkGroupId"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                        >
+                          <option value={""} selected disabled hidden>
+                            Select
+                          </option>
+                          <option value="1">1st Group</option>
+                          <option value="2">2nd Group</option>
+                          <option value="3">3rd Group</option>
+                          <option value="4">4th Group</option>
+                          <option value="5">5th Group</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div class="col-6">
+                      <div class="mb-3">
+                        <label class="form-label">Question Diary No</label>
+                        <input
+                          class={`form-control`}
+                          type="number"
+                          id="questionDiaryNo"
+                          value={formik.values.questionDiaryNo}
+                          name="questionDiaryNo"
+                          onBlur={formik.handleBlur}
+                          onChange={formik.handleChange}
+                        />
                       </div>
                     </div>
                   </div>

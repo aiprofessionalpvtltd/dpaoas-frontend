@@ -460,11 +460,6 @@ export const QMSSideBarItems = [
         icon: faClipboardList,
       },
 
-      {
-        itemName: "Resolution Annual Reports",
-        link: "/qms/reports/resolution-annual-reports",
-        icon: faClipboardList,
-      },
       // {
       //   itemName: "Question Annual Reports",
       //   link: "/qms/reports/question-annual-reports",

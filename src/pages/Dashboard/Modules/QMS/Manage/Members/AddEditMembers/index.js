@@ -352,6 +352,11 @@ function QMSMembersAddEditForm() {
                         </option>
                         <option value="Opposition">Opposition</option>
                         <option value="Government">Government</option>
+                        <option value="Independent">Independent</option>
+                        <option value="Minister">Minister</option>
+                        <option value="Treasury">Treasury</option>
+                        <option value="Anyside">Anyside</option>
+
                       </select>
                     </div>
                   </div>

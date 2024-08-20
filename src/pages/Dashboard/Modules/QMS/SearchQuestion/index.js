@@ -62,6 +62,8 @@ function QMSSearchQuestion() {
       noticeOfficeDiaryNo: "",
       fileStatus: "",
       groups: "",
+      religion: "",
+      gender: "",
       memberPosition: "",
     },
     onSubmit: (values) => {
@@ -129,6 +131,8 @@ function QMSSearchQuestion() {
       divisions: values.divisions,
       memberPosition: values?.memberPosition,
       questionSentStatus: "inQuestion",
+      gender: values?.gender,
+      religion: values?.religion,
       noticeOfficeDiaryNo: values?.noticeOfficeDiaryNo,
     };
 
@@ -536,132 +540,49 @@ function QMSSearchQuestion() {
                     </div>
                   </div>
                 </div>
-                {/* <div class="row">
-                  <div class="col">
+                <div class="row">
+                  <div class="col-3">
                     <div class="mb-3">
                       <label class="form-label">Gender</label>
-                      <select class="form-select">
-                        <option selected="selected" value="0">
+                      <select
+                        class="form-select"
+                        value={formik.values.gender}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        id="gender"
+                        name="gender"
+                      >
+                        <option value={""} selected disabled hidden>
                           Gender
                         </option>
-                        <option value="1">Male</option>
-                        <option value="2">Female</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
                       </select>
                     </div>
                   </div>
-                  <div class="col">
+                  <div class="col-3">
                     <div class="mb-3">
                       <label class="form-label">Religion</label>
                       <select
-                        name="ctl00$Contentvalue3$ReligionDDL"
-                        id="ReligionDDL"
+                        value={formik.values.religion}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        id="religion"
+                        name="religion"
                         class="form-select"
                       >
-                        <option selected="selected" value="0">
+                        <option selected value="" disabled hidden>
                           Religion
                         </option>
-                        <option value="1">Islam</option>
-                        <option value="2">Christianity</option>
-                        <option value="3">Hinduism</option>
-                        <option value="5">Sikh</option>
-                        <option value="4">Other</option>
+                        <option value="Islam">Islam</option>
+                        <option value="Christianity">Christianity</option>
+                        <option value="Hinduism">Hinduism</option>
+                        <option value="Sikh">Sikh</option>
+                        <option value="Other">Other</option>
                       </select>
                     </div>
                   </div>
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Not in Religion</label>
-                      <select class="form-select">
-                        <option>Not in Religion</option>
-                        <option>Islam</option>
-                        <option>Christianity</option>
-                        <option>Hinduism</option>
-                        <option>Sikh</option>
-                        <option>Other</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">File Status</label>
-                      <select
-                        class="form-select"
-                        value={formik.values.fileStatus}
-                        id="fileStatus"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                      >
-                        <option>Not in Religion</option>
-                        <option>Islam</option>
-                        <option>Christianity</option>
-                        <option>Hinduism</option>
-                        <option>Sikh</option>
-                        <option>Other</option>
-                      </select>
-                    </div>
-                  </div>
-                </div> */}
-                {/* <div class="row">
-                  <div class="col-3">
-                    <div class="mb-3">
-                      <label class="form-label">Division</label>
-                      <input
-                        class="form-control"
-                        type="text"
-                        value={formik.values.divisions}
-                        id="divisions"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                      />
-                    </div>
-                  </div>
-                  <div class="col-3">
-                    <div class="mb-3">
-                      <label class="form-label">Group</label>
-                      <select
-                        class="form-select"
-                        value={formik.values.groups}
-                        id="groups"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                      >
-                        <option value={""} selected disabled hidden>
-                          Selected
-                        </option>
-                        <option value={"1"}>saqib</option>
-                        <option value={"2"}>saqib</option>
-                      </select>
-                    </div>
-                  </div> 
-                  <div class="col-2">
-                    <div class="mb-3">
-                      <div class="form-check" style={{ marginTop: "39px" }}>
-                        <input
-                          class="form-check-input "
-                          type="checkbox"
-                          id="flexCheckDefault"
-                        />
-                        <label class="form-check-label" for="flexCheckDefault">
-                          Complete Text
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-2">
-                    <div class="mb-3">
-                      <div class="form-check" style={{ marginTop: "39px" }}>
-                        <input
-                          class="form-check-input "
-                          type="checkbox"
-                          id="flexCheckDefault"
-                        />
-                        <label class="form-check-label" for="flexCheckDefault">
-                          Exact Match
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                </div> */}
+                </div>
                 <div class="row">
                   <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                     <button class="btn btn-primary" type="submit">
