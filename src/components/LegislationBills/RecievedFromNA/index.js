@@ -13,6 +13,7 @@ const RecievedFromNA = ({
   currentPage,
   pageSize,
   totalCount,
+  hideTableTopButton,
 }) => {
   const [showModal, setShowModal] = useState(false);
   const [attachDocs, setAttachDocs] = useState([]);
@@ -42,7 +43,7 @@ const RecievedFromNA = ({
       <div>
         <CustomTable
           block={true}
-          hidebtn1={false}
+          hidebtn1={hideTableTopButton ? true : false}
           hideBtn={true}
           addBtnText={addBtnText}
           handleAdd={handleAdd}

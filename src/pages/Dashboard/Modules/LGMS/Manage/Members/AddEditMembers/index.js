@@ -7,7 +7,10 @@ import * as Yup from "yup";
 import DatePicker from "react-datepicker";
 import Header from "../../../../../../../components/Header";
 import { Layout } from "../../../../../../../components/Layout";
-import { LegislationSideBarItems, QMSSideBarItems } from "../../../../../../../utils/sideBarItems";
+import {
+  LegislationSideBarItems,
+  QMSSideBarItems,
+} from "../../../../../../../utils/sideBarItems";
 import {
   showErrorMessage,
   showSuccessMessage,
@@ -113,7 +116,7 @@ function LGMSMembersAddEditForm() {
       if (response?.success) {
         showSuccessMessage(response?.message);
         setTimeout(() => {
-          navigate("/qms/manage/members");
+          navigate("/lgms/dashboard/manage/members/list");
         }, 3000);
       }
     } catch (error) {
@@ -188,7 +191,11 @@ function LGMSMembersAddEditForm() {
   }, [memberById, formik.setValues]);
 
   return (
-    <Layout module={true} sidebarItems={LegislationSideBarItems} centerlogohide={true}>
+    <Layout
+      module={true}
+      sidebarItems={LegislationSideBarItems}
+      centerlogohide={true}
+    >
       <Header
         dashboardLink={"/qms/dashboard"}
         addLink1={"/lgms/dashboard/manage/members/list"}

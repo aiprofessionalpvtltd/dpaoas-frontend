@@ -20,7 +20,7 @@ import { ToastContainer } from "react-toastify";
 import { AuthContext } from "../../../../../../api/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
-
+import moment from "moment";
 const validationSchema = Yup.object({
   fkSessionNo: Yup.number().required("Session No is required"),
   noticeOfficeDiaryNo: Yup.string().required(
@@ -40,13 +40,12 @@ const validationSchema = Yup.object({
 function NewResolution() {
   const navigate = useNavigate();
   const { members, sessions } = useContext(AuthContext);
-  console.log("members", members);
   const [showModal, setShowModal] = useState(false);
-
   const [formValues, setFormValues] = useState([]);
 
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
+
   const handleOkClick = () => {
     CreateResolutionApi(formValues);
     handleClose();
@@ -56,8 +55,8 @@ function NewResolution() {
     initialValues: {
       fkSessionNo: "",
       noticeOfficeDiaryNo: "",
-      noticeOfficeDiaryDate: null,
-      noticeOfficeDiaryTime: "",
+      noticeOfficeDiaryDate: new Date(),
+      noticeOfficeDiaryTime: moment().format("HH:mm A"),
       resolutionType: "",
       resolutionMovers: [],
       englishText: "",
@@ -100,7 +99,6 @@ function NewResolution() {
         setTimeout(() => {
           navigate("/notice/resolution/sent");
         }, 2500);
-
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -294,8 +292,14 @@ function NewResolution() {
                         <DatePicker
                           selected={formik.values.noticeOfficeDiaryDate}
                           maxDate={new Date()}
+                          // onChange={(date) =>
+                          //   formik.setFieldValue("noticeOfficeDiaryDate", date)
+                          // }
                           onChange={(date) =>
-                            formik.setFieldValue("noticeOfficeDiaryDate", date)
+                            formik.setFieldValue(
+                              "noticeOfficeDiaryDate",
+                              moment(date).format("YYYY-MM-DD")
+                            )
                           }
                           onBlur={formik.handleBlur}
                           className={`form-control ${
