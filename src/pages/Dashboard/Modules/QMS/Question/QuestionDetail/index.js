@@ -16,6 +16,7 @@ import {
   createDefferQuestion,
   createReviveQuestion,
   getAllQuestionStatus,
+  getGroupbyDevisionId,
   sendQuestionTranslation,
 } from "../../../../../../api/APIs/Services/Question.service";
 import { ToastContainer } from "react-toastify";
@@ -98,8 +99,8 @@ function QMSQuestionDetail() {
       // replyDate: location?.state?.question?.replyDate,
       replyDate: new Date(location?.state?.question?.replyDate),
       senator: location?.state ? location?.state?.question?.member?.id : "",
-      group: location?.state?.question?.groups,
-      division: location?.state?.question?.divisions,
+      group:  location?.state ? location?.state?.question?.fkGroupId : '',
+      division: location?.state ?  location?.state?.question?.fkDivisionId : '',
       fileStatus: location?.state?.question?.fileStatus,
       englishText: location?.state?.question?.englishText,
       urduText: location?.state?.question?.urduText,
@@ -296,6 +297,26 @@ function QMSQuestionDetail() {
   const QuestionFileHistoryData = transfrerFilerHistoryData(
     location?.state?.history?.questionFileHistory
   );
+
+  //Group By Devision Id
+
+  const getGroupbyDevisionIdAPi = async (e) => {
+    try {
+      const response = await getGroupbyDevisionId(e.target.value);
+  
+      if (response?.success) {
+        const groupId = response?.data?.fkGroupId || ''; 
+        formik.setFieldValue("group", groupId);
+      } else {
+        formik.setFieldValue("group", ''); 
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+      formik.setFieldValue("group", '');
+    }
+  }
+  
+
   
   useEffect(() => {
     GetALlStatus();
@@ -751,7 +772,7 @@ function QMSQuestionDetail() {
                       <label class="form-label">Question Diary No</label>
                       <input
                         type="text"
-                        placeholder={formik.values.questionDiaryNo}
+                        value={formik.values.questionDiaryNo}
                         className={"form-control"}
                         id="questionDiaryNo"
                         onChange={formik.handleChange}
@@ -861,57 +882,30 @@ function QMSQuestionDetail() {
                       </select>
                     </div>
                   </div>
-                  {/* <div class="col">
+                  
+                 <div class="col-3">
                     <div class="mb-3">
-                      <label class="form-label">Group</label>
+                      <label class="form-label">File Status</label>
                       <select
                         class="form-control small-control"
-                        id="group"
+                        id="fileStatus"
+                        value={formik.values.fileStatus}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       >
                         <option value={""} selected disabled hidden>
-                          Select
+                          select
                         </option>
-                        <option value="1">1st Group</option>
-                        <option>2nd Group</option>
-                        <option>3rd Group</option>
-                        <option>4th Group</option>
-                        <option>5th Group</option>
+                        <option value={"Available"}>Available</option>
+                        <option value={"Missing"}>Missing</option>
+                        <option value={"Moved for Approval"}>
+                          Moved for Approval
+                        </option>
+                        <option value={"Moved for Advance Copy"}>
+                          Moved for Advance Copy
+                        </option>
                       </select>
                     </div>
-                  </div> */}
-                  <div class="col-3">
-                      <div class="mb-3">
-                        <label class="form-label">Member Position</label>
-                        <select
-                          class={`form-select ${
-                            formik.touched.memberPosition &&
-                            formik.errors.memberPosition
-                              ? "is-invalid"
-                              : ""
-                          }`}
-                          placeholder="Member Position"
-                          value={formik.values.memberPosition}
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          name="memberPosition"
-                        >
-                          <option value="" selected disabled hidden>
-                            Select
-                          </option>
-                          <option value={"Treasury"}>Treasury</option>
-                          <option value={"Opposition"}>Opposition</option>
-                          <option value={"Independent"}>Independent</option>
-                          <option value={"Anyside"}>Anyside</option>
-                        </select>
-                        {formik.touched.memberPosition &&
-                          formik.errors.memberPosition && (
-                            <div className="invalid-feedback">
-                              {formik.errors.memberPosition}
-                            </div>
-                          )}
-                      </div>
                   </div>
                 </div>
                 <div class="row">
@@ -920,9 +914,12 @@ function QMSQuestionDetail() {
                       <label class="form-label">Division</label>
                       <select
                         class="form-select"
-                        placeholder={formik.values.tonerModel}
+                        value={formik.values.division}
                         id="division"
-                        onChange={formik.handleChange}
+                        onChange={(event) => {
+                          formik.handleChange(event); 
+                          getGroupbyDevisionIdAPi(event); 
+                        }}
                         onBlur={formik.handleBlur}
                       >
                         <option selected disabled hidden>
@@ -943,49 +940,33 @@ function QMSQuestionDetail() {
                       {/* APi Required with base on Division ID */}
                       <select
                         class="form-select"
-                        placeholder={formik.values.tonerModel}
+                        value={formik.values.group}
                         id="group"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       >
-                        <option selected disabled hidden>
+                        <option value={''} selected disabled hidden>
                           Select
                         </option>
                         <option value="1">
-                              Group 1
+                             1st Group
                             </option>
-                        {/* {divisions &&
-                          divisions.map((item, index) => (
-                            <option value={item.id} key={index}>
-                              {item?.divisionName}
+                            <option value="2">
+                              2nd Group
                             </option>
-                          ))} */}
+                            <option value="3">
+                              3rd Group
+                            </option>
+                            <option value="4">
+                             4th Group
+                            </option>
+                            <option value="5">
+                             5th Group
+                            </option>
                       </select>
                     </div>
                   </div>
-                  <div class="col-3">
-                    <div class="mb-3">
-                      <label class="form-label">File Status</label>
-                      <select
-                        class="form-control small-control"
-                        id="fileStatus"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                      >
-                        <option value={""} selected disabled hidden>
-                          select
-                        </option>
-                        <option value={"Available"}>Available</option>
-                        <option value={"Missing"}>Missing</option>
-                        <option value={"Moved for Approval"}>
-                          Moved for Approval
-                        </option>
-                        <option value={"Moved for Advance Copy"}>
-                          Moved for Advance Copy
-                        </option>
-                      </select>
-                    </div>
-                  </div>
+                  
                 </div>
                 {/* <div style={{ marginTop: 10 }}>
                   <Editor
