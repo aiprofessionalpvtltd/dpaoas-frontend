@@ -37,7 +37,7 @@ const validationSchema = Yup.object({
   fileNumber: Yup.string().required("File Number is required"),
   billType: Yup.string().required("Bill Type is required"),
   billTitle: Yup.string().required("Bill Title is required"),
-  senateBillSenatorMovers: Yup.array().required("Senator is required"),
+  // senateBillSenatorMovers: Yup.array().required("Senator is required"),
   senateBillMnaMovers: Yup.object().required("Minister is required"),
   senateBillMinistryMovers: Yup.object().required("Ministery is required"),
 });
@@ -187,7 +187,7 @@ const EditSenateBill = () => {
       documentType: "",
       file: "",
     },
-    validationSchema: validationSchema,
+    // validationSchema: validationSchema,
     onSubmit: (values) => {
       UpdateNationalAssemblyBill(values);
     },
