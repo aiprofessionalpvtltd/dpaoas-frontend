@@ -1,97 +1,64 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Layout } from "../../../../../components/Layout";
-import {
-  EfilingSideBarBranchItem,
-  EfilingSideBarItem,
-  TransportSideBarItems,
-} from "../../../../../utils/sideBarItems";
 import { ToastContainer } from "react-toastify";
 import CustomTable from "../../../../../components/CustomComponents/CustomTable";
 import { useNavigate } from "react-router-dom";
-import {
-  DeleteFlagApi,
-  DeleteHeading,
-  getAllBranchFlagsApi,
-  getAllFileHeading,
-} from "../../../../../api/APIs/Services/efiling.service";
-import {
-  showErrorMessage,
-  showSuccessMessage,
-} from "../../../../../utils/ToastAlert";
+import { showErrorMessage, showSuccessMessage } from "../../../../../utils/ToastAlert";
 import { getUserData } from "../../../../../api/Auth";
+import { TransportSideBarItems } from '../../../../../utils/sideBarItems';
+import { deleteHandedForm, getHandedForm } from "../../../../../api/APIs/Services/Transport.service";
+
 
 function FleetManagementList() {
   const navigate = useNavigate();
   const userData = getUserData();
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
+  const [data, setData] = useState([]);
   const pageSize = 10; // Set your desired page size
-  const [flagsData, setFlagsData] = useState([]);
-  const [filteredData, setFilteredData] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
+
+  // Fetch data when the component mounts or when currentPage changes
+  const fetchData = useCallback(async () => {
+    try {
+      const result = await getHandedForm(currentPage, pageSize, userData?.id);
+      setData(result?.items || []);
+      setCount(result?.totalCount || 0);
+    } catch (error) {
+      showErrorMessage("Error fetching fleet management data.");
+    }
+  }, [currentPage, pageSize, userData?.id]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   const handlePageChange = (page) => {
-    // Update currentPage when a page link is clicked
     setCurrentPage(page);
   };
 
-  const transformFilesHeadingdata = (apiData) => {
-    return apiData.map((item) => ({
-      SrNo: item?.id,
-      flag: item?.flag,
-      branch: item?.branches?.branchName,
-    }));
-  };
-
-  const getAllFlagsApiFunc = useCallback(async () => {
-    try {
-      const response = await getAllBranchFlagsApi(
-        userData?.fkBranchId,
-        currentPage,
-        pageSize
-      );
-      if (response.success) {
-        //   showSuccessMessage(response?.message)
-        setCount(response?.data?.count);
-        const transformedData = transformFilesHeadingdata(
-          response?.data
-        );
-        setFlagsData(transformedData);
-        setFilteredData(transformedData); // Initialize filtered data
-      }
-    } catch (error) {
-      showErrorMessage(error?.response?.data?.message);
-    }
-  }, [currentPage, pageSize, userData?.fkBranchId]);
-
   const handleDelete = async (id) => {
     try {
-      const response = await DeleteFlagApi(id);
-      if (response?.success) {
-        showSuccessMessage(response.message);
-        getAllFlagsApiFunc();
-      }
+      await deleteHandedForm(id);
+      showSuccessMessage("Fleet record deleted successfully.");
+      fetchData(); // Refresh data after deletion
     } catch (error) {
-      showErrorMessage(error.response.data.message);
+      showErrorMessage("Error deleting fleet record.");
     }
   };
-
-  useEffect(() => {
-    getAllFlagsApiFunc();
-  }, [getAllFlagsApiFunc]);
 
   return (
     <Layout
       module={false}
       centerlogohide={true}
-      sidebarItems={TransportSideBarItems}>
+      sidebarItems={TransportSideBarItems}
+    >
       <ToastContainer />
       <div className="row">
         <div className="col-12">
           <CustomTable
             hideBtn={false}
             addBtnText={"Create Fleet"}
-            data={filteredData}
+            data={data}
             tableTitle="Fleet Management"
             headertitlebgColor={"#666"}
             headertitletextColor={"#FFF"}
@@ -105,11 +72,11 @@ function FleetManagementList() {
             singleDataCard={true}
             // seachBarShow={true}
             // searchonchange={onSearchChange}
-            handleDelete={(item) => handleDelete(item.SrNo)}
-            showEditIcon={false}
+            handleDelete={(item) => handleDelete(item.id)}
+            showEditIcon={true}
             handleEdit={(item) =>
               navigate("/transport/fleet/addedit", {
-                state: item,
+                state: { fleetData: item },
               })
             }
           />
