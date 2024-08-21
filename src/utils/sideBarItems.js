@@ -540,6 +540,11 @@ export const QMSSideBarItems = [
       },
     ],
   },
+  {
+    itemName: "Annual Report",
+    link: "/qms/questionList/question-anual-report",
+    icon: faClipboardList,
+  },
 ];
 
 // SMS Sidebar
