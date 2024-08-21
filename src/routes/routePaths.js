@@ -276,6 +276,9 @@ import Drivers from "../pages/Dashboard/Modules/Transport/DriversAndVehicles/Dri
 import ResolutionDataPreview from "../pages/Dashboard/Modules/QMS/Resolution/ResolutionDataPrintPreview/index.js";
 import QuestionDataPreviewPDF from "../pages/Dashboard/Modules/QMS/Question/PreviewQuestionDataPDF/index.js";
 import MainDashBoardDemo from "../pages/Dashboard/Modules/EFiling/MainDashBoardDemo/index.js";
+import SumDriverVehicle from "../pages/Dashboard/Modules/Transport/Summary/Driv-Vehicle/index.js";
+import Poll from "../pages/Dashboard/Modules/Transport/Summary/Poll/index.js";
+import MakeModelWise from "../pages/Dashboard/Modules/Transport/Summary/MakeModel/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -1122,7 +1125,19 @@ export const ProtectedRoutes = [
     element: <AddVehicles />,
   },
   {
-    path: "/transport/driver/addeditDrivers", // this will be changed
-    element: <AddEditDrivers />,
+    path:"/transport/driver/addeditDrivers",  // this will be changed
+    element: <AddEditDrivers/>
   },
+  {
+    path:"/transport/sumDriverVehicle",  // this will be changed
+    element: <SumDriverVehicle/>
+  },
+  {
+    path:"/transport/poll",  // this will be changed
+    element: <Poll/>
+  },
+  {
+    path:"/transport/makeModelWise",  // this will be changed
+    element: <MakeModelWise/>
+  }
 ];
