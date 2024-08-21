@@ -33,7 +33,7 @@ const validationSchema = Yup.object({
     "Date of Receipt is required"
   ),
   billTitle: Yup.string().required("Bill Title is required"),
-  selectedSenator: Yup.array().required("Senator is required"),
+  // selectedSenator: Yup.array().required("Senator is required"),
   selectedMNA: Yup.object().required("Minister is required"),
   selectedMinistry: Yup.object().required("Ministery is required"),
 });
@@ -108,7 +108,7 @@ function NewLegislationNABill() {
       selectedMinistry: null,
       billFrom: "From NA",
     },
-    validationSchema: validationSchema,
+    // validationSchema: validationSchema,
     onSubmit: (values) => {
       console.log("Create Question Data", values);
       CreateNABill(values);
