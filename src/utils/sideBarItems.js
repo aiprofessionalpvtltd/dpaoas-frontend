@@ -1245,7 +1245,7 @@ export const TransportSideBarItems = [
     icon: faClipboardList,
   },
   {
-    itemName: "Fleet Management",
+    itemName: "Handed Over Form",
     link: "/transport/fleet",
     icon: faClipboardList,
   },
@@ -1262,6 +1262,28 @@ export const TransportSideBarItems = [
       {
         itemName: "Drivers",
         link: "/transport/driver",  // need to be changed /drivers
+        icon: faFileInvoice,
+      }
+    ]
+  },
+  {
+    itemName:"Summary",
+    link:"/transport",
+    icon:faClipboardList,
+    subItems:[
+      {
+        itemName: "Drivers and Vehicles",
+        link: "/transport/sumDriverVehicle", // need to be changed /vehicles
+        icon: faFileInvoice,
+      }, // added 
+      {
+        itemName: "Poll",
+        link: "/transport/poll",  // need to be changed /drivers
+        icon: faFileInvoice,
+      },
+      {
+        itemName: "Make and Model-wise",
+        link: "/transport/makeModelWise",  // need to be changed /drivers
         icon: faFileInvoice,
       }
     ]

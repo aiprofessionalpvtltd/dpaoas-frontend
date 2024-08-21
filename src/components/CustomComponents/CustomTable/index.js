@@ -239,8 +239,8 @@ function CustomTable({
   return (
     <div className="container-fluid">
       <div className={`${singleDataCard ? "card" : ""}`}>
-        <div className="dash-card">
-          {!headerShown && !headerShown && (
+      <div style={{ borderRadius: '6px', overflow: 'hidden' }} className="dash-card">
+      {!headerShown && !headerShown && (
             <div className="dash-card-header" style={{ backgroundColor: headerBgColor ? headerBgColor : "#fff"}}>
               <h2 style={{ color: headerTitleColor ? headerTitleColor : "#666" }} className="float-start mt-2">
                 {tableTitle}

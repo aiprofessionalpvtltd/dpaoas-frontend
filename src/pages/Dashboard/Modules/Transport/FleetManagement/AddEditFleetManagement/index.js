@@ -1,15 +1,13 @@
-import React, { useEffect, useState } from 'react'
-import { Layout } from '../../../../../../components/Layout'
-import { TransportSideBarItems } from '../../../../../../utils/sideBarItems'
-import { useLocation, useNavigate } from 'react-router-dom'
-import { useFormik } from 'formik'
-import * as Yup from "yup"
-import { ToastContainer } from 'react-toastify'
-import { showErrorMessage, showSuccessMessage } from '../../../../../../utils/ToastAlert'
-import { UpdateFlagApi, createFlagApi, getSingleFlagById } from '../../../../../../api/APIs/Services/efiling.service'
-import { getUserData } from '../../../../../../api/Auth'
-import { Curtains } from '@mui/icons-material'
-
+import React, { useEffect, useState } from 'react';
+import { Layout } from '../../../../../../components/Layout';
+import { TransportSideBarItems } from '../../../../../../utils/sideBarItems';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useFormik } from 'formik';
+import * as Yup from "yup";
+import { ToastContainer } from 'react-toastify';
+import { showErrorMessage, showSuccessMessage } from '../../../../../../utils/ToastAlert';
+import { Curtains } from '@mui/icons-material';
+import { createHandedForm, updateHandedForm } from '../../../../../../api/APIs/Services/Transport.service';
 
 const validationSchema = Yup.object({
   flagName: Yup.string().required("Flag is required"),
@@ -17,125 +15,67 @@ const validationSchema = Yup.object({
 
 function AddEditFleetManagement() {
   const location = useLocation();
-  const userData = getUserData()
+  const navigate = useNavigate();
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [initialValues, setInitialValues] = useState({
+    VehicleRegNo: "",
+    Model: "",
+    make: "",
+    EngineCapacity: "",
+    EngineNo: "",
+    ChassisNo: "",
+    ConditionWetherCondemnedroadWorthy: "",
+    JackRod: "",
+    CondemnationPapers: "",
+    RegisterationBook: "",
+    SpareWheel: "",
+    ToolKit: "",
+    Keys: "",
+    SteeringLock: "",
+    SeatCover: "",
+    FootMate: "",
+    CDPlayerTapeRadio: "",
+    CigaretteLighter: "",
+    MovementRegister: "",
+    WheelCaps: "",
+    Curtains: "",
+    AC: "",
+    Hooter: "",
+    FogLights: "",
+    RemoteControls: "",
+    Aerial: "",
+    FleetCard: "",
+    MeterReading: "",
+    Others: "",
+    Petrol: ""
+  });
 
-  const navigate = useNavigate()
-  const [filesData, setFileData] = useState([])
-  const [fileId, setFIleId] = useState(location?.state?.SrNo);
-
-  
+  useEffect(() => {
+    if (location.state && location.state.fleetData) {
+      setInitialValues(location.state.fleetData);
+      setIsEditMode(true);
+    }
+  }, [location.state]);
 
   const formik = useFormik({
-    initialValues: {
-      VehicleRegNo: "",
-      Model: "",
-      make: "",
-      EngineCapacity: "",
-      EngineNo: "",
-      ChassisNo: "",
-      ConditionWetherCondemnedroadWorthy: "",
-      JackRod: "",
-      CondemnationPapers: "",
-      RegisterationBook: "",
-      SpareWheel: "",
-      ToolKit: "",
-      Keys: "",
-      SteeringLock: "",
-      SeatCover: "",
-      FootMate: "",
-      CDPlayerTapeRadio: "",
-      CigaretteLighter: "",
-      MovementRegister: "",
-      WheelCaps: "",
-      Curtains: "",
-      AC: "",
-      Hooter: "",
-      FogLights: "",
-      RemoteControls: "",
-      Aerial: "",
-      FleetCard: "",
-      MeterReading: "",
-      Others: "",
-      Petrol: ""
-
-    },
+    initialValues,
     validationSchema: validationSchema,
-    onSubmit: (values) => {
-      // Handle form submission here
-      if (fileId) {
-        handleUpdateFlag(values)
-      } else {
-        console.log("Please enter", values);
-        handleCreateFlag(values)
+    enableReinitialize: true,
+    onSubmit: async (values) => {
+      try {
+        if (isEditMode) {
+          await updateHandedForm(location.state.fleetData.id, values);
+          showSuccessMessage("Fleet management data updated successfully!");
+        } else {
+          await createHandedForm(values);
+          showSuccessMessage("Fleet management data added successfully!");
+        }
+        navigate('/some-path'); // Redirect to the desired page after success
+      } catch (error) {
+        showErrorMessage("An error occurred while saving the data.");
       }
     },
   });
-
-  const handleCreateFlag = async (values) => {
-    const Data = {
-      fkBranchId: userData?.fkBranchId,
-      flag: values?.flagName
-    }
-    try {
-      const response = await createFlagApi(Data)
-      if (response.success) {
-        showSuccessMessage(response?.message)
-        formik.resetForm()
-        setTimeout(() => {
-          navigate("/efiling/dashboard/flags");
-        }, 1000)
-      }
-    } catch (error) {
-      showErrorMessage(error?.response?.data?.message);
-    }
-  }
-
-  const handleUpdateFlag = async (values) => {
-    const Data = {
-      fkBranchId: userData?.fkBranchId,
-      flag: values?.flagName
-    }
-    try {
-      const response = await UpdateFlagApi(filesData?.id, Data)
-      if (response.success) {
-        showSuccessMessage(response?.message)
-        formik.resetForm()
-        setTimeout(() => {
-          navigate("/efiling/dashboard/flags");
-        }, 1000)
-      }
-    } catch (error) {
-      showErrorMessage(error?.response?.data?.message);
-    }
-  }
-
-  const getSingleHeadingAPi = async () => {
-
-    try {
-      const response = await getSingleFlagById(fileId)
-      if (response.success) {
-        // showSuccessMessage(response?.message)
-        setFileData(response?.data)
-      }
-    } catch (error) {
-      showErrorMessage(error?.response?.data?.message);
-    }
-  }
-
-  useEffect(() => {
-    if (fileId) {
-      getSingleHeadingAPi();
-    }
-  }, []);
-
-  useEffect(() => {
-    // Update form values when termsById changes
-    if (filesData) {
-      formik.setValues({
-        flagName: filesData?.flag || ""
-      });
-    }
-  }, [filesData, formik.setValues]);
 
   return (
     <Layout sidebarItems={TransportSideBarItems} centerlogohide={true} module={false}>
@@ -143,7 +83,7 @@ function AddEditFleetManagement() {
       <div class="container-fluid">
         <div class="card">
           <div class="card-header red-bg" style={{ background: "#14ae5c" }}>
-            {fileId ? <h1>Update Fleet</h1> : <h1>Create Fleet</h1>}
+            {isEditMode  ? <h1>Update Fleet</h1> : <h1>Create </h1>}
           </div>
           <div class="card-body">
             <form onSubmit={formik.handleSubmit}>

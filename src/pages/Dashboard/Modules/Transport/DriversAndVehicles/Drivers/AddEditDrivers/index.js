@@ -4,27 +4,54 @@ import * as Yup from 'yup';
 import { ToastContainer } from 'react-toastify';
 import { Layout } from '../../../../../../../components/Layout';
 import { TransportSideBarItems } from '../../../../../../../utils/sideBarItems';
+import { createDrivers, updateDrivers } from '../../../../../../../api/APIs/Services/Transport.service';
+import { useLocation, useNavigate } from 'react-router-dom';
 
+
+
+// Updated validation schema to include new fields
 const validationSchema = Yup.object().shape({
   NameDriver: Yup.string().required("Name of Driver is required"),
   VehicleNo: Yup.string().required("Vehicle Number is required"),
   Make: Yup.string().required("Make is required"),
   OfficesBranch: Yup.string().required("Offices Branch is required"),
+  EngineCapacity: Yup.string(), // Optional field
+  PetrolLimit: Yup.string(), // Optional field
+  Remarks: Yup.string(), // Optional field
   NameofSenatorAndOfficer: Yup.string(), // Can be left empty, so no validation
 });
 
 function AddEditDrivers() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const driverData = location.state?.driver; 
+
+
   const formik = useFormik({
     initialValues: {
       NameDriver: "",
       VehicleNo: "",
       Make: "",
       OfficesBranch: "",
+      EngineCapacity: "", // New field
+      PetrolLimit: "", // New field
+      Remarks: "", // New field
       NameofSenatorAndOfficer: "",
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => {
-      console.log(values);
+    onSubmit: async (values) => {
+      try {
+        if (driverData) {
+          // Update existing driver
+          await updateDrivers(driverData.id, values);
+        } else {
+          // Create new driver
+          await createDrivers(values);
+        }
+        navigate("/transport/drivers"); // Navigate back to the drivers list
+      } catch (error) {
+        console.error("Error submitting form:", error);
+      }
     },
   });
 
@@ -40,6 +67,7 @@ function AddEditDrivers() {
             <form onSubmit={formik.handleSubmit}>
               <div className="container-fluid">
                 <div className="row">
+                  {/* Existing fields */}
                   <div className="col-3">
                     <div className="mb-3">
                       <label className="form-label">
@@ -149,33 +177,86 @@ function AddEditDrivers() {
                   </div>
                 </div>
 
+                {/* New fields */}
                 <div className="row">
                   <div className="col-3">
                     <div className="mb-3">
                       <label className="form-label">
-                        Name of Senator & Officer
+                        Engine Capacity
                       </label>
                       <input
                         type="text"
-                        placeholder="Name of Senator & Officer"
-                        name="NameofSenatorAndOfficer"
-                        value={formik.values.NameofSenatorAndOfficer}
+                        placeholder="Engine Capacity"
+                        name="EngineCapacity"
+                        value={formik.values.EngineCapacity}
                         className={`form-control ${
-                          formik.touched.NameofSenatorAndOfficer &&
-                          formik.errors.NameofSenatorAndOfficer
+                          formik.touched.EngineCapacity && formik.errors.EngineCapacity
                             ? "is-invalid"
                             : ""
                         }`}
-                        id="NameofSenatorAndOfficer"
+                        id="EngineCapacity"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
-                      {formik.touched.NameofSenatorAndOfficer &&
-                        formik.errors.NameofSenatorAndOfficer && (
-                          <div className="invalid-feedback">
-                            {formik.errors.NameofSenatorAndOfficer}
-                          </div>
-                        )}
+                      {formik.touched.EngineCapacity && formik.errors.EngineCapacity && (
+                        <div className="invalid-feedback">
+                          {formik.errors.EngineCapacity}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="col-3">
+                    <div className="mb-3">
+                      <label className="form-label">
+                        Petrol Limit
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Petrol Limit"
+                        name="PetrolLimit"
+                        value={formik.values.PetrolLimit}
+                        className={`form-control ${
+                          formik.touched.PetrolLimit && formik.errors.PetrolLimit
+                            ? "is-invalid"
+                            : ""
+                        }`}
+                        id="PetrolLimit"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      />
+                      {formik.touched.PetrolLimit && formik.errors.PetrolLimit && (
+                        <div className="invalid-feedback">
+                          {formik.errors.PetrolLimit}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="col-3">
+                    <div className="mb-3">
+                      <label className="form-label">
+                        Remarks
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Remarks"
+                        name="Remarks"
+                        value={formik.values.Remarks}
+                        className={`form-control ${
+                          formik.touched.Remarks && formik.errors.Remarks
+                            ? "is-invalid"
+                            : ""
+                        }`}
+                        id="Remarks"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      />
+                      {formik.touched.Remarks && formik.errors.Remarks && (
+                        <div className="invalid-feedback">
+                          {formik.errors.Remarks}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
