@@ -734,5 +734,14 @@ export const getSingleQuestionList = async (id)=>{
   }
 }
 
+export const getGroupbyDevisionId = async (id)=>{
+  try {
+    const response = await axiosClient.get(`/divisions/group-by-division/${id}`)
+    return response?.data
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+}
 
 

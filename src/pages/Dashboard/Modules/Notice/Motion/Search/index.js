@@ -125,7 +125,12 @@ function SearchMotion() {
         englishText: EnglishText ? EnglishText : "",
         urduText: UrduText ? UrduText : "",
         SentDate: leave?.motionSentDate,
-        createdBy : leave?.motionSentStatus === "inNotice" ? "Notice Office" : leave?.motionSentStatus == "toMotion" ? "From Notice Office":"--"
+        createdBy:
+          leave?.motionSentStatus === "inNotice"
+            ? "Notice Office"
+            : leave?.motionSentStatus == "toMotion"
+              ? "From Notice Office"
+              : "--",
       };
     });
   };
@@ -164,7 +169,7 @@ function SearchMotion() {
       englishText: values?.keyword,
       motionWeek: values?.motionWeek,
       motionType: values?.motionType,
-      motionSentStatus:["inNotice", "toMotion"]
+      motionSentStatus: ["inNotice", "toMotion"],
     };
     setCount(null);
 
@@ -228,8 +233,9 @@ function SearchMotion() {
         addLink1={"/notice/motion/search"}
         title1={"Search Motion"}
       />
+
       <div>
-        <div class="container-fluid dash-detail-container">
+        <div class="container-fluid">
           <div class="card mt-1">
             <div
               class="card-header red-bg"
@@ -610,8 +616,12 @@ function SearchMotion() {
                     </button>
                   </div>
                 </div>
-                <div class="" style={{ marginTop: "20px" }}>
+                <div className="" style={{ marginTop: "20px" }}>
                   <CustomTable
+                    hideBtn={true}
+                    hidebtn1={true}
+                    block={false}
+                    tableTitle="Search Motions"
                     data={motionData}
                     headerShown={true}
                     hideDeleteIcon={true}

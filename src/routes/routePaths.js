@@ -178,7 +178,6 @@ import AllGovernmentSenateBills from "../pages/Dashboard/Modules/LGMS/Bills/Gove
 import AllGovernmentRecievedNABills from "../pages/Dashboard/Modules/LGMS/Bills/GovernmentBill/RecievefromNA/index.js";
 import AllPrivateMemberSenateBills from "../pages/Dashboard/Modules/LGMS/Bills/PrivateMemberBill/IntroducedInSenate/index.js";
 import AllPrivateMemberBillFromNA from "../pages/Dashboard/Modules/LGMS/Bills/PrivateMemberBill/RecievedFromNA/index.js";
-import SearchLegislationBills from "../pages/Dashboard/Modules/LGMS/Bills/SearchBills";
 import AllOrdinanceList from "../pages/Dashboard/Modules/LGMS/Ordinance/OrdinanceList";
 import AddOrdinance from "../pages/Dashboard/Modules/LGMS/Ordinance/AddOrdinance";
 import EditOrdinance from "../pages/Dashboard/Modules/LGMS/Ordinance/EditOrdinance";
@@ -255,6 +254,8 @@ import AddEditFlags from "../pages/Dashboard/Modules/EFiling/Flags/AddEditFIags/
 import MotionPreviewPDF from "../components/MotionPDFPreview/index.js";
 import PreviewSuplementryList from "../pages/Dashboard/Modules/QMS/Reports/QuestionList/PreviewSuplementryList/index.js";
 import TransportDashboard from "../pages/Dashboard/Modules/Transport/index.js";
+import SearchLegislationGovernmentBills from "../pages/Dashboard/Modules/LGMS/Bills/SearchBills/GovernmentBills/index.js";
+import SearchLegislationPrivateMemberBill from "../pages/Dashboard/Modules/LGMS/Bills/SearchBills/PrivateMemberBills/index.js";
 import LogBookList from "../pages/Dashboard/Modules/Transport/LogBook/index.js";
 import AddEditLogBook from "../pages/Dashboard/Modules/Transport/LogBook/AddEditLogBook/index.js";
 import VehicleMovementList from "../pages/Dashboard/Modules/Transport/VehicleMovement/index.js";
@@ -266,12 +267,11 @@ import AddEditPurchasesMade from "../pages/Dashboard/Modules/Transport/LogBook/P
 import PetrolMileageList from "../pages/Dashboard/Modules/Transport/LogBook/PetrolMileage/index.js";
 import AddEditPetrolMileage from "../pages/Dashboard/Modules/Transport/LogBook/PetrolMileage/AddEditPetrolMileage/index.js";
 import AddVehicles from "../pages/Dashboard/Modules/Transport/DriversAndVehicles/Vehicles/AddVehicles/index.js";
-import Vehicle from '../pages/Dashboard/Modules/Transport/DriversAndVehicles/Vehicles';
+import Vehicle from "../pages/Dashboard/Modules/Transport/DriversAndVehicles/Vehicles";
 
 import { elementClosest } from "@fullcalendar/core/internal";
 import AddEditDrivers from "../pages/Dashboard/Modules/Transport/DriversAndVehicles/Drivers/AddEditDrivers/index.js";
 import Drivers from "../pages/Dashboard/Modules/Transport/DriversAndVehicles/Drivers/index.js";
-
 
 import ResolutionDataPreview from "../pages/Dashboard/Modules/QMS/Resolution/ResolutionDataPrintPreview/index.js";
 import QuestionDataPreviewPDF from "../pages/Dashboard/Modules/QMS/Question/PreviewQuestionDataPDF/index.js";
@@ -813,8 +813,12 @@ export const ProtectedRoutes = [
   },
 
   {
-    path: "/lgms/dashboard/bills/search-bills",
-    element: <SearchLegislationBills />,
+    path: "/lgms/dashboard/bills/search-government-bills",
+    element: <SearchLegislationGovernmentBills />,
+  },
+  {
+    path: "/lgms/dashboard/bills/search-private-bills",
+    element: <SearchLegislationPrivateMemberBill />,
   },
   {
     path: "/lgms/dashboard/ordinances/ordinance-list",
@@ -1107,18 +1111,18 @@ export const ProtectedRoutes = [
     element: <AddEditFleetManagement />,
   },
   {
-    path:"/transport/vehicles",
-    element: <Vehicle/>
+    path: "/transport/vehicles",
+    element: <Vehicle />,
   },
 
   {
-    path:"/transport/driver",
-    element:<Drivers/>
+    path: "/transport/driver",
+    element: <Drivers />,
   },
 
   {
-    path:"/transport/vehicles/addeditVehicles",  // this will be changed
-    element: <AddVehicles/>
+    path: "/transport/vehicles/addeditVehicles", // this will be changed
+    element: <AddVehicles />,
   },
   {
     path:"/transport/driver/addeditDrivers",  // this will be changed

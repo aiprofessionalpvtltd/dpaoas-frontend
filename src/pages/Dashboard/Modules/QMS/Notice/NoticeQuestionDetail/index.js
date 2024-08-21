@@ -19,6 +19,7 @@ import {
 import {
   UpdateQuestionById,
   getAllQuestionStatus,
+  getGroupbyDevisionId,
   sendQuestionTranslation,
 } from "../../../../../../api/APIs/Services/Question.service";
 import { ToastContainer } from "react-toastify";
@@ -47,11 +48,9 @@ const validationSchema = Yup.object({
 });
 
 function QMSNoticeQuestionDetail() {
-  const { members, sessions } = useContext(AuthContext);
-  const [alldivisons, setAllDivisions] = useState([]);
+  const { members, sessions, divisions } = useContext(AuthContext);
   const [allQuestionStatus, setAllQuestionStatus] = useState([]);
   const location = useLocation();
-  console.log("sessions", sessions);
   const formik = useFormik({
     initialValues: {
       sessionNumber: location.state
@@ -97,6 +96,10 @@ function QMSNoticeQuestionDetail() {
             label: location?.state?.question?.questionStatus?.questionStatus,
           }
         : "",
+        fkGroupId:location?.state?.question
+        ? location?.state?.question?.fkGroupId
+        : "",
+        fileStatus:location?.state?.question ?location?.state?.question?.fileStatus:''
     },
     // validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -114,9 +117,9 @@ function QMSNoticeQuestionDetail() {
     formData.append("questionCategory", values?.category);
     formData.append("questionDiaryNo", values?.questionDiaryNumber);
     formData.append("fkMemberId", values?.mover);
-    // formData.append("fkGroupId", values?.group);
+    formData.append("fkGroupId", values?.fkGroupId);
     formData.append("fkDivisionId", values?.division);
-    // formData.append("fileStatus", values?.fileStatus);
+    formData.append("fileStatus", values?.fileStatus);
     // formData.append("replyDate", values?.replyDate);
 
     // formData.append("ammendedText", values.ammendedText);
@@ -150,19 +153,7 @@ function QMSNoticeQuestionDetail() {
     }
   };
 
-  const GetALLDivsions = async () => {
-    try {
-      const response = await getAllDivisions(0, 100);
-      if (response?.success) {
-        setAllDivisions(response?.data?.divisions);
-        // setCount(response?.data?.count);
-        // setTotalPages(rersponse?.data?.totalPages)
-        // showSuccessMessage(response.message)
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  
 
   // Getting Question Statuses
   const GetAllQuestionStatus = async () => {
@@ -177,9 +168,24 @@ function QMSNoticeQuestionDetail() {
     }
   };
 
+  const getGroupbyDevisionIdAPi = async (e) => {
+    try {
+      const response = await getGroupbyDevisionId(e.target.value);
+  
+      if (response?.success) {
+        const groupId = response?.data?.fkGroupId || ''; 
+        formik.setFieldValue("fkGroupId", groupId);
+      } else {
+        formik.setFieldValue("fkGroupId", ''); 
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+      formik.setFieldValue("fkGroupId", '');
+    }
+  }
+
   useEffect(() => {
     GetAllQuestionStatus();
-    GetALLDivsions();
   }, []);
 
   return (
@@ -408,7 +414,7 @@ function QMSNoticeQuestionDetail() {
                         <label class="form-label">Question Diary No</label>
                         <input
                           type="text"
-                          placeholder={formik.values.questionDiaryNumber}
+                          value={formik.values.questionDiaryNumber}
                           className={`form-control ${
                             formik.touched.questionDiaryNumber &&
                             formik.errors.questionDiaryNumber
@@ -500,36 +506,90 @@ function QMSNoticeQuestionDetail() {
                         </select>
                       </div>
                     </div>
-                    <div class="col-3">
-                      <div class="mb-3">
-                        <label class="form-label">Division</label>
-                        {/* <input
-                          class="form-control"
-                          type="text"
-                          placeholder={formik.values.division}
-                          id="division"
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                        /> */}
-                        <select
-                          class="form-select"
-                          value={formik.values.division}
-                          id="division"
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                        >
-                          <option selected disabled hidden>
-                            Select
-                          </option>
-                          {alldivisons &&
-                            alldivisons.map((item, index) => (
-                              <option value={item.id} key={index}>
-                                {item?.divisionName}
-                              </option>
-                            ))}
-                        </select>
-                      </div>
+              
+                    <div class="col">
+                    <div class="mb-3">
+                      <label class="form-label">Division</label>
+                      <select
+                        class="form-select"
+                        value={formik.values.division}
+                        id="division"
+                        onChange={(event) => {
+                          formik.handleChange(event); 
+                          getGroupbyDevisionIdAPi(event); 
+                        }}
+                        onBlur={formik.handleBlur}
+                      >
+                        <option selected disabled hidden>
+                          Select
+                        </option>
+                        {divisions &&
+                          divisions.map((item, index) => (
+                            <option value={item.id} key={index}>
+                              {item?.divisionName}
+                            </option>
+                          ))}
+                      </select>
                     </div>
+                  </div>
+                  <div class="col">
+                    <div class="mb-3">
+                      <label class="form-label">Group</label>
+                      {/* APi Required with base on Division ID */}
+                      <select
+                        class="form-select"
+                        value={formik.values.fkGroupId}
+                        id="fkGroupId"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      >
+                        <option value={''} selected disabled hidden>
+                          Select
+                        </option>
+                        <option value="1">
+                             1st Group
+                            </option>
+                            <option value="2">
+                              2nd Group
+                            </option>
+                            <option value="3">
+                              3rd Group
+                            </option>
+                            <option value="4">
+                             4th Group
+                            </option>
+                            <option value="5">
+                             5th Group
+                            </option>
+                      </select>
+                    </div>
+                  </div>
+                  </div>
+                  <div className="row">
+                  <div class="col-3" style={{width:"300px"}}>
+                    <div class="mb-3">
+                      <label class="form-label">File Status</label>
+                      <select
+                        class="form-control small-control"
+                        id="fileStatus"
+                        value={formik.values.fileStatus}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      >
+                        <option value={""} selected disabled hidden>
+                          select
+                        </option>
+                        <option value={"Available"}>Available</option>
+                        <option value={"Missing"}>Missing</option>
+                        <option value={"Moved for Approval"}>
+                          Moved for Approval
+                        </option>
+                        <option value={"Moved for Advance Copy"}>
+                          Moved for Advance Copy
+                        </option>
+                      </select>
+                    </div>
+                  </div>
                   </div>
                 </div>
                 <div style={{ marginTop: 10 }}>

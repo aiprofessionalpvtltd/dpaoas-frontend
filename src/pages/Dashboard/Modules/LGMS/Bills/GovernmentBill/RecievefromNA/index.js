@@ -28,7 +28,7 @@ const AllGovernmentRecievedNABills = () => {
     setCurrentPage(page);
   };
 
-  // Transform Government Bill Data
+  // Transform Government Bill Recieved From NA Data
   const transformGovernmentSenateBillData = (apiData) => {
     const docs = apiData?.map((item) => item?.billDocuments);
     if (docs?.length > 0) {

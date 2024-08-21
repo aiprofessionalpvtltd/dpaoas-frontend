@@ -219,12 +219,12 @@ export const NoticeSidebarItems = [
         icon: faSquarePollHorizontal,
       },
       {
-        itemName: "Attendence Reports",
+        itemName: "Date Wise Attendance Report",
         link: "/notice/reports/attendence-reports",
         icon: faClipboardList,
       },
       {
-        itemName: "Party/Province Reports",
+        itemName: "Party/Province Wise Attendance Reports",
         link: "/notice/reports/party-province-annual-attendence-reports",
         icon: faClipboardList,
       },
@@ -236,10 +236,10 @@ export const NoticeSidebarItems = [
 
 export const MMSSideBarItems = [
   {
-      itemName: "Dashboard",
-      link: "/mms/dashboard",
-      icon: faClipboardList,
-    },
+    itemName: "Dashboard",
+    link: "/mms/dashboard",
+    icon: faClipboardList,
+  },
   {
     itemName: "Motion",
     link: "/mms/motion",
@@ -330,7 +330,6 @@ export const QMSSideBarItems = [
     link: "/qms/question",
     icon: faClipboardList,
     subItems: [
-      
       {
         itemName: "New Question",
         link: "/qms/question/new",
@@ -422,18 +421,17 @@ export const QMSSideBarItems = [
     link: "/qms/reports",
     icon: faClipboardList,
     subItems: [
-      
-        {
-          itemName: "Resolution Summary",
-          link: "/qms/reports/resolution-summary",
-          icon: faClipboardList,
-        },
-        {
-          itemName: "Resolution Annual Reports",
-          link: "/qms/reports/resolution-annual-reports",
-          icon: faClipboardList,
-        },
-     ]
+      {
+        itemName: "Resolution Summary",
+        link: "/qms/reports/resolution-summary",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Resolution Annual Reports",
+        link: "/qms/reports/resolution-annual-reports",
+        icon: faClipboardList,
+      },
+    ],
   },
   {
     itemName: "Question Reports",
@@ -450,7 +448,7 @@ export const QMSSideBarItems = [
         link: "/qms/reports/question-pending-under-process",
         icon: faClipboardList,
       },
-      
+
       {
         itemName: "Notice Summary",
         link: "/qms/reports/notice-summary",
@@ -461,6 +459,7 @@ export const QMSSideBarItems = [
         link: "/qms/reports/question-summary",
         icon: faClipboardList,
       },
+
       // {
       //   itemName: "Question Annual Reports",
       //   link: "/qms/reports/question-annual-reports",
@@ -982,7 +981,7 @@ export const LegislationSideBarItems = [
       },
       {
         itemName: "Search Bills",
-        link: "/lgms/dashboard/bills/search-bills",
+        link: "/lgms/dashboard/bills/search-government-bills",
         icon: faBookOpen,
       },
     ],
@@ -1005,7 +1004,7 @@ export const LegislationSideBarItems = [
       },
       {
         itemName: "Search Bills",
-        link: "/lgms/dashboard/bills/search-bills",
+        link: "/lgms/dashboard/bills/search-private-bills",
         icon: faBookOpen,
       },
     ],
@@ -1211,8 +1210,6 @@ export const LDUSideBarItems = [
   },
 ];
 
-
-
 // Transport Management
 
 export const TransportSideBarItems = [
@@ -1236,7 +1233,6 @@ export const TransportSideBarItems = [
         link: "/transport/petrol-mileage",
         icon: faFileInvoice,
       },
-     
     ],
   },
   {
@@ -1250,18 +1246,18 @@ export const TransportSideBarItems = [
     icon: faClipboardList,
   },
   {
-    itemName:"Drivers & Vehicles",
-    link:"/transport/drivers_Vehicle",
-    icon:faClipboardList,
-    subItems:[
+    itemName: "Drivers & Vehicles",
+    link: "/transport/drivers_Vehicle",
+    icon: faClipboardList,
+    subItems: [
       {
         itemName: "Vehicles",
         link: "/transport/vehicles", // need to be changed /vehicles
         icon: faFileInvoice,
-      }, // added 
+      }, // added
       {
         itemName: "Drivers",
-        link: "/transport/driver",  // need to be changed /drivers
+        link: "/transport/driver", // need to be changed /drivers
         icon: faFileInvoice,
       }
     ]
