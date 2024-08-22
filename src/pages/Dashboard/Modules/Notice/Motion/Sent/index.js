@@ -105,7 +105,7 @@ function SentMotion() {
       return {
         id: res?.id,
         memberName: res?.motionMovers[0]?.members?.memberName,
-        SessionName: res?.sessions?.sessionName
+        SessionNumber: res?.sessions?.sessionName
           ? res?.sessions?.sessionName
           : "",
         motionType: res?.motionType ? res?.motionType : "",
@@ -125,7 +125,7 @@ function SentMotion() {
           : "",
         englishText: EnglishText ? EnglishText : "",
         urduText: UrduText ? UrduText : "",
-        motionStatus: res?.motionStatuses?.statusName,
+        // motionStatus: res?.motionStatuses?.statusName,
         device: res?.device,
 
         // createdBy:res?.motionSentStatus === "inNotice" ? "Notice Office": "---"
