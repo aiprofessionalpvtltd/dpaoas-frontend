@@ -1,6 +1,24 @@
 import { axiosClient } from "..";
 import { getAuthToken } from "../../Auth";
 
+// Auto Notice Office Diary Number
+export const getQuestionNoticeDiaryNumber = async () => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClient.get(
+      `/questions/questionDiaryNumber/generate`,
+      {
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // }
+      }
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
 // Question Module
 export const createQuestion = async (data) => {
   try {
@@ -22,7 +40,7 @@ export const createQuestion = async (data) => {
 export const DeleteQuestion = async (id, Data) => {
   try {
     //   const token = getAuthToken()
-    const response = await axiosClient.put(`/questions/delete/${id}`, Data)
+    const response = await axiosClient.put(`/questions/delete/${id}`, Data);
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -112,7 +130,8 @@ export const sendToQuestion = async (id, data) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClient.put(
-      `/questions/sendToQuestion/${id}`, data,
+      `/questions/sendToQuestion/${id}`,
+      data,
       {
         // headers: {
         //   Authorization: `Bearer ${token}`,
@@ -279,15 +298,12 @@ export const allQuestionSummary = async (
       Object.entries(searchParams).filter(([_, value]) => value !== "")
     );
 
-    const response = await axiosClient.get(
-      `/questions/getQuestionsSummary`,
-      {
-        params: filteredSearchParams,
-        // headers: {
-        //   Authorization: `Bearer ${token}`,
-        // },
-      }
-    );
+    const response = await axiosClient.get(`/questions/getQuestionsSummary`, {
+      params: filteredSearchParams,
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // },
+    });
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -420,14 +436,11 @@ export const saveQuestionList = async (data) => {
 export const printQuestionsFromList = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClient.get(
-      `/questionList/${id}`,
-      {
-        // headers: {
-        //   Authorization: `Bearer ${token}`,
-        // }
-      }
-    );
+    const response = await axiosClient.get(`/questionList/${id}`, {
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // }
+    });
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -625,7 +638,9 @@ export const CreateRotaList = async (data) => {
 export const allRotaList = async (currentPage, pageSize) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClient.get(`/new/rota/getAll?currentPage=${currentPage}&pageSize=${pageSize}`)
+    const response = await axiosClient.get(
+      `/new/rota/getAll?currentPage=${currentPage}&pageSize=${pageSize}`
+    );
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -704,8 +719,19 @@ export const updateQuestionStatus = async (data) => {
 export const allquestionsByStatus = async (data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClient.get(
-      `/questions/questionsByStatus`,
+    const response = await axiosClient.get(`/questions/questionsByStatus`);
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const updateGenaratedQuestion = async (data) => {
+  try {
+    const response = await axiosClient.put(
+      `/questionList/editQuestionList`,
+      data
     );
     return response?.data;
   } catch (error) {
@@ -714,34 +740,24 @@ export const allquestionsByStatus = async (data) => {
   }
 };
 
-export const updateGenaratedQuestion = async(data)=>{
+export const getSingleQuestionList = async (id) => {
   try {
-    const response = await axiosClient.put(`/questionList/editQuestionList`,data)
-    return response?.data
+    const response = await axiosClient.get(`/questionList/${id}`);
+    return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
     throw error;
   }
-}
+};
 
-export const getSingleQuestionList = async (id)=>{
+export const getGroupbyDevisionId = async (id) => {
   try {
-    const response = await axiosClient.get(`/questionList/${id}`)
-    return response?.data
+    const response = await axiosClient.get(
+      `/divisions/group-by-division/${id}`
+    );
+    return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
     throw error;
   }
-}
-
-export const getGroupbyDevisionId = async (id)=>{
-  try {
-    const response = await axiosClient.get(`/divisions/group-by-division/${id}`)
-    return response?.data
-  } catch (error) {
-    console.error("Error fetching API endpoint:", error);
-    throw error;
-  }
-}
-
-
+};

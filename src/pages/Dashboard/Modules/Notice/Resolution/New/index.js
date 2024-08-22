@@ -3,7 +3,10 @@ import { NoticeSidebarItems } from "../../../../../../utils/sideBarItems";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
 import { useNavigate } from "react-router";
-import { createResolution } from "../../../../../../api/APIs/Services/Resolution.service";
+import {
+  createResolution,
+  getResolutionNoticeDiaryNumber,
+} from "../../../../../../api/APIs/Services/Resolution.service";
 import TimePicker from "react-time-picker";
 
 import {
@@ -42,7 +45,7 @@ function NewResolution() {
   const { members, sessions } = useContext(AuthContext);
   const [showModal, setShowModal] = useState(false);
   const [formValues, setFormValues] = useState([]);
-
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
 
@@ -51,11 +54,39 @@ function NewResolution() {
     handleClose();
   };
 
+  // Getting Notice Office Diary Number
+  const getResolutionNoticeOfficeDiaryNumberApi = async () => {
+    try {
+      const response = await getResolutionNoticeDiaryNumber();
+
+      if (response?.success) {
+        // setQuestionNoticeOfficeDiaryNumber(response?.data);
+        formik.setFieldValue(
+          "noticeOfficeDiaryNo",
+          response?.data?.noticeOfficeDiaryNo
+            ? response?.data?.noticeOfficeDiaryNo
+            : ""
+        );
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.error);
+    }
+  };
+
+  useEffect(() => {
+    getResolutionNoticeOfficeDiaryNumberApi();
+    if (sessions && sessions.length > 0) {
+      const currentSessionId = sessions[0]?.id; // Assuming the first session is the current one
+      formik.setFieldValue("fkSessionNo", currentSessionId);
+    }
+  }, [sessions]);
+
   const formik = useFormik({
     initialValues: {
       fkSessionNo: "",
       noticeOfficeDiaryNo: "",
-      noticeOfficeDiaryDate: new Date(),
+      // noticeOfficeDiaryDate: new Date(),
+      noticeOfficeDiaryDate: moment(new Date()).format("YYYY-MM-DD"),
       noticeOfficeDiaryTime: moment().format("HH:mm A"),
       resolutionType: "",
       resolutionMovers: [],
@@ -72,6 +103,20 @@ function NewResolution() {
     },
     enableReinitialize: true,
   });
+
+  // Handle Claneder Toggel
+  const handleCalendarToggle = () => {
+    setIsCalendarOpen(!isCalendarOpen);
+  };
+  // Handale DateCHange
+  const handleDateSelect = (date) => {
+    // formik.setFieldValue("noticeOfficeDiaryDate", date);
+    formik.setFieldValue(
+      "noticeOfficeDiaryDate",
+      moment(date).format("YYYY-MM-DD")
+    );
+    setIsCalendarOpen(false);
+  };
 
   const CreateResolutionApi = async (values) => {
     const formData = new FormData();
@@ -271,7 +316,7 @@ function NewResolution() {
                     </div>
                   </div>
                   <div class="row">
-                    <div className="col-3">
+                    {/* <div className="col-3">
                       <div className="mb-3" style={{ position: "relative" }}>
                         <label className="form-label">
                           Notice Office Diary Date{" "}
@@ -313,6 +358,62 @@ function NewResolution() {
                         {formik.touched.noticeOfficeDiaryDate &&
                           formik.errors.noticeOfficeDiaryDate && (
                             <div className="invalid-feedback">
+                              {formik.errors.noticeOfficeDiaryDate}
+                            </div>
+                          )}
+                      </div>
+                    </div> */}
+                    <div className="col-3">
+                      <div className="mb-3" style={{ position: "relative" }}>
+                        <label className="form-label">
+                          Notice Office Diary Date{" "}
+                        </label>
+                        <span
+                          style={{
+                            position: "absolute",
+                            right: "15px",
+                            top: "36px",
+                            zIndex: 1,
+                            fontSize: "20px",
+                            color: "#666",
+                            cursor: "pointer",
+                          }}
+                          onClick={handleCalendarToggle}
+                        >
+                          <FontAwesomeIcon icon={faCalendarAlt} />
+                        </span>
+
+                        <DatePicker
+                          // selected={
+                          //   formik.values.noticeOfficeDiaryDate &&
+                          //   formik.values.noticeOfficeDiaryDate
+                          // }
+                          selected={moment(
+                            formik.values.noticeOfficeDiaryDate,
+                            "YYYY-MM-DD"
+                          ).toDate()}
+                          onChange={handleDateSelect}
+                          onBlur={formik.handleBlur}
+                          className={`form-control ${
+                            formik.touched.noticeOfficeDiaryDate &&
+                            formik.errors.noticeOfficeDiaryDate
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                          open={isCalendarOpen}
+                          onClickOutside={() => setIsCalendarOpen(false)}
+                          onInputClick={handleCalendarToggle}
+                          // onClick={handleCalendarToggle}
+                          maxDate={new Date()}
+                          dateFormat="dd-MM-yyyy"
+                        />
+
+                        {formik.touched.noticeOfficeDiaryDate &&
+                          formik.errors.noticeOfficeDiaryDate && (
+                            <div
+                              className="invalid-feedback"
+                              style={{ display: "block" }}
+                            >
                               {formik.errors.noticeOfficeDiaryDate}
                             </div>
                           )}

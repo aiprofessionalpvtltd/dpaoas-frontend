@@ -5,6 +5,26 @@ import { getAuthToken } from "../../Auth";
 
 // Resolution Module
 
+// Auto Notice Office Diary Number
+export const getResolutionNoticeDiaryNumber = async () => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClient.get(
+      `/resolution/resolutionDiaryNumber/generate`,
+      {
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // }
+      }
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+// Create Resolution
 export const createResolution = async (data) => {
   try {
     //   const token = getAuthToken();
@@ -21,7 +41,11 @@ export const createResolution = async (data) => {
   }
 };
 
-export const getAllResolutions = async (page, pageSize, resolutionSentStatus) => {
+export const getAllResolutions = async (
+  page,
+  pageSize,
+  resolutionSentStatus
+) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClient.get(
@@ -60,14 +84,11 @@ export const getAllResolutionsNotice = async (page, pageSize) => {
 export const getAllResolutionStatus = async () => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClient.get(
-      `/resolution/resolutionStatuses`,
-      {
-        // headers: {
-        //   Authorization: `Bearer ${token}`,
-        // }
-      }
-    );
+    const response = await axiosClient.get(`/resolution/resolutionStatuses`, {
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // }
+    });
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -101,7 +122,11 @@ export const searchResolution = async (searchParams, currentPage, pageSize) => {
 };
 
 //Annual Resolution Api
-export const resolutionAnnualReport = async (searchParams, currentPage, pageSize) => {
+export const resolutionAnnualReport = async (
+  searchParams,
+  currentPage,
+  pageSize
+) => {
   try {
     // const token = getAuthToken();
 
@@ -125,7 +150,11 @@ export const resolutionAnnualReport = async (searchParams, currentPage, pageSize
     throw error;
   }
 };
-export const DeleteResolutionList = async (searchParams, currentPage, pageSize) => {
+export const DeleteResolutionList = async (
+  searchParams,
+  currentPage,
+  pageSize
+) => {
   try {
     // const token = getAuthToken();
 
@@ -151,10 +180,9 @@ export const DeleteResolutionList = async (searchParams, currentPage, pageSize) 
 };
 
 export const DeleteResolution = async (id, Data) => {
-  
   try {
     // const token = getAuthToken();
-    const response = await axiosClient.put(`/resolution/delete/${id}`,Data);
+    const response = await axiosClient.put(`/resolution/delete/${id}`, Data);
     // {
     //   headers: {
     //     Authorization: `Bearer ${token}`,
@@ -202,16 +230,12 @@ export const getResolutionBYID = async (id) => {
 export const UpdateResolution = async (id, data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClient.put(
-      `/resolution/update/${id}`,
-      data,
-      {
-        headers: {
-          accept: "application/json",
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
+    const response = await axiosClient.put(`/resolution/update/${id}`, data, {
+      headers: {
+        accept: "application/json",
+        "Content-Type": "multipart/form-data",
+      },
+    });
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -223,7 +247,8 @@ export const sendToResolution = async (id, data) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClient.put(
-      `/resolution/sendToResolution/${id}`, data,
+      `/resolution/sendToResolution/${id}`,
+      data,
       {
         // headers: {
         //   Authorization: `Bearer ${token}`,
@@ -240,9 +265,7 @@ export const sendToResolution = async (id, data) => {
 export const sendResolutionForTranslation = async (id) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClient.put(
-      `/resolution/sendTranslation/${id}`
-    );
+    const response = await axiosClient.put(`/resolution/sendTranslation/${id}`);
     //  {
     //   headers: {
     //     accept: "application/json",
@@ -257,7 +280,11 @@ export const sendResolutionForTranslation = async (id) => {
 };
 
 //Summary
-export const allResolutionSummary = async (searchParams, currentPage, pageSize) => {
+export const allResolutionSummary = async (
+  searchParams,
+  currentPage,
+  pageSize
+) => {
   try {
     // const token = getAuthToken();
 
@@ -283,7 +310,11 @@ export const allResolutionSummary = async (searchParams, currentPage, pageSize) 
 };
 
 //ResolutionSummary Detail APi
-export const allResolutionSummaryDetail = async (searchParams, currentPage, pageSize) => {
+export const allResolutionSummaryDetail = async (
+  searchParams,
+  currentPage,
+  pageSize
+) => {
   try {
     // const token = getAuthToken();
 
@@ -313,137 +344,161 @@ export const allResolutionSummaryDetail = async (searchParams, currentPage, page
 export const generateResolutionListData = async (data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClient.post(`/resolution/generateResolutionListData`, data)
+    const response = await axiosClient.post(
+      `/resolution/generateResolutionListData`,
+      data
+    );
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
     throw error;
   }
 };
-  //Create rESOLUTION List 
-  export const createNewResolutionList = async (data) => {
-    try {
-      // const token = getAuthToken();
-      const response = await axiosClient.post(`/resolution/resolution-lists`, data)
-      return response?.data;
-    } catch (error) {
-      console.error("Error fetching API endpoint:", error);
-      throw error;
-    }
-  };
-
-   //Update rESOLUTION List 
-   export const UpdateResolutionList = async (data) => {
-    try {
-      // const token = getAuthToken();
-      const response = await axiosClient.put(`/resolution/updateResolutionListAndAssociations`, data)
-      return response?.data;
-    } catch (error) {
-      console.error("Error fetching API endpoint:", error);
-      throw error;
-    }
-  };
-
-  export const allResolutionList = async (currentPage, pageSize) => {
-    try {
-      // const token = getAuthToken();
-      const response = await axiosClient.get(`/resolution/resolutionLists?currentPage=${currentPage}&pageSize=${pageSize}`)
-      return response?.data;
-    } catch (error) {
-      console.error("Error fetching API endpoint:", error);
-      throw error;
-    }
+//Create rESOLUTION List
+export const createNewResolutionList = async (data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClient.post(
+      `/resolution/resolution-lists`,
+      data
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
   }
+};
 
-  export const deleteResolutionListByID = async (id) => {
-    try {
-      // const token = getAuthToken();
-      const response = await axiosClient.delete(`/resolution/resolutionlists/${id}`)
-      return response?.data;
-    } catch (error) {
-      console.error("Error fetching API endpoint:", error);
-      throw error;
-    }
+//Update rESOLUTION List
+export const UpdateResolutionList = async (data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClient.put(
+      `/resolution/updateResolutionListAndAssociations`,
+      data
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
   }
+};
 
-  //getBallotRecord
-  export const getBallotRecord = async (data) => {
-    try {
-      // const token = getAuthToken();
-      const response = await axiosClient.post(`/resolution/pdfResolutionList`, data)
-      return response?.data;
-    } catch (error) {
-      console.error("Error fetching API endpoint:", error);
-      throw error;
-    }
-  };
+export const allResolutionList = async (currentPage, pageSize) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClient.get(
+      `/resolution/resolutionLists?currentPage=${currentPage}&pageSize=${pageSize}`
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
 
-  export const resolutionStatusCount = async () => {
-    try {
-      // const token = getAuthToken();
-      const response = await axiosClient.get(`/resolution/resolutionsByStatus`)
-      return response?.data;
-    } catch (error) {
-      console.error("Error fetching API endpoint:", error);
-      throw error;
-    }
-  };
+export const deleteResolutionListByID = async (id) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClient.delete(
+      `/resolution/resolutionlists/${id}`
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
 
-  export const allBallotByResolutionListId = async (id) => {
-    try {
-      // const token = getAuthToken();
-      const response = await axiosClient.get(`/resolution/getSingleResolutionData/${id}`)
-      return response?.data;
-    } catch (error) {
-      console.error("Error fetching API endpoint:", error);
-      throw error;
-    }
-  };
+//getBallotRecord
+export const getBallotRecord = async (data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClient.post(
+      `/resolution/pdfResolutionList`,
+      data
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
 
-  //
-  export const allBallotResolution = async (currentPage, pageSize) => {
-    try {
-      // const token = getAuthToken();
-      const response = await axiosClient.get(`/resolution/findAllBalloting?currentPage=${currentPage}&pageSize=${pageSize}`)
-      return response?.data;
-    } catch (error) {
-      console.error("Error fetching API endpoint:", error);
-      throw error;
-    }
-  };
+export const resolutionStatusCount = async () => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClient.get(`/resolution/resolutionsByStatus`);
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
 
-  export const changeResolutionStatus = async (data) => {
-    try {
-      // const token = getAuthToken();
-      const response = await axiosClient.put(`/resolution/resolutionsBalloting/status`, data)
-      return response?.data;
-    } catch (error) {
-      console.error("Error fetching API endpoint:", error);
-      throw error;
-    }
-  };
+export const allBallotByResolutionListId = async (id) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClient.get(
+      `/resolution/getSingleResolutionData/${id}`
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
 
-  export const searchResolutionbyColumn = async (searchParams, data) => {
-    try {
-      // const token = getAuthToken();
-  
-      // Filter out empty values
-      const filteredSearchParams = Object.fromEntries(
-        Object.entries(searchParams).filter(([_, value]) => value !== "")
-      );
-  
-      const response = await axiosClient.post(
-        `/resolution/selectColumnsResolution`, data,
-        {
-          params: filteredSearchParams,
-          // headers: {
-          //   Authorization: `Bearer ${token}`,
-          // },
-        }
-      );
-      return response?.data;
-    } catch (error) {
-      console.error("Error fetching API endpoint:", error);
-      throw error;
-    }
-  };
+//
+export const allBallotResolution = async (currentPage, pageSize) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClient.get(
+      `/resolution/findAllBalloting?currentPage=${currentPage}&pageSize=${pageSize}`
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const changeResolutionStatus = async (data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClient.put(
+      `/resolution/resolutionsBalloting/status`,
+      data
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const searchResolutionbyColumn = async (searchParams, data) => {
+  try {
+    // const token = getAuthToken();
+
+    // Filter out empty values
+    const filteredSearchParams = Object.fromEntries(
+      Object.entries(searchParams).filter(([_, value]) => value !== "")
+    );
+
+    const response = await axiosClient.post(
+      `/resolution/selectColumnsResolution`,
+      data,
+      {
+        params: filteredSearchParams,
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // },
+      }
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};

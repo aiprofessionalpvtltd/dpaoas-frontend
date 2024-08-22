@@ -4,7 +4,10 @@ import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
 import { useNavigate } from "react-router";
 import TimePicker from "react-time-picker";
-import { createQuestion } from "../../../../../../api/APIs/Services/Question.service";
+import {
+  createQuestion,
+  getQuestionNoticeDiaryNumber,
+} from "../../../../../../api/APIs/Services/Question.service";
 import {
   showErrorMessage,
   showSuccessMessage,
@@ -42,7 +45,6 @@ const validationSchema = Yup.object({
 function NewQuestion() {
   const navigate = useNavigate();
   const { members, sessions, allBranchesData } = useContext(AuthContext);
-
   const [showModal, setShowModal] = useState(false);
   const [formValues, setFormValues] = useState([]);
   const [filesData, setFilesData] = useState();
@@ -53,6 +55,7 @@ function NewQuestion() {
   const LoggedInUserID = UserData && UserData?.fkUserId;
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
+
   const handleOkClick = () => {
     CreateQuestionApi(formValues);
     handleClose();
@@ -82,6 +85,34 @@ function NewQuestion() {
     enableReinitialize: true,
   });
 
+  // Getting Notice Office Diary Number
+  const getQuestionNoticeOfficeDiaryNumberApi = async () => {
+    try {
+      const response = await getQuestionNoticeDiaryNumber();
+
+      if (response?.success) {
+        // setQuestionNoticeOfficeDiaryNumber(response?.data);
+        formik.setFieldValue(
+          "noticeOfficeDiaryNo",
+          response?.data?.noticeOfficeDiaryNo
+            ? response?.data?.noticeOfficeDiaryNo
+            : ""
+        );
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.error);
+    }
+  };
+
+  useEffect(() => {
+    getQuestionNoticeOfficeDiaryNumberApi();
+    if (sessions && sessions.length > 0) {
+      const currentSessionId = sessions[0]?.id; // Assuming the first session is the current one
+      formik.setFieldValue("fkSessionId", currentSessionId);
+    }
+  }, [sessions]);
+
+  console.log("FormiknoticeOfficeDiaryNo", formik?.noticeOfficeDiaryNo);
   // Handle Claneder Toggel
   const handleCalendarToggle = () => {
     setIsCalendarOpen(!isCalendarOpen);
@@ -99,7 +130,7 @@ function NewQuestion() {
   const CreateQuestionApi = async (values) => {
     const formData = new FormData();
     formData.append("fkSessionId", values?.fkSessionId);
-    formData.append("noticeOfficeDiaryNo", Number(values.noticeOfficeDiaryNo));
+    formData.append("noticeOfficeDiaryNo", Number(values?.noticeOfficeDiaryNo));
     // formData.append("noticeOfficeDiaryDate", values.noticeOfficeDiaryDate);
 
     formData.append(
@@ -212,9 +243,9 @@ function NewQuestion() {
                           onBlur={formik.handleBlur}
                           name="fkSessionId"
                         >
-                          <option value="" selected disabled hidden>
+                          {/* <option value="" selected disabled hidden>
                             Select
-                          </option>
+                          </option> */}
                           {sessions &&
                             sessions.length > 0 &&
                             sessions.map((item) => (
@@ -272,12 +303,13 @@ function NewQuestion() {
                               ? "is-invalid"
                               : ""
                           }`}
-                          type="number"
+                          type="text"
                           id="noticeOfficeDiaryNo"
                           value={formik.values.noticeOfficeDiaryNo}
                           name="noticeOfficeDiaryNo"
                           onBlur={formik.handleBlur}
                           onChange={formik.handleChange}
+                          readOnly
                         />
                         {formik.touched.noticeOfficeDiaryNo &&
                           formik.errors.noticeOfficeDiaryNo && (
