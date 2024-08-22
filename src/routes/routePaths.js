@@ -279,6 +279,7 @@ import MainDashBoardDemo from "../pages/Dashboard/Modules/EFiling/MainDashBoardD
 import SumDriverVehicle from "../pages/Dashboard/Modules/Transport/Summary/Driv-Vehicle/index.js";
 import Poll from "../pages/Dashboard/Modules/Transport/Summary/Poll/index.js";
 import MakeModelWise from "../pages/Dashboard/Modules/Transport/Summary/MakeModel/index.js";
+import QuestionAnualReport from "../pages/Dashboard/Modules/QMS/QuestionAnnualReport/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -613,6 +614,10 @@ export const ProtectedRoutes = [
   {
     path: "/qms/questionList/priveiw-suplementry-list",
     element: <PreviewSuplementryList />,
+  },
+  {
+    path: "/qms/questionList/question-anual-report",
+    element: <QuestionAnualReport />,
   },
 
   //SMS Module routes
