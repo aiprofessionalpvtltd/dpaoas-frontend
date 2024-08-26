@@ -100,10 +100,10 @@ function QuestionDataPreviewPDF() {
         <div style={{ marginBottom: "20px" }}>
           <div style={{ textAlign: "right" }}>
             <p style={{ margin: "5px 0", fontSize: "1rem" }}>
-              <strong>Diary No:</strong> required backend 23
+              <strong>Diary No:</strong> {data && data?.questionDiary?.questionDiaryNo}
             </p>
             <p style={{ margin: "5px 0", fontSize: "1rem" }}>
-              <strong>Group No:</strong>required backend 2
+              <strong>Group No:</strong>{data && data?.groups?.groupNameStarred}
             </p>
             <p style={{ margin: "5px 0", fontSize: "1rem" }}>
               <strong>QID:</strong> {data && data?.id}
