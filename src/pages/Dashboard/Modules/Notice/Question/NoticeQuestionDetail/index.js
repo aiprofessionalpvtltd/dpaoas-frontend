@@ -468,7 +468,7 @@ function NoticeQuestionDetail() {
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col">
+                  {/* <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Question ID</label>
                       <input
@@ -481,8 +481,8 @@ function NoticeQuestionDetail() {
                         onBlur={formik.handleBlur}
                       />
                     </div>
-                  </div>
-                  <div class="col">
+                  </div> */}
+                  <div class="col-3">
                     <div class="mb-3">
                       <label class="form-label">Category</label>
                       <select
@@ -490,7 +490,12 @@ function NoticeQuestionDetail() {
                         id="category"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                        value={formik.values.category}
+                        value={formik.values./* The above code is a comment in JavaScript. Comments are
+                        used to add explanations or notes to the code for
+                        better understanding. In this case, the comment appears
+                        to be incomplete as it starts with "categ" and ends
+                        with " */
+                        category}
                       >
                         <option value={""} selected disabled hidden>
                           Select
@@ -501,7 +506,7 @@ function NoticeQuestionDetail() {
                       </select>
                     </div>
                   </div>
-                  <div class="col">
+                  <div class="col-3">
                     <div class="mb-3">
                       <label class="form-label">Senator</label>
                       {/* <select
@@ -554,45 +559,9 @@ function NoticeQuestionDetail() {
                       )}
                     </div>
                   </div>
-                  <div class="col">
+                  {/* <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Question Status</label>
-                      {/* <input
-                        className={`form-control ${
-                          formik.touched.questionStatus &&
-                          formik.errors.questionStatus
-                            ? "is-invalid"
-                            : ""
-                        }`}
-                        value={formik.values.questionStatus}
-                        type="text"
-                        id="questionStatus"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                      /> */}
-                      {/* <select
-                        id="questionStatus"
-                        name="questionStatus"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.questionStatus}
-                        className={`form-select  ${
-                          formik.touched.questionStatus &&
-                          formik.errors.questionStatus
-                            ? "is-invalid"
-                            : ""
-                        }`}
-                      >
-                        <option value={""} selected disabled hidden>
-                          Select
-                        </option>
-                        {allQuestionStatus &&
-                          allQuestionStatus.map((item) => (
-                            <option key={item.id} value={item.id}>
-                              {item?.questionStatus}
-                            </option>
-                          ))}
-                      </select> */}
                       <Select
                         options={
                           allQuestionStatus &&
@@ -625,7 +594,7 @@ function NoticeQuestionDetail() {
                           </div>
                         )}
                     </div>
-                  </div>
+                  </div> */}
                 </div>
                 <div className="row">
                   <label htmlFor="" className="form-label">
@@ -633,7 +602,7 @@ function NoticeQuestionDetail() {
                   </label>
                   {location?.state?.question?.questionImage?.length > 0 ? (
                     location?.state?.question?.questionImage?.map((item) => (
-                      <div class="MultiFile-label mt-3">
+                      <div class="MultiFile-label">
                         <a
                           href={`${imagesUrl}${item?.path}`}
                           target="_blank"

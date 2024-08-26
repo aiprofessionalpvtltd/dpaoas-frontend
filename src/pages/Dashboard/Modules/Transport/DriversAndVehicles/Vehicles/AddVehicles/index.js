@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import { Layout } from '../../../../../../../components/Layout';
 import { TransportSideBarItems } from '../../../../../../../utils/sideBarItems';
+import { createVehicle, updateVehicles } from '../../../../../../../api/APIs/Services/Transport.service';
 
 const validationSchema = Yup.object().shape({
     VehicleNo: Yup.string().required("Vehicle Number is required"),
@@ -15,20 +16,32 @@ const validationSchema = Yup.object().shape({
     remarks: Yup.string(),
 });
 
-function AddVehicles() {
+function AddVehicles({ location }) {
+    const vehicleData = location?.state || null; // Get vehicle data if editing
+
     const formik = useFormik({
         initialValues: {
-            VehicleNo: "",
-            Make: "",
-            Model: "",
-            EngCapp: "",
-            OfficesBranch: "",
-            petrolLimit: "",
-            remarks: "",
+            VehicleNo: vehicleData ? vehicleData.VehicleNo : "",
+            Make: vehicleData ? vehicleData.Make : "",
+            Model: vehicleData ? vehicleData.Model : "",
+            EngCapp: vehicleData ? vehicleData.EngCapp : "",
+            OfficesBranch: vehicleData ? vehicleData.OfficesBranch : "",
+            petrolLimit: vehicleData ? vehicleData.petrolLimit : "",
+            remarks: vehicleData ? vehicleData.remarks : "",
         },
         validationSchema: validationSchema,
-        onSubmit: (values) => {
-            console.log(values);
+        onSubmit: async (values) => {
+            try {
+                if (vehicleData) {
+                    await updateVehicles(vehicleData.id, values);
+                    toast.success("Vehicle updated successfully.");
+                } else {
+                    await createVehicle(values);
+                    toast.success("Vehicle added successfully.");
+                }
+            } catch (error) {
+                toast.error("Error submitting vehicle data.");
+            }
         },
     });
 
@@ -38,7 +51,7 @@ function AddVehicles() {
             <div className="container-fluid">
                 <div className="card">
                     <div className="card-header red-bg" style={{ background: "#14ae5c" }}>
-                        <h1>Add Vehicle</h1>
+                        <h1>{vehicleData ? "Edit Vehicle" : "Add Vehicle"}</h1>
                     </div>
                     <div className="card-body">
                         <form onSubmit={formik.handleSubmit}>
@@ -225,7 +238,7 @@ function AddVehicles() {
                                 <div className="row mt-4">
                                     <div className="col">
                                         <button className="btn btn-primary float-end" type="submit">
-                                            Submit
+                                            {vehicleData ? "Update" : "Submit"}
                                         </button>
                                     </div>
                                 </div>

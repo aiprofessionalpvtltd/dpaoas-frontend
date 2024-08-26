@@ -1,33 +1,33 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Layout } from "../../../../../../components/Layout";
 import { ToastContainer } from "react-toastify";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import { TransportSideBarItems } from '../../../../../../utils/sideBarItems';
-import { getVehicles } from '../../../../../../api/APIs/Services/Transport.service';
+import { getPoll } from '../../../../../../api/APIs/Services/Transport.service';
 
-function Drivers() {
+function Poll() {
   const navigate = useNavigate();
   const [filteredData, setFilteredData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
-  const [count, setCount] = useState(0);
   const pageSize = 10;
-  const userId = 1; // Replace with the actual user ID if needed
+  const [count, setCount] = useState(null);
+  const userId = "your_user_id"; 
 
-  // Fetch vehicles data from API
-  const fetchVehicles = async () => {
+  const fetchPollData = useCallback(async () => {
     try {
-      const data = await getVehicles(currentPage, pageSize, userId);
-      setFilteredData(data.vehicles || []); // Adjust according to the actual response structure
-      setCount(data.totalCount || 0); // Adjust according to the actual response structure
+      const response = await getPoll(currentPage, pageSize, userId);
+      const data = response?.data || []
+      setFilteredData(data);
+      setCount()
     } catch (error) {
-      console.error("Failed to fetch vehicles:", error);
+      console.error("Error fetching Poll data:", error);
     }
-  };
+  }, [currentPage, pageSize, userId]);
 
   useEffect(() => {
-    fetchVehicles();
-  }, [currentPage]);
+    fetchPollData();
+  }, [fetchPollData]);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -43,29 +43,22 @@ function Drivers() {
       <div className="row">
         <div className="col-12">
           <CustomTable
-            hideBtn={false}
-            addBtnText={"Add Vehicle"}
+            hidebtn1={true}
+            addBtnText={"Add Poll"}
             data={filteredData}
-            tableTitle="Vehicles"
+            tableTitle="Poll"
             headertitlebgColor={"#666"}
             headertitletextColor={"#FFF"}
             handlePageChange={handlePageChange}
             currentPage={currentPage}
-            handleAdd={() =>
-              navigate("/transport/vehicles/addeditVehicles")
-            }
+            handleAdd={() => navigate("/transport/driver/addeditDrivers")}
             pageSize={pageSize}
             totalCount={count}
             singleDataCard={true}
-            // seachBarShow={true}
-            // searchonchange={onSearchChange}
-            // handleDelete={(item) => handleDelete(item.SrNo)}
             showEditIcon={false}
-            handleEdit={(item) =>
-              navigate("/transport/vehicles/addeditVehicles", {
-                state: item,
-              })
-            }
+            handleEdit={(item) => navigate("/transport/driver/addeditDrivers", {
+              state: item,
+            })}
           />
         </div>
       </div>
@@ -73,4 +66,4 @@ function Drivers() {
   );
 }
 
-export default Drivers;
+export default Poll;

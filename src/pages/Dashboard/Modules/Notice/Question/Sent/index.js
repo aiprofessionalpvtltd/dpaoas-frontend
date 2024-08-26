@@ -128,9 +128,9 @@ function SentQuestion() {
           : "",
         SubjectMatter: cleanedSubjectMatter ? cleanedSubjectMatter : "",
         Category: res.questionCategory ? res.questionCategory : "",
-        Status: res.questionStatus?.questionStatus
-          ? res.questionStatus?.questionStatus
-          : "",
+        // Status: res.questionStatus?.questionStatus
+        //   ? res.questionStatus?.questionStatus
+        //   : "",
         device: res?.device,
         createdBy:
           res?.questionSentStatus === "inNotice" ? "Notice Office" : "---",

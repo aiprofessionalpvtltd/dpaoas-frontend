@@ -1,33 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Layout } from "../../../../../../components/Layout";
 import { ToastContainer } from "react-toastify";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import { TransportSideBarItems } from '../../../../../../utils/sideBarItems';
-import { getVehicles } from '../../../../../../api/APIs/Services/Transport.service';
+import { getMakeModel } from '../../../../../../api/APIs/Services/Transport.service';
 
-function Drivers() {
+function MakeModelWise() {
   const navigate = useNavigate();
   const [filteredData, setFilteredData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
-  const [count, setCount] = useState(0);
   const pageSize = 10;
-  const userId = 1; // Replace with the actual user ID if needed
+  const [count, setCount] = useState(null);
+  const userId = "your_user_id"; 
 
-  // Fetch vehicles data from API
-  const fetchVehicles = async () => {
+  const fetchMakeModelData = useCallback(async () => {
     try {
-      const data = await getVehicles(currentPage, pageSize, userId);
-      setFilteredData(data.vehicles || []); // Adjust according to the actual response structure
-      setCount(data.totalCount || 0); // Adjust according to the actual response structure
+      const response = await getMakeModel(currentPage, pageSize, userId);
+      const data =response?.data || []
+      setFilteredData(data)
     } catch (error) {
-      console.error("Failed to fetch vehicles:", error);
+      console.error("Error fetching MakeModel data:", error);
     }
-  };
+  }, [currentPage, pageSize, userId]);
 
   useEffect(() => {
-    fetchVehicles();
-  }, [currentPage]);
+    fetchMakeModelData();
+  }, [fetchMakeModelData]);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -37,32 +36,28 @@ function Drivers() {
     <Layout
       module={false}
       centerlogohide={true}
-      sidebarItems={TransportSideBarItems}
-    >
+      sidebarItems={TransportSideBarItems}>
       <ToastContainer />
       <div className="row">
         <div className="col-12">
           <CustomTable
-            hideBtn={false}
-            addBtnText={"Add Vehicle"}
+            hidebtn1={true}
+            addBtnText={"Add Make And Model"}
             data={filteredData}
-            tableTitle="Vehicles"
+            tableTitle="Make Model-Wise"
             headertitlebgColor={"#666"}
             headertitletextColor={"#FFF"}
             handlePageChange={handlePageChange}
             currentPage={currentPage}
             handleAdd={() =>
-              navigate("/transport/vehicles/addeditVehicles")
+              navigate("/transport/driver/addeditDrivers")
             }
             pageSize={pageSize}
             totalCount={count}
             singleDataCard={true}
-            // seachBarShow={true}
-            // searchonchange={onSearchChange}
-            // handleDelete={(item) => handleDelete(item.SrNo)}
             showEditIcon={false}
             handleEdit={(item) =>
-              navigate("/transport/vehicles/addeditVehicles", {
+              navigate("/transport/driver/addeditDrivers", {
                 state: item,
               })
             }
@@ -73,4 +68,4 @@ function Drivers() {
   );
 }
 
-export default Drivers;
+export default MakeModelWise;

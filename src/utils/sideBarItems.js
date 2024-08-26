@@ -153,21 +153,9 @@ export const NoticeSidebarItems = [
     ],
   },
   {
-    itemName: "Private Member Bill",
-    link: "/notice/legislation",
-    icon: faScaleBalanced,
-    subItems: [
-      // {
-      //   itemName: "Search Private Member Bill",
-      //   link: "",
-      //   icon: faFileInvoice,
-      // },
-      {
-        itemName: "List Private Member Bill",
-        link: "/notice/legislation/legislative-bill",
-        icon: faFileInvoice,
-      },
-    ],
+    itemName: "Private Member Bills",
+    link: "/notice/legislation/private-bill",
+    icon: faScaleBalanced
   },
   {
     itemName: "Manage",
@@ -190,12 +178,12 @@ export const NoticeSidebarItems = [
         target: "blank",
         icon: faChair,
       },
-      {
-        itemName: "Member Attendance",
-        link: "/notice/manage/single-member-session-attendance",
-        icon: faChair,
-      },
     ],
+  },
+  {
+    itemName: "Member Attendance",
+    link: "/notice/manage/single-member-session-attendance",
+    icon: faChair,
   },
   // {
   //   itemName: "Event Calendar",
@@ -539,6 +527,11 @@ export const QMSSideBarItems = [
         icon: faClipboardList,
       },
     ],
+  },
+  {
+    itemName: "Annual Report",
+    link: "/qms/questionList/question-anual-report",
+    icon: faClipboardList,
   },
 ];
 
@@ -1241,7 +1234,7 @@ export const TransportSideBarItems = [
     icon: faClipboardList,
   },
   {
-    itemName: "Fleet Management",
+    itemName: "Handed Over Form",
     link: "/transport/fleet",
     icon: faClipboardList,
   },
@@ -1259,7 +1252,29 @@ export const TransportSideBarItems = [
         itemName: "Drivers",
         link: "/transport/driver", // need to be changed /drivers
         icon: faFileInvoice,
-      },
-    ],
+      }
+    ]
   },
+  {
+    itemName:"Summary",
+    link:"/transport",
+    icon:faClipboardList,
+    subItems:[
+      {
+        itemName: "Drivers and Vehicles",
+        link: "/transport/sumDriverVehicle", // need to be changed /vehicles
+        icon: faFileInvoice,
+      }, // added 
+      {
+        itemName: "Poll",
+        link: "/transport/poll",  // need to be changed /drivers
+        icon: faFileInvoice,
+      },
+      {
+        itemName: "Make and Model-wise",
+        link: "/transport/makeModelWise",  // need to be changed /drivers
+        icon: faFileInvoice,
+      }
+    ]
+  }
 ];

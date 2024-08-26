@@ -481,23 +481,9 @@ function EditMotion() {
                       </div>
                     </div>
 
-                    <div class="col-3">
+                    {/* <div class="col-3">
                       <div class="mb-3">
                         <label class="form-label">Motion Status</label>
-                        {/* <input
-                          class={`form-control ${
-                            formik.touched.noticeOfficeDiaryNo &&
-                            formik.errors.noticeOfficeDiaryNo
-                              ? "is-invalid"
-                              : ""
-                          }`}
-                          type="number"
-                          id="noticeOfficeDiaryNo"
-                          value={formik.values.noticeOfficeDiaryNo}
-                          name="noticeOfficeDiaryNo"
-                          onBlur={formik.handleBlur}
-                          onChange={formik.handleChange}
-                        /> */}
                         <Select
                           options={
                             motionStatusData &&
@@ -524,7 +510,7 @@ function EditMotion() {
                             </div>
                           )}
                       </div>
-                    </div>
+                    </div> */}
 
                     <div class="col-3">
                       <div class="mb-3">

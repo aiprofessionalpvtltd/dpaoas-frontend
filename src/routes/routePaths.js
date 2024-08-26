@@ -276,6 +276,10 @@ import Drivers from "../pages/Dashboard/Modules/Transport/DriversAndVehicles/Dri
 import ResolutionDataPreview from "../pages/Dashboard/Modules/QMS/Resolution/ResolutionDataPrintPreview/index.js";
 import QuestionDataPreviewPDF from "../pages/Dashboard/Modules/QMS/Question/PreviewQuestionDataPDF/index.js";
 import MainDashBoardDemo from "../pages/Dashboard/Modules/EFiling/MainDashBoardDemo/index.js";
+import SumDriverVehicle from "../pages/Dashboard/Modules/Transport/Summary/Driv-Vehicle/index.js";
+import Poll from "../pages/Dashboard/Modules/Transport/Summary/Poll/index.js";
+import MakeModelWise from "../pages/Dashboard/Modules/Transport/Summary/MakeModel/index.js";
+import QuestionAnualReport from "../pages/Dashboard/Modules/QMS/QuestionAnnualReport/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -334,19 +338,20 @@ export const ProtectedRoutes = [
   { path: "/notice/resolution/sent", element: <SentResolution /> },
 
   { path: "/notice/legislation/government-bill", element: <GovernmentBill /> },
-  { path: "/notice/legislation/private-bill", element: <PrivateBill /> },
+  // Not useable
+  // { path: "/notice/legislation/private-bill", element: <PrivateBill /> },
+
+  // {
+  //   path: "/notice/legislation/private-bill/addedit",
+  //   element: <AddEditPrivateBill />,
+  // },
 
   {
-    path: "/notice/legislation/private-bill/addedit",
-    element: <AddEditPrivateBill />,
-  },
-
-  {
-    path: "/notice/legislation/legislative-bill",
+    path: "/notice/legislation/private-bill",
     element: <LegislativeBillList />,
   },
   {
-    path: "/notice/legislation/legislative-bill/addedit",
+    path: "/notice/legislation/private-bill/addedit",
     element: <AddEditLegislativeBill />,
   },
 
@@ -610,6 +615,10 @@ export const ProtectedRoutes = [
   {
     path: "/qms/questionList/priveiw-suplementry-list",
     element: <PreviewSuplementryList />,
+  },
+  {
+    path: "/qms/questionList/question-anual-report",
+    element: <QuestionAnualReport />,
   },
 
   //SMS Module routes
@@ -1122,7 +1131,19 @@ export const ProtectedRoutes = [
     element: <AddVehicles />,
   },
   {
-    path: "/transport/driver/addeditDrivers", // this will be changed
-    element: <AddEditDrivers />,
+    path:"/transport/driver/addeditDrivers",  // this will be changed
+    element: <AddEditDrivers/>
   },
+  {
+    path:"/transport/sumDriverVehicle",  // this will be changed
+    element: <SumDriverVehicle/>
+  },
+  {
+    path:"/transport/poll",  // this will be changed
+    element: <Poll/>
+  },
+  {
+    path:"/transport/makeModelWise",  // this will be changed
+    element: <MakeModelWise/>
+  }
 ];

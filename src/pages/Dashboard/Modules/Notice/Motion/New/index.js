@@ -12,7 +12,10 @@ import TimePicker from "react-time-picker";
 import Select from "react-select";
 import { Editor } from "../../../../../../components/CustomComponents/Editor";
 import { ToastContainer } from "react-toastify";
-import { createNewMotion } from "../../../../../../api/APIs/Services/Motion.service";
+import {
+  createNewMotion,
+  getMotionNoticeDiaryNumber,
+} from "../../../../../../api/APIs/Services/Motion.service";
 import {
   showErrorMessage,
   showSuccessMessage,
@@ -56,6 +59,34 @@ function NewMotion() {
   const handleCalendarToggle = () => {
     setIsCalendarOpen(!isCalendarOpen);
   };
+
+  // Getting Notice Office Diary Number
+  const getMotionNoticeOfficeDiaryNumberApi = async () => {
+    try {
+      const response = await getMotionNoticeDiaryNumber();
+
+      if (response?.success) {
+        // setQuestionNoticeOfficeDiaryNumber(response?.data);
+        formik.setFieldValue(
+          "noticeOfficeDiaryNo",
+          response?.data?.noticeOfficeDiaryNo
+            ? response?.data?.noticeOfficeDiaryNo
+            : ""
+        );
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.error);
+    }
+  };
+
+  useEffect(() => {
+    getMotionNoticeOfficeDiaryNumberApi();
+    if (sessions && sessions.length > 0) {
+      const currentSessionId = sessions[0]?.id; // Assuming the first session is the current one
+      formik.setFieldValue("sessionNumber", currentSessionId);
+    }
+  }, [sessions]);
+
   // Handale DateCHange
   const handleDateSelect = (date) => {
     formik.setFieldValue(
@@ -418,6 +449,7 @@ function NewMotion() {
                           name="noticeOfficeDiaryNo"
                           onBlur={formik.handleBlur}
                           onChange={formik.handleChange}
+                          readOnly
                         />
                         {formik.touched.noticeOfficeDiaryNo &&
                           formik.errors.noticeOfficeDiaryNo && (
