@@ -153,21 +153,9 @@ export const NoticeSidebarItems = [
     ],
   },
   {
-    itemName: "Private Member Bill",
-    link: "/notice/legislation",
-    icon: faScaleBalanced,
-    subItems: [
-      // {
-      //   itemName: "Search Private Member Bill",
-      //   link: "",
-      //   icon: faFileInvoice,
-      // },
-      {
-        itemName: "List Private Member Bill",
-        link: "/notice/legislation/legislative-bill",
-        icon: faFileInvoice,
-      },
-    ],
+    itemName: "Private Member Bills",
+    link: "/notice/legislation/private-bill",
+    icon: faScaleBalanced
   },
   {
     itemName: "Manage",
@@ -190,12 +178,12 @@ export const NoticeSidebarItems = [
         target: "blank",
         icon: faChair,
       },
-      {
-        itemName: "Member Attendance",
-        link: "/notice/manage/single-member-session-attendance",
-        icon: faChair,
-      },
     ],
+  },
+  {
+    itemName: "Member Attendance",
+    link: "/notice/manage/single-member-session-attendance",
+    icon: faChair,
   },
   // {
   //   itemName: "Event Calendar",

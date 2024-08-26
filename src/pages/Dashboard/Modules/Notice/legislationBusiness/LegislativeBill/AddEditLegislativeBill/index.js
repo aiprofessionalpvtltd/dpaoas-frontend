@@ -9,6 +9,7 @@ import { AuthContext } from "../../../../../../../api/AuthContext";
 import { useFormik } from "formik";
 import {
   UpdateLegislativeBillById,
+  createLegislativeBill,
   getLegislativeBillById,
 } from "../../../../../../../api/APIs/Services/Notice.service";
 import {
@@ -18,6 +19,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import DatePicker from "react-datepicker";
+import TimePicker from "react-time-picker";
 
 function AddEditLegislativeBill() {
   const location = useLocation();
@@ -29,6 +31,7 @@ function AddEditLegislativeBill() {
       sessionNo: "",
       title: "",
       billdate: "",
+      noticeOfficeDiaryTime: "",
       status: "",
       attachment: "",
       description: "",
@@ -40,21 +43,50 @@ function AddEditLegislativeBill() {
       if (location?.state?.id) {
         UpdateLegislativeBillAPi(values);
       } else {
-        // handleCreateLegislativeBill(values);
+        handleCreateLegislativeBill(values);
       }
     },
   });
 
-  const UpdateLegislativeBillAPi = async (values) => {
+  const handleCreateLegislativeBill = async (values) => {
     const formData = new FormData();
     formData.append("title", values?.title);
-    formData.append("fkSessionNo", values?.sessionNo.value);
+    // formData.append("fkSessionNo", values?.sessionNo.value);
     formData.append("description", values?.description);
     if (values?.attachment) {
       formData.append("attachment", values?.attachment);
     }
     formData.append("date", values?.billdate);
-    formData.append("status", values?.status);
+    // formData.append("status", values?.status);
+    formData.append("diary_number", values?.diary_number);
+    formData.append("device", "Web")
+
+    try {
+      const response = await createLegislativeBill(
+        formData
+      );
+      if (response.success) {
+        showSuccessMessage(response.message);
+        formik.resetForm();
+        setTimeout(() => {
+          navigate("/notice/legislation/private-bill");
+        }, 1000);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  };
+
+  const UpdateLegislativeBillAPi = async (values) => {
+    const formData = new FormData();
+    formData.append("title", values?.title);
+    // formData.append("fkSessionNo", values?.sessionNo.value);
+    formData.append("description", values?.description);
+    if (values?.attachment) {
+      formData.append("attachment", values?.attachment);
+    }
+    formData.append("date", values?.billdate);
+    // formData.append("status", values?.status);
     formData.append("diary_number", values?.diary_number);
     // formData.append("device", "Web")
 
@@ -67,7 +99,7 @@ function AddEditLegislativeBill() {
         showSuccessMessage(response.message);
         formik.resetForm();
         setTimeout(() => {
-          navigate("/notice/legislation/legislative-bill");
+          navigate("/notice/legislation/private-bill");
         }, 1000);
       }
     } catch (error) {
@@ -122,8 +154,8 @@ function AddEditLegislativeBill() {
         addLink1={"/notice/legislation/legislative-bill/addedit"}
         title1={
           location && location?.state?.id
-            ? "Edit Legislative Bill"
-            : "Add Legislative Bill"
+            ? "Edit Private Member Bill"
+            : "Add Private Member Bill"
         }
       />
 
@@ -132,16 +164,16 @@ function AddEditLegislativeBill() {
         <div className="card">
           <div className="card-header red-bg" style={{ background: "#666" }}>
             {location && location?.state ? (
-              <h1>Edit Legislative Bill</h1>
+              <h1>Edit Private Member Bill</h1>
             ) : (
-              <h1>Edit Legislative Bill</h1>
+              <h1>Edit Private Member Bill</h1>
             )}
           </div>
           <div className="card-body">
             <form onSubmit={formik.handleSubmit}>
               <div className="container-fluid">
                 <div className="row">
-                  <div class="col-4">
+                  {/* <div class="col-4">
                     <div class="mb-3">
                       <label class="form-label">Session No</label>
                       <Select
@@ -171,7 +203,7 @@ function AddEditLegislativeBill() {
                         </div>
                       )}
                     </div>
-                  </div>
+                  </div> */}
                   <div className="col-4">
                     <div className="mb-3">
                       <label className="form-label">Title</label>
@@ -188,7 +220,7 @@ function AddEditLegislativeBill() {
                   </div>
                   <div className="col-4">
                     <div className="mb-3" style={{ position: "relative" }}>
-                      <label className="form-label">Date</label>
+                      <label className="form-label">Notice Office Diary Date</label>
                       <span
                         style={{
                           position: "absolute",
@@ -215,9 +247,42 @@ function AddEditLegislativeBill() {
                       />
                     </div>
                   </div>
+
+                  <div className="col-4">
+                      <div className="mb-3">
+                        <label className="form-label">
+                          Notice Office Diary Time
+                        </label>
+
+                        <TimePicker
+                          value={formik.values.noticeOfficeDiaryTime}
+                          clockIcon={null} // Disable clock view
+                          openClockOnFocus={false}
+                          format="hh:mm a"
+                          onChange={(time) =>
+                            formik.setFieldValue("noticeOfficeDiaryTime", time)
+                          }
+                          className={`form-control ${
+                            formik.touched.noticeOfficeDiaryTime &&
+                            formik.errors.noticeOfficeDiaryTime
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                        />
+                        {formik.touched.noticeOfficeDiaryTime &&
+                          formik.errors.noticeOfficeDiaryTime && (
+                            <div
+                              className="invalid-feedback"
+                              style={{ display: "block" }}
+                            >
+                              {formik.errors.noticeOfficeDiaryTime}
+                            </div>
+                          )}
+                      </div>
+                    </div>
                 </div>
                 <div className="row">
-                  <div className="col-4">
+                  {/* <div className="col-4">
                     <div className="mb-3">
                       <label className="form-label">Status</label>
                       <select
@@ -235,7 +300,7 @@ function AddEditLegislativeBill() {
                         <option value="Pending">Pending</option>
                       </select>
                     </div>
-                  </div>
+                  </div> */}
                   <div class="col-4">
                     <div class="mb-3">
                       <label className="form-label">Attachment</label>

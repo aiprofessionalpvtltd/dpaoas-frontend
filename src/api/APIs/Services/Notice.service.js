@@ -352,6 +352,25 @@ export const getLegislativeBillById = async (id) => {
   }
 };
 
+export const createLegislativeBill = async (data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClient.post(
+      `/legislativeBills`,
+      data,
+      {
+        headers: {
+          accept: "application/json",
+          "Content-Type": "multipart/form-data",
+        },
+      });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
 export const UpdateLegislativeBillById = async (id, data) => {
   try {
     // const token = getAuthToken();

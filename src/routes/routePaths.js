@@ -338,19 +338,20 @@ export const ProtectedRoutes = [
   { path: "/notice/resolution/sent", element: <SentResolution /> },
 
   { path: "/notice/legislation/government-bill", element: <GovernmentBill /> },
-  { path: "/notice/legislation/private-bill", element: <PrivateBill /> },
+  // Not useable
+  // { path: "/notice/legislation/private-bill", element: <PrivateBill /> },
+
+  // {
+  //   path: "/notice/legislation/private-bill/addedit",
+  //   element: <AddEditPrivateBill />,
+  // },
 
   {
-    path: "/notice/legislation/private-bill/addedit",
-    element: <AddEditPrivateBill />,
-  },
-
-  {
-    path: "/notice/legislation/legislative-bill",
+    path: "/notice/legislation/private-bill",
     element: <LegislativeBillList />,
   },
   {
-    path: "/notice/legislation/legislative-bill/addedit",
+    path: "/notice/legislation/private-bill/addedit",
     element: <AddEditLegislativeBill />,
   },
 

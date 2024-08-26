@@ -106,9 +106,8 @@ function LegislativeBillList() {
             singleDataCard={true}
             block={false}
             data={billData}
-            hidebtn1={true}
-            // addBtnText={"Create Speech On Demand"}
-            tableTitle="Legislative Bill"
+            addBtnText={"Create Private  Member Bill"}
+            tableTitle="Private Member Bills"
             handlePageChange={handlePageChange}
             hideBtn={true}
             currentPage={currentPage}
@@ -116,9 +115,9 @@ function LegislativeBillList() {
             headertitlebgColor={"#666"}
             headertitletextColor={"#FFF"}
             totalCount={count}
-            // handleAdd={() => navigate("/notice/speech-on-demand/addedit")}
+            handleAdd={() => navigate("/notice/legislation/private-bill/addedit")}
             handleEdit={(item) =>
-              navigate("/notice/legislation/legislative-bill/addedit", {
+              navigate("/notice/legislation/private-bill/addedit", {
                 state: { id: item?.SR },
               })
             }
