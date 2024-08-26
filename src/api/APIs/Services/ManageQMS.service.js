@@ -261,6 +261,22 @@ export const updateMembers = async (id, data) => {
     throw error;
   }
 };
+export const updateMemberParliamentaryYear = async (id, data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClient.put(`/members/promote/${id}`, data, {
+      // headers: {
+      //   accept: "application/json",
+      //   "Content-Type": "application/json",
+      // },
+    });
+
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
 
 export const deleteMembers = async (id) => {
   try {
@@ -370,16 +386,12 @@ export const deleteDivisions = async (id) => {
 export const createPoliticalParties = async (data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClient.post(
-      `/politicalParties/create`,
-      data,
-      {
-        headers: {
-          accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const response = await axiosClient.post(`/politicalParties/create`, data, {
+      headers: {
+        accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -487,6 +499,22 @@ export const getAllParliamentaryYears = async (currentPage, pageSize) => {
     const response = await axiosClient.get(
       `/parliamentaryYears?currentPage=${currentPage}&pageSize=${pageSize}`
     );
+    // {
+    //   headers: {
+    //     Authorization: `Bearer ${token}`,
+    //   }
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const getParliamentaryYearsByTenureID = async (id) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClient.get(`/parliamentaryYears/${id}/tenure`);
     // {
     //   headers: {
     //     Authorization: `Bearer ${token}`,

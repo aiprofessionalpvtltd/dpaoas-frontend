@@ -1,10 +1,8 @@
 import React from "react";
 import Modal from "react-bootstrap/Modal";
 import {
-  createBillNewStatus,
   createCommitteesRecommendation,
   UpdateCommitteeRecommendation,
-  updatedBillNewStatus,
 } from "../../api/APIs/Services/LegislationModule.service";
 import { useFormik } from "formik";
 import { showErrorMessage, showSuccessMessage } from "../../utils/ToastAlert";

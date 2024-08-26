@@ -1038,17 +1038,17 @@ export const LegislationSideBarItems = [
     icon: faBookOpen,
     subItems: [
       {
-        itemName: "Manage Bill Statuses",
+        itemName: "Bill Statuses",
         link: "/lgms/dashboard/bill/manage-bill-statuses",
         icon: faBookOpen,
       },
       {
-        itemName: "Manage Committees",
+        itemName: "Committees",
         link: "/lgms/dashboard/manage/committees/list",
         icon: faBookOpen,
       },
       {
-        itemName: "Manage Committees Recommendation",
+        itemName: "Committees Recommendation",
         link: "/lgms/dashboard/manage/committee-recomendation/list",
         icon: faBookOpen,
       },
@@ -1264,29 +1264,29 @@ export const TransportSideBarItems = [
         itemName: "Drivers",
         link: "/transport/driver", // need to be changed /drivers
         icon: faFileInvoice,
-      }
-    ]
+      },
+    ],
   },
   {
-    itemName:"Summary",
-    link:"/transport",
-    icon:faClipboardList,
-    subItems:[
+    itemName: "Summary",
+    link: "/transport",
+    icon: faClipboardList,
+    subItems: [
       {
         itemName: "Drivers and Vehicles",
         link: "/transport/sumDriverVehicle", // need to be changed /vehicles
         icon: faFileInvoice,
-      }, // added 
+      }, // added
       {
         itemName: "Poll",
-        link: "/transport/poll",  // need to be changed /drivers
+        link: "/transport/poll", // need to be changed /drivers
         icon: faFileInvoice,
       },
       {
         itemName: "Make and Model-wise",
-        link: "/transport/makeModelWise",  // need to be changed /drivers
+        link: "/transport/makeModelWise", // need to be changed /drivers
         icon: faFileInvoice,
-      }
-    ]
-  }
+      },
+    ],
+  },
 ];
