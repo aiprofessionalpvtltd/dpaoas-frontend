@@ -40,11 +40,11 @@ const AllOrdinanceList = () => {
       dateOfLayingInNationalAssembly: item?.dateOfLayingInTheNA
         ? moment(item?.dateOfLayingInTheNA).format("DD-MM-YYYY")
         : "---",
-        ordinanceStatus: item?.billStatuses && item?.billStatuses?.billStatusName,
+      ordinanceStatus: item?.billStatuses && item?.billStatuses?.billStatusName,
       documentDate: item?.documentDate
         ? moment(item?.documentDate).format("DD-MM-YYYY")
         : "---",
-        Status: item.ordinanceStatus,
+      Status: item.ordinanceStatus,
     }));
   };
 
@@ -106,6 +106,7 @@ const AllOrdinanceList = () => {
             currentPage={currentPage}
             pageSize={pageSize}
             totalCount={count}
+            hideDeleteIcon={true}
             handleAdd={() =>
               navigate("/lgms/dashboard/ordinances/add/ordinance")
             }
@@ -114,7 +115,7 @@ const AllOrdinanceList = () => {
                 state: item,
               })
             }
-            handleDelete={(item) => handleDeleteOrdinance(item?.id)}
+            // handleDelete={(item) => handleDeleteOrdinance(item?.id)}
           />
         </div>
       </div>

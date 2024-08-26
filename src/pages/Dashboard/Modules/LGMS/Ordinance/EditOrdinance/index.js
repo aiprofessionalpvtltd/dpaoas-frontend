@@ -11,14 +11,20 @@ import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import DatePicker from "react-datepicker";
 import { getAllParliamentaryYears } from "../../../../../../api/APIs/Services/ManageQMS.service";
 import {
+  DeleteBillDocumentTypeAttachemnt,
+  DeleteOrdinanceAttachemnt,
   getAllBillStatus,
   getSingleOrdinanceByID,
   updatedOrdinance,
 } from "../../../../../../api/APIs/Services/LegislationModule.service";
 import { getUserData } from "../../../../../../api/Auth";
-import { showSuccessMessage } from "../../../../../../utils/ToastAlert";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../../utils/ToastAlert";
 import moment from "moment";
 import Select from "react-select";
+import { imagesUrl } from "../../../../../../api/APIs";
 function EditOrdinance() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -32,6 +38,7 @@ function EditOrdinance() {
   const [parliamentaryYearData, setParliamentaryYearData] = useState([]);
   const [singleOrdinanceData, setSingleOrdinanceData] = useState([]);
   const [imageLinks, setImageLinks] = useState([]);
+  const OrdinanceID = location.state?.id && location.state?.id;
 
   const userData = getUserData();
   const [billStatusData, setBillStatusesData] = useState([]);
@@ -125,6 +132,22 @@ function EditOrdinance() {
     },
   });
 
+  // Remove Ordinance Attachemnts
+  const hendleRemoveImage = async (fileId) => {
+    const data = {
+      fileId: fileId,
+    };
+    try {
+      const response = await DeleteOrdinanceAttachemnt(OrdinanceID, data);
+      if (response?.success) {
+        getOrdinanceByIdApi();
+        showSuccessMessage(response.message);
+      }
+    } catch (error) {
+      showErrorMessage(error.response.data.message);
+    }
+  };
+
   const handleFileChange = (event) => {
     const selectedFiles = Array.from(event.currentTarget.files);
     const links = selectedFiles.map((file) => URL.createObjectURL(file));
@@ -154,6 +177,11 @@ function EditOrdinance() {
   useEffect(() => {
     // Update form values when termsById changes
     if (singleOrdinanceData) {
+      const firstDocument = singleOrdinanceData?.billDocuments?.[0];
+      let parsedFiles = [];
+      if (firstDocument && firstDocument.file) {
+        parsedFiles = firstDocument.file.map((file) => file.path);
+      }
       formik.setValues({
         fkParliamentaryYearId: singleOrdinanceData?.fkParliamentaryYearId || "",
         ordinanceTitle: singleOrdinanceData?.ordinanceTitle || "",
@@ -199,6 +227,21 @@ function EditOrdinance() {
     formData.append("fkSessionId", values?.fkSessionId);
     formData.append("fkUserId", userData && userData?.id);
     formData.append("ordinanceTitle", values?.ordinanceTitle);
+
+    if (values?.dateOfLayingInTheNA) {
+      const formattedDate = moment(values.dateOfLayingInTheNA).format(
+        "YYYY-MM-DD"
+      );
+      formData.append("dateOfLayingInTheNA", formattedDate);
+    }
+    if (values?.dateOfLayingInTheSenate) {
+      const formattedDate = moment(values.dateOfLayingInTheSenate).format(
+        "YYYY-MM-DD"
+      );
+      formData.append("dateOfLayingInTheSenate", formattedDate);
+    }
+    // formData.append("dateOfLayingInTheNA", values?.dateOfLayingInTheNA);
+    // formData.append("dateOfLayingInTheSenate", values?.dateOfLayingInTheSenate);
 
     if (values?.fkOrdinanceStatus) {
       formData.append("fkOrdinanceStatus", values?.fkOrdinanceStatus.value);
@@ -460,7 +503,7 @@ function EditOrdinance() {
                       )}
                   </div>
                 </div>
-                <div className="col-3">
+                {/* <div className="col-3">
                   <div className="mb-3" style={{ position: "relative" }}>
                     <label className="form-label">Ordinance Status Date</label>
                     <span
@@ -508,7 +551,7 @@ function EditOrdinance() {
                         </div>
                       )}
                   </div>
-                </div>
+                </div> */}
               </div>
               <div className="row">
                 <div className=" col">
@@ -541,7 +584,7 @@ function EditOrdinance() {
                 </div>
               </div>
 
-              <div className="row">
+              {/* <div className="row">
                 <div className=" col">
                   <div className="mb-3">
                     <label className="form-label">Document Description</label>
@@ -555,7 +598,7 @@ function EditOrdinance() {
                     />
                   </div>
                 </div>
-              </div>
+              </div> */}
 
               <div className="row">
                 <div className=" col">
@@ -645,6 +688,79 @@ function EditOrdinance() {
                     )}
                   </div>
                 </div>
+
+                {singleOrdinanceData &&
+                  singleOrdinanceData.file &&
+                  singleOrdinanceData.file.map((doc, index) => (
+                    <div key={index} className="document-section">
+                      {doc.type && (
+                        <div
+                          className="document-type"
+                          style={{
+                            display: "flex",
+                            color: "black",
+                            alignItems: "center",
+                          }}
+                        >
+                          <h6
+                            style={{
+                              display: "flex",
+                              color: "black",
+                              fontSize: "14px",
+                              marginTop: "15px",
+                            }}
+                          >
+                            {doc.type}
+                          </h6>
+                          <h6
+                            style={{
+                              display: "flex",
+                              color: "black",
+                              fontSize: "10px",
+                              fontWeight: "bold",
+                              marginTop: "15px",
+                              marginLeft: "14px",
+                            }}
+                          >
+                            {doc.date
+                              ? moment(doc.date).format("DD-MM-YYYY")
+                              : ""}
+                          </h6>
+                        </div>
+                      )}
+                      {doc.files &&
+                        doc.files.map((file) => (
+                          <div className="MultiFile-label mt-1" key={file.id}>
+                            <a
+                              className="MultiFile-remove"
+                              style={{
+                                marginRight: "10px",
+                                color: "red",
+                                cursor: "pointer",
+                              }}
+                              onClick={() => hendleRemoveImage(file?.id)}
+                            >
+                              x
+                            </a>
+                            <span
+                              className="MultiFile-label"
+                              title={file.path.split("/").pop()}
+                            >
+                              <span className="MultiFile-title">
+                                <a
+                                  href={`${imagesUrl}${file.path}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  style={{ cursor: "pointer" }}
+                                >
+                                  {file.path.split("/").pop()}
+                                </a>
+                              </span>
+                            </span>
+                          </div>
+                        ))}
+                    </div>
+                  ))}
               </div>
 
               <div style={{ display: "flex", justifyContent: "flex-end" }}>

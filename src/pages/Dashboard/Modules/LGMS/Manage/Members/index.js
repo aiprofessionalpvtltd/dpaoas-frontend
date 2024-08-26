@@ -15,12 +15,15 @@ import {
 } from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 import { getallMembers } from "../../../../../../api/APIs/Services/Motion.service";
+import UpdateMemberParliamentaryYear from "../../../../../../components/MemberUpdateParliamentaryYearModal";
 
 function LGMSMembers() {
   const navigate = useNavigate();
   const [members, setMembers] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [toUpdateMemberId, setToUpdateMemberId] = useState(null);
   const pageSize = 200; // Set your desired page size
 
   const handlePageChange = (page) => {
@@ -29,19 +32,32 @@ function LGMSMembers() {
   };
 
   const transformData = (apiData) => {
+    console.log("apiData", apiData);
     return apiData.map((item) => ({
       id: item.id,
       memberName: `${item.memberName}`,
-      politicalParty: `${item?.politicalParties?.partyName}`,
-      // politicalParty: `${item?.politicalParty}`,
-      electionType: item?.electionType,
+      // politicalParty: `${item?.politicalParties?.partyName}`,
+      // electionType: item?.electionType,
       tenure: item?.tenures?.tenureName,
+      parliamentaryYear: item?.parliamentaryYears?.parliamentaryTenure
+        ? item?.parliamentaryYears?.parliamentaryTenure
+        : "---",
       phoneNo: item?.phoneNo,
       gender: item?.gender,
       fromDate: moment(item.fromDate).format("YYYY/MM/DD"),
       toDate: moment(item.toDate).format("YYYY/MM/DD"),
       memberStatus: item?.memberStatus,
     }));
+  };
+
+  // Handle Models
+  const openModal = (id) => {
+    setToUpdateMemberId(id);
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
   };
 
   const handleMembers = async () => {
@@ -86,6 +102,15 @@ function LGMSMembers() {
       />
       <ToastContainer />
 
+      {showModal && showModal && (
+        <UpdateMemberParliamentaryYear
+          closeModal={closeModal}
+          UpdateMemberId={toUpdateMemberId}
+          showModal={showModal}
+          // toUpdateMemberData={toUpdateMemberData}
+        />
+      )}
+
       <div class="container-fluid dash-detail-container card">
         <div class="row">
           <div class="col-12">
@@ -108,6 +133,8 @@ function LGMSMembers() {
               currentPage={currentPage}
               pageSize={pageSize}
               totalCount={count}
+              showSent={true}
+              handleSent={(item) => openModal(item?.id)}
             />
           </div>
         </div>
