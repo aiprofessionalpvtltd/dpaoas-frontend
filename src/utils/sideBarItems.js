@@ -276,6 +276,11 @@ export const MMSSideBarItems = [
         link: "/mms/reports/motion-list",
         icon: faClipboardList,
       },
+      {
+        itemName: "Ballot List",
+        link: "/mms/reports/motion-list/ballot/list",
+        icon: faClipboardList,
+      },
     ],
   },
 ];

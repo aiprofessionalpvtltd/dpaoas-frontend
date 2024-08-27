@@ -281,6 +281,7 @@ import Poll from "../pages/Dashboard/Modules/Transport/Summary/Poll/index.js";
 import MakeModelWise from "../pages/Dashboard/Modules/Transport/Summary/MakeModel/index.js";
 import QuestionAnualReport from "../pages/Dashboard/Modules/QMS/QuestionAnnualReport/index.js";
 import { AnnualPdf } from "../pages/Dashboard/Modules/QMS/QuestionAnnualReport/QuestionAnnualPdfPreview/index.js";
+import AllBallotMotionList from "../pages/Dashboard/Modules/MMS/Reports/BallotList/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -451,6 +452,10 @@ export const ProtectedRoutes = [
   {
     path: "/mms/reports/motion-list/ballot/preview-pdf",
     element: <PreviewBallotMotionList />,
+  },
+  {
+    path: "/mms/reports/motion-list/ballot/list",
+    element: <AllBallotMotionList />,
   },
 
   //QMS Module
