@@ -297,6 +297,9 @@ function NewMotion() {
                           <option value={"Call Attention Notice"}>
                             Call Attention Notice
                           </option>
+                          <option value={"Privilege Motion"}>
+                            Privilege Motion
+                          </option>
 
                           <option value={"Motion Under Rule 218"}>
                             Motion Under Rule 218
