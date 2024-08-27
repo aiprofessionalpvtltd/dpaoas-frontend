@@ -1,79 +1,45 @@
 import React, { useContext, useState } from "react";
-
 import Header from "../../../../../components/Header";
 import { QMSSideBarItems } from "../../../../../utils/sideBarItems";
-import CustomTable from "../../../../../components/CustomComponents/CustomTable";
 import { AuthContext } from "../../../../../api/AuthContext";
 import { useFormik } from "formik";
-import { allResolutionSummaryDetail } from "../../../../../api/APIs/Services/Resolution.service";
-import moment from "moment";
 import { ToastContainer } from "react-toastify";
 import { Layout } from "../../../../../components/Layout";
+import { AnnualQuestionReprtPdfPreview } from "../../../../../api/APIs/Services/Question.service";
 
 function QuestionAnualReport() {
   const { sessions } = useContext(AuthContext);
-  const [count, setCount] = useState(null);
-  const [currentPage, setCurrentPage] = useState(0);
-  const [searchedData, setSearchData] = useState([]);
-  const pageSize = 10;
 
   const formik = useFormik({
     initialValues: {
       fromsessionNumber: "",
       tosessionNumber: "",
+      parlimentryYear: ""
     },
     onSubmit: (values) => {
-      AllResolutionSummaryDetailApi(values, currentPage);
+      console.log(values)
+      AnnualQuestionReprtPdf(values);
     },
     enableReinitialize: true,
   });
 
-  const handlePageChange = (page) => {
-    // Update currentPage when a page link is clicked
-    setCurrentPage(page);
-    if (formik?.values?.fromsessionNumber || formik?.values?.tosessionNumber) {
-      AllResolutionSummaryDetailApi(formik?.values, page);
-    }
 
-    AllResolutionSummaryDetailApi(formik?.values, page);
-  };
-
-  const transResolutionSummaryData = (apiData) => {
-    return apiData.map((item) => {
-      const subjectMatter = [item?.englishText, item?.urduText]
-        .filter(Boolean)
-        .join(", ");
-      const cleanedSubjectMatter = subjectMatter.replace(/(<([^>]+)>)/gi, "");
-      return {
-        SR: item?.id,
-        Movers: item?.resolutionMoversAssociation
-          .map((mover) => mover.memberAssociation.memberName)
-          .join(", "),
-        ResolutionContents: cleanedSubjectMatter ? cleanedSubjectMatter : "-",
-        NoticeDate: item?.noticeDiary?.noticeOfficeDiaryDate
-          ? moment(item?.noticeDiary?.noticeOfficeDiaryDate).format(
-              "DD-MM-YYYY"
-            )
-          : "-",
-        ResolutionStatus: item?.resolutionStatus?.resolutionStatus,
-      };
-    });
-  };
-
-  const AllResolutionSummaryDetailApi = async (values, page) => {
+  const AnnualQuestionReprtPdf = async (values) => {
     const Data = {
       fromSessionId: values?.fromsessionNumber,
       toSessionId: values?.tosessionNumber,
     };
     try {
-      const response = await allResolutionSummaryDetail(Data, page, pageSize);
+      const response = await AnnualQuestionReprtPdfPreview(Data);
       if (response?.success) {
-        // showSuccessMessage(response.message);
-        setCount(response?.data?.count);
-        const transformedData = transResolutionSummaryData(
-          response?.data?.resolutions
-        );
-        setSearchData(transformedData);
+        const combinedData = {
+          ...response?.data,
+          parlimentryYear: values?.parlimentryYear
+        };
+  
+        const encodedJsonString = encodeURIComponent(JSON.stringify(combinedData));
+        const url = `/qms/questionList/question-anual-report-pdf-preview?state=${encodedJsonString}`;
+        window.open(url, "_blank");
       }
     } catch (error) {
       console.log(error);
@@ -181,7 +147,6 @@ function QuestionAnualReport() {
                       type="button"
                       onClick={() => {
                         formik.resetForm();
-                        setSearchData([]);
                       }}
                     >
                       Reset
@@ -191,7 +156,7 @@ function QuestionAnualReport() {
                       type="submit"
                       disabled={
                         formik?.values?.fromsessionNumber ||
-                        formik.values.tosessionNumber
+                          formik.values.tosessionNumber
                           ? false
                           : true
                       }
@@ -202,7 +167,7 @@ function QuestionAnualReport() {
                 </div>
               </form>
 
-          
+
             </div>
           </div>
         </div>
