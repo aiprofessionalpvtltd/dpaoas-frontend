@@ -31,14 +31,19 @@ function LegislativeBillList() {
     return apiData.map((item, index) => ({
       SR: item?.id,
       title: item?.title ? item?.title : "",
-      memberName:item?.member?.memberName,
-      sessionno: item?.session?.sessionName ? item?.session?.sessionName : "",
-      date: item?.date ? moment(item?.date).format("DD-MM-YYYY") : "",
+      memberName: item?.member?.memberName,
+      noticeOfficeDiraryDate: item?.date
+        ? moment(item?.date).format("DD-MM-YYYY")
+        : "",
+      noticeOfficeDiaryTime: item?.noticeOfficeDiaryTime
+        ? moment(item?.noticeOfficeDiaryTime, "hh:mm A").format("hh:mm A")
+        : "",
+      // sessionno: item?.session?.sessionName ? item?.session?.sessionName : "",
+
       description: item?.description ? item?.description : "",
       device: item?.device ? item?.device : "",
-      SubmittedOn:moment(item?.createdAt).format("DD-MM-YYYY"),
+      SubmittedOnBySenator: moment(item?.createdAt).format("DD-MM-YYYY"),
       isActive: item?.isActive ? item?.isActive : "",
-
     }));
   };
 
@@ -76,8 +81,8 @@ function LegislativeBillList() {
   const sendBill = async (id) => {
     try {
       const data = {
-        billSentDate: new Date()
-      }
+        billSentDate: new Date(),
+      };
       const response = await sendLegislativeBill(id, data);
       if (response?.success) {
         showSuccessMessage(response.message);
@@ -115,7 +120,9 @@ function LegislativeBillList() {
             headertitlebgColor={"#666"}
             headertitletextColor={"#FFF"}
             totalCount={count}
-            handleAdd={() => navigate("/notice/legislation/private-bill/addedit")}
+            handleAdd={() =>
+              navigate("/notice/legislation/private-bill/addedit")
+            }
             handleEdit={(item) =>
               navigate("/notice/legislation/private-bill/addedit", {
                 state: { id: item?.SR },

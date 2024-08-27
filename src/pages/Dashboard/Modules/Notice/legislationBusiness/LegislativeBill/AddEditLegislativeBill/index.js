@@ -11,6 +11,7 @@ import {
   UpdateLegislativeBillById,
   createLegislativeBill,
   getLegislativeBillById,
+  getPrivateMemberBillNoticeDiaryNumber,
 } from "../../../../../../../api/APIs/Services/Notice.service";
 import {
   showErrorMessage,
@@ -20,18 +21,21 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import DatePicker from "react-datepicker";
 import TimePicker from "react-time-picker";
+import moment from "moment";
 
 function AddEditLegislativeBill() {
   const location = useLocation();
   const navigate = useNavigate();
   const { sessions } = useContext(AuthContext);
   const [billData, setBillData] = useState([]);
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+
   const formik = useFormik({
     initialValues: {
       sessionNo: "",
       title: "",
-      billdate: "",
-      noticeOfficeDiaryTime: "",
+      date: moment(new Date()).format("YYYY-MM-DD"),
+      noticeOfficeDiaryTime: moment().format("HH:mm A"),
       status: "",
       attachment: "",
       description: "",
@@ -48,6 +52,38 @@ function AddEditLegislativeBill() {
     },
   });
 
+  // Handle Claneder Toggel
+  const handleCalendarToggle = () => {
+    setIsCalendarOpen(!isCalendarOpen);
+  };
+  // Handale DateCHange
+  const handleDateSelect = (date) => {
+    // formik.setFieldValue("noticeOfficeDiaryDate", date);
+    formik.setFieldValue("date", moment(date).format("YYYY-MM-DD"));
+    setIsCalendarOpen(false);
+  };
+
+  // Getting Notice Office Diary Number
+  const getPrivateMemberNoticeOfficeDiaryNumberApi = async () => {
+    try {
+      const response = await getPrivateMemberBillNoticeDiaryNumber();
+
+      if (response?.success) {
+        // setQuestionNoticeOfficeDiaryNumber(response?.data);
+        formik.setFieldValue(
+          "diary_number",
+          response?.data?.newDiaryNumber ? response?.data?.newDiaryNumber : ""
+        );
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.error);
+    }
+  };
+
+  useEffect(() => {
+    getPrivateMemberNoticeOfficeDiaryNumberApi();
+  }, []);
+
   const handleCreateLegislativeBill = async (values) => {
     const formData = new FormData();
     formData.append("title", values?.title);
@@ -56,15 +92,19 @@ function AddEditLegislativeBill() {
     if (values?.attachment) {
       formData.append("attachment", values?.attachment);
     }
-    formData.append("date", values?.billdate);
+    formData.append("date", values?.date);
+    // formData.append("noticeOfficeDiaryTime", values?.noticeOfficeDiaryTime);
+    formData.append(
+      "noticeOfficeDiaryTime",
+      values?.noticeOfficeDiaryTime &&
+        moment(values?.noticeOfficeDiaryTime, "hh:mm A").format("hh:mm A")
+    );
     // formData.append("status", values?.status);
     formData.append("diary_number", values?.diary_number);
-    formData.append("device", "Web")
+    formData.append("device", "Web");
 
     try {
-      const response = await createLegislativeBill(
-        formData
-      );
+      const response = await createLegislativeBill(formData);
       if (response.success) {
         showSuccessMessage(response.message);
         formik.resetForm();
@@ -85,7 +125,13 @@ function AddEditLegislativeBill() {
     if (values?.attachment) {
       formData.append("attachment", values?.attachment);
     }
-    formData.append("date", values?.billdate);
+    formData.append("date", values?.date);
+    formData.append(
+      "noticeOfficeDiaryTime",
+      values?.noticeOfficeDiaryTime &&
+        moment(values?.noticeOfficeDiaryTime, "hh:mm A").format("hh:mm A")
+    );
+    // formData.append("noticeOfficeDiaryTime", values?.noticeOfficeDiaryTime);
     // formData.append("status", values?.status);
     formData.append("diary_number", values?.diary_number);
     // formData.append("device", "Web")
@@ -126,7 +172,7 @@ function AddEditLegislativeBill() {
   }, []);
   useEffect(() => {
     // Update form values when termsById changes
-    if (billData) {
+    if (billData.length > 0) {
       formik.setValues({
         sessionNo:
           {
@@ -134,11 +180,12 @@ function AddEditLegislativeBill() {
             label: billData[0]?.session?.sessionName,
           } || "",
 
-        billdate: billData[0]?.date ? new Date(billData[0]?.date) : "",
+        date: billData[0]?.date ? new Date(billData[0]?.date) : "",
         status: billData[0]?.status || "",
         description: billData[0]?.description || "",
         title: billData[0]?.title || "",
         diary_number: billData[0]?.diary_number || "",
+        noticeOfficeDiaryTime: billData[0]?.noticeOfficeDiaryTime || "",
       });
     }
   }, [billData, formik.setValues]);
@@ -166,7 +213,7 @@ function AddEditLegislativeBill() {
             {location && location?.state ? (
               <h1>Edit Private Member Bill</h1>
             ) : (
-              <h1>Edit Private Member Bill</h1>
+              <h1>Add Private Member Bill</h1>
             )}
           </div>
           <div className="card-body">
@@ -218,9 +265,11 @@ function AddEditLegislativeBill() {
                       />
                     </div>
                   </div>
-                  <div className="col-4">
+                  {/* <div className="col-4">
                     <div className="mb-3" style={{ position: "relative" }}>
-                      <label className="form-label">Notice Office Diary Date</label>
+                      <label className="form-label">
+                        Notice Office Diary Date
+                      </label>
                       <span
                         style={{
                           position: "absolute",
@@ -236,50 +285,122 @@ function AddEditLegislativeBill() {
                         <FontAwesomeIcon icon={faCalendarAlt} />
                       </span>
                       <DatePicker
-                        selected={formik.values.billdate}
+                        selected={formik.values.date}
                         // minDate={new Date()}
 
                         onChange={(date) =>
-                          formik.setFieldValue("billdate", date)
+                          formik.setFieldValue("date", date)
                         }
                         onBlur={formik.handleBlur}
                         className={`form-control`}
                       />
                     </div>
+                  </div> */}
+
+                  <div className="col-4">
+                    <div className="mb-3" style={{ position: "relative" }}>
+                      <label className="form-label">
+                        Notice Office Diary Date{" "}
+                      </label>
+                      <span
+                        style={{
+                          position: "absolute",
+                          right: "15px",
+                          top: "36px",
+                          zIndex: 1,
+                          fontSize: "20px",
+                          zIndex: "1",
+                          color: "#666",
+                          cursor: "pointer",
+                        }}
+                        onClick={handleCalendarToggle}
+                      >
+                        <FontAwesomeIcon icon={faCalendarAlt} />
+                      </span>
+
+                      <DatePicker
+                        // selected={
+                        //   formik.values.noticeOfficeDiaryDate &&
+                        //   formik.values.noticeOfficeDiaryDate
+                        // }
+                        selected={
+                          formik.values.date
+                            ? moment(formik.values.date, "YYYY-MM-DD").toDate()
+                            : null
+                        }
+                        onChange={handleDateSelect}
+                        onBlur={formik.handleBlur}
+                        className={`form-control ${
+                          formik.touched.date && formik.errors.date
+                            ? "is-invalid"
+                            : ""
+                        }`}
+                        open={isCalendarOpen}
+                        onClickOutside={() => setIsCalendarOpen(false)}
+                        onInputClick={handleCalendarToggle}
+                        // onClick={handleCalendarToggle}
+                        maxDate={new Date()}
+                        dateFormat="dd-MM-yyyy"
+                      />
+
+                      {formik.touched.date && formik.errors.date && (
+                        <div
+                          className="invalid-feedback"
+                          style={{ display: "block" }}
+                        >
+                          {formik.errors.date}
+                        </div>
+                      )}
+                    </div>
                   </div>
 
                   <div className="col-4">
-                      <div className="mb-3">
-                        <label className="form-label">
-                          Notice Office Diary Time
-                        </label>
+                    <div className="mb-3">
+                      <label className="form-label">
+                        Notice Office Diary Time
+                      </label>
 
-                        <TimePicker
-                          value={formik.values.noticeOfficeDiaryTime}
-                          clockIcon={null} // Disable clock view
-                          openClockOnFocus={false}
-                          format="hh:mm a"
-                          onChange={(time) =>
-                            formik.setFieldValue("noticeOfficeDiaryTime", time)
-                          }
-                          className={`form-control ${
-                            formik.touched.noticeOfficeDiaryTime &&
-                            formik.errors.noticeOfficeDiaryTime
-                              ? "is-invalid"
-                              : ""
-                          }`}
-                        />
-                        {formik.touched.noticeOfficeDiaryTime &&
-                          formik.errors.noticeOfficeDiaryTime && (
-                            <div
-                              className="invalid-feedback"
-                              style={{ display: "block" }}
-                            >
-                              {formik.errors.noticeOfficeDiaryTime}
-                            </div>
-                          )}
-                      </div>
+                      {/* <TimePicker
+                        value={formik.values.noticeOfficeDiaryTime}
+                        clockIcon={null} // Disable clock view
+                        openClockOnFocus={false}
+                        format="hh:mm a"
+                        onChange={(time) =>
+                          formik.setFieldValue("noticeOfficeDiaryTime", time)
+                        }
+                        className={`form-control ${
+                          formik.touched.noticeOfficeDiaryTime &&
+                          formik.errors.noticeOfficeDiaryTime
+                            ? "is-invalid"
+                            : ""
+                        }`}
+                      /> */}
+                      <TimePicker
+                        value={formik.values.noticeOfficeDiaryTime}
+                        clockIcon={null} // Disable clock view
+                        openClockOnFocus={false}
+                        format="hh:mm a"
+                        onChange={(time) =>
+                          formik.setFieldValue("noticeOfficeDiaryTime", time)
+                        }
+                        className={`form-control ${
+                          formik.touched.noticeOfficeDiaryTime &&
+                          formik.errors.noticeOfficeDiaryTime
+                            ? "is-invalid"
+                            : ""
+                        }`}
+                      />
+                      {formik.touched.noticeOfficeDiaryTime &&
+                        formik.errors.noticeOfficeDiaryTime && (
+                          <div
+                            className="invalid-feedback"
+                            style={{ display: "block" }}
+                          >
+                            {formik.errors.noticeOfficeDiaryTime}
+                          </div>
+                        )}
                     </div>
+                  </div>
                 </div>
                 <div className="row">
                   {/* <div className="col-4">
@@ -351,7 +472,7 @@ function AddEditLegislativeBill() {
 
                 <div className="d-grid gap-2 mt-4 d-md-flex justify-content-md-end">
                   <button className="btn btn-primary" type="submit">
-                    {location?.state?.id ? "Update Bill" : "Create Bill"}
+                    {location?.state?.id ? "Submit" : "Submit"}
                   </button>
                 </div>
               </div>
