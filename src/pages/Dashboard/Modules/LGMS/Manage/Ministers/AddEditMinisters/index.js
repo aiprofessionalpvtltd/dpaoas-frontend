@@ -15,6 +15,8 @@ import {
 } from "../../../../../../../utils/ToastAlert";
 import {
   getAllPoliticalParties,
+  getAllTenures,
+  getParliamentaryYearsByTenureID,
   updateMembers,
 } from "../../../../../../../api/APIs/Services/ManageQMS.service";
 import { ToastContainer } from "react-toastify";
@@ -39,6 +41,7 @@ function LGMSMinisterAddEditForm() {
   const [ministerByID, setMinisterByID] = useState();
   const [allparties, setAllParties] = useState([]);
   const { ministryData } = useContext(AuthContext);
+  const [parliamentaryYearData, setParliamentaryYearData] = useState([]);
   console.log("location", location?.state);
   const formik = useFormik({
     initialValues: {
@@ -48,6 +51,8 @@ function LGMSMinisterAddEditForm() {
       phone: "",
       address: "",
       ministryIds: [],
+      memberTenure: "",
+      fkParliamentaryYearId: "",
     },
     // validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -65,6 +70,8 @@ function LGMSMinisterAddEditForm() {
       mnaData: {
         mnaName: values?.mnaName,
         politicalParty: Number(values?.politicalParty),
+        fkTenureId: Number(values?.memberTenure),
+        fkParliamentaryYearId: Number(values?.fkParliamentaryYearId),
         phone: String(values?.phone),
         constituency: values?.constituency,
         address: values?.address,
@@ -88,6 +95,29 @@ function LGMSMinisterAddEditForm() {
     }
   };
 
+  const handleTenures = async () => {
+    try {
+      const response = await getAllTenures(0, 1000, "Ministers");
+      if (response?.success) {
+        setTenures(response?.data?.tenures);
+      }
+    } catch (error) {
+      console.log(error?.response?.data?.message);
+    }
+  };
+
+  const getParliamentaryYearsonTheBaseOfTenure = async (id) => {
+    try {
+      const response = await getParliamentaryYearsByTenureID(id);
+      if (response?.success) {
+        console.log(response?.data?.data);
+        setParliamentaryYearData(response?.data);
+        // setTonerModels(transformedData);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   //Get Political Party
   const AllPoliticalPartiesList = async () => {
     try {
@@ -118,6 +148,7 @@ function LGMSMinisterAddEditForm() {
   };
   useEffect(() => {
     AllPoliticalPartiesList();
+    handleTenures();
     if (location.state?.id) {
       getMinisterByIdApi();
     }
@@ -129,6 +160,8 @@ function LGMSMinisterAddEditForm() {
       formik.setValues({
         mnaName: ministerByID?.mnaName || "",
         constituency: ministerByID?.constituency || "",
+        memberTenure: ministerByID.fkTenureId || "",
+        fkParliamentaryYearId: ministerByID?.parliamentaryYears?.id || "",
         phone: ministerByID?.phone || "",
         politicalParty: ministerByID?.politicalParty || "",
         address: ministerByID?.address || "",
@@ -138,12 +171,16 @@ function LGMSMinisterAddEditForm() {
             label: ministry?.ministryName,
           })) || [],
       });
+      getParliamentaryYearsonTheBaseOfTenure(ministerByID?.fkTenureId);
     }
   }, [ministerByID, formik.setValues]);
+
   const handleEditMinisters = async (values) => {
     const data = {
       mnaData: {
         mnaName: values?.mnaName,
+        fkTenureId: Number(values?.memberTenure),
+        fkParliamentaryYearId: Number(values?.fkParliamentaryYearId),
         politicalParty: Number(values?.politicalParty),
         phone: String(values?.phone),
         constituency: values?.constituency,
@@ -360,7 +397,64 @@ function LGMSMinisterAddEditForm() {
                     )}
                   </div>
                 </div>
-
+                <div className="row">
+                  <div class="col">
+                    <div class="mb-3">
+                      <label class="form-label">Member Tenure</label>
+                      <select
+                        class="form-select"
+                        id="memberTenure"
+                        name="memberTenure"
+                        onBlur={formik.handleBlur}
+                        value={formik.values.memberTenure}
+                        // onChange={formik.handleChange}
+                        onChange={(e) => {
+                          const selectedId = e.target.value;
+                          formik.handleChange(e);
+                          getParliamentaryYearsonTheBaseOfTenure(
+                            e.target.value
+                          );
+                          console.log("id", selectedId);
+                          // setTenureID(e.target.value);
+                        }}
+                      >
+                        <option value={""} selected disabled hidden>
+                          Select
+                        </option>
+                        {tenures.length > 0 &&
+                          tenures.map((tenure) => (
+                            <option value={tenure?.id}>
+                              {tenure?.tenureName}
+                            </option>
+                          ))}
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="mb-3">
+                      <label class="form-label">Parliamentary Year</label>
+                      <select
+                        class="form-select"
+                        id="fkParliamentaryYearId"
+                        name="fkParliamentaryYearId"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.fkParliamentaryYearId}
+                      >
+                        <option value={""} selected disabled hidden>
+                          Select
+                        </option>
+                        {parliamentaryYearData &&
+                          parliamentaryYearData?.length > 0 &&
+                          parliamentaryYearData.map((parliamentaryYear) => (
+                            <option value={parliamentaryYear?.id}>
+                              {parliamentaryYear?.parliamentaryTenure}
+                            </option>
+                          ))}
+                      </select>
+                    </div>
+                  </div>
+                </div>
                 <div class="row">
                   <div class="col">
                     <button class="btn btn-primary float-end" type="submit">

@@ -275,7 +275,23 @@ export const getAllLegislationBills = async (
     throw error;
   }
 };
+//  Get Ministers On The Base of Parliamentray Year
 
+export const getMinisterByParliamentaryYearID = async (id) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClient.get(`/mnas/parliamentaryYears/${id}`);
+    // {
+    //   headers: {
+    //     Authorization: `Bearer ${token}`,
+    //   }
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
 // Getting All MNA Lists Data
 export const getAllMNALists = async (currentPage, pageSize) => {
   try {

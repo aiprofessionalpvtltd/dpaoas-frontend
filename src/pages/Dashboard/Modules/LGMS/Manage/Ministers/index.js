@@ -31,6 +31,12 @@ function LGMSMinisters() {
     return apiData.map((item) => ({
       id: item.id,
       ministerName: `${item.mnaName}`,
+      ministerTenure: item?.tenures?.tenureName
+        ? item?.tenures?.tenureName
+        : "---",
+      ministerParliamentaryYear: item?.parliamentaryYears?.parliamentaryTenure
+        ? item?.parliamentaryYears?.parliamentaryTenure
+        : "---",
       politicalParty: `${item?.politicalParties?.partyName}`,
       minstries: item?.ministries
         ? item?.ministries
@@ -45,7 +51,11 @@ function LGMSMinisters() {
 
   const getAllMinisterApi = async () => {
     try {
-      const response = await getAllMinisters(currentPage, pageSize);
+      const response = await getAllMinisters(
+        currentPage,
+        pageSize,
+        "Ministers"
+      );
       if (response?.success) {
         setCount(response?.data?.count);
         const transformedData = transformData(response.data?.mnas);
