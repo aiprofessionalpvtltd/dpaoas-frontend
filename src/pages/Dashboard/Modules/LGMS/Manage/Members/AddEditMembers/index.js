@@ -17,9 +17,11 @@ import {
 } from "../../../../../../../utils/ToastAlert";
 import {
   createMember,
+  getAllParliamentaryYears,
   getAllPoliticalParties,
   getAllTenures,
   getMembersByID,
+  getParliamentaryYearsByTenureID,
   updateMembers,
 } from "../../../../../../../api/APIs/Services/ManageQMS.service";
 import { ToastContainer } from "react-toastify";
@@ -37,14 +39,18 @@ function LGMSMembersAddEditForm() {
   const location = useLocation();
   const navigate = useNavigate();
   const [tenures, setTenures] = useState([]);
+  const [tenureID, setTenureID] = useState(null);
   const [memberById, setMemberById] = useState();
   const [allparties, setAllParties] = useState([]);
+  const [parliamentaryYearData, setParliamentaryYearData] = useState([]);
+  console.log("parliamentaryYearData", parliamentaryYearData);
 
   const formik = useFormik({
     initialValues: {
       memberName: "",
       memberUrduName: "",
       memberTenure: "",
+      fkParliamentaryYearId: "",
       memberStatus: "",
       politicalParty: "",
       governmentType: "",
@@ -70,6 +76,7 @@ function LGMSMembersAddEditForm() {
     const data = {
       memberName: values?.memberName,
       fkTenureId: Number(values?.memberTenure),
+      fkParliamentaryYearId: Number(values?.fkParliamentaryYearId),
       memberStatus: values.memberStatus,
       politicalParty: Number(values?.politicalParty),
       electionType: values?.electionType,
@@ -87,7 +94,7 @@ function LGMSMembersAddEditForm() {
       if (response?.success) {
         showSuccessMessage(response?.message);
         setTimeout(() => {
-          navigate("/qms/manage/members");
+          navigate("/lgms/dashboard/manage/members/list");
         }, 3000);
       }
     } catch (error) {
@@ -99,6 +106,7 @@ function LGMSMembersAddEditForm() {
     const data = {
       memberName: values.memberName,
       fkTenureId: Number(values.memberTenure),
+      fkParliamentaryYearId: values?.fkParliamentaryYearId,
       memberStatus: values.memberStatus,
       politicalParty: Number(values.politicalParty),
       electionType: values.electionType,
@@ -110,7 +118,7 @@ function LGMSMembersAddEditForm() {
       memberProvince: values?.memberProvince,
       reason: values?.reason,
     };
-
+    // return false;
     try {
       const response = await updateMembers(location?.state?.id, data);
       if (response?.success) {
@@ -126,7 +134,7 @@ function LGMSMembersAddEditForm() {
 
   const handleTenures = async () => {
     try {
-      const response = await getAllTenures(0, 100);
+      const response = await getAllTenures(0, 1000);
       if (response?.success) {
         setTenures(response?.data?.tenures);
       }
@@ -161,6 +169,19 @@ function LGMSMembersAddEditForm() {
       console.log(error);
     }
   };
+  //Get Political Party
+  const getParliamentaryYearsonTheBaseOfTenure = async (id) => {
+    try {
+      const response = await getParliamentaryYearsByTenureID(id);
+      if (response?.success) {
+        console.log(response?.data?.data);
+        setParliamentaryYearData(response?.data);
+        // setTonerModels(transformedData);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     handleTenures();
@@ -176,6 +197,7 @@ function LGMSMembersAddEditForm() {
       formik.setValues({
         memberName: memberById.memberName || "",
         memberTenure: memberById.fkTenureId || "",
+        fkParliamentaryYearId: memberById?.parliamentaryYears?.id,
         memberStatus: memberById.memberStatus || "",
         politicalParty: memberById.politicalParty || "",
         electionType: memberById.electionType || "",
@@ -187,6 +209,8 @@ function LGMSMembersAddEditForm() {
         memberProvince: memberById?.memberProvince || "",
         reason: memberById?.reason || "",
       });
+
+      getParliamentaryYearsonTheBaseOfTenure(memberById?.fkTenureId);
     }
   }, [memberById, formik.setValues]);
 
@@ -274,9 +298,18 @@ function LGMSMembersAddEditForm() {
                         class="form-select"
                         id="memberTenure"
                         name="memberTenure"
-                        onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         value={formik.values.memberTenure}
+                        // onChange={formik.handleChange}
+                        onChange={(e) => {
+                          const selectedId = e.target.value;
+                          formik.handleChange(e);
+                          getParliamentaryYearsonTheBaseOfTenure(
+                            e.target.value
+                          );
+                          console.log("id", selectedId);
+                          // setTenureID(e.target.value);
+                        }}
                       >
                         <option value={""} selected disabled hidden>
                           Select
@@ -285,6 +318,30 @@ function LGMSMembersAddEditForm() {
                           tenures.map((tenure) => (
                             <option value={tenure?.id}>
                               {tenure?.tenureName}
+                            </option>
+                          ))}
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="mb-3">
+                      <label class="form-label">Parliamentary Year</label>
+                      <select
+                        class="form-select"
+                        id="fkParliamentaryYearId"
+                        name="fkParliamentaryYearId"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.fkParliamentaryYearId}
+                      >
+                        <option value={""} selected disabled hidden>
+                          Select
+                        </option>
+                        {parliamentaryYearData &&
+                          parliamentaryYearData?.length > 0 &&
+                          parliamentaryYearData.map((parliamentaryYear) => (
+                            <option value={parliamentaryYear?.id}>
+                              {parliamentaryYear?.parliamentaryTenure}
                             </option>
                           ))}
                       </select>

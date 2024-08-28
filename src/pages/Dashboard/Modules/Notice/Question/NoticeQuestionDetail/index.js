@@ -62,7 +62,7 @@ function NoticeQuestionDetail() {
   const [currentPage, setCurrentPage] = useState(0);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [allQuestionStatus, setAllQuestionStatus] = useState([]);
-  
+
   const pageSize = 10;
 
   const handleStatusPageChange = (page) => {
@@ -127,7 +127,7 @@ function NoticeQuestionDetail() {
         : "",
       ammendedText: "",
       originalText: "",
-      questionImage:[],
+      questionImage: [],
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -141,7 +141,6 @@ function NoticeQuestionDetail() {
     GetAllQuestionStatus();
   }, []);
 
-  
   // Handle Claneder Toggel
   const handleCalendarToggle = () => {
     setIsCalendarOpen(!isCalendarOpen);
@@ -490,12 +489,14 @@ function NoticeQuestionDetail() {
                         id="category"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                        value={formik.values./* The above code is a comment in JavaScript. Comments are
+                        value={
+                          formik
+                            .values /* The above code is a comment in JavaScript. Comments are
                         used to add explanations or notes to the code for
                         better understanding. In this case, the comment appears
                         to be incomplete as it starts with "categ" and ends
-                        with " */
-                        category}
+                        with " */.category
+                        }
                       >
                         <option value={""} selected disabled hidden>
                           Select
@@ -687,7 +688,7 @@ function NoticeQuestionDetail() {
                   style={{ marginTop: 70, marginBottom: 40 }}
                 >
                   <button class="btn btn-primary" type="submit">
-                    Update
+                    Submit
                   </button>
                   {/* <button class="btn btn-primary" type="">
                     Upload File

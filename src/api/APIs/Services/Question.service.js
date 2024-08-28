@@ -760,4 +760,18 @@ export const getGroupbyDevisionId = async (id) => {
     console.error("Error fetching API endpoint:", error);
     throw error;
   }
-};
+}
+
+
+export const AnnualQuestionReprtPdfPreview = async(Data)=>{
+  try {
+    const response = await axiosClient.get(`/resolution/findAllSummary?fromSessionId=${Data?.fromSessionId}&toSessionId=${Data?.toSessionId}`)
+
+    return response.data
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+}
+
+

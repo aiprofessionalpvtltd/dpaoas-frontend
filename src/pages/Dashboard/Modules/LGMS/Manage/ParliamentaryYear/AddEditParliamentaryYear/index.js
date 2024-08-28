@@ -223,7 +223,7 @@ function LGMSAddEditParliamentaryYearForm() {
                           formik.setFieldValue("fromDate", date)
                         }
                         onBlur={formik.handleBlur}
-                        minDate={new Date()}
+                        // minDate={new Date()}
                         className={`form-control ${
                           formik.touched.fromDate && formik.errors.fromDate
                             ? "is-invalid"
@@ -260,7 +260,7 @@ function LGMSAddEditParliamentaryYearForm() {
                           formik.setFieldValue("toDate", date)
                         }
                         onBlur={formik.handleBlur}
-                        minDate={new Date()}
+                        // minDate={new Date()}
                         className={`form-control ${
                           formik.touched.toDate && formik.errors.toDate
                             ? "is-invalid"

@@ -136,6 +136,7 @@ export const createNewOrdinance = async (data) => {
     throw error;
   }
 };
+
 // Get Single Ordinance
 
 export const getSingleOrdinanceByID = async (id) => {
@@ -165,6 +166,25 @@ export const updatedOrdinance = async (id, data) => {
       },
     });
 
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+// Delete APi of File Attachements Added on The Base Document Type.
+
+export const DeleteOrdinanceAttachemnt = async (id, data) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.put(`/ordinance/${id}/file`, data);
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
