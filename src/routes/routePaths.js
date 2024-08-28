@@ -282,6 +282,7 @@ import MakeModelWise from "../pages/Dashboard/Modules/Transport/Summary/MakeMode
 import QuestionAnualReport from "../pages/Dashboard/Modules/QMS/QuestionAnnualReport/index.js";
 import { AnnualPdf } from "../pages/Dashboard/Modules/QMS/QuestionAnnualReport/QuestionAnnualPdfPreview/index.js";
 import AllBallotMotionList from "../pages/Dashboard/Modules/MMS/Reports/BallotList/index.js";
+import PdfAllQuestion from "../pages/Dashboard/Modules/Notice/Question/Sent/pdfAllQuestion.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -324,6 +325,7 @@ export const ProtectedRoutes = [
   { path: "/notice/question/new", element: <NewQuestion /> },
   { path: "/notice/question/search", element: <SearchQuestion /> },
   { path: "/notice/question/sent", element: <SentQuestion /> },
+  { path: "/notice/question/pdf-allQuestion", element: <PdfAllQuestion /> },
   { path: "/notice/question/detail", element: <NoticeQuestionDetail /> },
 
   { path: "/notice/motion", element: <MotionListing /> },
