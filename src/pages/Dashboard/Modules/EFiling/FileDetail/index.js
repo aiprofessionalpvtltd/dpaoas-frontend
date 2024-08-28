@@ -39,6 +39,7 @@ import ImageGallery from "react-image-gallery";
 import "react-image-gallery/styles/css/image-gallery.css";
 import moment from "moment";
 import { CustomAlert } from "../../../../../components/CustomComponents/CustomAlert";
+import html2pdf from "html2pdf.js";
 
 const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
   return (
@@ -561,6 +562,130 @@ function FileDetail() {
     deleteNotification();
   }, []);
 
+ // Mapping over the paragraphs array
+ const paragraphsHtml = notingTabData?.map((para, index) => {
+  // const containsLink = /<a\s+[^>]*href=/i.test(para?.description); // Improved regex to check for link
+  // console.log(containsLink, "link");
+
+  // const descriptionHtml = containsLink
+  //   ? para?.description.replace(/<a\s+[^>]*href="([^"]+)"[^>]*>([^<]+)<\/a>/gi, '<a href="$1" style="color: blue; text-decoration: underline;">$2</a>')
+  //   : para?.description;
+
+  // console.log(containsLink, "link");
+
+  // No index for the first paragraph
+  if (index === 0) {
+    return `<div style="margin-bottom: 10px; text-indent: 65px; text-align: justify;">${para?.description}</div>`;
+  }
+  return `
+    <div style="display: flex; align-items: flex-start; margin-bottom: 10px;">
+      <strong>${index + 1}.</strong>
+      <div style="flex-grow: 1; text-align: justify; text-indent: 50px; text-align: justify;">${para?.description}</div>
+    </div>
+  `;
+}).join('');
+
+
+// Main HTML template
+const html = `
+  <div className="container" style="padding:20px">
+    <div className="row mb-5">
+      <div className="col-2" style="border-right: 1px solid black; height: 100%;">
+        <!-- Border Column Content -->
+      </div>
+      <div className="col-10">
+        <div style="text-align: center;">
+          <h4>SENATE SECRETARIAT</h4>
+          <h6>(${UserData?.branch?.branchName} Branch)</h6>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <div></div>
+          <p><strong>${filesData?.cases?.files?.fileNumber}</strong></p>
+        </div>
+        <p><strong>Subject: ${notingTabSubject}</strong></p>
+        ${paragraphsHtml}
+      </div>
+    </div>
+  </div>
+`;
+
+const handlePrintNotingDoc = (htmlContent) => {
+  // Create a temporary container to hold the HTML content
+  const tempContainer = document.createElement("div");
+  tempContainer.innerHTML = htmlContent;
+  document.body.appendChild(tempContainer);
+
+  const opt = {
+    margin: 0.2,
+    filename: "motion.pdf",
+    image: { type: "jpeg", quality: 0.98 },
+    html2canvas: { scale: 3 },
+    jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+  };
+
+  html2pdf()
+    .set(opt)
+    .from(tempContainer)
+    .toPdf()
+    .outputPdf("blob")
+    .then((pdfBlob) => {
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+      const iframe = document.createElement("iframe");
+      iframe.style.position = "fixed";
+      iframe.style.width = "100%";
+      iframe.style.height = "100%";
+      iframe.style.left = "0";
+      iframe.style.top = "0";
+      iframe.style.zIndex = "-1";
+      iframe.style.visibility = "hidden";
+      iframe.src = pdfUrl;
+
+      document.body.appendChild(iframe);
+
+      iframe.onload = () => {
+        iframe.style.visibility = "visible";
+        iframe.contentWindow.focus();
+        iframe.contentWindow.print();
+        iframe.style.visibility = "hidden";
+      };
+    })
+    .finally(() => {
+      // Clean up: Remove the temporary container
+      document.body.removeChild(tempContainer);
+    });
+};
+
+const handlePreviewNotingDoc = (htmlContent) => {
+  // Create a temporary container to hold the HTML content
+  const tempContainer = document.createElement("div");
+  tempContainer.innerHTML = htmlContent;
+  document.body.appendChild(tempContainer);
+
+  const opt = {
+    margin: 0.2,
+    image: { type: "jpeg", quality: 0.98 },
+    html2canvas: { scale: 3 },
+    jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+    enableLinks: true // Enable link functionality
+  };
+
+  html2pdf()
+    .set(opt)
+    .from(tempContainer)
+    .toPdf()
+    .outputPdf("blob")
+    .then((pdfBlob) => {
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+      window.open(pdfUrl); // Open the PDF in a new tab
+    })
+    .finally(() => {
+      // Clean up: Remove the temporary container
+      document.body.removeChild(tempContainer);
+    });
+};
+
+
+
   return (
     <Layout
       centerlogohide={true}
@@ -577,6 +702,7 @@ function FileDetail() {
         handleOkClick={handleOkClick}
       />
       <div className="dashboard-content">
+
         <Modal
           show={showModal}
           size="lg"
@@ -889,75 +1015,81 @@ function FileDetail() {
 
                     <div class="tab-content" id="ex1-content">
                       <div class="row">
-                        <div class="row mt-2 d-flex justify-content-end float-end">
-                        <div class="col-4">
-                          <div style={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
-                            <label style={{
-    display: 'flex',
-    width: '20%',
-    alignItems: 'center'
-                              }}
-                            >Order By:</label>
-                            <select
-                              className="form-select w-75"
-                              id="status"
-                              name="status"
-                              onChange={(e) => setOrder(e.target.value)}
-                              value={order}
-                            >
-                              <option value={"ASC"}>Ascending</option>
-                              <option value={"DESC"} selected>Descending</option>
-                            </select>
-                          </div>
-                        </div>
-                          <div class="col-2">
-                            <button
-                              class="btn btn-primary"
-                              type="submit"
-                              style={{
-                                width: "150px",
-                                display: location?.state?.view
-                                  ? "none"
-                                  : "block",
-                              }}
-                              onClick={() => UpdateEfilingApi()} // True means non-editable
-                              disabled={
-                                viewPage
-                                  ? true
-                                  : location?.state?.approved
-                                    ? true
-                                    : false
-                              }
-                            >
-                              Save
-                            </button>
-                          </div>
+                      <div class="row mt-2 d-flex justify-content-end float-end">
+  <div class="col-4">
+    <div style={{display: "flex", flexDirection: "row",alignItems: "center"}}>
+      <label style={{width: "20%", marginRight: "10px"}}>Order By:</label>
+      <select
+        className="form-select w-50"
+        id="status"
+        name="status"
+        onChange={(e) => setOrder(e.target.value)}
+        value={order}
+      >
+        <option value="ASC">Ascending</option>
+        <option value="DESC" selected>Descending</option>
+      </select>
+    </div>
+  </div>
 
-                          {UserData && UserData?.userType === "Officer" && (
-                            <div class="col-2">
-                              <button
-                                class="btn btn-primary"
-                                type="submit"
-                                style={{
-                                  width: "150px",
-                                  display: location?.state?.view
-                                    ? "none"
-                                    : "block",
-                                }}
-                                onClick={() => handleShow()} // True means non-editable
-                                disabled={
-                                  viewPage
-                                    ? true
-                                    : location?.state?.approved
-                                      ? true
-                                      : false
-                                }
-                              >
-                                Approve Case
-                              </button>
-                            </div>
-                          )}
-                        </div>
+  <div class="col-auto">
+    <button
+      class="btn btn-primary"
+      type="submit"
+      style={{
+        width: "150px",
+        display: location?.state?.view ? "none" : "block",
+      }}
+      onClick={() => UpdateEfilingApi()}
+      disabled={
+        viewPage
+          ? true
+          : location?.state?.approved
+            ? true
+            : false
+      }
+    >
+      Save
+    </button>
+  </div>
+
+  <div class="col-auto">
+    <button
+      class="btn btn-primary"
+      type="submit"
+      style={{
+        width: "150px",
+        display: "block",
+      }}
+      onClick={() => handlePreviewNotingDoc(html)}
+    >
+      View File
+    </button>
+  </div>
+
+  {UserData && UserData?.userType === "Officer" && (
+    <div class="col-auto">
+      <button
+        class="btn btn-primary"
+        type="submit"
+        style={{
+          width: "150px",
+          display: location?.state?.view ? "none" : "block",
+        }}
+        onClick={() => handleShow()}
+        disabled={
+          viewPage
+            ? true
+            : location?.state?.approved
+              ? true
+              : false
+        }
+      >
+        Approve Case
+      </button>
+    </div>
+  )}
+</div>
 
                         <div
                           style={{
