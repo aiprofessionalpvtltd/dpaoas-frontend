@@ -283,6 +283,8 @@ import QuestionAnualReport from "../pages/Dashboard/Modules/QMS/QuestionAnnualRe
 import { AnnualPdf } from "../pages/Dashboard/Modules/QMS/QuestionAnnualReport/QuestionAnnualPdfPreview/index.js";
 import AllBallotMotionList from "../pages/Dashboard/Modules/MMS/Reports/BallotList/index.js";
 import PdfAllQuestion from "../pages/Dashboard/Modules/Notice/Question/Sent/pdfAllQuestion.js";
+import LeaveRequests from "../pages/Dashboard/Modules/Notice/LeaveRequests/index.js";
+import AddEditLeaveRequests from "../pages/Dashboard/Modules/Notice/LeaveRequests/AddEditLeaveRequests/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -367,6 +369,8 @@ export const ProtectedRoutes = [
   { path: "/notice/manage/sessions/addedit", element: <SessionsAddEditForm /> },
 
   { path: "/notice/manage", element: <NoticeDashboard /> },
+  { path: "/notice/leaveRequests", element: <LeaveRequests /> },
+  { path: "/notice/leaveRequests/addedit", element: <AddEditLeaveRequests /> },
   {
     path: "/notice/manage/single-member-session-attendance",
     element: <NMSMemberSessionAttendance />,

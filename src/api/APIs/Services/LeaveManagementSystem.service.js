@@ -123,3 +123,23 @@ export const getAllLeaves = async (page, pageSize) => {
       throw error;
     }
   };
+
+  // Leave Requests API endpoint
+
+  export const getAllLeaveRequests = async (page, pageSize) => {
+    try {
+    //   const token = getAuthToken();
+      const response = await axiosClient.get(
+        `/leave/all?page=${page}&pageSize=${pageSize}`,
+        {
+          // headers: {
+          //   Authorization: `Bearer ${token}`,
+          // }
+        },
+      );
+      return response?.data;
+    } catch (error) {
+      console.error("Error fetching API endpoint:", error);
+      throw error;
+    }
+  };

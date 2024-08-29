@@ -185,6 +185,11 @@ export const NoticeSidebarItems = [
     link: "/notice/manage/single-member-session-attendance",
     icon: faChair,
   },
+  {
+    itemName: "Leave Requests",
+    link: "/notice/leaveRequests",
+    icon: faChair,
+  },
   // {
   //   itemName: "Event Calendar",
   //   link: "/notice/event-calendar",
