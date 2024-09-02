@@ -22,6 +22,7 @@ function PreviousCasesHistory() {
   const location = useLocation();
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
   const [casesData, setCasesData] = useState([]);
   const pageSize = 10; // Set your desired page size
   const UserData = getUserData();
@@ -94,7 +95,7 @@ function PreviousCasesHistory() {
     try {
       if (UserData && UserData?.userType === "Officer") {
          response = await getUserAllCaseHistory(
-          location?.state?.fileId,
+          // location?.state?.fileId,
           UserData?.fkBranchId,
           UserData?.fkUserId,
           currentPage,
@@ -102,7 +103,7 @@ function PreviousCasesHistory() {
         );
       } else {
          response = await getUserCaseHistory(
-          location?.state?.fileId,
+          // location?.state?.fileId,
           UserData?.fkBranchId,
           UserData?.fkUserId,
           currentPage,
@@ -124,7 +125,10 @@ function PreviousCasesHistory() {
       // showErrorMessage(error?.response?.data?.message);
     }
   };
-
+// FIltered Data
+const filteredCaseData = casesData?.filter((item) =>
+  item?.FileNo?.toLowerCase().includes(searchTerm?.toLowerCase())
+);
   useEffect(() => {
     if (location.state?.internalId) {
       setFileIdInRegister(location.state?.internalId);
@@ -159,12 +163,14 @@ function PreviousCasesHistory() {
             ActionHide={false}
             hidebtn1={true}
             hideBtn={true}
-            data={casesData}
+            data={filteredCaseData}
             tableTitle="File Cases History"
             headertitlebgColor={"#666"}
             headertitletextColor={"#FFF"}
             handlePageChange={handlePageChange}
             currentPage={currentPage}
+            seachBarShow={true}
+            searchonchange={(e) => setSearchTerm(e.target.value)}
             pageSize={pageSize}
             totalCount={count}
             singleDataCard={true}

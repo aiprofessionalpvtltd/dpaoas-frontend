@@ -706,7 +706,7 @@ export const getSingleCaseByFileId = async (fileId, caseId) => {
 };
 
 export const getUserCaseHistory = async (
-  fileId,
+  // fileId,
   branchId,
   userId,
   currentPage,
@@ -715,7 +715,7 @@ export const getUserCaseHistory = async (
   try {
     //   const token = getAuthToken();
     const response = await axiosClient.get(
-      `/cases/getCasesHistory/${fileId}/${branchId}/${userId}?currentPage=${currentPage}&pageSize=${pageSize}`
+      `/cases/getCasesHistory/${branchId}/${userId}?currentPage=${currentPage}&pageSize=${pageSize}`
     );
     // {
     //   headers: {
@@ -731,7 +731,7 @@ export const getUserCaseHistory = async (
 };
 
 export const getUserAllCaseHistory = async (
-  fileId,
+  // fileId,
   branchId,
   userId,
   currentPage,
@@ -740,7 +740,7 @@ export const getUserAllCaseHistory = async (
   try {
     //   const token = getAuthToken();
     const response = await axiosClient.get(
-      `/cases/getAllCasesHistory/${fileId}/${branchId}/${userId}?currentPage=${currentPage}&pageSize=${pageSize}`
+      `/cases/getAllCasesHistory/${branchId}/${userId}?currentPage=${currentPage}&pageSize=${pageSize}`
     );
     // {
     //   headers: {
