@@ -22,10 +22,12 @@ import {
   getAllTenures,
   getMembersByID,
   getParliamentaryYearsByTenureID,
+  getParliamentaryYearsByTermID,
+  getTermByTenureID,
   updateMembers,
 } from "../../../../../../../api/APIs/Services/ManageQMS.service";
 import { ToastContainer } from "react-toastify";
-
+import Select from "react-select";
 const validationSchema = Yup.object({
   memberName: Yup.string().required("Member name is required"),
   memberTenure: Yup.string().required("Member tenure is required"),
@@ -39,7 +41,9 @@ function LGMSMembersAddEditForm() {
   const location = useLocation();
   const navigate = useNavigate();
   const [tenures, setTenures] = useState([]);
-  const [tenureID, setTenureID] = useState(null);
+  const [tenuresTerms, setTenuresTerms] = useState([]);
+  const [selectedTenureType, setSelectedTenureType] = useState(null);
+  // const [tenureID, setTenureID] = useState(null);
   const [memberById, setMemberById] = useState();
   const [allparties, setAllParties] = useState([]);
   const [parliamentaryYearData, setParliamentaryYearData] = useState([]);
@@ -50,6 +54,7 @@ function LGMSMembersAddEditForm() {
       memberName: "",
       memberUrduName: "",
       memberTenure: "",
+      fkTermId: "",
       fkParliamentaryYearId: "",
       memberStatus: "",
       politicalParty: "",
@@ -61,7 +66,7 @@ function LGMSMembersAddEditForm() {
       reason: "",
       phoneNo: "",
     },
-    validationSchema: validationSchema,
+    // validationSchema: validationSchema,
     onSubmit: (values) => {
       // Handle form submission here
       if (location?.state) {
@@ -75,7 +80,8 @@ function LGMSMembersAddEditForm() {
   const handleCreateMembers = async (values) => {
     const data = {
       memberName: values?.memberName,
-      fkTenureId: Number(values?.memberTenure),
+      fkTenureId: Number(values?.memberTenure?.value),
+      fkTermId: Number(values?.fkTermId?.value),
       fkParliamentaryYearId: Number(values?.fkParliamentaryYearId),
       memberStatus: values.memberStatus,
       politicalParty: Number(values?.politicalParty),
@@ -105,7 +111,8 @@ function LGMSMembersAddEditForm() {
   const handleEditMembers = async (values) => {
     const data = {
       memberName: values.memberName,
-      fkTenureId: Number(values.memberTenure),
+      fkTenureId: Number(values?.memberTenure?.value),
+      fkTermId: Number(values.fkTermId?.value),
       fkParliamentaryYearId: values?.fkParliamentaryYearId,
       memberStatus: values.memberStatus,
       politicalParty: Number(values.politicalParty),
@@ -134,12 +141,23 @@ function LGMSMembersAddEditForm() {
 
   const handleTenures = async () => {
     try {
-      const response = await getAllTenures(0, 1000);
+      const response = await getAllTenures(0, 1000, "Senators");
       if (response?.success) {
         setTenures(response?.data?.tenures);
       }
     } catch (error) {
       console.log(error?.response?.data?.message);
+    }
+  };
+  const handleTenuresTerms = async (id) => {
+    try {
+      const response = await getTermByTenureID(id);
+      if (response?.success) {
+        setTenuresTerms(response?.data);
+      }
+    } catch (error) {
+      console.log(error?.response?.data?.message);
+      showErrorMessage(error?.response?.data?.message);
     }
   };
 
@@ -169,12 +187,11 @@ function LGMSMembersAddEditForm() {
       console.log(error);
     }
   };
-  //Get Political Party
-  const getParliamentaryYearsonTheBaseOfTenure = async (id) => {
+  //Get Parliamentary Year
+  const getParliamentaryYearsonTheBaseOfTerm = async (id) => {
     try {
-      const response = await getParliamentaryYearsByTenureID(id);
+      const response = await getParliamentaryYearsByTermID(id);
       if (response?.success) {
-        console.log(response?.data?.data);
         setParliamentaryYearData(response?.data);
         // setTonerModels(transformedData);
       }
@@ -196,7 +213,19 @@ function LGMSMembersAddEditForm() {
     if (memberById) {
       formik.setValues({
         memberName: memberById.memberName || "",
-        memberTenure: memberById.fkTenureId || "",
+        // memberTenure: memberById.fkTenureId || "",
+        memberTenure: memberById?.tenures
+          ? {
+              value: memberById?.tenures?.id,
+              label: memberById?.tenures?.tenureName,
+            }
+          : "",
+        fkTermId: memberById?.terms
+          ? {
+              value: memberById?.terms?.id,
+              label: memberById?.terms?.termName,
+            }
+          : "",
         fkParliamentaryYearId: memberById?.parliamentaryYears?.id,
         memberStatus: memberById.memberStatus || "",
         politicalParty: memberById.politicalParty || "",
@@ -209,8 +238,12 @@ function LGMSMembersAddEditForm() {
         memberProvince: memberById?.memberProvince || "",
         reason: memberById?.reason || "",
       });
-
-      getParliamentaryYearsonTheBaseOfTenure(memberById?.fkTenureId);
+      if (memberById?.fkTenureId) {
+        handleTenuresTerms(memberById?.fkTenureId);
+      }
+      if (memberById?.fkTermId) {
+        getParliamentaryYearsonTheBaseOfTerm(memberById?.fkTermId);
+      }
     }
   }, [memberById, formik.setValues]);
 
@@ -294,7 +327,7 @@ function LGMSMembersAddEditForm() {
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Member Tenure</label>
-                      <select
+                      {/* <select
                         class="form-select"
                         id="memberTenure"
                         name="memberTenure"
@@ -304,7 +337,7 @@ function LGMSMembersAddEditForm() {
                         onChange={(e) => {
                           const selectedId = e.target.value;
                           formik.handleChange(e);
-                          getParliamentaryYearsonTheBaseOfTenure(
+                          getParliamentaryYearsonTheBaseOfTerm(
                             e.target.value
                           );
                           console.log("id", selectedId);
@@ -320,9 +353,62 @@ function LGMSMembersAddEditForm() {
                               {tenure?.tenureName}
                             </option>
                           ))}
-                      </select>
+                      </select> */}
+                      <Select
+                        options={
+                          Array.isArray(tenures) && tenures?.length > 0
+                            ? tenures.map((item) => ({
+                                value: item?.id,
+                                label: `${item?.tenureName} (${item?.tenureType})`,
+                                tenureType: item?.tenureType,
+                              }))
+                            : []
+                        }
+                        onChange={(selectedOption) => {
+                          formik.setFieldValue("memberTenure", selectedOption);
+                          if (selectedOption?.value) {
+                            handleTenuresTerms(selectedOption?.value);
+                          }
+                        }}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.memberTenure}
+                        id="memberTenure"
+                        name="memberTenure"
+                        isClearable={true}
+                      />
                     </div>
                   </div>
+
+                  <div className="col">
+                    <div className="mb-3">
+                      <label className="form-label">Select Senator Term</label>
+                      <Select
+                        options={
+                          Array.isArray(tenuresTerms) &&
+                          tenuresTerms?.length > 0
+                            ? tenuresTerms.map((item) => ({
+                                value: item?.id,
+                                label: `${item?.termName}`,
+                              }))
+                            : []
+                        }
+                        onChange={(selectedOption) => {
+                          formik.setFieldValue("fkTermId", selectedOption);
+                          if (selectedOption?.value) {
+                            getParliamentaryYearsonTheBaseOfTerm(
+                              selectedOption?.value
+                            );
+                          }
+                        }}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.fkTermId}
+                        id="fkTermId"
+                        name="fkTermId"
+                        isClearable={true}
+                      />
+                    </div>
+                  </div>
+
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Parliamentary Year</label>

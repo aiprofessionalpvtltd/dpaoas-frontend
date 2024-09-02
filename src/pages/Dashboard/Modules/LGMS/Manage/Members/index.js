@@ -38,15 +38,19 @@ function LGMSMembers() {
       memberName: `${item.memberName}`,
       // politicalParty: `${item?.politicalParties?.partyName}`,
       // electionType: item?.electionType,
-      tenure: item?.tenures?.tenureName,
+      memberTenure: item?.tenures?.tenureName
+        ? item?.tenures?.tenureName
+        : "---",
+      memberTerm: item?.terms?.termName ? item?.terms?.termName : "---",
       parliamentaryYear: item?.parliamentaryYears?.parliamentaryTenure
         ? item?.parliamentaryYears?.parliamentaryTenure
         : "---",
-      phoneNo: item?.phoneNo,
-      gender: item?.gender,
-      fromDate: moment(item.fromDate).format("YYYY/MM/DD"),
-      toDate: moment(item.toDate).format("YYYY/MM/DD"),
-      memberStatus: item?.memberStatus,
+      memberProvince: item?.memberProvince ? item?.memberProvince : "---",
+      // phoneNo: item?.phoneNo ? item?.phoneNo : "---",
+      // gender: item?.gender,
+      // fromDate: moment(item.fromDate).format("YYYY/MM/DD"),
+      // toDate: moment(item.toDate).format("YYYY/MM/DD"),
+      // memberStatus: item?.memberStatus,
     }));
   };
 
@@ -107,6 +111,8 @@ function LGMSMembers() {
           closeModal={closeModal}
           UpdateMemberId={toUpdateMemberId}
           showModal={showModal}
+          handleMembers={handleMembers}
+          member="Senators"
           // toUpdateMemberData={toUpdateMemberData}
         />
       )}

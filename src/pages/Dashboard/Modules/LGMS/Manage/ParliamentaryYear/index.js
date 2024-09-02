@@ -32,10 +32,13 @@ function LGMSParliamentaryYear() {
   };
 
   const transformData = (apiData) => {
+    console.log("apiData", apiData);
     return apiData?.map((item) => ({
       id: item.id,
-      parliamentaryYear: `${item.parliamentaryTenure}`,
       tenure: String(item?.tenure?.tenureName),
+      tenureType: String(item?.tenure?.tenureType),
+      tenureTerm: item.term?.termName ? `${item.term?.termName}` : "---",
+      parliamentaryYear: `${item.parliamentaryTenure}`,
       description: `${item?.description}`,
       fromDate: moment(item.fromDate).format("YYYY/MM/DD"),
       toDate: moment(item.toDate).format("YYYY/MM/DD"),

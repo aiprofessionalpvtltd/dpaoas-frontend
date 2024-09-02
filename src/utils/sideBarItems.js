@@ -155,7 +155,7 @@ export const NoticeSidebarItems = [
   {
     itemName: "Private Member Bills",
     link: "/notice/legislation/private-bill",
-    icon: faScaleBalanced
+    icon: faScaleBalanced,
   },
   {
     itemName: "Manage",
@@ -1036,8 +1036,34 @@ export const LegislationSideBarItems = [
     icon: faBookOpen,
     subItems: [
       {
-        itemName: "Bill Statuses",
-        link: "/lgms/dashboard/bill/manage-bill-statuses",
+        itemName: "Tenures",
+        link: "/lgms/dashboard/manage/tenures/list",
+        icon: faBookOpen,
+      },
+      {
+        itemName: "Terms",
+        link: "/lgms/dashboard/manage/terms/list",
+        icon: faBookOpen,
+      },
+      {
+        itemName: "Parliamentary Years",
+        link: "/lgms/dashboard/manage/parliamentary-year/list",
+        icon: faBookOpen,
+      },
+      {
+        itemName: "Members",
+        link: "/lgms/dashboard/manage/members/list",
+        icon: faBookOpen,
+      },
+      {
+        itemName: "Ministers",
+        link: "/lgms/dashboard/manage/ministers/list",
+        icon: faBookOpen,
+      },
+
+      {
+        itemName: "Sessions",
+        link: "/lgms/dashboard/manage/session/list",
         icon: faBookOpen,
       },
       {
@@ -1050,37 +1076,13 @@ export const LegislationSideBarItems = [
         link: "/lgms/dashboard/manage/committee-recomendation/list",
         icon: faBookOpen,
       },
+
       {
-        itemName: "Ministers",
-        link: "/lgms/dashboard/manage/ministers/list",
-        icon: faBookOpen,
-      },
-      {
-        itemName: "Members",
-        link: "/lgms/dashboard/manage/members/list",
+        itemName: "Bill Statuses",
+        link: "/lgms/dashboard/bill/manage-bill-statuses",
         icon: faBookOpen,
       },
 
-      {
-        itemName: "Parliamentary Years",
-        link: "/lgms/dashboard/manage/parliamentary-year/list",
-        icon: faBookOpen,
-      },
-      {
-        itemName: "Sessions",
-        link: "/lgms/dashboard/manage/session/list",
-        icon: faBookOpen,
-      },
-      {
-        itemName: "Tenures",
-        link: "/lgms/dashboard/manage/tenures/list",
-        icon: faBookOpen,
-      },
-      {
-        itemName: "Terms",
-        link: "/lgms/dashboard/manage/terms/list",
-        icon: faBookOpen,
-      },
       // {
       //   itemName: "Committees",
       //   link: "/lgms/dashboard/manage/committees/list",

@@ -11,8 +11,10 @@ import {
   getAllGovernmentSenateBills,
   getAllPrivateMemberSenateBills,
 } from "../../../../api/APIs/Services/LegislationModule.service";
+import { useNavigate } from "react-router-dom";
 
 function LegislationManagementSystemDashboard() {
+  const navigate = useNavigate();
   const [totalCount, setTotalCount] = useState(0);
   const [totalFromSenateCount, setTotalFromSenateCount] = useState(0);
   const [totalFromNACount, setTotalFromNACount] = useState(0);
@@ -124,6 +126,11 @@ function LegislationManagementSystemDashboard() {
                   overall={true}
                   iconBgColor={"#FFA500"}
                   total={totalFromSenateCount}
+                  onClick={() => {
+                    navigate(
+                      "/lgms/dashboard/bills/legislation-bills/government-bills/introduced-in-senate"
+                    );
+                  }}
                 />
                 <NoticeStatsCard
                   title={"Recieved From NA"}
@@ -131,6 +138,11 @@ function LegislationManagementSystemDashboard() {
                   overall={true}
                   iconBgColor={"#FFA500"}
                   total={totalFromNACount}
+                  onClick={() => {
+                    navigate(
+                      "/lgms/dashboard/bills/legislation-bills/government-bills/recieved-from-na"
+                    );
+                  }}
                 />
               </div>
             </div>
@@ -164,6 +176,11 @@ function LegislationManagementSystemDashboard() {
                   overall={true}
                   iconBgColor={"#FFA500"}
                   total={totalPrivateFromSenateCount}
+                  onClick={() => {
+                    navigate(
+                      "/lgms/dashboard/bills/legislation-bills/private-member-bills/introduced-in-senate"
+                    );
+                  }}
                 />
                 <NoticeStatsCard
                   title={"Recieved From NA"}
@@ -171,6 +188,11 @@ function LegislationManagementSystemDashboard() {
                   overall={true}
                   iconBgColor={"#FFA500"}
                   total={totalPrivateFromNACount}
+                  onClick={() => {
+                    navigate(
+                      "/lgms/dashboard/bills/legislation-bills/private-member-bills/recieved-from-na"
+                    );
+                  }}
                 />
               </div>
             </div>

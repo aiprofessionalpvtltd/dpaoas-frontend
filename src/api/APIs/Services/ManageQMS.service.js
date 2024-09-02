@@ -36,6 +36,22 @@ export const getAllTerms = async (currentPage, pageSize) => {
   }
 };
 
+export const getTermByTenureID = async (id) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClient.get(`/terms/tenure/${id}`);
+    // {
+    //   headers: {
+    //     Authorization: `Bearer ${token}`,
+    //   }
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
 export const getTermByID = async (id) => {
   try {
     // const token = getAuthToken();
@@ -121,12 +137,17 @@ export const createTenure = async (data) => {
   }
 };
 
-export const getAllTenures = async (currentPage, pageSize) => {
+export const getAllTenures = async (currentPage, pageSize, tenureType) => {
+  // let tenureType = "Senators";
   try {
     // const token = getAuthToken();
-    const response = await axiosClient.get(
-      `/tenures?currentPage=${currentPage}&pageSize=${pageSize}`
-    );
+    let url = {};
+    if (tenureType) {
+      url = `/tenures?currentPage=${currentPage}&pageSize=${pageSize}&tenureType=${tenureType}`;
+    } else {
+      url = `/tenures?currentPage=${currentPage}&pageSize=${pageSize}`;
+    }
+    const response = await axiosClient.get(url);
     // {
     //   headers: {
     //     Authorization: `Bearer ${token}`,
@@ -515,6 +536,36 @@ export const getParliamentaryYearsByTenureID = async (id) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClient.get(`/parliamentaryYears/${id}/tenure`);
+    // {
+    //   headers: {
+    //     Authorization: `Bearer ${token}`,
+    //   }
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+export const getParliamentaryYearsByTermID = async (id) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClient.get(`/parliamentaryYears/${id}/term`);
+    // {
+    //   headers: {
+    //     Authorization: `Bearer ${token}`,
+    //   }
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+export const getMemberByParliamentaryYearID = async (id) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClient.get(`/members/parliamentaryYears/${id}`);
     // {
     //   headers: {
     //     Authorization: `Bearer ${token}`,
