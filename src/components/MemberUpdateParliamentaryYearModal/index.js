@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import {
   createCommitteesRecommendation,
+  getSingleMinisterByID,
   UpdateCommitteeRecommendation,
 } from "../../api/APIs/Services/LegislationModule.service";
 import { useFormik } from "formik";
@@ -11,36 +12,49 @@ import {
   getAllTenures,
   getMembersByID,
   getParliamentaryYearsByTenureID,
+  getParliamentaryYearsByTermID,
+  getTermByTenureID,
   updateMemberParliamentaryYear,
   updateMembers,
 } from "../../api/APIs/Services/ManageQMS.service";
 import { useNavigate } from "react-router-dom";
-
+import { updateMinisterParliamentaryYear } from "../../api/APIs/Services/Motion.service";
+import Select from "react-select";
 function UpdateMemberParliamentaryYear({
   showModal,
   closeModal,
   UpdateMemberId,
+  member,
+  handleMembers,
+  getAllMinisterApi,
   //   toUpdateMemberData,
 }) {
   const navigate = useNavigate();
-  const [memberById, setMemberById] = useState();
   const [parliamentaryYearData, setParliamentaryYearData] = useState([]);
   const [tenures, setTenures] = useState([]);
-
+  const [tenuresTerms, setTenuresTerms] = useState([]);
+  const [memberById, setMemberById] = useState();
+  const [ministerByID, setMinisterByID] = useState();
   const formik = useFormik({
     initialValues: {
       memberName: "",
       memberTenure: "",
+      fkTermId: "",
       fkParliamentaryYearId: "",
     },
     // validationSchema: validationSchema,
     onSubmit: (values) => {
       if (values) {
-        handleUpdateMemberParliamentaryYear(values);
+        if (member === "Senators") {
+          handleUpdateMemberParliamentaryYear(values);
+        } else if (member === "Ministers") {
+          handleUpdateMinisterParliamentaryYear(values);
+        }
       }
     },
   });
-
+  console.log("Tenures on Single", tenures);
+  console.log("Update Member ID", UpdateMemberId);
   const getMemberByIdApi = async () => {
     try {
       const response = await getMembersByID(UpdateMemberId);
@@ -49,6 +63,29 @@ function UpdateMemberParliamentaryYear({
       }
     } catch (error) {
       // showErrorMessage(error?.response?.data?.message);
+    }
+  };
+  const getMinisterByIdApi = async () => {
+    try {
+      const response = await getSingleMinisterByID(UpdateMemberId);
+      if (response?.success) {
+        setMinisterByID(response?.data[0]);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  };
+
+  //Get Parliamentary Year
+  const getParliamentaryYearsonTheBaseOfTerm = async (id) => {
+    try {
+      const response = await getParliamentaryYearsByTermID(id);
+      if (response?.success) {
+        setParliamentaryYearData(response?.data);
+        // setTonerModels(transformedData);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -66,11 +103,22 @@ function UpdateMemberParliamentaryYear({
     }
   };
 
-  const handleTenures = async () => {
+  const handleTenures = async (memberTenure) => {
     try {
-      const response = await getAllTenures(0, 1000);
+      const response = await getAllTenures(0, 1000, memberTenure);
       if (response?.success) {
         setTenures(response?.data?.tenures);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  };
+
+  const handleTenuresTerms = async (id) => {
+    try {
+      const response = await getTermByTenureID(id);
+      if (response?.success) {
+        setTenuresTerms(response?.data);
       }
     } catch (error) {
       console.log(error?.response?.data?.message);
@@ -79,8 +127,12 @@ function UpdateMemberParliamentaryYear({
 
   console.log("UpdateMemberId", UpdateMemberId);
   useEffect(() => {
-    handleTenures();
-    getMemberByIdApi();
+    if (member && member === "Senators") {
+      getMemberByIdApi();
+    } else if (member && member === "Ministers") {
+      getMinisterByIdApi();
+    }
+    handleTenures(member);
   }, []);
   useEffect(() => {
     // Update form values when termsById changes
@@ -88,15 +140,38 @@ function UpdateMemberParliamentaryYear({
       formik.setValues({
         memberName: memberById?.memberName || "",
         memberTenure: memberById?.fkTenureId || "",
+        fkTermId: memberById?.terms
+          ? {
+              value: memberById?.terms?.id,
+              label: memberById?.terms?.termName,
+            }
+          : "",
         fkParliamentaryYearId: memberById?.parliamentaryYears?.id,
       });
 
-      getParliamentaryYearsonTheBaseOfTenure(memberById?.fkTenureId);
+      if (memberById?.fkTenureId) {
+        handleTenuresTerms(memberById?.fkTenureId);
+      }
+      if (memberById?.fkTermId) {
+        getParliamentaryYearsonTheBaseOfTerm(memberById?.fkTermId);
+      }
+      // getParliamentaryYearsonTheBaseOfTerm(memberById?.fkTenureId);
+    } else if (ministerByID) {
+      console.log("ministerByID", ministerByID);
+      formik.setValues({
+        memberName: ministerByID?.mnaName || "",
+        memberTenure: ministerByID?.fkTenureId || "",
+        fkParliamentaryYearId: ministerByID?.parliamentaryYears?.id,
+      });
     }
-  }, [memberById, formik.setValues]);
+    if (ministerByID?.fkTenureId) {
+      getParliamentaryYearsonTheBaseOfTenure(ministerByID?.fkTenureId);
+    }
+  }, [memberById, ministerByID, formik.setValues]);
 
   const handleUpdateMemberParliamentaryYear = async (values) => {
     const data = {
+      newTermId: values?.fkTermId.value,
       newParliamentaryYearId: values?.fkParliamentaryYearId,
     };
     // return false;
@@ -108,6 +183,26 @@ function UpdateMemberParliamentaryYear({
       if (response?.success) {
         showSuccessMessage(response?.message);
         closeModal();
+        handleMembers();
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  };
+  const handleUpdateMinisterParliamentaryYear = async (values) => {
+    const data = {
+      newParliamentaryYearId: values?.fkParliamentaryYearId,
+    };
+    // return false;
+    try {
+      const response = await updateMinisterParliamentaryYear(
+        UpdateMemberId,
+        data
+      );
+      if (response?.success) {
+        showSuccessMessage(response?.message);
+        closeModal();
+        getAllMinisterApi();
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -123,16 +218,42 @@ function UpdateMemberParliamentaryYear({
               <Modal.Title>
                 {UpdateMemberId &&
                   UpdateMemberId &&
-                  "Update Member Parliamentary Year"}
+                  "Promote Member Parliamentary Year"}
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <div className="row">
                 <div class="col">
                   <div class="mb-3">
+                    <label class="form-label">Member Name</label>
+                    <input
+                      type="text"
+                      placeholder={"Member Name"}
+                      value={formik.values.memberName}
+                      className={`form-control ${
+                        formik.touched.memberName && formik.errors.memberName
+                          ? "is-invalid"
+                          : ""
+                      }`}
+                      id="memberName"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      readOnly
+                    />
+                    {formik.touched.memberName && formik.errors.memberName && (
+                      <div className="invalid-feedback">
+                        {formik.errors.memberName}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className="row">
+                <div class="col">
+                  <div class="mb-3">
                     <label class="form-label">Member Tenure</label>
                     <select
-                      class="form-select"
+                      className="form-select"
                       id="memberTenure"
                       name="memberTenure"
                       onBlur={formik.handleBlur}
@@ -142,23 +263,59 @@ function UpdateMemberParliamentaryYear({
                         const selectedId = e.target.value;
                         formik.handleChange(e);
                         getParliamentaryYearsonTheBaseOfTenure(e.target.value);
-                        console.log("id", selectedId);
+
                         // setTenureID(e.target.value);
                       }}
+                      disabled
                     >
                       <option value={""} selected disabled hidden>
                         Select
                       </option>
-                      {tenures.length > 0 &&
-                        tenures.map((tenure) => (
-                          <option value={tenure?.id}>
-                            {tenure?.tenureName}
-                          </option>
-                        ))}
+                      {tenures && tenures?.length > 0
+                        ? tenures.map((tenure) => (
+                            <option key={tenure?.id} value={tenure?.id}>
+                              {tenure?.tenureName}
+                            </option>
+                          ))
+                        : ""}
                     </select>
                   </div>
                 </div>
               </div>
+
+              {member === "Senators" && (
+                <div className="row">
+                  <div className="col">
+                    <div className="mb-3">
+                      <label className="form-label">Member Term</label>
+                      <Select
+                        options={
+                          Array.isArray(tenuresTerms) &&
+                          tenuresTerms?.length > 0
+                            ? tenuresTerms.map((item) => ({
+                                value: item?.id,
+                                label: `${item?.termName}`,
+                              }))
+                            : []
+                        }
+                        onChange={(selectedOption) => {
+                          formik.setFieldValue("fkTermId", selectedOption);
+                          if (selectedOption?.value) {
+                            getParliamentaryYearsonTheBaseOfTerm(
+                              selectedOption?.value
+                            );
+                          }
+                        }}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.fkTermId}
+                        id="fkTermId"
+                        name="fkTermId"
+                        isClearable={true}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
               <div className="row">
                 <div class="col">
                   <div class="mb-3">

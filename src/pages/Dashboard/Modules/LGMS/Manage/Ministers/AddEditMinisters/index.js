@@ -42,7 +42,6 @@ function LGMSMinisterAddEditForm() {
   const [allparties, setAllParties] = useState([]);
   const { ministryData } = useContext(AuthContext);
   const [parliamentaryYearData, setParliamentaryYearData] = useState([]);
-  console.log("location", location?.state);
   const formik = useFormik({
     initialValues: {
       mnaName: "",
@@ -414,8 +413,6 @@ function LGMSMinisterAddEditForm() {
                           getParliamentaryYearsonTheBaseOfTenure(
                             e.target.value
                           );
-                          console.log("id", selectedId);
-                          // setTenureID(e.target.value);
                         }}
                       >
                         <option value={""} selected disabled hidden>

@@ -28,6 +28,8 @@ import {
   getAllTenures,
   getMemberByParliamentaryYearID,
   getParliamentaryYearsByTenureID,
+  getParliamentaryYearsByTermID,
+  getTermByTenureID,
 } from "../../../../../../../api/APIs/Services/ManageQMS.service";
 
 // Validation Schema
@@ -63,8 +65,10 @@ function NewLegislationSenateBill() {
   );
   const [ministersOnParliamentaryYear, setMinisterOnParliamentaryYear] =
     useState([]);
+  const [tenuresTerms, setTenuresTerms] = useState([]);
   const [isFormShow, setIsFormShow] = useState(false);
   const [showMinster, setShowMinister] = useState(false);
+  console.log("SowministersOnParliamentaryYear", showMinster);
   const isGovernmentBill =
     location?.state?.category &&
     location?.state?.category === "Government Bill";
@@ -74,7 +78,8 @@ function NewLegislationSenateBill() {
   const formik = useFormik({
     initialValues: {
       selectiontype: "",
-      membertenure: "",
+      memberTenure: "",
+      fkTermId: "",
       parliamentaryYear: "",
       session: "",
       fileNumber: "",
@@ -126,7 +131,17 @@ function NewLegislationSenateBill() {
       console.log(error?.response?.data?.message);
     }
   };
-
+  // GetTerms on the Base of Tenure
+  const handleTenuresTerms = async (id) => {
+    try {
+      const response = await getTermByTenureID(id);
+      if (response?.success) {
+        setTenuresTerms(response?.data);
+      }
+    } catch (error) {
+      console.log(error?.response?.data?.message);
+    }
+  };
   // Get All Miisters
   const getMinisteryByMinisterIdApi = async () => {
     try {
@@ -180,6 +195,19 @@ function NewLegislationSenateBill() {
     }
   };
 
+  //Get Parliamentary Year
+  const getParliamentaryYearsonTheBaseOfTerm = async (id) => {
+    try {
+      const response = await getParliamentaryYearsByTermID(id);
+      if (response?.success) {
+        setParliamentaryYearData(response?.data);
+        // setTonerModels(transformedData);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     // getAllMNA();
     // handleTenures();
@@ -191,7 +219,9 @@ function NewLegislationSenateBill() {
   const CreateSenateBill = async (values) => {
     const formData = new FormData();
     formData.append("fkSessionId", values?.session);
-    formData.append("fkTenureId", values?.membertenure?.value);
+    formData.append("billFor", showMinster);
+    formData.append("fkTenureId", values?.memberTenure?.value);
+    formData.append("fkTermId", values?.fkTermId?.value);
     formData.append("fkParliamentaryYearId", values?.parliamentaryYear);
     if (
       location?.state &&
@@ -254,7 +284,6 @@ function NewLegislationSenateBill() {
       formDataObject[key] = value;
     }
     console.log("formData", formDataObject);
-
     try {
       const response = await createNewLegislationBill(formData);
       if (response.success) {
@@ -325,15 +354,16 @@ function NewLegislationSenateBill() {
                       formik.handleChange(e);
                       // Call the API with the selected value
                       handleTenures(selectedValue);
-                      formik.setFieldValue("membertenure", "");
+                      formik.setFieldValue("memberTenure", "");
                       formik.setFieldValue("parliamentaryYear", "");
+                      formik.setFieldValue("fkTermId", "");
                       formik.setFieldValue("selectedSenator", null);
                       formik.setFieldValue("selectedMNA", null);
                       formik.setFieldValue("selectedMinistry", null);
                       // SetFormSHow
                       setIsFormShow(true);
                       setShowMinister(selectedValue);
-                      setMembersOnParliamentaryYear([]);
+                      // setMembersOnParliamentaryYear([]);
                     }}
                     value={formik.values.selectiontype}
                   >
@@ -400,7 +430,7 @@ function NewLegislationSenateBill() {
                           <label className="form-label">Member Tenure</label>
                         )}
 
-                        <Select
+                        {/* <Select
                           options={
                             tenures &&
                             tenures?.length > 0 &&
@@ -423,12 +453,12 @@ function NewLegislationSenateBill() {
                             // setMembersOnParliamentaryYear([]);
                             // Get the selected ID and call the API
                             const selectedId = selectedOption?.value;
-                            if (selectedId) {
-                              getParliamentaryYearsonTheBaseOfTenure(
-                                selectedId
-                              );
-                              console.log("Selected ID:", selectedId);
-                            }
+                            // if (selectedId) {
+                            //   getParliamentaryYearsonTheBaseOfTenure(
+                            //     selectedId
+                            //   );
+                            //   console.log("Selected ID:", selectedId);
+                            // }
                           }}
                           className={` ${
                             formik.touched.membertenure &&
@@ -437,15 +467,82 @@ function NewLegislationSenateBill() {
                               : ""
                           }`}
                           value={formik.values.membertenure}
+                        /> */}
+                        <Select
+                          options={
+                            Array.isArray(tenures) && tenures?.length > 0
+                              ? tenures.map((item) => ({
+                                  value: item?.id,
+                                  label: `${item?.tenureName} (${item?.tenureType})`,
+                                  tenureType: item?.tenureType,
+                                }))
+                              : []
+                          }
+                          onChange={(selectedOption) => {
+                            formik.setFieldValue(
+                              "memberTenure",
+                              selectedOption
+                            );
+                            if (showMinster === "Ministers") {
+                              getParliamentaryYearsonTheBaseOfTenure(
+                                selectedOption?.value
+                              );
+                            } else {
+                              handleTenuresTerms(selectedOption?.value);
+                            }
+                            formik.setFieldValue("fkTermId", "");
+                            formik.setFieldValue("parliamentaryYear", "");
+                            formik.setFieldValue("selectedSenator", "");
+                          }}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.memberTenure}
+                          id="memberTenure"
+                          name="memberTenure"
+                          isClearable={true}
                         />
-                        {formik.touched.membertenure &&
-                          formik.errors.membertenure && (
+                        {formik.touched.memberTenure &&
+                          formik.errors.memberTenure && (
                             <div className="invalid-feedback">
-                              {formik.errors.membertenure}
+                              {formik.errors.memberTenure}
                             </div>
                           )}
                       </div>
-
+                      {showMinster !== "Ministers" && (
+                        <div className="col">
+                          <div className="mb-3">
+                            <label className="form-label">Member Term</label>
+                            <Select
+                              options={
+                                Array.isArray(tenuresTerms) &&
+                                tenuresTerms?.length > 0
+                                  ? tenuresTerms.map((item) => ({
+                                      value: item?.id,
+                                      label: `${item?.termName}`,
+                                    }))
+                                  : []
+                              }
+                              onChange={(selectedOption) => {
+                                formik.setFieldValue(
+                                  "fkTermId",
+                                  selectedOption
+                                );
+                                formik.setFieldValue("parliamentaryYear", "");
+                                formik.setFieldValue("selectedSenator", "");
+                                if (selectedOption?.value) {
+                                  getParliamentaryYearsonTheBaseOfTerm(
+                                    selectedOption?.value
+                                  );
+                                }
+                              }}
+                              onBlur={formik.handleBlur}
+                              value={formik.values.fkTermId}
+                              id="fkTermId"
+                              name="fkTermId"
+                              isClearable={true}
+                            />
+                          </div>
+                        </div>
+                      )}
                       <div class="col">
                         <div class="mb-3">
                           {showMinster === "Ministers" ? (
@@ -474,9 +571,13 @@ function NewLegislationSenateBill() {
                               const selectedId = e.target.value;
                               formik.handleChange(e);
                               setMembersOnParliamentaryYear([]);
-                              getMembersOnParliamentaryYear(e.target.value);
-                              getMNAOnParliamentaryYear(e.target.value);
-                              // console.log("id", selectedId);
+                              if (showMinster === "Ministers") {
+                                getMNAOnParliamentaryYear(e.target.value);
+                              } else {
+                                getMembersOnParliamentaryYear(e.target.value);
+                              }
+
+                              formik.setFieldValue("selectedSenator", "");
                             }}
                             value={formik.values.parliamentaryYear}
                           >
@@ -504,15 +605,18 @@ function NewLegislationSenateBill() {
                         <>
                           <div class="col">
                             <div class="mb-3">
-                              <label class="form-label">Select Minister</label>
+                              <label class="form-label">Minister</label>
                               <Select
                                 options={
-                                  ministersOnParliamentaryYear &&
-                                  ministersOnParliamentaryYear?.length > 0 &&
-                                  ministersOnParliamentaryYear?.map((item) => ({
-                                    value: item.id,
-                                    label: item.mnaName,
-                                  }))
+                                  Array.isArray(ministersOnParliamentaryYear) &&
+                                  ministersOnParliamentaryYear.length > 0
+                                    ? ministersOnParliamentaryYear.map(
+                                        (item) => ({
+                                          value: item?.id,
+                                          label: item?.mnaName,
+                                        })
+                                      )
+                                    : []
                                 }
                                 onChange={(selectedOption) => {
                                   formik.setFieldValue(
@@ -545,9 +649,7 @@ function NewLegislationSenateBill() {
                             </div>
                           </div>
                           <div className="col">
-                            <label className="form-label">
-                              Select Ministry
-                            </label>
+                            <label className="form-label">Ministry</label>
                             <Select
                               options={
                                 ministryDataOnMinister &&
@@ -584,7 +686,7 @@ function NewLegislationSenateBill() {
                       ) : (
                         <div className="col">
                           <div className="mb-3">
-                            <label class="form-label">Select Senator</label>
+                            <label class="form-label">Member</label>
                             <Select
                               // options={
                               //   membersOnParliamentaryYear &&
@@ -825,7 +927,7 @@ function NewLegislationSenateBill() {
                         </div>
                       </div>
                     </div>
-                    <div class="row">
+                    {/* <div class="row">
                       <div class="col-3">
                         <div style={{ marginTop: "35px" }}>
                           <div class="form-check">
@@ -929,7 +1031,7 @@ function NewLegislationSenateBill() {
                       ) : (
                         <></>
                       )}
-                    </div>
+                    </div> */}
 
                     <div className="row mt-3">
                       <div class="d-grid gap-2 d-md-flex justify-content-md-end">

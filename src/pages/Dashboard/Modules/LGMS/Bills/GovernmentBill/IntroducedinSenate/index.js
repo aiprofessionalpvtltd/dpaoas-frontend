@@ -37,7 +37,12 @@ const AllGovernmentSenateBills = () => {
       // internalId: item?.id,
       fileNumber: item?.fileNumber,
       billTitle: item?.billTitle,
-      nameOfMinisters: item?.senateBillMnaMovers?.[0]?.mna?.mnaName || "---",
+      nameOfMinistersOrMovers:
+        item?.senateBillMnaMovers?.[0]?.mna?.mnaName ||
+        item?.senateBillSenatorMovers
+          ?.map((mover) => mover?.member?.memberName)
+          .join(", ") ||
+        "",
       dateOfReceiptOfNotice: item?.noticeDate
         ? moment(item?.noticeDate, "YYYY-MM-DD").format("DD-MM-YYYY")
         : "---",

@@ -13,12 +13,15 @@ import {
 import { ToastContainer } from "react-toastify";
 import { getallMembers } from "../../../../../../api/APIs/Services/Motion.service";
 import { getAllMinisters } from "../../../../../../api/APIs/Services/LegislationModule.service";
+import UpdateMemberParliamentaryYear from "../../../../../../components/MemberUpdateParliamentaryYearModal";
 
 function LGMSMinisters() {
   const navigate = useNavigate();
   const [ministers, setMinisters] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [toUpdateMemberId, setToUpdateMemberId] = useState(null);
   const pageSize = 10; // Set your desired page size
 
   const handlePageChange = (page) => {
@@ -27,7 +30,6 @@ function LGMSMinisters() {
   };
 
   const transformData = (apiData) => {
-    console.log("apiData", apiData);
     return apiData.map((item) => ({
       id: item.id,
       ministerName: `${item.mnaName}`,
@@ -82,6 +84,16 @@ function LGMSMinisters() {
     }
   };
 
+  // Handle Models
+  const openModal = (id) => {
+    setToUpdateMemberId(id);
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
+
   return (
     <Layout
       module={true}
@@ -94,6 +106,17 @@ function LGMSMinisters() {
         title1={"Members"}
       />
       <ToastContainer />
+
+      {showModal && showModal && (
+        <UpdateMemberParliamentaryYear
+          closeModal={closeModal}
+          UpdateMemberId={toUpdateMemberId}
+          showModal={showModal}
+          member="Ministers"
+          getAllMinisterApi={getAllMinisterApi}
+          // toUpdateMemberData={toUpdateMemberData}
+        />
+      )}
 
       <div class="container-fluid dash-detail-container card">
         <div class="row">
@@ -118,6 +141,8 @@ function LGMSMinisters() {
               currentPage={currentPage}
               pageSize={pageSize}
               totalCount={count}
+              showSent={true}
+              handleSent={(item) => openModal(item?.id)}
             />
           </div>
         </div>
