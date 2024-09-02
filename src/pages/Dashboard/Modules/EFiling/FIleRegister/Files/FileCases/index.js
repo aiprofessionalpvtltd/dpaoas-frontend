@@ -24,6 +24,7 @@ import { showSuccessMessage } from "../../../../../../../utils/ToastAlert";
 function FileCases() {
   const navigate = useNavigate();
   const { setFileIdInRegister, fileIdINRegister } = useContext(AuthContext);
+  const [searchTerm, setSearchTerm] = useState("");
   const userData = getUserData();
   const location = useLocation();
   const [headings, setHeadings] = useState(null);
@@ -76,7 +77,7 @@ function FileCases() {
       userId: userData?.fkUserId,
       currentPage: currentPage,
       pageSize: pageSize,
-      fileId: fkfileId?.value ? fkfileId?.value : location.state?.internalId,
+      // fileId: fkfileId?.value ? fkfileId?.value : location.state?.internalId,
       // fkBranchId:userData && userData?.fkBranchId
     };
     
@@ -181,6 +182,12 @@ function FileCases() {
     }
   }, [headcount]);
 
+
+    // FIltered Data
+    const filteredCaseData = casesData?.filter((item) =>
+      item?.FileNo?.toLowerCase().includes(searchTerm?.toLowerCase())
+    );
+
   useEffect(() => {
     const fileId = getSelectedFileID();
     if(fileId) {
@@ -226,8 +233,8 @@ function FileCases() {
         </div>
       </div>
       {/* )} */}
-
-      <div className="row" style={{ marginBottom: "20px", marginLeft: "3px" }}>
+ {/* Hide THis Field */}
+      {/* <div className="row" style={{ marginBottom: "20px", marginLeft: "3px" }}>
         <div className="col-4">
           <label for="formFile" class="form-label">
             Select Register
@@ -292,7 +299,7 @@ function FileCases() {
             </>
           )}
         </div>
-      </div>
+      </div> */}
 
       <div class="row">
         <div class="col-12">
@@ -300,7 +307,9 @@ function FileCases() {
             ActionHide={false}
             hideBtn={false}
             addBtnText={"Create Case"}
-            data={casesData}
+            data={filteredCaseData}
+            seachBarShow={true}
+            searchonchange={(e) => setSearchTerm(e.target.value)}
             tableTitle="File Cases"
             headertitlebgColor={"#666"}
             headertitletextColor={"#FFF"}
