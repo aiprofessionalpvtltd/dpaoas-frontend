@@ -56,6 +56,7 @@ function FileDetail() {
   const location = useLocation();
   const [showApproveModal, setShowApproveModal] = useState(false);
   const { fildetailsAqain } = useContext(AuthContext);
+  const [paraNumber, setParaNumber] = useState("")
   const navigate = useNavigate();
   const UserData = getUserData();
   const [loading, setLoading] = useState(true);
@@ -259,7 +260,7 @@ function FileDetail() {
       setNotingTabsData([
         ...notingTabData,
         {
-          title: `Para ${notingTabData?.length + 1}`,
+          title: `Para ${paraNumber}`,
           description: content,
           references: [],
           createdBy: UserData && UserData?.fkUserId,
@@ -311,7 +312,7 @@ function FileDetail() {
     // // Update the titles of the remaining items
     const renumberedTabs = updatedTabs.map((tab, i) => ({
       ...tab,
-      title: `Para ${i + 1}`,
+      // title: `Para ${i + 1}`,
     }));
 
     setNotingTabsData(renumberedTabs);
@@ -1187,6 +1188,17 @@ const handlePreviewNotingDoc = (htmlContent) => {
                                 </div>
                               </div>
 
+                              <div>
+                        <label className="form-label">Add Para Number</label>
+                        <input
+                          className={`form-control mb-2`}
+                          id="paraNumber"
+                          placeholder="Add Para Number"
+                          onChange={(e) => setParaNumber(e.target.value)}
+                          value={paraNumber}
+                          style={{ width: "50%" }}
+                        />
+                        </div>
                               <label className="form-label">
                                 Add new paragraph
                               </label>

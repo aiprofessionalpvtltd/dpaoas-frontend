@@ -47,6 +47,7 @@ function AddEditFileCase() {
   const location = useLocation();
   const { fileIdINRegister } = useContext(AuthContext);
   const [notingTabSubject, setNotingTabSubject] = useState("");
+  const [paraNumber, setParaNumber] = useState("")
   const [notingData, setNotingData] = useState({
     description: "",
   });
@@ -89,7 +90,7 @@ function AddEditFileCase() {
       setNotingTabsData([
         ...notingTabData,
         {
-          title: `Para ${notingTabData.length + 1}`,
+          title: `Para ${paraNumber}`,
           description: content,
           references: [],
           createdBy: UserData && UserData?.fkUserId,
@@ -142,7 +143,7 @@ function AddEditFileCase() {
     // Update the titles of the remaining items
     const renumberedTabs = updatedTabs.map((tab, i) => ({
       ...tab,
-      title: `Para ${i + 1}`,
+      // title: `Para ${i + 1}`,
     }));
 
     setNotingTabsData(renumberedTabs);
@@ -717,12 +718,13 @@ function AddEditFileCase() {
                           value={notingTabSubject}
                           style={{ width: "50%" }}
                         />
+                        
                         {notingTabData.length > 0 && (
                           <label htmlFor="formFile" className="form-label mt-2">
                             Added Paragraphs
                           </label>
                         )}
-
+                        
                         <DocParas
                           tabsData={notingTabData}
                           onEditorChange={handleEditorChange}
@@ -735,7 +737,17 @@ function AddEditFileCase() {
                         />
                       </div>
                     </div>
-
+                    <div>
+                        <label className="form-label">Add Para Number</label>
+                        <input
+                          className={`form-control mb-2`}
+                          id="paraNumber"
+                          placeholder="Add Para Number"
+                          onChange={(e) => setParaNumber(e.target.value)}
+                          value={paraNumber}
+                          style={{ width: "50%" }}
+                        />
+                        </div>
                     <label className="form-label">Add new paragraph</label>
                     {/* <Editor
                       onChange={(content) =>
@@ -747,6 +759,7 @@ function AddEditFileCase() {
                     /> */}
 
                     {/* <Jodit /> */}
+
                     <CKEditorComp
                       onChange={(data) => setNotingData({ description: data })}
                       value={notingData.description}
