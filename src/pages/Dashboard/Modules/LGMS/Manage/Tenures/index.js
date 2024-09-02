@@ -57,19 +57,19 @@ function LGMSTenures() {
 
   useEffect(() => {
     handleTenures();
-  }, []);
+  }, [currentPage]);
 
-  const handleDelete = async (id) => {
-    try {
-      const response = await deleteTenures(id);
-      if (response?.success) {
-        showSuccessMessage(response.message);
-        handleTenures();
-      }
-    } catch (error) {
-      showErrorMessage(error.response.data.message);
-    }
-  };
+  // const handleDelete = async (id) => {
+  //   try {
+  //     const response = await deleteTenures(id);
+  //     if (response?.success) {
+  //       showSuccessMessage(response.message);
+  //       handleTenures();
+  //     }
+  //   } catch (error) {
+  //     showErrorMessage(error.response.data.message);
+  //   }
+  // };
 
   return (
     <Layout
@@ -99,7 +99,8 @@ function LGMSTenures() {
                   state: item,
                 })
               }
-              handleDelete={(item) => handleDelete(item.id)}
+              hideDeleteIcon={true}
+              // handleDelete={(item) => handleDelete(item.id)}
               headertitlebgColor={"#666"}
               headertitletextColor={"#FFF"}
               handlePageChange={handlePageChange}
