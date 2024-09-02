@@ -17,7 +17,7 @@ function QuestionAnualReport() {
       parlimentryYear: ""
     },
     onSubmit: (values) => {
-      console.log(values)
+
       AnnualQuestionReprtPdf(values);
     },
     enableReinitialize: true,

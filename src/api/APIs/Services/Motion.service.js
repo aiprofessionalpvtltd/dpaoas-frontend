@@ -411,3 +411,35 @@ export const dashboardMotionStats = async () => {
     throw error;
   }
 };
+
+//Ballot Motion List
+export const allBallotMotionList = async (currentPage, pageSize) => {
+  try {
+    const response = await axiosClient.get(`/motion/findAllBalloting?currentPage=${currentPage}&pageSize=${pageSize}`);
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+//CHanges Motion Statuses
+export const ChangeMotionStatus = async (Data) => {
+  try {
+    const response = await axiosClient.put(`/motion/motionBalloting/status`,Data);
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const createReviveMotion = async (data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClient.post(`/motion/revive-motions`, data);
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};

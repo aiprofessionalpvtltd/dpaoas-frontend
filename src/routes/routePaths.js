@@ -281,6 +281,11 @@ import Poll from "../pages/Dashboard/Modules/Transport/Summary/Poll/index.js";
 import MakeModelWise from "../pages/Dashboard/Modules/Transport/Summary/MakeModel/index.js";
 import QuestionAnualReport from "../pages/Dashboard/Modules/QMS/QuestionAnnualReport/index.js";
 import { AnnualPdf } from "../pages/Dashboard/Modules/QMS/QuestionAnnualReport/QuestionAnnualPdfPreview/index.js";
+import AllBallotMotionList from "../pages/Dashboard/Modules/MMS/Reports/BallotList/index.js";
+import PdfAllQuestion from "../pages/Dashboard/Modules/Notice/Question/Sent/pdfAllQuestion.js";
+import LeaveRequests from "../pages/Dashboard/Modules/Notice/LeaveRequests/index.js";
+import AddEditLeaveRequests from "../pages/Dashboard/Modules/Notice/LeaveRequests/AddEditLeaveRequests/index.js";
+import MMSReviveMotion from "../pages/Dashboard/Modules/MMS/Motion/ReviveMotion/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -323,6 +328,7 @@ export const ProtectedRoutes = [
   { path: "/notice/question/new", element: <NewQuestion /> },
   { path: "/notice/question/search", element: <SearchQuestion /> },
   { path: "/notice/question/sent", element: <SentQuestion /> },
+  { path: "/notice/question/pdf-allQuestion", element: <PdfAllQuestion /> },
   { path: "/notice/question/detail", element: <NoticeQuestionDetail /> },
 
   { path: "/notice/motion", element: <MotionListing /> },
@@ -364,6 +370,8 @@ export const ProtectedRoutes = [
   { path: "/notice/manage/sessions/addedit", element: <SessionsAddEditForm /> },
 
   { path: "/notice/manage", element: <NoticeDashboard /> },
+  { path: "/notice/leaveRequests", element: <LeaveRequests /> },
+  { path: "/notice/leaveRequests/addedit", element: <AddEditLeaveRequests /> },
   {
     path: "/notice/manage/single-member-session-attendance",
     element: <NMSMemberSessionAttendance />,
@@ -437,6 +445,7 @@ export const ProtectedRoutes = [
   { path: "/mms/motion/detail", element: <MMSMotionDetail /> },
   { path: "/mms/motion/list", element: <MMSMotionList /> },
   { path: "/mms/motion/preview-pdf", element: <MotionPreviewPDF /> },
+  { path: "/mms/motion/revive", element: <MMSReviveMotion /> },
 
   { path: "/mms/question/search", element: <MMSSearchQuestion /> },
   { path: "/mms/resolution/search", element: <MMSSearchResolution /> },
@@ -451,6 +460,10 @@ export const ProtectedRoutes = [
   {
     path: "/mms/reports/motion-list/ballot/preview-pdf",
     element: <PreviewBallotMotionList />,
+  },
+  {
+    path: "/mms/reports/motion-list/ballot/list",
+    element: <AllBallotMotionList />,
   },
 
   //QMS Module

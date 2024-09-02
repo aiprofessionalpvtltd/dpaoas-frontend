@@ -138,7 +138,6 @@ export const CKEditorComp = ({ onChange, value, disabled }) => {
         onChange={(event, editor) => {
           const data = editor.getData();
         //   console.log({ event, editor, data });
-          console.log(data);
           onChange(data);
         }}
         onBlur={(event, editor) => {

@@ -28,7 +28,7 @@ import Select from "react-select";
 function SentQuestion() {
   const navigate = useNavigate();
   const { members, sessions } = useContext(AuthContext);
-  const [searchedData, setSearchedData] = useState([]);
+  const [pdfData, setPDFData] = useState([]);
   const [resData, setResData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [allquestionStatus, setAllQuestionStatus] = useState([]);
@@ -114,14 +114,14 @@ function SentQuestion() {
           : "",
         NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate
           ? moment(res?.noticeOfficeDiary?.noticeOfficeDiaryDate).format(
-              "DD-MM-YYYY"
-            )
+            "DD-MM-YYYY"
+          )
           : "",
         NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime
           ? moment(
-              res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
-              "hh:mm A"
-            ).format("hh:mm A")
+            res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
+            "hh:mm A"
+          ).format("hh:mm A")
           : "",
         SessionNumber: res?.session?.sessionName
           ? res?.session?.sessionName
@@ -137,6 +137,50 @@ function SentQuestion() {
       };
     });
   };
+
+
+
+  const transformPdfData = (apiData) => {
+    return apiData.map((res, index) => {
+      const subjectMatter = [res?.englishText, res?.urduText]
+        .filter(Boolean)
+        .join(", ");
+      const cleanedSubjectMatter = subjectMatter.replace(/(<([^>]+)>)/gi, "");
+
+      return {
+        SrNo: index + 1,
+        Id: res?.id,
+        MemberName: res?.member ? res?.member?.memberName : "--",
+        noticeOfficeDiaryNumber: res?.noticeOfficeDiary?.noticeOfficeDiaryNo
+          ? res?.noticeOfficeDiary?.noticeOfficeDiaryNo
+          : "",
+        NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate
+          ? moment(res?.noticeOfficeDiary?.noticeOfficeDiaryDate).format(
+            "DD-MM-YYYY"
+          )
+          : "",
+        NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime
+          ? moment(
+            res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
+            "hh:mm A"
+          ).format("hh:mm A")
+          : "",
+        SessionNumber: res?.session?.sessionName
+          ? res?.session?.sessionName
+          : "",
+        // SubjectMatter: cleanedSubjectMatter ? cleanedSubjectMatter : "",
+        Category: res.questionCategory ? res.questionCategory : "",
+        ActionTaken: res.questionStatus?.questionStatus
+          ? res.questionStatus?.questionStatus
+          : "",
+        Description: res?.description,
+        createdBy:
+          res?.questionSentStatus === "inNotice" ? "Notice Office" : "---",
+      };
+    });
+  };
+
+
   const SearchQuestionApi = useCallback(
     async (values, page) => {
       setSearchingFlag(true);
@@ -194,10 +238,13 @@ function SentQuestion() {
   const getAllQuestionsApi = useCallback(async () => {
     try {
       const response = await getAllQuestionNotice(currentPage, pageSize);
+      console.log(response.data.questions)
       if (response?.success) {
         const transformedData = transformLeavesData(response?.data?.questions);
         setCount(response?.data?.count);
         setResData(transformedData);
+        const pdfData = transformPdfData(response?.data?.questions)
+        setPDFData(pdfData)
       }
     } catch (error) {
       console.log(error);
@@ -261,6 +308,11 @@ function SentQuestion() {
       console.log(error);
     }
   };
+  const handlePDF = async () => {
+    const encodedJsonString = encodeURIComponent(JSON.stringify(pdfData));
+    const url = `/notice/question/pdf-allQuestion?state=${encodedJsonString}`;
+    window.open(url, "_blank");
+  }
 
   return (
     <Layout
@@ -530,12 +582,11 @@ function SentQuestion() {
                             selected={formik.values.fromNoticeDate}
                             onChange={handleFromNoticeDateSelect}
                             onBlur={formik.handleBlur}
-                            className={`form-control ${
-                              formik.touched.fromNoticeDate &&
+                            className={`form-control ${formik.touched.fromNoticeDate &&
                               formik.errors.fromNoticeDate
-                                ? "is-invalid"
-                                : ""
-                            }`}
+                              ? "is-invalid"
+                              : ""
+                              }`}
                             dateFormat="dd-MM-yyyy"
                             maxDate={new Date()}
                             open={isFromNoticeOpen}
@@ -567,12 +618,11 @@ function SentQuestion() {
                             selected={formik.values.toNoticeDate}
                             onChange={handleToNoticeDateSelect}
                             onBlur={formik.handleBlur}
-                            className={`form-control ${
-                              formik.touched.toNoticeDate &&
+                            className={`form-control ${formik.touched.toNoticeDate &&
                               formik.errors.toNoticeDate
-                                ? "is-invalid"
-                                : ""
-                            }`}
+                              ? "is-invalid"
+                              : ""
+                              }`}
                             maxDate={new Date()}
                             open={isToNoticeOpen}
                             onClickOutside={() => setIsToNoticeOpen(false)}
@@ -584,7 +634,15 @@ function SentQuestion() {
                     </div>
 
                     <div className="row">
+
                       <div className="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button
+                          className="btn btn-primary col-1"
+                          type="button"
+                          onClick={handlePDF}
+                        >
+                          Print PDF
+                        </button>
                         <button className="btn btn-primary" type="submit">
                           Search
                         </button>

@@ -1,0 +1,138 @@
+import React, { useCallback, useEffect, useState } from "react";
+import { Layout } from "../../../../../components/Layout";
+import Header from "../../../../../components/Header";
+import CustomTable from "../../../../../components/CustomComponents/CustomTable";
+import { NoticeSidebarItems } from "../../../../../utils/sideBarItems";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../utils/ToastAlert";
+import {
+  deletePrivateBill,
+  getAllPrivateBillNotice,
+  sendPrivateBill,
+} from "../../../../../api/APIs/Services/Legislation.service";
+import PrivateBillModal from "../../../../../components/PrivateBillModal";
+import { ToastContainer } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { CustomAlert } from "../../../../../components/CustomComponents/CustomAlert";
+import moment from "moment";
+import { getAllLeaveRequests } from "../../../../../api/APIs/Services/LeaveManagementSystem.service";
+
+function LeaveRequests() {
+  const [currentPage, setCurrentPage] = useState(0);
+  const pageSize = 5; // Set your desired page size
+  const [count, setCount] = useState();
+  const [assignModalOpan, setAssignedModal] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const navigate = useNavigate();
+
+  const [data, setData] = useState([]);
+
+  const handlePageChange = (page) => {
+    // Update currentPage when a page link is clicked
+    setCurrentPage(page);
+  };
+
+  const transformPrivateData = (apiData) => {
+    return apiData.map((item) => ({
+      id: item?.id,
+      startDate: item?.requestStartDate ? item.requestStartDate : item?.leave_oneday ? item.leave_oneday : "---",
+      endDate: item?.requestEndDate ? item.requestEndDate : item?.leave_oneday ? item.leave_oneday : "---",
+      reason: item?.requestLeaveReason,
+      member: item?.memberName ? item?.memberName : "---",
+      status: item?.requestStatus
+    }));
+  };
+  const getAllLeaveRequestsApi = useCallback(async () => {
+    try {
+      const response = await getAllLeaveRequests(currentPage, pageSize);
+      if (response?.success) {
+        const transformedData = transformPrivateData(
+          response?.data?.data
+        );
+        setCount(response?.data.totalCount);
+        setData(transformedData);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, [currentPage, pageSize, setCount, setData]);
+
+  useEffect(() => {
+    getAllLeaveRequestsApi();
+  }, [getAllLeaveRequestsApi]);
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await deletePrivateBill(id);
+      if (response?.success) {
+        showSuccessMessage(response?.message);
+        getAllLeaveRequestsApi();
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  };
+
+  const handleClose = () => setShowModal(false);
+  const handleOkClick = () => {
+    handleDelete(selectedItem?.id);
+    handleClose();
+  };
+
+  return (
+    <Layout
+      module={true}
+      sidebarItems={NoticeSidebarItems}
+      centerlogohide={true}
+    >
+      <ToastContainer />
+
+      <Header
+        dashboardLink={"/notice/dashboard"}
+        // addLink1={"/notice/question/sent"}
+        title1={"Leave Requests"}
+      />
+
+      <CustomAlert
+        showModal={showModal}
+        handleClose={handleClose}
+        handleOkClick={handleOkClick}
+      />
+
+      <div class="row">
+        <div class="col-12">
+          <CustomTable
+            singleDataCard={true}
+            data={data}
+            tableTitle="Leave Requests"
+            addBtnText={"Create Leave Request"}
+            handleAdd={() =>
+              navigate("/notice/leaveRequests/addedit")
+            }
+            handleEdit={(item) =>
+              navigate("/notice/leaveRequests/addedit", {
+                state: item,
+              })
+            }
+            handleDelete={(item) => {
+              setSelectedItem(item);
+              setShowModal(true);
+            }}
+            hideDeleteIcon={true}
+            headertitlebgColor={"#666"}
+            headertitletextColor={"#FFF"}
+            handlePageChange={handlePageChange}
+            currentPage={currentPage}
+            pageSize={pageSize}
+            totalCount={count}
+          />
+        </div>
+      </div>
+    </Layout>
+  );
+}
+
+export default LeaveRequests;

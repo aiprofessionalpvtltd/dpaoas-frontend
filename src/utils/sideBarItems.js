@@ -185,6 +185,11 @@ export const NoticeSidebarItems = [
     link: "/notice/manage/single-member-session-attendance",
     icon: faChair,
   },
+  {
+    itemName: "Leave Requests",
+    link: "/notice/leaveRequests",
+    icon: faChair,
+  },
   // {
   //   itemName: "Event Calendar",
   //   link: "/notice/event-calendar",
@@ -255,11 +260,11 @@ export const MMSSideBarItems = [
   //   link: "/mms/question/search",
   //   icon: faClipboardList,
   // },
-  // {
-  //   itemName: "Search Resolution",
-  //   link: "/mms/resolution/search",
-  //   icon: faClipboardList,
-  // },
+  {
+    itemName: "Revive Motion",
+    link: "/mms/motion/revive",
+    icon: faClipboardList,
+  },
 
   {
     itemName: "Reports",
@@ -274,6 +279,11 @@ export const MMSSideBarItems = [
       {
         itemName: "Motion List Report",
         link: "/mms/reports/motion-list",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Ballot List",
+        link: "/mms/reports/motion-list/ballot/list",
         icon: faClipboardList,
       },
     ],

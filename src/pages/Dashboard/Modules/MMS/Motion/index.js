@@ -19,6 +19,7 @@ function MMSMotionDashboard() {
   const [count, setCount] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [data, setData] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
 const [filterData, setFIlterData] = useState([])
 
 
@@ -78,7 +79,6 @@ const [filterData, setFIlterData] = useState([])
   };
   useEffect(() => {
     getAllMotionDashboardAPi();
-      
   }, []);
   
   const hendleEdit = async (id) => {
@@ -97,7 +97,10 @@ const [filterData, setFIlterData] = useState([])
     const url = `/mms/motion/preview-pdf?state=${encodedJsonString}`;
     window.open(url, "_blank");
   };
-
+// FIltered Data
+const filteredMotionData = filterData.filter((motion) =>
+  motion?.motionStatus?.toLowerCase().includes(searchTerm?.toLowerCase())
+);
   return (
     <Layout module={true} sidebarItems={MMSSideBarItems} centerlogohide={true}>
       <Header
@@ -186,7 +189,9 @@ const [filterData, setFIlterData] = useState([])
           <div class="col-12">
             {filterData && filterData.length > 0 && (
                 <CustomTable
-                  data={filterData}
+                  data={filteredMotionData}
+                  seachBarShow={true}
+                  searchonchange={(e) => setSearchTerm(e.target.value)}
                   hideBtn={true}
                   hidebtn1={true}
                   block={true}

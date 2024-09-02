@@ -335,9 +335,9 @@ function MMSMotionDetail() {
                           <option value={"Motion Under Rule 218"}>
                             Motion Under Rule 218
                           </option>
-                          {/* <option value={"Motion Under Rule 60"}>
-                            Motion Under Rule 60
-                          </option> */}
+                          <option value={"Privilege Motion"}>
+                            Privilege Motion
+                          </option>
                         </select>
                         {formik.touched.motionType &&
                           formik.errors.motionType && (
