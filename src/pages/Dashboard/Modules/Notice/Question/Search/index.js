@@ -32,6 +32,7 @@ function SearchQuestion() {
   const [allquestionStatus, setAllQuestionStatus] = useState([]);
   const [isFromNoticeOpen, setIsFromNoticeOpen] = useState(false);
   const [isToNoticeOpen, setIsToNoticeOpen] = useState(false);
+  const [pdfData , setPDFData] = useState([])
   const pageSize = 10; // Set your desired page size
 
   const formik = useFormik({
@@ -105,7 +106,45 @@ function SearchQuestion() {
       };
     });
   };
+  const transformPdfData = (apiData) => {
+    return apiData.map((res, index) => {
+      const subjectMatter = [res?.englishText, res?.urduText]
+        .filter(Boolean)
+        .join(", ");
+      const cleanedSubjectMatter = subjectMatter.replace(/(<([^>]+)>)/gi, "");
 
+      return {
+        SrNo: index + 1,
+        Id: res?.id,
+        MemberName: res?.member ? res?.member?.memberName : "--",
+        noticeOfficeDiaryNumber: res?.noticeOfficeDiary?.noticeOfficeDiaryNo
+          ? res?.noticeOfficeDiary?.noticeOfficeDiaryNo
+          : "",
+        NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate
+          ? moment(res?.noticeOfficeDiary?.noticeOfficeDiaryDate).format(
+            "DD-MM-YYYY"
+          )
+          : "",
+        NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime
+          ? moment(
+            res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
+            "hh:mm A"
+          ).format("hh:mm A")
+          : "",
+        SessionNumber: res?.session?.sessionName
+          ? res?.session?.sessionName
+          : "",
+        // SubjectMatter: cleanedSubjectMatter ? cleanedSubjectMatter : "",
+        Category: res.questionCategory ? res.questionCategory : "",
+        ActionTaken: res.questionStatus?.questionStatus
+          ? res.questionStatus?.questionStatus
+          : "",
+        Description: res?.description,
+        createdBy:
+          res?.questionSentStatus === "inNotice" ? "Notice Office" : "---",
+      };
+    });
+  };
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
     setCurrentPage(page);
@@ -157,6 +196,8 @@ function SearchQuestion() {
           showSuccessMessage(response?.message);
           setCount(response?.data?.count);
           const transformedData = transformLeavesData(response.data?.questions);
+          const pdfTransformData = transformPdfData(response.data?.questions)
+          setPDFData(pdfTransformData)
           setSearchedData(transformedData);
         }
         // formik.resetForm();
@@ -237,7 +278,11 @@ function SearchQuestion() {
     formik.resetForm();
     setSearchedData([]);
   };
-
+const handlePDF = async () =>{
+  const encodedJsonString = encodeURIComponent(JSON.stringify(pdfData));
+  const url = `/notice/question/pdf-allQuestion?state=${encodedJsonString}`;
+  window.open(url, "_blank");
+}
   return (
     <Layout
       module={true}
@@ -507,6 +552,13 @@ function SearchQuestion() {
 
                     <div className="row">
                       <div className="d-grid gap-2 d-md-flex justify-content-md-end">
+                      <button
+                          className="btn btn-primary col-1"
+                          type="button"
+                          onClick={handlePDF}
+                        >
+                          Print PDF
+                        </button>
                         <button className="btn btn-primary" type="submit">
                           Search
                         </button>
