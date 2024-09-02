@@ -72,7 +72,6 @@ function FileCases() {
   };  
 
   const getAllCasesApi = async () => {
-    if(fkfileId) {
     const searchParams = {
       userId: userData?.fkUserId,
       currentPage: currentPage,
@@ -94,7 +93,6 @@ function FileCases() {
     } catch (error) {
       console.log(error);
     }
-  }
   };
 
   useEffect(() => {
@@ -141,7 +139,7 @@ function FileCases() {
       currentPage: currentPage,
       pageSize: pageSize,
       mainHeadingNumber: headID,
-      
+      branchId: userData?.fkBranchId
     };
     try {
       const response = await getFileByRegisterById(searchParams);

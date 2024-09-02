@@ -285,6 +285,7 @@ import AllBallotMotionList from "../pages/Dashboard/Modules/MMS/Reports/BallotLi
 import PdfAllQuestion from "../pages/Dashboard/Modules/Notice/Question/Sent/pdfAllQuestion.js";
 import LeaveRequests from "../pages/Dashboard/Modules/Notice/LeaveRequests/index.js";
 import AddEditLeaveRequests from "../pages/Dashboard/Modules/Notice/LeaveRequests/AddEditLeaveRequests/index.js";
+import MMSReviveMotion from "../pages/Dashboard/Modules/MMS/Motion/ReviveMotion/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -444,6 +445,7 @@ export const ProtectedRoutes = [
   { path: "/mms/motion/detail", element: <MMSMotionDetail /> },
   { path: "/mms/motion/list", element: <MMSMotionList /> },
   { path: "/mms/motion/preview-pdf", element: <MotionPreviewPDF /> },
+  { path: "/mms/motion/revive", element: <MMSReviveMotion /> },
 
   { path: "/mms/question/search", element: <MMSSearchQuestion /> },
   { path: "/mms/resolution/search", element: <MMSSearchResolution /> },

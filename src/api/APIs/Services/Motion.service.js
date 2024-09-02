@@ -415,3 +415,14 @@ export const ChangeMotionStatus = async (Data) => {
     throw error;
   }
 };
+
+export const createReviveMotion = async (data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClient.post(`/motion/revive-motions`, data);
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};

@@ -260,11 +260,11 @@ export const MMSSideBarItems = [
   //   link: "/mms/question/search",
   //   icon: faClipboardList,
   // },
-  // {
-  //   itemName: "Search Resolution",
-  //   link: "/mms/resolution/search",
-  //   icon: faClipboardList,
-  // },
+  {
+    itemName: "Revive Motion",
+    link: "/mms/motion/revive",
+    icon: faClipboardList,
+  },
 
   {
     itemName: "Reports",
