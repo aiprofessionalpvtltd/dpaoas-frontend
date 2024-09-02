@@ -24,6 +24,7 @@ import { ToastContainer } from "react-toastify";
 import { AuthContext } from "../../../../../../api/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
+import moment from "moment";
 
 function SentResolution() {
   const navigate = useNavigate();
@@ -77,16 +78,23 @@ function SentResolution() {
         SessionNumber: leave?.session?.sessionName
           ? leave?.session?.sessionName
           : "",
+          diaryNumber : leave?.noticeDiary?.noticeOfficeDiaryNo ? leave?.noticeDiary?.noticeOfficeDiaryNo :"---",
+          DiaryDate: leave?.noticeDiary?.noticeOfficeDiaryDate
+          ? moment(leave?.noticeDiary?.noticeOfficeDiaryDate).format(
+            "DD-MM-YYYY"
+          )
+          : "",
+          diaryTime : leave?.noticeDiary?.noticeOfficeDiaryTime ? leave?.noticeDiary?.noticeOfficeDiaryTime :"---",
         ResolutionType: leave?.resolutionType ? leave?.resolutionType : "",
         SubjectMatter: cleanedSubjectMatter ? cleanedSubjectMatter : "",
         NoticeNo: leave?.noticeDiary?.noticeOfficeDiaryNo
           ? leave?.noticeDiary?.noticeOfficeDiaryNo
           : "",
-        ResolutionStatus: leave?.resolutionStatus?.resolutionStatus
-          ? leave?.resolutionStatus?.resolutionStatus
-          : "",
-        Status: leave?.resolutionActive ? leave?.resolutionActive : "",
-        device : leave?.device,
+        // ResolutionStatus: leave?.resolutionStatus?.resolutionStatus
+        //   ? leave?.resolutionStatus?.resolutionStatus
+        //   : "",
+        // Status: leave?.resolutionActive ? leave?.resolutionActive : "",
+        // device : leave?.device,
         createdBy:leave?.resolutionSentStatus === "inNotice" ? "Notice Office": "---"
       };
     });
@@ -211,6 +219,12 @@ function SentResolution() {
       showErrorMessage(error?.response?.data?.message);
     }
   };
+
+  const handlePDF = async () =>{
+    const encodedJsonString = encodeURIComponent(JSON.stringify(resData));
+    const url = `/notice/resolution/pdf-preview-resolution?state=${encodedJsonString}`;
+    window.open(url, "_blank");
+  }
 
   return (
     <Layout
@@ -532,6 +546,13 @@ function SentResolution() {
 
                   <div class="row">
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button
+                      className="btn btn-primary col-1"
+                      type="button"
+                      onClick={handlePDF}
+                    >
+                      Print PDF
+                    </button>
                       <button class="btn btn-primary" type="submit">
                         Search
                       </button>

@@ -104,6 +104,7 @@ function SentMotion() {
 
       return {
         id: res?.id,
+        // SrNo : res?.SrNo,
         memberName: res?.motionMovers[0]?.members?.memberName,
         SessionNumber: res?.sessions?.sessionName
           ? res?.sessions?.sessionName
@@ -114,14 +115,14 @@ function SentMotion() {
           : "",
         noticeOfficeDiaryDate: res?.noticeOfficeDairies?.noticeOfficeDiaryDate
           ? moment(res?.noticeOfficeDairies?.noticeOfficeDiaryDate).format(
-              "DD-MM-YYYY"
-            )
+            "DD-MM-YYYY"
+          )
           : "",
         noticeOfficeDiaryTime: res?.noticeOfficeDairies?.noticeOfficeDiaryTime
           ? moment(
-              res?.noticeOfficeDairies?.noticeOfficeDiaryTime,
-              "hh:ss A"
-            ).format("hh:ss A")
+            res?.noticeOfficeDairies?.noticeOfficeDiaryTime,
+            "hh:ss A"
+          ).format("hh:ss A")
           : "",
         englishText: EnglishText ? EnglishText : "",
         urduText: UrduText ? UrduText : "",
@@ -143,6 +144,7 @@ function SentMotion() {
       );
       if (response?.success) {
         const transformedData = transformMotionData(response?.data?.rows);
+        console.log(response?.data?.rows)
         setCount(response?.data?.count);
         setMotionData(transformedData);
       }
@@ -249,6 +251,12 @@ function SentMotion() {
       console.log(error);
     }
   };
+
+  const handlePDF = async () =>{
+    const encodedJsonString = encodeURIComponent(JSON.stringify(motionData));
+    const url = `/notice/motion/pdf-preview?state=${encodedJsonString}`;
+    window.open(url, "_blank");
+  }
 
   return (
     <Layout
@@ -516,12 +524,11 @@ function SentMotion() {
                         selected={formik.values.fromNoticeDate}
                         onChange={handleFromNoticeDateSelect}
                         onBlur={formik.handleBlur}
-                        className={`form-control ${
-                          formik.touched.fromNoticeDate &&
-                          formik.errors.fromNoticeDate
+                        className={`form-control ${formik.touched.fromNoticeDate &&
+                            formik.errors.fromNoticeDate
                             ? "is-invalid"
                             : ""
-                        }`}
+                          }`}
                         dateFormat={"dd-MM-yyyy"}
                         maxDate={new Date()}
                         open={isFromNoticeOpen}
@@ -552,12 +559,11 @@ function SentMotion() {
                         selected={formik.values.toNoticeDate}
                         onChange={handleToNoticeDateSelect}
                         onBlur={formik.handleBlur}
-                        className={`form-control ${
-                          formik.touched.toNoticeDate &&
-                          formik.errors.toNoticeDate
+                        className={`form-control ${formik.touched.toNoticeDate &&
+                            formik.errors.toNoticeDate
                             ? "is-invalid"
                             : ""
-                        }`}
+                          }`}
                         maxDate={new Date()}
                         dateFormat={"dd-MM-yyyy"}
                         open={isToNoticeOpen}
@@ -570,6 +576,13 @@ function SentMotion() {
 
                 <div class="row">
                   <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button
+                      className="btn btn-primary col-1"
+                      type="button"
+                      onClick={handlePDF}
+                    >
+                      Print PDF
+                    </button>
                     <button class="btn btn-primary" type="submit">
                       Search
                     </button>
