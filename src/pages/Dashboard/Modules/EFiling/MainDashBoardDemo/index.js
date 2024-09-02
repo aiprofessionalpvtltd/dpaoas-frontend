@@ -600,6 +600,7 @@ const NonBlinkingIndicator = (color) => {
                 <CustomTable
                   ActionHide={false}
                   hideBtn={true}
+                  block={true}
                   hidebtn1={true}
                   addBtnText={"Create Case"}
                   data={casesData}
@@ -659,6 +660,7 @@ const NonBlinkingIndicator = (color) => {
               <div class="col-12">
                 <CustomTable
                         hidebtn1={true}
+                        block={true}
                         hideBtn={true}
                         addBtnText={"Create Fresh Receipt"}
                         data={fileData}
