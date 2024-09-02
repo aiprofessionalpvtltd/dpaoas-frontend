@@ -95,7 +95,7 @@ function MMSReviveMotion() {
     const data = {
       // fileNumber: ,
       fkMotionStatus: values?.motionStatus,
-      motionSentStatus:"inMotion",
+      motionSentStatus:"toMotion",
     };
     setCount(null);
 
@@ -159,7 +159,9 @@ function MMSReviveMotion() {
     };
     try {
       const response = await createReviveMotion(data);
+      searchMotionList(formik?.values, currentPage);
       if (response?.success) {
+        
         showSuccessMessage(response?.message);
       }
     } catch (error) {
@@ -201,7 +203,7 @@ function MMSReviveMotion() {
                         <option value={""} >
                           Select
                         </option>
-                        <option key={2} value={"2"}>Admitted</option>
+                        {/* <option key={2} value={"2"}>Admitted</option> */}
                         <option key={3} value={"3"}>Admitted but Lapsed</option>
                       </select>
                     </div>
