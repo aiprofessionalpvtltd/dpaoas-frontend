@@ -201,6 +201,8 @@ function AddEditFileCase() {
       );
       if (response.success) {
         showSuccessMessage(response?.message);
+        localStorage.removeItem("frId");
+        localStorage.removeItem("frAttachments");
         setTimeout(() => {
           navigate("/efiling/dashboard/file-register-list/files-list/cases");
         }, 1000);
