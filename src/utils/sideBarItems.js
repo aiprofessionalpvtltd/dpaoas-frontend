@@ -288,6 +288,12 @@ export const MMSSideBarItems = [
       },
     ],
   },
+  {
+    itemName: "Miscellaneous",
+    link: "/mms/motion-miscelleneuos",
+    icon: faClipboardList,
+    
+  },
 ];
 
 export const TelecastingSideBarItems = [

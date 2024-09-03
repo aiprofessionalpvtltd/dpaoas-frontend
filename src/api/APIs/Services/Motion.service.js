@@ -443,3 +443,18 @@ export const createReviveMotion = async (data) => {
     throw error;
   }
 };
+export const searchMiscelleneousList = async(data)=>{
+
+  try {
+    const filteredSearchParams = Object.fromEntries(
+      Object.entries(data).filter(([_, value]) => value !== "")
+    );
+    console.log(filteredSearchParams)
+    const response = await axiosClient.get('motion/searchMotions',{
+      params: filteredSearchParams,
+    })
+    return response?.data
+  } catch (error) {
+    throw error
+  }
+}

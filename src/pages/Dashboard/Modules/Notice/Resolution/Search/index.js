@@ -82,8 +82,14 @@ function SearchResolution() {
           ? res.resolutionStatus?.resolutionStatus
           : "",
         Movers: movers ? movers : "",
-        SentDate:res?.resolutionSentDate? moment(res?.resolutionSentDate).format("DD-MM-YYYY"):"--",
-        createdBy:res?.resolutionSentStatus === "inNotice" ? "Notice Office": "---"
+        SentDate: res?.resolutionSentDate ? moment(res?.resolutionSentDate).format("DD-MM-YYYY") : "--",
+        createdBy: res?.resolutionSentStatus === "inNotice" ? "Notice Office" : "---",
+        diaryTime : res?.noticeDiary?.noticeOfficeDiaryTime ? res?.noticeDiary?.noticeOfficeDiaryTime :"---",
+        ResolutionType: res?.resolutionType ? res?.resolutionType : "",
+        SubjectMatter: cleanedSubjectMatter ? cleanedSubjectMatter : "",
+        NoticeNo: res?.noticeDiary?.noticeOfficeDiaryNo
+          ? res?.noticeDiary?.noticeOfficeDiaryNo
+          : "",
       };
     });
   };
@@ -155,6 +161,12 @@ function SearchResolution() {
     formik.resetForm();
     setSearchedData([]);
   };
+  const handlePDF = async () =>{
+    const encodedJsonString = encodeURIComponent(JSON.stringify(searchedData));
+    const url = `/notice/resolution/pdf-preview-resolution?state=${encodedJsonString}`;
+    window.open(url, "_blank");
+  }
+  
   return (
     <Layout
       module={true}
@@ -430,6 +442,13 @@ function SearchResolution() {
 
                     <div className="row">
                       <div className="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button
+                          className="btn btn-primary col-1"
+                          type="button"
+                          onClick={handlePDF}
+                        >
+                          Print PDF
+                        </button>
                         <button className="btn btn-primary" type="submit">
                           Search
                         </button>

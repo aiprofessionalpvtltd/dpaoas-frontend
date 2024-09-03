@@ -286,6 +286,11 @@ import PdfAllQuestion from "../pages/Dashboard/Modules/Notice/Question/Sent/pdfA
 import LeaveRequests from "../pages/Dashboard/Modules/Notice/LeaveRequests/index.js";
 import AddEditLeaveRequests from "../pages/Dashboard/Modules/Notice/LeaveRequests/AddEditLeaveRequests/index.js";
 import MMSReviveMotion from "../pages/Dashboard/Modules/MMS/Motion/ReviveMotion/index.js";
+import pdfPreviewMotion from "../pages/Dashboard/Modules/Notice/Motion/pdfPreview.js";
+import PdfPreviewMotion from "../pages/Dashboard/Modules/Notice/Motion/pdfPreview.js";
+import PdfPreviewResolution from "../pages/Dashboard/Modules/Notice/Resolution/PdfPreviewResolution.js";
+import Miscellaneous from "../pages/Dashboard/Modules/MMS/Miscellaneous/index.js";
+import MiscelleneousPDFPreview from "../pages/Dashboard/Modules/MMS/Miscellaneous/MiscelleneousPDFPreview.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -332,6 +337,7 @@ export const ProtectedRoutes = [
   { path: "/notice/question/detail", element: <NoticeQuestionDetail /> },
 
   { path: "/notice/motion", element: <MotionListing /> },
+  { path: "/notice/motion/pdf-preview", element: <PdfPreviewMotion /> },
   { path: "/notice/motion/new", element: <NewMotion /> },
   { path: "/notice/motion/edit", element: <EditMotion /> },
 
@@ -339,6 +345,7 @@ export const ProtectedRoutes = [
   { path: "/notice/motion/sent", element: <SentMotion /> },
 
   { path: "/notice/resolution", element: <NoticeDashboard /> },
+  { path: "/notice/resolution/pdf-preview-resolution", element: <PdfPreviewResolution /> },
   { path: "/notice/resolution/new", element: <NewResolution /> },
   { path: "/notice/resolution/edit", element: <NoticeResolutionDetail /> },
   { path: "/notice/resolution/search", element: <SearchResolution /> },
@@ -453,6 +460,8 @@ export const ProtectedRoutes = [
   // { path: "/mms/reports", element: <MMSMotionDashboard /> },
   { path: "/mms/reports/motion-summary", element: <MMSMotionSummery /> },
   { path: "/mms/reports/motion-list", element: <MMSMotionListReport /> },
+  { path: "/mms/motion-miscelleneuos", element: <Miscellaneous /> },
+  { path: "/mms/motion-miscelleneuos/pdf-preview", element: <MiscelleneousPDFPreview /> },
   {
     path: "/mms/reports/motion-list/ballot/:id",
     element: <MMSBallotMotionList />,

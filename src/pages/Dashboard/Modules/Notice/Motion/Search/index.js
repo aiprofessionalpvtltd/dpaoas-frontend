@@ -105,9 +105,11 @@ function SearchMotion() {
       const UrduText = Urdu.replace(/(<([^>]+)>)/gi, "");
       return {
         id: leave?.id,
-        SessionName: leave?.sessions?.sessionName
+        memberName: leave?.motionMovers[0]?.members?.memberName,
+        SessionNumber: leave?.sessions?.sessionName
           ? leave?.sessions?.sessionName
           : "",
+
         motionType: leave?.motionType ? leave?.motionType : "",
         noticeOfficeDiaryNo: leave?.noticeOfficeDairies?.noticeOfficeDiaryNo
           ? leave?.noticeOfficeDairies?.noticeOfficeDiaryNo
@@ -220,6 +222,11 @@ function SearchMotion() {
       showErrorMessage(error.response?.data?.message);
     }
   };
+  const handlePDF = async () =>{
+    const encodedJsonString = encodeURIComponent(JSON.stringify(motionData));
+    const url = `/notice/motion/pdf-preview?state=${encodedJsonString}`;
+    window.open(url, "_blank");
+  }
 
   return (
     <Layout
@@ -604,6 +611,13 @@ function SearchMotion() {
 
                 <div class="row">
                   <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                  <button
+                      className="btn btn-primary col-1"
+                      type="button"
+                      onClick={handlePDF}
+                    >
+                      Print PDF
+                    </button>
                     <button class="btn btn-primary" type="submit">
                       Search
                     </button>
