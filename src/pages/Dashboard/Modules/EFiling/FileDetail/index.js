@@ -563,7 +563,7 @@ function FileDetail() {
   }, []);
 
  // Mapping over the paragraphs array
- const paragraphsHtml = notingTabData?.map((para, index) => {
+ const paragraphsHtml0 = notingTabData?.map((para, index) => {
   // const containsLink = /<a\s+[^>]*href=/i.test(para?.description); // Improved regex to check for link
   // console.log(containsLink, "link");
 
@@ -575,14 +575,19 @@ function FileDetail() {
 
   // No index for the first paragraph
   if (index === 0) {
-    return `<div style="margin-bottom: 10px; text-indent: 65px; text-align: justify;">${para?.description}</div>`;
+    return `<div style="margin-top: 10px; text-indent: 65px; text-align: justify;">${para?.description}</div>`;
   }
   return `
-    <div style="display: flex; align-items: flex-start; margin-bottom: 10px;">
+    <div style="display: flex; align-items: flex-start; margin-top: 10px;">
       <strong>${index + 1}.</strong>
       <div style="flex-grow: 1; text-align: justify; text-indent: 50px; text-align: justify;">${para?.description}</div>
     </div>
   `;
+}).join('');
+
+const paragraphsHtml = notingTabData?.map((para, index) => {
+  // No index for the first paragraph
+    return `<div style="margin-top: 10px; text-align: justify;">${para?.description}</div>`;
 }).join('');
 
 
