@@ -26,11 +26,9 @@ import { getUserData } from "../../../../../../api/Auth";
 import moment from "moment";
 
 const validationSchema = Yup.object({
-  fkSessionId: Yup.number().required("Session No is required"),
+  fkSessionId: Yup.number().optional(),
   questionCategory: Yup.string().required("Category is required"),
-  noticeOfficeDiaryNo: Yup.number().required(
-    "Notice office diary No is required"
-  ),
+  noticeOfficeDiaryNo: Yup.number().optional(),
   fkMemberId: Yup.object().required("Member Name is required"),
   noticeOfficeDiaryDate: Yup.string().required(
     "Notice Office Diary Date is required"
@@ -44,7 +42,7 @@ const validationSchema = Yup.object({
 
 function NewQuestion() {
   const navigate = useNavigate();
-  const { members, sessions, allBranchesData } = useContext(AuthContext);
+  const { members, sessions, allBranchesData, divisions } = useContext(AuthContext);
   const [showModal, setShowModal] = useState(false);
   const [formValues, setFormValues] = useState([]);
   const [filesData, setFilesData] = useState();
@@ -55,7 +53,7 @@ function NewQuestion() {
   const LoggedInUserID = UserData && UserData?.fkUserId;
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
-
+ 
   const handleOkClick = () => {
     CreateQuestionApi(formValues);
     handleClose();
@@ -74,6 +72,7 @@ function NewQuestion() {
       questionImage: [],
       initiatedByBranch: "",
       sentToBranch: "",
+      fkDivisionId:""
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -155,7 +154,7 @@ function NewQuestion() {
     formData.append("englishText", values.englishText);
     formData.append("urduText", values.urduText);
     formData.append("questionSentStatus", "inNotice");
-    // formData.append("questionImage", values.questionImage);
+    formData.append("fkDivisionId", values.fkDivisionId);
     // Array.from(values.questionImage).forEach((file, index) => {
     //   formData.append(`questionImage[${index}]`, file);
     // });
@@ -439,6 +438,29 @@ function NewQuestion() {
                               {formik.errors.noticeOfficeDiaryTime}
                             </div>
                           )}
+                      </div>
+                    </div>
+                    <div class="col-3">
+                      <div class="mb-3">
+                        <label class="form-label">Division</label>
+                        <select
+                          class={`form-select`}
+                          placeholder="Division"
+                          value={formik.values.fkDivisionId}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          name="fkDivisionId"
+                        >
+                          <option value="" selected disabled hidden>
+                            Select
+                          </option>
+                          {divisions &&
+                            divisions.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item?.divisionName}
+                              </option>
+                            ))}
+                        </select>
                       </div>
                     </div>
                     {/* From Notice */}
