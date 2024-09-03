@@ -22,7 +22,7 @@ import { imagesUrl } from "../../../../../../api/APIs";
 
 function QMSNoticeResolutionDetail() {
   const location = useLocation();
-  const { members, sessions, resolutionStatus } = useContext(AuthContext);
+  const { members, sessions, resolutionStatus , ministryData} = useContext(AuthContext);
   
   const formik = useFormik({
     initialValues: {
@@ -59,6 +59,14 @@ function QMSNoticeResolutionDetail() {
           ? location?.state?.resolutionMoversAssociation.map((item) => ({
               value: item?.memberAssociation?.id,
               label: item?.memberAssociation?.memberName,
+            }))
+          : [],
+
+          ministries:
+        location?.state?.resolutionMinistries.length > 0
+          ? location?.state?.resolutionMinistries.map((item) => ({
+              value: item?.fkMinistryId,
+              label: item?.ministries?.ministryName,
             }))
           : [],
 
@@ -112,6 +120,9 @@ function QMSNoticeResolutionDetail() {
     data.append("dateOfDiscussion", values.dateOfDiscussion);
     data.append("dateOfPassing", values.dateOfPassing);
 
+    values?.ministries.forEach((minister, index) => {
+      data.append(`ministries[${index}][fkMinistryId]`, minister.value);
+    });
     data.append("englishText", values.englishText);
     data.append("urduText", values.urduText);
     if(values?.memberPosition){
@@ -519,6 +530,36 @@ function QMSNoticeResolutionDetail() {
                           )}
                       </div>
                       </div>
+                      <div class="col-3">
+                      <div class="mb-3">
+                        <label class="form-label">Ministries</label>
+                        <Select
+                          options={
+                            ministryData &&
+                            ministryData.map((item) => ({
+                              value: item.id,
+                              label: item.ministryName,
+                            }))
+                          }
+                          isMulti
+                          onChange={(selectedOptions) =>
+                            formik.setFieldValue(
+                              "ministries",
+                              selectedOptions
+                            )
+                          }
+                          onBlur={formik.handleBlur}
+                          value={formik.values.ministries}
+                          name="ministries"
+                        />
+                        {formik.touched.ministries &&
+                          formik.errors.ministries && (
+                            <div class="invalid-feedback">
+                              {formik.errors.ministries}
+                            </div>
+                          )}
+                      </div>
+                    </div>
                 </div>
                 <div className="row">
                   <label htmlFor="" className="form-label">

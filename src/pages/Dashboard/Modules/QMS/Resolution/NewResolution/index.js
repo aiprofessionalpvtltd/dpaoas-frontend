@@ -37,7 +37,7 @@ const validationSchema = Yup.object({
 });
 
 function QMSNewResolution() {
-  const { members, sessions } = useContext(AuthContext);
+  const { members, sessions , ministryData } = useContext(AuthContext);
   const userData = getUserData();
 
   const formik = useFormik({
@@ -52,12 +52,14 @@ function QMSNewResolution() {
       urduText: "",
       fkResolutionStatus: null,
       memberPosition:"",
+      ministries : [],
       attachment: null,
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       // handleShow();
       // setFormValues(values);
+      console.log("ministring",values.ministries)
       CreateResolutionApi(values);
     },
     enableReinitialize: true,
@@ -83,6 +85,9 @@ function QMSNewResolution() {
     formData.append("resolutionSentStatus", 'inResolution');
     formData.append("createdByUser",  userData?.fkUserId)
     formData.append("memberPosition",  values?.memberPosition)
+    values?.ministries.forEach((minister, index) => {
+      formData.append(`ministries[${index}][fkMinistryId]`, minister.value);
+    });
 
     try {
       const response = await createResolution(formData);
@@ -336,6 +341,36 @@ function QMSNewResolution() {
                           )}
                       </div>
                   </div>
+                  <div class="col-3">
+                      <div class="mb-3">
+                        <label class="form-label">Ministries</label>
+                        <Select
+                          options={
+                            ministryData &&
+                            ministryData.map((item) => ({
+                              value: item.id,
+                              label: item.ministryName,
+                            }))
+                          }
+                          isMulti
+                          onChange={(selectedOptions) =>
+                            formik.setFieldValue(
+                              "ministries",
+                              selectedOptions
+                            )
+                          }
+                          onBlur={formik.handleBlur}
+                          value={formik.values.ministries}
+                          name="ministries"
+                        />
+                        {formik.touched.ministries &&
+                          formik.errors.ministries && (
+                            <div class="invalid-feedback">
+                              {formik.errors.ministries}
+                            </div>
+                          )}
+                      </div>
+                    </div>
                     <div className="col-3">
                       <div className="mb-3">
                         <label htmlFor="formFile" className="form-label">
