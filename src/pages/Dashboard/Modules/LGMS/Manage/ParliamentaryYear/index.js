@@ -61,19 +61,19 @@ function LGMSParliamentaryYear() {
 
   useEffect(() => {
     handleParliamentaryYears();
-  }, []);
+  }, [currentPage]);
 
-  const handleDelete = async (id) => {
-    try {
-      const response = await deleteParliamentaryYears(id);
-      if (response?.success) {
-        showSuccessMessage(response.message);
-        handleParliamentaryYears();
-      }
-    } catch (error) {
-      showErrorMessage(error.response.data.message);
-    }
-  };
+  // const handleDelete = async (id) => {
+  //   try {
+  //     const response = await deleteParliamentaryYears(id);
+  //     if (response?.success) {
+  //       showSuccessMessage(response.message);
+  //       handleParliamentaryYears();
+  //     }
+  //   } catch (error) {
+  //     showErrorMessage(error.response.data.message);
+  //   }
+  // };
 
   const hendleEdit = async (id) => {
     try {
@@ -112,7 +112,8 @@ function LGMSParliamentaryYear() {
                 navigate("/lgms/dashboard/manage/parliamentary-year/addedit")
               }
               handleEdit={(item) => hendleEdit(item.id)}
-              handleDelete={(item) => handleDelete(item.id)}
+              hideDeleteIcon={true}
+              // handleDelete={(item) => handleDelete(item.id)}
               headertitlebgColor={"#666"}
               headertitletextColor={"#FFF"}
               handlePageChange={handlePageChange}
