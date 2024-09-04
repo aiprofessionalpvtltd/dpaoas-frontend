@@ -667,10 +667,10 @@ const handlePreviewNotingDoc = (htmlContent) => {
   document.body.appendChild(tempContainer);
 
   const opt = {
-    margin: 0.2,
-    image: { type: "jpeg", quality: 0.98 },
-    html2canvas: { scale: 3 },
-    jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+    margin: [20, 10, 20, 10],
+    image: { type: "jpeg", quality: 1 },
+    html2canvas: { scale: 2 },
+    jsPDF: { unit: "pt", format: "a4", orientation: "portrait" },
     enableLinks: true // Enable link functionality
   };
 
