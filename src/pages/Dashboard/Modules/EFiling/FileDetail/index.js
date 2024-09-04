@@ -92,7 +92,7 @@ function FileDetail() {
   const handleShow = () => setShowApproveModal(true);
   const handleClose = () => setShowApproveModal(false);
   const handleOkClick = () => {
-    handleSubmit(true)
+    handleSubmit(true);
     handleClose();
   };
 
@@ -174,7 +174,7 @@ function FileDetail() {
       CommentStatus: "",
       priority: "",
       comment: "",
-    })
+    });
   };
 
   const hendleAssiginFileCaseApi = async () => {
@@ -221,7 +221,9 @@ function FileDetail() {
     try {
       const response = await getHLEmployee(UserData?.fkUserId);
       if (response?.success) {
-        const filteredData = response?.data?.filter((item) => item?.userName !== UserData?.userName);
+        const filteredData = response?.data?.filter(
+          (item) => item?.userName !== UserData?.userName
+        );
         setEmployeeData(filteredData);
       }
     } catch (error) {
@@ -257,14 +259,21 @@ function FileDetail() {
   ) => {
     if (isNew) {
       setNotingTabsData([
-        ...notingTabData,
-        {
+        ...(order === "DESC" ? [{
           title: `Para ${notingTabData?.length + 1}`,
           description: content,
           references: [],
-          createdBy: UserData && UserData?.fkUserId,
-        },
+          createdBy: UserData?.fkUserId,
+        }] : []),
+        ...notingTabData,
+        ...(order === "ASC" ? [{
+          title: `Para ${notingTabData?.length + 1}`,
+          description: content,
+          references: [],
+          createdBy: UserData?.fkUserId,
+        }] : []),
       ]);
+      
       setNotingData("");
     } else if (isReference) {
       const updatedTabs = notingTabData.map((tab, i) =>
@@ -323,14 +332,15 @@ function FileDetail() {
       if (tIndex === tabIndex) {
         return {
           ...tab,
-          references: tab.references.filter((_, fIndex) => fIndex !== flagIndex),
+          references: tab.references.filter(
+            (_, fIndex) => fIndex !== flagIndex
+          ),
         };
       }
       return tab;
     });
     setNotingTabsData(updatedTabs);
-  }
-
+  };
 
   const handleAttachDelete = async (item, tabIndex) => {
     //   const updatedTabs = notingTabData.map((tab, tIndex) => {
@@ -428,7 +438,9 @@ function FileDetail() {
         fileGlobalId
           ? fileGlobalId
           : location?.state?.fileId || fildetailsAqain?.fileId,
-        caseGlobalId ? caseGlobalId : location?.state?.id || fildetailsAqain?.id,
+        caseGlobalId
+          ? caseGlobalId
+          : location?.state?.id || fildetailsAqain?.id,
         orderBy ? orderBy : "DESC"
       );
 
@@ -495,7 +507,7 @@ function FileDetail() {
       };
     }) || [];
 
-      // Filter out images from the items
+  // Filter out images from the items
   const imageItems = images.filter((item) => !item.isPdf);
 
   const PdfPreview = ({ pdfUrl }) => {
@@ -542,10 +554,10 @@ function FileDetail() {
   useEffect(() => {
     const fileId = location?.state?.fileId || fildetailsAqain?.fileId;
     const caseId = location?.state?.id || fildetailsAqain?.id;
-    if(fileId && caseId) {
+    if (fileId && caseId) {
       getFilesByID(fileId, caseId, order);
     }
-  }, [order])
+  }, [order]);
 
   const deleteNotification = async (item) => {
     try {
@@ -562,37 +574,42 @@ function FileDetail() {
     deleteNotification();
   }, []);
 
- // Mapping over the paragraphs array
- const paragraphsHtml0 = notingTabData?.map((para, index) => {
-  // const containsLink = /<a\s+[^>]*href=/i.test(para?.description); // Improved regex to check for link
-  // console.log(containsLink, "link");
+  // Mapping over the paragraphs array
+  const paragraphsHtml0 = notingTabData
+    ?.map((para, index) => {
+      // const containsLink = /<a\s+[^>]*href=/i.test(para?.description); // Improved regex to check for link
+      // console.log(containsLink, "link");
 
-  // const descriptionHtml = containsLink
-  //   ? para?.description.replace(/<a\s+[^>]*href="([^"]+)"[^>]*>([^<]+)<\/a>/gi, '<a href="$1" style="color: blue; text-decoration: underline;">$2</a>')
-  //   : para?.description;
+      // const descriptionHtml = containsLink
+      //   ? para?.description.replace(/<a\s+[^>]*href="([^"]+)"[^>]*>([^<]+)<\/a>/gi, '<a href="$1" style="color: blue; text-decoration: underline;">$2</a>')
+      //   : para?.description;
 
-  // console.log(containsLink, "link");
+      // console.log(containsLink, "link");
 
-  // No index for the first paragraph
-  if (index === 0) {
-    return `<div style="margin-top: 10px; text-indent: 65px; text-align: justify;">${para?.description}</div>`;
-  }
-  return `
+      // No index for the first paragraph
+      if (index === 0) {
+        return `<div style="margin-top: 10px; text-indent: 65px; text-align: justify;">${para?.description}</div>`;
+      }
+      return `
     <div style="display: flex; align-items: flex-start; margin-top: 10px;">
       <strong>${index + 1}.</strong>
-      <div style="flex-grow: 1; text-align: justify; text-indent: 50px; text-align: justify;">${para?.description}</div>
+      <div style="flex-grow: 1; text-align: justify; text-indent: 50px; text-align: justify;">${
+        para?.description
+      }</div>
     </div>
   `;
-}).join('');
+    })
+    .join("");
 
-const paragraphsHtml = notingTabData?.map((para, index) => {
-  // No index for the first paragraph
-    return `<div style="margin-top: 10px; text-align: justify;">${para?.description}</div>`;
-}).join('');
+  const paragraphsHtml = notingTabData
+    ?.map((para, index) => {
+      // No index for the first paragraph
+      return `<div style="margin-top: 10px; text-align: justify;">${para?.description}</div>`;
+    })
+    .join("");
 
-
-// Main HTML template
-const html = `
+  // Main HTML template
+  const html = `
   <div className="container" style="padding:20px">
     <div className="row mb-5">
       <div className="col-2" style="border-right: 1px solid black; height: 100%;">
@@ -617,82 +634,80 @@ const html = `
   </div>
 `;
 
-const handlePrintNotingDoc = (htmlContent) => {
-  // Create a temporary container to hold the HTML content
-  const tempContainer = document.createElement("div");
-  tempContainer.innerHTML = htmlContent;
-  document.body.appendChild(tempContainer);
+  const handlePrintNotingDoc = (htmlContent) => {
+    // Create a temporary container to hold the HTML content
+    const tempContainer = document.createElement("div");
+    tempContainer.innerHTML = htmlContent;
+    document.body.appendChild(tempContainer);
 
-  const opt = {
-    margin: 0.2,
-    filename: "motion.pdf",
-    image: { type: "jpeg", quality: 0.98 },
-    html2canvas: { scale: 3 },
-    jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
-  };
+    const opt = {
+      margin: 0.2,
+      filename: "motion.pdf",
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 3 },
+      jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+    };
 
-  html2pdf()
-    .set(opt)
-    .from(tempContainer)
-    .toPdf()
-    .outputPdf("blob")
-    .then((pdfBlob) => {
-      const pdfUrl = URL.createObjectURL(pdfBlob);
-      const iframe = document.createElement("iframe");
-      iframe.style.position = "fixed";
-      iframe.style.width = "100%";
-      iframe.style.height = "100%";
-      iframe.style.left = "0";
-      iframe.style.top = "0";
-      iframe.style.zIndex = "-1";
-      iframe.style.visibility = "hidden";
-      iframe.src = pdfUrl;
-
-      document.body.appendChild(iframe);
-
-      iframe.onload = () => {
-        iframe.style.visibility = "visible";
-        iframe.contentWindow.focus();
-        iframe.contentWindow.print();
+    html2pdf()
+      .set(opt)
+      .from(tempContainer)
+      .toPdf()
+      .outputPdf("blob")
+      .then((pdfBlob) => {
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+        const iframe = document.createElement("iframe");
+        iframe.style.position = "fixed";
+        iframe.style.width = "100%";
+        iframe.style.height = "100%";
+        iframe.style.left = "0";
+        iframe.style.top = "0";
+        iframe.style.zIndex = "-1";
         iframe.style.visibility = "hidden";
-      };
-    })
-    .finally(() => {
-      // Clean up: Remove the temporary container
-      document.body.removeChild(tempContainer);
-    });
-};
+        iframe.src = pdfUrl;
 
-const handlePreviewNotingDoc = (htmlContent) => {
-  // Create a temporary container to hold the HTML content
-  const tempContainer = document.createElement("div");
-  tempContainer.innerHTML = htmlContent;
-  document.body.appendChild(tempContainer);
+        document.body.appendChild(iframe);
 
-  const opt = {
-    margin: [20, 10, 20, 10],
-    image: { type: "jpeg", quality: 1 },
-    html2canvas: { scale: 2 },
-    jsPDF: { unit: "pt", format: "a4", orientation: "portrait" },
-    enableLinks: true // Enable link functionality
+        iframe.onload = () => {
+          iframe.style.visibility = "visible";
+          iframe.contentWindow.focus();
+          iframe.contentWindow.print();
+          iframe.style.visibility = "hidden";
+        };
+      })
+      .finally(() => {
+        // Clean up: Remove the temporary container
+        document.body.removeChild(tempContainer);
+      });
   };
 
-  html2pdf()
-    .set(opt)
-    .from(tempContainer)
-    .toPdf()
-    .outputPdf("blob")
-    .then((pdfBlob) => {
-      const pdfUrl = URL.createObjectURL(pdfBlob);
-      window.open(pdfUrl); // Open the PDF in a new tab
-    })
-    .finally(() => {
-      // Clean up: Remove the temporary container
-      document.body.removeChild(tempContainer);
-    });
-};
+  const handlePreviewNotingDoc = (htmlContent) => {
+    // Create a temporary container to hold the HTML content
+    const tempContainer = document.createElement("div");
+    tempContainer.innerHTML = htmlContent;
+    document.body.appendChild(tempContainer);
 
+    const opt = {
+      margin: [20, 10, 20, 10],
+      image: { type: "jpeg", quality: 1 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: "pt", format: "a4", orientation: "portrait" },
+      enableLinks: true, // Enable link functionality
+    };
 
+    html2pdf()
+      .set(opt)
+      .from(tempContainer)
+      .toPdf()
+      .outputPdf("blob")
+      .then((pdfBlob) => {
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+        window.open(pdfUrl); // Open the PDF in a new tab
+      })
+      .finally(() => {
+        // Clean up: Remove the temporary container
+        document.body.removeChild(tempContainer);
+      });
+  };
 
   return (
     <Layout
@@ -710,7 +725,6 @@ const handlePreviewNotingDoc = (htmlContent) => {
         handleOkClick={handleOkClick}
       />
       <div className="dashboard-content">
-
         <Modal
           show={showModal}
           size="lg"
@@ -790,30 +804,30 @@ const handlePreviewNotingDoc = (htmlContent) => {
               </div>
             </div>
             <div class="col">
-            <div class="mb-3">
-              <label class="form-label">Priority</label>
-              <select
-                className="form-select"
-                id="priority"
-                name="priority"
-                onChange={(e) =>
-                  setModalInputValue((prevState) => ({
-                    ...prevState,
-                    priority: e.target.value,
-                  }))
-                }
-                value={modalInputValue.priority}
-                disabled={viewPage ? true : false}
-              >
-                <option value="" selected disabled hidden>
-                  Select
-                </option>
+              <div class="mb-3">
+                <label class="form-label">Priority</label>
+                <select
+                  className="form-select"
+                  id="priority"
+                  name="priority"
+                  onChange={(e) =>
+                    setModalInputValue((prevState) => ({
+                      ...prevState,
+                      priority: e.target.value,
+                    }))
+                  }
+                  value={modalInputValue.priority}
+                  disabled={viewPage ? true : false}
+                >
+                  <option value="" selected disabled hidden>
+                    Select
+                  </option>
                   <option value={"Confidential"}>Confidential</option>
                   <option value={"Immediate"}>Immediate</option>
                   <option value={"Routine"}>Routine</option>
-              </select>
+                </select>
+              </div>
             </div>
-          </div>
             <div class="col">
               <div class="mb-3">
                 <label class="form-label">Mark To</label>
@@ -1023,81 +1037,97 @@ const handlePreviewNotingDoc = (htmlContent) => {
 
                     <div class="tab-content" id="ex1-content">
                       <div class="row">
-                      <div class="row mt-2 d-flex justify-content-end float-end">
-  <div class="col-4">
-    <div style={{display: "flex", flexDirection: "row",alignItems: "center"}}>
-      <label style={{width: "20%", marginRight: "10px"}}>Order By:</label>
-      <select
-        className="form-select w-50"
-        id="status"
-        name="status"
-        onChange={(e) => setOrder(e.target.value)}
-        value={order}
-      >
-        <option value="ASC">Ascending</option>
-        <option value="DESC" selected>Descending</option>
-      </select>
-    </div>
-  </div>
+                        <div class="row mt-2 d-flex justify-content-end float-end">
+                          <div class="col-4">
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                alignItems: "center",
+                              }}
+                            >
+                              <label
+                                style={{ width: "30%", marginRight: "10px" }}
+                              >
+                                Order By:
+                              </label>
+                              <select
+                                className="form-select w-50"
+                                id="status"
+                                name="status"
+                                onChange={(e) => setOrder(e.target.value)}
+                                value={order}
+                              >
+                                <option value="ASC">Ascending</option>
+                                <option value="DESC" selected>
+                                  Descending
+                                </option>
+                              </select>
+                            </div>
+                          </div>
 
-  <div class="col-auto">
-    <button
-      class="btn btn-primary"
-      type="submit"
-      style={{
-        width: "150px",
-        display: location?.state?.view ? "none" : "block",
-      }}
-      onClick={() => UpdateEfilingApi()}
-      disabled={
-        viewPage
-          ? true
-          : location?.state?.approved
-            ? true
-            : false
-      }
-    >
-      Save
-    </button>
-  </div>
+                          <div class="col-auto">
+                            <button
+                              class="btn btn-primary"
+                              type="submit"
+                              style={{
+                                width: "150px",
+                                display: location?.state?.view
+                                  ? "none"
+                                  : "block",
+                              }}
+                              onClick={() => UpdateEfilingApi()}
+                              disabled={
+                                viewPage
+                                  ? true
+                                  : location?.state?.approved
+                                    ? true
+                                    : false
+                              }
+                            >
+                              Save
+                            </button>
+                          </div>
 
-  <div class="col-auto">
-    <button
-      class="btn btn-primary"
-      type="submit"
-      style={{
-        width: "150px",
-        display: "block",
-      }}
-      onClick={() => handlePreviewNotingDoc(html)}
-    >
-      View File
-    </button>
-  </div>
+                          <div class="col-auto">
+                            <button
+                              class="btn btn-primary"
+                              type="submit"
+                              style={{
+                                width: "150px",
+                                display: "block",
+                              }}
+                              onClick={() => handlePreviewNotingDoc(html)}
+                            >
+                              View File
+                            </button>
+                          </div>
 
-  {UserData && UserData?.userType === "Officer" && (
-    <div class="col-auto">
-      <button
-        class="btn btn-primary"
-        type="submit"
-        style={{
-          width: "150px",
-          display: location?.state?.view ? "none" : "block",
-        }}
-        onClick={() => handleShow()}
-        disabled={
-          viewPage
-            ? true
-            : location?.state?.approved
-              ? true
-              : false
-        }
-      >
-        Approve Case
-      </button>
-    </div>
-  )}
-</div>
+                          {UserData && UserData?.userType === "Officer" && (
+                            <div class="col-auto">
+                              <button
+                                class="btn btn-primary"
+                                type="submit"
+                                style={{
+                                  width: "150px",
+                                  display: location?.state?.view
+                                    ? "none"
+                                    : "block",
+                                }}
+                                onClick={() => handleShow()}
+                                disabled={
+                                  viewPage
+                                    ? true
+                                    : location?.state?.approved
+                                      ? true
+                                      : false
+                                }
+                              >
+                                Approve Case
+                              </button>
+                            </div>
+                          )}
+                        </div>
 
                         <div
                           style={{
@@ -1160,7 +1190,9 @@ const handlePreviewNotingDoc = (htmlContent) => {
                                   <input
                                     className={`form-control mb-2`}
                                     id="subject"
-                                    disabled={location?.state?.view ? true : false}
+                                    disabled={
+                                      location?.state?.view ? true : false
+                                    }
                                     placeholder="Subject"
                                     onChange={(e) =>
                                       setNotingTabSubject(e.target.value)
@@ -1168,53 +1200,22 @@ const handlePreviewNotingDoc = (htmlContent) => {
                                     value={notingTabSubject}
                                     style={{ width: "50%" }}
                                   />
-                                  {notingTabData?.length > 0 && (
-                                    <label
-                                      htmlFor="formFile"
-                                      className="form-label mt-2"
-                                    >
-                                      Added Paragraphs
-                                    </label>
-                                  )}
-                                  <DocParas
-                                    tabsData={notingTabData}
-                                    disabled={location?.state?.view ? true : false}
-                                    onEditorChange={handleEditorChange}
-                                    onDelete={handleDelete}
-                                    hendleDeleteAttach={(item, innerIdx) =>
-                                      handleAttachDelete(item, innerIdx)
-                                    }
-                                    handleFlagDelete={(tabIndex, flagIndex) => handleFlagDeleteFunc(tabIndex, flagIndex)}
 
-                                    FR={FR}
-                                    selectedFileId={
-                                      location?.state?.fileId ||
-                                      fildetailsAqain?.fileId
-                                    }
-                                  />
-                                </div>
-                              </div>
-
-                              <label className="form-label">
-                                Add new paragraph
-                              </label>
-                              <CKEditorComp
-                                onChange={(data) =>
-                                  setNotingData({ description: data })
-                                }
-                                value={notingData.description}
-                                disabled={location?.state?.view ? true : false}
-                              />
-
-                              {/* <Editor
-                                onChange={(content) =>
-                                  setNotingData({ description: content })
-                                }
-                                value={notingData.description}
-                                width={"100%"}
-                                display={"flex"}
-                              /> */}
-                              <div
+                                  {order === "DESC" && (
+                                    <>
+                                      <label className="form-label">
+                                        Add new paragraph
+                                      </label>
+                                      <CKEditorComp
+                                        onChange={(data) =>
+                                          setNotingData({ description: data })
+                                        }
+                                        value={notingData.description}
+                                        disabled={
+                                          location?.state?.view ? true : false
+                                        }
+                                      />
+                                      <div
                                 style={{
                                   display: "flex",
                                   justifyContent: "flex-end",
@@ -1224,7 +1225,9 @@ const handlePreviewNotingDoc = (htmlContent) => {
                                 <button
                                   className="btn btn-primary"
                                   style={{ marginTop: 60, width: "100px" }}
-                                  disabled={location?.state?.view ? true : false}
+                                  disabled={
+                                    location?.state?.view ? true : false
+                                  }
                                   onClick={() =>
                                     handleEditorChange(
                                       null,
@@ -1238,6 +1241,90 @@ const handlePreviewNotingDoc = (htmlContent) => {
                                   {"Add"}
                                 </button>
                               </div>
+                                    </>
+                                  )}
+                                  {notingTabData?.length > 0 && (
+                                    <label
+                                      htmlFor="formFile"
+                                      className="form-label mt-2"
+                                    >
+                                      Added Paragraphs
+                                    </label>
+                                  )}
+                                  <DocParas
+                                    tabsData={notingTabData}
+                                    disabled={
+                                      location?.state?.view ? true : false
+                                    }
+                                    onEditorChange={handleEditorChange}
+                                    onDelete={handleDelete}
+                                    hendleDeleteAttach={(item, innerIdx) =>
+                                      handleAttachDelete(item, innerIdx)
+                                    }
+                                    handleFlagDelete={(tabIndex, flagIndex) =>
+                                      handleFlagDeleteFunc(tabIndex, flagIndex)
+                                    }
+                                    FR={FR}
+                                    selectedFileId={
+                                      location?.state?.fileId ||
+                                      fildetailsAqain?.fileId
+                                    }
+                                  />
+                                </div>
+                              </div>
+
+                              {order === "ASC" && (
+                                <>
+                                  <label className="form-label">
+                                    Add new paragraph
+                                  </label>
+                                  <CKEditorComp
+                                    onChange={(data) =>
+                                      setNotingData({ description: data })
+                                    }
+                                    value={notingData.description}
+                                    disabled={
+                                      location?.state?.view ? true : false
+                                    }
+                                  />
+                                  <div
+                                style={{
+                                  display: "flex",
+                                  justifyContent: "flex-end",
+                                  marginTop: 5,
+                                }}
+                              >
+                                <button
+                                  className="btn btn-primary"
+                                  style={{ marginTop: 60, width: "100px" }}
+                                  disabled={
+                                    location?.state?.view ? true : false
+                                  }
+                                  onClick={() =>
+                                    handleEditorChange(
+                                      null,
+                                      notingData.description,
+                                      null,
+                                      false,
+                                      true
+                                    )
+                                  }
+                                >
+                                  {"Add"}
+                                </button>
+                              </div>
+                                </>
+                              )}
+
+                              {/* <Editor
+                                onChange={(content) =>
+                                  setNotingData({ description: content })
+                                }
+                                value={notingData.description}
+                                width={"100%"}
+                                display={"flex"}
+                              /> */}
+                              
                             </div>
                           ) : null}
 
@@ -1278,9 +1365,15 @@ const handlePreviewNotingDoc = (htmlContent) => {
                                   setAttachedFiles(item?.attachmentInternal);
                                   setShowModal(true);
                                 }}
-                                showEditIcon={location.state?.view ? true : false}
-                                hideDeleteIcon={location.state?.view ? true : false}
-                                handleDelete={(item) => handleDeleteCorr(item.internalId)}
+                                showEditIcon={
+                                  location.state?.view ? true : false
+                                }
+                                hideDeleteIcon={
+                                  location.state?.view ? true : false
+                                }
+                                handleDelete={(item) =>
+                                  handleDeleteCorr(item.internalId)
+                                }
                                 handleEdit={(item) => {
                                   if (fkfileId) {
                                     navigate(
@@ -1340,7 +1433,7 @@ const handlePreviewNotingDoc = (htmlContent) => {
                     remarksData.map((item) => (
                       <>
                         {(item?.CommentStatus !== null ||
-                        item?.comment !== null) && (
+                          item?.comment !== null) && (
                           <div
                             class="d-flex flex-row p-3 ps-3"
                             style={{ borderBottom: "1px solid #ddd" }}
