@@ -599,17 +599,20 @@ const html = `
         <!-- Border Column Content -->
       </div>
       <div className="col-10">
-        <div style="text-align: center;">
-          <h4>SENATE SECRETARIAT</h4>
-          <h6>(${UserData?.branch?.branchName} Branch)</h6>
-        </div>
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-          <div></div>
-          <p><strong>${filesData?.cases?.files?.fileNumber}</strong></p>
-        </div>
-        <p><strong>Subject: ${notingTabSubject}</strong></p>
-        ${paragraphsHtml}
-      </div>
+  <div style="text-align: center; line-height: 1.5;">
+    <h4>SENATE SECRETARIAT</h4>
+    <h6>(${UserData?.branch?.branchName} Branch)</h6>
+  </div>
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; line-height: 1.5;">
+    <div></div>
+    <p><strong>${filesData?.cases?.files?.fileNumber}</strong></p>
+  </div>
+  <p style="line-height: 1.5;"><strong>Subject: ${notingTabSubject}</strong></p>
+  <div style="line-height: 1.5;">
+    ${paragraphsHtml}
+  </div>
+</div>
+
     </div>
   </div>
 `;
