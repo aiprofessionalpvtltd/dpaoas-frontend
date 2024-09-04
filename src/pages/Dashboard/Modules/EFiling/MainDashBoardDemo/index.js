@@ -311,7 +311,7 @@ const NonBlinkingIndicator = (color) => {
 
 
        {/* File cases table */}
-       <div className="dash-detail-container" style={{ background: "none" }}>
+       <div className="dash-detail-container" style={{ background: "none", paddingLeft:'5px', paddingRight:'5px' }}>
             <div class="row">
               <div class="col-12">
                 <CustomTable
@@ -370,7 +370,7 @@ const NonBlinkingIndicator = (color) => {
           </div>
 
           {/* FRs table */}
-          <div className="dash-detail-container mt-2" style={{ background: "none"}}>
+          <div className="dash-detail-container mt-3" style={{ background: "none", paddingLeft:'5px', paddingRight:'5px' }}>
             <div class="row">
               <div class="col-12">
                 <CustomTable
@@ -417,7 +417,7 @@ const NonBlinkingIndicator = (color) => {
             </div>
           </div>
 
-          <div className="dash-detail-container" style={{ background: "none" }}>
+          <div className="dash-detail-container mt-3" style={{ background: "none" }}>
             <div className="row">
               <div className="col-6">
                 <div className="dash-card">
