@@ -38,6 +38,7 @@ function QMSSerchResolution() {
   const [isChecked, setIsChecked] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleteId, setDeleteId] = useState(null)
+  const [count, setCount]= useState(null)
 
   const[deleteModalRemarksValue,setDeleteModalRemarksValue]= useState(null)
 
@@ -134,6 +135,7 @@ function QMSSerchResolution() {
 
       if (response?.success) {
         showSuccessMessage(response?.message);
+        setCount(response?.data?.count)
         const transformedData = transformLeavesData(
           response?.data?.resolutions
         );
@@ -236,7 +238,7 @@ function QMSSerchResolution() {
       const dashboardData = transformLeavesData(location?.state)
       setSearchedData(dashboardData)
     }else {
-      const values = { fromSession: currentSession?.id };
+      const values = { toSession: currentSession?.id };
       SearchResolutionApi(values);
     }
   },[location?.state, currentSession])
@@ -629,6 +631,7 @@ function QMSSerchResolution() {
                     isColumncheck={true}
                     setIsColumnCheckBox={setIsChecked}
                     handlePrint={(item) => hendlePrint(item?.id)}
+                    totalCount={count}
                   
                   />
               </div>
