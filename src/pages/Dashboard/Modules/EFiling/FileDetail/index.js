@@ -259,21 +259,29 @@ function FileDetail() {
   ) => {
     if (isNew) {
       setNotingTabsData([
-        ...(order === "DESC" ? [{
-          title: `Para ${notingTabData?.length + 1}`,
-          description: content,
-          references: [],
-          createdBy: UserData?.fkUserId,
-        }] : []),
+        ...(order === "DESC"
+          ? [
+              {
+                title: `Para ${notingTabData?.length + 1}`,
+                description: content,
+                references: [],
+                createdBy: UserData?.fkUserId,
+              },
+            ]
+          : []),
         ...notingTabData,
-        ...(order === "ASC" ? [{
-          title: `Para ${notingTabData?.length + 1}`,
-          description: content,
-          references: [],
-          createdBy: UserData?.fkUserId,
-        }] : []),
+        ...(order === "ASC"
+          ? [
+              {
+                title: `Para ${notingTabData?.length + 1}`,
+                description: content,
+                references: [],
+                createdBy: UserData?.fkUserId,
+              },
+            ]
+          : []),
       ]);
-      
+
       setNotingData("");
     } else if (isReference) {
       const updatedTabs = notingTabData.map((tab, i) =>
@@ -602,11 +610,27 @@ function FileDetail() {
     .join("");
 
   const paragraphsHtml = notingTabData
-    ?.map((para, index) => {
-      // No index for the first paragraph
-      return `<div style="margin-top: 10px; text-align: justify;">${para?.description}</div>`;
-    })
-    .join("");
+  ?.map((para, index) => {
+    
+    return `
+      <div style="margin-top: 10px; margin-bottom: 10px; text-align: justify;">
+        ${para?.description}
+      </div>
+     
+      <p style="float: right; font-weight: bold; margin-top: 5px; margin-bottom: 30px; text-align: center">
+        ${para?.createdByUser}
+        <br />
+        <span style="font-style: italic; font-weight: normal;">
+          (${para?.createdByUserDesignation})
+        </span>
+        <br />
+        <span style="font-style: italic; font-weight: normal;">
+          (${moment(para?.createdAt).format("YYYY-MM-DD")})
+        </span>
+      </p> <div style="clear:both"> </div>`;
+  })
+  .join("");
+  
 
   // Main HTML template
   const html = `
@@ -1216,31 +1240,34 @@ function FileDetail() {
                                         }
                                       />
                                       <div
-                                style={{
-                                  display: "flex",
-                                  justifyContent: "flex-end",
-                                  marginTop: 5,
-                                }}
-                              >
-                                <button
-                                  className="btn btn-primary"
-                                  style={{ marginTop: 60, width: "100px" }}
-                                  disabled={
-                                    location?.state?.view ? true : false
-                                  }
-                                  onClick={() =>
-                                    handleEditorChange(
-                                      null,
-                                      notingData.description,
-                                      null,
-                                      false,
-                                      true
-                                    )
-                                  }
-                                >
-                                  {"Add"}
-                                </button>
-                              </div>
+                                        style={{
+                                          display: "flex",
+                                          justifyContent: "flex-end",
+                                          marginTop: 5,
+                                        }}
+                                      >
+                                        <button
+                                          className="btn btn-primary"
+                                          style={{
+                                            marginTop: 60,
+                                            width: "100px",
+                                          }}
+                                          disabled={
+                                            location?.state?.view ? true : false
+                                          }
+                                          onClick={() =>
+                                            handleEditorChange(
+                                              null,
+                                              notingData.description,
+                                              null,
+                                              false,
+                                              true
+                                            )
+                                          }
+                                        >
+                                          {"Add"}
+                                        </button>
+                                      </div>
                                     </>
                                   )}
                                   {notingTabData?.length > 0 && (
@@ -1288,31 +1315,31 @@ function FileDetail() {
                                     }
                                   />
                                   <div
-                                style={{
-                                  display: "flex",
-                                  justifyContent: "flex-end",
-                                  marginTop: 5,
-                                }}
-                              >
-                                <button
-                                  className="btn btn-primary"
-                                  style={{ marginTop: 60, width: "100px" }}
-                                  disabled={
-                                    location?.state?.view ? true : false
-                                  }
-                                  onClick={() =>
-                                    handleEditorChange(
-                                      null,
-                                      notingData.description,
-                                      null,
-                                      false,
-                                      true
-                                    )
-                                  }
-                                >
-                                  {"Add"}
-                                </button>
-                              </div>
+                                    style={{
+                                      display: "flex",
+                                      justifyContent: "flex-end",
+                                      marginTop: 5,
+                                    }}
+                                  >
+                                    <button
+                                      className="btn btn-primary"
+                                      style={{ marginTop: 60, width: "100px" }}
+                                      disabled={
+                                        location?.state?.view ? true : false
+                                      }
+                                      onClick={() =>
+                                        handleEditorChange(
+                                          null,
+                                          notingData.description,
+                                          null,
+                                          false,
+                                          true
+                                        )
+                                      }
+                                    >
+                                      {"Add"}
+                                    </button>
+                                  </div>
                                 </>
                               )}
 
@@ -1324,7 +1351,6 @@ function FileDetail() {
                                 width={"100%"}
                                 display={"flex"}
                               /> */}
-                              
                             </div>
                           ) : null}
 
