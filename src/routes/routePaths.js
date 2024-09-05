@@ -291,6 +291,7 @@ import PdfPreviewMotion from "../pages/Dashboard/Modules/Notice/Motion/pdfPrevie
 import PdfPreviewResolution from "../pages/Dashboard/Modules/Notice/Resolution/PdfPreviewResolution.js";
 import Miscellaneous from "../pages/Dashboard/Modules/MMS/Miscellaneous/index.js";
 import MiscelleneousPDFPreview from "../pages/Dashboard/Modules/MMS/Miscellaneous/MiscelleneousPDFPreview.js";
+import QMSGroupMemberQuestion from "../pages/Dashboard/Modules/QMS/Reports/GroupMemberQuestion/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -482,6 +483,10 @@ export const ProtectedRoutes = [
   {
     path: "/qms/reports/question-group-diary",
     element: <QuestionGroupDiary />,
+  },
+  {
+    path: "/qms/reports/qroup-member-question",
+    element: <QMSGroupMemberQuestion />,
   },
   {
     path: "/qms/reports/resolution-summary",
