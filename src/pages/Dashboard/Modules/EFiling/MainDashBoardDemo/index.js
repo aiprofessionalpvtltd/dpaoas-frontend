@@ -307,12 +307,118 @@ const NonBlinkingIndicator = (color) => {
           Today's Stats
         </h2> */}
       </div>
-      <div className="row">
-        <div className="col-5">
-          <div className="dash-detail-container" style={{ background: "none" }}>
-            <div className="row">
 
-{/* FRs Card */}
+
+
+       {/* File cases table */}
+       <div className="dash-detail-container" style={{ background: "none", paddingLeft:'5px', paddingRight:'5px' }}>
+            <div class="row">
+              <div class="col-12">
+                <CustomTable
+                  ActionHide={false}
+                  hideBtn={true}
+                  block={true}
+                  hidebtn1={true}
+                  addBtnText={"Create Case"}
+                  data={casesData}
+                  tableTitle="File Cases on desk"
+                  headertitlebgColor={"#666"}
+                  headertitletextColor={"#FFF"}
+                  headerBgColor={"rgb(79, 89, 102)"}
+                  headerTitleColor={"#FFF"}
+                  handlePageChange={handlePageChange}
+                  currentPage={currentPage}
+                  pageSize={pageSize}
+                  totalCount={count}
+                  handleAdd={() =>
+                    navigate(
+                      "/efiling/dashboard/file-register-list/files-list/addedit-case"
+                    )
+                  }
+                  handleEdit={(item) => {
+                    setFileIdForDetailPage(item?.internalId);
+                    setCaseIdForDetailPage(item?.caseId);
+                    navigate("/efiling/dashboard/fileDetail", {
+                      state: {
+                        view: false,
+                        id: item?.caseId,
+                        fileId: item?.internalId,
+                      },
+                    })
+                  }}
+                  showEditIcon={true}
+                  singleDataCard={true}
+                  hideDeleteIcon={true}
+                  showView={false}
+                  caseEditable = {true}
+                  handleView={(item) => {
+                    setFileIdForDetailPage(item?.internalId);
+                    setCaseIdForDetailPage(item?.caseId);
+                    navigate("/efiling/dashboard/fileDetail", {
+                      state: {
+                        view: true,
+                        id: item?.caseId,
+                        fileId: item?.internalId,
+                      },
+                    })
+                  }}
+                  showAssigned={false}
+                  // hendleAssigned={(item) => navigate("/efiling/dashboard/fileDetail", { state: { view: true, id: item.caseId } })}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* FRs table */}
+          <div className="dash-detail-container mt-3" style={{ background: "none", paddingLeft:'5px', paddingRight:'5px' }}>
+            <div class="row">
+              <div class="col-12">
+                <CustomTable
+                        hidebtn1={true}
+                        block={true}
+                        hideBtn={true}
+                        addBtnText={"Create Fresh Receipt"}
+                        data={fileData}
+                        tableTitle="Fresh Receipts on desk" 
+                        headertitlebgColor={"#666"}
+                        headertitletextColor={"#FFF"}
+                        headerBgColor={"rgb(79, 89, 102)"}
+                        headerTitleColor={"#FFF"}
+                        handlePageChange={handleFrPageChange}
+                        currentPage={fRCurrentPage}
+                        handleAdd={() => navigate("/efiling/dashboard/fresh-receipt/addedit")}
+                        pageSize={frPageSize}
+                        totalCount={frCount}
+                        singleDataCard={true}
+                        hideDeleteIcon={true}
+                        handleDelete={(item) => handleDelete(item.id)}
+                        showEditIcon={true}
+                        handleEdit={(item) => navigate("/efiling/dashboard/fresh-receipt/addedit", {state:{id:item.id, view: true}})}
+                        showAssigned={false}
+                        hendleAssigned={(item) => navigate("/efiling/dashboard/fresh-receipt/frdetail", {state:{id:item.id, view: false}})}
+                        showCreateBtn={false}
+                        hendleCreateBtn={(item) => {
+                          setFRId(item.id);
+                          setFRAttachmentsData(item.internalAttachment);
+                          if(item?.internalAttachment) {
+                            navigate("/efiling/dashboard/file-register-list/files-list/addedit-case", {state:{freshReceiptsAttachments:item.internalAttachment, frId: item.id, frSubject: item.frSubject}})
+                          } else {
+                            alert("Please select an attachment")
+                          }
+                        }}
+                        showView={false}
+                        handleView={(item) =>
+                          navigate("/efiling/dashboard/fresh-receipt/frdetail", {
+                            state: { id: item.id, view: true },
+                          })
+                        }
+                    />
+              </div>
+            </div>
+          </div>
+
+          <div className="dash-detail-container mt-3" style={{ background: "none" }}>
+            <div className="row">
               <div className="col-6">
                 <div className="dash-card">
                   <div
@@ -574,9 +680,8 @@ const NonBlinkingIndicator = (color) => {
             </div>
           </div>
 
-
-          
-
+      <div className="row">
+        <div className="col-12">
             <div
               className="dash-detail-container mt-2"
               style={{ background: "none" }}
@@ -589,118 +694,6 @@ const NonBlinkingIndicator = (color) => {
               <Calendar />
             </div>
 
-        </div>
-
-        {/* Add FRs and Files here */}
-        <div className="col-7">
-          {/* File cases table */}
-          <div className="dash-detail-container" style={{ background: "none", height: 400 }}>
-            <div class="row">
-              <div class="col-12">
-                <CustomTable
-                  ActionHide={false}
-                  hideBtn={true}
-                  block={true}
-                  hidebtn1={true}
-                  addBtnText={"Create Case"}
-                  data={casesData}
-                  tableTitle="File Cases on desk"
-                  headertitlebgColor={"#666"}
-                  headertitletextColor={"#FFF"}
-                  headerBgColor={"rgb(79, 89, 102)"}
-                  headerTitleColor={"#FFF"}
-                  handlePageChange={handlePageChange}
-                  currentPage={currentPage}
-                  pageSize={pageSize}
-                  totalCount={count}
-                  handleAdd={() =>
-                    navigate(
-                      "/efiling/dashboard/file-register-list/files-list/addedit-case"
-                    )
-                  }
-                  handleEdit={(item) => {
-                    setFileIdForDetailPage(item?.internalId);
-                    setCaseIdForDetailPage(item?.caseId);
-                    navigate("/efiling/dashboard/fileDetail", {
-                      state: {
-                        view: false,
-                        id: item?.caseId,
-                        fileId: item?.internalId,
-                      },
-                    })
-                  }}
-                  showEditIcon={true}
-                  singleDataCard={true}
-                  hideDeleteIcon={true}
-                  showView={false}
-                  caseEditable = {true}
-                  handleView={(item) => {
-                    setFileIdForDetailPage(item?.internalId);
-                    setCaseIdForDetailPage(item?.caseId);
-                    navigate("/efiling/dashboard/fileDetail", {
-                      state: {
-                        view: true,
-                        id: item?.caseId,
-                        fileId: item?.internalId,
-                      },
-                    })
-                  }}
-                  showAssigned={false}
-                  // hendleAssigned={(item) => navigate("/efiling/dashboard/fileDetail", { state: { view: true, id: item.caseId } })}
-                />
-              </div>
-            </div>
-          </div>
-
-
-
-          {/* FRs table */}
-          <div className="dash-detail-container mt-2" style={{ background: "none", height: 400 }}>
-            <div class="row">
-              <div class="col-12">
-                <CustomTable
-                        hidebtn1={true}
-                        block={true}
-                        hideBtn={true}
-                        addBtnText={"Create Fresh Receipt"}
-                        data={fileData}
-                        tableTitle="Fresh Receipts on desk" 
-                        headertitlebgColor={"#666"}
-                        headertitletextColor={"#FFF"}
-                        headerBgColor={"rgb(79, 89, 102)"}
-                        headerTitleColor={"#FFF"}
-                        handlePageChange={handleFrPageChange}
-                        currentPage={fRCurrentPage}
-                        handleAdd={() => navigate("/efiling/dashboard/fresh-receipt/addedit")}
-                        pageSize={frPageSize}
-                        totalCount={frCount}
-                        singleDataCard={true}
-                        hideDeleteIcon={true}
-                        handleDelete={(item) => handleDelete(item.id)}
-                        showEditIcon={true}
-                        handleEdit={(item) => navigate("/efiling/dashboard/fresh-receipt/addedit", {state:{id:item.id, view: true}})}
-                        showAssigned={false}
-                        hendleAssigned={(item) => navigate("/efiling/dashboard/fresh-receipt/frdetail", {state:{id:item.id, view: false}})}
-                        showCreateBtn={false}
-                        hendleCreateBtn={(item) => {
-                          setFRId(item.id);
-                          setFRAttachmentsData(item.internalAttachment);
-                          if(item?.internalAttachment) {
-                            navigate("/efiling/dashboard/file-register-list/files-list/addedit-case", {state:{freshReceiptsAttachments:item.internalAttachment, frId: item.id, frSubject: item.frSubject}})
-                          } else {
-                            alert("Please select an attachment")
-                          }
-                        }}
-                        showView={false}
-                        handleView={(item) =>
-                          navigate("/efiling/dashboard/fresh-receipt/frdetail", {
-                            state: { id: item.id, view: true },
-                          })
-                        }
-                    />
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </Layout>

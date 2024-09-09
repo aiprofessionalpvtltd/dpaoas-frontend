@@ -131,6 +131,8 @@ function SentQuestion() {
         // Status: res.questionStatus?.questionStatus
         //   ? res.questionStatus?.questionStatus
         //   : "",
+        division: res?.divisions ? res?.divisions?.divisionName : "--",
+        ministry: res?.divisions?.ministry?.ministryName ? res?.divisions?.ministry?.ministryName :"--",
         device: res?.device,
         createdBy:
           res?.questionSentStatus === "inNotice" ? "Notice Office" : "---",

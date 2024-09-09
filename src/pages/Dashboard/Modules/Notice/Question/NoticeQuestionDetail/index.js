@@ -57,7 +57,7 @@ const validationSchema = Yup.object({
 function NoticeQuestionDetail() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { members, sessions } = useContext(AuthContext);
+  const { members, sessions, divisions } = useContext(AuthContext);
   const [filesData, setFilesData] = useState();
   const [currentPage, setCurrentPage] = useState(0);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
@@ -115,7 +115,7 @@ function NoticeQuestionDetail() {
           }
         : "",
       group: location?.state?.question?.groups,
-      division: location?.state?.question?.divisions,
+      fkDivisionId: location?.state?.question?.fkDivisionId,
       fileStatus: location?.state?.question?.fileStatus,
       englishText: location?.state?.question?.englishText,
       urduText: location?.state?.question?.urduText,
@@ -155,6 +155,7 @@ function NoticeQuestionDetail() {
     const formData = new FormData();
     formData.append("fkSessionId", values?.sessionNo?.value);
     formData.append("noticeOfficeDiaryNo", values?.noticeOfficeDiaryNo);
+    formData.append("fkDivisionId", values?.fkDivisionId);
     formData.append(
       "noticeOfficeDiaryDate",
       values?.noticeOfficeDiaryDate &&
@@ -560,6 +561,29 @@ function NoticeQuestionDetail() {
                       )}
                     </div>
                   </div>
+                  <div class="col-3">
+                      <div class="mb-3">
+                        <label class="form-label">Division</label>
+                        <select
+                          class={`form-select`}
+                          placeholder="Division"
+                          value={formik.values.fkDivisionId}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          name="fkDivisionId"
+                        >
+                          <option value="" selected disabled hidden>
+                            Select
+                          </option>
+                          {divisions &&
+                            divisions.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item?.divisionName}
+                              </option>
+                            ))}
+                        </select>
+                      </div>
+                    </div>
                   {/* <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Question Status</label>

@@ -243,6 +243,7 @@ function CustomTable({
               className="dash-card-header"
               style={{
                 backgroundColor: headerBgColor ? headerBgColor : "#fff",
+                borderRadius:"10px 10px 0 0"
               }}
             >
               <h2
