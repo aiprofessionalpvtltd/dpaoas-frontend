@@ -493,6 +493,8 @@ function NewLegislationSenateBill() {
                             formik.setFieldValue("fkTermId", "");
                             formik.setFieldValue("parliamentaryYear", "");
                             formik.setFieldValue("selectedSenator", "");
+                            formik.setFieldValue("selectedMNA", null);
+                            formik.setFieldValue("selectedMinistry", null);
                           }}
                           onBlur={formik.handleBlur}
                           value={formik.values.memberTenure}

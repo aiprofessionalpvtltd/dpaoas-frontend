@@ -291,6 +291,7 @@ import PdfPreviewMotion from "../pages/Dashboard/Modules/Notice/Motion/pdfPrevie
 import PdfPreviewResolution from "../pages/Dashboard/Modules/Notice/Resolution/PdfPreviewResolution.js";
 import Miscellaneous from "../pages/Dashboard/Modules/MMS/Miscellaneous/index.js";
 import MiscelleneousPDFPreview from "../pages/Dashboard/Modules/MMS/Miscellaneous/MiscelleneousPDFPreview.js";
+import PDFAllBusinessSummary from "../pages/Dashboard/Modules/Notice/Reports/BusinessSummary/SummaryPDF/index.js";
 import QMSGroupMemberQuestion from "../pages/Dashboard/Modules/QMS/Reports/GroupMemberQuestion/index.js";
 import PreviewGroupMemberPDF from "../pages/Dashboard/Modules/QMS/Reports/GroupMemberQuestion/PreviewGroupMemberPDF.js";
 import PreviewGroupMinistryPDF from "../pages/Dashboard/Modules/QMS/Reports/GroupMemberQuestion/PreviewGroupMinistryPDF.js";
@@ -349,7 +350,10 @@ export const ProtectedRoutes = [
   { path: "/notice/motion/sent", element: <SentMotion /> },
 
   { path: "/notice/resolution", element: <NoticeDashboard /> },
-  { path: "/notice/resolution/pdf-preview-resolution", element: <PdfPreviewResolution /> },
+  {
+    path: "/notice/resolution/pdf-preview-resolution",
+    element: <PdfPreviewResolution />,
+  },
   { path: "/notice/resolution/new", element: <NewResolution /> },
   { path: "/notice/resolution/edit", element: <NoticeResolutionDetail /> },
   { path: "/notice/resolution/search", element: <SearchResolution /> },
@@ -436,6 +440,10 @@ export const ProtectedRoutes = [
 
   { path: "/notice/reports", element: <NoticeDashboard /> },
   { path: "/notice/reports/business-summary", element: <BusinessSummary /> },
+  {
+    path: "/notice/reports/business-summary/preview-pdf",
+    element: <PDFAllBusinessSummary />,
+  },
 
   {
     path: "/notice/reports/attendence-reports",
@@ -465,7 +473,10 @@ export const ProtectedRoutes = [
   { path: "/mms/reports/motion-summary", element: <MMSMotionSummery /> },
   { path: "/mms/reports/motion-list", element: <MMSMotionListReport /> },
   { path: "/mms/motion-miscelleneuos", element: <Miscellaneous /> },
-  { path: "/mms/motion-miscelleneuos/pdf-preview", element: <MiscelleneousPDFPreview /> },
+  {
+    path: "/mms/motion-miscelleneuos/pdf-preview",
+    element: <MiscelleneousPDFPreview />,
+  },
   {
     path: "/mms/reports/motion-list/ballot/:id",
     element: <MMSBallotMotionList />,
@@ -1177,19 +1188,19 @@ export const ProtectedRoutes = [
     element: <AddVehicles />,
   },
   {
-    path:"/transport/driver/addeditDrivers",  // this will be changed
-    element: <AddEditDrivers/>
+    path: "/transport/driver/addeditDrivers", // this will be changed
+    element: <AddEditDrivers />,
   },
   {
-    path:"/transport/sumDriverVehicle",  // this will be changed
-    element: <SumDriverVehicle/>
+    path: "/transport/sumDriverVehicle", // this will be changed
+    element: <SumDriverVehicle />,
   },
   {
-    path:"/transport/poll",  // this will be changed
-    element: <Poll/>
+    path: "/transport/poll", // this will be changed
+    element: <Poll />,
   },
   {
-    path:"/transport/makeModelWise",  // this will be changed
-    element: <MakeModelWise/>
-  }
+    path: "/transport/makeModelWise", // this will be changed
+    element: <MakeModelWise />,
+  },
 ];

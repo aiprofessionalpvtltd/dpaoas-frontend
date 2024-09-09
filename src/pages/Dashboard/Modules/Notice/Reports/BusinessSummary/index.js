@@ -66,80 +66,87 @@ function BusinessSummary() {
   const damiiiData = {
     questions: [{}],
   };
-  const hendleExportExcel = async () => {
-    // const response = await getallcomplaintRecordByUserId(
-    //     userData.fkUserId,
-    //     0,
-    //     100
-    // );
-    // if (response?.success) {
-    // const data = response?.data?.complaints;
+  // const hendleExportExcel = async () => {
+  //   // const response = await getallcomplaintRecordByUserId(
+  //   //     userData.fkUserId,
+  //   //     0,
+  //   //     100
+  //   // );
+  //   // if (response?.success) {
+  //   // const data = response?.data?.complaints;
 
-    // Create a new workbook
-    // CleanData
+  //   // Create a new workbook
+  //   // CleanData
 
-    const QuestionRecord =
-      questionReport &&
-      questionReport.map((item) => ({
-        SR: item?.id,
-        NoticeOfficeDiaryNo: item?.noticeOfficeDiary?.noticeOfficeDiaryNo,
-        noticeOfficeDiaryDate: item?.noticeOfficeDiary?.noticeOfficeDiaryDate,
-        noticeOfficeDiaryTime: item?.noticeOfficeDiary?.noticeOfficeDiaryTime,
-        session: item?.session?.sessionName,
-        MemberName: item?.member?.memberName,
-        questionStatus: item?.questionStatus?.questionStatus,
-        Description: [item?.englishText, item?.urduText]
-          .filter(Boolean)
-          .join(", ")
-          .replace(/(<([^>]+)>)/gi, ""),
-      }));
+  //   const QuestionRecord =
+  //     questionReport &&
+  //     questionReport.map((item) => ({
+  //       SR: item?.id,
+  //       NoticeOfficeDiaryNo: item?.noticeOfficeDiary?.noticeOfficeDiaryNo,
+  //       noticeOfficeDiaryDate: item?.noticeOfficeDiary?.noticeOfficeDiaryDate,
+  //       noticeOfficeDiaryTime: item?.noticeOfficeDiary?.noticeOfficeDiaryTime,
+  //       session: item?.session?.sessionName,
+  //       MemberName: item?.member?.memberName,
+  //       questionStatus: item?.questionStatus?.questionStatus,
+  //       Description: [item?.englishText, item?.urduText]
+  //         .filter(Boolean)
+  //         .join(", ")
+  //         .replace(/(<([^>]+)>)/gi, ""),
+  //     }));
 
-    const ResolutionRecord =
-      resolutionReport &&
-      resolutionReport.map((item) => ({
-        SR: item?.id,
-        NoticeOfficeDiaryNo: item?.noticeDiary?.noticeOfficeDiaryNo,
-        noticeOfficeDiaryDate: item?.noticeDiary?.noticeOfficeDiaryDate,
-        noticeOfficeDiaryTime: item?.noticeDiary?.noticeOfficeDiaryTime,
-        session: item?.session?.sessionName,
-        resolutionType: item?.resolutionType,
-        resolutionStatus: item?.resolutionStatus?.resolutionStatus,
-        Description: [item?.englishText, item?.urduText]
-          .filter(Boolean)
-          .join(", ")
-          .replace(/(<([^>]+)>)/gi, ""),
-      }));
+  //   const ResolutionRecord =
+  //     resolutionReport &&
+  //     resolutionReport.map((item) => ({
+  //       SR: item?.id,
+  //       NoticeOfficeDiaryNo: item?.noticeDiary?.noticeOfficeDiaryNo,
+  //       noticeOfficeDiaryDate: item?.noticeDiary?.noticeOfficeDiaryDate,
+  //       noticeOfficeDiaryTime: item?.noticeDiary?.noticeOfficeDiaryTime,
+  //       session: item?.session?.sessionName,
+  //       resolutionType: item?.resolutionType,
+  //       resolutionStatus: item?.resolutionStatus?.resolutionStatus,
+  //       Description: [item?.englishText, item?.urduText]
+  //         .filter(Boolean)
+  //         .join(", ")
+  //         .replace(/(<([^>]+)>)/gi, ""),
+  //     }));
 
-    const MotionRecord =
-      motionReport &&
-      motionReport.map((item) => ({
-        SR: item?.id,
-        NoticeOfficeDiaryNo: item?.noticeOfficeDairies?.noticeOfficeDiaryNo,
-        noticeOfficeDiaryDate: item?.noticeOfficeDairies?.noticeOfficeDiaryDate,
-        noticeOfficeDiaryTime: item?.noticeOfficeDairies?.noticeOfficeDiaryTime,
-        session: item?.sessions?.sessionName,
-        motionType: item?.motionType,
-        Description: [item?.englishText, item?.urduText]
-          .filter(Boolean)
-          .join(", ")
-          .replace(/(<([^>]+)>)/gi, ""),
-      }));
+  //   const MotionRecord =
+  //     motionReport &&
+  //     motionReport.map((item) => ({
+  //       SR: item?.id,
+  //       NoticeOfficeDiaryNo: item?.noticeOfficeDairies?.noticeOfficeDiaryNo,
+  //       noticeOfficeDiaryDate: item?.noticeOfficeDairies?.noticeOfficeDiaryDate,
+  //       noticeOfficeDiaryTime: item?.noticeOfficeDairies?.noticeOfficeDiaryTime,
+  //       session: item?.sessions?.sessionName,
+  //       motionType: item?.motionType,
+  //       Description: [item?.englishText, item?.urduText]
+  //         .filter(Boolean)
+  //         .join(", ")
+  //         .replace(/(<([^>]+)>)/gi, ""),
+  //     }));
 
-    const workbook = XLSX.utils.book_new();
+  //   const workbook = XLSX.utils.book_new();
 
-    // Function to add a worksheet with title and list
-    const addWorksheet = (worksheetData, title) => {
-      const worksheet = XLSX.utils.json_to_sheet(worksheetData);
-      XLSX.utils.book_append_sheet(workbook, worksheet, title);
-    };
+  //   // Function to add a worksheet with title and list
+  //   const addWorksheet = (worksheetData, title) => {
+  //     const worksheet = XLSX.utils.json_to_sheet(worksheetData);
+  //     XLSX.utils.book_append_sheet(workbook, worksheet, title);
+  //   };
 
-    // Add worksheets for each category
-    addWorksheet(QuestionRecord, "Question");
-    // addWorksheet(ResolutionRecord, 'Resolution');
-    addWorksheet(MotionRecord, "Motion");
+  //   // Add worksheets for each category
+  //   addWorksheet(QuestionRecord, "Question");
+  //   // addWorksheet(ResolutionRecord, 'Resolution');
+  //   addWorksheet(MotionRecord, "Motion");
 
-    // Write the workbook to a file
-    XLSX.writeFile(workbook, "DataSheet.xlsx");
+  //   // Write the workbook to a file
+  //   XLSX.writeFile(workbook, "DataSheet.xlsx");
+  // };
+
+  const handlePrint = async () => {
+    const CombinedData = { questionReport, motionReport, resolutionReport };
+    const encodedJsonString = encodeURIComponent(JSON.stringify(CombinedData));
+    const url = `/notice/reports/business-summary/preview-pdf?state=${encodedJsonString}`;
+    window.open(url, "_blank");
   };
   return (
     <Layout
@@ -243,7 +250,7 @@ function BusinessSummary() {
                     <button
                       class="btn btn-primary"
                       type="button"
-                      onClick={hendleExportExcel}
+                      onClick={handlePrint}
                       disabled={questionReport?.length > 0 ? false : true}
                     >
                       Print Report
@@ -423,7 +430,7 @@ function BusinessSummary() {
                     </tbody>
                   </table>
                 </div>
-                {/* <h2 style={{ color: "#666", marginTop: "30px" }}>
+                <h2 style={{ color: "#666", marginTop: "30px" }}>
                   Resolutions
                 </h2>
                 <div
@@ -461,28 +468,40 @@ function BusinessSummary() {
                         >
                           Description
                         </th>
-                        
                       </tr>
                     </thead>
                     <tbody>
-                      {resolutionReport && resolutionReport.map((item) => (
-                      
-                      <tr>
-                        <td class="text-center">{item?.id}</td>
-                        <td class="text-center">{item?.noticeDiary?.noticeOfficeDiaryNo}</td>
-                        <td class="text-center">{item?.noticeDiary?.noticeOfficeDiaryDate}</td>
-                        <td class="text-center">{item?.noticeDiary?.noticeOfficeDiaryTime}</td>
-                        <td class="text-center">{item?.session?.sessionName}</td>
-                        <td class="text-center">{item?.resolutionType}</td>
-                        <td class="text-center">{item?.resolutionStatus?.resolutionStatus}</td>
-                        <td class="text-center">{[item?.englishText, item?.urduText]
-                            .filter(Boolean)
-                            .join(", ").replace(/(<([^>]+)>)/gi, "")}</td>
-                      </tr>
-                      ))}
+                      {resolutionReport &&
+                        resolutionReport.map((item) => (
+                          <tr>
+                            <td class="text-center">{item?.id}</td>
+                            <td class="text-center">
+                              {item?.noticeDiary?.noticeOfficeDiaryNo}
+                            </td>
+                            <td class="text-center">
+                              {item?.noticeDiary?.noticeOfficeDiaryDate}
+                            </td>
+                            <td class="text-center">
+                              {item?.noticeDiary?.noticeOfficeDiaryTime}
+                            </td>
+                            <td class="text-center">
+                              {item?.session?.sessionName}
+                            </td>
+                            <td class="text-center">{item?.resolutionType}</td>
+                            <td class="text-center">
+                              {item?.resolutionStatus?.resolutionStatus}
+                            </td>
+                            <td class="text-center">
+                              {[item?.englishText, item?.urduText]
+                                .filter(Boolean)
+                                .join(", ")
+                                .replace(/(<([^>]+)>)/gi, "")}
+                            </td>
+                          </tr>
+                        ))}
                     </tbody>
                   </table>
-                </div> */}
+                </div>
               </div>
             </div>
           </div>
