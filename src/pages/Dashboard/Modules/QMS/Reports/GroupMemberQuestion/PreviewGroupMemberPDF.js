@@ -8,6 +8,7 @@ const PreviewGroupMemberPDF = () => {
     const encodedJsonString = queryParams.get('state');
     const decodedString = decodeURIComponent(encodedJsonString);
     const data = JSON.parse(decodedString);
+    const resData = data?.data
     console.log(data);
 
     const handlePrint = () => {
@@ -62,8 +63,8 @@ const PreviewGroupMemberPDF = () => {
                 </h1>
                 <p style={{ fontSize: '18px' , fontWeight : 'bold' , textTransform: 'uppercase'}}>(Question Branch)</p>
                 <p style={{ fontSize: '18px' , fontWeight : 'bold' , textTransform: 'uppercase'}}>Member Wise Statement of Admitted Starred Questions For</p>
-                <p>Session Number: 341 To 342</p>
-                <p>Report Date: 3/09/2024</p>
+                <p>Session Number: {resData?.sessions?.fromSession} To {resData?.sessions?.toSession}</p>
+                <p>Report Date: {resData?.currentDate}</p>
             </div>
 
             <div >
@@ -76,7 +77,7 @@ const PreviewGroupMemberPDF = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {data?.data?.map((group, groupIndex) => (
+                        {resData?.data?.map((group, groupIndex) => (
                             <React.Fragment key={`group-${groupIndex}`}>
                                 <tr>
                                     <td colSpan="3" style={{ textAlign: 'center', fontWeight: 'bold', padding: '8px' }}>

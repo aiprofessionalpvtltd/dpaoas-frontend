@@ -68,7 +68,7 @@ function QMSGroupMemberQuestion() {
                         onChange={handleSessionChange}
                         value={formik.values.fromSessionNo}
                       >
-                        <option selected disabled>
+                        <option selected disabled value={""}>
                           Select
                         </option>
                         {sessions &&
@@ -90,7 +90,7 @@ function QMSGroupMemberQuestion() {
                         onChange={handleSessionChange2}
                         value={formik.values.toSessionNo}
                       >
-                        <option selected disabled hidden>
+                        <option selected disabled value={""}>
                           Select
                         </option>
                         {sessions &&
