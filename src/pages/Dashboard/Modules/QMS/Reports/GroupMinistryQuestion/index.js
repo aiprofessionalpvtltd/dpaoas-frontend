@@ -1,59 +1,58 @@
-import React, { useContext } from 'react';
-import { Layout } from '../../../../../../components/Layout';
-import { QMSSideBarItems } from '../../../../../../utils/sideBarItems';
-import Header from '../../../../../../components/Header';
-import CustomTable from '../../../../../../components/CustomComponents/CustomTable';
-import { AuthContext } from '../../../../../../api/AuthContext';
-import { useFormik } from 'formik';
-import { GroupMemberQuestionData } from '../../../../../../api/APIs/Services/Question.service';
+import React, { useContext } from 'react'
+import CustomTable from '../../../../../../components/CustomComponents/CustomTable'
+import Header from '../../../../../../components/Header'
+import { Layout } from '../../../../../../components/Layout'
+import { QMSSideBarItems } from '../../../../../../utils/sideBarItems'
+import { AuthContext } from '../../../../../../api/AuthContext'
+import { useFormik } from 'formik'
+import { GroupMinistryQuestionData } from '../../../../../../api/APIs/Services/Question.service'
 
-function QMSGroupMemberQuestion() {
-  const { sessions } = useContext(AuthContext);
+const GroupMinistryQuestion = () => {
+    const { sessions } = useContext(AuthContext);
 
-  const formik = useFormik({
-    initialValues: {
-      fromSessionNo: "",
-      toSessionNo: ""
-    },
-    onSubmit: (values) => {
-      handleSubmit(values)
-    },
-  });
-
-  const handleSessionChange = (event) => {
-    const selectedSessionId = event.target.value;
-    formik.setFieldValue('fromSessionNo', selectedSessionId);
-  };
-
-  const handleSessionChange2 = (event) => {
-    const selectedSessionId = event.target.value;
-    formik.setFieldValue('toSessionNo', selectedSessionId);
-  };
-
-  const handleSubmit = async (values) => {
-    try {
-      const res = await GroupMemberQuestionData(values.fromSessionNo, values.toSessionNo)
-      if (res?.success) {
-        const encodedJsonString = encodeURIComponent(JSON.stringify(res));
-        const url = `/qms/reports/qroup-member-question/preview-pdf?state=${encodedJsonString}`;
-        window.open(url, "_blank");
+    const formik = useFormik({
+        initialValues: {
+          fromSessionNo: "",
+          toSessionNo: ""
+        },
+        onSubmit: (values) => {
+          handleSubmit(values)
+        },
+      });
+    
+      const handleSessionChange = (event) => {
+        const selectedSessionId = event.target.value;
+        formik.setFieldValue('fromSessionNo', selectedSessionId);
+      };
+    
+      const handleSessionChange2 = (event) => {
+        const selectedSessionId = event.target.value;
+        formik.setFieldValue('toSessionNo', selectedSessionId);
+      };
+    
+      const handleSubmit = async (values) => {
+        try {
+          const res = await GroupMinistryQuestionData(values.fromSessionNo, values.toSessionNo)
+          if (res?.success) {
+            const encodedJsonString = encodeURIComponent(JSON.stringify(res));
+            const url = `/qms/reports/qroup-ministry-question/preview-pdf?state=${encodedJsonString}`;
+            window.open(url, "_blank");
+          }
+        } catch (error) {
+    
+        }
       }
-    } catch (error) {
-
-    }
-  }
-
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <Header
         dashboardLink="/"
-        addLink1="/qms/reports/qroup-member-question"
+        addLink1="/qms/reports/qroup-ministry-question"
         title1="Group Member Data"
       />
       <div className="container-fluid">
         <div className="card mt-4">
           <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
-            <h1>Group Members Data</h1>
+            <h1>Group Ministry Data</h1>
           </div>
           <div className="card-body">
             <div className="container-fluid">
@@ -68,7 +67,7 @@ function QMSGroupMemberQuestion() {
                         onChange={handleSessionChange}
                         value={formik.values.fromSessionNo}
                       >
-                        <option selected disabled>
+                        <option selected disabled value={""}>
                           Select
                         </option>
                         {sessions &&
@@ -90,7 +89,7 @@ function QMSGroupMemberQuestion() {
                         onChange={handleSessionChange2}
                         value={formik.values.toSessionNo}
                       >
-                        <option selected disabled hidden>
+                        <option selected disabled value={""}>
                           Select
                         </option>
                         {sessions &&
@@ -126,7 +125,7 @@ function QMSGroupMemberQuestion() {
         </div>
       </div>
     </Layout>
-  );
+  )
 }
 
-export default QMSGroupMemberQuestion;
+export default GroupMinistryQuestion

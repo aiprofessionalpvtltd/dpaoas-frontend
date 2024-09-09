@@ -774,4 +774,24 @@ export const AnnualQuestionReprtPdfPreview = async(Data)=>{
   }
 }
 
+export const GroupMemberQuestionData = async (fromSessionNo , toSessionNo) =>{
+  try {
+    const response = await axiosClient(`/questions/getMemberWiseStatement?fromSession=${fromSessionNo}&toSession=${toSessionNo}`)
+    return response?.data
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+}
+
+export const GroupMinistryQuestionData = async (fromSessionNo , toSessionNo) =>{
+  try {
+    const response = await axiosClient(`/questions/getDivisionWiseCategoryCount?fromSession=${fromSessionNo}&toSession=${toSessionNo}`)
+    return response?.data
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+}
+
 

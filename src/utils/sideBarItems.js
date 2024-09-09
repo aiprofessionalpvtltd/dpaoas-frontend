@@ -443,7 +443,12 @@ export const QMSSideBarItems = [
     icon: faClipboardList,
     subItems: [
       {
-        itemName: "Group Memmber Question",
+        itemName: "Group Ministry Question",
+        link: "/qms/reports/qroup-ministry-question",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Group Member Question",
         link: "/qms/reports/qroup-member-question",
         icon: faClipboardList,
       },

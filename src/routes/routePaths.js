@@ -292,6 +292,9 @@ import PdfPreviewResolution from "../pages/Dashboard/Modules/Notice/Resolution/P
 import Miscellaneous from "../pages/Dashboard/Modules/MMS/Miscellaneous/index.js";
 import MiscelleneousPDFPreview from "../pages/Dashboard/Modules/MMS/Miscellaneous/MiscelleneousPDFPreview.js";
 import QMSGroupMemberQuestion from "../pages/Dashboard/Modules/QMS/Reports/GroupMemberQuestion/index.js";
+import PreviewGroupMemberPDF from "../pages/Dashboard/Modules/QMS/Reports/GroupMemberQuestion/PreviewGroupMemberPDF.js";
+import PreviewGroupMinistryPDF from "../pages/Dashboard/Modules/QMS/Reports/GroupMemberQuestion/PreviewGroupMinistryPDF.js";
+import GroupMinistryQuestion from "../pages/Dashboard/Modules/QMS/Reports/GroupMinistryQuestion/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -487,6 +490,18 @@ export const ProtectedRoutes = [
   {
     path: "/qms/reports/qroup-member-question",
     element: <QMSGroupMemberQuestion />,
+  },
+  {
+    path: "/qms/reports/qroup-ministry-question",
+    element: <GroupMinistryQuestion />,
+  },
+  {
+    path: "/qms/reports/qroup-member-question/preview-pdf",
+    element: <PreviewGroupMemberPDF />,
+  },
+  {
+    path: "/qms/reports/qroup-ministry-question/preview-pdf",
+    element: <PreviewGroupMinistryPDF />,
   },
   {
     path: "/qms/reports/resolution-summary",
