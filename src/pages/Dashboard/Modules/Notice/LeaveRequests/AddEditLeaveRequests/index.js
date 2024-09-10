@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { LMSsidebarItems } from "../../../../../../utils/sideBarItems";
 import { Layout } from "../../../../../../components/Layout";
 import logoImage from "../../../../../../assets/profile-img.jpg";
@@ -21,7 +21,8 @@ import moment from "moment";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { NoticeSidebarItems } from "../../../../../../utils/sideBarItems";
-
+import { AuthContext } from "../../../../../../api/AuthContext";
+import Select from "react-select";
 const validationSchema = Yup.object({
   reason: Yup.string().required("Reason is required"),
   // comments: Yup.string().required("Comment is required"),
@@ -36,13 +37,15 @@ const validationSchema = Yup.object({
 });
 function AddEditLeaveRequests() {
   const location = useLocation();
-  const navigate =  useNavigate()
+  const navigate = useNavigate();
 
   const [showModal, setShowModal] = useState(false);
   const [formValues, setFormValues] = useState();
   const [leaveByIdData, setLeaveByIdData] = useState([]);
   const [leaveTypesData, setLeaveTypesData] = useState([]);
+  const [leaveType, setLeaveType] = useState("");
   const [isChecked, setChecked] = useState(false);
+  const { members, sessions } = useContext(AuthContext);
 
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
@@ -72,31 +75,40 @@ function AddEditLeaveRequests() {
   };
 
   const initialValues = {
-    reason:
-      leaveByIdData.length > 0 ? leaveByIdData[0]?.requestLeaveReason : "",
-    comments: "",
-    leaveForwarder:
-      leaveByIdData.length > 0 ? leaveByIdData[0]?.requestLeaveForwarder : "",
-    submittedTo:
-      leaveByIdData.length > 0
-        ? leaveByIdData[0]?.requestLeaveSubmittedTo
-        : null,
-    status: leaveByIdData.length > 0 ? leaveByIdData[0]?.requestStatus : "",
-    leaveType:
-      leaveByIdData.length > 0 ? leaveByIdData[0]?.fkRequestTypeId : null,
-    leaveSubtype:
-      leaveByIdData.length > 0 ? leaveByIdData[0]?.requestLeaveSubType : "",
-    startDate:
-      leaveByIdData.length > 0
-        ? new Date(leaveByIdData[0]?.requestStartDate)
-        : null,
-    endDate:
-      leaveByIdData.length > 0
-        ? new Date(leaveByIdData[0]?.requestEndDate)
-        : null,
-    leaveStation:
-      leaveByIdData.length > 0 ? leaveByIdData[0]?.requestStationLeave : false,
+    member: "",
+    sessionNumber: "",
+    leaveType: "",
+    applicationSubmittedDate: "",
+    leaveStartDate: "",
+    leaveEndDate: "",
+    subject: "",
     attachment: null,
+
+    // reason:
+    //   leaveByIdData.length > 0 ? leaveByIdData[0]?.requestLeaveReason : "",
+    // comments: "",
+    // leaveForwarder:
+    //   leaveByIdData.length > 0 ? leaveByIdData[0]?.requestLeaveForwarder : "",
+    // submittedTo:
+    //   leaveByIdData.length > 0
+    //     ? leaveByIdData[0]?.requestLeaveSubmittedTo
+    //     : null,
+    // status: leaveByIdData.length > 0 ? leaveByIdData[0]?.requestStatus : "",
+    // leaveType:
+    //   leaveByIdData.length > 0 ? leaveByIdData[0]?.fkRequestTypeId : null,
+    // leaveSubtype:
+    //   leaveByIdData.length > 0 ? leaveByIdData[0]?.requestLeaveSubType : "",
+    // startDate:
+    //   leaveByIdData.length > 0
+    //     ? new Date(leaveByIdData[0]?.requestStartDate)
+    //     : null,
+    // endDate:
+    //   leaveByIdData.length > 0
+    //     ? new Date(leaveByIdData[0]?.requestEndDate)
+    //     : null,
+    // leaveStation:
+    //   leaveByIdData.length > 0 ? leaveByIdData[0]?.requestStationLeave : false,
+    // attachment: null,
   };
 
   const formik = useFormik({
@@ -112,6 +124,11 @@ function AddEditLeaveRequests() {
 
   const handleCheckboxChange = () => {
     setChecked(!isChecked);
+  };
+
+  const handleLeaveTypeChange = (e) => {
+    setLeaveType(e.target.value);
+    formik.handleChange(e); // to make sure formik tracks the changes
   };
 
   const getLeaveByIdApi = async () => {
@@ -147,6 +164,13 @@ function AddEditLeaveRequests() {
     }
   }, []);
 
+  useEffect(() => {
+    if (sessions && sessions?.length > 0) {
+      const currentSessionId = sessions[0]?.id; // Assuming the first session is the current one
+      formik.setFieldValue("sessionNumber", currentSessionId);
+    }
+  }, [sessions]);
+
   const CreateLeaveApi = async (values) => {
     const startDateObj = new Date(values.startDate);
     const endDateObj = new Date(values.endDate);
@@ -180,8 +204,8 @@ function AddEditLeaveRequests() {
       if (response?.success) {
         showSuccessMessage(response?.message);
         setTimeout(() => {
-          navigate("/notice/leaveRequests")
-        }, 3000)  
+          navigate("/notice/leaveRequests");
+        }, 3000);
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -220,8 +244,8 @@ function AddEditLeaveRequests() {
       if (response?.success) {
         showSuccessMessage(response?.message);
         setTimeout(() => {
-          navigate("/lms/dashboard")
-        }, 3000)
+          navigate("/lms/dashboard");
+        }, 3000);
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -229,7 +253,11 @@ function AddEditLeaveRequests() {
   };
 
   return (
-    <Layout module={true} sidebarItems={NoticeSidebarItems} centerlogohide={true}>
+    <Layout
+      module={true}
+      sidebarItems={NoticeSidebarItems}
+      centerlogohide={true}
+    >
       <ToastContainer />
 
       <Header
@@ -255,9 +283,40 @@ function AddEditLeaveRequests() {
             <form onSubmit={formik.handleSubmit}>
               <div class="container-fluid">
                 <div className="row">
-                  <div class="col mt-3">
+                  <div class="col-4">
                     <div class="mb-3">
-                      <div class="form-check">
+                      <label className="form-label">Select Member</label>
+                      <Select
+                        options={
+                          Array.isArray(members) && members?.length > 0
+                            ? members.map((item) => ({
+                                value: item?.id,
+                                label: `${item?.memberName} `,
+                              }))
+                            : []
+                        }
+                        onChange={(selectedOption) => {
+                          formik.setFieldValue("member", selectedOption);
+
+                          // formik.setFieldValue("fkTermId", "");
+                          // formik.setFieldValue("parliamentaryYear", "");
+                          // formik.setFieldValue("selectedSenator", "");
+                          // formik.setFieldValue("selectedMNA", null);
+                          // formik.setFieldValue("selectedMinistry", null);
+                        }}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.member}
+                        id="member"
+                        name="member"
+                        isClearable={true}
+                      />
+                      {formik.touched.member && formik.errors.member && (
+                        <div className="invalid-feedback">
+                          {formik.errors.member}
+                        </div>
+                      )}
+
+                      {/* <div class="form-check">
                         <input
                           class="form-check-input"
                           type="checkbox"
@@ -269,186 +328,52 @@ function AddEditLeaveRequests() {
                         <label class="form-check-label" for="flexCheckDefault">
                           Leave on behalf <span className="text-danger">*</span>
                         </label>
-                      </div>
+                      </div> */}
                     </div>
                   </div>
-                  {isChecked && (
-                    <div class="col">
-                      <div class="mb-3">
-                        <label class="form-label">Leave Forwarder</label>
-                        <select
-                          class={`form-select ${
-                            formik.touched.leaveForwarder &&
-                            formik.errors.leaveForwarder
-                              ? "is-invalid"
-                              : ""
-                          }`}
-                          placeholder="Leave Forwarder"
-                          value={formik.values.leaveForwarder}
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          name="leaveForwarder"
-                        >
-                          <option value="" selected disabled hidden>
-                            Select
-                          </option>
-                          <option>HR</option>
-                          <option>DG</option>
-                        </select>
-                        {formik.touched.leaveForwarder &&
-                          formik.errors.leaveForwarder && (
-                            <div className="invalid-feedback">
-                              {formik.errors.leaveForwarder}
-                            </div>
-                          )}
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                <div class="row">
-                  <div class="col">
+                  <div class="col-4">
                     <div class="mb-3">
-                      <label class="form-label">Submitted To <span className="text-danger">*</span></label>
+                      <label class="form-label">Session No</label>
+
                       <select
-                        class={`form-select ${
-                          formik.touched.submittedTo &&
-                          formik.errors.submittedTo
+                        className={`form-select ${
+                          formik.touched.sessionNumber &&
+                          formik.errors.sessionNumber
                             ? "is-invalid"
                             : ""
                         }`}
-                        placeholder="Leave Forwarder"
-                        value={formik.values.submittedTo}
-                        onChange={(e) => {
-                          // Set submittedTo as a number directly
-                          formik.handleChange(e);
-                          formik.setFieldValue(
-                            "submittedTo",
-                            Number(e.target.value),
-                          );
-                        }}
-                        onBlur={formik.handleBlur}
-                        name="submittedTo"
-                      >
-                        <option value="" selected disabled hidden>
-                          Select
-                        </option>
-                        <option value={1}>HR</option>
-                        <option value={2}>DG</option>
-                      </select>
-                      {formik.touched.submittedTo &&
-                        formik.errors.submittedTo && (
-                          <div className="invalid-feedback">
-                            {formik.errors.submittedTo}
-                          </div>
-                        )}
-                    </div>
-                  </div>
-
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Status <span className="text-danger">*</span></label>
-                      <select
-                        class={`form-select ${
-                          formik.touched.status && formik.errors.status
-                            ? "is-invalid"
-                            : ""
-                        }`}
-                        placeholder="Leave Forwarder"
-                        value={formik.values.status}
+                        placeholder="Session No"
+                        value={formik.values.sessionNumber}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                        name="status"
+                        name="sessionNumber"
+                        id="sessionNumber"
                       >
-                        <option value="" selected disabled hidden>
+                        <option value={""} selected disabled hidden>
                           Select
                         </option>
-                        <option value={"pending"}>Pending</option>
-                        <option value={"approved"}>Approved</option>
-                        <option value={"rejected"}>Rejected</option>
-                      </select>
-                      {formik.touched.status && formik.errors.status && (
-                        <div className="invalid-feedback">
-                          {formik.errors.status}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
 
-                <div class="row">
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Leave Type <span className="text-danger">*</span></label>
-                      <select
-                        class={`form-select ${
-                          formik.touched.leaveType && formik.errors.leaveType
-                            ? "is-invalid"
-                            : ""
-                        }`}
-                        placeholder="Leave Forwarder"
-                        value={formik.values.leaveType}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        name="leaveType"
-                      >
-                        <option value="" selected disabled hidden>
-                          Select
-                        </option>
-                        {leaveTypesData &&
-                          leaveTypesData.map((item) => (
+                        {sessions &&
+                          sessions.length > 0 &&
+                          sessions.map((item) => (
                             <option key={item.id} value={item.id}>
-                              {item.leaveType}
+                              {item?.sessionName}
                             </option>
                           ))}
                       </select>
-                      {formik.touched.leaveType && formik.errors.leaveType && (
-                        <div className="invalid-feedback">
-                          {formik.errors.leaveType}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">Leave Subtype <span className="text-danger">*</span></label>
-                      <select
-                        class={`form-select ${
-                          formik.touched.leaveSubtype &&
-                          formik.errors.leaveSubtype
-                            ? "is-invalid"
-                            : ""
-                        }`}
-                        placeholder="Leave Forwarder"
-                        value={formik.values.leaveSubtype}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        name="leaveSubtype"
-                      >
-                        <option value="" selected disabled hidden>
-                          Select
-                        </option>
-                        <option value={"preApproved"}>Pre Approved</option>
-                        <option value={"postApproved"}>Post Approved</option>
-                        <option value={"telephonicInformed"}>
-                          Telephonic Informed
-                        </option>
-                      </select>
-                      {formik.touched.leaveSubtype &&
-                        formik.errors.leaveSubtype && (
-                          <div className="invalid-feedback">
-                            {formik.errors.leaveSubtype}
+                      {formik.touched.sessionNumber &&
+                        formik.errors.sessionNumber && (
+                          <div class="invalid-feedback">
+                            {formik.errors.sessionNumber}
                           </div>
                         )}
                     </div>
                   </div>
-                </div>
-
-                <div class="row">
-                  <div className="col">
+                  <div className="col-4">
                     <div className="mb-3" style={{ position: "relative" }}>
-                      <label className="form-label">Start Date <span className="text-danger">*</span></label>
+                      <label className="form-label">
+                        Application Date <span className="text-danger">*</span>
+                      </label>
                       <span
                         style={{
                           position: "absolute",
@@ -483,94 +408,217 @@ function AddEditLeaveRequests() {
                     </div>
                   </div>
 
-                  <div className="col">
-                    <div className="mb-3" style={{ position: "relative" }}>
-                      <label className="form-label">End Date <span className="text-danger">*</span></label>
-                      <span
-                        style={{
-                          position: "absolute",
-                          right: "15px",
-                          top: "36px",
-                          zIndex: 1,
-                          fontSize: "20px",
-                          zIndex: "1",
-                          color: "#666",
-                        }}
-                      >
-                        <FontAwesomeIcon icon={faCalendarAlt} />
-                      </span>
-                      <DatePicker
-                        selected={formik.values.endDate}
-                        onChange={(date) =>
-                          formik.setFieldValue("endDate", date)
-                        }
-                        onBlur={formik.handleBlur}
-                        minDate={new Date()}
-                        className={`form-control ${
-                          formik.touched.endDate && formik.errors.endDate
-                            ? "is-invalid"
-                            : ""
-                        }`}
-                      />
-                      {formik.touched.endDate && formik.errors.endDate && (
-                        <div className="invalid-feedback">
-                          {formik.errors.endDate}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                <div class="row">
-                  <div className="col-6">
-                    <div className="mb-3">
-                      <label htmlFor="formFile" className="form-label">
-                        Attachment <span className="text-danger">*</span>
-                      </label>
-                      <input
-                        className="form-control"
-                        type="file"
-                        id="formFile"
-                        name="attachment"
-                        onChange={(event) => {
-                          formik.setFieldValue(
-                            "attachment",
-                            event.currentTarget.files[0],
-                          );
-                        }}
-                      />
-                    </div>
-                  </div>
-
-                  <div class="col-6">
-                    <div class="mb-3">
-                      <div class="form-check" style={{ marginTop: "39px" }}>
-                        <input
-                          class={`form-check-input ${
-                            formik.touched.leaveStation &&
-                            formik.errors.leaveStation
+                  <div className="row">
+                    <div className="col-4">
+                      <div className="mb-3">
+                        <label className="form-label">
+                          Leave Type <span className="text-danger">*</span>
+                        </label>
+                        <select
+                          className={`form-select ${
+                            formik.touched.leaveType && formik.errors.leaveType
                               ? "is-invalid"
                               : ""
                           }`}
-                          type="checkbox"
-                          id="flexCheckDefault"
-                          checked={formik.values.leaveStation}
-                          onChange={() =>
-                            formik.setFieldValue(
-                              "leaveStation",
-                              !formik.values.leaveStation,
-                            )
-                          }
-                        />
-                        <label class="form-check-label" for="flexCheckDefault">
-                          Leave Station <span className="text-danger">*</span>
-                        </label>
-                        {formik.touched.leaveStation &&
-                          formik.errors.leaveStation && (
+                          placeholder="Leave Forwarder"
+                          value={formik.values.leaveType}
+                          onChange={handleLeaveTypeChange}
+                          onBlur={formik.handleBlur}
+                          name="leaveType"
+                        >
+                          <option value="" selected disabled hidden>
+                            Select
+                          </option>
+                          <option value="single">Single Day</option>
+                          <option value="multiple">Multiple Days</option>
+                          <option value="session">Whole Session</option>
+                        </select>
+                        {formik.touched.leaveType &&
+                          formik.errors.leaveType && (
                             <div className="invalid-feedback">
-                              {formik.errors.leaveStation}
+                              {formik.errors.leaveType}
                             </div>
                           )}
+                      </div>
+                    </div>
+
+                    {leaveType === "single" && (
+                      <div className="col-4">
+                        <div className="mb-3" style={{ position: "relative" }}>
+                          <label className="form-label">
+                            Start Date <span className="text-danger">*</span>
+                          </label>
+                          <span
+                            style={{
+                              position: "absolute",
+                              right: "15px",
+                              top: "36px",
+                              zIndex: 1,
+                              fontSize: "20px",
+                              zIndex: "1",
+                              color: "#666",
+                            }}
+                          >
+                            <FontAwesomeIcon icon={faCalendarAlt} />
+                          </span>
+                          <DatePicker
+                            selected={formik.values.startDate}
+                            onChange={(date) =>
+                              formik.setFieldValue("startDate", date)
+                            }
+                            onBlur={formik.handleBlur}
+                            minDate={new Date()}
+                            className={`form-control ${
+                              formik.touched.startDate &&
+                              formik.errors.startDate
+                                ? "is-invalid"
+                                : ""
+                            }`}
+                          />
+                          {formik.touched.startDate &&
+                            formik.errors.startDate && (
+                              <div className="invalid-feedback">
+                                {formik.errors.startDate}
+                              </div>
+                            )}
+                        </div>
+                      </div>
+                    )}
+
+                    {leaveType === "multiple" && (
+                      <>
+                        <div className="col-4">
+                          <div
+                            className="mb-3"
+                            style={{ position: "relative" }}
+                          >
+                            <label className="form-label">
+                              Start Date <span className="text-danger">*</span>
+                            </label>
+                            <span
+                              style={{
+                                position: "absolute",
+                                right: "15px",
+                                top: "36px",
+                                zIndex: 1,
+                                fontSize: "20px",
+                                zIndex: "1",
+                                color: "#666",
+                              }}
+                            >
+                              <FontAwesomeIcon icon={faCalendarAlt} />
+                            </span>
+                            <DatePicker
+                              selected={formik.values.startDate}
+                              onChange={(date) =>
+                                formik.setFieldValue("startDate", date)
+                              }
+                              onBlur={formik.handleBlur}
+                              minDate={new Date()}
+                              className={`form-control ${
+                                formik.touched.startDate &&
+                                formik.errors.startDate
+                                  ? "is-invalid"
+                                  : ""
+                              }`}
+                            />
+                            {formik.touched.startDate &&
+                              formik.errors.startDate && (
+                                <div className="invalid-feedback">
+                                  {formik.errors.startDate}
+                                </div>
+                              )}
+                          </div>
+                        </div>
+                        <div className="col-4">
+                          <div
+                            className="mb-3"
+                            style={{ position: "relative" }}
+                          >
+                            <label className="form-label">
+                              End Date <span className="text-danger">*</span>
+                            </label>
+                            <span
+                              style={{
+                                position: "absolute",
+                                right: "15px",
+                                top: "36px",
+                                zIndex: 1,
+                                fontSize: "20px",
+                                zIndex: "1",
+                                color: "#666",
+                              }}
+                            >
+                              <FontAwesomeIcon icon={faCalendarAlt} />
+                            </span>
+                            <DatePicker
+                              selected={formik.values.startDate}
+                              onChange={(date) =>
+                                formik.setFieldValue("startDate", date)
+                              }
+                              onBlur={formik.handleBlur}
+                              minDate={new Date()}
+                              className={`form-control ${
+                                formik.touched.startDate &&
+                                formik.errors.startDate
+                                  ? "is-invalid"
+                                  : ""
+                              }`}
+                            />
+                            {formik.touched.startDate &&
+                              formik.errors.startDate && (
+                                <div className="invalid-feedback">
+                                  {formik.errors.startDate}
+                                </div>
+                              )}
+                          </div>
+                        </div>
+                      </>
+                    )}
+
+                    <div className="col-4">
+                      <div class="mb-3">
+                        <label class="form-label">
+                          Subject <span className="text-danger">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          placeholder={"Subject"}
+                          value={formik.values.subject}
+                          className={`form-control ${
+                            formik.touched.subject && formik.errors.subject
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                          id="subject"
+                          name="subject"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                        />
+                        {formik.touched.subject && formik.errors.subject && (
+                          <div className="invalid-feedback">
+                            {formik.errors.subject}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <div className="col-4">
+                      <div className="mb-3">
+                        <label htmlFor="formFile" className="form-label">
+                          Attachment <span className="text-danger">*</span>
+                        </label>
+                        <input
+                          className="form-control"
+                          type="file"
+                          id="formFile"
+                          name="attachment"
+                          onChange={(event) => {
+                            formik.setFieldValue(
+                              "attachment",
+                              event.currentTarget.files[0]
+                            );
+                          }}
+                        />
                       </div>
                     </div>
                   </div>
@@ -579,7 +627,9 @@ function AddEditLeaveRequests() {
                 <div class="row">
                   <div class="col">
                     <div class="mb-3">
-                      <label class="form-label">Reason <span className="text-danger">*</span></label>
+                      <label class="form-label">
+                        Description <span className="text-danger">*</span>
+                      </label>
                       <textarea
                         cols="30"
                         rows="10"
@@ -606,7 +656,9 @@ function AddEditLeaveRequests() {
                   {location.state?.id && (
                     <div class="col">
                       <div class="mb-3">
-                        <label class="form-label">Comment <span className="text-danger">*</span></label>
+                        <label class="form-label">
+                          Comment <span className="text-danger">*</span>
+                        </label>
                         <textarea
                           cols="30"
                           rows="10"

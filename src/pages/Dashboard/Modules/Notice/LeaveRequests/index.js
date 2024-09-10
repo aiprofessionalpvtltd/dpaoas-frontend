@@ -29,6 +29,7 @@ function LeaveRequests() {
   const navigate = useNavigate();
 
   const [data, setData] = useState([]);
+  console.log("data", data);
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
@@ -36,23 +37,29 @@ function LeaveRequests() {
   };
 
   const transformPrivateData = (apiData) => {
-    return apiData.map((item) => ({
+    return apiData?.map((item) => ({
       id: item?.id,
-      startDate: item?.requestStartDate ? item.requestStartDate : item?.leave_oneday ? item.leave_oneday : "---",
-      endDate: item?.requestEndDate ? item.requestEndDate : item?.leave_oneday ? item.leave_oneday : "---",
+      startDate: item?.requestStartDate
+        ? item.requestStartDate
+        : item?.leave_oneday
+          ? item.leave_oneday
+          : "---",
+      endDate: item?.requestEndDate
+        ? item.requestEndDate
+        : item?.leave_oneday
+          ? item.leave_oneday
+          : "---",
       reason: item?.requestLeaveReason,
       member: item?.memberName ? item?.memberName : "---",
-      status: item?.requestStatus
+      status: item?.requestStatus,
     }));
   };
   const getAllLeaveRequestsApi = useCallback(async () => {
     try {
       const response = await getAllLeaveRequests(currentPage, pageSize);
       if (response?.success) {
-        const transformedData = transformPrivateData(
-          response?.data?.data
-        );
-        setCount(response?.data.totalCount);
+        const transformedData = transformPrivateData(response?.data);
+        setCount(response?.data?.totalCount);
         setData(transformedData);
       }
     } catch (error) {
@@ -109,9 +116,7 @@ function LeaveRequests() {
             data={data}
             tableTitle="Leave Requests"
             addBtnText={"Create Leave Request"}
-            handleAdd={() =>
-              navigate("/notice/leaveRequests/addedit")
-            }
+            handleAdd={() => navigate("/notice/leaveRequests/addedit")}
             handleEdit={(item) =>
               navigate("/notice/leaveRequests/addedit", {
                 state: item,
