@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL = "http://10.10.140.89:5152";
 const TINY_EDITOR_API_KEY = process.env.REACT_APP_TINY_EDITOR_API_KEY;
 
 console.log("API URL:", API_URL); // This should log the API URL from .env

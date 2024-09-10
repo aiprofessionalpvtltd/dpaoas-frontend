@@ -63,7 +63,7 @@ const PreviewGroupMinistryPDF = () => {
                     <p style={{ fontSize: '18px', fontWeight: 'bold', textTransform: 'uppercase' }}>
                         Ministry Wise Statement of Admitted Starred, Un-Starred and Deferred Questions
                     </p>
-                    <p>Session Number: {responseData?.sessions} To 342</p>
+                    <p>Session Number: {responseData?.data?.sessions?.fromSession} To {responseData?.data?.sessions?.toSession}</p>
                     <p>Report Date: {responseData?.data?.currentDate}</p>
                 </div>
 
