@@ -611,13 +611,17 @@ function FileDetail() {
 
   const paragraphsHtml = notingTabData
   ?.map((para, index) => {
+    console.log("para Title", para?.title);
     
     return `
+    
+        
       <div style="margin-top: 10px; margin-bottom: 10px; text-align: justify;">
         ${para?.description}
       </div>
+      
      
-      <p style="float: right; font-weight: bold; margin-top: 5px; margin-bottom: 30px; text-align: center">
+      <p style="float: left; font-weight: bold; margin-bottom: 0px; text-align: center">
         ${para?.createdByUser}
         <br />
         <span style="font-style: italic; font-weight: normal;">
