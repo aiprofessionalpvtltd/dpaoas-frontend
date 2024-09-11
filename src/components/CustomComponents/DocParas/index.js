@@ -41,6 +41,7 @@ const DocParas = ({
   const { fildetailsAqain } = useContext(AuthContext);
   const [correspondenceTypesData, setCorrespondenceTypesData] = useState([]);
   const [editableIndex, setEditableIndex] = useState(null);
+  const [flagLabel, setFlagLabel] = useState("");
   const [notingData, setNotingData] = useState({
     description: "",
     references: [],
@@ -84,7 +85,8 @@ const DocParas = ({
     );
 
     const ref = {
-      flag: referenceFlag,
+      flagId: referenceFlag,
+      flag:flagLabel,
       id: frAttachment ? frAttachment : referenceAttachment,
       attachments: frAttachment
         ? FR?.freshReceiptsAttachments
@@ -92,7 +94,8 @@ const DocParas = ({
           ? [selectedAttachment]
           : [],
     };
-
+    
+    
     if (edited && ref?.id) {
       onEditorChange(index, notingData.description, ref, true);
       setEditableIndex(null); // Reset editable index after saving
@@ -270,7 +273,10 @@ const DocParas = ({
                   className="form-select"
                   id="flag"
                   name="flag"
-                  onChange={(e) => setReferenceFlag(e.target.value)}
+                  onChange={(e) => {
+                    setReferenceFlag(e.target.value)
+                    setFlagLabel(e.target.options[e.target.selectedIndex].text)
+                  }}
                   value={referenceFlag}
                 >
                   <option value="" selected disabled hidden>
@@ -279,7 +285,7 @@ const DocParas = ({
                   {flagsData &&
                     flagsData?.length > 0 &&
                     flagsData.map((item) => (
-                      <option value={item?.flag}>{item?.flag}</option>
+                      <option value={item?.SrNo}>{item?.flag}</option>
                     ))}
                     <option value={"other"}>Other</option>
                 </select>
