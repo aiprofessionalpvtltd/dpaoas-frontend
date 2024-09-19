@@ -132,7 +132,9 @@ function SentQuestion() {
         //   ? res.questionStatus?.questionStatus
         //   : "",
         division: res?.divisions ? res?.divisions?.divisionName : "--",
-        ministry: res?.divisions?.ministry?.ministryName ? res?.divisions?.ministry?.ministryName :"--",
+        ministry: res?.divisions?.ministry?.ministryName
+          ? res?.divisions?.ministry?.ministryName
+          : "--",
         device: res?.device,
         createdBy:
           res?.questionSentStatus === "inNotice" ? "Notice Office" : "---",
@@ -170,10 +172,10 @@ function SentQuestion() {
           : "",
         // SubjectMatter: cleanedSubjectMatter ? cleanedSubjectMatter : "",
         Category: res.questionCategory ? res.questionCategory : "",
-        ActionTaken: res.questionStatus?.questionStatus
-          ? res.questionStatus?.questionStatus
+        Division: res?.divisions ? res?.divisions?.divisionName : "",
+        Ministry: res?.divisions?.ministry?.ministryName
+          ? res?.divisions?.ministry?.ministryName
           : "",
-        Description: res?.description,
         createdBy:
           res?.questionSentStatus === "inNotice" ? "Notice Office" : "---",
       };
@@ -237,7 +239,6 @@ function SentQuestion() {
   const getAllQuestionsApi = useCallback(async () => {
     try {
       const response = await getAllQuestionNotice(currentPage, pageSize);
-      console.log(response.data.questions);
       if (response?.success) {
         const transformedData = transformLeavesData(response?.data?.questions);
         setCount(response?.data?.count);
@@ -640,6 +641,7 @@ function SentQuestion() {
                           className="btn btn-primary col-1"
                           type="button"
                           onClick={handlePDF}
+                          disabled={resData?.length > 0 ? false : true}
                         >
                           Print PDF
                         </button>

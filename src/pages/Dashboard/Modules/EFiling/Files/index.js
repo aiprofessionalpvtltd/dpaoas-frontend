@@ -3,9 +3,15 @@ import { useNavigate } from "react-router-dom";
 import { Layout } from "../../../../../components/Layout";
 import CustomTable from "../../../../../components/CustomComponents/CustomTable";
 import Header from "../../../../../components/Header";
-import { DeleteEfiling, getAllEfiling } from "../../../../../api/APIs/Services/efiling.service";
+import {
+  DeleteEfiling,
+  getAllEfiling,
+} from "../../../../../api/APIs/Services/efiling.service";
 import { getUserData } from "../../../../../api/Auth";
-import { showErrorMessage, showSuccessMessage } from "../../../../../utils/ToastAlert";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 
 function Files() {
@@ -30,13 +36,17 @@ function Files() {
       subject: item?.fileSubject,
       branch: item?.branches?.branchName,
       fileStatus: item?.fileStatus,
-      status: item?.status
+      status: item?.status,
     }));
   };
 
   const getAllFilesAPi = useCallback(async () => {
     try {
-      const response = await getAllEfiling(currentPage, pageSize, UserData?.fkUserId);
+      const response = await getAllEfiling(
+        currentPage,
+        pageSize,
+        UserData?.fkUserId
+      );
       if (response?.success) {
         const transformedData = transformFilesdata(response?.data?.rows);
         setCount(response?.data?.count);
@@ -86,7 +96,12 @@ function Files() {
   return (
     <Layout centerlogohide={true}>
       <div className="dashboard-content" style={{ marginTop: 80 }}>
-        <Header dashboardLink={"/"} addLink1={"/efiling/dashboard"} title1={"E-Filing"} width={"500px"} />
+        <Header
+          dashboardLink={"/"}
+          addLink1={"/efiling/dashboard"}
+          title1={"E-Filing"}
+          width={"500px"}
+        />
         <ToastContainer />
         <div className="row">
           <div className="col-12">
@@ -97,11 +112,23 @@ function Files() {
               addBtnText2="Create File"
               handleAdd2={() => navigate("/efiling/dashboard/addedit")}
               showEditIcon={true}
-              handleEdit={(item) => navigate("/efiling/dashboard/addedit", { state: { view: false, id: item.id } })}
-              handleView={(item) => navigate("/efiling/dashboard/fileDetail", { state: { view: true, id: item.id } })}
+              handleEdit={(item) =>
+                navigate("/efiling/dashboard/addedit", {
+                  state: {
+                    view: false,
+                    id: item.id,
+                    fileNumber: item?.fileNumber,
+                  },
+                })
+              }
+              handleView={(item) =>
+                navigate("/efiling/dashboard/fileDetail", {
+                  state: { view: true, id: item.id },
+                })
+              }
               showView={true}
-              headertitlebgColor={"#666"}
-              headertitletextColor={"#FFF"}
+              headerBgColor={"#4B8FF0"}
+              headerTitleColor={"#fff"}
               handlePageChange={handlePageChange}
               currentPage={currentPage}
               pageSize={pageSize}

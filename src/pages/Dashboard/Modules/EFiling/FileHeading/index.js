@@ -107,7 +107,8 @@ function FileHeadingList() {
         userData && userData?.userType === "Officer"
           ? EfilingSideBarItem
           : EfilingSideBarBranchItem
-      }>
+      }
+    >
       <ToastContainer />
       <div className="row">
         <div className="col-12">
@@ -116,8 +117,8 @@ function FileHeadingList() {
             addBtnText={"Create File Head"}
             data={filteredData}
             tableTitle="File Headings"
-            headertitlebgColor={"#666"}
-            headertitletextColor={"#FFF"}
+            headerBgColor={"#4B8FF0"}
+            headerTitleColor={"#fff"}
             handlePageChange={handlePageChange}
             currentPage={currentPage}
             handleAdd={() =>

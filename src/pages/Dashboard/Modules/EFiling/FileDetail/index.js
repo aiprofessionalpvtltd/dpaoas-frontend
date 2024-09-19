@@ -610,10 +610,10 @@ function FileDetail() {
     .join("");
 
   const paragraphsHtml = notingTabData
-  ?.map((para, index) => {
-    console.log("para Title", para?.title);
-    
-    return `
+    ?.map((para, index) => {
+      console.log("para Title", para?.title);
+
+      return `
     
         
       <div style="margin-top: 10px; margin-bottom: 10px; text-align: justify;">
@@ -632,9 +632,8 @@ function FileDetail() {
           (${moment(para?.createdAt).format("YYYY-MM-DD")})
         </span>
       </p> <div style="clear:both"> </div>`;
-  })
-  .join("");
-  
+    })
+    .join("");
 
   // Main HTML template
   const html = `
@@ -1366,8 +1365,8 @@ function FileDetail() {
                                 ActionHide={false}
                                 data={correspondenceTypesData}
                                 tableTitle="Correspondence"
-                                headertitlebgColor={"#666"}
-                                headertitletextColor={"#FFF"}
+                                headerBgColor={"#4B8FF0"}
+                                headerTitleColor={"#fff"}
                                 handlePageChange={handlePageChange}
                                 currentPage={currentPage}
                                 handleAdd={() => {

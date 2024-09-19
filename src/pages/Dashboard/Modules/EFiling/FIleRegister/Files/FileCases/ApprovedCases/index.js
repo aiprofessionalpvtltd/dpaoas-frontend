@@ -1,5 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
-import { getUserData, setCaseIdForDetailPage, setFileIdForDetailPage } from "../../../../../../../../api/Auth";
+import {
+  getUserData,
+  setCaseIdForDetailPage,
+  setFileIdForDetailPage,
+} from "../../../../../../../../api/Auth";
 import { Layout } from "../../../../../../../../components/Layout";
 import {
   EfilingSideBarBranchItem,
@@ -55,20 +59,14 @@ function ApprovedCasesHistory() {
       internalId: item?.fileData?.id,
       FileNo: item?.fileData?.fileNumber,
       initiatedBy: item?.createdByUser?.firstName,
-      Sender: item?.fileRemarksData?.length > 0
-      ? `${item?.fileRemarksData[0]
-        ?.submittedUser?.employee?.firstName
-      } ${item?.fileRemarksData[0]
-        ?.submittedUser?.employee?.lastName
-      }`
-      : "---",
-      Receiver: item?.fileRemarksData?.length > 0
-      ? `${item?.fileRemarksData[0]
-        ?.assignedUser?.employee?.firstName
-      } ${item?.fileRemarksData[0]
-        ?.assignedUser?.employee?.lastName
-      }`
-      : "---",
+      Sender:
+        item?.fileRemarksData?.length > 0
+          ? `${item?.fileRemarksData[0]?.submittedUser?.employee?.firstName} ${item?.fileRemarksData[0]?.submittedUser?.employee?.lastName}`
+          : "---",
+      Receiver:
+        item?.fileRemarksData?.length > 0
+          ? `${item?.fileRemarksData[0]?.assignedUser?.employee?.firstName} ${item?.fileRemarksData[0]?.assignedUser?.employee?.lastName}`
+          : "---",
       Status: item?.caseStatus,
       markDate: moment(item?.fileData?.createdAt).format("DD/MM/YYYY"),
     }));
@@ -79,29 +77,29 @@ function ApprovedCasesHistory() {
   //Getting Approved Cases Data
   const getAllApprovedCasesApi = async () => {
     let searchParams = {};
-    if(UserData && UserData?.userType==="Officer"){
+    if (UserData && UserData?.userType === "Officer") {
       searchParams = {
         branchId: UserData?.fkBranchId,
         currentPage: currentPage,
         pageSize: pageSize,
         fileId: fkfileId?.value,
       };
-    }else{
+    } else {
       searchParams = {
         branchId: UserData?.fkBranchId,
         currentPage: currentPage,
         pageSize: pageSize,
         fileId: fkfileId?.value,
-        userId:UserData?.fkUserId,
+        userId: UserData?.fkUserId,
       };
     }
-     
+
     try {
       const response = await getUserApprovedCaseHistory(searchParams);
       console.log("Response", response);
       if (response?.success) {
         setCount(response?.data?.count);
-        showSuccessMessage(response?.message)
+        showSuccessMessage(response?.message);
         const transformedData = transformApprovedCases(response?.data?.cases);
         setApprovedCasesData(transformedData);
       }
@@ -292,14 +290,19 @@ function ApprovedCasesHistory() {
             hideBtn={true}
             data={approvedCasesData}
             tableTitle="Approved Cases History"
-            headertitlebgColor={"#666"}
-            headertitletextColor={"#FFF"}
+            headerBgColor={"#4B8FF0"}
+            headerTitleColor={"#fff"}
             handlePageChange={handlePageChange}
             currentPage={currentPage}
             pageSize={pageSize}
             totalCount={count}
             singleDataCard={true}
-            showEditIcon={UserData && UserData?.designation?.designationName === "Section Officer" ? false :true}
+            showEditIcon={
+              UserData &&
+              UserData?.designation?.designationName === "Section Officer"
+                ? false
+                : true
+            }
             hideDeleteIcon={true}
             showView={true}
             handleView={(item) =>
@@ -321,7 +324,7 @@ function ApprovedCasesHistory() {
                   id: item?.caseId,
                   fileId: item?.internalId,
                 },
-              })
+              });
             }}
           />
         </div>

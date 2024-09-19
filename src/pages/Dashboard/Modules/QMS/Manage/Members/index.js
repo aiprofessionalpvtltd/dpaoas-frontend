@@ -16,7 +16,7 @@ import { getallMembers } from "../../../../../../api/APIs/Services/Motion.servic
 function QMSMembers() {
   const navigate = useNavigate();
   const [members, setMembers] = useState([]);
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
   const [count, setCount] = useState(null);
   const pageSize = 10; // Set your desired page size
 
@@ -79,27 +79,27 @@ function QMSMembers() {
       />
       <ToastContainer />
 
-        <div class="row">
-          <div class="col-12">
-            <CustomTable
-              block={false}
-              singleDataCard={true}
-              data={members}
-              tableTitle="Member List"
-              addBtnText="Add Member"
-              handleAdd={() => navigate("/qms/manage/members/addedit")}
-              handleEdit={(item) =>
-                navigate("/qms/manage/members/addedit", { state: item })
-              }
-              handleDelete={(item) => handleDelete(item.id)}
-              headertitlebgColor={"#666"}
-              headertitletextColor={"#FFF"}
-              handlePageChange={handlePageChange}
-              currentPage={currentPage}
-              pageSize={pageSize}
-              totalCount={count}
-            />
-          </div>
+      <div class="row">
+        <div class="col-12">
+          <CustomTable
+            block={false}
+            singleDataCard={true}
+            data={members}
+            tableTitle="Member List"
+            addBtnText="Add Member"
+            handleAdd={() => navigate("/qms/manage/members/addedit")}
+            handleEdit={(item) =>
+              navigate("/qms/manage/members/addedit", { state: item })
+            }
+            handleDelete={(item) => handleDelete(item.id)}
+            headertitlebgColor={"#666"}
+            headertitletextColor={"#FFF"}
+            handlePageChange={handlePageChange}
+            currentPage={currentPage}
+            pageSize={pageSize}
+            totalCount={count}
+          />
+        </div>
       </div>
     </Layout>
   );

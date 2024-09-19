@@ -828,7 +828,8 @@ hr.horizontal {
 
 .red-bg {
   /* background: #14ae5c !important; */
-  background: #4B90F0 !important;
+  /* background: #4B90F0 !important; */
+  background: #4B8FF0 !important;
   border-radius: 5px 5px 0 0 !important;
 
 }
@@ -2077,6 +2078,8 @@ textarea {
 }
 .dash-card {
   background: #fff;
+
+ 
 }
 
 .dash-card .dash-card-header {

@@ -25,6 +25,8 @@ function BusinessSummary() {
   const [resolutionReport, setresolutionReport] = useState([]);
   const [isFromOpen, setIsFromOpen] = useState(false);
   const [isToOpen, setIsToOpen] = useState(false);
+
+  console.log("questionReport", questionReport);
   // Handle From Notice Date Claneder Toggel
   const handleFromCalendarToggle = () => {
     setIsFromOpen(!isFromOpen);
@@ -257,7 +259,7 @@ function BusinessSummary() {
                     </button>
                   </div>
                 </div>
-                <h2 style={{ color: "#666" }}>Question</h2>
+                <h2 style={{ color: "#666" }}>Questions</h2>
                 <div
                   class="dash-detail-container"
                   style={{ marginTop: "20px" }}
@@ -269,6 +271,9 @@ function BusinessSummary() {
                           Sr#
                         </th>
                         <th class="text-center" scope="col">
+                          Session Number
+                        </th>
+                        <th class="text-center" scope="col">
                           Notice Diary Number
                         </th>
                         <th class="text-center" scope="col">
@@ -277,29 +282,45 @@ function BusinessSummary() {
                         <th class="text-center" scope="col">
                           Notice Diary Time
                         </th>
-                        <th class="text-center" scope="col">
-                          Session Number
-                        </th>
+
                         <th class="text-center" scope="col">
                           Mover
                         </th>
                         <th class="text-center" scope="col">
-                          Category
+                          Division
                         </th>
                         <th
                           class="text-center"
                           style={{ paddingLeft: "6px" }}
                           scope="col"
                         >
-                          Description
+                          Ministry
                         </th>
                       </tr>
                     </thead>
+                    {!questionReport && (
+                      <div
+                        class="alert alert-danger mt-5"
+                        role="alert"
+                        style={{
+                          width: "350px",
+                          margin: "0 auto",
+                          textAlign: "center",
+                        }}
+                      >
+                        No data found
+                      </div>
+                    )}
                     <tbody>
-                      {questionReport &&
+                      {/* {questionReport &&
                         questionReport?.map((item) => (
                           <tr>
                             <td class="text-center">{item?.id}</td>
+                            <td class="text-center">
+                              {item?.session?.sessionName
+                                ? item?.session?.sessionName
+                                : ""}
+                            </td>
                             <td class="text-center">
                               {item?.noticeOfficeDiary?.noticeOfficeDiaryNo
                                 ? item?.noticeOfficeDiary?.noticeOfficeDiaryNo
@@ -321,29 +342,83 @@ function BusinessSummary() {
                                   ).format("hh:mm A")
                                 : ""}
                             </td>
-                            <td class="text-center">
-                              {item?.session?.sessionName
-                                ? item?.session?.sessionName
-                                : ""}
-                            </td>
+
                             <td class="text-center">
                               {item?.member?.memberName
                                 ? item?.member?.memberName
                                 : ""}
                             </td>
                             <td class="text-center">
-                              {item?.questionStatus?.questionStatus
-                                ? item?.questionStatus?.questionStatus
+                              {item?.divisions?.divisionName
+                                ? item?.divisions?.divisionName
                                 : ""}
                             </td>
                             <td class="text-center">
-                              {[item?.englishText, item?.urduText]
-                                .filter(Boolean)
-                                .join(", ")
-                                .replace(/(<([^>]+)>)/gi, "")}
+                              {item?.divisions?.ministry?.ministryName
+                                ? item?.divisions?.ministry?.ministryName
+                                : ""}
+                              
                             </td>
                           </tr>
-                        ))}
+                        ))} */}
+                      {questionReport && questionReport.length > 0 ? (
+                        questionReport.map((item, index) => (
+                          <tr key={index}>
+                            <td class="text-center">{item?.id}</td>
+                            <td class="text-center">
+                              {item?.session?.sessionName || ""}
+                            </td>
+                            <td class="text-center">
+                              {item?.noticeOfficeDiary?.noticeOfficeDiaryNo ||
+                                ""}
+                            </td>
+                            <td class="text-center">
+                              {item.noticeOfficeDiary?.noticeOfficeDiaryDate
+                                ? moment(
+                                    item.noticeOfficeDiary.noticeOfficeDiaryDate
+                                  ).format("DD-MM-YYYY")
+                                : ""}
+                            </td>
+                            <td class="text-center">
+                              {item.noticeOfficeDiary?.noticeOfficeDiaryTime
+                                ? moment(
+                                    item.noticeOfficeDiary
+                                      .noticeOfficeDiaryTime,
+                                    "hh:mm A"
+                                  ).format("hh:mm A")
+                                : ""}
+                            </td>
+                            <td class="text-center">
+                              {item?.member?.memberName || ""}
+                            </td>
+                            <td class="text-center">
+                              {item?.divisions?.divisionName || ""}
+                            </td>
+                            <td class="text-center">
+                              {item?.divisions?.ministry?.ministryName || ""}
+                            </td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td
+                            colSpan="8"
+                            style={{ textAlign: "center", padding: "20px" }}
+                          >
+                            <div
+                              class="alert alert-danger"
+                              role="alert"
+                              style={{
+                                width: "350px",
+                                margin: "0 auto",
+                                textAlign: "center",
+                              }}
+                            >
+                              No data found
+                            </div>
+                          </td>
+                        </tr>
+                      )}
                     </tbody>
                   </table>
                 </div>
@@ -359,6 +434,9 @@ function BusinessSummary() {
                           Sr#
                         </th>
                         <th class="text-center" scope="col">
+                          Session Number
+                        </th>
+                        <th class="text-center" scope="col">
                           Notice Diary Number
                         </th>
                         <th class="text-center" scope="col">
@@ -366,9 +444,6 @@ function BusinessSummary() {
                         </th>
                         <th class="text-center" scope="col">
                           Notice Diary Time
-                        </th>
-                        <th class="text-center" scope="col">
-                          Session Number
                         </th>
 
                         <th class="text-center" scope="col">
@@ -384,10 +459,15 @@ function BusinessSummary() {
                       </tr>
                     </thead>
                     <tbody>
-                      {motionReport &&
+                      {motionReport && motionReport?.length > 0 ? (
                         motionReport?.map((item) => (
                           <tr>
                             <td class="text-center">{item?.id}</td>
+                            <td class="text-center">
+                              {item?.sessions?.sessionName
+                                ? item?.sessions?.sessionName
+                                : "---"}
+                            </td>
                             <td class="text-center">
                               {item?.noticeOfficeDairies?.noticeOfficeDiaryNo
                                 ? item?.noticeOfficeDairies?.noticeOfficeDiaryNo
@@ -400,7 +480,7 @@ function BusinessSummary() {
                                     item?.noticeOfficeDairies
                                       ?.noticeOfficeDiaryDate
                                   ).format("DD-MM-YYYY")
-                                : ""}
+                                : "---"}
                             </td>
                             <td class="text-center">
                               {item?.noticeOfficeDairies?.noticeOfficeDiaryTime
@@ -409,13 +489,9 @@ function BusinessSummary() {
                                       ?.noticeOfficeDiaryTime,
                                     "hh:mm A"
                                   ).format("hh:mm A")
-                                : ""}
+                                : "---"}
                             </td>
-                            <td class="text-center">
-                              {item?.sessions?.sessionName
-                                ? item?.sessions?.sessionName
-                                : ""}
-                            </td>
+
                             <td class="text-center">
                               {item?.motionType ? item?.motionType : ""}
                             </td>
@@ -426,7 +502,27 @@ function BusinessSummary() {
                                 .replace(/(<([^>]+)>)/gi, "")}
                             </td>
                           </tr>
-                        ))}
+                        ))
+                      ) : (
+                        <tr>
+                          <td
+                            colSpan="8"
+                            style={{ textAlign: "center", padding: "20px" }}
+                          >
+                            <div
+                              class="alert alert-danger"
+                              role="alert"
+                              style={{
+                                width: "350px",
+                                margin: "0 auto",
+                                textAlign: "center",
+                              }}
+                            >
+                              No data found
+                            </div>
+                          </td>
+                        </tr>
+                      )}
                     </tbody>
                   </table>
                 </div>
@@ -444,6 +540,9 @@ function BusinessSummary() {
                           Sr#
                         </th>
                         <th class="text-center" scope="col">
+                          Session Number
+                        </th>
+                        <th class="text-center" scope="col">
                           Notice Diary Number
                         </th>
                         <th class="text-center" scope="col">
@@ -452,15 +551,13 @@ function BusinessSummary() {
                         <th class="text-center" scope="col">
                           Notice Diary Time
                         </th>
-                        <th class="text-center" scope="col">
-                          Session Number
-                        </th>
+
                         <th class="text-center" scope="col">
                           Resolution Type
                         </th>
-                        <th class="text-center" scope="col">
+                        {/* <th class="text-center" scope="col">
                           Resolution Status
-                        </th>
+                        </th> */}
                         <th
                           class="text-left"
                           style={{ paddingLeft: "6px" }}
@@ -471,26 +568,36 @@ function BusinessSummary() {
                       </tr>
                     </thead>
                     <tbody>
-                      {resolutionReport &&
+                      {resolutionReport && resolutionReport?.length > 0 ? (
                         resolutionReport.map((item) => (
                           <tr>
                             <td class="text-center">{item?.id}</td>
                             <td class="text-center">
+                              {item?.session?.sessionName}
+                            </td>
+                            <td class="text-center">
                               {item?.noticeDiary?.noticeOfficeDiaryNo}
                             </td>
                             <td class="text-center">
-                              {item?.noticeDiary?.noticeOfficeDiaryDate}
+                              {item?.noticeDiary?.noticeOfficeDiaryDate
+                                ? moment(
+                                    item?.noticeDiary?.noticeOfficeDiaryDate
+                                  ).format("DD-MM-YYYY")
+                                : "---"}
                             </td>
                             <td class="text-center">
-                              {item?.noticeDiary?.noticeOfficeDiaryTime}
+                              {item?.noticeDiary?.noticeOfficeDiaryTime
+                                ? moment(
+                                    item?.noticeDiary?.noticeOfficeDiaryTime,
+                                    "hh:mm A"
+                                  ).format("hh:mm A")
+                                : "---"}
                             </td>
-                            <td class="text-center">
-                              {item?.session?.sessionName}
-                            </td>
+
                             <td class="text-center">{item?.resolutionType}</td>
-                            <td class="text-center">
+                            {/* <td class="text-center">
                               {item?.resolutionStatus?.resolutionStatus}
-                            </td>
+                            </td> */}
                             <td class="text-center">
                               {[item?.englishText, item?.urduText]
                                 .filter(Boolean)
@@ -498,7 +605,27 @@ function BusinessSummary() {
                                 .replace(/(<([^>]+)>)/gi, "")}
                             </td>
                           </tr>
-                        ))}
+                        ))
+                      ) : (
+                        <tr>
+                          <td
+                            colSpan="8"
+                            style={{ textAlign: "center", padding: "20px" }}
+                          >
+                            <div
+                              class="alert alert-danger"
+                              role="alert"
+                              style={{
+                                width: "350px",
+                                margin: "0 auto",
+                                textAlign: "center",
+                              }}
+                            >
+                              No data found
+                            </div>
+                          </td>
+                        </tr>
+                      )}
                     </tbody>
                   </table>
                 </div>

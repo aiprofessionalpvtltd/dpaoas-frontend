@@ -273,7 +273,9 @@ const PDFAllBusinessSummary = () => {
                         fontSize: "14px",
                       }}
                     >
-                      {item.Ministry}
+                      {item?.divisions?.ministry?.ministryName
+                        ? item?.divisions?.ministry?.ministryName
+                        : "---"}
                     </td>
                   </tr>
                 ))}

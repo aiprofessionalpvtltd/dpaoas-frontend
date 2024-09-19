@@ -20,7 +20,7 @@ import UpdateMemberParliamentaryYear from "../../../../../../components/MemberUp
 function LGMSMembers() {
   const navigate = useNavigate();
   const [members, setMembers] = useState([]);
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
   const [count, setCount] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [toUpdateMemberId, setToUpdateMemberId] = useState(null);
