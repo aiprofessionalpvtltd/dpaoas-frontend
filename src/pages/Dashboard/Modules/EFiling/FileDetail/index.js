@@ -1226,7 +1226,7 @@ function FileDetail() {
                                       setNotingTabSubject(e.target.value)
                                     }
                                     value={notingTabSubject}
-                                    style={{ width: "50%" }}
+                                    // style={{ width: "50%" }}
                                   />
 
                                   {order === "DESC" && (
