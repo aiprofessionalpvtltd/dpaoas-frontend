@@ -426,7 +426,7 @@ function FileDetail() {
         pageSize
       );
       if (response?.success) {
-        setCount(response?.count);
+        setCount(response?.data?.count);
         const transformedData = transformData(response.data?.correspondences);
         setCorrespondenceTypesData(transformedData);
       }
@@ -483,7 +483,7 @@ function FileDetail() {
 
   useEffect(() => {
     handleCorrespondences();
-  }, [filesData?.cases?.files?.id]);
+  }, [filesData?.cases?.files?.id, currentPage]);
 
   useEffect(() => {
     getEmployeeData();
