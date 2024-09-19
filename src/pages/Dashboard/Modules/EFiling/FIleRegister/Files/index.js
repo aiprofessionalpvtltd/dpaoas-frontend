@@ -48,7 +48,7 @@ function ListFiles() {
       // year: item.year,
       fileNumber: item?.fileNumber,
       fileSubject: item?.fileSubject,
-      status: item?.status
+      status: item?.status,
     }));
   };
   const [registerHistory, setRegisterHistory] = useState(null);
@@ -248,9 +248,7 @@ function ListFiles() {
                 </option>
                 {headings &&
                   headings.map((item) => (
-                    <option value={item.HeadingNumber}>
-                      {item.mainHead}
-                    </option>
+                    <option value={item.HeadingNumber}>{item.mainHead}</option>
                   ))}
               </select>
             </div>
@@ -271,8 +269,8 @@ function ListFiles() {
             data={fileData}
             tableTitle="Files List"
             addBtnText2="Create File"
-            headertitlebgColor={"#666"}
-            headertitletextColor={"#FFF"}
+            headerBgColor={"#4B8FF0"}
+            headerTitleColor={"#fff"}
             currentPage={currentPage}
             pageSize={pageSize}
             handlePageChange={handlePageChange}
@@ -285,7 +283,12 @@ function ListFiles() {
             singleDataCard={true}
             hideDeleteIcon={false}
             showEditIcon={false}
-            handleEdit={(item) => navigate("/efiling/dashboard/file-register-list/files-list/addedit-file", { state: { view: false, id: item.internalId } })}
+            handleEdit={(item) =>
+              navigate(
+                "/efiling/dashboard/file-register-list/files-list/addedit-file",
+                { state: { view: false, id: item.internalId } }
+              )
+            }
             handleDelete={(item) => handleDelete(item.SrNo)}
             showView={true}
             handleView={(item) =>

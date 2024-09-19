@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import html2pdf from "html2pdf.js";
 import { useLocation } from "react-router-dom";
 
@@ -8,7 +8,7 @@ const PdfAllQuestion = () => {
   const encodedJsonString = queryParams.get("state");
   const decodedString = decodeURIComponent(encodedJsonString);
   const data = JSON.parse(decodedString);
-  console.log(data);
+  console.log("Data", data);
 
   const handlePrint = () => {
     const element = document.getElementById("template-container");
@@ -55,50 +55,207 @@ const PdfAllQuestion = () => {
           Print
         </button>
       </div>
-      <div id='template-container' style={{ background: '#fff', fontFamily: 'Arial, Helvetica, sans-serif' }}>
-        <div className="template" style={{ width: '700px', margin: '0 auto' }}>
+      <div
+        id="template-container"
+        style={{
+          background: "#fff",
+          fontFamily: "Arial, Helvetica, sans-serif",
+        }}
+      >
+        <div className="template" style={{ width: "700px", margin: "0 auto" }}>
           <div className="template-head">
-            <h1 style={{ textAlign: 'center', fontSize: '20px', textDecoration: 'underline' }}>
+            <h1
+              style={{
+                textAlign: "center",
+                fontSize: "20px",
+                textDecoration: "underline",
+              }}
+            >
               SENATE OF PAKISTAN
             </h1>
-            <p style={{ textAlign: 'center', fontSize: '20px', marginTop: '10px', marginBottom: '10px' }}>
+            <p
+              style={{
+                textAlign: "center",
+                fontSize: "20px",
+                marginTop: "10px",
+                marginBottom: "10px",
+              }}
+            >
               (Notice Branch)
             </p>
           </div>
-          <table style={{ width: '100%' }}>
+          <table style={{ width: "100%" }}>
             <thead>
-              <tr>
-                <th style={{ padding: '10px', textAlign: 'left' }}>Sr No</th>
-                <th style={{ padding: '10px', textAlign: 'left' }}>Notice Diary Number</th>
-                <th style={{ padding: '10px', textAlign: 'left' }}>Notice Date</th>
-                <th style={{ padding: '10px', textAlign: 'left' }}>Notice Time</th>
-                <th style={{ padding: '10px', textAlign: 'left' }}>Session Number</th>
-                <th style={{ padding: '10px', textAlign: 'left' }}>Mover</th>
-                <th style={{ padding: '10px', textAlign: 'left' }}>Category</th>
-                <th style={{ padding: '10px', textAlign: 'left' }}>Description</th>
-                <th style={{ padding: '10px', textAlign: 'left' }}>Action Taken</th>
+              <tr
+                style={{
+                  backgroundColor: "#f4f4f4",
+                  borderBottom: "2px solid #ddd",
+                }}
+              >
+                <th
+                  style={{
+                    padding: "10px",
+                    textAlign: "left",
+                    fontSize: "14px",
+                  }}
+                >
+                  Sr No
+                </th>
+                <th
+                  style={{
+                    padding: "10px",
+                    textAlign: "left",
+                    fontSize: "14px",
+                  }}
+                >
+                  Session Number
+                </th>
+                <th
+                  style={{
+                    padding: "10px",
+                    textAlign: "left",
+                    fontSize: "14px",
+                  }}
+                >
+                  Notice Diary Number
+                </th>
+                <th
+                  style={{
+                    padding: "10px",
+                    textAlign: "left",
+                    fontSize: "14px",
+                  }}
+                >
+                  Notice Date
+                </th>
+                <th
+                  style={{
+                    padding: "10px",
+                    textAlign: "left",
+                    fontSize: "14px",
+                  }}
+                >
+                  Notice Time
+                </th>
+
+                <th
+                  style={{
+                    padding: "10px",
+                    textAlign: "left",
+                    fontSize: "14px",
+                  }}
+                >
+                  Mover
+                </th>
+                <th
+                  style={{
+                    padding: "10px",
+                    textAlign: "left",
+                    fontSize: "14px",
+                  }}
+                >
+                  Category
+                </th>
+                <th
+                  style={{
+                    padding: "10px",
+                    textAlign: "left",
+                    fontSize: "14px",
+                  }}
+                >
+                  Division
+                </th>
+                <th
+                  style={{
+                    padding: "10px",
+                    textAlign: "left",
+                    fontSize: "14px",
+                  }}
+                >
+                  Ministry
+                </th>
               </tr>
             </thead>
             <tbody>
-              {data && data.map((item, index) => (
-                <tr key={index}>
-                  <td style={{ padding: '10px' }}>{item.SrNo}</td>
-                  <td style={{ padding: '10px' }}>{item.noticeOfficeDiaryNumber}</td>
-                  <td style={{ padding: '10px' }}>{item.NoticeDate}</td>
-                  <td style={{ padding: '10px' }}>{item.NoticeTime}</td>
-                  <td style={{ padding: '10px' }}>{item.SessionNumber}</td>
-                  <td style={{ padding: '10px' }}>{item.MemberName}</td>
-                  <td style={{ padding: '10px' }}>{item.Category}</td>
-                  <td style={{ padding: '10px' }}>{item.SubjectMatter}</td>
-                  <td style={{ padding: '10px' }}>{item.ActionTaken}</td>
-                </tr>
-              ))}
+              {data &&
+                data.map((item, index) => (
+                  <tr key={index}>
+                    <td style={{ padding: "10px" }}>{item.SrNo}</td>
+                    <td
+                      style={{
+                        padding: "10px",
+                        textAlign: "left",
+                        fontSize: "14px",
+                      }}
+                    >
+                      {item.SessionNumber}
+                    </td>
+                    <td style={{ padding: "10px" }}>
+                      {item.noticeOfficeDiaryNumber}
+                    </td>
+                    <td
+                      style={{
+                        padding: "10px",
+                        textAlign: "left",
+                        fontSize: "14px",
+                      }}
+                    >
+                      {item.NoticeDate}
+                    </td>
+                    <td
+                      style={{
+                        padding: "10px",
+                        textAlign: "left",
+                        fontSize: "14px",
+                      }}
+                    >
+                      {item.NoticeTime}
+                    </td>
+
+                    <td
+                      style={{
+                        padding: "10px",
+                        textAlign: "left",
+                        fontSize: "14px",
+                      }}
+                    >
+                      {item.MemberName}
+                    </td>
+                    <td
+                      style={{
+                        padding: "10px",
+                        textAlign: "left",
+                        fontSize: "14px",
+                      }}
+                    >
+                      {item.Category}
+                    </td>
+                    <td
+                      style={{
+                        padding: "10px",
+                        textAlign: "left",
+                        fontSize: "14px",
+                      }}
+                    >
+                      {item?.Division ? item?.Division : "---"}
+                    </td>
+                    <td
+                      style={{
+                        padding: "10px",
+                        textAlign: "left",
+                        fontSize: "14px",
+                      }}
+                    >
+                      {item?.Ministry ? item?.Ministry : "---"}
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
 export default PdfAllQuestion;

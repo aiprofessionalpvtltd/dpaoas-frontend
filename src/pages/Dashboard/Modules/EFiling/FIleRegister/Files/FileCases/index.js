@@ -3,7 +3,6 @@ import { ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router";
 import { useLocation } from "react-router-dom";
 import { Layout } from "../../../../../../../components/Layout";
-
 import CustomTable from "../../../../../../../components/CustomComponents/CustomTable";
 import {
   EfilingSideBarBranchItem,
@@ -11,15 +10,25 @@ import {
 } from "../../../../../../../utils/sideBarItems";
 import {
   getAllCasesThroughSearchParams,
+  getAllEfiling,
   getAllFileHeading,
   getAllFileRegister,
   getFileByRegisterById,
 } from "../../../../../../../api/APIs/Services/efiling.service";
 import { AuthContext } from "../../../../../../../api/AuthContext";
-import { getSelectedFileID, getUserData, setCaseIdForDetailPage, setFileIdForDetailPage } from "../../../../../../../api/Auth";
+import {
+  getSelectedFileID,
+  getUserData,
+  setCaseIdForDetailPage,
+  setFileIdForDetailPage,
+} from "../../../../../../../api/Auth";
 import moment from "moment";
 import Select from "react-select";
-import { showSuccessMessage } from "../../../../../../../utils/ToastAlert";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../../../utils/ToastAlert";
+import { useFormik } from "formik";
 
 function FileCases() {
   const navigate = useNavigate();
@@ -27,11 +36,14 @@ function FileCases() {
   const [searchTerm, setSearchTerm] = useState("");
   const userData = getUserData();
   const location = useLocation();
+
+  console.log("location", location?.state?.fileNumber);
   const [headings, setHeadings] = useState(null);
   const [headcount, setHeadCount] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
   const [casesData, setCasesData] = useState([]);
+  const [allFiles, setAllFiles] = useState([]);
   const pageSize = 10;
   const UserData = getUserData();
   const [fkfileId, setFKFileId] = useState(null);
@@ -40,6 +52,15 @@ function FileCases() {
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
+
+  const formik = useFormik({
+    initialValues: {
+      formFile: "",
+    },
+    onSubmit: (values) => {
+      console.log("Values", values);
+    },
+  });
 
   const transformFilesCases = (apiData) => {
     return apiData?.map((item, index) => {
@@ -66,10 +87,13 @@ function FileCases() {
           item?.fileRemarksData?.length > 0
             ? moment(item?.fileRemarksData[0]?.createdAt).format("hh:mm A")
             : "---",
-        Priority: item?.fileRemarksData?.length > 0 ? item?.fileRemarksData[0]?.priority : "---",
+        Priority:
+          item?.fileRemarksData?.length > 0
+            ? item?.fileRemarksData[0]?.priority
+            : "---",
       };
     });
-  };  
+  };
 
   const getAllCasesApi = async () => {
     const searchParams = {
@@ -79,7 +103,7 @@ function FileCases() {
       // fileId: fkfileId?.value ? fkfileId?.value : location.state?.internalId,
       // fkBranchId:userData && userData?.fkBranchId
     };
-    
+
     try {
       const response = await getAllCasesThroughSearchParams(searchParams);
       console.log(response);
@@ -121,7 +145,9 @@ function FileCases() {
 
   const [fileData, setFileData] = useState([]);
   const [registerId, setRegisterId] = useState(null);
-
+  const [fileNumnerCases, setFileNumberCases] = useState(
+    location?.state?.fileNumber && location?.state?.fileNumber
+  );
   // Register Drop Down Change
   const handleRegisterDropDownChange = (selectedOption) => {
     setRegisterId(selectedOption?.value);
@@ -129,6 +155,33 @@ function FileCases() {
     setFileData([]);
   };
 
+  const getAllFilesAPi = async () => {
+    const searchParams = {
+      branchId: userData?.fkBranchId,
+      currentPage: 0,
+      pageSize: 2000,
+      // fileRegisterId: registerDataid,
+      // mainHeadingNumber: headingNumber,
+    };
+    try {
+      const response = await getFileByRegisterById(searchParams);
+      if (response?.success) {
+        setCount(response?.data?.count);
+        setAllFiles(response?.data?.files);
+        //   if (response?.data?.files) {
+        //     const transformedData = transformFilesHeadingdata(
+        //       response?.data?.files
+        //     );
+        //     setFileData(transformedData);
+        //   } else {
+        //     setFileData([]);
+        //   }
+      }
+    } catch (error) {
+      console.log(error);
+      // showErrorMessage(error?.response?.data?.message);
+    }
+  };
   const handleHeadingChange = (e) => {
     hendleRegisterSelect(e.target.value);
     setShowFiles(true);
@@ -139,7 +192,7 @@ function FileCases() {
       currentPage: currentPage,
       pageSize: pageSize,
       mainHeadingNumber: headID,
-      branchId: userData?.fkBranchId
+      branchId: userData?.fkBranchId,
     };
     try {
       const response = await getFileByRegisterById(searchParams);
@@ -158,7 +211,7 @@ function FileCases() {
   const transformFilesHeadings = (apiData) => {
     return apiData?.map((item) => ({
       HeadingNumber: item?.mainHeadingNumber,
-      mainHead: item?.mainHeading
+      mainHead: item?.mainHeading,
     }));
   };
 
@@ -180,18 +233,44 @@ function FileCases() {
     }
   }, [headcount]);
 
+  // FIltered Data
+  // const filteredCaseData = casesData?.filter((item) =>
+  //   item?.FileNo?.toLowerCase().includes(searchTerm?.toLowerCase())
+  // );
 
-    // FIltered Data
-    const filteredCaseData = casesData?.filter((item) =>
-      item?.FileNo?.toLowerCase().includes(searchTerm?.toLowerCase())
-    );
+  // Filtered Data
+  // Filtered Data based on fileNumnerCases and searchTerm
+  const filteredCaseData = casesData?.filter((item) => {
+    const fileNumberMatches = fileNumnerCases
+      ? item?.FileNo?.toLowerCase() === fileNumnerCases?.toLowerCase()
+      : true; // If there's no selected file number, show all
+
+    const searchTermMatches = searchTerm
+      ? item?.FileNo?.toLowerCase().includes(searchTerm?.toLowerCase())
+      : true; // If no search term, show all
+
+    return fileNumberMatches && searchTermMatches;
+  });
+
+  // const filteredCaseData = casesData?.filter((item) => {
+  //   const fileNumberMatches = fileNumnerCases
+  //     ? item?.FileNo?.toLowerCase() === fileNumnerCases?.toLowerCase()
+  //     : true; // If there's no fileNumber, include all
+
+  //   const searchTermMatches = searchTerm
+  //     ? item?.FileNo?.toLowerCase().includes(searchTerm?.toLowerCase())
+  //     : true; // If searchTerm is empty, include all
+
+  //   return fileNumberMatches && searchTermMatches;
+  // });
 
   useEffect(() => {
     const fileId = getSelectedFileID();
-    if(fileId) {
+    if (fileId) {
       setFKFileId(fileId);
     }
     getAllFileHeadingApi();
+    getAllFilesAPi();
   }, []);
 
   return (
@@ -230,8 +309,88 @@ function FileCases() {
           </button>
         </div>
       </div>
+
+      <div className="row">
+        {/* <div className="col-3">
+          <div className="mb-3">
+            <label class="form-label">Selected File</label>
+            <Select
+              options={
+                Array.isArray(allFiles) && allFiles?.length > 0
+                  ? allFiles.map((item) => ({
+                      value: item?.id,
+                      label: item?.fileNumber,
+                      // tenureType: item?.tenureType,
+                    }))
+                  : []
+              }
+              // Use selectedOptions to update the form value
+              onChange={(selectedOptions) => {
+                formik.setFieldValue("formFile", selectedOptions);
+              }}
+              onBlur={formik.handleBlur}
+              // Set the default value if location.state.fileNumber exists
+              value={
+                fileNumnerCases
+                  ? allFiles.find(
+                      (file) => file?.fileNumber === fileNumnerCases
+                    )
+                    ? {
+                        value: allFiles.find(
+                          (file) => file?.fileNumber === fileNumnerCases
+                        )?.id,
+                        label: fileNumnerCases,
+                      }
+                    : formik.values.formFile
+                  : formik.values.formFile
+              }
+              name="formFile"
+            />
+            {formik.touched.mover && formik.errors.formFile && (
+              <div class="invalid-feedback">{formik.errors.formFile}</div>
+            )}
+          </div>
+        </div> */}
+        <div className="col-3">
+          <div className="mb-3">
+            <label className="form-label">Selected File</label>
+            <Select
+              options={
+                Array.isArray(allFiles) && allFiles.length > 0
+                  ? allFiles.map((item) => ({
+                      value: item.id,
+                      label: item.fileNumber,
+                    }))
+                  : []
+              }
+              onChange={(selectedOptions) => {
+                // Update form field
+                formik.setFieldValue("formFile", selectedOptions);
+                // Update the fileNumnerCases state to filter the data
+                setFileNumberCases(selectedOptions.label);
+              }}
+              onBlur={formik.handleBlur}
+              value={
+                fileNumnerCases
+                  ? {
+                      value: allFiles.find(
+                        (file) => file.fileNumber === fileNumnerCases
+                      )?.id,
+                      label: fileNumnerCases,
+                    }
+                  : formik.values.formFile
+              }
+              name="formFile"
+            />
+            {formik.touched.formFile && formik.errors.formFile && (
+              <div className="invalid-feedback">{formik.errors.formFile}</div>
+            )}
+          </div>
+        </div>
+      </div>
+
       {/* )} */}
- {/* Hide THis Field */}
+      {/* Hide THis Field */}
       {/* <div className="row" style={{ marginBottom: "20px", marginLeft: "3px" }}>
         <div className="col-4">
           <label for="formFile" class="form-label">
@@ -309,8 +468,8 @@ function FileCases() {
             seachBarShow={true}
             searchonchange={(e) => setSearchTerm(e.target.value)}
             tableTitle="File Cases"
-            headertitlebgColor={"#666"}
-            headertitletextColor={"#FFF"}
+            headerBgColor={"#4B8FF0"}
+            headerTitleColor={"#fff"}
             handlePageChange={handlePageChange}
             currentPage={currentPage}
             handleAdd={() =>
@@ -327,7 +486,7 @@ function FileCases() {
                   id: item?.caseId,
                   fileId: item?.internalId,
                 },
-              })
+              });
             }}
             showEditIcon={true}
             pageSize={pageSize}
@@ -335,7 +494,7 @@ function FileCases() {
             singleDataCard={true}
             hideDeleteIcon={true}
             showView={false}
-            caseEditable = {true}
+            caseEditable={true}
             handleView={(item) => {
               setFileIdForDetailPage(item?.internalId);
               setCaseIdForDetailPage(item?.caseId);
@@ -345,7 +504,7 @@ function FileCases() {
                   id: item?.caseId,
                   fileId: item?.internalId,
                 },
-              })
+              });
             }}
             showAssigned={false}
             // hendleAssigned={(item) => navigate("/efiling/dashboard/fileDetail", { state: { view: true, id: item.caseId } })}

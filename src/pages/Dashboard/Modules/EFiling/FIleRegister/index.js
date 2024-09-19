@@ -8,7 +8,10 @@ import {
   EfilingSideBarItem,
 } from "../../../../../utils/sideBarItems";
 import { useNavigate } from "react-router";
-import { deleteFileRegisterApi, getAllFileRegister } from "../../../../../api/APIs/Services/efiling.service";
+import {
+  deleteFileRegisterApi,
+  getAllFileRegister,
+} from "../../../../../api/APIs/Services/efiling.service";
 import {
   showErrorMessage,
   showSuccessMessage,
@@ -37,7 +40,7 @@ function ListFileRegister() {
       branch: item?.branches?.branchName,
       Subject: item?.registerSubject,
       year: item?.year,
-      status: item?.status
+      status: item?.status,
     }));
   };
 
@@ -116,15 +119,21 @@ function ListFileRegister() {
             data={filteredData}
             tableTitle="File Registers"
             addBtnText2="Create File"
-            headertitlebgColor={"#666"}
-            headertitletextColor={"#FFF"}
+            headerBgColor={"#4B8FF0"}
+            headerTitleColor={"#fff"}
             handlePageChange={handlePageChange}
             ActionHide={false}
             // handleEdit={false}
             showEditIcon={false}
             currentPage={currentPage}
-            handleAdd={() => navigate("/efiling/dashboard/addedit-file-register")}
-            handleEdit={(item) => navigate("/efiling/dashboard/addedit-file-register", { state: item })}
+            handleAdd={() =>
+              navigate("/efiling/dashboard/addedit-file-register")
+            }
+            handleEdit={(item) =>
+              navigate("/efiling/dashboard/addedit-file-register", {
+                state: item,
+              })
+            }
             handleDelete={(item) => handleDelete(item.id)}
             pageSize={pageSize}
             totalCount={count}

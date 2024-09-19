@@ -17,7 +17,7 @@ import { getallMembers } from "../../../../../api/APIs/Services/Motion.service";
 function SMSMembers() {
   const navigate = useNavigate();
   const [members, setMembers] = useState([]);
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
   const [count, setCount] = useState(null);
   const pageSize = 10; // Set your desired page size
 
@@ -32,7 +32,7 @@ function SMSMembers() {
       memberName: `${item.memberName}`,
       politicalParty: `${item?.politicalParties?.partyName}`,
       electionType: item?.electionType,
-      reason: item?.reason ? item?.reason:"---",
+      reason: item?.reason ? item?.reason : "---",
       phoneNo: item?.phoneNo,
       memberStatus: item?.memberStatus,
     }));

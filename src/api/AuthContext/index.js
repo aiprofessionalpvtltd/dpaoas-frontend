@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }) => {
   const [parliamentaryYear, setParliamentaryYear] = useState([]);
   const [divisions, setDivisions] = useState([]);
   const [fileIdINRegister, setFileIdInRegister] = useState(null);
-  const [fildetailsAqain, setFileDetail] = useState(null)
+  const [fildetailsAqain, setFileDetail] = useState(null);
 
   const login = async (data) => {
     try {
@@ -73,7 +73,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await getAllSessions();
       if (response?.success) {
-        setCurrentSession( response?.data?.sessions[0])
+        setCurrentSession(response?.data?.sessions[0]);
         setSessions(response?.data?.sessions);
       }
     } catch (error) {
@@ -82,7 +82,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const AllMembersData = async () => {
-    const currentPage = 0;
+    const currentPage = 1;
     const pageSize = 100;
     try {
       const response = await getallMembers(currentPage, pageSize);
@@ -105,9 +105,7 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.log(error?.response?.data?.message);
     }
-  }    
-
-  
+  };
 
   const getAllResolutionStatusApi = async () => {
     try {
@@ -156,9 +154,9 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  useEffect(()=>{  
+  useEffect(() => {
     getEmployeeData();
-  },[])
+  }, []);
   useEffect(() => {
     getAllResolutionStatusApi();
     AllMembersData();
@@ -167,7 +165,7 @@ export const AuthProvider = ({ children }) => {
     getretriveEmployeesAsEngineers();
     AllBranchesData();
     getAllParliamnetaryYears();
-    handleDivisionsAPi()
+    handleDivisionsAPi();
   }, []);
 
   return (
@@ -187,8 +185,10 @@ export const AuthProvider = ({ children }) => {
         parliamentaryYear,
         setFileIdInRegister,
         fileIdINRegister,
-        fildetailsAqain, setFileDetail,divisions,
-        currentSession
+        fildetailsAqain,
+        setFileDetail,
+        divisions,
+        currentSession,
       }}
     >
       {children}

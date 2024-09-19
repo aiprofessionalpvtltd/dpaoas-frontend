@@ -691,20 +691,25 @@ function NewLegislationSenateBill() {
                             <label class="form-label">Member</label>
                             <Select
                               // options={
-                              //   membersOnParliamentaryYear &&
-                              //   membersOnParliamentaryYear?.length > 0 &&
-                              //   membersOnParliamentaryYear?.map((item) => ({
-                              //     value: item.id,
-                              //     label: item?.memberName,
-                              //   }))
+                              //   Array.isArray(membersOnParliamentaryYear) &&
+                              //   membersOnParliamentaryYear.length > 0
+                              //     ? membersOnParliamentaryYear.map((item) => ({
+                              //         value: item.id,
+                              //         label: item?.memberName,
+                              //       }))
+                              //     : []
                               // }
                               options={
                                 Array.isArray(membersOnParliamentaryYear) &&
                                 membersOnParliamentaryYear.length > 0
-                                  ? membersOnParliamentaryYear.map((item) => ({
-                                      value: item.id,
-                                      label: item?.memberName,
-                                    }))
+                                  ? membersOnParliamentaryYear
+                                      .sort((a, b) =>
+                                        a.memberName.localeCompare(b.memberName)
+                                      ) // Sort by memberName alphabetically
+                                      .map((item) => ({
+                                        value: item.id,
+                                        label: item.memberName,
+                                      }))
                                   : []
                               }
                               id="selectedSenator"

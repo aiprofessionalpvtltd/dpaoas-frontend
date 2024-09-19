@@ -49,6 +49,7 @@ function AddEditLeaveRequests() {
 
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
+
   const handleOkClick = () => {
     if (location?.state?.id) {
       UpdateLeaveApi(formValues);
@@ -113,7 +114,7 @@ function AddEditLeaveRequests() {
 
   const formik = useFormik({
     initialValues: initialValues,
-    validationSchema: validationSchema,
+    // validationSchema: validationSchema,
     onSubmit: (values) => {
       // Handle form submission here
       handleShow();
@@ -199,17 +200,17 @@ function AddEditLeaveRequests() {
     formData.append("requestStationLeave", values.leaveStation);
     formData.append("file", values.attachment);
 
-    try {
-      const response = await createLeave(formData);
-      if (response?.success) {
-        showSuccessMessage(response?.message);
-        setTimeout(() => {
-          navigate("/notice/leaveRequests");
-        }, 3000);
-      }
-    } catch (error) {
-      showErrorMessage(error?.response?.data?.message);
-    }
+    // try {
+    //   const response = await createLeave(formData);
+    //   if (response?.success) {
+    //     showSuccessMessage(response?.message);
+    //     setTimeout(() => {
+    //       navigate("/notice/leaveRequests");
+    //     }, 3000);
+    //   }
+    // } catch (error) {
+    //   showErrorMessage(error?.response?.data?.message);
+    // }
   };
 
   const UpdateLeaveApi = async (values) => {
