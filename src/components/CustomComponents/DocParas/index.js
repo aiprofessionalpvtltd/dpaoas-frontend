@@ -137,7 +137,10 @@ const DocParas = ({
         1000
       );
       if (response?.success) {
-        const transformedData = transformData(response.data?.correspondences);
+        const FilterData = response.data?.correspondences?.filter(
+          (item) => item.status === "active"
+        );
+        const transformedData = transformData(FilterData);
         setCorrespondenceTypesData(transformedData);
       }
     } catch (error) {
@@ -230,10 +233,10 @@ const DocParas = ({
     if (otherReferenceFlag) {
       const Data = {
         fkBranchId: userData?.fkBranchId,
-        flag: otherReferenceFlag
-      }
+        flag: otherReferenceFlag,
+      };
       try {
-        const response = await createFlagApi(Data)
+        const response = await createFlagApi(Data);
         if (response.success) {
           showSuccessMessage(response?.message);
           getBranchFlags();
@@ -244,7 +247,7 @@ const DocParas = ({
         showErrorMessage(error?.response?.data?.message);
       }
     }
-  }
+  };
 
   return (
     <>
@@ -281,41 +284,40 @@ const DocParas = ({
                     flagsData.map((item) => (
                       <option value={item?.flag}>{item?.flag}</option>
                     ))}
-                    <option value={"other"}>Other</option>
+                  <option value={"other"}>Other</option>
                 </select>
               </div>
 
               {referenceFlag === "other" && (
-                    <>
-                    <div class="col">
-                      <div class="mb-3">
-                        <label class="form-label">Other Flag</label>
-                        <input
-                          type="text"
-                          placeholder={"Other flag"}
-                          value={otherReferenceFlag}
-                          className={`form-control`}
-                          id="otherFlag"
-                          onChange={(e) => setOtherReferenceFlag(e.target.value)}
-                        />
-                      </div>
+                <>
+                  <div class="col">
+                    <div class="mb-3">
+                      <label class="form-label">Other Flag</label>
+                      <input
+                        type="text"
+                        placeholder={"Other flag"}
+                        value={otherReferenceFlag}
+                        className={`form-control`}
+                        id="otherFlag"
+                        onChange={(e) => setOtherReferenceFlag(e.target.value)}
+                      />
                     </div>
+                  </div>
 
-                    <div className="col-1">
-                        <FontAwesomeIcon
-                          icon={faPlusSquare}
-                          style={{
-                            fontSize: "30px",
-                            color: "#14ae5c",
-                            cursor: "pointer",
-                            marginTop: "33px",
-                          }}
-                          onClick={() => handleAddNewFlag()}
-                        />
-                      </div>
-                      </>
-                  )}
-
+                  <div className="col-1">
+                    <FontAwesomeIcon
+                      icon={faPlusSquare}
+                      style={{
+                        fontSize: "30px",
+                        color: "#14ae5c",
+                        cursor: "pointer",
+                        marginTop: "33px",
+                      }}
+                      onClick={() => handleAddNewFlag()}
+                    />
+                  </div>
+                </>
+              )}
             </div>
 
             {/* {FR?.frId && (
@@ -371,10 +373,10 @@ const DocParas = ({
               className="btn btn-primary"
               type="submit"
               onClick={() => {
-                if(referenceFlag && referenceAttachment) {
+                if (referenceFlag && referenceAttachment) {
                   handleEditToggle(showModalIndex, true);
                 } else {
-                  showErrorMessage("Please select all the required fields!")
+                  showErrorMessage("Please select all the required fields!");
                 }
               }}
             >
@@ -571,109 +573,113 @@ const DocParas = ({
                   disabled={editableIndex !== index ? true : false}
                 />
               </div>
-              
+
               {tab?.references && tab?.references?.length > 0 && (
                 <>
-                {userData && userData?.userType === "Section User" && (
-                <div
-                  className="col"
-                  style={{ width: "100%", marginTop: "10px" }}
-                >
-                  {tab.references?.map((item, idx) => (
+                  {userData && userData?.userType === "Section User" && (
                     <div
-                      key={idx}
-                      style={{ display: "flex", flexDirection: "column" }}
+                      className="col"
+                      style={{ width: "100%", marginTop: "10px" }}
                     >
-                      <div style={{ display: "flex", flexDirection: "row" }}>
-                        <label>Flag - {item?.flag}</label>
+                      {tab.references?.map((item, idx) => (
                         <div
-                          style={{
-                            marginLeft: "20px",
-                            color: "red",
-                            cursor: "pointer",
-                          }}
+                          key={idx}
+                          style={{ display: "flex", flexDirection: "column" }}
                         >
-                          <FontAwesomeIcon
-                            icon={faXmark}
-                            onClick={() => handleFlagDelete(index, idx)}
-                          />
-                        </div>
-                      </div>
-                      {/* <label>Attachments: </label> */}
-                      <ul style={{ marginBottom: 0 }}>
-                        {item?.attachments?.map((innerItem, innerIdx) => (
-                          <React.Fragment key={innerIdx}>
-                            {innerItem?.filename && (
-                              <li>
-                                <p
-                                  onClick={() =>
-                                    HandlePrint(innerItem?.filename)
-                                  }
-                                  style={{
-                                    color: "blue",
-                                    cursor: "pointer",
-                                  }}
-                                >
-                                  {`${getFileName(innerItem?.filename)}`}
-                                </p>
-                              </li>
-                            )}
-                            {innerItem?.attachments?.map(
-                              (nestedItem, nestedItemIdx) => (
-                                <>
-                                  <li key={`${innerIdx}-${nestedItemIdx}`}>
-                                    <div
+                          <div
+                            style={{ display: "flex", flexDirection: "row" }}
+                          >
+                            <label>Flag - {item?.flag}</label>
+                            <div
+                              style={{
+                                marginLeft: "20px",
+                                color: "red",
+                                cursor: "pointer",
+                              }}
+                            >
+                              <FontAwesomeIcon
+                                icon={faXmark}
+                                onClick={() => handleFlagDelete(index, idx)}
+                              />
+                            </div>
+                          </div>
+                          {/* <label>Attachments: </label> */}
+                          <ul style={{ marginBottom: 0 }}>
+                            {item?.attachments?.map((innerItem, innerIdx) => (
+                              <React.Fragment key={innerIdx}>
+                                {innerItem?.filename && (
+                                  <li>
+                                    <p
+                                      onClick={() =>
+                                        HandlePrint(innerItem?.filename)
+                                      }
                                       style={{
-                                        flexDirection: "row",
-                                        display: "flex",
+                                        color: "blue",
+                                        cursor: "pointer",
                                       }}
                                     >
-                                      <p
-                                        onClick={() =>
-                                          HandlePrint(nestedItem?.file)
-                                        }
-                                        style={{
-                                          color: "blue",
-                                          cursor: "pointer",
-                                        }}
-                                      >
-                                        {`${innerItem?.name} (${
-                                          innerItem?.description
-                                        }) - ${getFileName(nestedItem?.file)}`}
-                                      </p>
-                                      {/* <div style={{marginLeft:"10px", cursor:"pointer"}}>
+                                      {`${getFileName(innerItem?.filename)}`}
+                                    </p>
+                                  </li>
+                                )}
+                                {innerItem?.attachments?.map(
+                                  (nestedItem, nestedItemIdx) => (
+                                    <>
+                                      <li key={`${innerIdx}-${nestedItemIdx}`}>
+                                        <div
+                                          style={{
+                                            flexDirection: "row",
+                                            display: "flex",
+                                          }}
+                                        >
+                                          <p
+                                            onClick={() =>
+                                              HandlePrint(nestedItem?.file)
+                                            }
+                                            style={{
+                                              color: "blue",
+                                              cursor: "pointer",
+                                            }}
+                                          >
+                                            {`${innerItem?.name} (${
+                                              innerItem?.description
+                                            }) - ${getFileName(
+                                              nestedItem?.file
+                                            )}`}
+                                          </p>
+                                          {/* <div style={{marginLeft:"10px", cursor:"pointer"}}>
                                     <FontAwesomeIcon  onClick={() => hendleDeleteAttach(item, innerIdx)} color={"red"} icon={faXmark}/>
 
                                     </div> */}
-                                      <div
-                                        style={{
-                                          marginLeft: "10px",
-                                          cursor: "pointer",
-                                        }}
-                                        onClick={() =>
-                                          copyToClipboard(
-                                            `${imagesUrl}${nestedItem?.file}`
-                                          )
-                                        }
-                                        title="Copy Link"
-                                      >
-                                        <FontAwesomeIcon
-                                          icon={faClipboard}
-                                          color={"rgb(45, 206, 137)"}
-                                        />
-                                      </div>
-                                    </div>
-                                  </li>
-                                </>
-                              )
-                            )}
-                          </React.Fragment>
-                        ))}
-                      </ul>
+                                          <div
+                                            style={{
+                                              marginLeft: "10px",
+                                              cursor: "pointer",
+                                            }}
+                                            onClick={() =>
+                                              copyToClipboard(
+                                                `${imagesUrl}${nestedItem?.file}`
+                                              )
+                                            }
+                                            title="Copy Link"
+                                          >
+                                            <FontAwesomeIcon
+                                              icon={faClipboard}
+                                              color={"rgb(45, 206, 137)"}
+                                            />
+                                          </div>
+                                        </div>
+                                      </li>
+                                    </>
+                                  )
+                                )}
+                              </React.Fragment>
+                            ))}
+                          </ul>
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
-                )}
+                  )}
                 </>
               )}
             </Box>

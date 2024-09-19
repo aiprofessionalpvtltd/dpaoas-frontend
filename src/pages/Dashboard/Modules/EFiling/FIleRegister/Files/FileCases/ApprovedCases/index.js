@@ -37,6 +37,7 @@ function ApprovedCasesHistory() {
   const [showHeadings, setShowHeadings] = useState(false);
   const [showFiles, setShowFiles] = useState(false);
   const [fkfileId, setFKFileId] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
@@ -72,12 +73,13 @@ function ApprovedCasesHistory() {
     }));
   };
 
-  console.log("locationID", location?.state);
-
   //Getting Approved Cases Data
   const getAllApprovedCasesApi = async () => {
     let searchParams = {};
-    if (UserData && UserData?.userType === "Officer") {
+    if (
+      (UserData && UserData?.userType === "Officer") ||
+      UserData?.designation?.designationName === "Superintendent"
+    ) {
       searchParams = {
         branchId: UserData?.fkBranchId,
         currentPage: currentPage,
@@ -183,6 +185,10 @@ function ApprovedCasesHistory() {
     hendleRegisterSelect(e.target.value);
     setShowFiles(true);
   };
+
+  const filteredApprovedData = approvedCasesData?.filter((item) =>
+    item?.FileNo?.toLowerCase().includes(searchTerm?.toLowerCase())
+  );
   return (
     <Layout
       module={false}
@@ -286,9 +292,11 @@ function ApprovedCasesHistory() {
         <div class="col-12">
           <CustomTable
             ActionHide={false}
+            seachBarShow={true}
+            searchonchange={(e) => setSearchTerm(e.target.value)}
             hidebtn1={true}
             hideBtn={true}
-            data={approvedCasesData}
+            data={filteredApprovedData}
             tableTitle="Approved Cases History"
             headerBgColor={"#4B8FF0"}
             headerTitleColor={"#fff"}
@@ -299,7 +307,7 @@ function ApprovedCasesHistory() {
             singleDataCard={true}
             showEditIcon={
               UserData &&
-              UserData?.designation?.designationName === "Section Officer"
+              UserData?.designation?.designationName === "Superintendent"
                 ? false
                 : true
             }
