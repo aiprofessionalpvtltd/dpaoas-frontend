@@ -1389,7 +1389,7 @@ function FileDetail() {
                                 pageSize={pageSize}
                                 totalCount={count}
                                 singleDataCard={true}
-                                showView={true}
+                                // showView={true}
                                 handleView={(item) => {
                                   setAttachedFiles(item?.attachmentInternal);
                                   setShowModal(true);

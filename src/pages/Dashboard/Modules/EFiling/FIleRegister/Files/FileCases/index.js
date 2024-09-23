@@ -36,8 +36,6 @@ function FileCases() {
   const [searchTerm, setSearchTerm] = useState("");
   const userData = getUserData();
   const location = useLocation();
-
-  console.log("location", location?.state?.fileNumber);
   const [headings, setHeadings] = useState(null);
   const [headcount, setHeadCount] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
@@ -146,7 +144,7 @@ function FileCases() {
   const [fileData, setFileData] = useState([]);
   const [registerId, setRegisterId] = useState(null);
   const [fileNumnerCases, setFileNumberCases] = useState(
-    location?.state?.fileNumber && location?.state?.fileNumber
+    location?.state?.fileNumber ? location?.state?.fileNumber : ""
   );
   // Register Drop Down Change
   const handleRegisterDropDownChange = (selectedOption) => {
@@ -238,31 +236,20 @@ function FileCases() {
   //   item?.FileNo?.toLowerCase().includes(searchTerm?.toLowerCase())
   // );
 
-  // Filtered Data
   // Filtered Data based on fileNumnerCases and searchTerm
   const filteredCaseData = casesData?.filter((item) => {
-    const fileNumberMatches = fileNumnerCases
-      ? item?.FileNo?.toLowerCase() === fileNumnerCases?.toLowerCase()
-      : true; // If there's no selected file number, show all
+    // If "All Cases" is selected or fileNumnerCases is empty, show all data
+    const fileNumberMatches =
+      fileNumnerCases === "All Cases" || fileNumnerCases === ""
+        ? true // If "All Cases" or no file is selected, show all data
+        : item?.FileNo?.toLowerCase() === fileNumnerCases?.toLowerCase(); // Otherwise, filter by file number
 
     const searchTermMatches = searchTerm
       ? item?.FileNo?.toLowerCase().includes(searchTerm?.toLowerCase())
-      : true; // If no search term, show all
+      : true; // Show all if no search term
 
     return fileNumberMatches && searchTermMatches;
   });
-
-  // const filteredCaseData = casesData?.filter((item) => {
-  //   const fileNumberMatches = fileNumnerCases
-  //     ? item?.FileNo?.toLowerCase() === fileNumnerCases?.toLowerCase()
-  //     : true; // If there's no fileNumber, include all
-
-  //   const searchTermMatches = searchTerm
-  //     ? item?.FileNo?.toLowerCase().includes(searchTerm?.toLowerCase())
-  //     : true; // If searchTerm is empty, include all
-
-  //   return fileNumberMatches && searchTermMatches;
-  // });
 
   useEffect(() => {
     const fileId = getSelectedFileID();
@@ -311,63 +298,24 @@ function FileCases() {
       </div>
 
       <div className="row">
-        {/* <div className="col-3">
-          <div className="mb-3">
-            <label class="form-label">Selected File</label>
-            <Select
-              options={
-                Array.isArray(allFiles) && allFiles?.length > 0
-                  ? allFiles.map((item) => ({
-                      value: item?.id,
-                      label: item?.fileNumber,
-                      // tenureType: item?.tenureType,
-                    }))
-                  : []
-              }
-              // Use selectedOptions to update the form value
-              onChange={(selectedOptions) => {
-                formik.setFieldValue("formFile", selectedOptions);
-              }}
-              onBlur={formik.handleBlur}
-              // Set the default value if location.state.fileNumber exists
-              value={
-                fileNumnerCases
-                  ? allFiles.find(
-                      (file) => file?.fileNumber === fileNumnerCases
-                    )
-                    ? {
-                        value: allFiles.find(
-                          (file) => file?.fileNumber === fileNumnerCases
-                        )?.id,
-                        label: fileNumnerCases,
-                      }
-                    : formik.values.formFile
-                  : formik.values.formFile
-              }
-              name="formFile"
-            />
-            {formik.touched.mover && formik.errors.formFile && (
-              <div class="invalid-feedback">{formik.errors.formFile}</div>
-            )}
-          </div>
-        </div> */}
         <div className="col-3">
           <div className="mb-3">
             <label className="form-label">Selected File</label>
             <Select
-              options={
-                Array.isArray(allFiles) && allFiles.length > 0
+              options={[
+                { value: "All Cases", label: "All Cases" }, // Adding the "All Cases" option
+                ...(Array.isArray(allFiles) && allFiles?.length > 0
                   ? allFiles.map((item) => ({
                       value: item.id,
                       label: item.fileNumber,
                     }))
-                  : []
-              }
+                  : []),
+              ]}
               onChange={(selectedOptions) => {
                 // Update form field
                 formik.setFieldValue("formFile", selectedOptions);
                 // Update the fileNumnerCases state to filter the data
-                setFileNumberCases(selectedOptions.label);
+                setFileNumberCases(selectedOptions.label || ""); // Handle empty value for "All Cases"
               }}
               onBlur={formik.handleBlur}
               value={

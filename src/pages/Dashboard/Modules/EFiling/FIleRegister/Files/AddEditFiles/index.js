@@ -57,11 +57,13 @@ function AddEditFiles() {
   const [mainheadingData, setMainHeadingData] = useState([]);
   const [numberMainHeading, setNumberMainHeading] = useState([]);
   const [fileData, setFileData] = useState([]);
-  const [registerData, setRegisterData] = useState({});
+  const [registerData, setRegisterData] = useState([]);
   const [fileNumberValid, setFileNumberValid] = useState(true);
   const [selectedHeadNumber, setSelectedHeadNumber] = useState("");
+  const [selectedChangeYear, setSelectedChangeYear] = useState("");
   const [defaultFileNo, setDefaultFileNo] = useState(true);
-
+  console.log("registerData", registerData);
+  const [storeValue, setStoreValur] = useState(null);
   // const [divisionById, setDivisionById] = useState();
 
   const formik = useFormik({
@@ -140,7 +142,7 @@ function AddEditFiles() {
     };
     try {
       const response = await createFiles(
-        location.state ? registerId : registerData?.id,
+        location.state ? registerId : values?.registerDataid,
         Data
       );
       if (response.success) {
@@ -202,7 +204,7 @@ function AddEditFiles() {
     try {
       const response = await getAllFileRegister(userData?.fkBranchId, 0, 100);
       if (response.success) {
-        setRegisterData(response?.data?.fileRegisters[0]);
+        setRegisterData(response?.data?.fileRegisters);
       }
     } catch (error) {
       // showErrorMessage(error?.response?.data?.message);
@@ -224,7 +226,7 @@ function AddEditFiles() {
     if (!defaultFileNo) {
       console.log(!defaultFileNo, "sddd");
       // Set the value of the fileNumber field if it's derived
-      const fileNumber = `F.No. ${selectedHeadNumber} (${formik.values.serialNumber}) - ${registerData?.year}`;
+      const fileNumber = `F.No. ${selectedHeadNumber} (${formik.values.serialNumber}) - ${storeValue}`;
       formik.setFieldValue("fileNumber", fileNumber);
     }
   }, [
@@ -232,6 +234,7 @@ function AddEditFiles() {
     formik.values.serialNumber,
     registerData,
     defaultFileNo,
+    storeValue,
   ]);
 
   // Handle onChange event for the fileNumber field
@@ -335,10 +338,18 @@ function AddEditFiles() {
                         className={`form-select`}
                         id="registerDataid"
                         name="registerDataid"
-                        onChange={formik.handleChange}
+                        onChange={(e) => {
+                          formik.handleChange(e);
+                          console.log(
+                            e.target.options[e.target.selectedIndex].text
+                          );
+
+                          setStoreValur(
+                            e.target.options[e.target.selectedIndex].text
+                          );
+                        }}
                         onBlur={formik.handleBlur}
                         value={registerData?.year}
-                        disabled
                       >
                         <option value={""} selected disabled hidden>
                           Select
@@ -346,12 +357,16 @@ function AddEditFiles() {
                         {/* {mainheadingData && mainheadingData?.filter((filteredItem) => filteredItem?.status === "active")?.map((item) => (
                           
                         ))} */}
-                        {/* {registerData &&
-                          registerData.map((item) => ( */}
-                        <option value={registerData?.id}>
-                          {registerData?.year}
-                        </option>
-                        {/* ))} */}
+                        {location.state && location.state?.id ? (
+                          <option value={registerData?.id}>
+                            {registerData?.year}
+                          </option>
+                        ) : (
+                          registerData &&
+                          registerData.map((item) => (
+                            <option value={item?.id}>{item?.year}</option>
+                          ))
+                        )}
                       </select>
                     </div>
                   </div>
