@@ -87,7 +87,7 @@ function FileDetail() {
   });
   const [filesData, setFilesData] = useState(null);
   const [FR, setFR] = useState(null);
-  const pageSize = 10;
+  const pageSize = 30;
   const [order, setOrder] = useState("DESC");
   const handleShow = () => setShowApproveModal(true);
   const handleClose = () => setShowApproveModal(false);
@@ -408,13 +408,15 @@ function FileDetail() {
   // setNotingTabsData(renumberedTabs);
 
   const transformData = (apiData) => {
-    return apiData?.map((item) => ({
-      internalId: item.id,
-      name: item.name,
-      description: item.description,
-      status: item.status,
-      attachmentInternal: item.correspondenceAttachments,
-    }));
+    return apiData
+      ?.filter((item) => item.status === "active") // Filter items with status 'active'
+      .map((item) => ({
+        internalId: item.id,
+        name: item.name,
+        description: item.description,
+        status: item.status,
+        attachmentInternal: item.correspondenceAttachments,
+      }));
   };
 
   const handleCorrespondences = async () => {
