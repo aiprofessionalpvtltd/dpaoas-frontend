@@ -622,10 +622,17 @@ const UpdateBills = () => {
     formData.append("billCategory", values?.billCategory);
     formData.append("billType", values?.billType);
     formData.append("fkBillStatus", values?.fkBillStatus?.value);
+    const currentYear = new Date().getFullYear();
     if (BillCategory === "Private Member Bill") {
-      formData.append("fileNumber", `24/(${values?.fileNumber})/2024`);
+      formData.append(
+        "fileNumber",
+        `24/(${values?.fileNumber})/${currentYear}`
+      );
     } else {
-      formData.append("fileNumber", `09/(${values?.fileNumber})/2024`);
+      formData.append(
+        "fileNumber",
+        `09/(${values?.fileNumber})/${currentYear}`
+      );
     }
     // formData.append("fileNumber",   `09(${values?.fileNumber})/2024`);
     // formData.append("fileNumber", values?.fileNumber);
