@@ -11,7 +11,6 @@ import {
   ApprovedFIleCase,
   DeleteCorrApi,
   DeleteNotificationById,
-  DeletePara,
   DeleteParaAttachement,
   UpdateFIleCase,
   assignFIleCase,
@@ -32,7 +31,6 @@ import {
 import { Button, Modal, Spinner } from "react-bootstrap";
 import CustomTable from "../../../../../components/CustomComponents/CustomTable";
 import DocParas from "../../../../../components/CustomComponents/DocParas";
-import { Editor } from "../../../../../components/CustomComponents/Editor";
 import CKEditorComp from "../../../../../components/CustomComponents/Editor/CKEditorComp";
 import { imagesUrl } from "../../../../../api/APIs";
 import ImageGallery from "react-image-gallery";
