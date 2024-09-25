@@ -223,13 +223,20 @@ function NewLegislationSenateBill() {
     formData.append("fkTenureId", values?.memberTenure?.value);
     formData.append("fkTermId", values?.fkTermId?.value);
     formData.append("fkParliamentaryYearId", values?.parliamentaryYear);
+    const currentYear = new Date().getFullYear();
     if (
       location?.state &&
       location?.state?.category === "Private Member Bill"
     ) {
-      formData.append("fileNumber", `24/(${values?.fileNumber})/2024`);
+      formData.append(
+        "fileNumber",
+        `24/(${values?.fileNumber})/${currentYear}`
+      );
     } else {
-      formData.append("fileNumber", `09/(${values?.fileNumber})/2024`);
+      formData.append(
+        "fileNumber",
+        `09/(${values?.fileNumber})/${currentYear}`
+      );
     }
     if (values?.noticeDate) {
       const formattedDate = moment(values?.noticeDate).format("YYYY-MM-DD");
@@ -430,7 +437,7 @@ function NewLegislationSenateBill() {
                           <label className="form-label">Member Tenure</label>
                         )}
 
-                        {/* <Select
+                        {/* <Select 
                           options={
                             tenures &&
                             tenures?.length > 0 &&

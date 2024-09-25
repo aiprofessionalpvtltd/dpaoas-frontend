@@ -32,6 +32,8 @@ import {
   getAllTenures,
   getMemberByParliamentaryYearID,
   getParliamentaryYearsByTenureID,
+  getParliamentaryYearsByTermID,
+  getTermByTenureID,
 } from "../../../../../../../api/APIs/Services/ManageQMS.service";
 
 const validationSchema = Yup.object({
@@ -50,6 +52,7 @@ const validationSchema = Yup.object({
 
 const EditSenateBill = () => {
   const location = useLocation();
+  const [tenuresTerms, setTenuresTerms] = useState([]);
   const navigate = useNavigate();
   const userData = getUserData();
   const GovSenateBillID = location?.state && location?.state?.id;
@@ -152,6 +155,19 @@ const EditSenateBill = () => {
       console.log(error);
     }
   };
+
+  //Get Parliamentary Year
+  const getParliamentaryYearsonTheBaseOfTerm = async (id) => {
+    try {
+      const response = await getParliamentaryYearsByTermID(id);
+      if (response?.success) {
+        setParliamentaryYearData(response?.data);
+        // setTonerModels(transformedData);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
     getAllBillStatusData();
     getAllMNA();
@@ -166,6 +182,7 @@ const EditSenateBill = () => {
       // Define your initial form values here
       selectiontype: "",
       membertenure: "",
+      fkTermId: "",
       fkParliamentaryYearId: "",
       fkSessionId: "",
       billCategory: "",
@@ -355,6 +372,18 @@ const EditSenateBill = () => {
     }
   };
 
+  // GetTerms on the Base of Tenure
+  const handleTenuresTerms = async (id) => {
+    try {
+      const response = await getTermByTenureID(id);
+      if (response?.success) {
+        setTenuresTerms(response?.data);
+      }
+    } catch (error) {
+      console.log(error?.response?.data?.message);
+    }
+  };
+
   // Get All Miisters
   const getMinisteryByMinisterIdApi = async () => {
     try {
@@ -459,6 +488,7 @@ const EditSenateBill = () => {
   }, [GovSenateBillID]);
   useEffect(() => {
     if (singleSenateBillData) {
+      console.log("singleSenateBillData", singleSenateBillData);
       let fileNum = "";
       if (singleSenateBillData?.fileNumber) {
         const fileNumberMatch =
@@ -489,6 +519,9 @@ const EditSenateBill = () => {
         handleTenures(singleSenateBillData?.billFor);
       }
       if (singleSenateBillData?.tenures?.id) {
+        getParliamentaryYearsonTheBaseOfTerm(singleSenateBillData?.tenures?.id);
+      }
+      if (singleSenateBillData?.terms?.id) {
         getParliamentaryYearsonTheBaseOfTenure(
           singleSenateBillData?.tenures?.id
         );
@@ -508,6 +541,13 @@ const EditSenateBill = () => {
           (singleSenateBillData?.tenures && {
             value: singleSenateBillData?.tenures?.id,
             label: singleSenateBillData?.tenures?.tenureName,
+          }) ||
+          "",
+
+        fkTermId:
+          (singleSenateBillData?.terms && {
+            value: singleSenateBillData?.terms?.id,
+            label: singleSenateBillData?.terms?.termName,
           }) ||
           "",
 
@@ -706,6 +746,7 @@ const EditSenateBill = () => {
     formData.append("fkSessionId", values?.fkSessionId);
     formData.append("billFor", showMinster);
     formData.append("fkTenureId", values?.membertenure?.value);
+    formData.append("fkTermId", values?.fkTermId?.value);
     formData.append("fkParliamentaryYearId", values?.fkParliamentaryYearId);
     formData.append("billCategory", BillCategory);
     formData.append("billType", values?.billType);
@@ -714,10 +755,17 @@ const EditSenateBill = () => {
       const formattedDate = moment(values?.billStatusDate).format("YYYY-MM-DD");
       formData.append("billStatusDate", formattedDate);
     }
+    const currentYear = new Date().getFullYear();
     if (BillCategory === "Private Member Bill") {
-      formData.append("fileNumber", `24/(${values?.fileNumber})/2024`);
+      formData.append(
+        "fileNumber",
+        `24/(${values?.fileNumber})/${currentYear}`
+      );
     } else {
-      formData.append("fileNumber", `09/(${values?.fileNumber})/2024`);
+      formData.append(
+        "fileNumber",
+        `09/(${values?.fileNumber})/${currentYear}`
+      );
     }
     // formData.append("fileNumber",   `09/(${values?.fileNumber})/2024`);
     // formData.append("noticeDate", values?.noticeDate);
@@ -982,10 +1030,17 @@ const EditSenateBill = () => {
                               // Call the API with the selected value
                               handleTenures(selectedValue);
                               formik.setFieldValue("membertenure", "");
-                              formik.setFieldValue("parliamentaryYear", "");
-                              formik.setFieldValue("selectedSenator", null);
-                              formik.setFieldValue("selectedMNA", null);
-                              formik.setFieldValue("selectedMinistry", null);
+                              formik.setFieldValue("fkParliamentaryYearId", "");
+                              formik.setFieldValue("fkTermId", "");
+                              formik.setFieldValue(
+                                "senateBillSenatorMovers",
+                                null
+                              );
+                              formik.setFieldValue("senateBillMnaMovers", null);
+                              formik.setFieldValue(
+                                "senateBillMinistryMovers",
+                                null
+                              );
                               // SetFormSHow
                               setIsFormShow(true);
                               setShowMinister(selectedValue);
@@ -1017,50 +1072,41 @@ const EditSenateBill = () => {
                         )}
 
                         <Select
-                          // options={
-                          //   tenures &&
-                          //   tenures?.length > 0 &&
-                          //   tenures.map((item) => ({
-                          //     value: item.id,
-                          //     label: item?.tenureName,
-                          //   }))
-                          // }
                           options={
                             Array.isArray(tenures) && tenures?.length > 0
                               ? tenures.map((item) => ({
                                   value: item?.id,
-                                  label: item?.tenureName,
+                                  label: `${item?.tenureName} (${item?.tenureType})`,
+                                  tenureType: item?.tenureType,
                                 }))
                               : []
                           }
-                          name="membertenure"
-                          id="membertenure"
                           onChange={(selectedOption) => {
-                            // Set the selected value in Formik
                             formik.setFieldValue(
                               "membertenure",
                               selectedOption
                             );
-                            // Clear the Parliamentary Year select field
-                            formik.setFieldValue("fkParliamentaryYearId", []);
-                            formik.setFieldValue("selectedSenator", []);
-                            // setMembersOnParliamentaryYear([]);
-                            // Get the selected ID and call the API
-                            const selectedId = selectedOption?.value;
-                            if (selectedId) {
+                            if (showMinster === "Ministers") {
                               getParliamentaryYearsonTheBaseOfTenure(
-                                selectedId
+                                selectedOption?.value
                               );
-                              console.log("Selected ID:", selectedId);
+                            } else {
+                              handleTenuresTerms(selectedOption?.value);
                             }
+                            formik.setFieldValue("fkTermId", "");
+                            formik.setFieldValue("fkParliamentaryYearId", "");
+                            formik.setFieldValue("senateBillSenatorMovers", "");
+                            formik.setFieldValue("senateBillMnaMovers", null);
+                            formik.setFieldValue(
+                              "senateBillMinistryMovers",
+                              null
+                            );
                           }}
-                          className={` ${
-                            formik.touched.membertenure &&
-                            formik.errors.membertenure
-                              ? "is-invalid"
-                              : ""
-                          }`}
+                          onBlur={formik.handleBlur}
                           value={formik.values.membertenure}
+                          id="membertenure"
+                          name="membertenure"
+                          isClearable={true}
                         />
                         {formik.touched.membertenure &&
                           formik.errors.membertenure && (
@@ -1102,6 +1148,40 @@ const EditSenateBill = () => {
                             )}
                         </div>
                       </div> */}
+                      <div className="col">
+                        <div className="mb-3">
+                          <label className="form-label">Member Term</label>
+                          <Select
+                            options={
+                              Array.isArray(tenuresTerms) &&
+                              tenuresTerms?.length > 0
+                                ? tenuresTerms.map((item) => ({
+                                    value: item?.id,
+                                    label: `${item?.termName}`,
+                                  }))
+                                : []
+                            }
+                            onChange={(selectedOption) => {
+                              formik.setFieldValue("fkTermId", selectedOption);
+                              formik.setFieldValue("fkParliamentaryYearId", "");
+                              formik.setFieldValue(
+                                "senateBillSenatorMovers",
+                                ""
+                              );
+                              if (selectedOption?.value) {
+                                getParliamentaryYearsonTheBaseOfTerm(
+                                  selectedOption?.value
+                                );
+                              }
+                            }}
+                            onBlur={formik.handleBlur}
+                            value={formik.values.fkTermId}
+                            id="fkTermId"
+                            name="fkTermId"
+                            isClearable={true}
+                          />
+                        </div>
+                      </div>
 
                       <div class="col">
                         <div class="mb-3">
@@ -1187,7 +1267,7 @@ const EditSenateBill = () => {
                                     selectedOption
                                   );
                                   formik.setFieldValue(
-                                    "selectedMinistry",
+                                    "senateBillMinistryMovers",
                                     null
                                   );
                                   setMinisterID(selectedOption?.value);

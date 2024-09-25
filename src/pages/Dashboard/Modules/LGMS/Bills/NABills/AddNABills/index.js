@@ -137,10 +137,17 @@ function NewLegislationNABill() {
     const formData = new FormData();
     formData.append("fkSessionId", values?.session);
     formData.append("fkParliamentaryYearId", values?.parliamentaryYear);
+    const currentYear = new Date().getFullYear();
     if (location?.state && location.state.category === "Private Member Bill") {
-      formData.append("fileNumber", `24/(${values?.fileNumber})/2024`);
+      formData.append(
+        "fileNumber",
+        `24/(${values?.fileNumber})/${currentYear}`
+      );
     } else {
-      formData.append("fileNumber", `09/(${values?.fileNumber})/2024`);
+      formData.append(
+        "fileNumber",
+        `09/(${values?.fileNumber})/${currentYear}`
+      );
     }
     // formData.append("PassedByNADate", values?.passedByNADate);
     if (values?.PassedByNADate) {

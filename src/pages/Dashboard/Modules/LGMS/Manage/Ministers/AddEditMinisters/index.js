@@ -114,6 +114,7 @@ function LGMSMinisterAddEditForm() {
         // setTonerModels(transformedData);
       }
     } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
       console.log(error);
     }
   };
@@ -399,7 +400,7 @@ function LGMSMinisterAddEditForm() {
                 <div className="row">
                   <div class="col">
                     <div class="mb-3">
-                      <label class="form-label">Member Tenure</label>
+                      <label class="form-label">Minister Tenure</label>
                       <select
                         class="form-select"
                         id="memberTenure"
@@ -413,6 +414,7 @@ function LGMSMinisterAddEditForm() {
                           getParliamentaryYearsonTheBaseOfTenure(
                             e.target.value
                           );
+                          formik.setFieldValue("fkParliamentaryYearId", []);
                         }}
                       >
                         <option value={""} selected disabled hidden>
@@ -441,6 +443,33 @@ function LGMSMinisterAddEditForm() {
                         <option value={""} selected disabled hidden>
                           Select
                         </option>
+                        {parliamentaryYearData?.length > 0 ? (
+                          parliamentaryYearData.map((parliamentaryYear) => (
+                            <option value={parliamentaryYear?.id}>
+                              {parliamentaryYear?.parliamentaryTenure}
+                            </option>
+                          ))
+                        ) : (
+                          <option disabled>No Data Found</option>
+                        )}
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* <div class="col">
+                    <div class="mb-3">
+                      <label class="form-label">Parliamentary Year</label>
+                      <select
+                        class="form-select"
+                        id="fkParliamentaryYearId"
+                        name="fkParliamentaryYearId"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.fkParliamentaryYearId}
+                      >
+                        <option value={""} selected disabled hidden>
+                          Select
+                        </option>
                         {parliamentaryYearData &&
                           parliamentaryYearData?.length > 0 &&
                           parliamentaryYearData.map((parliamentaryYear) => (
@@ -450,7 +479,7 @@ function LGMSMinisterAddEditForm() {
                           ))}
                       </select>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
                 <div class="row">
                   <div class="col">
