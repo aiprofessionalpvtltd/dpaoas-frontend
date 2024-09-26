@@ -11437,6 +11437,11 @@ react-smooth@^4.0.0:
     prop-types "^15.8.1"
     react-transition-group "^4.4.5"
 
+react-spinner-animated@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/react-spinner-animated/-/react-spinner-animated-3.1.1.tgz#2e8a589afe3c0bef95980ca00dd346d02d58bdd8"
+  integrity sha512-bv4YRVAKjAMahHmeQfLp9qD+Y4v/ZkV9L/kYzVeAOSvvjjVknqdTn9iNT0CBqsW4AU3oFZ/xTle/5C8qzOvvsg==
+
 react-tag-input-component@^2.0.2:
   version "2.0.2"
   resolved "https://registry.npmjs.org/react-tag-input-component/-/react-tag-input-component-2.0.2.tgz"

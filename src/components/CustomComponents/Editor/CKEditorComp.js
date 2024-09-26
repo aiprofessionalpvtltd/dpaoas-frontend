@@ -133,7 +133,7 @@ export const CKEditorComp = ({ onChange, value, disabled }) => {
         }}
         data={value ? value : ""}
         onReady={editor => {
-          console.log('Editor is ready to use!', editor);
+          // console.log('Editor is ready to use!', editor);
         }}
         onChange={(event, editor) => {
           const data = editor.getData();

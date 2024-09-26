@@ -38,6 +38,8 @@ import "react-image-gallery/styles/css/image-gallery.css";
 import moment from "moment";
 import { CustomAlert } from "../../../../../components/CustomComponents/CustomAlert";
 import html2pdf from "html2pdf.js";
+import { HalfMalf } from "react-spinner-animated";
+import "react-spinner-animated/dist/index.css";
 
 const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
   return (
@@ -57,6 +59,7 @@ function FileDetail() {
   const navigate = useNavigate();
   const UserData = getUserData();
   const [loading, setLoading] = useState(true);
+  const [initialDataLoading, setInitialDataLoading] = useState(false);
   const fileInputRef = useRef(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
@@ -87,6 +90,9 @@ function FileDetail() {
   const [FR, setFR] = useState(null);
   const pageSize = 30;
   const [order, setOrder] = useState("DESC");
+  const [previousUserParaCount, setPreviousUserParaCount] = useState(0);
+  const [saved, setSaved] = useState(false);
+
   const handleShow = () => setShowApproveModal(true);
   const handleClose = () => setShowApproveModal(false);
   const handleOkClick = () => {
@@ -442,6 +448,7 @@ function FileDetail() {
 
   const getFilesByID = async (fileGlobalId, caseGlobalId, orderBy) => {
     try {
+      setInitialDataLoading(true);
       const response = await getCaseDetailByID(
         fileGlobalId
           ? fileGlobalId
@@ -462,8 +469,10 @@ function FileDetail() {
             response?.data?.cases?.freshReceipts?.freshReceiptsAttachments,
         };
         setFR(FRSelection);
+        setInitialDataLoading(false);
       }
     } catch (error) {
+      setInitialDataLoading(false);
       showErrorMessage(error?.response?.data?.message);
     }
   };
@@ -501,6 +510,7 @@ function FileDetail() {
     });
     setNotingTabSubject(filesData?.notingSubject);
     setNotingTabsData(filesData?.paragraphArray);
+    setPreviousUserParaCount(filesData?.paragraphArray?.length);
   }, [filesData]);
 
   const images =
@@ -736,6 +746,24 @@ function FileDetail() {
       });
   };
 
+  // Helper function to strip HTML tags and get plain text
+  const stripHtml = (html) => {
+    const tmp = document.createElement("div");
+    tmp.innerHTML = html;
+    return tmp.textContent || tmp.innerText || "";
+  };
+
+  const isContentEmpty = () => {
+    const strippedText = stripHtml(notingData.description);
+    return strippedText.trim().length === 0; // Check if the content is truly empty after stripping HTML
+  };
+
+  console.log("====================================");
+  console.log(notingTabData?.length, previousUserParaCount, !saved);
+
+  console.log(notingTabData?.length > previousUserParaCount && !saved);
+  console.log("====================================");
+
   return (
     <Layout
       centerlogohide={true}
@@ -751,6 +779,17 @@ function FileDetail() {
         handleClose={handleClose}
         handleOkClick={handleOkClick}
       />
+
+      {initialDataLoading && (
+        <HalfMalf
+          text={"Loading data..."}
+          bgColor={"#ffffff"}
+          center={true}
+          width={"150px"}
+          height={"150px"}
+        />
+      )}
+
       <div className="dashboard-content">
         <Modal
           show={showModal}
@@ -1103,13 +1142,14 @@ function FileDetail() {
                                   ? "none"
                                   : "block",
                               }}
-                              onClick={() => UpdateEfilingApi()}
+                              onClick={() => {
+                                UpdateEfilingApi();
+                                setSaved(true);
+                              }}
                               disabled={
-                                viewPage
-                                  ? true
-                                  : location?.state?.approved
-                                    ? true
-                                    : false
+                                viewPage ||
+                                location?.state?.approved ||
+                                notingTabData?.length <= previousUserParaCount
                               }
                             >
                               Save
@@ -1256,7 +1296,8 @@ function FileDetail() {
                                             width: "100px",
                                           }}
                                           disabled={
-                                            location?.state?.view ? true : false
+                                            location?.state?.view ||
+                                            isContentEmpty()
                                           }
                                           onClick={() =>
                                             handleEditorChange(
@@ -1321,14 +1362,14 @@ function FileDetail() {
                                     style={{
                                       display: "flex",
                                       justifyContent: "flex-end",
-                                      marginTop: 5,
                                     }}
                                   >
                                     <button
                                       className="btn btn-primary"
-                                      style={{ marginTop: 60, width: "100px" }}
+                                      style={{ marginTop: 10, width: "100px" }}
                                       disabled={
-                                        location?.state?.view ? true : false
+                                        location?.state?.view ||
+                                        isContentEmpty()
                                       }
                                       onClick={() =>
                                         handleEditorChange(
@@ -1444,12 +1485,51 @@ function FileDetail() {
                     Comments
                   </h2>
                   {!location?.state?.approved && (
-                    <a onClick={toggleModal}>
+                    <a
+                      onClick={() => {
+                        // Check if the user is a "Assistant"
+                        if (UserData?.designation?.designationName?.includes("Assistant")) {
+                          // If a new paragraph has been added and not saved, show an error
+                          if (
+                            notingTabData?.length > previousUserParaCount &&
+                            !saved
+                          ) {
+                            showErrorMessage(
+                              "Please save the new paragraph before proceeding!"
+                            );
+                          } else {
+                            toggleModal();
+                          }
+                        }
+                        // For other users, proceed with the usual validation
+                        else {
+                          if (
+                            notingTabData?.length <= previousUserParaCount ||
+                            !saved
+                          ) {
+                            showErrorMessage(
+                              "Please add your paragraph first & save it!"
+                            );
+                          } else {
+                            toggleModal();
+                          }
+                        }
+                      }}
+                    >
                       <button
                         className="btn add-btn"
                         style={{
                           display: location?.state?.view ? "none" : "block",
                         }}
+                        disabled={
+                          UserData?.designation?.designationName?.includes("Assistant")
+                            ? // Disable for "Assistant" only if a new paragraph was added but not saved
+                              notingTabData?.length > previousUserParaCount &&
+                              !saved
+                            : // Disable for other users if paragraph count is not valid or content is not saved
+                              notingTabData?.length <= previousUserParaCount ||
+                              !saved
+                        }
                       >
                         Proceed
                       </button>
