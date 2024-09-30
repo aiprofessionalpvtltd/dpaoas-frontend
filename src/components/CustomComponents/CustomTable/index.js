@@ -97,6 +97,7 @@ function CustomTable({
     return (
       key !== "internalAttachment" &&
       key !== "internalId" &&
+      key !== "caseNoteId" &&
       key !== "isEditable" &&
       key !== "attachmentInternal" &&
       key !== "billFrom" &&
@@ -628,6 +629,19 @@ function CustomTable({
                                       style={{ color: "blue" }}
                                     >
                                       <FontAwesomeIcon icon={faEdit} />
+                                    </button>
+                                  </OverlayTrigger>
+                                  <OverlayTrigger
+                                    placement="top"
+                                    overlay={deleteTooltip}
+                                  >
+                                    <button
+                                      onClick={() => handleDelete(item)}
+                                      className="btn-xs black circle-btn"
+                                      data-id={item.id}
+                                      style={{ color: "#fb6340" }}
+                                    >
+                                      <FontAwesomeIcon icon={faTrash} />
                                     </button>
                                   </OverlayTrigger>
                                 </>
