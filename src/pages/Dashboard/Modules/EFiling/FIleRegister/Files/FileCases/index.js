@@ -9,6 +9,7 @@ import {
   EfilingSideBarItem,
 } from "../../../../../../../utils/sideBarItems";
 import {
+  deleteCaseById,
   getAllCasesThroughSearchParams,
   getAllEfiling,
   getAllFileHeading,
@@ -29,6 +30,7 @@ import {
   showSuccessMessage,
 } from "../../../../../../../utils/ToastAlert";
 import { useFormik } from "formik";
+import { CustomAlert } from "../../../../../../../components/CustomComponents/CustomAlert";
 
 function FileCases() {
   const navigate = useNavigate();
@@ -47,6 +49,8 @@ function FileCases() {
   const [fkfileId, setFKFileId] = useState(null);
   const [showHeadings, setShowHeadings] = useState(false);
   const [showFiles, setShowFiles] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteCaseId, setDeleteCaseId] = useState(null);
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
@@ -65,6 +69,7 @@ function FileCases() {
       return {
         isEditable: item?.isEditable,
         caseId: item?.fkCaseId,
+        caseNoteId: item?.caseNoteId,
         internalId: item?.fileData?.id,
         FileNo: item?.fileData?.fileNumber,
         initiatedBy: item?.createdByUser?.firstName,
@@ -260,6 +265,29 @@ function FileCases() {
     getAllFilesAPi();
   }, []);
 
+  const deleteCaseHandler = (item) => {
+    setDeleteCaseId(item?.caseNoteId);
+    setShowDeleteModal(true);
+  }
+
+  const handleClose = () => {
+    setShowDeleteModal(false);
+    setDeleteCaseId(null);
+  }
+
+  const handleOkClick = async () => {
+    try {
+      const response = await deleteCaseById(deleteCaseId);
+      if (response?.success) {
+        showSuccessMessage(response.message);
+        getAllCasesApi();
+      }
+    } catch (error) {
+      showErrorMessage(error.response.data.message);
+    }
+    setShowDeleteModal(false);
+  }
+
   return (
     <Layout
       module={false}
@@ -406,6 +434,12 @@ function FileCases() {
         </div>
       </div> */}
 
+      <CustomAlert
+        showModal={showDeleteModal}
+        handleClose={handleClose}
+        handleOkClick={handleOkClick}
+      />
+
       <div class="row">
         <div class="col-12">
           <CustomTable
@@ -443,6 +477,7 @@ function FileCases() {
             hideDeleteIcon={true}
             showView={false}
             caseEditable={true}
+            handleDelete={(item) => deleteCaseHandler(item)}
             handleView={(item) => {
               setFileIdForDetailPage(item?.internalId);
               setCaseIdForDetailPage(item?.caseId);

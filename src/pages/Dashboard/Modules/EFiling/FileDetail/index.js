@@ -758,12 +758,6 @@ function FileDetail() {
     return strippedText.trim().length === 0; // Check if the content is truly empty after stripping HTML
   };
 
-  console.log("====================================");
-  console.log(notingTabData?.length, previousUserParaCount, !saved);
-
-  console.log(notingTabData?.length > previousUserParaCount && !saved);
-  console.log("====================================");
-
   return (
     <Layout
       centerlogohide={true}
