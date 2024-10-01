@@ -667,6 +667,19 @@ export const getAllCasesThroughSearchParams = async (searchParams) => {
   }
 };
 
+export const deleteCaseById = async (id) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.delete(
+      `/cases/delete-case/${id}`
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching delete case API endpoint:", error);
+    throw error;
+  }
+};
+
 export const getPendingCasesThroughSearchParams = async (searchParams) => {
   const filteredSearchParams = Object.fromEntries(
     Object.entries(searchParams).filter(([_, value]) => value !== "")
