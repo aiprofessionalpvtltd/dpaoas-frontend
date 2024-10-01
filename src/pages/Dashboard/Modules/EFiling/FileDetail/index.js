@@ -1140,10 +1140,10 @@ function FileDetail() {
                                 UpdateEfilingApi();
                                 setSaved(true);
                               }}
+                              // another condition if needed notingTabData?.length <= previousUserParaCount
                               disabled={
                                 viewPage ||
-                                location?.state?.approved ||
-                                notingTabData?.length <= previousUserParaCount
+                                location?.state?.approved
                               }
                             >
                               Save
