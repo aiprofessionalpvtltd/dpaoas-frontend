@@ -296,6 +296,18 @@ import QMSGroupMemberQuestion from "../pages/Dashboard/Modules/QMS/Reports/Group
 import PreviewGroupMemberPDF from "../pages/Dashboard/Modules/QMS/Reports/GroupMemberQuestion/PreviewGroupMemberPDF.js";
 import PreviewGroupMinistryPDF from "../pages/Dashboard/Modules/QMS/Reports/GroupMemberQuestion/PreviewGroupMinistryPDF.js";
 import GroupMinistryQuestion from "../pages/Dashboard/Modules/QMS/Reports/GroupMinistryQuestion/index.js";
+import VehiclesInformation from "../pages/Dashboard/Modules/Transport/Vehicles/index.js";
+import VehiclesProfile from "../pages/Dashboard/Modules/Transport/Vehicles/VehiclesProfile/index.js";
+import VehiclesLogBook from "../pages/Dashboard/Modules/Transport/Vehicles/VehiclesLogBook/index.js";
+import VehiclesMovementRegister from "../pages/Dashboard/Modules/Transport/Vehicles/VehiclesMovementRegister/index.js";
+import VehiclesOperationalStatus from "../pages/Dashboard/Modules/Transport/Vehicles/VehiclesOperationalStatus/index.js";
+import VehiclePurchases from "../pages/Dashboard/Modules/Transport/Vehicles/VehiclesPurchases/index.js";
+import DriverInformstion from "../pages/Dashboard/Modules/Transport/VehicleDrivers/index.js";
+import DriversProfile from "../pages/Dashboard/Modules/Transport/VehicleDrivers/DriversProfile/index.js";
+import DriverDeputedWithOfficer from "../pages/Dashboard/Modules/Transport/VehicleDrivers/DeputedWithOfficer/index.js";
+import DriverDeputedOnVehicleNo from "../pages/Dashboard/Modules/Transport/VehicleDrivers/DeputedOnVehicleNO/index.js";
+import DriversLicenseType from "../pages/Dashboard/Modules/Transport/VehicleDrivers/DriversLicenseType/index.js";
+import DriversMedicalReport from "../pages/Dashboard/Modules/Transport/VehicleDrivers/MedicalReport/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -1173,14 +1185,62 @@ export const ProtectedRoutes = [
     path: "/transport/fleet/addedit",
     element: <AddEditFleetManagement />,
   },
+  // {
+  //   path: "/transport/vehicles",
+  //   element: <Vehicle />,
+  // },
   {
     path: "/transport/vehicles",
-    element: <Vehicle />,
+    element: <VehiclesInformation />,
+  },
+  {
+    path: "/transport/vehicles/profiles",
+    element: <VehiclesProfile />,
+  },
+  {
+    path: "/transport/vehicles/log-book",
+    element: <VehiclesLogBook />,
+  },
+  {
+    path: "/transport/vehicles/movement-register",
+    element: <VehiclesMovementRegister />,
+  },
+  {
+    path: "/transport/vehicles/operational-status",
+    element: <VehiclesOperationalStatus />,
+  },
+  {
+    path: "/transport/vehicles/purchases",
+    element: <VehiclePurchases />,
   },
 
+  // {
+  //   path: "/transport/driver",
+  //   element: <Drivers />,
+  // },
   {
-    path: "/transport/driver",
-    element: <Drivers />,
+    path: "/transport/drivers",
+    element: <DriverInformstion />,
+  },
+  {
+    path: "/transport/drivers/profiles",
+    element: <DriversProfile />,
+  },
+  {
+    path: "/transport/drivers/deputed-with-officer",
+    element: <DriverDeputedWithOfficer />,
+  },
+  {
+    path: "/transport/drivers/deputed-on-vehicle-no",
+    element: <DriverDeputedOnVehicleNo />,
+  },
+  {
+    path: "/transport/drivers/license-type",
+    element: <DriversLicenseType />,
+  },
+  {
+    path: "/transport/drivers/medical-report",
+    element: <DriversMedicalReport />,
   },
 
   {
