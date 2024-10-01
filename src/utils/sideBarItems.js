@@ -292,7 +292,6 @@ export const MMSSideBarItems = [
     itemName: "Miscellaneous",
     link: "/mms/motion-miscelleneuos",
     icon: faClipboardList,
-    
   },
 ];
 
@@ -1239,70 +1238,137 @@ export const TransportSideBarItems = [
     link: "/transport/dashboard",
     icon: faClipboardList,
   },
+
   {
-    itemName: "Log Book",
-    link: "/transport/logbook",
+    itemName: "Vehicles",
+    link: "/transport/vehicles",
     icon: faClipboardList,
     subItems: [
       {
-        itemName: "Repairs Executed & Purchases Made",
-        link: "/transport/purchases",
+        itemName: "Vehicles Profile",
+        link: "/transport/vehicles/profiles",
         icon: faFileInvoice,
       },
       {
-        itemName: "Petrol Mileage",
-        link: "/transport/petrol-mileage",
+        itemName: "Vehicles Log Book",
+        link: "/transport/vehicles/log-book",
+        icon: faFileInvoice,
+      },
+      {
+        itemName: "Vehicles Movement Register",
+        link: "/transport/vehicles/movement-register",
+        icon: faFileInvoice,
+      },
+      {
+        itemName: "Vehicles Operational Status",
+        link: "/transport/vehicles/operational-status",
+        icon: faFileInvoice,
+      },
+      {
+        itemName: "Vehicles Purchases",
+        link: "/transport/vehicles/purchases",
         icon: faFileInvoice,
       },
     ],
   },
+
   {
-    itemName: "Vehicle Movement",
-    link: "/transport/vehicle-movement",
-    icon: faClipboardList,
-  },
-  {
-    itemName: "Handed Over Form",
-    link: "/transport/fleet",
-    icon: faClipboardList,
-  },
-  {
-    itemName: "Drivers & Vehicles",
-    link: "/transport/drivers_Vehicle",
+    itemName: "Drivers",
+    link: "/transport/drivers",
     icon: faClipboardList,
     subItems: [
       {
-        itemName: "Vehicles",
-        link: "/transport/vehicles", // need to be changed /vehicles
+        itemName: "Drivers Profile",
+        link: "/transport/drivers/profiles",
         icon: faFileInvoice,
-      }, // added
+      },
       {
-        itemName: "Drivers",
-        link: "/transport/driver", // need to be changed /drivers
+        itemName: "Deputed With Officer",
+        link: "/transport/drivers/deputed-with-officer",
+        icon: faFileInvoice,
+      },
+      {
+        itemName: "Deputed on Vehicle No",
+        link: "/transport/drivers/deputed-on-vehicle-no",
+        icon: faFileInvoice,
+      },
+      {
+        itemName: "License Type",
+        link: "/transport/drivers/license-type",
+        icon: faFileInvoice,
+      },
+      {
+        itemName: "Medical Report",
+        link: "/transport/drivers/medical-report",
         icon: faFileInvoice,
       },
     ],
   },
-  {
-    itemName: "Summary",
-    link: "/transport",
-    icon: faClipboardList,
-    subItems: [
-      {
-        itemName: "Drivers and Vehicles",
-        link: "/transport/sumDriverVehicle", // need to be changed /vehicles
-        icon: faFileInvoice,
-      }, // added
-      {
-        itemName: "Poll",
-        link: "/transport/poll", // need to be changed /drivers
-        icon: faFileInvoice,
-      },
-      {
-        itemName: "Make and Model-wise",
-        link: "/transport/makeModelWise", // need to be changed /drivers
-        icon: faFileInvoice,
-      },
-    ],
-  },
+
+  // {
+  //   itemName: "Log Book",
+  //   link: "/transport/logbook",
+  //   icon: faClipboardList,
+  //   subItems: [
+  //     {
+  //       itemName: "Repairs Executed & Purchases Made",
+  //       link: "/transport/purchases",
+  //       icon: faFileInvoice,
+  //     },
+  //     {
+  //       itemName: "Petrol Mileage",
+  //       link: "/transport/petrol-mileage",
+  //       icon: faFileInvoice,
+  //     },
+  //   ],
+  // },
+  // {
+  //   itemName: "Vehicle Movement",
+  //   link: "/transport/vehicle-movement",
+  //   icon: faClipboardList,
+  // },
+  // {
+  //   itemName: "Handed Over Form",
+  //   link: "/transport/fleet",
+  //   icon: faClipboardList,
+  // },
+  // {
+  //   itemName: "Drivers & Vehicles",
+  //   link: "/transport/drivers_Vehicle",
+  //   icon: faClipboardList,
+  //   subItems: [
+  //     {
+  //       itemName: "Vehicles",
+  //       link: "/transport/vehicles", // need to be changed /vehicles
+  //       icon: faFileInvoice,
+  //     }, // added
+  //     {
+  //       itemName: "Drivers",
+  //       link: "/transport/driver", // need to be changed /drivers
+  //       icon: faFileInvoice,
+  //     },
+  //   ],
+  // },
+  // {
+  //   itemName: "Summary",
+  //   link: "/transport",
+  //   icon: faClipboardList,
+  //   subItems: [
+  //     {
+  //       itemName: "Drivers and Vehicles",
+  //       link: "/transport/sumDriverVehicle", // need to be changed /vehicles
+  //       icon: faFileInvoice,
+  //     }, // added
+  //     {
+  //       itemName: "Poll",
+  //       link: "/transport/poll", // need to be changed /drivers
+  //       icon: faFileInvoice,
+  //     },
+  //     {
+  //       itemName: "Make and Model-wise",
+  //       link: "/transport/makeModelWise", // need to be changed /drivers
+  //       icon: faFileInvoice,
+  //     },
+  //   ],
+  // },
 ];

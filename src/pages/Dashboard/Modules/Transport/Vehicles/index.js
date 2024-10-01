@@ -1,24 +1,32 @@
 import React, { useEffect, useState } from "react";
-import { Layout } from "../../../../components/Layout";
-import { TransportSideBarItems } from "../../../../utils/sideBarItems";
+// import { Layout } from "../../../components/Layout";
+// import { TransportSideBarItems } from "../../../../utils/sideBarItems";
 import { useNavigate } from "react-router-dom";
-import Header from "../../../../components/Header";
-import NoticeStatsCard from "../../../../components/CustomComponents/NoticeStatsCard";
-import {
-  getAllNoticeStats,
-  getAllResarchServices,
-  getAllSpeachOnDemand,
-} from "../../../../api/APIs/Services/Notice.service";
+// import Header from "../../../../components/Header";
+// import NoticeStatsCard from "../../../../components/CustomComponents/NoticeStatsCard";
+// import {
+//   getAllNoticeStats,
+//   getAllResarchServices,
+//   getAllSpeachOnDemand,
+// } from "../../../../api/APIs/Services/Notice.service";
+import { Layout } from "../../../../../components/Layout";
+import Header from "../../../../../components/Header";
+import NoticeStatsCard from "../../../../../components/CustomComponents/NoticeStatsCard";
+import { TransportSideBarItems } from "../../../../../utils/sideBarItems";
 import {
   faBook,
   faGasPump,
   faTruckMonster,
   faVanShuttle,
 } from "@fortawesome/free-solid-svg-icons";
-import LineGraph from "./Graph.js/LineGraph";
-import PieGraph from "./Graph.js/PiGraph";
 
-function TransportDashboard() {
+import {
+  getAllNoticeStats,
+  getAllResarchServices,
+  getAllSpeachOnDemand,
+} from "../../../../../api/APIs/Services/Notice.service";
+
+function VehiclesInformation() {
   const navigate = useNavigate();
   const [stats, setStats] = useState(null);
   const [todaySpeach, setTodaySpeach] = useState(0);
@@ -94,90 +102,68 @@ function TransportDashboard() {
             color: "#f5365c",
           }}
         >
-          Transport Branch
+          Vehicles Information
         </h2>
-        {/* <div className="row">
-          <div className="col-md-12">
+        <div className="row">
+          <div className="col-md-12 col">
             <div className="mt-2 mb-4">
               <div className="row">
                 <NoticeStatsCard
-                  title={"Repairs Purchases"}
+                  title={"Profile"}
                   icon={faBook}
                   overall={true}
                   iconBgColor={"#FFA500"}
-                  ColValue={"col-3"}
+                  ColValue={"col"}
                   total={`${stats?.monthlyQuestions}`}
-                  onClick={() => navigate("/transport/purchases")}
-                  style={{ padding: '20px' }} // Added padding
+                  onClick={() => navigate("/transport/vehicles/profiles")}
+                  style={{ padding: "20px" }} // Added padding
                 />
                 <NoticeStatsCard
-                  title={"Petrol Mileage"}
+                  title={"Log Book"}
                   icon={faGasPump}
                   overall={true}
-                  ColValue={"col-3"}
+                  ColValue={"col"}
                   iconBgColor={"green"}
                   total={`${stats?.monthlyMotions}`}
-                  onClick={() => navigate("/transport/petrol-mileage")}
-                  style={{ padding: '20px' }} // Added padding
+                  onClick={() => navigate("/transport/vehicles/log-book")}
+                  style={{ padding: "20px" }} // Added padding
                 />
                 <NoticeStatsCard
-                  title={"Vehicle Movement"}
+                  title={"Mov. Register"}
                   icon={faVanShuttle}
                   overall={true}
-                  ColValue={"col-3"}
+                  ColValue={"col"}
                   iconBgColor={"#007bff"}
                   total={`${stats?.monthlyMotions}`}
-                  onClick={() => navigate("/transport/vehicle-movement")}
-                  style={{ padding: '20px' }} 
+                  onClick={() =>
+                    navigate("/transport/vehicles/movement-register")
+                  }
+                  style={{ padding: "20px" }}
                 />
                 <NoticeStatsCard
-                  title={"Fleet Management"}
+                  title={"Operat. Status"}
                   icon={faTruckMonster}
                   overall={true}
-                  ColValue={"col-3"}
+                  ColValue={"col"}
                   iconBgColor={"rgb(45, 206, 137)"}
                   total={`${stats?.monthlyMotions}`}
-                  onClick={() => navigate("/transport/fleet")}
-                  style={{ padding: '20px' }} // Added padding
-                />
-              </div>
-            </div>
-          </div>
-        </div> */}
-        <div className="row">
-          <div className="col-md-12">
-            <div className="mt-2 mb-4">
-              <div className="row">
-                <NoticeStatsCard
-                  title={"Vehicles"}
-                  icon={faBook}
-                  overall={true}
-                  iconBgColor={"#FFA500"}
-                  ColValue={"col-6"}
-                  total={`${stats?.monthlyQuestions}`}
-                  onClick={() => navigate("/transport/vehicles")}
+                  onClick={() =>
+                    navigate("/transport/vehicles/operational-status")
+                  }
                   style={{ padding: "20px" }} // Added padding
                 />
                 <NoticeStatsCard
-                  title={"Divers"}
-                  icon={faGasPump}
+                  title={"Purchases"}
+                  icon={faTruckMonster}
                   overall={true}
-                  ColValue={"col-6"}
-                  iconBgColor={"green"}
+                  ColValue={"col"}
+                  iconBgColor={"rgb(45, 206, 137)"}
                   total={`${stats?.monthlyMotions}`}
-                  onClick={() => navigate("/transport/drivers")}
+                  onClick={() => navigate("/transport/vehicles/purchases")}
                   style={{ padding: "20px" }} // Added padding
                 />
               </div>
             </div>
-          </div>
-        </div>
-        <div className="d-flex flex-row mt-3">
-          <div className="flex-fill">
-            <LineGraph />
-          </div>
-          <div className="flex-fill ms-2">
-            <PieGraph />
           </div>
         </div>
       </div>
@@ -185,4 +171,4 @@ function TransportDashboard() {
   );
 }
 
-export default TransportDashboard;
+export default VehiclesInformation;
