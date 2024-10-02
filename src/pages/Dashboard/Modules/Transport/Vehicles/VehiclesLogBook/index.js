@@ -7,7 +7,7 @@ import { TransportSideBarItems } from "../../../../../../utils/sideBarItems";
 import { getVehicles } from "../../../../../../api/APIs/Services/Transport.service";
 import Header from "../../../../../../components/Header";
 
-function VehiclesLogBook() {
+function EditAddVehMov() {
   const navigate = useNavigate();
   const [filteredData, setFilteredData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
@@ -46,14 +46,14 @@ function VehiclesLogBook() {
         <div className="col-12">
           <CustomTable
             hideBtn={false}
-            addBtnText={"Add Vehicle Log"}
+            addBtnText={"Add Log Book"}
             data={filteredData}
             tableTitle="Vehicles Log Book"
             headerBgColor={"#4B8FF0"}
             headerTitleColor={"#fff"}
             handlePageChange={handlePageChange}
             currentPage={currentPage}
-            // handleAdd={() => navigate("/transport/vehicles/addeditVehicles")}
+            handleAdd={() => navigate("/transport/vehicles/profiles/addeditlogbook")}
             pageSize={pageSize}
             totalCount={count}
             singleDataCard={true}
@@ -61,11 +61,11 @@ function VehiclesLogBook() {
             // searchonchange={onSearchChange}
             // handleDelete={(item) => handleDelete(item.SrNo)}
             showEditIcon={false}
-            // handleEdit={(item) =>
-            //   navigate("/transport/vehicles/addeditVehicles", {
-            //     state: item,
-            //   })
-            // }
+            handleEdit={(item) =>
+              navigate("/transport/vehicles/addeditVehicles", {
+                state: item,
+              })
+            }
           />
         </div>
       </div>
@@ -73,4 +73,4 @@ function VehiclesLogBook() {
   );
 }
 
-export default VehiclesLogBook;
+export default EditAddVehMov;

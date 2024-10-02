@@ -53,7 +53,7 @@ function VehiclesOperationalStatus() {
             headerTitleColor={"#fff"}
             handlePageChange={handlePageChange}
             currentPage={currentPage}
-            // handleAdd={() => navigate("/transport/vehicles/addeditVehicles")}
+            handleAdd={() => navigate("/transport/vehicles/addeditvehop")}
             pageSize={pageSize}
             totalCount={count}
             singleDataCard={true}
