@@ -308,6 +308,16 @@ import DriverDeputedWithOfficer from "../pages/Dashboard/Modules/Transport/Vehic
 import DriverDeputedOnVehicleNo from "../pages/Dashboard/Modules/Transport/VehicleDrivers/DeputedOnVehicleNO/index.js";
 import DriversLicenseType from "../pages/Dashboard/Modules/Transport/VehicleDrivers/DriversLicenseType/index.js";
 import DriversMedicalReport from "../pages/Dashboard/Modules/Transport/VehicleDrivers/MedicalReport/index.js";
+import AddEditVehicleProfile from "../pages/Dashboard/Modules/Transport/Vehicles/VehiclesProfile/AddEditVehicleProfile/index.js";
+import EditAddLogBook from "../pages/Dashboard/Modules/Transport/Vehicles/VehiclesLogBook/AddEditProfile/index.js";
+import EditAddVehMov from "../pages/Dashboard/Modules/Transport/Vehicles/VehiclesMovementRegister/AddEditVehicleMov/index.js";
+import AddEditVehOpertional from "../pages/Dashboard/Modules/Transport/Vehicles/VehiclesOperationalStatus/AddEditVehOperational/index.js";
+import AddEditVehiclePurchase from "../pages/Dashboard/Modules/Transport/Vehicles/VehiclesPurchases/AddEditVehPurchase/index.js";
+import AddEditDriversProfile from "../pages/Dashboard/Modules/Transport/VehicleDrivers/DriversProfile/AddEditDriverProfile/index.js";
+import AddEditDeputedWithOff from "../pages/Dashboard/Modules/Transport/VehicleDrivers/DeputedWithOfficer/AddEditDeputedWithOff/index.js";
+import AddEditDepOnVehNo from "../pages/Dashboard/Modules/Transport/VehicleDrivers/DeputedOnVehicleNO/AddEditDepOnVehNo/index.js";
+import AddEditDriverLicense from "../pages/Dashboard/Modules/Transport/VehicleDrivers/DriversLicenseType/AddEditDriverLicense/index.js";
+import AddEditMedicalRepo from "../pages/Dashboard/Modules/Transport/VehicleDrivers/MedicalReport/AddEditMedicalRep/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -1198,6 +1208,15 @@ export const ProtectedRoutes = [
     element: <VehiclesProfile />,
   },
   {
+    path: "/transport/vehicles/profiles/addedit",
+    element: <AddEditVehicleProfile/>,
+  },
+  {
+    path: "/transport/vehicles/profiles/addeditlogbook",
+    element: <EditAddLogBook/>,
+  },
+  
+  {
     path: "/transport/vehicles/log-book",
     element: <VehiclesLogBook />,
   },
@@ -1206,12 +1225,24 @@ export const ProtectedRoutes = [
     element: <VehiclesMovementRegister />,
   },
   {
+    path: "/transport/vehicles/editaddvehmov",
+    element: <EditAddVehMov />,
+  },
+  {
     path: "/transport/vehicles/operational-status",
     element: <VehiclesOperationalStatus />,
   },
   {
+    path: "/transport/vehicles/addeditvehop",
+    element: <AddEditVehOpertional />,
+  },
+  {
     path: "/transport/vehicles/purchases",
     element: <VehiclePurchases />,
+  },
+  {
+    path: "/transport/vehicles/addeditvehiclepurchase",
+    element: <AddEditVehiclePurchase/>,
   },
 
   // {
@@ -1227,8 +1258,24 @@ export const ProtectedRoutes = [
     element: <DriversProfile />,
   },
   {
+    path: "/transport/drivers/addeditdriverprof",
+    element: <AddEditDriversProfile />,
+  },
+  {
     path: "/transport/drivers/deputed-with-officer",
     element: <DriverDeputedWithOfficer />,
+  },
+  {
+    path: "/transport/drivers/addeditdeputedwithofficer",
+    element: <AddEditDeputedWithOff/>,
+  },
+  {
+    path: "/transport/drivers/deputed-on-vehicle-no",
+    element: <DriverDeputedOnVehicleNo />,
+  },
+  {
+    path: "/transport/drivers/addeditdeponvehNo",
+    element: <AddEditDepOnVehNo/>,
   },
   {
     path: "/transport/drivers/deputed-on-vehicle-no",
@@ -1239,8 +1286,16 @@ export const ProtectedRoutes = [
     element: <DriversLicenseType />,
   },
   {
+    path: "/transport/drivers/addeditlicense",
+    element: <AddEditDriverLicense />,
+  },
+  {
     path: "/transport/drivers/medical-report",
     element: <DriversMedicalReport />,
+  },
+  {
+    path: "/transport/drivers/addeditmedicalrepo",
+    element: <AddEditMedicalRepo/>,
   },
 
   {

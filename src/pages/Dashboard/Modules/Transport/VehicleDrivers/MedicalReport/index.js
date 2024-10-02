@@ -53,7 +53,7 @@ function DriversMedicalReport() {
             headerTitleColor={"#fff"}
             handlePageChange={handlePageChange}
             currentPage={currentPage}
-            // handleAdd={() => navigate("/transport/vehicles/addeditVehicles")}
+            handleAdd={() => navigate("/transport/drivers/addeditmedicalrepo")}
             pageSize={pageSize}
             totalCount={count}
             singleDataCard={true}

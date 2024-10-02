@@ -53,7 +53,7 @@ function DriversProfile() {
             headerTitleColor={"#fff"}
             handlePageChange={handlePageChange}
             currentPage={currentPage}
-            // handleAdd={() => navigate("/transport/vehicles/addeditVehicles")}
+            handleAdd={() => navigate("/transport/drivers/addeditdriverprof")}
             pageSize={pageSize}
             totalCount={count}
             singleDataCard={true}

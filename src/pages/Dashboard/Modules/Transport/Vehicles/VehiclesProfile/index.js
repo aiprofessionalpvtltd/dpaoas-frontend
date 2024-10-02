@@ -53,7 +53,7 @@ function VehiclesProfile() {
             headerTitleColor={"#fff"}
             handlePageChange={handlePageChange}
             currentPage={currentPage}
-            handleAdd={() => navigate("/transport/vehicles/addeditVehicles")}
+            handleAdd={() => navigate("/transport/vehicles/profiles/addedit")}
             pageSize={pageSize}
             totalCount={count}
             singleDataCard={true}

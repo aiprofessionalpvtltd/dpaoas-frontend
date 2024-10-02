@@ -53,7 +53,7 @@ function DriverDeputedWithOfficer() {
             headerTitleColor={"#fff"}
             handlePageChange={handlePageChange}
             currentPage={currentPage}
-            // handleAdd={() => navigate("/transport/vehicles/addeditVehicles")}
+            handleAdd={() => navigate("/transport/drivers/addeditdeputedwithofficer")}
             pageSize={pageSize}
             totalCount={count}
             singleDataCard={true}
