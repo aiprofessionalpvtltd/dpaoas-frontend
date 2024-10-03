@@ -1,37 +1,105 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Layout } from "../../../../components/Layout";
 import { TMSsidebarItems } from "../../../../utils/sideBarItems";
 import StatsCard from "../../../../components/CustomComponents/StatsCard";
 import { useNavigate } from "react-router-dom";
+import { allquestionsByStatus } from "../../../../api/APIs/Services/Question.service";
+import { resolutionStatusCount } from "../../../../api/APIs/Services/Resolution.service";
+import NoticeStatsCard from "../../../../components/CustomComponents/NoticeStatsCard";
+import { faClipboardQuestion, faFileImport, faHandshake } from "@fortawesome/free-solid-svg-icons";
 
 function TMSDashboard() {
-  const navigate = useNavigate();
-  const categories = [
-    {
-      Question: ["Order Of the Day"],
-      Motion: [],
-      Resolution: [],
-      Legislation: [
-        "Legislative",
-        "DO Letter",
-        "Ballot",
-        "Notices",
-        "Drill",
-        "Order of The Day",
-        "Summon",
-        "Chairman Order",
-        "House of Business",
-        "Rules of Procedures",
-        "Amendment",
-      ],
-      RB: ["Chairman", "Deputy Chairman", "Leader of the House", "leader of the Opposition"],
-      Members: [],
-    },
-  ];
+  const navigate = useNavigate()
+  const [resolutionCount, setResolutionCount] = useState({
+    toResolutionCount:0,
+    inResolutionCount:0
+  })
+  const [questionCount, setQuestionCount] = useState({
+    toQuestionCount:0,
+    inQuestionCount:0
+  })
+
+  const ResolutionCountAPi = async () => {
+    try {
+      const response = await resolutionStatusCount();
+      if (response?.success) {
+        setResolutionCount({
+          toResolutionCount: response?.data?.counts?.toResolution || 0,
+          inResolutionCount: response?.data?.counts?.inResolution || 0
+      });
+      }
+    } catch (error) {
+      console.log(error?.response?.data?.message);
+    }
+  };
+
+  const QuestionCountAPi = async () => {
+    try {
+      const response = await allquestionsByStatus();
+      if (response?.success) {
+        setQuestionCount({
+          toQuestionCount: response?.data?.counts?.toQuestion || 0,
+          inQuestionCount: response?.data?.counts?.inQuestion || 0
+      });
+      }
+    } catch (error) {
+      console.log(error?.response?.data?.message);
+    }
+  };
+
+  useEffect(() => {
+    QuestionCountAPi()
+    ResolutionCountAPi()
+  },[])
+
   return (
     <Layout module={true} sidebarItems={TMSsidebarItems} centerlogohide={true}>
       <div class="row">
-        <div class="col-md-12">
+      <div style={{ marginLeft: 15 }}>
+        <h2
+          style={{
+            fontSize: "22px",
+            fontWeight: "bold",
+            marginBottom: "10px",
+            color: "#fb6340",
+          }}
+        >
+          Overall Stats
+        </h2>
+        <div class="row">
+          <div class="col">
+            <div class="mt-2 mb-4">
+              <div class="row">
+                <NoticeStatsCard
+                  title={"Questions"}
+                  icon={faClipboardQuestion}
+                  overall={true}
+                  iconBgColor={"#FFA500"}
+                  total={questionCount?.toQuestionCount}
+                  onClick={() => navigate("/qms/notice/notice-question")}
+                />
+                <NoticeStatsCard
+                  title={"Motions"}
+                  icon={faFileImport}
+                  overall={true}
+                  iconBgColor={"#007bff"}
+                  total={20}
+                  onClick={() => navigate("/notice/motion/sent")}
+                />
+                <NoticeStatsCard
+                  title={"Resolutions"}
+                  icon={faHandshake}
+                  overall={true}
+                  iconBgColor={"#2dce89"}
+                  total={resolutionCount?.toResolutionCount}
+                  onClick={() => navigate("/qms/notice/notice-resolution")}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+        {/* <div class="col-md-12">
           <div class="mt-5 mb-4">
             <div class="row">
               <StatsCard
@@ -62,11 +130,10 @@ function TMSDashboard() {
                   subCat={true}
                   handleClick={() => navigate("/tms/dashboard/detail", { state: categories[0].RB })}
                 />
-                {/* <StatsCard name={"Members"} freshVal={60} InprogressVal={17} completedVal={34} subCat={true}  /> */}
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </Layout>
   );

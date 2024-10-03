@@ -1,133 +1,213 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
+import { QMSSideBarItems, TMSsidebarItems } from "../../../../../utils/sideBarItems";
 import { Layout } from "../../../../../components/Layout";
 import Header from "../../../../../components/Header";
-import { RevivedQuestionsBYID, allRevivedQuestions, getAllQuestion } from "../../../../../api/APIs/Services/Question.service";
-import CustomTable from "../../../../../components/CustomComponents/CustomTable";
-import { showErrorMessage, showSuccessMessage } from "../../../../../utils/ToastAlert";
-import { Button, ToastContainer } from "react-bootstrap";
 import { useNavigate } from "react-router";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../utils/ToastAlert";
+import {
+  getAllQuestion,
+  getAllQuestionByID,
+  getAllQuestionStatus,
+  searchQuestion,
+} from "../../../../../api/APIs/Services/Question.service";
+import { useFormik } from "formik";
+import CustomTable from "../../../../../components/CustomComponents/CustomTable";
+import { ToastContainer } from "react-toastify";
+import DatePicker from "react-datepicker";
+import { AuthContext } from "../../../../../api/AuthContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
-import { TMSsidebarItems } from "../../../../../utils/sideBarItems";
-import Modal from "react-modal";
-
-const customStyles = {
-  content: {
-    top: "50%",
-    left: "50%",
-    right: "auto",
-    bottom: "auto",
-    marginRight: "-50%",
-    transform: "translate(-50%, -50%)",
-    width: "30%", // Adjust the width as needed, for example '80%',
-    border: "none",
-    background: "transparent",
-  },
-};
+import Select from "react-select";
 
 function TMSQuestion() {
   const navigate = useNavigate();
+  const { members, sessions } = useContext(AuthContext);
   const [resData, setResData] = useState([]);
-  const [modalIsOpen, setIsOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
-  const [revivedData, setRivivedData] = useState([]);
+  const [allquestionStatus, setAllQuestionStatus] = useState([]);
   const [count, setCount] = useState(null);
-  const pageSize = 10;
+  const [isFromNoticeOpen, setIsFromNoticeOpen] = useState(false);
+  const [isToNoticeOpen, setIsToNoticeOpen] = useState(false);
+  const [searchingFlag, setSearchingFlag] = useState(false);
+  const pageSize = 10; // Set your desired page size
 
-  const openModal = () => {
-    setIsOpen(true);
+  console.log(searchingFlag);
+  const handlePageChange = (page) => {
+    // Update currentPage when a page link is clicked
+    setCurrentPage(page);
+    if (
+      formik?.values?.questionDiaryNo ||
+      formik?.values?.questionID ||
+      formik?.values?.keyword ||
+      formik?.values?.memberName ||
+      formik?.values?.fromSession ||
+      formik?.values?.toSession ||
+      formik?.values?.category ||
+      formik?.values?.questionStatus ||
+      formik?.values?.fromNoticeDate ||
+      formik?.values?.toNoticeDate
+    ) {
+      SearchQuestionApi(formik?.values, page);
+    }
+    // SearchQuestionApi(formik?.values, page);
   };
 
-  const data = [
-    {
-      "Sr#": 1,
-      QID: "41465",
-      SessionNumber: "332",
-      SubjectMatter: "Translated Question 123",
-      NoticeNo: "2132 ",
-      NoticeDate: "8/25/2023 ",
-      NoticeTime: "12:00 AM",
-      Category: "Starred",
-      SubmittedBy: "Mohsin",
-      Status: "Defferd",
-      SentOn: "12/12/2023",
-      ReturnedOn: "1/12/2024",
+  const formik = useFormik({
+    initialValues: {
+      questionDiaryNo: "",
+      questionID: "",
+      keyword: "",
+      memberName: "",
+      fromSession: "",
+      toSession: "",
+      category: "",
+      questionStatus: "",
+      fromNoticeDate: "",
+      toNoticeDate: "",
     },
-  ];
-  const translatedData = [
-    {
-      "Sr#": 1,
-      QID: "41465",
-      SessionNumber: "332",
-      NoticeDate: "8/25/2023 ",
-      NoticeTime: "12:00 AM",
-      Category: "Starred",
-      SubmittedBy: "Mohsin",
-      Status: "Defferd",
-      SentOn: "12/12/2023",
-      ReturnedOn: "1/12/2024",
+    onSubmit: (values) => {
+      // Handle form submission here
+      SearchQuestionApi(values, currentPage);
     },
-  ];
+  });
 
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
+  // Handle From Notice Date Claneder Toggel
+  const handleFromNoticeCalendarToggle = () => {
+    setIsFromNoticeOpen(!isFromNoticeOpen);
+  };
+  // Handale From Notice DateCHange
+  const handleFromNoticeDateSelect = (date) => {
+    formik.setFieldValue("fromNoticeDate", date);
+    setIsFromNoticeOpen(false);
+  };
+
+  // Handle To Notice Date Claneder Toggel
+  const handleToNoticeCalendarToggle = () => {
+    setIsToNoticeOpen(!isToNoticeOpen);
+  };
+  // Handale To Notice DateCHange
+  const handleToNoticeDateSelect = (date) => {
+    formik.setFieldValue("toNoticeDate", date);
+
+    setIsToNoticeOpen(false);
   };
 
   const transformLeavesData = (apiData) => {
     return apiData.map((res, index) => {
+      const subjectMatter = [res?.englishText, res?.urduText]
+        .filter(Boolean)
+        .join(", ");
+      const cleanedSubjectMatter = subjectMatter.replace(/(<([^>]+)>)/gi, "");
+
       return {
-        SrNo: index,
-        QID: res.id,
-        QDN: res.fkQuestionDiaryId,
-        NoticeDate: moment(res?.noticeOfficeDiary?.noticeOfficeDiaryDate).format("YYYY/MM/DD"),
-        NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
-        SessionNumber: res?.session?.sessionName,
-        SubjectMatter: [res?.englishText, res?.urduText].filter(Boolean).join(", "),
-        Category: res.questionCategory,
-        // SubmittedBy: res.category,
-        Status: res.questionStatus?.questionStatus,
+        // SrNo: index + 1,
+        Id: res?.id,
+        MemberName: res?.member ? res?.member?.memberName :"--",
+        noticeOfficeDiaryNumber: res?.noticeOfficeDiary?.noticeOfficeDiaryNo
+          ? res?.noticeOfficeDiary?.noticeOfficeDiaryNo
+          : "",
+        NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate
+          ? moment(res?.noticeOfficeDiary?.noticeOfficeDiaryDate).format(
+              "DD-MM-YYYY"
+            )
+          : "",
+        NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime
+          ? moment(
+              res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
+              "hh:mm A"
+            ).format("hh:mm A")
+          : "",
+        SessionNumber: res?.session?.sessionName
+          ? res?.session?.sessionName
+          : "",
+        SubjectMatter: cleanedSubjectMatter ? cleanedSubjectMatter : "",
+        Category: res.questionCategory ? res.questionCategory : "",
+        Status: res.questionStatus?.questionStatus
+          ? res.questionStatus?.questionStatus
+          : "",
+          device:res?.device,
+          createdBy:res?.questionSentStatus === "toQuestion" ? "Notice Office": "---"
       };
     });
   };
+  const SearchQuestionApi = useCallback(
+    async (values, page) => {
+      setSearchingFlag(true);
+      const searchParams = {
+        fromSessionNo: values?.fromSession,
+        toSessionNo: values?.toSession,
+        memberName: values?.memberName?.value,
+        questionCategory: values?.category,
+        keyword: values?.keyword,
+        questionID: values?.questionID,
+        questionStatus: values?.questionStatus,
+        questionDiaryNo: values?.questionDiaryNo,
+        noticeOfficeDiaryDateFrom:
+          values?.fromNoticeDate &&
+          moment(values?.fromNoticeDate).format("YYYY-MM-DD"),
+        noticeOfficeDiaryDateTo:
+          values?.toNoticeDate &&
+          moment(values?.toNoticeDate).format("YYYY-MM-DD"),
+          questionSentStatus:"toQuestion"
+      };
+      try {
+        const response = await searchQuestion(searchParams, page, pageSize);
 
-  const getAllQuestionsApi = async () => {
+        if (response?.success) {
+          showSuccessMessage(response?.message);
+          setCount(response?.data?.count);
+          const transformedData = transformLeavesData(response.data?.questions);
+          setResData(transformedData);
+        }
+        // formik.resetForm();
+      } catch (error) {
+        showErrorMessage(error?.response?.data?.message);
+      } finally {
+        setSearchingFlag(false); // Set searching flag back to false
+      }
+    },
+    [pageSize, setCount, setResData]
+  );
+
+  // HandleEdit
+  const handleEdit = async (id) => {
     try {
-      const response = await getAllQuestion(currentPage, pageSize);
-      if (response?.success) {
-        // showSuccessMessage(response?.message);
-        setCount(response?.count);
-        const transformedData = transformLeavesData(response.data);
-        // console.log("Saqib", transformedData);
-        setResData(transformedData);
+      const { question, history } = await getAllQuestionByID(id);
+
+      if (question?.success) {
+        navigate("/tms/question/questionTranslation", {
+          state: { question: question?.data, history: history?.data },
+        });
       }
     } catch (error) {
-      showErrorMessage(error?.response?.data?.message);
+      showErrorMessage(error.response?.data?.message);
     }
   };
 
-  const getallRevivedQuestionsAPI = async () => {
+  const getAllQuestionsApi = useCallback(async () => {
+    const questionSentStatus = "toQuestion"
     try {
-      const response = await allRevivedQuestions();
+      const response = await getAllQuestion(currentPage, pageSize, questionSentStatus);
       if (response?.success) {
-        // showSuccessMessage(response?.message);
-        setRivivedData(response?.data);
-        console.log("sdasd", response?.data);
-        // setCount(response?.count);
-        // const transformedData = transformLeavesData(response.data);
-        // console.log("Saqib", transformedData);
-        // setResHistory(transformedData);
+        const transformedData = transformLeavesData(response?.data?.questions);
+        setCount(response?.data?.count);
+        setResData(transformedData);
       }
     } catch (error) {
       console.log(error);
     }
-  };
+  }, [currentPage, pageSize, setCount, setResData]);
 
-  const hendleViewDetail = async (id) => {
+  const GetALlStatus = async () => {
     try {
-      const response = await RevivedQuestionsBYID(id);
+      const response = await getAllQuestionStatus();
       if (response?.success) {
-        navigate("/qms/notice/notice-question-detail", {
-          state: response?.data,
-        });
+        setAllQuestionStatus(response?.data);
+        // showSuccessMessage(response.message);
       }
     } catch (error) {
       console.log(error);
@@ -135,139 +215,394 @@ function TMSQuestion() {
   };
 
   useEffect(() => {
-    getAllQuestionsApi();
-    getallRevivedQuestionsAPI();
+    GetALlStatus();
   }, []);
+
+  // useEffect(() => {
+  //   getAllQuestionsApi();
+  // }, [getAllQuestionsApi]);
+
+  useEffect(() => {
+    if (
+      formik?.values?.questionDiaryNo ||
+      formik?.values?.questionID ||
+      formik?.values?.keyword ||
+      formik?.values?.memberName ||
+      formik?.values?.fromSession ||
+      formik?.values?.toSession ||
+      formik?.values?.category ||
+      formik?.values?.questionStatus ||
+      formik?.values?.fromNoticeDate ||
+      formik?.values?.toNoticeDate
+    ) {
+      return;
+    }
+    getAllQuestionsApi();
+  }, [getAllQuestionsApi, formik?.values]);
+  // Handle Reset Form
+  const handleResetForm = () => {
+    formik.resetForm();
+    getAllQuestionsApi();
+  };
 
   return (
     <Layout module={true} sidebarItems={TMSsidebarItems} centerlogohide={true}>
       <ToastContainer />
-      <Header dashboardLink={"/tms/dashboard"} title1={"Question"} />
+      <Header
+        dashboardLink={"/"}
+        addLink1={"/qms/notice/notice-question"}
+        title1={"Questions"}
+      />
+     <div>
+        <div class="container-fluid">
+          <div class="card mt-1">
+            <div
+              class="card-header red-bg"
+              style={{ background: "#14ae5c !important" }}
+            >
+              <h1>Questions List</h1>
+            </div>
+            <div class="card-body">
+              <div class="container-fluid">
+                <form onSubmit={formik.handleSubmit}>
+                  <div className="container-fluid">
+                    <div className="row">
+                      <div className="col">
+                        <div className="mb-3">
+                          <label className="form-label">
+                            Question Diary No
+                          </label>
+                          <input
+                            className="form-control"
+                            type="text"
+                            id="questionDiaryNo"
+                            // placeholder={formik.values.questionDiaryNo}
+                            value={formik.values.questionDiaryNo}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                          />
+                        </div>
+                      </div>
+                      <div className="col">
+                        <div className="mb-3">
+                          <label className="form-label">Question ID</label>
+                          <input
+                            className="form-control"
+                            type="number"
+                            min={"1"}
+                            value={formik.values.questionID}
+                            id="questionID"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                          />
+                        </div>
+                      </div>
+                      <div className="col">
+                        <div className="mb-3">
+                          <label className="form-label">Keyword</label>
+                          <input
+                            className="form-control"
+                            type="text"
+                            value={formik.values.keyword}
+                            name="keyword"
+                            id="keyword"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                          />
+                        </div>
+                      </div>
+                      <div className="col">
+                        <div className="mb-3">
+                          <label className="form-label">Member Name</label>
+                          <Select
+                            options={members.map((item) => ({
+                              value: item.id,
+                              label: item.memberName,
+                            }))}
+                            onChange={(selectedOptions) =>
+                              formik.setFieldValue(
+                                "memberName",
+                                selectedOptions
+                              )
+                            }
+                            onBlur={formik.handleBlur}
+                            value={formik.values.memberName}
+                            name="memberName"
+                          />
+                          {formik.touched.memberName &&
+                            formik.errors.memberName && (
+                              <div class="invalid-feedback">
+                                {formik.errors.memberName}
+                              </div>
+                            )}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="row">
+                      <div className="col">
+                        <div className="mb-3">
+                          <label className="form-label">From Session</label>
+                          <select
+                            class="form-select"
+                            // placeholder={formik.values.fromSession}
+                            value={formik.values.fromSession}
+                            id="fromSession"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                          >
+                            <option value="" selected disabled hidden>
+                              Select
+                            </option>
+                            {sessions &&
+                              sessions.map((item) => (
+                                <option key={item.id} value={item.id}>
+                                  {item?.sessionName}
+                                </option>
+                              ))}
+                          </select>
+                        </div>
+                      </div>
+                      <div className="col">
+                        <div className="mb-3">
+                          <label className="form-label">To Session</label>
+                          <select
+                            class="form-select"
+                            id="toSession"
+                            // placeholder={formik.values.toSession}
+                            value={formik.values.toSession}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                          >
+                            <option value="" selected disabled hidden>
+                              Select
+                            </option>
+                            {sessions &&
+                              sessions.map((item) => (
+                                <option key={item.id} value={item.id}>
+                                  {item?.sessionName}
+                                </option>
+                              ))}
+                          </select>
+                        </div>
+                      </div>
+                      <div className="col">
+                        <div className="mb-3">
+                          <label className="form-label">Category</label>
+                          <select
+                            class="form-select"
+                            // placeholder={formik.values.category}
+                            value={formik.values.category}
+                            id="category"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                          >
+                            <option value={" "} selected disabled hidden>
+                              Select
+                            </option>
+                            <option value={"Starred"}>Starred</option>
+                            <option value={"Un-Starred"}>Un-Starred</option>
+                            <option value={"Short Notice"}>Short Notice</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div className="col">
+                        <div className="mb-3">
+                          <label className="form-label">Question Status</label>
+                          <select
+                            class="form-select"
+                            // placeholder={formik.values.questionStatus}
+                            value={formik.values.questionStatus}
+                            id="questionStatus"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                          >
+                            <option value={""} selected disabled hidden>
+                              Select
+                            </option>
+                            {allquestionStatus &&
+                              allquestionStatus.map((item) => (
+                                <option key={item.id} value={item.id}>
+                                  {item?.questionStatus}
+                                </option>
+                              ))}
+                          </select>
+                        </div>
+                      </div>
+                    </div>
 
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={() => setIsOpen(false)}
-        style={customStyles}
-        contentLabel="Example Modal"
-      >
-        <div class="card">
-          <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
-            <h1>Assign Question</h1>
-          </div>
-          <div class="card-body">
-            <div className="row">
-              <div className="col-12">
-                <div className="mb-3">
-                  <label className="form-label">Remarks</label>
-                  <textarea
-                    type="text"
-                    className={`form-control`}
-                    id="seatNo"
-                    // placeholder={selectedItem?.seatNo}
+                    {/* <div className="row">
+                      <div className="col-3">
+                        <div className="mb-3" style={{ position: "relative" }}>
+                          <label className="form-label">From Notice Date</label>
+                          <span
+                            style={{
+                              position: "absolute",
+                              right: "15px",
+                              top: "36px",
+                              zIndex: 1,
+                              fontSize: "20px",
+                              zIndex: "1",
+                              color: "#666",
+                            }}
+                          >
+                            <FontAwesomeIcon icon={faCalendarAlt} />
+                          </span>
+                          <DatePicker
+                            selected={formik.values.fromNoticeDate}
+                            // minDate={new Date()}
+                            onChange={(date) =>
+                              formik.setFieldValue("fromNoticeDate", date)
+                            }
+                            className={"form-control"}
+                          />
+                        </div>
+                      </div>
+                      <div className="col-3">
+                        <div className="mb-3" style={{ position: "relative" }}>
+                          <label className="form-label">To Notice Date</label>
+                          <span
+                            style={{
+                              position: "absolute",
+                              right: "15px",
+                              top: "36px",
+                              zIndex: 1,
+                              fontSize: "20px",
+                              zIndex: "1",
+                              color: "#666",
+                            }}
+                          >
+                            <FontAwesomeIcon icon={faCalendarAlt} />
+                          </span>
+                          <DatePicker
+                            selected={formik.values.toNoticeDate}
+                            // minDate={new Date()}
+                            onChange={(date) =>
+                              formik.setFieldValue("toNoticeDate", date)
+                            }
+                            className={"form-control"}
+                          />
+                        </div>
+                      </div>
+                    </div> */}
+
+                    <div className="row">
+                      <div className="col-3">
+                        <div className="mb-3" style={{ position: "relative" }}>
+                          <label className="form-label">From Notice Date</label>
+                          <span
+                            style={{
+                              position: "absolute",
+                              right: "15px",
+                              top: "36px",
+                              zIndex: 1,
+                              fontSize: "20px",
+                              color: "#666",
+                              cursor: "pointer",
+                            }}
+                            onClick={handleFromNoticeCalendarToggle}
+                          >
+                            <FontAwesomeIcon icon={faCalendarAlt} />
+                          </span>
+
+                          <DatePicker
+                            selected={formik.values.fromNoticeDate}
+                            onChange={handleFromNoticeDateSelect}
+                            onBlur={formik.handleBlur}
+                            className={`form-control ${
+                              formik.touched.fromNoticeDate &&
+                              formik.errors.fromNoticeDate
+                                ? "is-invalid"
+                                : ""
+                            }`}
+                            dateFormat="dd-MM-yyyy"
+                            maxDate={new Date()}
+                            open={isFromNoticeOpen}
+                            onClickOutside={() => setIsFromNoticeOpen(false)}
+                            onInputClick={handleFromNoticeCalendarToggle}
+                          />
+                        </div>
+                      </div>
+                      <div className="col-3">
+                        <div className="mb-3" style={{ position: "relative" }}>
+                          <label className="form-label">To Notice Date</label>
+                          <span
+                            style={{
+                              position: "absolute",
+                              right: "15px",
+                              top: "36px",
+                              zIndex: 1,
+                              fontSize: "20px",
+                              color: "#666",
+                              cursor: "pointer",
+                            }}
+                            onClick={handleToNoticeCalendarToggle}
+                          >
+                            <FontAwesomeIcon icon={faCalendarAlt} />
+                          </span>
+
+                          <DatePicker
+                            selected={formik.values.toNoticeDate}
+                            onChange={handleToNoticeDateSelect}
+                            onBlur={formik.handleBlur}
+                            className={`form-control ${
+                              formik.touched.toNoticeDate &&
+                              formik.errors.toNoticeDate
+                                ? "is-invalid"
+                                : ""
+                            }`}
+                            maxDate={new Date()}
+                            open={isToNoticeOpen}
+                            onClickOutside={() => setIsToNoticeOpen(false)}
+                            onInputClick={handleToNoticeCalendarToggle}
+                            dateFormat="dd-MM-yyyy"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="row">
+                      <div className="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button className="btn btn-primary" type="submit">
+                          Search
+                        </button>
+                        <button
+                          className="btn btn-primary"
+                          type="button"
+                          onClick={handleResetForm}
+                        >
+                          Reset
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+
+                <div
+                  class="dash-detail-container"
+                  style={{ marginTop: "20px" }}
+                >
+                  <CustomTable
+                    // block={true}
+                    hideBtn={true}
+                    hidebtn1={true}
+                    // data={searchedData}
+                    data={resData}
+                    tableTitle="Questions"
+                    handlePageChange={handlePageChange}
+                    currentPage={currentPage}
+                    totalCount={count}
+                    pageSize={pageSize}
+                    headertitlebgColor={"#666"}
+                    headertitletextColor={"#FFF"}
+                    showPrint={false}
+                    // ActionHide={true}
+                    hideEditIcon={false}
+                    hideDeleteIcon={true}
+                    handleAdd={(item) => navigate("/")}
+                    handleEdit={(item) => handleEdit(item?.Id)}
                   />
                 </div>
               </div>
-            </div>
-
-            <div className="row">
-              <div className="col-12">
-                <div>
-                  <label className="form-label">Assign To</label>
-                  <select class="form-select " placeholder="Assign To">
-                    <option value="" selected disabled>
-                      Select
-                    </option>
-                    <option value="1">Translator</option>
-                    <option value="2">Typist</option>
-                    <option value="2">Proof Reader</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            <div className="float-end">
-              <div className="col-4" style={{ marginTop: "30px" }}>
-                <Button
-                  variant="success"
-                  type="submit"
-                  style={{ width: 130, backgroundColor: "#14ae5c" }}
-                  onClick={() => setIsOpen(false)}
-                >
-                  Assign
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </Modal>
-
-      <div class="container-fluid">
-        <div class="card mt-4">
-          <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
-            <h1>Fresh Received</h1>
-          </div>
-          <div class="card-body">
-            <div class="container-fluid">
-              <CustomTable
-                hideBtn={true}
-                data={data}
-                headerShown={true}
-                handlePageChange={handlePageChange}
-                currentPage={currentPage}
-                pageSize={pageSize}
-                // totalCount={count}
-                hideEditIcon={true}
-                assignBtn={true}
-                assignClick={openModal}
-                headertitlebgColor={"#666"}
-                headertitletextColor={"#FFF"}
-              />
-            </div>
-          </div>
-        </div>
-
-        <div class="card mt-4">
-          <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
-            <h1>In Progress</h1>
-          </div>
-          <div class="card-body">
-            <div class="container-fluid">
-              <CustomTable
-                hideBtn={true}
-                data={data}
-                headerShown={true}
-                handlePageChange={handlePageChange}
-                currentPage={currentPage}
-                pageSize={pageSize}
-                // totalCount={count}
-                hideEditIcon={true}
-                assignBtn={true}
-                assignClick={openModal}
-                headertitlebgColor={"#666"}
-                headertitletextColor={"#FFF"}
-              />
-            </div>
-          </div>
-        </div>
-
-        <div class="card mt-4">
-          <div class="card-header red-bg" style={{ background: "#14ae5c !important" }}>
-            <h1>Completed</h1>
-          </div>
-          <div class="card-body">
-            <div class="container-fluid">
-              <CustomTable
-                hideBtn={true}
-                data={translatedData}
-                headerShown={true}
-                handlePageChange={handlePageChange}
-                currentPage={currentPage}
-                pageSize={pageSize}
-                // totalCount={count}
-                ActionHide={true}
-                headertitlebgColor={"#666"}
-                headertitletextColor={"#FFF"}
-              />
             </div>
           </div>
         </div>

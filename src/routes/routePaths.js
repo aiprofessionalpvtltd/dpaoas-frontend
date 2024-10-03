@@ -308,6 +308,7 @@ import DriverDeputedWithOfficer from "../pages/Dashboard/Modules/Transport/Vehic
 import DriverDeputedOnVehicleNo from "../pages/Dashboard/Modules/Transport/VehicleDrivers/DeputedOnVehicleNO/index.js";
 import DriversLicenseType from "../pages/Dashboard/Modules/Transport/VehicleDrivers/DriversLicenseType/index.js";
 import DriversMedicalReport from "../pages/Dashboard/Modules/Transport/VehicleDrivers/MedicalReport/index.js";
+import QuestionTranslation from "../pages/Dashboard/Modules/TMS/Question/QuestionTranslation.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -697,6 +698,8 @@ export const ProtectedRoutes = [
   { path: "/tms/dashboard", element: <TMSDashboard /> },
   { path: "/tms/dashboard/detail", element: <TMSDashboardDetail /> },
   { path: "/tms/question", element: <TMSQuestion /> },
+  { path: "/tms/question/questionTranslation", element: <QuestionTranslation /> },
+
   { path: "/tms/motion", element: <TMSMotion /> },
   { path: "/tms/resolution", element: <TMSResolution /> },
   { path: "/sms/send-sms", element: <SMSDashboard /> },

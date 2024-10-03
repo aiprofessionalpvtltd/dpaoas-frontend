@@ -582,7 +582,7 @@ function QMSNoticeQuestion() {
                   style={{ marginTop: "20px" }}
                 >
                   <CustomTable
-                    block={true}
+                    // block={true}
                     hideBtn={true}
                     hidebtn1={true}
                     // data={searchedData}
