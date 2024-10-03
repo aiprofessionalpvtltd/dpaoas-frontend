@@ -15,6 +15,7 @@ import {
   getAllBillStatus,
   getAllCommitteeRecommendation,
   getAllMNALists,
+  getMinisterByParliamentaryYearID,
   getSingleNABillByID,
 } from "../../../../../../../api/APIs/Services/LegislationModule.service";
 import moment from "moment";
@@ -26,6 +27,13 @@ import { getUserData } from "../../../../../../../api/Auth";
 import { ToastContainer } from "react-toastify";
 import { imagesUrl } from "../../../../../../../api/APIs";
 import { getSingleMinisteryByMinisterID } from "../../../../../../../api/APIs/Services/Motion.service";
+import {
+  getAllTenures,
+  getMemberByParliamentaryYearID,
+  getParliamentaryYearsByTenureID,
+  getParliamentaryYearsByTermID,
+  getTermByTenureID,
+} from "../../../../../../../api/APIs/Services/ManageQMS.service";
 
 const UpdateBills = () => {
   const location = useLocation();
@@ -43,8 +51,21 @@ const UpdateBills = () => {
   const [MNAData, setMNAData] = useState([]);
   const [singleSenateBillData, setSingleSenateBillData] = useState([]);
   const [committieeData, setCommittieData] = useState([]);
+  const [parliamentaryYearData, setParliamentaryYearData] = useState([]);
+  const [membersOnParliamentaryYear, setMembersOnParliamentaryYear] = useState(
+    []
+  );
+
+  const [tenuresTerms, setTenuresTerms] = useState([]);
+  const [tenures, setTenures] = useState([]);
+  const [ministersOnParliamentaryYear, setMinisterOnParliamentaryYear] =
+    useState([]);
+  const [isFormShow, setIsFormShow] = useState(false);
+  const [showMinster, setShowMinister] = useState(false);
+  // Different Dates of Forms
   const [isNoticeDateCalendarOpen, setIsNoticeDateCalendarOpen] =
     useState(false);
+
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [isIntroducedCalendarOpen, setIntroducedCalendarOpen] = useState(false);
   const [isDateofReciptCalendarOpen, setIsDateofReciptCalendarOpen] =
@@ -111,6 +132,19 @@ const UpdateBills = () => {
       console.log(error);
     }
   };
+
+  //Get Parliamentary Year
+  const getParliamentaryYearsonTheBaseOfTerm = async (id) => {
+    try {
+      const response = await getParliamentaryYearsByTermID(id);
+      if (response?.success) {
+        setParliamentaryYearData(response?.data);
+        // setTonerModels(transformedData);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const getAllBillStatusData = async () => {
     try {
       const response = await getAllBillStatus(0, 500);
@@ -123,19 +157,6 @@ const UpdateBills = () => {
     }
   };
 
-  // Get Ministery By Minister
-  const getMinisteryByMinisterIdApi = async () => {
-    try {
-      const response = await getSingleMinisteryByMinisterID(
-        ministerID && ministerID
-      );
-      if (response?.success) {
-        setMinistryDataOnMinister(response?.data?.ministries?.ministries);
-      }
-    } catch (error) {
-      showErrorMessage(error?.response?.data?.message);
-    }
-  };
   useEffect(() => {
     getAllMNA();
     GetAllCommittiesApi();
@@ -147,6 +168,9 @@ const UpdateBills = () => {
   }, [ministerID]);
   const formik = useFormik({
     initialValues: {
+      selectiontype: "",
+      membertenure: "",
+      fkTermId: "",
       // Define your initial form values here
       fkParliamentaryYearId: "",
       fkSessionId: "",
@@ -345,6 +369,82 @@ const UpdateBills = () => {
     formik.setFieldValue("documentDate", date);
     setDocomentDateCalendarOpen(false);
   };
+  const handleTenures = async (selectionType) => {
+    try {
+      const response = await getAllTenures(0, 1000, selectionType);
+      if (response?.success) {
+        setTenures(response?.data?.tenures);
+      }
+    } catch (error) {
+      console.log(error?.response?.data?.message);
+    }
+  };
+
+  // GetTerms on the Base of Tenure
+  const handleTenuresTerms = async (id) => {
+    try {
+      const response = await getTermByTenureID(id);
+      if (response?.success) {
+        setTenuresTerms(response?.data);
+      }
+    } catch (error) {
+      console.log(error?.response?.data?.message);
+    }
+  };
+
+  // Get All Miisters
+  const getMinisteryByMinisterIdApi = async () => {
+    try {
+      const response = await getSingleMinisteryByMinisterID(
+        ministerID && ministerID
+      );
+      if (response?.success) {
+        setMinistryDataOnMinister(response?.data?.ministries?.ministries);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  };
+
+  //Get Parliamentary Year On The Base Of Tenure
+  const getParliamentaryYearsonTheBaseOfTenure = async (id) => {
+    try {
+      const response = await getParliamentaryYearsByTenureID(id);
+      if (response?.success) {
+        console.log(response?.data?.data);
+        setParliamentaryYearData(response?.data);
+        // setTonerModels(transformedData);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  //Get Members On The Base Of Parliamentary Year
+  const getMembersOnParliamentaryYear = async (id) => {
+    try {
+      const response = await getMemberByParliamentaryYearID(id);
+      if (response?.success) {
+        console.log("Memberon Response", response);
+        setMembersOnParliamentaryYear(response?.data);
+        // setTonerModels(transformedData);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  };
+  const getMNAOnParliamentaryYear = async (id) => {
+    try {
+      const response = await getMinisterByParliamentaryYearID(id);
+      if (response?.success) {
+        console.log("Memberon Response", response);
+        setMinisterOnParliamentaryYear(response?.data);
+        // setTonerModels(transformedData);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  };
+
   // Get Single Record
   const getNABillByIdApi = async () => {
     try {
@@ -403,8 +503,41 @@ const UpdateBills = () => {
       if (firstDocument && firstDocument.file) {
         parsedFiles = firstDocument.file.map((file) => file.path);
       }
-
+      if (singleSenateBillData?.billFor) {
+        handleTenures(singleSenateBillData?.billFor);
+      }
+      if (singleSenateBillData?.tenures?.id) {
+        getParliamentaryYearsonTheBaseOfTerm(singleSenateBillData?.tenures?.id);
+      }
+      if (singleSenateBillData?.terms?.id) {
+        getParliamentaryYearsonTheBaseOfTenure(
+          singleSenateBillData?.tenures?.id
+        );
+      }
+      if (singleSenateBillData?.billFor === "Ministers") {
+        console.log("Min", singleSenateBillData?.billFor);
+        getMNAOnParliamentaryYear(singleSenateBillData?.fkParliamentaryYearId);
+      } else {
+        getMembersOnParliamentaryYear(
+          singleSenateBillData?.fkParliamentaryYearId
+        );
+      }
+      setShowMinister(singleSenateBillData?.billFor);
       formik.setValues({
+        selectiontype: singleSenateBillData?.billFor || "",
+        membertenure:
+          (singleSenateBillData?.tenures && {
+            value: singleSenateBillData?.tenures?.id,
+            label: singleSenateBillData?.tenures?.tenureName,
+          }) ||
+          "",
+
+        fkTermId:
+          (singleSenateBillData?.terms && {
+            value: singleSenateBillData?.terms?.id,
+            label: singleSenateBillData?.terms?.termName,
+          }) ||
+          "",
         fkParliamentaryYearId:
           (singleSenateBillData?.parliamentaryYears && {
             value: singleSenateBillData?.parliamentaryYears?.id,
