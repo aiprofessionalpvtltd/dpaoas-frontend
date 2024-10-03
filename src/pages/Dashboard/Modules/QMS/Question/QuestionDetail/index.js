@@ -129,6 +129,7 @@ function QMSQuestionDetail() {
     formData.append("fkDivisionId", values?.division);
     formData.append("fileStatus", values?.fileStatus);
     formData.append("replyDate", values?.replyDate);
+    formData.append("fkQuestionStatus",values.questionStatus)
 
     formData.append("ammendedText", values.ammendedText);
     formData.append("urduText", values.urduText);

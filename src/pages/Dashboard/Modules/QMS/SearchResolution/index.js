@@ -241,7 +241,7 @@ function QMSSerchResolution() {
       const values = { toSession: currentSession?.id };
       SearchResolutionApi(values);
     }
-  },[location?.state, currentSession])
+  },[location?.state, currentSession, currentPage])
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <Header
