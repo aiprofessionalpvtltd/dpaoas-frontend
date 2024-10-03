@@ -107,7 +107,7 @@ function QMSQuestionDetail() {
       ammendedText: "",
       originalText: "",
       questionImage:[],
-      memberPosition: location?.state?.question?.memberPosition ? location?.state?.question?.memberPosition :""
+      memberPosition: location?.state?.question?.member ? location?.state?.question?.member?.governmentType :""
     },
     // validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -129,12 +129,13 @@ function QMSQuestionDetail() {
     formData.append("fkDivisionId", values?.division);
     formData.append("fileStatus", values?.fileStatus);
     formData.append("replyDate", values?.replyDate);
+    formData.append("fkQuestionStatus",values.questionStatus)
 
     formData.append("ammendedText", values.ammendedText);
     formData.append("urduText", values.urduText);
     formData.append("englishText", values.englishText);
     formData.append("originalText", values.originalText);
-    formData.append("memberPosition", values.memberPosition);
+    // formData.append("memberPosition", values.memberPosition);
     if (values?.questionImage) {
       Array.from(values?.questionImage).map((file, index) => {
         formData.append(`questionImage`, file);

@@ -53,7 +53,7 @@ function VehiclesMovementRegister() {
             headerTitleColor={"#fff"}
             handlePageChange={handlePageChange}
             currentPage={currentPage}
-            // handleAdd={() => navigate("/transport/vehicles/addeditVehicles")}
+            handleAdd={() => navigate("/transport/vehicles/editaddvehmov")}
             pageSize={pageSize}
             totalCount={count}
             singleDataCard={true}
