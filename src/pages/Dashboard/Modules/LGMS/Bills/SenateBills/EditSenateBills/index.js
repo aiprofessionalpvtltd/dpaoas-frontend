@@ -524,13 +524,12 @@ const EditSenateBill = () => {
       if (singleSenateBillData?.tenures?.id) {
         getParliamentaryYearsonTheBaseOfTerm(singleSenateBillData?.tenures?.id);
       }
-      if (singleSenateBillData?.terms?.id) {
+      if (singleSenateBillData?.tenures?.id) {
         getParliamentaryYearsonTheBaseOfTenure(
           singleSenateBillData?.tenures?.id
         );
       }
       if (singleSenateBillData?.billFor === "Ministers") {
-        console.log("Min******", singleSenateBillData?.billFor);
         getMNAOnParliamentaryYear(singleSenateBillData?.fkParliamentaryYearId);
       } else {
         getMembersOnParliamentaryYear(
@@ -556,6 +555,13 @@ const EditSenateBill = () => {
 
         fkParliamentaryYearId:
           singleSenateBillData?.fkParliamentaryYearId || "",
+        // fkParliamentaryYearId:
+        //   (singleSenateBillData?.parliamentaryYears && {
+        //     value: singleSenateBillData?.parliamentaryYears.id,
+        //     label: singleSenateBillData?.parliamentaryYears.parliamentaryTenure,
+        //   }) ||
+        //   "",
+
         fkSessionId: singleSenateBillData?.fkSessionId || "",
         billCategory: singleSenateBillData?.billCategory || "",
         billType: singleSenateBillData?.billType || "",
@@ -1140,7 +1146,10 @@ const EditSenateBill = () => {
                                   "fkTermId",
                                   selectedOption
                                 );
-                                formik.setFieldValue("parliamentaryYear", "");
+                                formik.setFieldValue(
+                                  "fkParliamentaryYearId",
+                                  ""
+                                );
                                 formik.setFieldValue("selectedSenator", "");
                                 if (selectedOption?.value) {
                                   getParliamentaryYearsonTheBaseOfTerm(
@@ -1219,6 +1228,10 @@ const EditSenateBill = () => {
                             onChange={(e) => {
                               const selectedId = e.target.value;
                               formik.handleChange(e);
+                              formik.setFieldValue(
+                                "fkParliamentaryYearId",
+                                e.target.value
+                              );
                               setMembersOnParliamentaryYear([]);
                               getMembersOnParliamentaryYear(e.target.value);
                               getMNAOnParliamentaryYear(e.target.value);
@@ -1568,7 +1581,7 @@ const EditSenateBill = () => {
                         </div>
                       </div>
                     </div>
-                    {showMinster !== "Ministers" && (
+                    {/* {showMinster !== "Ministers" && (
                       <div className="col">
                         <div className="mb-3">
                           <label className="form-label">Member Term</label>
@@ -1600,7 +1613,7 @@ const EditSenateBill = () => {
                           />
                         </div>
                       </div>
-                    )}
+                    )} */}
                     <div className="row">
                       {/* <div className="col-3">
                         <div className="mb-3" style={{ position: "relative" }}>
