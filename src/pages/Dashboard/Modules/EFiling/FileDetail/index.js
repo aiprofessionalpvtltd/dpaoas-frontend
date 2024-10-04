@@ -1286,13 +1286,13 @@ function FileDetail() {
                                         <button
                                           className="btn btn-primary"
                                           style={{
-                                            marginTop: 60,
+                                            marginTop: 60,  
                                             width: "100px",
                                           }}
                                           disabled={
-                                            location?.state?.view ||
-                                            isContentEmpty()
+                                            location?.state?.view
                                           }
+                                          // disabled={location?.state?.view || isContentEmpty()}
                                           onClick={() =>
                                             handleEditorChange(
                                               null,
@@ -1361,10 +1361,8 @@ function FileDetail() {
                                     <button
                                       className="btn btn-primary"
                                       style={{ marginTop: 10, width: "100px" }}
-                                      disabled={
-                                        location?.state?.view ||
-                                        isContentEmpty()
-                                      }
+                                      disabled={location?.state?.view}
+                                      // disabled={location?.state?.view || isContentEmpty()}
                                       onClick={() =>
                                         handleEditorChange(
                                           null,

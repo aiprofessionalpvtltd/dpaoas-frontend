@@ -40,7 +40,7 @@ function QMSSearchQuestion() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
 
-  // const [count, setCount] = useState(null);
+  const [count, setCount] = useState(null);
   const [deleteModalRemarksValue, setDeleteModalRemarksValue] = useState(null);
 
   const pageSize = 10; // Set your desired page size
@@ -145,6 +145,7 @@ function QMSSearchQuestion() {
       if (response?.success) {
         showSuccessMessage(response?.message);
         const transformedData = transformLeavesData(response?.data?.questions);
+        setCount(response?.data?.count)
         setSearchedData(transformedData);
       }
     } catch (error) {
@@ -232,7 +233,7 @@ function QMSSearchQuestion() {
       const values = { fromSession: currentSession?.id };
       SearchQuestionApi(values);
     }
-  }, [location?.state, currentSession]);
+  }, [location?.state, currentSession, currentPage]);
 
   // Handle Reset Form
 
@@ -630,6 +631,7 @@ function QMSSearchQuestion() {
                   setIsChecked={setIsChecked}
                   isCheckbox={true}
                   showPrint={true}
+                  totalCount={count}
                   handlePrint={(item) => hendlePrint(item.QID)}
                 />
               </div>
