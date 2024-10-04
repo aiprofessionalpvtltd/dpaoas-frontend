@@ -411,6 +411,7 @@ const EditSenateBill = () => {
       console.log(error);
     }
   };
+
   //Get Members On The Base Of Parliamentary Year
   const getMembersOnParliamentaryYear = async (id) => {
     try {
@@ -425,8 +426,10 @@ const EditSenateBill = () => {
     }
   };
   const getMNAOnParliamentaryYear = async (id) => {
+    console.log("API HIT bfore");
     try {
       const response = await getMinisterByParliamentaryYearID(id);
+      console.log("API HIT Response", response?.success);
       if (response?.success) {
         console.log("Memberon Response", response);
         setMinisterOnParliamentaryYear(response?.data);
@@ -521,13 +524,12 @@ const EditSenateBill = () => {
       if (singleSenateBillData?.tenures?.id) {
         getParliamentaryYearsonTheBaseOfTerm(singleSenateBillData?.tenures?.id);
       }
-      if (singleSenateBillData?.terms?.id) {
+      if (singleSenateBillData?.tenures?.id) {
         getParliamentaryYearsonTheBaseOfTenure(
           singleSenateBillData?.tenures?.id
         );
       }
       if (singleSenateBillData?.billFor === "Ministers") {
-        console.log("Min", singleSenateBillData?.billFor);
         getMNAOnParliamentaryYear(singleSenateBillData?.fkParliamentaryYearId);
       } else {
         getMembersOnParliamentaryYear(
@@ -553,6 +555,13 @@ const EditSenateBill = () => {
 
         fkParliamentaryYearId:
           singleSenateBillData?.fkParliamentaryYearId || "",
+        // fkParliamentaryYearId:
+        //   (singleSenateBillData?.parliamentaryYears && {
+        //     value: singleSenateBillData?.parliamentaryYears.id,
+        //     label: singleSenateBillData?.parliamentaryYears.parliamentaryTenure,
+        //   }) ||
+        //   "",
+
         fkSessionId: singleSenateBillData?.fkSessionId || "",
         billCategory: singleSenateBillData?.billCategory || "",
         billType: singleSenateBillData?.billType || "",
@@ -746,7 +755,9 @@ const EditSenateBill = () => {
     formData.append("fkSessionId", values?.fkSessionId);
     formData.append("billFor", showMinster);
     formData.append("fkTenureId", values?.membertenure?.value);
-    formData.append("fkTermId", values?.fkTermId?.value);
+    if (values?.fkTermId?.value) {
+      formData.append("fkTermId", values?.fkTermId?.value);
+    }
     formData.append("fkParliamentaryYearId", values?.fkParliamentaryYearId);
     formData.append("billCategory", BillCategory);
     formData.append("billType", values?.billType);
@@ -1063,6 +1074,7 @@ const EditSenateBill = () => {
                         </div>
                       </div>
                     </div>
+
                     <div className="row">
                       <div className="col">
                         {showMinster === "Ministers" ? (
@@ -1115,40 +1127,46 @@ const EditSenateBill = () => {
                             </div>
                           )}
                       </div>
-                      {/* <div className="col">
-                        <div class="mb-3">
-                          <label class="form-label">Parliamentary Year</label>
-                          <select
-                            id="fkParliamentaryYearId"
-                            name="fkParliamentaryYearId"
-                            className={`form-select  ${
-                              formik.touched.fkParliamentaryYearId &&
-                              formik.errors.fkParliamentaryYearId
-                                ? "is-invalid"
-                                : ""
-                            }`}
-                            onChange={formik.handleChange}
-                            value={formik.values.fkParliamentaryYearId}
-                          >
-                            <option value="" disabled hidden>
-                              Select
-                            </option>
-                            {parliamentaryYear &&
-                              parliamentaryYear.map((item) => (
-                                <option value={item.id}>
-                                  {item.parliamentaryTenure}
-                                </option>
-                              ))}
-                          </select>
-                          {formik.touched.fkParliamentaryYearId &&
-                            formik.errors.fkParliamentaryYearId && (
-                              <div className="invalid-feedback">
-                                {formik.errors.fkParliamentaryYearId}
-                              </div>
-                            )}
+                      {showMinster !== "Ministers" && (
+                        <div className="col">
+                          <div className="mb-3">
+                            <label className="form-label">Member Term</label>
+                            <Select
+                              options={
+                                Array.isArray(tenuresTerms) &&
+                                tenuresTerms?.length > 0
+                                  ? tenuresTerms.map((item) => ({
+                                      value: item?.id,
+                                      label: `${item?.termName}`,
+                                    }))
+                                  : []
+                              }
+                              onChange={(selectedOption) => {
+                                formik.setFieldValue(
+                                  "fkTermId",
+                                  selectedOption
+                                );
+                                formik.setFieldValue(
+                                  "fkParliamentaryYearId",
+                                  ""
+                                );
+                                formik.setFieldValue("selectedSenator", "");
+                                if (selectedOption?.value) {
+                                  getParliamentaryYearsonTheBaseOfTerm(
+                                    selectedOption?.value
+                                  );
+                                }
+                              }}
+                              onBlur={formik.handleBlur}
+                              value={formik.values.fkTermId}
+                              id="fkTermId"
+                              name="fkTermId"
+                              isClearable={true}
+                            />
+                          </div>
                         </div>
-                      </div> */}
-                      <div className="col">
+                      )}
+                      {/* <div className="col">
                         <div className="mb-3">
                           <label className="form-label">Member Term</label>
                           <Select
@@ -1181,7 +1199,7 @@ const EditSenateBill = () => {
                             isClearable={true}
                           />
                         </div>
-                      </div>
+                      </div> */}
 
                       <div class="col">
                         <div class="mb-3">
@@ -1210,6 +1228,10 @@ const EditSenateBill = () => {
                             onChange={(e) => {
                               const selectedId = e.target.value;
                               formik.handleChange(e);
+                              formik.setFieldValue(
+                                "fkParliamentaryYearId",
+                                e.target.value
+                              );
                               setMembersOnParliamentaryYear([]);
                               getMembersOnParliamentaryYear(e.target.value);
                               getMNAOnParliamentaryYear(e.target.value);
@@ -1252,7 +1274,7 @@ const EditSenateBill = () => {
                                 // }
                                 options={
                                   Array.isArray(ministersOnParliamentaryYear) &&
-                                  ministersOnParliamentaryYear.length > 0
+                                  ministersOnParliamentaryYear?.length > 0
                                     ? ministersOnParliamentaryYear.map(
                                         (item) => ({
                                           value: item?.id,
@@ -1559,6 +1581,39 @@ const EditSenateBill = () => {
                         </div>
                       </div>
                     </div>
+                    {/* {showMinster !== "Ministers" && (
+                      <div className="col">
+                        <div className="mb-3">
+                          <label className="form-label">Member Term</label>
+                          <Select
+                            options={
+                              Array.isArray(tenuresTerms) &&
+                              tenuresTerms?.length > 0
+                                ? tenuresTerms.map((item) => ({
+                                    value: item?.id,
+                                    label: `${item?.termName}`,
+                                  }))
+                                : []
+                            }
+                            onChange={(selectedOption) => {
+                              formik.setFieldValue("fkTermId", selectedOption);
+                              formik.setFieldValue("parliamentaryYear", "");
+                              formik.setFieldValue("selectedSenator", "");
+                              if (selectedOption?.value) {
+                                getParliamentaryYearsonTheBaseOfTerm(
+                                  selectedOption?.value
+                                );
+                              }
+                            }}
+                            onBlur={formik.handleBlur}
+                            value={formik.values.fkTermId}
+                            id="fkTermId"
+                            name="fkTermId"
+                            isClearable={true}
+                          />
+                        </div>
+                      </div>
+                    )} */}
                     <div className="row">
                       {/* <div className="col-3">
                         <div className="mb-3" style={{ position: "relative" }}>
