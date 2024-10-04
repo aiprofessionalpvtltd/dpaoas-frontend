@@ -66,7 +66,7 @@ function NewQuestion() {
       noticeOfficeDiaryNo: null,
       fkMemberId: null,
       noticeOfficeDiaryDate: moment(new Date()).format("YYYY-MM-DD"),
-      noticeOfficeDiaryTime: moment().format("HH:mm A"),
+      noticeOfficeDiaryTime: "",
       englishText: "",
       urduText: "",
       questionImage: [],
