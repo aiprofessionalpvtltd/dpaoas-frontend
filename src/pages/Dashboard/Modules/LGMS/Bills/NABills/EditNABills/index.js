@@ -411,7 +411,7 @@ const UpdateBills = () => {
     try {
       const response = await getParliamentaryYearsByTenureID(id);
       if (response?.success) {
-        console.log(response?.data?.data);
+        console.log("Parliamentary Years By Tenure ", response?.data);
         setParliamentaryYearData(response?.data);
         // setTonerModels(transformedData);
       }
@@ -424,7 +424,7 @@ const UpdateBills = () => {
     try {
       const response = await getMemberByParliamentaryYearID(id);
       if (response?.success) {
-        console.log("Memberon Response", response);
+        console.log("Get Member Parliamentary Year", response);
         setMembersOnParliamentaryYear(response?.data);
         // setTonerModels(transformedData);
       }
@@ -506,251 +506,273 @@ const UpdateBills = () => {
       if (singleSenateBillData?.billFor) {
         handleTenures(singleSenateBillData?.billFor);
       }
-      if (singleSenateBillData?.term?.id) {
-        getParliamentaryYearsonTheBaseOfTerm(singleSenateBillData?.term?.id);
+      if (
+        singleSenateBillData?.fkTenureId &&
+        singleSenateBillData?.billFor === "Senators"
+      ) {
+        handleTenuresTerms(singleSenateBillData?.fkTenureId);
       }
-      if (singleSenateBillData?.tenures?.id) {
+      if (
+        singleSenateBillData?.fkTermId &&
+        singleSenateBillData?.billFor === "Senators"
+      ) {
+        getParliamentaryYearsonTheBaseOfTerm(singleSenateBillData?.fkTermId);
+      } else if (
+        singleSenateBillData?.fkTenureId &&
+        singleSenateBillData?.billFor === "Ministers"
+      ) {
         getParliamentaryYearsonTheBaseOfTenure(
-          singleSenateBillData?.tenures?.id
+          singleSenateBillData?.fkTenureId
         );
       }
       if (singleSenateBillData?.billFor === "Ministers") {
         console.log("Min", singleSenateBillData?.billFor);
         getMNAOnParliamentaryYear(singleSenateBillData?.fkParliamentaryYearId);
-      } else {
+      } else if (singleSenateBillData?.billFor === "Senators") {
         getMembersOnParliamentaryYear(
           singleSenateBillData?.fkParliamentaryYearId
         );
       }
       setShowMinister(singleSenateBillData?.billFor);
-      formik.setValues({
-        selectiontype: singleSenateBillData?.billFor || "",
-        membertenure:
-          (singleSenateBillData?.tenures && {
-            value: singleSenateBillData?.tenures?.id,
-            label: singleSenateBillData?.tenures?.tenureName,
-          }) ||
-          "",
+      if (
+        singleSenateBillData &&
+        Object.keys(singleSenateBillData).length > 0
+      ) {
+        formik.setValues({
+          selectiontype: singleSenateBillData?.billFor || "",
+          membertenure:
+            (singleSenateBillData?.tenures && {
+              value: singleSenateBillData?.tenures?.id,
+              label: singleSenateBillData?.tenures?.tenureName,
+            }) ||
+            "",
 
-        fkTermId:
-          (singleSenateBillData?.terms && {
-            value: singleSenateBillData?.terms?.id,
-            label: singleSenateBillData?.terms?.termName,
-          }) ||
-          "",
-        fkParliamentaryYearId:
-          (singleSenateBillData?.parliamentaryYears && {
-            value: singleSenateBillData?.parliamentaryYears?.id,
-            label:
-              singleSenateBillData?.parliamentaryYears?.parliamentaryTenure,
-          }) ||
-          "",
+          fkTermId:
+            (singleSenateBillData?.terms && {
+              value: singleSenateBillData?.terms?.id,
+              label: singleSenateBillData?.terms?.termName,
+            }) ||
+            "",
 
-        fkSessionId: singleSenateBillData?.fkSessionId || "",
-        billCategory: singleSenateBillData?.billCategory || "",
-        billType: singleSenateBillData?.billType || "",
-        // billStatuses: singleSenateBillData?.billStatuses || "",
-        fileNumber: fileNum || "",
-        PassedByNADate: singleSenateBillData?.PassedByNADate
-          ? moment(singleSenateBillData?.PassedByNADate, "YYYY-MM-DD").toDate()
-          : null,
-        DateOfReceiptOfMessageFromNA:
-          singleSenateBillData?.DateOfReceiptOfMessageFromNA
+          fkParliamentaryYearId:
+            singleSenateBillData?.fkParliamentaryYearId || "",
+          senateBillSenatorMovers: singleSenateBillData?.senateBillSenatorMovers
+            ? singleSenateBillData?.senateBillSenatorMovers.map((senator) => ({
+                value: senator?.member?.id,
+                label: senator?.member?.memberName,
+              }))
+            : [],
+
+          senateBillMnaMovers: singleSenateBillData?.senateBillMnaMovers
+            ? {
+                value: singleSenateBillData?.senateBillMnaMovers[0]?.mna?.id,
+                label:
+                  singleSenateBillData?.senateBillMnaMovers[0]?.mna?.mnaName,
+              }
+            : null,
+
+          fkSessionId: singleSenateBillData?.fkSessionId || "",
+          billCategory: singleSenateBillData?.billCategory || "",
+          billType: singleSenateBillData?.billType || "",
+          // billStatuses: singleSenateBillData?.billStatuses || "",
+          fileNumber: fileNum || "",
+          PassedByNADate: singleSenateBillData?.PassedByNADate
             ? moment(
-                singleSenateBillData?.DateOfReceiptOfMessageFromNA,
+                singleSenateBillData?.PassedByNADate,
                 "YYYY-MM-DD"
               ).toDate()
             : null,
-        noticeDate: singleSenateBillData?.noticeDate
-          ? moment(singleSenateBillData?.noticeDate, "YYYY-MM-DD").toDate()
-          : null,
-
-        //   dateOfReceiptMessageFromNA:
-        // singleSenateBillData?.dateOfReceiptMessageFromNA
-        //   ? moment(
-        //       singleSenateBillData?.dateOfReceiptMessageFromNA,
-        //       "YYYY-MM-DD"
-        //     ).toDate()
-        //   : "",
-        // dateOfPassageByNA: singleSenateBillData?.dateOfPassageByNA
-        //   ? moment(
-        //       singleSenateBillData?.dateOfPassageByNA,
-        //       "YYYY-MM-DD"
-        //     ).toDate()
-        //   : "",
-        billTitle: singleSenateBillData?.billTitle || "",
-        billText: singleSenateBillData?.billText || "",
-        billRemarks: singleSenateBillData?.billRemarks || "",
-        senateBillSenatorMovers: singleSenateBillData?.senateBillSenatorMovers
-          ? singleSenateBillData?.senateBillSenatorMovers.map((senator) => ({
-              value: senator?.member?.id,
-              label: senator?.member?.memberName,
-            }))
-          : [],
-        fkBillStatus:
-          (singleSenateBillData?.billStatuses && {
-            value: singleSenateBillData?.billStatuses?.id,
-            label: singleSenateBillData?.billStatuses?.billStatusName,
-          }) ||
-          "",
-        senateBillMnaMovers: singleSenateBillData?.senateBillMnaMovers
-          ? {
-              value: singleSenateBillData?.senateBillMnaMovers[0]?.mna?.id,
-              label: singleSenateBillData?.senateBillMnaMovers[0]?.mna?.mnaName,
-            }
-          : null,
-        senateBillMinistryMovers: singleSenateBillData?.senateBillMinistryMovers
-          ? {
-              value:
-                singleSenateBillData?.senateBillMinistryMovers[0]?.ministrie
-                  ?.id,
-              label:
-                singleSenateBillData?.senateBillMinistryMovers[0]?.ministrie
-                  ?.ministryName,
-            }
-          : null,
-        // senateBillMnaMovers: singleSenateBillData?.senateBillMnaMovers
-        //   ? singleSenateBillData?.senateBillMnaMovers.map((senator) => ({
-        //       value: senator?.mna?.id,
-        //       label: senator?.mna?.mnaName,
-        //     }))
-        //   : [],
-        // senateBillMinistryMovers: singleSenateBillData?.senateBillMinistryMovers
-        //   ? singleSenateBillData?.senateBillMinistryMovers.map((senator) => ({
-        //       value: senator?.ministrie?.id,
-        //       label: senator?.ministrie?.ministryName,
-        //     }))
-        //   : [],
-        // senateBillMinistryMovers: singleSenateBillData?.senateBillMinistryMovers
-        //   ? {
-        //       value:
-        //         singleSenateBillData?.senateBillMinistryMovers[0]?.ministrie
-        //           ?.id,
-        //       label:
-        //         singleSenateBillData?.senateBillMinistryMovers[0]?.ministrie
-        //           ?.ministryName,
-        //     }
-        //   : null,
-        introducedInHouseDate:
-          singleSenateBillData?.introducedInHouses &&
-          singleSenateBillData?.introducedInHouses?.introducedInHouseDate
-            ? moment(
-                singleSenateBillData?.introducedInHouses?.introducedInHouseDate,
-                "YYYY-MM-DD"
-              ).toDate()
+          DateOfReceiptOfMessageFromNA:
+            singleSenateBillData?.DateOfReceiptOfMessageFromNA
+              ? moment(
+                  singleSenateBillData?.DateOfReceiptOfMessageFromNA,
+                  "YYYY-MM-DD"
+                ).toDate()
+              : null,
+          noticeDate: singleSenateBillData?.noticeDate
+            ? moment(singleSenateBillData?.noticeDate, "YYYY-MM-DD").toDate()
             : null,
-        referedOnDate:
-          singleSenateBillData?.introducedInHouses &&
-          singleSenateBillData?.introducedInHouses?.referedOnDate
-            ? moment(
-                singleSenateBillData?.introducedInHouses?.referedOnDate,
-                "YYYY-MM-DD"
-              ).toDate()
-            : null,
-        fkManageCommitteeId: singleSenateBillData?.introducedInHouses
-          ? singleSenateBillData?.introducedInHouses?.fkManageCommitteeId
-          : "",
 
-        committeeRecomendation: singleSenateBillData?.introducedInHouses
-          ?.manageCommitteeRecomendations
-          ? {
-              value:
+          //   dateOfReceiptMessageFromNA:
+          // singleSenateBillData?.dateOfReceiptMessageFromNA
+          //   ? moment(
+          //       singleSenateBillData?.dateOfReceiptMessageFromNA,
+          //       "YYYY-MM-DD"
+          //     ).toDate()
+          //   : "",
+          // dateOfPassageByNA: singleSenateBillData?.dateOfPassageByNA
+          //   ? moment(
+          //       singleSenateBillData?.dateOfPassageByNA,
+          //       "YYYY-MM-DD"
+          //     ).toDate()
+          //   : "",
+          billTitle: singleSenateBillData?.billTitle || "",
+          billText: singleSenateBillData?.billText || "",
+          billRemarks: singleSenateBillData?.billRemarks || "",
+
+          fkBillStatus:
+            (singleSenateBillData?.billStatuses && {
+              value: singleSenateBillData?.billStatuses?.id,
+              label: singleSenateBillData?.billStatuses?.billStatusName,
+            }) ||
+            "",
+
+          senateBillMinistryMovers:
+            singleSenateBillData?.senateBillMinistryMovers
+              ? {
+                  value:
+                    singleSenateBillData?.senateBillMinistryMovers[0]?.ministrie
+                      ?.id,
+                  label:
+                    singleSenateBillData?.senateBillMinistryMovers[0]?.ministrie
+                      ?.ministryName,
+                }
+              : null,
+          // senateBillMnaMovers: singleSenateBillData?.senateBillMnaMovers
+          //   ? singleSenateBillData?.senateBillMnaMovers.map((senator) => ({
+          //       value: senator?.mna?.id,
+          //       label: senator?.mna?.mnaName,
+          //     }))
+          //   : [],
+          // senateBillMinistryMovers: singleSenateBillData?.senateBillMinistryMovers
+          //   ? singleSenateBillData?.senateBillMinistryMovers.map((senator) => ({
+          //       value: senator?.ministrie?.id,
+          //       label: senator?.ministrie?.ministryName,
+          //     }))
+          //   : [],
+          // senateBillMinistryMovers: singleSenateBillData?.senateBillMinistryMovers
+          //   ? {
+          //       value:
+          //         singleSenateBillData?.senateBillMinistryMovers[0]?.ministrie
+          //           ?.id,
+          //       label:
+          //         singleSenateBillData?.senateBillMinistryMovers[0]?.ministrie
+          //           ?.ministryName,
+          //     }
+          //   : null,
+          introducedInHouseDate:
+            singleSenateBillData?.introducedInHouses &&
+            singleSenateBillData?.introducedInHouses?.introducedInHouseDate
+              ? moment(
+                  singleSenateBillData?.introducedInHouses
+                    ?.introducedInHouseDate,
+                  "YYYY-MM-DD"
+                ).toDate()
+              : null,
+          referedOnDate:
+            singleSenateBillData?.introducedInHouses &&
+            singleSenateBillData?.introducedInHouses?.referedOnDate
+              ? moment(
+                  singleSenateBillData?.introducedInHouses?.referedOnDate,
+                  "YYYY-MM-DD"
+                ).toDate()
+              : null,
+          fkManageCommitteeId: singleSenateBillData?.introducedInHouses
+            ? singleSenateBillData?.introducedInHouses?.fkManageCommitteeId
+            : "",
+
+          committeeRecomendation: singleSenateBillData?.introducedInHouses
+            ?.manageCommitteeRecomendations
+            ? {
+                value:
+                  singleSenateBillData?.introducedInHouses
+                    ?.manageCommitteeRecomendations?.id,
+                label:
+                  singleSenateBillData?.introducedInHouses
+                    ?.manageCommitteeRecomendations?.committeeRecom,
+              }
+            : null,
+          reportPresentationDate: singleSenateBillData?.introducedInHouses
+            ?.reportPresentationDate
+            ? moment(
                 singleSenateBillData?.introducedInHouses
-                  ?.manageCommitteeRecomendations?.id,
-              label:
-                singleSenateBillData?.introducedInHouses
-                  ?.manageCommitteeRecomendations?.committeeRecom,
-            }
-          : null,
-        reportPresentationDate: singleSenateBillData?.introducedInHouses
-          ?.reportPresentationDate
-          ? moment(
-              singleSenateBillData?.introducedInHouses?.reportPresentationDate,
-              "YYYY-MM-DD"
-            ).toDate()
-          : "",
-        fkMemberPassageId: singleSenateBillData?.memberPassages
-          ? singleSenateBillData?.memberPassages?.fkMemberPassageId
-          : "",
-        memeberNoticeDate: singleSenateBillData?.memberPassages
-          ?.memeberNoticeDate
-          ? moment(
-              singleSenateBillData?.memberPassages?.memeberNoticeDate,
-              "YYYY-MM-DD"
-            ).toDate()
-          : "",
-        dateOfConsiderationBill:
-          singleSenateBillData?.memberPassages &&
-          singleSenateBillData?.memberPassages?.dateOfConsiderationBill
-            ? moment(
-                singleSenateBillData?.memberPassages?.dateOfConsiderationBill,
+                  ?.reportPresentationDate,
                 "YYYY-MM-DD"
               ).toDate()
             : "",
-        fkSessionMemberPassageId: singleSenateBillData?.memberPassages
-          ? singleSenateBillData?.memberPassages?.fkSessionMemberPassageId
-          : "",
-        dateOfPassageBySenate: singleSenateBillData?.dateOfPassageBySenate
-          ? moment(
-              singleSenateBillData?.dateOfPassageBySenate,
-              "YYYY-MM-DD"
-            ).toDate()
-          : "",
-        dateOfTransmissionToNA: singleSenateBillData?.dateOfTransmissionToNA
-          ? moment(
-              singleSenateBillData?.dateOfTransmissionToNA,
-              "YYYY-MM-DD"
-            ).toDate()
-          : "",
+          fkMemberPassageId: singleSenateBillData?.memberPassages
+            ? singleSenateBillData?.memberPassages?.fkMemberPassageId
+            : "",
+          memeberNoticeDate: singleSenateBillData?.memberPassages
+            ?.memeberNoticeDate
+            ? moment(
+                singleSenateBillData?.memberPassages?.memeberNoticeDate,
+                "YYYY-MM-DD"
+              ).toDate()
+            : "",
+          dateOfConsiderationBill:
+            singleSenateBillData?.memberPassages &&
+            singleSenateBillData?.memberPassages?.dateOfConsiderationBill
+              ? moment(
+                  singleSenateBillData?.memberPassages?.dateOfConsiderationBill,
+                  "YYYY-MM-DD"
+                ).toDate()
+              : "",
+          fkSessionMemberPassageId: singleSenateBillData?.memberPassages
+            ? singleSenateBillData?.memberPassages?.fkSessionMemberPassageId
+            : "",
+          dateOfPassageBySenate: singleSenateBillData?.dateOfPassageBySenate
+            ? moment(
+                singleSenateBillData?.dateOfPassageBySenate,
+                "YYYY-MM-DD"
+              ).toDate()
+            : "",
+          dateOfTransmissionToNA: singleSenateBillData?.dateOfTransmissionToNA
+            ? moment(
+                singleSenateBillData?.dateOfTransmissionToNA,
+                "YYYY-MM-DD"
+              ).toDate()
+            : "",
 
-        dateOfPublishInGazette: singleSenateBillData?.dateOfPublishInGazette
-          ? moment(
-              singleSenateBillData?.dateOfPublishInGazette,
-              "YYYY-MM-DD"
-            ).toDate()
-          : "",
-        dateOfAssentByThePresident:
-          singleSenateBillData?.dateOfAssentByThePresident
+          dateOfPublishInGazette: singleSenateBillData?.dateOfPublishInGazette
             ? moment(
-                singleSenateBillData?.dateOfAssentByThePresident,
+                singleSenateBillData?.dateOfPublishInGazette,
                 "YYYY-MM-DD"
               ).toDate()
             : "",
-        dateOfCirculationOfBill: singleSenateBillData?.dateOfCirculationOfBill
-          ? moment(
-              singleSenateBillData?.dateOfCirculationOfBill,
-              "YYYY-MM-DD"
-            ).toDate()
-          : "",
+          dateOfAssentByThePresident:
+            singleSenateBillData?.dateOfAssentByThePresident
+              ? moment(
+                  singleSenateBillData?.dateOfAssentByThePresident,
+                  "YYYY-MM-DD"
+                ).toDate()
+              : "",
+          dateOfCirculationOfBill: singleSenateBillData?.dateOfCirculationOfBill
+            ? moment(
+                singleSenateBillData?.dateOfCirculationOfBill,
+                "YYYY-MM-DD"
+              ).toDate()
+            : "",
 
-        documentDiscription: singleSenateBillData?.billDocuments
-          ? singleSenateBillData?.billDocuments?.documentDiscription
-          : "",
-        documentDate:
-          singleSenateBillData?.billDocuments &&
-          singleSenateBillData?.billDocuments?.documentDate
+          documentDiscription: singleSenateBillData?.billDocuments
+            ? singleSenateBillData?.billDocuments?.documentDiscription
+            : "",
+          documentDate:
+            singleSenateBillData?.billDocuments &&
+            singleSenateBillData?.billDocuments?.documentDate
+              ? moment(
+                  singleSenateBillData?.billDocuments?.documentDate,
+                  "YYYY-MM-DD"
+                ).toDate()
+              : "",
+          documentType: singleSenateBillData?.billDocuments
+            ? singleSenateBillData?.billDocuments?.documentType
+            : "",
+          billStatusDate: singleSenateBillData?.billStatusDate
             ? moment(
-                singleSenateBillData?.billDocuments?.documentDate,
+                singleSenateBillData?.billStatusDate,
                 "YYYY-MM-DD"
               ).toDate()
             : "",
-        documentType: singleSenateBillData?.billDocuments
-          ? singleSenateBillData?.billDocuments?.documentType
-          : "",
-        billStatusDate: singleSenateBillData?.billStatusDate
-          ? moment(singleSenateBillData?.billStatusDate, "YYYY-MM-DD").toDate()
-          : "",
-      });
+        });
+      }
     }
   }, [singleSenateBillData]);
 
   // console.log("PAAAA FIle", singleSenateBillData?.billDocuments);
   const UpdateNationalAssemblyBill = async (values) => {
     const formData = new FormData();
-    formData.append(
-      "fkParliamentaryYearId",
-      values?.fkParliamentaryYearId?.value
-    );
+    formData.append("fkParliamentaryYearId", values?.fkParliamentaryYearId);
     formData.append("fkSessionId", values?.fkSessionId);
     formData.append("billCategory", values?.billCategory);
     formData.append("billType", values?.billType);
@@ -770,6 +792,10 @@ const UpdateBills = () => {
     // formData.append("fileNumber",   `09(${values?.fileNumber})/2024`);
     // formData.append("fileNumber", values?.fileNumber);
     // formData.append("PassedByNADate", values?.PassedByNADate);
+    formData.append("fkTenureId", values?.membertenure?.value);
+    if (values?.fkTermId?.value) {
+      formData.append("fkTermId", values?.fkTermId?.value);
+    }
     if (values?.PassedByNADate) {
       const formattedDate = moment(values?.PassedByNADate).format("YYYY-MM-DD");
       formData.append("PassedByNADate", formattedDate);
@@ -1194,7 +1220,7 @@ const UpdateBills = () => {
                                 );
                                 formik.setFieldValue(
                                   "fkParliamentaryYearId",
-                                  null
+                                  ""
                                 );
                                 formik.setFieldValue(
                                   "senateBillSenatorMovers",
@@ -1246,6 +1272,15 @@ const UpdateBills = () => {
                               setMembersOnParliamentaryYear([]);
                               getMembersOnParliamentaryYear(e.target.value);
                               getMNAOnParliamentaryYear(e.target.value);
+                              formik.setFieldValue("senateBillMnaMovers", []);
+                              formik.setFieldValue(
+                                "senateBillMinistryMovers",
+                                []
+                              );
+                              formik.setFieldValue(
+                                "senateBillSenatorMovers",
+                                []
+                              );
                               // console.log("id", selectedId);
                             }}
                             value={formik.values.fkParliamentaryYearId}
@@ -1594,7 +1629,7 @@ const UpdateBills = () => {
                     </div>
 
                     <div className="row">
-                      <div class="col-3">
+                      {/* <div class="col-3">
                         <div class="mb-3">
                           <label class="form-label">Bill Type </label>
                           <select
@@ -1629,8 +1664,8 @@ const UpdateBills = () => {
                               </div>
                             )}
                         </div>
-                      </div>
-                      <div className="col">
+                      </div> */}
+                      {/* <div className="col">
                         <div className="mb-3">
                           <label className="form-label">File Number</label>
 
@@ -1653,9 +1688,9 @@ const UpdateBills = () => {
                               </div>
                             )}
                         </div>
-                      </div>
+                      </div> */}
 
-                      <div className="col">
+                      <div className="col-3">
                         <div className="mb-3" style={{ position: "relative" }}>
                           <label className="form-label">
                             Passed By NA Date
@@ -1705,7 +1740,7 @@ const UpdateBills = () => {
                         </div>
                       </div>
 
-                      <div className="col">
+                      <div className="col-3">
                         <div className="mb-3" style={{ position: "relative" }}>
                           <label className="form-label">
                             Date of Recipt of Message From NA

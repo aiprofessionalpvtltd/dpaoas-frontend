@@ -521,14 +521,33 @@ const EditSenateBill = () => {
       if (singleSenateBillData?.billFor) {
         handleTenures(singleSenateBillData?.billFor);
       }
-      if (singleSenateBillData?.tenures?.id) {
-        getParliamentaryYearsonTheBaseOfTerm(singleSenateBillData?.tenures?.id);
+      if (
+        singleSenateBillData?.fkTenureId &&
+        singleSenateBillData?.billFor === "Senators"
+      ) {
+        handleTenuresTerms(singleSenateBillData?.fkTenureId);
       }
-      if (singleSenateBillData?.tenures?.id) {
+      if (
+        singleSenateBillData?.fkTermId &&
+        singleSenateBillData?.billFor === "Senators"
+      ) {
+        getParliamentaryYearsonTheBaseOfTerm(singleSenateBillData?.fkTermId);
+      } else if (
+        singleSenateBillData?.fkTenureId &&
+        singleSenateBillData?.billFor === "Ministers"
+      ) {
         getParliamentaryYearsonTheBaseOfTenure(
-          singleSenateBillData?.tenures?.id
+          singleSenateBillData?.fkTenureId
         );
       }
+      // if (singleSenateBillData?.tenures?.id) {
+      //   getParliamentaryYearsonTheBaseOfTerm(singleSenateBillData?.tenures?.id);
+      // }
+      // if (singleSenateBillData?.tenures?.id) {
+      //   getParliamentaryYearsonTheBaseOfTenure(
+      //     singleSenateBillData?.tenures?.id
+      //   );
+      // }
       if (singleSenateBillData?.billFor === "Ministers") {
         getMNAOnParliamentaryYear(singleSenateBillData?.fkParliamentaryYearId);
       } else {
@@ -1231,6 +1250,15 @@ const EditSenateBill = () => {
                               formik.setFieldValue(
                                 "fkParliamentaryYearId",
                                 e.target.value
+                              );
+                              formik.setFieldValue("senateBillMnaMovers", []);
+                              formik.setFieldValue(
+                                "senateBillMinistryMovers",
+                                []
+                              );
+                              formik.setFieldValue(
+                                "senateBillSenatorMovers",
+                                []
                               );
                               setMembersOnParliamentaryYear([]);
                               getMembersOnParliamentaryYear(e.target.value);
