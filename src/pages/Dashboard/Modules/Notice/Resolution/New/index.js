@@ -87,7 +87,7 @@ function NewResolution() {
       noticeOfficeDiaryNo: "",
       // noticeOfficeDiaryDate: new Date(),
       noticeOfficeDiaryDate: moment(new Date()).format("YYYY-MM-DD"),
-      noticeOfficeDiaryTime: moment().format("HH:mm A"),
+      noticeOfficeDiaryTime: "",
       resolutionType: "",
       resolutionMovers: [],
       englishText: "",

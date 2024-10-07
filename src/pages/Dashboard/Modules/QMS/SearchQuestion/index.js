@@ -600,7 +600,7 @@ function QMSSearchQuestion() {
                 </div>
               </form>
               <div class="dash-detail-container" style={{ marginTop: "20px" }}>
-                <div class="row">
+                {/* <div class="row">
                   <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                     <button class="btn btn-primary mb-3" type="submit">
                       Print Questions
@@ -612,9 +612,9 @@ function QMSSearchQuestion() {
                       Defferd Questions
                     </button>
                   </div>
-                </div>
+                </div> */}
                 <CustomTable
-                  block={true}
+                  block={false}
                   headerShown={true}
                   data={searchedData}
                   handleEdit={(item) => handleEdit(item.QID)}

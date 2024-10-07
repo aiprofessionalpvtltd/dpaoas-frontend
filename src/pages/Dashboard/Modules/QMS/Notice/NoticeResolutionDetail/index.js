@@ -28,6 +28,7 @@ function QMSNoticeResolutionDetail() {
 
   const formik = useFormik({
     initialValues: {
+      resolutionClub:[],
       sessionNo: location?.state?.session
         ? {
           value: location?.state?.session?.id,
@@ -37,7 +38,7 @@ function QMSNoticeResolutionDetail() {
       noticeOfficeDiaryNo: location?.state?.noticeDiary?.noticeOfficeDiaryNo || "",
       noticeOfficeDiaryDate: location?.state?.noticeDiary?.noticeOfficeDiaryDate
         ? moment(location?.state?.noticeDiary?.noticeOfficeDiaryDate, "YYYY-MM-DD").toDate()
-        : "",
+        : null,
       noticeOfficeDiaryTime: location?.state?.noticeDiary?.noticeOfficeDiaryTime || "",
       resolutionType: location?.state?.resolutionType || "",
       resolutionStatus: location?.state?.resolutionStatus
@@ -66,13 +67,13 @@ function QMSNoticeResolutionDetail() {
       resolutionDiaryNo: location?.state?.resolutionDiaries?.resolutionDiaryNo || "",
       dateOfMovingHouse: location?.state?.dateOfMovingHouse
         ? moment(location?.state?.dateOfMovingHouse).toDate()
-        : "",
+        : null,
       dateOfDiscussion: location?.state?.dateOfDiscussion
         ? moment(location?.state?.dateOfDiscussion).toDate()
-        : "",
+        : null,
       dateOfPassing: location?.state?.dateOfPassing
         ? moment(location?.state?.dateOfPassing).toDate()
-        : "",
+        : null,
       memberPosition: location?.state?.memberPosition || "",
       attachment: "",
       linkedResolutions:
@@ -115,6 +116,7 @@ function QMSNoticeResolutionDetail() {
     data.append("dateOfMovingHouse", values.dateOfMovingHouse);
     data.append("dateOfDiscussion", values.dateOfDiscussion);
     data.append("dateOfPassing", values.dateOfPassing);
+    data.append("linkedResolutions", values.resolutionClub);
 
     values?.ministries.forEach((minister, index) => {
       data.append(`ministries[${index}][fkMinistryId]`, minister.value);
@@ -622,6 +624,24 @@ function QMSNoticeResolutionDetail() {
                   </div>
 
 
+                </div>
+                <div className="row">
+                <div className="col-3">
+                      <div className="mb-3">
+                        <label className="form-label">Resolution Club</label>
+                        <input
+                          className="form-control"
+                          type="text"
+                          id="resolutionClub"
+                          name="resolutionClub"
+                          value={formik.values.resolutionClub}
+                          onBlur={formik.handleBlur}
+                          onChange={formik.handleChange} 
+                          placeholder=""
+                        />
+                        
+                      </div>
+                    </div>
                 </div>
                 <div className="row">
                   <label htmlFor="" className="form-label">
