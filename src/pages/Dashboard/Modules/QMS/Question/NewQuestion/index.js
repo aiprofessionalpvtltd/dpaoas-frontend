@@ -39,6 +39,7 @@ function QMSNewQuestion() {
   const { members, sessions, allBranchesData, divisions } =
     useContext(AuthContext);
   const userData = getUserData();
+  const navigate = useNavigate()
 
   const formik = useFormik({
     initialValues: {
@@ -87,6 +88,10 @@ function QMSNewQuestion() {
       const response = await createQuestion(formData);
       if (response?.success) {
         showSuccessMessage(response?.message);
+        setTimeout(() => {
+          navigate('/qms/search/question')
+        }, 1000);
+       
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);

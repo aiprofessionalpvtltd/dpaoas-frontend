@@ -15,7 +15,7 @@ import { CreateRotaList, UpdateRotaList } from '../../../../../../../api/APIs/Se
 import { showErrorMessage, showSuccessMessage } from '../../../../../../../utils/ToastAlert'
 import { useLocation } from 'react-router-dom'
 import moment from 'moment'
-
+import { useNavigate } from 'react-router-dom'
 const validationSchema = Yup.object({
     groupNo: Yup.string().required("Group No is required"),
     allotmentType: Yup.string().required("Allotment Type is required"),
@@ -28,6 +28,7 @@ const validationSchema = Yup.object({
 function AddEditRotaList() {
     const { sessions } = useContext(AuthContext);
     const location = useLocation()
+    const navigate = useNavigate()
     const formik = useFormik({
         initialValues: {
           allotmentType: location?.state ? location?.state?.weekDays :  "",
@@ -103,6 +104,9 @@ function AddEditRotaList() {
           const response = await UpdateRotaList(location?.state?.id ,Data);
            
             showSuccessMessage(response?.message)
+            setTimeout(() => {
+              navigate('/qms/reports/rota-list')
+            }, 2000);
           
         } catch (error) {
           showErrorMessage(error?.response?.data?.message);

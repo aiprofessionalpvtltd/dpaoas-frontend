@@ -33,9 +33,9 @@ const validationSchema = Yup.object({
   noticeOfficeDiaryDate: Yup.string().required(
     "Notice Office Diary Date is required"
   ),
-  noticeOfficeDiaryTime: Yup.string().required(
-    "Notice Office Diary Time is required"
-  ),
+  // noticeOfficeDiaryTime: Yup.string().required(
+  //   "Notice Office Diary Time is required"
+  // ),
   // englishText: Yup.string().required('English Text is required'),
   // urduText: Yup.string().required('Urdu Text is required'),
 });
@@ -66,7 +66,7 @@ function NewQuestion() {
       noticeOfficeDiaryNo: null,
       fkMemberId: null,
       noticeOfficeDiaryDate: moment(new Date()).format("YYYY-MM-DD"),
-      noticeOfficeDiaryTime: "",
+      noticeOfficeDiaryTime: moment().format("HH:mm A"),
       englishText: "",
       urduText: "",
       questionImage: [],
@@ -76,12 +76,11 @@ function NewQuestion() {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      console.log("Create Question Data", values);
       // handleShow();
       // setFormValues(values);
       CreateQuestionApi(values);
     },
-    enableReinitialize: true,
+    // enableReinitialize: true,
   });
 
   // Getting Notice Office Diary Number
@@ -111,8 +110,6 @@ function NewQuestion() {
     }
   }, [sessions]);
 
-  console.log("FormiknoticeOfficeDiaryNo", formik?.noticeOfficeDiaryNo);
-  // Handle Claneder Toggel
   const handleCalendarToggle = () => {
     setIsCalendarOpen(!isCalendarOpen);
   };
@@ -415,29 +412,29 @@ function NewQuestion() {
                         </label>
 
                         <TimePicker
-                          value={formik.values.noticeOfficeDiaryTime}
-                          clockIcon={null} // Disable clock view
-                          openClockOnFocus={false}
-                          format="hh:mm a"
-                          onChange={(time) =>
-                            formik.setFieldValue("noticeOfficeDiaryTime", time)
-                          }
-                          className={`form-control ${
-                            formik.touched.noticeOfficeDiaryTime &&
-                            formik.errors.noticeOfficeDiaryTime
-                              ? "is-invalid"
-                              : ""
-                          }`}
-                        />
-                        {formik.touched.noticeOfficeDiaryTime &&
-                          formik.errors.noticeOfficeDiaryTime && (
-                            <div
-                              className="invalid-feedback"
-                              style={{ display: "block" }}
-                            >
-                              {formik.errors.noticeOfficeDiaryTime}
-                            </div>
-                          )}
+            value={formik.values.noticeOfficeDiaryTime}
+            clockIcon={null}
+            openClockOnFocus={false}
+            format="hh:mm a"
+            onChange={(time) =>
+              formik.setFieldValue("noticeOfficeDiaryTime", time)
+            }
+            className={`form-control ${
+              formik.touched.noticeOfficeDiaryTime &&
+              formik.errors.noticeOfficeDiaryTime
+                ? "is-invalid"
+                : ""
+            }`}
+          />
+          {formik.touched.noticeOfficeDiaryTime &&
+            formik.errors.noticeOfficeDiaryTime && (
+              <div
+                className="invalid-feedback"
+                style={{ display: "block" }}
+              >
+                {formik.errors.noticeOfficeDiaryTime}
+              </div>
+            )}
                       </div>
                     </div>
                     <div class="col-3">

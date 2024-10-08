@@ -87,7 +87,7 @@ function NewResolution() {
       noticeOfficeDiaryNo: "",
       // noticeOfficeDiaryDate: new Date(),
       noticeOfficeDiaryDate: moment(new Date()).format("YYYY-MM-DD"),
-      noticeOfficeDiaryTime: "",
+      noticeOfficeDiaryTime: moment().format("HH:mm A"),
       resolutionType: "",
       resolutionMovers: [],
       englishText: "",
@@ -101,7 +101,7 @@ function NewResolution() {
       // setFormValues(values);
       CreateResolutionApi(values);
     },
-    enableReinitialize: true,
+    // enableReinitialize: true,
   });
 
   // Handle Claneder Toggel

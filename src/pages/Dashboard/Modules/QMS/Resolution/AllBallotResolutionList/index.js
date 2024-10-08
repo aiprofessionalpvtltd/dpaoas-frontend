@@ -103,7 +103,7 @@ function AllBallotResolutionList() {
               />
             </div>
           </div>
-          <div class="row mt-4">
+          <div class="row mt-4" style={{marginLeft:"20px"}}>
             <div class="col-4">
               <div class="mb-3">
                 <label class="form-label">Question Status</label>

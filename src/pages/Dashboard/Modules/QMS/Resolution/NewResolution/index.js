@@ -19,6 +19,7 @@ import { AuthContext } from "../../../../../../api/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import { getUserData } from "../../../../../../api/Auth";
+import { useNavigate } from "react-router-dom";
 
 const validationSchema = Yup.object({
   fkSessionNo: Yup.number().required("Session No is required"),
@@ -39,6 +40,7 @@ const validationSchema = Yup.object({
 function QMSNewResolution() {
   const { members, sessions, ministryData } = useContext(AuthContext);
   const userData = getUserData();
+  const navigate = useNavigate()
 
   const formik = useFormik({
     initialValues: {
@@ -95,6 +97,7 @@ function QMSNewResolution() {
       if (response?.success) {
         showSuccessMessage(response?.message);
         formik.resetForm();
+        navigate('/qms/search/resolution')
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);

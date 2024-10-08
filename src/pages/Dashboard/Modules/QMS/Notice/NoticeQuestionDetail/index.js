@@ -26,7 +26,7 @@ import { ToastContainer } from "react-toastify";
 import moment from "moment";
 import { getAllDivisions } from "../../../../../../api/APIs/Services/ManageQMS.service";
 import { imagesUrl } from "../../../../../../api/APIs";
-
+import { useNavigate } from "react-router-dom";
 const validationSchema = Yup.object({
   sessionNumber: Yup.string().required("Session No is required"),
   noticeOfficeDiaryNumber: Yup.string().required(
@@ -51,6 +51,7 @@ function QMSNoticeQuestionDetail() {
   const { members, sessions, divisions } = useContext(AuthContext);
   const [allQuestionStatus, setAllQuestionStatus] = useState([]);
   const location = useLocation();
+  const navigate = useNavigate()
   const formik = useFormik({
     initialValues: {
       sessionNumber: location.state
@@ -134,6 +135,9 @@ function QMSNoticeQuestionDetail() {
       );
       if (response?.success) {
         showSuccessMessage(response?.message);
+        setTimeout(() => {
+          navigate('/qms/notice/notice-question')
+        }, 1000);
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
