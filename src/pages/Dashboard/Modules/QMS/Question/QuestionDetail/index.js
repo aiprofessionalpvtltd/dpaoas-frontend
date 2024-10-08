@@ -25,6 +25,8 @@ import { AuthContext } from "../../../../../../api/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import { imagesUrl } from "../../../../../../api/APIs";
+import { useNavigate } from "react-router-dom";
+
 const validationSchema = Yup.object({
   sessionNo: Yup.string(),
   noticeOfficeDiaryNo: Yup.string(),
@@ -52,6 +54,7 @@ function QMSQuestionDetail() {
   // const Urdu = location?.state && location?.state?.question?.urduText;
   // console.log("location states", location?.state?.question?.urduText);
   const { members, sessions, divisions } = useContext(AuthContext);
+  const navigate = useNavigate()
 
   console.log(
     "Question Detail Data",
@@ -149,6 +152,9 @@ function QMSQuestionDetail() {
       );
       if (response?.success) {
         showSuccessMessage(response?.message);
+        setTimeout(() => {
+          navigate('/qms/search/question')
+        }, 1000);
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);

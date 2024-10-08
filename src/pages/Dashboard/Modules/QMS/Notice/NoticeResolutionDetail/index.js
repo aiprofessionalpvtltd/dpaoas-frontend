@@ -20,11 +20,12 @@ import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import { AuthContext } from "../../../../../../api/AuthContext";
 import moment from "moment";
 import { imagesUrl } from "../../../../../../api/APIs";
-
+import { useNavigate } from "react-router-dom";
 function QMSNoticeResolutionDetail() {
   const location = useLocation();
   const { members, sessions, resolutionStatus, ministryData } = useContext(AuthContext);
   const [linkedIdData, setLinkedIdData] = useState(null)
+  const navigate = useNavigate()
 
   const formik = useFormik({
     initialValues: {
@@ -134,6 +135,7 @@ function QMSNoticeResolutionDetail() {
       const response = await UpdateResolution(location.state.id, data);
       if (response?.success) {
         showSuccessMessage(response.message);
+        navigate('/qms/search/resolution')
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);

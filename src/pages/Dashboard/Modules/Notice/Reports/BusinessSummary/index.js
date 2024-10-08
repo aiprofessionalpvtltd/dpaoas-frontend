@@ -6,6 +6,7 @@ import { useNavigate } from "react-router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import DatePicker from "react-datepicker";
+import LZString from "lz-string";
 import { noticeBusinessReport } from "../../../../../../api/APIs/Services/Question.service";
 import {
   showErrorMessage,
@@ -146,8 +147,11 @@ function BusinessSummary() {
 
   const handlePrint = async () => {
     const CombinedData = { questionReport, motionReport, resolutionReport };
-    const encodedJsonString = encodeURIComponent(JSON.stringify(CombinedData));
-    const url = `/notice/reports/business-summary/preview-pdf?state=${encodedJsonString}`;
+    console.log("CombinedData before compression:", CombinedData); // Check the data
+    const compressedData = LZString.compressToEncodedURIComponent(
+      JSON.stringify(CombinedData)
+    );
+    const url = `/notice/reports/business-summary/preview-pdf?state=${compressedData}`;
     window.open(url, "_blank");
   };
   return (
