@@ -7,12 +7,8 @@ import {
   showErrorMessage,
   showSuccessMessage,
 } from "../../../../../utils/ToastAlert";
-import {
-  deletePrivateBill,
-  getAllPrivateBillNotice,
-  sendPrivateBill,
-} from "../../../../../api/APIs/Services/Legislation.service";
-import PrivateBillModal from "../../../../../components/PrivateBillModal";
+import { deletePrivateBill } from "../../../../../api/APIs/Services/Legislation.service";
+
 import { ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { CustomAlert } from "../../../../../components/CustomComponents/CustomAlert";
@@ -21,7 +17,7 @@ import { getAllLeaveRequests } from "../../../../../api/APIs/Services/LeaveManag
 
 function LeaveRequests() {
   const [currentPage, setCurrentPage] = useState(0);
-  const pageSize = 5; // Set your desired page size
+  const pageSize = 120; // Set your desired page size
   const [count, setCount] = useState();
   const [assignModalOpan, setAssignedModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -36,24 +32,57 @@ function LeaveRequests() {
     setCurrentPage(page);
   };
 
+  // const transformPrivateData = (apiData) => {
+  //   return apiData?.map((item) => ({
+  //     id: item?.id,
+  //     startDate: item?.requestStartDate
+  //       ? item.requestStartDate
+  //       : item?.leave_oneday
+  //         ? item.leave_oneday
+  //         : "---",
+  //     endDate: item?.requestEndDate
+  //       ? item.requestEndDate
+  //       : item?.leave_oneday
+  //         ? item.leave_oneday
+  //         : "---",
+  //     reason: item?.requestLeaveReason,
+  //     member: item?.memberName ? item?.memberName : "---",
+  //     status: item?.requestStatus,
+  //   }));
+  // };
+
   const transformPrivateData = (apiData) => {
-    return apiData?.map((item) => ({
-      id: item?.id,
-      startDate: item?.requestStartDate
-        ? item.requestStartDate
-        : item?.leave_oneday
-          ? item.leave_oneday
+    return apiData?.map((item) => {
+      // Determine leave type
+      let leaveType = "";
+      if (item?.leave_oneday) {
+        leaveType = "Single Day"; // Single-day leave
+      } else if (item?.requestStartDate && item?.requestEndDate) {
+        leaveType = "Multiple Days"; // Multiple-day leave
+      } else {
+        leaveType = "Full Session"; // Full session leave
+      }
+
+      return {
+        id: item?.id,
+        leaveType: leaveType, // Add the determined leaveType
+        singleDayDate: item?.leave_oneday
+          ? moment(item.leave_oneday).format("DD-MM-YYYY")
+          : "---", // Corrected access to leave_oneday
+        startDate: item?.requestStartDate
+          ? moment(item.requestStartDate).format("DD-MM-YYYY")
           : "---",
-      endDate: item?.requestEndDate
-        ? item.requestEndDate
-        : item?.leave_oneday
-          ? item.leave_oneday
+        endDate: item?.requestEndDate
+          ? moment(item.requestEndDate).format("DD-MM-YYYY")
           : "---",
-      reason: item?.requestLeaveReason,
-      member: item?.memberName ? item?.memberName : "---",
-      status: item?.requestStatus,
-    }));
+        reason: item?.requestLeaveReason || "---",
+        member: item?.memberName || "---",
+        status: item?.requestStatus || "---",
+        device: item?.device || "---",
+      };
+    });
   };
+
   const getAllLeaveRequestsApi = useCallback(async () => {
     try {
       const response = await getAllLeaveRequests(currentPage, pageSize);
