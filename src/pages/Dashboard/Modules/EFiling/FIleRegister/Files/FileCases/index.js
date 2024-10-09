@@ -72,6 +72,7 @@ function FileCases() {
         caseNoteId: item?.caseNoteId,
         internalId: item?.fileData?.id,
         FileNo: item?.fileData?.fileNumber,
+        FileSubject: item?.fileData?.fileSubject,
         initiatedBy: item?.createdByUser?.firstName,
         Sender:
           item?.fileRemarksData?.length > 0
