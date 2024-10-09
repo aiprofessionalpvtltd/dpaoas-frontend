@@ -222,11 +222,11 @@ function SearchMotion() {
       showErrorMessage(error.response?.data?.message);
     }
   };
-  const handlePDF = async () =>{
+  const handlePDF = async () => {
     const encodedJsonString = encodeURIComponent(JSON.stringify(motionData));
     const url = `/notice/motion/pdf-preview?state=${encodedJsonString}`;
     window.open(url, "_blank");
-  }
+  };
 
   return (
     <Layout
@@ -267,7 +267,7 @@ function SearchMotion() {
                       />
                     </div>
                   </div>
-                  <div class="col">
+                  {/* <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Motion ID</label>
                       <input
@@ -280,7 +280,7 @@ function SearchMotion() {
                         onBlur={formik.handleBlur}
                       />
                     </div>
-                  </div>
+                  </div> */}
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Keyword</label>
@@ -611,7 +611,7 @@ function SearchMotion() {
 
                 <div class="row">
                   <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                  <button
+                    <button
                       className="btn btn-primary col-1"
                       type="button"
                       onClick={handlePDF}

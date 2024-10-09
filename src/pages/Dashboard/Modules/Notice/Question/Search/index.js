@@ -32,7 +32,7 @@ function SearchQuestion() {
   const [allquestionStatus, setAllQuestionStatus] = useState([]);
   const [isFromNoticeOpen, setIsFromNoticeOpen] = useState(false);
   const [isToNoticeOpen, setIsToNoticeOpen] = useState(false);
-  const [pdfData , setPDFData] = useState([])
+  const [pdfData, setPDFData] = useState([]);
   const pageSize = 10; // Set your desired page size
 
   const formik = useFormik({
@@ -101,8 +101,15 @@ function SearchQuestion() {
         Status: res.questionStatus?.questionStatus
           ? res.questionStatus?.questionStatus
           : "",
-        SentDate:res?.questionSentDate? moment(res?.questionSentDate).format("DD-MM-YYYY"):"--",
-        createdBy : res?.questionSentStatus === "inNotice" ? "Notice Office" : res?.questionSentStatus == "toQuestion" ? "From Notice Office":"--"
+        SentDate: res?.questionSentDate
+          ? moment(res?.questionSentDate).format("DD-MM-YYYY")
+          : "--",
+        createdBy:
+          res?.questionSentStatus === "inNotice"
+            ? "Notice Office"
+            : res?.questionSentStatus == "toQuestion"
+              ? "From Notice Office"
+              : "--",
       };
     });
   };
@@ -122,14 +129,14 @@ function SearchQuestion() {
           : "",
         NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate
           ? moment(res?.noticeOfficeDiary?.noticeOfficeDiaryDate).format(
-            "DD-MM-YYYY"
-          )
+              "DD-MM-YYYY"
+            )
           : "",
         NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime
           ? moment(
-            res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
-            "hh:mm A"
-          ).format("hh:mm A")
+              res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
+              "hh:mm A"
+            ).format("hh:mm A")
           : "",
         SessionNumber: res?.session?.sessionName
           ? res?.session?.sessionName
@@ -186,7 +193,7 @@ function SearchQuestion() {
         noticeOfficeDiaryDateTo:
           values?.toNoticeDate &&
           moment(values?.toNoticeDate).format("YYYY-MM-DD"),
-          questionSentStatus : ["inNotice", "toQuestion"]
+        questionSentStatus: ["inNotice", "toQuestion"],
       };
 
       try {
@@ -196,8 +203,8 @@ function SearchQuestion() {
           showSuccessMessage(response?.message);
           setCount(response?.data?.count);
           const transformedData = transformLeavesData(response.data?.questions);
-          const pdfTransformData = transformPdfData(response.data?.questions)
-          setPDFData(pdfTransformData)
+          const pdfTransformData = transformPdfData(response.data?.questions);
+          setPDFData(pdfTransformData);
           setSearchedData(transformedData);
         }
         // formik.resetForm();
@@ -278,11 +285,11 @@ function SearchQuestion() {
     formik.resetForm();
     setSearchedData([]);
   };
-const handlePDF = async () =>{
-  const encodedJsonString = encodeURIComponent(JSON.stringify(pdfData));
-  const url = `/notice/question/pdf-allQuestion?state=${encodedJsonString}`;
-  window.open(url, "_blank");
-}
+  const handlePDF = async () => {
+    const encodedJsonString = encodeURIComponent(JSON.stringify(pdfData));
+    const url = `/notice/question/pdf-allQuestion?state=${encodedJsonString}`;
+    window.open(url, "_blank");
+  };
   return (
     <Layout
       module={true}
@@ -309,7 +316,7 @@ const handlePDF = async () =>{
                 <form onSubmit={formik.handleSubmit}>
                   <div className="container-fluid">
                     <div className="row">
-                      <div className="col">
+                      {/* <div className="col">
                         <div className="mb-3">
                           <label className="form-label">
                             Question Diary No
@@ -324,8 +331,8 @@ const handlePDF = async () =>{
                             onBlur={formik.handleBlur}
                           />
                         </div>
-                      </div>
-                      <div className="col">
+                      </div> */}
+                      {/* <div className="col">
                         <div className="mb-3">
                           <label className="form-label">Question ID</label>
                           <input
@@ -338,7 +345,7 @@ const handlePDF = async () =>{
                             onBlur={formik.handleBlur}
                           />
                         </div>
-                      </div>
+                      </div> */}
                       <div className="col">
                         <div className="mb-3">
                           <label className="form-label">Keyword</label>
@@ -377,6 +384,80 @@ const handlePDF = async () =>{
                                 {formik.errors.memberName}
                               </div>
                             )}
+                        </div>
+                      </div>
+                      <div className="col">
+                        <div className="mb-3" style={{ position: "relative" }}>
+                          <label className="form-label">From Notice Date</label>
+                          <span
+                            style={{
+                              position: "absolute",
+                              right: "15px",
+                              top: "36px",
+                              zIndex: 1,
+                              fontSize: "20px",
+                              zIndex: "1",
+                              color: "#666",
+                              cursor: "pointer",
+                            }}
+                            onClick={handleFromNoticeCalendarToggle}
+                          >
+                            <FontAwesomeIcon icon={faCalendarAlt} />
+                          </span>
+
+                          <DatePicker
+                            selected={formik.values.fromNoticeDate}
+                            onChange={handleFromNoticeDateSelect}
+                            onBlur={formik.handleBlur}
+                            className={`form-control ${
+                              formik.touched.fromNoticeDate &&
+                              formik.errors.fromNoticeDate
+                                ? "is-invalid"
+                                : ""
+                            }`}
+                            open={isFromNoticeOpen}
+                            onClickOutside={() => setIsFromNoticeOpen(false)}
+                            onInputClick={handleFromNoticeCalendarToggle}
+                            dateFormat="dd-MM-yyyy"
+                            maxDate={new Date()}
+                          />
+                        </div>
+                      </div>
+                      <div className="col">
+                        <div className="mb-3" style={{ position: "relative" }}>
+                          <label className="form-label">To Notice Date</label>
+                          <span
+                            style={{
+                              position: "absolute",
+                              right: "15px",
+                              top: "36px",
+                              zIndex: 1,
+                              fontSize: "20px",
+                              zIndex: "1",
+                              color: "#666",
+                              cursor: "pointer",
+                            }}
+                            onClick={handleToNoticeCalendarToggle}
+                          >
+                            <FontAwesomeIcon icon={faCalendarAlt} />
+                          </span>
+
+                          <DatePicker
+                            selected={formik.values.toNoticeDate}
+                            onChange={handleToNoticeDateSelect}
+                            onBlur={formik.handleBlur}
+                            className={`form-control ${
+                              formik.touched.toNoticeDate &&
+                              formik.errors.toNoticeDate
+                                ? "is-invalid"
+                                : ""
+                            }`}
+                            open={isToNoticeOpen}
+                            onClickOutside={() => setIsToNoticeOpen(false)}
+                            onInputClick={handleToNoticeCalendarToggle}
+                            dateFormat="dd-MM-yyyy"
+                            maxDate={new Date()}
+                          />
                         </div>
                       </div>
                     </div>
@@ -473,86 +554,11 @@ const handlePDF = async () =>{
                       </div>
                     </div>
 
-                    <div className="row">
-                      <div className="col-3">
-                        <div className="mb-3" style={{ position: "relative" }}>
-                          <label className="form-label">From Notice Date</label>
-                          <span
-                            style={{
-                              position: "absolute",
-                              right: "15px",
-                              top: "36px",
-                              zIndex: 1,
-                              fontSize: "20px",
-                              zIndex: "1",
-                              color: "#666",
-                              cursor: "pointer",
-                            }}
-                            onClick={handleFromNoticeCalendarToggle}
-                          >
-                            <FontAwesomeIcon icon={faCalendarAlt} />
-                          </span>
-
-                          <DatePicker
-                            selected={formik.values.fromNoticeDate}
-                            onChange={handleFromNoticeDateSelect}
-                            onBlur={formik.handleBlur}
-                            className={`form-control ${
-                              formik.touched.fromNoticeDate &&
-                              formik.errors.fromNoticeDate
-                                ? "is-invalid"
-                                : ""
-                            }`}
-                            open={isFromNoticeOpen}
-                            onClickOutside={() => setIsFromNoticeOpen(false)}
-                            onInputClick={handleFromNoticeCalendarToggle}
-                            dateFormat="dd-MM-yyyy"
-                            maxDate={new Date()}
-                          />
-                        </div>
-                      </div>
-                      <div className="col-3">
-                        <div className="mb-3" style={{ position: "relative" }}>
-                          <label className="form-label">To Notice Date</label>
-                          <span
-                            style={{
-                              position: "absolute",
-                              right: "15px",
-                              top: "36px",
-                              zIndex: 1,
-                              fontSize: "20px",
-                              zIndex: "1",
-                              color: "#666",
-                              cursor: "pointer",
-                            }}
-                            onClick={handleToNoticeCalendarToggle}
-                          >
-                            <FontAwesomeIcon icon={faCalendarAlt} />
-                          </span>
-
-                          <DatePicker
-                            selected={formik.values.toNoticeDate}
-                            onChange={handleToNoticeDateSelect}
-                            onBlur={formik.handleBlur}
-                            className={`form-control ${
-                              formik.touched.toNoticeDate &&
-                              formik.errors.toNoticeDate
-                                ? "is-invalid"
-                                : ""
-                            }`}
-                            open={isToNoticeOpen}
-                            onClickOutside={() => setIsToNoticeOpen(false)}
-                            onInputClick={handleToNoticeCalendarToggle}
-                            dateFormat="dd-MM-yyyy"
-                            maxDate={new Date()}
-                          />
-                        </div>
-                      </div>
-                    </div>
+                    <div className="row"></div>
 
                     <div className="row">
                       <div className="d-grid gap-2 d-md-flex justify-content-md-end">
-                      <button
+                        <button
                           className="btn btn-primary col-1"
                           type="button"
                           onClick={handlePDF}

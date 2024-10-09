@@ -82,9 +82,14 @@ function SearchResolution() {
           ? res.resolutionStatus?.resolutionStatus
           : "",
         Movers: movers ? movers : "",
-        SentDate: res?.resolutionSentDate ? moment(res?.resolutionSentDate).format("DD-MM-YYYY") : "--",
-        createdBy: res?.resolutionSentStatus === "inNotice" ? "Notice Office" : "---",
-        diaryTime : res?.noticeDiary?.noticeOfficeDiaryTime ? res?.noticeDiary?.noticeOfficeDiaryTime :"---",
+        SentDate: res?.resolutionSentDate
+          ? moment(res?.resolutionSentDate).format("DD-MM-YYYY")
+          : "--",
+        createdBy:
+          res?.resolutionSentStatus === "inNotice" ? "Notice Office" : "---",
+        diaryTime: res?.noticeDiary?.noticeOfficeDiaryTime
+          ? res?.noticeDiary?.noticeOfficeDiaryTime
+          : "---",
         ResolutionType: res?.resolutionType ? res?.resolutionType : "",
         SubjectMatter: cleanedSubjectMatter ? cleanedSubjectMatter : "",
         NoticeNo: res?.noticeDiary?.noticeOfficeDiaryNo
@@ -107,7 +112,7 @@ function SearchResolution() {
       noticeOfficeDiaryDateFrom: values.fromNoticeDate,
       noticeOfficeDiaryDateTo: values.toNoticeDate,
       resolutionMovers: values?.memberName?.value,
-      resolutionSentStatus: ["inNotice", "toResolution"]
+      resolutionSentStatus: ["inNotice", "toResolution"],
     };
 
     try {
@@ -161,12 +166,12 @@ function SearchResolution() {
     formik.resetForm();
     setSearchedData([]);
   };
-  const handlePDF = async () =>{
+  const handlePDF = async () => {
     const encodedJsonString = encodeURIComponent(JSON.stringify(searchedData));
     const url = `/notice/resolution/pdf-preview-resolution?state=${encodedJsonString}`;
     window.open(url, "_blank");
-  }
-  
+  };
+
   return (
     <Layout
       module={true}
@@ -209,7 +214,7 @@ function SearchResolution() {
                           />
                         </div>
                       </div>
-                      <div className="col">
+                      {/* <div className="col">
                         <div className="mb-3">
                           <label className="form-label">Resolution ID</label>
                           <input
@@ -221,7 +226,7 @@ function SearchResolution() {
                             onBlur={formik.handleBlur}
                           />
                         </div>
-                      </div>
+                      </div> */}
                       <div className="col">
                         <div className="mb-3">
                           <label className="form-label">Keyword</label>

@@ -214,33 +214,35 @@ function AddEditLeaveRequests() {
       else {
         leaveTypeValue = "session"; // Session leave
       }
-
-      formik.setValues({
-        fkMemberId: leaveByIdData?.member
-          ? {
-              value: leaveByIdData?.member?.id,
-              label: leaveByIdData?.member?.name,
-            }
-          : null,
-        fkSessionId:
-          (leaveByIdData?.session && leaveByIdData?.session?.id) || 8,
-        applicationSubmittedDate: leaveByIdData?.applicationDate
-          ? moment(leaveByIdData?.applicationDate).toDate()
-          : "",
-        leave_oneday: leaveByIdData?.leave_oneday
-          ? moment(leaveByIdData?.leave_oneday).toDate()
-          : "",
-        requestStartDate: leaveByIdData?.requestStartDate
-          ? moment(leaveByIdData?.requestStartDate).toDate()
-          : "",
-        requestEndDate: leaveByIdData?.requestEndDate
-          ? moment(leaveByIdData?.requestEndDate).toDate()
-          : "",
-        subject: leaveByIdData?.subject || "",
-        description: leaveByIdData?.requestLeaveReason || "",
-        leaveType: leaveTypeValue, // Automatically set leaveType based on logic
-        requestStatus: leaveByIdData?.requestStatus,
-      });
+      console.log("leaveData", leaveByIdData?.member?.id);
+      if (location?.state?.id) {
+        formik.setValues({
+          fkMemberId: leaveByIdData?.member?.id
+            ? {
+                value: leaveByIdData?.member?.id,
+                label: leaveByIdData?.member?.name,
+              }
+            : { value: 968, label: "Manzoor Ahmed" },
+          fkSessionId:
+            (leaveByIdData?.session && leaveByIdData?.session?.id) || 8,
+          applicationSubmittedDate: leaveByIdData?.applicationDate
+            ? moment(leaveByIdData?.applicationDate).toDate()
+            : "",
+          leave_oneday: leaveByIdData?.leave_oneday
+            ? moment(leaveByIdData?.leave_oneday).toDate()
+            : "",
+          requestStartDate: leaveByIdData?.requestStartDate
+            ? moment(leaveByIdData?.requestStartDate).toDate()
+            : "",
+          requestEndDate: leaveByIdData?.requestEndDate
+            ? moment(leaveByIdData?.requestEndDate).toDate()
+            : "",
+          subject: leaveByIdData?.subject || "",
+          description: leaveByIdData?.requestLeaveReason || "",
+          leaveType: leaveTypeValue, // Automatically set leaveType based on logic
+          requestStatus: leaveByIdData?.requestStatus,
+        });
+      }
     }
   }, [leaveByIdData]);
 
@@ -407,7 +409,6 @@ function AddEditLeaveRequests() {
       formData.append("file", values?.requestLeaveAttachment);
     }
 
-    formData.append("device", "Web");
     formData.append("requestStatus", values?.requestStatus);
 
     try {
@@ -793,33 +794,36 @@ function AddEditLeaveRequests() {
                         />
                       </div>
                     </div>
-                    <div className="col-3">
-                      <div className="mb-3">
-                        <label htmlFor="formFile" className="form-label">
-                          Status <span className="text-danger">*</span>
-                        </label>
-                        <select
-                          className={`form-select ${
-                            formik.touched.status && formik.errors.requestStatus
-                              ? "is-invalid"
-                              : ""
-                          }`}
-                          value={formik.values.requestStatus}
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          name="requestStatus"
-                          id="requestStatus"
-                        >
-                          <option value="" selected disabled hidden>
-                            Select
-                          </option>
-                          <option value="pending">Pending</option>
-                          <option value="approved">Approved</option>
-                          <option value="disapproved">DisApproved</option>
-                          <option value="marked">Marked</option>
-                        </select>
+                    {location?.state?.id && (
+                      <div className="col-3">
+                        <div className="mb-3">
+                          <label htmlFor="formFile" className="form-label">
+                            Status <span className="text-danger">*</span>
+                          </label>
+                          <select
+                            className={`form-select ${
+                              formik.touched.status &&
+                              formik.errors.requestStatus
+                                ? "is-invalid"
+                                : ""
+                            }`}
+                            value={formik.values.requestStatus}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            name="requestStatus"
+                            id="requestStatus"
+                          >
+                            <option value="" selected disabled hidden>
+                              Select
+                            </option>
+                            <option value="pending">Pending</option>
+                            <option value="approved">Approved</option>
+                            <option value="disapproved">DisApproved</option>
+                            <option value="marked">Marked</option>
+                          </select>
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
                 </div>
 

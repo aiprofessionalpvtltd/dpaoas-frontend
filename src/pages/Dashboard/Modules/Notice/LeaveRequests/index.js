@@ -17,7 +17,7 @@ import { getAllLeaveRequests } from "../../../../../api/APIs/Services/LeaveManag
 
 function LeaveRequests() {
   const [currentPage, setCurrentPage] = useState(0);
-  const pageSize = 120; // Set your desired page size
+  const pageSize = 10; // Set your desired page size
   const [count, setCount] = useState();
   const [assignModalOpan, setAssignedModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -65,7 +65,8 @@ function LeaveRequests() {
 
       return {
         id: item?.id,
-        leaveType: leaveType, // Add the determined leaveType
+        leaveType: leaveType,
+        session: item?.sessionName ? item?.sessionName : "---",
         singleDayDate: item?.leave_oneday
           ? moment(item.leave_oneday).format("DD-MM-YYYY")
           : "---", // Corrected access to leave_oneday
@@ -76,7 +77,7 @@ function LeaveRequests() {
           ? moment(item.requestEndDate).format("DD-MM-YYYY")
           : "---",
         reason: item?.requestLeaveReason || "---",
-        member: item?.memberName || "---",
+        member: item?.memberName || "Manzoor Ahmed",
         status: item?.requestStatus || "---",
         device: item?.device || "---",
       };
@@ -88,7 +89,7 @@ function LeaveRequests() {
       const response = await getAllLeaveRequests(currentPage, pageSize);
       if (response?.success) {
         const transformedData = transformPrivateData(response?.data);
-        setCount(response?.data?.totalCount);
+        setCount(response?.totalCount);
         setData(transformedData);
       }
     } catch (error) {

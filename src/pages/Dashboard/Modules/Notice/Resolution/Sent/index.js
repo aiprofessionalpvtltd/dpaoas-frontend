@@ -74,17 +74,22 @@ function SentResolution() {
       const cleanedSubjectMatter = subjectMatter.replace(/(<([^>]+)>)/gi, "");
       return {
         SrNo: leave.id,
-        memberName: leave?.resolutionMoversAssociation[0]?.memberAssociation?.memberName,
+        memberName:
+          leave?.resolutionMoversAssociation[0]?.memberAssociation?.memberName,
         SessionNumber: leave?.session?.sessionName
           ? leave?.session?.sessionName
           : "",
-          diaryNumber : leave?.noticeDiary?.noticeOfficeDiaryNo ? leave?.noticeDiary?.noticeOfficeDiaryNo :"---",
-          DiaryDate: leave?.noticeDiary?.noticeOfficeDiaryDate
+        diaryNumber: leave?.noticeDiary?.noticeOfficeDiaryNo
+          ? leave?.noticeDiary?.noticeOfficeDiaryNo
+          : "---",
+        DiaryDate: leave?.noticeDiary?.noticeOfficeDiaryDate
           ? moment(leave?.noticeDiary?.noticeOfficeDiaryDate).format(
-            "DD-MM-YYYY"
-          )
+              "DD-MM-YYYY"
+            )
           : "",
-          diaryTime : leave?.noticeDiary?.noticeOfficeDiaryTime ? leave?.noticeDiary?.noticeOfficeDiaryTime :"---",
+        diaryTime: leave?.noticeDiary?.noticeOfficeDiaryTime
+          ? leave?.noticeDiary?.noticeOfficeDiaryTime
+          : "---",
         ResolutionType: leave?.resolutionType ? leave?.resolutionType : "",
         SubjectMatter: cleanedSubjectMatter ? cleanedSubjectMatter : "",
         NoticeNo: leave?.noticeDiary?.noticeOfficeDiaryNo
@@ -95,7 +100,8 @@ function SentResolution() {
         //   : "",
         // Status: leave?.resolutionActive ? leave?.resolutionActive : "",
         // device : leave?.device,
-        createdBy:leave?.resolutionSentStatus === "inNotice" ? "Notice Office": "---"
+        createdBy:
+          leave?.resolutionSentStatus === "inNotice" ? "Notice Office" : "---",
       };
     });
   };
@@ -109,7 +115,6 @@ function SentResolution() {
   });
 
   const SearchResolutionApi = async (values, page) => {
-
     const searchParams = {
       fkSessionNoFrom: values.fromSession,
       fkSessionNoTo: values.toSession,
@@ -122,23 +127,24 @@ function SentResolution() {
       noticeOfficeDiaryDateFrom: values.fromNoticeDate,
       noticeOfficeDiaryDateTo: values.toNoticeDate,
       resolutionMovers: values?.memberName?.value,
-      resolutionSentStatus: ["inNotice", "toResolution"]
+      resolutionSentStatus: ["inNotice", "toResolution"],
     };
 
     try {
       const response = await searchResolution(searchParams, page, pageSize);
-      
+
       if (response?.success) {
         showSuccessMessage(response?.message);
 
         setCount(response.data?.count);
-        if(response.data?.resolutions?.length > 0) {
-          const transformedData = transformLeavesData(response.data?.resolutions);
+        if (response.data?.resolutions?.length > 0) {
+          const transformedData = transformLeavesData(
+            response.data?.resolutions
+          );
           setResData(transformedData);
         } else {
           setResData(response.data);
         }
-
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -208,8 +214,8 @@ function SentResolution() {
   const sendResolution = async (id) => {
     try {
       const data = {
-        resolutionSentDate: new Date()
-      }
+        resolutionSentDate: new Date(),
+      };
       const response = await sendToResolution(id, data);
       if (response?.success) {
         showSuccessMessage(response.message);
@@ -220,11 +226,11 @@ function SentResolution() {
     }
   };
 
-  const handlePDF = async () =>{
+  const handlePDF = async () => {
     const encodedJsonString = encodeURIComponent(JSON.stringify(resData));
     const url = `/notice/resolution/pdf-preview-resolution?state=${encodedJsonString}`;
     window.open(url, "_blank");
-  }
+  };
 
   return (
     <Layout
@@ -270,7 +276,7 @@ function SentResolution() {
                         />
                       </div>
                     </div>
-                    <div class="col">
+                    {/* <div class="col">
                       <div class="mb-3">
                         <label class="form-label">Resolution ID</label>
                         <input
@@ -287,7 +293,7 @@ function SentResolution() {
                           value={formik.values.resolutionId}
                         />
                       </div>
-                    </div>
+                    </div> */}
                     <div class="col">
                       <div class="mb-3">
                         <label class="form-label">Keyword</label>
@@ -546,13 +552,13 @@ function SentResolution() {
 
                   <div class="row">
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                    <button
-                      className="btn btn-primary col-1"
-                      type="button"
-                      onClick={handlePDF}
-                    >
-                      Print PDF
-                    </button>
+                      <button
+                        className="btn btn-primary col-1"
+                        type="button"
+                        onClick={handlePDF}
+                      >
+                        Print PDF
+                      </button>
                       <button class="btn btn-primary" type="submit">
                         Search
                       </button>

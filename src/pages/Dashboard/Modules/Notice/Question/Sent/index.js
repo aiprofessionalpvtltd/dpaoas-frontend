@@ -356,7 +356,7 @@ function SentQuestion() {
                           />
                         </div>
                       </div>
-                      <div className="col">
+                      {/* <div className="col">
                         <div className="mb-3">
                           <label className="form-label">Question ID</label>
                           <input
@@ -369,7 +369,7 @@ function SentQuestion() {
                             onBlur={formik.handleBlur}
                           />
                         </div>
-                      </div>
+                      </div> */}
                       <div className="col">
                         <div className="mb-3">
                           <label className="form-label">Keyword</label>
