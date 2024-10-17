@@ -29,7 +29,8 @@ function LegislativeBillList() {
   };
   const transformLegislativeData = (apiData) => {
     return apiData.map((item, index) => ({
-      SR: item?.id,
+      "S.No": index + 1,
+      id: item?.id,
       title: item?.title ? item?.title : "",
       memberName: item?.member?.memberName,
       noticeOfficeDiraryDate: item?.date
@@ -125,12 +126,12 @@ function LegislativeBillList() {
             }
             handleEdit={(item) =>
               navigate("/notice/legislation/private-bill/addedit", {
-                state: { id: item?.SR },
+                state: { id: item?.id },
               })
             }
-            handleDelete={(item) => handleDelete(item.SR)}
+            handleDelete={(item) => handleDelete(item.id)}
             showSent={true}
-            handleSent={(item) => sendBill(item?.SR)}
+            handleSent={(item) => sendBill(item?.id)}
           />
         </div>
       </div>

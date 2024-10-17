@@ -81,6 +81,7 @@ function SearchQuestion() {
       const cleanedSubjectMatter = subjectMatter.replace(/(<([^>]+)>)/gi, "");
 
       return {
+        "S.No" : index + 1,
         Id: res.id,
         NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate
           ? moment(res?.noticeOfficeDiary?.noticeOfficeDiaryDate).format(

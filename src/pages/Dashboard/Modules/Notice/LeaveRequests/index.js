@@ -52,7 +52,7 @@ function LeaveRequests() {
   // };
 
   const transformPrivateData = (apiData) => {
-    return apiData?.map((item) => {
+    return apiData?.map((item, index) => {
       // Determine leave type
       let leaveType = "";
       if (item?.leave_oneday) {
@@ -64,6 +64,7 @@ function LeaveRequests() {
       }
 
       return {
+        "S.No": index + 1,
         id: item?.id,
         leaveType: leaveType,
         session: item?.sessionName ? item?.sessionName : "---",

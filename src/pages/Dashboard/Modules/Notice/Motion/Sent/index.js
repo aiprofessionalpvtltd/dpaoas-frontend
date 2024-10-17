@@ -103,8 +103,8 @@ function SentMotion() {
       const UrduText = urdu.replace(/(<([^>]+)>)/gi, "");
 
       return {
+        "S.No" : index + 1,
         id: res?.id,
-        // SrNo : res?.SrNo,
         memberName: res?.motionMovers[0]?.members?.memberName,
         SessionNumber: res?.sessions?.sessionName
           ? res?.sessions?.sessionName

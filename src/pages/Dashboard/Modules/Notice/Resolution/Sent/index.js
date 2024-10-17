@@ -67,12 +67,13 @@ function SentResolution() {
   };
 
   const transformLeavesData = (apiData) => {
-    return apiData.map((leave) => {
+    return apiData.map((leave, index) => {
       const subjectMatter = [leave?.englishText, leave?.urduText]
         .filter(Boolean)
         .join(", ");
       const cleanedSubjectMatter = subjectMatter.replace(/(<([^>]+)>)/gi, "");
       return {
+        "S.No": index + 1,
         SrNo: leave.id,
         memberName:
           leave?.resolutionMoversAssociation[0]?.memberAssociation?.memberName,

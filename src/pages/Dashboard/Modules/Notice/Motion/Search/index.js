@@ -104,6 +104,7 @@ function SearchMotion() {
       const Urdu = [leave?.urduText].filter(Boolean).join(", ");
       const UrduText = Urdu.replace(/(<([^>]+)>)/gi, "");
       return {
+        "S.No" : index + 1,
         id: leave?.id,
         memberName: leave?.motionMovers[0]?.members?.memberName,
         SessionNumber: leave?.sessions?.sessionName
