@@ -1,9 +1,7 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
-import {
-  NoticeSidebarItems,
-} from "../../../../../../utils/sideBarItems";
+import { NoticeSidebarItems } from "../../../../../../utils/sideBarItems";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useLocation, useNavigate } from "react-router";
@@ -21,6 +19,7 @@ import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import { AuthContext } from "../../../../../../api/AuthContext";
 import Select from "react-select";
 import moment from "moment";
+import { imagesUrl } from "../../../../../../api/APIs";
 const validationSchema = Yup.object({
   sessionNo: Yup.number(),
   noticeOfficeDiaryNo: Yup.number(),
@@ -41,13 +40,9 @@ function NoticeResolutionDetail() {
   const location = useLocation();
   const navigate = useNavigate();
   const { members, sessions, resolutionStatus } = useContext(AuthContext);
-  console.log("dksfifsdpoipfosdpfiopf", location.state);
-  console.log(
-    "location?.state?.resolutionMoversAssociatio",
-    location?.state?.resolutionMoversAssociation?.map(
-      (item) => item?.memberAssociation?.id
-    )
-  );
+  const [imageLinks, setImageLinks] = useState([]);
+
+  console.log("location", location.state);
   const formik = useFormik({
     initialValues: {
       //   sessionNo: location?.state?.session?.sessionName,
@@ -90,6 +85,7 @@ function NoticeResolutionDetail() {
         ? location?.state?.englishText
         : "",
       urduText: location?.state?.urduText ? location?.state?.urduText : "",
+      attachment: null,
     },
     // validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -98,6 +94,12 @@ function NoticeResolutionDetail() {
     },
   });
 
+  const handleFileChange = (event) => {
+    const selectedFiles = Array.from(event.currentTarget.files);
+    const links = selectedFiles.map((file) => URL.createObjectURL(file));
+    setImageLinks(links);
+    formik.setFieldValue("attachment", event.currentTarget.files);
+  };
   const hendleUpdate = async (values) => {
     const data = new FormData();
     data.append("fkSessionNo", values?.sessionNo?.value);
@@ -112,6 +114,11 @@ function NoticeResolutionDetail() {
     data.append("noticeOfficeDiaryNo", values?.noticeOfficeDiaryNo);
     data.append("englishText", values.englishText);
     data.append("urduText", values.urduText);
+    if (values?.attachment) {
+      Array.from(values?.attachment).map((file, index) => {
+        data.append(`attachment`, file);
+      });
+    }
 
     try {
       const response = await UpdateResolution(location.state.id, data);
@@ -335,7 +342,7 @@ function NoticeResolutionDetail() {
                   </div>
                   <div class="col">
                     <div class="mb-3">
-                      <label class="form-label">Resolution Movers</label>
+                      <label class="form-label">Mover(s)</label>
                       {/* <select
                         class="form-control form-select"
                         id="resolutionMovers"
@@ -368,6 +375,87 @@ function NoticeResolutionDetail() {
                         // className="form-select"
                       />
                     </div>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-3">
+                    {location?.state?.attachment?.length > 0 ? (
+                      <div>
+                        <label htmlFor="formFile" className="form-label">
+                          Selected Images
+                        </label>
+                        {location.state.attachment.map((item, index) => {
+                          const parsedItem = JSON.parse(item); // Parse the string to an object
+                          return (
+                            <div key={index} className="MultiFile-label mt-3">
+                              <div>
+                                <a
+                                  href={`${imagesUrl}${parsedItem?.path}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  <i className="fas fa-download"></i>
+                                </a>
+                                <span
+                                  className="MultiFile-label"
+                                  title={parsedItem?.path
+                                    .split("\\")
+                                    .pop()
+                                    .split("/")
+                                    .pop()}
+                                >
+                                  <span className="MultiFile-title">
+                                    <a
+                                      href={`${imagesUrl}${parsedItem?.path}`}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                    >
+                                      {parsedItem?.path
+                                        .split("\\")
+                                        .pop()
+                                        .split("/")
+                                        .pop()}
+                                    </a>
+                                  </span>
+                                </span>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <div className="col-12">
+                        <div className="mb-3">
+                          <label htmlFor="formFile" className="form-label">
+                            Attach Image Files
+                          </label>
+                          <input
+                            className="form-control"
+                            type="file"
+                            accept=".pdf, .jpg, .jpeg, .png"
+                            id="formFile"
+                            name="attachment"
+                            multiple
+                            onChange={handleFileChange}
+                          />
+                          {imageLinks.length > 0 && (
+                            <div>
+                              {imageLinks.map((link, index) => (
+                                <div className="col mt-2" key={index}>
+                                  <a
+                                    href={link}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                  >
+                                    Attachment {index + 1}
+                                  </a>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div class="row">

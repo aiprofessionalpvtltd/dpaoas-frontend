@@ -59,7 +59,7 @@ function SearchResolution() {
   });
 
   const transformLeavesData = (apiData) => {
-    return apiData.map((res) => {
+    return apiData.map((res, index) => {
       const subjectMatter = [res?.englishText, res?.urduText]
         .filter(Boolean)
         .join(", ");
@@ -70,6 +70,7 @@ function SearchResolution() {
         ) || [];
 
       return {
+        "S.No" : index + 1,
         RID: res.id,
         // ResDN: res.resolutionDiaries,
         SessionNumber: res.session?.sessionName ? res.session?.sessionName : "",
@@ -242,7 +243,7 @@ function SearchResolution() {
                       </div>
                       <div className="col">
                         <div className="mb-3">
-                          <label className="form-label">Member Name</label>
+                          <label className="form-label">Mover(s)</label>
                           {/* <input
                             className="form-control"
                             type="text"

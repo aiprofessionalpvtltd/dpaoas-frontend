@@ -104,6 +104,7 @@ function SearchMotion() {
       const Urdu = [leave?.urduText].filter(Boolean).join(", ");
       const UrduText = Urdu.replace(/(<([^>]+)>)/gi, "");
       return {
+        "S.No" : index + 1,
         id: leave?.id,
         memberName: leave?.motionMovers[0]?.members?.memberName,
         SessionNumber: leave?.sessions?.sessionName
@@ -297,7 +298,7 @@ function SearchMotion() {
                   </div>
                   <div class="col">
                     <div class="mb-3">
-                      <label class="form-label">Member Name</label>
+                      <label class="form-label">Mover(s)</label>
                       <Select
                         options={members.map((item) => ({
                           value: item.id,
@@ -397,12 +398,11 @@ function SearchMotion() {
                       </select>
                     </div>
                   </div>
-                  <div class="col">
+                  {/* <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Motion Week</label>
                       <select
                         class="form-select"
-                        // placeholder={formik.values.motionWeek}
                         value={formik.values.motionWeek}
                         onChange={formik.handleChange}
                         id="motionWeek"
@@ -410,9 +410,7 @@ function SearchMotion() {
                       >
                         <option value={""} selected disabled hidden>
                           Select
-                        </option>
-                        {/* <option>Motion Week</option>
-                        <option>Not Applicable</option> */}
+                        </option>                      
                         <option value={"1st Week"}>1st Week</option>
                         <option value={"2nd Week"}>2nd Week</option>
                         <option value={"3rd Week"}>3rd Week</option>
@@ -420,7 +418,7 @@ function SearchMotion() {
                         <option value={"5th Week"}>5th Week</option>
                       </select>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
 
                 <div class="row">
@@ -446,12 +444,11 @@ function SearchMotion() {
                       </select>
                     </div>
                   </div>
-                  <div class="col">
+                  {/* <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Motion Status</label>
                       <select
                         class="form-select"
-                        // placeholder={formik.values.motionStatus}
                         value={formik.values.motionStatus}
                         onChange={formik.handleChange}
                         id="motionStatus"
@@ -468,7 +465,7 @@ function SearchMotion() {
                           ))}
                       </select>
                     </div>
-                  </div>
+                  </div> */}
                   {/* <div class="col">
                     <div class="mb-3" style={{ position: "relative" }}>
                       <label class="form-label">From Notice Date</label>
@@ -533,7 +530,7 @@ function SearchMotion() {
                     </div>
                   </div> */}
 
-                  <div className="col-3">
+                  <div className="col">
                     <div className="mb-3" style={{ position: "relative" }}>
                       <label className="form-label">From Notice Date</label>
                       <span
@@ -570,7 +567,7 @@ function SearchMotion() {
                       />
                     </div>
                   </div>
-                  <div className="col-3">
+                  <div className="col">
                     <div className="mb-3" style={{ position: "relative" }}>
                       <label className="form-label">To Notice Date</label>
                       <span

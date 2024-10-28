@@ -81,6 +81,7 @@ function SearchQuestion() {
       const cleanedSubjectMatter = subjectMatter.replace(/(<([^>]+)>)/gi, "");
 
       return {
+        "S.No" : index + 1,
         Id: res.id,
         NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate
           ? moment(res?.noticeOfficeDiary?.noticeOfficeDiaryDate).format(
@@ -362,7 +363,7 @@ function SearchQuestion() {
                       </div>
                       <div className="col">
                         <div className="mb-3">
-                          <label className="form-label">Member Name</label>
+                          <label className="form-label">Mover(s)</label>
                           <Select
                             options={members.map((item) => ({
                               value: item.id,

@@ -3,10 +3,11 @@ import { LMSsidebarItems } from "../../../../../../utils/sideBarItems";
 import { Layout } from "../../../../../../components/Layout";
 import logoImage from "../../../../../../assets/profile-img.jpg";
 import { useLocation, useNavigate } from "react-router-dom";
+import DatePicker, { DateObject } from "react-multi-date-picker";
+import DatePanel from "react-multi-date-picker/plugins/date_panel";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Header from "../../../../../../components/Header";
-import DatePicker from "react-datepicker";
 import { CustomAlert } from "../../../../../../components/CustomComponents/CustomAlert";
 import {
   UpdateLeaveById,
@@ -82,7 +83,7 @@ function AddEditLeaveRequests() {
     fkMemberId: "",
     fkSessionId: "",
     leaveType: "",
-    applicationSubmittedDate: "",
+    applicationDate: "",
     leave_oneday: "",
     requestStartDate: "",
     requestEndDate: "",
@@ -91,6 +92,7 @@ function AddEditLeaveRequests() {
     description: "",
     comments: "",
     requestStatus: "",
+    requestleavedates: null,
 
     // reason:
     //   leaveByIdData.length > 0 ? leaveByIdData[0]?.requestLeaveReason : "",
@@ -139,9 +141,15 @@ function AddEditLeaveRequests() {
     formik.handleChange(e);
     if (e.target.value === "single") {
       formik.setFieldValue("requestStartDate", "");
+      formik.setFieldValue("requestleavedates", "");
       formik.setFieldValue("requestEndDate", "");
+    } else if (e.target.value === "multipledaysrange") {
+      formik.setFieldValue("singleDate", "");
+      formik.setFieldValue("requestleavedates", "");
     } else if (e.target.value === "multiple") {
       formik.setFieldValue("singleDate", "");
+      formik.setFieldValue("requestStartDate", "");
+      formik.setFieldValue("requestEndDate", "");
     } else if (e.target.value === "session") {
       formik.setFieldValue("requestStartDate", "");
       formik.setFieldValue("requestEndDate", "");
@@ -208,13 +216,15 @@ function AddEditLeaveRequests() {
         leaveByIdData?.requestStartDate &&
         leaveByIdData?.requestEndDate
       ) {
-        leaveTypeValue = "multiple"; // Multiple-day leave
+        leaveTypeValue = "multipledaysrange"; // Multiple-days leave range
+      } else if (leaveByIdData?.requestleavedates) {
+        leaveTypeValue = "multiple";
       }
       // If no relevant leave data is found, default to session leave
       else {
         leaveTypeValue = "session"; // Session leave
       }
-      console.log("leaveData", leaveByIdData?.member?.id);
+      console.log("leaveData", leaveByIdData);
       if (location?.state?.id) {
         formik.setValues({
           fkMemberId: leaveByIdData?.member?.id
@@ -225,7 +235,7 @@ function AddEditLeaveRequests() {
             : { value: 968, label: "Manzoor Ahmed" },
           fkSessionId:
             (leaveByIdData?.session && leaveByIdData?.session?.id) || 8,
-          applicationSubmittedDate: leaveByIdData?.applicationDate
+          applicationDate: leaveByIdData?.applicationDate
             ? moment(leaveByIdData?.applicationDate).toDate()
             : "",
           leave_oneday: leaveByIdData?.leave_oneday
@@ -241,6 +251,11 @@ function AddEditLeaveRequests() {
           description: leaveByIdData?.requestLeaveReason || "",
           leaveType: leaveTypeValue, // Automatically set leaveType based on logic
           requestStatus: leaveByIdData?.requestStatus,
+          requestleavedates: leaveByIdData?.requestleavedates
+            ? JSON.parse(leaveByIdData?.requestleavedates).map((date) =>
+                moment(date).toDate()
+              )
+            : [],
         });
       }
     }
@@ -263,12 +278,14 @@ function AddEditLeaveRequests() {
       return "";
     };
 
-    const formattedApplicaSubmittedDate = formatDate(
-      values?.applicationSubmittedDate
-    );
+    const formattedApplicaSubmittedDate = formatDate(values?.applicationDate);
     const formattedLeaveOneDay = formatDate(values?.leave_oneday);
     const formattedStartDate = formatDate(values?.requestStartDate);
     const formattedEndDate = formatDate(values?.requestEndDate);
+    const formattedMultipleDates =
+      values?.requestleavedates?.map(formatDate) || [];
+
+    console.log("formattedMultipleDates", formattedMultipleDates);
 
     const formData = new FormData();
 
@@ -320,6 +337,13 @@ function AddEditLeaveRequests() {
       formData.append("file", values?.requestLeaveAttachment);
     }
 
+    if (formattedMultipleDates && formattedMultipleDates.length > 0) {
+      formData.append(
+        "requestleavedates",
+        JSON.stringify(formattedMultipleDates)
+      );
+    }
+
     formData.append("device", "Web");
 
     // For debugging: Log the formData as an object
@@ -329,7 +353,6 @@ function AddEditLeaveRequests() {
     }
     console.log("");
     console.log("Created Leave Request", formDataObject);
-
     try {
       const response = await createLeave(formData);
       if (response?.success) {
@@ -355,13 +378,12 @@ function AddEditLeaveRequests() {
       return "";
     };
 
-    const formattedApplicaSubmittedDate = formatDate(
-      values?.applicationSubmittedDate
-    );
+    const formattedApplicaSubmittedDate = formatDate(values?.applicationDate);
     const formattedLeaveOneDay = formatDate(values?.leave_oneday);
     const formattedStartDate = formatDate(values?.requestStartDate);
     const formattedEndDate = formatDate(values?.requestEndDate);
-
+    const formattedMultipleDates =
+      values?.requestleavedates?.map(formatDate) || [];
     const formData = new FormData();
 
     if (userData && userData?.id) {
@@ -410,6 +432,13 @@ function AddEditLeaveRequests() {
     }
 
     formData.append("requestStatus", values?.requestStatus);
+
+    if (formattedMultipleDates && formattedMultipleDates.length > 0) {
+      formData.append(
+        "requestleavedates",
+        JSON.stringify(formattedMultipleDates)
+      );
+    }
 
     try {
       const response = await UpdateLeaveById(location?.state?.id, formData);
@@ -558,23 +587,25 @@ function AddEditLeaveRequests() {
                         <FontAwesomeIcon icon={faCalendarAlt} />
                       </span>
                       <DatePicker
-                        selected={formik.values.applicationSubmittedDate}
-                        onChange={(date) =>
-                          formik.setFieldValue("applicationSubmittedDate", date)
-                        }
+                        format="DD-MM-YYYY"
+                        id="applicationDate"
+                        value={formik.values.applicationDate}
+                        onChange={(date) => {
+                          // const formattedDate = moment(date).format('DD/MM/YYYY');
+                          formik.setFieldValue("applicationDate", date);
+                        }}
                         onBlur={formik.handleBlur}
-                        minDate={new Date()}
                         className={`form-control ${
-                          formik.touched.applicationSubmittedDate &&
-                          formik.errors.applicationSubmittedDate
+                          formik.touched.applicationDate &&
+                          formik.errors.applicationDate
                             ? "is-invalid"
                             : ""
                         }`}
                       />
-                      {formik.touched.applicationSubmittedDate &&
-                        formik.errors.applicationSubmittedDate && (
+                      {formik.touched.applicationDate &&
+                        formik.errors.applicationDate && (
                           <div className="invalid-feedback">
-                            {formik.errors.applicationSubmittedDate}
+                            {formik.errors.applicationDate}
                           </div>
                         )}
                     </div>
@@ -603,6 +634,9 @@ function AddEditLeaveRequests() {
                           </option>
                           <option value="single">Single Day</option>
                           <option value="multiple">Multiple Days</option>
+                          <option value="multipledaysrange">
+                            Multiple Days Range
+                          </option>
                           <option value="session">Whole Session</option>
                         </select>
                         {formik.touched.leaveType &&
@@ -634,12 +668,14 @@ function AddEditLeaveRequests() {
                             <FontAwesomeIcon icon={faCalendarAlt} />
                           </span>
                           <DatePicker
-                            selected={formik.values.leave_oneday}
-                            onChange={(date) =>
-                              formik.setFieldValue("leave_oneday", date)
-                            }
+                            format="DD-MM-YYYY"
+                            id="leave_oneday"
+                            value={formik.values.leave_oneday}
+                            onChange={(date) => {
+                              // const formattedDate = moment(date).format('DD/MM/YYYY');
+                              formik.setFieldValue("leave_oneday", date);
+                            }}
                             onBlur={formik.handleBlur}
-                            minDate={new Date()}
                             className={`form-control ${
                               formik.touched.leave_oneday &&
                               formik.errors.leave_oneday
@@ -656,8 +692,45 @@ function AddEditLeaveRequests() {
                         </div>
                       </div>
                     )}
-
                     {leaveType === "multiple" && (
+                      <div className="col-4">
+                        <div className="mb-3" style={{ position: "relative" }}>
+                          <label
+                            style={{ width: "100%" }}
+                            className="form-label"
+                          >
+                            Multiple Days
+                          </label>
+                          <span
+                            style={{
+                              position: "absolute",
+                              right: "15px",
+                              top: "36px",
+                              zIndex: 1,
+                              fontSize: "20px",
+                              color: "#666",
+                            }}
+                          >
+                            <FontAwesomeIcon icon={faCalendarAlt} />
+                          </span>
+                          <DatePicker
+                            value={formik.values.requestleavedates}
+                            onChange={(date) => {
+                              // const formattedDate = moment(date).format('DD/MM/YYYY');
+                              formik.setFieldValue("requestleavedates", date);
+                            }}
+                            multiple
+                            sort
+                            id="requestleavedates"
+                            format="DD-MM-YYYY"
+                            calendarPosition="bottom-center"
+                            plugins={[<DatePanel />]}
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    {leaveType === "multipledaysrange" && (
                       <>
                         <div className="col-4">
                           <div
@@ -681,12 +754,13 @@ function AddEditLeaveRequests() {
                               <FontAwesomeIcon icon={faCalendarAlt} />
                             </span>
                             <DatePicker
-                              selected={formik.values.requestStartDate}
+                              value={formik.values.requestStartDate}
                               onChange={(date) =>
                                 formik.setFieldValue("requestStartDate", date)
                               }
                               onBlur={formik.handleBlur}
-                              minDate={new Date()}
+                              format="DD-MM-YYYY"
+                              id="requestStartDate"
                               className={`form-control ${
                                 formik.touched.requestStartDate &&
                                 formik.errors.requestStartDate
@@ -724,12 +798,13 @@ function AddEditLeaveRequests() {
                               <FontAwesomeIcon icon={faCalendarAlt} />
                             </span>
                             <DatePicker
-                              selected={formik.values.requestEndDate}
+                              value={formik.values.requestEndDate}
                               onChange={(date) =>
                                 formik.setFieldValue("requestEndDate", date)
                               }
                               onBlur={formik.handleBlur}
-                              minDate={new Date()}
+                              format="DD-MM-YYYY"
+                              id="requestEndDate"
                               className={`form-control ${
                                 formik.touched.requestEndDate &&
                                 formik.errors.requestEndDate
@@ -795,7 +870,7 @@ function AddEditLeaveRequests() {
                       </div>
                     </div>
                     {location?.state?.id && (
-                      <div className="col-3">
+                      <div className="col-4">
                         <div className="mb-3">
                           <label htmlFor="formFile" className="form-label">
                             Status <span className="text-danger">*</span>
@@ -819,7 +894,7 @@ function AddEditLeaveRequests() {
                             <option value="pending">Pending</option>
                             <option value="approved">Approved</option>
                             <option value="disapproved">DisApproved</option>
-                            <option value="marked">Marked</option>
+                            {/* <option value="marked">Marked</option> */}
                           </select>
                         </div>
                       </div>

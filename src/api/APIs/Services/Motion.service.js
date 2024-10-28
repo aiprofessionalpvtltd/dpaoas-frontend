@@ -148,6 +148,36 @@ export const getAllMotionNotice = async (
   }
 };
 
+//
+// Get All Current Date Motions
+export const getAllCurrentDateMotions = async (
+  currentPage,
+  pageSize,
+  searchParams
+) => {
+  try {
+    // const token = getAuthToken();
+
+    // Filter out empty values
+    const filteredSearchParams = Object.fromEntries(
+      Object.entries(searchParams).filter(([_, value]) => value !== "")
+    );
+    const response = await axiosClient.get(
+      `/motion/todayMotion?currentPage=${currentPage}&pageSize=${pageSize}`,
+      {
+        params: filteredSearchParams,
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // },
+      }
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
 export const updateNewMotion = async (id, data) => {
   try {
     // const token = getAuthToken();
@@ -415,7 +445,9 @@ export const dashboardMotionStats = async () => {
 //Ballot Motion List
 export const allBallotMotionList = async (currentPage, pageSize) => {
   try {
-    const response = await axiosClient.get(`/motion/findAllBalloting?currentPage=${currentPage}&pageSize=${pageSize}`);
+    const response = await axiosClient.get(
+      `/motion/findAllBalloting?currentPage=${currentPage}&pageSize=${pageSize}`
+    );
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -425,7 +457,10 @@ export const allBallotMotionList = async (currentPage, pageSize) => {
 //CHanges Motion Statuses
 export const ChangeMotionStatus = async (Data) => {
   try {
-    const response = await axiosClient.put(`/motion/motionBalloting/status`,Data);
+    const response = await axiosClient.put(
+      `/motion/motionBalloting/status`,
+      Data
+    );
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -443,18 +478,17 @@ export const createReviveMotion = async (data) => {
     throw error;
   }
 };
-export const searchMiscelleneousList = async(data)=>{
-
+export const searchMiscelleneousList = async (data) => {
   try {
     const filteredSearchParams = Object.fromEntries(
       Object.entries(data).filter(([_, value]) => value !== "")
     );
-    console.log(filteredSearchParams)
-    const response = await axiosClient.get('motion/searchMotions',{
+    console.log(filteredSearchParams);
+    const response = await axiosClient.get("motion/searchMotions", {
       params: filteredSearchParams,
-    })
-    return response?.data
+    });
+    return response?.data;
   } catch (error) {
-    throw error
+    throw error;
   }
-}
+};

@@ -49,6 +49,7 @@ function ManageSittingsDays() {
   const transformData = (apiData) => {
     console.log(apiData);
     return apiData?.map((item, index) => ({
+      "S.No": index + 1,
       id: item?.id,
       session: `${item.session?.sessionName}`,
       sittingDate: moment(item?.sittingDate).format("YYYY/MM/DD"),
@@ -56,7 +57,7 @@ function ManageSittingsDays() {
         "hh:ss:a"
       ),
       sittingEndTime: moment(item?.sittingEndTime, "hh:ss:a").format("hh:ss:a"),
-      committeeAsWholeTime: item?.committeeTotalTime
+      committeeOfWholeTime: item?.committeeTotalTime
         ? item?.committeeTotalTime
         : "--",
       totalBreakTime: item?.totalBreakTime,
