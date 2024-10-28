@@ -31,7 +31,8 @@ function LegislativeBillList({ isDashboardData }) {
   const transformLegislativeData = (apiData) => {
     console.log("apiData", apiData);
     return apiData.map((item, index) => ({
-      SR: item?.id,
+      "S.No": index + 1,
+      id: item?.id,
       title: item?.title ? item?.title : "",
       memberName:
         item?.legislationMovers

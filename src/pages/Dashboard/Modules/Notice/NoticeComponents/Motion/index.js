@@ -100,7 +100,7 @@ const SentMotions = ({ isDashboardData }) => {
       const UrduText = urdu.replace(/(<([^>]+)>)/gi, "");
 
       return {
-        SrNo: index + 1,
+        "S.No": index + 1,
         id: res?.id,
         // memberName: res?.motionMovers[0]?.members?.memberName,
         memberName:

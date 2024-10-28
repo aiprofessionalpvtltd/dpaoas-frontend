@@ -180,7 +180,7 @@ function QMSAddEditSessionsForm() {
         jointSessionPurpose: sessionByIdData.jointSessionPurpose || "",
       });
     }
-  }, [sessionByIdData, formik.setValues, formik]);
+  }, [sessionByIdData, formik.setValues]);
   console.log("test", sessionByIdData);
   return (
     <Layout

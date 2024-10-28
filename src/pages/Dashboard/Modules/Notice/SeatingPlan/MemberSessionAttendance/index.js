@@ -79,6 +79,7 @@ function NMSMemberSessionAttendance() {
   //   Transformed Data
   const transformData = (apiData) => {
     return apiData?.map((item, index) => ({
+      "S.No": index + 1,
       id: item?.id,
       session: `${item.session?.sessionName}`,
       sittingDate: moment(item?.sittingDate).format("YYYY/MM/DD"),

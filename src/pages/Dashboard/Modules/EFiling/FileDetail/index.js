@@ -88,7 +88,7 @@ function FileDetail() {
   });
   const [filesData, setFilesData] = useState(null);
   const [FR, setFR] = useState(null);
-  const pageSize = 30;
+  const pageSize = 100;
   const [order, setOrder] = useState("DESC");
   const [previousUserParaCount, setPreviousUserParaCount] = useState(0);
   const [saved, setSaved] = useState(false);

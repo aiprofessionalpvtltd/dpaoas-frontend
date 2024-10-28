@@ -67,7 +67,7 @@ const SentResolutionList = ({ isDashboardData }) => {
         .join(", ");
       const cleanedSubjectMatter = subjectMatter.replace(/(<([^>]+)>)/gi, "");
       return {
-        SrNo: index + 1,
+        "S.NO": index + 1,
         id: leave.id,
         memberName:
           leave?.resolutionMoversAssociation[0]?.memberAssociation?.memberName,

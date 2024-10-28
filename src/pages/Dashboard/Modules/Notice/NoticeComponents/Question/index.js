@@ -102,7 +102,7 @@ const AllQuestionComponent = ({ isDashboardData }) => {
       const cleanedSubjectMatter = subjectMatter.replace(/(<([^>]+)>)/gi, "");
 
       return {
-        SrNo: index + 1,
+        "S.No": index + 1,
         Id: res?.id,
         MemberName: res?.member ? res?.member?.memberName : "--",
         noticeOfficeDiaryNumber: res?.noticeOfficeDiary?.noticeOfficeDiaryNo

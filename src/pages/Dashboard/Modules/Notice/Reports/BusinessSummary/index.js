@@ -274,7 +274,7 @@ function BusinessSummary() {
                     <thead>
                       <tr>
                         <th class="text-center" scope="col">
-                          Sr#
+                          S.No
                         </th>
                         <th class="text-center" scope="col">
                           Session Number

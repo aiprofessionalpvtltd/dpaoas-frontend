@@ -3,10 +3,11 @@ import { LMSsidebarItems } from "../../../../../../utils/sideBarItems";
 import { Layout } from "../../../../../../components/Layout";
 import logoImage from "../../../../../../assets/profile-img.jpg";
 import { useLocation, useNavigate } from "react-router-dom";
+import DatePicker, { DateObject } from "react-multi-date-picker";
+import DatePanel from "react-multi-date-picker/plugins/date_panel";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Header from "../../../../../../components/Header";
-import DatePicker from "react-datepicker";
 import { CustomAlert } from "../../../../../../components/CustomComponents/CustomAlert";
 import {
   UpdateLeaveById,
@@ -91,6 +92,7 @@ function AddEditLeaveRequests() {
     description: "",
     comments: "",
     requestStatus: "",
+    allowedDates: [],
 
     // reason:
     //   leaveByIdData.length > 0 ? leaveByIdData[0]?.requestLeaveReason : "",
@@ -634,12 +636,14 @@ function AddEditLeaveRequests() {
                             <FontAwesomeIcon icon={faCalendarAlt} />
                           </span>
                           <DatePicker
-                            selected={formik.values.leave_oneday}
-                            onChange={(date) =>
-                              formik.setFieldValue("leave_oneday", date)
-                            }
+                            format="DD/MM/YYYY"
+                            id="leave_oneday"
+                            value={formik.values.leave_oneday}
+                            onChange={(date) => {
+                              // const formattedDate = moment(date).format('DD/MM/YYYY');
+                              formik.setFieldValue("leave_oneday", date);
+                            }}
                             onBlur={formik.handleBlur}
-                            minDate={new Date()}
                             className={`form-control ${
                               formik.touched.leave_oneday &&
                               formik.errors.leave_oneday
@@ -681,12 +685,13 @@ function AddEditLeaveRequests() {
                               <FontAwesomeIcon icon={faCalendarAlt} />
                             </span>
                             <DatePicker
-                              selected={formik.values.requestStartDate}
+                              value={formik.values.requestStartDate}
                               onChange={(date) =>
                                 formik.setFieldValue("requestStartDate", date)
                               }
                               onBlur={formik.handleBlur}
-                              minDate={new Date()}
+                              format="DD/MM/YYYY"
+                              id="requestStartDate"
                               className={`form-control ${
                                 formik.touched.requestStartDate &&
                                 formik.errors.requestStartDate
@@ -724,12 +729,13 @@ function AddEditLeaveRequests() {
                               <FontAwesomeIcon icon={faCalendarAlt} />
                             </span>
                             <DatePicker
-                              selected={formik.values.requestEndDate}
+                              value={formik.values.requestEndDate}
                               onChange={(date) =>
                                 formik.setFieldValue("requestEndDate", date)
                               }
                               onBlur={formik.handleBlur}
-                              minDate={new Date()}
+                              format="DD/MM/YYYY"
+                              id="requestEndDate"
                               className={`form-control ${
                                 formik.touched.requestEndDate &&
                                 formik.errors.requestEndDate
@@ -824,6 +830,38 @@ function AddEditLeaveRequests() {
                         </div>
                       </div>
                     )}
+                  </div>
+                  <div className="col-3">
+                    <div className="mb-3" style={{ position: "relative" }}>
+                      <label style={{ width: "100%" }} className="form-label">
+                        Allowed Dates
+                      </label>
+                      <span
+                        style={{
+                          position: "absolute",
+                          right: "15px",
+                          top: "36px",
+                          zIndex: 1,
+                          fontSize: "20px",
+                          color: "#666",
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faCalendarAlt} />
+                      </span>
+                      <DatePicker
+                        value={formik.values.allowedDates}
+                        onChange={(date) => {
+                          // const formattedDate = moment(date).format('DD/MM/YYYY');
+                          formik.setFieldValue("allowedDates", date);
+                        }}
+                        multiple
+                        sort
+                        id="allowedDates"
+                        format={"MM/DD/YYYY"}
+                        calendarPosition="bottom-center"
+                        plugins={[<DatePanel />]}
+                      />
+                    </div>
                   </div>
                 </div>
 
