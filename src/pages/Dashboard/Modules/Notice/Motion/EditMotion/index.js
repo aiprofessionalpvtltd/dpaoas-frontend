@@ -54,6 +54,7 @@ function EditMotion() {
   const { members, sessions } = useContext(AuthContext);
   const [showModal, setShowModal] = useState(false);
   const [formValues, setFormValues] = useState([]);
+  const [imageLinks, setImageLinks] = useState([]);
   const [motionStatusData, setMotionStatusData] = useState([]);
 
   // const sessionId = sessions && sessions.map((item) => item?.id);
@@ -89,6 +90,13 @@ function EditMotion() {
     });
   };
   console.log("status", location?.state?.motionStatuses);
+
+  const handleFileChange = (event) => {
+    const selectedFiles = Array.from(event.currentTarget.files);
+    const links = selectedFiles.map((file) => URL.createObjectURL(file));
+    setImageLinks(links);
+    formik.setFieldValue("file", event.currentTarget.files);
+  };
   const formik = useFormik({
     initialValues: {
       sessionNumber: location.state
@@ -134,7 +142,7 @@ function EditMotion() {
           }
         : "",
 
-      attachment: null,
+      file: null,
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -176,7 +184,7 @@ function EditMotion() {
         formData.append(`file`, file);
       });
     }
-    // formData.append("file", values?.attachment);
+    // formData.append("file", values?.file);
 
     try {
       const response = await updateNewMotion(location?.state?.id, formData);
@@ -538,7 +546,7 @@ function EditMotion() {
                               </option>
                             ))}
                         </select> */}
-                        <label class="form-label">Member Senate</label>
+                        <label class="form-label">Mover(s)</label>
                         <Select
                           options={
                             members &&
@@ -559,97 +567,79 @@ function EditMotion() {
                     </div>
                     <div class="col-3"></div>
                   </div>
-
-                  {/* <input
-                          className="form-control"
-                          type="file"
-                          accept=".pdf, .jpg, .jpeg, .png"
-                          id="formFile"
-                          name="attachment"
-                          onChange={(event) => {
-                            formik.setFieldValue(
-                              "attachment",
-                              event.currentTarget.files[0]
-                            );
-                          }}
-                        /> */}
                   <div className="row">
                     <div className="col-3">
                       {location?.state?.file?.length > 0 ? (
-                        location?.state?.file?.map((item) => (
-                          <div class="MultiFile-label mt-3">
-                            <a
-                              href={`${imagesUrl}${item?.path}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              <i class="fas fa-download"></i>
-                            </a>
-                            {/* <a class="MultiFile-remove" href="#T7">
-                              x
-                            </a> */}
-                            <span
-                              class="MultiFile-label"
-                              title={item?.path
-                                ?.split("\\")
-                                .pop()
-                                .split("/")
-                                .pop()}
-                            >
-                              <span class="MultiFile-title">
+                        <div>
+                          <label htmlFor="formFile" className="form-label">
+                            Selected Images
+                          </label>
+                          {location.state.file.map((item, index) => (
+                            <div key={index} className="MultiFile-label mt-3">
+                              <div>
                                 <a
                                   href={`${imagesUrl}${item?.path}`}
                                   target="_blank"
                                   rel="noopener noreferrer"
                                 >
-                                  {item?.path
-                                    ?.split("\\")
+                                  <i className="fas fa-download"></i>
+                                </a>
+                                <span
+                                  className="MultiFile-label"
+                                  title={item?.path
+                                    .split("\\")
                                     .pop()
                                     .split("/")
                                     .pop()}
-                                </a>
-                              </span>
-                            </span>
-                          </div>
-                        ))
+                                >
+                                  <span className="MultiFile-title">
+                                    <a
+                                      href={`${imagesUrl}${item?.path}`}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                    >
+                                      {item?.path
+                                        .split("\\")
+                                        .pop()
+                                        .split("/")
+                                        .pop()}
+                                    </a>
+                                  </span>
+                                </span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
                       ) : (
-                        <div class="col-12">
-                          <div class="mb-3">
-                            {/* {location?.state?.file?.length > 0 &&
-                            location?.state?.file ? (
-                              <label for="formFile" class="form-label">
-                                Selected Images
-                              </label>
-                            ) : (
-                              <label for="formFile" class="form-label">
-                                Attach Image Files
-                              </label>
-                            )} */}
-                            {Array.isArray(location?.state?.file) &&
-                            location?.state?.file.length > 0 ? (
-                              <label htmlFor="formFile" className="form-label">
-                                Selected Images
-                              </label>
-                            ) : (
-                              <label htmlFor="formFile" className="form-label">
-                                Attach Image Files
-                              </label>
-                            )}
-
+                        <div className="col-12">
+                          <div className="mb-3">
+                            <label htmlFor="formFile" className="form-label">
+                              Attach Image Files
+                            </label>
                             <input
                               className="form-control"
                               type="file"
                               accept=".pdf, .jpg, .jpeg, .png"
                               id="formFile"
-                              name="attachment"
+                              name="file"
                               multiple
-                              onChange={(event) => {
-                                formik.setFieldValue(
-                                  "file",
-                                  event.currentTarget.files
-                                );
-                              }}
+                              onChange={handleFileChange}
                             />
+                            {imageLinks.length > 0 && (
+                              <div>
+                                {imageLinks.map((link, index) => (
+                                  <div className="col mt-2" key={index}>
+                                    <a
+                                      href={link}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                    >
+                                      Attachment {index + 1}
+                                    </a>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
                           </div>
                         </div>
                       )}

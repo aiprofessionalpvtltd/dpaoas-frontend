@@ -819,7 +819,7 @@ function AddEditLeaveRequests() {
                             <option value="pending">Pending</option>
                             <option value="approved">Approved</option>
                             <option value="disapproved">DisApproved</option>
-                            <option value="marked">Marked</option>
+                            {/* <option value="marked">Marked</option> */}
                           </select>
                         </div>
                       </div>

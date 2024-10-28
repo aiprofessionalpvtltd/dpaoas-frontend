@@ -242,7 +242,7 @@ function SearchResolution() {
                       </div>
                       <div className="col">
                         <div className="mb-3">
-                          <label className="form-label">Member Name</label>
+                          <label className="form-label">Mover(s)</label>
                           {/* <input
                             className="form-control"
                             type="text"

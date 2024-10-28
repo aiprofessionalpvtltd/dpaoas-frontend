@@ -487,7 +487,7 @@ function NewMotion() {
                               </option>
                             ))}
                         </select> */}
-                        <label class="form-label">Member Senate</label>
+                        <label class="form-label">Mover(s)</label>
                         <Select
                           options={members.map((item) => ({
                             value: item.id,
@@ -523,7 +523,7 @@ function NewMotion() {
                           type="file"
                           accept=".pdf, .jpg, .jpeg, .png"
                           id="formFile"
-                          name="attachment"
+                          name="file"
                           multiple
                           // onChange={(event) => {
                           //   formik.setFieldValue(
@@ -534,7 +534,7 @@ function NewMotion() {
                           onChange={handleFileChange}
                         />
 
-                        {imageLinks.length > 0 && (
+                        {/* {imageLinks.length > 0 && (
                           <div>
                             <div className="col ">
                               {imageLinks.map((link, index) => (
@@ -545,10 +545,27 @@ function NewMotion() {
                                   rel="noopener noreferrer"
                                   className="mx-1"
                                 >
-                                  Image {index + 1}
+                                  Attachement {index + 1}
                                 </a>
                               ))}
                             </div>
+                          </div>
+                        )} */}
+
+                        {imageLinks.length > 0 && (
+                          <div>
+                            {imageLinks.map((link, index) => (
+                              <div className="col mt-2" key={index}>
+                                <a
+                                  key={index}
+                                  href={link}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  Attachement {index + 1}
+                                </a>
+                              </div>
+                            ))}
                           </div>
                         )}
 

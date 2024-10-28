@@ -103,7 +103,7 @@ function NMSAddEditSittingDaysForm() {
                 </div>
               )}
               <div className="mb-3 col-6">
-                <label className="form-label">Member Name</label>
+                <label className="form-label">Chaired By</label>
                 <select
                   className={`form-select ${
                     formik.touched[`sessionMembers[${i}].fkMemberId`] &&
@@ -999,7 +999,7 @@ function NMSAddEditSittingDaysForm() {
                           }
                         />
                         <label class="form-check-label" for="flexCheckDefault">
-                          Committee As Whole
+                          Committee of Whole
                         </label>
                         {formik.touched.committeeWhole &&
                           formik.errors.committeeWhole && (

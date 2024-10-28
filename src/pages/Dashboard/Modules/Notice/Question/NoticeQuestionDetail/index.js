@@ -510,7 +510,7 @@ function NoticeQuestionDetail() {
                   </div>
                   <div class="col-3">
                     <div class="mb-3">
-                      <label class="form-label">Senator</label>
+                      <label class="form-label">Mover(s)</label>
                       {/* <select
                         className={`form-select`}
                         id="senator"
@@ -562,28 +562,28 @@ function NoticeQuestionDetail() {
                     </div>
                   </div>
                   <div class="col-3">
-                      <div class="mb-3">
-                        <label class="form-label">Division</label>
-                        <select
-                          class={`form-select`}
-                          placeholder="Division"
-                          value={formik.values.fkDivisionId}
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          name="fkDivisionId"
-                        >
-                          <option value="" selected disabled hidden>
-                            Select
-                          </option>
-                          {divisions &&
-                            divisions.map((item) => (
-                              <option key={item.id} value={item.id}>
-                                {item?.divisionName}
-                              </option>
-                            ))}
-                        </select>
-                      </div>
+                    <div class="mb-3">
+                      <label class="form-label">Division</label>
+                      <select
+                        class={`form-select`}
+                        placeholder="Division"
+                        value={formik.values.fkDivisionId}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        name="fkDivisionId"
+                      >
+                        <option value="" selected disabled hidden>
+                          Select
+                        </option>
+                        {divisions &&
+                          divisions.map((item) => (
+                            <option key={item.id} value={item.id}>
+                              {item?.divisionName}
+                            </option>
+                          ))}
+                      </select>
                     </div>
+                  </div>
                   {/* <div class="col">
                     <div class="mb-3">
                       <label class="form-label">Question Status</label>

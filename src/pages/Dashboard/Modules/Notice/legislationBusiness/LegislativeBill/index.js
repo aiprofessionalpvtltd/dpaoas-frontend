@@ -11,13 +11,14 @@ import {
   DeleteLegislativeBill,
   getAllLegislativeBill,
   getAllLegislativeBillNotice,
+  getCurrentAllPrivateMemberBills,
   sendLegislativeBill,
 } from "../../../../../../api/APIs/Services/Notice.service";
 import Header from "../../../../../../components/Header";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
 
-function LegislativeBillList() {
+function LegislativeBillList({ isDashboardData }) {
   const navigate = useNavigate();
   const [count, setCount] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
@@ -28,10 +29,17 @@ function LegislativeBillList() {
     setCurrentPage(page);
   };
   const transformLegislativeData = (apiData) => {
+    console.log("apiData", apiData);
     return apiData.map((item, index) => ({
       SR: item?.id,
       title: item?.title ? item?.title : "",
-      memberName: item?.member?.memberName,
+      memberName:
+        item?.legislationMovers
+          ?.map((mover) => mover?.member?.memberName)
+          .join(", ") ||
+        item?.member?.memberName ||
+        "---",
+
       noticeOfficeDiraryDate: item?.date
         ? moment(item?.date).format("DD-MM-YYYY")
         : "",
@@ -48,8 +56,18 @@ function LegislativeBillList() {
   };
 
   const getAllLegislativeBillApi = useCallback(async () => {
+    let response;
+    const data = { legislativeSentStatus: "inNotice" };
     try {
-      const response = await getAllLegislativeBillNotice(currentPage, pageSize);
+      if (isDashboardData) {
+        response = await getCurrentAllPrivateMemberBills(
+          currentPage,
+          pageSize,
+          data
+        );
+      } else {
+        response = await getAllLegislativeBillNotice(currentPage, pageSize);
+      }
       if (response?.success) {
         setCount(response?.data?.count);
         const trensferData = transformLegislativeData(
@@ -94,47 +112,101 @@ function LegislativeBillList() {
   };
 
   return (
-    <Layout
-      module={true}
-      sidebarItems={NoticeSidebarItems}
-      centerlogohide={true}
-    >
-      <ToastContainer />
-      <Header
-        dashboardLink={"/notice/dashboard"}
-        addLink1={"/"}
-        title1={"Private Member Bills"}
-      />
-      <div class="row mt-5">
-        <div class="col-12">
-          <CustomTable
-            singleDataCard={true}
-            block={false}
-            data={billData}
-            addBtnText={"Create Private  Member Bill"}
-            tableTitle="Private Member Bills"
-            handlePageChange={handlePageChange}
-            hideBtn={true}
-            currentPage={currentPage}
-            pageSize={pageSize}
-            headertitlebgColor={"#666"}
-            headertitletextColor={"#FFF"}
-            totalCount={count}
-            handleAdd={() =>
-              navigate("/notice/legislation/private-bill/addedit")
-            }
-            handleEdit={(item) =>
-              navigate("/notice/legislation/private-bill/addedit", {
-                state: { id: item?.SR },
-              })
-            }
-            handleDelete={(item) => handleDelete(item.SR)}
-            showSent={true}
-            handleSent={(item) => sendBill(item?.SR)}
-          />
+    <>
+      {isDashboardData ? (
+        <div>
+          <div className="container-fluid">
+            <div className="card mt-1">
+              <div
+                className="card-header red-bg"
+                style={{ background: "#14ae5c" }}
+              >
+                <h1>Private Member List</h1>
+              </div>
+              <div className="card-body">
+                <div style={{ marginTop: "20px" }}>
+                  <CustomTable
+                    block={false}
+                    data={billData}
+                    hidebtn1={isDashboardData}
+                    addBtnText="Create Private Member Bill"
+                    tableTitle="Private Member Bills"
+                    handlePageChange={handlePageChange}
+                    hideBtn
+                    currentPage={currentPage}
+                    pageSize={pageSize}
+                    headertitlebgColor="#666"
+                    headertitletextColor="#FFF"
+                    totalCount={count}
+                    handleAdd={() =>
+                      navigate("/notice/legislation/private-bill/addedit")
+                    }
+                    handleEdit={(item) =>
+                      navigate("/notice/legislation/private-bill/addedit", {
+                        state: { id: item?.SR },
+                      })
+                    }
+                    hideDeleteIcon
+                    showSent
+                    handleSent={(item) => sendBill(item?.SR)}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </Layout>
+      ) : (
+        <Layout module sidebarItems={NoticeSidebarItems} centerlogohide>
+          <ToastContainer />
+          {!isDashboardData && (
+            <Header
+              dashboardLink="/notice/dashboard"
+              addLink1="/"
+              title1="Private Member Bills"
+            />
+          )}
+          <div className="container-fluid">
+            <div className="card mt-1">
+              <div
+                className="card-header red-bg"
+                style={{ background: "#14ae5c" }}
+              >
+                <h1>Private Member Bill List</h1>
+              </div>
+              <div className="card-body">
+                <div style={{ marginTop: "20px" }}>
+                  <CustomTable
+                    block={false}
+                    data={billData}
+                    hidebtn1={isDashboardData}
+                    addBtnText="Create Private Member Bill"
+                    tableTitle="Private Member Bills"
+                    handlePageChange={handlePageChange}
+                    hideBtn
+                    currentPage={currentPage}
+                    pageSize={pageSize}
+                    headertitlebgColor="#666"
+                    headertitletextColor="#FFF"
+                    totalCount={count}
+                    handleAdd={() =>
+                      navigate("/notice/legislation/private-bill/addedit")
+                    }
+                    handleEdit={(item) =>
+                      navigate("/notice/legislation/private-bill/addedit", {
+                        state: { id: item?.SR },
+                      })
+                    }
+                    hideDeleteIcon
+                    showSent
+                    handleSent={(item) => sendBill(item?.SR)}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </Layout>
+      )}
+    </>
   );
 }
 export default LegislativeBillList;

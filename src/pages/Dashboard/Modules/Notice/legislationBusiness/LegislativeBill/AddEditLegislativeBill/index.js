@@ -26,7 +26,8 @@ import moment from "moment";
 function AddEditLegislativeBill() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { sessions } = useContext(AuthContext);
+  const { members } = useContext(AuthContext);
+  const [imageLinks, setImageLinks] = useState([]);
   const [billData, setBillData] = useState([]);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
@@ -37,9 +38,10 @@ function AddEditLegislativeBill() {
       date: moment(new Date()).format("YYYY-MM-DD"),
       noticeOfficeDiaryTime: moment().format("HH:mm A"),
       status: "",
-      attachment: "",
+      attachment: null,
       description: "",
       diary_number: "",
+      legislationMovers: "",
     },
     // validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -58,7 +60,7 @@ function AddEditLegislativeBill() {
   };
   // Handale DateCHange
   const handleDateSelect = (date) => {
-    // formik.setFieldValue("noticeOfficeDiaryDate", date);
+    // formik.setFieldValue("date", date);
     formik.setFieldValue("date", moment(date).format("YYYY-MM-DD"));
     setIsCalendarOpen(false);
   };
@@ -84,6 +86,13 @@ function AddEditLegislativeBill() {
     getPrivateMemberNoticeOfficeDiaryNumberApi();
   }, []);
 
+  const handleFileChange = (event) => {
+    const selectedFiles = Array.from(event.currentTarget.files);
+    const links = selectedFiles.map((file) => URL.createObjectURL(file));
+    setImageLinks(links);
+    formik.setFieldValue("attachment", event.currentTarget.files);
+  };
+
   const handleCreateLegislativeBill = async (values) => {
     const formData = new FormData();
     formData.append("title", values?.title);
@@ -92,7 +101,15 @@ function AddEditLegislativeBill() {
     if (values?.attachment) {
       formData.append("attachment", values?.attachment);
     }
+
+    // if (values?.attachment) {
+    //   Array.from(values?.attachment).map((file, index) => {
+    //     formData.append(`attachment`, file);
+    //   });
+    // }
+    // formData.append("date", values?.date.toDate());
     formData.append("date", values?.date);
+
     // formData.append("noticeOfficeDiaryTime", values?.noticeOfficeDiaryTime);
     formData.append(
       "noticeOfficeDiaryTime",
@@ -102,6 +119,10 @@ function AddEditLegislativeBill() {
     // formData.append("status", values?.status);
     formData.append("diary_number", values?.diary_number);
     formData.append("device", "Web");
+    // Assuming resolutionMovers is an array of objects with a fkMemberId property
+    values?.legislationMovers.forEach((mover, index) => {
+      formData.append(`legislationMovers[${index}][fkMemberId]`, mover.value);
+    });
 
     try {
       const response = await createLegislativeBill(formData);
@@ -126,6 +147,7 @@ function AddEditLegislativeBill() {
       formData.append("attachment", values?.attachment);
     }
     formData.append("date", values?.date);
+    // formData.append("date", new Date(values?.date));
     formData.append(
       "noticeOfficeDiaryTime",
       values?.noticeOfficeDiaryTime &&
@@ -133,7 +155,11 @@ function AddEditLegislativeBill() {
     );
     // formData.append("noticeOfficeDiaryTime", values?.noticeOfficeDiaryTime);
     // formData.append("status", values?.status);
-    formData.append("diary_number", values?.diary_number);
+    // formData.append("diary_number", values?.diary_number);
+    values?.legislationMovers.forEach((mover, index) => {
+      formData.append(`legislationMovers[${index}][fkMemberId]`, mover.value);
+    });
+
     // formData.append("device", "Web")
 
     try {
@@ -173,6 +199,7 @@ function AddEditLegislativeBill() {
   useEffect(() => {
     // Update form values when termsById changes
     if (billData.length > 0) {
+      console.log("billData", billData);
       formik.setValues({
         sessionNo:
           {
@@ -186,6 +213,13 @@ function AddEditLegislativeBill() {
         title: billData[0]?.title || "",
         diary_number: billData[0]?.diary_number || "",
         noticeOfficeDiaryTime: billData[0]?.noticeOfficeDiaryTime || "",
+        legislationMovers:
+          billData[0]?.legislationMovers?.length > 0
+            ? billData[0]?.legislationMovers?.map((item) => ({
+                value: item?.member?.id,
+                label: item?.member?.memberName,
+              }))
+            : [],
       });
     }
   }, [billData, formik.setValues]);
@@ -265,6 +299,52 @@ function AddEditLegislativeBill() {
                       />
                     </div>
                   </div>
+                  <div className="col-4">
+                    <div className="mb-3">
+                      <label className="form-label">Mover(s)</label>
+                      <Select
+                        options={
+                          members &&
+                          members.map((item) => ({
+                            value: item.id,
+                            label: item.memberName,
+                          }))
+                        }
+                        isMulti
+                        onChange={(selectedOptions) =>
+                          formik.setFieldValue(
+                            "legislationMovers",
+                            selectedOptions
+                          )
+                        }
+                        onBlur={formik.handleBlur}
+                        value={formik.values.legislationMovers}
+                        name="legislationMovers"
+                      />
+                      {formik.touched.legislationMovers &&
+                        formik.errors.legislationMovers && (
+                          <div class="invalid-feedback">
+                            {formik.errors.legislationMovers}
+                          </div>
+                        )}
+                    </div>
+                  </div>
+
+                  <div className="col-4">
+                    <div className="mb-3">
+                      <label className="form-label">Diary Number</label>
+                      <input
+                        className={`form-control`}
+                        type="text"
+                        id="diary_number"
+                        value={formik.values.diary_number}
+                        name="diary_number"
+                        onBlur={formik.handleBlur}
+                        onChange={formik.handleChange}
+                        readOnly
+                      />
+                    </div>
+                  </div>
                   {/* <div className="col-4">
                     <div className="mb-3" style={{ position: "relative" }}>
                       <label className="form-label">
@@ -296,7 +376,8 @@ function AddEditLegislativeBill() {
                       />
                     </div>
                   </div> */}
-
+                </div>
+                <div className="row">
                   <div className="col-4">
                     <div className="mb-3" style={{ position: "relative" }}>
                       <label className="form-label">
@@ -401,8 +482,6 @@ function AddEditLegislativeBill() {
                         )}
                     </div>
                   </div>
-                </div>
-                <div className="row">
                   {/* <div className="col-4">
                     <div className="mb-3">
                       <label className="form-label">Status</label>
@@ -431,27 +510,31 @@ function AddEditLegislativeBill() {
                         accept=".pdf, .jpg, .jpeg, .png"
                         id="attachment"
                         name="attachment"
-                        onChange={(event) => {
-                          formik.setFieldValue(
-                            "attachment",
-                            event.currentTarget.files[0]
-                          );
-                        }}
+                        onChange={handleFileChange}
+                        // onChange={(event) => {
+                        //   formik.setFieldValue(
+                        //     "attachment",
+                        //     event.currentTarget.files[0]
+                        //   );
+                        // }}
                       />
-                    </div>
-                  </div>
-                  <div className="col-4">
-                    <div className="mb-3">
-                      <label className="form-label">Diary Number</label>
-                      <input
-                        className={`form-control`}
-                        type="text"
-                        id="diary_number"
-                        value={formik.values.diary_number}
-                        name="diary_number"
-                        onBlur={formik.handleBlur}
-                        onChange={formik.handleChange}
-                      />
+
+                      {imageLinks.length > 0 && (
+                        <div>
+                          {imageLinks.map((link, index) => (
+                            <div className="col mt-2" key={index}>
+                              <a
+                                key={index}
+                                href={link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                Attachement {index + 1}
+                              </a>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
