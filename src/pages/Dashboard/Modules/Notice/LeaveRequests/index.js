@@ -58,11 +58,15 @@ function LeaveRequests() {
       if (item?.leave_oneday) {
         leaveType = "Single Day"; // Single-day leave
       } else if (item?.requestStartDate && item?.requestEndDate) {
-        leaveType = "Multiple Days"; // Multiple-day leave
+        leaveType = "Multiple Days Range"; // Multiple-day leave
+      } else if (item?.requestleavedates?.length > 0) {
+        leaveType = "Multiple Days";
       } else {
         leaveType = "Full Session"; // Full session leave
       }
-
+      const multipleDates = item?.requestleavedates
+        ? JSON.parse(item.requestleavedates)
+        : [];
       return {
         "S.No": index + 1,
         id: item?.id,
@@ -71,6 +75,8 @@ function LeaveRequests() {
         singleDayDate: item?.leave_oneday
           ? moment(item.leave_oneday).format("DD-MM-YYYY")
           : "---", // Corrected access to leave_oneday
+        multipleDates:
+          multipleDates.length > 0 ? multipleDates.join(", ") : "---",
         startDate: item?.requestStartDate
           ? moment(item.requestStartDate).format("DD-MM-YYYY")
           : "---",
