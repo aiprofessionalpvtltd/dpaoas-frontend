@@ -3,10 +3,8 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import Header from "../../../../../../components/Header";
 import { ToastContainer } from "react-toastify";
-import moment from "moment";
 import { getUserData } from "../../../../../../api/Auth";
 import { Layout } from "../../../../../../components/Layout";
-import thumbnail from "./../../../../../../assets/profile-img.jpg";
 import ImageGallery from "react-image-gallery";
 import "react-image-gallery/styles/css/image-gallery.css";
 import {
@@ -27,10 +25,9 @@ import {
   EfilingSideBarItem,
 } from "../../../../../../utils/sideBarItems";
 import { Button, Modal, Spinner } from "react-bootstrap";
-import { TinyEditor } from "../../../../../../components/CustomComponents/Editor/TinyEditor";
 import { imagesUrl } from "../../../../../../api/APIs";
 import { Editor } from "../../../../../../components/CustomComponents/Editor";
-
+import WebviewEditor from "../../../../../../components/CustomComponents/Editor/WebviewEditor";
 const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
   return (
     <Modal size="lg" show={isOpen} onHide={toggleModal} centered>
@@ -96,7 +93,7 @@ function FRDetail() {
       const response = await getFreshReceiptById(receptId);
       if (response.success) {
         setRemarksData(response?.data?.freshReceipt);
-        setDescriptionData(response?.data?.shortDescription)
+        setDescriptionData(response?.data?.shortDescription);
         setAttachments(response?.data?.freshReceiptsAttachments);
         // showSuccessMessage(response.message);
       }
@@ -129,7 +126,9 @@ function FRDetail() {
     try {
       const response = await getLLEmployee(UserData?.fkUserId);
       if (response?.success) {
-        const filteredData = response?.data?.filter((item) => item?.userName !== UserData?.userName);
+        const filteredData = response?.data?.filter(
+          (item) => item?.userName !== UserData?.userName
+        );
         setEmployeeData(filteredData);
       }
     } catch (error) {
@@ -170,7 +169,7 @@ function FRDetail() {
       CommentStatus: "",
       priority: "",
       comment: "",
-    })
+    });
   };
 
   const hendleAssiginFileCaseApi = async () => {
@@ -184,7 +183,6 @@ function FRDetail() {
     try {
       const response = await assignFR(receptId, data);
       if (response?.success) {
-        
         showSuccessMessage(response?.message, true);
 
         toggleModal();
@@ -211,44 +209,51 @@ function FRDetail() {
   //     thumbnail: `${imagesUrl}${item?.filename}`,
   //   })) || [];
 
-    const images =
+  const images =
     attachments?.map((item) => {
       const fileUrl = `${imagesUrl}${item?.filename}`;
-      const isPdf = item?.filename?.toLowerCase().endsWith('.pdf');
-  
+      console.log("Orignal", fileUrl);
+      const isPdf = item?.filename?.toLowerCase().endsWith(".pdf");
+      console.log("PDFLINK", isPdf);
+      const isDoc = item?.filename?.toLowerCase().endsWith(".doc");
+      console.log("DocLINK", isDoc);
+
       return {
         original: fileUrl,
         thumbnail: fileUrl,
-        isPdf: isPdf, // Custom property to identify PDFs
+        isPdf: isPdf,
+        isDoc: isDoc, // Custom property to identify PDFs
       };
     }) || [];
 
-    // Component to render PDF preview
-const PdfPreview = ({ pdfUrl }) => {
-  return (
-    <div style={{ position: 'relative', marginBottom: '20px' }}>
-      {loading && (
-        <div style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          zIndex: 10,
-        }}>
-           <Spinner />
-        </div>
-      )}
-      <iframe
-        src={pdfUrl}
-        width="100%"
-        height="600px"
-        style={{ border: 'none', display: loading ? 'none' : 'block' }}
-        title="PDF Preview"
-        onLoad={() => setLoading(false)} // Event listener for when the PDF is fully loaded
-      />
-    </div>
-  );
-};
+  // Component to render PDF preview
+  const PdfPreview = ({ pdfUrl }) => {
+    return (
+      <div style={{ position: "relative", marginBottom: "20px" }}>
+        {loading && (
+          <div
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              zIndex: 10,
+            }}
+          >
+            <Spinner />
+          </div>
+        )}
+        <iframe
+          src={pdfUrl}
+          width="100%"
+          height="600px"
+          style={{ border: "none", display: loading ? "none" : "block" }}
+          title="PDF Preview"
+          onLoad={() => setLoading(false)} // Event listener for when the PDF is fully loaded
+        />
+      </div>
+    );
+  };
 
   return (
     <Layout
@@ -297,10 +302,12 @@ const PdfPreview = ({ pdfUrl }) => {
                 <option value="" selected disabled hidden>
                   Select
                 </option>
-                  <option value={"Please Put Up"}>Please Put Up</option>
-                  <option value={"Please Link"}>Please Link</option>
-                  <option value={"For Perusal Please"}>For Perusal Please</option>
-                  <option value={"Submitted For Approval"}>Submitted For Approval</option>
+                <option value={"Please Put Up"}>Please Put Up</option>
+                <option value={"Please Link"}>Please Link</option>
+                <option value={"For Perusal Please"}>For Perusal Please</option>
+                <option value={"Submitted For Approval"}>
+                  Submitted For Approval
+                </option>
               </select>
             </div>
           </div>
@@ -323,9 +330,9 @@ const PdfPreview = ({ pdfUrl }) => {
                 <option value="" selected disabled hidden>
                   Select
                 </option>
-                  <option value={"Confidential"}>Confidential</option>
-                  <option value={"Immediate"}>Immediate</option>
-                  <option value={"Routine"}>Routine</option>
+                <option value={"Confidential"}>Confidential</option>
+                <option value={"Immediate"}>Immediate</option>
+                <option value={"Routine"}>Routine</option>
               </select>
             </div>
           </div>
@@ -407,42 +414,42 @@ const PdfPreview = ({ pdfUrl }) => {
       </EFilingModal>
 
       <div className="custom-editor">
-
         <div className="row">
           <div className="col-7">
             <section>
-            {images.map((item, index) =>
-              item.isPdf ? (
-                <PdfPreview pdfUrl={item.original} key={index} />
-              ) : (
-              <ImageGallery
-                style={{ maxHeight: "calc(100vh 0px)" }}
-                items={images}
-                showThumbnails={false}
-                showFullscreenButton={false}
-                showPlayButton={false}
-                slideOnThumbnailOver
-                renderThumbInner={(item) => (
-                  <div className="image-gallery-thumbnail-inner">
-                    <img
-                      src={item.thumbnail}
-                      alt={"file"}
-                      width={92}
-                      height={80}
-                    />
-                    {/* Add any additional elements or styles for the thumbnail */}
-                  </div>
-                )}
-              />
-              )
+              {images?.map((item, index) =>
+                item?.isPdf ? (
+                  <PdfPreview pdfUrl={item.original} key={index} />
+                ) : item?.isDoc ? (
+                  <WebviewEditor docUrl={item.original} />
+                ) : (
+                  <ImageGallery
+                    key={index}
+                    style={{ maxHeight: "calc(100vh - 0px)" }}
+                    items={images}
+                    showThumbnails={false}
+                    showFullscreenButton={false}
+                    showPlayButton={false}
+                    slideOnThumbnailOver
+                    renderThumbInner={(thumbItem) => (
+                      <div className="image-gallery-thumbnail-inner">
+                        <img
+                          src={thumbItem.thumbnail}
+                          alt="file"
+                          width={92}
+                          height={80}
+                        />
+                        {/* Additional elements or styles for the thumbnail */}
+                      </div>
+                    )}
+                  />
+                )
               )}
             </section>
 
             <label className="form-label">F.R Detail</label>
             <Editor
-              onChange={(content) =>
-                setDescriptionData(content)
-              }
+              onChange={(content) => setDescriptionData(content)}
               value={descriptionData}
               // width={"100%"}
               display={"flex"}
@@ -479,7 +486,7 @@ const PdfPreview = ({ pdfUrl }) => {
                 {remarksData?.length > 0 ? (
                   remarksData.map((item) => (
                     <>
-                    {(item?.CommentStatus !== null ||
+                      {(item?.CommentStatus !== null ||
                         item?.comment !== null) && (
                         <div
                           class="d-flex flex-row p-3 ps-3"
@@ -534,11 +541,21 @@ const PdfPreview = ({ pdfUrl }) => {
                               </div>
                               <p
                                 class="text-justify comment-text mb-0"
-                                style={{ fontSize: "18px", color: item?.submittedUser?.employee?.userType === "Officer" ? "green" : item?.submittedUser?.employee?.userType === "Section" ? "blue" : "black" }}
+                                style={{
+                                  fontSize: "18px",
+                                  color:
+                                    item?.submittedUser?.employee?.userType ===
+                                    "Officer"
+                                      ? "green"
+                                      : item?.submittedUser?.employee
+                                            ?.userType === "Section"
+                                        ? "blue"
+                                        : "black",
+                                }}
                               >
                                 {item?.CommentStatus
-                                    ? item?.CommentStatus
-                                    : item?.comment}
+                                  ? item?.CommentStatus
+                                  : item?.comment}
                               </p>
                               {/* <small
                                 style={{
