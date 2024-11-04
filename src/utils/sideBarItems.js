@@ -804,6 +804,11 @@ export const EfilingSideBarItem = [
       },
     ],
   },
+  {
+    itemName:"Leave Management",
+    link:"/efiling/dashboard/add-leave",
+    icon: faHome,
+  }
 ];
 
 export const EfilingSideBarBranchItem = [
@@ -946,6 +951,11 @@ export const EfilingSideBarBranchItem = [
       },
     ],
   },
+  {
+    itemName:"Leave Management",
+    link:"/efiling/dashboard/add-leave",
+    icon: faHome,
+  }
 ];
 
 // Legislation Management System SideBar Items
