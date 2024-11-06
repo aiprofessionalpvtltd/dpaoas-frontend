@@ -65,7 +65,7 @@ function EfilingLeaveManagement() {
             {({ values }) => (
               <Form>
                 <>
-                  <div className="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
+                  <div className="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4 mt-4">
                   { employeeData?.map((member, index) => (
                         <div key={index} className="col">
                           <AttendanceCard
@@ -84,9 +84,7 @@ function EfilingLeaveManagement() {
                       className="row mt-2"
                       style={{
                         position: "absolute",
-                        // bottom: 610,
-                        // left: 500,
-                        right: 180,
+                        right: 60,
                         top: 100,
                       }}
                     >
