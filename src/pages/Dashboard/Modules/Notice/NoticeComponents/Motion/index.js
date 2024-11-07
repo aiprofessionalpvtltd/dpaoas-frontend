@@ -144,37 +144,37 @@ const SentMotions = ({ isDashboardData }) => {
       const cleanedSubjectMatter = subjectMatter.replace(/(<([^>]+)>)/gi, "");
 
       return {
-        SrNo: index + 1,
-        Id: res?.id,
+        "S.No": index + 1,
+        id: res?.id,
+        // memberName: res?.motionMovers[0]?.members?.memberName,
         memberName:
           res?.motionMovers
             ?.map((mover) => mover.members?.memberName)
             .join(", ") || "---",
-        noticeOfficeDiaryNumber: res?.noticeOfficeDiary?.noticeOfficeDiaryNo
-          ? res?.noticeOfficeDiary?.noticeOfficeDiaryNo
+        SessionNumber: res?.sessions?.sessionName
+          ? res?.sessions?.sessionName
           : "",
-        NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate
-          ? moment(res?.noticeOfficeDiary?.noticeOfficeDiaryDate).format(
+        motionType: res?.motionType ? res?.motionType : "",
+        noticeOfficeDiaryNo: res?.noticeOfficeDairies?.noticeOfficeDiaryNo
+          ? res?.noticeOfficeDairies?.noticeOfficeDiaryNo
+          : "",
+        noticeOfficeDiaryDate: res?.noticeOfficeDairies?.noticeOfficeDiaryDate
+          ? moment(res?.noticeOfficeDairies?.noticeOfficeDiaryDate).format(
               "DD-MM-YYYY"
             )
           : "",
-        NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime
+        noticeOfficeDiaryTime: res?.noticeOfficeDairies?.noticeOfficeDiaryTime
           ? moment(
-              res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
-              "hh:mm A"
-            ).format("hh:mm A")
+              res?.noticeOfficeDairies?.noticeOfficeDiaryTime,
+              "hh:ss A"
+            ).format("hh:ss A")
           : "",
-        SessionNumber: res?.session?.sessionName
-          ? res?.session?.sessionName
-          : "",
-        // SubjectMatter: cleanedSubjectMatter ? cleanedSubjectMatter : "",
-        Category: res.questionCategory ? res.questionCategory : "",
-        Division: res?.divisions ? res?.divisions?.divisionName : "",
-        Ministry: res?.divisions?.ministry?.ministryName
-          ? res?.divisions?.ministry?.ministryName
-          : "",
-        createdBy:
-          res?.questionSentStatus === "inNotice" ? "Notice Office" : "---",
+        description: res?.englishText,
+        // urduText: UrduText ? UrduText : "",
+        // motionStatus: res?.motionStatuses?.statusName,
+        // device: res?.device,
+
+        // createdBy:res?.motionSentStatus === "inNotice" ? "Notice Office": "---"
       };
     });
   };
@@ -224,7 +224,7 @@ const SentMotions = ({ isDashboardData }) => {
       motionWeek: values?.motionWeek,
       motionType: values?.motionType,
       fkMotionStatus: values?.motionStatus,
-      motionSentStatus: ["inNotice", "toMotion"],
+      motionSentStatus: ["inNotice"],
     };
 
     try {
@@ -232,8 +232,9 @@ const SentMotions = ({ isDashboardData }) => {
       if (response?.success) {
         // showSuccessMessage(response?.message);
         const transformedData = transformMotionData(response?.data?.rows);
+        const transformedPDFData = transformPdfData(response?.data?.rows);
         setMotionData(transformedData);
-        setMotionPDFData(transformedData);
+        setMotionPDFData(transformedPDFData);
       }
     } catch (error) {
       console.log(error);
@@ -289,6 +290,7 @@ const SentMotions = ({ isDashboardData }) => {
     getMotionListDataa();
   }, [getMotionListDataa, formik?.values]);
 
+  console.log("motionPdfData==============>", motionPdfData);
   const sendMotion = async (id) => {
     try {
       const data = {
@@ -320,7 +322,7 @@ const SentMotions = ({ isDashboardData }) => {
             <p
               style="text-align: center; font-size: 20px; margin-top: 10px; margin-bottom: 10px;"
             >
-              (Notice Branch)
+              (Notice Branch) / Motions
             </p>
           </div>
           <table style="width: 100%;">
@@ -333,10 +335,10 @@ const SentMotions = ({ isDashboardData }) => {
                 <th style="padding: 10px; text-align: left; font-size: 14px;">Notice Diary Number</th>
                 <th style="padding: 10px; text-align: left; font-size: 14px;">Notice Date</th>
                 <th style="padding: 10px; text-align: left; font-size: 14px;">Notice Time</th>
+                <th style="padding: 10px; text-align: left; font-size: 14px;">Motion Type</th>
                 <th style="padding: 10px; text-align: left; font-size: 14px;">Mover</th>
-                <th style="padding: 10px; text-align: left; font-size: 14px;">Category</th>
-                <th style="padding: 10px; text-align: left; font-size: 14px;">Division</th>
-                <th style="padding: 10px; text-align: left; font-size: 14px;">Ministry</th>
+                <th style="padding: 10px; text-align: left; font-size: 14px;">Description</th>
+                
               </tr>
             </thead>
             <tbody>
@@ -344,31 +346,33 @@ const SentMotions = ({ isDashboardData }) => {
                 .map(
                   (item, index) => `
                   <tr key="${index}">
-                    <td style="padding: 10px;">${item.SrNo}</td>
+                     <td style="padding: 10px;">${item["S.No"]}</td>
                     <td style="padding: 10px; text-align: left; font-size: 14px;">${
-                      item.SessionNumber
+                      item?.SessionNumber
                     }</td>
-                    <td style="padding: 10px;">${
-                      item.noticeOfficeDiaryNumber
-                    }</td>
+                    <td style="padding: 10px;">${item?.noticeOfficeDiaryNo}</td>
                     <td style="padding: 10px; text-align: left; font-size: 14px;">${
-                      item.NoticeDate
+                      item?.noticeOfficeDiaryDate
                     }</td>
                     <td style="padding: 10px; text-align: left; font-size: 14px;">${
-                      item.NoticeTime
+                      item?.noticeOfficeDiaryTime
                     }</td>
                     <td style="padding: 10px; text-align: left; font-size: 14px;">${
-                      item.MemberName
+                      item?.motionType
                     }</td>
+                   <td style="padding: 10px; text-align: left; font-size: 14px;">
+          ${
+            item?.memberName
+              .split(",") // Split names by comma
+              .map((name) => name.trim()) // Trim spaces for each name
+              .join("<br>") // Join each name with a line break
+          }
+        </td>
                     <td style="padding: 10px; text-align: left; font-size: 14px;">${
-                      item.Category
+                      item?.description
                     }</td>
-                    <td style="padding: 10px; text-align: left; font-size: 14px;">${
-                      item?.Division || "---"
-                    }</td>
-                    <td style="padding: 10px; text-align: left; font-size: 14px;">${
-                      item?.Ministry || "---"
-                    }</td>
+                   
+                    
                   </tr>
                 `
                 )
@@ -387,7 +391,7 @@ const SentMotions = ({ isDashboardData }) => {
     // Define PDF options
     const options = {
       margin: 0.5,
-      filename: "Questions-In-Notice.pdf",
+      filename: "Motions.pdf",
       image: { type: "jpeg", quality: 0.98 },
       html2canvas: { scale: 2 },
       jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
@@ -711,8 +715,9 @@ const SentMotions = ({ isDashboardData }) => {
                         className="btn btn-primary col-1"
                         type="button"
                         onClick={handlePDF}
+                        disabled={motionData?.length > 0 ? false : true}
                       >
-                        Print PDF
+                        Download
                       </button>
                       <button class="btn btn-primary" type="submit">
                         Search

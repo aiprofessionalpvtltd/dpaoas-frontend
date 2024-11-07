@@ -70,7 +70,6 @@ function Dashboard() {
 
         if (permissionKeys.length === 1) {
           const singlePermission = permissions[0].label; // Assuming permissions is an array
-          console.log("singlePermission", singlePermission);
           const tileWithSinglePermission = tilesData.find(
             (tile) =>
               tile.permission.includes(singlePermission) &&
@@ -141,7 +140,10 @@ function Dashboard() {
     },
     {
       title: "Notice Management System",
-      link: userRole?.fkBranchId === 9 ? "/notice/speech-on-demand" : "/notice/dashboard",
+      link:
+        userRole?.fkBranchId === 9
+          ? "/notice/speech-on-demand"
+          : "/notice/dashboard",
       type: "",
       cardbg: "darkGreenbg",
       icon: faBullhorn,
@@ -203,7 +205,7 @@ function Dashboard() {
       icon: faMailBulk,
       permission: ["Legislation"],
     },
-// Committees Tile
+    // Committees Tile
     {
       title: "Committees Management System",
       link: "committees/dashboard",
@@ -245,8 +247,48 @@ function Dashboard() {
       icon: faVanShuttle,
       permission: ["Telecasting"],
     },
-  ];
+    {
+      title: "Admin-1",
+      id: 7,
+      branchName: "Admin-I",
+      link: "/efiling/dashboard",
+      type: "",
+      cardbg: "mehroonBg",
+      icon: faBookOpenReader,
+      permission: ["E-Filing Admin-1"],
+    },
+    {
+      title: "Admin-II",
+      id: 112,
+      branchName: "E-Filing Admin-2",
+      link: "/efiling/dashboard",
+      type: "",
+      cardbg: "lightGreen",
+      icon: faBookOpenReader,
+      permission: ["E-Filing Admin-2"],
+    },
+    {
+      title: "Transport",
+      id: 106,
+      branchName: "Transport Branch",
+      link: "/efiling/dashboard",
+      type: "",
+      cardbg: "bluebg",
+      icon: faVanShuttle,
 
+      permission: ["E-Filing Transport"],
+    },
+    {
+      title: "P & P",
+      id: 105,
+      branchName: "P&P Branch",
+      link: "/efiling/dashboard",
+      type: "",
+      cardbg: "greybg",
+      icon: faBookOpenReader,
+      permission: ["E-Filing Printing & Publication"],
+    },
+  ];
 
   // Filter tiles based on permissions
   const filteredTiles = tilesData.filter((tile) => {
@@ -261,6 +303,26 @@ function Dashboard() {
   for (let i = 0; i < filteredTiles.length; i += 4) {
     rows.push(filteredTiles.slice(i, i + 4));
   }
+
+  const handleCardClick = (id, branchName) => {
+    // Retrieve the userData from local storage
+    const userData = JSON.parse(localStorage.getItem("userData"));
+
+    if (userData) {
+      // Use default branch information if no id or branchName is provided
+      const updatedId = id || userData.fkBranchId;
+      const updatedBranchName = branchName || userData.branch.branchName;
+
+      // Update the fkBranchId and branch properties in userData
+      userData.fkBranchId = updatedId;
+      userData.branch = { id: updatedId, branchName: updatedBranchName };
+
+      // Save the updated userData back to local storage
+      localStorage.setItem("userData", JSON.stringify(userData));
+    } else {
+      console.error("No userData found in local storage");
+    }
+  };
 
   return (
     <Layout>
@@ -277,6 +339,10 @@ function Dashboard() {
                   type={tile.type}
                   cardbg={tile.cardbg}
                   icon={tile.icon}
+                  id={tile?.id}
+                  onClick={() => {
+                    handleCardClick(tile?.id, tile?.branchName);
+                  }}
                 />
               </div>
             ))}

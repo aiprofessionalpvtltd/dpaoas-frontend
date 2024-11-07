@@ -20,28 +20,28 @@ export const CustomNavbar = ({ module, centerlogohide, navItems }) => {
 
   return (
     <header
-      class="dashboard-toolbar"
+      className="dashboard-toolbar"
       style={{
         marginLeft: module ? "240px" : "0px",
         top: centerlogohide ? "0px" : "0px",
       }}
     >
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-          <div class="collapse navbar-collapse" id="navbarNavDropdown">
-            <ul class="navbar-nav">
+      <nav className="navbar navbar-expand-lg navbar-light bg-light">
+        <div className="container-fluid">
+          <div className="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul className="navbar-nav">
               <>
-                {navItems && 
-                  navItems?.map((item) => (
-                    <>
+                {navItems &&
+                  navItems?.map((item, index) => (
+                    <React.Fragment key={index}>
                       {item?.subItems ? (
-                        <li class="nav-item">
+                        <li className="nav-item">
                           <Dropdown>
                             <Dropdown.Toggle
                               variant="default"
                               id="about-dropdown"
                               style={{
-                                marginRight:5,
+                                marginRight: 5,
                                 fontWeight: "bold",
                                 color: item.subItems.some(
                                   (subItem) =>
@@ -53,9 +53,8 @@ export const CustomNavbar = ({ module, centerlogohide, navItems }) => {
                                   (subItem) =>
                                     location.pathname === subItem.link
                                 )
-                                  // ? "#14ae5c"
-                                   ?"#4B90F0"
-                                  
+                                  ? // ? "#14ae5c"
+                                    "#4B90F0"
                                   : "",
                               }}
                             >
@@ -86,8 +85,8 @@ export const CustomNavbar = ({ module, centerlogohide, navItems }) => {
                                         : "#000",
                                     backgroundColor:
                                       location.pathname === subItem?.link
-                                        // ? "#14ae5c"
-                                         ?"#4B90F0"
+                                        ? // ? "#14ae5c"
+                                          "#4B90F0"
                                         : "",
                                   }}
                                   to={subItem?.link}
@@ -102,7 +101,7 @@ export const CustomNavbar = ({ module, centerlogohide, navItems }) => {
                           </Dropdown>
                         </li>
                       ) : (
-                        <li class="nav-item">
+                        <li className="nav-item">
                           <Link
                             style={{
                               fontWeight: "bold",
@@ -112,15 +111,15 @@ export const CustomNavbar = ({ module, centerlogohide, navItems }) => {
                                   : "#000",
                               backgroundColor:
                                 location.pathname === item?.link
-                                  // ? "#14ae5c"
-                                  ?"#4B90F0"
+                                  ? // ? "#14ae5c"
+                                    "#4B90F0"
                                   : "",
                               borderRadius: 5,
                               paddingRight: 10,
-                              marginRight:5,
+                              marginRight: 5,
                               paddingLeft: 10,
                             }}
-                            class="nav-link"
+                            className="nav-link"
                             aria-current="page"
                             to={item?.link}
                           >
@@ -128,7 +127,7 @@ export const CustomNavbar = ({ module, centerlogohide, navItems }) => {
                           </Link>
                         </li>
                       )}
-                    </>
+                    </React.Fragment>
                   ))}
               </>
               {/* {shouldRenderEfiling ? (

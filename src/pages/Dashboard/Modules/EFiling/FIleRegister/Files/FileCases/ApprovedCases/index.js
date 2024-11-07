@@ -98,7 +98,7 @@ function ApprovedCasesHistory() {
 
     try {
       const response = await getUserApprovedCaseHistory(searchParams);
-      console.log("Response", response);
+
       if (response?.success) {
         setCount(response?.data?.count);
         showSuccessMessage(response?.message);

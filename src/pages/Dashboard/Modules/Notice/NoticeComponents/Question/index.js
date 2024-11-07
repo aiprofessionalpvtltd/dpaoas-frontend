@@ -196,7 +196,7 @@ const AllQuestionComponent = ({ isDashboardData }) => {
         noticeOfficeDiaryDateTo:
           values?.toNoticeDate &&
           moment(values?.toNoticeDate).format("YYYY-MM-DD"),
-        questionSentStatus: ["inNotice", "toQuestion"],
+        questionSentStatus: ["inNotice"],
       };
       try {
         const response = await searchQuestion(searchParams, page, pageSize);
@@ -402,7 +402,7 @@ const AllQuestionComponent = ({ isDashboardData }) => {
         <p
           style="text-align: center; font-size: 20px; margin-top: 10px; margin-bottom: 10px;"
         >
-          (Notice Branch)
+          (Notice Branch) / Questions
         </p>
       </div>
       <table style="width: 100%; border-collapse: collapse; margin: 0; padding: 0;">
@@ -426,15 +426,23 @@ const AllQuestionComponent = ({ isDashboardData }) => {
             .map(
               (item, index) => `
               <tr key="${index}">
-                <td style="padding: 8px;">${item.SrNo}</td>
-                <td style="padding: 8px;">${item.SessionNumber}</td>
-                <td style="padding: 8px;">${item.noticeOfficeDiaryNumber}</td>
-                <td style="padding: 8px;">${item.NoticeDate}</td>
-                <td style="padding: 8px;">${item.NoticeTime}</td>
-                <td style="padding: 8px;">${item.MemberName}</td>
-                <td style="padding: 8px;">${item.Category}</td>
-                <td style="padding: 8px;">${item.Division || "---"}</td>
-                <td style="padding: 8px;">${item.Ministry || "---"}</td>
+                <td style="padding: 8px; font-size:12px">${item.SrNo}</td>
+                <td style="padding: 8px; font-size:12px">${
+                  item.SessionNumber
+                }</td>
+                <td style="padding: 8px; font-size:12px">${
+                  item.noticeOfficeDiaryNumber
+                }</td>
+                <td style="padding: 8px; font-size:11px">${item.NoticeDate}</td>
+                <td style="padding: 8px; font-size:11px">${item.NoticeTime}</td>
+                <td style="padding: 8px; font-size:12px">${item.MemberName}</td>
+                <td style="padding: 8px; font-size:12px">${item.Category}</td>
+                <td style="padding: 8px; font-size:12px">${
+                  item.Division || "---"
+                }</td>
+                <td style="padding: 8px; font-size:12px">${
+                  item.Ministry || "---"
+                }</td>
               </tr>
             `
             )
@@ -779,7 +787,7 @@ const AllQuestionComponent = ({ isDashboardData }) => {
                           onClick={handlePDF}
                           disabled={resData?.length > 0 ? false : true}
                         >
-                          Print PDF
+                          Download Report
                         </button>
                         <button className="btn btn-primary" type="submit">
                           Search
