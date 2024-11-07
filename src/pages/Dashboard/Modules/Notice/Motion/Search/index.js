@@ -22,7 +22,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
 import Select from "react-select";
-
+import html2pdf from "html2pdf.js";
 function SearchMotion() {
   const navigate = useNavigate();
   const { ministryData, members, sessions } = useContext(AuthContext);
@@ -30,6 +30,7 @@ function SearchMotion() {
   const [count, setCount] = useState(null);
   const [motionStatus, setMotionStatus] = useState([]);
   const [motionData, setMotionData] = useState([]);
+  const [motionPDFData, setMotionPDFData] = useState([]);
   const [isFromNoticeOpen, setIsFromNoticeOpen] = useState(false);
   const [isToNoticeOpen, setIsToNoticeOpen] = useState(false);
   const pageSize = 10; // Set your desired page size
@@ -97,43 +98,47 @@ function SearchMotion() {
   };
 
   const transformMotionData = (apiData) => {
-    return apiData.map((leave, index) => {
-      const English = [leave?.englishText].filter(Boolean).join(", ");
-      const EnglishText = English.replace(/(<([^>]+)>)/gi, "");
+    console.log("API DATA MOTION", apiData);
+    return apiData.map((res, index) => {
+      const english = [res?.englishText].filter(Boolean).join(", ");
+      const EnglishText = english.replace(/(<([^>]+)>)/gi, "");
 
-      const Urdu = [leave?.urduText].filter(Boolean).join(", ");
-      const UrduText = Urdu.replace(/(<([^>]+)>)/gi, "");
+      const urdu = [res?.urduText].filter(Boolean).join(", ");
+      const UrduText = urdu.replace(/(<([^>]+)>)/gi, "");
+
       return {
-        "S.No" : index + 1,
-        id: leave?.id,
-        memberName: leave?.motionMovers[0]?.members?.memberName,
-        SessionNumber: leave?.sessions?.sessionName
-          ? leave?.sessions?.sessionName
+        "S.No": index + 1,
+        id: res?.id,
+        // memberName: res?.motionMovers[0]?.members?.memberName,
+        memberName:
+          res?.motionMovers
+            ?.map((mover) => mover.members?.memberName)
+            .join(", ") || "---",
+        SessionNumber: res?.sessions?.sessionName
+          ? res?.sessions?.sessionName
           : "",
-
-        motionType: leave?.motionType ? leave?.motionType : "",
-        noticeOfficeDiaryNo: leave?.noticeOfficeDairies?.noticeOfficeDiaryNo
-          ? leave?.noticeOfficeDairies?.noticeOfficeDiaryNo
+        motionType: res?.motionType ? res?.motionType : "",
+        noticeOfficeDiaryNo: res?.noticeOfficeDairies?.noticeOfficeDiaryNo
+          ? res?.noticeOfficeDairies?.noticeOfficeDiaryNo
           : "",
-
-        noticeOfficeDiaryDate: leave?.noticeOfficeDairies?.noticeOfficeDiaryDate
-          ? moment(leave?.noticeOfficeDairies?.noticeOfficeDiaryDate).format(
+        noticeOfficeDiaryDate: res?.noticeOfficeDairies?.noticeOfficeDiaryDate
+          ? moment(res?.noticeOfficeDairies?.noticeOfficeDiaryDate).format(
               "DD-MM-YYYY"
             )
           : "",
-        noticeOfficeDiaryTime: moment(
-          leave?.noticeOfficeDairies?.noticeOfficeDiaryTime,
-          "hh:ss A"
-        ).format("hh:ss A"),
-        englishText: EnglishText ? EnglishText : "",
-        urduText: UrduText ? UrduText : "",
-        SentDate: leave?.motionSentDate,
+        noticeOfficeDiaryTime: res?.noticeOfficeDairies?.noticeOfficeDiaryTime
+          ? moment(
+              res?.noticeOfficeDairies?.noticeOfficeDiaryTime,
+              "hh:ss A"
+            ).format("hh:ss A")
+          : "",
+        englishText: EnglishText ? EnglishText : "No English Text",
+        urduText: UrduText ? UrduText : "No Urdu Text",
+        // motionStatus: res?.motionStatuses?.statusName,
+        device: res?.device,
+
         createdBy:
-          leave?.motionSentStatus === "inNotice"
-            ? "Notice Office"
-            : leave?.motionSentStatus == "toMotion"
-              ? "From Notice Office"
-              : "--",
+          res?.motionSentStatus === "inNotice" ? "Notice Office" : "---",
       };
     });
   };
@@ -172,7 +177,7 @@ function SearchMotion() {
       englishText: values?.keyword,
       motionWeek: values?.motionWeek,
       motionType: values?.motionType,
-      motionSentStatus: ["inNotice", "toMotion"],
+      motionSentStatus: ["inNotice"],
     };
     setCount(null);
 
@@ -181,7 +186,9 @@ function SearchMotion() {
       if (response?.success) {
         // showSuccessMessage(response?.message);
         const transformedData = transformMotionData(response?.data?.rows);
+        const transformedPDFData = transformPdfData(response?.data?.rows);
         setMotionData(transformedData);
+        setMotionPDFData(transformedPDFData);
         showSuccessMessage(response?.message);
         setCount(response?.data?.count);
       }
@@ -223,11 +230,147 @@ function SearchMotion() {
       showErrorMessage(error.response?.data?.message);
     }
   };
-  const handlePDF = async () => {
-    const encodedJsonString = encodeURIComponent(JSON.stringify(motionData));
-    const url = `/notice/motion/pdf-preview?state=${encodedJsonString}`;
-    window.open(url, "_blank");
+  //   Transforming Motion Data For PDF
+  const transformPdfData = (apiData) => {
+    return apiData.map((res, index) => {
+      const subjectMatter = [res?.englishText, res?.urduText]
+        .filter(Boolean)
+        .join(", ");
+      const cleanedSubjectMatter = subjectMatter.replace(/(<([^>]+)>)/gi, "");
+
+      return {
+        "S.No": index + 1,
+        id: res?.id,
+        // memberName: res?.motionMovers[0]?.members?.memberName,
+        memberName:
+          res?.motionMovers
+            ?.map((mover) => mover.members?.memberName)
+            .join(", ") || "---",
+        SessionNumber: res?.sessions?.sessionName
+          ? res?.sessions?.sessionName
+          : "",
+        motionType: res?.motionType ? res?.motionType : "",
+        noticeOfficeDiaryNo: res?.noticeOfficeDairies?.noticeOfficeDiaryNo
+          ? res?.noticeOfficeDairies?.noticeOfficeDiaryNo
+          : "",
+        noticeOfficeDiaryDate: res?.noticeOfficeDairies?.noticeOfficeDiaryDate
+          ? moment(res?.noticeOfficeDairies?.noticeOfficeDiaryDate).format(
+              "DD-MM-YYYY"
+            )
+          : "",
+        noticeOfficeDiaryTime: res?.noticeOfficeDairies?.noticeOfficeDiaryTime
+          ? moment(
+              res?.noticeOfficeDairies?.noticeOfficeDiaryTime,
+              "hh:ss A"
+            ).format("hh:ss A")
+          : "",
+        description: res?.englishText,
+        // urduText: UrduText ? UrduText : "",
+        // motionStatus: res?.motionStatuses?.statusName,
+        // device: res?.device,
+
+        // createdBy:res?.motionSentStatus === "inNotice" ? "Notice Office": "---"
+      };
+    });
   };
+  const htmlcontent = `
+  <div
+       id="template-container"
+       style="background: #fff; font-family: Arial, Helvetica, sans-serif;"
+     >
+       <div class="template" style="width: 700px; margin: 0 auto;">
+         <div class="template-head">
+           <h1
+             style="text-align: center; font-size: 20px; text-decoration: underline;"
+           >
+             SENATE OF PAKISTAN
+           </h1>
+           <p
+             style="text-align: center; font-size: 20px; margin-top: 10px; margin-bottom: 10px;"
+           >
+             (Notice Branch) / Motions
+           </p>
+         </div>
+         <table style="width: 100%;">
+           <thead>
+             <tr
+               style="background-color: #f4f4f4; border-bottom: 2px solid #ddd;"
+             >
+               <th style="padding: 10px; text-align: left; font-size: 14px;">Sr No</th>
+               <th style="padding: 10px; text-align: left; font-size: 14px;">Session Number</th>
+               <th style="padding: 10px; text-align: left; font-size: 14px;">Notice Diary Number</th>
+               <th style="padding: 10px; text-align: left; font-size: 14px;">Notice Date</th>
+               <th style="padding: 10px; text-align: left; font-size: 14px;">Notice Time</th>
+               <th style="padding: 10px; text-align: left; font-size: 14px;">Motion Type</th>
+               <th style="padding: 10px; text-align: left; font-size: 14px;">Mover</th>
+               <th style="padding: 10px; text-align: left; font-size: 14px;">Description</th>
+               
+             </tr>
+           </thead>
+           <tbody>
+             ${motionPDFData
+               .map(
+                 (item, index) => `
+                 <tr key="${index}">
+                    <td style="padding: 10px;">${item["S.No"]}</td>
+                   <td style="padding: 10px; text-align: left; font-size: 12px;">${
+                     item?.SessionNumber
+                   }</td>
+                   <td style="padding: 10px;">${item?.noticeOfficeDiaryNo}</td>
+                   <td style="padding: 10px; text-align: left; font-size: 11px;">${
+                     item?.noticeOfficeDiaryDate
+                   }</td>
+                   <td style="padding: 10px; text-align: left; font-size: 11px;">${
+                     item?.noticeOfficeDiaryTime
+                   }</td>
+                   <td style="padding: 10px; text-align: left; font-size: 12px;">${
+                     item?.motionType
+                   }</td>
+                  <td style="padding: 10px; text-align: left; font-size: 12px;">
+         ${
+           item?.memberName
+             .split(",") // Split names by comma
+             .map((name) => name.trim()) // Trim spaces for each name
+             .join("<br>") // Join each name with a line break
+         }
+       </td>
+                   <td style="padding: 10px; text-align: left; font-size: 12px;">${
+                     item?.description
+                   }</td>
+                  
+                   
+                 </tr>
+               `
+               )
+               .join("")}
+           </tbody>
+         </table>
+       </div>
+     </div>
+ `;
+
+  const handlePDF = () => {
+    // Create a temporary container to hold the HTML content for pdf
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = htmlcontent;
+
+    // Define PDF options
+    const options = {
+      margin: 0.5,
+      filename: "Motions.pdf",
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+    };
+
+    // Generate the PDF from the htmlcontent
+    html2pdf().from(tempDiv).set(options).save();
+  };
+  // const handlePDF = async () => {
+  //   const encodedJsonString = encodeURIComponent(JSON.stringify(motionData));
+  //   const url = `/notice/motion/pdf-preview?state=${encodedJsonString}`;
+  //   window.open(url, "_blank");
+  // };
 
   return (
     <Layout
@@ -612,8 +755,9 @@ function SearchMotion() {
                       className="btn btn-primary col-1"
                       type="button"
                       onClick={handlePDF}
+                      disabled={motionData?.length > 0 ? false : true}
                     >
-                      Print PDF
+                      Download Report
                     </button>
                     <button class="btn btn-primary" type="submit">
                       Search
