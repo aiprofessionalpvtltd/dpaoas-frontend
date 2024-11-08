@@ -1211,13 +1211,13 @@ export const ProtectedRoutes = [
   },
   {
     path: "/transport/vehicles/profiles/addedit",
-    element: <AddEditVehicleProfile/>,
+    element: <AddEditVehicleProfile />,
   },
   {
     path: "/transport/vehicles/profiles/addeditlogbook",
-    element: <EditAddLogBook/>,
+    element: <EditAddLogBook />,
   },
-  
+
   {
     path: "/transport/vehicles/log-book",
     element: <VehiclesLogBook />,
@@ -1244,7 +1244,7 @@ export const ProtectedRoutes = [
   },
   {
     path: "/transport/vehicles/addeditvehiclepurchase",
-    element: <AddEditVehiclePurchase/>,
+    element: <AddEditVehiclePurchase />,
   },
 
   // {
@@ -1269,7 +1269,7 @@ export const ProtectedRoutes = [
   },
   {
     path: "/transport/drivers/addeditdeputedwithofficer",
-    element: <AddEditDeputedWithOff/>,
+    element: <AddEditDeputedWithOff />,
   },
   {
     path: "/transport/drivers/deputed-on-vehicle-no",
@@ -1277,7 +1277,7 @@ export const ProtectedRoutes = [
   },
   {
     path: "/transport/drivers/addeditdeponvehNo",
-    element: <AddEditDepOnVehNo/>,
+    element: <AddEditDepOnVehNo />,
   },
   {
     path: "/transport/drivers/deputed-on-vehicle-no",
@@ -1297,7 +1297,7 @@ export const ProtectedRoutes = [
   },
   {
     path: "/transport/drivers/addeditmedicalrepo",
-    element: <AddEditMedicalRepo/>,
+    element: <AddEditMedicalRepo />,
   },
 
   {

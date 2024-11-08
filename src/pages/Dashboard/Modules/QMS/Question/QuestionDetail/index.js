@@ -349,7 +349,7 @@ function QMSQuestionDetail() {
               <form onSubmit={formik.handleSubmit}>
                 <div class="row mb-4">
                   <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                    <button class="btn btn-warning" type="">
+                    {/* <button class="btn btn-warning" type="">
                       No File Attached
                     </button>
                     <button
@@ -371,7 +371,7 @@ function QMSQuestionDetail() {
                       }}
                     >
                       Defer
-                    </button>
+                    </button> */}
                     <button
                       class="btn btn-primary"
                       type="button"

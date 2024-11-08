@@ -228,7 +228,7 @@ function QMSNoticeQuestionDetail() {
               <button class="btn btn-primary me-2" type="submit">
                 Update
               </button>
-              <button
+              {/* <button
                 class="btn btn-warning me-2"
                 type="button"
                 onClick={() => {
@@ -243,7 +243,7 @@ function QMSNoticeQuestionDetail() {
                 }}
               >
                 View File
-              </button>
+              </button> */}
               {/* <button class="btn btn-primary me-2" type="button">
                 Revive
               </button>
@@ -594,6 +594,48 @@ function QMSNoticeQuestionDetail() {
                       </select>
                     </div>
                   </div>
+                  {location?.state?.question?.questionImage.length > 0  && (
+                  
+                    location?.state?.question?.questionImage?.map((item, index) => {
+                      // const imageparse = JSON.parse(item)
+                      return (
+                        <div key={index} class="MultiFile-label mt-3">
+                          <a
+                            href={`${imagesUrl}${item?.path}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <i class="fas fa-download"></i>
+                          </a>
+                          {/* <a class="MultiFile-remove" href="#T7">
+                            x
+                          </a> */}
+                          <span
+                            class="MultiFile-label"
+                            title={item?.path
+                              ?.split("\\")
+                              .pop()
+                              .split("/")
+                              .pop()}
+                          >
+                            <span class="MultiFile-title">
+                              <a
+                                href={`${imagesUrl}${item?.path}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                {item?.path
+                                  ?.split("\\")
+                                  .pop()
+                                  .split("/")
+                                  .pop()}
+                              </a>
+                            </span>
+                          </span>
+                        </div>
+                      );
+                    })
+                  )}
                   </div>
                 </div>
                 <div style={{ marginTop: 10 }}>

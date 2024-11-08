@@ -154,25 +154,25 @@ export const Layout = ({
     }
   };
 
-  useEffect(() => {
-    const apiRequests = [];
+  // useEffect(() => {
+  //   const apiRequests = [];
 
-    if (shouldRenderNotice || shouldRenderQuestion || shouldRenderMotion) {
-      apiRequests.push(getAllResolutionsApi());
-      apiRequests.push(getAllQuestionsApi());
-      apiRequests.push(getAllMotionsApi());
-    }
+  //   if (shouldRenderNotice || shouldRenderQuestion || shouldRenderMotion) {
+  //     apiRequests.push(getAllResolutionsApi());
+  //     apiRequests.push(getAllQuestionsApi());
+  //     apiRequests.push(getAllMotionsApi());
+  //   }
 
-    // Execute all API requests concurrently
-    Promise.all(apiRequests)
-      .then(() => {
-        // All requests are completed
-        // console.log("complete all requests");
-      })
-      .catch((error) => {
-        // Handle error
-      });
-  }, [shouldRenderNotice, shouldRenderQuestion, shouldRenderMotion]);
+  //   // Execute all API requests concurrently
+  //   Promise.all(apiRequests)
+  //     .then(() => {
+  //       // All requests are completed
+  //       // console.log("complete all requests");
+  //     })
+  //     .catch((error) => {
+  //       // Handle error
+  //     });
+  // }, [shouldRenderNotice, shouldRenderQuestion, shouldRenderMotion]);
 
   useEffect(() => {
     const token = getAuthToken();
@@ -216,7 +216,7 @@ export const Layout = ({
 
   return (
     <>
-      <div className="container-fluid" style={{marginBottom:"50px"}}>
+      <div className="container-fluid" style={{ marginBottom: "50px" }}>
         {module && <Sidebar sidebarItems={sidebarItems} />}
         {module ? (
           <>
@@ -230,7 +230,7 @@ export const Layout = ({
               <div className="dashboard-content">
                 {shouldRenderNotice ? (
                   <>
-                    <div class="tab-right me-4 mt-1 mb-4">
+                    <div className="tab-right me-4 mt-1 mb-4">
                       {/* <button onClick={() => handleButtonClick("Motion")}>
                         Motion{count?.motion && <span>{count.motion}</span>}
                       </button>
@@ -312,11 +312,11 @@ export const Layout = ({
                         </button>
                       </Link>
                     </div>
-                    <div class="clearfix"></div>
+                    <div className="clearfix"></div>
                   </>
                 ) : shouldRenderMotion ? (
                   <>
-                    <div class="tab-right me-4 mt-1 mb-4">
+                    <div className="tab-right me-4 mt-1 mb-4">
                       <button onClick={() => handleButtonClick("Translations")}>
                         Translations
                         {count?.question && <span>{count?.question}</span>}
@@ -326,12 +326,12 @@ export const Layout = ({
                         {count?.motion && <span>{count.motion}</span>}
                       </button>
                     </div>
-                    <div class="clearfix"></div>
+                    <div className="clearfix"></div>
                   </>
                 ) : (
                   shouldRenderQuestion && (
                     <>
-                      <div class="tab-right me-4 mt-1 mb-4">
+                      <div className="tab-right me-4 mt-1 mb-4">
                         <button
                           onClick={() => handleButtonClick("Translations")}
                         >
@@ -347,7 +347,7 @@ export const Layout = ({
                           {count?.question && <span>{count.question}</span>}
                         </button>
                       </div>
-                      <div class="clearfix"></div>
+                      <div className="clearfix"></div>
                     </>
                   )
                 )}
@@ -365,7 +365,16 @@ export const Layout = ({
               />
               <div
                 className="dashboard-content"
-                style={{ marginTop: location.pathname === "/" ? 5 : location.pathname === "/efiling/dashboard" ? 83 : 90, marginBottom: location.pathname === "/efiling/dashboard" ? 0 : "65px"}}
+                style={{
+                  marginTop:
+                    location.pathname === "/"
+                      ? 5
+                      : location.pathname === "/efiling/dashboard"
+                        ? 83
+                        : 90,
+                  marginBottom:
+                    location.pathname === "/efiling/dashboard" ? 0 : "65px",
+                }}
               >
                 <ScrollButton />
                 <div className="container-fluid">{children}</div>
@@ -374,7 +383,7 @@ export const Layout = ({
           </>
         )}
       </div>
-      <div class="footer">© Copyright Senate Of Pakistan</div>
+      <div className="footer">© Copyright Senate Of Pakistan</div>
     </>
   );
 };

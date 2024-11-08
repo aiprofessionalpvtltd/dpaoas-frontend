@@ -613,7 +613,7 @@ function FileDetail() {
       return `
     <div style="display: flex; align-items: flex-start; margin-top: 10px;">
       <strong>${index + 1}.</strong>
-      <div style="flex-grow: 1; text-align: justify; text-indent: 50px; text-align: justify;">${
+      <div style="flex-grow: 1; text-align: justify; text-indent: 50px; text-align: justify; margin-left:10px;">${
         para?.description
       }</div>
     </div>
@@ -623,7 +623,7 @@ function FileDetail() {
 
   const paragraphsHtml = notingTabData
     ?.map((para, index) => {
-      console.log("para Title", para?.title);
+      console.log("para Title", para);
 
       return `
     
@@ -633,15 +633,15 @@ function FileDetail() {
       </div>
       
      
-      <p style="float: left; font-weight: bold; margin-bottom: 0px; text-align: center">
-        ${para?.createdByUser}
+      <p style="float: right; font-weight: bold; margin-bottom: 0px; text-align: center">
+        (${para?.createdByUser})
         <br />
         <span style="font-style: italic; font-weight: normal;">
-          (${para?.createdByUserDesignation})
+          ${para?.createdByUserDesignation}
         </span>
         <br />
         <span style="font-style: italic; font-weight: normal;">
-          (${moment(para?.createdAt).format("YYYY-MM-DD")})
+          ${moment(para?.createdAt).format("Do MMMM, YYYY")}
         </span>
       </p> <div style="clear:both"> </div>`;
     })
@@ -1143,10 +1143,7 @@ function FileDetail() {
                                 setSaved(true);
                               }}
                               // another condition if needed notingTabData?.length <= previousUserParaCount
-                              disabled={
-                                viewPage ||
-                                location?.state?.approved
-                              }
+                              disabled={viewPage || location?.state?.approved}
                             >
                               Save
                             </button>
@@ -1288,12 +1285,10 @@ function FileDetail() {
                                         <button
                                           className="btn btn-primary"
                                           style={{
-                                            marginTop: 60,  
+                                            marginTop: 60,
                                             width: "100px",
                                           }}
-                                          disabled={
-                                            location?.state?.view
-                                          }
+                                          disabled={location?.state?.view}
                                           // disabled={location?.state?.view || isContentEmpty()}
                                           onClick={() =>
                                             handleEditorChange(
@@ -1482,7 +1477,11 @@ function FileDetail() {
                     <a
                       onClick={() => {
                         // Check if the user is a "Assistant"
-                        if (UserData?.designation?.designationName?.includes("Assistant")) {
+                        if (
+                          UserData?.designation?.designationName?.includes(
+                            "Assistant"
+                          )
+                        ) {
                           // If a new paragraph has been added and not saved, show an error
                           if (
                             notingTabData?.length > previousUserParaCount &&
@@ -1516,7 +1515,9 @@ function FileDetail() {
                           display: location?.state?.view ? "none" : "block",
                         }}
                         disabled={
-                          UserData?.designation?.designationName?.includes("Assistant")
+                          UserData?.designation?.designationName?.includes(
+                            "Assistant"
+                          )
                             ? // Disable for "Assistant" only if a new paragraph was added but not saved
                               notingTabData?.length > previousUserParaCount &&
                               !saved

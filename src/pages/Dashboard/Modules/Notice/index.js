@@ -24,11 +24,7 @@ import LegislativeBillList from "./legislationBusiness/LegislativeBill";
 function NoticeDashboard() {
   const navigate = useNavigate();
   const [stats, setStats] = useState(null);
-
-  console.log("Stats", stats);
   const [selectedComponent, setSelectedComponent] = useState("Question");
-  const [todaySpeach, setTodaySpeach] = useState(0);
-  const [todayservices, setTodayservices] = useState(0);
 
   const [currentPage, setCurrentPage] = useState(0);
   const pageSize = 10; // Set your desired page size
@@ -53,37 +49,7 @@ function NoticeDashboard() {
 
   const today = new Date().toISOString().split("T")[0];
 
-  const getAllSpeachOnDemandAPi = async () => {
-    try {
-      const response = await getAllSpeachOnDemand(0, 200);
-      if (response?.success) {
-        const todaycount = response?.data?.speechOnDemand.filter(
-          (item) => item.createdAt.split("T")[0] === today
-        ).length;
-        setTodaySpeach(todaycount);
-      }
-    } catch (error) {
-      console.log(error?.response?.data?.message);
-    }
-  };
-
-  const getAllResarchServicesApi = async () => {
-    try {
-      const response = await getAllResarchServices(0, 200);
-      if (response?.success) {
-        const todaycount = response?.data?.researchServiceData?.filter(
-          (item) => item.createdAt.split("T")[0] === today
-        ).length;
-        setTodayservices(todaycount);
-      }
-    } catch (error) {
-      console.log(error?.response?.data?.message);
-    }
-  };
-
   useEffect(() => {
-    getAllSpeachOnDemandAPi();
-    getAllResarchServicesApi();
     GetAllNoticeStatsApi();
   }, []);
 
