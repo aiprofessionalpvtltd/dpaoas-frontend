@@ -26,12 +26,21 @@ function EfilingLeaveManagement() {
         getEmployeeData()
       },[])
       const onSubmit = async (values) => {
-        const changedValues = values.sessionMembers.filter(
-          (member, index) =>
-            member.attendanceStatus !== employeeData[index].attendanceStatus
-        );
-           console.log(changedValues);
-           
+        // const changedValues = values.sessionMembers.filter(
+        //   (member, index) =>
+        //     member.attendanceStatus !== employeeData[index].attendanceStatus
+        // );
+        const changedValues = values.sessionMembers
+        .filter((member, index) => 
+          member.attendanceStatus !== employeeData[index].attendanceStatus
+        )
+        .map(member => ({
+          fkBranchId: member.fkBranchId,
+          fkUserId: member.fkUserId,
+          attendanceStatus: member.attendanceStatus
+        }));
+      
+      console.log(changedValues);
         // const formattedData = changedValues.map((member) => ({
         //   fkMemberId: member.memberId,
         //   attendanceStatus: member.attendanceStatus,
