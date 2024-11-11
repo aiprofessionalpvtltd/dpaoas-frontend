@@ -6,6 +6,7 @@ export const EfilingAttendanceCard = ({
   memberParty,
   attendance,
   onChange,
+  view
 }) => {
   return (
     <>
@@ -26,6 +27,25 @@ export const EfilingAttendanceCard = ({
               Attendance
             </span>
             <span style={{ float: "right", width: "110px" }}>
+                {view ? (
+              <span
+                className="tag"
+                style={{
+                  float: "right",
+                  background:
+                   attendance === "PRESENT"
+                      ? "rgb(0, 128, 0)"
+                      : attendance === "LEAVE"
+                        ? "rgb(0, 0, 255)"
+                        : attendance === "ABSENT"
+                          ? "rgb(255, 0, 0)"
+                          : "",
+                  color: "#FFF",
+                }}
+              >
+                {attendance ? attendance : "PRESENT"}
+              </span>
+            ):(
               <select
                 className="form-select"
                 onChange={onChange} // Trigger parent onChange with index
@@ -35,6 +55,7 @@ export const EfilingAttendanceCard = ({
                 <option value="ABSENT">Absent</option>
                 <option value="LEAVE">Leave</option>
               </select>
+              )}
             </span>
             <div className="clearfix"></div>
           </div>
