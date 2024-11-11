@@ -65,14 +65,15 @@ function FileCases() {
   });
 
   const transformFilesCases = (apiData) => {
-    return apiData?.map((item, index) => {
+    return apiData?.map((item, index) => {      
       return {
         isEditable: item?.isEditable,
         caseId: item?.fkCaseId,
         caseNoteId: item?.caseNoteId,
         internalId: item?.fileData?.id,
         FileNo: item?.fileData?.fileNumber,
-        FileSubject: item?.fileData?.fileSubject,
+        // FileSubject: item?.fileData?.fileSubject,
+        CaseSubject: item?.caseSubject,
         initiatedBy: item?.createdByUser?.firstName,
         Sender:
           item?.fileRemarksData?.length > 0
