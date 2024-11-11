@@ -121,7 +121,7 @@ function FileDetail() {
   // ];
 
   const [notingTabData, setNotingTabsData] = useState([]);
-
+  
   const formik = useFormik({
     initialValues: {
       fileNumber: "",
@@ -184,6 +184,7 @@ function FileDetail() {
   const hendleAssiginFileCaseApi = async () => {
     try {
       const formData = new FormData();
+      formData.append("paraId", order == "ASC" ? notingTabData[notingTabData?.length - 1].id :  notingTabData[0]?.id)
       formData.append("submittedBy", UserData?.fkUserId);
       formData.append("assignedTo", modalInputValue?.assignedTo);
       formData.append("priority", modalInputValue?.priority);
@@ -192,6 +193,7 @@ function FileDetail() {
         "comment",
         modalInputValue?.CommentStatus ? "" : modalInputValue?.comment
       );
+
       const response = await assignFIleCase(
         location?.state?.fileId || fildetailsAqain?.fileId
           ? location?.state?.fileId || fildetailsAqain?.fileId

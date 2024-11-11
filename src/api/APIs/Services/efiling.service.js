@@ -1416,3 +1416,22 @@ export const DeleteParaAttachement = async (caseId,correspondenceID,paraID ) => 
     throw error;
   }
 };
+
+//Submit Leave APi
+export const leaveEfilingUser = async (data) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.post(`/cases/assign-to-higher-level`,data)
+   
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
