@@ -13,6 +13,8 @@ import { HalfMalf } from "react-spinner-animated";
 
 function EfilingLeaveManagement() {
   const userData = getUserData();
+  console.log(userData?.designation?.designationName);
+  
   const [employeeData, setEmployeeData] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -85,6 +87,7 @@ function EfilingLeaveManagement() {
             {employeeData.map((member, index) => (
               <div key={index} className="col">
                 <EfilingAttendanceCard
+                  view ={ userData?.designation?.designationName === "Director General" || userData?.designation?.designationName === "Joint Secretary" || userData?.designation?.designationName === "Section Officer"  ? false :true}
                   memberName={member?.firstName}
                   memberParty={`${member?.designations?.designationName}`}
                   attendance={member.attendanceStatus}
