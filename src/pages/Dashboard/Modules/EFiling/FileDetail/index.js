@@ -88,9 +88,10 @@ function FileDetail() {
   });
   const [filesData, setFilesData] = useState(null);
   const [FR, setFR] = useState(null);
-  const pageSize = 100;
+  const pageSize = 1000;
   const [order, setOrder] = useState("DESC");
   const [previousUserParaCount, setPreviousUserParaCount] = useState(0);
+  const [caseCreatedBy, setCaseCreatedBy] = useState("");
   const [saved, setSaved] = useState(false);
 
   const handleShow = () => setShowApproveModal(true);
@@ -146,6 +147,10 @@ function FileDetail() {
   });
 
   const UpdateEfilingApi = async () => {
+    console.log('====================================');
+    console.log(notingTabSubject, "================================");
+    console.log('====================================');
+    return  
     const data = {
       notingSubject: notingTabSubject,
       paragraphArray: notingTabData,
@@ -157,6 +162,21 @@ function FileDetail() {
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
+    }
+  };
+
+  const UpdateNotingParaAtAssign = async (updatedNoting) => {
+    const data = {
+      notingSubject: notingTabSubject,
+      paragraphArray: updatedNoting,
+    };
+    try {
+      const response = await UpdateFIleCase(filesData?.caseNoteId, data);
+      if (response?.success) {
+        // showSuccessMessage(response?.message);
+      }
+    } catch (error) {
+      // showErrorMessage(error?.response?.data?.message);
     }
   };
 
@@ -183,6 +203,20 @@ function FileDetail() {
 
   const hendleAssiginFileCaseApi = async () => {
     try {
+
+      // Update the specific paragraph's assignedTo value
+    const updatedTabs = [...notingTabData]; // Create a copy of the array to ensure immutability
+    updatedTabs[order == "ASC" ? notingTabData.length - 1 : 0] = {
+      ...updatedTabs[order == "ASC" ? notingTabData.length - 1 : 0], // Spread the existing tab data
+      assignedTo: modalInputValue?.assignedTo, // Update only the assignedTo field for the specific paragraph
+    };
+
+    console.log('====================================');
+    console.log(updatedTabs);
+    console.log('====================================');
+
+    UpdateNotingParaAtAssign(updatedTabs)
+
       const formData = new FormData();
       formData.append("paraId", order == "ASC" ? notingTabData[notingTabData?.length - 1].id :  notingTabData[0]?.id)
       formData.append("submittedBy", UserData?.fkUserId);
@@ -272,6 +306,7 @@ function FileDetail() {
                 description: content,
                 references: [],
                 createdBy: UserData?.fkUserId,
+                assignedTo: null
               },
             ]
           : []),
@@ -283,6 +318,7 @@ function FileDetail() {
                 description: content,
                 references: [],
                 createdBy: UserData?.fkUserId,
+                assignedTo: null
               },
             ]
           : []),
@@ -464,6 +500,7 @@ function FileDetail() {
       if (response?.success) {
         setRemarksData(response?.data?.cases?.casesRemarks);
         setFilesData(response?.data);
+        setCaseCreatedBy(response?.data?.caseCreatedBy);
         const FRSelection = {
           frId: response?.data?.cases?.freshReceipts?.id,
           frSubject: response?.data?.cases?.freshReceipts?.frSubject,
@@ -513,7 +550,7 @@ function FileDetail() {
     setNotingTabSubject(filesData?.notingSubject);
     setNotingTabsData(filesData?.paragraphArray);
     setPreviousUserParaCount(filesData?.paragraphArray?.length);
-  }, [filesData]);
+  }, [filesData]);  
 
   const images =
     FR?.freshReceiptsAttachments?.map((item) => {
@@ -621,29 +658,29 @@ function FileDetail() {
     })
     .join("");
 
-  const paragraphsHtml = notingTabData
+    const paragraphsHtml = notingTabData
     ?.map((para, index) => {
-      console.log("para Title", para);
-
       return `
-    
-        
-      <div style="margin-top: 10px; margin-bottom: 10px; text-align: justify;">
+      <div style="margin-top: 10px; margin-bottom: 10px; text-align: justify; color: black;">
         ${para?.description}
       </div>
-      
-     
-      <p style="float: right; font-weight: bold; margin-bottom: 0px; text-align: center">
+      <p style="float: right; margin-bottom: 0px; text-align: center; width: 40%;">
         (${para?.createdByUser})
         <br />
-        <span style="font-style: italic; font-weight: normal;">
-          ${para?.createdByUserDesignation}
+        <span style="font-weight: normal;">
+        ${`${para.createdByUserDesignation} (${para.createdByUserBranch})`}
         </span>
         <br />
-        <span style="font-style: italic; font-weight: normal;">
+        <span style="font-weight: normal;">
           ${moment(para?.createdAt).format("Do MMMM, YYYY")}
         </span>
-      </p> <div style="clear:both"> </div>`;
+      </p>
+       
+<p style="float: left; margin-top: 60px; text-align: center; color: black;">
+  ${para?.assignedToUser ? `${para.assignedToUserDesignation} (${para.assignedToUserBranch})` : ""}
+</p>
+      
+       <div style="clear:both"> </div>`;
     })
     .join("");
 
@@ -655,16 +692,16 @@ function FileDetail() {
         <!-- Border Column Content -->
       </div>
       <div className="col-10">
-  <div style="text-align: center; line-height: 1.5;">
-    <h4>SENATE SECRETARIAT</h4>
-    <h6>(${UserData?.branch?.branchName} Branch)</h6>
+  <div style="text-align: center; line-height: 1.5; color: black;">
+    <h4 style="color: black;">SENATE SECRETARIAT</h4>
+    <h6 style="color: black;">(${UserData?.branch?.branchName} Branch)</h6>
   </div>
   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; line-height: 1.5;">
     <div></div>
-    <p><strong>${filesData?.cases?.files?.fileNumber}</strong></p>
+    <p style="color: black;"><strong>${filesData?.cases?.files?.fileNumber}</strong></p>
   </div>
-  <p style="line-height: 1.5;"><strong>Subject: ${notingTabSubject}</strong></p>
-  <div style="line-height: 1.5;">
+  <p style="line-height: 1.5; color: black;"><strong>Subject: ${notingTabSubject}</strong></p>
+  <div style="line-height: 1.5; color: black">
     ${paragraphsHtml}
   </div>
 </div>
@@ -1514,6 +1551,7 @@ function FileDetail() {
                         style={{
                           display: location?.state?.view ? "none" : "block",
                         }}
+                        /*
                         disabled={
                           UserData?.designation?.designationName?.includes(
                             "Assistant"
@@ -1524,6 +1562,13 @@ function FileDetail() {
                             : // Disable for other users if paragraph count is not valid or content is not saved
                               notingTabData?.length <= previousUserParaCount ||
                               !saved
+                        }
+                        */
+                        disabled={
+                          !(caseCreatedBy === UserData?.fkUserId) && (
+                            notingTabData?.length <= previousUserParaCount || 
+                            !saved
+                          )
                         }
                       >
                         Proceed

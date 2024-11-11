@@ -397,7 +397,7 @@ function HRMAddEditEmployee() {
                       }
                       value={formik.values.password}
                       onChange={formik.handleChange}
-                      readOnly={location?.state?.id ? true : false}
+                      // readOnly={location?.state?.id ? true : false}
                       onBlur={formik.handleBlur}
                     />
                      {formik.touched.password &&

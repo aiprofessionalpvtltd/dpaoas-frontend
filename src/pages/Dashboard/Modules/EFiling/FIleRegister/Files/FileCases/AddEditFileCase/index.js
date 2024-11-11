@@ -59,7 +59,7 @@ function AddEditFileCase() {
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
   const [correspondenceTypesData, setCorrespondenceTypesData] = useState([]);
-  const pageSize = 100; // Set your desired page size
+  const pageSize = 1000; // Set your desired page size
   const [showModal, setShowModal] = useState(false);
   const [attachedFiles, setAttachedFiles] = useState([]);
   const [globalFRId, setGlobalFRId] = useState();
@@ -93,6 +93,7 @@ function AddEditFileCase() {
           description: content,
           references: [],
           createdBy: UserData && UserData?.fkUserId,
+          assignedTo: null
         },
       ]);
       setNotingData("");
