@@ -8,8 +8,9 @@ import { getUserData } from "../../../../../api/Auth";
 import { getHLEmployee } from "../../../../../api/APIs/Services/organizational.service";
 import { EfilingAttendanceCard } from "../../../../../components/CustomComponents/EfilingAttendanceCard";
 import { leaveEfilingUser } from "../../../../../api/APIs/Services/efiling.service";
-import { showSuccessMessage } from "../../../../../utils/ToastAlert";
+import { showErrorMessage, showSuccessMessage } from "../../../../../utils/ToastAlert";
 import { HalfMalf } from "react-spinner-animated";
+import { ToastContainer } from "react-toastify";
 
 function EfilingLeaveManagement() {
   const userData = getUserData();
@@ -40,15 +41,16 @@ function EfilingLeaveManagement() {
   // Update attendance status for a specific employee
   const handleAttendanceChange = async (e, index) => {
     setLoading(true);
-    const updatedEmployees = employeeData.find((member, i) =>
-      i === index ? { ...member, attendanceStatus: e.target.value } : member
-    );
-    const payload = {
-      attendanceEnum: e.target.value,
-      branchId: updatedEmployees.fkBranchId,
-      userId: updatedEmployees.fkUserId,
-    };
-    console.log(payload);
+    const updatedMember = employeeData.find((member, i) => i === index);
+
+      const payload = {
+        attendanceEnum: e.target.value,
+        branchId: updatedMember?.fkBranchId,
+        userId: updatedMember?.fkUserId,
+      };
+      // Update the member's attendance status locally if needed
+      updatedMember.users = { ...updatedMember.users, attendance_status: e.target.value };
+    
     try {
       const response = await leaveEfilingUser(payload);
       if (response?.success) {
@@ -56,7 +58,7 @@ function EfilingLeaveManagement() {
         getEmployeeData();
       }
     } catch (error) {
-      console.log(error);
+      showErrorMessage(error.response.data.message)
     } finally {
       setLoading(false);
     }
@@ -72,6 +74,7 @@ function EfilingLeaveManagement() {
           : EfilingSideBarBranchItem
       }
     >
+      <ToastContainer />
       {loading && (
         <HalfMalf
           text={"Loading data..."}
@@ -87,10 +90,10 @@ function EfilingLeaveManagement() {
             {employeeData.map((member, index) => (
               <div key={index} className="col">
                 <EfilingAttendanceCard
-                  view ={ userData?.designation?.designationName === "Director General" || userData?.designation?.designationName === "Joint Secretary" || userData?.designation?.designationName === "Section Officer"  ? false :true}
+                  view ={userData?.designation?.designationName === "Director General" || userData?.designation?.designationName === "Joint Secretary" || userData?.designation?.designationName === "Section Officer"  ? false :true}
                   memberName={member?.firstName}
                   memberParty={`${member?.designations?.designationName}`}
-                  attendance={member.attendanceStatus}
+                  attendance={member?.users?.attendance_status}
                   onChange={(e) => handleAttendanceChange(e, index)}
                 />
               </div>

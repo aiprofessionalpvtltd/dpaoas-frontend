@@ -262,7 +262,7 @@ function FileDetail() {
       const response = await getHLEmployee(UserData?.fkUserId);
       if (response?.success) {
         const filteredData = response?.data?.filter(
-          (item) => item?.userName !== UserData?.userName
+          (item) => item?.userName !== UserData?.userName && item?.users?.attendance_status == "PRESENT"
         );
         setEmployeeData(filteredData);
       }
