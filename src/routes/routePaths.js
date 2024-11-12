@@ -320,6 +320,7 @@ import AddEditDriverLicense from "../pages/Dashboard/Modules/Transport/VehicleDr
 import AddEditMedicalRepo from "../pages/Dashboard/Modules/Transport/VehicleDrivers/MedicalReport/AddEditMedicalRep/index.js";
 import AddEditGovernmentBills from "../pages/Dashboard/Modules/Notice/legislationBusiness/GovernmentBill/AddEditGovernmentBill/index.js";
 import UserManulas from "../pages/Dashboard/Modules/EFiling/UserManuals/index.js";
+import EfilingLeaveManagement from "../pages/Dashboard/Modules/EFiling/AddLeave/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -886,6 +887,7 @@ export const ProtectedRoutes = [
     path: "/efiling/document/user-manual",
     element: <UserManulas />,
   },
+  { path: "/efiling/dashboard/add-leave", element: <EfilingLeaveManagement /> },
 
   // Legislation Routes Start
 

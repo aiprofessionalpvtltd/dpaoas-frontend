@@ -821,6 +821,11 @@ export const EfilingSideBarItem = [
       },
     ],
   },
+  {
+    itemName: "Leave Management",
+    link: "/efiling/dashboard/add-leave",
+    icon: faHome,
+  },
 ];
 
 export const EfilingSideBarBranchItem = [
@@ -993,6 +998,11 @@ export const EfilingSideBarBranchItem = [
       //   icon: faClipboardList,
       // },
     ],
+  },
+  {
+    itemName: "Leave Management",
+    link: "/efiling/dashboard/add-leave",
+    icon: faHome,
   },
 ];
 
