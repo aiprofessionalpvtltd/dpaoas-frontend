@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import Header from "../../../../../../components/Header";
 import { ToastContainer } from "react-toastify";
@@ -28,6 +28,7 @@ import { Button, Modal, Spinner } from "react-bootstrap";
 import { imagesUrl } from "../../../../../../api/APIs";
 import { Editor } from "../../../../../../components/CustomComponents/Editor";
 import WebviewEditor from "../../../../../../components/CustomComponents/Editor/WebviewEditor";
+import { AuthContext } from "../../../../../../api/AuthContext";
 const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
   return (
     <Modal size="lg" show={isOpen} onHide={toggleModal} centered>
@@ -60,6 +61,7 @@ function FRDetail() {
     CommentStatus: "",
     comment: "",
   });
+  const { handleNotificationAssignFRs } = useContext(AuthContext);
 
   const navigate = useNavigate();
 
@@ -149,7 +151,7 @@ function FRDetail() {
   };
 
   useEffect(() => {
-    deleteNotification();
+    handleNotificationAssignFRs(location?.state?.notificationId);
     if (receptId) {
       getFreashRecepitByIdApi();
       getEmployeeData();

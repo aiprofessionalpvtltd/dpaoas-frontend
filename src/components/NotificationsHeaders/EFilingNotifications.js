@@ -10,16 +10,23 @@ import { AuthContext } from "../../api/AuthContext";
 
 export const EFilingNotifications = (notificationType) => {
   const [count, setCount] = useState(null);
- const  navigate = useNavigate()
- const {setFileDetail} = useContext(AuthContext)
- const location = useLocation()
- const [key, setKey] = React.useState(Date.now());
+  const navigate = useNavigate();
+  const {
+    setFileDetail,
+    notificationCaseData,
+    notificationFRsData,
+    notificationApprovedCaseData,
+  } = useContext(AuthContext);
+  const location = useLocation();
+  const [key, setKey] = React.useState(Date.now());
 
   const [modal, setModal] = useState(false);
   const [notificationData, setNotificationData] = useState([]);
   const [activeNotificationType, setActiveNotificationType] = useState(null);
   const notificationRef = useRef();
   const UserData = getUserData();
+  console.log("Notification Case Data in Efileing", notificationCaseData);
+  // Connect to the server - replace URL with your server's address
 
   const getAllQuestionsApi = async () => {
     try {
@@ -51,7 +58,7 @@ export const EFilingNotifications = (notificationType) => {
     }
   };
   const handleClick = (item) => {
-    console.log("location.pathname  ",location.pathname);
+    console.log("location.pathname  ", location.pathname);
     if (location.pathname === "/efiling/dashboard/fileDetail") {
       console.log("sisisiis");
       navigate("/efiling/dashboard/fileDetail", {
@@ -63,15 +70,17 @@ export const EFilingNotifications = (notificationType) => {
         },
       });
       setKey(Date.now());
-      setModal(false)
+      setModal(false);
     }
-    
   };
   useEffect(() => {
-    if (location.pathname === "/efiling/dashboard/fileDetail" && location.state) {
+    if (
+      location.pathname === "/efiling/dashboard/fileDetail" &&
+      location.state
+    ) {
       // Handle the state update or any other logic here
       console.log("Updated state:", location.state);
-      setFileDetail(location.state)
+      setFileDetail(location.state);
     }
   }, [location, key]);
 

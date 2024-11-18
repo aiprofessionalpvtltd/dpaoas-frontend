@@ -11,6 +11,7 @@ import {
   ApprovedFIleCase,
   DeleteCorrApi,
   DeleteNotificationById,
+  DeleteNotificationByIdAPI,
   DeleteParaAttachement,
   UpdateFIleCase,
   assignFIleCase,
@@ -69,7 +70,8 @@ function FileDetail() {
   const [fkfileId, setFKFileId] = useState(null);
   const [employeeData, setEmployeeData] = useState([]);
   const [viewPage, setViewPage] = useState(location?.state?.view);
-  const { fileIdINRegister } = useContext(AuthContext);
+  const { fileIdINRegister, handleNotificationAssignCase } =
+    useContext(AuthContext);
   const [caseId, setcaseId] = useState(
     location?.state?.id || fildetailsAqain?.id
   );
@@ -122,7 +124,7 @@ function FileDetail() {
   // ];
 
   const [notingTabData, setNotingTabsData] = useState([]);
-  
+
   const formik = useFormik({
     initialValues: {
       fileNumber: "",
@@ -147,10 +149,10 @@ function FileDetail() {
   });
 
   const UpdateEfilingApi = async () => {
-    console.log('====================================');
+    console.log("====================================");
     console.log(notingTabSubject, "================================");
-    console.log('====================================');
-    return  
+    console.log("====================================");
+    return;
     const data = {
       notingSubject: notingTabSubject,
       paragraphArray: notingTabData,
@@ -203,22 +205,26 @@ function FileDetail() {
 
   const hendleAssiginFileCaseApi = async () => {
     try {
-
       // Update the specific paragraph's assignedTo value
-    const updatedTabs = [...notingTabData]; // Create a copy of the array to ensure immutability
-    updatedTabs[order == "ASC" ? notingTabData.length - 1 : 0] = {
-      ...updatedTabs[order == "ASC" ? notingTabData.length - 1 : 0], // Spread the existing tab data
-      assignedTo: modalInputValue?.assignedTo, // Update only the assignedTo field for the specific paragraph
-    };
+      const updatedTabs = [...notingTabData]; // Create a copy of the array to ensure immutability
+      updatedTabs[order == "ASC" ? notingTabData.length - 1 : 0] = {
+        ...updatedTabs[order == "ASC" ? notingTabData.length - 1 : 0], // Spread the existing tab data
+        assignedTo: modalInputValue?.assignedTo, // Update only the assignedTo field for the specific paragraph
+      };
 
-    console.log('====================================');
-    console.log(updatedTabs);
-    console.log('====================================');
+      console.log("====================================");
+      console.log(updatedTabs);
+      console.log("====================================");
 
-    UpdateNotingParaAtAssign(updatedTabs)
+      UpdateNotingParaAtAssign(updatedTabs);
 
       const formData = new FormData();
-      formData.append("paraId", order == "ASC" ? notingTabData[notingTabData?.length - 1].id :  notingTabData[0]?.id)
+      formData.append(
+        "paraId",
+        order == "ASC"
+          ? notingTabData[notingTabData?.length - 1].id
+          : notingTabData[0]?.id
+      );
       formData.append("submittedBy", UserData?.fkUserId);
       formData.append("assignedTo", modalInputValue?.assignedTo);
       formData.append("priority", modalInputValue?.priority);
@@ -262,7 +268,9 @@ function FileDetail() {
       const response = await getHLEmployee(UserData?.fkUserId);
       if (response?.success) {
         const filteredData = response?.data?.filter(
-          (item) => item?.userName !== UserData?.userName && item?.users?.attendance_status == "PRESENT"
+          (item) =>
+            item?.userName !== UserData?.userName &&
+            item?.users?.attendance_status == "PRESENT"
         );
         setEmployeeData(filteredData);
       }
@@ -306,7 +314,7 @@ function FileDetail() {
                 description: content,
                 references: [],
                 createdBy: UserData?.fkUserId,
-                assignedTo: null
+                assignedTo: null,
               },
             ]
           : []),
@@ -318,7 +326,7 @@ function FileDetail() {
                 description: content,
                 references: [],
                 createdBy: UserData?.fkUserId,
-                assignedTo: null
+                assignedTo: null,
               },
             ]
           : []),
@@ -550,7 +558,7 @@ function FileDetail() {
     setNotingTabSubject(filesData?.notingSubject);
     setNotingTabsData(filesData?.paragraphArray);
     setPreviousUserParaCount(filesData?.paragraphArray?.length);
-  }, [filesData]);  
+  }, [filesData]);
 
   const images =
     FR?.freshReceiptsAttachments?.map((item) => {
@@ -616,11 +624,13 @@ function FileDetail() {
     }
   }, [order]);
 
+  console.log("locat", location?.state?.id);
+
   const deleteNotification = async (item) => {
     try {
-      const response = await DeleteNotificationById(
-        location.state?.notificationId,
-        UserData?.fkUserId
+      const response = await DeleteNotificationByIdAPI(
+        location.state?.notificationId
+        // UserData?.fkUserId
       );
     } catch (error) {
       console.log(error.response.data.message);
@@ -628,6 +638,7 @@ function FileDetail() {
   };
 
   useEffect(() => {
+    // handleNotificationAssignCase(location.state?.notificationId);
     deleteNotification();
   }, []);
 
@@ -658,7 +669,7 @@ function FileDetail() {
     })
     .join("");
 
-    const paragraphsHtml = notingTabData
+  const paragraphsHtml = notingTabData
     ?.map((para, index) => {
       return `
       <div style="margin-top: 10px; margin-bottom: 10px; text-align: justify; color: black;">
@@ -677,7 +688,11 @@ function FileDetail() {
       </p>
        
 <p style="float: left; margin-top: 60px; text-align: center; color: black;">
-  ${para?.assignedToUser ? `${para.assignedToUserDesignation} (${para.assignedToUserBranch})` : ""}
+  ${
+    para?.assignedToUser
+      ? `${para.assignedToUserDesignation} (${para.assignedToUserBranch})`
+      : ""
+  }
 </p>
       
        <div style="clear:both"> </div>`;
@@ -1565,10 +1580,9 @@ function FileDetail() {
                         }
                         */
                         disabled={
-                          !(caseCreatedBy === UserData?.fkUserId) && (
-                            notingTabData?.length <= previousUserParaCount || 
-                            !saved
-                          )
+                          !(caseCreatedBy === UserData?.fkUserId) &&
+                          (notingTabData?.length <= previousUserParaCount ||
+                            !saved)
                         }
                       >
                         Proceed
