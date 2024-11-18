@@ -1,5 +1,8 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { getEfilingNotifications } from "../../api/APIs/Services/efiling.service";
+import {
+  getEfilingNotifications,
+  getNotificationsApprovedCasesByUserId,
+} from "../../api/APIs/Services/efiling.service";
 import { getUserData } from "../../api/Auth";
 import moment from "moment";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -10,7 +13,7 @@ import { AuthContext } from "../../api/AuthContext";
 
 export const EFilingNotificationApprovedCases = (notificationType) => {
   const navigate = useNavigate();
-  const { setFileDetail, notificationCaseData } = useContext(AuthContext);
+  const { notificationApprovedCaseData } = useContext(AuthContext);
   const location = useLocation();
   const [key, setKey] = React.useState(Date.now());
 
@@ -26,16 +29,19 @@ export const EFilingNotificationApprovedCases = (notificationType) => {
 
   // Load notification cases from localStorage
   useEffect(() => {
-    const storedNotifications = localStorage.getItem(
-      "notificationApprovedCaesData"
-    );
-    if (storedNotifications) {
-      const parsedNotifications = JSON.parse(storedNotifications);
-      console.log("parsedNotifications", parsedNotifications);
-      setNotificationApprovedLocalCaseData(parsedNotifications);
-      setCount(parsedNotifications?.length ? parsedNotifications?.length : "0");
-    }
-  }, [notificationCaseData]);
+    // const storedNotifications = localStorage.getItem("notificationCaseData");
+    const fetchData = async () => {
+      const res = await getNotificationsApprovedCasesByUserId(
+        UserData?.fkUserId
+      );
+      if (res?.success) {
+        setNotificationApprovedLocalCaseData(res?.data);
+        setCount(res?.data?.length ? res?.data?.length : "0");
+      }
+    };
+
+    fetchData();
+  }, [notificationApprovedCaseData]);
   console.log(
     "Notification Case Data in Efileing",
     notificationApprovedLocalCaseData
@@ -88,8 +94,8 @@ export const EFilingNotificationApprovedCases = (notificationType) => {
               to={"/efiling/dashboard/fileDetail"}
               state={{
                 view: false,
-                fileId: item?.data?.fkFileId,
-                id: item?.data?.fkCaseId,
+                fileId: item?.data[0]?.fkFileId,
+                id: item?.data[0]?.fkCaseId,
                 notificationId: item?.notificationId,
               }}
               style={{ color: "black" }}
@@ -99,25 +105,25 @@ export const EFilingNotificationApprovedCases = (notificationType) => {
               <span>
                 <span
                   className={`mb-2 ${
-                    item?.data?.priority === "Routine"
+                    item?.data[0]?.priority === "Routine"
                       ? "label-pending"
-                      : item?.data?.priority === "Immediate"
+                      : item?.data[0]?.priority === "Immediate"
                         ? "label-inprogress"
-                        : item?.data?.priority === "Confidential"
+                        : item?.data[0]?.priority === "Confidential"
                           ? "label-danger"
                           : "label-default"
                   }`}
                 >
-                  {item?.data?.priority}
+                  {item?.data[0]?.priority}
                 </span>
                 <br />
                 {item?.message}
                 <br />
                 <span className="text-sm">
-                  <i>{moment(item?.data?.createdAt).format("DD/MM/YYYY")}</i>
+                  <i>{moment(item?.data[0]?.createdAt).format("DD/MM/YYYY")}</i>
                 </span>
                 <span className="float-end text-sm">
-                  {new Date(item?.data?.createdAt).toLocaleTimeString([], {
+                  {new Date(item?.data[0]?.createdAt).toLocaleTimeString([], {
                     hour: "2-digit",
                     minute: "2-digit",
                   })}

@@ -1,10 +1,13 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { getEfilingNotifications } from "../../api/APIs/Services/efiling.service";
+import {
+  getEfilingNotifications,
+  getNotificationsFRsByUserId,
+} from "../../api/APIs/Services/efiling.service";
 import { getUserData } from "../../api/Auth";
 import moment from "moment";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ListGroup } from "react-bootstrap";
-import { Badge } from "@mui/material";
+import { Badge, Tooltip } from "@mui/material";
 import MarkUnreadChatAltIcon from "@mui/icons-material/MarkUnreadChatAlt";
 import { AuthContext } from "../../api/AuthContext";
 
@@ -23,13 +26,15 @@ export const EFilingNotificationAssignFrs = (notificationType) => {
 
   // Load notification cases from localStorage
   useEffect(() => {
-    const storedNotifications = localStorage.getItem("notificationFRsData");
-    if (storedNotifications) {
-      const parsedNotifications = JSON.parse(storedNotifications);
-      console.log("parsedNotifications", parsedNotifications);
-      setNotificationFrsLocalData(parsedNotifications);
-      setCount(parsedNotifications?.length ? parsedNotifications?.length : "0");
-    }
+    const fetchData = async () => {
+      const res = await getNotificationsFRsByUserId(UserData?.fkUserId);
+      if (res?.success) {
+        setNotificationFrsLocalData(res?.data);
+        setCount(res?.data?.length ? res?.data?.length : "0");
+      }
+    };
+
+    fetchData();
   }, [notificationFRsData]);
   console.log("Notification Case Data in Efileing", notifcationFrsLocalData);
 
@@ -77,7 +82,7 @@ export const EFilingNotificationAssignFrs = (notificationType) => {
               to={"/efiling/dashboard/fresh-receipt/frdetail"}
               state={{
                 view: false,
-                id: item?.data?.fkFreshReceiptId,
+                id: item?.data[0]?.fkFreshReceiptId,
                 notificationId: item.notificationId,
               }}
               style={{ color: "black" }}
@@ -87,25 +92,25 @@ export const EFilingNotificationAssignFrs = (notificationType) => {
               <span>
                 <span
                   className={`mb-2 ${
-                    item?.data?.priority === "Routine"
+                    item?.data[0]?.priority === "Routine"
                       ? "label-pending"
-                      : item?.data?.priority === "Immediate"
+                      : item?.data[0]?.priority === "Immediate"
                         ? "label-inprogress"
-                        : item?.data?.priority === "Confidential"
+                        : item?.data[0]?.priority === "Confidential"
                           ? "label-danger"
                           : "label-default"
                   }`}
                 >
-                  {item?.data?.priority}
+                  {item?.data[0]?.priority}
                 </span>
                 <br />
                 {item?.message}
                 <br />
                 <span className="text-sm">
-                  <i>{moment(item?.data?.createdAt).format("DD/MM/YYYY")}</i>
+                  <i>{moment(item?.data[0]?.createdAt).format("DD/MM/YYYY")}</i>
                 </span>
                 <span className="float-end text-sm">
-                  {new Date(item?.data?.createdAt).toLocaleTimeString([], {
+                  {new Date(item?.data[0]?.createdAt).toLocaleTimeString([], {
                     hour: "2-digit",
                     minute: "2-digit",
                   })}
@@ -116,7 +121,9 @@ export const EFilingNotificationAssignFrs = (notificationType) => {
         ))
       ) : (
         <span className="text-sm d-block text-center">
-          No FRs Notifications Found!
+          {notifcationFrsLocalData && notifcationFrsLocalData?.length > 0
+            ? "Assigned FRs Notification"
+            : " No Assigned FRs Notifications found!"}
         </span>
       )}
     </div>
@@ -166,15 +173,16 @@ export const EFilingNotificationAssignFrs = (notificationType) => {
   return (
     <>
       {modal && notificationModal()}
-
-      <Badge
-        badgeContent={count}
-        color="primary"
-        onClick={() => handleButtonClick("Notifications")}
-        style={{ marginRight: 20, cursor: "pointer" }}
-      >
-        <MarkUnreadChatAltIcon color="red" />
-      </Badge>
+      <Tooltip title="Assigned FRs Notifications">
+        <Badge
+          badgeContent={count}
+          color="primary"
+          onClick={() => handleButtonClick("Notifications")}
+          style={{ marginRight: 20, cursor: "pointer" }}
+        >
+          <MarkUnreadChatAltIcon color="red" />
+        </Badge>
+      </Tooltip>
     </>
   );
 };

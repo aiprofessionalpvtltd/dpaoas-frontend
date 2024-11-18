@@ -1461,7 +1461,7 @@ export const createNotificationAPI = async (data, userId) => {
     // });
     return response?.data;
   } catch (error) {
-    console.error("Error fetching API endpoint:", error);
+    console.log("Error fetching API endpoint:", error);
     throw error;
   }
 };
@@ -1481,7 +1481,7 @@ export const getNotificationsByUserId = async (id) => {
     // });
     return response?.data;
   } catch (error) {
-    console.error("Error fetching API endpoint:", error);
+    console.log("Error fetching API endpoint:", error);
     throw error;
   }
 };
@@ -1500,7 +1500,133 @@ export const DeleteNotificationByIdAPI = async (notificationId) => {
     // });
     return response?.data;
   } catch (error) {
-    console.error("Error fetching API endpoint:", error);
+    console.log("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+// Create FRs Notification
+export const createNotificationFRsAPI = async (data, userId) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.post(
+      `/frNotifications/create/${userId}`,
+      data
+    );
+
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.log("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+// Get Notifications of FRs By User ID
+export const getNotificationsFRsByUserId = async (id) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.get(
+      `/frNotifications/getByUserId/${id}`
+    );
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.log("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+// Delete FRs Notification
+export const DeleteNotificationFrsByIdAPI = async (notificationId) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.delete(
+      `/frNotifications/deleteById/${notificationId}`
+    );
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.log("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+// Create Approved Cases Notification
+export const createNotificationApprovedCasesAPI = async (data, userId) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.post(
+      `/approvedCaseNotifications/create/${userId}`,
+      data
+    );
+
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.log("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+// Get Notifications of Approved Cases By User ID
+export const getNotificationsApprovedCasesByUserId = async (id) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.get(
+      `/approvedCaseNotifications/getByUserId/${id}`
+    );
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.log("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+// Delete Approved Notification
+export const DeleteNotificationApprovedCasesByIdAPI = async (
+  notificationId
+) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.delete(
+      `/approvedCaseNotifications/deleteById/${notificationId}`
+    );
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.log("Error fetching API endpoint:", error);
     throw error;
   }
 };

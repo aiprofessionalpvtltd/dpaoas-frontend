@@ -9,9 +9,11 @@ import ImageGallery from "react-image-gallery";
 import "react-image-gallery/styles/css/image-gallery.css";
 import {
   DeleteNotificationById,
+  DeleteNotificationFrsByIdAPI,
   assiginFR,
   assignFR,
   getFreshReceiptById,
+  getNotificationsFRsByUserId,
 } from "../../../../../../api/APIs/Services/efiling.service";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt, faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -138,20 +140,21 @@ function FRDetail() {
     }
   };
 
-  const deleteNotification = async (item) => {
+  const deleteFRsNotification = async (item) => {
     try {
-      const response = await DeleteNotificationById(
-        location.state?.notificationId,
-        UserData?.fkUserId
+      const response = await DeleteNotificationFrsByIdAPI(
+        location.state?.notificationId
       );
-      console.log("Notification deleted", response?.data);
+      if (response?.success) {
+        getNotificationsFRsByUserId(UserData?.fkUserId);
+      }
     } catch (error) {
       console.log(error.response.data.message);
     }
   };
-
   useEffect(() => {
-    handleNotificationAssignFRs(location?.state?.notificationId);
+    deleteFRsNotification(location?.state?.notificationId);
+
     if (receptId) {
       getFreashRecepitByIdApi();
       getEmployeeData();

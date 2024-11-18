@@ -17,6 +17,7 @@ import {
   assignFIleCase,
   getAllCorrespondence,
   getCaseDetailByID,
+  getNotificationsByUserId,
 } from "../../../../../api/APIs/Services/efiling.service";
 import { ToastContainer } from "react-toastify";
 import {
@@ -632,6 +633,9 @@ function FileDetail() {
         location.state?.notificationId
         // UserData?.fkUserId
       );
+      if (response?.success) {
+        getNotificationsByUserId(UserData?.fkUserId);
+      }
     } catch (error) {
       console.log(error.response.data.message);
     }

@@ -14,7 +14,11 @@ import { loginUser } from "../APIs/Services/basicAuth.service";
 import { getBranches } from "../APIs/Services/Branches.services";
 import { io } from "socket.io-client";
 import notificationSound from "./../../assets/notification.mp3";
-import { createNotificationAPI } from "../APIs/Services/efiling.service";
+import {
+  createNotificationAPI,
+  createNotificationApprovedCasesAPI,
+  createNotificationFRsAPI,
+} from "../APIs/Services/efiling.service";
 const socket = io("http://10.10.40.220:5152");
 // const socket = io("http://172.16.170.8:2424");
 
@@ -228,10 +232,6 @@ export const AuthProvider = ({ children }) => {
         // Update the notification data in state and local storage
         setNotificationCaseData((prev) => {
           const updatedNotifications = [...prev, data];
-          // localStorage.setItem(
-          //   "notificationCaseData",
-          //   JSON.stringify(updatedNotifications)
-          // );
           return updatedNotifications;
         });
 
@@ -241,53 +241,77 @@ export const AuthProvider = ({ children }) => {
         console.error("Failed to create notification:", error);
       }
     });
-    // socket.on(`notificationCases:${UserData?.fkUserId}`, (data) => {
-    //    createNotificationAPI(data)
-    //   setNotificationCaseData((prev) => {
+
+    // Assign FRs Notification
+
+    socket.on(`notificationFRs:${UserData?.fkUserId}`, async (data) => {
+      console.log("data through socket", data);
+      try {
+        // Call the API with received data
+        await createNotificationFRsAPI(data, UserData?.fkUserId);
+
+        // Update the notification data in state and local storage
+        setNotificationFRsData((prev) => {
+          const updatedNotifications = [...prev, data];
+          return updatedNotifications;
+        });
+
+        // Optional: Play notification sound
+        playSound();
+      } catch (error) {
+        console.error("Failed to create notification:", error);
+      }
+    });
+
+    // socket.on(`notificationFRs:${UserData?.fkUserId}`, (data) => {
+    //   setNotificationFRsData((prev) => {
     //     const updatedNotifications = [...prev, data];
     //     localStorage.setItem(
-    //       "notificationCaseData",
+    //       "notificationFRsData",
     //       JSON.stringify(updatedNotifications)
     //     );
     //     return updatedNotifications;
     //   });
-    //   playSound();
-    // });
-
-    // Assign FRs Notification
-    socket.on(`notificationFRs:${UserData?.fkUserId}`, (data) => {
-      setNotificationFRsData((prev) => {
-        const updatedNotifications = [...prev, data];
-        localStorage.setItem(
-          "notificationFRsData",
-          JSON.stringify(updatedNotifications)
-        );
-        return updatedNotifications;
-      });
-      // playSound();
-    });
-    // socket.on(`notificationFRs:${UserData?.fkUserId}`, (data) => {
-    //   setNotificationFRsData((prevFRNotification) => [
-    //     ...prevFRNotification,
-    //     data,
-    //   ]);
-    //   console.log("Received notification:", data);
-    //   console.log("Updated notificationFRsData:", notificationFRsData);
-    //   alert(`Notification FRs: ${data.message}`);
+    //   // playSound();
     // });
 
     //  Approved Case Notification
-    socket.on(`notificationApprovedCase:${UserData?.fkUserId}`, (data) => {
-      setNotificationApprovedCaseData((prev) => {
-        const updatedNotifications = [...prev, data];
-        localStorage.setItem(
-          "notificationApprovedCaesData",
-          JSON.stringify(updatedNotifications)
-        );
-        return updatedNotifications;
-      });
-      // playSound();
-    });
+    socket.on(
+      `notificationApprovedCase:${UserData?.fkUserId}`,
+      async (data) => {
+        console.log("data through socket", data);
+        try {
+          // Call the API with received data
+          const response = await createNotificationApprovedCasesAPI(
+            data,
+            UserData?.fkUserId
+          );
+          console.log("Response Approved", response);
+          // Update the notification data in state and local storage
+          setNotificationApprovedCaseData((prev) => {
+            const updatedNotifications = [...prev, data];
+            return updatedNotifications;
+          });
+
+          // Optional: Play notification sound
+          playSound();
+        } catch (error) {
+          console.error("Failed to create notification:", error);
+        }
+      }
+    );
+
+    // socket.on(`notificationApprovedCase:${UserData?.fkUserId}`, (data) => {
+    //   setNotificationApprovedCaseData((prev) => {
+    //     const updatedNotifications = [...prev, data];
+    //     localStorage.setItem(
+    //       "notificationApprovedCaesData",
+    //       JSON.stringify(updatedNotifications)
+    //     );
+    //     return updatedNotifications;
+    //   });
+    //   // playSound();
+    // });
     // socket.on(`notificationApprovedCase:${UserData?.fkUserId}`, (data) => {
     //   setNotificationApprovedCaseData((prevApprovedCaseNotification) => [
     //     ...prevApprovedCaseNotification,
