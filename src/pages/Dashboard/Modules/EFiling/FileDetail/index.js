@@ -17,7 +17,6 @@ import {
   assignFIleCase,
   getAllCorrespondence,
   getCaseDetailByID,
-  getNotificationsByUserId,
 } from "../../../../../api/APIs/Services/efiling.service";
 import { ToastContainer } from "react-toastify";
 import {
@@ -633,9 +632,6 @@ function FileDetail() {
         location.state?.notificationId
         // UserData?.fkUserId
       );
-      if (response?.success) {
-        getNotificationsByUserId(UserData?.fkUserId);
-      }
     } catch (error) {
       console.log(error.response.data.message);
     }
@@ -1532,36 +1528,16 @@ function FileDetail() {
                   {!location?.state?.approved && (
                     <a
                       onClick={() => {
-                        // Check if the user is a "Assistant"
                         if (
-                          UserData?.designation?.designationName?.includes(
-                            "Assistant"
-                          )
+                          !(caseCreatedBy === UserData?.fkUserId) &&
+                          (notingTabData?.length <= previousUserParaCount ||
+                            !saved)
                         ) {
-                          // If a new paragraph has been added and not saved, show an error
-                          if (
-                            notingTabData?.length > previousUserParaCount &&
-                            !saved
-                          ) {
-                            showErrorMessage(
-                              "Please save the new paragraph before proceeding!"
-                            );
-                          } else {
-                            toggleModal();
-                          }
-                        }
-                        // For other users, proceed with the usual validation
-                        else {
-                          if (
-                            notingTabData?.length <= previousUserParaCount ||
-                            !saved
-                          ) {
-                            showErrorMessage(
-                              "Please add your paragraph first & save it!"
-                            );
-                          } else {
-                            toggleModal();
-                          }
+                          showErrorMessage(
+                            "Please add your paragraph first & save it!"
+                          );
+                        } else {
+                          toggleModal();
                         }
                       }}
                     >
