@@ -40,7 +40,6 @@ export const EFilingNotificationAssignCases = (notificationType) => {
 
     fetchData();
   }, [notificationCaseData]);
-  console.log("Notification Case Data in Efileing", notificationCaseLocalData);
 
   const handleClick = (item, event) => {
     event.preventDefault();

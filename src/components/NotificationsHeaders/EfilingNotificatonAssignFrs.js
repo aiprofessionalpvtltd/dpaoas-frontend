@@ -36,7 +36,6 @@ export const EFilingNotificationAssignFrs = (notificationType) => {
 
     fetchData();
   }, [notificationFRsData]);
-  console.log("Notification Case Data in Efileing", notifcationFrsLocalData);
 
   const handleClick = (item) => {
     navigate("/efiling/dashboard/fresh-receipt/frdetail", {

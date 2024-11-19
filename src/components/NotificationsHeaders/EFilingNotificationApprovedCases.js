@@ -42,18 +42,16 @@ export const EFilingNotificationApprovedCases = (notificationType) => {
 
     fetchData();
   }, [notificationApprovedCaseData]);
-  console.log(
-    "Notification Case Data in Efileing",
-    notificationApprovedLocalCaseData
-  );
 
-  const handleClick = (item) => {
+  const handleClick = (item, event) => {
+    event.preventDefault();
     navigate("/efiling/dashboard/fileDetail", {
       state: {
-        view: false,
-        fileId: item?.data?.fkFileId,
-        id: item?.data?.fkCaseId,
+        fileId: item?.data[0]?.fkFileId && item?.data[0]?.fkFileId,
+        id: item?.data[0]?.id && item?.data[0]?.id,
         notificationId: item?.notificationId,
+        approved: true,
+        view: true,
       },
     });
     setKey(Date.now());
@@ -84,7 +82,7 @@ export const EFilingNotificationApprovedCases = (notificationType) => {
           <ListGroup.Item
             key={index}
             className={
-              notificationApprovedLocalCaseData.length === 1
+              notificationApprovedLocalCaseData?.length === 1
                 ? ""
                 : "border-bottom"
             }
@@ -93,31 +91,33 @@ export const EFilingNotificationApprovedCases = (notificationType) => {
             <Link
               to={"/efiling/dashboard/fileDetail"}
               state={{
-                view: false,
-                fileId: item?.data[0]?.fkFileId,
-                id: item?.data[0]?.fkCaseId,
+                fileId: item?.data[0]?.fkFileId && item?.data[0]?.fkFileId,
+                id: item?.data[0]?.id && item?.data[0]?.id,
                 notificationId: item?.notificationId,
+                approved: true,
+                view: true,
               }}
               style={{ color: "black" }}
-              onClick={(item) => handleClick(item)}
+              onClick={(e) => handleClick(item, e)}
               className="link"
             >
               <span>
                 <span
                   className={`mb-2 ${
-                    item?.data[0]?.priority === "Routine"
+                    item?.data[0]?.casesRemarks[0]?.priority === "Routine"
                       ? "label-pending"
-                      : item?.data[0]?.priority === "Immediate"
+                      : item?.data[0]?.casesRemarks[0]?.priority === "Immediate"
                         ? "label-inprogress"
-                        : item?.data[0]?.priority === "Confidential"
+                        : item?.data[0]?.casesRemarks[0]?.priority ===
+                            "Confidential"
                           ? "label-danger"
                           : "label-default"
                   }`}
                 >
-                  {item?.data[0]?.priority}
+                  {item?.data[0]?.casesRemarks[0]?.priority}
                 </span>
                 <br />
-                {item?.message}
+                {item?.message} <br />
                 <br />
                 <span className="text-sm">
                   <i>{moment(item?.data[0]?.createdAt).format("DD/MM/YYYY")}</i>
@@ -134,7 +134,10 @@ export const EFilingNotificationApprovedCases = (notificationType) => {
         ))
       ) : (
         <span className="text-sm d-block text-center">
-          No notifications found!
+          {notificationApprovedLocalCaseData &&
+          notificationApprovedLocalCaseData?.length > 0
+            ? "Assigned Cases Notification"
+            : " No Assigned Cases Notifications found!"}
         </span>
       )}
     </div>
@@ -167,7 +170,6 @@ export const EFilingNotificationApprovedCases = (notificationType) => {
   useEffect(() => {
     const handleOutsideClick = (e) => {
       if (!notificationRef?.current?.contains(e.target)) {
-        // console.log("This one gets called because of the button click", e);
         handleCloseModal();
       }
     };

@@ -202,9 +202,13 @@ export const CustomNavbar = ({ module, centerlogohide, navItems }) => {
           </div>
         </div>
 
-        <EFilingNotificationAssignCases notificationType="Notifications" />
-        <EFilingNotificationAssignFrs notificationType="Notifications" />
-        <EFilingNotificationApprovedCases notificationType="Notifications" />
+        {shouldRenderEfiling && (
+          <>
+            <EFilingNotificationAssignCases notificationType="Notifications" />
+            <EFilingNotificationAssignFrs notificationType="Notifications" />
+            <EFilingNotificationApprovedCases notificationType="Notifications" />
+          </>
+        )}
 
         <Dropdown className="user-box dropdown px-3 float-end">
           <Dropdown.Toggle

@@ -169,50 +169,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Function to handle notification click and remove it from localStorage
-  const handleNotificationAssignCase = (notificationId) => {
-    // Step 1: Retrieve and parse the stored notifications
-    const storedNotifications = localStorage.getItem("notificationCaseData");
-    if (storedNotifications) {
-      const notificationsArray = JSON.parse(storedNotifications);
 
-      // Step 2: Filter out the clicked notification
-      const updatedNotifications = notificationsArray.filter(
-        (notification) => notification.notificationId !== notificationId
-      );
-
-      // Step 3: Update the localStorage with the filtered notifications
-      localStorage.setItem(
-        "notificationCaseData",
-        JSON.stringify(updatedNotifications)
-      );
-
-      // Step 4: Update the state with the new notifications array
-      setNotificationCaseData(updatedNotifications);
-    }
-  };
-
-  // Function to handle notification click and remove it from localStorage
-  const handleNotificationAssignFRs = (notificationId) => {
-    // Step 1: Retrieve and parse the stored notifications
-    const storedNotifications = localStorage.getItem("notificationFRsData");
-    if (storedNotifications) {
-      const notificationsArray = JSON.parse(storedNotifications);
-
-      // Step 2: Filter out the clicked notification
-      const updatedNotifications = notificationsArray.filter(
-        (notification) => notification.notificationId !== notificationId
-      );
-
-      // Step 3: Update the localStorage with the filtered notifications
-      localStorage.setItem(
-        "notificationFRsData",
-        JSON.stringify(updatedNotifications)
-      );
-
-      // Step 4: Update the state with the new notifications array
-      setNotificationFRsData(updatedNotifications);
-    }
-  };
   const playSound = () => {
     const audio = new Audio(notificationSound);
     audio.play();
@@ -224,7 +181,6 @@ export const AuthProvider = ({ children }) => {
     });
     // Assign Case Notification
     socket.on(`notificationCases:${UserData?.fkUserId}`, async (data) => {
-      console.log("data through socket", data);
       try {
         // Call the API with received data
         await createNotificationAPI(data, UserData?.fkUserId);
@@ -243,9 +199,7 @@ export const AuthProvider = ({ children }) => {
     });
 
     // Assign FRs Notification
-
     socket.on(`notificationFRs:${UserData?.fkUserId}`, async (data) => {
-      console.log("data through socket", data);
       try {
         // Call the API with received data
         await createNotificationFRsAPI(data, UserData?.fkUserId);
@@ -263,30 +217,16 @@ export const AuthProvider = ({ children }) => {
       }
     });
 
-    // socket.on(`notificationFRs:${UserData?.fkUserId}`, (data) => {
-    //   setNotificationFRsData((prev) => {
-    //     const updatedNotifications = [...prev, data];
-    //     localStorage.setItem(
-    //       "notificationFRsData",
-    //       JSON.stringify(updatedNotifications)
-    //     );
-    //     return updatedNotifications;
-    //   });
-    //   // playSound();
-    // });
-
     //  Approved Case Notification
     socket.on(
       `notificationApprovedCase:${UserData?.fkUserId}`,
       async (data) => {
-        console.log("data through socket", data);
         try {
           // Call the API with received data
           const response = await createNotificationApprovedCasesAPI(
             data,
             UserData?.fkUserId
           );
-          console.log("Response Approved", response);
           // Update the notification data in state and local storage
           setNotificationApprovedCaseData((prev) => {
             const updatedNotifications = [...prev, data];
@@ -301,33 +241,11 @@ export const AuthProvider = ({ children }) => {
       }
     );
 
-    // socket.on(`notificationApprovedCase:${UserData?.fkUserId}`, (data) => {
-    //   setNotificationApprovedCaseData((prev) => {
-    //     const updatedNotifications = [...prev, data];
-    //     localStorage.setItem(
-    //       "notificationApprovedCaesData",
-    //       JSON.stringify(updatedNotifications)
-    //     );
-    //     return updatedNotifications;
-    //   });
-    //   // playSound();
-    // });
-    // socket.on(`notificationApprovedCase:${UserData?.fkUserId}`, (data) => {
-    //   setNotificationApprovedCaseData((prevApprovedCaseNotification) => [
-    //     ...prevApprovedCaseNotification,
-    //     data,
-    //   ]);
-    //   console.log("Received notification:", data);
-    //   console.log("Updated notificationCaseData:", notificationCaseData);
-    //   alert(`Notification: ${data.message}`);
-    // });
-
     // Cleanup on component unmount
     return () => {
       socket.off(`notificationCases:${UserData?.fkUserId}`);
       socket.off(`notificationFRs:${UserData?.fkUserId}`);
       socket.off(`notificationApprovedCase:${UserData?.fkUserId}`);
-      socket.disconnect();
     };
   }, [UserData?.fkUserId]);
 
@@ -369,8 +287,6 @@ export const AuthProvider = ({ children }) => {
         notificationCaseData,
         notificationFRsData,
         notificationApprovedCaseData,
-        handleNotificationAssignCase,
-        handleNotificationAssignFRs,
       }}
     >
       {children}

@@ -10,6 +10,7 @@ import {
 import {
   ApprovedFIleCase,
   DeleteCorrApi,
+  DeleteNotificationApprovedCasesByIdAPI,
   DeleteNotificationById,
   DeleteNotificationByIdAPI,
   DeleteParaAttachement,
@@ -17,6 +18,8 @@ import {
   assignFIleCase,
   getAllCorrespondence,
   getCaseDetailByID,
+  getNotificationsApprovedCasesByUserId,
+  getNotificationsByUserId,
 } from "../../../../../api/APIs/Services/efiling.service";
 import { ToastContainer } from "react-toastify";
 import {
@@ -149,9 +152,6 @@ function FileDetail() {
   });
 
   const UpdateEfilingApi = async () => {
-    console.log("====================================");
-    console.log(notingTabSubject, "================================");
-    console.log("====================================");
     return;
     const data = {
       notingSubject: notingTabSubject,
@@ -211,10 +211,6 @@ function FileDetail() {
         ...updatedTabs[order == "ASC" ? notingTabData.length - 1 : 0], // Spread the existing tab data
         assignedTo: modalInputValue?.assignedTo, // Update only the assignedTo field for the specific paragraph
       };
-
-      console.log("====================================");
-      console.log(updatedTabs);
-      console.log("====================================");
 
       UpdateNotingParaAtAssign(updatedTabs);
 
@@ -626,21 +622,74 @@ function FileDetail() {
 
   console.log("locat", location?.state?.id);
 
-  const deleteNotification = async (item) => {
+  // const deleteNotification = async (item) => {
+  //   try {
+  //     const response = await DeleteNotificationByIdAPI(
+  //       location.state?.notificationId
+  //       // UserData?.fkUserId
+  //     );
+  //     if (response?.success) {
+  //       await getNotificationsByUserId(UserData?.fkUserId);
+  //     }
+  //   } catch (error) {
+  //     console.log(error.response.data.message);
+  //   }
+  // };
+
+  // const deleteApprovedNotification = async (item) => {
+  //   try {
+  //     const response = await DeleteNotificationApprovedCasesByIdAPI(
+  //       location.state?.notificationId
+  //       // UserData?.fkUserId
+  //     );
+  //     if (response?.success) {
+  //       await getNotificationsApprovedCasesByUserId(UserData?.fkUserId);
+  //     }
+  //   } catch (error) {
+  //     console.log(error.response.data.message);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   if (location?.state?.view === true && location?.state?.approved === true) {
+  //     deleteApprovedNotification();
+  //   } else {
+  //     deleteNotification();
+  //   }
+  //   // handleNotificationAssignCase(location.state?.notificationId);
+  // }, []);
+
+  const deleteNotificationByType = async (notificationId, isApproved) => {
     try {
-      const response = await DeleteNotificationByIdAPI(
-        location.state?.notificationId
-        // UserData?.fkUserId
-      );
+      const response = isApproved
+        ? await DeleteNotificationApprovedCasesByIdAPI(notificationId)
+        : await DeleteNotificationByIdAPI(notificationId);
+
+      if (response?.success) {
+        const fetchNotifications = isApproved
+          ? getNotificationsApprovedCasesByUserId
+          : getNotificationsByUserId;
+        await fetchNotifications(UserData?.fkUserId);
+      }
     } catch (error) {
-      console.log(error.response.data.message);
+      console.error(
+        "Error deleting notification:",
+        error?.response?.data?.message || "An unexpected error occurred."
+      );
     }
   };
 
   useEffect(() => {
-    // handleNotificationAssignCase(location.state?.notificationId);
-    deleteNotification();
-  }, []);
+    const notificationId = location?.state?.notificationId;
+    const isApproved = location?.state?.approved;
+    if (notificationId) {
+      deleteNotificationByType(notificationId, isApproved);
+    }
+  }, [
+    location?.state?.notificationId,
+    location?.state?.approved,
+    UserData?.fkUserId,
+  ]);
 
   // Mapping over the paragraphs array
   const paragraphsHtml0 = notingTabData
