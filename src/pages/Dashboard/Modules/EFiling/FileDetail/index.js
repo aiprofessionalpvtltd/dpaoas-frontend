@@ -10,12 +10,16 @@ import {
 import {
   ApprovedFIleCase,
   DeleteCorrApi,
+  DeleteNotificationApprovedCasesByIdAPI,
   DeleteNotificationById,
+  DeleteNotificationByIdAPI,
   DeleteParaAttachement,
   UpdateFIleCase,
   assignFIleCase,
   getAllCorrespondence,
   getCaseDetailByID,
+  getNotificationsApprovedCasesByUserId,
+  getNotificationsByUserId,
 } from "../../../../../api/APIs/Services/efiling.service";
 import { ToastContainer } from "react-toastify";
 import {
@@ -69,7 +73,8 @@ function FileDetail() {
   const [fkfileId, setFKFileId] = useState(null);
   const [employeeData, setEmployeeData] = useState([]);
   const [viewPage, setViewPage] = useState(location?.state?.view);
-  const { fileIdINRegister } = useContext(AuthContext);
+  const { fileIdINRegister, handleNotificationAssignCase } =
+    useContext(AuthContext);
   const [caseId, setcaseId] = useState(
     location?.state?.id || fildetailsAqain?.id
   );
@@ -122,7 +127,7 @@ function FileDetail() {
   // ];
 
   const [notingTabData, setNotingTabsData] = useState([]);
-  
+
   const formik = useFormik({
     initialValues: {
       fileNumber: "",
@@ -147,10 +152,7 @@ function FileDetail() {
   });
 
   const UpdateEfilingApi = async () => {
-    console.log('====================================');
-    console.log(notingTabSubject, "================================");
-    console.log('====================================');
-    return  
+    return;
     const data = {
       notingSubject: notingTabSubject,
       paragraphArray: notingTabData,
@@ -203,22 +205,22 @@ function FileDetail() {
 
   const hendleAssiginFileCaseApi = async () => {
     try {
-
       // Update the specific paragraph's assignedTo value
-    const updatedTabs = [...notingTabData]; // Create a copy of the array to ensure immutability
-    updatedTabs[order == "ASC" ? notingTabData.length - 1 : 0] = {
-      ...updatedTabs[order == "ASC" ? notingTabData.length - 1 : 0], // Spread the existing tab data
-      assignedTo: modalInputValue?.assignedTo, // Update only the assignedTo field for the specific paragraph
-    };
+      const updatedTabs = [...notingTabData]; // Create a copy of the array to ensure immutability
+      updatedTabs[order == "ASC" ? notingTabData.length - 1 : 0] = {
+        ...updatedTabs[order == "ASC" ? notingTabData.length - 1 : 0], // Spread the existing tab data
+        assignedTo: modalInputValue?.assignedTo, // Update only the assignedTo field for the specific paragraph
+      };
 
-    console.log('====================================');
-    console.log(updatedTabs);
-    console.log('====================================');
-
-    UpdateNotingParaAtAssign(updatedTabs)
+      UpdateNotingParaAtAssign(updatedTabs);
 
       const formData = new FormData();
-      formData.append("paraId", order == "ASC" ? notingTabData[notingTabData?.length - 1].id :  notingTabData[0]?.id)
+      formData.append(
+        "paraId",
+        order == "ASC"
+          ? notingTabData[notingTabData?.length - 1].id
+          : notingTabData[0]?.id
+      );
       formData.append("submittedBy", UserData?.fkUserId);
       formData.append("assignedTo", modalInputValue?.assignedTo);
       formData.append("priority", modalInputValue?.priority);
@@ -262,7 +264,9 @@ function FileDetail() {
       const response = await getHLEmployee(UserData?.fkUserId);
       if (response?.success) {
         const filteredData = response?.data?.filter(
-          (item) => item?.userName !== UserData?.userName && item?.users?.attendance_status == "PRESENT"
+          (item) =>
+            item?.userName !== UserData?.userName &&
+            item?.users?.attendance_status == "PRESENT"
         );
         setEmployeeData(filteredData);
       }
@@ -306,7 +310,7 @@ function FileDetail() {
                 description: content,
                 references: [],
                 createdBy: UserData?.fkUserId,
-                assignedTo: null
+                assignedTo: null,
               },
             ]
           : []),
@@ -318,7 +322,7 @@ function FileDetail() {
                 description: content,
                 references: [],
                 createdBy: UserData?.fkUserId,
-                assignedTo: null
+                assignedTo: null,
               },
             ]
           : []),
@@ -550,7 +554,7 @@ function FileDetail() {
     setNotingTabSubject(filesData?.notingSubject);
     setNotingTabsData(filesData?.paragraphArray);
     setPreviousUserParaCount(filesData?.paragraphArray?.length);
-  }, [filesData]);  
+  }, [filesData]);
 
   const images =
     FR?.freshReceiptsAttachments?.map((item) => {
@@ -616,20 +620,76 @@ function FileDetail() {
     }
   }, [order]);
 
-  const deleteNotification = async (item) => {
+  console.log("locat", location?.state?.id);
+
+  // const deleteNotification = async (item) => {
+  //   try {
+  //     const response = await DeleteNotificationByIdAPI(
+  //       location.state?.notificationId
+  //       // UserData?.fkUserId
+  //     );
+  //     if (response?.success) {
+  //       await getNotificationsByUserId(UserData?.fkUserId);
+  //     }
+  //   } catch (error) {
+  //     console.log(error.response.data.message);
+  //   }
+  // };
+
+  // const deleteApprovedNotification = async (item) => {
+  //   try {
+  //     const response = await DeleteNotificationApprovedCasesByIdAPI(
+  //       location.state?.notificationId
+  //       // UserData?.fkUserId
+  //     );
+  //     if (response?.success) {
+  //       await getNotificationsApprovedCasesByUserId(UserData?.fkUserId);
+  //     }
+  //   } catch (error) {
+  //     console.log(error.response.data.message);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   if (location?.state?.view === true && location?.state?.approved === true) {
+  //     deleteApprovedNotification();
+  //   } else {
+  //     deleteNotification();
+  //   }
+  //   // handleNotificationAssignCase(location.state?.notificationId);
+  // }, []);
+
+  const deleteNotificationByType = async (notificationId, isApproved) => {
     try {
-      const response = await DeleteNotificationById(
-        location.state?.notificationId,
-        UserData?.fkUserId
-      );
+      const response = isApproved
+        ? await DeleteNotificationApprovedCasesByIdAPI(notificationId)
+        : await DeleteNotificationByIdAPI(notificationId);
+
+      if (response?.success) {
+        const fetchNotifications = isApproved
+          ? getNotificationsApprovedCasesByUserId
+          : getNotificationsByUserId;
+        await fetchNotifications(UserData?.fkUserId);
+      }
     } catch (error) {
-      console.log(error.response.data.message);
+      console.error(
+        "Error deleting notification:",
+        error?.response?.data?.message || "An unexpected error occurred."
+      );
     }
   };
 
   useEffect(() => {
-    deleteNotification();
-  }, []);
+    const notificationId = location?.state?.notificationId;
+    const isApproved = location?.state?.approved;
+    if (notificationId) {
+      deleteNotificationByType(notificationId, isApproved);
+    }
+  }, [
+    location?.state?.notificationId,
+    location?.state?.approved,
+    UserData?.fkUserId,
+  ]);
 
   // Mapping over the paragraphs array
   const paragraphsHtml0 = notingTabData
@@ -658,7 +718,7 @@ function FileDetail() {
     })
     .join("");
 
-    const paragraphsHtml = notingTabData
+  const paragraphsHtml = notingTabData
     ?.map((para, index) => {
       return `
       <div style="margin-top: 10px; margin-bottom: 10px; text-align: justify; color: black;">
@@ -677,7 +737,11 @@ function FileDetail() {
       </p>
        
 <p style="float: left; margin-top: 60px; text-align: center; color: black;">
-  ${para?.assignedToUser ? `${para.assignedToUserDesignation} (${para.assignedToUserBranch})` : ""}
+  ${
+    para?.assignedToUser
+      ? `${para.assignedToUserDesignation} (${para.assignedToUserBranch})`
+      : ""
+  }
 </p>
       
        <div style="clear:both"> </div>`;
@@ -1513,36 +1577,16 @@ function FileDetail() {
                   {!location?.state?.approved && (
                     <a
                       onClick={() => {
-                        // Check if the user is a "Assistant"
                         if (
-                          UserData?.designation?.designationName?.includes(
-                            "Assistant"
-                          )
+                          !(caseCreatedBy === UserData?.fkUserId) &&
+                          (notingTabData?.length <= previousUserParaCount ||
+                            !saved)
                         ) {
-                          // If a new paragraph has been added and not saved, show an error
-                          if (
-                            notingTabData?.length > previousUserParaCount &&
-                            !saved
-                          ) {
-                            showErrorMessage(
-                              "Please save the new paragraph before proceeding!"
-                            );
-                          } else {
-                            toggleModal();
-                          }
-                        }
-                        // For other users, proceed with the usual validation
-                        else {
-                          if (
-                            notingTabData?.length <= previousUserParaCount ||
-                            !saved
-                          ) {
-                            showErrorMessage(
-                              "Please add your paragraph first & save it!"
-                            );
-                          } else {
-                            toggleModal();
-                          }
+                          showErrorMessage(
+                            "Please add your paragraph first & save it!"
+                          );
+                        } else {
+                          toggleModal();
                         }
                       }}
                     >
@@ -1565,10 +1609,9 @@ function FileDetail() {
                         }
                         */
                         disabled={
-                          !(caseCreatedBy === UserData?.fkUserId) && (
-                            notingTabData?.length <= previousUserParaCount || 
-                            !saved
-                          )
+                          !(caseCreatedBy === UserData?.fkUserId) &&
+                          (notingTabData?.length <= previousUserParaCount ||
+                            !saved)
                         }
                       >
                         Proceed

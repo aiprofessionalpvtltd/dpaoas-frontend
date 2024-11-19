@@ -133,10 +133,7 @@ export const createFIleRegister = async (data) => {
 export const UpdateFIleRegister = async (id, data) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClient.put(
-      `/fileRegisters/update/${id}`,
-      data
-    );
+    const response = await axiosClient.put(`/fileRegisters/update/${id}`, data);
     // {
     //   headers: {
     //     accept: "application/json",
@@ -207,7 +204,10 @@ export const getAllYear = async (data) => {
 export const getAllYearNew = async (data) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClient.get(`/years?currentPage=0&pageSize=100`, data);
+    const response = await axiosClient.get(
+      `/years?currentPage=0&pageSize=100`,
+      data
+    );
     // {
     //   headers: {
     //     accept: "application/json",
@@ -237,8 +237,6 @@ export const createYearNew = async (data) => {
     throw error;
   }
 };
-
-
 
 //Create Heading
 export const createFIleHeading = async (data) => {
@@ -299,10 +297,7 @@ export const registerRecordByRegisterId = async (id) => {
 export const UpdateFIleHeading = async (id, data) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClient.put(
-      `/mainHeading/update/${id}`,
-      data
-    );
+    const response = await axiosClient.put(`/mainHeading/update/${id}`, data);
     // {
     //   headers: {
     //     accept: "application/json",
@@ -332,8 +327,6 @@ export const getSingleHeadingbyId = async (id) => {
     throw error;
   }
 };
-
-
 
 // Flags APIs
 export const createFlagApi = async (data) => {
@@ -375,10 +368,7 @@ export const getAllBranchFlagsApi = async (branchId, currentPage, pageSize) => {
 export const UpdateFlagApi = async (id, data) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClient.put(
-      `/flags/update/${id}`,
-      data
-    );
+    const response = await axiosClient.put(`/flags/update/${id}`, data);
     // {
     //   headers: {
     //     accept: "application/json",
@@ -425,8 +415,6 @@ export const DeleteFlagApi = async (id) => {
     throw error;
   }
 };
-
-
 
 //heading retrive on the basis on branch id
 
@@ -501,9 +489,7 @@ export const updateFiles = async (id, data) => {
 export const getSingleFileById = async (fileId) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClient.get(
-      `/files/singleFile/${fileId}`
-    );
+    const response = await axiosClient.get(`/files/singleFile/${fileId}`);
     // {
     //   headers: {
     //     accept: "application/json",
@@ -670,9 +656,7 @@ export const getAllCasesThroughSearchParams = async (searchParams) => {
 export const deleteCaseById = async (id) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClient.delete(
-      `/cases/delete-case/${id}`
-    );
+    const response = await axiosClient.delete(`/cases/delete-case/${id}`);
     return response?.data;
   } catch (error) {
     console.error("Error fetching delete case API endpoint:", error);
@@ -774,12 +758,9 @@ export const getUserApprovedCaseHistory = async (searchParams) => {
   );
   try {
     //   const token = getAuthToken();
-    const response = await axiosClient.get(
-      `/cases/getApprovedCasesHistory`,
-      {
-        params: filteredSearchParams,
-      }
-    );
+    const response = await axiosClient.get(`/cases/getApprovedCasesHistory`, {
+      params: filteredSearchParams,
+    });
     // {
     //   headers: {
     //     accept: "application/json",
@@ -796,9 +777,7 @@ export const getUserApprovedCaseHistory = async (searchParams) => {
 export const DeleteFileCaseImage = async (id) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClient.delete(
-      `/cases/deleteAttachment/${id}`
-    );
+    const response = await axiosClient.delete(`/cases/deleteAttachment/${id}`);
     // {
     //   headers: {
     //     accept: "application/json",
@@ -912,7 +891,11 @@ export const getAllFreshReceipt = async (userId, currentPage, pageSize) => {
   }
 };
 
-export const getPendingFreshReceipts = async (userId, currentPage, pageSize) => {
+export const getPendingFreshReceipts = async (
+  userId,
+  currentPage,
+  pageSize
+) => {
   try {
     //   const token = getAuthToken();
     const response = await axiosClient.get(
@@ -953,7 +936,7 @@ export const createReceivedFromBranches = async (data) => {
     //   const token = getAuthToken();
     const response = await axiosClient.post(
       `/freshReceipt/createExternal`,
-      data,
+      data
       // {
       //   headers: {
       //     accept: "application/json",
@@ -971,7 +954,9 @@ export const createReceivedFromBranches = async (data) => {
 export const getReceivedFromBranches = async () => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClient.get(`/freshReceipt/getExternal?currentPage=0&pageSize=1000`);
+    const response = await axiosClient.get(
+      `/freshReceipt/getExternal?currentPage=0&pageSize=1000`
+    );
     // {
     //   headers: {
     //     accept: "application/json",
@@ -1008,9 +993,7 @@ export const UpdateFreshReceipt = async (id, data) => {
 export const DeleteFreshReceipt = async (id) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClient.delete(
-      `/freshReceipt/deleteFR/${id}`
-    );
+    const response = await axiosClient.delete(`/freshReceipt/deleteFR/${id}`);
     // {
     //   headers: {
     //     accept: "application/json",
@@ -1142,7 +1125,7 @@ export const DeleteNotificationById = async (notificationId, userId) => {
   try {
     //   const token = getAuthToken();
     const response = await axiosClient.delete(
-      `/filesDashboard/makeNotificationDecrease/${notificationId}/${userId}`,
+      `/filesDashboard/makeNotificationDecrease/${notificationId}/${userId}`
     );
     // {
     //   headers: {
@@ -1176,7 +1159,12 @@ export const getFRHistory = async (branchId, userId, currentPage, pageSize) => {
   }
 };
 
-export const getOfficerFRHistory = async (branchId, userId, currentPage, pageSize) => {
+export const getOfficerFRHistory = async (
+  branchId,
+  userId,
+  currentPage,
+  pageSize
+) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClient.get(
@@ -1255,12 +1243,16 @@ export const getSignatureByUserId = async (id) => {
 export const createCorrespondence = async (data) => {
   try {
     // const token = getAuthToken();
-    const response = await axiosClient.post(`/correspondence/createCorrespondence`, data, {
-      headers: {
-        accept: "multipart/form-data",
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    const response = await axiosClient.post(
+      `/correspondence/createCorrespondence`,
+      data,
+      {
+        headers: {
+          accept: "multipart/form-data",
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -1291,7 +1283,9 @@ export const UpdateCorrespondence = async (id, data) => {
 export const getCorrespondenceById = async (id) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClient.get(`/correspondence/getSingleCorrespondence/${id}`);
+    const response = await axiosClient.get(
+      `/correspondence/getSingleCorrespondence/${id}`
+    );
     // {
     //   headers: {
     //     accept: "application/json",
@@ -1305,10 +1299,17 @@ export const getCorrespondenceById = async (id) => {
   }
 };
 
-export const getAllCorrespondence = async (fileId, branchId, currentPage, pageSize) => {
+export const getAllCorrespondence = async (
+  fileId,
+  branchId,
+  currentPage,
+  pageSize
+) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClient.get(`/correspondence/getAllCorrespondences?fileId=${fileId}&branchId=${branchId}&currentPage=${currentPage}&pageSize=${pageSize}`);
+    const response = await axiosClient.get(
+      `/correspondence/getAllCorrespondences?fileId=${fileId}&branchId=${branchId}&currentPage=${currentPage}&pageSize=${pageSize}`
+    );
     // {
     //   headers: {
     //     accept: "application/json",
@@ -1364,10 +1365,7 @@ export const DeleteAttachedFiles = async (id) => {
 export const ApprovedFIleCase = async (data) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClient.put(
-      `/cases/updateCaseStatus`,
-      data
-    );
+    const response = await axiosClient.put(`/cases/updateCaseStatus`, data);
     // {
     //   headers: {
     //     accept: "application/json",
@@ -1382,10 +1380,12 @@ export const ApprovedFIleCase = async (data) => {
 };
 
 // Delete Given Paragraph of Case
-export const DeletePara = async (caseId,correspondenceID, paraID) => {
+export const DeletePara = async (caseId, correspondenceID, paraID) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClient.get(`/cases/deleteSingleCorrespondence?caseId=${caseId}&correspondenceID=${correspondenceID}&paraID=${paraID}`);
+    const response = await axiosClient.get(
+      `/cases/deleteSingleCorrespondence?caseId=${caseId}&correspondenceID=${correspondenceID}&paraID=${paraID}`
+    );
     // /deleteSingleCorrespondence?caseId=63&correspondenceID=30
     // {
     //   headers: {
@@ -1399,11 +1399,17 @@ export const DeletePara = async (caseId,correspondenceID, paraID) => {
     throw error;
   }
 };
-export const DeleteParaAttachement = async (caseId,correspondenceID,paraID ) => {
+export const DeleteParaAttachement = async (
+  caseId,
+  correspondenceID,
+  paraID
+) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClient.get(`/cases/deleteCorrespondenceAttachment?caseId=${caseId}&correspondenceID=${correspondenceID}&paraID=${paraID}`)
-   
+    const response = await axiosClient.get(
+      `/cases/deleteCorrespondenceAttachment?caseId=${caseId}&correspondenceID=${correspondenceID}&paraID=${paraID}`
+    );
+
     // {
     //   headers: {
     //     accept: "application/json",
@@ -1421,8 +1427,11 @@ export const DeleteParaAttachement = async (caseId,correspondenceID,paraID ) => 
 export const leaveEfilingUser = async (data) => {
   try {
     //   const token = getAuthToken();
-    const response = await axiosClient.post(`/cases/assign-to-higher-level`,data)
-   
+    const response = await axiosClient.post(
+      `/cases/assign-to-higher-level`,
+      data
+    );
+
     // {
     //   headers: {
     //     accept: "application/json",
@@ -1432,6 +1441,192 @@ export const leaveEfilingUser = async (data) => {
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+//Create Notifications
+export const createNotificationAPI = async (data, userId) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.post(
+      `/caseNotifications/create/${userId}`,
+      data
+    );
+
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.log("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+// Get Notifications By User ID
+export const getNotificationsByUserId = async (id) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.get(
+      `/caseNotifications/getByUserId/${id}`
+    );
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.log("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const DeleteNotificationByIdAPI = async (notificationId) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.delete(
+      `/caseNotifications/deleteById/${notificationId}`
+    );
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.log("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+// Create FRs Notification
+export const createNotificationFRsAPI = async (data, userId) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.post(
+      `/frNotifications/create/${userId}`,
+      data
+    );
+
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.log("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+// Get Notifications of FRs By User ID
+export const getNotificationsFRsByUserId = async (id) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.get(
+      `/frNotifications/getByUserId/${id}`
+    );
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.log("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+// Delete FRs Notification
+export const DeleteNotificationFrsByIdAPI = async (notificationId) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.delete(
+      `/frNotifications/deleteById/${notificationId}`
+    );
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.log("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+// Create Approved Cases Notification
+export const createNotificationApprovedCasesAPI = async (data, userId) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.post(
+      `/approvedCaseNotifications/create/${userId}`,
+      data
+    );
+
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.log("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+// Get Notifications of Approved Cases By User ID
+export const getNotificationsApprovedCasesByUserId = async (id) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.get(
+      `/approvedCaseNotifications/getByUserId/${id}`
+    );
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.log("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+// Delete Approved Notification
+export const DeleteNotificationApprovedCasesByIdAPI = async (
+  notificationId
+) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.delete(
+      `/approvedCaseNotifications/deleteById/${notificationId}`
+    );
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.log("Error fetching API endpoint:", error);
     throw error;
   }
 };

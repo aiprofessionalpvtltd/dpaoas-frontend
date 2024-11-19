@@ -7,6 +7,9 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { faSortDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { EFilingNotifications } from "../NotificationsHeaders/EFilingNotifications";
+import { EFilingNotificationAssignCases } from "../NotificationsHeaders/EfilingNotificationAssignCases";
+import { EFilingNotificationAssignFrs } from "../NotificationsHeaders/EfilingNotificatonAssignFrs";
+import { EFilingNotificationApprovedCases } from "../NotificationsHeaders/EFilingNotificationApprovedCases";
 
 export const CustomNavbar = ({ module, centerlogohide, navItems }) => {
   const navigation = useNavigate();
@@ -199,7 +202,13 @@ export const CustomNavbar = ({ module, centerlogohide, navItems }) => {
           </div>
         </div>
 
-        <EFilingNotifications notificationType="Notifications" />
+        {shouldRenderEfiling && (
+          <>
+            <EFilingNotificationAssignCases notificationType="Notifications" />
+            <EFilingNotificationAssignFrs notificationType="Notifications" />
+            <EFilingNotificationApprovedCases notificationType="Notifications" />
+          </>
+        )}
 
         <Dropdown className="user-box dropdown px-3 float-end">
           <Dropdown.Toggle

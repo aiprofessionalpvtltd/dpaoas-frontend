@@ -22,7 +22,7 @@ import {
   faReceipt,
 } from "@fortawesome/free-solid-svg-icons";
 import CalenderImage from "../../../../../assets/calander.png";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import {
   DeleteFreshReceipt,
   getAllCasesThroughSearchParams,
@@ -43,8 +43,10 @@ import {
   showErrorMessage,
   showSuccessMessage,
 } from "../../../../../utils/ToastAlert";
+import { AuthContext } from "../../../../../api/AuthContext";
 
 function MainDashBoardDemo() {
+  const { notificationCaseData, notificationFRsData } = useContext(AuthContext);
   const userData = getUserData();
   const navigate = useNavigate();
   const [fileStatsData, setFileStatsData] = useState(null);
@@ -257,12 +259,12 @@ function MainDashBoardDemo() {
   useEffect(() => {
     getAllStatsDataApi();
     getAllFilesDataApi();
-    getAllFRDataApi();
   }, []);
 
   useEffect(() => {
     getAllCasesApi();
-  }, [currentPage]);
+    getAllFRDataApi();
+  }, [currentPage, notificationCaseData, notificationFRsData]);
 
   useEffect(() => {
     getAllFreshReceiptAPi();
