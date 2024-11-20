@@ -224,9 +224,24 @@ export const CustomNavbar = ({ module, centerlogohide, navItems }) => {
               <p className="user-name mb-0" style={{ fontSize: "19px" }}>
                 {userData && `${userData?.firstName} ${userData?.lastName}`}
               </p>
-              <p className="designation mb-0">
-                {userData &&
-                  `${userData?.designation?.designationName} ${userData?.branch?.branchName}`}
+              <p
+                className="designation mb-0"
+                title={
+                  userData?.branches?.length > 1
+                    ? userData?.branches
+                        .map((branch) => branch?.branchName)
+                        .join(", ")
+                    : ""
+                }
+              >
+                {userData && userData?.designation?.designationName}
+                {" ("}
+                {userData?.branches?.length > 0
+                  ? userData?.branches.length > 1
+                    ? `${userData?.branches[0]?.branchName}...`
+                    : userData?.branches[0]?.branchName
+                  : userData?.branch?.branchName}
+                {")"}
               </p>
             </div>
           </Dropdown.Toggle>
