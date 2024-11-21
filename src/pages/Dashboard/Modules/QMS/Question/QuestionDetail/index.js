@@ -54,7 +54,7 @@ function QMSQuestionDetail() {
   // const Urdu = location?.state && location?.state?.question?.urduText;
   // console.log("location states", location?.state?.question?.urduText);
   const { members, sessions, divisions } = useContext(AuthContext);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   console.log(
     "Question Detail Data",
@@ -96,21 +96,24 @@ function QMSQuestionDetail() {
         location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryTime,
       priority: "",
       questionId: location?.state?.question?.id,
-      questionDiaryNo: location?.state?.question?.questionDiary?.questionDiaryNo,
+      questionDiaryNo:
+        location?.state?.question?.questionDiary?.questionDiaryNo,
       category: location?.state?.question?.questionCategory,
       questionStatus: location?.state?.question?.fkQuestionStatus,
       // replyDate: location?.state?.question?.replyDate,
       replyDate: new Date(location?.state?.question?.replyDate),
       senator: location?.state ? location?.state?.question?.member?.id : "",
-      group:  location?.state ? location?.state?.question?.fkGroupId : '',
-      division: location?.state ?  location?.state?.question?.fkDivisionId : '',
+      group: location?.state ? location?.state?.question?.fkGroupId : "",
+      division: location?.state ? location?.state?.question?.fkDivisionId : "",
       fileStatus: location?.state?.question?.fileStatus,
       englishText: location?.state?.question?.englishText,
       urduText: location?.state?.question?.urduText,
       ammendedText: "",
       originalText: "",
-      questionImage:[],
-      memberPosition: location?.state?.question?.member ? location?.state?.question?.member?.governmentType :""
+      questionImage: [],
+      memberPosition: location?.state?.question?.member
+        ? location?.state?.question?.member?.governmentType
+        : "",
     },
     // validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -132,7 +135,7 @@ function QMSQuestionDetail() {
     formData.append("fkDivisionId", values?.division);
     formData.append("fileStatus", values?.fileStatus);
     formData.append("replyDate", values?.replyDate);
-    formData.append("fkQuestionStatus",values.questionStatus)
+    formData.append("fkQuestionStatus", values.questionStatus);
 
     formData.append("ammendedText", values.ammendedText);
     formData.append("urduText", values.urduText);
@@ -153,7 +156,7 @@ function QMSQuestionDetail() {
       if (response?.success) {
         showSuccessMessage(response?.message);
         setTimeout(() => {
-          navigate('/qms/search/question')
+          navigate("/qms/search/question");
         }, 1000);
       }
     } catch (error) {
@@ -310,21 +313,19 @@ function QMSQuestionDetail() {
   const getGroupbyDevisionIdAPi = async (e) => {
     try {
       const response = await getGroupbyDevisionId(e.target.value);
-  
+
       if (response?.success) {
-        const groupId = response?.data?.fkGroupId || ''; 
+        const groupId = response?.data?.fkGroupId || "";
         formik.setFieldValue("group", groupId);
       } else {
-        formik.setFieldValue("group", ''); 
+        formik.setFieldValue("group", "");
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
-      formik.setFieldValue("group", '');
+      formik.setFieldValue("group", "");
     }
-  }
-  
+  };
 
-  
   useEffect(() => {
     GetALlStatus();
   }, []);
@@ -856,7 +857,7 @@ function QMSQuestionDetail() {
                       </span>
                       <DatePicker
                         selected={formik.values.replyDate}
-                        minDate={new Date()}
+                        maxDate={new Date()}
                         onChange={(date) =>
                           formik.setFieldValue("replyDate", date)
                         }
@@ -889,8 +890,8 @@ function QMSQuestionDetail() {
                       </select>
                     </div>
                   </div>
-                  
-                 <div class="col-3">
+
+                  <div class="col-3">
                     <div class="mb-3">
                       <label class="form-label">File Status</label>
                       <select
@@ -924,8 +925,8 @@ function QMSQuestionDetail() {
                         value={formik.values.division}
                         id="division"
                         onChange={(event) => {
-                          formik.handleChange(event); 
-                          getGroupbyDevisionIdAPi(event); 
+                          formik.handleChange(event);
+                          getGroupbyDevisionIdAPi(event);
                         }}
                         onBlur={formik.handleBlur}
                       >
@@ -952,28 +953,17 @@ function QMSQuestionDetail() {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       >
-                        <option value={''} selected disabled hidden>
+                        <option value={""} selected disabled hidden>
                           Select
                         </option>
-                        <option value="1">
-                             1st Group
-                            </option>
-                            <option value="2">
-                              2nd Group
-                            </option>
-                            <option value="3">
-                              3rd Group
-                            </option>
-                            <option value="4">
-                             4th Group
-                            </option>
-                            <option value="5">
-                             5th Group
-                            </option>
+                        <option value="1">1st Group</option>
+                        <option value="2">2nd Group</option>
+                        <option value="3">3rd Group</option>
+                        <option value="4">4th Group</option>
+                        <option value="5">5th Group</option>
                       </select>
                     </div>
                   </div>
-                  
                 </div>
                 {/* <div style={{ marginTop: 10 }}>
                   <Editor
@@ -993,7 +983,7 @@ function QMSQuestionDetail() {
                     value={formik.values.ammendedText}
                   />
                 </div> */}
-                 <div className="row">
+                <div className="row">
                   <label htmlFor="" className="form-label">
                     Selected Images
                   </label>
@@ -1049,15 +1039,15 @@ function QMSQuestionDetail() {
                     </div>
                   )}
                 </div>
-                 <div style={{marginTop: 10, marginBottom: 40 }}>
-                <Editor
-                  title={"English Text"}
-                  onChange={(content) =>
-                    formik.setFieldValue("englishText", content)
-                  }
-                  value={formik.values.englishText}
-                />
-              </div>
+                <div style={{ marginTop: 10, marginBottom: 40 }}>
+                  <Editor
+                    title={"English Text"}
+                    onChange={(content) =>
+                      formik.setFieldValue("englishText", content)
+                    }
+                    value={formik.values.englishText}
+                  />
+                </div>
                 <div style={{ marginTop: 70, marginBottom: 40 }}>
                   <Editor
                     title={"Urdu Text"}
@@ -1088,7 +1078,7 @@ function QMSQuestionDetail() {
                   </button> */}
                 </div>
               </form>
-             
+
               <div
                 class="dash-detail-container"
                 style={{ marginTop: 70, marginBottom: 40 }}
