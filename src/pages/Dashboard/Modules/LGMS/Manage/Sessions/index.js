@@ -50,8 +50,6 @@ function LGMSSessions() {
         : "---",
       // summonNoticeTime: `${item?.summonNoticeTime}`,
 
-     
-
       // jointSessionPurpose: `${item?.jointSessionPurpose}`,
       sessionStatus: `${item?.sessionStatus}`,
     }));
@@ -103,7 +101,7 @@ function LGMSSessions() {
         <div class="row">
           <div class="col-12">
             <CustomTable
-              block={true}
+              // block={true}
               data={sessions}
               tableTitle="Sessions List"
               addBtnText="Add Sessions"
