@@ -3,7 +3,6 @@ import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
 import { QMSSideBarItems } from "../../../../../../utils/sideBarItems";
 import { useFormik } from "formik";
-import * as Yup from "yup";
 import TimePicker from "react-time-picker";
 import DatePicker from "react-datepicker";
 import { useLocation } from "react-router";
@@ -26,6 +25,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import { imagesUrl } from "../../../../../../api/APIs";
 import { useNavigate } from "react-router-dom";
+import * as Yup from "yup";
 
 const validationSchema = Yup.object({
   sessionNo: Yup.string(),
@@ -56,10 +56,6 @@ function QMSQuestionDetail() {
   const { members, sessions, divisions } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  console.log(
-    "Question Detail Data",
-    location?.state?.question?.session?.sessionName
-  );
   // console.log("Divisions", divisons);
   const [showDeferForm, setShowDeferForm] = useState(false);
   const [showRetriveForm, setShowRetriveForm] = useState(false);
@@ -82,7 +78,6 @@ function QMSQuestionDetail() {
     questionDiaryNo: "",
   });
 
-  console.log("location", location?.state?.question?.member?.id);
   const formik = useFormik({
     initialValues: {
       sessionNo: location?.state?.question?.session?.id,
@@ -102,6 +97,7 @@ function QMSQuestionDetail() {
       questionStatus: location?.state?.question?.fkQuestionStatus,
       // replyDate: location?.state?.question?.replyDate,
       replyDate:
+        location?.state?.question?.replyDate &&
         location?.state?.question?.replyDate !== "null"
           ? new Date(location?.state?.question?.replyDate)
           : "",
