@@ -101,7 +101,10 @@ function QMSQuestionDetail() {
       category: location?.state?.question?.questionCategory,
       questionStatus: location?.state?.question?.fkQuestionStatus,
       // replyDate: location?.state?.question?.replyDate,
-      replyDate: new Date(location?.state?.question?.replyDate),
+      replyDate:
+        location?.state?.question?.replyDate !== "null"
+          ? new Date(location?.state?.question?.replyDate)
+          : "",
       senator: location?.state ? location?.state?.question?.member?.id : "",
       group: location?.state ? location?.state?.question?.fkGroupId : "",
       division: location?.state ? location?.state?.question?.fkDivisionId : "",
@@ -794,7 +797,10 @@ function QMSQuestionDetail() {
                       <select
                         class="form-control small-control"
                         id="category"
-                        onChange={formik.handleChange}
+                        onChange={(e) => {
+                          formik.handleChange(e);
+                          formik.setFieldValue("group", ""); // Reset the "Group" field when "Category" changes
+                        }}
                         onBlur={formik.handleBlur}
                         value={formik.values.category}
                       >
@@ -946,7 +952,7 @@ function QMSQuestionDetail() {
                     <div class="mb-3">
                       <label class="form-label">Group</label>
                       {/* APi Required with base on Division ID */}
-                      <select
+                      {/* <select
                         class="form-select"
                         value={formik.values.group}
                         id="group"
@@ -961,6 +967,38 @@ function QMSQuestionDetail() {
                         <option value="3">3rd Group</option>
                         <option value="4">4th Group</option>
                         <option value="5">5th Group</option>
+                      </select> */}
+                      <select
+                        class="form-select"
+                        value={formik.values.group}
+                        id="group"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      >
+                        <option value={""} selected disabled hidden>
+                          Select
+                        </option>
+                        {formik.values.category === "Starred" ? (
+                          <>
+                            <option value="1">1st Group</option>
+                            <option value="2">2nd Group</option>
+                            <option value="3">3rd Group</option>
+                            <option value="4">4th Group</option>
+                            <option value="5">5th Group</option>
+                          </>
+                        ) : formik.values.category === "Un-Starred" ? (
+                          <>
+                            <option value="1">A</option>
+                            <option value="2">B</option>
+                            <option value="3">C</option>
+                            <option value="4">D</option>
+                            <option value="5">E</option>
+                          </>
+                        ) : (
+                          <option value="">
+                            Please select a category first
+                          </option>
+                        )}
                       </select>
                     </div>
                   </div>

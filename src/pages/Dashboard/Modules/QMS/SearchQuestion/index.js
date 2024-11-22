@@ -44,7 +44,6 @@ function QMSSearchQuestion() {
   const [deleteModalRemarksValue, setDeleteModalRemarksValue] = useState(null);
 
   const pageSize = 10; // Set your desired page size
-  console.log("currentSession", currentSession);
 
   const formik = useFormik({
     initialValues: {
@@ -52,7 +51,7 @@ function QMSSearchQuestion() {
       questionID: "",
       keyword: "",
       memberName: "",
-      fromSession: "",
+      fromSession: currentSession?.id || "",
       toSession: "",
       category: "",
       questionStatus: "",
@@ -145,7 +144,7 @@ function QMSSearchQuestion() {
       if (response?.success) {
         showSuccessMessage(response?.message);
         const transformedData = transformLeavesData(response?.data?.questions);
-        setCount(response?.data?.count)
+        setCount(response?.data?.count);
         setSearchedData(transformedData);
       }
     } catch (error) {
@@ -224,13 +223,17 @@ function QMSSearchQuestion() {
   useEffect(() => {
     GetALlStatus();
   }, []);
-
   useEffect(() => {
     if (location?.state) {
+      formik.setFieldValue("fromSession", "");
       const dashboardData = transformLeavesData(location?.state);
       setSearchedData(dashboardData);
     } else {
-      const values = { fromSession: currentSession?.id };
+      const values = {
+        fromSession: formik?.values?.fromSession
+          ? formik?.values?.fromSession
+          : currentSession?.id,
+      };
       SearchQuestionApi(values);
     }
   }, [location?.state, currentSession, currentPage]);
@@ -239,6 +242,15 @@ function QMSSearchQuestion() {
 
   const handleResetForm = () => {
     formik.resetForm({});
+    formik.setFieldValue("fromSession", currentSession?.id);
+    setCurrentPage(0);
+    const values = {
+      fromSession: formik?.values?.fromSession
+        ? formik?.values?.fromSession
+        : currentSession?.id,
+    };
+
+    SearchQuestionApi(values);
   };
 
   return (
@@ -360,7 +372,7 @@ function QMSSearchQuestion() {
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col">
+                  {/* <div class="col">
                     <div class="mb-3">
                       <label class="form-label">From Session</label>
                       <select
@@ -371,6 +383,28 @@ function QMSSearchQuestion() {
                         onBlur={formik.handleBlur}
                       >
                         <option value={""} selected disabled hidden>
+                          Select
+                        </option>
+                        {sessions &&
+                          sessions.map((item) => (
+                            <option key={item.id} value={item.id}>
+                              {item?.sessionName}
+                            </option>
+                          ))}
+                      </select>
+                    </div>
+                  </div> */}
+                  <div className="col">
+                    <div className="mb-3">
+                      <label className="form-label">From Session</label>
+                      <select
+                        className="form-select"
+                        value={formik.values.fromSession}
+                        id="fromSession"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      >
+                        <option value={""} disabled hidden>
                           Select
                         </option>
                         {sessions &&
