@@ -40,7 +40,7 @@ const validationSchema = Yup.object({
 function QMSNewResolution() {
   const { members, sessions, ministryData } = useContext(AuthContext);
   const userData = getUserData();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: {
@@ -65,29 +65,48 @@ function QMSNewResolution() {
       CreateResolutionApi(values);
     },
     enableReinitialize: true,
-
   });
-  console.log("resolutionClub", formik.values.resolutionClub)
+  console.log("resolutionClub", formik.values.resolutionClub);
   const CreateResolutionApi = async (values) => {
     const formData = new FormData();
     formData.append("fkSessionNo", values.fkSessionNo);
-    formData.append("noticeOfficeDiaryNo", Number(values.noticeOfficeDiaryNo));
-    formData.append("noticeOfficeDiaryDate", values.noticeOfficeDiaryDate);
-    formData.append("noticeOfficeDiaryTime", values.noticeOfficeDiaryTime);
-    formData.append("resolutionType", values.resolutionType);
-    formData.append("linkedResolutions", values.resolutionClub);
+    if (values.noticeOfficeDiaryNo) {
+      formData.append(
+        "noticeOfficeDiaryNo",
+        Number(values.noticeOfficeDiaryNo)
+      );
+    }
+    if (values.noticeOfficeDiaryDate) {
+      formData.append("noticeOfficeDiaryDate", values.noticeOfficeDiaryDate);
+    }
+    if (values.noticeOfficeDiaryTime) {
+      formData.append("noticeOfficeDiaryTime", values.noticeOfficeDiaryTime);
+    }
+    if (values.resolutionType) {
+      formData.append("resolutionType", values.resolutionType);
+    }
+    if (values.resolutionClub?.length > 0) {
+      formData.append("linkedResolutions", values.resolutionClub);
+    }
     // Assuming resolutionMovers is an array of objects with a fkMemberId property
     values?.resolutionMovers.forEach((mover, index) => {
       formData.append(`resolutionMovers[${index}][fkMemberId]`, mover.value);
     });
-
-    formData.append("englishText", values.englishText);
-    formData.append("urduText", values.urduText);
+    if (values.englishText) {
+      formData.append("englishText", values.englishText);
+    }
+    if (values.urduText) {
+      formData.append("urduText", values.urduText);
+    }
     formData.append("fkResolutionStatus", 1);
-    formData.append("attachment", values.attachment);
-    formData.append("resolutionSentStatus", 'inResolution');
-    formData.append("createdByUser", userData?.fkUserId)
-    formData.append("memberPosition", values?.memberPosition)
+    if (values?.attachment) {
+      formData.append("attachment", values.attachment);
+    }
+    formData.append("resolutionSentStatus", "inResolution");
+    formData.append("createdByUser", userData?.fkUserId);
+    if (values?.memberPosition) {
+      formData.append("memberPosition", values?.memberPosition);
+    }
     values?.ministries.forEach((minister, index) => {
       formData.append(`ministries[${index}][fkMinistryId]`, minister.value);
     });
@@ -97,20 +116,15 @@ function QMSNewResolution() {
       if (response?.success) {
         showSuccessMessage(response?.message);
         formik.resetForm();
-        navigate('/qms/search/resolution')
+        navigate("/qms/search/resolution");
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
     }
   };
 
-
   return (
-    <Layout
-      module={true}
-      sidebarItems={QMSSideBarItems}
-      centerlogohide={true}
-    >
+    <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <ToastContainer />
 
       <Header
@@ -135,11 +149,12 @@ function QMSNewResolution() {
                       <div class="mb-3">
                         <label class="form-label">Session No</label>
                         <select
-                          class={`form-select ${formik.touched.fkSessionNo &&
+                          class={`form-select ${
+                            formik.touched.fkSessionNo &&
                             formik.errors.fkSessionNo
-                            ? "is-invalid"
-                            : ""
-                            }`}
+                              ? "is-invalid"
+                              : ""
+                          }`}
                           // placeholder="Session No"
                           value={formik.values.fkSessionNo}
                           onChange={formik.handleChange}
@@ -189,11 +204,12 @@ function QMSNewResolution() {
                       <div class="mb-3">
                         <label class="form-label">Resolution Type</label>
                         <select
-                          class={`form-select ${formik.touched.resolutionType &&
+                          class={`form-select ${
+                            formik.touched.resolutionType &&
                             formik.errors.resolutionType
-                            ? "is-invalid"
-                            : ""
-                            }`}
+                              ? "is-invalid"
+                              : ""
+                          }`}
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                           value={formik.values.resolutionType || ""}
@@ -276,11 +292,12 @@ function QMSNewResolution() {
                             formik.setFieldValue("noticeOfficeDiaryDate", date)
                           }
                           onBlur={formik.handleBlur}
-                          className={`form-control ${formik.touched.noticeOfficeDiaryDate &&
+                          className={`form-control ${
+                            formik.touched.noticeOfficeDiaryDate &&
                             formik.errors.noticeOfficeDiaryDate
-                            ? "is-invalid"
-                            : ""
-                            }`}
+                              ? "is-invalid"
+                              : ""
+                          }`}
                           dateFormat={"dd-MM-yyyy"}
                         />
                         {formik.touched.noticeOfficeDiaryDate &&
@@ -314,11 +331,12 @@ function QMSNewResolution() {
                       <div class="mb-3">
                         <label class="form-label">Member Position</label>
                         <select
-                          class={`form-select ${formik.touched.memberPosition &&
+                          class={`form-select ${
+                            formik.touched.memberPosition &&
                             formik.errors.memberPosition
-                            ? "is-invalid"
-                            : ""
-                            }`}
+                              ? "is-invalid"
+                              : ""
+                          }`}
                           placeholder="Member Position"
                           value={formik.values.memberPosition}
                           onChange={formik.handleChange}
@@ -352,17 +370,17 @@ function QMSNewResolution() {
                           name="resolutionClub"
                           value={formik.values.resolutionClub}
                           onBlur={formik.handleBlur}
-                          onChange={formik.handleChange} 
+                          onChange={formik.handleChange}
                           placeholder=""
                         />
-                        {formik.touched.resolutionClub && formik.errors.resolutionClub && (
-                          <div className="invalid-feedback">
-                            {formik.errors.resolutionClub}
-                          </div>
-                        )}
+                        {formik.touched.resolutionClub &&
+                          formik.errors.resolutionClub && (
+                            <div className="invalid-feedback">
+                              {formik.errors.resolutionClub}
+                            </div>
+                          )}
                       </div>
                     </div>
-
 
                     <div class="col-3">
                       <div class="mb-3">
@@ -377,10 +395,7 @@ function QMSNewResolution() {
                           }
                           isMulti
                           onChange={(selectedOptions) =>
-                            formik.setFieldValue(
-                              "ministries",
-                              selectedOptions
-                            )
+                            formik.setFieldValue("ministries", selectedOptions)
                           }
                           onBlur={formik.handleBlur}
                           value={formik.values.ministries}
