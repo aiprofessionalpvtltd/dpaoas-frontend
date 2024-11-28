@@ -42,14 +42,21 @@ function QMSNoticeResolutionDetail() {
         : "",
       noticeOfficeDiaryNo:
         location?.state?.noticeDiary?.noticeOfficeDiaryNo || "",
+      // noticeOfficeDiaryDate: location?.state?.noticeDiary?.noticeOfficeDiaryDate
+      //   ? moment(
+      //       location?.state?.noticeDiary?.noticeOfficeDiaryDate,
+      //       "YYYY-MM-DD"
+      //     ).toDate()
+      //   : "",
       noticeOfficeDiaryDate: location?.state?.noticeDiary?.noticeOfficeDiaryDate
         ? moment(
             location?.state?.noticeDiary?.noticeOfficeDiaryDate,
             "YYYY-MM-DD"
           ).toDate()
         : null,
-      noticeOfficeDiaryTime:
-        location?.state?.noticeDiary?.noticeOfficeDiaryTime || "",
+      noticeOfficeDiaryTime: location?.state?.noticeDiary?.noticeOfficeDiaryTime
+        ? location?.state?.noticeDiary?.noticeOfficeDiaryTime
+        : "",
       resolutionType: location?.state?.resolutionType || "",
       resolutionStatus: location?.state?.resolutionStatus
         ? {
@@ -59,14 +66,14 @@ function QMSNoticeResolutionDetail() {
         : "",
       resolutionMovers:
         location?.state?.resolutionMoversAssociation?.length > 0
-          ? location?.state?.resolutionMoversAssociation.map((item) => ({
+          ? location?.state?.resolutionMoversAssociation?.map((item) => ({
               value: item?.memberAssociation?.id,
               label: item?.memberAssociation?.memberName,
             }))
           : [],
       ministries:
         location?.state?.resolutionMinistries?.length > 0
-          ? location?.state?.resolutionMinistries.map((item) => ({
+          ? location?.state?.resolutionMinistries?.map((item) => ({
               value: item?.fkMinistryId,
               label: item?.ministries?.ministryName,
             }))
@@ -111,8 +118,12 @@ function QMSNoticeResolutionDetail() {
   const hendleUpdate = async (values) => {
     const data = new FormData();
     data.append("fkSessionNo", values?.sessionNo?.value);
-    data.append("noticeOfficeDiaryDate", values.noticeOfficeDiaryDate);
-    data.append("noticeOfficeDiaryTime", values.noticeOfficeDiaryTime);
+    if (values?.noticeOfficeDiaryDate) {
+      data.append("noticeOfficeDiaryDate", values.noticeOfficeDiaryDate);
+    }
+    if (values.noticeOfficeDiaryTime) {
+      data.append("noticeOfficeDiaryTime", values.noticeOfficeDiaryTime);
+    }
     data.append("resolutionType", values.resolutionType);
     data.append("fkResolutionStatus", values.resolutionStatus?.value);
     values?.resolutionMovers?.forEach((mover, index) => {
@@ -120,19 +131,34 @@ function QMSNoticeResolutionDetail() {
     });
     // data.append("resolutionMovers[]", values.resolutionMovers?.value);
     data.append("noticeOfficeDiaryNo", values?.noticeOfficeDiaryNo);
-
-    data.append("colourResNo", values.colourResNo);
-    data.append("resolutionDiaryNo", values.resolutionDiaryNo);
-    data.append("dateOfMovingHouse", values.dateOfMovingHouse);
-    data.append("dateOfDiscussion", values.dateOfDiscussion);
-    data.append("dateOfPassing", values.dateOfPassing);
-    data.append("linkedResolutions", values.resolutionClub);
+    if (values.colourResNo) {
+      data.append("colourResNo", values.colourResNo);
+    }
+    if (values.resolutionDiaryNo) {
+      data.append("resolutionDiaryNo", values.resolutionDiaryNo);
+    }
+    if (values.dateOfMovingHouse) {
+      data.append("dateOfMovingHouse", values.dateOfMovingHouse);
+    }
+    if (values.dateOfDiscussion) {
+      data.append("dateOfDiscussion", values.dateOfDiscussion);
+    }
+    if (values?.dateOfPassing) {
+      data.append("dateOfPassing", values.dateOfPassing);
+    }
+    if (values?.resolutionClub?.length > 0) {
+      data.append("linkedResolutions", values.resolutionClub);
+    }
 
     values?.ministries.forEach((minister, index) => {
       data.append(`ministries[${index}][fkMinistryId]`, minister.value);
     });
-    data.append("englishText", values.englishText);
-    data.append("urduText", values.urduText);
+    if (values.englishText) {
+      data.append("englishText", values.englishText);
+    }
+    if (values.urduText) {
+      data.append("urduText", values.urduText);
+    }
     if (values?.memberPosition) {
       data.append("memberPosition", values?.memberPosition);
     }
@@ -267,9 +293,7 @@ function QMSNoticeResolutionDetail() {
   };
 
   const imgArray =
-    location?.state?.attachment.length > 0
-      ? location?.state?.attachment
-      : null;
+    location?.state?.attachment.length > 0 ? location?.state?.attachment : null;
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <ToastContainer />
@@ -728,7 +752,7 @@ function QMSNoticeResolutionDetail() {
                   {imgArray && imgArray ? (
                     imgArray &&
                     location?.state?.attachment?.map((item, index) => {
-                      const imageparse = JSON.parse(item)
+                      const imageparse = JSON.parse(item);
                       return (
                         <div key={index} class="MultiFile-label mt-3">
                           <a

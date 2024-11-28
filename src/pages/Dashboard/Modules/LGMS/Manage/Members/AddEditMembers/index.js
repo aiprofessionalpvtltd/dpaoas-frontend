@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCalendarAlt, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -502,6 +500,10 @@ function LGMSMembersAddEditForm() {
                         </option>
                         <option value="Opposition">Opposition</option>
                         <option value="Government">Government</option>
+                        <option value="Independent">Independent</option>
+                        <option value="Minister">Minister</option>
+                        <option value="Treasury">Treasury</option>
+                        <option value="Anyside">Anyside</option>
                       </select>
                     </div>
                   </div>
