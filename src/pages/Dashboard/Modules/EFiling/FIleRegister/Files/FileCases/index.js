@@ -103,6 +103,7 @@ function FileCases() {
   const getAllCasesApi = async () => {
     const searchParams = {
       userId: userData?.fkUserId,
+      branchId: userData?.fkBranchId,
       currentPage: currentPage,
       pageSize: pageSize,
       // fileId: fkfileId?.value ? fkfileId?.value : location.state?.internalId,

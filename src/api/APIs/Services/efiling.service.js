@@ -664,18 +664,9 @@ export const deleteCaseById = async (id) => {
   }
 };
 
-export const getPendingCasesThroughSearchParams = async (searchParams) => {
-  const filteredSearchParams = Object.fromEntries(
-    Object.entries(searchParams).filter(([_, value]) => value !== "")
-  );
+export const getPendingCasesThroughSearchParams = async (queryParams) => {
   try {
-    //   const token = getAuthToken();
-    const response = await axiosClient.get(`/cases/getAllPendingCases`, {
-      params: filteredSearchParams,
-      // headers: {
-      //   Authorization: `Bearer ${token}`,
-      // },
-    });
+    const response = await axiosClient.get(`/cases/getAllPendingCases?${queryParams}`);
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -872,11 +863,11 @@ export const assignFR = async (frId, data) => {
   }
 };
 
-export const getAllFreshReceipt = async (userId, currentPage, pageSize) => {
+export const getAllFreshReceipt = async (userId, branchId, currentPage, pageSize) => {
   try {
     //   const token = getAuthToken();
     const response = await axiosClient.get(
-      `/freshReceipt/${userId}?currentPage=${currentPage}&pageSize=${pageSize}`
+      `/freshReceipt/${userId}/${branchId}?currentPage=${currentPage}&pageSize=${pageSize}`
     );
     // {
     //   headers: {
@@ -891,26 +882,14 @@ export const getAllFreshReceipt = async (userId, currentPage, pageSize) => {
   }
 };
 
-export const getPendingFreshReceipts = async (
-  userId,
-  currentPage,
-  pageSize
-) => {
+export const getPendingFreshReceipts = async (queryParams) => {
+  const url = `/freshReceipt/getAllPendingFRs?${queryParams}`;
   try {
-    //   const token = getAuthToken();
-    const response = await axiosClient.get(
-      `/freshReceipt/getAllPendingFRs/${userId}?currentPage=${currentPage}&pageSize=${pageSize}`
-    );
-    // {
-    //   headers: {
-    //     accept: "application/json",
-    //     "Content-Type": "multipart/form-data",
-    //   },
-    // });
-    return response?.data;
+      const response = await axiosClient.get(url);
+      return response?.data;
   } catch (error) {
-    console.error("Error fetching API endpoint:", error);
-    throw error;
+      console.error("Error fetching API endpoint:", error);
+      throw error;
   }
 };
 

@@ -289,11 +289,11 @@ export const getEmployeeById = async (id) => {
   }
 };
 
-export const getLLEmployee = async (userId) => {
+export const getLLEmployee = async (userId, branchName) => {
   try {
     const token = getAuthToken();
     const response = await axiosClient.get(
-      `/cases/getLLEmployee/${userId}`,
+      `/cases/getLLEmployee/${userId}?branchName=${branchName}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -307,11 +307,11 @@ export const getLLEmployee = async (userId) => {
   }
 };
 
-export const getHLEmployee = async (userId) => {
+export const getHLEmployee = async (userId, branchName) => {
   try {
     const token = getAuthToken();
     const response = await axiosClient.get(
-      `/cases/getHLEmployees/${userId}`,
+      `/cases/getHLEmployees/${userId}?branchName=${branchName}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

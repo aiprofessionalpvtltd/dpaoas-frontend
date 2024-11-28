@@ -44,6 +44,7 @@ import { CustomAlert } from "../../../../../components/CustomComponents/CustomAl
 import html2pdf from "html2pdf.js";
 import { HalfMalf } from "react-spinner-animated";
 import "react-spinner-animated/dist/index.css";
+import { getBranchById } from "../../../../../api/APIs/Services/Branches.services";
 
 const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
   return (
@@ -203,6 +204,8 @@ function FileDetail() {
     });
   };
 
+  const [customAssignedTo, setCustomAssignedTo] = useState();
+
   const hendleAssiginFileCaseApi = async () => {
     try {
       // Update the specific paragraph's assignedTo value
@@ -221,8 +224,14 @@ function FileDetail() {
           ? notingTabData[notingTabData?.length - 1].id
           : notingTabData[0]?.id
       );
+
+      const assignedToValue = customAssignedTo === "Jamil Ahmed" ? 57 : modalInputValue?.assignedTo;
+
+      console.log('====================================');
+      console.log("modalInputValue?.assignedTo", assignedToValue);
+      console.log('====================================');
       formData.append("submittedBy", UserData?.fkUserId);
-      formData.append("assignedTo", modalInputValue?.assignedTo);
+      formData.append("assignedTo", assignedToValue);
       formData.append("priority", modalInputValue?.priority);
       formData.append("CommentStatus", modalInputValue?.CommentStatus);
       formData.append(
@@ -259,9 +268,12 @@ function FileDetail() {
     }
   };
 
-  const getEmployeeData = async () => {
+  const getEmployeeData = async (fkBranchId) => {
     try {
-      const response = await getHLEmployee(UserData?.fkUserId);
+      const branchData = await getBranchById(fkBranchId);
+
+      const response = await 
+      getHLEmployee(UserData?.fkUserId, branchData?.data?.branchName);
       if (response?.success) {
         const filteredData = response?.data?.filter(
           (item) =>
@@ -504,6 +516,8 @@ function FileDetail() {
       if (response?.success) {
         setRemarksData(response?.data?.cases?.casesRemarks);
         setFilesData(response?.data);
+        getEmployeeData(response?.data?.fkBranchId);
+
         setCaseCreatedBy(response?.data?.caseCreatedBy);
         const FRSelection = {
           frId: response?.data?.cases?.freshReceipts?.id,
@@ -536,10 +550,6 @@ function FileDetail() {
   useEffect(() => {
     handleCorrespondences();
   }, [filesData?.cases?.files?.id, currentPage]);
-
-  useEffect(() => {
-    getEmployeeData();
-  }, []);
 
   useEffect(() => {
     formik.setValues({
@@ -619,8 +629,6 @@ function FileDetail() {
       getFilesByID(fileId, caseId, order);
     }
   }, [order]);
-
-  console.log("locat", location?.state?.id);
 
   // const deleteNotification = async (item) => {
   //   try {
@@ -994,28 +1002,38 @@ function FileDetail() {
             <div class="col">
               <div class="mb-3">
                 <label class="form-label">Mark To</label>
-                <select
-                  class="form-select"
-                  id="assignedTo"
-                  name="assignedTo"
-                  onChange={(e) =>
-                    setModalInputValue((prevState) => ({
-                      ...prevState,
-                      assignedTo: e.target.value,
-                    }))
-                  }
-                  value={modalInputValue.assignedTo}
-                >
-                  <option value={""} selected>
-                    Select
-                  </option>
-                  {employeeData &&
-                    employeeData?.map((item) => (
-                      <option
-                        value={item.fkUserId}
-                      >{`${item?.firstName} ${item?.lastName} (${item.designations?.designationName})`}</option>
-                    ))}
-                </select>
+<select
+  className="form-select"
+  id="assignedTo"
+  name="assignedTo"
+  onChange={(e) => {
+    const selectedValue = e.target.value;
+    const selectedItem = employeeData.find(
+      (item) => item.fkUserId.toString() === selectedValue
+    );
+
+    // Update modal input state
+    setModalInputValue((prevState) => ({
+      ...prevState,
+      assignedTo: selectedValue,
+    }));
+
+    // Update customAssignedTo with firstName of selected item
+    setCustomAssignedTo(selectedItem?.firstName || "");
+  }}
+  value={modalInputValue.assignedTo}
+>
+  <option value="" disabled>
+    Select
+  </option>
+  {employeeData &&
+    employeeData.map((item) => (
+      <option key={item.fkUserId} value={item.fkUserId.toString()}>
+        {`${item?.firstName} ${item?.lastName} (${item.designations?.designationName})`}
+      </option>
+    ))}
+</select>
+
               </div>
             </div>
           </div>

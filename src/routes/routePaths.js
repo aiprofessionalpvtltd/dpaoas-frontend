@@ -795,7 +795,7 @@ export const ProtectedRoutes = [
   // { path: "/efiling/dashboard", element: <MainDashboard /> },
   { path: "/efiling/dashboard", element: <MainDashBoardDemo /> },
   // { path: "/efiling/dashboard", element: <UpdatedDashboard /> },
-  { path: "/efiling/director-dashboard", element: <EFilingDashboard /> },
+  // { path: "/efiling/director-dashboard", element: <EFilingDashboard /> },
 
   { path: "/efiling/dashboard/fileDetail", element: <FileDetail /> },
   // { path: "/efiling/dashboard/addedit", element: <AddEditFileForm /> },

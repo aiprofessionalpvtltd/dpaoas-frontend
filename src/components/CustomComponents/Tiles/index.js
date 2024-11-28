@@ -2,16 +2,7 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 
-export const Tiles = ({
-  title,
-  value,
-  link,
-  cardbg,
-  icon,
-  type,
-  id,
-  onClick,
-}) => {
+export const Tiles = ({ title, value, link, cardbg, icon, type }) => {
   return (
     <>
       {type === "TileWithIcon" ? (
@@ -33,8 +24,6 @@ export const Tiles = ({
           <div
             class={`card ${cardbg} text-white widget-visitor-card`}
             style={{ overflow: "hidden" }}
-            onClick={() => onClick(id)} // Call the function with the id
-            // style={{ cursor: 'pointer' }}
           >
             <div
               class="card-block-small text-center"
