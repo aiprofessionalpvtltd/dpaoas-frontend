@@ -96,7 +96,9 @@ function QMSQuestionDetail() {
       category: location?.state?.question?.questionCategory,
       questionStatus: location?.state?.question?.fkQuestionStatus,
       // replyDate: location?.state?.question?.replyDate,
-      replyDate:location?.state?.question?.replyDate !== "null"
+      replyDate:
+        location?.state?.question?.replyDate &&
+        location?.state?.question?.replyDate !== "null"
           ? new Date(location?.state?.question?.replyDate)
           : "",
       senator: location?.state ? location?.state?.question?.member?.id : "",
