@@ -96,6 +96,9 @@ function FRDetail() {
     try {
       const response = await getFreshReceiptById(receptId);
       if (response.success) {
+        console.log('====================================');
+        console.log("response?.data?.freshReceipt", response?.data?.freshReceipt);
+        console.log('====================================');
         setRemarksData(response?.data?.freshReceipt);
         setDescriptionData(response?.data?.shortDescription);
         setAttachments(response?.data?.freshReceiptsAttachments);
@@ -128,7 +131,7 @@ function FRDetail() {
 
   const getEmployeeData = async () => {
     try {
-      const response = await getLLEmployee(UserData?.fkUserId);
+      const response = await getLLEmployee(UserData?.fkUserId, UserData?.branch?.branchName);
       if (response?.success) {
         const filteredData = response?.data?.filter(
           (item) => item?.userName !== UserData?.userName
