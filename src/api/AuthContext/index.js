@@ -198,7 +198,7 @@ export const AuthProvider = ({ children }) => {
         });
 
         // Optional: Play notification sound
-        playSound();
+        // playSound();
       } catch (error) {
         console.error("Failed to create notification:", error);
       }
@@ -217,7 +217,7 @@ export const AuthProvider = ({ children }) => {
         });
 
         // Optional: Play notification sound
-        playSound();
+        // playSound();
       } catch (error) {
         console.error("Failed to create notification:", error);
       }
@@ -240,7 +240,7 @@ export const AuthProvider = ({ children }) => {
           });
 
           // Optional: Play notification sound
-          playSound();
+          // playSound();
         } catch (error) {
           console.error("Failed to create notification:", error);
         }
