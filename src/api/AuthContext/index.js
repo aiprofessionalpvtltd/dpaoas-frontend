@@ -53,9 +53,16 @@ export const AuthProvider = ({ children }) => {
         const updatedUserData = {
           ...response.data?.user,
           fkBranchId: response.data?.user?.branches[0]?.id,
-          branch: {id: response.data?.user?.branches[0]?.id, branchName: response.data?.user?.branches[0]?.branchName},
+          branch: {
+            id: response.data?.user?.branches[0]?.id,
+            branchName: response.data?.user?.branches[0]?.branchName,
+          },
         };
-        setUserData(response.data?.user?.branches?.length > 0 ? updatedUserData : response.data?.user);
+        setUserData(
+          response.data?.user?.branches?.length > 0
+            ? updatedUserData
+            : response.data?.user
+        );
 
         setPermissions(response?.data?.permissions);
       }
@@ -198,7 +205,7 @@ export const AuthProvider = ({ children }) => {
         });
 
         // Optional: Play notification sound
-        // playSound();
+        playSound();
       } catch (error) {
         console.error("Failed to create notification:", error);
       }
@@ -217,7 +224,7 @@ export const AuthProvider = ({ children }) => {
         });
 
         // Optional: Play notification sound
-        // playSound();
+        playSound();
       } catch (error) {
         console.error("Failed to create notification:", error);
       }
@@ -240,7 +247,7 @@ export const AuthProvider = ({ children }) => {
           });
 
           // Optional: Play notification sound
-          // playSound();
+          playSound();
         } catch (error) {
           console.error("Failed to create notification:", error);
         }
