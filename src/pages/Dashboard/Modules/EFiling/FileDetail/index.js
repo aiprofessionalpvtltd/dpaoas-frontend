@@ -758,7 +758,7 @@ function FileDetail() {
 
   // Main HTML template
   const html = `
-  <div className="container" style="padding:20px">
+  <div className="container" style="padding-left:50px; padding-right:50px">
     <div className="row mb-5">
       <div className="col-2" style="border-right: 1px solid black; height: 100%;">
         <!-- Border Column Content -->
