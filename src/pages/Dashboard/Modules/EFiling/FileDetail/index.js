@@ -153,7 +153,6 @@ function FileDetail() {
   });
 
   const UpdateEfilingApi = async () => {
-    return;
     const data = {
       notingSubject: notingTabSubject,
       paragraphArray: notingTabData,
@@ -1282,7 +1281,7 @@ function FileDetail() {
                             </button>
                           </div>
 
-                          {UserData && UserData?.userType === "Officer" && (
+                          {/* {UserData && UserData?.userType === "Officer" && (
                             <div class="col-auto">
                               <button
                                 class="btn btn-primary"
@@ -1305,7 +1304,7 @@ function FileDetail() {
                                 Approve Case
                               </button>
                             </div>
-                          )}
+                          )} */}
                         </div>
 
                         <div
