@@ -70,6 +70,7 @@ function FileCases() {
         isEditable: item?.isEditable,
         caseId: item?.fkCaseId,
         caseNoteId: item?.caseNoteId,
+        Branch: item?.branch?.name,
         internalId: item?.fileData?.id,
         FileNo: item?.fileData?.fileNumber,
         // FileSubject: item?.fileData?.fileSubject,

@@ -187,11 +187,11 @@ function FRDetail() {
 
   const hendleAssiginFileCaseApi = async () => {
 
-    const assignedToValue = customAssignedTo === "Jamil Ahmed" ? 57 : modalInputValue?.assignedTo;
+    // const assignedToValue = customAssignedTo === "Jamil Ahmed" ? 57 : modalInputValue?.assignedTo;
     
     const data = {
       submittedBy: UserData?.fkUserId,
-      assignedTo: assignedToValue,
+      assignedTo: modalInputValue?.assignedTo,
       priority: modalInputValue?.priority,
       CommentStatus: modalInputValue?.CommentStatus,
       comment: modalInputValue?.CommentStatus ? "" : modalInputValue?.comment,

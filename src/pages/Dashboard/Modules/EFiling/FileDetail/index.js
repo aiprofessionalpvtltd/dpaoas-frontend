@@ -209,8 +209,8 @@ function FileDetail() {
     try {
       // Update the specific paragraph's assignedTo value
       const updatedTabs = [...notingTabData]; // Create a copy of the array to ensure immutability
-      updatedTabs[order == "ASC" ? notingTabData.length - 1 : 0] = {
-        ...updatedTabs[order == "ASC" ? notingTabData.length - 1 : 0], // Spread the existing tab data
+      updatedTabs[order == "ASC" ? notingTabData?.length - 1 : 0] = {
+        ...updatedTabs[order == "ASC" ? notingTabData?.length - 1 : 0], // Spread the existing tab data
         assignedTo: modalInputValue?.assignedTo, // Update only the assignedTo field for the specific paragraph
       };
 
@@ -224,13 +224,13 @@ function FileDetail() {
           : notingTabData[0]?.id
       );
 
-      const assignedToValue = customAssignedTo === "Jamil Ahmed" ? 57 : modalInputValue?.assignedTo;
+      // const assignedToValue = customAssignedTo === "Jamil Ahmed" ? 57 : modalInputValue?.assignedTo;
 
       console.log('====================================');
-      console.log("modalInputValue?.assignedTo", assignedToValue);
+      console.log("modalInputValue?.assignedTo", modalInputValue?.assignedTo);
       console.log('====================================');
       formData.append("submittedBy", UserData?.fkUserId);
-      formData.append("assignedTo", assignedToValue);
+      formData.append("assignedTo", modalInputValue?.assignedTo);
       formData.append("priority", modalInputValue?.priority);
       formData.append("CommentStatus", modalInputValue?.CommentStatus);
       formData.append(
@@ -341,7 +341,7 @@ function FileDetail() {
 
       setNotingData("");
     } else if (isReference) {
-      const updatedTabs = notingTabData.map((tab, i) =>
+      const updatedTabs = notingTabData?.map((tab, i) =>
         i === index
           ? {
               ...tab,
@@ -351,7 +351,7 @@ function FileDetail() {
       );
       setNotingTabsData(updatedTabs);
     } else {
-      const updatedTabs = notingTabData.map((tab, i) =>
+      const updatedTabs = notingTabData?.map((tab, i) =>
         i === index
           ? {
               ...tab,
@@ -380,7 +380,7 @@ function FileDetail() {
     //     showErrorMessage(error?.response?.data?.message)
     //   }
     // }else{
-    const updatedTabs = notingTabData.filter((_, i) => i !== index);
+    const updatedTabs = notingTabData?.filter((_, i) => i !== index);
 
     // // Update the titles of the remaining items
     const renumberedTabs = updatedTabs.map((tab, i) => ({
@@ -393,7 +393,7 @@ function FileDetail() {
   };
   const handleFlagDeleteFunc = (tabIndex, flagIndex) => {
     // Function to handle deletion of a flag
-    const updatedTabs = notingTabData.map((tab, tIndex) => {
+    const updatedTabs = notingTabData?.map((tab, tIndex) => {
       if (tIndex === tabIndex) {
         return {
           ...tab,
@@ -435,7 +435,7 @@ function FileDetail() {
       }
     } else {
       // const tabIndex= 0
-      const updatedTabs = notingTabData.map((tab, tIndex) => {
+      const updatedTabs = notingTabData?.map((tab, tIndex) => {
         if (
           item?.attachments[0]?.attachments[0]?.id ===
           item?.attachments[0]?.attachments[0]?.id
@@ -864,7 +864,7 @@ function FileDetail() {
   };
 
   const isContentEmpty = () => {
-    const strippedText = stripHtml(notingData.description);
+    const strippedText = stripHtml(notingData?.description);
     return strippedText.trim().length === 0; // Check if the content is truly empty after stripping HTML
   };
 
@@ -1388,7 +1388,7 @@ function FileDetail() {
                                         onChange={(data) =>
                                           setNotingData({ description: data })
                                         }
-                                        value={notingData.description}
+                                        value={notingData?.description}
                                         disabled={
                                           location?.state?.view ? true : false
                                         }
@@ -1411,7 +1411,7 @@ function FileDetail() {
                                           onClick={() =>
                                             handleEditorChange(
                                               null,
-                                              notingData.description,
+                                              notingData?.description,
                                               null,
                                               false,
                                               true
@@ -1462,7 +1462,7 @@ function FileDetail() {
                                     onChange={(data) =>
                                       setNotingData({ description: data })
                                     }
-                                    value={notingData.description}
+                                    value={notingData?.description}
                                     disabled={
                                       location?.state?.view ? true : false
                                     }
@@ -1481,7 +1481,7 @@ function FileDetail() {
                                       onClick={() =>
                                         handleEditorChange(
                                           null,
-                                          notingData.description,
+                                          notingData?.description,
                                           null,
                                           false,
                                           true
@@ -1498,7 +1498,7 @@ function FileDetail() {
                                 onChange={(content) =>
                                   setNotingData({ description: content })
                                 }
-                                value={notingData.description}
+                                value={notingData?.description}
                                 width={"100%"}
                                 display={"flex"}
                               /> */}
@@ -1639,7 +1639,7 @@ function FileDetail() {
 
                 <div style={{ maxHeight: "712px", overflowY: "scroll" }}>
                   {remarksData?.length > 0 ? (
-                    remarksData.map((item) => (
+                    remarksData?.map((item) => (
                       <>
                         {(item?.CommentStatus !== null ||
                           item?.comment !== null) && (
