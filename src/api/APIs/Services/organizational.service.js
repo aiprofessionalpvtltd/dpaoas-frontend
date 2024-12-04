@@ -307,11 +307,11 @@ export const getLLEmployee = async (userId, branchName) => {
   }
 };
 
-export const getHLEmployee = async (userId, branchName) => {
+export const getHLEmployee = async (userId, selectedBranchID, branchName) => {
   try {
     const token = getAuthToken();
     const response = await axiosClient.get(
-      `/cases/getHLEmployees/${userId}?branchName=${branchName}`,
+      `/cases/getHLEmployees/${userId}?selectedBranchID=${selectedBranchID}&branchName=${branchName}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

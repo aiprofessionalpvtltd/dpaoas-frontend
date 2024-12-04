@@ -272,7 +272,7 @@ function FileDetail() {
       const branchData = await getBranchById(fkBranchId);
 
       const response = await 
-      getHLEmployee(UserData?.fkUserId, branchData?.data?.branchName);
+      getHLEmployee(UserData?.fkUserId, UserData?.branch?.id, branchData?.data?.branchName);
       if (response?.success) {
         const filteredData = response?.data?.filter(
           (item) =>
