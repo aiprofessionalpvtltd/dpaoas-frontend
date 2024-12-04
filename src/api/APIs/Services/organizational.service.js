@@ -310,8 +310,9 @@ export const getLLEmployee = async (userId, branchName) => {
 export const getHLEmployee = async (userId, selectedBranchID, branchName) => {
   try {
     const token = getAuthToken();
+    const encodedBranchName = encodeURIComponent(branchName);
     const response = await axiosClient.get(
-      `/cases/getHLEmployees/${userId}?selectedBranchID=${selectedBranchID}&branchName=${branchName}`,
+      `/cases/getHLEmployees/${userId}?selectedBranchID=${selectedBranchID}&branchName=${encodedBranchName}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
