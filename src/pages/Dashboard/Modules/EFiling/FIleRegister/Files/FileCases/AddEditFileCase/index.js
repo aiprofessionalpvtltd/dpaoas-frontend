@@ -39,6 +39,7 @@ import { Jodit } from "../../../../../../../../components/CustomComponents/Edito
 import { CKEditorComp } from "../../../../../../../../components/CustomComponents/Editor/CKEditorComp";
 import ImageGallery from "react-image-gallery";
 import "react-image-gallery/styles/css/image-gallery.css";
+import moment from "moment";
 
 function AddEditFileCase() {
   const navigate = useNavigate();
@@ -336,6 +337,7 @@ function AddEditFileCase() {
       name: item.name,
       description: item.description,
       status: item.status,
+      createdAt: moment(item.createdAt).format("DD-MM-YYYY"),
       attachmentInternal: item.correspondenceAttachments,
     }));
   };

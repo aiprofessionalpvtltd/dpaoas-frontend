@@ -464,7 +464,7 @@ function FileDetail() {
 
   // setNotingTabsData(renumberedTabs);
 
-  const transformData = (apiData) => {
+  const   transformData = (apiData) => {
     return apiData
       ?.filter((item) => item.status === "active") // Filter items with status 'active'
       .map((item) => ({
@@ -472,6 +472,7 @@ function FileDetail() {
         name: item.name,
         description: item.description,
         status: item.status,
+        createdAt: moment(item.createdAt).format("DD-MM-YYYY"), 
         attachmentInternal: item.correspondenceAttachments,
       }));
   };
