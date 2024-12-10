@@ -80,7 +80,7 @@ function QMSQuestionDashboard() {
             color: "#fb6340",
           }}
         >
-          Form Notice Office Branch
+          From Notice Office Branch
         </h2>
         <div class="row">
           <div class="col">

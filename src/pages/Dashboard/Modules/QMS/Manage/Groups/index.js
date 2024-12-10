@@ -1,13 +1,20 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Header from "../../../../../../components/Header";
 import { Layout } from "../../../../../../components/Layout";
 import { QMSSideBarItems } from "../../../../../../utils/sideBarItems";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { getDivisionsBySessionId, updateDivisionsAndGroups } from "../../../../../../api/APIs/Services/ManageQMS.service";
-import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
+import {
+  getDivisionsBySessionId,
+  updateDivisionsAndGroups,
+} from "../../../../../../api/APIs/Services/ManageQMS.service";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
+import { AuthContext } from "../../../../../../api/AuthContext";
 
 const validationSchema = Yup.object({
   employeename: Yup.string().required("Employee name is required"),
@@ -82,7 +89,7 @@ function QMSGroups() {
   const [columns, setColumns] = useState({});
   const [sessionId, setSessionId] = useState();
   const [draggedItemDivision, setDraggedItemDivision] = useState();
-
+  const { sessions } = useContext(AuthContext);
   const onDragEnd = ({ source, destination }) => {
     if (!destination) return null;
 
@@ -90,7 +97,7 @@ function QMSGroups() {
     // if (destination.droppableId === "availableDivisions") {
     //   // Get the dragged item
     //   const draggedItem = columns[source.droppableId].list[source.index];
-      
+
     //   // Set the dragged item into the state
     //   console.log("Dragged item", draggedItem);
     //   // setDraggedItemDivision(draggedItem);
@@ -154,30 +161,32 @@ function QMSGroups() {
       if (response?.success) {
         console.log("data", response?.data);
         const initialColumns = {
-            availableDivisions: {
-              id: "availableDivisions",
-              list: response?.data?.availableDivisions ? response?.data?.availableDivisions?.list : [],
-            },
-            group1: {
-              id: "group1",  // Add the id property
-              list: response?.data?.group1 ? response?.data?.group1?.list : [],
-            },
-            group2: {
-              id: "group2",  // Add the id property
-              list: response?.data?.group2 ? response?.data?.group2?.list : [],
-            },
-            group3: {
-              id: "group3",  // Add the id property
-              list: response?.data?.group3 ? response?.data?.group3?.list : [],
-            },
-            group4: {
-              id: "group4",  // Add the id property
-              list: response?.data?.group4 ? response?.data?.group4?.list : [],
-            },
-            group5: {
-              id: "group5",  // Add the id property
-              list: response?.data?.group5 ? response?.data?.group5?.list : [],
-            }          
+          availableDivisions: {
+            id: "availableDivisions",
+            list: response?.data?.availableDivisions
+              ? response?.data?.availableDivisions?.list
+              : [],
+          },
+          group1: {
+            id: "group1", // Add the id property
+            list: response?.data?.group1 ? response?.data?.group1?.list : [],
+          },
+          group2: {
+            id: "group2", // Add the id property
+            list: response?.data?.group2 ? response?.data?.group2?.list : [],
+          },
+          group3: {
+            id: "group3", // Add the id property
+            list: response?.data?.group3 ? response?.data?.group3?.list : [],
+          },
+          group4: {
+            id: "group4", // Add the id property
+            list: response?.data?.group4 ? response?.data?.group4?.list : [],
+          },
+          group5: {
+            id: "group5", // Add the id property
+            list: response?.data?.group5 ? response?.data?.group5?.list : [],
+          },
         };
         console.log("initialColumns", initialColumns);
         setColumns(initialColumns);
@@ -188,46 +197,61 @@ function QMSGroups() {
   };
 
   const handleUpdate = async () => {
-    const updatedDivisions = columns?.availableDivisions?.list?.map(item => ({ id: item.id }));
-    const updatedGroup1 = columns?.group1?.list?.map(item => ({ id: item.id }));
-    const updatedGroup2 = columns?.group2?.list?.map(item => ({ id: item.id }));
-    const updatedGroup3 = columns?.group3?.list?.map(item => ({ id: item.id }));
-    const updatedGroup4 = columns?.group4?.list?.map(item => ({ id: item.id }));
-    const updatedGroup5 = columns?.group5?.list?.map(item => ({ id: item.id }));
+    const updatedDivisions = columns?.availableDivisions?.list?.map((item) => ({
+      id: item.id,
+    }));
+    const updatedGroup1 = columns?.group1?.list?.map((item) => ({
+      id: item.id,
+    }));
+    const updatedGroup2 = columns?.group2?.list?.map((item) => ({
+      id: item.id,
+    }));
+    const updatedGroup3 = columns?.group3?.list?.map((item) => ({
+      id: item.id,
+    }));
+    const updatedGroup4 = columns?.group4?.list?.map((item) => ({
+      id: item.id,
+    }));
+    const updatedGroup5 = columns?.group5?.list?.map((item) => ({
+      id: item.id,
+    }));
 
     const updatedColumns = {
       availableDivisions: updatedDivisions,
       group1: {
-        id: 1, 
+        id: 1,
         list: updatedGroup1,
       },
       group2: {
-        id: 2, 
+        id: 2,
         list: updatedGroup2,
       },
       group3: {
-        id: 3, 
+        id: 3,
         list: updatedGroup3,
       },
       group4: {
-        id: 4, 
+        id: 4,
         list: updatedGroup4,
       },
       group5: {
-        id: 5, 
-        list: updatedGroup5
-      }          
+        id: 5,
+        list: updatedGroup5,
+      },
     };
 
     try {
-      const response = await updateDivisionsAndGroups(sessionId, updatedColumns);
+      const response = await updateDivisionsAndGroups(
+        sessionId,
+        updatedColumns
+      );
       if (response?.success) {
         showSuccessMessage(response?.message);
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
     }
-  }
+  };
 
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
@@ -260,8 +284,12 @@ function QMSGroups() {
                         <option value={""} selected disabled hidden>
                           Select
                         </option>
-                        <option value={"1"}>2022</option>
-                        <option value={"2"}>2023</option>
+                        {sessions &&
+                          sessions.map((item) => (
+                            <option value={item.id}>{item.sessionName}</option>
+                          ))}
+                        {/* <option value={"1"}>2022</option>
+                        <option value={"2"}>2023</option> */}
                       </select>
                     </div>
                   </div>
@@ -286,33 +314,35 @@ function QMSGroups() {
                               overflow: "auto",
                             }}
                           >
-                            {columns?.availableDivisions?.list?.map((item, index) => (
-                              <Draggable
-                                key={item?.id?.toString()}  // Use index as a fallback if id is undefined
-                                draggableId={item?.id?.toString()} 
-                                index={index}
-                              >
-                                {(provided, snapshot) => (
-                                  <div
-                                    ref={provided.innerRef}
-                                    {...provided.draggableProps}
-                                    {...provided.dragHandleProps}
-                                  >
+                            {columns?.availableDivisions?.list?.map(
+                              (item, index) => (
+                                <Draggable
+                                  key={item?.id?.toString()} // Use index as a fallback if id is undefined
+                                  draggableId={item?.id?.toString()}
+                                  index={index}
+                                >
+                                  {(provided, snapshot) => (
                                     <div
-                                      style={{
-                                        backgroundColor: "#f0f0f0",
-                                        width: "100%",
-                                        padding: "4px",
-                                        marginBottom: "5px",
-                                        borderRadius: "5px",
-                                      }}
+                                      ref={provided.innerRef}
+                                      {...provided.draggableProps}
+                                      {...provided.dragHandleProps}
                                     >
-                                      <span>{item?.divisionName}</span>
+                                      <div
+                                        style={{
+                                          backgroundColor: "#f0f0f0",
+                                          width: "100%",
+                                          padding: "4px",
+                                          marginBottom: "5px",
+                                          borderRadius: "5px",
+                                        }}
+                                      >
+                                        <span>{item?.divisionName}</span>
+                                      </div>
                                     </div>
-                                  </div>
-                                )}
-                              </Draggable>
-                            ))}
+                                  )}
+                                </Draggable>
+                              )
+                            )}
                             {provided.placeholder}
                           </div>
                         )}
@@ -323,7 +353,11 @@ function QMSGroups() {
                       {Object.keys(columns)
                         ?.filter((colId) => colId !== "availableDivisions") // Exclude 'ministries' column
                         ?.map((groupColId, groupIndex) => (
-                          <div style={{ marginTop: groupIndex === 0 ? '0px' : '10px' }}>
+                          <div
+                            style={{
+                              marginTop: groupIndex === 0 ? "0px" : "10px",
+                            }}
+                          >
                             <label class="form-label">
                               Group {groupIndex + 1}
                             </label>
@@ -344,8 +378,8 @@ function QMSGroups() {
                                   {columns[groupColId]?.list?.map(
                                     (item, index) => (
                                       <Draggable
-                                        key={item?.id?.toString()}  // Use index as a fallback if id is undefined
-                                        draggableId={item?.id?.toString()} 
+                                        key={item?.id?.toString()} // Use index as a fallback if id is undefined
+                                        draggableId={item?.id?.toString()}
                                         index={index}
                                       >
                                         {(provided, snapshot) => (
@@ -382,7 +416,11 @@ function QMSGroups() {
 
                 <div class="row mt-4">
                   <div class="col">
-                    <button class="btn btn-primary float-end" type="submit" onClick={handleUpdate}>
+                    <button
+                      class="btn btn-primary float-end"
+                      type="submit"
+                      onClick={handleUpdate}
+                    >
                       Submit
                     </button>
                   </div>

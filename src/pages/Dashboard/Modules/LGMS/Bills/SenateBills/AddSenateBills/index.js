@@ -221,7 +221,9 @@ function NewLegislationSenateBill() {
     formData.append("fkSessionId", values?.session);
     formData.append("billFor", showMinster);
     formData.append("fkTenureId", values?.memberTenure?.value);
-    formData.append("fkTermId", values?.fkTermId?.value);
+    if (values?.fkTermId?.value) {
+      formData.append("fkTermId", values?.fkTermId?.value);
+    }
     formData.append("fkParliamentaryYearId", values?.parliamentaryYear);
     const currentYear = new Date().getFullYear();
     if (
@@ -305,7 +307,7 @@ function NewLegislationSenateBill() {
         } else {
           setTimeout(() => {
             navigate(
-              "http://localhost:3000/lgms/dashboard/bills/legislation-bills/private-member-bills/introduced-in-senate"
+              "/lgms/dashboard/bills/legislation-bills/private-member-bills/introduced-in-senate"
             );
           }, [3000]);
         }

@@ -59,7 +59,7 @@ function SearchResolution() {
   });
 
   const transformLeavesData = (apiData) => {
-    return apiData.map((res) => {
+    return apiData.map((res, index) => {
       const subjectMatter = [res?.englishText, res?.urduText]
         .filter(Boolean)
         .join(", ");
@@ -70,6 +70,7 @@ function SearchResolution() {
         ) || [];
 
       return {
+        "S.No" : index + 1,
         RID: res.id,
         // ResDN: res.resolutionDiaries,
         SessionNumber: res.session?.sessionName ? res.session?.sessionName : "",
@@ -82,9 +83,14 @@ function SearchResolution() {
           ? res.resolutionStatus?.resolutionStatus
           : "",
         Movers: movers ? movers : "",
-        SentDate: res?.resolutionSentDate ? moment(res?.resolutionSentDate).format("DD-MM-YYYY") : "--",
-        createdBy: res?.resolutionSentStatus === "inNotice" ? "Notice Office" : "---",
-        diaryTime : res?.noticeDiary?.noticeOfficeDiaryTime ? res?.noticeDiary?.noticeOfficeDiaryTime :"---",
+        SentDate: res?.resolutionSentDate
+          ? moment(res?.resolutionSentDate).format("DD-MM-YYYY")
+          : "--",
+        createdBy:
+          res?.resolutionSentStatus === "inNotice" ? "Notice Office" : "---",
+        diaryTime: res?.noticeDiary?.noticeOfficeDiaryTime
+          ? res?.noticeDiary?.noticeOfficeDiaryTime
+          : "---",
         ResolutionType: res?.resolutionType ? res?.resolutionType : "",
         SubjectMatter: cleanedSubjectMatter ? cleanedSubjectMatter : "",
         NoticeNo: res?.noticeDiary?.noticeOfficeDiaryNo
@@ -107,7 +113,7 @@ function SearchResolution() {
       noticeOfficeDiaryDateFrom: values.fromNoticeDate,
       noticeOfficeDiaryDateTo: values.toNoticeDate,
       resolutionMovers: values?.memberName?.value,
-      resolutionSentStatus: ["inNotice", "toResolution"]
+      resolutionSentStatus: ["inNotice", "toResolution"],
     };
 
     try {
@@ -161,12 +167,12 @@ function SearchResolution() {
     formik.resetForm();
     setSearchedData([]);
   };
-  const handlePDF = async () =>{
+  const handlePDF = async () => {
     const encodedJsonString = encodeURIComponent(JSON.stringify(searchedData));
     const url = `/notice/resolution/pdf-preview-resolution?state=${encodedJsonString}`;
     window.open(url, "_blank");
-  }
-  
+  };
+
   return (
     <Layout
       module={true}
@@ -209,7 +215,7 @@ function SearchResolution() {
                           />
                         </div>
                       </div>
-                      <div className="col">
+                      {/* <div className="col">
                         <div className="mb-3">
                           <label className="form-label">Resolution ID</label>
                           <input
@@ -221,7 +227,7 @@ function SearchResolution() {
                             onBlur={formik.handleBlur}
                           />
                         </div>
-                      </div>
+                      </div> */}
                       <div className="col">
                         <div className="mb-3">
                           <label className="form-label">Keyword</label>
@@ -237,7 +243,7 @@ function SearchResolution() {
                       </div>
                       <div className="col">
                         <div className="mb-3">
-                          <label className="form-label">Member Name</label>
+                          <label className="form-label">Mover(s)</label>
                           {/* <input
                             className="form-control"
                             type="text"

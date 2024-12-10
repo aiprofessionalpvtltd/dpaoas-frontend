@@ -81,6 +81,36 @@ export const getAllResolutionsNotice = async (page, pageSize) => {
   }
 };
 
+//
+// Get All Current Date Resolution
+export const getAllCurrentDateResolution = async (
+  currentPage,
+  pageSize,
+  searchParams
+) => {
+  try {
+    // const token = getAuthToken();
+
+    // Filter out empty values
+    const filteredSearchParams = Object.fromEntries(
+      Object.entries(searchParams).filter(([_, value]) => value !== "")
+    );
+    const response = await axiosClient.get(
+      `/resolution/todayResolution?currentPage=${currentPage}&pageSize=${pageSize}`,
+      {
+        params: filteredSearchParams,
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // },
+      }
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
 export const getAllResolutionStatus = async () => {
   try {
     // const token = getAuthToken();

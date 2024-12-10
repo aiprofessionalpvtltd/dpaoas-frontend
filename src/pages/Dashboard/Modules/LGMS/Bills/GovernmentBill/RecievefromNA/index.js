@@ -55,9 +55,9 @@ const AllGovernmentRecievedNABills = () => {
             "DD-MM-YYYY"
           )
         : "---",
-      dateOfReceiptOfNotice: item?.noticeDate
-        ? moment(item?.noticeDate, "YYYY-MM-DD").format("DD-MM-YYYY")
-        : "---",
+      // dateOfReceiptOfNotice: item?.noticeDate
+      //   ? moment(item?.noticeDate, "YYYY-MM-DD").format("DD-MM-YYYY")
+      //   : "---",
 
       dateOfReferencetoStandingCommittee: item?.introducedInHouses
         ?.referedOnDate

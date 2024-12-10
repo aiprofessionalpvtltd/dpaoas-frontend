@@ -8,14 +8,24 @@ import {
 import { getallMembers, getAllMinistry } from "../APIs/Services/Motion.service";
 import { getAllResolutionStatus } from "../APIs/Services/Resolution.service";
 import { getAllEmployee } from "../APIs/Services/organizational.service";
-import { setAuthToken, setUserData } from "../Auth";
+import { getUserData, setAuthToken, setUserData } from "../Auth";
 import { showErrorMessage } from "../../utils/ToastAlert";
 import { loginUser } from "../APIs/Services/basicAuth.service";
 import { getBranches } from "../APIs/Services/Branches.services";
+import { io } from "socket.io-client";
+import notificationSound from "./../../assets/notification.mp3";
+import {
+  createNotificationAPI,
+  createNotificationApprovedCasesAPI,
+  createNotificationFRsAPI,
+} from "../APIs/Services/efiling.service";
+// const socket = io("http://10.10.40.220:5152");
+const socket = io("http://172.16.170.8:2424");
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
+  const UserData = getUserData();
   const [permissions, setPermissions] = useState([]);
   const [ministryData, setMinistryData] = useState([]);
   const [sessions, setSessions] = useState([]);
@@ -30,13 +40,30 @@ export const AuthProvider = ({ children }) => {
   const [divisions, setDivisions] = useState([]);
   const [fileIdINRegister, setFileIdInRegister] = useState(null);
   const [fildetailsAqain, setFileDetail] = useState(null);
+  const [notificationCaseData, setNotificationCaseData] = useState([]);
+  const [notificationFRsData, setNotificationFRsData] = useState([]);
+  const [notificationApprovedCaseData, setNotificationApprovedCaseData] =
+    useState([]);
 
   const login = async (data) => {
     try {
       const response = await loginUser(data);
       if (response.data) {
         setAuthToken(response?.data?.token);
-        setUserData(response.data?.user);
+        const updatedUserData = {
+          ...response.data?.user,
+          fkBranchId: response.data?.user?.branches[0]?.id,
+          branch: {
+            id: response.data?.user?.branches[0]?.id,
+            branchName: response.data?.user?.branches[0]?.branchName,
+          },
+        };
+        setUserData(
+          response.data?.user?.branches?.length > 0
+            ? updatedUserData
+            : response.data?.user
+        );
+
         setPermissions(response?.data?.permissions);
       }
       return response?.data;
@@ -154,6 +181,87 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // Function to handle notification click and remove it from localStorage
+
+  const playSound = () => {
+    const audio = new Audio(notificationSound);
+    audio.play();
+  };
+  useEffect(() => {
+    // Listen for connection success
+    socket.on("connect", () => {
+      console.log("Connected to the server");
+    });
+    // Assign Case Notification
+    socket.on(`notificationCases:${UserData?.fkUserId}`, async (data) => {
+      try {
+        // Call the API with received data
+        await createNotificationAPI(data, UserData?.fkUserId);
+
+        // Update the notification data in state and local storage
+        setNotificationCaseData((prev) => {
+          const updatedNotifications = [...prev, data];
+          return updatedNotifications;
+        });
+
+        // Optional: Play notification sound
+        playSound();
+      } catch (error) {
+        console.error("Failed to create notification:", error);
+      }
+    });
+
+    // Assign FRs Notification
+    socket.on(`notificationFRs:${UserData?.fkUserId}`, async (data) => {
+      try {
+        // Call the API with received data
+        await createNotificationFRsAPI(data, UserData?.fkUserId);
+
+        // Update the notification data in state and local storage
+        setNotificationFRsData((prev) => {
+          const updatedNotifications = [...prev, data];
+          return updatedNotifications;
+        });
+
+        // Optional: Play notification sound
+        playSound();
+      } catch (error) {
+        console.error("Failed to create notification:", error);
+      }
+    });
+
+    //  Approved Case Notification
+    socket.on(
+      `notificationApprovedCase:${UserData?.fkUserId}`,
+      async (data) => {
+        try {
+          // Call the API with received data
+          const response = await createNotificationApprovedCasesAPI(
+            data,
+            UserData?.fkUserId
+          );
+          // Update the notification data in state and local storage
+          setNotificationApprovedCaseData((prev) => {
+            const updatedNotifications = [...prev, data];
+            return updatedNotifications;
+          });
+
+          // Optional: Play notification sound
+          playSound();
+        } catch (error) {
+          console.error("Failed to create notification:", error);
+        }
+      }
+    );
+
+    // Cleanup on component unmount
+    return () => {
+      socket.off(`notificationCases:${UserData?.fkUserId}`);
+      socket.off(`notificationFRs:${UserData?.fkUserId}`);
+      socket.off(`notificationApprovedCase:${UserData?.fkUserId}`);
+    };
+  }, [UserData?.fkUserId]);
+
   useEffect(() => {
     getEmployeeData();
   }, []);
@@ -174,6 +282,7 @@ export const AuthProvider = ({ children }) => {
         login,
         setPermissions,
         setEmployeeData,
+        setUserData,
         permissions,
         ministryData,
         members,
@@ -189,6 +298,9 @@ export const AuthProvider = ({ children }) => {
         setFileDetail,
         divisions,
         currentSession,
+        notificationCaseData,
+        notificationFRsData,
+        notificationApprovedCaseData,
       }}
     >
       {children}

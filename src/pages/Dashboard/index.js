@@ -141,7 +141,10 @@ function Dashboard() {
     },
     {
       title: "Notice Management System",
-      link: userRole?.fkBranchId === 9 ? "/notice/speech-on-demand" : "/notice/dashboard",
+      link:
+        userRole?.fkBranchId === 9
+          ? "/notice/speech-on-demand"
+          : "/notice/dashboard",
       type: "",
       cardbg: "darkGreenbg",
       icon: faBullhorn,
@@ -203,7 +206,7 @@ function Dashboard() {
       icon: faMailBulk,
       permission: ["Legislation"],
     },
-// Committees Tile
+    // Committees Tile
     {
       title: "Committees Management System",
       link: "committees/dashboard",
@@ -246,7 +249,6 @@ function Dashboard() {
       permission: ["Telecasting"],
     },
   ];
-
 
   // Filter tiles based on permissions
   const filteredTiles = tilesData.filter((tile) => {

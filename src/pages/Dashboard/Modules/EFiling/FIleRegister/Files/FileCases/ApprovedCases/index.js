@@ -59,6 +59,7 @@ function ApprovedCasesHistory() {
       caseId: item?.fkCaseId,
       internalId: item?.fileData?.id,
       FileNo: item?.fileData?.fileNumber,
+      CaseSubject: item?.caseSubject,
       initiatedBy: item?.createdByUser?.firstName,
       Sender:
         item?.fileRemarksData?.length > 0
@@ -98,7 +99,7 @@ function ApprovedCasesHistory() {
 
     try {
       const response = await getUserApprovedCaseHistory(searchParams);
-      console.log("Response", response);
+
       if (response?.success) {
         setCount(response?.data?.count);
         showSuccessMessage(response?.message);

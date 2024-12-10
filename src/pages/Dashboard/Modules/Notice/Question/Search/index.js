@@ -22,7 +22,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
 import Select from "react-select";
-
+import html2pdf from "html2pdf.js";
 function SearchQuestion() {
   const navigate = useNavigate();
   const { members, sessions } = useContext(AuthContext);
@@ -32,7 +32,7 @@ function SearchQuestion() {
   const [allquestionStatus, setAllQuestionStatus] = useState([]);
   const [isFromNoticeOpen, setIsFromNoticeOpen] = useState(false);
   const [isToNoticeOpen, setIsToNoticeOpen] = useState(false);
-  const [pdfData , setPDFData] = useState([])
+  const [pdfData, setPDFData] = useState([]);
   const pageSize = 10; // Set your desired page size
 
   const formik = useFormik({
@@ -81,7 +81,12 @@ function SearchQuestion() {
       const cleanedSubjectMatter = subjectMatter.replace(/(<([^>]+)>)/gi, "");
 
       return {
-        Id: res.id,
+        "S.No": index + 1,
+        Id: res?.id,
+        MemberName: res?.member ? res?.member?.memberName : "--",
+        noticeOfficeDiaryNumber: res?.noticeOfficeDiary?.noticeOfficeDiaryNo
+          ? res?.noticeOfficeDiary?.noticeOfficeDiaryNo
+          : "",
         NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate
           ? moment(res?.noticeOfficeDiary?.noticeOfficeDiaryDate).format(
               "DD-MM-YYYY"
@@ -90,21 +95,64 @@ function SearchQuestion() {
         NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime
           ? moment(
               res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
-              "hh:ss A"
-            ).format("hh:ss A")
+              "hh:mm A"
+            ).format("hh:mm A")
           : "",
         SessionNumber: res?.session?.sessionName
           ? res?.session?.sessionName
           : "",
         SubjectMatter: cleanedSubjectMatter ? cleanedSubjectMatter : "",
         Category: res.questionCategory ? res.questionCategory : "",
-        Status: res.questionStatus?.questionStatus
-          ? res.questionStatus?.questionStatus
-          : "",
-        SentDate:res?.questionSentDate? moment(res?.questionSentDate).format("DD-MM-YYYY"):"--",
-        createdBy : res?.questionSentStatus === "inNotice" ? "Notice Office" : res?.questionSentStatus == "toQuestion" ? "From Notice Office":"--"
+        // Status: res.questionStatus?.questionStatus
+        //   ? res.questionStatus?.questionStatus
+        //   : "",
+        division: res?.divisions ? res?.divisions?.divisionName : "--",
+        ministry: res?.divisions?.ministry?.ministryName
+          ? res?.divisions?.ministry?.ministryName
+          : "--",
+        device: res?.device,
+        createdBy: "inNotice" === "inNotice" ? "Notice Office" : "---",
       };
     });
+    // return apiData.map((res, index) => {
+    //   const subjectMatter = [res?.englishText, res?.urduText]
+    //     .filter(Boolean)
+    //     .join(", ");
+    //   const cleanedSubjectMatter = subjectMatter.replace(/(<([^>]+)>)/gi, "");
+
+    //   return {
+    //     "S.No" : index + 1,
+    //     Id: res.id,
+    //     NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate
+    //       ? moment(res?.noticeOfficeDiary?.noticeOfficeDiaryDate).format(
+    //           "DD-MM-YYYY"
+    //         )
+    //       : "",
+    //     NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime
+    //       ? moment(
+    //           res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
+    //           "hh:ss A"
+    //         ).format("hh:ss A")
+    //       : "",
+    //     SessionNumber: res?.session?.sessionName
+    //       ? res?.session?.sessionName
+    //       : "",
+    //     SubjectMatter: cleanedSubjectMatter ? cleanedSubjectMatter : "",
+    //     Category: res.questionCategory ? res.questionCategory : "",
+    //     Status: res.questionStatus?.questionStatus
+    //       ? res.questionStatus?.questionStatus
+    //       : "",
+    //     SentDate: res?.questionSentDate
+    //       ? moment(res?.questionSentDate).format("DD-MM-YYYY")
+    //       : "--",
+    //     createdBy:
+    //       res?.questionSentStatus === "inNotice"
+    //         ? "Notice Office"
+    //         : res?.questionSentStatus == "toQuestion"
+    //           ? "From Notice Office"
+    //           : "--",
+    //   };
+    // });
   };
   const transformPdfData = (apiData) => {
     return apiData.map((res, index) => {
@@ -122,24 +170,24 @@ function SearchQuestion() {
           : "",
         NoticeDate: res?.noticeOfficeDiary?.noticeOfficeDiaryDate
           ? moment(res?.noticeOfficeDiary?.noticeOfficeDiaryDate).format(
-            "DD-MM-YYYY"
-          )
+              "DD-MM-YYYY"
+            )
           : "",
         NoticeTime: res?.noticeOfficeDiary?.noticeOfficeDiaryTime
           ? moment(
-            res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
-            "hh:mm A"
-          ).format("hh:mm A")
+              res?.noticeOfficeDiary?.noticeOfficeDiaryTime,
+              "hh:mm A"
+            ).format("hh:mm A")
           : "",
         SessionNumber: res?.session?.sessionName
           ? res?.session?.sessionName
           : "",
         // SubjectMatter: cleanedSubjectMatter ? cleanedSubjectMatter : "",
         Category: res.questionCategory ? res.questionCategory : "",
-        ActionTaken: res.questionStatus?.questionStatus
-          ? res.questionStatus?.questionStatus
+        Division: res?.divisions ? res?.divisions?.divisionName : "",
+        Ministry: res?.divisions?.ministry?.ministryName
+          ? res?.divisions?.ministry?.ministryName
           : "",
-        Description: res?.description,
         createdBy:
           res?.questionSentStatus === "inNotice" ? "Notice Office" : "---",
       };
@@ -186,7 +234,7 @@ function SearchQuestion() {
         noticeOfficeDiaryDateTo:
           values?.toNoticeDate &&
           moment(values?.toNoticeDate).format("YYYY-MM-DD"),
-          questionSentStatus : ["inNotice", "toQuestion"]
+        questionSentStatus: ["inNotice"],
       };
 
       try {
@@ -196,8 +244,8 @@ function SearchQuestion() {
           showSuccessMessage(response?.message);
           setCount(response?.data?.count);
           const transformedData = transformLeavesData(response.data?.questions);
-          const pdfTransformData = transformPdfData(response.data?.questions)
-          setPDFData(pdfTransformData)
+          const pdfTransformData = transformPdfData(response.data?.questions);
+          setPDFData(pdfTransformData);
           setSearchedData(transformedData);
         }
         // formik.resetForm();
@@ -273,16 +321,105 @@ function SearchQuestion() {
   }, []);
 
   // Handle Reset Form
-
+  console.log("pdfData Questions By Search", pdfData);
   const handleResetForm = () => {
     formik.resetForm();
     setSearchedData([]);
   };
-const handlePDF = async () =>{
-  const encodedJsonString = encodeURIComponent(JSON.stringify(pdfData));
-  const url = `/notice/question/pdf-allQuestion?state=${encodedJsonString}`;
-  window.open(url, "_blank");
-}
+  const htmlcontent = `
+  <div
+    id="template-container"
+    style="background: #fff; font-family: Arial, Helvetica, sans-serif;"
+  >
+    <div class="template" style="width: 100%; margin: 0; padding: 0;">
+      <div class="template-head">
+        <h1
+          style="text-align: center; font-size: 20px; text-decoration: underline;"
+        >
+          SENATE OF PAKISTAN
+        </h1>
+        <p
+          style="text-align: center; font-size: 20px; margin-top: 10px; margin-bottom: 10px;"
+        >
+          (Notice Branch)
+        </p>
+      </div>
+      <table style="width: 100%; border-collapse: collapse; margin: 0; padding: 0;">
+        <thead>
+          <tr
+            style="background-color: #f4f4f4; border-bottom: 2px solid #ddd;"
+          >
+            <th style="padding: 8px; text-align: left; font-size: 14px;">Sr No</th>
+            <th style="padding: 8px; text-align: left; font-size: 14px;">Session Number</th>
+            <th style="padding: 8px; text-align: left; font-size: 14px;">Notice Diary Number</th>
+            <th style="padding: 8px; text-align: left; font-size: 14px;">Notice Date</th>
+            <th style="padding: 8px; text-align: left; font-size: 14px;">Notice Time</th>
+            <th style="padding: 8px; text-align: left; font-size: 14px;">Mover</th>
+            <th style="padding: 8px; text-align: left; font-size: 14px;">Category</th>
+            <th style="padding: 8px; text-align: left; font-size: 14px;">Division</th>
+            <th style="padding: 8px; text-align: left; font-size: 14px;">Ministry</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${pdfData
+            .map(
+              (item, index) => `
+              <tr key="${index}">
+                <td style="padding: 8px; font-size: 12px;">${item.SrNo}</td>
+                <td style="padding: 8px; font-size: 12px;">${
+                  item.SessionNumber
+                }</td>
+                <td style="padding: 8px; font-size: 12px;">${
+                  item.noticeOfficeDiaryNumber
+                }</td>
+                <td style="padding: 8px; font-size: 11px;">${
+                  item.NoticeDate
+                }</td>
+                <td style="padding: 8px; font-size: 11px;">${
+                  item.NoticeTime
+                }</td>
+                <td style="padding: 8px; font-size: 12px;">${
+                  item.MemberName
+                }</td>
+                <td style="padding: 8px; font-size: 12px;">${item.Category}</td>
+                <td style="padding: 8px; font-size: 12px;">${
+                  item.Division || "---"
+                }</td>
+                <td style="padding: 8px; font-size: 12px;">${
+                  item.Ministry || "---"
+                }</td>
+              </tr>
+            `
+            )
+            .join("")}
+        </tbody>
+      </table>
+    </div>
+  </div>
+`;
+
+  const handlePDF = () => {
+    // Create a temporary container to hold the HTML content for pdf
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = htmlcontent;
+
+    // Define PDF options
+    const options = {
+      margin: 0.5,
+      filename: "Questions.pdf",
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+    };
+
+    // Generate the PDF from the htmlcontent
+    html2pdf().from(tempDiv).set(options).save();
+  };
+  // const handlePDF = async () => {
+  //   const encodedJsonString = encodeURIComponent(JSON.stringify(pdfData));
+  //   const url = `/notice/question/pdf-allQuestion?state=${encodedJsonString}`;
+  //   window.open(url, "_blank");
+  // };
   return (
     <Layout
       module={true}
@@ -309,7 +446,7 @@ const handlePDF = async () =>{
                 <form onSubmit={formik.handleSubmit}>
                   <div className="container-fluid">
                     <div className="row">
-                      <div className="col">
+                      {/* <div className="col">
                         <div className="mb-3">
                           <label className="form-label">
                             Question Diary No
@@ -324,8 +461,8 @@ const handlePDF = async () =>{
                             onBlur={formik.handleBlur}
                           />
                         </div>
-                      </div>
-                      <div className="col">
+                      </div> */}
+                      {/* <div className="col">
                         <div className="mb-3">
                           <label className="form-label">Question ID</label>
                           <input
@@ -338,7 +475,7 @@ const handlePDF = async () =>{
                             onBlur={formik.handleBlur}
                           />
                         </div>
-                      </div>
+                      </div> */}
                       <div className="col">
                         <div className="mb-3">
                           <label className="form-label">Keyword</label>
@@ -355,7 +492,7 @@ const handlePDF = async () =>{
                       </div>
                       <div className="col">
                         <div className="mb-3">
-                          <label className="form-label">Member Name</label>
+                          <label className="form-label">Mover(s)</label>
                           <Select
                             options={members.map((item) => ({
                               value: item.id,
@@ -377,6 +514,80 @@ const handlePDF = async () =>{
                                 {formik.errors.memberName}
                               </div>
                             )}
+                        </div>
+                      </div>
+                      <div className="col">
+                        <div className="mb-3" style={{ position: "relative" }}>
+                          <label className="form-label">From Notice Date</label>
+                          <span
+                            style={{
+                              position: "absolute",
+                              right: "15px",
+                              top: "36px",
+                              zIndex: 1,
+                              fontSize: "20px",
+                              zIndex: "1",
+                              color: "#666",
+                              cursor: "pointer",
+                            }}
+                            onClick={handleFromNoticeCalendarToggle}
+                          >
+                            <FontAwesomeIcon icon={faCalendarAlt} />
+                          </span>
+
+                          <DatePicker
+                            selected={formik.values.fromNoticeDate}
+                            onChange={handleFromNoticeDateSelect}
+                            onBlur={formik.handleBlur}
+                            className={`form-control ${
+                              formik.touched.fromNoticeDate &&
+                              formik.errors.fromNoticeDate
+                                ? "is-invalid"
+                                : ""
+                            }`}
+                            open={isFromNoticeOpen}
+                            onClickOutside={() => setIsFromNoticeOpen(false)}
+                            onInputClick={handleFromNoticeCalendarToggle}
+                            dateFormat="dd-MM-yyyy"
+                            maxDate={new Date()}
+                          />
+                        </div>
+                      </div>
+                      <div className="col">
+                        <div className="mb-3" style={{ position: "relative" }}>
+                          <label className="form-label">To Notice Date</label>
+                          <span
+                            style={{
+                              position: "absolute",
+                              right: "15px",
+                              top: "36px",
+                              zIndex: 1,
+                              fontSize: "20px",
+                              zIndex: "1",
+                              color: "#666",
+                              cursor: "pointer",
+                            }}
+                            onClick={handleToNoticeCalendarToggle}
+                          >
+                            <FontAwesomeIcon icon={faCalendarAlt} />
+                          </span>
+
+                          <DatePicker
+                            selected={formik.values.toNoticeDate}
+                            onChange={handleToNoticeDateSelect}
+                            onBlur={formik.handleBlur}
+                            className={`form-control ${
+                              formik.touched.toNoticeDate &&
+                              formik.errors.toNoticeDate
+                                ? "is-invalid"
+                                : ""
+                            }`}
+                            open={isToNoticeOpen}
+                            onClickOutside={() => setIsToNoticeOpen(false)}
+                            onInputClick={handleToNoticeCalendarToggle}
+                            dateFormat="dd-MM-yyyy"
+                            maxDate={new Date()}
+                          />
                         </div>
                       </div>
                     </div>
@@ -473,91 +684,17 @@ const handlePDF = async () =>{
                       </div>
                     </div>
 
-                    <div className="row">
-                      <div className="col-3">
-                        <div className="mb-3" style={{ position: "relative" }}>
-                          <label className="form-label">From Notice Date</label>
-                          <span
-                            style={{
-                              position: "absolute",
-                              right: "15px",
-                              top: "36px",
-                              zIndex: 1,
-                              fontSize: "20px",
-                              zIndex: "1",
-                              color: "#666",
-                              cursor: "pointer",
-                            }}
-                            onClick={handleFromNoticeCalendarToggle}
-                          >
-                            <FontAwesomeIcon icon={faCalendarAlt} />
-                          </span>
-
-                          <DatePicker
-                            selected={formik.values.fromNoticeDate}
-                            onChange={handleFromNoticeDateSelect}
-                            onBlur={formik.handleBlur}
-                            className={`form-control ${
-                              formik.touched.fromNoticeDate &&
-                              formik.errors.fromNoticeDate
-                                ? "is-invalid"
-                                : ""
-                            }`}
-                            open={isFromNoticeOpen}
-                            onClickOutside={() => setIsFromNoticeOpen(false)}
-                            onInputClick={handleFromNoticeCalendarToggle}
-                            dateFormat="dd-MM-yyyy"
-                            maxDate={new Date()}
-                          />
-                        </div>
-                      </div>
-                      <div className="col-3">
-                        <div className="mb-3" style={{ position: "relative" }}>
-                          <label className="form-label">To Notice Date</label>
-                          <span
-                            style={{
-                              position: "absolute",
-                              right: "15px",
-                              top: "36px",
-                              zIndex: 1,
-                              fontSize: "20px",
-                              zIndex: "1",
-                              color: "#666",
-                              cursor: "pointer",
-                            }}
-                            onClick={handleToNoticeCalendarToggle}
-                          >
-                            <FontAwesomeIcon icon={faCalendarAlt} />
-                          </span>
-
-                          <DatePicker
-                            selected={formik.values.toNoticeDate}
-                            onChange={handleToNoticeDateSelect}
-                            onBlur={formik.handleBlur}
-                            className={`form-control ${
-                              formik.touched.toNoticeDate &&
-                              formik.errors.toNoticeDate
-                                ? "is-invalid"
-                                : ""
-                            }`}
-                            open={isToNoticeOpen}
-                            onClickOutside={() => setIsToNoticeOpen(false)}
-                            onInputClick={handleToNoticeCalendarToggle}
-                            dateFormat="dd-MM-yyyy"
-                            maxDate={new Date()}
-                          />
-                        </div>
-                      </div>
-                    </div>
+                    <div className="row"></div>
 
                     <div className="row">
                       <div className="d-grid gap-2 d-md-flex justify-content-md-end">
-                      <button
+                        <button
                           className="btn btn-primary col-1"
                           type="button"
                           onClick={handlePDF}
+                          disabled={!searchedData || searchedData?.length === 0}
                         >
-                          Print PDF
+                          Download Report
                         </button>
                         <button className="btn btn-primary" type="submit">
                           Search

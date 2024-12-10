@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import Logo from "../../assets/logo.png";
 import Profile from "../../assets/profile-img.jpg";
 import { Dropdown } from "react-bootstrap";
@@ -7,41 +7,63 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { faSortDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { EFilingNotifications } from "../NotificationsHeaders/EFilingNotifications";
+import { EFilingNotificationAssignCases } from "../NotificationsHeaders/EfilingNotificationAssignCases";
+import { EFilingNotificationAssignFrs } from "../NotificationsHeaders/EfilingNotificatonAssignFrs";
+import { EFilingNotificationApprovedCases } from "../NotificationsHeaders/EFilingNotificationApprovedCases";
+import Select from "react-select";
+import { AuthContext } from "../../api/AuthContext";
 
 export const CustomNavbar = ({ module, centerlogohide, navItems }) => {
   const navigation = useNavigate();
   const userData = getUserData();
+  const { setUserData } = useContext(AuthContext);
   const location = useLocation();
   const basePathEFiling = location.pathname.substring(
     0,
     location.pathname.lastIndexOf("/efiling") + 8
   );
   const shouldRenderEfiling = basePathEFiling === "/efiling";
+  const [selectedBranch, setSelectedBranch] = useState(null);
+
+  const handleBranchChange = (selectedOption) => {
+    setSelectedBranch(selectedOption);
+    const updatedUserData = {
+      ...userData,
+      fkBranchId: selectedOption?.value,
+      branch: {id: selectedOption?.value, branchName: selectedOption?.label},
+    };
+
+    setUserData(updatedUserData);
+
+    window.location.reload();
+  };
+  
+  // value={userData?.branch ? {value: userData?.branch?.id, label: userData?.branch?.branchName} : selectedBranch}
 
   return (
     <header
-      class="dashboard-toolbar"
+      className="dashboard-toolbar"
       style={{
         marginLeft: module ? "240px" : "0px",
         top: centerlogohide ? "0px" : "0px",
       }}
     >
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-          <div class="collapse navbar-collapse" id="navbarNavDropdown">
-            <ul class="navbar-nav">
+      <nav className="navbar navbar-expand-lg navbar-light bg-light">
+        <div className="container-fluid">
+          <div className="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul className="navbar-nav">
               <>
-                {navItems && 
-                  navItems?.map((item) => (
-                    <>
+                {navItems &&
+                  navItems?.map((item, index) => (
+                    <React.Fragment key={index}>
                       {item?.subItems ? (
-                        <li class="nav-item">
+                        <li className="nav-item">
                           <Dropdown>
                             <Dropdown.Toggle
                               variant="default"
                               id="about-dropdown"
                               style={{
-                                marginRight:5,
+                                marginRight: 5,
                                 fontWeight: "bold",
                                 color: item.subItems.some(
                                   (subItem) =>
@@ -53,9 +75,8 @@ export const CustomNavbar = ({ module, centerlogohide, navItems }) => {
                                   (subItem) =>
                                     location.pathname === subItem.link
                                 )
-                                  // ? "#14ae5c"
-                                   ?"#4B90F0"
-                                  
+                                  ? // ? "#14ae5c"
+                                    "#4B90F0"
                                   : "",
                               }}
                             >
@@ -86,8 +107,8 @@ export const CustomNavbar = ({ module, centerlogohide, navItems }) => {
                                         : "#000",
                                     backgroundColor:
                                       location.pathname === subItem?.link
-                                        // ? "#14ae5c"
-                                         ?"#4B90F0"
+                                        ? // ? "#14ae5c"
+                                          "#4B90F0"
                                         : "",
                                   }}
                                   to={subItem?.link}
@@ -102,7 +123,7 @@ export const CustomNavbar = ({ module, centerlogohide, navItems }) => {
                           </Dropdown>
                         </li>
                       ) : (
-                        <li class="nav-item">
+                        <li className="nav-item">
                           <Link
                             style={{
                               fontWeight: "bold",
@@ -112,15 +133,15 @@ export const CustomNavbar = ({ module, centerlogohide, navItems }) => {
                                   : "#000",
                               backgroundColor:
                                 location.pathname === item?.link
-                                  // ? "#14ae5c"
-                                  ?"#4B90F0"
+                                  ? // ? "#14ae5c"
+                                    "#4B90F0"
                                   : "",
                               borderRadius: 5,
                               paddingRight: 10,
-                              marginRight:5,
+                              marginRight: 5,
                               paddingLeft: 10,
                             }}
-                            class="nav-link"
+                            className="nav-link"
                             aria-current="page"
                             to={item?.link}
                           >
@@ -128,9 +149,58 @@ export const CustomNavbar = ({ module, centerlogohide, navItems }) => {
                           </Link>
                         </li>
                       )}
-                    </>
+                    </React.Fragment>
                   ))}
               </>
+
+              {userData && userData?.branches?.length > 1 && (
+        <Dropdown>
+          <Dropdown.Toggle
+            variant="default"
+            id="branch-dropdown"
+            style={{
+              marginRight: 5,
+              fontWeight: "bold",
+              color: "#000", // Default text color
+            }}
+          >
+            Select Branch
+            <FontAwesomeIcon
+              icon={faSortDown}
+              style={{
+                fontSize: "20px",
+                marginBottom: "1px",
+                color: "#000",
+                marginLeft: 5
+              }}
+            />
+          </Dropdown.Toggle>
+
+          <Dropdown.Menu>
+            {userData?.branches.map((item) => (
+              <Dropdown.Item
+                as="button"
+                key={item?.id}
+                onClick={() => handleBranchChange({ value: item.id, label: item.branchName })}
+                style={{
+                  fontWeight: "bold",
+                  color:
+                    userData?.fkBranchId === item?.id
+                      ? "#fff"
+                      : "#000", // Active link color
+                  backgroundColor:
+                    userData?.fkBranchId === item?.id
+                      ? "#4B90F0"
+                      : "", // Active background color
+                }}
+              >
+                {item?.branchName}
+              </Dropdown.Item>
+            ))}
+          </Dropdown.Menu>
+        </Dropdown>
+      )}
+
               {/* {shouldRenderEfiling ? (
               <>
               {navItems &&
@@ -200,7 +270,13 @@ export const CustomNavbar = ({ module, centerlogohide, navItems }) => {
           </div>
         </div>
 
-        <EFilingNotifications notificationType="Notifications" />
+        {shouldRenderEfiling && (
+          <>
+            <EFilingNotificationAssignCases notificationType="Notifications" />
+            <EFilingNotificationAssignFrs notificationType="Notifications" />
+            <EFilingNotificationApprovedCases notificationType="Notifications" />
+          </>
+        )}
 
         <Dropdown className="user-box dropdown px-3 float-end">
           <Dropdown.Toggle
@@ -216,10 +292,32 @@ export const CustomNavbar = ({ module, centerlogohide, navItems }) => {
               <p className="user-name mb-0" style={{ fontSize: "19px" }}>
                 {userData && `${userData?.firstName} ${userData?.lastName}`}
               </p>
-              <p className="designation mb-0">
-                {userData &&
-                  `${userData?.designation?.designationName} ${userData?.branch?.branchName}`}
-              </p>
+              {userData && userData?.branches?.length > 0 ? (
+                <p
+                  className="designation mb-0"
+                  title={
+                    userData?.branches?.length > 1
+                      ? userData?.branches
+                          .map((branch) => branch?.branchName)
+                          .join(", ")
+                      : ""
+                  }
+                >
+                  {userData && userData?.designation?.designationName}
+                  {" ("}
+                  {userData?.branches?.length > 0
+                    ? userData?.branches.length > 1
+                      ? `${userData?.branches[0]?.branchName}...`
+                      : userData?.branches[0]?.branchName
+                    : userData?.branch?.branchName}
+                  {")"}
+                </p>
+              ) : (
+                <p className="designation mb-0">
+                  {userData &&
+                    `${userData?.designation?.designationName} ${userData?.branch?.branchName}`}
+                </p>
+              )}
             </div>
           </Dropdown.Toggle>
           <div className="clearfix"></div>

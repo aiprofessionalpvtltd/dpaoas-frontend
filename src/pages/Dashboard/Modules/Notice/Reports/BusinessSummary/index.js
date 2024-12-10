@@ -6,6 +6,7 @@ import { useNavigate } from "react-router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import DatePicker from "react-datepicker";
+import LZString from "lz-string";
 import { noticeBusinessReport } from "../../../../../../api/APIs/Services/Question.service";
 import {
   showErrorMessage,
@@ -23,6 +24,7 @@ function BusinessSummary() {
   const [questionReport, setQuestionReport] = useState([]);
   const [motionReport, setMotionReport] = useState([]);
   const [resolutionReport, setresolutionReport] = useState([]);
+  const [privateMemberBillReport, setPrivateMemberBillReport] = useState([]);
   const [isFromOpen, setIsFromOpen] = useState(false);
   const [isToOpen, setIsToOpen] = useState(false);
 
@@ -59,6 +61,7 @@ function BusinessSummary() {
         setQuestionReport(response?.data?.questions);
         setMotionReport(response?.data?.motions);
         setresolutionReport(response?.data?.resolutions);
+        setPrivateMemberBillReport(response?.data?.legislativeBills);
         showSuccessMessage(response.message);
       }
     } catch (error) {
@@ -146,8 +149,11 @@ function BusinessSummary() {
 
   const handlePrint = async () => {
     const CombinedData = { questionReport, motionReport, resolutionReport };
-    const encodedJsonString = encodeURIComponent(JSON.stringify(CombinedData));
-    const url = `/notice/reports/business-summary/preview-pdf?state=${encodedJsonString}`;
+    console.log("CombinedData before compression:", CombinedData); // Check the data
+    const compressedData = LZString.compressToEncodedURIComponent(
+      JSON.stringify(CombinedData)
+    );
+    const url = `/notice/reports/business-summary/preview-pdf?state=${compressedData}`;
     window.open(url, "_blank");
   };
   return (
@@ -268,7 +274,7 @@ function BusinessSummary() {
                     <thead>
                       <tr>
                         <th class="text-center" scope="col">
-                          Sr#
+                          S.No
                         </th>
                         <th class="text-center" scope="col">
                           Session Number
@@ -559,7 +565,7 @@ function BusinessSummary() {
                           Resolution Status
                         </th> */}
                         <th
-                          class="text-left"
+                          class="text-center"
                           style={{ paddingLeft: "6px" }}
                           scope="col"
                         >
@@ -604,6 +610,95 @@ function BusinessSummary() {
                                 .join(", ")
                                 .replace(/(<([^>]+)>)/gi, "")}
                             </td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td
+                            colSpan="8"
+                            style={{ textAlign: "center", padding: "20px" }}
+                          >
+                            <div
+                              class="alert alert-danger"
+                              role="alert"
+                              style={{
+                                width: "350px",
+                                margin: "0 auto",
+                                textAlign: "center",
+                              }}
+                            >
+                              No data found
+                            </div>
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+                <h2 style={{ color: "#666", marginTop: "30px" }}>
+                  Private Member Bills
+                </h2>
+                <div
+                  class="dash-detail-container"
+                  style={{ marginTop: "20px" }}
+                >
+                  <table class="table red-bg-head th">
+                    <thead>
+                      <tr>
+                        <th class="text-center" scope="col">
+                          Sr#
+                        </th>
+                        <th class="text-center" scope="col">
+                          Title
+                        </th>
+                        <th class="text-center" scope="col">
+                          Notice Diary Number
+                        </th>
+                        <th class="text-center" scope="col">
+                          Notice Diary Date
+                        </th>
+                        <th class="text-center" scope="col">
+                          Notice Diary Time
+                        </th>
+                        <th class="text-center" scope="col">
+                          Device
+                        </th>
+
+                        {/* <th class="text-center" scope="col">
+                          Resolution Status
+                        </th> */}
+                        <th
+                          class="text-center"
+                          style={{ paddingLeft: "6px" }}
+                          scope="col"
+                        >
+                          Description
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {privateMemberBillReport &&
+                      privateMemberBillReport?.length > 0 ? (
+                        privateMemberBillReport.map((item) => (
+                          <tr>
+                            <td class="text-center">{item?.id}</td>
+                            <td class="text-center">{item?.title}</td>
+                            <td class="text-center">{item?.diary_number}</td>
+                            <td class="text-center">
+                              {item?.date
+                                ? moment(item?.date).format("DD-MM-YYYY")
+                                : "---"}
+                            </td>
+                            <td class="text-center">
+                              {item?.noticeOfficeDiaryTime
+                                ? moment(
+                                    item?.noticeOfficeDiaryTime,
+                                    "hh:mm A"
+                                  ).format("hh:mm A")
+                                : "---"}
+                            </td>
+                            <td class="text-center">{item?.device}</td>
+                            <td class="text-center">{item?.description}</td>
                           </tr>
                         ))
                       ) : (

@@ -481,9 +481,7 @@ const AttendanceReport = () => {
                   <div className="row">
                     <div className="col-3">
                       <div className="mb-3">
-                        <label class="form-label">
-                          Select Attendance Date Wise
-                        </label>
+                        <label class="form-label">Attendance Period</label>
                         <select
                           id="attendenceReportsId"
                           className={`form-select ${

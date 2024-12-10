@@ -10,12 +10,16 @@ import {
 import {
   ApprovedFIleCase,
   DeleteCorrApi,
+  DeleteNotificationApprovedCasesByIdAPI,
   DeleteNotificationById,
+  DeleteNotificationByIdAPI,
   DeleteParaAttachement,
   UpdateFIleCase,
   assignFIleCase,
   getAllCorrespondence,
   getCaseDetailByID,
+  getNotificationsApprovedCasesByUserId,
+  getNotificationsByUserId,
 } from "../../../../../api/APIs/Services/efiling.service";
 import { ToastContainer } from "react-toastify";
 import {
@@ -40,6 +44,7 @@ import { CustomAlert } from "../../../../../components/CustomComponents/CustomAl
 import html2pdf from "html2pdf.js";
 import { HalfMalf } from "react-spinner-animated";
 import "react-spinner-animated/dist/index.css";
+import { getBranchById } from "../../../../../api/APIs/Services/Branches.services";
 
 const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
   return (
@@ -69,7 +74,8 @@ function FileDetail() {
   const [fkfileId, setFKFileId] = useState(null);
   const [employeeData, setEmployeeData] = useState([]);
   const [viewPage, setViewPage] = useState(location?.state?.view);
-  const { fileIdINRegister } = useContext(AuthContext);
+  const { fileIdINRegister, handleNotificationAssignCase } =
+    useContext(AuthContext);
   const [caseId, setcaseId] = useState(
     location?.state?.id || fildetailsAqain?.id
   );
@@ -88,9 +94,10 @@ function FileDetail() {
   });
   const [filesData, setFilesData] = useState(null);
   const [FR, setFR] = useState(null);
-  const pageSize = 30;
+  const pageSize = 1000;
   const [order, setOrder] = useState("DESC");
   const [previousUserParaCount, setPreviousUserParaCount] = useState(0);
+  const [caseCreatedBy, setCaseCreatedBy] = useState("");
   const [saved, setSaved] = useState(false);
 
   const handleShow = () => setShowApproveModal(true);
@@ -160,6 +167,21 @@ function FileDetail() {
     }
   };
 
+  const UpdateNotingParaAtAssign = async (updatedNoting) => {
+    const data = {
+      notingSubject: notingTabSubject,
+      paragraphArray: updatedNoting,
+    };
+    try {
+      const response = await UpdateFIleCase(filesData?.caseNoteId, data);
+      if (response?.success) {
+        // showSuccessMessage(response?.message);
+      }
+    } catch (error) {
+      // showErrorMessage(error?.response?.data?.message);
+    }
+  };
+
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
     setCurrentPage(page);
@@ -181,9 +203,32 @@ function FileDetail() {
     });
   };
 
+  const [customAssignedTo, setCustomAssignedTo] = useState();
+
   const hendleAssiginFileCaseApi = async () => {
     try {
+      // Update the specific paragraph's assignedTo value
+      const updatedTabs = [...notingTabData]; // Create a copy of the array to ensure immutability
+      updatedTabs[order == "ASC" ? notingTabData?.length - 1 : 0] = {
+        ...updatedTabs[order == "ASC" ? notingTabData?.length - 1 : 0], // Spread the existing tab data
+        assignedTo: modalInputValue?.assignedTo, // Update only the assignedTo field for the specific paragraph
+      };
+
+      UpdateNotingParaAtAssign(updatedTabs);
+
       const formData = new FormData();
+      formData.append(
+        "paraId",
+        order == "ASC"
+          ? notingTabData[notingTabData?.length - 1].id
+          : notingTabData[0]?.id
+      );
+
+      // const assignedToValue = customAssignedTo === "Jamil Ahmed" ? 57 : modalInputValue?.assignedTo;
+
+      console.log('====================================');
+      console.log("modalInputValue?.assignedTo", modalInputValue?.assignedTo);
+      console.log('====================================');
       formData.append("submittedBy", UserData?.fkUserId);
       formData.append("assignedTo", modalInputValue?.assignedTo);
       formData.append("priority", modalInputValue?.priority);
@@ -192,6 +237,7 @@ function FileDetail() {
         "comment",
         modalInputValue?.CommentStatus ? "" : modalInputValue?.comment
       );
+
       const response = await assignFIleCase(
         location?.state?.fileId || fildetailsAqain?.fileId
           ? location?.state?.fileId || fildetailsAqain?.fileId
@@ -221,12 +267,17 @@ function FileDetail() {
     }
   };
 
-  const getEmployeeData = async () => {
+  const getEmployeeData = async (fkBranchId) => {
     try {
-      const response = await getHLEmployee(UserData?.fkUserId);
+      const branchData = await getBranchById(fkBranchId);
+
+      const response = await 
+      getHLEmployee(UserData?.fkUserId, UserData?.branch?.id, branchData?.data?.branchName);
       if (response?.success) {
         const filteredData = response?.data?.filter(
-          (item) => item?.userName !== UserData?.userName
+          (item) =>
+            item?.userName !== UserData?.userName &&
+            item?.users?.attendance_status == "PRESENT"
         );
         setEmployeeData(filteredData);
       }
@@ -270,6 +321,7 @@ function FileDetail() {
                 description: content,
                 references: [],
                 createdBy: UserData?.fkUserId,
+                assignedTo: null,
               },
             ]
           : []),
@@ -281,6 +333,7 @@ function FileDetail() {
                 description: content,
                 references: [],
                 createdBy: UserData?.fkUserId,
+                assignedTo: null,
               },
             ]
           : []),
@@ -288,7 +341,7 @@ function FileDetail() {
 
       setNotingData("");
     } else if (isReference) {
-      const updatedTabs = notingTabData.map((tab, i) =>
+      const updatedTabs = notingTabData?.map((tab, i) =>
         i === index
           ? {
               ...tab,
@@ -298,7 +351,7 @@ function FileDetail() {
       );
       setNotingTabsData(updatedTabs);
     } else {
-      const updatedTabs = notingTabData.map((tab, i) =>
+      const updatedTabs = notingTabData?.map((tab, i) =>
         i === index
           ? {
               ...tab,
@@ -327,7 +380,7 @@ function FileDetail() {
     //     showErrorMessage(error?.response?.data?.message)
     //   }
     // }else{
-    const updatedTabs = notingTabData.filter((_, i) => i !== index);
+    const updatedTabs = notingTabData?.filter((_, i) => i !== index);
 
     // // Update the titles of the remaining items
     const renumberedTabs = updatedTabs.map((tab, i) => ({
@@ -340,7 +393,7 @@ function FileDetail() {
   };
   const handleFlagDeleteFunc = (tabIndex, flagIndex) => {
     // Function to handle deletion of a flag
-    const updatedTabs = notingTabData.map((tab, tIndex) => {
+    const updatedTabs = notingTabData?.map((tab, tIndex) => {
       if (tIndex === tabIndex) {
         return {
           ...tab,
@@ -382,7 +435,7 @@ function FileDetail() {
       }
     } else {
       // const tabIndex= 0
-      const updatedTabs = notingTabData.map((tab, tIndex) => {
+      const updatedTabs = notingTabData?.map((tab, tIndex) => {
         if (
           item?.attachments[0]?.attachments[0]?.id ===
           item?.attachments[0]?.attachments[0]?.id
@@ -411,7 +464,7 @@ function FileDetail() {
 
   // setNotingTabsData(renumberedTabs);
 
-  const transformData = (apiData) => {
+  const   transformData = (apiData) => {
     return apiData
       ?.filter((item) => item.status === "active") // Filter items with status 'active'
       .map((item) => ({
@@ -419,6 +472,7 @@ function FileDetail() {
         name: item.name,
         description: item.description,
         status: item.status,
+        createdAt: moment(item.createdAt).format("DD-MM-YYYY"), 
         attachmentInternal: item.correspondenceAttachments,
       }));
   };
@@ -462,6 +516,9 @@ function FileDetail() {
       if (response?.success) {
         setRemarksData(response?.data?.cases?.casesRemarks);
         setFilesData(response?.data);
+        getEmployeeData(response?.data?.fkBranchId);
+
+        setCaseCreatedBy(response?.data?.caseCreatedBy);
         const FRSelection = {
           frId: response?.data?.cases?.freshReceipts?.id,
           frSubject: response?.data?.cases?.freshReceipts?.frSubject,
@@ -493,10 +550,6 @@ function FileDetail() {
   useEffect(() => {
     handleCorrespondences();
   }, [filesData?.cases?.files?.id, currentPage]);
-
-  useEffect(() => {
-    getEmployeeData();
-  }, []);
 
   useEffect(() => {
     formik.setValues({
@@ -577,20 +630,74 @@ function FileDetail() {
     }
   }, [order]);
 
-  const deleteNotification = async (item) => {
+  // const deleteNotification = async (item) => {
+  //   try {
+  //     const response = await DeleteNotificationByIdAPI(
+  //       location.state?.notificationId
+  //       // UserData?.fkUserId
+  //     );
+  //     if (response?.success) {
+  //       await getNotificationsByUserId(UserData?.fkUserId);
+  //     }
+  //   } catch (error) {
+  //     console.log(error.response.data.message);
+  //   }
+  // };
+
+  // const deleteApprovedNotification = async (item) => {
+  //   try {
+  //     const response = await DeleteNotificationApprovedCasesByIdAPI(
+  //       location.state?.notificationId
+  //       // UserData?.fkUserId
+  //     );
+  //     if (response?.success) {
+  //       await getNotificationsApprovedCasesByUserId(UserData?.fkUserId);
+  //     }
+  //   } catch (error) {
+  //     console.log(error.response.data.message);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   if (location?.state?.view === true && location?.state?.approved === true) {
+  //     deleteApprovedNotification();
+  //   } else {
+  //     deleteNotification();
+  //   }
+  //   // handleNotificationAssignCase(location.state?.notificationId);
+  // }, []);
+
+  const deleteNotificationByType = async (notificationId, isApproved) => {
     try {
-      const response = await DeleteNotificationById(
-        location.state?.notificationId,
-        UserData?.fkUserId
-      );
+      const response = isApproved
+        ? await DeleteNotificationApprovedCasesByIdAPI(notificationId)
+        : await DeleteNotificationByIdAPI(notificationId);
+
+      if (response?.success) {
+        const fetchNotifications = isApproved
+          ? getNotificationsApprovedCasesByUserId
+          : getNotificationsByUserId;
+        await fetchNotifications(UserData?.fkUserId);
+      }
     } catch (error) {
-      console.log(error.response.data.message);
+      console.error(
+        "Error deleting notification:",
+        error?.response?.data?.message || "An unexpected error occurred."
+      );
     }
   };
 
   useEffect(() => {
-    deleteNotification();
-  }, []);
+    const notificationId = location?.state?.notificationId;
+    const isApproved = location?.state?.approved;
+    if (notificationId) {
+      deleteNotificationByType(notificationId, isApproved);
+    }
+  }, [
+    location?.state?.notificationId,
+    location?.state?.approved,
+    UserData?.fkUserId,
+  ]);
 
   // Mapping over the paragraphs array
   const paragraphsHtml0 = notingTabData
@@ -611,7 +718,7 @@ function FileDetail() {
       return `
     <div style="display: flex; align-items: flex-start; margin-top: 10px;">
       <strong>${index + 1}.</strong>
-      <div style="flex-grow: 1; text-align: justify; text-indent: 50px; text-align: justify;">${
+      <div style="flex-grow: 1; text-align: justify; text-indent: 50px; text-align: justify; margin-left:10px;">${
         para?.description
       }</div>
     </div>
@@ -621,48 +728,52 @@ function FileDetail() {
 
   const paragraphsHtml = notingTabData
     ?.map((para, index) => {
-      console.log("para Title", para?.title);
-
       return `
-    
-        
-      <div style="margin-top: 10px; margin-bottom: 10px; text-align: justify;">
+      <div style="margin-top: 10px; margin-bottom: 10px; text-align: justify; color: black;">
         ${para?.description}
       </div>
+      <p style="float: right; margin-bottom: 0px; text-align: center; width: 40%;">
+        (${para?.createdByUser})
+        <br />
+        <span style="font-weight: normal;">
+        ${`${para.createdByUserDesignation} (${para.createdByUserBranch})`}
+        </span>
+        <br />
+        <span style="font-weight: normal;">
+          ${moment(para?.createdAt).format("Do MMMM, YYYY")}
+        </span>
+      </p>
+       
+<p style="float: left; margin-top: 60px; text-align: center; color: black;">
+  ${
+    para?.assignedToUser
+      ? `${para.assignedToUserDesignation} (${para.assignedToUserBranch})`
+      : ""
+  }
+</p>
       
-     
-      <p style="float: left; font-weight: bold; margin-bottom: 0px; text-align: center">
-        ${para?.createdByUser}
-        <br />
-        <span style="font-style: italic; font-weight: normal;">
-          (${para?.createdByUserDesignation})
-        </span>
-        <br />
-        <span style="font-style: italic; font-weight: normal;">
-          (${moment(para?.createdAt).format("YYYY-MM-DD")})
-        </span>
-      </p> <div style="clear:both"> </div>`;
+       <div style="clear:both"> </div>`;
     })
     .join("");
 
   // Main HTML template
   const html = `
-  <div className="container" style="padding:20px">
+  <div className="container" style="padding-left:50px; padding-right:50px">
     <div className="row mb-5">
       <div className="col-2" style="border-right: 1px solid black; height: 100%;">
         <!-- Border Column Content -->
       </div>
       <div className="col-10">
-  <div style="text-align: center; line-height: 1.5;">
-    <h4>SENATE SECRETARIAT</h4>
-    <h6>(${UserData?.branch?.branchName} Branch)</h6>
+  <div style="text-align: center; line-height: 1.5; color: black;">
+    <h4 style="color: black;">SENATE SECRETARIAT</h4>
+    <h6 style="color: black;">(${UserData?.branch?.branchName} Branch)</h6>
   </div>
   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; line-height: 1.5;">
     <div></div>
-    <p><strong>${filesData?.cases?.files?.fileNumber}</strong></p>
+    <p style="color: black;"><strong>${filesData?.cases?.files?.fileNumber}</strong></p>
   </div>
-  <p style="line-height: 1.5;"><strong>Subject: ${notingTabSubject}</strong></p>
-  <div style="line-height: 1.5;">
+  <p style="line-height: 1.5; color: black;"><strong>Subject: ${notingTabSubject}</strong></p>
+  <div style="line-height: 1.5; color: black">
     ${paragraphsHtml}
   </div>
 </div>
@@ -754,7 +865,7 @@ function FileDetail() {
   };
 
   const isContentEmpty = () => {
-    const strippedText = stripHtml(notingData.description);
+    const strippedText = stripHtml(notingData?.description);
     return strippedText.trim().length === 0; // Check if the content is truly empty after stripping HTML
   };
 
@@ -891,28 +1002,38 @@ function FileDetail() {
             <div class="col">
               <div class="mb-3">
                 <label class="form-label">Mark To</label>
-                <select
-                  class="form-select"
-                  id="assignedTo"
-                  name="assignedTo"
-                  onChange={(e) =>
-                    setModalInputValue((prevState) => ({
-                      ...prevState,
-                      assignedTo: e.target.value,
-                    }))
-                  }
-                  value={modalInputValue.assignedTo}
-                >
-                  <option value={""} selected>
-                    Select
-                  </option>
-                  {employeeData &&
-                    employeeData?.map((item) => (
-                      <option
-                        value={item.fkUserId}
-                      >{`${item?.firstName} ${item?.lastName} (${item.designations?.designationName})`}</option>
-                    ))}
-                </select>
+<select
+  className="form-select"
+  id="assignedTo"
+  name="assignedTo"
+  onChange={(e) => {
+    const selectedValue = e.target.value;
+    const selectedItem = employeeData.find(
+      (item) => item.fkUserId.toString() === selectedValue
+    );
+
+    // Update modal input state
+    setModalInputValue((prevState) => ({
+      ...prevState,
+      assignedTo: selectedValue,
+    }));
+
+    // Update customAssignedTo with firstName of selected item
+    setCustomAssignedTo(selectedItem?.firstName || "");
+  }}
+  value={modalInputValue.assignedTo}
+>
+  <option value="" disabled>
+    Select
+  </option>
+  {employeeData &&
+    employeeData.map((item) => (
+      <option key={item.fkUserId} value={item.fkUserId.toString()}>
+        {`${item?.firstName} ${item?.lastName} (${item.designations?.designationName})`}
+      </option>
+    ))}
+</select>
+
               </div>
             </div>
           </div>
@@ -1141,10 +1262,7 @@ function FileDetail() {
                                 setSaved(true);
                               }}
                               // another condition if needed notingTabData?.length <= previousUserParaCount
-                              disabled={
-                                viewPage ||
-                                location?.state?.approved
-                              }
+                              disabled={viewPage || location?.state?.approved}
                             >
                               Save
                             </button>
@@ -1164,7 +1282,7 @@ function FileDetail() {
                             </button>
                           </div>
 
-                          {UserData && UserData?.userType === "Officer" && (
+                          {/* {UserData && UserData?.userType === "Officer" && (
                             <div class="col-auto">
                               <button
                                 class="btn btn-primary"
@@ -1187,7 +1305,7 @@ function FileDetail() {
                                 Approve Case
                               </button>
                             </div>
-                          )}
+                          )} */}
                         </div>
 
                         <div
@@ -1271,7 +1389,7 @@ function FileDetail() {
                                         onChange={(data) =>
                                           setNotingData({ description: data })
                                         }
-                                        value={notingData.description}
+                                        value={notingData?.description}
                                         disabled={
                                           location?.state?.view ? true : false
                                         }
@@ -1289,14 +1407,12 @@ function FileDetail() {
                                             marginTop: 60,
                                             width: "100px",
                                           }}
-                                          disabled={
-                                            location?.state?.view ||
-                                            isContentEmpty()
-                                          }
+                                          disabled={location?.state?.view}
+                                          // disabled={location?.state?.view || isContentEmpty()}
                                           onClick={() =>
                                             handleEditorChange(
                                               null,
-                                              notingData.description,
+                                              notingData?.description,
                                               null,
                                               false,
                                               true
@@ -1347,7 +1463,7 @@ function FileDetail() {
                                     onChange={(data) =>
                                       setNotingData({ description: data })
                                     }
-                                    value={notingData.description}
+                                    value={notingData?.description}
                                     disabled={
                                       location?.state?.view ? true : false
                                     }
@@ -1361,14 +1477,12 @@ function FileDetail() {
                                     <button
                                       className="btn btn-primary"
                                       style={{ marginTop: 10, width: "100px" }}
-                                      disabled={
-                                        location?.state?.view ||
-                                        isContentEmpty()
-                                      }
+                                      disabled={location?.state?.view}
+                                      // disabled={location?.state?.view || isContentEmpty()}
                                       onClick={() =>
                                         handleEditorChange(
                                           null,
-                                          notingData.description,
+                                          notingData?.description,
                                           null,
                                           false,
                                           true
@@ -1385,7 +1499,7 @@ function FileDetail() {
                                 onChange={(content) =>
                                   setNotingData({ description: content })
                                 }
-                                value={notingData.description}
+                                value={notingData?.description}
                                 width={"100%"}
                                 display={"flex"}
                               /> */}
@@ -1481,32 +1595,16 @@ function FileDetail() {
                   {!location?.state?.approved && (
                     <a
                       onClick={() => {
-                        // Check if the user is a "Assistant"
-                        if (UserData?.designation?.designationName?.includes("Assistant")) {
-                          // If a new paragraph has been added and not saved, show an error
-                          if (
-                            notingTabData?.length > previousUserParaCount &&
-                            !saved
-                          ) {
-                            showErrorMessage(
-                              "Please save the new paragraph before proceeding!"
-                            );
-                          } else {
-                            toggleModal();
-                          }
-                        }
-                        // For other users, proceed with the usual validation
-                        else {
-                          if (
-                            notingTabData?.length <= previousUserParaCount ||
-                            !saved
-                          ) {
-                            showErrorMessage(
-                              "Please add your paragraph first & save it!"
-                            );
-                          } else {
-                            toggleModal();
-                          }
+                        if (
+                          !(caseCreatedBy === UserData?.fkUserId) &&
+                          (notingTabData?.length <= previousUserParaCount ||
+                            !saved)
+                        ) {
+                          showErrorMessage(
+                            "Please add your paragraph first & save it!"
+                          );
+                        } else {
+                          toggleModal();
                         }
                       }}
                     >
@@ -1515,14 +1613,23 @@ function FileDetail() {
                         style={{
                           display: location?.state?.view ? "none" : "block",
                         }}
+                        /*
                         disabled={
-                          UserData?.designation?.designationName?.includes("Assistant")
+                          UserData?.designation?.designationName?.includes(
+                            "Assistant"
+                          )
                             ? // Disable for "Assistant" only if a new paragraph was added but not saved
                               notingTabData?.length > previousUserParaCount &&
                               !saved
                             : // Disable for other users if paragraph count is not valid or content is not saved
                               notingTabData?.length <= previousUserParaCount ||
                               !saved
+                        }
+                        */
+                        disabled={
+                          !(caseCreatedBy === UserData?.fkUserId) &&
+                          (notingTabData?.length <= previousUserParaCount ||
+                            !saved)
                         }
                       >
                         Proceed
@@ -1533,7 +1640,7 @@ function FileDetail() {
 
                 <div style={{ maxHeight: "712px", overflowY: "scroll" }}>
                   {remarksData?.length > 0 ? (
-                    remarksData.map((item) => (
+                    remarksData?.map((item) => (
                       <>
                         {(item?.CommentStatus !== null ||
                           item?.comment !== null) && (

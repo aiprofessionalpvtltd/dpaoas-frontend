@@ -45,9 +45,9 @@ const AllPrivateMemberSenateBills = () => {
           ?.map((mover) => mover?.member?.memberName)
           .join(", ") ||
         "",
-      dateOfReceiptOfNotice: item?.noticeDate
-        ? moment(item?.noticeDate, "YYYY-MM-DD").format("DD-MM-YYYY")
-        : "---",
+      // dateOfReceiptOfNotice: item?.noticeDate
+      //   ? moment(item?.noticeDate, "YYYY-MM-DD").format("DD-MM-YYYY")
+      //   : "---",
       dateOfIntroductionReferenceToStandingCommittee: item?.introducedInHouses
         ?.introducedInHouseDate
         ? moment(

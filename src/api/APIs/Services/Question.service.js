@@ -84,6 +84,35 @@ export const getAllQuestionNotice = async (page, pageSize) => {
   }
 };
 
+// Get All Current Date Question
+export const getAllCurrentDateQuestion = async (
+  currentPage,
+  pageSize,
+  searchParams
+) => {
+  try {
+    // const token = getAuthToken();
+
+    // Filter out empty values
+    const filteredSearchParams = Object.fromEntries(
+      Object.entries(searchParams).filter(([_, value]) => value !== "")
+    );
+    const response = await axiosClient.get(
+      `/questions/todayQuestion?currentPage=${currentPage}&pageSize=${pageSize}`,
+      {
+        params: filteredSearchParams,
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // },
+      }
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
 export const searchQuestion = async (searchParams, currentPage, pageSize) => {
   try {
     // const token = getAuthToken();
@@ -760,38 +789,41 @@ export const getGroupbyDevisionId = async (id) => {
     console.error("Error fetching API endpoint:", error);
     throw error;
   }
-}
+};
 
-
-export const AnnualQuestionReprtPdfPreview = async(Data)=>{
+export const AnnualQuestionReprtPdfPreview = async (Data) => {
   try {
-    const response = await axiosClient.get(`/resolution/findAllSummary?fromSessionId=${Data?.fromSessionId}&toSessionId=${Data?.toSessionId}`)
+    const response = await axiosClient.get(
+      `/resolution/findAllSummary?fromSessionId=${Data?.fromSessionId}&toSessionId=${Data?.toSessionId}`
+    );
 
-    return response.data
+    return response.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
     throw error;
   }
-}
+};
 
-export const GroupMemberQuestionData = async (fromSessionNo , toSessionNo) =>{
+export const GroupMemberQuestionData = async (fromSessionNo, toSessionNo) => {
   try {
-    const response = await axiosClient(`/questions/getMemberWiseStatement?fromSession=${fromSessionNo}&toSession=${toSessionNo}`)
-    return response?.data
+    const response = await axiosClient(
+      `/questions/getMemberWiseStatement?fromSession=${fromSessionNo}&toSession=${toSessionNo}`
+    );
+    return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
     throw error;
   }
-}
+};
 
-export const GroupMinistryQuestionData = async (fromSessionNo , toSessionNo) =>{
+export const GroupMinistryQuestionData = async (fromSessionNo, toSessionNo) => {
   try {
-    const response = await axiosClient(`/questions/getDivisionWiseCategoryCount?fromSession=${fromSessionNo}&toSession=${toSessionNo}`)
-    return response?.data
+    const response = await axiosClient(
+      `/questions/getDivisionWiseCategoryCount?fromSession=${fromSessionNo}&toSession=${toSessionNo}`
+    );
+    return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
     throw error;
   }
-}
-
-
+};

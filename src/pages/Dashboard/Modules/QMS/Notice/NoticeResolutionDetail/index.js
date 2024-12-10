@@ -10,7 +10,10 @@ import {
   getResolutionBYID,
   sendResolutionForTranslation,
 } from "../../../../../../api/APIs/Services/Resolution.service";
-import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 import TimePicker from "react-time-picker";
 import DatePicker from "react-datepicker";
@@ -20,75 +23,91 @@ import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import { AuthContext } from "../../../../../../api/AuthContext";
 import moment from "moment";
 import { imagesUrl } from "../../../../../../api/APIs";
-
+import { useNavigate } from "react-router-dom";
 function QMSNoticeResolutionDetail() {
   const location = useLocation();
-  const { members, sessions, resolutionStatus, ministryData } = useContext(AuthContext);
-  const [linkedIdData, setLinkedIdData] = useState(null)
+  const { members, sessions, resolutionStatus, ministryData } =
+    useContext(AuthContext);
+  const [linkedIdData, setLinkedIdData] = useState(null);
+  const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: {
+      resolutionClub: [],
       sessionNo: location?.state?.session
         ? {
-          value: location?.state?.session?.id,
-          label: location?.state?.session?.sessionName,
-        }
+            value: location?.state?.session?.id,
+            label: location?.state?.session?.sessionName,
+          }
         : "",
-      noticeOfficeDiaryNo: location?.state?.noticeDiary?.noticeOfficeDiaryNo || "",
+      noticeOfficeDiaryNo:
+        location?.state?.noticeDiary?.noticeOfficeDiaryNo || "",
+      // noticeOfficeDiaryDate: location?.state?.noticeDiary?.noticeOfficeDiaryDate
+      //   ? moment(
+      //       location?.state?.noticeDiary?.noticeOfficeDiaryDate,
+      //       "YYYY-MM-DD"
+      //     ).toDate()
+      //   : "",
       noticeOfficeDiaryDate: location?.state?.noticeDiary?.noticeOfficeDiaryDate
-        ? moment(location?.state?.noticeDiary?.noticeOfficeDiaryDate, "YYYY-MM-DD").toDate()
+        ? moment(
+            location?.state?.noticeDiary?.noticeOfficeDiaryDate,
+            "YYYY-MM-DD"
+          ).toDate()
+        : null,
+      noticeOfficeDiaryTime: location?.state?.noticeDiary?.noticeOfficeDiaryTime
+        ? location?.state?.noticeDiary?.noticeOfficeDiaryTime
         : "",
-      noticeOfficeDiaryTime: location?.state?.noticeDiary?.noticeOfficeDiaryTime || "",
       resolutionType: location?.state?.resolutionType || "",
       resolutionStatus: location?.state?.resolutionStatus
         ? {
-          value: location?.state?.resolutionStatus?.id,
-          label: location?.state?.resolutionStatus?.resolutionStatus,
-        }
+            value: location?.state?.resolutionStatus?.id,
+            label: location?.state?.resolutionStatus?.resolutionStatus,
+          }
         : "",
       resolutionMovers:
         location?.state?.resolutionMoversAssociation?.length > 0
-          ? location?.state?.resolutionMoversAssociation.map((item) => ({
-            value: item?.memberAssociation?.id,
-            label: item?.memberAssociation?.memberName,
-          }))
+          ? location?.state?.resolutionMoversAssociation?.map((item) => ({
+              value: item?.memberAssociation?.id,
+              label: item?.memberAssociation?.memberName,
+            }))
           : [],
       ministries:
         location?.state?.resolutionMinistries?.length > 0
-          ? location?.state?.resolutionMinistries.map((item) => ({
-            value: item?.fkMinistryId,
-            label: item?.ministries?.ministryName,
-          }))
+          ? location?.state?.resolutionMinistries?.map((item) => ({
+              value: item?.fkMinistryId,
+              label: item?.ministries?.ministryName,
+            }))
           : [],
       englishText: location?.state?.englishText || "",
       urduText: location?.state?.urduText || "",
       colourResNo: location?.state?.colourResNo || "",
-      resolutionDiaryNo: location?.state?.resolutionDiaries?.resolutionDiaryNo || "",
+      resolutionDiaryNo:
+        location?.state?.resolutionDiaries?.resolutionDiaryNo || "",
       dateOfMovingHouse: location?.state?.dateOfMovingHouse
         ? moment(location?.state?.dateOfMovingHouse).toDate()
-        : "",
+        : null,
       dateOfDiscussion: location?.state?.dateOfDiscussion
         ? moment(location?.state?.dateOfDiscussion).toDate()
-        : "",
+        : null,
       dateOfPassing: location?.state?.dateOfPassing
         ? moment(location?.state?.dateOfPassing).toDate()
-        : "",
+        : null,
       memberPosition: location?.state?.memberPosition || "",
       attachment: "",
       linkedResolutions:
         location?.state?.linkedResolutions?.length > 0
           ? location?.state?.linkedResolutions.map((item) => ({
-            value: item.resolutionClubs?.id,
-            label: item?.resolutionClubs?.linkedResolutionId,
-          }))
+              value: item.resolutionClubs?.id,
+              label: item?.resolutionClubs?.linkedResolutionId,
+            }))
           : [],
 
       linkedToResolutions:
         location?.state?.linkedToResolutions?.length > 0
           ? location?.state?.linkedToResolutions.map((item) => ({
-            value: item.resolutionClubs?.id,
-            label: item?.resolutionClubs?.linkedResolutionId,
-          }))
+              value: item.resolutionClubs?.id,
+              label: item?.resolutionClubs?.linkedResolutionId,
+            }))
           : [],
     },
     onSubmit: (values) => {
@@ -96,12 +115,15 @@ function QMSNoticeResolutionDetail() {
     },
   });
 
-
   const hendleUpdate = async (values) => {
     const data = new FormData();
     data.append("fkSessionNo", values?.sessionNo?.value);
-    data.append("noticeOfficeDiaryDate", values.noticeOfficeDiaryDate);
-    data.append("noticeOfficeDiaryTime", values.noticeOfficeDiaryTime);
+    if (values?.noticeOfficeDiaryDate) {
+      data.append("noticeOfficeDiaryDate", values.noticeOfficeDiaryDate);
+    }
+    if (values.noticeOfficeDiaryTime) {
+      data.append("noticeOfficeDiaryTime", values.noticeOfficeDiaryTime);
+    }
     data.append("resolutionType", values.resolutionType);
     data.append("fkResolutionStatus", values.resolutionStatus?.value);
     values?.resolutionMovers?.forEach((mover, index) => {
@@ -109,29 +131,46 @@ function QMSNoticeResolutionDetail() {
     });
     // data.append("resolutionMovers[]", values.resolutionMovers?.value);
     data.append("noticeOfficeDiaryNo", values?.noticeOfficeDiaryNo);
-
-    data.append("colourResNo", values.colourResNo);
-    data.append("resolutionDiaryNo", values.resolutionDiaryNo);
-    data.append("dateOfMovingHouse", values.dateOfMovingHouse);
-    data.append("dateOfDiscussion", values.dateOfDiscussion);
-    data.append("dateOfPassing", values.dateOfPassing);
+    if (values.colourResNo) {
+      data.append("colourResNo", values.colourResNo);
+    }
+    if (values.resolutionDiaryNo) {
+      data.append("resolutionDiaryNo", values.resolutionDiaryNo);
+    }
+    if (values.dateOfMovingHouse) {
+      data.append("dateOfMovingHouse", values.dateOfMovingHouse);
+    }
+    if (values.dateOfDiscussion) {
+      data.append("dateOfDiscussion", values.dateOfDiscussion);
+    }
+    if (values?.dateOfPassing) {
+      data.append("dateOfPassing", values.dateOfPassing);
+    }
+    if (values?.resolutionClub?.length > 0) {
+      data.append("linkedResolutions", values.resolutionClub);
+    }
 
     values?.ministries.forEach((minister, index) => {
       data.append(`ministries[${index}][fkMinistryId]`, minister.value);
     });
-    data.append("englishText", values.englishText);
-    data.append("urduText", values.urduText);
+    if (values.englishText) {
+      data.append("englishText", values.englishText);
+    }
+    if (values.urduText) {
+      data.append("urduText", values.urduText);
+    }
     if (values?.memberPosition) {
-      data.append("memberPosition", values?.memberPosition)
+      data.append("memberPosition", values?.memberPosition);
     }
     if (values?.attachment) {
-      data.append("attachment", values?.attachment)
+      data.append("attachment", values?.attachment);
     }
 
     try {
       const response = await UpdateResolution(location.state.id, data);
       if (response?.success) {
         showSuccessMessage(response.message);
+        navigate("/qms/search/resolution");
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -157,54 +196,104 @@ function QMSNoticeResolutionDetail() {
         setLinkedIdData(response?.data);
 
         // Update form fields dynamically using Formik's setFieldValue
-        formik.setFieldValue('sessionNo', {
+        formik.setFieldValue("sessionNo", {
           value: response?.data?.session?.id,
           label: response?.data?.session?.sessionName,
         });
-        formik.setFieldValue('noticeOfficeDiaryNo', response?.data?.noticeDiary?.noticeOfficeDiaryNo || '');
-        formik.setFieldValue('noticeOfficeDiaryDate', response?.data?.noticeDiary?.noticeOfficeDiaryDate ? moment(response?.data?.noticeDiary?.noticeOfficeDiaryDate, "YYYY-MM-DD").toDate() : '');
-        formik.setFieldValue('noticeOfficeDiaryTime', response?.data?.noticeDiary?.noticeOfficeDiaryTime || '');
-        formik.setFieldValue('resolutionType', response?.data?.resolutionType || '');
-        formik.setFieldValue('resolutionStatus', {
+        formik.setFieldValue(
+          "noticeOfficeDiaryNo",
+          response?.data?.noticeDiary?.noticeOfficeDiaryNo || ""
+        );
+        formik.setFieldValue(
+          "noticeOfficeDiaryDate",
+          response?.data?.noticeDiary?.noticeOfficeDiaryDate
+            ? moment(
+                response?.data?.noticeDiary?.noticeOfficeDiaryDate,
+                "YYYY-MM-DD"
+              ).toDate()
+            : ""
+        );
+        formik.setFieldValue(
+          "noticeOfficeDiaryTime",
+          response?.data?.noticeDiary?.noticeOfficeDiaryTime || ""
+        );
+        formik.setFieldValue(
+          "resolutionType",
+          response?.data?.resolutionType || ""
+        );
+        formik.setFieldValue("resolutionStatus", {
           value: response?.data?.resolutionStatus?.id,
           label: response?.data?.resolutionStatus?.resolutionStatus,
         });
-        formik.setFieldValue('resolutionMovers', response?.data?.resolutionMoversAssociation?.map(item => ({
-          value: item?.memberAssociation?.id,
-          label: item?.memberAssociation?.memberName,
-        })) || []);
-        formik.setFieldValue('ministries', response?.data?.resolutionMinistries?.map(item => ({
-          value: item?.fkMinistryId,
-          label: item?.ministries?.ministryName,
-        })) || []);
-        formik.setFieldValue('englishText', response?.data?.englishText || '');
-        formik.setFieldValue('urduText', response?.data?.urduText || '');
-        formik.setFieldValue('colourResNo', response?.data?.colourResNo || '');
-        formik.setFieldValue('resolutionDiaryNo', response?.data?.resolutionDiaries?.resolutionDiaryNo || "",);
-        formik.setFieldValue('dateOfMovingHouse', response?.data?.dateOfMovingHouse ? moment(response?.data?.dateOfMovingHouse).toDate() : '');
-        formik.setFieldValue('dateOfDiscussion', response?.data?.dateOfDiscussion ? moment(response?.data?.dateOfDiscussion).toDate() : '');
-        formik.setFieldValue('dateOfPassing', response?.data?.dateOfPassing ? moment(response?.data?.dateOfPassing).toDate() : '');
-        formik.setFieldValue('memberPosition', response?.data?.memberPosition || '');
-        formik.setFieldValue('linkedResolutions', response?.data?.linkedResolutions?.length > 0
-          ? response?.data?.linkedResolutions.map((item) => ({
-            value: item.resolutionClubs?.id,
-            label: item?.resolutionClubs?.linkedResolutionId,
-          }))
-          : [],)
-        formik.setFieldValue('linkedToResolutions', response?.data?.linkedToResolutions?.length > 0
-          ? response?.data?.linkedToResolutions.map((item) => ({
-            value: item.resolutionClubs?.id,
-            label: item?.resolutionClubs?.linkedResolutionId,
-          }))
-          : [],)
+        formik.setFieldValue(
+          "resolutionMovers",
+          response?.data?.resolutionMoversAssociation?.map((item) => ({
+            value: item?.memberAssociation?.id,
+            label: item?.memberAssociation?.memberName,
+          })) || []
+        );
+        formik.setFieldValue(
+          "ministries",
+          response?.data?.resolutionMinistries?.map((item) => ({
+            value: item?.fkMinistryId,
+            label: item?.ministries?.ministryName,
+          })) || []
+        );
+        formik.setFieldValue("englishText", response?.data?.englishText || "");
+        formik.setFieldValue("urduText", response?.data?.urduText || "");
+        formik.setFieldValue("colourResNo", response?.data?.colourResNo || "");
+        formik.setFieldValue(
+          "resolutionDiaryNo",
+          response?.data?.resolutionDiaries?.resolutionDiaryNo || ""
+        );
+        formik.setFieldValue(
+          "dateOfMovingHouse",
+          response?.data?.dateOfMovingHouse
+            ? moment(response?.data?.dateOfMovingHouse).toDate()
+            : ""
+        );
+        formik.setFieldValue(
+          "dateOfDiscussion",
+          response?.data?.dateOfDiscussion
+            ? moment(response?.data?.dateOfDiscussion).toDate()
+            : ""
+        );
+        formik.setFieldValue(
+          "dateOfPassing",
+          response?.data?.dateOfPassing
+            ? moment(response?.data?.dateOfPassing).toDate()
+            : ""
+        );
+        formik.setFieldValue(
+          "memberPosition",
+          response?.data?.memberPosition || ""
+        );
+        formik.setFieldValue(
+          "linkedResolutions",
+          response?.data?.linkedResolutions?.length > 0
+            ? response?.data?.linkedResolutions.map((item) => ({
+                value: item.resolutionClubs?.id,
+                label: item?.resolutionClubs?.linkedResolutionId,
+              }))
+            : []
+        );
+        formik.setFieldValue(
+          "linkedToResolutions",
+          response?.data?.linkedToResolutions?.length > 0
+            ? response?.data?.linkedToResolutions.map((item) => ({
+                value: item.resolutionClubs?.id,
+                label: item?.resolutionClubs?.linkedResolutionId,
+              }))
+            : []
+        );
       }
     } catch (error) {
       showErrorMessage(error?.message);
     }
   };
 
-
-  const imgArray = location?.state?.attachment.length > 0 ? JSON?.parse(location?.state?.attachment) : null
+  const imgArray =
+    location?.state?.attachment.length > 0 ? location?.state?.attachment : null;
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <ToastContainer />
@@ -284,11 +373,12 @@ function QMSNoticeResolutionDetail() {
                           formik.setFieldValue("noticeOfficeDiaryDate", date)
                         }
                         onBlur={formik.handleBlur}
-                        className={`form-control ${formik.touched.noticeOfficeDiaryDate &&
+                        className={`form-control ${
+                          formik.touched.noticeOfficeDiaryDate &&
                           formik.errors.noticeOfficeDiaryDate
-                          ? "is-invalid"
-                          : ""
-                          }`}
+                            ? "is-invalid"
+                            : ""
+                        }`}
                         dateFormat={"dd-MM-yyyy"}
                       />
                       {formik.touched.noticeOfficeDiaryDate &&
@@ -312,11 +402,12 @@ function QMSNoticeResolutionDetail() {
                         onChange={(time) =>
                           formik.setFieldValue("noticeOfficeDiaryTime", time)
                         }
-                        className={`form-control ${formik.touched.noticeOfficeDiaryTime &&
+                        className={`form-control ${
+                          formik.touched.noticeOfficeDiaryTime &&
                           formik.errors.noticeOfficeDiaryTime
-                          ? "is-invalid"
-                          : ""
-                          }`}
+                            ? "is-invalid"
+                            : ""
+                        }`}
                       />
                       {formik.touched.noticeOfficeDiaryTime &&
                         formik.errors.noticeOfficeDiaryTime && (
@@ -382,7 +473,6 @@ function QMSNoticeResolutionDetail() {
                     <div class="mb-3">
                       <label class="form-label">Resolution Movers</label>
 
-
                       <Select
                         options={
                           members &&
@@ -402,7 +492,7 @@ function QMSNoticeResolutionDetail() {
                         name="resolutionMovers"
                         isClearable={true}
                         isMulti
-                      // className="form-select"
+                        // className="form-select"
                       />
                     </div>
                   </div>
@@ -461,7 +551,6 @@ function QMSNoticeResolutionDetail() {
                         className={`form-control`}
                         dateFormat={"dd-MM-yyyy"}
                       />
-
                     </div>
                   </div>
                   <div class="col">
@@ -489,7 +578,6 @@ function QMSNoticeResolutionDetail() {
                         className={`form-control`}
                         dateFormat={"dd-MM-yyyy"}
                       />
-
                     </div>
                   </div>
                   <div class="col">
@@ -517,7 +605,6 @@ function QMSNoticeResolutionDetail() {
                         className={`form-control`}
                         dateFormat={"dd-MM-yyyy"}
                       />
-
                     </div>
                   </div>
                 </div>
@@ -526,11 +613,12 @@ function QMSNoticeResolutionDetail() {
                     <div class="mb-2">
                       <label class="form-label">Member Position</label>
                       <select
-                        class={`form-select ${formik.touched.memberPosition &&
+                        class={`form-select ${
+                          formik.touched.memberPosition &&
                           formik.errors.memberPosition
-                          ? "is-invalid"
-                          : ""
-                          }`}
+                            ? "is-invalid"
+                            : ""
+                        }`}
                         placeholder="Member Position"
                         value={formik.values.memberPosition}
                         onChange={formik.handleChange}
@@ -566,10 +654,7 @@ function QMSNoticeResolutionDetail() {
                         }
                         isMulti
                         onChange={(selectedOptions) =>
-                          formik.setFieldValue(
-                            "ministries",
-                            selectedOptions
-                          )
+                          formik.setFieldValue("ministries", selectedOptions)
                         }
                         onBlur={formik.handleBlur}
                         value={formik.values.ministries}
@@ -586,18 +671,28 @@ function QMSNoticeResolutionDetail() {
                   <div className="col-3">
                     <div className="mb-3">
                       <label className="form-label">Linked Resolution</label>
-                      <div className="form-control-plaintext" style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-
+                      <div
+                        className="form-control-plaintext"
+                        style={{
+                          display: "flex",
+                          gap: "10px",
+                          flexWrap: "wrap",
+                        }}
+                      >
                         {formik.values.linkedResolutions.map((item, index) => (
                           <span
                             key={index}
-                            style={{ cursor: 'pointer', textDecoration: 'underline', color: 'blue', fontWeight: 'bold' }}
-                            onClick={() => handlePress(item.value)} 
+                            style={{
+                              cursor: "pointer",
+                              textDecoration: "underline",
+                              color: "blue",
+                              fontWeight: "bold",
+                            }}
+                            onClick={() => handlePress(item.value)}
                           >
-                            {item.label} 
+                            {item.label}
                           </span>
                         ))}
-
                       </div>
                     </div>
                   </div>
@@ -605,57 +700,96 @@ function QMSNoticeResolutionDetail() {
                   <div className="col-3">
                     <div className="mb-3">
                       <label className="form-label">Linked to Resolution</label>
-                      <div className="form-control-plaintext" style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-
-                        {formik.values.linkedToResolutions.map((item, index) => (
-                          <span
-                            key={index}
-                            style={{ cursor: 'pointer', textDecoration: 'underline', color: 'blue', fontWeight: 'bold' }}
-                            onClick={() => handlePress(item.value)}
-                          >
-                            {item.label}
-                          </span>
-                        ))}
-
+                      <div
+                        className="form-control-plaintext"
+                        style={{
+                          display: "flex",
+                          gap: "10px",
+                          flexWrap: "wrap",
+                        }}
+                      >
+                        {formik.values.linkedToResolutions.map(
+                          (item, index) => (
+                            <span
+                              key={index}
+                              style={{
+                                cursor: "pointer",
+                                textDecoration: "underline",
+                                color: "blue",
+                                fontWeight: "bold",
+                              }}
+                              onClick={() => handlePress(item.value)}
+                            >
+                              {item.label}
+                            </span>
+                          )
+                        )}
                       </div>
                     </div>
                   </div>
-
-
+                </div>
+                <div className="row">
+                  <div className="col-3">
+                    <div className="mb-3">
+                      <label className="form-label">Resolution Club</label>
+                      <input
+                        className="form-control"
+                        type="text"
+                        id="resolutionClub"
+                        name="resolutionClub"
+                        value={formik.values.resolutionClub}
+                        onBlur={formik.handleBlur}
+                        onChange={formik.handleChange}
+                        placeholder=""
+                      />
+                    </div>
+                  </div>
                 </div>
                 <div className="row">
                   <label htmlFor="" className="form-label">
                     Selected Images
                   </label>
                   {imgArray && imgArray ? (
-                    //  imgArray && imgArray?.map((item) => (
-                    <div class="MultiFile-label mt-3">
-                      <a
-                        href={`${imagesUrl}${imgArray?.path}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <i class="fas fa-download"></i>
-                      </a>
-                      <a class="MultiFile-remove" href="#T7">
-                        x
-                      </a>
-                      <span
-                        class="MultiFile-label"
-                        title={imgArray?.path?.split("\\").pop().split("/").pop()}
-                      >
-                        <span class="MultiFile-title">
+                    imgArray &&
+                    location?.state?.attachment?.map((item, index) => {
+                      const imageparse = JSON.parse(item);
+                      return (
+                        <div key={index} class="MultiFile-label mt-3">
                           <a
-                            href={`${imagesUrl}${imgArray?.path}`}
+                            href={`${imagesUrl}${imageparse?.path}`}
                             target="_blank"
                             rel="noopener noreferrer"
                           >
-                            {imgArray?.path?.split("\\").pop().split("/").pop()}
+                            <i class="fas fa-download"></i>
                           </a>
-                        </span>
-                      </span>
-                    </div>
-                    // ))
+                          <a class="MultiFile-remove" href="#T7">
+                            x
+                          </a>
+                          <span
+                            class="MultiFile-label"
+                            title={imageparse?.path
+                              ?.split("\\")
+                              .pop()
+                              .split("/")
+                              .pop()}
+                          >
+                            <span class="MultiFile-title">
+                              <a
+                                href={`${imagesUrl}${imageparse?.path}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                {imageparse?.path
+                                  ?.split("\\")
+                                  .pop()
+                                  .split("/")
+                                  .pop()}
+                              </a>
+                            </span>
+                          </span>
+                        </div>
+                      );
+                    })
                   ) : (
                     <div className="row">
                       <div className="col-6 ">
@@ -679,7 +813,6 @@ function QMSNoticeResolutionDetail() {
                     </div>
                   )}
                 </div>
-
 
                 <div style={{ marginTop: 10 }}>
                   <Editor

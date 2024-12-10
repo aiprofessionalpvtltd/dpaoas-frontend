@@ -153,10 +153,27 @@ export const NoticeSidebarItems = [
     ],
   },
   {
-    itemName: "Private Member Bills",
-    link: "/notice/legislation/private-bill",
-    icon: faScaleBalanced,
+    itemName: "Bills",
+    link: "/notice/bills",
+    icon: faClipboardList,
+    subItems: [
+      {
+        itemName: "Private Member Bills",
+        link: "/notice/bills/private-member-bills",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Government Bills",
+        link: "/notice/bills/government-bills",
+        icon: faClipboardList,
+      },
+    ],
   },
+  // {
+  //   itemName: "Private Member Bills",
+  //   link: "/notice/legislation/private-bill",
+  //   icon: faScaleBalanced,
+  // },
   {
     itemName: "Manage",
     link: "/notice/manage",
@@ -804,6 +821,11 @@ export const EfilingSideBarItem = [
       },
     ],
   },
+  {
+    itemName: "Leave Management",
+    link: "/efiling/dashboard/add-leave",
+    icon: faHome,
+  },
 ];
 
 export const EfilingSideBarBranchItem = [
@@ -945,6 +967,42 @@ export const EfilingSideBarBranchItem = [
         icon: faClipboardList,
       },
     ],
+  },
+
+  {
+    itemName: "E-filing Helping Materials",
+    link: "",
+    icon: faClipboardList,
+    subItems: [
+      {
+        itemName: "Document View",
+        link: "/efiling/document/user-manual",
+        icon: faReceipt,
+      },
+
+      // {
+      //   itemName: "Assistant Level",
+      //   link: "https://www.loom.com/share/ec5ae81f154349039268891e3e1eb90a?sid=92999436-45c5-46d0-8e20-67c0c86cc12b",
+      //   icon: faReceipt,
+      // },
+
+      // {
+      //   itemName: "Superindent Level",
+      //   link: "https://www.loom.com/share/05164207695a4d3e9081df72cd2db78e?sid=96c98b45-efe5-427b-b098-7907423ee174",
+      //   icon: faClipboardList,
+      // },
+      // {
+      //   itemName: "Higher Level",
+      //   link: "https://www.loom.com/share/7e40dd2802f1423fbf4708a4c9a4ac0e?sid=5b81fee9-1d34-43cb-abdc-6545e7c0ccbe",
+
+      //   icon: faClipboardList,
+      // },
+    ],
+  },
+  {
+    itemName: "Leave Management",
+    link: "/efiling/dashboard/add-leave",
+    icon: faHome,
   },
 ];
 

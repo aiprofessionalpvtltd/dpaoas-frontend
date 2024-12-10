@@ -59,9 +59,9 @@ const AllPrivateMemberBillFromNA = () => {
             "DD-MM-YYYY"
           )
         : "---",
-      dateOfReceiptOfNotice: item?.noticeDate
-        ? moment(item?.noticeDate, "YYYY-MM-DD").format("DD-MM-YYYY")
-        : "---",
+      // dateOfReceiptOfNotice: item?.noticeDate
+      //   ? moment(item?.noticeDate, "YYYY-MM-DD").format("DD-MM-YYYY")
+      //   : "---",
 
       dateOfIntroductionReferenceToStandingCommittee: item?.introducedInHouses
         ?.introducedInHouseDate

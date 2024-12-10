@@ -301,6 +301,35 @@ export const getAllLegislativeBillNotice = async (currentPage, pageSize) => {
   }
 };
 
+// Get All Current Date Question
+export const getCurrentAllPrivateMemberBills = async (
+  currentPage,
+  pageSize,
+  searchParams
+) => {
+  try {
+    // const token = getAuthToken();
+
+    // Filter out empty values
+    const filteredSearchParams = Object.fromEntries(
+      Object.entries(searchParams).filter(([_, value]) => value !== "")
+    );
+    const response = await axiosClient.get(
+      `/legislativeBills/todaylegislativeBills?currentPage=${currentPage}&pageSize=${pageSize}`,
+      {
+        params: filteredSearchParams,
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // },
+      }
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
 export const sendLegislativeBill = async (id, data) => {
   try {
     // const token = getAuthToken();

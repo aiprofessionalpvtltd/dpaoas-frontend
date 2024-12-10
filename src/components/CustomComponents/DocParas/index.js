@@ -576,7 +576,7 @@ const DocParas = ({
 
               {tab?.references && tab?.references?.length > 0 && (
                 <>
-                  {userData && userData?.userType === "Section User" && (
+                  {/* {userData && userData?.userType === "Section User" && ( */}
                     <div
                       className="col"
                       style={{ width: "100%", marginTop: "10px" }}
@@ -679,7 +679,7 @@ const DocParas = ({
                         </div>
                       ))}
                     </div>
-                  )}
+                  {/* )} */}
                 </>
               )}
             </Box>

@@ -233,7 +233,9 @@ function NewLegislationNABill() {
     formData.append("fkSessionId", values?.session);
     formData.append("billFor", showMinster);
     formData.append("fkTenureId", values?.memberTenure?.value);
-    formData.append("fkTermId", values?.fkTermId?.value);
+    if (values?.fkTermId?.value) {
+      formData.append("fkTermId", values?.fkTermId?.value);
+    }
     formData.append("fkParliamentaryYearId", values?.parliamentaryYear);
     const currentYear = new Date().getFullYear();
     if (location?.state && location.state.category === "Private Member Bill") {
@@ -315,28 +317,28 @@ function NewLegislationNABill() {
       formDataObject[key] = value;
     }
     console.log("Government Bill NA formData", formDataObject);
-    // try {
-    //   const response = await createNewLegislationBill(formData);
-    //   if (response.success) {
-    //     showSuccessMessage(response?.message);
-    //     formik.resetForm();
-    //     if (isGovernmentBill && isFromNA) {
-    //       setTimeout(() => {
-    //         navigate(
-    //           "/lgms/dashboard/bills/legislation-bills/government-bills/recieved-from-na"
-    //         );
-    //       }, [3000]);
-    //     } else if (isPrivateMemberBill && isFromNA) {
-    //       setTimeout(() => {
-    //         navigate(
-    //           "/lgms/dashboard/bills/legislation-bills/private-member-bills/recieved-from-na"
-    //         );
-    //       }, [3000]);
-    //     }
-    //   }
-    // } catch (error) {
-    //   console.log("error", error);
-    // }
+    try {
+      const response = await createNewLegislationBill(formData);
+      if (response.success) {
+        showSuccessMessage(response?.message);
+        formik.resetForm();
+        if (isGovernmentBill && isFromNA) {
+          setTimeout(() => {
+            navigate(
+              "/lgms/dashboard/bills/legislation-bills/government-bills/recieved-from-na"
+            );
+          }, [3000]);
+        } else if (isPrivateMemberBill && isFromNA) {
+          setTimeout(() => {
+            navigate(
+              "/lgms/dashboard/bills/legislation-bills/private-member-bills/recieved-from-na"
+            );
+          }, [3000]);
+        }
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
   };
 
   return (

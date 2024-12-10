@@ -46,6 +46,7 @@ function NewResolution() {
   const [showModal, setShowModal] = useState(false);
   const [formValues, setFormValues] = useState([]);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  const [imageLinks, setImageLinks] = useState([]);
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
 
@@ -54,6 +55,12 @@ function NewResolution() {
     handleClose();
   };
 
+  const handleFileChange = (event) => {
+    const selectedFiles = Array.from(event.currentTarget.files);
+    const links = selectedFiles.map((file) => URL.createObjectURL(file));
+    setImageLinks(links);
+    formik.setFieldValue("attachment", event.currentTarget.files);
+  };
   // Getting Notice Office Diary Number
   const getResolutionNoticeOfficeDiaryNumberApi = async () => {
     try {
@@ -101,7 +108,7 @@ function NewResolution() {
       // setFormValues(values);
       CreateResolutionApi(values);
     },
-    enableReinitialize: true,
+    // enableReinitialize: true,
   });
 
   // Handle Claneder Toggel
@@ -134,7 +141,13 @@ function NewResolution() {
     formData.append("englishText", values.englishText);
     formData.append("urduText", values.urduText);
     formData.append("fkResolutionStatus", 1);
-    formData.append("attachment", values.attachment);
+    // formData.append("attachment", values.attachment);
+
+    if (values?.attachment) {
+      Array.from(values?.attachment).map((file, index) => {
+        formData.append(`attachment`, file);
+      });
+    }
 
     try {
       const response = await createResolution(formData);
@@ -286,7 +299,7 @@ function NewResolution() {
                     </div>
                     <div class="col">
                       <div class="mb-3">
-                        <label class="form-label">Member Senate</label>
+                        <label class="form-label">Mover(s)</label>
                         <Select
                           options={
                             members &&
@@ -449,13 +462,31 @@ function NewResolution() {
                           accept=".pdf, .jpg, .jpeg, .png"
                           id="formFile"
                           name="attachment"
-                          onChange={(event) => {
-                            formik.setFieldValue(
-                              "attachment",
-                              event.currentTarget.files[0]
-                            );
-                          }}
+                          multiple
+                          onChange={handleFileChange}
+                          // onChange={(event) => {
+                          //   formik.setFieldValue(
+                          //     "attachment",
+                          //     event.currentTarget.files[0]
+                          //   );
+                          // }}
                         />
+                        {imageLinks.length > 0 && (
+                          <div>
+                            {imageLinks.map((link, index) => (
+                              <div className="col mt-2" key={index}>
+                                <a
+                                  key={index}
+                                  href={link}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  Attachement {index + 1}
+                                </a>
+                              </div>
+                            ))}
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>

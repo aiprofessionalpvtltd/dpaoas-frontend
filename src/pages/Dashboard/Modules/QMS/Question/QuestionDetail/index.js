@@ -3,7 +3,6 @@ import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
 import { QMSSideBarItems } from "../../../../../../utils/sideBarItems";
 import { useFormik } from "formik";
-import * as Yup from "yup";
 import TimePicker from "react-time-picker";
 import DatePicker from "react-datepicker";
 import { useLocation } from "react-router";
@@ -25,6 +24,9 @@ import { AuthContext } from "../../../../../../api/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import { imagesUrl } from "../../../../../../api/APIs";
+import { useNavigate } from "react-router-dom";
+import * as Yup from "yup";
+
 const validationSchema = Yup.object({
   sessionNo: Yup.string(),
   noticeOfficeDiaryNo: Yup.string(),
@@ -52,11 +54,8 @@ function QMSQuestionDetail() {
   // const Urdu = location?.state && location?.state?.question?.urduText;
   // console.log("location states", location?.state?.question?.urduText);
   const { members, sessions, divisions } = useContext(AuthContext);
+  const navigate = useNavigate();
 
-  console.log(
-    "Question Detail Data",
-    location?.state?.question?.session?.sessionName
-  );
   // console.log("Divisions", divisons);
   const [showDeferForm, setShowDeferForm] = useState(false);
   const [showRetriveForm, setShowRetriveForm] = useState(false);
@@ -79,7 +78,6 @@ function QMSQuestionDetail() {
     questionDiaryNo: "",
   });
 
-  console.log("location", location?.state?.question?.member?.id);
   const formik = useFormik({
     initialValues: {
       sessionNo: location?.state?.question?.session?.id,
@@ -93,21 +91,28 @@ function QMSQuestionDetail() {
         location?.state?.question?.noticeOfficeDiary?.noticeOfficeDiaryTime,
       priority: "",
       questionId: location?.state?.question?.id,
-      questionDiaryNo: location?.state?.question?.questionDiary?.questionDiaryNo,
+      questionDiaryNo:
+        location?.state?.question?.questionDiary?.questionDiaryNo,
       category: location?.state?.question?.questionCategory,
       questionStatus: location?.state?.question?.fkQuestionStatus,
       // replyDate: location?.state?.question?.replyDate,
-      replyDate: new Date(location?.state?.question?.replyDate),
+      replyDate:
+        location?.state?.question?.replyDate &&
+        location?.state?.question?.replyDate !== "null"
+          ? new Date(location?.state?.question?.replyDate)
+          : "",
       senator: location?.state ? location?.state?.question?.member?.id : "",
-      group:  location?.state ? location?.state?.question?.fkGroupId : '',
-      division: location?.state ?  location?.state?.question?.fkDivisionId : '',
+      group: location?.state ? location?.state?.question?.fkGroupId : "",
+      division: location?.state ? location?.state?.question?.fkDivisionId : "",
       fileStatus: location?.state?.question?.fileStatus,
       englishText: location?.state?.question?.englishText,
       urduText: location?.state?.question?.urduText,
       ammendedText: "",
       originalText: "",
-      questionImage:[],
-      memberPosition: location?.state?.question?.member ? location?.state?.question?.member?.governmentType :""
+      questionImage: [],
+      memberPosition: location?.state?.question?.member
+        ? location?.state?.question?.member?.governmentType
+        : "",
     },
     // validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -129,7 +134,7 @@ function QMSQuestionDetail() {
     formData.append("fkDivisionId", values?.division);
     formData.append("fileStatus", values?.fileStatus);
     formData.append("replyDate", values?.replyDate);
-    formData.append("fkQuestionStatus",values.questionStatus)
+    formData.append("fkQuestionStatus", values.questionStatus);
 
     formData.append("ammendedText", values.ammendedText);
     formData.append("urduText", values.urduText);
@@ -149,6 +154,9 @@ function QMSQuestionDetail() {
       );
       if (response?.success) {
         showSuccessMessage(response?.message);
+        setTimeout(() => {
+          navigate("/qms/search/question");
+        }, 1000);
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -304,21 +312,19 @@ function QMSQuestionDetail() {
   const getGroupbyDevisionIdAPi = async (e) => {
     try {
       const response = await getGroupbyDevisionId(e.target.value);
-  
+
       if (response?.success) {
-        const groupId = response?.data?.fkGroupId || ''; 
+        const groupId = response?.data?.fkGroupId || "";
         formik.setFieldValue("group", groupId);
       } else {
-        formik.setFieldValue("group", ''); 
+        formik.setFieldValue("group", "");
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
-      formik.setFieldValue("group", '');
+      formik.setFieldValue("group", "");
     }
-  }
-  
+  };
 
-  
   useEffect(() => {
     GetALlStatus();
   }, []);
@@ -343,7 +349,7 @@ function QMSQuestionDetail() {
               <form onSubmit={formik.handleSubmit}>
                 <div class="row mb-4">
                   <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                    <button class="btn btn-warning" type="">
+                    {/* <button class="btn btn-warning" type="">
                       No File Attached
                     </button>
                     <button
@@ -365,7 +371,7 @@ function QMSQuestionDetail() {
                       }}
                     >
                       Defer
-                    </button>
+                    </button> */}
                     <button
                       class="btn btn-primary"
                       type="button"
@@ -787,7 +793,10 @@ function QMSQuestionDetail() {
                       <select
                         class="form-control small-control"
                         id="category"
-                        onChange={formik.handleChange}
+                        onChange={(e) => {
+                          formik.handleChange(e);
+                          formik.setFieldValue("group", ""); // Reset the "Group" field when "Category" changes
+                        }}
                         onBlur={formik.handleBlur}
                         value={formik.values.category}
                       >
@@ -850,7 +859,7 @@ function QMSQuestionDetail() {
                       </span>
                       <DatePicker
                         selected={formik.values.replyDate}
-                        minDate={new Date()}
+                        maxDate={new Date()}
                         onChange={(date) =>
                           formik.setFieldValue("replyDate", date)
                         }
@@ -883,8 +892,8 @@ function QMSQuestionDetail() {
                       </select>
                     </div>
                   </div>
-                  
-                 <div class="col-3">
+
+                  <div class="col-3">
                     <div class="mb-3">
                       <label class="form-label">File Status</label>
                       <select
@@ -918,8 +927,8 @@ function QMSQuestionDetail() {
                         value={formik.values.division}
                         id="division"
                         onChange={(event) => {
-                          formik.handleChange(event); 
-                          getGroupbyDevisionIdAPi(event); 
+                          formik.handleChange(event);
+                          getGroupbyDevisionIdAPi(event);
                         }}
                         onBlur={formik.handleBlur}
                       >
@@ -939,6 +948,22 @@ function QMSQuestionDetail() {
                     <div class="mb-3">
                       <label class="form-label">Group</label>
                       {/* APi Required with base on Division ID */}
+                      {/* <select
+                        class="form-select"
+                        value={formik.values.group}
+                        id="group"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      >
+                        <option value={""} selected disabled hidden>
+                          Select
+                        </option>
+                        <option value="1">1st Group</option>
+                        <option value="2">2nd Group</option>
+                        <option value="3">3rd Group</option>
+                        <option value="4">4th Group</option>
+                        <option value="5">5th Group</option>
+                      </select> */}
                       <select
                         class="form-select"
                         value={formik.values.group}
@@ -946,28 +971,33 @@ function QMSQuestionDetail() {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       >
-                        <option value={''} selected disabled hidden>
+                        <option value={""} selected disabled hidden>
                           Select
                         </option>
-                        <option value="1">
-                             1st Group
-                            </option>
-                            <option value="2">
-                              2nd Group
-                            </option>
-                            <option value="3">
-                              3rd Group
-                            </option>
-                            <option value="4">
-                             4th Group
-                            </option>
-                            <option value="5">
-                             5th Group
-                            </option>
+                        {formik.values.category === "Starred" ? (
+                          <>
+                            <option value="1">1st Group</option>
+                            <option value="2">2nd Group</option>
+                            <option value="3">3rd Group</option>
+                            <option value="4">4th Group</option>
+                            <option value="5">5th Group</option>
+                          </>
+                        ) : formik.values.category === "Un-Starred" ? (
+                          <>
+                            <option value="1">A</option>
+                            <option value="2">B</option>
+                            <option value="3">C</option>
+                            <option value="4">D</option>
+                            <option value="5">E</option>
+                          </>
+                        ) : (
+                          <option value="">
+                            Please select a category first
+                          </option>
+                        )}
                       </select>
                     </div>
                   </div>
-                  
                 </div>
                 {/* <div style={{ marginTop: 10 }}>
                   <Editor
@@ -987,7 +1017,7 @@ function QMSQuestionDetail() {
                     value={formik.values.ammendedText}
                   />
                 </div> */}
-                 <div className="row">
+                <div className="row">
                   <label htmlFor="" className="form-label">
                     Selected Images
                   </label>
@@ -1043,15 +1073,15 @@ function QMSQuestionDetail() {
                     </div>
                   )}
                 </div>
-                 <div style={{marginTop: 10, marginBottom: 40 }}>
-                <Editor
-                  title={"English Text"}
-                  onChange={(content) =>
-                    formik.setFieldValue("englishText", content)
-                  }
-                  value={formik.values.englishText}
-                />
-              </div>
+                <div style={{ marginTop: 10, marginBottom: 40 }}>
+                  <Editor
+                    title={"English Text"}
+                    onChange={(content) =>
+                      formik.setFieldValue("englishText", content)
+                    }
+                    value={formik.values.englishText}
+                  />
+                </div>
                 <div style={{ marginTop: 70, marginBottom: 40 }}>
                   <Editor
                     title={"Urdu Text"}
@@ -1082,7 +1112,7 @@ function QMSQuestionDetail() {
                   </button> */}
                 </div>
               </form>
-             
+
               <div
                 class="dash-detail-container"
                 style={{ marginTop: 70, marginBottom: 40 }}

@@ -411,7 +411,7 @@ const UpdateBills = () => {
     try {
       const response = await getParliamentaryYearsByTenureID(id);
       if (response?.success) {
-        console.log(response?.data?.data);
+        console.log("Parliamentary Years By Tenure ", response?.data);
         setParliamentaryYearData(response?.data);
         // setTonerModels(transformedData);
       }
@@ -424,7 +424,7 @@ const UpdateBills = () => {
     try {
       const response = await getMemberByParliamentaryYearID(id);
       if (response?.success) {
-        console.log("Memberon Response", response);
+        console.log("Get Member Parliamentary Year", response);
         setMembersOnParliamentaryYear(response?.data);
         // setTonerModels(transformedData);
       }
@@ -506,251 +506,273 @@ const UpdateBills = () => {
       if (singleSenateBillData?.billFor) {
         handleTenures(singleSenateBillData?.billFor);
       }
-      if (singleSenateBillData?.tenures?.id) {
-        getParliamentaryYearsonTheBaseOfTerm(singleSenateBillData?.tenures?.id);
+      if (
+        singleSenateBillData?.fkTenureId &&
+        singleSenateBillData?.billFor === "Senators"
+      ) {
+        handleTenuresTerms(singleSenateBillData?.fkTenureId);
       }
-      if (singleSenateBillData?.terms?.id) {
+      if (
+        singleSenateBillData?.fkTermId &&
+        singleSenateBillData?.billFor === "Senators"
+      ) {
+        getParliamentaryYearsonTheBaseOfTerm(singleSenateBillData?.fkTermId);
+      } else if (
+        singleSenateBillData?.fkTenureId &&
+        singleSenateBillData?.billFor === "Ministers"
+      ) {
         getParliamentaryYearsonTheBaseOfTenure(
-          singleSenateBillData?.tenures?.id
+          singleSenateBillData?.fkTenureId
         );
       }
       if (singleSenateBillData?.billFor === "Ministers") {
         console.log("Min", singleSenateBillData?.billFor);
         getMNAOnParliamentaryYear(singleSenateBillData?.fkParliamentaryYearId);
-      } else {
+      } else if (singleSenateBillData?.billFor === "Senators") {
         getMembersOnParliamentaryYear(
           singleSenateBillData?.fkParliamentaryYearId
         );
       }
       setShowMinister(singleSenateBillData?.billFor);
-      formik.setValues({
-        selectiontype: singleSenateBillData?.billFor || "",
-        membertenure:
-          (singleSenateBillData?.tenures && {
-            value: singleSenateBillData?.tenures?.id,
-            label: singleSenateBillData?.tenures?.tenureName,
-          }) ||
-          "",
+      if (
+        singleSenateBillData &&
+        Object.keys(singleSenateBillData).length > 0
+      ) {
+        formik.setValues({
+          selectiontype: singleSenateBillData?.billFor || "",
+          membertenure:
+            (singleSenateBillData?.tenures && {
+              value: singleSenateBillData?.tenures?.id,
+              label: singleSenateBillData?.tenures?.tenureName,
+            }) ||
+            "",
 
-        fkTermId:
-          (singleSenateBillData?.terms && {
-            value: singleSenateBillData?.terms?.id,
-            label: singleSenateBillData?.terms?.termName,
-          }) ||
-          "",
-        fkParliamentaryYearId:
-          (singleSenateBillData?.parliamentaryYears && {
-            value: singleSenateBillData?.parliamentaryYears?.id,
-            label:
-              singleSenateBillData?.parliamentaryYears?.parliamentaryTenure,
-          }) ||
-          "",
+          fkTermId:
+            (singleSenateBillData?.terms && {
+              value: singleSenateBillData?.terms?.id,
+              label: singleSenateBillData?.terms?.termName,
+            }) ||
+            "",
 
-        fkSessionId: singleSenateBillData?.fkSessionId || "",
-        billCategory: singleSenateBillData?.billCategory || "",
-        billType: singleSenateBillData?.billType || "",
-        // billStatuses: singleSenateBillData?.billStatuses || "",
-        fileNumber: fileNum || "",
-        PassedByNADate: singleSenateBillData?.PassedByNADate
-          ? moment(singleSenateBillData?.PassedByNADate, "YYYY-MM-DD").toDate()
-          : null,
-        DateOfReceiptOfMessageFromNA:
-          singleSenateBillData?.DateOfReceiptOfMessageFromNA
+          fkParliamentaryYearId:
+            singleSenateBillData?.fkParliamentaryYearId || "",
+          senateBillSenatorMovers: singleSenateBillData?.senateBillSenatorMovers
+            ? singleSenateBillData?.senateBillSenatorMovers.map((senator) => ({
+                value: senator?.member?.id,
+                label: senator?.member?.memberName,
+              }))
+            : [],
+
+          senateBillMnaMovers: singleSenateBillData?.senateBillMnaMovers
+            ? {
+                value: singleSenateBillData?.senateBillMnaMovers[0]?.mna?.id,
+                label:
+                  singleSenateBillData?.senateBillMnaMovers[0]?.mna?.mnaName,
+              }
+            : null,
+
+          fkSessionId: singleSenateBillData?.fkSessionId || "",
+          billCategory: singleSenateBillData?.billCategory || "",
+          billType: singleSenateBillData?.billType || "",
+          // billStatuses: singleSenateBillData?.billStatuses || "",
+          fileNumber: fileNum || "",
+          PassedByNADate: singleSenateBillData?.PassedByNADate
             ? moment(
-                singleSenateBillData?.DateOfReceiptOfMessageFromNA,
+                singleSenateBillData?.PassedByNADate,
                 "YYYY-MM-DD"
               ).toDate()
             : null,
-        noticeDate: singleSenateBillData?.noticeDate
-          ? moment(singleSenateBillData?.noticeDate, "YYYY-MM-DD").toDate()
-          : null,
-
-        //   dateOfReceiptMessageFromNA:
-        // singleSenateBillData?.dateOfReceiptMessageFromNA
-        //   ? moment(
-        //       singleSenateBillData?.dateOfReceiptMessageFromNA,
-        //       "YYYY-MM-DD"
-        //     ).toDate()
-        //   : "",
-        // dateOfPassageByNA: singleSenateBillData?.dateOfPassageByNA
-        //   ? moment(
-        //       singleSenateBillData?.dateOfPassageByNA,
-        //       "YYYY-MM-DD"
-        //     ).toDate()
-        //   : "",
-        billTitle: singleSenateBillData?.billTitle || "",
-        billText: singleSenateBillData?.billText || "",
-        billRemarks: singleSenateBillData?.billRemarks || "",
-        senateBillSenatorMovers: singleSenateBillData?.senateBillSenatorMovers
-          ? singleSenateBillData?.senateBillSenatorMovers.map((senator) => ({
-              value: senator?.member?.id,
-              label: senator?.member?.memberName,
-            }))
-          : [],
-        fkBillStatus:
-          (singleSenateBillData?.billStatuses && {
-            value: singleSenateBillData?.billStatuses?.id,
-            label: singleSenateBillData?.billStatuses?.billStatusName,
-          }) ||
-          "",
-        senateBillMnaMovers: singleSenateBillData?.senateBillMnaMovers
-          ? {
-              value: singleSenateBillData?.senateBillMnaMovers[0]?.mna?.id,
-              label: singleSenateBillData?.senateBillMnaMovers[0]?.mna?.mnaName,
-            }
-          : null,
-        senateBillMinistryMovers: singleSenateBillData?.senateBillMinistryMovers
-          ? {
-              value:
-                singleSenateBillData?.senateBillMinistryMovers[0]?.ministrie
-                  ?.id,
-              label:
-                singleSenateBillData?.senateBillMinistryMovers[0]?.ministrie
-                  ?.ministryName,
-            }
-          : null,
-        // senateBillMnaMovers: singleSenateBillData?.senateBillMnaMovers
-        //   ? singleSenateBillData?.senateBillMnaMovers.map((senator) => ({
-        //       value: senator?.mna?.id,
-        //       label: senator?.mna?.mnaName,
-        //     }))
-        //   : [],
-        // senateBillMinistryMovers: singleSenateBillData?.senateBillMinistryMovers
-        //   ? singleSenateBillData?.senateBillMinistryMovers.map((senator) => ({
-        //       value: senator?.ministrie?.id,
-        //       label: senator?.ministrie?.ministryName,
-        //     }))
-        //   : [],
-        // senateBillMinistryMovers: singleSenateBillData?.senateBillMinistryMovers
-        //   ? {
-        //       value:
-        //         singleSenateBillData?.senateBillMinistryMovers[0]?.ministrie
-        //           ?.id,
-        //       label:
-        //         singleSenateBillData?.senateBillMinistryMovers[0]?.ministrie
-        //           ?.ministryName,
-        //     }
-        //   : null,
-        introducedInHouseDate:
-          singleSenateBillData?.introducedInHouses &&
-          singleSenateBillData?.introducedInHouses?.introducedInHouseDate
-            ? moment(
-                singleSenateBillData?.introducedInHouses?.introducedInHouseDate,
-                "YYYY-MM-DD"
-              ).toDate()
+          DateOfReceiptOfMessageFromNA:
+            singleSenateBillData?.DateOfReceiptOfMessageFromNA
+              ? moment(
+                  singleSenateBillData?.DateOfReceiptOfMessageFromNA,
+                  "YYYY-MM-DD"
+                ).toDate()
+              : null,
+          noticeDate: singleSenateBillData?.noticeDate
+            ? moment(singleSenateBillData?.noticeDate, "YYYY-MM-DD").toDate()
             : null,
-        referedOnDate:
-          singleSenateBillData?.introducedInHouses &&
-          singleSenateBillData?.introducedInHouses?.referedOnDate
-            ? moment(
-                singleSenateBillData?.introducedInHouses?.referedOnDate,
-                "YYYY-MM-DD"
-              ).toDate()
-            : null,
-        fkManageCommitteeId: singleSenateBillData?.introducedInHouses
-          ? singleSenateBillData?.introducedInHouses?.fkManageCommitteeId
-          : "",
 
-        committeeRecomendation: singleSenateBillData?.introducedInHouses
-          ?.manageCommitteeRecomendations
-          ? {
-              value:
+          //   dateOfReceiptMessageFromNA:
+          // singleSenateBillData?.dateOfReceiptMessageFromNA
+          //   ? moment(
+          //       singleSenateBillData?.dateOfReceiptMessageFromNA,
+          //       "YYYY-MM-DD"
+          //     ).toDate()
+          //   : "",
+          // dateOfPassageByNA: singleSenateBillData?.dateOfPassageByNA
+          //   ? moment(
+          //       singleSenateBillData?.dateOfPassageByNA,
+          //       "YYYY-MM-DD"
+          //     ).toDate()
+          //   : "",
+          billTitle: singleSenateBillData?.billTitle || "",
+          billText: singleSenateBillData?.billText || "",
+          billRemarks: singleSenateBillData?.billRemarks || "",
+
+          fkBillStatus:
+            (singleSenateBillData?.billStatuses && {
+              value: singleSenateBillData?.billStatuses?.id,
+              label: singleSenateBillData?.billStatuses?.billStatusName,
+            }) ||
+            "",
+
+          senateBillMinistryMovers:
+            singleSenateBillData?.senateBillMinistryMovers
+              ? {
+                  value:
+                    singleSenateBillData?.senateBillMinistryMovers[0]?.ministrie
+                      ?.id,
+                  label:
+                    singleSenateBillData?.senateBillMinistryMovers[0]?.ministrie
+                      ?.ministryName,
+                }
+              : null,
+          // senateBillMnaMovers: singleSenateBillData?.senateBillMnaMovers
+          //   ? singleSenateBillData?.senateBillMnaMovers.map((senator) => ({
+          //       value: senator?.mna?.id,
+          //       label: senator?.mna?.mnaName,
+          //     }))
+          //   : [],
+          // senateBillMinistryMovers: singleSenateBillData?.senateBillMinistryMovers
+          //   ? singleSenateBillData?.senateBillMinistryMovers.map((senator) => ({
+          //       value: senator?.ministrie?.id,
+          //       label: senator?.ministrie?.ministryName,
+          //     }))
+          //   : [],
+          // senateBillMinistryMovers: singleSenateBillData?.senateBillMinistryMovers
+          //   ? {
+          //       value:
+          //         singleSenateBillData?.senateBillMinistryMovers[0]?.ministrie
+          //           ?.id,
+          //       label:
+          //         singleSenateBillData?.senateBillMinistryMovers[0]?.ministrie
+          //           ?.ministryName,
+          //     }
+          //   : null,
+          introducedInHouseDate:
+            singleSenateBillData?.introducedInHouses &&
+            singleSenateBillData?.introducedInHouses?.introducedInHouseDate
+              ? moment(
+                  singleSenateBillData?.introducedInHouses
+                    ?.introducedInHouseDate,
+                  "YYYY-MM-DD"
+                ).toDate()
+              : null,
+          referedOnDate:
+            singleSenateBillData?.introducedInHouses &&
+            singleSenateBillData?.introducedInHouses?.referedOnDate
+              ? moment(
+                  singleSenateBillData?.introducedInHouses?.referedOnDate,
+                  "YYYY-MM-DD"
+                ).toDate()
+              : null,
+          fkManageCommitteeId: singleSenateBillData?.introducedInHouses
+            ? singleSenateBillData?.introducedInHouses?.fkManageCommitteeId
+            : "",
+
+          committeeRecomendation: singleSenateBillData?.introducedInHouses
+            ?.manageCommitteeRecomendations
+            ? {
+                value:
+                  singleSenateBillData?.introducedInHouses
+                    ?.manageCommitteeRecomendations?.id,
+                label:
+                  singleSenateBillData?.introducedInHouses
+                    ?.manageCommitteeRecomendations?.committeeRecom,
+              }
+            : null,
+          reportPresentationDate: singleSenateBillData?.introducedInHouses
+            ?.reportPresentationDate
+            ? moment(
                 singleSenateBillData?.introducedInHouses
-                  ?.manageCommitteeRecomendations?.id,
-              label:
-                singleSenateBillData?.introducedInHouses
-                  ?.manageCommitteeRecomendations?.committeeRecom,
-            }
-          : null,
-        reportPresentationDate: singleSenateBillData?.introducedInHouses
-          ?.reportPresentationDate
-          ? moment(
-              singleSenateBillData?.introducedInHouses?.reportPresentationDate,
-              "YYYY-MM-DD"
-            ).toDate()
-          : "",
-        fkMemberPassageId: singleSenateBillData?.memberPassages
-          ? singleSenateBillData?.memberPassages?.fkMemberPassageId
-          : "",
-        memeberNoticeDate: singleSenateBillData?.memberPassages
-          ?.memeberNoticeDate
-          ? moment(
-              singleSenateBillData?.memberPassages?.memeberNoticeDate,
-              "YYYY-MM-DD"
-            ).toDate()
-          : "",
-        dateOfConsiderationBill:
-          singleSenateBillData?.memberPassages &&
-          singleSenateBillData?.memberPassages?.dateOfConsiderationBill
-            ? moment(
-                singleSenateBillData?.memberPassages?.dateOfConsiderationBill,
+                  ?.reportPresentationDate,
                 "YYYY-MM-DD"
               ).toDate()
             : "",
-        fkSessionMemberPassageId: singleSenateBillData?.memberPassages
-          ? singleSenateBillData?.memberPassages?.fkSessionMemberPassageId
-          : "",
-        dateOfPassageBySenate: singleSenateBillData?.dateOfPassageBySenate
-          ? moment(
-              singleSenateBillData?.dateOfPassageBySenate,
-              "YYYY-MM-DD"
-            ).toDate()
-          : "",
-        dateOfTransmissionToNA: singleSenateBillData?.dateOfTransmissionToNA
-          ? moment(
-              singleSenateBillData?.dateOfTransmissionToNA,
-              "YYYY-MM-DD"
-            ).toDate()
-          : "",
+          fkMemberPassageId: singleSenateBillData?.memberPassages
+            ? singleSenateBillData?.memberPassages?.fkMemberPassageId
+            : "",
+          memeberNoticeDate: singleSenateBillData?.memberPassages
+            ?.memeberNoticeDate
+            ? moment(
+                singleSenateBillData?.memberPassages?.memeberNoticeDate,
+                "YYYY-MM-DD"
+              ).toDate()
+            : "",
+          dateOfConsiderationBill:
+            singleSenateBillData?.memberPassages &&
+            singleSenateBillData?.memberPassages?.dateOfConsiderationBill
+              ? moment(
+                  singleSenateBillData?.memberPassages?.dateOfConsiderationBill,
+                  "YYYY-MM-DD"
+                ).toDate()
+              : "",
+          fkSessionMemberPassageId: singleSenateBillData?.memberPassages
+            ? singleSenateBillData?.memberPassages?.fkSessionMemberPassageId
+            : "",
+          dateOfPassageBySenate: singleSenateBillData?.dateOfPassageBySenate
+            ? moment(
+                singleSenateBillData?.dateOfPassageBySenate,
+                "YYYY-MM-DD"
+              ).toDate()
+            : "",
+          dateOfTransmissionToNA: singleSenateBillData?.dateOfTransmissionToNA
+            ? moment(
+                singleSenateBillData?.dateOfTransmissionToNA,
+                "YYYY-MM-DD"
+              ).toDate()
+            : "",
 
-        dateOfPublishInGazette: singleSenateBillData?.dateOfPublishInGazette
-          ? moment(
-              singleSenateBillData?.dateOfPublishInGazette,
-              "YYYY-MM-DD"
-            ).toDate()
-          : "",
-        dateOfAssentByThePresident:
-          singleSenateBillData?.dateOfAssentByThePresident
+          dateOfPublishInGazette: singleSenateBillData?.dateOfPublishInGazette
             ? moment(
-                singleSenateBillData?.dateOfAssentByThePresident,
+                singleSenateBillData?.dateOfPublishInGazette,
                 "YYYY-MM-DD"
               ).toDate()
             : "",
-        dateOfCirculationOfBill: singleSenateBillData?.dateOfCirculationOfBill
-          ? moment(
-              singleSenateBillData?.dateOfCirculationOfBill,
-              "YYYY-MM-DD"
-            ).toDate()
-          : "",
+          dateOfAssentByThePresident:
+            singleSenateBillData?.dateOfAssentByThePresident
+              ? moment(
+                  singleSenateBillData?.dateOfAssentByThePresident,
+                  "YYYY-MM-DD"
+                ).toDate()
+              : "",
+          dateOfCirculationOfBill: singleSenateBillData?.dateOfCirculationOfBill
+            ? moment(
+                singleSenateBillData?.dateOfCirculationOfBill,
+                "YYYY-MM-DD"
+              ).toDate()
+            : "",
 
-        documentDiscription: singleSenateBillData?.billDocuments
-          ? singleSenateBillData?.billDocuments?.documentDiscription
-          : "",
-        documentDate:
-          singleSenateBillData?.billDocuments &&
-          singleSenateBillData?.billDocuments?.documentDate
+          documentDiscription: singleSenateBillData?.billDocuments
+            ? singleSenateBillData?.billDocuments?.documentDiscription
+            : "",
+          documentDate:
+            singleSenateBillData?.billDocuments &&
+            singleSenateBillData?.billDocuments?.documentDate
+              ? moment(
+                  singleSenateBillData?.billDocuments?.documentDate,
+                  "YYYY-MM-DD"
+                ).toDate()
+              : "",
+          documentType: singleSenateBillData?.billDocuments
+            ? singleSenateBillData?.billDocuments?.documentType
+            : "",
+          billStatusDate: singleSenateBillData?.billStatusDate
             ? moment(
-                singleSenateBillData?.billDocuments?.documentDate,
+                singleSenateBillData?.billStatusDate,
                 "YYYY-MM-DD"
               ).toDate()
             : "",
-        documentType: singleSenateBillData?.billDocuments
-          ? singleSenateBillData?.billDocuments?.documentType
-          : "",
-        billStatusDate: singleSenateBillData?.billStatusDate
-          ? moment(singleSenateBillData?.billStatusDate, "YYYY-MM-DD").toDate()
-          : "",
-      });
+        });
+      }
     }
   }, [singleSenateBillData]);
 
   // console.log("PAAAA FIle", singleSenateBillData?.billDocuments);
   const UpdateNationalAssemblyBill = async (values) => {
     const formData = new FormData();
-    formData.append(
-      "fkParliamentaryYearId",
-      values?.fkParliamentaryYearId?.value
-    );
+    formData.append("fkParliamentaryYearId", values?.fkParliamentaryYearId);
     formData.append("fkSessionId", values?.fkSessionId);
     formData.append("billCategory", values?.billCategory);
     formData.append("billType", values?.billType);
@@ -770,6 +792,10 @@ const UpdateBills = () => {
     // formData.append("fileNumber",   `09(${values?.fileNumber})/2024`);
     // formData.append("fileNumber", values?.fileNumber);
     // formData.append("PassedByNADate", values?.PassedByNADate);
+    formData.append("fkTenureId", values?.membertenure?.value);
+    if (values?.fkTermId?.value) {
+      formData.append("fkTermId", values?.fkTermId?.value);
+    }
     if (values?.PassedByNADate) {
       const formattedDate = moment(values?.PassedByNADate).format("YYYY-MM-DD");
       formData.append("PassedByNADate", formattedDate);
@@ -949,7 +975,7 @@ const UpdateBills = () => {
     //   const formattedDate = moment(values?.referedOnDate).format("YYYY-MM-DD");
     //   formData.append("referedOnDate", formattedDate);
     // }
-    if (values?.senateBillSenatorMovers) {
+    if (values?.senateBillSenatorMovers?.length > 0) {
       values?.senateBillSenatorMovers?.forEach((senator, index) => {
         formData.append(
           `senateBillSenatorMovers[${index}][fkSenatorId]`,
@@ -957,7 +983,7 @@ const UpdateBills = () => {
         );
       });
     }
-    if (values?.senateBillMnaMovers) {
+    if (values?.senateBillMnaMovers?.length > 0) {
       formData.append(
         `senateBillMnaMovers[${0}][fkMnaId]`,
         values?.senateBillMnaMovers?.value
@@ -971,7 +997,7 @@ const UpdateBills = () => {
     //     );
     //   });
     // }
-    if (values?.senateBillMinistryMovers) {
+    if (values?.senateBillMinistryMovers?.length > 0) {
       formData.append(
         `senateBillMinistryMovers[${0}][fkMinistryId]`,
         values?.senateBillMinistryMovers?.value
@@ -1035,13 +1061,123 @@ const UpdateBills = () => {
                 <div className="card-body">
                   <div className="container-fluid">
                     <div className="row">
+                      <div class="col-3 mb-3">
+                        <div className="mb-3">
+                          <label className="form-label">Bill For</label>
+                          <select
+                            id="selectiontype"
+                            name="selectiontype"
+                            className={`form-select  ${
+                              formik.touched.selectiontype &&
+                              formik.errors.selectiontype
+                                ? "is-invalid"
+                                : ""
+                            }`}
+                            onBlur={formik.handleBlur}
+                            onChange={(e) => {
+                              const selectedValue = e.target.value;
+                              // Update the formik state
+                              formik.handleChange(e);
+                              // Call the API with the selected value
+                              handleTenures(selectedValue);
+                              formik.setFieldValue("membertenure", "");
+                              formik.setFieldValue("fkParliamentaryYearId", "");
+                              formik.setFieldValue("fkTermId", "");
+                              formik.setFieldValue(
+                                "senateBillSenatorMovers",
+                                null
+                              );
+                              formik.setFieldValue("senateBillMnaMovers", null);
+                              formik.setFieldValue(
+                                "senateBillMinistryMovers",
+                                null
+                              );
+                              // SetFormSHow
+                              setIsFormShow(true);
+                              setShowMinister(selectedValue);
+                              setMembersOnParliamentaryYear([]);
+                            }}
+                            value={formik.values.selectiontype}
+                          >
+                            <option value="" disabled hidden>
+                              Select
+                            </option>
+                            <option value="Senators">Senators</option>
+                            <option value="Ministers">Ministers</option>
+                          </select>
+                          {formik.touched.selectiontype &&
+                            formik.errors.selectiontype && (
+                              <div className="invalid-feedback">
+                                {formik.errors.selectiontype}
+                              </div>
+                            )}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="row">
                       <div className="col">
+                        {showMinster === "Ministers" ? (
+                          <label className="form-label">Minister Tenure</label>
+                        ) : (
+                          <label className="form-label">Member Tenure</label>
+                        )}
+
+                        <Select
+                          options={
+                            Array.isArray(tenures) && tenures?.length > 0
+                              ? tenures.map((item) => ({
+                                  value: item?.id,
+                                  label: `${item?.tenureName} (${item?.tenureType})`,
+                                  tenureType: item?.tenureType,
+                                }))
+                              : []
+                          }
+                          onChange={(selectedOption) => {
+                            formik.setFieldValue(
+                              "membertenure",
+                              selectedOption
+                            );
+                            if (showMinster === "Ministers") {
+                              getParliamentaryYearsonTheBaseOfTenure(
+                                selectedOption?.value
+                              );
+                            } else {
+                              handleTenuresTerms(selectedOption?.value);
+                            }
+                            formik.setFieldValue("fkTermId", "");
+                            formik.setFieldValue("fkParliamentaryYearId", "");
+                            formik.setFieldValue("senateBillSenatorMovers", "");
+                            formik.setFieldValue("senateBillMnaMovers", null);
+                            formik.setFieldValue(
+                              "senateBillMinistryMovers",
+                              null
+                            );
+                          }}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.membertenure}
+                          id="membertenure"
+                          name="membertenure"
+                          isClearable={true}
+                        />
+                        {formik.touched.membertenure &&
+                          formik.errors.membertenure && (
+                            <div className="invalid-feedback">
+                              {formik.errors.membertenure}
+                            </div>
+                          )}
+                      </div>
+                      {/* <div className="col">
                         <div class="mb-3">
                           <label class="form-label">Parliamentary Year</label>
-                          {/* <select
+                          <select
                             id="fkParliamentaryYearId"
                             name="fkParliamentaryYearId"
-                            className="form-select"
+                            className={`form-select  ${
+                              formik.touched.fkParliamentaryYearId &&
+                              formik.errors.fkParliamentaryYearId
+                                ? "is-invalid"
+                                : ""
+                            }`}
                             onChange={formik.handleChange}
                             value={formik.values.fkParliamentaryYearId}
                           >
@@ -1054,26 +1190,112 @@ const UpdateBills = () => {
                                   {item.parliamentaryTenure}
                                 </option>
                               ))}
-                          </select> */}
-                          <Select
-                            options={
-                              parliamentaryYear &&
-                              parliamentaryYear?.map((item) => ({
-                                value: item?.id,
-                                label: item?.parliamentaryTenure,
-                              }))
-                            }
-                            onChange={(selectedOptions) =>
-                              formik.setFieldValue(
-                                "fkParliamentaryYearId",
-                                selectedOptions
-                              )
-                            }
-                            // onBlur={formikAssigned.handleBlur}
-                            value={formik.values.fkParliamentaryYearId}
-                            name="fkParliamentaryYearId"
-                          />
+                          </select>
+                          {formik.touched.fkParliamentaryYearId &&
+                            formik.errors.fkParliamentaryYearId && (
+                              <div className="invalid-feedback"> 
+                                {formik.errors.fkParliamentaryYearId}
+                              </div>
+                            )}
+                        </div>
+                      </div> */}
+                      {showMinster !== "Ministers" && (
+                        <div className="col">
+                          <div className="mb-3">
+                            <label className="form-label">Member Term</label>
+                            <Select
+                              options={
+                                Array.isArray(tenuresTerms) &&
+                                tenuresTerms?.length > 0
+                                  ? tenuresTerms.map((item) => ({
+                                      value: item?.id,
+                                      label: `${item?.termName}`,
+                                    }))
+                                  : []
+                              }
+                              onChange={(selectedOption) => {
+                                formik.setFieldValue(
+                                  "fkTermId",
+                                  selectedOption
+                                );
+                                formik.setFieldValue(
+                                  "fkParliamentaryYearId",
+                                  ""
+                                );
+                                formik.setFieldValue(
+                                  "senateBillSenatorMovers",
+                                  ""
+                                );
+                                if (selectedOption?.value) {
+                                  getParliamentaryYearsonTheBaseOfTerm(
+                                    selectedOption?.value
+                                  );
+                                }
+                              }}
+                              onBlur={formik.handleBlur}
+                              value={formik.values.fkTermId}
+                              id="fkTermId"
+                              name="fkTermId"
+                              isClearable={true}
+                            />
+                          </div>
+                        </div>
+                      )}
 
+                      <div class="col">
+                        <div class="mb-3">
+                          {showMinster === "Ministers" ? (
+                            <label className="form-label">
+                              Minister Parliamentary Year
+                            </label>
+                          ) : (
+                            <label className="form-label">
+                              Member Parliamentary Year
+                            </label>
+                          )}
+
+                          <label class="form-label"></label>
+                          <select
+                            id="fkParliamentaryYearId"
+                            name="fkParliamentaryYearId"
+                            className={`form-select  ${
+                              formik.touched.fkParliamentaryYearId &&
+                              formik.errors.fkParliamentaryYearId
+                                ? "is-invalid"
+                                : ""
+                            }`}
+                            onBlur={formik.handleBlur}
+                            // onChange={formik.handleChange}
+                            onChange={(e) => {
+                              const selectedId = e.target.value;
+                              formik.handleChange(e);
+                              setMembersOnParliamentaryYear([]);
+                              getMembersOnParliamentaryYear(e.target.value);
+                              getMNAOnParliamentaryYear(e.target.value);
+                              formik.setFieldValue("senateBillMnaMovers", []);
+                              formik.setFieldValue(
+                                "senateBillMinistryMovers",
+                                []
+                              );
+                              formik.setFieldValue(
+                                "senateBillSenatorMovers",
+                                []
+                              );
+                              // console.log("id", selectedId);
+                            }}
+                            value={formik.values.fkParliamentaryYearId}
+                          >
+                            <option value="" disabled hidden>
+                              Select
+                            </option>
+                            {parliamentaryYearData &&
+                              parliamentaryYearData?.length > 0 &&
+                              parliamentaryYearData.map((item) => (
+                                <option value={item?.id}>
+                                  {item?.parliamentaryTenure}
+                                </option>
+                              ))}
+                          </select>
                           {formik.touched.fkParliamentaryYearId &&
                             formik.errors.fkParliamentaryYearId && (
                               <div className="invalid-feedback">
@@ -1082,35 +1304,146 @@ const UpdateBills = () => {
                             )}
                         </div>
                       </div>
+                      {showMinster === "Ministers" ? (
+                        <>
+                          <div class="col">
+                            <div class="mb-3">
+                              <label class="form-label">Select Minister</label>
+                              <Select
+                                // options={
+                                //   ministersOnParliamentaryYear &&
+                                //   ministersOnParliamentaryYear?.length > 0 &&
+                                //   ministersOnParliamentaryYear?.map((item) => ({
+                                //     value: item?.id,
+                                //     label: item?.mnaName,
+                                //   }))
+                                // }
+                                options={
+                                  Array.isArray(ministersOnParliamentaryYear) &&
+                                  ministersOnParliamentaryYear.length > 0
+                                    ? ministersOnParliamentaryYear.map(
+                                        (item) => ({
+                                          value: item?.id,
+                                          label: item?.mnaName,
+                                        })
+                                      )
+                                    : []
+                                }
+                                onChange={(selectedOption) => {
+                                  formik.setFieldValue(
+                                    "senateBillMnaMovers",
+                                    selectedOption
+                                  );
+                                  formik.setFieldValue(
+                                    "senateBillMinistryMovers",
+                                    null
+                                  );
+                                  setMinisterID(selectedOption?.value);
+                                }}
+                                onBlur={formik.handleBlur}
+                                value={formik.values.senateBillMnaMovers}
+                                name="senateBillMnaMovers"
+                                className={`${
+                                  formik.touched.senateBillMnaMovers &&
+                                  formik.errors.senateBillMnaMovers
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
+                              />
 
-                      <div class="col">
-                        <div class="mb-3">
-                          <label class="form-label">Session</label>
-                          <select
-                            id="fkSessionId"
-                            name="fkSessionId"
-                            className="form-control"
-                            onChange={formik.handleChange}
-                            value={formik.values.fkSessionId}
-                          >
-                            <option value="" disabled hidden>
-                              Select
-                            </option>
-                            {sessions &&
-                              sessions.map((item) => (
-                                <option value={item.id}>
-                                  {item.sessionName}
-                                </option>
-                              ))}
-                          </select>
-                          {formik.touched.fkSessionId &&
-                            formik.errors.fkSessionId && (
-                              <div class="invalid-feedback">
-                                {formik.errors.fkSessionId}
-                              </div>
-                            )}
+                              {formik.touched.senateBillMnaMovers &&
+                                formik.errors.senateBillMnaMovers && (
+                                  <div class="invalid-feedback">
+                                    {formik.errors.senateBillMnaMovers}
+                                  </div>
+                                )}
+                            </div>
+                          </div>
+                          <div className="col">
+                            <label className="form-label">
+                              Select Ministry
+                            </label>
+                            <Select
+                              options={
+                                ministryDataOnMinister &&
+                                ministryDataOnMinister?.map((item) => ({
+                                  value: item.id,
+                                  label: item?.ministryName,
+                                }))
+                              }
+                              name="senateBillMinistryMovers"
+                              id="senateBillMinistryMovers"
+                              onChange={(selectedOptions) =>
+                                formik.setFieldValue(
+                                  "senateBillMinistryMovers",
+                                  selectedOptions
+                                )
+                              }
+                              className={` ${
+                                formik.touched.senateBillMinistryMovers &&
+                                formik.errors.senateBillMinistryMovers
+                                  ? "is-invalid"
+                                  : ""
+                              }`}
+                              value={formik.values.senateBillMinistryMovers}
+                              // isMulti={true}
+                            />
+                            {formik.touched.senateBillMinistryMovers &&
+                              formik.errors.senateBillMinistryMovers && (
+                                <div class="invalid-feedback">
+                                  {formik.errors.senateBillMinistryMovers}
+                                </div>
+                              )}
+                          </div>
+                        </>
+                      ) : (
+                        <div className="col">
+                          <div className="mb-3">
+                            <label class="form-label">Select Senator</label>
+                            <Select
+                              // options={
+                              //   membersOnParliamentaryYear &&
+                              //   membersOnParliamentaryYear?.length > 0 &&
+                              //   membersOnParliamentaryYear?.map((item) => ({
+                              //     value: item.id,
+                              //     label: item?.memberName,
+                              //   }))
+                              // }
+                              options={
+                                Array.isArray(membersOnParliamentaryYear) &&
+                                membersOnParliamentaryYear.length > 0
+                                  ? membersOnParliamentaryYear.map((item) => ({
+                                      value: item.id,
+                                      label: item?.memberName,
+                                    }))
+                                  : []
+                              }
+                              id="senateBillSenatorMovers"
+                              name="senateBillSenatorMovers"
+                              onChange={(selectedOptions) =>
+                                formik.setFieldValue(
+                                  "senateBillSenatorMovers",
+                                  selectedOptions
+                                )
+                              }
+                              value={formik.values.senateBillSenatorMovers}
+                              isMulti={true}
+                              className={` ${
+                                formik.touched.senateBillSenatorMovers &&
+                                formik.errors.senateBillSenatorMovers
+                                  ? "is-invalid"
+                                  : ""
+                              }`}
+                            />
+                            {formik.touched.senateBillSenatorMovers &&
+                              formik.errors.senateBillSenatorMovers && (
+                                <div class="invalid-feedback">
+                                  {formik.errors.senateBillSenatorMovers}
+                                </div>
+                              )}
+                          </div>
                         </div>
-                      </div>
+                      )}
 
                       {/* <div class="col">
                         <div class="mb-3">
@@ -1145,10 +1478,111 @@ const UpdateBills = () => {
                             )}
                         </div>
                       </div> */}
-                      <div class="col">
-                        <div class="mb-3">
-                          <label class="form-label">Bill Status</label>
-                          {/* <select
+                      <div className="row">
+                        <div class="col">
+                          <div class="mb-3">
+                            <label class="form-label">Session</label>
+                            <select
+                              id="fkSessionId"
+                              name="fkSessionId"
+                              className={`form-control  ${
+                                formik.touched.fkSessionId &&
+                                formik.errors.fkSessionId
+                                  ? "is-invalid"
+                                  : ""
+                              }`}
+                              onBlur={formik.handleBlur}
+                              onChange={formik.handleChange}
+                              value={formik.values.fkSessionId}
+                            >
+                              <option value="" disabled hidden>
+                                Select
+                              </option>
+                              {sessions &&
+                                sessions.map((item) => (
+                                  <option value={item.id}>
+                                    {item.sessionName}
+                                  </option>
+                                ))}
+                            </select>
+                            {formik.touched.fkSessionId &&
+                              formik.errors.fkSessionId && (
+                                <div class="invalid-feedback">
+                                  {formik.errors.fkSessionId}
+                                </div>
+                              )}
+                          </div>
+                        </div>
+                        <div className="col">
+                          <div className="mb-3">
+                            <label className="form-label">File Number</label>
+
+                            <input
+                              type="text"
+                              id="fileNumber"
+                              name="fileNumber"
+                              className={`form-control ${
+                                formik.touched.fileNumber &&
+                                formik.errors.fileNumber
+                                  ? "is-invalid"
+                                  : ""
+                              }`}
+                              onChange={formik.handleChange}
+                              onBlur={formik.handleBlur}
+                              value={formik.values.fileNumber}
+                            />
+                            {formik.touched.fileNumber &&
+                              formik.errors.fileNumber && (
+                                <div
+                                  className="invalid-feedback"
+                                  style={{ display: "block" }}
+                                >
+                                  {formik.errors.fileNumber}
+                                </div>
+                              )}
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="mb-3">
+                            <label class="form-label">Bill Type </label>
+                            <select
+                              id="billType"
+                              name="billType"
+                              className={`form-select ${
+                                formik.touched.billType &&
+                                formik.errors.billType
+                                  ? "is-invalid"
+                                  : ""
+                              }`}
+                              onChange={formik.handleChange}
+                              onBlur={formik.handleBlur}
+                              value={formik.values.billType}
+                            >
+                              <option value="" disabled hidden>
+                                Select
+                              </option>
+                              <option value="Amendment Bill">
+                                Amendment Bill
+                              </option>
+                              <option value="Constitutional Amendment Bill">
+                                Constitutional Amendment Bill
+                              </option>
+                              <option value="Finance Bill">Finance Bill</option>
+                              <option value="Money Bill">Money Bill</option>
+                              <option value="New Bill">New Bill</option>
+                            </select>
+                            {formik.touched.billType &&
+                              formik.errors.billType && (
+                                <div class="invalid-feedback">
+                                  {formik.errors.billType}
+                                </div>
+                              )}
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="mb-3">
+                            <label class="form-label">Bill Status</label>
+                            {/* <select
                             id="fkBillStatus"
                             name="fkBillStatus"
                             className="form-select"
@@ -1165,135 +1599,37 @@ const UpdateBills = () => {
                                 </option>
                               ))}
                           </select> */}
-                          <Select
-                            options={
-                              billStatusData &&
-                              billStatusData?.map((item) => ({
-                                value: item.id,
-                                label: item?.billStatusName,
-                              }))
-                            }
-                            onChange={(selectedOptions) =>
-                              formik.setFieldValue(
-                                "fkBillStatus",
-                                selectedOptions
-                              )
-                            }
-                            // onBlur={formikAssigned.handleBlur}
-                            value={formik.values.fkBillStatus}
-                            name="fkBillStatus"
-                          />
-                          {formik.touched.fkBillStatus &&
-                            formik.errors.fkBillStatus && (
-                              <div class="invalid-feedback">
-                                {formik.errors.fkBillStatus}
-                              </div>
-                            )}
-                        </div>
-                      </div>
-                      {/* <div className="col">
-                        <div className="mb-3" style={{ position: "relative" }}>
-                          <label className="form-label">Bill Status Date</label>
-                          <span
-                            style={{
-                              position: "absolute",
-                              right: "15px",
-                              top: "36px",
-                              zIndex: 1,
-                              fontSize: "20px",
-                              color: "#666",
-                              cursor: "pointer",
-                            }}
-                            onClick={handleBillStatusCalendarToggle}
-                          >
-                            <FontAwesomeIcon icon={faCalendarAlt} />
-                          </span>
-                          <DatePicker
-                            selected={formik.values.billStatusDate}
-                            onChange={handleBillStatustDateSelect}
-                            onBlur={formik.handleBlur}
-                            className={`form-control ${
-                              formik.touched.billStatusDate &&
-                              formik.errors.billStatusDate
-                                ? "is-invalid"
-                                : ""
-                            }`}
-                            open={isBillStatusDateCalendarOpen}
-                            onClickOutside={() =>
-                              setBillStatusDateCalendarOpen(false)
-                            }
-                            onInputClick={handleBillStatusCalendarToggle}
-                            // onClick={handleCalendarToggle}
-                            maxDate={new Date()}
-                            dateFormat="dd-MM-yyyy"
-                          />
-                          {formik.touched.billStatusDate &&
-                            formik.errors.billStatusDate && (
-                              <div
-                                className="invalid-feedback"
-                                style={{ display: "block" }}
-                              >
-                                {formik.errors.billStatusDate}
-                              </div>
-                            )}
-                        </div>
-                      </div> */}
-                      <div className="col">
-                        <div className="mb-3" style={{ position: "relative" }}>
-                          <label className="form-label">
-                            Date of Recipt of Notice
-                          </label>
-                          <span
-                            style={{
-                              position: "absolute",
-                              right: "15px",
-                              top: "36px",
-                              zIndex: 1,
-                              fontSize: "20px",
-                              color: "#666",
-                              cursor: "pointer",
-                            }}
-                            // onClick={handleCalendarToggle}
-                            onClick={handleNoticeDateCalendarToggle}
-                          >
-                            <FontAwesomeIcon icon={faCalendarAlt} />
-                          </span>
-
-                          <DatePicker
-                            selected={formik.values.noticeDate}
-                            onChange={handleNoticeDateSelect}
-                            onBlur={formik.handleBlur}
-                            className={`form-control ${
-                              formik.touched.noticeDate &&
-                              formik.errors.noticeDate
-                                ? "is-invalid"
-                                : ""
-                            }`}
-                            open={isNoticeDateCalendarOpen}
-                            onClickOutside={() =>
-                              setIsNoticeDateCalendarOpen(false)
-                            }
-                            onInputClick={handleNoticeDateCalendarToggle}
-                            // onClick={handleCalendarToggle}
-                            maxDate={new Date()}
-                            dateFormat="dd-MM-yyyy"
-                          />
-
-                          {formik.touched.noticeDate &&
-                            formik.errors.noticeDate && (
-                              <div
-                                className="invalid-feedback"
-                                style={{ display: "block" }}
-                              >
-                                {formik.errors.noticeDate}
-                              </div>
-                            )}
+                            <Select
+                              options={
+                                billStatusData &&
+                                billStatusData?.map((item) => ({
+                                  value: item.id,
+                                  label: item?.billStatusName,
+                                }))
+                              }
+                              onChange={(selectedOptions) =>
+                                formik.setFieldValue(
+                                  "fkBillStatus",
+                                  selectedOptions
+                                )
+                              }
+                              // onBlur={formikAssigned.handleBlur}
+                              value={formik.values.fkBillStatus}
+                              name="fkBillStatus"
+                            />
+                            {formik.touched.fkBillStatus &&
+                              formik.errors.fkBillStatus && (
+                                <div class="invalid-feedback">
+                                  {formik.errors.fkBillStatus}
+                                </div>
+                              )}
+                          </div>
                         </div>
                       </div>
                     </div>
 
                     <div className="row">
-                      <div class="col-3">
+                      {/* <div class="col-3">
                         <div class="mb-3">
                           <label class="form-label">Bill Type </label>
                           <select
@@ -1328,8 +1664,8 @@ const UpdateBills = () => {
                               </div>
                             )}
                         </div>
-                      </div>
-                      <div className="col">
+                      </div> */}
+                      {/* <div className="col">
                         <div className="mb-3">
                           <label className="form-label">File Number</label>
 
@@ -1352,9 +1688,9 @@ const UpdateBills = () => {
                               </div>
                             )}
                         </div>
-                      </div>
+                      </div> */}
 
-                      <div className="col">
+                      <div className="col-3">
                         <div className="mb-3" style={{ position: "relative" }}>
                           <label className="form-label">
                             Passed By NA Date
@@ -1404,7 +1740,7 @@ const UpdateBills = () => {
                         </div>
                       </div>
 
-                      <div className="col">
+                      <div className="col-3">
                         <div className="mb-3" style={{ position: "relative" }}>
                           <label className="form-label">
                             Date of Recipt of Message From NA
@@ -1537,181 +1873,6 @@ const UpdateBills = () => {
                             )}
                         </div>
                       </div>
-                    </div>
-
-                    <div className="row">
-                      <div className=" col">
-                        <label className="form-label">Senator</label>
-                        <Select
-                          options={
-                            members &&
-                            members?.map((item) => ({
-                              value: item.id,
-                              label: item?.memberName,
-                            }))
-                          }
-                          id="senateBillSenatorMovers"
-                          name="senateBillSenatorMovers"
-                          onChange={(selectedOptions) =>
-                            formik.setFieldValue(
-                              "senateBillSenatorMovers",
-                              selectedOptions
-                            )
-                          }
-                          value={formik.values.senateBillSenatorMovers}
-                          isMulti={true}
-                        />
-                      </div>
-                      {/* <div class="col">
-                        <div class="mb-3">
-                          <label class="form-label">Select MNA</label>
-                          <Select
-                            options={MNAData.map((item) => ({
-                              value: item.id,
-                              label: item.mnaName,
-                            }))}
-                            onChange={(selectedOption) =>
-                              formik.setFieldValue(
-                                "senateBillMnaMovers",
-                                selectedOption
-                              )
-                            }
-                            onBlur={formik.handleBlur}
-                            value={formik.values.senateBillMnaMovers}
-                            name="senateBillMnaMovers"
-                            className={` ${
-                              formik.touched.senateBillMnaMovers &&
-                              formik.errors.senateBillMnaMovers
-                                ? "is-invalid"
-                                : ""
-                            }`}
-                            isMulti
-                          />
-
-                          {formik.touched.senateBillMnaMovers &&
-                            formik.errors.senateBillMnaMovers && (
-                              <div class="invalid-feedback">
-                                {formik.errors.senateBillMnaMovers}
-                              </div>
-                            )}
-                        </div>
-                      </div> */}
-
-                      <div class="col">
-                        <div class="mb-3">
-                          <label class="form-label">Select Minister</label>
-                          <Select
-                            options={MNAData.map((item) => ({
-                              value: item.id,
-                              label: item.mnaName,
-                            }))}
-                            onChange={(selectedOption) => {
-                              formik.setFieldValue(
-                                "senateBillMnaMovers",
-                                selectedOption
-                              );
-                              formik.setFieldValue(
-                                "senateBillMinistryMovers",
-                                null
-                              );
-                              setMinisterID(selectedOption?.value);
-                            }}
-                            onBlur={formik.handleBlur}
-                            value={formik.values.senateBillMnaMovers}
-                            name="senateBillMnaMovers"
-                            className={` ${
-                              formik.touched.senateBillMnaMovers &&
-                              formik.errors.senateBillMnaMovers
-                                ? "is-invalid"
-                                : ""
-                            }`}
-                            // isMulti
-                          />
-
-                          {formik.touched.senateBillMnaMovers &&
-                            formik.errors.senateBillMnaMovers && (
-                              <div class="invalid-feedback">
-                                {formik.errors.senateBillMnaMovers}
-                              </div>
-                            )}
-                        </div>
-                        {/* <div class="mb-3">
-                          <label class="form-label">Select MNA</label>
-                          <Select
-                            options={MNAData.map((item) => ({
-                              value: item.id,
-                              label: item.mnaName,
-                            }))}
-                            onChange={(selectedOption) =>
-                              formik.setFieldValue(
-                                "senateBillMnaMovers",
-                                selectedOption
-                              )
-                            }
-                            onBlur={formik.handleBlur}
-                            value={formik.values.senateBillMnaMovers}
-                            name="senateBillMnaMovers"
-                            className={` ${
-                              formik.touched.senateBillMnaMovers &&
-                              formik.errors.senateBillMnaMovers
-                                ? "is-invalid"
-                                : ""
-                            }`}
-                            isMulti
-                          />
-
-                          {formik.touched.senateBillMnaMovers &&
-                            formik.errors.senateBillMnaMovers && (
-                              <div class="invalid-feedback">
-                                {formik.errors.senateBillMnaMovers}
-                              </div>
-                            )}
-                        </div> */}
-                      </div>
-                      <div className="col">
-                        <label className="form-label">Select Ministry</label>
-                        <Select
-                          options={
-                            ministryDataOnMinister &&
-                            ministryDataOnMinister?.map((item) => ({
-                              value: item.id,
-                              label: item?.ministryName,
-                            }))
-                          }
-                          name="senateBillMinistryMovers"
-                          id="senateBillMinistryMovers"
-                          onChange={(selectedOptions) =>
-                            formik.setFieldValue(
-                              "senateBillMinistryMovers",
-                              selectedOptions
-                            )
-                          }
-                          value={formik.values.senateBillMinistryMovers}
-                          // isMulti={true}
-                        />
-                      </div>
-                      {/* <div className="col">
-                        <label className="form-label">Select Ministry</label>
-                        <Select
-                          options={
-                            ministryData &&
-                            ministryData?.map((item) => ({
-                              value: item.id,
-                              label: item?.ministryName,
-                            }))
-                          }
-                          name="senateBillMinistryMovers"
-                          id="senateBillMinistryMovers"
-                          onChange={(selectedOptions) =>
-                            formik.setFieldValue(
-                              "senateBillMinistryMovers",
-                              selectedOptions
-                            )
-                          }
-                          value={formik.values.senateBillMinistryMovers}
-                          // isMulti={true}
-                        />
-                      </div> */}
                     </div>
                   </div>
                 </div>

@@ -319,6 +319,9 @@ import AddEditDeputedWithOff from "../pages/Dashboard/Modules/Transport/VehicleD
 import AddEditDepOnVehNo from "../pages/Dashboard/Modules/Transport/VehicleDrivers/DeputedOnVehicleNO/AddEditDepOnVehNo/index.js";
 import AddEditDriverLicense from "../pages/Dashboard/Modules/Transport/VehicleDrivers/DriversLicenseType/AddEditDriverLicense/index.js";
 import AddEditMedicalRepo from "../pages/Dashboard/Modules/Transport/VehicleDrivers/MedicalReport/AddEditMedicalRep/index.js";
+import AddEditGovernmentBills from "../pages/Dashboard/Modules/Notice/legislationBusiness/GovernmentBill/AddEditGovernmentBill/index.js";
+import UserManulas from "../pages/Dashboard/Modules/EFiling/UserManuals/index.js";
+import EfilingLeaveManagement from "../pages/Dashboard/Modules/EFiling/AddLeave/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -392,12 +395,20 @@ export const ProtectedRoutes = [
   // },
 
   {
-    path: "/notice/legislation/private-bill",
+    path: "/notice/bills/private-member-bills",
+    element: <LegislativeBillList />,
+  },
+  {
+    path: "/notice/bills/government-bills",
     element: <LegislativeBillList />,
   },
   {
     path: "/notice/legislation/private-bill/addedit",
     element: <AddEditLegislativeBill />,
+  },
+  {
+    path: "/notice/legislation/government/addedit",
+    element: <AddEditGovernmentBills />,
   },
 
   { path: "/notice/manage", element: <NoticeDashboard /> },
@@ -787,7 +798,7 @@ export const ProtectedRoutes = [
   // { path: "/efiling/dashboard", element: <MainDashboard /> },
   { path: "/efiling/dashboard", element: <MainDashBoardDemo /> },
   // { path: "/efiling/dashboard", element: <UpdatedDashboard /> },
-  { path: "/efiling/director-dashboard", element: <EFilingDashboard /> },
+  // { path: "/efiling/director-dashboard", element: <EFilingDashboard /> },
 
   { path: "/efiling/dashboard/fileDetail", element: <FileDetail /> },
   // { path: "/efiling/dashboard/addedit", element: <AddEditFileForm /> },
@@ -875,6 +886,11 @@ export const ProtectedRoutes = [
     path: "/efiling/dashboard/addedit-flags",
     element: <AddEditFlags />,
   },
+  {
+    path: "/efiling/document/user-manual",
+    element: <UserManulas />,
+  },
+  { path: "/efiling/dashboard/add-leave", element: <EfilingLeaveManagement /> },
 
   // Legislation Routes Start
 
@@ -1212,13 +1228,13 @@ export const ProtectedRoutes = [
   },
   {
     path: "/transport/vehicles/profiles/addedit",
-    element: <AddEditVehicleProfile/>,
+    element: <AddEditVehicleProfile />,
   },
   {
     path: "/transport/vehicles/profiles/addeditlogbook",
-    element: <EditAddLogBook/>,
+    element: <EditAddLogBook />,
   },
-  
+
   {
     path: "/transport/vehicles/log-book",
     element: <VehiclesLogBook />,
@@ -1245,7 +1261,7 @@ export const ProtectedRoutes = [
   },
   {
     path: "/transport/vehicles/addeditvehiclepurchase",
-    element: <AddEditVehiclePurchase/>,
+    element: <AddEditVehiclePurchase />,
   },
 
   // {
@@ -1270,7 +1286,7 @@ export const ProtectedRoutes = [
   },
   {
     path: "/transport/drivers/addeditdeputedwithofficer",
-    element: <AddEditDeputedWithOff/>,
+    element: <AddEditDeputedWithOff />,
   },
   {
     path: "/transport/drivers/deputed-on-vehicle-no",
@@ -1278,7 +1294,7 @@ export const ProtectedRoutes = [
   },
   {
     path: "/transport/drivers/addeditdeponvehNo",
-    element: <AddEditDepOnVehNo/>,
+    element: <AddEditDepOnVehNo />,
   },
   {
     path: "/transport/drivers/deputed-on-vehicle-no",
@@ -1298,7 +1314,7 @@ export const ProtectedRoutes = [
   },
   {
     path: "/transport/drivers/addeditmedicalrepo",
-    element: <AddEditMedicalRepo/>,
+    element: <AddEditMedicalRepo />,
   },
 
   {

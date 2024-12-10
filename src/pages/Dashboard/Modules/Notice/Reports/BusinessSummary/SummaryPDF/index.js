@@ -2,14 +2,26 @@ import React from "react";
 import html2pdf from "html2pdf.js";
 import { useLocation } from "react-router-dom";
 import moment from "moment";
+import LZString from "lz-string";
 
 const PDFAllBusinessSummary = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const encodedJsonString = queryParams.get("state");
-  const decodedString = decodeURIComponent(encodedJsonString);
-  const data = JSON.parse(decodedString);
-  console.log(data);
+
+  let data;
+  try {
+    // Decode and decompress the JSON string
+    const decodedString = decodeURIComponent(encodedJsonString);
+    const decompressedData = LZString.decompressFromEncodedURIComponent(decodedString);
+    
+    // Parse the JSON data
+    data = JSON.parse(decompressedData);
+    console.log(data);
+  } catch (error) {
+    console.error("Error parsing JSON data:", error);
+    return <div>Error loading data</div>; // Show an error message
+  }
 
   const handlePrint = () => {
     const element = document.getElementById("template-container");
