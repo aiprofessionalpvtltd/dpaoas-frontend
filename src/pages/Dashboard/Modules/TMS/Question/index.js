@@ -189,7 +189,7 @@ function TMSQuestion() {
   };
 
   const getAllQuestionsApi = useCallback(async () => {
-    const questionSentStatus = "toQuestion"
+    const questionSentStatus = "toTranslation"
     try {
       const response = await getAllQuestion(currentPage, pageSize, questionSentStatus);
       if (response?.success) {
