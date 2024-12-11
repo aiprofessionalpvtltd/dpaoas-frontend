@@ -19,8 +19,9 @@ import {
   createNotificationApprovedCasesAPI,
   createNotificationFRsAPI,
 } from "../APIs/Services/efiling.service";
-// const socket = io("http://10.10.40.220:5152");
-const socket = io("http://172.16.170.8:2424");
+
+const API_URL = process.env.REACT_APP_API_URL;
+const socket = io(API_URL);
 
 export const AuthContext = createContext();
 
