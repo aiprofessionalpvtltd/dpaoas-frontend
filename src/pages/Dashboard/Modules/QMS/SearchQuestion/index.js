@@ -229,12 +229,7 @@ function QMSSearchQuestion() {
       const dashboardData = transformLeavesData(location?.state);
       setSearchedData(dashboardData);
     } else {
-      const values = {
-        fromSession: formik?.values?.fromSession
-          ? formik?.values?.fromSession
-          : currentSession?.id,
-      };
-      SearchQuestionApi(values);
+      SearchQuestionApi(formik.values);
     }
   }, [location?.state, currentSession, currentPage]);
 
