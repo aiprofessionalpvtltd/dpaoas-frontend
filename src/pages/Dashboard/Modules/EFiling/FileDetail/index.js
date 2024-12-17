@@ -740,7 +740,7 @@ function FileDetail() {
         </span>
         <br />
         <span style="font-weight: normal;">
-          ${moment(para?.createdAt).format("Do MMMM, YYYY")}
+         ${moment(para?.updatedAt).format("Do MMMM, YYYY [at] h:mm A")}
         </span>
       </p>
        
