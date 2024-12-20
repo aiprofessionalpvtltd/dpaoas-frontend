@@ -65,6 +65,7 @@ function AddEditFileCase() {
   const [attachedFiles, setAttachedFiles] = useState([]);
   const [globalFRId, setGlobalFRId] = useState();
   const [globalFRAttachments, setGlobalFRAttachments] = useState([]);
+  const paraNewUpdateDate = new Date().toISOString()
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
@@ -94,7 +95,8 @@ function AddEditFileCase() {
           description: content,
           references: [],
           createdBy: UserData && UserData?.fkUserId,
-          assignedTo: null
+          assignedTo: null,
+          paraCreatedAt: moment(paraNewUpdateDate).format("Do MMMM, YYYY [at] h:mm A")
         },
       ]);
       setNotingData("");

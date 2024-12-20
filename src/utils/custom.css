@@ -1187,6 +1187,15 @@ hr.horizontal {
   width: 142px;
   margin-bottom: 25px;
 }
+.smalllogo {
+  text-align: center;
+}
+
+.smalllogo img {
+  width: 120px;
+  margin-bottom: 25px;
+}
+
 
 /* .page-item.active .page-link {
     background: linear-gradient(to bottom, #b5090b 0%, #a00808 100%);

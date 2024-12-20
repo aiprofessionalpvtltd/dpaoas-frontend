@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState, useRef } from "react";
 import { Layout } from "../../../../../components/Layout";
 import { useLocation, useNavigate } from "react-router-dom";
+import senatelogo from "../../../../../assets/senatelogo.jpg";
 import { useFormik } from "formik";
 import {
   getCaseIdForDetailPage,
@@ -128,6 +129,7 @@ function FileDetail() {
   // ];
 
   const [notingTabData, setNotingTabsData] = useState([]);
+  const paraNewUpdateDate = new Date().toISOString();
 
   const formik = useFormik({
     initialValues: {
@@ -226,9 +228,9 @@ function FileDetail() {
 
       // const assignedToValue = customAssignedTo === "Jamil Ahmed" ? 57 : modalInputValue?.assignedTo;
 
-      console.log('====================================');
+      console.log("====================================");
       console.log("modalInputValue?.assignedTo", modalInputValue?.assignedTo);
-      console.log('====================================');
+      console.log("====================================");
       formData.append("submittedBy", UserData?.fkUserId);
       formData.append("assignedTo", modalInputValue?.assignedTo);
       formData.append("priority", modalInputValue?.priority);
@@ -271,8 +273,11 @@ function FileDetail() {
     try {
       const branchData = await getBranchById(fkBranchId);
 
-      const response = await 
-      getHLEmployee(UserData?.fkUserId, UserData?.branch?.id, branchData?.data?.branchName);
+      const response = await getHLEmployee(
+        UserData?.fkUserId,
+        UserData?.branch?.id,
+        branchData?.data?.branchName
+      );
       if (response?.success) {
         const filteredData = response?.data?.filter(
           (item) =>
@@ -322,6 +327,9 @@ function FileDetail() {
                 references: [],
                 createdBy: UserData?.fkUserId,
                 assignedTo: null,
+                paraCreatedAt: moment(paraNewUpdateDate).format(
+                  "Do MMMM, YYYY [at] h:mm A"
+                ),
               },
             ]
           : []),
@@ -334,6 +342,9 @@ function FileDetail() {
                 references: [],
                 createdBy: UserData?.fkUserId,
                 assignedTo: null,
+                paraCreatedAt: moment(paraNewUpdateDate).format(
+                  "Do MMMM, YYYY [at] h:mm A"
+                ),
               },
             ]
           : []),
@@ -464,7 +475,7 @@ function FileDetail() {
 
   // setNotingTabsData(renumberedTabs);
 
-  const   transformData = (apiData) => {
+  const transformData = (apiData) => {
     return apiData
       ?.filter((item) => item.status === "active") // Filter items with status 'active'
       .map((item) => ({
@@ -472,7 +483,7 @@ function FileDetail() {
         name: item.name,
         description: item.description,
         status: item.status,
-        createdAt: moment(item.createdAt).format("DD-MM-YYYY"), 
+        createdAt: moment(item.createdAt).format("DD-MM-YYYY"),
         attachmentInternal: item.correspondenceAttachments,
       }));
   };
@@ -732,7 +743,7 @@ function FileDetail() {
       <div style="margin-top: 10px; margin-bottom: 10px; text-align: justify; color: black;">
         ${para?.description}
       </div>
-      <p style="float: right; margin-bottom: 0px; text-align: center; width: 40%;">
+      <p style="float:right; mergin-right: 50px; text-align: right;">
         (${para?.createdByUser})
         <br />
         <span style="font-weight: normal;">
@@ -740,17 +751,19 @@ function FileDetail() {
         </span>
         <br />
         <span style="font-weight: normal;">
-         ${moment(para?.updatedAt).format("Do MMMM, YYYY [at] h:mm A")}
+         ${para?.paraCreatedAt ? para?.paraCreatedAt : ""}
         </span>
       </p>
+      <div style="clear:both"> </div>
        
-<p style="float: left; margin-top: 60px; text-align: center; color: black;">
-  ${
-    para?.assignedToUser
-      ? `${para.assignedToUserDesignation} (${para.assignedToUserBranch})`
-      : ""
-  }
+<p style="float: left; margin-top: 20px; text-align: center; color: black; line-height: 2;">
+${
+  para?.assignedToUser
+    ? `${para.assignedToUserDesignation} (${para.assignedToUserBranch})`
+    : ""
+}
 </p>
+
       
        <div style="clear:both"> </div>`;
     })
@@ -758,7 +771,7 @@ function FileDetail() {
 
   // Main HTML template
   const html = `
-  <div className="container" style="padding-left:50px; padding-right:50px">
+  <div className="container" style="padding:50px; padding-left:70px">
     <div className="row mb-5">
       <div className="col-2" style="border-right: 1px solid black; height: 100%;">
         <!-- Border Column Content -->
@@ -768,16 +781,20 @@ function FileDetail() {
     <h4 style="color: black;">SENATE SECRETARIAT</h4>
     <h6 style="color: black;">(${UserData?.branch?.branchName} Branch)</h6>
   </div>
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; line-height: 1.5;">
-    <div></div>
-    <p style="color: black;"><strong>${filesData?.cases?.files?.fileNumber}</strong></p>
+  <div style="float:right; mergin-right: 50px">
+    <div class="smalllogo mb-3">
+  <img src="${senatelogo}" alt="" />
+  <p style="color: black;"><strong>${filesData?.cases?.files?.fileNumber}</strong></p>
+</div>
   </div>
+
+<div style="clear: both;"></div>
+
   <p style="line-height: 1.5; color: black;"><strong>Subject: ${notingTabSubject}</strong></p>
   <div style="line-height: 1.5; color: black">
     ${paragraphsHtml}
   </div>
 </div>
-
     </div>
   </div>
 `;
@@ -829,32 +846,126 @@ function FileDetail() {
   };
 
   const handlePreviewNotingDoc = (htmlContent) => {
-    // Create a temporary container to hold the HTML content
-    const tempContainer = document.createElement("div");
-    tempContainer.innerHTML = htmlContent;
-    document.body.appendChild(tempContainer);
+    const newTab = window.open("", "_blank");
 
-    const opt = {
-      margin: [20, 10, 20, 10],
-      image: { type: "jpeg", quality: 1 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: "pt", format: "a4", orientation: "portrait" },
-      enableLinks: true, // Enable link functionality
-    };
+    if (newTab) {
+      newTab.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>Print Preview</title>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              padding: 20px;
+              margin: 0;
+              background-color: white;
+            }
+            .container {
+              padding: 50px;
+              padding-left: 70px;
+              max-width: 100%;
+              background-color: white;
+            }
+            .row {
+              margin-bottom: 5px;
+            }
+            .smalllogo img {
+              max-width: 100px;
+            }
+            .smalllogo p {
+              text-align: right;
+              margin: 0;
+            }
+            h4, h6, p {
+              margin: 5px 0;
+            }
+            .watermarktop {
+              position: fixed;
+              top: 10px;
+              left: 250px;
+              width: 100%;
+              height: 100%;
+              z-index: -1;
+              font-size: 24px;
+              color: rgba(150, 150, 150, 0.3);
+              transform: rotate(-35deg);
+              pointer-events: none;
+              text-align: center;
+            }
+              .watermark {
+             position: fixed;
+              top: 180px;
+              left: 200px;
+              width: 100%;
+              height: 100%;
+              z-index: -1;
+              font-size: 24px;
+              color: rgba(150, 150, 150, 0.3);
+              transform: rotate(-35deg);
+              pointer-events: none;
+              text-align: center;
+            }
+              .watermarkbottom {
+             position: fixed;
+              top: 700px;
+              left: 300px;
+              width: 100%;
+              height: 100%;
+              z-index: -1;
+              font-size: 24px;
+              color: rgba(150, 150, 150, 0.3);
+              transform: rotate(-35deg);
+              pointer-events: none;
+              text-align: center;
+            }
+               @page {
+            size: A4 portrait; 
+          }
+            @media print {
+              .row, p {
+                color: black !important;
+              }
+            }
+          </style>
+        </head>
+        <body>
+        <div class="watermarktop">
+            ${UserData?.firstName} ${UserData?.lastName}<br/>${
+              UserData?.branch?.branchName
+            } (${UserData?.designation?.designationName})<br />${moment(
+              paraNewUpdateDate
+            ).format("Do MMMM, YYYY [at] h:mm A")}
+          </div>
+          <div class="watermark">
+            ${UserData?.firstName} ${UserData?.lastName}<br/>${
+              UserData?.branch?.branchName
+            } (${UserData?.designation?.designationName})<br />${moment(
+              paraNewUpdateDate
+            ).format("Do MMMM, YYYY [at] h:mm A")}
+            </div>
+             <div class="watermarkbottom">
+            ${UserData?.firstName} ${UserData?.lastName}<br/>${
+              UserData?.branch?.branchName
+            } (${UserData?.designation?.designationName})<br />${moment(
+              paraNewUpdateDate
+            ).format("Do MMMM, YYYY [at] h:mm A")}
+          </div>
+          ${htmlContent}
+          <script>
+            window.onload = () => {
+              window.print();
+              window.onafterprint = () => window.close();
+            };
+          </script>
+        </body>
+        </html>
+      `);
 
-    html2pdf()
-      .set(opt)
-      .from(tempContainer)
-      .toPdf()
-      .outputPdf("blob")
-      .then((pdfBlob) => {
-        const pdfUrl = URL.createObjectURL(pdfBlob);
-        window.open(pdfUrl); // Open the PDF in a new tab
-      })
-      .finally(() => {
-        // Clean up: Remove the temporary container
-        document.body.removeChild(tempContainer);
-      });
+      newTab.document.close();
+    } else {
+      alert("Unable to open new tab. Please allow pop-ups for this site.");
+    }
   };
 
   // Helper function to strip HTML tags and get plain text
@@ -1002,38 +1113,40 @@ function FileDetail() {
             <div class="col">
               <div class="mb-3">
                 <label class="form-label">Mark To</label>
-<select
-  className="form-select"
-  id="assignedTo"
-  name="assignedTo"
-  onChange={(e) => {
-    const selectedValue = e.target.value;
-    const selectedItem = employeeData.find(
-      (item) => item.fkUserId.toString() === selectedValue
-    );
+                <select
+                  className="form-select"
+                  id="assignedTo"
+                  name="assignedTo"
+                  onChange={(e) => {
+                    const selectedValue = e.target.value;
+                    const selectedItem = employeeData.find(
+                      (item) => item.fkUserId.toString() === selectedValue
+                    );
 
-    // Update modal input state
-    setModalInputValue((prevState) => ({
-      ...prevState,
-      assignedTo: selectedValue,
-    }));
+                    // Update modal input state
+                    setModalInputValue((prevState) => ({
+                      ...prevState,
+                      assignedTo: selectedValue,
+                    }));
 
-    // Update customAssignedTo with firstName of selected item
-    setCustomAssignedTo(selectedItem?.firstName || "");
-  }}
-  value={modalInputValue.assignedTo}
->
-  <option value="" disabled>
-    Select
-  </option>
-  {employeeData &&
-    employeeData.map((item) => (
-      <option key={item.fkUserId} value={item.fkUserId.toString()}>
-        {`${item?.firstName} ${item?.lastName} (${item.designations?.designationName})`}
-      </option>
-    ))}
-</select>
-
+                    // Update customAssignedTo with firstName of selected item
+                    setCustomAssignedTo(selectedItem?.firstName || "");
+                  }}
+                  value={modalInputValue.assignedTo}
+                >
+                  <option value="" disabled>
+                    Select
+                  </option>
+                  {employeeData &&
+                    employeeData.map((item) => (
+                      <option
+                        key={item.fkUserId}
+                        value={item.fkUserId.toString()}
+                      >
+                        {`${item?.firstName} ${item?.lastName} (${item.designations?.designationName})`}
+                      </option>
+                    ))}
+                </select>
               </div>
             </div>
           </div>
