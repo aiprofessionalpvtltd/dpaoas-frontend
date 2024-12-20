@@ -321,6 +321,7 @@ import AddEditMedicalRepo from "../pages/Dashboard/Modules/Transport/VehicleDriv
 import AddEditGovernmentBills from "../pages/Dashboard/Modules/Notice/legislationBusiness/GovernmentBill/AddEditGovernmentBill/index.js";
 import UserManulas from "../pages/Dashboard/Modules/EFiling/UserManuals/index.js";
 import EfilingLeaveManagement from "../pages/Dashboard/Modules/EFiling/AddLeave/index.js";
+import { ChangePasswordScreen } from "../pages/Dashboard/Modules/EFiling/changePassword/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -794,6 +795,10 @@ export const ProtectedRoutes = [
   // { path: "/efiling/dashboard", element: <DirectorDashboard /> },
   // { path: "/efiling/dashboard", element: <MainDashboard /> },
   { path: "/efiling/dashboard", element: <MainDashBoardDemo /> },
+  {
+    path: "/efiling/dashboard/changepassword",
+    element: <ChangePasswordScreen />,
+  },
   // { path: "/efiling/dashboard", element: <UpdatedDashboard /> },
   // { path: "/efiling/director-dashboard", element: <EFilingDashboard /> },
 
