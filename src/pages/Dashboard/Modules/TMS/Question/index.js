@@ -22,6 +22,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
 import Select from "react-select";
+import { getUserData } from "../../../../../api/Auth";
 
 function TMSQuestion() {
   const navigate = useNavigate();
@@ -34,6 +35,9 @@ function TMSQuestion() {
   const [isToNoticeOpen, setIsToNoticeOpen] = useState(false);
   const [searchingFlag, setSearchingFlag] = useState(false);
   const pageSize = 10; // Set your desired page size
+  const user = getUserData()
+  const designationName = user.designation.designationName
+  console.log("designation",designationName)
 
   console.log(searchingFlag);
   const handlePageChange = (page) => {
@@ -191,7 +195,7 @@ function TMSQuestion() {
   const getAllQuestionsApi = useCallback(async () => {
     const questionSentStatus = "toTranslation"
     try {
-      const response = await getAllQuestion(currentPage, pageSize, questionSentStatus);
+      const response = await getAllQuestion(currentPage, pageSize, questionSentStatus, designationName);
       if (response?.success) {
         const transformedData = transformLeavesData(response?.data?.questions);
         setCount(response?.data?.count);
