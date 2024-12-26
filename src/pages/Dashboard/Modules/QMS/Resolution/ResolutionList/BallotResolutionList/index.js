@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Layout } from "../../../../../../../components/Layout";
 import { QMSSideBarItems } from "../../../../../../../utils/sideBarItems";
 import CustomTable from "../../../../../../../components/CustomComponents/CustomTable";
+import LZString from "lz-string";
 import {
   showErrorMessage,
   showSuccessMessage,
@@ -37,16 +38,27 @@ function QMSBallotResolutionList() {
       Status: item?.resolutionStatus?.resolutionStatus,
     }));
   };
+
+   // Function to select random elements from an array
+   function getRandomIds(arr, count) {
+    const shuffled = [...arr].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, count);
+}
+
   const hendleBallot = async () => {
-    // const resolutionIds = {isChecked}
+     // Get 5 random IDs
+     const randomIds = getRandomIds(isChecked, 5);
     try {
-      const response = await getBallotRecord(isChecked); // Add await here
+      const response = await getBallotRecord(randomIds); // Add await here
       if (response?.success) {
         showSuccessMessage(response?.message);
-        const jsonString = JSON.stringify(response?.data?.resolutions);
-        const encodedJsonString = encodeURIComponent(jsonString);
-        const url = `/qms/rsolution/list/ballot/preview-pdf?state=${encodedJsonString}`;
+        const pdfData = JSON.stringify(response?.data?.resolutions);
+        const compressedData = LZString.compressToEncodedURIComponent(
+            pdfData
+            );
+        const url = `/qms/rsolution/list/ballot/preview-pdf?state=${compressedData}`;
         window.open(url, "_blank");
+
         const handleFocus = () => {
           getBallotResolutionsListByIDApi();
           window.removeEventListener("focus", handleFocus); // Remove listener after it fires
@@ -68,6 +80,8 @@ function QMSBallotResolutionList() {
         );
         console.log("transferData", transferData);
         setResolutionData(transferData);
+        const ids = transferData.map(item => item.id);
+        setIsChecked(ids)
       }
     } catch (error) {
       // Handle error
@@ -103,9 +117,6 @@ function QMSBallotResolutionList() {
                 pageSize={pageSize}
                 hideEditIcon={true}
                 ActionHide={true}
-                isChecked={isChecked}
-                setIsChecked={setIsChecked}
-                isCheckbox={true}
               />
             </div>
           </div>
