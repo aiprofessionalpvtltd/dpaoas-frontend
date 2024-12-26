@@ -753,18 +753,7 @@ function FileDetail() {
         <span style="font-weight: normal;">
          ${para?.paraCreatedAt ? para?.paraCreatedAt : ""}
         </span>
-      </p>
-      <div style="clear:both"> </div>
-       
-<p style="float: left; margin-top: 20px; text-align: center; color: black; line-height: 2;">
-${
-  para?.assignedToUser
-    ? `${para.assignedToUserDesignation} (${para.assignedToUserBranch})`
-    : ""
-}
-</p>
-
-      
+      </p> 
        <div style="clear:both"> </div>`;
     })
     .join("");
@@ -860,6 +849,8 @@ ${
               padding: 20px;
               margin: 0;
               background-color: white;
+              -webkit-print-color-adjust: exact !important;
+              print-color-adjust: exact !important;
             }
             .container {
               padding: 50px;
@@ -893,8 +884,8 @@ ${
               pointer-events: none;
               text-align: center;
             }
-              .watermark {
-             position: fixed;
+            .watermark {
+              position: fixed;
               top: 180px;
               left: 200px;
               width: 100%;
@@ -906,8 +897,8 @@ ${
               pointer-events: none;
               text-align: center;
             }
-              .watermarkbottom {
-             position: fixed;
+            .watermarkbottom {
+              position: fixed;
               top: 700px;
               left: 300px;
               width: 100%;
@@ -919,18 +910,57 @@ ${
               pointer-events: none;
               text-align: center;
             }
-               @page {
-            size: A4 portrait; 
-          }
+            @page {
+              size: A4 portrait;
+              margin: 0;
+              @bottom-right {
+                content: counter(page);
+              }
+            }
             @media print {
+              @page {
+                size: A4;
+                margin: 0;
+                @bottom-right {
+                  content: counter(page);
+                  margin-right: 10mm;
+                  margin-bottom: 15mm;
+                }
+              }
+              html {
+                counter-reset: page 0;
+              }
+              div {
+                page-break-inside: auto;
+              }
+              .page {
+                counter-increment: page;
+                position: relative;
+                page-break-after: auto;
+              }
+              html, body {
+                height: 100%;
+                margin: 0 !important;
+                padding: 0 !important;
+              }
               .row, p {
                 color: black !important;
+              }
+              /* Hide default footers */
+              tfoot {
+                display: none !important;
+              }
+            }
+            /* Hide URL in location bar for Chrome */
+            @media screen {
+              #header, #footer {
+                display: none !important;
               }
             }
           </style>
         </head>
         <body>
-        <div class="watermarktop">
+          <div class="watermarktop">
             ${UserData?.firstName} ${UserData?.lastName}<br/>${
               UserData?.branch?.branchName
             } (${UserData?.designation?.designationName})<br />${moment(
@@ -943,17 +973,24 @@ ${
             } (${UserData?.designation?.designationName})<br />${moment(
               paraNewUpdateDate
             ).format("Do MMMM, YYYY [at] h:mm A")}
-            </div>
-             <div class="watermarkbottom">
+          </div>
+          <div class="watermarkbottom">
             ${UserData?.firstName} ${UserData?.lastName}<br/>${
               UserData?.branch?.branchName
             } (${UserData?.designation?.designationName})<br />${moment(
               paraNewUpdateDate
             ).format("Do MMMM, YYYY [at] h:mm A")}
           </div>
-          ${htmlContent}
-          <script>
+          <div class="page">
+            ${htmlContent}
+          </div>
+           <script>
             window.onload = () => {
+              // Remove any browser-added headers/footers
+              const style = document.createElement('style');
+              style.textContent = '@page { margin: 5mm; }';
+              document.head.appendChild(style);
+              
               window.print();
               window.onafterprint = () => window.close();
             };
