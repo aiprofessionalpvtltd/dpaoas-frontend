@@ -323,6 +323,16 @@ export const CustomNavbar = ({ module, centerlogohide, navItems }) => {
           </Dropdown.Toggle>
           <div className="clearfix"></div>
           <Dropdown.Menu>
+          <Dropdown.Item
+              style={{ border: "none" }}
+              onClick={async (e) => {
+                e.preventDefault();
+                navigation("/efiling/dashboard/changepassword");
+              }}
+            >
+              <i className="bx bx-user fs-5"></i>
+              <span>Change Password</span>
+            </Dropdown.Item>
             <Dropdown.Item
               style={{ border: "none" }}
               onClick={async (e) => {
@@ -333,16 +343,6 @@ export const CustomNavbar = ({ module, centerlogohide, navItems }) => {
             >
               <i className="bx bx-user fs-5"></i>
               <span>Logout</span>
-            </Dropdown.Item>
-            <Dropdown.Item
-              style={{ border: "none" }}
-              onClick={async (e) => {
-                e.preventDefault();
-                navigation("/efiling/dashboard/changepassword");
-              }}
-            >
-              <i className="bx bx-user fs-5"></i>
-              <span>Change Password</span>
             </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
