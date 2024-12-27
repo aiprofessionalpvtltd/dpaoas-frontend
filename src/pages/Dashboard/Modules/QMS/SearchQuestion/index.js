@@ -25,6 +25,9 @@ import moment from "moment";
 import { getUserData } from "../../../../../api/Auth";
 import { DeleteModal } from "../../../../../components/DeleteModal";
 import { Button, Modal } from "react-bootstrap";
+import {
+  handlePreviewNotingDoc,
+} from "../../../../../components/QuestionBranch/QuestionPDFPreview";
 
 function QMSSearchQuestion() {
   const navigate = useNavigate();
@@ -367,28 +370,6 @@ function QMSSearchQuestion() {
                   </div>
                 </div>
                 <div class="row">
-                  {/* <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">From Session</label>
-                      <select
-                        class="form-select"
-                        value={formik.values.fromSession}
-                        id="fromSession"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                      >
-                        <option value={""} selected disabled hidden>
-                          Select
-                        </option>
-                        {sessions &&
-                          sessions.map((item) => (
-                            <option key={item.id} value={item.id}>
-                              {item?.sessionName}
-                            </option>
-                          ))}
-                      </select>
-                    </div>
-                  </div> */}
                   <div className="col">
                     <div className="mb-3">
                       <label className="form-label">From Session</label>
@@ -615,6 +596,14 @@ function QMSSearchQuestion() {
                 </div>
                 <div class="row">
                   <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button
+                      class="btn btn-primary"
+                      type="button"
+                      onClick={() => handlePreviewNotingDoc(searchedData)}
+                      disabled={searchedData?.length > 0 ? false : true}
+                    >
+                      Preview PDF
+                    </button>
                     <button class="btn btn-primary" type="submit">
                       Search
                     </button>
