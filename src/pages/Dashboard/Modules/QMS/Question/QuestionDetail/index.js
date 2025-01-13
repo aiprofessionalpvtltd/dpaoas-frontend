@@ -6,6 +6,7 @@ import { useFormik } from "formik";
 import TimePicker from "react-time-picker";
 import DatePicker from "react-datepicker";
 import { useLocation } from "react-router";
+import {ExtractText} from "../../../../../../components/ExtractTextModal"
 import {
   showErrorMessage,
   showSuccessMessage,
@@ -66,7 +67,7 @@ function QMSQuestionDetail() {
     sessionNo: "",
     deferDate: "",
   });
-
+  const [isExtractText, setIsExtractText] = useState(false)
   const [reviveState, setReviveState] = useState({
     sessionNo: "",
     qroup: "",
@@ -77,6 +78,7 @@ function QMSQuestionDetail() {
     questionStatus: "",
     questionDiaryNo: "",
   });
+
 
   const formik = useFormik({
     initialValues: {
@@ -336,6 +338,7 @@ function QMSQuestionDetail() {
         title1={"Question Detail"}
       />
       <ToastContainer />
+        <ExtractText isOpen={isExtractText} toggleModal={() => setIsExtractText(!isExtractText)}/>
       <div class="container-fluid">
         <div class="card mt-4">
           <div
@@ -372,6 +375,15 @@ function QMSQuestionDetail() {
                     >
                       Defer
                     </button> */}
+                    <button
+                      class="btn btn-primary"
+                      type="button"
+                      onClick={() => {
+                        setIsExtractText(true)
+                      }}
+                    >
+                      Extract Text
+                    </button>
                     <button
                       class="btn btn-primary"
                       type="button"
