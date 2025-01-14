@@ -130,7 +130,7 @@ function QMSQuestionDetail() {
     formData.append("noticeOfficeDiaryDate", values?.noticeOfficeDiaryDate);
     formData.append("noticeOfficeDiaryTime", values?.noticeOfficeDiaryTime);
     formData.append("questionCategory", values?.category);
-    formData.append("questionDiaryNo", values?.questionDiaryNo);
+    formData.append("questionDiaryNo", values?.questionDiaryNo ?? 0);
     formData.append("fkMemberId", values?.senator);
     formData.append("fkGroupId", values?.group);
     formData.append("fkDivisionId", values?.division);
@@ -790,6 +790,7 @@ function QMSQuestionDetail() {
                     <div class="mb-3">
                       <label class="form-label">Question Diary No</label>
                       <input
+                        readOnly={true}
                         type="text"
                         value={formik.values.questionDiaryNo}
                         className={"form-control"}
