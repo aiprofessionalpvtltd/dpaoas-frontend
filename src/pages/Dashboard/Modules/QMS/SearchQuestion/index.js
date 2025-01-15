@@ -32,7 +32,7 @@ import {
 function QMSSearchQuestion() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { members, sessions, currentSession } = useContext(AuthContext);
+  const { members, sessions, currentSession, divisions } = useContext(AuthContext);
   const UserData = getUserData();
   const [currentPage, setCurrentPage] = useState(0);
   const [searchedData, setSearchedData] = useState([]);
@@ -593,9 +593,43 @@ function QMSSearchQuestion() {
                       </select>
                     </div>
                   </div>
+                  <div class="col-3">
+                      <div class="mb-3">
+                        <label class="form-label">Division</label>
+                        <select
+                          class={`form-select`}
+                          placeholder="Division"
+                          value={formik.values.divisions}
+                          onChange={(event) => {
+                            formik.handleChange(event);
+                          }}
+                          onBlur={formik.handleBlur}
+                          name="divisions"
+                          id="divisions"
+                        >
+                          <option selected value="" disabled hidden>
+                            Select
+                          </option>
+                          {divisions &&
+                            divisions.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item?.divisionName}
+                              </option>
+                            ))}
+                        </select>
+                      </div>
+                    </div>
                 </div>
                 <div class="row">
                   <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                  
+                  <button
+                      class="btn btn-primary"
+                      type="button"
+                      onClick={() => navigate("/qms/search/question/compare")}
+                    >
+                      Compare
+                    </button>
                     <button
                       class="btn btn-primary"
                       type="button"

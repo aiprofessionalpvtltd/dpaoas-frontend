@@ -3953,13 +3953,15 @@ button span {
 }
 /* hover show all text */
 .truncated-text {
-  white-space: nowrap;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* Number of lines to display */
+  -webkit-box-orient: vertical;
+  line-height: 30px;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 150px; /* Adjust the max-width as needed */
-  display: inline-block;
-  vertical-align: top;
+  max-width: 350px; /* Adjust the max-width as needed */
   cursor: pointer;
+  text-align: left;
 }
 .rmdp-input{
 height: 37px !important;

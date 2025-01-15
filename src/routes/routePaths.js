@@ -322,6 +322,7 @@ import AddEditGovernmentBills from "../pages/Dashboard/Modules/Notice/legislatio
 import UserManulas from "../pages/Dashboard/Modules/EFiling/UserManuals/index.js";
 import EfilingLeaveManagement from "../pages/Dashboard/Modules/EFiling/AddLeave/index.js";
 import { ChangePasswordScreen } from "../pages/Dashboard/Modules/EFiling/changePassword/index.js";
+import QMSCompareQuestion from "../pages/Dashboard/Modules/QMS/Question/CompareQuestion/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -527,6 +528,7 @@ export const ProtectedRoutes = [
   //QMS Module
   { path: "/qms/dashboard", element: <QMSQuestionDashboard /> },
   { path: "/qms/search/question", element: <QMSSearchQuestion /> },
+  { path: "/qms/search/question/compare", element: <QMSCompareQuestion /> },
   { path: "/qms/search/resolution", element: <QMSSerchResolution /> },
   {
     path: "/qms/reports/question-group-diary",
