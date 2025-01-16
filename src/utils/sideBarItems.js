@@ -1145,8 +1145,13 @@ export const LegislationSideBarItems = [
     link: "/lgms/dashboard/order-of-the-day/list",
     icon: faBookOpen,
     subItems: [
+      // {
+      //   itemName: "New Order of The Day",
+      //   link: "/lgms/dashboard/order-of-the-day/addedit",
+      //   icon: faBookOpen,
+      // },
       {
-        itemName: "Order of Day List",
+        itemName: "List Order of The Day",
         link: "/lgms/dashboard/order-of-the-day/list",
         icon: faBookOpen,
       },
