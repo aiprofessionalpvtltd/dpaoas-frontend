@@ -39,15 +39,15 @@ const AllPrivateMemberSenateBills = () => {
       id: item.id,
       fileNumber: item?.fileNumber,
       TitleOfTheBill: item?.billTitle,
-      nameOfMinistersOrMovers:
+      nameOfMovers:
         item?.senateBillMnaMovers?.[0]?.mna?.mnaName ||
         item?.senateBillSenatorMovers
           ?.map((mover) => mover?.member?.memberName)
           .join(", ") ||
         "",
-      // dateOfReceiptOfNotice: item?.noticeDate
-      //   ? moment(item?.noticeDate, "YYYY-MM-DD").format("DD-MM-YYYY")
-      //   : "---",
+      dateOfNotice: item?.noticeDate
+        ? moment(item?.noticeDate, "YYYY-MM-DD").format("DD-MM-YYYY")
+        : "---",
       dateOfIntroductionReferenceToStandingCommittee: item?.introducedInHouses
         ?.introducedInHouseDate
         ? moment(
@@ -62,6 +62,12 @@ const AllPrivateMemberSenateBills = () => {
             item?.introducedInHouses?.reportPresentationDate,
             "YYYY-MM-DD"
           ).format("DD-MM-YYYY")
+        : "---",
+      dateOfNoticeForPassageUnderRule100: item?.memberPassages
+        ?.memeberNoticeDate
+        ? moment(item?.memberPassages?.memeberNoticeDate, "YYYY-MM-DD").format(
+            "DD-MM-YYYY"
+          )
         : "---",
       dateOfConsiderationOfTheBillBySenate: item?.memberPassages
         ?.dateOfConsiderationBill
@@ -126,14 +132,18 @@ const AllPrivateMemberSenateBills = () => {
 
   const handlePrivateMemberSenateBill = () => {
     navigate("/lgms/dashboard/bills/senate-bills", {
-      state: { category: "Private Member Bill", billFrom: "From NA" },
+      state: {
+        category: "Private Member Bill",
+        billFrom: "From NA",
+        forPerson: "Senators",
+      },
     });
   };
 
   // Handle Edit Senate Bills
   const handleEditSenateBill = (id, item) => {
     navigate("/lgms/dashboard/bills/edit/senate-bills", {
-      state: { id, item },
+      state: { id, item, forPerson: "Senators" },
     });
   };
 
@@ -169,7 +179,7 @@ const AllPrivateMemberSenateBills = () => {
       />
       <div class="container-fluid">
         <IntroducedInSenate
-          addBtnText={"Private Member Bill (Introduced In Senate)"}
+          addBtnText={"Create New Private Member Bill (Introduced In Senate)"}
           handleAdd={handlePrivateMemberSenateBill}
           tableTitle={"Private Member Bill Data (Introduced In Senate)"}
           data={privateMemberSenateBill}

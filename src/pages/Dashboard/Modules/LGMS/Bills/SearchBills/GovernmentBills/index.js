@@ -36,7 +36,7 @@ const SearchLegislationGovernmentBills = () => {
   const [concerndCommitte, setConcerndCommitte] = useState(null);
   const [billFrom, setBillFrom] = useState();
   const [remarksAttachmentVal, setRemarksAttachmentVal] = useState();
-
+  const [isColumnChecked, setIsColumnChecked] = useState([]);
   const [searchdata, setSearchData] = useState([]);
   const [billdata, setBilldata] = useState([]);
   const [parliamentaryYears, setParliamentaryYears] = useState([]);
@@ -431,6 +431,7 @@ const SearchLegislationGovernmentBills = () => {
   const handleResetForm = () => {
     formik.resetForm();
     setSearchData([]);
+    setIsColumnChecked([]);
     setRemarksAttachmentVal(false);
   };
 
@@ -952,12 +953,11 @@ const SearchLegislationGovernmentBills = () => {
                     >
                       Reset
                     </button>
-                    {/* <button type="" className="btn btn-primary me-2">
-                      Print
-                    </button>
-                    <button type="" className="btn btn-primary">
-                      Annual Report
-                    </button> */}
+                    {isColumnChecked.length > 0 && (
+                      <button type="button" className="btn btn-primary">
+                        View Report
+                      </button>
+                    )}
                   </div>
                 </div>
               </form>
@@ -982,6 +982,9 @@ const SearchLegislationGovernmentBills = () => {
                     pageSize={pageSize}
                     totalCount={count}
                     hideTableTopButton={true}
+                    iscolumnCheckbox={isColumnChecked}
+                    isColumncheck={true}
+                    setIsColumnCheckBox={setIsColumnChecked}
                   />
                 ) : billFrom === "From NA" ? (
                   <RecievedFromNA
@@ -1000,6 +1003,9 @@ const SearchLegislationGovernmentBills = () => {
                     pageSize={pageSize}
                     totalCount={count}
                     hideTableTopButton={true}
+                    iscolumnCheckbox={isColumnChecked}
+                    isColumncheck={true}
+                    setIsColumnCheckBox={setIsColumnChecked}
                   />
                 ) : (
                   "No Data"

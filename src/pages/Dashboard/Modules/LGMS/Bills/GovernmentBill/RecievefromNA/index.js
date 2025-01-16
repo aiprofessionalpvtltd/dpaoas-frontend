@@ -59,11 +59,13 @@ const AllGovernmentRecievedNABills = () => {
       //   ? moment(item?.noticeDate, "YYYY-MM-DD").format("DD-MM-YYYY")
       //   : "---",
 
-      dateOfReferencetoStandingCommittee: item?.introducedInHouses
-        ?.referedOnDate
-        ? moment(item?.introducedInHouses?.referedOnDate, "YYYY-MM-DD").format(
-            "DD-MM-YYYY"
-          )
+      dateOfReferencetoStandingCommittee: item
+        ?.dateofReferencetoStandingCommittee?.dateofReferencetoStandingCommittee
+        ? moment(
+            item?.dateofReferencetoStandingCommittee
+              ?.dateofReferencetoStandingCommittee,
+            "YYYY-MM-DD"
+          ).format("DD-MM-YYYY")
         : "---",
       dateOfPresentationOfTheReport: item?.introducedInHouses
         ?.reportPresentationDate
@@ -138,7 +140,11 @@ const AllGovernmentRecievedNABills = () => {
   // };
   const handleGovernmentNABill = () => {
     navigate("/lgms/dashboard/bills/NA-bills", {
-      state: { category: "Government Bill", billFrom: "From NA" },
+      state: {
+        category: "Government Bill",
+        billFrom: "From NA",
+        forPerson: "Ministers",
+      },
     });
   };
 
@@ -151,7 +157,9 @@ const AllGovernmentRecievedNABills = () => {
 
   // Edit Bill Recieved From NA
   const handleEditNABill = (id, item) => {
-    navigate("/lgms/dashboard/bills/edit/NA-bills/", { state: { id, item } });
+    navigate("/lgms/dashboard/bills/edit/NA-bills/", {
+      state: { id, item, forPerson: "Ministers" },
+    });
   };
 
   return (
@@ -168,9 +176,9 @@ const AllGovernmentRecievedNABills = () => {
       />
       <div class="container-fluid">
         <RecievedFromNA
-          addBtnText={"Government Bill (Received From NA)"}
+          addBtnText={"Create New Government Bill (Received From NA)"}
           handleAdd={handleGovernmentNABill}
-          tableTitle={"Government Bills Data (Received From NA)"}
+          tableTitle={"Create New Government Bills Data (Received From NA)"}
           data={governmentNABill}
           remarksAttachmentVal={remarksAttachmentVal}
           handleEdit={(item) => {

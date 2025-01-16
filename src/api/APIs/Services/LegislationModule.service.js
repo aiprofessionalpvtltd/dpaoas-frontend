@@ -616,3 +616,216 @@ export const DeleteBillDocumentTypeAttachemnt = async (id, data) => {
     throw error;
   }
 };
+
+// Get All Ministers
+export const getAllLegisMinistries = async (currentPage, pageSize) => {
+  try {
+    const response = await axiosClient.get(
+      `/ministries?currentPage=${currentPage}&pageSize=${pageSize}`
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+// Add Ministry
+export const createMinistery = async (data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClient.post(
+      `/ministries`,
+      data
+      // {
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // }
+      // },
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+// Get Single Ministry
+export const getSingleMinisteryByID = async (id) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.get(`/ministries/${id}`);
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+// Get Ministries by Tenure
+export const getMinsistriesByTenure = async (tenureId) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.get(`/ministries/tenure/${tenureId}`);
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+// Update Ministry
+export const updateMinistery = async (id, data) => {
+  try {
+    const response = await axiosClient.put(
+      `/ministries/${id}`,
+      data
+      // {
+      //   headers: {
+      //     accept: "application/json",
+      //     "Content-Type": "multipart/form-data",
+      //   },
+      // }
+    );
+
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+// Delete Ministry
+export const deleteMinistry = async (id) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.put(`/ministries`, id);
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+//Minister Tenures Management System
+export const createMinisterTenure = async (data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClient.post(`/tenuresMinister/create`, data, {
+      headers: {
+        accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const getAllMinisterTenures = async (
+  currentPage,
+  pageSize,
+  tenureType
+) => {
+  // let tenureType = "Senators";
+  try {
+    const response = await axiosClient.get(
+      `/tenuresMinister?currentPage=${currentPage}&pageSize=${pageSize}&tenureType=${tenureType}`,
+      {
+        headers: {
+          accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    // {
+    //   headers: {
+    //     Authorization: `Bearer ${token}`,
+    //   }
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+//ParliamentaryYears API's
+export const createMinisterParliamentaryYears = async (data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClient.post(
+      `/parliamentaryYearsMna/create`,
+      data,
+      {
+        headers: {
+          accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const getMinisterAllParliamentaryYears = async (
+  currentPage,
+  pageSize
+) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClient.get(
+      `/parliamentaryYearsMna?currentPage=${currentPage}&pageSize=${pageSize}`
+    );
+    // {
+    //   headers: {
+    //     Authorization: `Bearer ${token}`,
+    //   }
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const getMinisterParliamentaryYearsByTenure = async (id) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClient.get(
+      `/parliamentaryYearsMna/${id}/tenureMinister`
+    );
+    // {
+    //   headers: {
+    //     Authorization: `Bearer ${token}`,
+    //   }
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};

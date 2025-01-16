@@ -28,13 +28,13 @@ const validationSchema = Yup.object({
   fromDate: Yup.string().required("Start date name is required"),
   toDate: Yup.string().required("End date is required"),
 });
-function LGMSAddEditTenuresForm() {
+function LGMSAddEditMinisterTenures() {
   const location = useLocation();
   const navigate = useNavigate();
   const formik = useFormik({
     initialValues: {
       tenure: location.state ? location.state?.tenureName : "",
-      tenureType: location?.state ? location?.state?.tenureType : "Senators",
+      tenureType: location?.state ? location?.state?.tenureType : "Ministers",
       fromDate: location.state ? moment(location.state?.fromDate).toDate() : "",
       toDate: location.state ? moment(location.state?.toDate).toDate() : "",
     },
@@ -52,7 +52,7 @@ function LGMSAddEditTenuresForm() {
   const handleCreateTenures = async (values) => {
     const data = {
       tenureName: values?.tenure,
-      tenureType: "Senators",
+      tenureType: values?.tenureType,
       fromDate: values?.fromDate,
       toDate: values?.toDate,
     };
@@ -61,7 +61,8 @@ function LGMSAddEditTenuresForm() {
       let response;
       if (values?.tenureType === "Senators") {
         response = await createTenure(data);
-      } else {
+      }
+      if (values?.tenureType === "Ministers") {
         response = await createMinisterTenure(data);
       }
 
@@ -80,7 +81,7 @@ function LGMSAddEditTenuresForm() {
   const handleEditTenures = async (values) => {
     const data = {
       tenureName: values?.tenure,
-      tenureType: "Senators",
+      tenureType: values?.tenureType,
       fromDate: values?.fromDate,
       toDate: values?.toDate,
     };
@@ -261,4 +262,4 @@ function LGMSAddEditTenuresForm() {
   );
 }
 
-export default LGMSAddEditTenuresForm;
+export default LGMSAddEditMinisterTenures;

@@ -38,6 +38,8 @@ function EditOrdinance() {
   const [parliamentaryYearData, setParliamentaryYearData] = useState([]);
   const [singleOrdinanceData, setSingleOrdinanceData] = useState([]);
   const [imageLinks, setImageLinks] = useState([]);
+  const [isExpiryDateOpen, setIsExpiryDAteOpen] = useState(false);
+  const [isExtensionDateOpen, setIsExtensionDateOpen] = useState(false);
   const OrdinanceID = location.state?.id && location.state?.id;
 
   const userData = getUserData();
@@ -51,24 +53,33 @@ function EditOrdinance() {
     formik.setFieldValue("dateOfLayingInTheSenate", date);
     setIsCalendarOpen(false);
   };
-  // Handle Claneder Toggel
+
   const handleNACalendarToggle = () => {
     setIsNACalendarOpen(!isNACalendarOpen);
   };
-  // Handale DateCHange
+
   const handleNADateSelect = (date) => {
     formik.setFieldValue("dateOfLayingInTheNA", date);
     setIsNACalendarOpen(false);
   };
 
   // Handle Claneder Toggel
-  const handleOrdinanceCalendarToggle = () => {
-    setIsOrdinanceStatusCalenderOpen(!isOrdinanceStatusCalenderOpen);
+  const handleExpiryDateToggle = () => {
+    setIsExpiryDAteOpen(!isExpiryDateOpen);
   };
   // Handale DateCHange
-  const handleOrdinanceDateSelect = (date) => {
-    formik.setFieldValue("ordinanceStatusDate", date);
-    setIsOrdinanceStatusCalenderOpen(false);
+  const handleExpiryDateSelect = (date) => {
+    formik.setFieldValue("expiryDate", date);
+    setIsExpiryDAteOpen(false);
+  };
+  // Handle Claneder Toggel
+  const handleExtensionDateToggle = () => {
+    setIsExtensionDateOpen(!isExtensionDateOpen);
+  };
+  // Handale DateCHange
+  const handleExtensionDateSelect = (date) => {
+    formik.setFieldValue("extension", date);
+    setIsExtensionDateOpen(false);
   };
 
   const handleDocumentCalendarToggle = () => {
@@ -121,6 +132,8 @@ function EditOrdinance() {
       documentDate: "",
       documentDiscription: "",
       ordinanceStatus: "",
+      expiryDate: "",
+      extension: "",
       file: "",
     },
     // validationSchema: validationSchema,
@@ -207,6 +220,12 @@ function EditOrdinance() {
         ordinanceStatus: singleOrdinanceData?.ordinanceStatus
           ? singleOrdinanceData?.ordinanceStatus
           : "",
+        expiryDate: singleOrdinanceData?.expiryDate
+          ? moment(singleOrdinanceData?.expiryDate).toDate()
+          : "",
+        extension: singleOrdinanceData?.extension
+          ? moment(singleOrdinanceData?.extension).toDate()
+          : "",
         fkOrdinanceStatus:
           (singleOrdinanceData?.fkOrdinanceStatus && {
             value: singleOrdinanceData?.billStatuses?.id,
@@ -258,6 +277,15 @@ function EditOrdinance() {
     // formData.append("ordinanceRemarks", values?.ordinanceRemarks);
     if (values?.documentDiscription) {
       formData.append("documentDiscription", values?.documentDiscription);
+    }
+
+    if (values?.expiryDate) {
+      const formattedDate = moment(values.expiryDate).format("YYYY-MM-DD");
+      formData.append("expiryDate", formattedDate);
+    }
+    if (values?.extension) {
+      const formattedDate = moment(values.extension).format("YYYY-MM-DD");
+      formData.append("extension", formattedDate);
     }
 
     if (values?.documentDate) {
@@ -599,6 +627,100 @@ function EditOrdinance() {
                   </div>
                 </div>
               </div> */}
+
+              <div className="row">
+                <div className="col">
+                  <div className="mb-3" style={{ position: "relative" }}>
+                    <label className="form-label">Expiry Date</label>
+                    <span
+                      style={{
+                        position: "absolute",
+                        right: "15px",
+                        top: "36px",
+                        zIndex: 1,
+                        fontSize: "20px",
+                        zIndex: "1",
+                        color: "#666",
+                        cursor: "pointer",
+                      }}
+                      onClick={handleExpiryDateToggle}
+                    >
+                      <FontAwesomeIcon icon={faCalendarAlt} />
+                    </span>
+
+                    <DatePicker
+                      selected={formik.values.expiryDate}
+                      onChange={handleExpiryDateSelect}
+                      onBlur={formik.handleBlur}
+                      className={`form-control ${
+                        formik.touched.expiryDate && formik.errors.expiryDate
+                          ? "is-invalid"
+                          : ""
+                      }`}
+                      open={isExpiryDateOpen}
+                      onClickOutside={() => setIsExpiryDAteOpen(false)}
+                      onInputClick={handleExpiryDateToggle}
+                      // onClick={handleCalendarToggle}
+                      maxDate={new Date()}
+                      dateFormat="dd-MM-yyyy"
+                    />
+                    {formik.touched.expiryDate && formik.errors.expiryDate && (
+                      <div
+                        className="invalid-feedback"
+                        style={{ display: "block" }}
+                      >
+                        {formik.errors.expiryDate}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="col">
+                  <div className="mb-3" style={{ position: "relative" }}>
+                    <label className="form-label">Extension</label>
+                    <span
+                      style={{
+                        position: "absolute",
+                        right: "15px",
+                        top: "36px",
+                        zIndex: 1,
+                        fontSize: "20px",
+                        zIndex: "1",
+                        color: "#666",
+                        cursor: "pointer",
+                      }}
+                      onClick={handleExtensionDateToggle}
+                    >
+                      <FontAwesomeIcon icon={faCalendarAlt} />
+                    </span>
+
+                    <DatePicker
+                      selected={formik.values.extension}
+                      onChange={handleExtensionDateSelect}
+                      onBlur={formik.handleBlur}
+                      className={`form-control ${
+                        formik.touched.extension && formik.errors.extension
+                          ? "is-invalid"
+                          : ""
+                      }`}
+                      open={isExtensionDateOpen}
+                      onClickOutside={() => setIsExtensionDateOpen(false)}
+                      onInputClick={handleExtensionDateToggle}
+                      // onClick={handleCalendarToggle}
+                      maxDate={new Date()}
+                      dateFormat="dd-MM-yyyy"
+                    />
+                    {formik.touched.extension && formik.errors.extension && (
+                      <div
+                        className="invalid-feedback"
+                        style={{ display: "block" }}
+                      >
+                        {formik.errors.extension}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
 
               <div className="row">
                 <div className=" col">
