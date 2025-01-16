@@ -107,3 +107,63 @@ export const deletePrivateBill = async (id) => {
       throw error;
     }
   };
+  //Order Of The Day 
+  export const listOrderOfTheDay = async () => {
+    try {
+        const response = await axiosClient.get(
+            `/legisOrderOfDay`
+        );
+        return response?.data;
+    } catch (error) {
+        console.error("Error fetching API endpoint:", error);
+        throw error;
+    }
+};
+
+export const deleteOrderOfTheDay = async (id) => {
+    try {
+      const response = await axiosClient.delete(
+        `/legisOrderOfDay/delete/${id}`
+      );
+      return response?.data;
+    } catch (error) {
+      console.error("Error fetching API endpoint:", error);
+      throw error;
+    }
+  };
+
+  export const createOrderOfTheDay = async (data) => {
+    try {
+        const response = await axiosClient.post(
+            `/legisOrderOfDay/create`, data
+        );
+        return response?.data;
+    } catch (error) {
+        console.error("Error fetching API endpoint:", error);
+        throw error;
+    }
+};
+
+export const updateOrderOfTheDay = async (id) => {
+    try {
+      const response = await axiosClient.put(
+        `/legisOrderOfDay/update/${id}`
+      );
+      return response?.data;
+    } catch (error) {
+      console.error("Error fetching API endpoint:", error);
+      throw error;
+    }
+  };
+
+  export const OrderOfTheDayByID = async (id) => {
+    try {
+      const response = await axiosClient.get(
+        `/legisOrderOfDay/${id}`
+      );
+      return response?.data;
+    } catch (error) {
+      console.error("Error fetching API endpoint:", error);
+      throw error;
+    }
+  };
