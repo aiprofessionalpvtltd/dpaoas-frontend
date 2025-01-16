@@ -19,8 +19,8 @@ import {
   createNotificationApprovedCasesAPI,
   createNotificationFRsAPI,
 } from "../APIs/Services/efiling.service";
-const socket = io("http://10.10.40.220:5152");
-// const socket = io("http://172.16.170.8:2424");
+// const socket = io("http://10.10.40.220:5152");
+const socket = io("http://172.16.170.8:2424");
 
 export const AuthContext = createContext();
 
@@ -50,7 +50,20 @@ export const AuthProvider = ({ children }) => {
       const response = await loginUser(data);
       if (response.data) {
         setAuthToken(response?.data?.token);
-        setUserData(response.data?.user);
+        const updatedUserData = {
+          ...response.data?.user,
+          fkBranchId: response.data?.user?.branches[0]?.id,
+          branch: {
+            id: response.data?.user?.branches[0]?.id,
+            branchName: response.data?.user?.branches[0]?.branchName,
+          },
+        };
+        setUserData(
+          response.data?.user?.branches?.length > 0
+            ? updatedUserData
+            : response.data?.user
+        );
+
         setPermissions(response?.data?.permissions);
       }
       return response?.data;
@@ -269,6 +282,7 @@ export const AuthProvider = ({ children }) => {
         login,
         setPermissions,
         setEmployeeData,
+        setUserData,
         permissions,
         ministryData,
         members,

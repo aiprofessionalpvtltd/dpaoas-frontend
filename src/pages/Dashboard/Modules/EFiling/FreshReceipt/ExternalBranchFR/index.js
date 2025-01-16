@@ -59,6 +59,7 @@ function ExternalBranchFR() {
     try {
       const response = await getAllFreshReceipt(
         UserData?.fkUserId,
+        UserData?.fkBranchId,
         currentPage,
         pageSize
       );

@@ -62,7 +62,7 @@ function MainDashBoardDemo() {
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
   const [casesData, setCasesData] = useState([]);
-  const pageSize = 2;
+  const pageSize = 10;
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
@@ -140,6 +140,7 @@ function MainDashBoardDemo() {
       return {
         isEditable: item?.isEditable,
         caseId: item?.fkCaseId,
+        branch: item?.branch?.name,
         internalId: item?.fileData?.id,
         FileNo: item?.fileData?.fileNumber,
         initiatedBy: item?.createdByUser?.firstName,
@@ -169,29 +170,30 @@ function MainDashBoardDemo() {
   };
 
   const getAllCasesApi = async () => {
-    const searchParams = {
-      userId: userData?.fkUserId,
-      currentPage: currentPage,
-      pageSize: pageSize,
-      branchId: userData && userData?.fkBranchId,
-    };
-
+    const queryParams = new URLSearchParams({
+      userId: userData?.fkUserId || "",
+      currentPage: currentPage.toString(),
+      pageSize: pageSize.toString(),
+      branchId: userData?.fkBranchId || "",
+      branches: userData?.branches?.map((branch) => branch.id).join(",") || "", // Pass branch IDs as a comma-separated string
+    });
+  
     try {
-      const response = await getPendingCasesThroughSearchParams(searchParams);
+      const response = await getPendingCasesThroughSearchParams(queryParams);
       if (response.success) {
         setCount(response?.data?.count);
-
+  
         const transferData = transformFilesCases(response?.data?.cases);
         setCasesData(transferData);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
-  };
+  }; 
 
   const [fRCurrentPage, setFrCurrentPage] = useState(0);
   const [frCount, setFRCount] = useState(null);
-  const frPageSize = 2; // Set your desired page size
+  const frPageSize = 10; // Set your desired page size
   const [fileData, setFileData] = useState([]);
 
   const handleFrPageChange = (page) => {
@@ -204,6 +206,7 @@ function MainDashBoardDemo() {
       isEditable: item?.isEditable,
       id: item?.id,
       frType: item?.frType,
+      branch: item?.createdByUser?.employee?.branches?.branchName,
       initiatedBy: item?.createdByUser?.employee?.firstName,
       Sender:
         item?.freshReceipt?.length > 0
@@ -224,12 +227,18 @@ function MainDashBoardDemo() {
     }));
   };
 
-  const getAllFreshReceiptAPi = useCallback(async () => {
+  const getAllFreshReceiptAPi = async () => {
     try {
+      const queryParams = new URLSearchParams({
+        userId: userData?.fkUserId,
+        branchId: userData?.fkBranchId || "",
+        branches: userData?.branches?.map((branch) => branch.id).join(",") || "",
+        currentPage: fRCurrentPage,
+        pageSize: frPageSize
+      });
+      
       const response = await getPendingFreshReceipts(
-        userData?.fkUserId,
-        fRCurrentPage,
-        frPageSize
+        queryParams
       );
       if (response.success) {
         //   showSuccessMessage(response?.message)
@@ -242,7 +251,7 @@ function MainDashBoardDemo() {
     } catch (error) {
       // showErrorMessage(error?.response?.data?.message);
     }
-  }, [currentPage, pageSize, setCount, setFileData]);
+  }
 
   const handleDelete = async (id) => {
     try {
@@ -880,7 +889,7 @@ function MainDashBoardDemo() {
                 alt="calender"
                 style={{ width: "100%", height: "499px" }}
               /> */}
-            <Calendar />
+            {/* <Calendar /> */}
           </div>
         </div>
       </div>

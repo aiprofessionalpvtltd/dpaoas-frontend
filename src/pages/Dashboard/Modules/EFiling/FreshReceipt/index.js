@@ -45,6 +45,7 @@ function FileReceipt() {
       isEditable: item?.isEditable,
       id: item?.id,
       frType: item?.frType,
+      Branch: item?.createdByUser?.employee?.branches?.branchName,
       initiatedBy: item?.createdByUser?.employee?.firstName,
       Sender:
         item?.freshReceipt?.length > 0
@@ -68,6 +69,7 @@ function FileReceipt() {
     try {
       const response = await getAllFreshReceipt(
         UserData?.fkUserId,
+        UserData?.fkBranchId,
         currentPage,
         pageSize
       );

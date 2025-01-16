@@ -31,6 +31,7 @@ import { imagesUrl } from "../../../../../../api/APIs";
 import { Editor } from "../../../../../../components/CustomComponents/Editor";
 import WebviewEditor from "../../../../../../components/CustomComponents/Editor/WebviewEditor";
 import { AuthContext } from "../../../../../../api/AuthContext";
+import { getBranchById } from "../../../../../../api/APIs/Services/Branches.services";
 const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
   return (
     <Modal size="lg" show={isOpen} onHide={toggleModal} centered>
@@ -96,7 +97,11 @@ function FRDetail() {
     try {
       const response = await getFreshReceiptById(receptId);
       if (response.success) {
+        console.log('====================================');
+        console.log("response?.data?.freshReceipt", response?.data?.freshReceipt);
+        console.log('====================================');
         setRemarksData(response?.data?.freshReceipt);
+        getEmployeeData(response?.data?.createdByUser?.employee?.branches?.id);
         setDescriptionData(response?.data?.shortDescription);
         setAttachments(response?.data?.freshReceiptsAttachments);
         // showSuccessMessage(response.message);
@@ -126,9 +131,11 @@ function FRDetail() {
     }
   };
 
-  const getEmployeeData = async () => {
+  const getEmployeeData = async (fkBranchId) => {
+    const branchData = await getBranchById(fkBranchId);
+
     try {
-      const response = await getLLEmployee(UserData?.fkUserId);
+      const response = await getLLEmployee(UserData?.fkUserId, branchData?.data?.branchName);
       if (response?.success) {
         const filteredData = response?.data?.filter(
           (item) => item?.userName !== UserData?.userName
@@ -157,7 +164,6 @@ function FRDetail() {
 
     if (receptId) {
       getFreashRecepitByIdApi();
-      getEmployeeData();
     }
   }, []);
 
@@ -177,7 +183,12 @@ function FRDetail() {
     });
   };
 
+  const [customAssignedTo, setCustomAssignedTo] = useState();
+
   const hendleAssiginFileCaseApi = async () => {
+
+    // const assignedToValue = customAssignedTo === "Jamil Ahmed" ? 57 : modalInputValue?.assignedTo;
+    
     const data = {
       submittedBy: UserData?.fkUserId,
       assignedTo: modalInputValue?.assignedTo,
@@ -345,27 +356,36 @@ function FRDetail() {
             <div class="mb-3">
               <label class="form-label">Mark To</label>
               <select
-                class="form-select"
-                id="assignedTo"
-                name="assignedTo"
-                onChange={(e) =>
-                  setModalInputValue((prevState) => ({
-                    ...prevState,
-                    assignedTo: e.target.value,
-                  }))
-                }
-                value={modalInputValue.assignedTo}
-              >
-                <option value={""} selected disabled hidden>
-                  Select
-                </option>
-                {employeeData &&
-                  employeeData?.map((item) => (
-                    <option
-                      value={item.fkUserId}
-                    >{`${item?.firstName} ${item?.lastName} (${item.designations?.designationName})`}</option>
-                  ))}
-              </select>
+  className="form-select"
+  id="assignedTo"
+  name="assignedTo"
+  onChange={(e) => {
+    const selectedValue = e.target.value;
+    const selectedItem = employeeData.find(
+      (item) => item.fkUserId.toString() === selectedValue
+    );
+
+    // Update modal input state
+    setModalInputValue((prevState) => ({
+      ...prevState,
+      assignedTo: selectedValue,
+    }));
+
+    // Update customAssignedTo with firstName of selected item
+    setCustomAssignedTo(selectedItem?.firstName || "");
+  }}
+  value={modalInputValue.assignedTo}
+>
+  <option value="" disabled>
+    Select
+  </option>
+  {employeeData &&
+    employeeData.map((item) => (
+      <option key={item.fkUserId} value={item.fkUserId.toString()}>
+        {`${item?.firstName} ${item?.lastName} (${item.designations?.designationName})`}
+      </option>
+    ))}
+</select>
             </div>
           </div>
         </div>

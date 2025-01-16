@@ -39,6 +39,7 @@ import { Jodit } from "../../../../../../../../components/CustomComponents/Edito
 import { CKEditorComp } from "../../../../../../../../components/CustomComponents/Editor/CKEditorComp";
 import ImageGallery from "react-image-gallery";
 import "react-image-gallery/styles/css/image-gallery.css";
+import moment from "moment";
 
 function AddEditFileCase() {
   const navigate = useNavigate();
@@ -64,6 +65,7 @@ function AddEditFileCase() {
   const [attachedFiles, setAttachedFiles] = useState([]);
   const [globalFRId, setGlobalFRId] = useState();
   const [globalFRAttachments, setGlobalFRAttachments] = useState([]);
+  const paraNewUpdateDate = new Date().toISOString()
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
@@ -89,16 +91,17 @@ function AddEditFileCase() {
       setNotingTabsData([
         ...notingTabData,
         {
-          title: `Para ${notingTabData.length + 1}`,
+          title: `Para ${notingTabData?.length + 1}`,
           description: content,
           references: [],
           createdBy: UserData && UserData?.fkUserId,
-          assignedTo: null
+          assignedTo: null,
+          paraCreatedAt: moment(paraNewUpdateDate).format("Do MMMM, YYYY [at] h:mm A")
         },
       ]);
       setNotingData("");
     } else if (isReference) {
-      const updatedTabs = notingTabData.map((tab, i) =>
+      const updatedTabs = notingTabData?.map((tab, i) =>
         i === index
           ? {
               ...tab,
@@ -108,7 +111,7 @@ function AddEditFileCase() {
       );
       setNotingTabsData(updatedTabs);
     } else {
-      const updatedTabs = notingTabData.map((tab, i) =>
+      const updatedTabs = notingTabData?.map((tab, i) =>
         i === index
           ? {
               ...tab,
@@ -121,7 +124,7 @@ function AddEditFileCase() {
   };
 
   const handleAttachDelete = async (item, tabIndex) => {
-    const updatedTabs = notingTabData.map((tab, tIndex) => {
+    const updatedTabs = notingTabData?.map((tab, tIndex) => {
       if (
         item?.attachments[0]?.attachments[0]?.id ===
         item?.attachments[0]?.attachments[0]?.id
@@ -138,7 +141,7 @@ function AddEditFileCase() {
   };
 
   const handleDelete = (item, index) => {
-    const updatedTabs = notingTabData.filter((_, i) => i !== index);
+    const updatedTabs = notingTabData?.filter((_, i) => i !== index);
 
     // Update the titles of the remaining items
     const renumberedTabs = updatedTabs.map((tab, i) => ({
@@ -215,7 +218,7 @@ function AddEditFileCase() {
 
   const handleFlagDeleteFunc = (tabIndex, flagIndex) => {
     // Function to handle deletion of a flag
-    const updatedTabs = notingTabData.map((tab, tIndex) => {
+    const updatedTabs = notingTabData?.map((tab, tIndex) => {
       if (tIndex === tabIndex) {
         return {
           ...tab,
@@ -336,6 +339,7 @@ function AddEditFileCase() {
       name: item.name,
       description: item.description,
       status: item.status,
+      createdAt: moment(item.createdAt).format("DD-MM-YYYY"),
       attachmentInternal: item.correspondenceAttachments,
     }));
   };
@@ -720,7 +724,7 @@ function AddEditFileCase() {
                           value={notingTabSubject}
                           style={{ width: "50%" }}
                         />
-                        {notingTabData.length > 0 && (
+                        {notingTabData?.length > 0 && (
                           <label htmlFor="formFile" className="form-label mt-2">
                             Added Paragraphs
                           </label>

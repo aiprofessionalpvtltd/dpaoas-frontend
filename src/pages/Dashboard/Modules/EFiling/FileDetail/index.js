@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState, useRef } from "react";
 import { Layout } from "../../../../../components/Layout";
 import { useLocation, useNavigate } from "react-router-dom";
+import senatelogo from "../../../../../assets/senatelogo.jpg";
 import { useFormik } from "formik";
 import {
   getCaseIdForDetailPage,
@@ -44,6 +45,7 @@ import { CustomAlert } from "../../../../../components/CustomComponents/CustomAl
 import html2pdf from "html2pdf.js";
 import { HalfMalf } from "react-spinner-animated";
 import "react-spinner-animated/dist/index.css";
+import { getBranchById } from "../../../../../api/APIs/Services/Branches.services";
 
 const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
   return (
@@ -127,6 +129,7 @@ function FileDetail() {
   // ];
 
   const [notingTabData, setNotingTabsData] = useState([]);
+  const paraNewUpdateDate = new Date().toISOString();
 
   const formik = useFormik({
     initialValues: {
@@ -152,7 +155,6 @@ function FileDetail() {
   });
 
   const UpdateEfilingApi = async () => {
-    return;
     const data = {
       notingSubject: notingTabSubject,
       paragraphArray: notingTabData,
@@ -203,12 +205,14 @@ function FileDetail() {
     });
   };
 
+  const [customAssignedTo, setCustomAssignedTo] = useState();
+
   const hendleAssiginFileCaseApi = async () => {
     try {
       // Update the specific paragraph's assignedTo value
       const updatedTabs = [...notingTabData]; // Create a copy of the array to ensure immutability
-      updatedTabs[order == "ASC" ? notingTabData.length - 1 : 0] = {
-        ...updatedTabs[order == "ASC" ? notingTabData.length - 1 : 0], // Spread the existing tab data
+      updatedTabs[order == "ASC" ? notingTabData?.length - 1 : 0] = {
+        ...updatedTabs[order == "ASC" ? notingTabData?.length - 1 : 0], // Spread the existing tab data
         assignedTo: modalInputValue?.assignedTo, // Update only the assignedTo field for the specific paragraph
       };
 
@@ -221,6 +225,12 @@ function FileDetail() {
           ? notingTabData[notingTabData?.length - 1].id
           : notingTabData[0]?.id
       );
+
+      // const assignedToValue = customAssignedTo === "Jamil Ahmed" ? 57 : modalInputValue?.assignedTo;
+
+      console.log("====================================");
+      console.log("modalInputValue?.assignedTo", modalInputValue?.assignedTo);
+      console.log("====================================");
       formData.append("submittedBy", UserData?.fkUserId);
       formData.append("assignedTo", modalInputValue?.assignedTo);
       formData.append("priority", modalInputValue?.priority);
@@ -259,9 +269,15 @@ function FileDetail() {
     }
   };
 
-  const getEmployeeData = async () => {
+  const getEmployeeData = async (fkBranchId) => {
     try {
-      const response = await getHLEmployee(UserData?.fkUserId);
+      const branchData = await getBranchById(fkBranchId);
+
+      const response = await getHLEmployee(
+        UserData?.fkUserId,
+        UserData?.branch?.id,
+        branchData?.data?.branchName
+      );
       if (response?.success) {
         const filteredData = response?.data?.filter(
           (item) =>
@@ -311,6 +327,9 @@ function FileDetail() {
                 references: [],
                 createdBy: UserData?.fkUserId,
                 assignedTo: null,
+                paraCreatedAt: moment(paraNewUpdateDate).format(
+                  "Do MMMM, YYYY [at] h:mm A"
+                ),
               },
             ]
           : []),
@@ -323,6 +342,9 @@ function FileDetail() {
                 references: [],
                 createdBy: UserData?.fkUserId,
                 assignedTo: null,
+                paraCreatedAt: moment(paraNewUpdateDate).format(
+                  "Do MMMM, YYYY [at] h:mm A"
+                ),
               },
             ]
           : []),
@@ -330,7 +352,7 @@ function FileDetail() {
 
       setNotingData("");
     } else if (isReference) {
-      const updatedTabs = notingTabData.map((tab, i) =>
+      const updatedTabs = notingTabData?.map((tab, i) =>
         i === index
           ? {
               ...tab,
@@ -340,7 +362,7 @@ function FileDetail() {
       );
       setNotingTabsData(updatedTabs);
     } else {
-      const updatedTabs = notingTabData.map((tab, i) =>
+      const updatedTabs = notingTabData?.map((tab, i) =>
         i === index
           ? {
               ...tab,
@@ -369,7 +391,7 @@ function FileDetail() {
     //     showErrorMessage(error?.response?.data?.message)
     //   }
     // }else{
-    const updatedTabs = notingTabData.filter((_, i) => i !== index);
+    const updatedTabs = notingTabData?.filter((_, i) => i !== index);
 
     // // Update the titles of the remaining items
     const renumberedTabs = updatedTabs.map((tab, i) => ({
@@ -382,7 +404,7 @@ function FileDetail() {
   };
   const handleFlagDeleteFunc = (tabIndex, flagIndex) => {
     // Function to handle deletion of a flag
-    const updatedTabs = notingTabData.map((tab, tIndex) => {
+    const updatedTabs = notingTabData?.map((tab, tIndex) => {
       if (tIndex === tabIndex) {
         return {
           ...tab,
@@ -424,7 +446,7 @@ function FileDetail() {
       }
     } else {
       // const tabIndex= 0
-      const updatedTabs = notingTabData.map((tab, tIndex) => {
+      const updatedTabs = notingTabData?.map((tab, tIndex) => {
         if (
           item?.attachments[0]?.attachments[0]?.id ===
           item?.attachments[0]?.attachments[0]?.id
@@ -461,6 +483,7 @@ function FileDetail() {
         name: item.name,
         description: item.description,
         status: item.status,
+        createdAt: moment(item.createdAt).format("DD-MM-YYYY"),
         attachmentInternal: item.correspondenceAttachments,
       }));
   };
@@ -504,6 +527,8 @@ function FileDetail() {
       if (response?.success) {
         setRemarksData(response?.data?.cases?.casesRemarks);
         setFilesData(response?.data);
+        getEmployeeData(response?.data?.fkBranchId);
+
         setCaseCreatedBy(response?.data?.caseCreatedBy);
         const FRSelection = {
           frId: response?.data?.cases?.freshReceipts?.id,
@@ -536,10 +561,6 @@ function FileDetail() {
   useEffect(() => {
     handleCorrespondences();
   }, [filesData?.cases?.files?.id, currentPage]);
-
-  useEffect(() => {
-    getEmployeeData();
-  }, []);
 
   useEffect(() => {
     formik.setValues({
@@ -619,8 +640,6 @@ function FileDetail() {
       getFilesByID(fileId, caseId, order);
     }
   }, [order]);
-
-  console.log("locat", location?.state?.id);
 
   // const deleteNotification = async (item) => {
   //   try {
@@ -724,7 +743,7 @@ function FileDetail() {
       <div style="margin-top: 10px; margin-bottom: 10px; text-align: justify; color: black;">
         ${para?.description}
       </div>
-      <p style="float: right; margin-bottom: 0px; text-align: center; width: 40%;">
+      <p style="float:right; mergin-right: 50px; text-align: right;">
         (${para?.createdByUser})
         <br />
         <span style="font-weight: normal;">
@@ -732,25 +751,16 @@ function FileDetail() {
         </span>
         <br />
         <span style="font-weight: normal;">
-          ${moment(para?.createdAt).format("Do MMMM, YYYY")}
+         ${para?.paraCreatedAt ? para?.paraCreatedAt : ""}
         </span>
-      </p>
-       
-<p style="float: left; margin-top: 60px; text-align: center; color: black;">
-  ${
-    para?.assignedToUser
-      ? `${para.assignedToUserDesignation} (${para.assignedToUserBranch})`
-      : ""
-  }
-</p>
-      
+      </p> 
        <div style="clear:both"> </div>`;
     })
     .join("");
 
   // Main HTML template
   const html = `
-  <div className="container" style="padding:20px">
+  <div className="container" style="padding:50px; padding-left:70px">
     <div className="row mb-5">
       <div className="col-2" style="border-right: 1px solid black; height: 100%;">
         <!-- Border Column Content -->
@@ -760,16 +770,20 @@ function FileDetail() {
     <h4 style="color: black;">SENATE SECRETARIAT</h4>
     <h6 style="color: black;">(${UserData?.branch?.branchName} Branch)</h6>
   </div>
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; line-height: 1.5;">
-    <div></div>
-    <p style="color: black;"><strong>${filesData?.cases?.files?.fileNumber}</strong></p>
+  <div style="float:right; mergin-right: 50px">
+    <div class="smalllogo mb-3">
+  <img src="${senatelogo}" alt="" />
+  <p style="color: black;"><strong>${filesData?.cases?.files?.fileNumber}</strong></p>
+</div>
   </div>
+
+<div style="clear: both;"></div>
+
   <p style="line-height: 1.5; color: black;"><strong>Subject: ${notingTabSubject}</strong></p>
   <div style="line-height: 1.5; color: black">
     ${paragraphsHtml}
   </div>
 </div>
-
     </div>
   </div>
 `;
@@ -821,32 +835,174 @@ function FileDetail() {
   };
 
   const handlePreviewNotingDoc = (htmlContent) => {
-    // Create a temporary container to hold the HTML content
-    const tempContainer = document.createElement("div");
-    tempContainer.innerHTML = htmlContent;
-    document.body.appendChild(tempContainer);
+    const newTab = window.open("", "_blank");
 
-    const opt = {
-      margin: [20, 10, 20, 10],
-      image: { type: "jpeg", quality: 1 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: "pt", format: "a4", orientation: "portrait" },
-      enableLinks: true, // Enable link functionality
-    };
+    if (newTab) {
+      newTab.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>Print Preview</title>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              padding: 20px;
+              margin: 0;
+              background-color: white;
+              -webkit-print-color-adjust: exact !important;
+              print-color-adjust: exact !important;
+            }
+            .container {
+              padding: 50px;
+              padding-left: 70px;
+              max-width: 100%;
+              background-color: white;
+            }
+            .row {
+              margin-bottom: 5px;
+            }
+            .smalllogo img {
+              max-width: 100px;
+            }
+            .smalllogo p {
+              text-align: right;
+              margin: 0;
+            }
+            h4, h6, p {
+              margin: 5px 0;
+            }
+            .watermarktop {
+              position: fixed;
+              top: 10px;
+              left: 250px;
+              width: 100%;
+              height: 100%;
+              z-index: -1;
+              font-size: 24px;
+              color: rgba(150, 150, 150, 0.3);
+              transform: rotate(-35deg);
+              pointer-events: none;
+              text-align: center;
+            }
+            .watermark {
+              position: fixed;
+              top: 180px;
+              left: 200px;
+              width: 100%;
+              height: 100%;
+              z-index: -1;
+              font-size: 24px;
+              color: rgba(150, 150, 150, 0.3);
+              transform: rotate(-35deg);
+              pointer-events: none;
+              text-align: center;
+            }
+            .watermarkbottom {
+              position: fixed;
+              top: 700px;
+              left: 300px;
+              width: 100%;
+              height: 100%;
+              z-index: -1;
+              font-size: 24px;
+              color: rgba(150, 150, 150, 0.3);
+              transform: rotate(-35deg);
+              pointer-events: none;
+              text-align: center;
+            }
+            @page {
+              size: A4 portrait;
+              margin: 0;
+              @bottom-right {
+                content: counter(page);
+              }
+            }
+            @media print {
+              @page {
+                size: A4;
+                margin: 0;
+                @bottom-right {
+                  content: counter(page);
+                  margin-right: 10mm;
+                  margin-bottom: 15mm;
+                }
+              }
+              html {
+                counter-reset: page 0;
+              }
+              div {
+                page-break-inside: auto;
+              }
+              .page {
+                counter-increment: page;
+                position: relative;
+                page-break-after: auto;
+              }
+              html, body {
+                height: 100%;
+                margin: 0 !important;
+                padding: 0 !important;
+              }
+              .row, p {
+                color: black !important;
+              }
+              /* Hide default footers */
+              tfoot {
+                display: none !important;
+              }
+            }
+            /* Hide URL in location bar for Chrome */
+            @media screen {
+              #header, #footer {
+                display: none !important;
+              }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="watermarktop">
+            ${UserData?.firstName} ${UserData?.lastName}<br/>${
+              UserData?.branch?.branchName
+            } (${UserData?.designation?.designationName})<br />${moment(
+              paraNewUpdateDate
+            ).format("Do MMMM, YYYY [at] h:mm A")}
+          </div>
+          <div class="watermark">
+            ${UserData?.firstName} ${UserData?.lastName}<br/>${
+              UserData?.branch?.branchName
+            } (${UserData?.designation?.designationName})<br />${moment(
+              paraNewUpdateDate
+            ).format("Do MMMM, YYYY [at] h:mm A")}
+          </div>
+          <div class="watermarkbottom">
+            ${UserData?.firstName} ${UserData?.lastName}<br/>${
+              UserData?.branch?.branchName
+            } (${UserData?.designation?.designationName})<br />${moment(
+              paraNewUpdateDate
+            ).format("Do MMMM, YYYY [at] h:mm A")}
+          </div>
+          <div class="page">
+            ${htmlContent}
+          </div>
+           <script>
+            window.onload = () => {
+              // Remove any browser-added headers/footers
+              const style = document.createElement('style');
+              style.textContent = '@page { margin: 5mm; }';
+              document.head.appendChild(style);
+              
+              window.print();
+              window.onafterprint = () => window.close();
+            };
+          </script>
+        </body>
+        </html>
+      `);
 
-    html2pdf()
-      .set(opt)
-      .from(tempContainer)
-      .toPdf()
-      .outputPdf("blob")
-      .then((pdfBlob) => {
-        const pdfUrl = URL.createObjectURL(pdfBlob);
-        window.open(pdfUrl); // Open the PDF in a new tab
-      })
-      .finally(() => {
-        // Clean up: Remove the temporary container
-        document.body.removeChild(tempContainer);
-      });
+      newTab.document.close();
+    } else {
+      alert("Unable to open new tab. Please allow pop-ups for this site.");
+    }
   };
 
   // Helper function to strip HTML tags and get plain text
@@ -857,7 +1013,7 @@ function FileDetail() {
   };
 
   const isContentEmpty = () => {
-    const strippedText = stripHtml(notingData.description);
+    const strippedText = stripHtml(notingData?.description);
     return strippedText.trim().length === 0; // Check if the content is truly empty after stripping HTML
   };
 
@@ -995,25 +1151,37 @@ function FileDetail() {
               <div class="mb-3">
                 <label class="form-label">Mark To</label>
                 <select
-                  class="form-select"
+                  className="form-select"
                   id="assignedTo"
                   name="assignedTo"
-                  onChange={(e) =>
+                  onChange={(e) => {
+                    const selectedValue = e.target.value;
+                    const selectedItem = employeeData.find(
+                      (item) => item.fkUserId.toString() === selectedValue
+                    );
+
+                    // Update modal input state
                     setModalInputValue((prevState) => ({
                       ...prevState,
-                      assignedTo: e.target.value,
-                    }))
-                  }
+                      assignedTo: selectedValue,
+                    }));
+
+                    // Update customAssignedTo with firstName of selected item
+                    setCustomAssignedTo(selectedItem?.firstName || "");
+                  }}
                   value={modalInputValue.assignedTo}
                 >
-                  <option value={""} selected>
+                  <option value="" disabled>
                     Select
                   </option>
                   {employeeData &&
-                    employeeData?.map((item) => (
+                    employeeData.map((item) => (
                       <option
-                        value={item.fkUserId}
-                      >{`${item?.firstName} ${item?.lastName} (${item.designations?.designationName})`}</option>
+                        key={item.fkUserId}
+                        value={item.fkUserId.toString()}
+                      >
+                        {`${item?.firstName} ${item?.lastName} (${item.designations?.designationName})`}
+                      </option>
                     ))}
                 </select>
               </div>
@@ -1264,7 +1432,7 @@ function FileDetail() {
                             </button>
                           </div>
 
-                          {UserData && UserData?.userType === "Officer" && (
+                          {/* {UserData && UserData?.userType === "Officer" && (
                             <div class="col-auto">
                               <button
                                 class="btn btn-primary"
@@ -1287,7 +1455,7 @@ function FileDetail() {
                                 Approve Case
                               </button>
                             </div>
-                          )}
+                          )} */}
                         </div>
 
                         <div
@@ -1371,7 +1539,7 @@ function FileDetail() {
                                         onChange={(data) =>
                                           setNotingData({ description: data })
                                         }
-                                        value={notingData.description}
+                                        value={notingData?.description}
                                         disabled={
                                           location?.state?.view ? true : false
                                         }
@@ -1394,7 +1562,7 @@ function FileDetail() {
                                           onClick={() =>
                                             handleEditorChange(
                                               null,
-                                              notingData.description,
+                                              notingData?.description,
                                               null,
                                               false,
                                               true
@@ -1445,7 +1613,7 @@ function FileDetail() {
                                     onChange={(data) =>
                                       setNotingData({ description: data })
                                     }
-                                    value={notingData.description}
+                                    value={notingData?.description}
                                     disabled={
                                       location?.state?.view ? true : false
                                     }
@@ -1464,7 +1632,7 @@ function FileDetail() {
                                       onClick={() =>
                                         handleEditorChange(
                                           null,
-                                          notingData.description,
+                                          notingData?.description,
                                           null,
                                           false,
                                           true
@@ -1481,7 +1649,7 @@ function FileDetail() {
                                 onChange={(content) =>
                                   setNotingData({ description: content })
                                 }
-                                value={notingData.description}
+                                value={notingData?.description}
                                 width={"100%"}
                                 display={"flex"}
                               /> */}
@@ -1622,7 +1790,7 @@ function FileDetail() {
 
                 <div style={{ maxHeight: "712px", overflowY: "scroll" }}>
                   {remarksData?.length > 0 ? (
-                    remarksData.map((item) => (
+                    remarksData?.map((item) => (
                       <>
                         {(item?.CommentStatus !== null ||
                           item?.comment !== null) && (

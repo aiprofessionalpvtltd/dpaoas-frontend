@@ -337,6 +337,8 @@ import LGMSMinsisterTenures from "../pages/Dashboard/Modules/LGMS/Manage/Ministe
 import LGMSAddEditMinisterTenures from "../pages/Dashboard/Modules/LGMS/Manage/MinistersTenures/AddEditMinisterTenures/AddEditMinisterTenures.js";
 // import EditFinanceMoneyBill from "../pages/Dashboard/Modules/LGMS/FinanceMoneyBill/EditFinanceMoneyBill/index.js";
 // import EditFinanceMoney from "../pages/Dashboard/Modules/LGMS/FinanceMoneyBill/EditFinanceMoneyBill/index.js";
+import { ChangePasswordScreen } from "../pages/Dashboard/Modules/EFiling/changePassword/index.js";
+import QMSCompareQuestion from "../pages/Dashboard/Modules/QMS/Question/CompareQuestion/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -542,6 +544,7 @@ export const ProtectedRoutes = [
   //QMS Module
   { path: "/qms/dashboard", element: <QMSQuestionDashboard /> },
   { path: "/qms/search/question", element: <QMSSearchQuestion /> },
+  { path: "/qms/search/question/compare", element: <QMSCompareQuestion /> },
   { path: "/qms/search/resolution", element: <QMSSerchResolution /> },
   {
     path: "/qms/reports/question-group-diary",
@@ -810,8 +813,12 @@ export const ProtectedRoutes = [
   // { path: "/efiling/dashboard", element: <DirectorDashboard /> },
   // { path: "/efiling/dashboard", element: <MainDashboard /> },
   { path: "/efiling/dashboard", element: <MainDashBoardDemo /> },
+  {
+    path: "/efiling/dashboard/changepassword",
+    element: <ChangePasswordScreen />,
+  },
   // { path: "/efiling/dashboard", element: <UpdatedDashboard /> },
-  { path: "/efiling/director-dashboard", element: <EFilingDashboard /> },
+  // { path: "/efiling/director-dashboard", element: <EFilingDashboard /> },
 
   { path: "/efiling/dashboard/fileDetail", element: <FileDetail /> },
   // { path: "/efiling/dashboard/addedit", element: <AddEditFileForm /> },

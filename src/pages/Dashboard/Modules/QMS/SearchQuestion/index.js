@@ -25,11 +25,14 @@ import moment from "moment";
 import { getUserData } from "../../../../../api/Auth";
 import { DeleteModal } from "../../../../../components/DeleteModal";
 import { Button, Modal } from "react-bootstrap";
+import {
+  handlePreviewNotingDoc,
+} from "../../../../../components/QuestionBranch/QuestionPDFPreview";
 
 function QMSSearchQuestion() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { members, sessions, currentSession } = useContext(AuthContext);
+  const { members, sessions, currentSession, divisions } = useContext(AuthContext);
   const UserData = getUserData();
   const [currentPage, setCurrentPage] = useState(0);
   const [searchedData, setSearchedData] = useState([]);
@@ -229,12 +232,7 @@ function QMSSearchQuestion() {
       const dashboardData = transformLeavesData(location?.state);
       setSearchedData(dashboardData);
     } else {
-      const values = {
-        fromSession: formik?.values?.fromSession
-          ? formik?.values?.fromSession
-          : currentSession?.id,
-      };
-      SearchQuestionApi(values);
+      SearchQuestionApi(formik.values);
     }
   }, [location?.state, currentSession, currentPage]);
 
@@ -372,28 +370,6 @@ function QMSSearchQuestion() {
                   </div>
                 </div>
                 <div class="row">
-                  {/* <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">From Session</label>
-                      <select
-                        class="form-select"
-                        value={formik.values.fromSession}
-                        id="fromSession"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                      >
-                        <option value={""} selected disabled hidden>
-                          Select
-                        </option>
-                        {sessions &&
-                          sessions.map((item) => (
-                            <option key={item.id} value={item.id}>
-                              {item?.sessionName}
-                            </option>
-                          ))}
-                      </select>
-                    </div>
-                  </div> */}
                   <div className="col">
                     <div className="mb-3">
                       <label className="form-label">From Session</label>
@@ -617,9 +593,51 @@ function QMSSearchQuestion() {
                       </select>
                     </div>
                   </div>
+                  <div class="col-3">
+                      <div class="mb-3">
+                        <label class="form-label">Division</label>
+                        <select
+                          class={`form-select`}
+                          placeholder="Division"
+                          value={formik.values.divisions}
+                          onChange={(event) => {
+                            formik.handleChange(event);
+                          }}
+                          onBlur={formik.handleBlur}
+                          name="divisions"
+                          id="divisions"
+                        >
+                          <option selected value="" disabled hidden>
+                            Select
+                          </option>
+                          {divisions &&
+                            divisions.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item?.divisionName}
+                              </option>
+                            ))}
+                        </select>
+                      </div>
+                    </div>
                 </div>
                 <div class="row">
                   <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                  
+                  <button
+                      class="btn btn-primary"
+                      type="button"
+                      onClick={() => navigate("/qms/search/question/compare")}
+                    >
+                      Compare
+                    </button>
+                    <button
+                      class="btn btn-primary"
+                      type="button"
+                      onClick={() => handlePreviewNotingDoc(searchedData)}
+                      disabled={searchedData?.length > 0 ? false : true}
+                    >
+                      Preview PDF
+                    </button>
                     <button class="btn btn-primary" type="submit">
                       Search
                     </button>

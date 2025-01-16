@@ -19,6 +19,24 @@ export const getBranches = async (currentPage, pageSize) => {
     }
 };
 
+export const getBranchById = async (id) => {
+    try {
+        //   const token = getAuthToken();
+        const response = await axiosClient.get(
+            `cases/getBranchByBranchId/${id}`,
+            // {
+            //   headers: {
+            //     Authorization: `Bearer ${token}`,
+            //   },
+            // },
+        );
+        return response?.data;
+    } catch (error) {
+        console.error("Error fetching API endpoint:", error);
+        throw error;
+    }
+};
+
 export const createBranches = async (data) => {
     try {
         //   const token = getAuthToken();

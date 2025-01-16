@@ -54,7 +54,7 @@ function QMSNewQuestion() {
       englishText: "",
       urduText: "",
       fkDivisionId: "",
-      questionDiaryNo: "",
+      // questionDiaryNo: "",
       fkGroupId: "",
     },
     validationSchema: validationSchema,
@@ -81,7 +81,7 @@ function QMSNewQuestion() {
     formData.append("submittedBy", userData?.fkUserId);
     formData.append("questionSentStatus", "inQuestion");
     formData.append("fkDivisionId", values?.fkDivisionId);
-    formData.append("questionDiaryNo", values?.questionDiaryNo);
+    // formData.append("questionDiaryNo", values?.questionDiaryNo);
     formData.append("fkGroupId", values?.fkGroupId);
 
     try {
@@ -411,7 +411,7 @@ function QMSNewQuestion() {
                       </div>
                     </div>
                   </div>
-                  <div className="row">
+                  {/* <div className="row">
                     <div class="col-6">
                       <div class="mb-3">
                         <label class="form-label">Question Diary No</label>
@@ -426,7 +426,7 @@ function QMSNewQuestion() {
                         />
                       </div>
                     </div>
-                  </div>
+                  </div> */}
 
                   <div style={{ marginTop: 10 }}>
                     <Editor

@@ -6,6 +6,7 @@ import { useFormik } from "formik";
 import TimePicker from "react-time-picker";
 import DatePicker from "react-datepicker";
 import { useLocation } from "react-router";
+import {ExtractText} from "../../../../../../components/ExtractTextModal"
 import {
   showErrorMessage,
   showSuccessMessage,
@@ -66,7 +67,7 @@ function QMSQuestionDetail() {
     sessionNo: "",
     deferDate: "",
   });
-
+  const [isExtractText, setIsExtractText] = useState(false)
   const [reviveState, setReviveState] = useState({
     sessionNo: "",
     qroup: "",
@@ -77,6 +78,7 @@ function QMSQuestionDetail() {
     questionStatus: "",
     questionDiaryNo: "",
   });
+
 
   const formik = useFormik({
     initialValues: {
@@ -128,7 +130,7 @@ function QMSQuestionDetail() {
     formData.append("noticeOfficeDiaryDate", values?.noticeOfficeDiaryDate);
     formData.append("noticeOfficeDiaryTime", values?.noticeOfficeDiaryTime);
     formData.append("questionCategory", values?.category);
-    formData.append("questionDiaryNo", values?.questionDiaryNo);
+    formData.append("questionDiaryNo", values?.questionDiaryNo ?? 0);
     formData.append("fkMemberId", values?.senator);
     formData.append("fkGroupId", values?.group);
     formData.append("fkDivisionId", values?.division);
@@ -336,6 +338,7 @@ function QMSQuestionDetail() {
         title1={"Question Detail"}
       />
       <ToastContainer />
+        <ExtractText isOpen={isExtractText} toggleModal={() => setIsExtractText(!isExtractText)}/>
       <div class="container-fluid">
         <div class="card mt-4">
           <div
@@ -372,6 +375,15 @@ function QMSQuestionDetail() {
                     >
                       Defer
                     </button> */}
+                    <button
+                      class="btn btn-primary"
+                      type="button"
+                      onClick={() => {
+                        setIsExtractText(true)
+                      }}
+                    >
+                      Extract Text
+                    </button>
                     <button
                       class="btn btn-primary"
                       type="button"
@@ -778,6 +790,7 @@ function QMSQuestionDetail() {
                     <div class="mb-3">
                       <label class="form-label">Question Diary No</label>
                       <input
+                        readOnly={true}
                         type="text"
                         value={formik.values.questionDiaryNo}
                         className={"form-control"}

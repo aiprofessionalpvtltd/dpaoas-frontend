@@ -21,13 +21,12 @@ function EfilingLeaveManagement() {
 
   const getEmployeeData = async () => {
     try {
-      const response = await getHLEmployee(userData?.fkUserId);
+      const response = await getHLEmployee(userData?.fkUserId, userData?.branch?.id, userData?.branch?.branchName);
       if (response?.success) {
         const filteredData = response?.data?.filter(
           (item) => item?.userName !== userData?.userName
         ); // Default attendance status
         setEmployeeData(filteredData);
-        console.log("Api Data", filteredData);
       }
     } catch (error) {
       console.log(error);
@@ -85,7 +84,7 @@ function EfilingLeaveManagement() {
         />
       )}
       <div className="container-fluid">
-        {employeeData.length > 0 && (
+        {employeeData?.length > 0 && (
           <div className="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4 mt-4">
             {employeeData.map((member, index) => (
               <div key={index} className="col">
