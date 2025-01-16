@@ -33,11 +33,12 @@ function LGMSMinisters() {
     return apiData.map((item) => ({
       id: item.id,
       ministerName: `${item.mnaName}`,
-      ministerTenure: item?.tenures?.tenureName
-        ? item?.tenures?.tenureName
+      ministerTenure: item?.tenuresMinisters?.tenureName
+        ? item?.tenuresMinisters?.tenureName
         : "---",
-      ministerParliamentaryYear: item?.parliamentaryYears?.parliamentaryTenure
-        ? item?.parliamentaryYears?.parliamentaryTenure
+      ministerParliamentaryYear: item?.mnaParliamentaryYears
+        ?.parliamentaryTenure
+        ? item?.mnaParliamentaryYears?.parliamentaryTenure
         : "---",
       politicalParty: `${item?.politicalParties?.partyName}`,
       minstries: item?.ministries

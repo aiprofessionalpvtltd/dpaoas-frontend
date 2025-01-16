@@ -29,7 +29,7 @@ function LegislativeBillList({ isDashboardData }) {
     setCurrentPage(page);
   };
   const transformLegislativeData = (apiData) => {
-    console.log("apiData", apiData);
+    console.log("apiData bills bills", apiData);
     return apiData.map((item, index) => ({
       "S.No": index + 1,
       id: item?.id,
@@ -68,6 +68,8 @@ function LegislativeBillList({ isDashboardData }) {
         );
       } else {
         response = await getAllLegislativeBillNotice(currentPage, pageSize);
+
+        console.log("responseresponseresponse", response);
       }
       if (response?.success) {
         setCount(response?.data?.count);
@@ -97,19 +99,21 @@ function LegislativeBillList({ isDashboardData }) {
     getAllLegislativeBillApi();
   }, [currentPage]);
 
-  const sendBill = async (id) => {
-    try {
-      const data = {
-        billSentDate: new Date(),
-      };
-      const response = await sendLegislativeBill(id, data);
-      if (response?.success) {
-        showSuccessMessage(response.message);
-        getAllLegislativeBillApi();
-      }
-    } catch (error) {
-      console.log(error);
-    }
+  const sendBill = async (item) => {
+    console.log("send Bill Clicked and called");
+    console.log("ITemmmmm", item);
+    // try {
+    //   const data = {
+    //     billSentDate: new Date(),
+    //   };
+    //   const response = await sendLegislativeBill(id, data);
+    //   if (response?.success) {
+    //     showSuccessMessage(response.message);
+    //     getAllLegislativeBillApi();
+    //   }
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
 
   return (
@@ -144,12 +148,12 @@ function LegislativeBillList({ isDashboardData }) {
                     }
                     handleEdit={(item) =>
                       navigate("/notice/legislation/private-bill/addedit", {
-                        state: { id: item?.SR },
+                        state: { id: item?.id },
                       })
                     }
                     hideDeleteIcon
                     showSent
-                    handleSent={(item) => sendBill(item?.SR)}
+                    handleSent={(item) => sendBill(item)}
                   />
                 </div>
               </div>
@@ -194,12 +198,12 @@ function LegislativeBillList({ isDashboardData }) {
                     }
                     handleEdit={(item) =>
                       navigate("/notice/legislation/private-bill/addedit", {
-                        state: { id: item?.SR },
+                        state: { id: item?.id },
                       })
                     }
                     hideDeleteIcon
                     showSent
-                    handleSent={(item) => sendBill(item?.SR)}
+                    handleSent={(item) => sendBill(item?.id)}
                   />
                 </div>
               </div>

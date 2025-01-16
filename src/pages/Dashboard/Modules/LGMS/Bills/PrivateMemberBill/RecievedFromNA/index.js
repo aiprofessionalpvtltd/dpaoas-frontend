@@ -41,11 +41,11 @@ const AllPrivateMemberBillFromNA = () => {
       // internalId: item?.id,
       fileNumber: item?.fileNumber,
       titleOfTheBill: item?.billTitle,
-      // nameOfMinisters: item?.senateBillSenatorMovers
-      //   ? item?.senateBillSenatorMovers
-      //       .map((mover) => mover?.mna?.mnaName)
-      //       .join(", ")
-      //   : "---",
+      nameOfMoversInNA: item?.senateBillSenatorMovers
+        ? item?.senateBillSenatorMovers
+            .map((mover) => mover?.mna?.mnaName)
+            .join(", ")
+        : "---",
       dateOnWhichBillWasPassedByNA: item?.PassedByNADate
         ? moment(item?.PassedByNADate, "YYYY-MM-DD").format("DD-MM-YYYY")
         : "---",
@@ -59,11 +59,11 @@ const AllPrivateMemberBillFromNA = () => {
             "DD-MM-YYYY"
           )
         : "---",
-      // dateOfReceiptOfNotice: item?.noticeDate
-      //   ? moment(item?.noticeDate, "YYYY-MM-DD").format("DD-MM-YYYY")
-      //   : "---",
+      dateOfReceiptOfNoticeBySenator: item?.noticeDate
+        ? moment(item?.noticeDate, "YYYY-MM-DD").format("DD-MM-YYYY")
+        : "---",
 
-      dateOfIntroductionReferenceToStandingCommittee: item?.introducedInHouses
+      dateOnWhichReferredToStandingCommittee: item?.introducedInHouses
         ?.introducedInHouseDate
         ? moment(
             item?.introducedInHouses?.introducedInHouseDate,
@@ -98,7 +98,7 @@ const AllPrivateMemberBillFromNA = () => {
             "DD-MM-YYYY"
           )
         : "---",
-      dateOfPublishInTheGazette: item?.dateOfPublishInGazette
+      dateOnWhichPublishedInTheGazette: item?.dateOfPublishInGazette
         ? moment(item?.dateOfPublishInGazette, "YYYY-MM-DD").format(
             "DD-MM-YYYY"
           )
@@ -145,7 +145,11 @@ const AllPrivateMemberBillFromNA = () => {
   // };
   const handlePrivateNABill = () => {
     navigate("/lgms/dashboard/bills/NA-bills", {
-      state: { category: "Private Member Bill", billFrom: "From NA" },
+      state: {
+        category: "Private Member Bill",
+        billFrom: "From NA",
+        forPerson: "Senators",
+      },
     });
   };
 
@@ -158,7 +162,9 @@ const AllPrivateMemberBillFromNA = () => {
 
   // Edit Bill Recieved From NA
   const handleEditNABill = (id, item) => {
-    navigate("/lgms/dashboard/bills/edit/NA-bills/", { state: { id, item } });
+    navigate("/lgms/dashboard/bills/edit/NA-bills/", {
+      state: { id, item, forPerson: "Senators" },
+    });
   };
 
   return (
@@ -175,7 +181,7 @@ const AllPrivateMemberBillFromNA = () => {
       />
       <div class="container-fluid">
         <RecievedFromNA
-          addBtnText={"Private Member Bill (Received From NA)"}
+          addBtnText={"Create New Private Member Bill (Received From NA)"}
           handleAdd={handlePrivateNABill}
           tableTitle={"Private Member Bill Data (Received From NA)"}
           data={privateMemberNABill}

@@ -1,14 +1,15 @@
 import { useCallback, useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import moment from "moment";
-import IntroducedInSenate from "../../../../../../../components/LegislationBills/IntroducedInSenate";
-import { LegislationSideBarItems } from "../../../../../../../utils/sideBarItems";
-import { Layout } from "../../../../../../../components/Layout";
-import Header from "../../../../../../../components/Header";
-import { getAllGovernmentSenateBills } from "../../../../../../../api/APIs/Services/LegislationModule.service";
+import CustomTable from "../../../../../components/CustomComponents/CustomTable";
 
-const AllGovernmentSenateBills = () => {
+import moment from "moment";
+import { getAllGovernmentSenateBills } from "../../../../../api/APIs/Services/LegislationModule.service";
+import { Layout } from "../../../../../components/Layout";
+import Header from "../../../../../components/Header";
+import { LegislationSideBarItems } from "../../../../../utils/sideBarItems";
+
+const AllFinanceMoneyBill = () => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(0);
   const [governmentSenateBill, setGovernmantSenateBill] = useState([]);
@@ -116,12 +117,10 @@ const AllGovernmentSenateBills = () => {
   //   });
   // };
   // Create Government Bill
-  const handleGovernmentSenateBill = () => {
-    navigate("/lgms/dashboard/bills/senate-bills", {
+  const handleAddFinanceMoneyBill = () => {
+    navigate("/lgms/dashboard/bills/legislation-bills/finance-money-bill/add", {
       state: {
         category: "Government Bill",
-        billFrom: "From Senate",
-        forPerson: "Ministers",
       },
     });
   };
@@ -147,30 +146,36 @@ const AllGovernmentSenateBills = () => {
       <ToastContainer />
       <Header
         dashboardLink={"/lgms/dashboard"}
-        addLink1={"/lgms/dashboard/bills/legislation-bills"}
-        title1={"All Government Bills"}
+        addLink1={"/lgms/dashboard/bills"}
+        title1={"All Finance/Money Bills"}
       />
 
-      <div class="container-fluid">
-        <IntroducedInSenate
-          addBtnText={"Create New Government Bill (Introduced In Senate)"}
-          handleAdd={handleGovernmentSenateBill}
-          tableTitle={"Government Bills Data (Introduced In Senate)"}
-          data={governmentSenateBill}
-          remarksAttachmentVal={remarksAttachmentVal}
-          handleEdit={(item) => {
-            item?.billFrom === "From Senate"
-              ? handleEditSenateBill(item?.id, item)
-              : handleEditNABill(item?.id, item);
-          }}
-          handlePageChange={handlePageChange}
-          currentPage={currentPage}
-          pageSize={pageSize}
-          totalCount={count}
-        />
+      <div className="row">
+        <div className="col-12">
+          <CustomTable
+            singleDataCard={true}
+            data={governmentSenateBill}
+            tableTitle="Finance/Money Bill Data"
+            addBtnText={"Create New Finance/Money Bill"}
+            headerBgColor={"#4B8FF0"}
+            headerTitleColor={"#fff"}
+            handlePageChange={handlePageChange}
+            currentPage={currentPage}
+            pageSize={pageSize}
+            totalCount={count}
+            hideDeleteIcon={true}
+            handleAdd={() => {
+              handleAddFinanceMoneyBill();
+            }}
+            handleEdit={(item) => {
+              handleEditNABill(item);
+            }}
+            // handleDelete={() => {}}
+          />
+        </div>
       </div>
     </Layout>
   );
 };
 
-export default AllGovernmentSenateBills;
+export default AllFinanceMoneyBill;

@@ -22,11 +22,14 @@ import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import DatePicker from "react-datepicker";
 import TimePicker from "react-time-picker";
 import moment from "moment";
+import { getUserData } from "../../../../../../../api/Auth";
 
 function AddEditLegislativeBill() {
   const location = useLocation();
   const navigate = useNavigate();
   const { members } = useContext(AuthContext);
+  const userData = getUserData();
+  console.log("userData", userData);
   const [imageLinks, setImageLinks] = useState([]);
   const [billData, setBillData] = useState([]);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
@@ -123,6 +126,10 @@ function AddEditLegislativeBill() {
     values?.legislationMovers.forEach((mover, index) => {
       formData.append(`legislationMovers[${index}][fkMemberId]`, mover.value);
     });
+    formData.append(
+      "fkUserId",
+      userData && userData?.fkUserId && userData?.fkUserId
+    );
 
     try {
       const response = await createLegislativeBill(formData);

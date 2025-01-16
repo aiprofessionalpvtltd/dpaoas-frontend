@@ -98,12 +98,16 @@ function LGMSPrivateBill() {
             totalCount={count}
             // handleAdd={() => navigate("/notice/speech-on-demand/addedit")}
             handleEdit={(item) =>
-              navigate("/lgms/legislation/legislative-bill/addedit", {
-                state: { id: item?.SR },
-              })
+              navigate(
+                "/lgms/dashboard/notice-office/bills/edit/senate-bills",
+                {
+                  state: { id: item?.SR },
+                }
+              )
             }
-            handleDelete={(item) => handleDelete(item.SR)}
-            ActionHide={true}
+            // handleDelete={(item) => handleDelete(item.SR)}
+            hideDeleteIcon={true}
+            ActionHide={false}
           />
         </div>
       </div>

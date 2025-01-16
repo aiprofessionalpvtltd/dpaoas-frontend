@@ -14,6 +14,9 @@ const RecievedFromNA = ({
   pageSize,
   totalCount,
   hideTableTopButton,
+  iscolumnCheckbox,
+  isColumncheck,
+  setIsColumnCheckBox,
 }) => {
   const [showModal, setShowModal] = useState(false);
   const [attachDocs, setAttachDocs] = useState([]);
@@ -29,6 +32,8 @@ const RecievedFromNA = ({
     setAttachDocs(item?.billDocuments);
     openModal();
   };
+
+  console.log("isColumncheckBox", iscolumnCheckbox);
 
   return (
     <>
@@ -64,6 +69,9 @@ const RecievedFromNA = ({
           handleViewAttachment={(item) => {
             handleViewAttach(item);
           }}
+          iscolumnCheckbox={iscolumnCheckbox}
+          isColumncheck={isColumncheck}
+          setIsColumnCheckBox={setIsColumnCheckBox}
         />
       </div>
     </>

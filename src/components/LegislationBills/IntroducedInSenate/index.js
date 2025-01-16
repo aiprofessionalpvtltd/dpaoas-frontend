@@ -86,6 +86,9 @@ const IntroducedInSenate = ({
   pageSize,
   totalCount,
   hideTableTopButton,
+  iscolumnCheckbox,
+  isColumncheck,
+  setIsColumnCheckBox,
 }) => {
   const [showModal, setShowModal] = useState(false);
   const [attachDocs, setAttachDocs] = useState([]);
@@ -100,6 +103,9 @@ const IntroducedInSenate = ({
     setAttachDocs(item?.billDocuments);
     openModal();
   };
+
+  console.log("isColumncheckBox", iscolumnCheckbox);
+
   return (
     <div>
       {showModal && showModal && (
@@ -112,7 +118,7 @@ const IntroducedInSenate = ({
       <CustomTable
         block={true}
         hidebtn1={hideTableTopButton ? true : false}
-        hideBtn={true}
+        hideBtn={false}
         addBtnText={addBtnText}
         handleAdd={handleAdd}
         tableTitle={tableTitle}
@@ -132,6 +138,9 @@ const IntroducedInSenate = ({
         handleViewAttachment={(item) => {
           handleViewAttach(item);
         }}
+        iscolumnCheckbox={iscolumnCheckbox}
+        isColumncheck={isColumncheck}
+        setIsColumnCheckBox={setIsColumnCheckBox}
       />
     </div>
   );

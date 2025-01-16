@@ -23,6 +23,8 @@ import { ToastContainer } from "react-toastify";
 import { AuthContext } from "../../../../../../../api/AuthContext";
 import {
   createMinister,
+  getAllMinisterTenures,
+  getMinisterParliamentaryYearsByTenure,
   getSingleMinisterByID,
   updateMinisters,
 } from "../../../../../../../api/APIs/Services/LegislationModule.service";
@@ -96,7 +98,7 @@ function LGMSMinisterAddEditForm() {
 
   const handleTenures = async () => {
     try {
-      const response = await getAllTenures(0, 1000, "Ministers");
+      const response = await getAllMinisterTenures(0, 1000, "Ministers");
       if (response?.success) {
         setTenures(response?.data?.tenures);
       }
@@ -107,7 +109,7 @@ function LGMSMinisterAddEditForm() {
 
   const getParliamentaryYearsonTheBaseOfTenure = async (id) => {
     try {
-      const response = await getParliamentaryYearsByTenureID(id);
+      const response = await getMinisterParliamentaryYearsByTenure(id);
       if (response?.success) {
         console.log(response?.data?.data);
         setParliamentaryYearData(response?.data);
@@ -420,7 +422,7 @@ function LGMSMinisterAddEditForm() {
                         <option value={""} selected disabled hidden>
                           Select
                         </option>
-                        {tenures.length > 0 &&
+                        {tenures?.length > 0 &&
                           tenures.map((tenure) => (
                             <option value={tenure?.id}>
                               {tenure?.tenureName}
@@ -438,7 +440,7 @@ function LGMSMinisterAddEditForm() {
                         name="fkParliamentaryYearId"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                        value={formik.values.fkParliamentaryYearId}
+                        value={formik.values?.fkParliamentaryYearId}
                       >
                         <option value={""} selected disabled hidden>
                           Select
