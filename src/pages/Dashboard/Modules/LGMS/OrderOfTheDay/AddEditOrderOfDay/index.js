@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
 import { LegislationSideBarItems } from "../../../../../../utils/sideBarItems";
@@ -9,7 +9,7 @@ import moment from "moment";
 import { Editor } from "../../../../../../components/CustomComponents/Editor";
 import { getSessionSitting } from "../../../../../../api/APIs/Services/ManageQMS.service";
 import CKEditorComp from "../../../../../../components/CustomComponents/Editor/CKEditorComp";
-import { createOrderOfTheDay, updateOrderOfTheDay } from "../../../../../../api/APIs/Services/Legislation.service";
+import { createOrderOfTheDay, OrderOfTheDayByID, updateOrderOfTheDay } from "../../../../../../api/APIs/Services/Legislation.service";
 import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -106,6 +106,27 @@ const LGMSCreateOrderOftheDay = () => {
           showErrorMessage(error?.response?.data?.message);
         }
   }
+  //Signal ID Data 
+  const hendleListOrderOfTheDayBYID = async () => {
+     try {
+          const response = await OrderOfTheDayByID(location?.state?.id);
+          if (response?.success) {
+            // showSuccessMessage(response?.message);
+
+            formik.setFieldValue({
+              sessionId: "",
+              sittingDate: "",
+            })
+            setDescriptionData()
+          }
+        } catch (error) {
+          showErrorMessage(error?.response?.data?.message);
+        }
+  }
+
+  useEffect(() => {
+    hendleListOrderOfTheDayBYID()
+  },[location?.state?.id])
   return (
     <Layout
       module={true}
