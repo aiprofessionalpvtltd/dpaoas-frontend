@@ -9,7 +9,10 @@ import {
   showErrorMessage,
   showSuccessMessage,
 } from "../../../../../utils/ToastAlert";
-import { deleteOrderOfTheDay, listOrderOfTheDay } from "../../../../../api/APIs/Services/Legislation.service";
+import {
+  deleteOrderOfTheDay,
+  listOrderOfTheDay,
+} from "../../../../../api/APIs/Services/Legislation.service";
 
 function ListOrderOfDay() {
   const navigate = useNavigate();
@@ -26,18 +29,19 @@ function ListOrderOfDay() {
   const transformOrderOfTheDayData = (apiData) => {
     return apiData.map((item) => ({
       id: item?.id,
-      sessionName: item,
-      sittingDate: item,
-      description: item,
+      sessionName: item?.session?.sessionName,
+      sittingDate: item.sittingDate,
+      description: item?.content
+        .replace(/(<([^>]+)>)/gi, "")
+        .replace(/&nbsp;/gi, " ")
+        .replace(/\s+/g, " "),
     }));
   };
   const hendleOrderOfTheDayList = async () => {
     try {
       const response = await listOrderOfTheDay(currentPage, pageSize);
       if (response?.success) {
-        const transformedData = transformOrderOfTheDayData(
-          response?.data?.rows
-        );
+        const transformedData = transformOrderOfTheDayData(response?.data);
         setCount(response?.data?.count);
         setOrderOfTheDayData(transformedData);
       }

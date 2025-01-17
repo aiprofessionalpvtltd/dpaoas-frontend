@@ -144,10 +144,10 @@ export const deleteOrderOfTheDay = async (id) => {
     }
 };
 
-export const updateOrderOfTheDay = async (id) => {
+export const updateOrderOfTheDay = async (id, Data) => {
     try {
       const response = await axiosClient.put(
-        `/legisOrderOfDay/update/${id}`
+        `/legisOrderOfDay/update/${id}`, Data
       );
       return response?.data;
     } catch (error) {
