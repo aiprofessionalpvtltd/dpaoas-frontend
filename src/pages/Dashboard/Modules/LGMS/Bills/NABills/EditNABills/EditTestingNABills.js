@@ -1062,9 +1062,9 @@ const EditTestingNABills = () => {
       formData.append("fkMinisterTenureId", values?.fkMinisterTenureId?.value);
       formData.append("fkTenureId", values?.membertenure?.value);
     }
-    if (values?.fkTermId?.value) {
-      formData.append("fkTermId", values?.fkTermId?.value);
-    }
+    // if (values?.fkTermId?.value) {
+    //   formData.append("fkTermId", values?.fkTermId?.value);
+    // }
     if (
       BillCategory === "Government Bill" &&
       location?.state?.forPerson === "Ministers"
@@ -1084,6 +1084,7 @@ const EditTestingNABills = () => {
         values?.fkMnaParliamentaryYearId
       );
       formData.append("fkParliamentaryYearId", values?.fkParliamentaryYearId);
+      // formData.append()
     }
     // formData.append("fkParliamentaryYearId", values?.fkParliamentaryYearId);
     formData.append("fkSessionId", values?.fkSessionId);
@@ -1267,12 +1268,12 @@ const EditTestingNABills = () => {
       );
       formData.append("dateOfCirculationOfNotice", formattedDate);
     }
-    if (values?.dateofReciptofNotice) {
-      const formattedDate = moment(values?.dateofReciptofNotice).format(
-        "YYYY-MM-DD"
-      );
-      formData.append("dateofReciptofNotice", formattedDate);
-    }
+    // if (values?.dateofReciptofNotice) {
+    //   const formattedDate = moment(values?.dateofReciptofNotice).format(
+    //     "YYYY-MM-DD"
+    //   );
+    //   formData.append("dateofReciptofNotice", formattedDate);
+    // }
     if (values?.dateofReferencetoStandingCommittee) {
       const formattedDate = moment(
         values?.dateofReferencetoStandingCommittee
