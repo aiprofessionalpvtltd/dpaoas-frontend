@@ -102,18 +102,18 @@ function LegislativeBillList({ isDashboardData }) {
   const sendBill = async (item) => {
     console.log("send Bill Clicked and called");
     console.log("ITemmmmm", item);
-    // try {
-    //   const data = {
-    //     billSentDate: new Date(),
-    //   };
-    //   const response = await sendLegislativeBill(id, data);
-    //   if (response?.success) {
-    //     showSuccessMessage(response.message);
-    //     getAllLegislativeBillApi();
-    //   }
-    // } catch (error) {
-    //   console.log(error);
-    // }
+    try {
+      const data = {
+        billSentDate: new Date(),
+      };
+      const response = await sendLegislativeBill(item, data);
+      if (response?.success) {
+        showSuccessMessage(response.message);
+        getAllLegislativeBillApi();
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
