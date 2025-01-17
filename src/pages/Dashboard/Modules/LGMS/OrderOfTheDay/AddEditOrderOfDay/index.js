@@ -9,14 +9,21 @@ import moment from "moment";
 import { Editor } from "../../../../../../components/CustomComponents/Editor";
 import { getSessionSitting } from "../../../../../../api/APIs/Services/ManageQMS.service";
 import CKEditorComp from "../../../../../../components/CustomComponents/Editor/CKEditorComp";
-import { createOrderOfTheDay, OrderOfTheDayByID, updateOrderOfTheDay } from "../../../../../../api/APIs/Services/Legislation.service";
-import { showErrorMessage, showSuccessMessage } from "../../../../../../utils/ToastAlert";
+import {
+  createOrderOfTheDay,
+  OrderOfTheDayByID,
+  updateOrderOfTheDay,
+} from "../../../../../../api/APIs/Services/Legislation.service";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const LGMSCreateOrderOftheDay = () => {
-  const navigate = useNavigate()
-  const location = useLocation()
+  const navigate = useNavigate();
+  const location = useLocation();
   const [sittingDays, setSittingDays] = useState([]);
   const { sessions } = useContext(AuthContext);
   const [descriptionData, setDescriptionData] = useState("");
@@ -32,10 +39,10 @@ const LGMSCreateOrderOftheDay = () => {
     },
     onSubmit: (values) => {
       // Add your submit logic here
-      if (location.state.id) {
-        hendleUpdateOrderOfTheDay(values)
-      }else{
-       hendleCreateOrderOfTheDay(values)
+      if (location?.state?.id) {
+        hendleUpdateOrderOfTheDay(values);
+      } else {
+        hendleCreateOrderOfTheDay(values);
       }
     },
   });
@@ -75,58 +82,66 @@ const LGMSCreateOrderOftheDay = () => {
   //Create
   const hendleCreateOrderOfTheDay = async (values) => {
     const Data = {
-       
+      content: descriptionData,
+      fkSessionId: values.sessionId,
+      sittingDate: values.sittingDate,
+    };
+    try {
+      const response = await createOrderOfTheDay(Data);
+      if (response?.success) {
+        showSuccessMessage(response?.message);
+        setTimeout(() => {
+          navigate("/lgms/dashboard/order-of-the-day/list");
+        }, 1000);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
     }
-     try {
-          const response = await createOrderOfTheDay(Data);
-          if (response?.success) {
-            showSuccessMessage(response?.message);
-            setTimeout(() => {
-              navigate("/lgms/dashboard/order-of-the-day/list");
-            }, 1000);
-          }
-        } catch (error) {
-          showErrorMessage(error?.response?.data?.message);
-        }
-  }
+  };
 
   const hendleUpdateOrderOfTheDay = async (values) => {
     const Data = {
-       
+      content: descriptionData,
+      fkSessionId: values.sessionId,
+      sittingDate: values.sittingDate,
+    };
+    try {
+      const response = await updateOrderOfTheDay(location.state.id, Data);
+      if (response?.success) {
+        showSuccessMessage(response?.message);
+        setTimeout(() => {
+          navigate("/lgms/dashboard/order-of-the-day/list");
+        }, 1000);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
     }
-     try {
-          const response = await updateOrderOfTheDay(Data);
-          if (response?.success) {
-            showSuccessMessage(response?.message);
-            setTimeout(() => {
-              navigate("/lgms/dashboard/order-of-the-day/list");
-            }, 1000);
-          }
-        } catch (error) {
-          showErrorMessage(error?.response?.data?.message);
-        }
-  }
-  //Signal ID Data 
+  };
+  //Signal ID Data
   const hendleListOrderOfTheDayBYID = async () => {
-     try {
-          const response = await OrderOfTheDayByID(location?.state?.id);
-          if (response?.success) {
-            // showSuccessMessage(response?.message);
-
-            formik.setFieldValue({
-              sessionId: "",
-              sittingDate: "",
-            })
-            setDescriptionData()
-          }
-        } catch (error) {
-          showErrorMessage(error?.response?.data?.message);
-        }
-  }
+    try {
+      const response = await OrderOfTheDayByID(location?.state?.id);
+      if (response?.success) {
+        // showSuccessMessage(response?.message);
+        SearchSessionSittingApi({
+          sessionId: response?.data?.fkSessionId,
+        });
+        formik.setValues({
+          sessionId: response?.data?.fkSessionId || "",
+          sittingDate: response?.data?.sittingDate || "",
+        });
+        setDescriptionData(response?.data?.content);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  };
 
   useEffect(() => {
-    hendleListOrderOfTheDayBYID()
-  },[location?.state?.id])
+    if (location?.state?.id) {
+      hendleListOrderOfTheDayBYID();
+    }
+  }, [location?.state?.id]);
   return (
     <Layout
       module={true}
@@ -136,14 +151,20 @@ const LGMSCreateOrderOftheDay = () => {
       <Header
         dashboardLink={"/lgms/dashboard"}
         addLink1={"/lgms/dashboard"}
-        title1={"Create Order Of The Day"}
+        title1={
+          location?.state?.id ? "Edit Order Of The Day" : "Add Order Of The Day"
+        }
       />
       <ToastContainer />
 
       <div className="container-fluid">
         <div className="card">
           <div className="card-header red-bg">
-            <h1>{location?.state?.id ? "Edit Order Of The Day" :"Add Order Of The Day"}</h1>
+            <h1>
+              {location?.state?.id
+                ? "Edit Order Of The Day"
+                : "Add Order Of The Day"}
+            </h1>
           </div>
           <div className="card-body">
             <form onSubmit={formik.handleSubmit}>
