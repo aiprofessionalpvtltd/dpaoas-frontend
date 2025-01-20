@@ -59,17 +59,22 @@ const AllPrivateMemberBillFromNA = () => {
             "DD-MM-YYYY"
           )
         : "---",
-      dateOfReceiptOfNoticeBySenator: item?.noticeDate
-        ? moment(item?.noticeDate, "YYYY-MM-DD").format("DD-MM-YYYY")
+      dateOfReceiptOfNoticeBySenator: item?.dateofReciptofNotice
+        ? moment(item?.dateofReciptofNotice, "YYYY-MM-DD").format("DD-MM-YYYY")
+        : "---",
+      dateOfCirculationOfNotice: item?.dateOfCirculationOfNotice
+        ? moment(item?.dateOfCirculationOfNotice, "YYYY-MM-DD").format(
+            "DD-MM-YYYY"
+          )
         : "---",
 
-      dateOnWhichReferredToStandingCommittee: item?.introducedInHouses
-        ?.introducedInHouseDate
-        ? moment(
-            item?.introducedInHouses?.introducedInHouseDate,
-            "YYYY-MM-DD"
-          ).format("DD-MM-YYYY")
-        : "---",
+      dateOnWhichReferredToStandingCommittee:
+        item?.dateofReferencetoStandingCommittee
+          ? moment(
+              item?.dateofReferencetoStandingCommittee,
+              "YYYY-MM-DD"
+            ).format("DD-MM-YYYY")
+          : "---",
 
       dateOfPresentationOfTheReport: item?.introducedInHouses
         ?.reportPresentationDate
