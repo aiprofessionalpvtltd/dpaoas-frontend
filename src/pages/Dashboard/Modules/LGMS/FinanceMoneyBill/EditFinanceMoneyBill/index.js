@@ -5,51 +5,63 @@ import { useFormik } from "formik";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import DatePicker from "react-datepicker";
-import { Layout } from "../../../../../../components/Layout";
-import {
-  DeleteBillDocumentTypeAttachemnt,
-  UpdateNABill,
-  getAllBillStatus,
-  getAllMNALists,
-  getMinisterByParliamentaryYearID,
-  getSingleNABillByID,
-} from "../../../../../../../api/APIs/Services/LegislationModule.service";
-import moment from "moment";
-import {
-  showSuccessMessage,
-  showErrorMessage,
-} from "../../../../../../utils/ToastAlert";
-
-import { LegislationSideBarItems } from "../../../../../../utils/sideBarItems";
 import { AuthContext } from "../../../../../../api/AuthContext";
-import { getUserData } from "../../../../../../../api/Auth";
-import { ToastContainer } from "react-toastify";
-import { imagesUrl } from "../../../../../../../api/APIs";
-
+import { Layout } from "../../../../../../components/Layout";
+import { LegislationSideBarItems } from "../../../../../../utils/sideBarItems";
 import {
   AllManageCommitties,
+  DeleteBillDocumentTypeAttachemnt,
+  UpdateFinanceMoneyBill,
+  UpdateNABill,
+  getAllBillStatus,
   getAllCommitteeRecommendation,
+  getAllMNALists,
+  getAllMinisterTenures,
+  getMinisterByParliamentaryYearID,
+  getMinisterParliamentaryYearsByTenure,
+  getMinsistriesByTenure,
+  getSingleNABillByID,
+} from "../../../../../../api/APIs/Services/LegislationModule.service";
+import moment from "moment";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../../utils/ToastAlert";
+import { getUserData } from "../../../../../../api/Auth";
+import { ToastContainer } from "react-toastify";
+import { imagesUrl } from "../../../../../../api/APIs";
+import { getSingleMinisteryByMinisterID } from "../../../../../../api/APIs/Services/Motion.service";
+import {
   getAllTenures,
   getMemberByParliamentaryYearID,
   getParliamentaryYearsByTenureID,
   getParliamentaryYearsByTermID,
   getTermByTenureID,
-} from "../../../../../../api/APIs/Services/LegislationModule.service";
-import { getSingleMinisteryByMinisterID } from "../../../../../../api/APIs/Services/Motion.service";
+} from "../../../../../../api/APIs/Services/ManageQMS.service";
+// import BothMinisterSenator from "../AddNABills/SeparateForms/BothMinisterSenator";
+import { getFinanceMoneyBillByID } from "../../../../../../api/APIs/Services/LegislationModule.service";
+import BothMinisterSenator from "../../Bills/NABills/AddNABills/SeparateForms/BothMinisterSenator";
+// import { getFinanceMoneyBillByID } from "../../../../../../api/APIs/Services/LegislationModule.service";
 
 const EditFinanceMoneyBill = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const userData = getUserData();
+console.log("location?.state?.idlocation?.state?.id",location?.state?.id);
+
   const NA_Bill_ID = location?.state && location?.state?.id;
   const BillCategory = location?.state && location?.state?.item?.billCategory;
-  //   const BillFrom = location?.state && location?.state?.item?.billFrom;
+  const BillFrom = location?.state && location?.state?.item?.billFrom;
   const { ministryData, members, sessions, parliamentaryYear } =
     useContext(AuthContext);
+  const [MNAparliamentaryYearData, setMNAParliamentaryYearData] = useState([]);
   const [commiteeRecommendations, setCommitteeRecommendations] = useState([]);
   const [billStatusData, setBillStatusesData] = useState([]);
   const [ministryDataOnMinister, setMinistryDataOnMinister] = useState([]);
   const [ministerID, setMinisterID] = useState(null);
+  const [MNATenures, setMNATenures] = useState([]);
+  const [ministryDataOnTenure, setMinistryDataOnTenure] = useState([]);
+  // const [ministerID, setMinisterID] = useState(null);
   const [MNAData, setMNAData] = useState([]);
   const [singleSenateBillData, setSingleSenateBillData] = useState([]);
   const [committieeData, setCommittieData] = useState([]);
@@ -57,6 +69,13 @@ const EditFinanceMoneyBill = () => {
   const [membersOnParliamentaryYear, setMembersOnParliamentaryYear] = useState(
     []
   );
+
+  const [ministerTenure, setMinisterTenure] = useState([]);
+  const [memberTenure, setMemberTenure] = useState([]);
+  const [ministerParliamentaryYear, setMinisterParliamentaryYear] = useState(
+    []
+  );
+  const [memberParliamentaryYear, setMemberParliamentaryYear] = useState([]);
 
   const [tenuresTerms, setTenuresTerms] = useState([]);
   const [tenures, setTenures] = useState([]);
@@ -66,37 +85,58 @@ const EditFinanceMoneyBill = () => {
   const [showMinster, setShowMinister] = useState(
     location?.state?.forPerson && location?.state?.forPerson
   );
-  // Different Dates of Forms
-  const [isNoticeDateCalendarOpen, setIsNoticeDateCalendarOpen] =
-    useState(false);
 
+  // Date Of Bill Passed By NA State
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
-  const [isIntroducedCalendarOpen, setIntroducedCalendarOpen] = useState(false);
-  const [isDateofReciptCalendarOpen, setIsDateofReciptCalendarOpen] =
+  // Date of Receipt of Message From NA State
+  const [isDateReceiptofMessageFromNAOpen, setIsDateofReceiptofMessageFromNA] =
     useState(false);
-  const [isReferredCalendarOpen, setReferredCalendarOpen] = useState(false);
+  // Date of Circulation of Bill (Private Member Bill)
+  const [isDateCirculationBillOpen, setIsDateCirculationBillOpen] =
+    useState(false);
+  // Date of Receipt of Notice
+  const [isReceiptofNoticeOpen, setReceiptofNoticeOpen] = useState(false);
+  // Date of Circulation of Notice
+  const [
+    isCirculationNoticeDateCalendarOpen,
+    setCirculationNoticeDateCalendarOpen,
+  ] = useState(false);
+  // Date of Reference to Standing Committe State
+  const [
+    isDateofReferenceStandingCommitteeOpen,
+    setDateofReferenceStandingCommitteeOpen,
+  ] = useState(false);
+  // Date of Presentation Report State
   const [isReportPresentationCalendarOpen, setReportPresentationCalendarOpen] =
     useState(false);
-  const [isPassageCalendarOpen, setPassageCalendarOpen] = useState(false);
-  const [isPassageSenateCalendarOpen, setPassageSenateCalendarOpen] =
-    useState(false);
-  const [isTransmissionDateCalendarOpen, setTransmissionDateCalendarOpen] =
-    useState(false);
-
+  // Date of Consideration Report State
   const [isconsiderationDateCalendarOpen, setConsiderationDateCalendarOpen] =
     useState(false);
-  const [isRecepitMesageDateCalendarOpen, setRecepitMesageDateCalendarOpen] =
+  // Date of Passage by Senate
+  const [isPassageSenateCalendarOpen, setPassageSenateCalendarOpen] =
     useState(false);
+  // Date of Transmission to NA
+  const [isTransmissionDateCalendarOpen, setTransmissionDateCalendarOpen] =
+    useState(false);
+  //Date of Assent by the Prisdent
+  const [isAssentCalendarOpen, setAssentCalendarOpen] = useState(false);
+
+  // Date of Gazette
+  const [isGazetteCalendarOpen, setGazetteCalendarOpen] = useState(false);
+
+  const [isIntroducedCalendarOpen, setIntroducedCalendarOpen] = useState(false);
+
+  const [isReferredCalendarOpen, setReferredCalendarOpen] = useState(false);
+
+  const [isPassageCalendarOpen, setPassageCalendarOpen] = useState(false);
+
   const [isPassageByNADateCalendarOpen, setPassageByNADateCalendarOpen] =
     useState(false);
   const [isDocomentDateCalendarOpen, setDocomentDateCalendarOpen] =
     useState(false);
   const [isBillStatusDateCalendarOpen, setBillStatusDateCalendarOpen] =
     useState(false);
-  const [isGazetteCalendarOpen, setGazetteCalendarOpen] = useState(false);
-  const [isAssentCalendarOpen, setAssentCalendarOpen] = useState(false);
-  const [isCirculationCalendarOpen, setIsCirculationCalendarOpen] =
-    useState(false);
+
   const [filePath, setFilePath] = useState("");
   const GetAllCommittiesApi = async () => {
     try {
@@ -109,6 +149,93 @@ const EditFinanceMoneyBill = () => {
       console.log(error);
     }
   };
+
+  // Getting Tenures
+  const fetchTenures = async () => {
+    try {
+      let tenureData = [];
+      if (location?.state?.forPerson === "Senators") {
+        // Call `handleTenures` for Senators
+        const response = await getAllTenures(0, 5000, "Senators");
+        if (response?.success) {
+          setMemberTenure(response?.data?.tenures);
+        }
+      }
+      if (location?.state?.forPerson === "Ministers") {
+        // Call `getAllMinisterTenure` for Ministers
+        const response = await getAllMinisterTenures(0, 5000, "Ministers");
+        if (response?.success) {
+          setMinisterTenure(response?.data?.tenures);
+        }
+      }
+
+      // Update the state to store combined tenures
+      setTenures(tenureData);
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message || error.message);
+    }
+  };
+
+  const fetchParliamentaryYears = async (id) => {
+    try {
+      let senatorResponse, ministerResponse;
+
+      if (location?.state?.forPerson === "Ministers") {
+        // Call API for Ministers
+        ministerResponse = await getMinisterParliamentaryYearsByTenure(id);
+        if (ministerResponse?.success) {
+          setMinisterParliamentaryYear(ministerResponse?.data); // Update state for Ministers
+        }
+      }
+
+      if (location?.state?.forPerson === "Senators") {
+        // Call API for Senators
+        senatorResponse = await getParliamentaryYearsByTermID(id);
+        if (senatorResponse?.success) {
+          setMemberParliamentaryYear(senatorResponse?.data); // Update state for Senators
+        }
+
+        // Additionally call API for Ministers within "Senators"
+        ministerResponse = await getMinisterParliamentaryYearsByTenure(id);
+        if (ministerResponse?.success) {
+          setMinisterParliamentaryYear(ministerResponse?.data); // Update state for Ministers
+        }
+      } else {
+        console.warn("Invalid 'forPerson' value in location.state");
+      }
+    } catch (error) {
+      console.error(
+        "Error fetching parliamentary years:",
+        error?.response?.data?.message || error.message
+      );
+    }
+  };
+
+  // const fetchParliamentaryYears = async (id) => {
+  //   try {
+  //     let response;
+  //     if (location?.state?.forPerson === "Ministers") {
+  //       // Call API for Ministers
+  //       response = await getMinisterParliamentaryYearsByTenure(id);
+  //       if (response?.success) {
+  //         setMinisterParliamentaryYear(response?.data); // Update state for Ministers
+  //       }
+  //     }  if (location?.state?.forPerson === "Senators") {
+  //       // Call API for Senators
+  //       response = await getParliamentaryYearsByTermID(id);
+  //       if (response?.success) {
+  //         setMemberParliamentaryYear(response?.data); // Update state for Senators
+  //       }
+  //     } else {
+  //       console.warn("Invalid 'forPerson' value in location.state");
+  //     }
+  //   } catch (error) {
+  //     console.error(
+  //       "Error fetching parliamentary years:",
+  //       error?.response?.data?.message || error.message
+  //     );
+  //   }
+  // };
 
   //  Getting All Committees Recommendation
   const GetAllCommittiesRecommendationApi = async () => {
@@ -124,6 +251,23 @@ const EditFinanceMoneyBill = () => {
       console.log(error);
     }
   };
+
+  // const getParliamentaryYearsonTheBaseOfTenure = async (id) => {
+  //   try {
+  //     const response = await getParliamentaryYearsByTenureID(id);
+  //     if (response?.success) {
+  //       console.log("MNA Paraliamenary Years", response?.data);
+  //       if (BillCategory === "Private Member Bill" && BillFrom === "From NA") {
+  //         setMNAParliamentaryYearData(response?.data);
+  //       } else {
+  //         setParliamentaryYearData(response?.data);
+  //       }
+  //       // setTonerModels(transformedData);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
   // Getting All MNA
   const getAllMNA = async () => {
     try {
@@ -137,18 +281,18 @@ const EditFinanceMoneyBill = () => {
     }
   };
 
-  //Get Parliamentary Year
-  const getParliamentaryYearsonTheBaseOfTerm = async (id) => {
-    try {
-      const response = await getParliamentaryYearsByTermID(id);
-      if (response?.success) {
-        setParliamentaryYearData(response?.data);
-        // setTonerModels(transformedData);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // //Get Parliamentary Year
+  // const getParliamentaryYearsonTheBaseOfTerm = async (id) => {
+  //   try {
+  //     const response = await getParliamentaryYearsByTermID(id);
+  //     if (response?.success) {
+  //       setParliamentaryYearData(response?.data);
+  //       // setTonerModels(transformedData);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
   const getAllBillStatusData = async () => {
     try {
       const response = await getAllBillStatus(0, 500);
@@ -160,6 +304,35 @@ const EditFinanceMoneyBill = () => {
       console.log(error);
     }
   };
+
+  // const handleTenures = async (selectionType) => {
+  //   try {
+  //     // Check if the bill is a Private Member Bill and "From NA"
+  //     if (BillCategory === "Private Member Bill" && BillFrom === "From NA") {
+  //       // Fetch tenures for both ministers and senators
+  //       const [ministersResponse, senatorsResponse] = await Promise.all([
+  //         getAllTenures(0, 1000, "Ministers"), // Ministers
+  //         getAllTenures(0, 1000, "Senators"), // Senators
+  //       ]);
+
+  //       // Update state with fetched data
+  //       if (ministersResponse?.success) {
+  //         setMNATenures(ministersResponse?.data?.tenures);
+  //       }
+  //       if (senatorsResponse?.success) {
+  //         setTenures(senatorsResponse?.data?.tenures);
+  //       }
+  //     } else {
+  //       // Fetch tenures based on the selection type
+  //       const response = await getAllTenures(0, 1000, selectionType);
+  //       if (response?.success) {
+  //         setTenures(response?.data?.tenures);
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.log(error?.response?.data?.message);
+  //   }
+  // };
 
   useEffect(() => {
     getAllMNA();
@@ -174,9 +347,11 @@ const EditFinanceMoneyBill = () => {
     initialValues: {
       selectiontype: "",
       membertenure: "",
+      fkMinisterTenureId: "",
       fkTermId: "",
       // Define your initial form values here
       fkParliamentaryYearId: "",
+      fkMnaParliamentaryYearId: "",
       fkSessionId: "",
       billCategory: "",
       billType: "",
@@ -187,26 +362,29 @@ const EditFinanceMoneyBill = () => {
       billTitle: "",
       billText: "",
       billRemarks: "",
+      dateOfCirculationOfBill: "",
+      dateofReciptofNotice: "",
+      dateOfCirculationOfNotice: "",
+      dateofReferencetoStandingCommittee: "",
+      fkManageCommitteeId: "",
+      committeeRecomendation: "",
+      reportPresentationDate: "",
+      dateOfConsiderationBill: "",
+      dateofPassagebySenate: "",
+      dateOfPassageBySenate: "",
+      dateOfTransmissionToNA: "",
+      dateOfAssentByThePresident: "",
+      dateOfPublishInGazette: "",
       fkBillStatus: "",
       billStatusDate: "",
       senateBillSenatorMovers: [],
       senateBillMnaMovers: [],
       senateBillMinistryMovers: null,
       introducedInHouseDate: "",
-      fkManageCommitteeId: "",
       referedOnDate: "",
-      committeeRecomendation: "",
-      reportPresentationDate: "",
       fkMemberPassageId: "",
       memeberNoticeDate: "",
-      dateOfPublishInGazette: "",
-      dateOfCirculationOfBill: "",
-      dateOfAssentByThePresident: "",
-      dateOfConsiderationBill: "",
       fkSessionMemberPassageId: "",
-      dateOfPassageBySenate: "",
-      dateOfTransmissionToNA: "",
-      dateOfReceiptMessageFromNA: "",
       dateOfPassageByNA: "",
       documentDiscription: "",
       documentDate: "",
@@ -220,33 +398,117 @@ const EditFinanceMoneyBill = () => {
     },
   });
 
-  const handleNoticeDateCalendarToggle = () => {
-    setIsNoticeDateCalendarOpen(!isNoticeDateCalendarOpen);
-  };
-  // Handale DateCHange
-  const handleNoticeDateSelect = (date) => {
-    formik.setFieldValue("noticeDate", date);
-    setIsNoticeDateCalendarOpen(false);
-  };
+  console.log(
+    "Formik from Edit Testing NA",
+    formik.values.fkMnaParliamentaryYearId
+  );
 
+  // Handle Passed By NA Date
   const handleCalendarToggle = () => {
     setIsCalendarOpen(!isCalendarOpen);
   };
-  // Handale DateCHange
+
   const handleDateSelect = (date) => {
     formik.setFieldValue("PassedByNADate", date);
     setIsCalendarOpen(false);
   };
 
-  // Handle Claneder Toggel
-  const handleReciptCalendarToggle = () => {
-    setIsDateofReciptCalendarOpen(!isDateofReciptCalendarOpen);
+  // Handle Date of Receipt of Message From NA
+  const handleReceiptofMesssageFromNAToggle = () => {
+    setIsDateofReceiptofMessageFromNA(!isDateReceiptofMessageFromNAOpen);
+  };
+
+  const handleReceiptofMessageFromNASelect = (date) => {
+    formik.setFieldValue("DateOfReceiptOfMessageFromNA", date);
+    setIsDateofReceiptofMessageFromNA(false);
+  };
+
+  // Handle Date of Circulation of Bill
+  const handleDateCirculationBillToggle = () => {
+    setIsDateCirculationBillOpen(!isDateCirculationBillOpen);
+  };
+
+  const handleDateCirculationBillSelect = (date) => {
+    formik.setFieldValue("dateOfCirculationOfBill", date);
+    setIsDateCirculationBillOpen(false);
+  };
+
+  // Handle Date of Receipt of Notice
+  const handleReceiptofNoticeTogel = () => {
+    setReceiptofNoticeOpen(!isReceiptofNoticeOpen);
+  };
+
+  const handleReceiptofNotice = (date) => {
+    formik.setFieldValue("dateofReciptofNotice", date);
+    setReceiptofNoticeOpen(false);
+  };
+
+  // Handle Date of Circulation Notice
+  const handleCirculationNoticeCalendarToggle = () => {
+    setCirculationNoticeDateCalendarOpen(!isCirculationNoticeDateCalendarOpen);
+  };
+
+  const handleCirculationNoticeDateSelect = (date) => {
+    formik.setFieldValue("dateOfCirculationOfNotice", date);
+    setCirculationNoticeDateCalendarOpen(false);
+  };
+
+  // Handle Date of Reference to Standing Committee
+  const handleDateofReferenceCOmmitteeCalendarToggle = () => {
+    setDateofReferenceStandingCommitteeOpen(
+      !isDateofReferenceStandingCommitteeOpen
+    );
+  };
+
+  const handleDateofReferenceCommitteeDateSelect = (date) => {
+    formik.setFieldValue("dateofReferencetoStandingCommittee", date);
+    setDateofReferenceStandingCommitteeOpen(false);
+  };
+  // Handle Date of Presentation Report
+  const handleReportPresenatationDayCalendarToggle = () => {
+    setReportPresentationCalendarOpen(!isReportPresentationCalendarOpen);
+  };
+
+  const handleReportPresenatationDateSelect = (date) => {
+    formik.setFieldValue("reportPresentationDate", date);
+    setReportPresentationCalendarOpen(false);
+  };
+  // Handle Date of Consideration
+  const handleConsiderationCalendarToggle = () => {
+    setConsiderationDateCalendarOpen(!isconsiderationDateCalendarOpen);
+  };
+  const handleconsiderationDateSelect = (date) => {
+    formik.setFieldValue("dateOfConsiderationBill", date);
+    setConsiderationDateCalendarOpen(false);
+  };
+  // Handle Date of Passage By Senate
+  const handlePassageSenateCalendarToggle = () => {
+    setPassageSenateCalendarOpen(!isPassageSenateCalendarOpen);
+  };
+  const handlePassageSenateDateSelect = (date) => {
+    formik.setFieldValue("dateOfPassageBySenate", date);
+    setPassageSenateCalendarOpen(false);
+  };
+  // Handle Date of Transmission to NA
+  const handleTransmissionCalendarToggle = () => {
+    setTransmissionDateCalendarOpen(!isTransmissionDateCalendarOpen);
+  };
+
+  const handleTransmissionDateSelect = (date) => {
+    formik.setFieldValue("dateOfTransmissionToNA", date);
+    setTransmissionDateCalendarOpen(false);
+  };
+
+  // Date of Assent by Prisdent
+  const handleAssentCalendarToggle = () => {
+    setAssentCalendarOpen(!isAssentCalendarOpen);
   };
   // Handale DateCHange
-  const handleReciptDateSelect = (date) => {
-    formik.setFieldValue("DateOfReceiptOfMessageFromNA", date);
-    setIsDateofReciptCalendarOpen(false);
+  const handleAssentDateSelect = (date) => {
+    formik.setFieldValue("dateOfAssentByThePresident", date);
+    setAssentCalendarOpen(false);
   };
+
   // Handle Claneder Toggel
   const handleBillStatusCalendarToggle = () => {
     setBillStatusDateCalendarOpen(!isBillStatusDateCalendarOpen);
@@ -275,23 +537,6 @@ const EditFinanceMoneyBill = () => {
     setReferredCalendarOpen(false);
   };
 
-  const handleReportPresenatationDayCalendarToggle = () => {
-    setReportPresentationCalendarOpen(!isReportPresentationCalendarOpen);
-  };
-  // Handale DateCHange
-  const handleReportPresenatationDateSelect = (date) => {
-    formik.setFieldValue("reportPresentationDate", date);
-    setReportPresentationCalendarOpen(false);
-  };
-
-  const handleCirculationCalendarToggle = () => {
-    setIsCirculationCalendarOpen(!isCirculationCalendarOpen);
-  };
-  // Handale DateCHange
-  const handleCirculationDateSelect = (date) => {
-    formik.setFieldValue("dateOfCirculationOfBill", date);
-    setIsCirculationCalendarOpen(false);
-  };
   const handleGazetteCalendarToggle = () => {
     setGazetteCalendarOpen(!isGazetteCalendarOpen);
   };
@@ -301,15 +546,6 @@ const EditFinanceMoneyBill = () => {
     setGazetteCalendarOpen(false);
   };
 
-  const handleAssentCalendarToggle = () => {
-    setAssentCalendarOpen(!isAssentCalendarOpen);
-  };
-  // Handale DateCHange
-  const handleAssentDateSelect = (date) => {
-    formik.setFieldValue("dateOfAssentByThePresident", date);
-    setAssentCalendarOpen(false);
-  };
-
   const handlePassageCalendarToggle = () => {
     setPassageCalendarOpen(!isPassageCalendarOpen);
   };
@@ -317,42 +553,6 @@ const EditFinanceMoneyBill = () => {
   const handlePassageDateSelect = (date) => {
     formik.setFieldValue("memeberNoticeDate", date);
     setPassageCalendarOpen(false);
-  };
-
-  const handlePassageSenateCalendarToggle = () => {
-    setPassageSenateCalendarOpen(!isPassageSenateCalendarOpen);
-  };
-  // Handale DateCHange
-  const handlePassageSenateDateSelect = (date) => {
-    formik.setFieldValue("dateOfPassageBySenate", date);
-    setPassageSenateCalendarOpen(false);
-  };
-
-  const handleTransmissionCalendarToggle = () => {
-    setTransmissionDateCalendarOpen(!isTransmissionDateCalendarOpen);
-  };
-  // Handale DateCHange
-  const handleTransmissionDateSelect = (date) => {
-    formik.setFieldValue("dateOfTransmissionToNA", date);
-    setTransmissionDateCalendarOpen(false);
-  };
-
-  const handleConsiderationCalendarToggle = () => {
-    setConsiderationDateCalendarOpen(!isconsiderationDateCalendarOpen);
-  };
-  // Handale DateCHange
-  const handleconsiderationDateSelect = (date) => {
-    formik.setFieldValue("dateOfConsiderationBill", date);
-    setConsiderationDateCalendarOpen(false);
-  };
-
-  const handleRecepitMesageCalendarToggle = () => {
-    setRecepitMesageDateCalendarOpen(!isRecepitMesageDateCalendarOpen);
-  };
-  // Handale DateCHange
-  const handleRecepitMesageDateSelect = (date) => {
-    formik.setFieldValue("dateOfReceiptMessageFromNA", date);
-    setRecepitMesageDateCalendarOpen(false);
   };
 
   const handlePassageByNACalendarToggle = () => {
@@ -373,16 +573,16 @@ const EditFinanceMoneyBill = () => {
     formik.setFieldValue("documentDate", date);
     setDocomentDateCalendarOpen(false);
   };
-  const handleTenures = async (selectionType) => {
-    try {
-      const response = await getAllTenures(0, 1000, selectionType);
-      if (response?.success) {
-        setTenures(response?.data?.tenures);
-      }
-    } catch (error) {
-      console.log(error?.response?.data?.message);
-    }
-  };
+  // const handleTenures = async (selectionType) => {
+  //   try {
+  //     const response = await getAllTenures(0, 1000, selectionType);
+  //     if (response?.success) {
+  //       setTenures(response?.data?.tenures);
+  //     }
+  //   } catch (error) {
+  //     console.log(error?.response?.data?.message);
+  //   }
+  // };
 
   // GetTerms on the Base of Tenure
   const handleTenuresTerms = async (id) => {
@@ -410,18 +610,31 @@ const EditFinanceMoneyBill = () => {
     }
   };
 
-  //Get Parliamentary Year On The Base Of Tenure
-  const getParliamentaryYearsonTheBaseOfTenure = async (id) => {
+  // GetTerms on the Base of Tenure
+  const getMinistriesOnTenure = async (id) => {
     try {
-      const response = await getParliamentaryYearsByTenureID(id);
+      const response = await getMinsistriesByTenure(id);
       if (response?.success) {
-        setParliamentaryYearData(response?.data);
-        // setTonerModels(transformedData);
+        setMinistryDataOnTenure(response?.data);
       }
     } catch (error) {
-      console.log(error);
+      console.log(error?.response?.data?.message);
+      showErrorMessage(error?.response?.data?.message || "Error");
     }
   };
+
+  // //Get Parliamentary Year On The Base Of Tenure
+  // const getParliamentaryYearsonTheBaseOfTenure = async (id) => {
+  //   try {
+  //     const response = await getParliamentaryYearsByTenureID(id);
+  //     if (response?.success) {
+  //       setParliamentaryYearData(response?.data);
+  //       // setTonerModels(transformedData);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
   //Get Members On The Base Of Parliamentary Year
   const getMembersOnParliamentaryYear = async (id) => {
     try {
@@ -449,7 +662,7 @@ const EditFinanceMoneyBill = () => {
   // Get Single Record
   const getNABillByIdApi = async () => {
     try {
-      const response = await getSingleNABillByID(NA_Bill_ID && NA_Bill_ID);
+      const response = await getFinanceMoneyBillByID(NA_Bill_ID && NA_Bill_ID);
       if (response?.success) {
         setSingleSenateBillData(response?.data[0]);
       }
@@ -479,7 +692,7 @@ const EditFinanceMoneyBill = () => {
       showErrorMessage(error.response.data.message);
     }
   };
-
+  console.log("singleSenateBillData", singleSenateBillData);
   useEffect(() => {
     if (singleSenateBillData) {
       let fileNum = "";
@@ -504,7 +717,13 @@ const EditFinanceMoneyBill = () => {
         parsedFiles = firstDocument.file.map((file) => file.path);
       }
       if (singleSenateBillData?.billFor) {
-        handleTenures(singleSenateBillData?.billFor);
+        fetchTenures(singleSenateBillData?.billFor);
+        if (
+          singleSenateBillData?.fkMinisterTenureId &&
+          singleSenateBillData?.billFor === "Senators"
+        ) {
+          getMinistriesOnTenure(singleSenateBillData?.fkMinisterTenureId);
+        }
       }
       if (
         singleSenateBillData?.fkTenureId &&
@@ -513,21 +732,43 @@ const EditFinanceMoneyBill = () => {
         handleTenuresTerms(singleSenateBillData?.fkTenureId);
       }
       if (
-        singleSenateBillData?.fkTermId &&
-        singleSenateBillData?.billFor === "Senators"
-      ) {
-        getParliamentaryYearsonTheBaseOfTerm(singleSenateBillData?.fkTermId);
-      } else if (
+        singleSenateBillData?.billFor === "Senators" &&
         singleSenateBillData?.fkTenureId &&
+        singleSenateBillData?.fkTermId &&
+        singleSenateBillData?.fkMinisterTenureId
+      ) {
+        console.log("Condition for Senators matched");
+        fetchParliamentaryYears(singleSenateBillData?.fkTermId);
+        console.log("Member Parliamentary Years", memberParliamentaryYear);
+        fetchParliamentaryYears(singleSenateBillData?.fkMinisterTenureId);
+      } else if (
+        singleSenateBillData?.fkMinisterTenureId &&
         singleSenateBillData?.billFor === "Ministers"
       ) {
-        getParliamentaryYearsonTheBaseOfTenure(
-          singleSenateBillData?.fkTenureId
-        );
+        console.log("Condition for Ministers matched");
+        fetchParliamentaryYears(singleSenateBillData?.fkMinisterTenureId);
+      } else {
+        console.log("Conditions did not match");
       }
+      // if (
+      //   singleSenateBillData?.fkTenureId &&
+      //   singleSenateBillData?.fkTermId &&
+      //   singleSenateBillData?.fkMinisterTenureId &&
+      //   singleSenateBillData?.billFor === "Senators"
+      // ) {
+      //   fetchParliamentaryYears(singleSenateBillData?.fkTermId);
+      //   fetchParliamentaryYears(singleSenateBillData?.fkMinisterTenureId);
+      // } else if (
+      //   singleSenateBillData?.fkMinisterTenureId &&
+      //   singleSenateBillData?.billFor === "Ministers"
+      // ) {
+      //   fetchParliamentaryYears(singleSenateBillData?.fkMinisterTenureId);
+      // }
       if (singleSenateBillData?.billFor === "Ministers") {
         console.log("Min", singleSenateBillData?.billFor);
-        getMNAOnParliamentaryYear(singleSenateBillData?.fkParliamentaryYearId);
+        getMNAOnParliamentaryYear(
+          singleSenateBillData?.fkMnaParliamentaryYearId
+        );
       } else if (singleSenateBillData?.billFor === "Senators") {
         getMembersOnParliamentaryYear(
           singleSenateBillData?.fkParliamentaryYearId
@@ -546,6 +787,19 @@ const EditFinanceMoneyBill = () => {
               label: singleSenateBillData?.tenures?.tenureName,
             }) ||
             "",
+          // membertenure:
+          //   (singleSenateBillData?.tenures && {
+          //     value: singleSenateBillData?.tenures?.id,
+          //     label: singleSenateBillData?.tenures?.tenureName,
+          //   }) ||
+          //   "",
+
+          fkMinisterTenureId:
+            (singleSenateBillData?.tenuresMinisters && {
+              value: singleSenateBillData?.tenuresMinisters?.id,
+              label: singleSenateBillData?.tenuresMinisters?.tenureName,
+            }) ||
+            "",
 
           fkTermId:
             (singleSenateBillData?.terms && {
@@ -556,6 +810,9 @@ const EditFinanceMoneyBill = () => {
 
           fkParliamentaryYearId:
             singleSenateBillData?.fkParliamentaryYearId || "",
+          fkMnaParliamentaryYearId:
+            singleSenateBillData?.fkMnaParliamentaryYearId || "",
+
           senateBillSenatorMovers: singleSenateBillData?.senateBillSenatorMovers
             ? singleSenateBillData?.senateBillSenatorMovers.map((senator) => ({
                 value: senator?.member?.id,
@@ -589,14 +846,34 @@ const EditFinanceMoneyBill = () => {
                   "YYYY-MM-DD"
                 ).toDate()
               : null,
+          dateofReferencetoStandingCommittee:
+            singleSenateBillData?.dateofReferencetoStandingCommittee
+              ? moment(
+                  singleSenateBillData?.dateofReferencetoStandingCommittee,
+                  "YYYY-MM-DD"
+                ).toDate()
+              : null,
+          dateofReciptofNotice: singleSenateBillData?.dateofReciptofNotice
+            ? moment(
+                singleSenateBillData?.dateofReciptofNotice,
+                "YYYY-MM-DD"
+              ).toDate()
+            : null,
+          dateOfCirculationOfNotice:
+            singleSenateBillData?.dateOfCirculationOfNotice
+              ? moment(
+                  singleSenateBillData?.dateOfCirculationOfNotice,
+                  "YYYY-MM-DD"
+                ).toDate()
+              : null,
           noticeDate: singleSenateBillData?.noticeDate
             ? moment(singleSenateBillData?.noticeDate, "YYYY-MM-DD").toDate()
             : null,
 
-          //   dateOfReceiptMessageFromNA:
-          // singleSenateBillData?.dateOfReceiptMessageFromNA
+          //   dateofReciptofNotice:
+          // singleSenateBillData?.dateofReciptofNotice
           //   ? moment(
-          //       singleSenateBillData?.dateOfReceiptMessageFromNA,
+          //       singleSenateBillData?.dateofReciptofNotice,
           //       "YYYY-MM-DD"
           //     ).toDate()
           //   : "",
@@ -629,9 +906,9 @@ const EditFinanceMoneyBill = () => {
                 }
               : null,
           // senateBillMnaMovers: singleSenateBillData?.senateBillMnaMovers
-          //   ? singleSenateBillData?.senateBillMnaMovers.map((senator) => ({
-          //       value: senator?.mna?.id,
-          //       label: senator?.mna?.mnaName,
+          //   ? singleSenateBillData?.senateBillMnaMovers.map((minister) => ({
+          //       value: minister?.mna?.id,
+          //       label: minister?.mna?.mnaName,
           //     }))
           //   : [],
           // senateBillMinistryMovers: singleSenateBillData?.senateBillMinistryMovers
@@ -640,16 +917,17 @@ const EditFinanceMoneyBill = () => {
           //       label: senator?.ministrie?.ministryName,
           //     }))
           //   : [],
-          // senateBillMinistryMovers: singleSenateBillData?.senateBillMinistryMovers
-          //   ? {
-          //       value:
-          //         singleSenateBillData?.senateBillMinistryMovers[0]?.ministrie
-          //           ?.id,
-          //       label:
-          //         singleSenateBillData?.senateBillMinistryMovers[0]?.ministrie
-          //           ?.ministryName,
-          //     }
-          //   : null,
+          senateBillMinistryMovers:
+            singleSenateBillData?.senateBillMinistryMovers
+              ? {
+                  value:
+                    singleSenateBillData?.senateBillMinistryMovers[0]
+                      ?.ministries?.id,
+                  label:
+                    singleSenateBillData?.senateBillMinistryMovers[0]
+                      ?.ministries?.ministryName,
+                }
+              : null,
           introducedInHouseDate:
             singleSenateBillData?.introducedInHouses &&
             singleSenateBillData?.introducedInHouses?.introducedInHouseDate
@@ -701,10 +979,10 @@ const EditFinanceMoneyBill = () => {
               ).toDate()
             : "",
           dateOfConsiderationBill:
-            singleSenateBillData?.memberPassages &&
-            singleSenateBillData?.memberPassages?.dateOfConsiderationBill
+            singleSenateBillData?.memberPassagesFinance &&
+            singleSenateBillData?.memberPassagesFinance?.dateOfConsiderationBill
               ? moment(
-                  singleSenateBillData?.memberPassages?.dateOfConsiderationBill,
+                  singleSenateBillData?.memberPassagesFinance?.dateOfConsiderationBill,
                   "YYYY-MM-DD"
                 ).toDate()
               : "",
@@ -769,10 +1047,51 @@ const EditFinanceMoneyBill = () => {
     }
   }, [singleSenateBillData]);
 
+  const logFormDataTypes = (formData) => {
+    console.log("Logging FormData types and values:");
+    for (const [key, value] of formData.entries()) {
+      console.log(`Key: ${key}, Value: ${value}, Type: ${typeof value}`);
+    }
+  };
+
   // console.log("PAAAA FIle", singleSenateBillData?.billDocuments);
   const UpdateNationalAssemblyBill = async (values) => {
     const formData = new FormData();
-    formData.append("fkParliamentaryYearId", values?.fkParliamentaryYearId);
+    console.log("values Update", values);
+    if (
+      BillCategory === "Government Bill" &&
+      location?.state?.forPerson === "Ministers"
+    ) {
+      formData.append("fkMinisterTenureId", values?.fkMinisterTenureId?.value);
+    } else {
+      formData.append("fkMinisterTenureId", values?.fkMinisterTenureId?.value);
+      formData.append("fkTenureId", values?.membertenure?.value);
+    }
+    // if (values?.fkTermId?.value) {
+    //   formData.append("fkTermId", values?.fkTermId?.value);
+    // }
+    if (
+      BillCategory === "Government Bill" &&
+      location?.state?.forPerson === "Ministers"
+    ) {
+      formData.append(
+        "fkMnaParliamentaryYearId",
+        values?.fkMnaParliamentaryYearId
+      );
+    }
+    if (
+      BillCategory === "Private Member Bill" &&
+      BillFrom === "From NA" &&
+      location?.state?.forPerson === "Senators"
+    ) {
+      formData.append(
+        "fkMnaParliamentaryYearId",
+        values?.fkMnaParliamentaryYearId
+      );
+      formData.append("fkParliamentaryYearId", values?.fkParliamentaryYearId);
+      // formData.append()
+    }
+    // formData.append("fkParliamentaryYearId", values?.fkParliamentaryYearId);
     formData.append("fkSessionId", values?.fkSessionId);
     formData.append("billCategory", values?.billCategory);
     formData.append("billType", values?.billType);
@@ -792,7 +1111,7 @@ const EditFinanceMoneyBill = () => {
     // formData.append("fileNumber",   `09(${values?.fileNumber})/2024`);
     // formData.append("fileNumber", values?.fileNumber);
     // formData.append("PassedByNADate", values?.PassedByNADate);
-    formData.append("fkTenureId", values?.membertenure?.value);
+    // formData.append("fkTenureId", values?.membertenure?.value);
     if (values?.fkTermId?.value) {
       formData.append("fkTermId", values?.fkTermId?.value);
     }
@@ -908,17 +1227,17 @@ const EditFinanceMoneyBill = () => {
       );
       formData.append("dateOfTransmissionToNA", formattedDate);
     }
-    // if (values?.dateOfReceiptMessageFromNA) {
+    // if (values?.dateofReciptofNotice) {
     //   formData.append(
-    //     "dateOfReceiptMessageFromNA",
-    //     values?.dateOfReceiptMessageFromNA
+    //     "dateofReciptofNotice",
+    //     values?.dateofReciptofNotice
     //   );
     // }
-    if (values?.dateOfReceiptMessageFromNA) {
-      const formattedDate = moment(values?.dateOfReceiptMessageFromNA).format(
+    if (values?.dateofReciptofNotice) {
+      const formattedDate = moment(values?.dateofReciptofNotice).format(
         "YYYY-MM-DD"
       );
-      formData.append("dateOfReceiptMessageFromNA", formattedDate);
+      formData.append("dateofReciptofNotice", formattedDate);
     }
     // if (values?.dateOfPassageByNA) {
     //   formData.append("dateOfPassageByNA", values?.dateOfPassageByNA);
@@ -947,6 +1266,24 @@ const EditFinanceMoneyBill = () => {
         "YYYY-MM-DD"
       );
       formData.append("dateOfCirculationOfBill", formattedDate);
+    }
+    if (values?.dateOfCirculationOfNotice) {
+      const formattedDate = moment(values?.dateOfCirculationOfNotice).format(
+        "YYYY-MM-DD"
+      );
+      formData.append("dateOfCirculationOfNotice", formattedDate);
+    }
+    // if (values?.dateofReciptofNotice) {
+    //   const formattedDate = moment(values?.dateofReciptofNotice).format(
+    //     "YYYY-MM-DD"
+    //   );
+    //   formData.append("dateofReciptofNotice", formattedDate);
+    // }
+    if (values?.dateofReferencetoStandingCommittee) {
+      const formattedDate = moment(
+        values?.dateofReferencetoStandingCommittee
+      ).format("YYYY-MM-DD");
+      formData.append("dateofReferencetoStandingCommittee", formattedDate);
     }
     if (values?.documentDiscription) {
       formData.append("documentDiscription", values?.documentDiscription);
@@ -983,7 +1320,20 @@ const EditFinanceMoneyBill = () => {
         );
       });
     }
-    if (values?.senateBillMnaMovers?.length > 0) {
+    if (
+      BillCategory === "Private Member" &&
+      location?.state?.forPerson === "Senators"
+    ) {
+      formData.append(
+        `senateBillMnaMovers[${0}][fkMnaId]`,
+        values?.senateBillMnaMovers?.value
+      );
+      formData.append(
+        `senateBillMinistryMovers[${0}][fkMinistryId]`,
+        values?.senateBillMinistryMovers?.value
+      );
+    }
+    if (values?.senateBillMnaMovers) {
       formData.append(
         `senateBillMnaMovers[${0}][fkMnaId]`,
         values?.senateBillMnaMovers?.value
@@ -1004,22 +1354,34 @@ const EditFinanceMoneyBill = () => {
       );
     }
 
+    logFormDataTypes(formData);
+
     try {
-      const response = await UpdateNABill(NA_Bill_ID, formData);
+      const response = await UpdateFinanceMoneyBill(NA_Bill_ID, formData);
       console.log("response", response);
       if (response?.success) {
         showSuccessMessage(response?.message);
 
-        if (BillCategory && BillCategory === "Government Bill") {
+        if (
+          BillCategory &&
+          BillCategory === "Government Bill" &&
+          BillFrom &&
+          BillFrom === "From NA"
+        ) {
           setTimeout(() => {
             navigate(
-              "/lgms/dashboard/bills/legislation-bills/government-bills/recieved-from-na"
+              "/lgms/dashboard/bills/legislation-bills/finance-money-bill"
             );
           }, [3000]);
-        } else if (BillCategory && BillCategory === "Private Member Bill") {
+        } else if (
+          BillCategory &&
+          BillCategory === "Private Member Bill" &&
+          BillFrom &&
+          BillFrom === "From NA"
+        ) {
           setTimeout(() => {
             navigate(
-              "/lgms/dashboard/bills/legislation-bills/private-member-bills/recieved-from-na"
+              "/lgms/dashboard/bills/legislation-bills/finance-money-bill"
             );
           }, [3000]);
         }
@@ -1054,63 +1416,34 @@ const EditFinanceMoneyBill = () => {
                 </div>
                 <div className="card-body">
                   <div className="container-fluid">
-                    {/* <div className="row">
-                      <div class="col-3 mb-3">
-                        <div className="mb-3">
-                          <label className="form-label">Bill For</label>
-                          <select
-                            id="selectiontype"
-                            name="selectiontype"
-                            className={`form-select  ${
-                              formik.touched.selectiontype &&
-                              formik.errors.selectiontype
-                                ? "is-invalid"
-                                : ""
-                            }`}
-                            onBlur={formik.handleBlur}
-                            onChange={(e) => {
-                              const selectedValue = e.target.value;
-                              // Update the formik state
-                              formik.handleChange(e);
-                              // Call the API with the selected value
-                              handleTenures(selectedValue);
-                              formik.setFieldValue("membertenure", "");
-                              formik.setFieldValue("fkParliamentaryYearId", "");
-                              formik.setFieldValue("fkTermId", "");
-                              formik.setFieldValue(
-                                "senateBillSenatorMovers",
-                                null
-                              );
-                              formik.setFieldValue("senateBillMnaMovers", null);
-                              formik.setFieldValue(
-                                "senateBillMinistryMovers",
-                                null
-                              );
-                              // SetFormSHow
-                              setIsFormShow(true);
-                              setShowMinister(selectedValue);
-                              setMembersOnParliamentaryYear([]);
-                            }}
-                            value={formik.values.selectiontype}
-                          >
-                            <option value="" disabled hidden>
-                              Select
-                            </option>
-                            <option value="Senators">Senators</option>
-                            <option value="Ministers">Ministers</option>
-                          </select>
-                          {formik.touched.selectiontype &&
-                            formik.errors.selectiontype && (
-                              <div className="invalid-feedback">
-                                {formik.errors.selectiontype}
-                              </div>
-                            )}
-                        </div>
-                      </div>
-                    </div> */}
                     <div className="row">
+                      {BillCategory === "Private Member Bill" &&
+                        BillFrom === "From NA" && (
+                          <BothMinisterSenator
+                            // fkMinisterTenureId={}
+                            // MNATenures={MNATenures}
+                            ministerParliamentaryYear={
+                              ministerParliamentaryYear
+                            }
+                            ministersOnParliamentaryYear={
+                              ministersOnParliamentaryYear
+                            }
+                            // fetchParliamentaryYears={fetchParliamentaryYears}
+                            ministryDataOnMinister={ministryDataOnMinister}
+                            formik={formik}
+                            // getParliamentaryYearsonTheBaseOfTenure={
+                            //   getParliamentaryYearsonTheBaseOfTenure
+                            // }
+                            getMNAOnParliamentaryYear={
+                              getMNAOnParliamentaryYear
+                            }
+                            setMinisterID={setMinisterID}
+                            getMinistriesOnTenure={getMinistriesOnTenure}
+                            ministryDataOnTenure={ministryDataOnTenure}
+                          />
+                        )}
                       <div className="col">
-                        {showMinster === "Ministers" ? (
+                        {/* {showMinster === "Ministers" ? (
                           <label className="form-label">Minister Tenure</label>
                         ) : (
                           <label className="form-label">Member Tenure</label>
@@ -1132,9 +1465,7 @@ const EditFinanceMoneyBill = () => {
                               selectedOption
                             );
                             if (showMinster === "Ministers") {
-                              getParliamentaryYearsonTheBaseOfTenure(
-                                selectedOption?.value
-                              );
+                              fetchParliamentaryYears(selectedOption?.value);
                             } else {
                               handleTenuresTerms(selectedOption?.value);
                             }
@@ -1158,41 +1489,87 @@ const EditFinanceMoneyBill = () => {
                             <div className="invalid-feedback">
                               {formik.errors.membertenure}
                             </div>
-                          )}
+                          )} */}
+
+                        {showMinster === "Ministers" ? (
+                          <>
+                            <label className="form-label">
+                              Minister Tenure
+                            </label>
+                            <Select
+                              options={
+                                Array.isArray(ministerTenure) &&
+                                ministerTenure?.length > 0
+                                  ? ministerTenure.map((item) => ({
+                                      value: item?.id,
+                                      label: `${item?.tenureName} (${item?.tenureType})`,
+                                      tenureType: item?.tenureType,
+                                    }))
+                                  : []
+                              }
+                              onChange={(selectedOption) => {
+                                formik.setFieldValue(
+                                  "fkMinisterTenureId",
+                                  selectedOption
+                                );
+                                fetchParliamentaryYears(selectedOption?.value);
+                                getMinistriesOnTenure(selectedOption?.value);
+                                formik.setFieldValue("fkTermId", "");
+                                formik.setFieldValue("parliamentaryYear", "");
+                                formik.setFieldValue("selectedSenator", "");
+                              }}
+                              onBlur={formik.handleBlur}
+                              value={formik.values.fkMinisterTenureId}
+                              id="fkMinisterTenureId"
+                              name="fkMinisterTenureId"
+                              isClearable={true}
+                            />
+                            {formik.touched.fkMinisterTenureId &&
+                              formik.errors.fkMinisterTenureId && (
+                                <div className="invalid-feedback">
+                                  {formik.errors.fkMinisterTenureId}
+                                </div>
+                              )}
+                          </>
+                        ) : (
+                          <>
+                            <label className="form-label">Member Tenure</label>
+                            <Select
+                              options={
+                                Array.isArray(memberTenure) &&
+                                memberTenure?.length > 0
+                                  ? memberTenure.map((item) => ({
+                                      value: item?.id,
+                                      label: `${item?.tenureName} (${item?.tenureType})`,
+                                      tenureType: item?.tenureType,
+                                    }))
+                                  : []
+                              }
+                              onChange={(selectedOption) => {
+                                formik.setFieldValue(
+                                  "membertenure",
+                                  selectedOption
+                                );
+                                handleTenuresTerms(selectedOption?.value);
+                                formik.setFieldValue("fkTermId", "");
+                                formik.setFieldValue("parliamentaryYear", "");
+                                formik.setFieldValue("selectedSenator", "");
+                              }}
+                              onBlur={formik.handleBlur}
+                              value={formik.values.membertenure}
+                              id="membertenure"
+                              name="membertenure"
+                              isClearable={true}
+                            />
+                            {formik.touched.membertenure &&
+                              formik.errors.membertenure && (
+                                <div className="invalid-feedback">
+                                  {formik.errors.membertenure}
+                                </div>
+                              )}
+                          </>
+                        )}
                       </div>
-                      {/* <div className="col">
-                        <div class="mb-3">
-                          <label class="form-label">Parliamentary Year</label>
-                          <select
-                            id="fkParliamentaryYearId"
-                            name="fkParliamentaryYearId"
-                            className={`form-select  ${
-                              formik.touched.fkParliamentaryYearId &&
-                              formik.errors.fkParliamentaryYearId
-                                ? "is-invalid"
-                                : ""
-                            }`}
-                            onChange={formik.handleChange}
-                            value={formik.values.fkParliamentaryYearId}
-                          >
-                            <option value="" disabled hidden>
-                              Select
-                            </option>
-                            {parliamentaryYear &&
-                              parliamentaryYear.map((item) => (
-                                <option value={item.id}>
-                                  {item.parliamentaryTenure}
-                                </option>
-                              ))}
-                          </select>
-                          {formik.touched.fkParliamentaryYearId &&
-                            formik.errors.fkParliamentaryYearId && (
-                              <div className="invalid-feedback">
-                                {formik.errors.fkParliamentaryYearId}
-                              </div>
-                            )}
-                        </div>
-                      </div> */}
                       {showMinster !== "Ministers" && (
                         <div className="col">
                           <div className="mb-3">
@@ -1221,7 +1598,7 @@ const EditFinanceMoneyBill = () => {
                                   ""
                                 );
                                 if (selectedOption?.value) {
-                                  getParliamentaryYearsonTheBaseOfTerm(
+                                  fetchParliamentaryYears(
                                     selectedOption?.value
                                   );
                                 }
@@ -1239,6 +1616,102 @@ const EditFinanceMoneyBill = () => {
                       <div class="col">
                         <div class="mb-3">
                           {showMinster === "Ministers" ? (
+                            <>
+                              <label className="form-label">
+                                {" "}
+                                Parliamentary Year
+                              </label>
+                              <select
+                                id="fkMnaParliamentaryYearId"
+                                name="fkMnaParliamentaryYearId"
+                                className={`form-select ${
+                                  formik.touched.fkMnaParliamentaryYearId &&
+                                  formik.errors.fkMnaParliamentaryYearId
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
+                                onBlur={formik.handleBlur}
+                                onChange={(e) => {
+                                  const selectedId = e.target.value;
+                                  formik.handleChange(e);
+                                  formik.setFieldValue(
+                                    "fkMnaParliamentaryYearId",
+                                    selectedId
+                                  );
+                                  formik.setFieldValue(
+                                    "senateBillMinistryMovers",
+                                    []
+                                  );
+                                  setMembersOnParliamentaryYear([]);
+                                  getMembersOnParliamentaryYear(selectedId);
+                                }}
+                                value={formik.values.fkMnaParliamentaryYearId}
+                              >
+                                <option value="" disabled hidden>
+                                  Select
+                                </option>
+                                {ministerParliamentaryYear?.map((item) => (
+                                  <option key={item?.id} value={item?.id}>
+                                    {item?.parliamentaryTenure}
+                                  </option>
+                                ))}
+                              </select>
+                              {formik.touched.fkMnaParliamentaryYearId &&
+                                formik.errors.fkMnaParliamentaryYearId && (
+                                  <div className="invalid-feedback">
+                                    {formik.errors.fkMnaParliamentaryYearId}
+                                  </div>
+                                )}
+                            </>
+                          ) : (
+                            <>
+                              <label className="form-label">
+                                Member Parliamentary Year
+                              </label>
+                              <select
+                                id="memberParliamentaryYearId"
+                                name="memberParliamentaryYearId"
+                                className={`form-select ${
+                                  formik.touched.fkParliamentaryYearId &&
+                                  formik.errors.fkParliamentaryYearId
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
+                                onBlur={formik.handleBlur}
+                                onChange={(e) => {
+                                  const selectedId = e.target.value;
+                                  formik.handleChange(e);
+                                  formik.setFieldValue(
+                                    "fkParliamentaryYearId",
+                                    selectedId
+                                  );
+                                  formik.setFieldValue(
+                                    "senateBillMnaMovers",
+                                    []
+                                  );
+                                  setMembersOnParliamentaryYear([]);
+                                  getMNAOnParliamentaryYear(selectedId);
+                                }}
+                                value={formik.values.fkParliamentaryYearId}
+                              >
+                                <option value="" disabled hidden>
+                                  Select
+                                </option>
+                                {memberParliamentaryYear?.map((item) => (
+                                  <option key={item?.id} value={item?.id}>
+                                    {item?.parliamentaryTenure}
+                                  </option>
+                                ))}
+                              </select>
+                              {formik.touched.fkParliamentaryYearId &&
+                                formik.errors.fkParliamentaryYearId && (
+                                  <div className="invalid-feedback">
+                                    {formik.errors.fkParliamentaryYearId}
+                                  </div>
+                                )}
+                            </>
+                          )}
+                          {/* {showMinster === "Ministers" ? (
                             <label className="form-label">
                               Parliamentary Year
                             </label>
@@ -1248,7 +1721,7 @@ const EditFinanceMoneyBill = () => {
                             </label>
                           )}
 
-                          {/* <label class="form-label"></label> */}
+                        
                           <select
                             id="fkParliamentaryYearId"
                             name="fkParliamentaryYearId"
@@ -1295,7 +1768,7 @@ const EditFinanceMoneyBill = () => {
                               <div className="invalid-feedback">
                                 {formik.errors.fkParliamentaryYearId}
                               </div>
-                            )}
+                            )} */}
                         </div>
                       </div>
                       {showMinster === "Ministers" ? (
@@ -1304,14 +1777,6 @@ const EditFinanceMoneyBill = () => {
                             <div class="mb-3">
                               <label class="form-label">Introduced By</label>
                               <Select
-                                // options={
-                                //   ministersOnParliamentaryYear &&
-                                //   ministersOnParliamentaryYear?.length > 0 &&
-                                //   ministersOnParliamentaryYear?.map((item) => ({
-                                //     value: item?.id,
-                                //     label: item?.mnaName,
-                                //   }))
-                                // }
                                 options={
                                   Array.isArray(ministersOnParliamentaryYear) &&
                                   ministersOnParliamentaryYear.length > 0
@@ -1380,7 +1845,6 @@ const EditFinanceMoneyBill = () => {
                                   : ""
                               }`}
                               value={formik.values.senateBillMinistryMovers}
-                              // isMulti={true}
                             />
                             {formik.touched.senateBillMinistryMovers &&
                               formik.errors.senateBillMinistryMovers && (
@@ -1395,14 +1859,6 @@ const EditFinanceMoneyBill = () => {
                           <div className="mb-3">
                             <label class="form-label">Select Senator</label>
                             <Select
-                              // options={
-                              //   membersOnParliamentaryYear &&
-                              //   membersOnParliamentaryYear?.length > 0 &&
-                              //   membersOnParliamentaryYear?.map((item) => ({
-                              //     value: item.id,
-                              //     label: item?.memberName,
-                              //   }))
-                              // }
                               options={
                                 Array.isArray(membersOnParliamentaryYear) &&
                                 membersOnParliamentaryYear.length > 0
@@ -1439,39 +1895,6 @@ const EditFinanceMoneyBill = () => {
                         </div>
                       )}
 
-                      {/* <div class="col">
-                        <div class="mb-3">
-                          <label class="form-label">Bill Category </label>
-                          <select
-                            id="billCategory"
-                            name="billCategory"
-                            className={`form-select ${
-                              formik.touched.billCategory &&
-                              formik.errors.billCategory
-                                ? "is-invalid"
-                                : ""
-                            }`}
-                            onChange={formik.handleChange}
-                            value={formik.values.billCategory}
-                          >
-                            <option value="" disabled hidden>
-                              Select
-                            </option>
-                            <option value="Government Bill">
-                              Government Bill
-                            </option>
-                            <option value="Private Member Bill">
-                              Private Member Bill
-                            </option>
-                          </select>
-                          {formik.touched.billCategory &&
-                            formik.errors.billCategory && (
-                              <div class="invalid-feedback">
-                                {formik.errors.billCategory}
-                              </div>
-                            )}
-                        </div>
-                      </div> */}
                       <div className="row">
                         <div class="col">
                           <div class="mb-3">
@@ -1555,15 +1978,7 @@ const EditFinanceMoneyBill = () => {
                               <option value="" disabled hidden>
                                 Select
                               </option>
-                              <option value="Amendment Bill">
-                                Amendment Bill
-                              </option>
-                              <option value="Constitutional Amendment Bill">
-                                Constitution Amendment Bill
-                              </option>
-                              {/* <option value="Finance Bill">Finance Bill</option> */}
-                              {/* <option value="Money Bill">Money Bill</option> */}
-                              <option value="New Bill">New Law</option>
+                              <option value="Finance Money Bill">Finance / Money Bill</option>
                             </select>
                             {formik.touched.billType &&
                               formik.errors.billType && (
@@ -1576,23 +1991,6 @@ const EditFinanceMoneyBill = () => {
                         <div class="col">
                           <div class="mb-3">
                             <label class="form-label">Bill Status</label>
-                            {/* <select
-                            id="fkBillStatus"
-                            name="fkBillStatus"
-                            className="form-select"
-                            onChange={formik.handleChange}
-                            value={formik.values.fkBillStatus}
-                          >
-                            <option value="" disabled hidden>
-                              Select
-                            </option>
-                            {billStatusData &&
-                              billStatusData.map((item) => (
-                                <option value={item.id}>
-                                  {item.billStatusName}
-                                </option>
-                              ))}
-                          </select> */}
                             <Select
                               options={
                                 billStatusData &&
@@ -1623,67 +2021,6 @@ const EditFinanceMoneyBill = () => {
                     </div>
 
                     <div className="row">
-                      {/* <div class="col-3">
-                        <div class="mb-3">
-                          <label class="form-label">Bill Type </label>
-                          <select
-                            id="billType"
-                            name="billType"
-                            className={`form-select ${
-                              formik.touched.billType && formik.errors.billType
-                                ? "is-invalid"
-                                : ""
-                            }`}
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            value={formik.values.billType}
-                          >
-                            <option value="" disabled hidden>
-                              Select
-                            </option>
-                            <option value="Amendment Bill">
-                              Amendment Bill
-                            </option>
-                            <option value="Constitutional Amendment Bill">
-                              Constitutional Amendment Bill
-                            </option>
-                            <option value="Finance Bill">Finance Bill</option>
-                            <option value="Money Bill">Money Bill</option>
-                            <option value="New Bill">New Bill</option>
-                          </select>
-                          {formik.touched.billType &&
-                            formik.errors.billType && (
-                              <div class="invalid-feedback">
-                                {formik.errors.billType}
-                              </div>
-                            )}
-                        </div>
-                      </div> */}
-                      {/* <div className="col">
-                        <div className="mb-3">
-                          <label className="form-label">File Number</label>
-
-                          <input
-                            type="text"
-                            id="fileNumber"
-                            name="fileNumber"
-                            className="form-control"
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            value={formik.values.fileNumber}
-                          />
-                          {formik.touched.fileNumber &&
-                            formik.errors.fileNumber && (
-                              <div
-                                className="invalid-feedback"
-                                style={{ display: "block" }}
-                              >
-                                {formik.errors.fileNumber}
-                              </div>
-                            )}
-                        </div>
-                      </div> */}
-
                       <div className="col-3">
                         <div className="mb-3" style={{ position: "relative" }}>
                           <label className="form-label">
@@ -1749,7 +2086,7 @@ const EditFinanceMoneyBill = () => {
                               color: "#666",
                               cursor: "pointer",
                             }}
-                            onClick={handleReciptCalendarToggle}
+                            onClick={handleReceiptofMesssageFromNAToggle}
                           >
                             <FontAwesomeIcon icon={faCalendarAlt} />
                           </span>
@@ -1758,7 +2095,7 @@ const EditFinanceMoneyBill = () => {
                             selected={
                               formik.values.DateOfReceiptOfMessageFromNA
                             }
-                            onChange={handleReciptDateSelect}
+                            onChange={handleReceiptofMessageFromNASelect}
                             onBlur={formik.handleBlur}
                             className={`form-control ${
                               formik.touched.DateOfReceiptOfMessageFromNA &&
@@ -1767,11 +2104,11 @@ const EditFinanceMoneyBill = () => {
                                 : ""
                             }`}
                             name="DateOfReceiptOfMessageFromNA"
-                            open={isDateofReciptCalendarOpen}
+                            open={isDateReceiptofMessageFromNAOpen}
                             onClickOutside={() =>
-                              setIsDateofReciptCalendarOpen(false)
+                              setIsDateofReceiptofMessageFromNA(false)
                             }
-                            onInputClick={handleReciptCalendarToggle}
+                            onInputClick={handleReceiptofMesssageFromNAToggle}
                             // onClick={handleCalendarToggle}
                             maxDate={new Date()}
                             dateFormat="dd-MM-yyyy"
@@ -1816,7 +2153,7 @@ const EditFinanceMoneyBill = () => {
                       </div>
                     </div>
 
-                    <div className="row">
+                    {/* <div className="row">
                       <div className="col">
                         <div className="mb-3">
                           <label className="form-label">Bill Text</label>
@@ -1840,7 +2177,7 @@ const EditFinanceMoneyBill = () => {
                             )}
                         </div>
                       </div>
-                    </div>
+                    </div> */}
 
                     <div className="row">
                       <div className="col">
@@ -1882,7 +2219,7 @@ const EditFinanceMoneyBill = () => {
                 <div className="card-body">
                   <div className="container-fluid">
                     <div className="row">
-                      <div class="col">
+                      {/* <div class="col">
                         <div class="mb-3" style={{ position: "relative" }}>
                           <label class="form-label">
                             Introduced in House On
@@ -1915,10 +2252,12 @@ const EditFinanceMoneyBill = () => {
                             dateFormat="dd-MM-yyyy"
                           />
                         </div>
-                      </div>
-                      <div class="col">
+                      </div> */}
+                      <div class="col-3">
                         <div class="mb-3" style={{ position: "relative" }}>
-                          <label class="form-label">Refered On</label>
+                          <label class="form-label">
+                            Date of Circulation Of Bill
+                          </label>
                           <span
                             style={{
                               position: "absolute",
@@ -1928,24 +2267,89 @@ const EditFinanceMoneyBill = () => {
                               fontSize: "20px",
                               color: "#666",
                             }}
-                            onClick={handleReferredCalendarToggle}
+                            onClick={handleDateCirculationBillToggle}
                           >
                             <FontAwesomeIcon icon={faCalendarAlt} />
                           </span>
                           <DatePicker
-                            selected={formik.values.referedOnDate}
-                            onChange={handleReferredDateSelect}
+                            selected={formik.values.dateOfCirculationOfBill}
+                            onChange={handleDateCirculationBillSelect}
                             className={"form-control"}
-                            open={isReferredCalendarOpen}
+                            open={isDateCirculationBillOpen}
                             onClickOutside={() =>
-                              setReferredCalendarOpen(false)
+                              setIsDateCirculationBillOpen(false)
                             }
-                            onInputClick={handleReferredCalendarToggle}
+                            onInputClick={handleDateCirculationBillToggle}
                             maxDate={new Date()}
                             dateFormat="dd-MM-yyyy"
                           />
                         </div>
                       </div>
+
+                      <div className="col-3">
+                        <div class="mb-3 " style={{ position: "relative" }}>
+                          <label class="form-label">
+                            Date of Receipt of Notice
+                          </label>
+                          <span
+                            style={{
+                              position: "absolute",
+                              right: "15px",
+                              top: "36px",
+                              zIndex: 1,
+                              fontSize: "20px",
+                              color: "#666",
+                            }}
+                            onClick={handleReceiptofNoticeTogel}
+                          >
+                            <FontAwesomeIcon icon={faCalendarAlt} />
+                          </span>
+                          <DatePicker
+                            selected={formik.values.dateofReciptofNotice}
+                            onChange={handleReceiptofNotice}
+                            className={"form-control"}
+                            open={isReceiptofNoticeOpen}
+                            onClickOutside={() => setReceiptofNoticeOpen(false)}
+                            onInputClick={handleReceiptofNoticeTogel}
+                            maxDate={new Date()}
+                            dateFormat="dd-MM-yyyy"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="col-3">
+                        <div class="mb-3 " style={{ position: "relative" }}>
+                          <label class="form-label">
+                            Date of Circulation of Notice
+                          </label>
+                          <span
+                            style={{
+                              position: "absolute",
+                              right: "15px",
+                              top: "36px",
+                              zIndex: 1,
+                              fontSize: "20px",
+                              color: "#666",
+                            }}
+                            onClick={handleCirculationNoticeCalendarToggle}
+                          >
+                            <FontAwesomeIcon icon={faCalendarAlt} />
+                          </span>
+                          <DatePicker
+                            selected={formik.values.dateOfCirculationOfNotice}
+                            onChange={handleCirculationNoticeDateSelect}
+                            className={"form-control"}
+                            open={isCirculationNoticeDateCalendarOpen}
+                            onClickOutside={() =>
+                              handleCirculationNoticeDateSelect(false)
+                            }
+                            onInputClick={handleCirculationNoticeCalendarToggle}
+                            maxDate={new Date()}
+                            dateFormat="dd-MM-yyyy"
+                          />
+                        </div>
+                      </div>
+
                       <div className="col">
                         <label className="form-label">
                           Introduced in Session
@@ -1967,9 +2371,51 @@ const EditFinanceMoneyBill = () => {
                           ))}
                         </select>
                       </div>
+                    </div>
 
-                      <div className="col">
-                        <label className="form-label">Concernd Committes</label>
+                    <div className="row">
+                      <div className="col-3">
+                        <div class="mb-3 " style={{ position: "relative" }}>
+                          <label class="form-label">
+                            Date of Reference to Standing Committee
+                          </label>
+                          <span
+                            style={{
+                              position: "absolute",
+                              right: "15px",
+                              top: "36px",
+                              zIndex: 1,
+                              fontSize: "20px",
+                              color: "#666",
+                            }}
+                            onClick={
+                              handleDateofReferenceCOmmitteeCalendarToggle
+                            }
+                          >
+                            <FontAwesomeIcon icon={faCalendarAlt} />
+                          </span>
+                          <DatePicker
+                            selected={
+                              formik.values.dateofReferencetoStandingCommittee
+                            }
+                            onChange={handleDateofReferenceCommitteeDateSelect}
+                            className={"form-control"}
+                            open={isDateofReferenceStandingCommitteeOpen}
+                            onClickOutside={() =>
+                              handleDateofReferenceCommitteeDateSelect(false)
+                            }
+                            onInputClick={
+                              handleDateofReferenceCOmmitteeCalendarToggle
+                            }
+                            maxDate={new Date()}
+                            dateFormat="dd-MM-yyyy"
+                          />
+                        </div>
+                      </div>
+                      <div className="col-3">
+                        <label className="form-label">
+                          Concerned Committee
+                        </label>
                         <select
                           id="fkManageCommitteeId"
                           name="fkManageCommitteeId"
@@ -1987,29 +2433,7 @@ const EditFinanceMoneyBill = () => {
                               </option>
                             ))}
                         </select>
-                        {/* <Select
-                          options={
-                            committieeData &&
-                            committieeData?.map((item) => ({
-                              value: item.id,
-                              label: item?.committeeName,
-                            }))
-                          }
-                          id="fkManageCommitteeId"
-                          name="fkManageCommitteeId"
-                          onChange={(selectedOptions) =>
-                            formik.setFieldValue(
-                              "fkManageCommitteeId",
-                              selectedOptions
-                            )
-                          }
-                          value={formik.values.fkManageCommitteeId}
-                          isMulti={true}
-                        /> */}
                       </div>
-                    </div>
-
-                    <div className="row">
                       <div className="form-group col-3">
                         <div className="form-group col">
                           <label className="form-label">
@@ -2072,7 +2496,7 @@ const EditFinanceMoneyBill = () => {
                       <div class="col-3">
                         <div class="mb-3" style={{ position: "relative" }}>
                           <label class="form-label">
-                            Report Presenation Day
+                            Date of presenation of report
                           </label>
                           <span
                             style={{
@@ -2103,39 +2527,6 @@ const EditFinanceMoneyBill = () => {
                           />
                         </div>
                       </div>
-
-                      <div class="col-3">
-                        <div class="mb-3" style={{ position: "relative" }}>
-                          <label class="form-label">
-                            Date of circulation of bill
-                          </label>
-                          <span
-                            style={{
-                              position: "absolute",
-                              right: "15px",
-                              top: "36px",
-                              zIndex: 1,
-                              fontSize: "20px",
-                              color: "#666",
-                            }}
-                            onClick={handleCirculationCalendarToggle}
-                          >
-                            <FontAwesomeIcon icon={faCalendarAlt} />
-                          </span>
-                          <DatePicker
-                            selected={formik.values.dateOfCirculationOfBill}
-                            onChange={handleCirculationDateSelect}
-                            className={"form-control"}
-                            open={isCirculationCalendarOpen}
-                            onClickOutside={() =>
-                              setIsCirculationCalendarOpen(false)
-                            }
-                            onInputClick={handleCirculationCalendarToggle}
-                            maxDate={new Date()}
-                            dateFormat="dd-MM-yyyy"
-                          />
-                        </div>
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -2151,67 +2542,6 @@ const EditFinanceMoneyBill = () => {
                 <div className="card-body">
                   <div className="container-fluid">
                     <div className="row">
-                      <div className="form-group col">
-                        <label
-                          htmlFor="passageWithdrawal"
-                          className="form-label"
-                        >
-                          Memeber Passage/Withdrawal Status
-                        </label>
-
-                        <select
-                          id="fkMemberPassageId"
-                          name="fkMemberPassageId"
-                          className={`form-select ${
-                            formik.touched.fkMemberPassageId &&
-                            formik.errors.fkMemberPassageId
-                              ? "is-invalid"
-                              : ""
-                          }`}
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          value={formik.values.fkMemberPassageId}
-                        >
-                          <option value="" disabled hidden>
-                            Select
-                          </option>
-                          <option value={"Passage"}>Passage</option>
-                          <option value={"withdrawal"}>withdrawal</option>
-                        </select>
-                      </div>
-
-                      <div className="col">
-                        <div class="mb-3 " style={{ position: "relative" }}>
-                          <label class="form-label">
-                            Memeber Passage/Withdrawal Notice Date
-                          </label>
-                          <span
-                            style={{
-                              position: "absolute",
-                              right: "15px",
-                              top: "36px",
-                              zIndex: 1,
-                              fontSize: "20px",
-                              color: "#666",
-                              cursor: "pointer",
-                            }}
-                            onClick={handlePassageCalendarToggle}
-                          >
-                            <FontAwesomeIcon icon={faCalendarAlt} />
-                          </span>
-                          <DatePicker
-                            selected={formik.values.memeberNoticeDate}
-                            onChange={handlePassageDateSelect}
-                            className={"form-control"}
-                            open={isPassageCalendarOpen}
-                            onClickOutside={() => setPassageCalendarOpen(false)}
-                            onInputClick={handlePassageCalendarToggle}
-                            maxDate={new Date()}
-                            dateFormat="dd-MM-yyyy"
-                          />
-                        </div>
-                      </div>
-
                       <div className="col">
                         <div class="mb-3 " style={{ position: "relative" }}>
                           <label class="form-label">
@@ -2245,7 +2575,200 @@ const EditFinanceMoneyBill = () => {
                         </div>
                       </div>
 
-                      <div className="form-group col">
+                      <div className="col-3">
+                        <div class="mb-3 " style={{ position: "relative" }}>
+                          <label class="form-label">
+                            Date of Passage by Senate
+                          </label>
+                          <span
+                            style={{
+                              position: "absolute",
+                              right: "15px",
+                              top: "36px",
+                              zIndex: 1,
+                              fontSize: "20px",
+                              color: "#666",
+                            }}
+                            onClick={handlePassageSenateCalendarToggle}
+                          >
+                            <FontAwesomeIcon icon={faCalendarAlt} />
+                          </span>
+                          <DatePicker
+                            selected={formik.values.dateOfPassageBySenate}
+                            onChange={handlePassageSenateDateSelect}
+                            className={"form-control"}
+                            open={isPassageSenateCalendarOpen}
+                            onClickOutside={() =>
+                              setPassageSenateCalendarOpen(false)
+                            }
+                            onInputClick={handlePassageSenateCalendarToggle}
+                            maxDate={new Date()}
+                            dateFormat="dd-MM-yyyy"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="col-3">
+                        <div class="mb-3 " style={{ position: "relative" }}>
+                          <label class="form-label">
+                            Date of Transmission to NA
+                          </label>
+                          <span
+                            style={{
+                              position: "absolute",
+                              right: "15px",
+                              top: "36px",
+                              zIndex: 1,
+                              fontSize: "20px",
+                              color: "#666",
+                            }}
+                            onClick={handleTransmissionCalendarToggle}
+                          >
+                            <FontAwesomeIcon icon={faCalendarAlt} />
+                          </span>
+                          <DatePicker
+                            selected={formik.values.dateOfTransmissionToNA}
+                            onChange={handleTransmissionDateSelect}
+                            className={"form-control"}
+                            open={isTransmissionDateCalendarOpen}
+                            onClickOutside={() =>
+                              setTransmissionDateCalendarOpen(false)
+                            }
+                            onInputClick={handleTransmissionCalendarToggle}
+                            maxDate={new Date()}
+                            dateFormat="dd-MM-yyyy"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="col-3">
+                        <div class="mb-3 " style={{ position: "relative" }}>
+                          <label class="form-label">
+                            Date of Assent by President
+                          </label>
+                          <span
+                            style={{
+                              position: "absolute",
+                              right: "15px",
+                              top: "36px",
+                              zIndex: 1,
+                              fontSize: "20px",
+                              color: "#666",
+                              cursor: "pointer",
+                            }}
+                            // onClick={handleConsiderationCalendarToggle}
+                            onClick={handleAssentCalendarToggle}
+                          >
+                            <FontAwesomeIcon icon={faCalendarAlt} />
+                          </span>
+                          <DatePicker
+                            selected={formik.values.dateOfAssentByThePresident}
+                            onChange={handleAssentDateSelect}
+                            className={"form-control"}
+                            open={isAssentCalendarOpen}
+                            onClickOutside={() => setAssentCalendarOpen(false)}
+                            onInputClick={handleAssentCalendarToggle}
+                            maxDate={new Date()}
+                            dateFormat="dd-MM-yyyy"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="col-3">
+                        <div class="mb-3 " style={{ position: "relative" }}>
+                          <label class="form-label">
+                            Date of Publish in the Gazette
+                          </label>
+                          <span
+                            style={{
+                              position: "absolute",
+                              right: "15px",
+                              top: "36px",
+                              zIndex: 1,
+                              fontSize: "20px",
+                              color: "#666",
+                              cursor: "pointer",
+                            }}
+                            // onClick={handleConsiderationCalendarToggle}
+                            onClick={handleGazetteCalendarToggle}
+                          >
+                            <FontAwesomeIcon icon={faCalendarAlt} />
+                          </span>
+                          <DatePicker
+                            selected={formik.values.dateOfPublishInGazette}
+                            onChange={handleGazetteDateSelect}
+                            className={"form-control"}
+                            open={isGazetteCalendarOpen}
+                            onClickOutside={() => setGazetteCalendarOpen(false)}
+                            onInputClick={handleGazetteCalendarToggle}
+                            maxDate={new Date()}
+                            dateFormat="dd-MM-yyyy"
+                          />
+                        </div>
+                      </div>
+
+                      {/* <div className="form-group col">
+                        <label
+                          htmlFor="passageWithdrawal"
+                          className="form-label"
+                        >
+                          Memeber Passage/Withdrawal Status
+                        </label>
+
+                        <select
+                          id="fkMemberPassageId"
+                          name="fkMemberPassageId"
+                          className={`form-select ${
+                            formik.touched.fkMemberPassageId &&
+                            formik.errors.fkMemberPassageId
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.fkMemberPassageId}
+                        >
+                          <option value="" disabled hidden>
+                            Select
+                          </option>
+                          <option value={"Passage"}>Passage</option>
+                          <option value={"withdrawal"}>withdrawal</option>
+                        </select>
+                      </div> */}
+
+                      {/* <div className="col">
+                        <div class="mb-3 " style={{ position: "relative" }}>
+                          <label class="form-label">
+                            Memeber Passage/Withdrawal Notice Date
+                          </label>
+                          <span
+                            style={{
+                              position: "absolute",
+                              right: "15px",
+                              top: "36px",
+                              zIndex: 1,
+                              fontSize: "20px",
+                              color: "#666",
+                              cursor: "pointer",
+                            }}
+                            onClick={handlePassageCalendarToggle}
+                          >
+                            <FontAwesomeIcon icon={faCalendarAlt} />
+                          </span>
+                          <DatePicker
+                            selected={formik.values.memeberNoticeDate}
+                            onChange={handlePassageDateSelect}
+                            className={"form-control"}
+                            open={isPassageCalendarOpen}
+                            onClickOutside={() => setPassageCalendarOpen(false)}
+                            onInputClick={handlePassageCalendarToggle}
+                            maxDate={new Date()}
+                            dateFormat="dd-MM-yyyy"
+                          />
+                        </div>
+                      </div> */}
+
+                      {/* <div className="form-group col">
                         <label htmlFor="session" className="form-label">
                           Consideration in Session
                         </label>
@@ -2266,7 +2789,7 @@ const EditFinanceMoneyBill = () => {
                               </option>
                             ))}
                         </select>
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                 </div>
@@ -2281,170 +2804,6 @@ const EditFinanceMoneyBill = () => {
               <div className="card-body">
                 <div className="container-fluid">
                   <div className="row">
-                    <div className="col-3">
-                      <div class="mb-3 " style={{ position: "relative" }}>
-                        <label class="form-label">
-                          Date of Passage by Senate
-                        </label>
-                        <span
-                          style={{
-                            position: "absolute",
-                            right: "15px",
-                            top: "36px",
-                            zIndex: 1,
-                            fontSize: "20px",
-                            color: "#666",
-                          }}
-                          onClick={handlePassageSenateCalendarToggle}
-                        >
-                          <FontAwesomeIcon icon={faCalendarAlt} />
-                        </span>
-                        <DatePicker
-                          selected={formik.values.dateOfPassageBySenate}
-                          onChange={handlePassageSenateDateSelect}
-                          className={"form-control"}
-                          open={isPassageSenateCalendarOpen}
-                          onClickOutside={() =>
-                            setPassageSenateCalendarOpen(false)
-                          }
-                          onInputClick={handlePassageSenateCalendarToggle}
-                          maxDate={new Date()}
-                          dateFormat="dd-MM-yyyy"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="col-3">
-                      <div class="mb-3 " style={{ position: "relative" }}>
-                        <label class="form-label">
-                          Date of Transmission to NA
-                        </label>
-                        <span
-                          style={{
-                            position: "absolute",
-                            right: "15px",
-                            top: "36px",
-                            zIndex: 1,
-                            fontSize: "20px",
-                            color: "#666",
-                          }}
-                          onClick={handleTransmissionCalendarToggle}
-                        >
-                          <FontAwesomeIcon icon={faCalendarAlt} />
-                        </span>
-                        <DatePicker
-                          selected={formik.values.dateOfTransmissionToNA}
-                          onChange={handleTransmissionDateSelect}
-                          className={"form-control"}
-                          open={isTransmissionDateCalendarOpen}
-                          onClickOutside={() =>
-                            setTransmissionDateCalendarOpen(false)
-                          }
-                          onInputClick={handleTransmissionCalendarToggle}
-                          maxDate={new Date()}
-                          dateFormat="dd-MM-yyyy"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="col-3">
-                      <div class="mb-3 " style={{ position: "relative" }}>
-                        <label class="form-label">
-                          Date of Publish in the Gazette
-                        </label>
-                        <span
-                          style={{
-                            position: "absolute",
-                            right: "15px",
-                            top: "36px",
-                            zIndex: 1,
-                            fontSize: "20px",
-                            color: "#666",
-                            cursor: "pointer",
-                          }}
-                          // onClick={handleConsiderationCalendarToggle}
-                          onClick={handleGazetteCalendarToggle}
-                        >
-                          <FontAwesomeIcon icon={faCalendarAlt} />
-                        </span>
-                        <DatePicker
-                          selected={formik.values.dateOfPublishInGazette}
-                          onChange={handleGazetteDateSelect}
-                          className={"form-control"}
-                          open={isGazetteCalendarOpen}
-                          onClickOutside={() => setGazetteCalendarOpen(false)}
-                          onInputClick={handleGazetteCalendarToggle}
-                          maxDate={new Date()}
-                          dateFormat="dd-MM-yyyy"
-                        />
-                      </div>
-                    </div>
-                    <div className="col-3">
-                      <div class="mb-3 " style={{ position: "relative" }}>
-                        <label class="form-label">
-                          Date of Assent by President
-                        </label>
-                        <span
-                          style={{
-                            position: "absolute",
-                            right: "15px",
-                            top: "36px",
-                            zIndex: 1,
-                            fontSize: "20px",
-                            color: "#666",
-                            cursor: "pointer",
-                          }}
-                          // onClick={handleConsiderationCalendarToggle}
-                          onClick={handleAssentCalendarToggle}
-                        >
-                          <FontAwesomeIcon icon={faCalendarAlt} />
-                        </span>
-                        <DatePicker
-                          selected={formik.values.dateOfAssentByThePresident}
-                          onChange={handleAssentDateSelect}
-                          className={"form-control"}
-                          open={isAssentCalendarOpen}
-                          onClickOutside={() => setAssentCalendarOpen(false)}
-                          onInputClick={handleAssentCalendarToggle}
-                          maxDate={new Date()}
-                          dateFormat="dd-MM-yyyy"
-                        />
-                      </div>
-                    </div>
-
-                    {/* <div className="col-3">
-                      <div class="mb-3 " style={{ position: "relative" }}>
-                        <label class="form-label">
-                          Date of Receipt of Message from NA
-                        </label>
-                        <span
-                          style={{
-                            position: "absolute",
-                            right: "15px",
-                            top: "36px",
-                            zIndex: 1,
-                            fontSize: "20px",
-                            color: "#666",
-                          }}
-                          onClick={handleRecepitMesageCalendarToggle}
-                        >
-                          <FontAwesomeIcon icon={faCalendarAlt} />
-                        </span>
-                        <DatePicker
-                          selected={formik.values.dateOfReceiptMessageFromNA}
-                          onChange={handleRecepitMesageDateSelect}
-                          className={"form-control"}
-                          open={isRecepitMesageDateCalendarOpen}
-                          onClickOutside={() =>
-                            setRecepitMesageDateCalendarOpen(false)
-                          }
-                          onInputClick={handleRecepitMesageCalendarToggle}
-                          maxDate={new Date()}
-                          dateFormat="dd-MM-yyyy"
-                        />
-                      </div>
-                    </div> */}
-
                     {/* <div className="col-3">
                       <div class="mb-3 " style={{ position: "relative" }}>
                         <label class="form-label">Date of Passage by NA</label>
@@ -2556,7 +2915,7 @@ const EditFinanceMoneyBill = () => {
                         </option>
                         <option value="Message From NA">Message From NA</option>
 
-                        <option value="Bill">
+                        <option value="Letter circulated to Members/Ministries under rule 118">
                           Letter circulated to Members/Ministries under rule 118
                         </option>
                         <option value="Notice under rule 119">

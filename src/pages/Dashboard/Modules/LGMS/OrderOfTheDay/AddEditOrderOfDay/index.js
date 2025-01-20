@@ -35,7 +35,8 @@ const LGMSCreateOrderOftheDay = () => {
   const formik = useFormik({
     initialValues: {
       sessionId: "",
-      sittingDate: "",
+      sittingId: "",
+      sittingLabel: "",
     },
     onSubmit: (values) => {
       // Add your submit logic here
@@ -84,7 +85,8 @@ const LGMSCreateOrderOftheDay = () => {
     const Data = {
       content: descriptionData,
       fkSessionId: values.sessionId,
-      sittingDate: values.sittingDate,
+      sittingId: values.sittingId,
+      sittingLabel: values.sittingLabel,
     };
     try {
       const response = await createOrderOfTheDay(Data);
@@ -103,7 +105,8 @@ const LGMSCreateOrderOftheDay = () => {
     const Data = {
       content: descriptionData,
       fkSessionId: values.sessionId,
-      sittingDate: values.sittingDate,
+      sittingId: values.sittingId,
+      sittingLabel: values.sittingLabel,
     };
     try {
       const response = await updateOrderOfTheDay(location.state.id, Data);
@@ -128,7 +131,8 @@ const LGMSCreateOrderOftheDay = () => {
         });
         formik.setValues({
           sessionId: response?.data?.fkSessionId || "",
-          sittingDate: response?.data?.sittingDate || "",
+          sittingId: response?.data?.sittingId || null,
+          sittingLabel: response?.data?.sittingLabel || "",
         });
         setDescriptionData(response?.data?.content);
       }
@@ -136,6 +140,8 @@ const LGMSCreateOrderOftheDay = () => {
       showErrorMessage(error?.response?.data?.message);
     }
   };
+
+  console.log("formikk", formik.values);
 
   useEffect(() => {
     if (location?.state?.id) {
@@ -215,11 +221,17 @@ const LGMSCreateOrderOftheDay = () => {
                           ? "is-invalid"
                           : ""
                       }`}
-                      value={formik.values.sittingDate}
-                      onChange={formik.handleChange}
+                      value={formik.values.sittingId}
+                      onChange={(e) => {
+                        formik.setFieldValue("sittingId", e.target.value);
+                        formik.setFieldValue(
+                          "sittingLabel",
+                          e.target.options[e.target.selectedIndex].text || ""
+                        );
+                      }}
                       onBlur={formik.handleBlur}
-                      name="sittingDate"
-                      id="sittingDate"
+                      name="sittingId"
+                      id="sittingId"
                     >
                       <option value="" selected disabled hidden>
                         Select Date

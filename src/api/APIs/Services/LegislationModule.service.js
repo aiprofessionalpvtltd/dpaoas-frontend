@@ -829,3 +829,73 @@ export const getMinisterParliamentaryYearsByTenure = async (id) => {
     throw error;
   }
 };
+
+//Finance API's
+export const listFinanceMoneyBil = async (
+  currentPage,
+  pageSize,
+  searchParams
+) => {
+  const filteredSearchParams = Object.fromEntries(
+    Object.entries(searchParams).filter(([_, value]) => value !== "")
+  );
+  try {
+    const resposne = await axiosClient.get(
+      `/finance-money-bill/byCategory?currentPage=${currentPage}&pageSize=${pageSize}`,
+      {
+        params: filteredSearchParams,
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // },
+      }
+    );
+    return resposne?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+// Create Finance Money Bill
+export const createNewFinanceMoneyBill = async (data) => {
+  try {
+    const response = await axiosClient.post("/finance-money-bill", data);
+    return response?.data;
+  } catch (error) {
+    console.log("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const getFinanceMoneyBillByID = async (id) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.get(`/finance-money-bill/${id}`);
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const UpdateFinanceMoneyBill = async (id, data) => {
+  try {
+    const response = await axiosClient.put(`/finance-money-bill/update/${id}`, data, {
+      headers: {
+        accept: "application/json",
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
