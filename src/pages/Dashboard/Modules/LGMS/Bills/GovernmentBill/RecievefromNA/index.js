@@ -59,14 +59,13 @@ const AllGovernmentRecievedNABills = () => {
       //   ? moment(item?.noticeDate, "YYYY-MM-DD").format("DD-MM-YYYY")
       //   : "---",
 
-      dateOfReferencetoStandingCommittee: item
-        ?.dateofReferencetoStandingCommittee?.dateofReferencetoStandingCommittee
-        ? moment(
-            item?.dateofReferencetoStandingCommittee
-              ?.dateofReferencetoStandingCommittee,
-            "YYYY-MM-DD"
-          ).format("DD-MM-YYYY")
-        : "---",
+      dateOfReferencetoStandingCommittee:
+        item?.dateofReferencetoStandingCommittee
+          ? moment(
+              item?.dateofReferencetoStandingCommittee,
+              "YYYY-MM-DD"
+            ).format("DD-MM-YYYY")
+          : "---",
       dateOfPresentationOfTheReport: item?.introducedInHouses
         ?.reportPresentationDate
         ? moment(
