@@ -4,10 +4,11 @@ import { useNavigate } from "react-router-dom";
 import CustomTable from "../../../../../components/CustomComponents/CustomTable";
 
 import moment from "moment";
-import { getAllGovernmentSenateBills } from "../../../../../api/APIs/Services/LegislationModule.service";
+import { getAllGovernmentSenateBills, listFinanceMoneyBil } from "../../../../../api/APIs/Services/LegislationModule.service";
 import { Layout } from "../../../../../components/Layout";
 import Header from "../../../../../components/Header";
 import { LegislationSideBarItems } from "../../../../../utils/sideBarItems";
+import { showErrorMessage } from "../../../../../utils/ToastAlert";
 
 const AllFinanceMoneyBill = () => {
   const navigate = useNavigate();
@@ -38,23 +39,30 @@ const AllFinanceMoneyBill = () => {
       // internalId: item?.id,
       fileNumber: item?.fileNumber,
       billTitle: item?.billTitle,
-      nameOfMinistersOrMovers:
-        item?.senateBillMnaMovers?.[0]?.mna?.mnaName ||
-        item?.senateBillSenatorMovers
-          ?.map((mover) => mover?.member?.memberName)
-          .join(", ") ||
-        "",
-      dateOfReceiptOfNotice: item?.noticeDate
-        ? moment(item?.noticeDate, "YYYY-MM-DD").format("DD-MM-YYYY")
+      // nameOfMinisters: item?.senateBillSenatorMovers
+      //   ? item?.senateBillSenatorMovers
+      //       .map((mover) => mover?.mna?.mnaName)
+      //       .join(", ")
+      //   : "---",
+      dateOnWhichBillWasPassedByNA: item?.PassedByNADate
+        ? moment(item?.PassedByNADate, "YYYY-MM-DD").format("DD-MM-YYYY")
         : "---",
-      dateOfIntroductionReferenceToStandingCommittee: item?.introducedInHouses
-        ?.introducedInHouseDate
-        ? moment(
-            item?.introducedInHouses?.introducedInHouseDate,
-            "YYYY-MM-DD"
-          ).format("DD-MM-YYYY")
+      dateOfReceiptOfMessageFromNA: item?.DateOfReceiptOfMessageFromNA
+        ? moment(item?.DateOfReceiptOfMessageFromNA, "YYYY-MM-DD").format(
+            "DD-MM-YYYY"
+          )
         : "---",
+      // dateOfReceiptOfNotice: item?.noticeDate
+      //   ? moment(item?.noticeDate, "YYYY-MM-DD").format("DD-MM-YYYY")
+      //   : "---",
 
+      dateOfReferencetoStandingCommittee:
+        item?.dateofReferencetoStandingCommittee
+          ? moment(
+              item?.dateofReferencetoStandingCommittee,
+              "YYYY-MM-DD"
+            ).format("DD-MM-YYYY")
+          : "---",
       dateOfPresentationOfTheReport: item?.introducedInHouses
         ?.reportPresentationDate
         ? moment(
@@ -62,18 +70,28 @@ const AllFinanceMoneyBill = () => {
             "YYYY-MM-DD"
           ).format("DD-MM-YYYY")
         : "---",
-      dateOfConsiderationOfTheBillBySenate: item?.memberPassages
+      dateOfConsiderationOfTheBillBySenate: item?.memberPassagesFinance
         ?.dateOfConsiderationBill
         ? moment(
-            item?.memberPassages?.dateOfConsiderationBill,
+            item?.memberPassagesFinance?.dateOfConsiderationBill,
             "YYYY-MM-DD"
           ).format("DD-MM-YYYY")
         : "---",
       dateOfPassingTheBillByTheSenate: item?.dateOfPassageBySenate
         ? moment(item?.dateOfPassageBySenate, "YYYY-MM-DD").format("DD-MM-YYYY")
         : "---",
-      dateOnWhichTheBillTransmittedToNA: item?.dateOfTransmissionToNA
+      dateOfTransmissionOfMessageToNA: item?.dateOfTransmissionToNA
         ? moment(item?.dateOfTransmissionToNA, "YYYY-MM-DD").format(
+            "DD-MM-YYYY"
+          )
+        : "---",
+      dateOfAssentByThePresident: item?.dateOfAssentByThePresident
+        ? moment(item?.dateOfAssentByThePresident, "YYYY-MM-DD").format(
+            "DD-MM-YYYY"
+          )
+        : "---",
+      dateOfPublishInTheGazette: item?.dateOfPublishInGazette
+        ? moment(item?.dateOfPublishInGazette, "YYYY-MM-DD").format(
             "DD-MM-YYYY"
           )
         : "---",
@@ -88,22 +106,27 @@ const AllFinanceMoneyBill = () => {
   const getGovernmentSenateBillApi = useCallback(async () => {
     const searchParams = {
       billCategory: "Government Bill",
-      billFrom: "From Senate",
+      billFrom: "From NA",
     };
 
-    const response = await getAllGovernmentSenateBills(
-      currentPage,
-      pageSize,
-      searchParams
-    );
-    if (response?.success) {
-      setCount(response?.data?.count);
-      const governmentSenateBillData = response?.data?.senateBills;
-      const transformAllGovernmentSenateBillData =
-        transformGovernmentSenateBillData(governmentSenateBillData);
-      setGovernmantSenateBill(transformAllGovernmentSenateBillData);
-      // showSuccessMessage(response?.message)
+    try {
+      const response = await listFinanceMoneyBil(
+        currentPage,
+        pageSize,
+        searchParams
+      );
+      if (response?.success) {
+        setCount(response?.data?.count);
+        const governmentSenateBillData = response?.data?.senateBills;
+        const transformAllGovernmentSenateBillData =
+          transformGovernmentSenateBillData(governmentSenateBillData);
+        setGovernmantSenateBill(transformAllGovernmentSenateBillData);
+        // showSuccessMessage(response?.message)
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
     }
+
   }, [selectedbillFrom, currentPage, pageSize]);
 
   useEffect(() => {
@@ -117,24 +140,22 @@ const AllFinanceMoneyBill = () => {
   //   });
   // };
   // Create Government Bill
+ 
   const handleAddFinanceMoneyBill = () => {
     navigate("/lgms/dashboard/bills/legislation-bills/finance-money-bill/add", {
       state: {
         category: "Government Bill",
+        billFrom: "From NA",
+        forPerson: "Ministers",
       },
     });
   };
 
-  // Edit Bill Introduced in Senate
-  const handleEditSenateBill = (id, item) => {
-    navigate("/lgms/dashboard/bills/edit/senate-bills", {
-      state: { id, item, forPerson: "Ministers" },
-    });
-  };
+  
 
   // Edit Bill Recieved From NA
-  const handleEditNABill = (id, item) => {
-    navigate("/lgms/dashboard/bills/edit/NA-bills/", { state: { id, item } });
+  const handleEditNABill = (id,item) => {
+    navigate("/lgms/dashboard/bills/legislation-bills/finance-money-bill/edit", { state: { id, item, forPerson: "Ministers" } });
   };
 
   return (
@@ -153,6 +174,7 @@ const AllFinanceMoneyBill = () => {
       <div className="row">
         <div className="col-12">
           <CustomTable
+            block={true}
             singleDataCard={true}
             data={governmentSenateBill}
             tableTitle="Finance/Money Bill Data"
@@ -168,7 +190,7 @@ const AllFinanceMoneyBill = () => {
               handleAddFinanceMoneyBill();
             }}
             handleEdit={(item) => {
-              handleEditNABill(item);
+              handleEditNABill(item.id, item);
             }}
             // handleDelete={() => {}}
           />

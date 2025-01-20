@@ -340,6 +340,7 @@ import LGMSAddEditMinisterTenures from "../pages/Dashboard/Modules/LGMS/Manage/M
 import { ChangePasswordScreen } from "../pages/Dashboard/Modules/EFiling/changePassword/index.js";
 import QMSCompareQuestion from "../pages/Dashboard/Modules/QMS/Question/CompareQuestion/index.js";
 import ListOrderOfDay from "../pages/Dashboard/Modules/LGMS/OrderOfTheDay/index.js";
+import EditFinanceMoneyBill from "../pages/Dashboard/Modules/LGMS/FinanceMoneyBill/EditFinanceMoneyBill/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -940,10 +941,10 @@ export const ProtectedRoutes = [
     path: "/lgms/dashboard/bills/legislation-bills/finance-money-bill/add",
     element: <AddFinanceMoneyBill />,
   },
-  // {
-  //   path: "/lgms/dashboard/bills/legislation-bills/finance-money-bill/edit",
-  //   element: <EditFinanceMoneyBill />,
-  // },
+  {
+    path: "/lgms/dashboard/bills/legislation-bills/finance-money-bill/edit",
+    element: <EditFinanceMoneyBill />,
+  },
   {
     path: "/lgms/dashboard/bills/legislation-bills/private-member-bills/recieved-from-na",
     element: <AllPrivateMemberBillFromNA />,
