@@ -67,6 +67,7 @@ function QMSSearchQuestion() {
       religion: "",
       gender: "",
       memberPosition: "",
+      isExact:false
     },
     onSubmit: (values) => {
       // Handle form submission here
@@ -88,7 +89,8 @@ function QMSSearchQuestion() {
       const subjectMatter = [res?.englishText, res?.urduText]
         .filter(Boolean)
         .join(", ");
-      const cleanedSubjectMatter = subjectMatter.replace(/(<([^>]+)>)/gi, "");
+      const cleanedSubjectMatter = subjectMatter.replace(/(<([^>]+)>)/gi, "").replace(/&nbsp;/gi, " ")
+      .replace(/\s+/g, " ");
       return {
         SrNo: index,
         QID: res?.id,
@@ -136,6 +138,7 @@ function QMSSearchQuestion() {
       gender: values?.gender,
       religion: values?.religion,
       noticeOfficeDiaryNo: values?.noticeOfficeDiaryNo,
+      isExact: values?.isExact,
     };
 
     try {
@@ -619,6 +622,32 @@ function QMSSearchQuestion() {
                         </select>
                       </div>
                     </div>
+                    <div class="col-3">
+                    <div class="mb-3">
+                      <div class="form-check" style={{ marginTop: "39px" }}>
+                        <input
+                          class={`form-check-input ${
+                            formik.touched.isExact && formik.errors.isExact
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                          type="checkbox"
+                          id="flexCheckDefault"
+                          checked={formik.values.isExact}
+                          onChange={() =>
+                            formik.setFieldValue(
+                              "isExact",
+                              !formik.values.isExact
+                            )
+                          }
+                        />
+                        <label class="form-check-label" for="flexCheckDefault">
+                          Is Exact
+                        </label>
+                        
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <div class="row">
                   <div class="d-grid gap-2 d-md-flex justify-content-md-end">
