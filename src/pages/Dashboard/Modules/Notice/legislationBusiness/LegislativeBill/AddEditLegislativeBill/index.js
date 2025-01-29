@@ -23,23 +23,24 @@ import DatePicker from "react-datepicker";
 import TimePicker from "react-time-picker";
 import moment from "moment";
 import { getUserData } from "../../../../../../../api/Auth";
+import { imagesUrl } from "../../../../../../../api/APIs";
 
 function AddEditLegislativeBill() {
   const location = useLocation();
   const navigate = useNavigate();
   const { members } = useContext(AuthContext);
   const userData = getUserData();
-  console.log("userData", userData);
   const [imageLinks, setImageLinks] = useState([]);
   const [billData, setBillData] = useState([]);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
-
+  console.log("billData", billData);
   const formik = useFormik({
     initialValues: {
       sessionNo: "",
       title: "",
       date: moment(new Date()).format("YYYY-MM-DD"),
       noticeOfficeDiaryTime: moment().format("HH:mm A"),
+      billFrom: "",
       status: "",
       attachment: null,
       description: "",
@@ -89,27 +90,27 @@ function AddEditLegislativeBill() {
     getPrivateMemberNoticeOfficeDiaryNumberApi();
   }, []);
 
-  const handleFileChange = (event) => {
-    const selectedFiles = Array.from(event.currentTarget.files);
-    const links = selectedFiles.map((file) => URL.createObjectURL(file));
-    setImageLinks(links);
-    formik.setFieldValue("attachment", event.currentTarget.files);
-  };
+  // const handleFileChange = (event) => {
+  //   const selectedFiles = Array.from(event.currentTarget.files);
+  //   const links = selectedFiles.map((file) => URL.createObjectURL(file));
+  //   setImageLinks(links);
+  //   formik.setFieldValue("attachment", event.currentTarget.files);
+  // };
 
   const handleCreateLegislativeBill = async (values) => {
     const formData = new FormData();
     formData.append("title", values?.title);
     // formData.append("fkSessionNo", values?.sessionNo.value);
     formData.append("description", values?.description);
-    if (values?.attachment) {
-      formData.append("attachment", values?.attachment);
-    }
-
     // if (values?.attachment) {
-    //   Array.from(values?.attachment).map((file, index) => {
-    //     formData.append(`attachment`, file);
-    //   });
+    //   formData.append("billdocumentlegis", values?.attachment);
     // }
+
+    if (values?.attachment) {
+      Array.from(values?.attachment).map((file, index) => {
+        formData.append(`billdocumentlegis`, file);
+      });
+    }
     // formData.append("date", values?.date.toDate());
     formData.append("date", values?.date);
 
@@ -130,6 +131,7 @@ function AddEditLegislativeBill() {
       "fkUserId",
       userData && userData?.fkUserId && userData?.fkUserId
     );
+    formData.append("billFrom", "From Senate");
 
     try {
       const response = await createLegislativeBill(formData);
@@ -137,7 +139,7 @@ function AddEditLegislativeBill() {
         showSuccessMessage(response.message);
         formik.resetForm();
         setTimeout(() => {
-          navigate("/notice/legislation/private-bill");
+          navigate("/notice/bills/private-member-bills");
         }, 1000);
       }
     } catch (error) {
@@ -151,7 +153,7 @@ function AddEditLegislativeBill() {
     // formData.append("fkSessionNo", values?.sessionNo.value);
     formData.append("description", values?.description);
     if (values?.attachment) {
-      formData.append("attachment", values?.attachment);
+      formData.append("billdocumentlegis", values?.attachment);
     }
     formData.append("date", values?.date);
     // formData.append("date", new Date(values?.date));
@@ -167,7 +169,7 @@ function AddEditLegislativeBill() {
       formData.append(`legislationMovers[${index}][fkMemberId]`, mover.value);
     });
 
-    // formData.append("device", "Web")
+    formData.append("billFrom", "From Senate");
 
     try {
       const response = await UpdateLegislativeBillById(
@@ -178,7 +180,7 @@ function AddEditLegislativeBill() {
         showSuccessMessage(response.message);
         formik.resetForm();
         setTimeout(() => {
-          navigate("/notice/legislation/private-bill");
+          navigate("/notice/bills/private-member-bills");
         }, 1000);
       }
     } catch (error) {
@@ -189,8 +191,9 @@ function AddEditLegislativeBill() {
   const getLegislativeBillByIdApi = async () => {
     try {
       const response = await getLegislativeBillById(location?.state?.id);
+      console.log("responseeeeee", response);
       if (response.success) {
-        setBillData(response?.data);
+        setBillData(response?.data?.[0]?.legislativeBill);
         // showSuccessMessage(response.message);
       }
     } catch (error) {
@@ -205,24 +208,23 @@ function AddEditLegislativeBill() {
   }, []);
   useEffect(() => {
     // Update form values when termsById changes
-    if (billData.length > 0) {
-      console.log("billData", billData);
+    if (billData) {
       formik.setValues({
         sessionNo:
           {
-            value: billData[0]?.session?.id,
-            label: billData[0]?.session?.sessionName,
+            value: billData?.session?.id,
+            label: billData?.session?.sessionName,
           } || "",
 
-        date: billData[0]?.date ? new Date(billData[0]?.date) : "",
-        status: billData[0]?.status || "",
-        description: billData[0]?.description || "",
-        title: billData[0]?.title || "",
-        diary_number: billData[0]?.diary_number || "",
-        noticeOfficeDiaryTime: billData[0]?.noticeOfficeDiaryTime || "",
+        date: billData?.date ? new Date(billData?.date) : "",
+        status: billData?.status || "",
+        description: billData?.description || "",
+        title: billData?.title || "",
+        diary_number: billData?.diary_number || "",
+        noticeOfficeDiaryTime: billData?.noticeOfficeDiaryTime || "",
         legislationMovers:
-          billData[0]?.legislationMovers?.length > 0
-            ? billData[0]?.legislationMovers?.map((item) => ({
+          billData?.legislationMovers?.length > 0
+            ? billData?.legislationMovers?.map((item) => ({
                 value: item?.member?.id,
                 label: item?.member?.memberName,
               }))
@@ -261,37 +263,6 @@ function AddEditLegislativeBill() {
             <form onSubmit={formik.handleSubmit}>
               <div className="container-fluid">
                 <div className="row">
-                  {/* <div class="col-4">
-                    <div class="mb-3">
-                      <label class="form-label">Session No</label>
-                      <Select
-                        options={
-                          sessions &&
-                          sessions?.map((item) => ({
-                            value: item?.id,
-                            label: item?.sessionName,
-                          }))
-                        }
-                        onChange={(selectedOptions) => {
-                          formik.setFieldValue("sessionNo", selectedOptions);
-                        }}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.sessionNo}
-                        name="sessionNo"
-                        // isClearable={true}
-                        className={`.form-select  ${
-                          formik.touched.sessionNo && formik.errors.sessionNo
-                            ? "is-invalid"
-                            : ""
-                        }`}
-                      />
-                      {formik.touched.sessionNo && formik.errors.sessionNo && (
-                        <div className="invalid-feedback">
-                          {formik.errors.sessionNo}
-                        </div>
-                      )}
-                    </div>
-                  </div> */}
                   <div className="col-4">
                     <div className="mb-3">
                       <label className="form-label">Title</label>
@@ -447,24 +418,16 @@ function AddEditLegislativeBill() {
                       <label className="form-label">
                         Notice Office Diary Time
                       </label>
-
-                      {/* <TimePicker
-                        value={formik.values.noticeOfficeDiaryTime}
-                        clockIcon={null} // Disable clock view
-                        openClockOnFocus={false}
-                        format="hh:mm a"
-                        onChange={(time) =>
-                          formik.setFieldValue("noticeOfficeDiaryTime", time)
-                        }
-                        className={`form-control ${
-                          formik.touched.noticeOfficeDiaryTime &&
-                          formik.errors.noticeOfficeDiaryTime
-                            ? "is-invalid"
-                            : ""
-                        }`}
-                      /> */}
                       <TimePicker
-                        value={formik.values.noticeOfficeDiaryTime}
+                        // value={formik.values.noticeOfficeDiaryTime}
+                        value={
+                          formik.values.noticeOfficeDiaryTime
+                            ? moment(
+                                formik.values.noticeOfficeDiaryTime,
+                                "hh:mm A"
+                              ).toDate()
+                            : null
+                        }
                         clockIcon={null} // Disable clock view
                         openClockOnFocus={false}
                         format="hh:mm a"
@@ -489,29 +452,11 @@ function AddEditLegislativeBill() {
                         )}
                     </div>
                   </div>
-                  {/* <div className="col-4">
-                    <div className="mb-3">
-                      <label className="form-label">Status</label>
-                      <select
-                        class={`form-select`}
-                        id="status"
-                        name="status"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.status}
-                      >
-                        <option value={""} selected disabled hidden>
-                          Select
-                        </option>
-                        <option value="under process">under process</option>
-                        <option value="Pending">Pending</option>
-                      </select>
-                    </div>
-                  </div> */}
+
                   <div class="col-4">
                     <div class="mb-3">
                       <label className="form-label">Attachment</label>
-                      <input
+                      {/* <input
                         className="form-control"
                         type="file"
                         accept=".pdf, .jpg, .jpeg, .png"
@@ -524,6 +469,20 @@ function AddEditLegislativeBill() {
                         //     event.currentTarget.files[0]
                         //   );
                         // }}
+                      /> */}
+                      <input
+                        className="form-control"
+                        type="file"
+                        accept=".pdf, .jpg, .jpeg, .png"
+                        id="file"
+                        name="file"
+                        multiple
+                        onChange={(event) => {
+                          formik.setFieldValue(
+                            "attachment",
+                            event.currentTarget.files
+                          );
+                        }}
                       />
 
                       {imageLinks.length > 0 && (
@@ -542,6 +501,92 @@ function AddEditLegislativeBill() {
                           ))}
                         </div>
                       )}
+                      {billData &&
+                        billData?.billDocumentsLegis &&
+                        billData?.billDocumentsLegis.map((doc) => (
+                          <div key={doc.id} className="document-section">
+                            {doc.documentType && (
+                              <div
+                                className="document-type"
+                                style={{
+                                  display: "flex",
+                                  color: "black",
+                                  alignItems: "center",
+                                }}
+                              >
+                                <h6
+                                  style={{
+                                    display: "flex",
+                                    color: "black",
+                                    fontSize: "14px",
+                                    marginTop: "15px",
+                                  }}
+                                >
+                                  {doc.documentType}
+                                </h6>
+                                <h6
+                                  style={{
+                                    display: "flex",
+                                    color: "black",
+                                    fontSize: "10px",
+                                    fontWeight: "bold",
+                                    marginTop: "15px",
+                                    marginLeft: "14px",
+                                  }}
+                                >
+                                  {doc?.documentDate
+                                    ? moment(doc?.documentDate).format(
+                                        "DD-MM-YYYY"
+                                      )
+                                    : ""}
+                                </h6>
+                              </div>
+                            )}
+                            {doc.file?.map((file) => (
+                              <div
+                                className="MultiFile-label mt-1"
+                                key={file.id}
+                              >
+                                {/* <a
+                                  className="MultiFile-remove"
+                                  style={{
+                                    marginRight: "10px",
+                                    color: "red",
+                                    cursor: "pointer",
+                                  }}
+                                  // onClick={() =>
+                                  //   alert(
+                                  //     `File ID: ${file.id}, Document Type: ${doc.documentType}`
+                                  //   )
+                                  // }
+                                  onClick={() =>
+                                    hendleRemoveImage(
+                                      doc?.documentType,
+                                      file?.id
+                                    )
+                                  }
+                                >
+                                  x
+                                </a> */}
+                                <span
+                                  className="MultiFile-label"
+                                  title={file.path.split("/").pop()}
+                                >
+                                  <span className="MultiFile-title">
+                                    <a
+                                      href={`${imagesUrl}${file.path}`}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      style={{ cursor: "pointer" }}
+                                    >
+                                      {file.path.split("/").pop()}
+                                    </a>
+                                  </span>
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        ))}
                     </div>
                   </div>
                 </div>

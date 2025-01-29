@@ -33,12 +33,10 @@ function LGMSMinsiterParliamentaryYearList() {
   };
 
   const transformData = (apiData) => {
-    console.log("apiData", apiData);
     return apiData?.map((item) => ({
       id: item.id,
       tenure: String(item?.tenuresMinisters?.tenureName),
       tenureType: String(item?.tenuresMinisters?.tenureType),
-      tenureTerm: item.term?.termName ? `${item.term?.termName}` : "---",
       parliamentaryYear: `${item.parliamentaryTenure}`,
       description: `${item?.description}`,
       fromDate: moment(item.fromDate).format("YYYY/MM/DD"),
@@ -80,16 +78,9 @@ function LGMSMinsiterParliamentaryYearList() {
   // };
 
   const hendleEdit = async (id) => {
-    try {
-      const response = await getParliamentaryYearsByID(id);
-      if (response.success) {
-        navigate("/lgms/dashboard/manage/minister/parliamentary-year/addedit", {
-          state: response?.data,
-        });
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    navigate("/lgms/dashboard/manage/minister/parliamentary-year/addedit", {
+      state: { id },
+    });
   };
 
   return (

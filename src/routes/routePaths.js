@@ -340,6 +340,7 @@ import LGMSAddEditMinisterTenures from "../pages/Dashboard/Modules/LGMS/Manage/M
 import { ChangePasswordScreen } from "../pages/Dashboard/Modules/EFiling/changePassword/index.js";
 import QMSCompareQuestion from "../pages/Dashboard/Modules/QMS/Question/CompareQuestion/index.js";
 import ListOrderOfDay from "../pages/Dashboard/Modules/LGMS/OrderOfTheDay/index.js";
+import TestingNoticePrivateMemberBill from "../pages/Dashboard/Modules/LGMS/LGMSPrivateBill/LGMSEditNoticeOfficeSenateBill/EditPrivateNoticeBill.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -948,7 +949,7 @@ export const ProtectedRoutes = [
     path: "/lgms/dashboard/bills/legislation-bills/private-member-bills/recieved-from-na",
     element: <AllPrivateMemberBillFromNA />,
   },
-  
+
   {
     path: "/lgms/dashboard/order-of-the-day/list",
     element: <ListOrderOfDay />,
@@ -1087,6 +1088,10 @@ export const ProtectedRoutes = [
     path: "/lgms/legislation/private-bill",
     element: <LGMSPrivateBill />,
   },
+  {
+    path: "/lgms/legislation/private-bill/update",
+    element: <LGMSEditNoticeOfficeSenateBills />,
+  },
 
   // {
   //   path: "/lgms/dashboard/bills/NA-bills",
@@ -1121,9 +1126,14 @@ export const ProtectedRoutes = [
     element: <TestingEditSenateBills />,
   },
   {
-    path: "/lgms/dashboard/notice-office/bills/edit/senate-bills",
-    element: <LGMSEditNoticeOfficeSenateBills />,
+    path: "/lgms/dashboard/notice-office/bills/edit-private-senate-bills",
+    // element: <TestingEditSenateBills />,
+    element: <TestingNoticePrivateMemberBill />,
   },
+  // {
+  //   path: "/lgms/dashboard/notice-office/bills/edit/senate-bills",
+  //   element: <LGMSEditNoticeOfficeSenateBills />,
+  // },
 
   {
     path: "/lgms/legislation/private-bill/addedit",

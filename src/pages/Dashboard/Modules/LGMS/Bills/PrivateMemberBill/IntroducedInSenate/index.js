@@ -91,25 +91,61 @@ const AllPrivateMemberSenateBills = () => {
     }));
   };
 
+  // // Get Private Member Bills
+  // const getPrivateMemberBills = useCallback(async () => {
+  //   const searchParams = {
+  //     billCategory: "Private Member Bill",
+  //     billFrom: "From Senate",
+  //   };
+
+  //   const response = await getAllPrivateMemberSenateBills(
+  //     currentPage,
+  //     pageSize,
+  //     searchParams
+  //   );
+  //   if (response?.success) {
+  //     setCount(response?.data?.count);
+  //     const privateMemberSenateBillData = response?.data?.senateBills;
+  //     const trnasformAllData = transformPrivateMemberBillSenate(
+  //       privateMemberSenateBillData
+  //     );
+  //     setPrivateMemberSenateBill(trnasformAllData);
+  //   }
+  // }, [selectedbillFrom, currentPage, pageSize]);
+
   // Get Private Member Bills
   const getPrivateMemberBills = useCallback(async () => {
-    const searchParams = {
-      billCategory: "Private Member Bill",
-      billFrom: "From Senate",
-    };
+    try {
+      const searchParams = {
+        billCategory: "Private Member Bill",
+        billFrom: "From Senate",
+      };
 
-    const response = await getAllPrivateMemberSenateBills(
-      currentPage,
-      pageSize,
-      searchParams
-    );
-    if (response?.success) {
-      setCount(response?.data?.count);
-      const privateMemberSenateBillData = response?.data?.senateBills;
-      const trnasformAllData = transformPrivateMemberBillSenate(
-        privateMemberSenateBillData
+      const response = await getAllPrivateMemberSenateBills(
+        currentPage,
+        pageSize,
+        searchParams
       );
-      setPrivateMemberSenateBill(trnasformAllData);
+
+      if (response?.success) {
+        setCount(response?.data?.count);
+        const privateMemberSenateBillData = response?.data?.senateBills;
+        const transformedData = transformPrivateMemberBillSenate(
+          privateMemberSenateBillData
+        );
+        setPrivateMemberSenateBill(transformedData);
+      } else {
+        console.error("API Error:", response?.message);
+        // Optionally show an error message to the user
+        // showErrorMessage(response?.message || "Failed to fetch data");
+      }
+    } catch (error) {
+      console.error("Error fetching private member bills:", error);
+      // Optionally show an error message to the user
+      showErrorMessage(
+        error?.response?.data?.message ||
+          "Something went wrong. Please try again later."
+      );
     }
   }, [selectedbillFrom, currentPage, pageSize]);
 

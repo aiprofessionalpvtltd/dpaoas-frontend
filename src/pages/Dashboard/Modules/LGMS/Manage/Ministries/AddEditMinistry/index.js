@@ -78,7 +78,7 @@ function LGMSAddEditMinistries() {
   const handleCreateMinsitry = async (values) => {
     const data = {
       ministryName: values?.ministryName,
-      fkTenureId: values?.fkTenureId?.value,
+      fkMinisterTenureId: values?.fkTenureId?.value,
       ministryStatus: "Active",
     };
 
@@ -135,7 +135,7 @@ function LGMSAddEditMinistries() {
   const handleEditMinistry = async (values) => {
     const data = {
       ministryName: values.ministryName,
-      fkTenureId: values.fkTenureId?.value,
+      fkMinisterTenureId: values.fkTenureId?.value,
       ministryStatus: values?.ministryStatus,
     };
 

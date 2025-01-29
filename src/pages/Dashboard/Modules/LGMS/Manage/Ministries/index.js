@@ -24,8 +24,8 @@ function LGMSMinistries() {
     return apiData.map((item) => ({
       id: item.id,
       ministeryName: `${item.ministryName}`,
-      ministeryTenure: item?.tenure?.tenureName
-        ? item?.tenure?.tenureName
+      ministeryTenure: item?.tenuresMinisters?.tenureName
+        ? item?.tenuresMinisters?.tenureName
         : "---",
     }));
   };

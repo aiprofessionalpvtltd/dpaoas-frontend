@@ -829,3 +829,18 @@ export const getMinisterParliamentaryYearsByTenure = async (id) => {
     throw error;
   }
 };
+export const getMinisterParliamentaryYearsByID = async (id) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClient.get(`/parliamentaryYearsMna/${id}`);
+    // {
+    //   headers: {
+    //     Authorization: `Bearer ${token}`,
+    //   }
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};

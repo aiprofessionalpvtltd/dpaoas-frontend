@@ -23,6 +23,7 @@ import { ToastContainer } from "react-toastify";
 import { AuthContext } from "../../../../../../../api/AuthContext";
 import {
   createMinister,
+  getAllLegisMinistries,
   getAllMinisterTenures,
   getMinisterParliamentaryYearsByTenure,
   getSingleMinisterByID,
@@ -40,9 +41,11 @@ function LGMSMinisterAddEditForm() {
   const location = useLocation();
   const navigate = useNavigate();
   const [tenures, setTenures] = useState([]);
+  console.log("minister", tenures);
   const [ministerByID, setMinisterByID] = useState();
   const [allparties, setAllParties] = useState([]);
-  const { ministryData } = useContext(AuthContext);
+  // const { ministryData } = useContext(AuthContext);
+  const [ministryData, setMinistryData] = useState([]);
   const [parliamentaryYearData, setParliamentaryYearData] = useState([]);
   const formik = useFormik({
     initialValues: {
@@ -65,14 +68,23 @@ function LGMSMinisterAddEditForm() {
       }
     },
   });
-  console.log("formik.vlaues", formik?.values);
+  const getAllMinisteriesApi = async () => {
+    try {
+      const response = await getAllLegisMinistries(0, 5000);
+      if (response?.success) {
+        setMinistryData(response.data?.ministries);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  };
   const handleCreateMinisters = async (values) => {
     const data = {
       mnaData: {
         mnaName: values?.mnaName,
         politicalParty: Number(values?.politicalParty),
-        fkTenureId: Number(values?.memberTenure),
-        fkParliamentaryYearId: Number(values?.fkParliamentaryYearId),
+        fkMinisterTenureId: Number(values?.memberTenure),
+        fkMnaParliamentaryYearId: Number(values?.fkParliamentaryYearId),
         phone: String(values?.phone),
         constituency: values?.constituency,
         address: values?.address,
@@ -98,7 +110,7 @@ function LGMSMinisterAddEditForm() {
 
   const handleTenures = async () => {
     try {
-      const response = await getAllMinisterTenures(0, 1000, "Ministers");
+      const response = await getAllMinisterTenures(0, 5000, "Ministers");
       if (response?.success) {
         setTenures(response?.data?.tenures);
       }
@@ -150,6 +162,7 @@ function LGMSMinisterAddEditForm() {
   };
   useEffect(() => {
     AllPoliticalPartiesList();
+    getAllMinisteriesApi();
     handleTenures();
     if (location.state?.id) {
       getMinisterByIdApi();
@@ -162,8 +175,8 @@ function LGMSMinisterAddEditForm() {
       formik.setValues({
         mnaName: ministerByID?.mnaName || "",
         constituency: ministerByID?.constituency || "",
-        memberTenure: ministerByID.fkTenureId || "",
-        fkParliamentaryYearId: ministerByID?.parliamentaryYears?.id || "",
+        memberTenure: ministerByID.fkMinisterTenureId || "",
+        fkParliamentaryYearId: ministerByID?.fkMnaParliamentaryYearId || "",
         phone: ministerByID?.phone || "",
         politicalParty: ministerByID?.politicalParty || "",
         address: ministerByID?.address || "",
@@ -173,7 +186,7 @@ function LGMSMinisterAddEditForm() {
             label: ministry?.ministryName,
           })) || [],
       });
-      getParliamentaryYearsonTheBaseOfTenure(ministerByID?.fkTenureId);
+      getParliamentaryYearsonTheBaseOfTenure(ministerByID?.fkMinisterTenureId);
     }
   }, [ministerByID, formik.setValues]);
 
@@ -181,8 +194,8 @@ function LGMSMinisterAddEditForm() {
     const data = {
       mnaData: {
         mnaName: values?.mnaName,
-        fkTenureId: Number(values?.memberTenure),
-        fkParliamentaryYearId: Number(values?.fkParliamentaryYearId),
+        fkMinisterTenureId: Number(values?.memberTenure),
+        fkMnaParliamentaryYearId: Number(values?.fkParliamentaryYearId),
         politicalParty: Number(values?.politicalParty),
         phone: String(values?.phone),
         constituency: values?.constituency,
