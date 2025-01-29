@@ -26,6 +26,8 @@ import moment from "moment";
 import {
   createMinisterParliamentaryYears,
   getAllMinisterTenures,
+  getMinisterParliamentaryYearsByID,
+  getMinisterParliamentaryYearsByTenure,
 } from "../../../../../../../api/APIs/Services/LegislationModule.service";
 const validationSchema = Yup.object({
   parliamentaryTenure: Yup.string().required("Tenure is required"),
@@ -38,6 +40,7 @@ function LGMSAddEditMininsterParliamentaryYearForm() {
   const location = useLocation();
   const navigate = useNavigate();
   const [singleParliamentaryYear, setSingleParliamentaryYear] = useState([]);
+  console.log("locationlocationlocation", location);
 
   const [tenures, setTenures] = useState([]);
   const [tenuresTerms, setTenuresTerms] = useState([]);
@@ -98,7 +101,7 @@ function LGMSAddEditMininsterParliamentaryYearForm() {
   // Calling API
   const getParliamentaryYearByIdApi = async () => {
     try {
-      const response = await getParliamentaryYearsByID(
+      const response = await getMinisterParliamentaryYearsByID(
         location.state?.id && location.state?.id
       );
       if (response?.success) {
@@ -114,10 +117,10 @@ function LGMSAddEditMininsterParliamentaryYearForm() {
     if (singleParliamentaryYear) {
       formik.setValues({
         parliamentaryTenure: singleParliamentaryYear?.parliamentaryTenure || "",
-        fkTenureId: singleParliamentaryYear?.tenure
+        fkTenureId: singleParliamentaryYear?.tenuresMinisters
           ? {
-              value: singleParliamentaryYear?.tenure?.id,
-              label: singleParliamentaryYear?.tenure?.tenureName,
+              value: singleParliamentaryYear?.tenuresMinisters?.id,
+              label: singleParliamentaryYear?.tenuresMinisters?.tenureName,
             }
           : "",
         fkTermId: singleParliamentaryYear.term

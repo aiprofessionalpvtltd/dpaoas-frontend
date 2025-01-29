@@ -7,6 +7,7 @@ import { LegislationSideBarItems } from "../../../../../../../utils/sideBarItems
 import { Layout } from "../../../../../../../components/Layout";
 import Header from "../../../../../../../components/Header";
 import { getAllGovernmentSenateBills } from "../../../../../../../api/APIs/Services/LegislationModule.service";
+import { showErrorMessage } from "../../../../../../../utils/ToastAlert";
 
 const AllGovernmentSenateBills = () => {
   const navigate = useNavigate();
@@ -83,25 +84,65 @@ const AllGovernmentSenateBills = () => {
     }));
   };
 
+  // // Handle API Call (Get All Government Bills Senate)
+  // const getGovernmentSenateBillApi = useCallback(async () => {
+  //   const searchParams = {
+  //     billCategory: "Government Bill",
+  //     billFrom: "From Senate",
+  //   };
+
+  //   const response = await getAllGovernmentSenateBills(
+  //     currentPage,
+  //     pageSize,
+  //     searchParams
+  //   );
+  //   if (response?.success) {
+  //     setCount(response?.data?.count);
+  //     const governmentSenateBillData = response?.data?.senateBills;
+  //     const transformAllGovernmentSenateBillData =
+  //       transformGovernmentSenateBillData(governmentSenateBillData);
+  //     setGovernmantSenateBill(transformAllGovernmentSenateBillData);
+  //     // showSuccessMessage(response?.message)
+  //   }
+  // }, [selectedbillFrom, currentPage, pageSize]);
+
+  // useEffect(() => {
+  //   getGovernmentSenateBillApi();
+  // }, [getGovernmentSenateBillApi]);
+
   // Handle API Call (Get All Government Bills Senate)
   const getGovernmentSenateBillApi = useCallback(async () => {
-    const searchParams = {
-      billCategory: "Government Bill",
-      billFrom: "From Senate",
-    };
+    try {
+      const searchParams = {
+        billCategory: "Government Bill",
+        billFrom: "From Senate",
+      };
 
-    const response = await getAllGovernmentSenateBills(
-      currentPage,
-      pageSize,
-      searchParams
-    );
-    if (response?.success) {
-      setCount(response?.data?.count);
-      const governmentSenateBillData = response?.data?.senateBills;
-      const transformAllGovernmentSenateBillData =
-        transformGovernmentSenateBillData(governmentSenateBillData);
-      setGovernmantSenateBill(transformAllGovernmentSenateBillData);
-      // showSuccessMessage(response?.message)
+      const response = await getAllGovernmentSenateBills(
+        currentPage,
+        pageSize,
+        searchParams
+      );
+
+      if (response?.success) {
+        setCount(response?.data?.count);
+        const governmentSenateBillData = response?.data?.senateBills;
+        const transformAllGovernmentSenateBillData =
+          transformGovernmentSenateBillData(governmentSenateBillData);
+        setGovernmantSenateBill(transformAllGovernmentSenateBillData);
+        // showSuccessMessage(response?.message)
+      } else {
+        console.error("API Error:", response?.message);
+        // Optionally, show an error message to the user
+        // showErrorMessage(response?.message || "Failed to fetch data");
+      }
+    } catch (error) {
+      console.error("Error fetching government senate bills:", error);
+      // Optionally, show an error message to the user
+      showErrorMessage(
+        error?.response?.data?.message ||
+          "Something went wrong. Please try again later."
+      );
     }
   }, [selectedbillFrom, currentPage, pageSize]);
 

@@ -22,7 +22,7 @@ function LGMSMinisters() {
   const [count, setCount] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [toUpdateMemberId, setToUpdateMemberId] = useState(null);
-  const pageSize = 10; // Set your desired page size
+  const pageSize = 100; // Set your desired page size
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked

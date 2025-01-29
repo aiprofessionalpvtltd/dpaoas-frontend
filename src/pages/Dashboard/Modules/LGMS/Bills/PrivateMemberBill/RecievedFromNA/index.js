@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import RecievedFromNA from "../../../../../../../components/LegislationBills/RecievedFromNA";
 import { Layout } from "../../../../../../../components/Layout";
+import { showErrorMessage } from "../../../../../../../utils/ToastAlert";
 
 const AllPrivateMemberBillFromNA = () => {
   const navigate = useNavigate();
@@ -115,26 +116,36 @@ const AllPrivateMemberBillFromNA = () => {
     }));
   };
 
-  // Handle API Call (Get All Government Bills Recieved From NA)
   const getGovernmentNABillApi = useCallback(async () => {
-    const searchParams = {
-      billCategory: "Private Member Bill",
-      billFrom: "From NA",
-    };
+    try {
+      const searchParams = {
+        billCategory: "Private Member Bill",
+        billFrom: "From NA",
+      };
 
-    const response = await getAllPrivateMemberNABills(
-      currentPage,
-      pageSize,
-      searchParams
-    );
-    if (response?.success) {
-      setCount(response?.data?.count);
-      const privateMemberNABillData = response?.data?.senateBills;
-      const transformAllPrivateNABillData = transformPrivateNABillData(
-        privateMemberNABillData
+      const response = await getAllPrivateMemberNABills(
+        currentPage,
+        pageSize,
+        searchParams
       );
-      setPrivateMemberNABill(transformAllPrivateNABillData);
-      // showSuccessMessage(response?.message)
+
+      if (response?.success) {
+        setCount(response?.data?.count);
+        const privateMemberNABillData = response?.data?.senateBills;
+        const transformAllPrivateNABillData = transformPrivateNABillData(
+          privateMemberNABillData
+        );
+        setPrivateMemberNABill(transformAllPrivateNABillData);
+        // showSuccessMessage(response?.message)
+      } else {
+        console.error("API response unsuccessful:", response);
+      }
+    } catch (error) {
+      console.error("Error fetching Government NA Bills:", error);
+      // Optionally, show an error message to the user
+      showErrorMessage(
+        error?.response?.data?.message || "Failed to load Government NA Bills."
+      );
     }
   }, [selectedbillFrom, currentPage, pageSize]);
 

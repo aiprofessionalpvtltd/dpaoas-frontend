@@ -829,6 +829,20 @@ export const getMinisterParliamentaryYearsByTenure = async (id) => {
     throw error;
   }
 };
+export const getMinisterParliamentaryYearsByID = async (id) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClient.get(`/parliamentaryYearsMna/${id}`);
+    // {
+    //   headers: {
+    //     Authorization: `Bearer ${token}`,
+    //   }
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
 
 //Finance API's
 export const listFinanceMoneyBil = async (
@@ -886,12 +900,16 @@ export const getFinanceMoneyBillByID = async (id) => {
 
 export const UpdateFinanceMoneyBill = async (id, data) => {
   try {
-    const response = await axiosClient.put(`/finance-money-bill/update/${id}`, data, {
-      headers: {
-        accept: "application/json",
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    const response = await axiosClient.put(
+      `/finance-money-bill/update/${id}`,
+      data,
+      {
+        headers: {
+          accept: "application/json",
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
 
     return response?.data;
   } catch (error) {

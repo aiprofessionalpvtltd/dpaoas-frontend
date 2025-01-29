@@ -7,11 +7,13 @@ import {
   faClipboardQuestion,
   faFileImport,
 } from "@fortawesome/free-solid-svg-icons";
+import { ToastContainer } from "react-toastify";
 import {
   getAllGovernmentSenateBills,
   getAllPrivateMemberSenateBills,
 } from "../../../../api/APIs/Services/LegislationModule.service";
 import { useNavigate } from "react-router-dom";
+import { showErrorMessage } from "../../../../utils/ToastAlert";
 
 function LegislationManagementSystemDashboard() {
   const navigate = useNavigate();
@@ -23,69 +25,158 @@ function LegislationManagementSystemDashboard() {
     useState(0);
   const [totalPrivateFromNACount, setTotalPrivateFromNACount] = useState(0);
 
+  // const getGovBillsSenateNACount = useCallback(async () => {
+  //   const searchParams = {
+  //     billCategory: "Government Bill",
+  //   };
+
+  //   const response = await getAllGovernmentSenateBills(0, 5000, searchParams);
+  //   if (response?.success) {
+  //     const governmentNABillData = response?.data?.senateBills || [];
+
+  //     // Set the total count of bills
+  //     setTotalCount(response?.data?.count || 0);
+
+  //     // Filter data based on 'billFrom'
+  //     const filteredSenateData = governmentNABillData.filter(
+  //       (bill) => bill?.billFrom === "From Senate"
+  //     );
+
+  //     setTotalFromSenateCount(filteredSenateData?.length);
+
+  //     const filteredNAData = governmentNABillData.filter(
+  //       (bill) => bill?.billFrom === "From NA"
+  //     );
+
+  //     setTotalFromNACount(filteredNAData?.length);
+  //   }
+  // }, []);
+  // const getPrivateMemberBillsSenateNACount = useCallback(async () => {
+  //   const searchParams = {
+  //     billCategory: "Private Member Bill",
+  //   };
+
+  //   const response = await getAllPrivateMemberSenateBills(
+  //     0,
+  //     5000,
+  //     searchParams
+  //   );
+  //   if (response?.success) {
+  //     const privateMemeberBillData = response?.data?.senateBills || [];
+
+  //     // Set the total count of bills
+  //     setTotalPrivateCount(response?.data?.count || 0);
+
+  //     // Filter data based on 'billFrom'
+  //     const filteredSenateData = privateMemeberBillData.filter(
+  //       (bill) => bill?.billFrom === "From Senate"
+  //     );
+
+  //     setTotalPrivateFromSenateCount(filteredSenateData?.length);
+
+  //     const filteredNAData = privateMemeberBillData.filter(
+  //       (bill) => bill?.billFrom === "From NA"
+  //     );
+
+  //     setTotalPrivateFromNACount(filteredNAData?.length);
+  //   }
+  // }, [
+  //   totalCount,
+  //   totalFromNACount,
+  //   totalFromSenateCount,
+  //   totalPrivateCount,
+  //   totalPrivateFromNACount,
+  //   totalPrivateFromSenateCount,
+  // ]);
+
   const getGovBillsSenateNACount = useCallback(async () => {
-    const searchParams = {
-      billCategory: "Government Bill",
-    };
+    try {
+      const searchParams = {
+        billCategory: "Government Bill",
+      };
 
-    const response = await getAllGovernmentSenateBills(0, 5000, searchParams);
-    if (response?.success) {
-      const governmentNABillData = response?.data?.senateBills || [];
+      const response = await getAllGovernmentSenateBills(0, 5000, searchParams);
 
-      // Set the total count of bills
-      setTotalCount(response?.data?.count || 0);
+      if (response?.success) {
+        const governmentNABillData = response?.data?.senateBills || [];
 
-      // Filter data based on 'billFrom'
-      const filteredSenateData = governmentNABillData.filter(
-        (bill) => bill?.billFrom === "From Senate"
+        // Set the total count of bills
+        setTotalCount(response?.data?.count || 0);
+
+        // Filter data based on 'billFrom'
+        const filteredSenateData = governmentNABillData.filter(
+          (bill) => bill?.billFrom === "From Senate"
+        );
+
+        setTotalFromSenateCount(filteredSenateData?.length);
+
+        const filteredNAData = governmentNABillData.filter(
+          (bill) => bill?.billFrom === "From NA"
+        );
+
+        setTotalFromNACount(filteredNAData?.length);
+      } else {
+        console.error("API Error:", response?.message);
+        // Optionally show an error message to the user
+        // showErrorMessage(response?.message || "Failed to fetch data");
+      }
+    } catch (error) {
+      console.error(
+        "Error fetching government bills count:",
+        error?.response?.data?.message
       );
-
-      setTotalFromSenateCount(filteredSenateData?.length);
-
-      const filteredNAData = governmentNABillData.filter(
-        (bill) => bill?.billFrom === "From NA"
+      // Optionally show an error message to the user
+      showErrorMessage(
+        error?.response?.data?.message ||
+          "Something went wrong. Please try again later."
       );
-
-      setTotalFromNACount(filteredNAData?.length);
     }
   }, []);
+
   const getPrivateMemberBillsSenateNACount = useCallback(async () => {
-    const searchParams = {
-      billCategory: "Private Member Bill",
-    };
+    try {
+      const searchParams = {
+        billCategory: "Private Member Bill",
+      };
 
-    const response = await getAllPrivateMemberSenateBills(
-      0,
-      5000,
-      searchParams
-    );
-    if (response?.success) {
-      const privateMemeberBillData = response?.data?.senateBills || [];
-
-      // Set the total count of bills
-      setTotalPrivateCount(response?.data?.count || 0);
-
-      // Filter data based on 'billFrom'
-      const filteredSenateData = privateMemeberBillData.filter(
-        (bill) => bill?.billFrom === "From Senate"
+      const response = await getAllPrivateMemberSenateBills(
+        0,
+        5000,
+        searchParams
       );
 
-      setTotalPrivateFromSenateCount(filteredSenateData?.length);
+      if (response?.success) {
+        const privateMemeberBillData = response?.data?.senateBills || [];
 
-      const filteredNAData = privateMemeberBillData.filter(
-        (bill) => bill?.billFrom === "From NA"
+        // Set the total count of bills
+        setTotalPrivateCount(response?.data?.count || 0);
+
+        // Filter data based on 'billFrom'
+        const filteredSenateData = privateMemeberBillData.filter(
+          (bill) => bill?.billFrom === "From Senate"
+        );
+
+        setTotalPrivateFromSenateCount(filteredSenateData?.length);
+
+        const filteredNAData = privateMemeberBillData.filter(
+          (bill) => bill?.billFrom === "From NA"
+        );
+
+        setTotalPrivateFromNACount(filteredNAData?.length);
+      } else {
+        console.error("API Error:", response?.message);
+        // Optionally show an error message to the user
+        // showErrorMessage(response?.message || "Failed to fetch data");
+      }
+    } catch (error) {
+      console.error("Error fetching private member bills count:", error);
+      // Optionally show an error message to the user
+      showErrorMessage(
+        error?.response?.data?.message ||
+          "Something went wrong. Please try again later."
       );
-
-      setTotalPrivateFromNACount(filteredNAData?.length);
     }
-  }, [
-    totalCount,
-    totalFromNACount,
-    totalFromSenateCount,
-    totalPrivateCount,
-    totalPrivateFromNACount,
-    totalPrivateFromSenateCount,
-  ]);
+  }, []);
 
   useEffect(() => {
     getGovBillsSenateNACount();
@@ -97,6 +188,7 @@ function LegislationManagementSystemDashboard() {
       sidebarItems={LegislationSideBarItems}
       centerlogohide={true}
     >
+      <ToastContainer />
       <Header dashboardLink={"/"} title1={"Legislation Stats"} />
       <div style={{ marginLeft: 15 }}>
         <h2

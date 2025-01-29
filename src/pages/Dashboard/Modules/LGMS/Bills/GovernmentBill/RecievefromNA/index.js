@@ -13,6 +13,7 @@ import RecievedFromNA from "../../../../../../../components/LegislationBills/Rec
 import { Layout } from "../../../../../../../components/Layout";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
+import { showErrorMessage } from "../../../../../../../utils/ToastAlert";
 
 const AllGovernmentRecievedNABills = () => {
   const navigate = useNavigate();
@@ -105,25 +106,60 @@ const AllGovernmentRecievedNABills = () => {
     }));
   };
 
-  // Handle API Call (Get All Government Bills Recieved From NA)
-  const getGovernmentNABillApi = useCallback(async () => {
-    const searchParams = {
-      billCategory: "Government Bill",
-      billFrom: "From NA",
-    };
+  // // Handle API Call (Get All Government Bills Recieved From NA)
+  // const getGovernmentNABillApi = useCallback(async () => {
+  //   const searchParams = {
+  //     billCategory: "Government Bill",
+  //     billFrom: "From NA",
+  //   };
 
-    const response = await getAllGovernmentNABills(
-      currentPage,
-      pageSize,
-      searchParams
-    );
-    if (response?.success) {
-      setCount(response?.data?.count);
-      const governmentNABillData = response?.data?.senateBills;
-      const transformAllGovernmentNABillData =
-        transformGovernmentSenateBillData(governmentNABillData);
-      setGovernmantNABill(transformAllGovernmentNABillData);
-      // showSuccessMessage(response?.message)
+  //   const response = await getAllGovernmentNABills(
+  //     currentPage,
+  //     pageSize,
+  //     searchParams
+  //   );
+  //   if (response?.success) {
+  //     setCount(response?.data?.count);
+  //     const governmentNABillData = response?.data?.senateBills;
+  //     const transformAllGovernmentNABillData =
+  //       transformGovernmentSenateBillData(governmentNABillData);
+  //     setGovernmantNABill(transformAllGovernmentNABillData);
+  //     // showSuccessMessage(response?.message)
+  //   }
+  // }, [selectedbillFrom, currentPage, pageSize]);
+
+  const getGovernmentNABillApi = useCallback(async () => {
+    try {
+      const searchParams = {
+        billCategory: "Government Bill",
+        billFrom: "From NA",
+      };
+
+      const response = await getAllGovernmentNABills(
+        currentPage,
+        pageSize,
+        searchParams
+      );
+
+      if (response?.success) {
+        setCount(response?.data?.count);
+        const governmentNABillData = response?.data?.senateBills;
+        const transformAllGovernmentNABillData =
+          transformGovernmentSenateBillData(governmentNABillData);
+        setGovernmantNABill(transformAllGovernmentNABillData);
+        // showSuccessMessage(response?.message)
+      } else {
+        console.error("API Error:", response?.message);
+        // Optionally show an error message to the user
+        // showErrorMessage(response?.message || "Failed to fetch data");
+      }
+    } catch (error) {
+      console.error("Error fetching government NA bills:", error);
+      // Optionally show an error message to the user
+      showErrorMessage(
+        error?.response?.data?.message ||
+          "Something went wrong. Please try again later."
+      );
     }
   }, [selectedbillFrom, currentPage, pageSize]);
 

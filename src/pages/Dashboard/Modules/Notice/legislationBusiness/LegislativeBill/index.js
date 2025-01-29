@@ -29,7 +29,6 @@ function LegislativeBillList({ isDashboardData }) {
     setCurrentPage(page);
   };
   const transformLegislativeData = (apiData) => {
-    console.log("apiData bills bills", apiData);
     return apiData.map((item, index) => ({
       "S.No": index + 1,
       id: item?.id,
@@ -68,8 +67,6 @@ function LegislativeBillList({ isDashboardData }) {
         );
       } else {
         response = await getAllLegislativeBillNotice(currentPage, pageSize);
-
-        console.log("responseresponseresponse", response);
       }
       if (response?.success) {
         setCount(response?.data?.count);
@@ -100,8 +97,6 @@ function LegislativeBillList({ isDashboardData }) {
   }, [currentPage]);
 
   const sendBill = async (item) => {
-    console.log("send Bill Clicked and called");
-    console.log("ITemmmmm", item);
     try {
       const data = {
         billSentDate: new Date(),
@@ -113,6 +108,7 @@ function LegislativeBillList({ isDashboardData }) {
       }
     } catch (error) {
       console.log(error);
+      showErrorMessage(error?.response?.data?.message);
     }
   };
 
