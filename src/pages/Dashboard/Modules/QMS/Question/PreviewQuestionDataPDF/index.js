@@ -85,25 +85,65 @@ function QuestionDataPreviewPDF() {
           color: "#000",
         }}
       >
-        <div style={{ textAlign: "center", marginBottom: "20px" }}>
-          <h2 style={{ fontSize: "1.8rem", marginBottom: "5px" }}>
-            SENATE OF PAKISTAN
-          </h2>
-          <h3 style={{ fontSize: "1.2rem", marginBottom: "10px" }}>
-            (Question Branch)
-          </h3>
-          <p style={{ fontSize: "1rem", fontWeight: "bold" }}>
-            SESSION NO: {data && data?.session?.sessionName}
-          </p>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+            width: "100%",
+            marginBottom: "20px",
+          }}
+        >
+          <div style={{ textAlign: "center", flex: 1 }}>
+            <h2 style={{ fontSize: "1.8rem", marginBottom: "5px" }}>
+              SENATE OF PAKISTAN
+            </h2>
+            <h3
+              style={{
+                fontSize: "1.2rem",
+                marginBottom: "10px",
+                borderBottom: "2px dashed black",
+                paddingBottom: "5px",
+                display: "inline-block",
+              }}
+            >
+              (Question Branch)
+            </h3>
+
+            <p style={{ fontSize: "1rem", fontWeight: "bold" }}>
+              SESSION NO: {data && data?.session?.sessionName}
+            </p>
+          </div>
+          <div
+            style={{
+              textAlign: "right",
+              minWidth: "100px",
+              alignSelf: "flex-start",
+            }}
+          >
+            <p
+              style={{
+                marginTop: "5px",
+                fontSize: "1rem",
+                border: "1px solid black",
+                padding: "1px 10px 2px 10px",
+                display: "inline-block",
+              }}
+            >
+              {data && data?.questionCategory?.toUpperCase()}
+            </p>
+          </div>
         </div>
 
         <div style={{ marginBottom: "20px" }}>
           <div style={{ textAlign: "right" }}>
             <p style={{ margin: "5px 0", fontSize: "1rem" }}>
-              <strong>Diary No:</strong> {data && data?.questionDiary?.questionDiaryNo}
+              <strong>Diary No:</strong>{" "}
+              {data && data?.questionDiary?.questionDiaryNo}
             </p>
             <p style={{ margin: "5px 0", fontSize: "1rem" }}>
-              <strong>Group No:</strong>{data && data?.groups?.groupNameStarred}
+              <strong>Group No:</strong>
+              {data && data?.groups?.groupNameStarred}
             </p>
             <p style={{ margin: "5px 0", fontSize: "1rem" }}>
               <strong>QID:</strong> {data && data?.id}
@@ -135,9 +175,10 @@ function QuestionDataPreviewPDF() {
               fontSize: "1.2rem",
               marginBottom: "15px",
               fontWeight: "bold",
+              textDecoration: "underline",
             }}
           >
-            *{data && data?.member?.memberName}
+            *SENATOR {data && data?.member?.memberName?.toUpperCase()}
           </h3>
           <div dangerouslySetInnerHTML={{ __html: data?.englishText }} />
         </div>

@@ -3959,7 +3959,7 @@ button span {
   line-height: 30px;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 350px; /* Adjust the max-width as needed */
+  /* max-width: 350px; Adjust the max-width as needed */
   cursor: pointer;
   text-align: left;
 }

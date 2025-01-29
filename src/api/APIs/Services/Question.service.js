@@ -836,7 +836,7 @@ export const compareQuestion = async (searchParams, currentPage, pageSize) => {
       Object.entries(searchParams).filter(([_, value]) => value !== "")
     );
     const response = await axiosClient.get(
-      `api required ?currentPage=${currentPage}&pageSize=${pageSize}`,
+      `/questions/compareSearch?currentPage=${currentPage}&pageSize=${pageSize}`,
       {
         params: filteredSearchParams,
       }

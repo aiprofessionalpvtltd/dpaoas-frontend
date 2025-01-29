@@ -30,7 +30,7 @@ function ListOrderOfDay() {
     return apiData.map((item) => ({
       id: item?.id,
       sessionName: item?.session?.sessionName,
-      sittingDate: item.sittingDate,
+      sittingLabel: item.sittingLabel,
       description: item?.content
         .replace(/(<([^>]+)>)/gi, "")
         .replace(/&nbsp;/gi, " ")
@@ -97,10 +97,9 @@ function ListOrderOfDay() {
             handlePageChange={handlePageChange}
             currentPage={currentPage}
             pageSize={pageSize}
-            // handlePrint={}
-            // handleUser={}
+            hideDeleteIcon={true}
             totalCount={count}
-            handleDelete={(item) => handleDelete(item.id)}
+            // handleDelete={(item) => handleDelete(item.id)}
           />
         </div>
       </div>

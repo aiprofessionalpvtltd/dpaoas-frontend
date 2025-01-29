@@ -39,12 +39,24 @@ function QMSCompareQuestion() {
       SearchCompareQuestionApi(values);
     },
   });
+  const highlightMatch = (text, query) => {
+    if (!query) return text;
+    const parts = text.split(new RegExp(`(${query})`, 'gi'));
+    return parts.map((part, index) =>
+      part.toLowerCase() === query.toLowerCase() ? (
+        <span key={index} style={{ backgroundColor: 'yellow' }}>{part}</span>
+      ) : (
+        part
+      )
+    );
+  };
   const transformCompareQuestionData = (apiData) => {
     return apiData.map((res, index) => {
       const subjectMatter = [res?.englishText, res?.urduText]
         .filter(Boolean)
         .join(", ");
-      const cleanedSubjectMatter = subjectMatter.replace(/(<([^>]+)>)/gi, "");
+      const cleanedSubjectMatter = subjectMatter.replace(/(<([^>]+)>)/gi, "").replace(/&nbsp;/gi, " ")
+      .replace(/\s+/g, " ");
       return {
         SrNo: index,
         QID: res?.id,
@@ -58,7 +70,7 @@ function QMSCompareQuestion() {
           "hh:ss:a"
         ).format("hh:ss:a"),
         SessionNumber: res?.session?.sessionName,
-        SubjectMatter: cleanedSubjectMatter,
+        SubjectMatter: highlightMatch(cleanedSubjectMatter, formik.values.description),
         Category: res?.questionCategory,
         questionStatus: res?.questionStatus?.questionStatus,
       };
@@ -66,14 +78,12 @@ function QMSCompareQuestion() {
   };
   const SearchCompareQuestionApi = async (values) => {
     const searchParams = {
-      fromSessionNo: values.fromSession,
-      toSessionNo: values.toSession,
-      comparisonPercentage: values.comparisonPercentage,
+      fromSession: values.fromSession,
+      toSession: values.toSession,
+      percentageValue: values.comparisonPercentage,
       description: values.description,
       questionSentStatus: "inQuestion",
     };
-    console.log("api Required For This", searchParams);
-    return;
     try {
       const response = await compareQuestion(
         searchParams,
