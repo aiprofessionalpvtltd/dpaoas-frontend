@@ -5,7 +5,7 @@ export const handlePreviewNotingDoc = (pdfData) => {
     const tableRows = pdfData
       .map(
         (item, index) => `
-        <tr style="page-break-after: always;">
+        <tr>
           <td style="padding: 8px; font-size:12px">${item?.SrNo}</td>
           <td style="padding: 8px; font-size:12px">${item?.SessionNumber}</td>
           <td style="padding: 8px; font-size:12px">${
@@ -60,9 +60,6 @@ export const handlePreviewNotingDoc = (pdfData) => {
           th {
             background-color: #f4f4f4;
             text-align: left;
-          }
-          tr {
-            page-break-after: always;
           }
         </style>
       </head>
