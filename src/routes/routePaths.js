@@ -342,6 +342,7 @@ import QMSCompareQuestion from "../pages/Dashboard/Modules/QMS/Question/CompareQ
 import ListOrderOfDay from "../pages/Dashboard/Modules/LGMS/OrderOfTheDay/index.js";
 import TestingNoticePrivateMemberBill from "../pages/Dashboard/Modules/LGMS/LGMSPrivateBill/LGMSEditNoticeOfficeSenateBill/EditPrivateNoticeBill.js";
 import EditFinanceMoneyBill from "../pages/Dashboard/Modules/LGMS/FinanceMoneyBill/EditFinanceMoneyBill/index.js";
+import QMSBallotResolutionListTemplate from "../pages/Dashboard/Modules/QMS/Resolution/ResolutionList/BallotResolutionTemplate/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -634,6 +635,10 @@ export const ProtectedRoutes = [
   {
     path: "/qms/rsolution/list/ballot/preview-pdf",
     element: <PreviewBallotResolutionList />,
+  },
+  {
+    path: "/qms/rsolution/list/ballot/template/edit",
+    element: <QMSBallotResolutionListTemplate />,
   },
   { path: "/qms/resolution/delete", element: <QMSDeleteResolution /> },
   { path: "/qms/resolution/ballot/list", element: <AllBallotResolutionList /> },
