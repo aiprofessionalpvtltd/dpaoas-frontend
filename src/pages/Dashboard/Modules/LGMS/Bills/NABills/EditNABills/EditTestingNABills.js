@@ -131,6 +131,9 @@ const EditTestingNABills = () => {
     useState(false);
   const [isBillStatusDateCalendarOpen, setBillStatusDateCalendarOpen] =
     useState(false);
+  const [isReturnByPresidentOpen, setReturnByPresidentOpen] = useState(false);
+  const [isPassedByJointSittingOpen, setPassedByJointSittingOpen] =
+    useState(false);
 
   const [filePath, setFilePath] = useState("");
   const GetAllCommittiesApi = async () => {
@@ -206,32 +209,6 @@ const EditTestingNABills = () => {
     }
   };
 
-  // const fetchParliamentaryYears = async (id) => {
-  //   try {
-  //     let response;
-  //     if (location?.state?.forPerson === "Ministers") {
-  //       // Call API for Ministers
-  //       response = await getMinisterParliamentaryYearsByTenure(id);
-  //       if (response?.success) {
-  //         setMinisterParliamentaryYear(response?.data); // Update state for Ministers
-  //       }
-  //     }  if (location?.state?.forPerson === "Senators") {
-  //       // Call API for Senators
-  //       response = await getParliamentaryYearsByTermID(id);
-  //       if (response?.success) {
-  //         setMemberParliamentaryYear(response?.data); // Update state for Senators
-  //       }
-  //     } else {
-  //       console.warn("Invalid 'forPerson' value in location.state");
-  //     }
-  //   } catch (error) {
-  //     console.error(
-  //       "Error fetching parliamentary years:",
-  //       error?.response?.data?.message || error.message
-  //     );
-  //   }
-  // };
-
   //  Getting All Committees Recommendation
   const GetAllCommittiesRecommendationApi = async () => {
     try {
@@ -247,22 +224,6 @@ const EditTestingNABills = () => {
     }
   };
 
-  // const getParliamentaryYearsonTheBaseOfTenure = async (id) => {
-  //   try {
-  //     const response = await getParliamentaryYearsByTenureID(id);
-  //     if (response?.success) {
-  //       console.log("MNA Paraliamenary Years", response?.data);
-  //       if (BillCategory === "Private Member Bill" && BillFrom === "From NA") {
-  //         setMNAParliamentaryYearData(response?.data);
-  //       } else {
-  //         setParliamentaryYearData(response?.data);
-  //       }
-  //       // setTonerModels(transformedData);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
   // Getting All MNA
   const getAllMNA = async () => {
     try {
@@ -276,18 +237,6 @@ const EditTestingNABills = () => {
     }
   };
 
-  // //Get Parliamentary Year
-  // const getParliamentaryYearsonTheBaseOfTerm = async (id) => {
-  //   try {
-  //     const response = await getParliamentaryYearsByTermID(id);
-  //     if (response?.success) {
-  //       setParliamentaryYearData(response?.data);
-  //       // setTonerModels(transformedData);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
   const getAllBillStatusData = async () => {
     try {
       const response = await getAllBillStatus(0, 500);
@@ -299,35 +248,6 @@ const EditTestingNABills = () => {
       console.log(error);
     }
   };
-
-  // const handleTenures = async (selectionType) => {
-  //   try {
-  //     // Check if the bill is a Private Member Bill and "From NA"
-  //     if (BillCategory === "Private Member Bill" && BillFrom === "From NA") {
-  //       // Fetch tenures for both ministers and senators
-  //       const [ministersResponse, senatorsResponse] = await Promise.all([
-  //         getAllTenures(0, 1000, "Ministers"), // Ministers
-  //         getAllTenures(0, 1000, "Senators"), // Senators
-  //       ]);
-
-  //       // Update state with fetched data
-  //       if (ministersResponse?.success) {
-  //         setMNATenures(ministersResponse?.data?.tenures);
-  //       }
-  //       if (senatorsResponse?.success) {
-  //         setTenures(senatorsResponse?.data?.tenures);
-  //       }
-  //     } else {
-  //       // Fetch tenures based on the selection type
-  //       const response = await getAllTenures(0, 1000, selectionType);
-  //       if (response?.success) {
-  //         setTenures(response?.data?.tenures);
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.log(error?.response?.data?.message);
-  //   }
-  // };
 
   useEffect(() => {
     getAllMNA();
@@ -381,6 +301,8 @@ const EditTestingNABills = () => {
       memeberNoticeDate: "",
       fkSessionMemberPassageId: "",
       dateOfPassageByNA: "",
+      dateOfReturnByPresident: "",
+      passedInJointSitting: "",
       documentDiscription: "",
       documentDate: "",
       documentType: "",
@@ -541,22 +463,22 @@ const EditTestingNABills = () => {
     setGazetteCalendarOpen(false);
   };
 
-  const handlePassageCalendarToggle = () => {
-    setPassageCalendarOpen(!isPassageCalendarOpen);
+  const handleReturnByPresidentCalendarToggle = () => {
+    setReturnByPresidentOpen(!isReturnByPresidentOpen);
   };
   // Handale DateCHange
-  const handlePassageDateSelect = (date) => {
-    formik.setFieldValue("memeberNoticeDate", date);
-    setPassageCalendarOpen(false);
+  const handleReturnByPresidentDateSelect = (date) => {
+    formik.setFieldValue("dateOfReturnByPresident", date);
+    setReturnByPresidentOpen(false);
   };
 
-  const handlePassageByNACalendarToggle = () => {
-    setPassageByNADateCalendarOpen(!isPassageByNADateCalendarOpen);
+  const handlePassedByJointSittingCalendarToggle = () => {
+    setPassedByJointSittingOpen(!isPassedByJointSittingOpen);
   };
   // Handale DateCHange
-  const handlePassageByNADateSelect = (date) => {
-    formik.setFieldValue("dateOfPassageByNA", date);
-    setPassageByNADateCalendarOpen(false);
+  const handlePassedByJointSittingDateSelect = (date) => {
+    formik.setFieldValue("passedInJointSitting", date);
+    setPassedByJointSittingOpen(false);
   };
 
   const handleDocomentDateCalendarToggle = () => {
@@ -568,16 +490,6 @@ const EditTestingNABills = () => {
     formik.setFieldValue("documentDate", date);
     setDocomentDateCalendarOpen(false);
   };
-  // const handleTenures = async (selectionType) => {
-  //   try {
-  //     const response = await getAllTenures(0, 1000, selectionType);
-  //     if (response?.success) {
-  //       setTenures(response?.data?.tenures);
-  //     }
-  //   } catch (error) {
-  //     console.log(error?.response?.data?.message);
-  //   }
-  // };
 
   // GetTerms on the Base of Tenure
   const handleTenuresTerms = async (id) => {
@@ -996,6 +908,18 @@ const EditTestingNABills = () => {
                 "YYYY-MM-DD"
               ).toDate()
             : "",
+          dateOfReturnByPresident: singleSenateBillData?.dateOfReturnByPresident
+            ? moment(
+                singleSenateBillData?.dateOfReturnByPresident,
+                "YYYY-MM-DD"
+              ).toDate()
+            : null,
+          passedInJointSitting: singleSenateBillData?.passedInJointSitting
+            ? moment(
+                singleSenateBillData?.passedInJointSitting,
+                "YYYY-MM-DD"
+              ).toDate()
+            : null,
 
           dateOfPublishInGazette: singleSenateBillData?.dateOfPublishInGazette
             ? moment(
@@ -1095,12 +1019,12 @@ const EditTestingNABills = () => {
     if (BillCategory === "Private Member Bill") {
       formData.append(
         "fileNumber",
-        `24/(${values?.fileNumber})/${currentYear}`
+        `24/(${values?.fileNumber})/${currentYear}-Legis`
       );
     } else {
       formData.append(
         "fileNumber",
-        `09/(${values?.fileNumber})/${currentYear}`
+        `09/(${values?.fileNumber})/${currentYear}-Legis`
       );
     }
     // formData.append("fileNumber",   `09(${values?.fileNumber})/2024`);
@@ -1160,6 +1084,18 @@ const EditTestingNABills = () => {
         "fkManageCommitteeRecomendationId",
         values?.committeeRecomendation?.value
       );
+    }
+    if (values?.dateOfReturnByPresident) {
+      const formattedDate = moment(values?.dateOfReturnByPresident).format(
+        "YYYY-MM-DD"
+      );
+      formData.append("dateOfReturnByPresident", formattedDate);
+    }
+    if (values?.passedInJointSitting) {
+      const formattedDate = moment(values?.passedInJointSitting).format(
+        "YYYY-MM-DD"
+      );
+      formData.append("passedInJointSitting", formattedDate);
     }
     // if (values?.reportPresentationDate) {
     //   formData.append("reportPresentationDate", values?.reportPresentationDate);
@@ -1977,7 +1913,7 @@ const EditTestingNABills = () => {
                                 Amendment Bill
                               </option>
                               <option value="Constitutional Amendment Bill">
-                                Constitution Amendment Bill
+                                Constitutional Amendment Bill
                               </option>
                               <option value="New Bill">New Law</option>
                             </select>
@@ -2707,40 +2643,10 @@ const EditTestingNABills = () => {
                           />
                         </div>
                       </div>
-
-                      {/* <div className="form-group col">
-                        <label
-                          htmlFor="passageWithdrawal"
-                          className="form-label"
-                        >
-                          Memeber Passage/Withdrawal Status
-                        </label>
-
-                        <select
-                          id="fkMemberPassageId"
-                          name="fkMemberPassageId"
-                          className={`form-select ${
-                            formik.touched.fkMemberPassageId &&
-                            formik.errors.fkMemberPassageId
-                              ? "is-invalid"
-                              : ""
-                          }`}
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          value={formik.values.fkMemberPassageId}
-                        >
-                          <option value="" disabled hidden>
-                            Select
-                          </option>
-                          <option value={"Passage"}>Passage</option>
-                          <option value={"withdrawal"}>withdrawal</option>
-                        </select>
-                      </div> */}
-
-                      {/* <div className="col">
+                      <div className="col-3">
                         <div class="mb-3 " style={{ position: "relative" }}>
                           <label class="form-label">
-                            Memeber Passage/Withdrawal Notice Date
+                            Bill Return by President On
                           </label>
                           <span
                             style={{
@@ -2750,91 +2656,62 @@ const EditTestingNABills = () => {
                               zIndex: 1,
                               fontSize: "20px",
                               color: "#666",
-                              cursor: "pointer",
                             }}
-                            onClick={handlePassageCalendarToggle}
+                            onClick={handleReturnByPresidentCalendarToggle}
                           >
                             <FontAwesomeIcon icon={faCalendarAlt} />
                           </span>
                           <DatePicker
-                            selected={formik.values.memeberNoticeDate}
-                            onChange={handlePassageDateSelect}
+                            selected={formik.values.dateOfReturnByPresident}
+                            onChange={handleReturnByPresidentDateSelect}
                             className={"form-control"}
-                            open={isPassageCalendarOpen}
-                            onClickOutside={() => setPassageCalendarOpen(false)}
-                            onInputClick={handlePassageCalendarToggle}
+                            open={isReturnByPresidentOpen}
+                            onClickOutside={() =>
+                              setReturnByPresidentOpen(false)
+                            }
+                            onInputClick={handleReturnByPresidentCalendarToggle}
                             maxDate={new Date()}
                             dateFormat="dd-MM-yyyy"
                           />
                         </div>
-                      </div> */}
-
-                      {/* <div className="form-group col">
-                        <label htmlFor="session" className="form-label">
-                          Consideration in Session
-                        </label>
-                        <select
-                          id="fkSessionMemberPassageId"
-                          name="fkSessionMemberPassageId"
-                          className="form-control"
-                          onChange={formik.handleChange}
-                          value={formik.values.fkSessionMemberPassageId}
-                        >
-                          <option value="" disabled hidden>
-                            Select
-                          </option>
-                          {sessions &&
-                            sessions.map((item) => (
-                              <option value={item.id}>
-                                {item.sessionName}
-                              </option>
-                            ))}
-                        </select>
-                      </div> */}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* 4th card */}
-
-          <div className="container-fluid mt-2">
-            <div class="card mt-1">
-              <div className="card-body">
-                <div className="container-fluid">
-                  <div className="row">
-                    {/* <div className="col-3">
-                      <div class="mb-3 " style={{ position: "relative" }}>
-                        <label class="form-label">Date of Passage by NA</label>
-                        <span
-                          style={{
-                            position: "absolute",
-                            right: "15px",
-                            top: "36px",
-                            zIndex: 1,
-                            fontSize: "20px",
-                            color: "#666",
-                          }}
-                          onClick={handlePassageByNACalendarToggle}
-                        >
-                          <FontAwesomeIcon icon={faCalendarAlt} />
-                        </span>
-                        <DatePicker
-                          selected={formik.values.dateOfPassageByNA}
-                          onChange={handlePassageByNADateSelect}
-                          className={"form-control"}
-                          open={isPassageByNADateCalendarOpen}
-                          onClickOutside={() =>
-                            setPassageByNADateCalendarOpen(false)
-                          }
-                          onInputClick={handlePassageByNACalendarToggle}
-                          maxDate={new Date()}
-                          dateFormat="dd-MM-yyyy"
-                        />
                       </div>
-                    </div> */}
+
+                      <div className="col-3">
+                        <div class="mb-3 " style={{ position: "relative" }}>
+                          <label class="form-label">
+                            Passed in the Join Sitting On
+                          </label>
+                          <span
+                            style={{
+                              position: "absolute",
+                              right: "15px",
+                              top: "36px",
+                              zIndex: 1,
+                              fontSize: "20px",
+                              color: "#666",
+                            }}
+                            onClick={handlePassedByJointSittingCalendarToggle}
+                          >
+                            <FontAwesomeIcon icon={faCalendarAlt} />
+                          </span>
+                          <DatePicker
+                            selected={formik.values.passedInJointSitting}
+                            onChange={handlePassedByJointSittingDateSelect}
+                            className={"form-control"}
+                            open={isPassedByJointSittingOpen}
+                            onClickOutside={() =>
+                              setPassedByJointSittingOpen(false)
+                            }
+                            onInputClick={
+                              handlePassedByJointSittingCalendarToggle
+                            }
+                            maxDate={new Date()}
+                            dateFormat="dd-MM-yyyy"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="row"></div>
                   </div>
                 </div>
               </div>
