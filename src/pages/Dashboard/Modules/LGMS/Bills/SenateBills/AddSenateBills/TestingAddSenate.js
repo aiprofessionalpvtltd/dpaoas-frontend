@@ -230,19 +230,6 @@ function TestingAddSenate() {
     }
   };
 
-  //Get Parliamentary Year
-  // const getParliamentaryYearsonTheBaseOfTerm = async (id) => {
-  //   try {
-  //     const response = await getParliamentaryYearsByTermID(id);
-  //     if (response?.success) {
-  //       setMemberParliamentaryYearData(response?.data);
-  //       // setTonerModels(transformedData);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
   useEffect(() => {
     fetchTenures();
     fetchParliamentaryYears();
@@ -272,12 +259,12 @@ function TestingAddSenate() {
     ) {
       formData.append(
         "fileNumber",
-        `24/(${values?.fileNumber})/${currentYear}`
+        `24/(${values?.fileNumber})/${currentYear}-Legis`
       );
     } else {
       formData.append(
         "fileNumber",
-        `09/(${values?.fileNumber})/${currentYear}`
+        `09/(${values?.fileNumber})/${currentYear}-Legis`
       );
     }
     if (values?.noticeDate) {
@@ -695,15 +682,6 @@ function TestingAddSenate() {
                           <div className="mb-3">
                             <label class="form-label">Member</label>
                             <Select
-                              // options={
-                              //   Array.isArray(membersOnParliamentaryYear) &&
-                              //   membersOnParliamentaryYear.length > 0
-                              //     ? membersOnParliamentaryYear.map((item) => ({
-                              //         value: item.id,
-                              //         label: item?.memberName,
-                              //       }))
-                              //     : []
-                              // }
                               options={
                                 Array.isArray(membersOnParliamentaryYear) &&
                                 membersOnParliamentaryYear.length > 0
@@ -903,7 +881,7 @@ function TestingAddSenate() {
                               Amendment Bill
                             </option>
                             <option value="Constitutional Amendment Bill">
-                              Constitution Amendment Bill
+                              Constitutional Amendment Bill
                             </option>
                             {/* <option value="Finance Bill">Finance Bill</option> */}
                             {/* <option value="Money Bill">Money Bill</option> */}

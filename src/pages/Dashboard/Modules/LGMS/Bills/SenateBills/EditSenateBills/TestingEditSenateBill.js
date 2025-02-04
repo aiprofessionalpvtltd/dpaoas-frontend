@@ -108,7 +108,9 @@ const TestingEditSenateBills = () => {
   const [membersOnParliamentaryYear, setMembersOnParliamentaryYear] = useState(
     []
   );
-
+  const [isReturnByPresidentOpen, setReturnByPresidentOpen] = useState(false);
+  const [isPassedByJointSittingOpen, setPassedByJointSittingOpen] =
+    useState(false);
   const [ministersOnParliamentaryYear, setMinisterOnParliamentaryYear] =
     useState([]);
   const [ministersOnParliamentaryYearData, setMinisterParliamentaryYearData] =
@@ -255,6 +257,8 @@ const TestingEditSenateBills = () => {
       fkSessionMemberPassageId: "",
       dateOfPassageBySenate: "",
       dateOfTransmissionToNA: "",
+      dateOfReturnByPresident: "",
+      passedInJointSitting: "",
       dateOfReceiptMessageFromNA: "",
       dateOfPassageByNA: "",
       documentDiscription: "",
@@ -371,13 +375,22 @@ const TestingEditSenateBills = () => {
     setAssentCalendarOpen(false);
   };
 
-  const handleRecepitMesageCalendarToggle = () => {
-    setRecepitMesageDateCalendarOpen(!isRecepitMesageDateCalendarOpen);
+  const handleReturnByPresidentCalendarToggle = () => {
+    setReturnByPresidentOpen(!isReturnByPresidentOpen);
   };
   // Handale DateCHange
-  const handleRecepitMesageDateSelect = (date) => {
-    formik.setFieldValue("dateOfReceiptMessageFromNA", date);
-    setRecepitMesageDateCalendarOpen(false);
+  const handleReturnByPresidentDateSelect = (date) => {
+    formik.setFieldValue("dateOfReturnByPresident", date);
+    setReturnByPresidentOpen(false);
+  };
+
+  const handlePassedByJointSittingCalendarToggle = () => {
+    setPassedByJointSittingOpen(!isPassedByJointSittingOpen);
+  };
+  // Handale DateCHange
+  const handlePassedByJointSittingDateSelect = (date) => {
+    formik.setFieldValue("passedInJointSitting", date);
+    setPassedByJointSittingOpen(false);
   };
 
   const handlePassageByNACalendarToggle = () => {
@@ -732,6 +745,18 @@ const TestingEditSenateBills = () => {
                 "YYYY-MM-DD"
               ).toDate()
             : "",
+        dateOfReturnByPresident: singleSenateBillData?.dateOfReturnByPresident
+          ? moment(
+              singleSenateBillData?.dateOfReturnByPresident,
+              "YYYY-MM-DD"
+            ).toDate()
+          : null,
+        passedInJointSitting: singleSenateBillData?.passedInJointSitting
+          ? moment(
+              singleSenateBillData?.passedInJointSitting,
+              "YYYY-MM-DD"
+            ).toDate()
+          : null,
         fkManageCommitteeId: singleSenateBillData?.introducedInHouses
           ? singleSenateBillData?.introducedInHouses?.fkManageCommitteeId
           : "",
@@ -1149,8 +1174,8 @@ const TestingEditSenateBills = () => {
       formData.append(
         "fileNumber",
         BillCategory === "Private Member Bill"
-          ? `24/(${values?.fileNumber})/${currentYear}`
-          : `09/(${values?.fileNumber})/${currentYear}`
+          ? `24/(${values?.fileNumber})/${currentYear}-Legis`
+          : `09/(${values?.fileNumber})/${currentYear}-Legis`
       );
 
       if (values?.noticeDate) {
@@ -1285,6 +1310,18 @@ const TestingEditSenateBills = () => {
           "dateOfJointSitting",
           moment(values?.dateOfJointSitting).format("YYYY-MM-DD")
         );
+      }
+      if (values?.dateOfReturnByPresident) {
+        const formattedDate = moment(values?.dateOfReturnByPresident).format(
+          "YYYY-MM-DD"
+        );
+        formData.append("dateOfReturnByPresident", formattedDate);
+      }
+      if (values?.passedInJointSitting) {
+        const formattedDate = moment(values?.passedInJointSitting).format(
+          "YYYY-MM-DD"
+        );
+        formData.append("passedInJointSitting", formattedDate);
       }
 
       if (values?.documentType) {
@@ -2079,7 +2116,7 @@ const TestingEditSenateBills = () => {
                                 Amendment Bill
                               </option>
                               <option value="Constitutional Amendment Bill">
-                                Constitution Amendment Bill
+                                Constitutional Amendment Bill
                               </option>
                               {/* <option value="Finance Bill">Finance Bill</option> */}
                               {/* <option value="Money Bill">Money Bill</option> */}
@@ -3088,6 +3125,77 @@ const TestingEditSenateBills = () => {
                             maxDate={new Date()}
                             dateFormat="dd-MM-yyyy"
                           />
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col-3">
+                          <div class="mb-3 " style={{ position: "relative" }}>
+                            <label class="form-label">
+                              Bill Return by President On
+                            </label>
+                            <span
+                              style={{
+                                position: "absolute",
+                                right: "15px",
+                                top: "36px",
+                                zIndex: 1,
+                                fontSize: "20px",
+                                color: "#666",
+                              }}
+                              onClick={handleReturnByPresidentCalendarToggle}
+                            >
+                              <FontAwesomeIcon icon={faCalendarAlt} />
+                            </span>
+                            <DatePicker
+                              selected={formik.values.dateOfReturnByPresident}
+                              onChange={handleReturnByPresidentDateSelect}
+                              className={"form-control"}
+                              open={isReturnByPresidentOpen}
+                              onClickOutside={() =>
+                                setReturnByPresidentOpen(false)
+                              }
+                              onInputClick={
+                                handleReturnByPresidentCalendarToggle
+                              }
+                              maxDate={new Date()}
+                              dateFormat="dd-MM-yyyy"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="col-3">
+                          <div class="mb-3 " style={{ position: "relative" }}>
+                            <label class="form-label">
+                              Passed in the Join Sitting On
+                            </label>
+                            <span
+                              style={{
+                                position: "absolute",
+                                right: "15px",
+                                top: "36px",
+                                zIndex: 1,
+                                fontSize: "20px",
+                                color: "#666",
+                              }}
+                              onClick={handlePassedByJointSittingCalendarToggle}
+                            >
+                              <FontAwesomeIcon icon={faCalendarAlt} />
+                            </span>
+                            <DatePicker
+                              selected={formik.values.passedInJointSitting}
+                              onChange={handlePassedByJointSittingDateSelect}
+                              className={"form-control"}
+                              open={isPassedByJointSittingOpen}
+                              onClickOutside={() =>
+                                setPassedByJointSittingOpen(false)
+                              }
+                              onInputClick={
+                                handlePassedByJointSittingCalendarToggle
+                              }
+                              maxDate={new Date()}
+                              dateFormat="dd-MM-yyyy"
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>

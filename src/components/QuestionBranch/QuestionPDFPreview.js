@@ -38,13 +38,47 @@ export const handlePreviewNotingDoc = (pdfData) => {
           }
           @page {
             size: A4 portrait;
-            margin: 5mm 0mm;
+            margin: 10mm;
           }
           @media print {
             html, body {
               height: 100%;
               margin: 0 !important;
               padding: 0 !important;
+            }
+            .template {
+              page-break-inside: avoid;
+              margin: 0;
+              padding: 0;
+              width: 100%;
+            }
+            .template-head h1, .template-head p {
+              font-size: 12pt;
+            }
+            .template-head {
+              margin: 0;
+              padding: 0;
+            }
+            .template-head div {
+              margin: 0;
+              padding: 0;
+            }
+            .template-head p {
+              margin: 0;
+              padding: 0;
+            }
+            table {
+              page-break-inside: auto;
+            }
+            tr {
+              page-break-inside: avoid;
+              page-break-after: auto;
+            }
+            thead {
+              display: table-header-group;
+            }
+            tfoot {
+              display: table-footer-group;
             }
           }
           table {

@@ -69,7 +69,7 @@ const AllGovernmentSenateBills = () => {
             "YYYY-MM-DD"
           ).format("DD-MM-YYYY")
         : "---",
-      dateOfPassingTheBillByTheSenate: item?.dateOfPassageBySenate
+      dateOnWhichTheBillByTheSenate: item?.dateOfPassageBySenate
         ? moment(item?.dateOfPassageBySenate, "YYYY-MM-DD").format("DD-MM-YYYY")
         : "---",
       dateOnWhichTheBillTransmittedToNA: item?.dateOfTransmissionToNA

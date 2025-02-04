@@ -53,8 +53,7 @@ function UpdateMemberParliamentaryYear({
       }
     },
   });
-  console.log("Tenures on Single", tenures);
-  console.log("Update Member ID", UpdateMemberId);
+
   const getMemberByIdApi = async () => {
     try {
       const response = await getMembersByID(UpdateMemberId);
@@ -300,6 +299,8 @@ function UpdateMemberParliamentaryYear({
                         }
                         onChange={(selectedOption) => {
                           formik.setFieldValue("fkTermId", selectedOption);
+                          formik.setFieldValue("fkParliamentaryYearId", "");
+                          setParliamentaryYearData([]);
                           if (selectedOption?.value) {
                             getParliamentaryYearsonTheBaseOfTerm(
                               selectedOption?.value
