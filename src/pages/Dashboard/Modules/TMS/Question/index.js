@@ -1,5 +1,9 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { QMSSideBarItems, TMSsidebarItems } from "../../../../../utils/sideBarItems";
+import {
+  QMSSideBarItems,
+  TMSsidebarItems,
+  TMSsidebarItemsDirector,
+} from "../../../../../utils/sideBarItems";
 import { Layout } from "../../../../../components/Layout";
 import Header from "../../../../../components/Header";
 import { useNavigate } from "react-router";
@@ -23,11 +27,13 @@ import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
 import Select from "react-select";
 import { getUserData } from "../../../../../api/Auth";
+import { getAllRemarksWithOutUserId } from "../../../../../api/APIs/Services/translation.service";
 
 function TMSQuestion() {
   const navigate = useNavigate();
   const { members, sessions } = useContext(AuthContext);
   const [resData, setResData] = useState([]);
+  const [allRemarks, setAllRemarks] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [allquestionStatus, setAllQuestionStatus] = useState([]);
   const [count, setCount] = useState(null);
@@ -35,9 +41,9 @@ function TMSQuestion() {
   const [isToNoticeOpen, setIsToNoticeOpen] = useState(false);
   const [searchingFlag, setSearchingFlag] = useState(false);
   const pageSize = 10; // Set your desired page size
-  const user = getUserData()
-  const designationName = user.designation.designationName
-  console.log("designation",designationName)
+  const user = getUserData();
+  const designationName = user.designation.designationName;
+  console.log("designation", designationName);
 
   console.log(searchingFlag);
   const handlePageChange = (page) => {
@@ -110,7 +116,7 @@ function TMSQuestion() {
       return {
         // SrNo: index + 1,
         Id: res?.id,
-        MemberName: res?.member ? res?.member?.memberName :"--",
+        MemberName: res?.member ? res?.member?.memberName : "--",
         noticeOfficeDiaryNumber: res?.noticeOfficeDiary?.noticeOfficeDiaryNo
           ? res?.noticeOfficeDiary?.noticeOfficeDiaryNo
           : "",
@@ -133,8 +139,9 @@ function TMSQuestion() {
         Status: res.questionStatus?.questionStatus
           ? res.questionStatus?.questionStatus
           : "",
-          device:res?.device,
-          createdBy:res?.questionSentStatus === "toQuestion" ? "Notice Office": "---"
+        device: res?.device,
+        createdBy:
+          res?.questionSentStatus === "toQuestion" ? "Notice Office" : "---",
       };
     });
   };
@@ -156,7 +163,7 @@ function TMSQuestion() {
         noticeOfficeDiaryDateTo:
           values?.toNoticeDate &&
           moment(values?.toNoticeDate).format("YYYY-MM-DD"),
-          questionSentStatus:"toQuestion"
+        questionSentStatus: "toQuestion",
       };
       try {
         const response = await searchQuestion(searchParams, page, pageSize);
@@ -192,20 +199,6 @@ function TMSQuestion() {
     }
   };
 
-  const getAllQuestionsApi = useCallback(async () => {
-    const questionSentStatus = "toTranslation"
-    try {
-      const response = await getAllQuestion(currentPage, pageSize, questionSentStatus, designationName);
-      if (response?.success) {
-        const transformedData = transformLeavesData(response?.data?.questions);
-        setCount(response?.data?.count);
-        setResData(transformedData);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }, [currentPage, pageSize, setCount, setResData]);
-
   const GetALlStatus = async () => {
     try {
       const response = await getAllQuestionStatus();
@@ -218,13 +211,51 @@ function TMSQuestion() {
     }
   };
 
-  useEffect(() => {
-    GetALlStatus();
+  const getAllAssignedQuestions = useCallback(async () => {
+    const category = "Question";
+    try {
+      const response = await getAllRemarksWithOutUserId(category, 0, 1000);
+      if (response?.success) {
+        console.log(response);
+        const transformedData = transformLeavesData(response?.data);
+        setAllRemarks(transformedData);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
 
-  // useEffect(() => {
-  //   getAllQuestionsApi();
-  // }, [getAllQuestionsApi]);
+  useEffect(() => {
+    GetALlStatus();
+    getAllAssignedQuestions();
+  }, []);
+
+  const getAllQuestionsApi = useCallback(async () => {
+    const questionSentStatus = "toTranslation";
+    try {
+      const response = await getAllQuestion(
+        currentPage,
+        pageSize,
+        questionSentStatus,
+        designationName
+      );
+      if (response?.success) {
+        const transformedData = transformLeavesData(response?.data?.questions);
+        console.log("transform data---->", allRemarks);
+        let filteredArray;
+        if (allRemarks?.length > 0) {
+          filteredArray = transformedData?.filter(
+            (item) => !allRemarks.some((obj) => obj.Id === item.Id)
+          );
+          console.log("updatedData", filteredArray);
+        }
+        setCount(response?.data?.count);
+        setResData(filteredArray);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, [currentPage, pageSize, setCount, setResData]);
 
   useEffect(() => {
     if (
@@ -250,14 +281,22 @@ function TMSQuestion() {
   };
 
   return (
-    <Layout module={true} sidebarItems={TMSsidebarItems} centerlogohide={true}>
+    <Layout
+      module={true}
+      sidebarItems={
+        user?.designation?.designationName === "Assistant Director"
+          ? TMSsidebarItemsDirector
+          : TMSsidebarItems
+      }
+      centerlogohide={true}
+    >
       <ToastContainer />
       <Header
         dashboardLink={"/"}
         addLink1={"/qms/notice/notice-question"}
         title1={"Questions"}
       />
-     <div>
+      <div>
         <div class="container-fluid">
           <div class="card mt-1">
             <div

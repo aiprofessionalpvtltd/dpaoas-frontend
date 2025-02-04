@@ -26,6 +26,7 @@ import {
   faCalendarAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { getUserData } from "../api/Auth";
+import { link } from "jodit/esm/plugins/link/link";
 
 // LMS Sidebar
 export const LMSsidebarItems = [
@@ -672,7 +673,7 @@ export const SMSsidebarItems = [
 ];
 
 // TMS Sidebar
-export const TMSsidebarItems = [
+export const TMSsidebarItemsDirector = [
   {
     itemName: "Dashboard",
     link: "/tms/dashboard",
@@ -693,6 +694,44 @@ export const TMSsidebarItems = [
         icon: faClipboardList,
       },
     ],
+  },
+  {
+    itemName: "Motion",
+    link: "/tms/motion",
+    icon: faHome,
+  },
+  {
+    itemName: "Resolution",
+    link: "/tms/resolution",
+    icon: faHome,
+  },
+  {
+    itemName: "Legislation",
+    link: "/tms/legislation",
+    icon: faHome,
+  },
+  {
+    itemName: "Research Branch",
+    link: "/tms/house-business",
+    icon: faHome,
+  },
+  // {
+  //   itemName: "Members",
+  //   link: "/tms/members",
+  //   icon: faHome,
+  // },
+];
+
+export const TMSsidebarItems = [
+  {
+    itemName: "Dashboard",
+    link: "/tms/dashboard",
+    icon: faHome,
+  },
+  {
+    itemName: "Question",
+    icon: faHome,
+    link: "/tms/assigned-question",
   },
   {
     itemName: "Motion",

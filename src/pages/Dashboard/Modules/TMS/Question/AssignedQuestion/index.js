@@ -1,12 +1,19 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { Layout } from "../../../../../../components/Layout";
-import { TMSsidebarItems } from "../../../../../../utils/sideBarItems";
+import {
+  TMSsidebarItems,
+  TMSsidebarItemsDirector,
+} from "../../../../../../utils/sideBarItems";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
-import { getAllQuestion } from "../../../../../../api/APIs/Services/Question.service";
+import {
+  getAllQuestion,
+  getAllQuestionByID,
+} from "../../../../../../api/APIs/Services/Question.service";
 import moment from "moment";
 import { getUserData } from "../../../../../../api/Auth";
 import { getAllRemarks } from "../../../../../../api/APIs/Services/translation.service";
 import { useNavigate } from "react-router-dom";
+import { showErrorMessage } from "../../../../../../utils/ToastAlert";
 
 const AssignedQuestion = () => {
   const [resData, setResData] = useState([]);
@@ -14,11 +21,11 @@ const AssignedQuestion = () => {
   const [count, setCount] = useState(null);
   const userData = getUserData();
   const pageSize = 10;
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const transformLeavesData = (apiData) => {
-    console.log("apiData",apiData)
+    console.log("apiData", apiData);
     return apiData.map((res, index) => {
-        console.log("resfcccfc",res)
+      console.log("resfcccfc", res);
       const subjectMatter = [res?.englishText, res?.urduText]
         .filter(Boolean)
         .join(", ");
@@ -58,14 +65,19 @@ const AssignedQuestion = () => {
   };
 
   const getAllAssignedQuestions = useCallback(async () => {
-    const userId = userData?.fkUserId
-    const category = "Question"
+    const userId = userData?.fkUserId;
+    const category = "Question";
     try {
-      const response = await getAllRemarks(userId , category , currentPage , pageSize);
+      const response = await getAllRemarks(
+        userId,
+        category,
+        currentPage,
+        pageSize
+      );
       if (response?.success) {
-        console.log(response)
+        console.log(response);
         const transformedData = transformLeavesData(response?.data);
-        console.log("transform data" , transformedData)
+        console.log("transform data", transformedData);
         setCount(response?.data?.count);
         setResData(transformedData);
       }
@@ -74,21 +86,44 @@ const AssignedQuestion = () => {
     }
   }, [currentPage, pageSize, setCount, setResData]);
 
-  useEffect(()=>{
-    getAllAssignedQuestions()
-  },[])
+  useEffect(() => {
+    getAllAssignedQuestions();
+  }, []);
 
-  const handlePageChange =(page)=>{
-    setCurrentPage(page)
-  }
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
 
-   const handleEdit = async (id) => {
-    navigate("/tms/question/questionTranslation", {
-        state: {id  },
-      });
+  //  const handleEdit = async (id) => {
+  //   navigate("/tms/question/questionTranslation", {
+  //       state: {id  },
+  //     });
+  //   }
+
+  // HandleEdit
+  const handleEdit = async (id) => {
+    try {
+      const { question, history } = await getAllQuestionByID(id);
+
+      if (question?.success) {
+        navigate("/tms/question/questionTranslation", {
+          state: { question: question?.data, history: history?.data, qId: id },
+        });
+      }
+    } catch (error) {
+      showErrorMessage(error.response?.data?.message);
     }
+  };
   return (
-    <Layout sidebarItems={TMSsidebarItems} module={true} centerlogohide={true}>
+    <Layout
+      sidebarItems={
+        userData?.designation?.designationName === "Assistant Director"
+          ? TMSsidebarItemsDirector
+          : TMSsidebarItems
+      }
+      module={true}
+      centerlogohide={true}
+    >
       <div>
         <div class="container-fluid">
           <div class="card mt-1">
@@ -120,7 +155,6 @@ const AssignedQuestion = () => {
                     hideDeleteIcon={true}
                     // handleAdd={(item) => navigate("/")}
                     handleEdit={(item) => handleEdit(item?.Id)}
-                 
                   />
                 </div>
               </div>

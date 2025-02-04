@@ -2,6 +2,7 @@ import React, { useCallback, useContext, useEffect, useState } from "react";
 import {
   QMSSideBarItems,
   TMSsidebarItems,
+  TMSsidebarItemsDirector,
 } from "../../../../../utils/sideBarItems";
 import { Layout } from "../../../../../components/Layout";
 import Header from "../../../../../components/Header";
@@ -13,10 +14,21 @@ import "react-image-gallery/styles/css/image-gallery.css";
 import { Button, Modal, Spinner } from "react-bootstrap";
 import CKEditorComp from "../../../../../components/CustomComponents/Editor/CKEditorComp";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { GetAlLMarkTo, submitQuestion } from "../../../../../api/APIs/Services/translation.service";
-import { showSuccessMessage , showErrorMessage } from "../../../../../utils/ToastAlert";
-import moment from 'moment';
+import {
+  GetAlLMarkTo,
+  getQuestionRemarksByID,
+  submitQuestion,
+} from "../../../../../api/APIs/Services/translation.service";
+import {
+  showSuccessMessage,
+  showErrorMessage,
+} from "../../../../../utils/ToastAlert";
+import moment from "moment";
 import { getUserData } from "../../../../../api/Auth";
+// import {
+//   getAllQuestionByID,
+//   getQuestionRemarks,
+// } from "../../../../../api/APIs/Services/Question.service";
 
 const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
   return (
@@ -31,15 +43,16 @@ const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
 
 function QuestionTranslation() {
   const navigate = useNavigate();
-  const userData = getUserData()
+  const userData = getUserData();
+  const userId = userData?.fkUserId;
   const location = useLocation();
-  const fkQuestionId = location?.state?.question?.id
-  const fkNewQuestionId = location?.state?.id
-  console.log("location",fkNewQuestionId)
+  const fkQuestionId = location?.state?.question?.id;
+  const fkNewQuestionId = location?.state?.qId;
   const [markToData, setMarkToData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [questionData, setQuestionData] = useState(location.state?.question);
-
+  const [singleQuestionRemarks, setSingleQuestionRemarks] = useState([]);
+  console.log("singleQuestionRemarks", singleQuestionRemarks);
   const [englishText, setEnglishText] = useState(
     location.state?.question?.englishText || ""
   );
@@ -54,7 +67,6 @@ function QuestionTranslation() {
   });
 
   const attachments = [];
-  const remarksData = [];
 
   const images =
     location.state?.question?.questionImage?.map((item) => {
@@ -69,11 +81,9 @@ function QuestionTranslation() {
     }) || [];
 
   const getMarkTo = async () => {
-    const userId = userData?.fkUserId
     try {
       const res = await GetAlLMarkTo(userId);
       if (res.success && res.data) {
-        
         setMarkToData(res.data.employees || []);
       } else {
         console.error("Failed to fetch data:", res.message);
@@ -81,14 +91,13 @@ function QuestionTranslation() {
       }
     } catch (error) {
       console.error("Error fetching MarkTo data:", error);
-      setMarkToData([]); 
+      setMarkToData([]);
     }
   };
-  useEffect(() => {
-    getMarkTo();
-  }, []);
 
-  const formattedDate = moment(questionData?.noticeOfficeDiary?.noticeOfficeDiaryDate).format("DD/MM/YYYY");
+  const formattedDate = moment(
+    questionData?.noticeOfficeDiary?.noticeOfficeDiaryDate
+  ).format("DD/MM/YYYY");
   // Component to render PDF preview
   const PdfPreview = ({ pdfUrl }) => {
     return (
@@ -126,33 +135,73 @@ function QuestionTranslation() {
       priority: "",
       comment: "",
     });
-   
+
     if (isModalOpen) {
       onSubmitQuestion(modalInputValue);
-  }
-    
+    }
   };
 
-  const onSubmitQuestion = async ({ assignedTo, CommentStatus, priority, comment }) => {
-    const userId = userData?.fkUserId
-    const category = "Question"
+  const onSubmitQuestion = async ({
+    assignedTo,
+    CommentStatus,
+    priority,
+    comment,
+  }) => {
+    // const userId = userData?.fkUserId;
+    const category = "Question";
     try {
-        const response = await submitQuestion(assignedTo, CommentStatus, priority, comment ,fkQuestionId  , category , userId);
-        if(response){
-          showSuccessMessage(response?.message)
-          setTimeout(() => {
-            navigate('/tms/question')
-          }, 1000);
-          
-        }
-        
+      const response = await submitQuestion(
+        assignedTo,
+        CommentStatus,
+        priority,
+        comment,
+        fkQuestionId,
+        category,
+        userId
+      );
+      if (response) {
+        showSuccessMessage(response?.message);
+        setTimeout(() => {
+          navigate("/tms/question");
+        }, 1000);
+      }
     } catch (error) {
-        console.error("Error submitting question:", error);
+      console.error("Error submitting question:", error);
     }
-};
+  };
 
+  // getQuestionRemarksByIDs
+
+  const getQuestionRemarksByIDs = async () => {
+    try {
+      const response = await getQuestionRemarksByID(fkNewQuestionId, userId);
+      console.log("response", response);
+      if (response?.success) {
+        console.log("response", response);
+        setSingleQuestionRemarks(response?.data);
+        console.log("singleQuestionData", singleQuestionRemarks);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getMarkTo();
+    if (fkNewQuestionId) {
+      getQuestionRemarksByIDs();
+    }
+  }, []);
   return (
-    <Layout module={true} sidebarItems={TMSsidebarItems} centerlogohide={true}>
+    <Layout
+      module={true}
+      sidebarItems={
+        userData?.designation?.designationName === "Assistant Director"
+          ? TMSsidebarItemsDirector
+          : TMSsidebarItems
+      }
+      centerlogohide={true}
+    >
       <ToastContainer />
 
       <div className="d-flex row align-items-center justify-content-between">
@@ -173,9 +222,7 @@ function QuestionTranslation() {
               </div>
               <div className="col-4 d-flex">
                 <div className="fw-bold me-1">Notice Date:</div>
-                <div className="text-primary">
-                  {formattedDate}
-                </div>
+                <div className="text-primary">{formattedDate}</div>
               </div>
               <div className="col-4 d-flex">
                 <div className="fw-bold me-1">Notice Time:</div>
@@ -274,8 +321,8 @@ function QuestionTranslation() {
             </div>
 
             <div style={{ maxHeight: "712px", overflowY: "scroll" }}>
-              {remarksData?.length > 0 ? (
-                remarksData.map((item) => (
+              {singleQuestionRemarks?.length > 0 ? (
+                singleQuestionRemarks.map((item) => (
                   <>
                     {(item?.CommentStatus !== null ||
                       item?.comment !== null) && (
@@ -284,7 +331,6 @@ function QuestionTranslation() {
                         style={{ borderBottom: "1px solid #ddd" }}
                       >
                         <>
-                        
                           <div class="w-100" style={{ position: "relative" }}>
                             <div class="d-flex justify-content-between align-items-center">
                               <div class="d-flex flex-row align-items-center">
@@ -292,18 +338,15 @@ function QuestionTranslation() {
                                   <span
                                     class="mr-2"
                                     style={{ fontSize: "14px" }}
-                                  >{`${item?.submittedUser?.employee?.firstName}  ${item?.submittedUser?.employee?.lastName}/ ${item?.submittedUser?.employee?.designations?.designationNam}`}</span>
-                                  
+                                  >{`${item?.submittedUser?.employee?.firstName}  ${item?.submittedUser?.employee?.lastName}/ ${item?.submittedUser?.employee?.designations?.designationName}`}</span>
                                 </div>
                               </div>
                               <div style={{ float: "right" }}>
                                 <small>
-                                 
-                                  {item?.formattedDateCreatedAt}
+                                  {moment(item?.createdAt).format("DD/MM/YYYY")}
                                 </small>
                                 <small className="ms-2">
-                                
-                                  {item?.formattedTimeCreatedAt}
+                                  {moment(item?.createdAt).format("hh:mm a")}
                                 </small>
                               </div>
                             </div>
@@ -325,7 +368,6 @@ function QuestionTranslation() {
                                 ? item?.CommentStatus
                                 : item?.comment}
                             </p>
-                           
                           </div>
                         </>
                       </div>
@@ -427,7 +469,7 @@ function QuestionTranslation() {
                 </option>
                 {markToData?.length > 0 ? (
                   markToData.map((item) => (
-                    <option key={item.id} value={item.id}>
+                    <option key={item?.fkUserId} value={item?.fkUserId}>
                       {`${item.firstName} ${item.lastName} (${item.designations.designationName})`}
                     </option>
                   ))
