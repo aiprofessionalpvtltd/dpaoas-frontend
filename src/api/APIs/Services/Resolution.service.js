@@ -532,3 +532,44 @@ export const searchResolutionbyColumn = async (searchParams, data) => {
     throw error;
   }
 };
+
+//ballot Template
+export const allballotResolutionTemplate = async () => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClient.get(
+      `/resolution/getAllBallotingTemplates`
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+//Single record ballot Template
+export const ballotResolutionTemplateByID = async (id) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClient.get(
+      `/resolution/getBallotingTemplate/${id}`
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+//Update ballot Template
+export const updateBallotResolutionTemplate = async (id, data) => {
+  try {
+    const response = await axiosClient.put(
+      `/resolution/updateBallotingTemplate/${id}`, data
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};

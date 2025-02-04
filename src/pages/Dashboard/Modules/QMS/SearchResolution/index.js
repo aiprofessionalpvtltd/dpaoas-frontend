@@ -69,6 +69,7 @@ function QMSSerchResolution() {
       colourResNo: "",
       noticeOfficeDiaryNo: "",
       memberPosition: "",
+      passedResolution: false
     },
 
     onSubmit: (values) => {
@@ -129,8 +130,10 @@ function QMSSerchResolution() {
       noticeOfficeDiaryDateTo: values.toNoticeDate,
       resolutionMovers: values?.memberName?.value,
       memberPosition: values?.memberPosition,
+      passedResolution:values?.passedResolution,
       resolutionSentStatus: "inResolution",
     };
+
     try {
       const response = await searchResolution(
         searchParams,
@@ -575,6 +578,32 @@ function QMSSerchResolution() {
                           )}
                       </div>
                     </div>
+                    <div class="col-3">
+                    <div class="mb-3">
+                      <div class="form-check" style={{ marginTop: "39px" }}>
+                        <input
+                          class={`form-check-input ${
+                            formik.touched.passedResolution && formik.errors.passedResolution
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                          type="checkbox"
+                          id="flexCheckDefault"
+                          checked={formik.values.passedResolution}
+                          onChange={() =>
+                            formik.setFieldValue(
+                              "passedResolution",
+                              !formik.values.passedResolution
+                            )
+                          }
+                        />
+                        <label class="form-check-label" for="flexCheckDefault">
+                          Passed Resolution
+                        </label>
+                        
+                      </div>
+                    </div>
+                  </div>
                   </div>
 
                   <div className="row">
