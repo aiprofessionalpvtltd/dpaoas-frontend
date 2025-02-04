@@ -47,7 +47,7 @@ const EditFinanceMoneyBill = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const userData = getUserData();
-console.log("location?.state?.idlocation?.state?.id",location?.state?.id);
+  console.log("location?.state?.idlocation?.state?.id", location?.state?.id);
 
   const NA_Bill_ID = location?.state && location?.state?.id;
   const BillCategory = location?.state && location?.state?.item?.billCategory;
@@ -101,6 +101,9 @@ console.log("location?.state?.idlocation?.state?.id",location?.state?.id);
     isCirculationNoticeDateCalendarOpen,
     setCirculationNoticeDateCalendarOpen,
   ] = useState(false);
+  const [isReturnByPresidentOpen, setReturnByPresidentOpen] = useState(false);
+  const [isPassedByJointSittingOpen, setPassedByJointSittingOpen] =
+    useState(false);
   // Date of Reference to Standing Committe State
   const [
     isDateofReferenceStandingCommitteeOpen,
@@ -211,32 +214,6 @@ console.log("location?.state?.idlocation?.state?.id",location?.state?.id);
     }
   };
 
-  // const fetchParliamentaryYears = async (id) => {
-  //   try {
-  //     let response;
-  //     if (location?.state?.forPerson === "Ministers") {
-  //       // Call API for Ministers
-  //       response = await getMinisterParliamentaryYearsByTenure(id);
-  //       if (response?.success) {
-  //         setMinisterParliamentaryYear(response?.data); // Update state for Ministers
-  //       }
-  //     }  if (location?.state?.forPerson === "Senators") {
-  //       // Call API for Senators
-  //       response = await getParliamentaryYearsByTermID(id);
-  //       if (response?.success) {
-  //         setMemberParliamentaryYear(response?.data); // Update state for Senators
-  //       }
-  //     } else {
-  //       console.warn("Invalid 'forPerson' value in location.state");
-  //     }
-  //   } catch (error) {
-  //     console.error(
-  //       "Error fetching parliamentary years:",
-  //       error?.response?.data?.message || error.message
-  //     );
-  //   }
-  // };
-
   //  Getting All Committees Recommendation
   const GetAllCommittiesRecommendationApi = async () => {
     try {
@@ -252,22 +229,6 @@ console.log("location?.state?.idlocation?.state?.id",location?.state?.id);
     }
   };
 
-  // const getParliamentaryYearsonTheBaseOfTenure = async (id) => {
-  //   try {
-  //     const response = await getParliamentaryYearsByTenureID(id);
-  //     if (response?.success) {
-  //       console.log("MNA Paraliamenary Years", response?.data);
-  //       if (BillCategory === "Private Member Bill" && BillFrom === "From NA") {
-  //         setMNAParliamentaryYearData(response?.data);
-  //       } else {
-  //         setParliamentaryYearData(response?.data);
-  //       }
-  //       // setTonerModels(transformedData);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
   // Getting All MNA
   const getAllMNA = async () => {
     try {
@@ -281,18 +242,6 @@ console.log("location?.state?.idlocation?.state?.id",location?.state?.id);
     }
   };
 
-  // //Get Parliamentary Year
-  // const getParliamentaryYearsonTheBaseOfTerm = async (id) => {
-  //   try {
-  //     const response = await getParliamentaryYearsByTermID(id);
-  //     if (response?.success) {
-  //       setParliamentaryYearData(response?.data);
-  //       // setTonerModels(transformedData);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
   const getAllBillStatusData = async () => {
     try {
       const response = await getAllBillStatus(0, 500);
@@ -304,35 +253,6 @@ console.log("location?.state?.idlocation?.state?.id",location?.state?.id);
       console.log(error);
     }
   };
-
-  // const handleTenures = async (selectionType) => {
-  //   try {
-  //     // Check if the bill is a Private Member Bill and "From NA"
-  //     if (BillCategory === "Private Member Bill" && BillFrom === "From NA") {
-  //       // Fetch tenures for both ministers and senators
-  //       const [ministersResponse, senatorsResponse] = await Promise.all([
-  //         getAllTenures(0, 1000, "Ministers"), // Ministers
-  //         getAllTenures(0, 1000, "Senators"), // Senators
-  //       ]);
-
-  //       // Update state with fetched data
-  //       if (ministersResponse?.success) {
-  //         setMNATenures(ministersResponse?.data?.tenures);
-  //       }
-  //       if (senatorsResponse?.success) {
-  //         setTenures(senatorsResponse?.data?.tenures);
-  //       }
-  //     } else {
-  //       // Fetch tenures based on the selection type
-  //       const response = await getAllTenures(0, 1000, selectionType);
-  //       if (response?.success) {
-  //         setTenures(response?.data?.tenures);
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.log(error?.response?.data?.message);
-  //   }
-  // };
 
   useEffect(() => {
     getAllMNA();
@@ -384,6 +304,8 @@ console.log("location?.state?.idlocation?.state?.id",location?.state?.id);
       referedOnDate: "",
       fkMemberPassageId: "",
       memeberNoticeDate: "",
+      dateOfReturnByPresident: "",
+      passedInJointSitting: "",
       fkSessionMemberPassageId: "",
       dateOfPassageByNA: "",
       documentDiscription: "",
@@ -433,24 +355,22 @@ console.log("location?.state?.idlocation?.state?.id",location?.state?.id);
     setIsDateCirculationBillOpen(false);
   };
 
-  // Handle Date of Receipt of Notice
-  const handleReceiptofNoticeTogel = () => {
-    setReceiptofNoticeOpen(!isReceiptofNoticeOpen);
+  const handleReturnByPresidentCalendarToggle = () => {
+    setReturnByPresidentOpen(!isReturnByPresidentOpen);
+  };
+  // Handale DateCHange
+  const handleReturnByPresidentDateSelect = (date) => {
+    formik.setFieldValue("dateOfReturnByPresident", date);
+    setReturnByPresidentOpen(false);
   };
 
-  const handleReceiptofNotice = (date) => {
-    formik.setFieldValue("dateofReciptofNotice", date);
-    setReceiptofNoticeOpen(false);
+  const handlePassedByJointSittingCalendarToggle = () => {
+    setPassedByJointSittingOpen(!isPassedByJointSittingOpen);
   };
-
-  // Handle Date of Circulation Notice
-  const handleCirculationNoticeCalendarToggle = () => {
-    setCirculationNoticeDateCalendarOpen(!isCirculationNoticeDateCalendarOpen);
-  };
-
-  const handleCirculationNoticeDateSelect = (date) => {
-    formik.setFieldValue("dateOfCirculationOfNotice", date);
-    setCirculationNoticeDateCalendarOpen(false);
+  // Handale DateCHange
+  const handlePassedByJointSittingDateSelect = (date) => {
+    formik.setFieldValue("passedInJointSitting", date);
+    setPassedByJointSittingOpen(false);
   };
 
   // Handle Date of Reference to Standing Committee
@@ -839,6 +759,18 @@ console.log("location?.state?.idlocation?.state?.id",location?.state?.id);
                 "YYYY-MM-DD"
               ).toDate()
             : null,
+          dateOfReturnByPresident: singleSenateBillData?.dateOfReturnByPresident
+            ? moment(
+                singleSenateBillData?.dateOfReturnByPresident,
+                "YYYY-MM-DD"
+              ).toDate()
+            : null,
+          passedInJointSitting: singleSenateBillData?.passedInJointSitting
+            ? moment(
+                singleSenateBillData?.passedInJointSitting,
+                "YYYY-MM-DD"
+              ).toDate()
+            : null,
           DateOfReceiptOfMessageFromNA:
             singleSenateBillData?.DateOfReceiptOfMessageFromNA
               ? moment(
@@ -982,7 +914,8 @@ console.log("location?.state?.idlocation?.state?.id",location?.state?.id);
             singleSenateBillData?.memberPassagesFinance &&
             singleSenateBillData?.memberPassagesFinance?.dateOfConsiderationBill
               ? moment(
-                  singleSenateBillData?.memberPassagesFinance?.dateOfConsiderationBill,
+                  singleSenateBillData?.memberPassagesFinance
+                    ?.dateOfConsiderationBill,
                   "YYYY-MM-DD"
                 ).toDate()
               : "",
@@ -1118,6 +1051,18 @@ console.log("location?.state?.idlocation?.state?.id",location?.state?.id);
     if (values?.PassedByNADate) {
       const formattedDate = moment(values?.PassedByNADate).format("YYYY-MM-DD");
       formData.append("PassedByNADate", formattedDate);
+    }
+    if (values?.dateOfReturnByPresident) {
+      const formattedDate = moment(values?.dateOfReturnByPresident).format(
+        "YYYY-MM-DD"
+      );
+      formData.append("dateOfReturnByPresident", formattedDate);
+    }
+    if (values?.passedInJointSitting) {
+      const formattedDate = moment(values?.passedInJointSitting).format(
+        "YYYY-MM-DD"
+      );
+      formData.append("passedInJointSitting", formattedDate);
     }
     // formData.append(
     //   "DateOfReceiptOfMessageFromNA",
@@ -1308,10 +1253,7 @@ console.log("location?.state?.idlocation?.state?.id",location?.state?.id);
         formData.append("file", file);
       });
     }
-    // if (values?.referedOnDate) {
-    //   const formattedDate = moment(values?.referedOnDate).format("YYYY-MM-DD");
-    //   formData.append("referedOnDate", formattedDate);
-    // }
+
     if (values?.senateBillSenatorMovers?.length > 0) {
       values?.senateBillSenatorMovers?.forEach((senator, index) => {
         formData.append(
@@ -1339,14 +1281,7 @@ console.log("location?.state?.idlocation?.state?.id",location?.state?.id);
         values?.senateBillMnaMovers?.value
       );
     }
-    // if (values?.senateBillMinistryMovers) {
-    //   values?.senateBillMinistryMovers?.forEach((ministry, index) => {
-    //     formData.append(
-    //       `senateBillMinistryMovers[${index}][fkMinistryId]`,
-    //       ministry?.value
-    //     );
-    //   });
-    // }
+
     if (values?.senateBillMinistryMovers?.length > 0) {
       formData.append(
         `senateBillMinistryMovers[${0}][fkMinistryId]`,
@@ -1443,54 +1378,6 @@ console.log("location?.state?.idlocation?.state?.id",location?.state?.id);
                           />
                         )}
                       <div className="col">
-                        {/* {showMinster === "Ministers" ? (
-                          <label className="form-label">Minister Tenure</label>
-                        ) : (
-                          <label className="form-label">Member Tenure</label>
-                        )}
-
-                        <Select
-                          options={
-                            Array.isArray(tenures) && tenures?.length > 0
-                              ? tenures.map((item) => ({
-                                  value: item?.id,
-                                  label: `${item?.tenureName} (${item?.tenureType})`,
-                                  tenureType: item?.tenureType,
-                                }))
-                              : []
-                          }
-                          onChange={(selectedOption) => {
-                            formik.setFieldValue(
-                              "membertenure",
-                              selectedOption
-                            );
-                            if (showMinster === "Ministers") {
-                              fetchParliamentaryYears(selectedOption?.value);
-                            } else {
-                              handleTenuresTerms(selectedOption?.value);
-                            }
-                            formik.setFieldValue("fkTermId", "");
-                            formik.setFieldValue("fkParliamentaryYearId", "");
-                            formik.setFieldValue("senateBillSenatorMovers", "");
-                            formik.setFieldValue("senateBillMnaMovers", null);
-                            formik.setFieldValue(
-                              "senateBillMinistryMovers",
-                              null
-                            );
-                          }}
-                          onBlur={formik.handleBlur}
-                          value={formik.values.membertenure}
-                          id="membertenure"
-                          name="membertenure"
-                          isClearable={true}
-                        />
-                        {formik.touched.membertenure &&
-                          formik.errors.membertenure && (
-                            <div className="invalid-feedback">
-                              {formik.errors.membertenure}
-                            </div>
-                          )} */}
-
                         {showMinster === "Ministers" ? (
                           <>
                             <label className="form-label">
@@ -1978,7 +1865,8 @@ console.log("location?.state?.idlocation?.state?.id",location?.state?.id);
                               <option value="" disabled hidden>
                                 Select
                               </option>
-                              <option value="Finance Money Bill">Finance / Money Bill</option>
+                              <option value="Finance Bill">Finance Bill</option>
+                              <option value="Money Bill">Money Bill</option>
                             </select>
                             {formik.touched.billType &&
                               formik.errors.billType && (
@@ -2024,7 +1912,7 @@ console.log("location?.state?.idlocation?.state?.id",location?.state?.id);
                       <div className="col-3">
                         <div className="mb-3" style={{ position: "relative" }}>
                           <label className="form-label">
-                            Passed By NA Date
+                            Date of Laying in NA
                           </label>
                           <span
                             style={{
@@ -2074,7 +1962,7 @@ console.log("location?.state?.idlocation?.state?.id",location?.state?.id);
                       <div className="col-3">
                         <div className="mb-3" style={{ position: "relative" }}>
                           <label className="form-label">
-                            Date of Recipt of Message From NA
+                            Date of Laying in Senate
                           </label>
                           <span
                             style={{
@@ -2153,32 +2041,6 @@ console.log("location?.state?.idlocation?.state?.id",location?.state?.id);
                       </div>
                     </div>
 
-                    {/* <div className="row">
-                      <div className="col">
-                        <div className="mb-3">
-                          <label className="form-label">Bill Text</label>
-                          <textarea
-                            className={`form-control  ${
-                              formik.touched.billText && formik.errors.billText
-                                ? "is-invalid"
-                                : ""
-                            }`}
-                            id="billText"
-                            name="billText"
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            value={formik.values.billText}
-                          ></textarea>
-                          {formik.touched.billText &&
-                            formik.errors.billText && (
-                              <div className="invalid-feedback">
-                                {formik.errors.billText}
-                              </div>
-                            )}
-                        </div>
-                      </div>
-                    </div> */}
-
                     <div className="row">
                       <div className="col">
                         <div className="mb-3">
@@ -2218,41 +2080,7 @@ console.log("location?.state?.idlocation?.state?.id",location?.state?.id);
               <div class="card mt-1">
                 <div className="card-body">
                   <div className="container-fluid">
-                    <div className="row">
-                      {/* <div class="col">
-                        <div class="mb-3" style={{ position: "relative" }}>
-                          <label class="form-label">
-                            Introduced in House On
-                          </label>
-                          <span
-                            style={{
-                              position: "absolute",
-                              right: "15px",
-                              top: "36px",
-                              zIndex: 1,
-                              fontSize: "20px",
-                              color: "#666",
-                              cursor: "pointer",
-                            }}
-                            onClick={handleIntroducedCalendarToggle}
-                          >
-                            <FontAwesomeIcon icon={faCalendarAlt} />
-                          </span>
-                          <DatePicker
-                            selected={formik.values.introducedInHouseDate}
-                            onChange={handleIntroducedDateSelect}
-                            onBlur={formik.handleBlur}
-                            className="form-control"
-                            open={isIntroducedCalendarOpen}
-                            onClickOutside={() =>
-                              setIntroducedCalendarOpen(false)
-                            }
-                            onInputClick={handleIntroducedCalendarToggle}
-                            maxDate={new Date()}
-                            dateFormat="dd-MM-yyyy"
-                          />
-                        </div>
-                      </div> */}
+                    {/* <div className="row">
                       <div class="col-3">
                         <div class="mb-3" style={{ position: "relative" }}>
                           <label class="form-label">
@@ -2371,7 +2199,7 @@ console.log("location?.state?.idlocation?.state?.id",location?.state?.id);
                           ))}
                         </select>
                       </div>
-                    </div>
+                    </div> */}
 
                     <div className="row">
                       <div className="col-3">
@@ -2465,32 +2293,6 @@ console.log("location?.state?.idlocation?.state?.id",location?.state?.id);
                             // isMulti
                           />
                         </div>
-                        {/* <label className="form-label">
-                          Committee Recommendation
-                        </label>
-                        <select
-                          class="form-select"
-                          value={formik.values.committeeRecomendation}
-                          id="committeeRecomendation"
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                        >
-                          <option selected disabled hidden>
-                            Select
-                          </option>
-                          <option value="Ammended By Standing Committee">
-                            Ammended By Standing Committee
-                          </option>
-                          <option value="May be Passed as Introduced in the House">
-                            May be Passed as Introduced in the House
-                          </option>
-                          <option value="Passed without sending to Committee">
-                            Passed without sending to Committee
-                          </option>
-                          <option value="Ammended By Standing Committee">
-                            Ammended By Standing Committee
-                          </option>
-                        </select> */}
                       </div>
 
                       <div class="col-3">
@@ -2578,7 +2380,7 @@ console.log("location?.state?.idlocation?.state?.id",location?.state?.id);
                       <div className="col-3">
                         <div class="mb-3 " style={{ position: "relative" }}>
                           <label class="form-label">
-                            Date of Passage by Senate
+                            Date of Recommendation Adopted by Senate
                           </label>
                           <span
                             style={{
@@ -2707,39 +2509,10 @@ console.log("location?.state?.idlocation?.state?.id",location?.state?.id);
                         </div>
                       </div>
 
-                      {/* <div className="form-group col">
-                        <label
-                          htmlFor="passageWithdrawal"
-                          className="form-label"
-                        >
-                          Memeber Passage/Withdrawal Status
-                        </label>
-
-                        <select
-                          id="fkMemberPassageId"
-                          name="fkMemberPassageId"
-                          className={`form-select ${
-                            formik.touched.fkMemberPassageId &&
-                            formik.errors.fkMemberPassageId
-                              ? "is-invalid"
-                              : ""
-                          }`}
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          value={formik.values.fkMemberPassageId}
-                        >
-                          <option value="" disabled hidden>
-                            Select
-                          </option>
-                          <option value={"Passage"}>Passage</option>
-                          <option value={"withdrawal"}>withdrawal</option>
-                        </select>
-                      </div> */}
-
-                      {/* <div className="col">
+                      <div className="col-3">
                         <div class="mb-3 " style={{ position: "relative" }}>
                           <label class="form-label">
-                            Memeber Passage/Withdrawal Notice Date
+                            Bill Return by President On
                           </label>
                           <span
                             style={{
@@ -2749,91 +2522,61 @@ console.log("location?.state?.idlocation?.state?.id",location?.state?.id);
                               zIndex: 1,
                               fontSize: "20px",
                               color: "#666",
-                              cursor: "pointer",
                             }}
-                            onClick={handlePassageCalendarToggle}
+                            onClick={handleReturnByPresidentCalendarToggle}
                           >
                             <FontAwesomeIcon icon={faCalendarAlt} />
                           </span>
                           <DatePicker
-                            selected={formik.values.memeberNoticeDate}
-                            onChange={handlePassageDateSelect}
+                            selected={formik.values.dateOfReturnByPresident}
+                            onChange={handleReturnByPresidentDateSelect}
                             className={"form-control"}
-                            open={isPassageCalendarOpen}
-                            onClickOutside={() => setPassageCalendarOpen(false)}
-                            onInputClick={handlePassageCalendarToggle}
+                            open={isReturnByPresidentOpen}
+                            onClickOutside={() =>
+                              setReturnByPresidentOpen(false)
+                            }
+                            onInputClick={handleReturnByPresidentCalendarToggle}
                             maxDate={new Date()}
                             dateFormat="dd-MM-yyyy"
                           />
                         </div>
-                      </div> */}
-
-                      {/* <div className="form-group col">
-                        <label htmlFor="session" className="form-label">
-                          Consideration in Session
-                        </label>
-                        <select
-                          id="fkSessionMemberPassageId"
-                          name="fkSessionMemberPassageId"
-                          className="form-control"
-                          onChange={formik.handleChange}
-                          value={formik.values.fkSessionMemberPassageId}
-                        >
-                          <option value="" disabled hidden>
-                            Select
-                          </option>
-                          {sessions &&
-                            sessions.map((item) => (
-                              <option value={item.id}>
-                                {item.sessionName}
-                              </option>
-                            ))}
-                        </select>
-                      </div> */}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* 4th card */}
-
-          <div className="container-fluid mt-2">
-            <div class="card mt-1">
-              <div className="card-body">
-                <div className="container-fluid">
-                  <div className="row">
-                    {/* <div className="col-3">
-                      <div class="mb-3 " style={{ position: "relative" }}>
-                        <label class="form-label">Date of Passage by NA</label>
-                        <span
-                          style={{
-                            position: "absolute",
-                            right: "15px",
-                            top: "36px",
-                            zIndex: 1,
-                            fontSize: "20px",
-                            color: "#666",
-                          }}
-                          onClick={handlePassageByNACalendarToggle}
-                        >
-                          <FontAwesomeIcon icon={faCalendarAlt} />
-                        </span>
-                        <DatePicker
-                          selected={formik.values.dateOfPassageByNA}
-                          onChange={handlePassageByNADateSelect}
-                          className={"form-control"}
-                          open={isPassageByNADateCalendarOpen}
-                          onClickOutside={() =>
-                            setPassageByNADateCalendarOpen(false)
-                          }
-                          onInputClick={handlePassageByNACalendarToggle}
-                          maxDate={new Date()}
-                          dateFormat="dd-MM-yyyy"
-                        />
                       </div>
-                    </div> */}
+
+                      <div className="col-3">
+                        <div class="mb-3 " style={{ position: "relative" }}>
+                          <label class="form-label">
+                            Passed in the Join Sitting On
+                          </label>
+                          <span
+                            style={{
+                              position: "absolute",
+                              right: "15px",
+                              top: "36px",
+                              zIndex: 1,
+                              fontSize: "20px",
+                              color: "#666",
+                            }}
+                            onClick={handlePassedByJointSittingCalendarToggle}
+                          >
+                            <FontAwesomeIcon icon={faCalendarAlt} />
+                          </span>
+                          <DatePicker
+                            selected={formik.values.passedInJointSitting}
+                            onChange={handlePassedByJointSittingDateSelect}
+                            className={"form-control"}
+                            open={isPassedByJointSittingOpen}
+                            onClickOutside={() =>
+                              setPassedByJointSittingOpen(false)
+                            }
+                            onInputClick={
+                              handlePassedByJointSittingCalendarToggle
+                            }
+                            maxDate={new Date()}
+                            dateFormat="dd-MM-yyyy"
+                          />
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -2952,25 +2695,6 @@ console.log("location?.state?.idlocation?.state?.id",location?.state?.id);
                         </option>
                       </select>
                     </div>
-
-                    {/* <div className="form-group col-4">
-                      <label htmlFor="fileInput" className="form-label">
-                        Choose File
-                      </label>
-                      <input
-                        className="form-control"
-                        type="file"
-                        accept=".pdf, .jpg, .jpeg, .png"
-                        id="file"
-                        name="file"
-                        onChange={(event) => {
-                          formik.setFieldValue(
-                            "file",
-                            event.currentTarget.files
-                          );
-                        }}
-                      />
-                    </div> */}
                     <div className="form-group col-4">
                       <label htmlFor="fileInput" className="form-label">
                         Choose File

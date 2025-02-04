@@ -20,12 +20,21 @@ import moment from "moment";
 import * as Yup from "yup";
 
 // import BothMinisterSenator from "./SeparateForms/BothMinisterSenator";
-import { createNewFinanceMoneyBill, getAllMinisterTenures, getAllMNALists, getMinisterByParliamentaryYearID, getMinisterParliamentaryYearsByTenure, getMinsistriesByTenure } from "../../../../../../api/APIs/Services/LegislationModule.service";
-import {  getAllTenures,
+import {
+  createNewFinanceMoneyBill,
+  getAllMinisterTenures,
+  getAllMNALists,
+  getMinisterByParliamentaryYearID,
+  getMinisterParliamentaryYearsByTenure,
+  getMinsistriesByTenure,
+} from "../../../../../../api/APIs/Services/LegislationModule.service";
+import {
+  getAllTenures,
   getMemberByParliamentaryYearID,
   getParliamentaryYearsByTenureID,
   getParliamentaryYearsByTermID,
-  getTermByTenureID, } from "../../../../../../api/APIs/Services/ManageQMS.service";
+  getTermByTenureID,
+} from "../../../../../../api/APIs/Services/ManageQMS.service";
 import BothMinisterSenator from "../../Bills/NABills/AddNABills/SeparateForms/BothMinisterSenator";
 import { getSingleMinisteryByMinisterID } from "../../../../../../api/APIs/Services/Motion.service";
 import { getUserData } from "../../../../../../api/Auth";
@@ -366,7 +375,7 @@ function AddFinanceMoneyBill() {
         values?.fkMnaParliamentaryYearId
       );
     }
-    
+
     const currentYear = new Date().getFullYear();
     if (location?.state && location.state.category === "Private Member Bill") {
       formData.append(
@@ -383,7 +392,7 @@ function AddFinanceMoneyBill() {
       const formattedDate = moment(values?.PassedByNADate).format("YYYY-MM-DD");
       formData.append("PassedByNADate", formattedDate);
     }
-    
+
     if (values?.DateOfReceiptOfMessageFromNA) {
       const formattedDate = moment(values?.DateOfReceiptOfMessageFromNA).format(
         "YYYY-MM-DD"
@@ -416,12 +425,12 @@ function AddFinanceMoneyBill() {
       `senateBillMnaMovers[${0}][fkMnaId]`,
       values?.selectedMNA?.value
     );
-    
-      formData.append(
-        `senateBillMinistryMovers[${0}][fkMinistryId]`,
-        values?.selectedMinistry?.value
-      );
-    
+
+    formData.append(
+      `senateBillMinistryMovers[${0}][fkMinistryId]`,
+      values?.selectedMinistry?.value
+    );
+
     try {
       const response = await createNewFinanceMoneyBill(formData);
       if (response.success) {
@@ -1054,7 +1063,8 @@ function AddFinanceMoneyBill() {
                             <option value="" disabled hidden>
                               Select
                             </option>
-                            <option value="Finance Money Bill">Finance / Money Bill</option>
+                            <option value="Finance Bill">Finance Bill</option>
+                            <option value="Money Bill">Money Bill</option>
                           </select>
                           {formik.touched.billType &&
                             formik.errors.billType && (
@@ -1107,7 +1117,7 @@ function AddFinanceMoneyBill() {
                       </div> */}
                         <div className="mb-3" style={{ position: "relative" }}>
                           <label className="form-label">
-                            Passed By NA Date
+                            Date of Laying in NA
                           </label>
                           <span
                             style={{
@@ -1156,7 +1166,7 @@ function AddFinanceMoneyBill() {
                       <div className="col">
                         <div className="mb-3" style={{ position: "relative" }}>
                           <label className="form-label">
-                            Date of Recipt of Message From NA
+                            Date of Laying in Senate
                           </label>
                           <span
                             style={{

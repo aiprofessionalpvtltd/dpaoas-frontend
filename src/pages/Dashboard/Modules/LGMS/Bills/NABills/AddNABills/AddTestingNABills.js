@@ -94,6 +94,7 @@ function AddEditTestingNABills() {
 
   const [ministersOnParliamentaryYear, setMinisterOnParliamentaryYear] =
     useState([]);
+  const [isCheckBoxChecked, setIsCheckBoxChecked] = useState(false);
   // Getting Tenures
   const fetchTenures = async () => {
     try {
@@ -154,32 +155,6 @@ function AddEditTestingNABills() {
     }
   };
 
-  // const fetchParliamentaryYears = async (id) => {
-  //   try {
-  //     let response;
-  //     if (location?.state?.forPerson === "Ministers") {
-  //       // Call API for Ministers
-  //       response = await getMinisterParliamentaryYearsByTenure(id);
-  //       if (response?.success) {
-  //         setMinisterParliamentaryYear(response?.data); // Update state for Ministers
-  //       }
-  //     } else if (location?.state?.forPerson === "Senators") {
-  //       // Call API for Senators
-  //       response = await getParliamentaryYearsByTermID(id);
-  //       if (response?.success) {
-  //         setMemberParliamentaryYear(response?.data); // Update state for Senators
-  //       }
-  //     } else {
-  //       console.warn("Invalid 'forPerson' value in location.state");
-  //     }
-  //   } catch (error) {
-  //     console.error(
-  //       "Error fetching parliamentary years:",
-  //       error?.response?.data?.message || error.message
-  //     );
-  //   }
-  // };
-
   // GetTerms on the Base of Tenure
   const handleTenuresTerms = async (id) => {
     try {
@@ -203,23 +178,6 @@ function AddEditTestingNABills() {
     }
   };
 
-  //Get Parliamentary Year On The Base Of Tenure
-  // const getParliamentaryYearsonTheBaseOfTenure = async (id) => {
-  //   try {
-  //     const response = await getParliamentaryYearsByTenureID(id);
-  //     if (response?.success) {
-  //       console.log("MNA Paraliamenary Years", response?.data);
-  //       if (isPrivateMemberBill && isFromNA) {
-  //         setMNAParliamentaryYearData(response?.data);
-  //       } else {
-  //         setParliamentaryYearData(response?.data);
-  //       }
-  //       // setTonerModels(transformedData);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
   const getMNAOnParliamentaryYear = async (id) => {
     try {
       const response = await getMinisterByParliamentaryYearID(id);
@@ -258,18 +216,7 @@ function AddEditTestingNABills() {
       showErrorMessage(error?.response?.data?.message);
     }
   };
-  //Get Parliamentary Year
-  // const getParliamentaryYearsonTheBaseOfTerm = async (id) => {
-  //   try {
-  //     const response = await getParliamentaryYearsByTermID(id);
-  //     if (response?.success) {
-  //       setParliamentaryYearData(response?.data);
-  //       // setTonerModels(transformedData);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+
   // Getting All MNA
   const getAllMNA = async () => {
     try {
@@ -315,6 +262,7 @@ function AddEditTestingNABills() {
       selectedMNA: null,
       selectedMinistry: null,
       billFrom: "From NA",
+      oldYear: "",
     },
     // validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -360,15 +308,6 @@ function AddEditTestingNABills() {
     if (values?.fkTermId?.value) {
       formData.append("fkTermId", values?.fkTermId?.value);
     }
-    // if (values?.fkMinisterTenureId?.value) {
-    //   formData.append("fkMinisterTenureId", values?.fkMinisterTenureId?.value);
-    // }
-    // if (values?.fkMnaParliamentaryYearId) {
-    //   formData.append(
-    //     "fkMnaParliamentaryYearId",
-    //     values?.fkMnaParliamentaryYearId
-    //   );
-    // }
 
     if (
       isGovernmentBill &&
@@ -395,12 +334,12 @@ function AddEditTestingNABills() {
     if (location?.state && location.state.category === "Private Member Bill") {
       formData.append(
         "fileNumber",
-        `24/(${values?.fileNumber})/${currentYear}`
+        `24/(${values?.fileNumber})/${currentYear}-Legis`
       );
     } else {
       formData.append(
         "fileNumber",
-        `09/(${values?.fileNumber})/${currentYear}`
+        `09/(${values?.fileNumber})/${currentYear}-Legis`
       );
     }
     // formData.append("PassedByNADate", values?.passedByNADate);
@@ -1129,7 +1068,7 @@ function AddEditTestingNABills() {
                               Amendment Bill
                             </option>
                             <option value="Constitutional Amendment Bill">
-                              Constitution Amendment Bill
+                              Constitutional Amendment Bill
                             </option>
                             {/* <option value="Finance Bill">Finance Bill</option> */}
                             {/* <option value="Money Bill">Money Bill</option> */}
@@ -1288,6 +1227,55 @@ function AddEditTestingNABills() {
                       </div>
                     </div>
                     <div className="row">
+                      {/* <div className="col-2">
+                        <div className="mb-3">
+                          <label className="form-label">
+                            Add Old FIle Number
+                          </label>
+
+                          <input
+                            type="checkbox"
+                            id="checkbox"
+                            name="checkbox"
+                            className="form-check-input"
+                            checked={isCheckBoxChecked}
+                            onChange={(e) =>
+                              setIsCheckBoxChecked(e.target.checked)
+                            }
+                          />
+                          {formik.touched.oldYear && formik.errors.oldYear && (
+                            <div
+                              className="invalid-feedback"
+                              style={{ display: "block" }}
+                            >
+                              {formik.errors.oldYear}
+                            </div>
+                          )}
+                        </div>
+                      </div> */}
+
+                      {/* <div className="col-3">
+                        <div className="mb-3">
+                          <label className="form-label">old Year</label>
+
+                          <input
+                            type="text"
+                            id="oldYear"
+                            name="oldYear"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            value={formik.values.oldYear}
+                          />
+                          {formik.touched.oldYear && formik.errors.oldYear && (
+                            <div
+                              className="invalid-feedback"
+                              style={{ display: "block" }}
+                            >
+                              {formik.errors.oldYear}
+                            </div>
+                          )}
+                        </div>
+                      </div> */}
                       <div className="col-3">
                         <div className="mb-3">
                           <label className="form-label">File Number</label>

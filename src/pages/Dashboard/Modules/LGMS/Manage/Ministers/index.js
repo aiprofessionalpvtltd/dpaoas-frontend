@@ -104,7 +104,7 @@ function LGMSMinisters() {
       <Header
         dashboardLink={"lgms/dashboard"}
         addLink1={"/lgms/dashboard/manage/members/list"}
-        title1={"Members"}
+        title1={"Ministers"}
       />
       <ToastContainer />
 
