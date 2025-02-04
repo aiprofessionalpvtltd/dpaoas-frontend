@@ -322,6 +322,7 @@ import AddEditMedicalRepo from "../pages/Dashboard/Modules/Transport/VehicleDriv
 import AddEditGovernmentBills from "../pages/Dashboard/Modules/Notice/legislationBusiness/GovernmentBill/AddEditGovernmentBill/index.js";
 import UserManulas from "../pages/Dashboard/Modules/EFiling/UserManuals/index.js";
 import EfilingLeaveManagement from "../pages/Dashboard/Modules/EFiling/AddLeave/index.js";
+import AssignedQuestion from "../pages/Dashboard/Modules/TMS/Question/AssignedQuestion/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -719,6 +720,7 @@ export const ProtectedRoutes = [
   { path: "/tms/dashboard", element: <TMSDashboard /> },
   { path: "/tms/dashboard/detail", element: <TMSDashboardDetail /> },
   { path: "/tms/question", element: <TMSQuestion /> },
+  { path: "/tms/assigned-question", element: <AssignedQuestion /> },
   { path: "/tms/question/questionTranslation", element: <QuestionTranslation /> },
 
   { path: "/tms/motion", element: <TMSMotion /> },

@@ -15,6 +15,8 @@ import CKEditorComp from "../../../../../components/CustomComponents/Editor/CKEd
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { GetAlLMarkTo, submitQuestion } from "../../../../../api/APIs/Services/translation.service";
 import { showSuccessMessage , showErrorMessage } from "../../../../../utils/ToastAlert";
+import moment from 'moment';
+import { getUserData } from "../../../../../api/Auth";
 
 const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
   return (
@@ -29,11 +31,15 @@ const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
 
 function QuestionTranslation() {
   const navigate = useNavigate();
+  const userData = getUserData()
   const location = useLocation();
-  const fkQuestionId = location.state.question.id
+  const fkQuestionId = location?.state?.question?.id
+  const fkNewQuestionId = location?.state?.id
+  console.log("location",fkNewQuestionId)
   const [markToData, setMarkToData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [questionData, setQuestionData] = useState(location.state?.question);
+
   const [englishText, setEnglishText] = useState(
     location.state?.question?.englishText || ""
   );
@@ -63,24 +69,26 @@ function QuestionTranslation() {
     }) || [];
 
   const getMarkTo = async () => {
+    const userId = userData?.fkUserId
     try {
-      const res = await GetAlLMarkTo();
+      const res = await GetAlLMarkTo(userId);
       if (res.success && res.data) {
-        // Assuming you want to set the employees list in markToData
+        
         setMarkToData(res.data.employees || []);
       } else {
         console.error("Failed to fetch data:", res.message);
-        setMarkToData([]); // Set an empty array in case of failure
+        setMarkToData([]);
       }
     } catch (error) {
       console.error("Error fetching MarkTo data:", error);
-      setMarkToData([]); // Set an empty array on error
+      setMarkToData([]); 
     }
   };
   useEffect(() => {
     getMarkTo();
   }, []);
 
+  const formattedDate = moment(questionData?.noticeOfficeDiary?.noticeOfficeDiaryDate).format("DD/MM/YYYY");
   // Component to render PDF preview
   const PdfPreview = ({ pdfUrl }) => {
     return (
@@ -126,13 +134,15 @@ function QuestionTranslation() {
   };
 
   const onSubmitQuestion = async ({ assignedTo, CommentStatus, priority, comment }) => {
+    const userId = userData?.fkUserId
+    const category = "Question"
     try {
-        const response = await submitQuestion(assignedTo, CommentStatus, priority, comment ,fkQuestionId);
+        const response = await submitQuestion(assignedTo, CommentStatus, priority, comment ,fkQuestionId  , category , userId);
         if(response){
           showSuccessMessage(response?.message)
-          // setTimeout(() => {
-          //   navigate('/tms/question')
-          // }, 1000);
+          setTimeout(() => {
+            navigate('/tms/question')
+          }, 1000);
           
         }
         
@@ -144,11 +154,6 @@ function QuestionTranslation() {
   return (
     <Layout module={true} sidebarItems={TMSsidebarItems} centerlogohide={true}>
       <ToastContainer />
-      {/* <Header
-        dashboardLink={"/"}
-        addLink1={"/qms/notice/notice-question"}
-        title1={"Translate Question"}
-      /> */}
 
       <div className="d-flex row align-items-center justify-content-between">
         <div className="col-md-12">
@@ -169,7 +174,7 @@ function QuestionTranslation() {
               <div className="col-4 d-flex">
                 <div className="fw-bold me-1">Notice Date:</div>
                 <div className="text-primary">
-                  {questionData?.noticeOfficeDiary?.noticeOfficeDiaryDate}
+                  {formattedDate}
                 </div>
               </div>
               <div className="col-4 d-flex">
@@ -279,16 +284,7 @@ function QuestionTranslation() {
                         style={{ borderBottom: "1px solid #ddd" }}
                       >
                         <>
-                          {/* <img
-                              style={{
-                                marginBottom: "30px",
-                                marginRight: "15px",
-                              }}
-                              src={thumbnail}
-                              width="40"
-                              height="40"
-                              class="rounded-circle mr-3"
-                            /> */}
+                        
                           <div class="w-100" style={{ position: "relative" }}>
                             <div class="d-flex justify-content-between align-items-center">
                               <div class="d-flex flex-row align-items-center">
@@ -297,30 +293,16 @@ function QuestionTranslation() {
                                     class="mr-2"
                                     style={{ fontSize: "14px" }}
                                   >{`${item?.submittedUser?.employee?.firstName}  ${item?.submittedUser?.employee?.lastName}/ ${item?.submittedUser?.employee?.designations?.designationNam}`}</span>
-                                  {/* <small
-                                      style={{
-                                        marginLeft: "0px",
-                                        position: "absolute",
-                                        top: "-21px",
-                                      }}
-                                      class="c-badge"
-                                    >
-                                      {
-                                        item?.submittedUser?.employee
-                                          ?.designations?.designationNam
-                                      }
-                                    </small> */}
+                                  
                                 </div>
                               </div>
                               <div style={{ float: "right" }}>
                                 <small>
-                                  {/* {moment(item?.formattedCreatedAt).format(
-                                      "DD/MM/YYYY"
-                                    )} */}
+                                 
                                   {item?.formattedDateCreatedAt}
                                 </small>
                                 <small className="ms-2">
-                                  {/* {moment(item?.formattedCreatedAt).format("hh:mm A")} */}
+                                
                                   {item?.formattedTimeCreatedAt}
                                 </small>
                               </div>
@@ -343,20 +325,7 @@ function QuestionTranslation() {
                                 ? item?.CommentStatus
                                 : item?.comment}
                             </p>
-                            {/* <small
-                                style={{
-                                  marginBottom: "20px",
-                                  background:
-                                    item?.CommentStatus === "Approved"
-                                      ? "green"
-                                      : item?.CommentStatus === "Rejected"
-                                        ? "red"
-                                        : "grey",
-                                }}
-                                class="c-badge"
-                              >
-                                {item?.CommentStatus}
-                              </small> */}
+                           
                           </div>
                         </>
                       </div>

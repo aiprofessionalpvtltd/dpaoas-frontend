@@ -680,8 +680,19 @@ export const TMSsidebarItems = [
   },
   {
     itemName: "Question",
-    link: "/tms/question",
     icon: faHome,
+    subItems: [
+      {
+        itemName: "Received Questions",
+        link: "/tms/question",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Assigned Questions",
+        link: "/tms/assigned-question",
+        icon: faClipboardList,
+      },
+    ],
   },
   {
     itemName: "Motion",
