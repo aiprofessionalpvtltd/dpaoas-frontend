@@ -254,6 +254,41 @@ function QMSSearchQuestion() {
     SearchQuestionApi(values);
   };
 
+  const handlePreviewAllData = async () => {
+    const searchParams = {
+      fromSessionNo: formik.values.fromSession,
+      toSessionNo: formik.values.toSession,
+      memberName: formik.values.memberName,
+      questionCategory: formik.values.category,
+      keyword: formik.values.keyword,
+      questionID: formik.values?.questionID,
+      questionStatus: formik.values.questionStatus,
+      questionDiaryNo: formik.values.questionDiaryNo,
+      noticeOfficeDiaryDateFrom: formik.values.fromNoticeDate,
+      noticeOfficeDiaryDateTo: formik.values.toNoticeDate,
+      fileStatus: formik.values.fileStatus,
+      groups: formik.values.groups,
+      divisions: formik.values.divisions,
+      memberPosition: formik.values?.memberPosition,
+      questionSentStatus: "inQuestion",
+      gender: formik.values?.gender,
+      religion: formik.values?.religion,
+      noticeOfficeDiaryNo: formik.values?.noticeOfficeDiaryNo,
+      isExact: formik.values?.isExact,
+      
+    };
+
+    try {
+      const response = await searchQuestion(searchParams, 0, count); // Fetch all data
+      if (response?.success) {
+        const allData = transformLeavesData(response?.data?.questions);
+        handlePreviewNotingDoc(allData);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  };
+
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
       <Header
@@ -662,7 +697,7 @@ function QMSSearchQuestion() {
                     <button
                       class="btn btn-primary"
                       type="button"
-                      onClick={() => handlePreviewNotingDoc(searchedData)}
+                      onClick={handlePreviewAllData}
                       disabled={searchedData?.length > 0 ? false : true}
                     >
                       Preview PDF
@@ -681,19 +716,6 @@ function QMSSearchQuestion() {
                 </div>
               </form>
               <div class="dash-detail-container" style={{ marginTop: "20px" }}>
-                {/* <div class="row">
-                  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                    <button class="btn btn-primary mb-3" type="submit">
-                      Print Questions
-                    </button>
-                    <button class="btn btn-primary mb-3" type="submit">
-                      Annual Report
-                    </button>
-                    <button class="btn btn-warning mb-3" type="submit">
-                      Defferd Questions
-                    </button>
-                  </div>
-                </div> */}
                 <CustomTable
                   block={false}
                   headerShown={true}
