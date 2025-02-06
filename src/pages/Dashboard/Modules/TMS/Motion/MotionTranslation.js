@@ -1,5 +1,9 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { QMSSideBarItems, TMSsidebarItems } from "../../../../../utils/sideBarItems";
+import {
+  QMSSideBarItems,
+  TMSsidebarItems,
+  TMSsidebarItemsDirector,
+} from "../../../../../utils/sideBarItems";
 import { Layout } from "../../../../../components/Layout";
 import Header from "../../../../../components/Header";
 import { useNavigate, useLocation } from "react-router";
@@ -10,6 +14,18 @@ import "react-image-gallery/styles/css/image-gallery.css";
 import { Button, Modal, Spinner } from "react-bootstrap";
 import CKEditorComp from "../../../../../components/CustomComponents/Editor/CKEditorComp";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import moment from "moment";
+import { getUserData } from "../../../../../api/Auth";
+import {
+  assignedMotionForTranslation,
+  GetAlLMarkTo,
+  getMotionRemarksByID,
+} from "../../../../../api/APIs/Services/translation.service";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../utils/ToastAlert";
+import { updateNewMotion } from "../../../../../api/APIs/Services/Motion.service";
 
 const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
   return (
@@ -24,73 +40,174 @@ const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
 
 function MotionTranslation() {
   const navigate = useNavigate();
+  const userData = getUserData();
+  const userId = userData?.fkUserId;
   const location = useLocation();
   const [loading, setLoading] = useState(true);
-  const [motionData, setMotionData] = useState(location.state?.question);      
-  const [englishText, setEnglishText] = useState(location.state?.question?.englishText || "");
-  const [urduText, setUrduText] = useState(location.state?.question?.urduText || "");
+  const [motionData, setMotionData] = useState(
+    location?.state && location?.state
+  );
+  const [singleMotionRemarks, setSingleMotionRemarks] = useState([]);
+  const fkMotionId = motionData ? motionData?.id : null;
+  const [englishText, setEnglishText] = useState(motionData?.englishText || "");
+  const [urduText, setUrduText] = useState(motionData?.urduText || "");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalInputValue, setModalInputValue] = useState({
     assignedTo: "",
     CommentStatus: "",
     comment: "",
   });
-
-  const attachments = [];
-  const remarksData = [];
+  const [markToData, setMarkToData] = useState([]);
 
   const images =
-  location.state?.question?.questionImage?.map((item) => {
-    const fileUrl = `${imagesUrl}${item?.path}`;
-    const isPdf = item?.path?.toLowerCase().endsWith('.pdf');
+    location.state?.question?.questionImage?.map((item) => {
+      const fileUrl = `${imagesUrl}${item?.path}`;
+      const isPdf = item?.path?.toLowerCase().endsWith(".pdf");
 
-    return {
-      original: fileUrl,
-      thumbnail: fileUrl,
-      isPdf: isPdf, // Custom property to identify PDFs
-    };
-  }) || [];
+      return {
+        original: fileUrl,
+        thumbnail: fileUrl,
+        isPdf: isPdf, // Custom property to identify PDFs
+      };
+    }) || [];
 
-      // Component to render PDF preview
-      const PdfPreview = ({ pdfUrl }) => {
-        return (
-          <div style={{ position: 'relative', marginBottom: '20px' }}>
-            {loading && (
-              <div style={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                zIndex: 10,
-              }}>
-                <Spinner />
-              </div>
-            )}
-            <iframe
-              src={pdfUrl}
-              width="100%"
-              height="600px"
-              style={{ border: 'none', display: loading ? 'none' : 'block' }}
-              title="PDF Preview"
-              onLoad={() => setLoading(false)} // Event listener for when the PDF is fully loaded
-            />
+  const updateMotion = async () => {
+    const formData = new FormData();
+
+    formData.append("urduText", urduText);
+    formData.append("englishText", englishText);
+
+    try {
+      const response = await updateNewMotion(fkMotionId, formData);
+      if (response?.success) {
+        showSuccessMessage(response?.message);
+        // setTimeout(() => {
+        //   navigate("/qms/search/question");
+        // }, 1000);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  };
+
+  const getMarkTo = async () => {
+    try {
+      const res = await GetAlLMarkTo(userId);
+      if (res.success && res.data) {
+        setMarkToData(res.data.employees || []);
+      } else {
+        console.error("Failed to fetch data:", res.message);
+        setMarkToData([]);
+      }
+    } catch (error) {
+      console.error("Error fetching MarkTo data:", error);
+      setMarkToData([]);
+    }
+  };
+
+  const getMotionRemarksByIDs = async () => {
+    try {
+      const response = await getMotionRemarksByID(fkMotionId, userId);
+      if (response?.success) {
+        setSingleMotionRemarks(response?.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getMarkTo();
+    if (fkMotionId) {
+      getMotionRemarksByIDs();
+    }
+  }, []);
+
+  // Component to render PDF preview
+  const PdfPreview = ({ pdfUrl }) => {
+    return (
+      <div style={{ position: "relative", marginBottom: "20px" }}>
+        {loading && (
+          <div
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              zIndex: 10,
+            }}
+          >
+            <Spinner />
           </div>
-        );
-      };
+        )}
+        <iframe
+          src={pdfUrl}
+          width="100%"
+          height="600px"
+          style={{ border: "none", display: loading ? "none" : "block" }}
+          title="PDF Preview"
+          onLoad={() => setLoading(false)} // Event listener for when the PDF is fully loaded
+        />
+      </div>
+    );
+  };
 
-      const toggleModal = () => {
-        setIsModalOpen(!isModalOpen);
-        setModalInputValue({
-          assignedTo: "",
-          CommentStatus: "",
-          priority: "",
-          comment: "",
-        })
-      };
-    
+  // Assigned Motion
+  const onSubmitMotion = async ({
+    assignedTo,
+    CommentStatus,
+    priority,
+    comment,
+  }) => {
+    const category = "Motion";
+    try {
+      const response = await assignedMotionForTranslation(
+        assignedTo,
+        CommentStatus,
+        priority,
+        comment,
+        fkMotionId,
+        category,
+        userId
+      );
+      if (response) {
+        showSuccessMessage(response?.message);
+        setTimeout(() => {
+          if (userData?.designation?.designationName === "Assistant Director") {
+            navigate("/tms/motion");
+          } else {
+            navigate("/tms/assigned-motion");
+          }
+        }, 3000);
+      }
+    } catch (error) {
+      console.error("Error submitting question:", error);
+    }
+  };
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+    setModalInputValue({
+      assignedTo: "",
+      CommentStatus: "",
+      priority: "",
+      comment: "",
+    });
+    if (isModalOpen) {
+      onSubmitMotion(modalInputValue);
+    }
+  };
 
   return (
-    <Layout module={true} sidebarItems={TMSsidebarItems} centerlogohide={true}>
+    <Layout
+      module={true}
+      sidebarItems={
+        userData?.designation?.designationName === "Assistant Director"
+          ? TMSsidebarItemsDirector
+          : TMSsidebarItems
+      }
+      centerlogohide={true}
+    >
       <ToastContainer />
       {/* <Header
         dashboardLink={"/"}
@@ -99,136 +216,155 @@ function MotionTranslation() {
       /> */}
 
       <div className="d-flex row align-items-center justify-content-between">
-  <div className="col-md-12">
-    <div className="bg-white p-3 border rounded">
-      <div className="row">
-        <div className="col-4 d-flex">
-          <div className="fw-bold me-1">Member Name:</div>
-          <div className="text-primary">
-            {motionData?.member?.memberName}
-          </div>
-        </div>
-        <div className="col-4 d-flex">
-          <div className="fw-bold me-1">Office Diary Number:</div>
-          <div className="text-primary">
-            {motionData?.noticeOfficeDiary?.noticeOfficeDiaryNo}
-          </div>
-        </div>
-        <div className="col-4 d-flex">
-          <div className="fw-bold me-1">Notice Date:</div>
-          <div className="text-primary">
-            {motionData?.noticeOfficeDiary?.noticeOfficeDiaryDate}
-          </div>
-        </div>
-        <div className="col-4 d-flex">
-          <div className="fw-bold me-1">Notice Time:</div>
-          <div className="text-primary">
-            {motionData?.noticeOfficeDiary?.noticeOfficeDiaryTime}
-          </div>
-        </div>
-        <div className="col-4 d-flex">
-          <div className="fw-bold me-1">Session:</div>
-          <div className="text-primary">
-            {motionData?.session?.sessionName}
-          </div>
-        </div>
-        <div className="col-4 d-flex">
-          <div className="fw-bold me-1">Category:</div>
-          <div className="text-primary">
-            {motionData?.questionCategory}
+        <div className="col-md-12">
+          <div className="bg-white p-3 border rounded">
+            <div className="row">
+              <div className="col-4 d-flex">
+                <div className="fw-bold me-1">Member Name:</div>
+                <div className="text-primary">
+                  {motionData?.motionMovers?.map(
+                    (item) => item?.members?.memberName
+                  )}
+                </div>
+              </div>
+              <div className="col-4 d-flex">
+                <div className="fw-bold me-1">Office Diary Number:</div>
+                <div className="text-primary">
+                  {motionData?.noticeOfficeDairies?.noticeOfficeDiaryNo}
+                </div>
+              </div>
+              <div className="col-4 d-flex">
+                <div className="fw-bold me-1">Notice Date:</div>
+                <div className="text-primary">
+                  {motionData?.noticeOfficeDairies?.noticeOfficeDiaryDate
+                    ? moment(
+                        motionData?.noticeOfficeDairies?.noticeOfficeDiaryDate
+                      ).format("DD/MM/YYYY")
+                    : ""}
+                </div>
+              </div>
+              <div className="col-4 d-flex">
+                <div className="fw-bold me-1">Notice Time:</div>
+                <div className="text-primary">
+                  {motionData?.noticeOfficeDairies?.noticeOfficeDiaryTime
+                    ? moment(
+                        motionData?.noticeOfficeDairies?.noticeOfficeDiaryTime
+                      ).format("hh:mm a")
+                    : ""}
+                </div>
+              </div>
+              <div className="col-4 d-flex">
+                <div className="fw-bold me-1">Session:</div>
+                <div className="text-primary">
+                  {motionData?.sessions?.sessionName}
+                </div>
+              </div>
+              <div className="col-4 d-flex">
+                <div className="fw-bold me-1">Motion Type:</div>
+                <div className="text-primary">{motionData?.motionType}</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-</div>
-
 
       <div className="row mt-3">
-          <div className="col-8">
-            <section>
+        <div className="col-8">
+          <section>
             {images.map((item, index) =>
               item.isPdf ? (
                 <PdfPreview pdfUrl={item.original} key={index} />
               ) : (
-              <ImageGallery
-                style={{ maxHeight: "calc(100vh 0px)" }}
-                items={images}
-                showThumbnails={false}
-                showFullscreenButton={false}
-                showPlayButton={false}
-                slideOnThumbnailOver
-                renderThumbInner={(item) => (
-                  <div className="image-gallery-thumbnail-inner">
-                    <img
-                      src={item.thumbnail}
-                      alt={"file"}
-                      width={92}
-                      height={80}
-                    />
-                    {/* Add any additional elements or styles for the thumbnail */}
-                  </div>
-                )}
-              />
+                <ImageGallery
+                  style={{ maxHeight: "calc(100vh 0px)" }}
+                  items={images}
+                  showThumbnails={false}
+                  showFullscreenButton={false}
+                  showPlayButton={false}
+                  slideOnThumbnailOver
+                  renderThumbInner={(item) => (
+                    <div className="image-gallery-thumbnail-inner">
+                      <img
+                        src={item.thumbnail}
+                        alt={"file"}
+                        width={92}
+                        height={80}
+                      />
+                      {/* Add any additional elements or styles for the thumbnail */}
+                    </div>
+                  )}
+                />
               )
-              )}
-            </section>
+            )}
+          </section>
 
-            <div>
-                <label className="form-label mt-3">English Text</label>
-                <CKEditorComp
-                    onChange={(data) => setEnglishText(data)}
-                    value={englishText}
-                  />
-            </div>
-
-            <div>
-                <label className="form-label mt-3">Urdu Text</label>
-                <CKEditorComp
-                    onChange={(data) => setUrduText(data)}
-                    value={urduText}
-                  />
-            </div>
+          <div>
+            <label className="form-label mt-3">English Text</label>
+            <CKEditorComp
+              onChange={(data) => setEnglishText(data)}
+              value={englishText}
+            />
           </div>
 
-          <div className="col-4 justify-content-end">
-            <div
-              className="custom-editor-main"
-              style={{ marginTop: 0, borderLeft: "1px solid #ddd", padding: 10 }}
+          <div>
+            <label className="form-label mt-3">Urdu Text</label>
+            <CKEditorComp
+              onChange={(data) => setUrduText(data)}
+              value={urduText}
+            />
+          </div>
+          <div
+            class="d-grid gap-2 d-md-flex"
+            style={{ marginTop: 30, marginBottom: 40 }}
+          >
+            <button
+              class="btn btn-primary"
+              type="submit"
+              onClick={updateMotion}
             >
-              <div className="comment-heading">
-                <h2
-                  class="ps-3"
-                  style={{ fontWeight: "bold", paddingTop: "7px" }}
-                >
-                  Comments
-                </h2>
-                <a onClick={toggleModal}>
-                  <button class="btn add-btn">
-                    <FontAwesomeIcon
-                      style={{ marginRight: "-5px" }}
-                      // icon={faPlus}
-                      size="md"
-                      width={24}
-                    />{" "}
-                    {/* Add your comment */}
-                    Proceed
-                  </button>
-                </a>
-              </div>
+              Update
+            </button>
+          </div>
+        </div>
 
-              <div style={{ maxHeight: "712px", overflowY: "scroll" }}>
-                {remarksData?.length > 0 ? (
-                  remarksData.map((item) => (
-                    <>
+        <div className="col-4 justify-content-end">
+          <div
+            className="custom-editor-main"
+            style={{ marginTop: 0, borderLeft: "1px solid #ddd", padding: 10 }}
+          >
+            <div className="comment-heading">
+              <h2
+                class="ps-3"
+                style={{ fontWeight: "bold", paddingTop: "7px" }}
+              >
+                Comments
+              </h2>
+              <a onClick={toggleModal}>
+                <button class="btn add-btn">
+                  <FontAwesomeIcon
+                    style={{ marginRight: "-5px" }}
+                    // icon={faPlus}
+                    size="md"
+                    width={24}
+                  />{" "}
+                  {/* Add your comment */}
+                  Proceed
+                </button>
+              </a>
+            </div>
+
+            <div style={{ maxHeight: "712px", overflowY: "scroll" }}>
+              {singleMotionRemarks?.length > 0 ? (
+                singleMotionRemarks.map((item) => (
+                  <>
                     {(item?.CommentStatus !== null ||
-                        item?.comment !== null) && (
-                        <div
-                          class="d-flex flex-row p-3 ps-3"
-                          style={{ borderBottom: "1px solid #ddd" }}
-                        >
-                          <>
-                            {/* <img
+                      item?.comment !== null) && (
+                      <div
+                        class="d-flex flex-row p-3 ps-3"
+                        style={{ borderBottom: "1px solid #ddd" }}
+                      >
+                        <>
+                          {/* <img
                               style={{
                                 marginBottom: "30px",
                                 marginRight: "15px",
@@ -238,15 +374,15 @@ function MotionTranslation() {
                               height="40"
                               class="rounded-circle mr-3"
                             /> */}
-                            <div class="w-100" style={{ position: "relative" }}>
-                              <div class="d-flex justify-content-between align-items-center">
-                                <div class="d-flex flex-row align-items-center">
-                                  <div style={{ float: "left" }}>
-                                    <span
-                                      class="mr-2"
-                                      style={{ fontSize: "14px" }}
-                                    >{`${item?.submittedUser?.employee?.firstName}  ${item?.submittedUser?.employee?.lastName}/ ${item?.submittedUser?.employee?.designations?.designationNam}`}</span>
-                                    {/* <small
+                          <div class="w-100" style={{ position: "relative" }}>
+                            <div class="d-flex justify-content-between align-items-center">
+                              <div class="d-flex flex-row align-items-center">
+                                <div style={{ float: "left" }}>
+                                  <span
+                                    class="mr-2"
+                                    style={{ fontSize: "14px" }}
+                                  >{`${item?.submittedUser?.employee?.firstName}  ${item?.submittedUser?.employee?.lastName}/ ${item?.submittedUser?.employee?.designations?.designationName}`}</span>
+                                  {/* <small
                                       style={{
                                         marginLeft: "0px",
                                         position: "absolute",
@@ -259,30 +395,36 @@ function MotionTranslation() {
                                           ?.designations?.designationNam
                                       }
                                     </small> */}
-                                  </div>
-                                </div>
-                                <div style={{ float: "right" }}>
-                                  <small>
-                                    {/* {moment(item?.formattedCreatedAt).format(
-                                      "DD/MM/YYYY"
-                                    )} */}
-                                    {item?.formattedDateCreatedAt}
-                                  </small>
-                                  <small className="ms-2">
-                                    {/* {moment(item?.formattedCreatedAt).format("hh:mm A")} */}
-                                    {item?.formattedTimeCreatedAt}
-                                  </small>
                                 </div>
                               </div>
-                              <p
-                                class="text-justify comment-text mb-0"
-                                style={{ fontSize: "18px", color: item?.submittedUser?.employee?.userType === "Officer" ? "green" : item?.submittedUser?.employee?.userType === "Section" ? "blue" : "black" }}
-                              >
-                                {item?.CommentStatus
-                                    ? item?.CommentStatus
-                                    : item?.comment}
-                              </p>
-                              {/* <small
+                              <div style={{ float: "right" }}>
+                                <small>
+                                  {moment(item?.createdAt).format("DD/MM/YYYY")}
+                                </small>
+                                <small className="ms-2">
+                                  {moment(item?.createdAt).format("hh:mm a")}
+                                </small>
+                              </div>
+                            </div>
+                            <p
+                              class="text-justify comment-text mb-0"
+                              style={{
+                                fontSize: "18px",
+                                color:
+                                  item?.submittedUser?.employee?.userType ===
+                                  "Officer"
+                                    ? "green"
+                                    : item?.submittedUser?.employee
+                                          ?.userType === "Section"
+                                      ? "blue"
+                                      : "black",
+                              }}
+                            >
+                              {item?.CommentStatus
+                                ? item?.CommentStatus
+                                : item?.comment}
+                            </p>
+                            {/* <small
                                 style={{
                                   marginBottom: "20px",
                                   background:
@@ -296,28 +438,28 @@ function MotionTranslation() {
                               >
                                 {item?.CommentStatus}
                               </small> */}
-                            </div>
-                          </>
-                        </div>
-                      )}
-                    </>
-                  ))
-                ) : (
-                  <div
-                    class="alert alert-danger mt-5"
-                    role="alert"
-                    style={{
-                      width: "350px",
-                      margin: "0 auto",
-                      textAlign: "center",
-                    }}
-                  >
-                    No data found
-                  </div>
-                )}
-              </div>
+                          </div>
+                        </>
+                      </div>
+                    )}
+                  </>
+                ))
+              ) : (
+                <div
+                  class="alert alert-danger mt-5"
+                  role="alert"
+                  style={{
+                    width: "350px",
+                    margin: "0 auto",
+                    textAlign: "center",
+                  }}
+                >
+                  No data found
+                </div>
+              )}
             </div>
           </div>
+        </div>
       </div>
 
       <EFilingModal
@@ -344,10 +486,12 @@ function MotionTranslation() {
                 <option value="" selected disabled hidden>
                   Select
                 </option>
-                  <option value={"Please Put Up"}>Please Put Up</option>
-                  <option value={"Please Link"}>Please Link</option>
-                  <option value={"For Perusal Please"}>For Perusal Please</option>
-                  <option value={"Submitted For Approval"}>Submitted For Approval</option>
+                <option value={"Please Put Up"}>Please Put Up</option>
+                <option value={"Please Link"}>Please Link</option>
+                <option value={"For Perusal Please"}>For Perusal Please</option>
+                <option value={"Submitted For Approval"}>
+                  Submitted For Approval
+                </option>
               </select>
             </div>
           </div>
@@ -369,9 +513,9 @@ function MotionTranslation() {
                 <option value="" selected disabled hidden>
                   Select
                 </option>
-                  <option value={"Confidential"}>Confidential</option>
-                  <option value={"Immediate"}>Immediate</option>
-                  <option value={"Routine"}>Routine</option>
+                <option value={"Confidential"}>Confidential</option>
+                <option value={"Immediate"}>Immediate</option>
+                <option value={"Routine"}>Routine</option>
               </select>
             </div>
           </div>
@@ -393,12 +537,17 @@ function MotionTranslation() {
                 <option value={""} selected disabled hidden>
                   Select
                 </option>
-                {/* {employeeData &&
-                  employeeData?.map((item) => (
-                    <option
-                      value={item.fkUserId}
-                    >{`${item?.firstName} ${item?.lastName} (${item.designations?.designationName})`}</option>
-                  ))} */}
+                {markToData?.length > 0 ? (
+                  markToData.map((item) => (
+                    <option key={item?.fkUserId} value={item?.fkUserId}>
+                      {`${item.firstName} ${item.lastName} (${item.designations.designationName})`}
+                    </option>
+                  ))
+                ) : (
+                  <option value="" disabled>
+                    No Employees Available
+                  </option>
+                )}
               </select>
             </div>
           </div>
@@ -438,7 +587,6 @@ function MotionTranslation() {
           </Button>
         </Modal.Footer>
       </EFilingModal>
-
     </Layout>
   );
 }

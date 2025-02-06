@@ -681,6 +681,7 @@ export const TMSsidebarItemsDirector = [
   },
   {
     itemName: "Question",
+    link: "/tms/question",
     icon: faHome,
     subItems: [
       {
@@ -695,11 +696,29 @@ export const TMSsidebarItemsDirector = [
       },
     ],
   },
+
   {
     itemName: "Motion",
     link: "/tms/motion",
     icon: faHome,
+    subItems: [
+      {
+        itemName: "Received Motion",
+        link: "/tms/motion",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Assigned Motion",
+        link: "/tms/assigned-motion",
+        icon: faClipboardList,
+      },
+    ],
   },
+  // {
+  //   itemName: "Motion",
+  //   link: "/tms/motion",
+  //   icon: faHome,
+  // },
   {
     itemName: "Resolution",
     link: "/tms/resolution",
@@ -735,7 +754,7 @@ export const TMSsidebarItems = [
   },
   {
     itemName: "Motion",
-    link: "/tms/motion",
+    link: "/tms/assigned-motion",
     icon: faHome,
   },
   {

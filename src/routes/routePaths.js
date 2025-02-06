@@ -323,6 +323,8 @@ import AddEditGovernmentBills from "../pages/Dashboard/Modules/Notice/legislatio
 import UserManulas from "../pages/Dashboard/Modules/EFiling/UserManuals/index.js";
 import EfilingLeaveManagement from "../pages/Dashboard/Modules/EFiling/AddLeave/index.js";
 import AssignedQuestion from "../pages/Dashboard/Modules/TMS/Question/AssignedQuestion/index.js";
+import MotionTranslation from "../pages/Dashboard/Modules/TMS/Motion/MotionTranslation.js";
+import AssignedMotion from "../pages/Dashboard/Modules/TMS/Motion/AssigendMotion/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -721,7 +723,12 @@ export const ProtectedRoutes = [
   { path: "/tms/dashboard/detail", element: <TMSDashboardDetail /> },
   { path: "/tms/question", element: <TMSQuestion /> },
   { path: "/tms/assigned-question", element: <AssignedQuestion /> },
-  { path: "/tms/question/questionTranslation", element: <QuestionTranslation /> },
+  {
+    path: "/tms/question/questionTranslation",
+    element: <QuestionTranslation />,
+  },
+  { path: "/tms/motion/motion-translation", element: <MotionTranslation /> },
+  { path: "/tms/assigned-motion", element: <AssignedMotion /> },
 
   { path: "/tms/motion", element: <TMSMotion /> },
   { path: "/tms/resolution", element: <TMSResolution /> },

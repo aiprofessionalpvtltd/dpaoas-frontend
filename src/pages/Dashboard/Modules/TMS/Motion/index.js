@@ -1,5 +1,8 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { MMSSideBarItems } from "../../../../../utils/sideBarItems";
+import {
+  MMSSideBarItems,
+  TMSsidebarItemsDirector,
+} from "../../../../../utils/sideBarItems";
 import { Layout } from "../../../../../components/Layout";
 import Header from "../../../../../components/Header";
 import { useNavigate } from "react-router";
@@ -24,12 +27,19 @@ import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
 import Select from "react-select";
 import { TMSsidebarItems } from "../../../../../utils/sideBarItems";
+import {
+  getAssignedMotionWithOutUserId,
+  getMotionRemarksByID,
+} from "../../../../../api/APIs/Services/translation.service";
+import { getUserData } from "../../../../../api/Auth";
 
 function TMSMotion() {
   const navigate = useNavigate();
   const { members, sessions } = useContext(AuthContext);
+  const userData = getUserData();
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
+  // const [allRemarks, setAllRemarks] = useState([]);
   const [motionStatus, setMotionStatus] = useState([]);
   const [motionData, setMotionData] = useState([]);
   const [isFromNoticeOpen, setIsFromNoticeOpen] = useState(false);
@@ -48,7 +58,7 @@ function TMSMotion() {
       fkmotionStatus: "",
       fromNoticeDate: "",
       toNoticeDate: "",
-      memberPosition:"",
+      memberPosition: "",
     },
     onSubmit: (values) => {
       // Handle form submission here
@@ -68,7 +78,8 @@ function TMSMotion() {
       formik?.values?.toSession ||
       formik?.values?.motionType ||
       formik?.values?.fromNoticeDate ||
-      formik?.values?.toNoticeDate || formik?.values?.fkmotionStatus
+      formik?.values?.toNoticeDate ||
+      formik?.values?.fkmotionStatus
     ) {
       searchMotionList(formik?.values, page);
     }
@@ -104,7 +115,7 @@ function TMSMotion() {
 
       return {
         id: res?.id,
-        memberName: res?.motionMovers[0]?.members?.memberName,
+        // memberName: res?.motionMovers[0]?.members?.memberName,
         SessionName: res?.sessions?.sessionName
           ? res?.sessions?.sessionName
           : "",
@@ -126,32 +137,86 @@ function TMSMotion() {
         englishText: EnglishText ? EnglishText : "",
         urduText: UrduText ? UrduText : "",
         motionStatus: res?.motionStatuses?.statusName,
-        memberPosition:res?.memberPosition,
-        device:res?.device,
-        createdBy:res?.motionSentStatus === "toMotion" ? "From Notice Office": res?.motionSentStatus === "inMotion" ? "Motion Branch":"---"
+        memberPosition: res?.memberPosition,
+        device: res?.device,
+        createdBy:
+          res?.motionSentStatus === "toMotion"
+            ? "From Notice Office"
+            : res?.motionSentStatus === "inMotion"
+              ? "Motion Branch"
+              : "---",
       };
     });
   };
 
-  const getMotionListDataa = useCallback(async () => {
-    const motionSentStatus = "inMotion"
-    const motiontoStatus ="toMotion"
+  const getMotionStatus = async () => {
     try {
-      const response = await getAllMotion(currentPage, pageSize, motionSentStatus, motiontoStatus);
+      const response = await getallMotionStatus();
       if (response?.success) {
-        const transformedData = transformMotionData(response?.data?.rows);
-        setCount(response?.data?.count);
-        setMotionData(transformedData);
+        setMotionStatus(response?.data);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  };
+
+  const getRecievedMotion = useCallback(async () => {
+    const category = "Motion";
+    try {
+      const response = await getAssignedMotionWithOutUserId(category, 0, 1000);
+      if (response?.success) {
+        const transformedData = transformMotionData(response?.data);
+
+        if (transformedData) {
+          // setAllRemarks(transformedData);
+          getMotionListDataa(transformedData);
+        }
       }
     } catch (error) {
       console.log(error);
     }
-  }, [currentPage, pageSize, setCount, setMotionData]);
+  }, []);
+
+  useEffect(() => {
+    getMotionStatus();
+    getRecievedMotion();
+  }, []);
+
+  const getMotionListDataa = useCallback(
+    async (allRemarks) => {
+      const motionSentStatus = "inMotion";
+      const motiontoStatus = "toMotion";
+      try {
+        const response = await getAllMotion(
+          currentPage,
+          pageSize,
+          motionSentStatus,
+          motiontoStatus
+        );
+
+        if (response?.success) {
+          const transformedData = transformMotionData(response?.data?.rows);
+          let filteredArray;
+
+          if (allRemarks?.length > 0) {
+            filteredArray = transformedData?.filter(
+              (item) => !allRemarks?.some((obj) => obj?.id === item?.id)
+            );
+            setMotionData(filteredArray);
+          } else {
+            setMotionData(transformedData);
+          }
+          setCount(response?.data?.count);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [currentPage, pageSize, setCount, setMotionData]
+  );
 
   const searchMotionList = async (values, page) => {
     const data = {
-      // fileNumber: ,
-      // fkSessionId: values?.fromSession,
       noticeOfficeDiaryNo: values?.motionDiaryNo,
       fkMemberId: values?.memberName?.value,
       fkMinistryId: "",
@@ -168,8 +233,8 @@ function TMSMotion() {
       motionWeek: values?.motionWeek,
       motionType: values?.motionType,
       fkMotionStatus: values?.fkmotionStatus,
-      memberPosition:values?.memberPosition,
-      motionSentStatus:["inMotion","toMotion"]
+      memberPosition: values?.memberPosition,
+      motionSentStatus: ["inMotion", "toMotion"],
     };
 
     try {
@@ -184,24 +249,13 @@ function TMSMotion() {
     }
   };
 
-  const getMotionStatus = async () => {
-    try {
-      const response = await getallMotionStatus();
-      if (response?.success) {
-        setMotionStatus(response?.data);
-      }
-    } catch (error) {
-      showErrorMessage(error?.response?.data?.message);
-    }
-  };
-
   const hendleEdit = async (id) => {
     try {
       // const { question, history } = await getMotionByID(id);
       const response = await getMotionByID(id);
 
       if (response?.success) {
-        navigate("/mms/motion/detail", { state: response?.data });
+        navigate("/tms/motion/motion-translation", { state: response?.data });
         //   navigate("/notice/question/detail", {
         //     state: { question: question?.data, history: history?.data },
         //   });
@@ -217,10 +271,6 @@ function TMSMotion() {
   };
 
   useEffect(() => {
-    getMotionStatus();
-  }, []);
-
-  useEffect(() => {
     if (
       formik?.values?.motionDiaryNo ||
       formik?.values?.motionID ||
@@ -230,15 +280,25 @@ function TMSMotion() {
       formik?.values?.toSession ||
       formik?.values?.motionType ||
       formik?.values?.fromNoticeDate ||
-      formik?.values?.toNoticeDate || formik.values?.fkmotionStatus
+      formik?.values?.toNoticeDate ||
+      formik.values?.fkmotionStatus
     ) {
       return;
     }
+
     getMotionListDataa();
   }, [getMotionListDataa, formik?.values]);
 
   return (
-    <Layout module={true} sidebarItems={TMSsidebarItems} centerlogohide={true}>
+    <Layout
+      module={true}
+      sidebarItems={
+        userData?.designation?.designationName === "Assistant Director"
+          ? TMSsidebarItemsDirector
+          : TMSsidebarItems
+      }
+      centerlogohide={true}
+    >
       <Header
         dashboardLink={"/mms/dashboard"}
         addLink1={"/mms/motion/list"}
@@ -550,25 +610,25 @@ function TMSMotion() {
                     </div>
                   </div>
                   <div class="col-3">
-                      <div class="mb-3">
-                        <label class="form-label">Member Position</label>
-                        <select
-                          class={`form-select`}
-                          placeholder="Member Position"
-                          value={formik.values.memberPosition}
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          name="memberPosition"
-                        >
-                          <option value="" selected disabled hidden>
-                            Select
-                          </option>
-                          <option value={"Treasury"}>Treasury</option>
-                          <option value={"Opposition"}>Opposition</option>
-                          <option value={"Independent"}>Independent</option>
-                          <option value={"Anyside"}>Anyside</option>
-                        </select>
-                      </div>
+                    <div class="mb-3">
+                      <label class="form-label">Member Position</label>
+                      <select
+                        class={`form-select`}
+                        placeholder="Member Position"
+                        value={formik.values.memberPosition}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        name="memberPosition"
+                      >
+                        <option value="" selected disabled hidden>
+                          Select
+                        </option>
+                        <option value={"Treasury"}>Treasury</option>
+                        <option value={"Opposition"}>Opposition</option>
+                        <option value={"Independent"}>Independent</option>
+                        <option value={"Anyside"}>Anyside</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
 

@@ -33,7 +33,6 @@ function TMSQuestion() {
   const navigate = useNavigate();
   const { members, sessions } = useContext(AuthContext);
   const [resData, setResData] = useState([]);
-  const [allRemarks, setAllRemarks] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [allquestionStatus, setAllQuestionStatus] = useState([]);
   const [count, setCount] = useState(null);
@@ -43,9 +42,6 @@ function TMSQuestion() {
   const pageSize = 10; // Set your desired page size
   const user = getUserData();
   const designationName = user.designation.designationName;
-  console.log("designation", designationName);
-
-  console.log(searchingFlag);
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
     setCurrentPage(page);
@@ -216,9 +212,8 @@ function TMSQuestion() {
     try {
       const response = await getAllRemarksWithOutUserId(category, 0, 1000);
       if (response?.success) {
-        console.log(response);
         const transformedData = transformLeavesData(response?.data);
-        setAllRemarks(transformedData);
+        getAllQuestionsApi(transformedData);
       }
     } catch (error) {
       console.log(error);
@@ -230,32 +225,37 @@ function TMSQuestion() {
     getAllAssignedQuestions();
   }, []);
 
-  const getAllQuestionsApi = useCallback(async () => {
-    const questionSentStatus = "toTranslation";
-    try {
-      const response = await getAllQuestion(
-        currentPage,
-        pageSize,
-        questionSentStatus,
-        designationName
-      );
-      if (response?.success) {
-        const transformedData = transformLeavesData(response?.data?.questions);
-        console.log("transform data---->", allRemarks);
-        let filteredArray;
-        if (allRemarks?.length > 0) {
-          filteredArray = transformedData?.filter(
-            (item) => !allRemarks.some((obj) => obj.Id === item.Id)
+  const getAllQuestionsApi = useCallback(
+    async (allRemarks) => {
+      const questionSentStatus = "toTranslation";
+      try {
+        const response = await getAllQuestion(
+          currentPage,
+          pageSize,
+          questionSentStatus,
+          designationName
+        );
+        if (response?.success) {
+          const transformedData = transformLeavesData(
+            response?.data?.questions
           );
-          console.log("updatedData", filteredArray);
+          let filteredArray;
+          if (allRemarks?.length > 0) {
+            filteredArray = transformedData?.filter(
+              (item) => !allRemarks?.some((obj) => obj?.Id === item?.Id)
+            );
+            setResData(filteredArray);
+          } else {
+            setResData(transformedData);
+          }
+          setCount(response?.data?.count);
         }
-        setCount(response?.data?.count);
-        setResData(filteredArray);
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
-    }
-  }, [currentPage, pageSize, setCount, setResData]);
+    },
+    [currentPage, pageSize, setCount, setResData]
+  );
 
   useEffect(() => {
     if (

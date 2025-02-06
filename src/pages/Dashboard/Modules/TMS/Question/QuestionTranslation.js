@@ -25,6 +25,7 @@ import {
 } from "../../../../../utils/ToastAlert";
 import moment from "moment";
 import { getUserData } from "../../../../../api/Auth";
+import { UpdateQuestionById } from "../../../../../api/APIs/Services/Question.service";
 // import {
 //   getAllQuestionByID,
 //   getQuestionRemarks,
@@ -52,7 +53,6 @@ function QuestionTranslation() {
   const [loading, setLoading] = useState(true);
   const [questionData, setQuestionData] = useState(location.state?.question);
   const [singleQuestionRemarks, setSingleQuestionRemarks] = useState([]);
-  console.log("singleQuestionRemarks", singleQuestionRemarks);
   const [englishText, setEnglishText] = useState(
     location.state?.question?.englishText || ""
   );
@@ -66,7 +66,27 @@ function QuestionTranslation() {
     comment: "",
   });
 
-  const attachments = [];
+  const updateQuestion = async () => {
+    const formData = new FormData();
+
+    formData.append("urduText", urduText);
+    formData.append("englishText", englishText);
+
+    try {
+      const response = await UpdateQuestionById(
+        fkQuestionId ? fkQuestionId : fkNewQuestionId,
+        formData
+      );
+      if (response?.success) {
+        showSuccessMessage(response?.message);
+        // setTimeout(() => {
+        //   navigate("/qms/search/question");
+        // }, 1000);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  };
 
   const images =
     location.state?.question?.questionImage?.map((item) => {
@@ -162,7 +182,11 @@ function QuestionTranslation() {
       if (response) {
         showSuccessMessage(response?.message);
         setTimeout(() => {
-          navigate("/tms/question");
+          if (userData?.designation?.designationName === "Assistant Director") {
+            navigate("/tms/question");
+          } else {
+            navigate("/tms/assigned-question");
+          }
         }, 1000);
       }
     } catch (error) {
@@ -175,11 +199,8 @@ function QuestionTranslation() {
   const getQuestionRemarksByIDs = async () => {
     try {
       const response = await getQuestionRemarksByID(fkNewQuestionId, userId);
-      console.log("response", response);
       if (response?.success) {
-        console.log("response", response);
         setSingleQuestionRemarks(response?.data);
-        console.log("singleQuestionData", singleQuestionRemarks);
       }
     } catch (error) {
       console.log(error);
@@ -291,6 +312,18 @@ function QuestionTranslation() {
               onChange={(data) => setUrduText(data)}
               value={urduText}
             />
+          </div>
+          <div
+            class="d-grid gap-2 d-md-flex"
+            style={{ marginTop: 30, marginBottom: 40 }}
+          >
+            <button
+              class="btn btn-primary"
+              type="submit"
+              onClick={updateQuestion}
+            >
+              Update
+            </button>
           </div>
         </div>
 
