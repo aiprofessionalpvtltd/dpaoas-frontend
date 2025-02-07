@@ -171,7 +171,9 @@ function QMSNoticeResolutionDetail() {
       const response = await UpdateResolution(location.state.id, data);
       if (response?.success) {
         showSuccessMessage(response.message);
-        navigate("/qms/search/resolution");
+        setTimeout(() => {
+          navigate("/qms/search/resolution");
+        }, 2000);
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);

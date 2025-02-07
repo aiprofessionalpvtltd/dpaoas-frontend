@@ -69,6 +69,7 @@ function QMSSerchResolution() {
       colourResNo: "",
       noticeOfficeDiaryNo: "",
       memberPosition: "",
+      colourResNo:"",
       passedResolution: false
     },
 
@@ -131,6 +132,7 @@ function QMSSerchResolution() {
       resolutionMovers: values?.memberName?.value,
       memberPosition: values?.memberPosition,
       passedResolution:values?.passedResolution,
+      colourResNo:values?.colourResNo,
       resolutionSentStatus: "inResolution",
     };
 
@@ -602,6 +604,22 @@ function QMSSerchResolution() {
                         </label>
                         
                       </div>
+                    </div>
+                  </div>
+                  </div>
+                  <div className="row">
+                  <div class="col-3">
+                    <div class="mb-3">
+                      <label class="form-label">Color No</label>
+                      <input
+                        type="text"
+                        value={formik.values.colourResNo}
+                        className={`form-control`}
+                        id="colourResNo"
+                        // readOnly={true}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      />
                     </div>
                   </div>
                   </div>
