@@ -847,3 +847,18 @@ export const compareQuestion = async (searchParams, currentPage, pageSize) => {
     throw error;
   }
 };
+
+//
+// hour Statement Question List Count
+export const getQuestionListCountsHourStatement = async (id) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClient.get(
+      `questionList/getQuestionListCounts/${id}`
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};

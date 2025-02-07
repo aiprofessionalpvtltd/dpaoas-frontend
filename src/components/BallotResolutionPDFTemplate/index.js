@@ -54,6 +54,9 @@ function BallotResolutionPdfTemplate({ data }) {
     }
   };
 
+
+
+
   useEffect(() => {
     handleTemplate();
   }, []);
@@ -90,11 +93,11 @@ function BallotResolutionPdfTemplate({ data }) {
             SENATE SECRETARIAT
           </h1>
           <div style={{ float: "left" }}>
-            <p style={{ marginTop: "33px" }}>No. F.2(1)/2023-Q</p>
+            <p style={{ marginTop: "33px" }}>No. {templateData?.length > 0 && templateData[0]?.ballotingFileNo}</p>
           </div>
           <div style={{ float: "right" }}>
             <p style={{ marginTop: "33px" }}>
-              Islamabad, the 3<sup>rd</sup> July, 2024
+              Islamabad, the {templateData?.length > 0 && templateData[0]?.ballotingDate}
             </p>
           </div>
           <div style={{ clear: "both" }}></div>
@@ -121,7 +124,7 @@ function BallotResolutionPdfTemplate({ data }) {
           <p style={{ marginLeft: "110px", lineHeight: "26px" }}>
             I am directed to inform you that the following Private Member's
             Resolution will be set down in the Orders of the Day for the sitting
-            of the Senate to be held on Monday, the 8<sup>th</sup> July, 2024,
+            of the Senate to be held on Monday, the {templateData?.length > 0 && templateData[0]?.ballotingOrderDate},
             which will be a Private Member's Day:-
           </p>
           <div className="clearfix"></div>

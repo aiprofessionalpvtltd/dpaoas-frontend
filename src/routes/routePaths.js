@@ -343,6 +343,8 @@ import ListOrderOfDay from "../pages/Dashboard/Modules/LGMS/OrderOfTheDay/index.
 import TestingNoticePrivateMemberBill from "../pages/Dashboard/Modules/LGMS/LGMSPrivateBill/LGMSEditNoticeOfficeSenateBill/EditPrivateNoticeBill.js";
 import EditFinanceMoneyBill from "../pages/Dashboard/Modules/LGMS/FinanceMoneyBill/EditFinanceMoneyBill/index.js";
 import QMSBallotResolutionListTemplate from "../pages/Dashboard/Modules/QMS/Resolution/ResolutionList/BallotResolutionTemplate/index.js";
+import PreviewHourStatementList from "../pages/Dashboard/Modules/QMS/Reports/QuestionList/PreviewHourStatementList/index.js";
+import PreviewSinglepageOneQuestion from "../pages/Dashboard/Modules/QMS/Reports/QuestionList/PreviewSinglepageOneQuestion/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -725,6 +727,14 @@ export const ProtectedRoutes = [
   {
     path: "/qms/questionList/priveiw-question-list",
     element: <PreviewQuestionList />,
+  },
+  {
+    path: "/qms/questionList/priveiw-question-hour-statement-list",
+    element: <PreviewHourStatementList />,
+  },
+  {
+    path: "/qms/questionList/priveiw-question-single-page-list",
+    element: <PreviewSinglepageOneQuestion />,
   },
   {
     path: "/qms/questionList/priveiw-suplementry-list",
