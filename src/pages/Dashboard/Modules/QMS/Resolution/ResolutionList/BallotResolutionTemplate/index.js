@@ -67,6 +67,9 @@ function QMSBallotResolutionListTemplate() {
           userRole: response?.data?.template?.templateUserRole || "",
           templateDescription:
             response?.data?.template?.templateDescription || "",
+          ballotingFileNo: response?.data?.template?.ballotingFileNo || "",
+          ballotingDate: response?.data?.template?.ballotingDate || "",
+          ballotingOrderDate: response?.data?.template?.ballotingOrderDate || "",
         });
       }
     } catch (error) {
@@ -190,7 +193,6 @@ function QMSBallotResolutionListTemplate() {
                         }
                         onBlur={formik.handleBlur}
                         className={`form-control`}
-                        maxDate={new Date()}
                         dateFormat="dd-MM-yyyy"
                       />
                     </div>
@@ -227,7 +229,6 @@ function QMSBallotResolutionListTemplate() {
                         }
                         onBlur={formik.handleBlur}
                         className={`form-control`}
-                        maxDate={new Date()}
                         dateFormat="dd-MM-yyyy"
                       />
                     </div>

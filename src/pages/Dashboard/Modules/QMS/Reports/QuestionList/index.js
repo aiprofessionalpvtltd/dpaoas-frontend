@@ -119,6 +119,7 @@ function QMSReportQuestionList() {
           : "active",
         internalAttachment: res?.fileLink,
         fkGroupId: res?.fkGroupId,
+        duplicate: res?.duplicate,
       };
 
       // Remove id key from rowData if it's null or undefined
@@ -287,6 +288,65 @@ function QMSReportQuestionList() {
     const url = `/qms/questionList/priveiw-question-list?state=${encodedJsonString}`;
     window.open(url, "_blank");
   };
+  
+  const handlePrivewHourStaement = (id) => {
+    const encodedJsonString = encodeURIComponent(id);
+    const url = `/qms/questionList/priveiw-question-hour-statement-list?state=${encodedJsonString}`;
+    window.open(url, "_blank");
+  };
+
+  const handlePrivewSingleQuestion = (id) => {
+    const encodedJsonString = encodeURIComponent(id);
+    const url = `/qms/questionList/priveiw-question-single-page-list?state=${encodedJsonString}`;
+    window.open(url, "_blank");
+  };
+
+  const handleDuplicateList = async (id) => {
+    // Extract the question IDs without modifying them
+      try {
+        const response = await getSingleQuestionList(id);
+        if (response?.success) {
+          
+         await handleSupportDuplicateList(response);
+        }
+      } catch (error) {
+        showErrorMessage(error?.response?.data?.message);
+      }
+  };
+
+  const handleSupportDuplicateList = async (entryData) => {
+    // Extract the question IDs without modifying them
+    const questionIds = entryData?.data?.map((question) => ({
+      id: question.id,
+    }));
+  
+    // Prepare request data for duplication
+    const requestData = {
+      fkSessionId: entryData?.questionList?.fkSessionId,
+      questionCategory: entryData?.questionList?.questionCategory,
+      fkGroupId: entryData?.questionList?.fkGroupId,
+      startListNo: entryData?.questionList?.startListNo,
+      listName: entryData?.questionList?.listName,
+      houseLayDate: moment(entryData?.questionList?.houseLayDate).toDate(),
+      defferedQuestions: entryData?.questionList?.defferedQuestions,
+      fkUserId: entryData?.questionList?.fkUserId,
+      questionIds: questionIds,
+      duplicate: "true", // Mark as duplicated
+    };
+  
+    try {
+      const response = await saveQuestionList(requestData);
+      if (response?.success) {
+        showSuccessMessage(response?.message);
+        getQuestionsListBySessionApi(sessionId);
+        // const transformedData = transformLeavesData(response?.data);
+        // setResData(transformedData);
+
+      }
+    } catch (error) {
+      showErrorMessage(JSON.stringify(error?.response?.data?.message));
+    }
+  };
 
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
@@ -294,6 +354,8 @@ function QMSReportQuestionList() {
     deleteList(deleteId);
     handleClose();
   };
+
+  
 
   return (
     <Layout module={true} sidebarItems={QMSSideBarItems} centerlogohide={true}>
@@ -506,6 +568,14 @@ function QMSReportQuestionList() {
                   })
                 }
                 totalCount={count}
+                isRemarksAttachhments={true}
+                handleViewAttachment={(item) => handlePrivewHourStaement(item.id)}
+                showView={true}
+                handleView={(item) => handlePrivewSingleQuestion(item.id)}
+                hideUserIcon={true}
+                handleDuplicate={(item) => {
+                  handleDuplicateList(item.id);
+                }}
               />
             </div>
 
@@ -524,6 +594,7 @@ function QMSReportQuestionList() {
                 isCheckbox={true}
                 isChecked={checked}
                 setIsChecked={setChecked}
+              
               />
             </div>
           </div>
