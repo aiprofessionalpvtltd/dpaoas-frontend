@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { QMSSideBarItems, TMSsidebarItems } from "../../../../../utils/sideBarItems";
+import { QMSSideBarItems, TMSsidebarItems, TMSsidebarItemsDirector } from "../../../../../utils/sideBarItems";
 import { Layout } from "../../../../../components/Layout";
 import Header from "../../../../../components/Header";
 import { useNavigate } from "react-router";
@@ -22,6 +22,7 @@ import { ToastContainer } from "react-toastify";
 import { AuthContext } from "../../../../../api/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
+import { getUserData } from "../../../../../api/Auth";
 
 function TMSResolution() {
   const navigate = useNavigate();
@@ -30,6 +31,8 @@ function TMSResolution() {
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
   const pageSize = 10; // Set your desired page size
+  const userData = getUserData()
+  
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
@@ -111,7 +114,7 @@ function TMSResolution() {
       noticeOfficeDiaryDateFrom: values.fromNoticeDate,
       noticeOfficeDiaryDateTo: values.toNoticeDate,
       resolutionMovers: values?.memberName?.value,
-      resolutionSentStatus:"toResolution"
+      resolutionSentStatus:"inResolution"
 
     };
 
@@ -129,7 +132,7 @@ function TMSResolution() {
   };
 
   const getAllResolutionsApi = useCallback(async () => {
-    const resolutionSentStatus = "toResolution"
+    const resolutionSentStatus = "inResolution"
     try {
       const response = await getAllResolutions(currentPage, pageSize, resolutionSentStatus);
       if (response?.success) {
@@ -146,7 +149,7 @@ function TMSResolution() {
     try {
       const response = await getResolutionBYID(id);
       if (response?.success) {
-        navigate("/qms/notice/notice-resolution-detail", {
+        navigate("/tms/resolution/resolution-translation", {
           state: response?.data,
         });
       }
@@ -192,7 +195,11 @@ function TMSResolution() {
   };
 
   return (
-    <Layout module={true} sidebarItems={TMSsidebarItems} centerlogohide={true}>
+    <Layout module={true}  sidebarItems={
+            userData?.designation?.designationName === "Assistant Director"
+              ? TMSsidebarItemsDirector
+              : TMSsidebarItems
+          } centerlogohide={true}>
       <ToastContainer />
       <Header
         dashboardLink={"/"}

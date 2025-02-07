@@ -723,6 +723,18 @@ export const TMSsidebarItemsDirector = [
     itemName: "Resolution",
     link: "/tms/resolution",
     icon: faHome,
+    subItems: [
+      {
+        itemName: "Received Resolution",
+        link: "/tms/resolution",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Assigned Resolution",
+        link: "/tms/assigned-resolution",
+        icon: faClipboardList,
+      },
+    ],
   },
   {
     itemName: "Legislation",

@@ -325,6 +325,8 @@ import EfilingLeaveManagement from "../pages/Dashboard/Modules/EFiling/AddLeave/
 import AssignedQuestion from "../pages/Dashboard/Modules/TMS/Question/AssignedQuestion/index.js";
 import MotionTranslation from "../pages/Dashboard/Modules/TMS/Motion/MotionTranslation.js";
 import AssignedMotion from "../pages/Dashboard/Modules/TMS/Motion/AssigendMotion/index.js";
+import TMSAssignedResolution from "../pages/Dashboard/Modules/TMS/Resolution/AssignedResolution/index.js";
+import ResolutionTranslation from "../pages/Dashboard/Modules/TMS/Resolution/ResolutionTranslation.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -732,6 +734,8 @@ export const ProtectedRoutes = [
 
   { path: "/tms/motion", element: <TMSMotion /> },
   { path: "/tms/resolution", element: <TMSResolution /> },
+  { path: "/tms/resolution/resolution-translation", element: <ResolutionTranslation /> },
+  { path: "/tms/assigned-resolution", element: <TMSAssignedResolution /> },
   { path: "/sms/send-sms", element: <SMSDashboard /> },
   { path: "/sms/send-sms/instant", element: <SMSInstantSMS /> },
   { path: "/sms/send-sms/advanced", element: <SMSAdvancedSMS /> },
