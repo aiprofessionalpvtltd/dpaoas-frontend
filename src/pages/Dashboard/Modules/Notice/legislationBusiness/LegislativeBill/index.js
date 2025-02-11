@@ -29,7 +29,6 @@ function LegislativeBillList({ isDashboardData }) {
     setCurrentPage(page);
   };
   const transformLegislativeData = (apiData) => {
-    console.log("apiData", apiData);
     return apiData.map((item, index) => ({
       "S.No": index + 1,
       id: item?.id,
@@ -97,18 +96,19 @@ function LegislativeBillList({ isDashboardData }) {
     getAllLegislativeBillApi();
   }, [currentPage]);
 
-  const sendBill = async (id) => {
+  const sendBill = async (item) => {
     try {
       const data = {
         billSentDate: new Date(),
       };
-      const response = await sendLegislativeBill(id, data);
+      const response = await sendLegislativeBill(item, data);
       if (response?.success) {
         showSuccessMessage(response.message);
         getAllLegislativeBillApi();
       }
     } catch (error) {
       console.log(error);
+      showErrorMessage(error?.response?.data?.message);
     }
   };
 
@@ -144,12 +144,12 @@ function LegislativeBillList({ isDashboardData }) {
                     }
                     handleEdit={(item) =>
                       navigate("/notice/legislation/private-bill/addedit", {
-                        state: { id: item?.SR },
+                        state: { id: item?.id },
                       })
                     }
                     hideDeleteIcon
                     showSent
-                    handleSent={(item) => sendBill(item?.SR)}
+                    handleSent={(item) => sendBill(item)}
                   />
                 </div>
               </div>
@@ -194,12 +194,12 @@ function LegislativeBillList({ isDashboardData }) {
                     }
                     handleEdit={(item) =>
                       navigate("/notice/legislation/private-bill/addedit", {
-                        state: { id: item?.SR },
+                        state: { id: item?.id },
                       })
                     }
                     hideDeleteIcon
                     showSent
-                    handleSent={(item) => sendBill(item?.SR)}
+                    handleSent={(item) => sendBill(item?.id)}
                   />
                 </div>
               </div>

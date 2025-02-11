@@ -699,44 +699,44 @@ function NewLegislationSenateBill() {
                           <div className="mb-3">
                             <label class="form-label">Member</label>
                             <Select
-                              // options={
-                              //   Array.isArray(membersOnParliamentaryYear) &&
-                              //   membersOnParliamentaryYear.length > 0
-                              //     ? membersOnParliamentaryYear.map((item) => ({
-                              //         value: item.id,
-                              //         label: item?.memberName,
-                              //       }))
-                              //     : []
-                              // }
                               options={
                                 Array.isArray(membersOnParliamentaryYear) &&
                                 membersOnParliamentaryYear.length > 0
-                                  ? membersOnParliamentaryYear
-                                      .sort((a, b) =>
-                                        a.memberName.localeCompare(b.memberName)
-                                      ) // Sort by memberName alphabetically
-                                      .map((item) => ({
-                                        value: item.id,
-                                        label: item.memberName,
-                                      }))
+                                  ? membersOnParliamentaryYear.map((item) => ({
+                                      value: item.id,
+                                      label: item?.memberName,
+                                    }))
                                   : []
                               }
-                              id="selectedSenator"
-                              name="selectedSenator"
-                              onChange={(selectedOptions) =>
-                                formik.setFieldValue(
-                                  "selectedSenator",
-                                  selectedOptions
-                                )
-                              }
-                              value={formik.values.selectedSenator}
-                              isMulti={true}
-                              className={` ${
-                                formik.touched.selectedSenator &&
-                                formik.errors.selectedSenator
-                                  ? "is-invalid"
-                                  : ""
-                              }`}
+                              // options={
+                              //   Array.isArray(membersOnParliamentaryYear) &&
+                              //   membersOnParliamentaryYear.length > 0
+                              //     ? membersOnParliamentaryYear
+                              //         .sort((a, b) =>
+                              //           a.memberName.localeCompare(b.memberName)
+                              //         ) // Sort by memberName alphabetically
+                              //         .map((item) => ({
+                              //           value: item.id,
+                              //           label: item.memberName,
+                              //         }))
+                              //     : []
+                              // }
+                              // id="selectedSenator"
+                              // name="selectedSenator"
+                              // onChange={(selectedOptions) =>
+                              //   formik.setFieldValue(
+                              //     "selectedSenator",
+                              //     selectedOptions
+                              //   )
+                              // }
+                              // value={formik.values.selectedSenator}
+                              // isMulti={true}
+                              // className={` ${
+                              //   formik.touched.selectedSenator &&
+                              //   formik.errors.selectedSenator
+                              //     ? "is-invalid"
+                              //     : ""
+                              // }`}
                             />
                             {formik.touched.selectedSenator &&
                               formik.errors.selectedSenator && (

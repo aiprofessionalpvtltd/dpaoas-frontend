@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import RecievedFromNA from "../../../../../../../components/LegislationBills/RecievedFromNA";
 import { Layout } from "../../../../../../../components/Layout";
+import { showErrorMessage } from "../../../../../../../utils/ToastAlert";
 
 const AllPrivateMemberBillFromNA = () => {
   const navigate = useNavigate();
@@ -41,11 +42,11 @@ const AllPrivateMemberBillFromNA = () => {
       // internalId: item?.id,
       fileNumber: item?.fileNumber,
       titleOfTheBill: item?.billTitle,
-      // nameOfMinisters: item?.senateBillSenatorMovers
-      //   ? item?.senateBillSenatorMovers
-      //       .map((mover) => mover?.mna?.mnaName)
-      //       .join(", ")
-      //   : "---",
+      nameOfMoversInNA: item?.senateBillSenatorMovers
+        ? item?.senateBillSenatorMovers
+            .map((mover) => mover?.mna?.mnaName)
+            .join(", ")
+        : "---",
       dateOnWhichBillWasPassedByNA: item?.PassedByNADate
         ? moment(item?.PassedByNADate, "YYYY-MM-DD").format("DD-MM-YYYY")
         : "---",
@@ -59,17 +60,22 @@ const AllPrivateMemberBillFromNA = () => {
             "DD-MM-YYYY"
           )
         : "---",
-      // dateOfReceiptOfNotice: item?.noticeDate
-      //   ? moment(item?.noticeDate, "YYYY-MM-DD").format("DD-MM-YYYY")
-      //   : "---",
-
-      dateOfIntroductionReferenceToStandingCommittee: item?.introducedInHouses
-        ?.introducedInHouseDate
-        ? moment(
-            item?.introducedInHouses?.introducedInHouseDate,
-            "YYYY-MM-DD"
-          ).format("DD-MM-YYYY")
+      dateOfReceiptOfNoticeBySenator: item?.dateofReciptofNotice
+        ? moment(item?.dateofReciptofNotice, "YYYY-MM-DD").format("DD-MM-YYYY")
         : "---",
+      dateOfCirculationOfNotice: item?.dateOfCirculationOfNotice
+        ? moment(item?.dateOfCirculationOfNotice, "YYYY-MM-DD").format(
+            "DD-MM-YYYY"
+          )
+        : "---",
+
+      dateOnWhichReferredToStandingCommittee:
+        item?.dateofReferencetoStandingCommittee
+          ? moment(
+              item?.dateofReferencetoStandingCommittee,
+              "YYYY-MM-DD"
+            ).format("DD-MM-YYYY")
+          : "---",
 
       dateOfPresentationOfTheReport: item?.introducedInHouses
         ?.reportPresentationDate
@@ -98,7 +104,7 @@ const AllPrivateMemberBillFromNA = () => {
             "DD-MM-YYYY"
           )
         : "---",
-      dateOfPublishInTheGazette: item?.dateOfPublishInGazette
+      dateOnWhichPublishedInTheGazette: item?.dateOfPublishInGazette
         ? moment(item?.dateOfPublishInGazette, "YYYY-MM-DD").format(
             "DD-MM-YYYY"
           )
@@ -110,26 +116,36 @@ const AllPrivateMemberBillFromNA = () => {
     }));
   };
 
-  // Handle API Call (Get All Government Bills Recieved From NA)
   const getGovernmentNABillApi = useCallback(async () => {
-    const searchParams = {
-      billCategory: "Private Member Bill",
-      billFrom: "From NA",
-    };
+    try {
+      const searchParams = {
+        billCategory: "Private Member Bill",
+        billFrom: "From NA",
+      };
 
-    const response = await getAllPrivateMemberNABills(
-      currentPage,
-      pageSize,
-      searchParams
-    );
-    if (response?.success) {
-      setCount(response?.data?.count);
-      const privateMemberNABillData = response?.data?.senateBills;
-      const transformAllPrivateNABillData = transformPrivateNABillData(
-        privateMemberNABillData
+      const response = await getAllPrivateMemberNABills(
+        currentPage,
+        pageSize,
+        searchParams
       );
-      setPrivateMemberNABill(transformAllPrivateNABillData);
-      // showSuccessMessage(response?.message)
+
+      if (response?.success) {
+        setCount(response?.data?.count);
+        const privateMemberNABillData = response?.data?.senateBills;
+        const transformAllPrivateNABillData = transformPrivateNABillData(
+          privateMemberNABillData
+        );
+        setPrivateMemberNABill(transformAllPrivateNABillData);
+        // showSuccessMessage(response?.message)
+      } else {
+        console.error("API response unsuccessful:", response);
+      }
+    } catch (error) {
+      console.error("Error fetching Government NA Bills:", error);
+      // Optionally, show an error message to the user
+      showErrorMessage(
+        error?.response?.data?.message || "Failed to load Government NA Bills."
+      );
     }
   }, [selectedbillFrom, currentPage, pageSize]);
 
@@ -145,7 +161,11 @@ const AllPrivateMemberBillFromNA = () => {
   // };
   const handlePrivateNABill = () => {
     navigate("/lgms/dashboard/bills/NA-bills", {
-      state: { category: "Private Member Bill", billFrom: "From NA" },
+      state: {
+        category: "Private Member Bill",
+        billFrom: "From NA",
+        forPerson: "Senators",
+      },
     });
   };
 
@@ -158,7 +178,9 @@ const AllPrivateMemberBillFromNA = () => {
 
   // Edit Bill Recieved From NA
   const handleEditNABill = (id, item) => {
-    navigate("/lgms/dashboard/bills/edit/NA-bills/", { state: { id, item } });
+    navigate("/lgms/dashboard/bills/edit/NA-bills/", {
+      state: { id, item, forPerson: "Senators" },
+    });
   };
 
   return (
@@ -175,7 +197,7 @@ const AllPrivateMemberBillFromNA = () => {
       />
       <div class="container-fluid">
         <RecievedFromNA
-          addBtnText={"Private Member Bill (Received From NA)"}
+          addBtnText={"Create New Private Member Bill (Received From NA)"}
           handleAdd={handlePrivateNABill}
           tableTitle={"Private Member Bill Data (Received From NA)"}
           data={privateMemberNABill}

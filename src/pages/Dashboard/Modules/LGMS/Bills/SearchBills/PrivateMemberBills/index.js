@@ -32,12 +32,15 @@ const SearchLegislationPrivateMemberBill = () => {
   const { ministryData, members, sessions } = useContext(AuthContext);
   const [currentPage, setCurrentPage] = useState(0);
   const [pageValue, setPageValue] = useState(null);
+  const [isColumnChecked, setIsColumnChecked] = useState([]);
   const [count, setCount] = useState(null);
   const [concerndCommitte, setConcerndCommitte] = useState(null);
   const [billFrom, setBillFrom] = useState();
   const [remarksAttachmentVal, setRemarksAttachmentVal] = useState();
 
   const [searchdata, setSearchData] = useState([]);
+
+  console.log("searchdata", searchdata);
   const [billdata, setBilldata] = useState([]);
   const [parliamentaryYears, setParliamentaryYears] = useState([]);
   const [commiteeRecommendations, setCommitteeRecommendations] = useState([]);
@@ -431,6 +434,7 @@ const SearchLegislationPrivateMemberBill = () => {
   const handleResetForm = () => {
     formik.resetForm();
     setSearchData([]);
+    setIsColumnChecked([]);
     setRemarksAttachmentVal(false);
   };
 
@@ -463,6 +467,11 @@ const SearchLegislationPrivateMemberBill = () => {
     } catch (error) {
       showErrorMessage(error?.message);
     }
+  };
+
+  // Handle Preieve
+  const hendlepreview = async () => {
+    console.log("prieveiw", isColumnChecked);
   };
   return (
     <Layout
@@ -952,12 +961,11 @@ const SearchLegislationPrivateMemberBill = () => {
                     >
                       Reset
                     </button>
-                    {/* <button type="" className="btn btn-primary me-2">
-                      Print
-                    </button>
-                    <button type="" className="btn btn-primary">
-                      Annual Report
-                    </button> */}
+                    {isColumnChecked.length > 0 && (
+                      <button type="button" className="btn btn-primary">
+                        View Report
+                      </button>
+                    )}
                   </div>
                 </div>
               </form>
@@ -984,6 +992,9 @@ const SearchLegislationPrivateMemberBill = () => {
                     pageSize={pageSize}
                     totalCount={count}
                     hideTableTopButton={true}
+                    iscolumnCheckbox={isColumnChecked}
+                    isColumncheck={true}
+                    setIsColumnCheckBox={setIsColumnChecked}
                   />
                 ) : billFrom === "From NA" ? (
                   <RecievedFromNA
@@ -1002,6 +1013,9 @@ const SearchLegislationPrivateMemberBill = () => {
                     pageSize={pageSize}
                     totalCount={count}
                     hideTableTopButton={true}
+                    iscolumnCheckbox={isColumnChecked}
+                    isColumncheck={true}
+                    setIsColumnCheckBox={setIsColumnChecked}
                   />
                 ) : (
                   "No Data"

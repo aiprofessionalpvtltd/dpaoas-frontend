@@ -24,6 +24,7 @@ import { AuthContext } from "../../../../../../api/AuthContext";
 import moment from "moment";
 import { imagesUrl } from "../../../../../../api/APIs";
 import { useNavigate } from "react-router-dom";
+import DraggableMultiSelect from "../../../../../../components/DraggableMultiSelect/DraggableMultiSelect";
 function QMSNoticeResolutionDetail() {
   const location = useLocation();
   const { members, sessions, resolutionStatus, ministryData } =
@@ -170,7 +171,9 @@ function QMSNoticeResolutionDetail() {
       const response = await UpdateResolution(location.state.id, data);
       if (response?.success) {
         showSuccessMessage(response.message);
-        navigate("/qms/search/resolution");
+        setTimeout(() => {
+          navigate("/qms/search/resolution");
+        }, 2000);
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -473,27 +476,20 @@ function QMSNoticeResolutionDetail() {
                     <div class="mb-3">
                       <label class="form-label">Resolution Movers</label>
 
-                      <Select
-                        options={
-                          members &&
-                          members?.map((item) => ({
-                            value: item?.id,
-                            label: item?.memberName,
-                          }))
-                        }
-                        onChange={(selectedOptions) => {
-                          formik.setFieldValue(
-                            "resolutionMovers",
-                            selectedOptions
-                          );
-                        }}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.resolutionMovers}
-                        name="resolutionMovers"
-                        isClearable={true}
-                        isMulti
-                        // className="form-select"
-                      />
+                      
+<DraggableMultiSelect
+  options={members?.map((item) => ({
+    value: item?.id,
+    label: item?.memberName,
+  }))}
+  onChange={(selectedOptions) => {
+    formik.setFieldValue("resolutionMovers", selectedOptions);
+  }}
+  onBlur={formik.handleBlur}
+  value={formik.values.resolutionMovers}
+  name="resolutionMovers"
+  isClearable={true}
+/>
                     </div>
                   </div>
                   <div class="col">

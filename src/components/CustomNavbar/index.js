@@ -30,14 +30,14 @@ export const CustomNavbar = ({ module, centerlogohide, navItems }) => {
     const updatedUserData = {
       ...userData,
       fkBranchId: selectedOption?.value,
-      branch: {id: selectedOption?.value, branchName: selectedOption?.label},
+      branch: { id: selectedOption?.value, branchName: selectedOption?.label },
     };
 
     setUserData(updatedUserData);
 
     window.location.reload();
   };
-  
+
   // value={userData?.branch ? {value: userData?.branch?.id, label: userData?.branch?.branchName} : selectedBranch}
 
   return (
@@ -154,52 +154,53 @@ export const CustomNavbar = ({ module, centerlogohide, navItems }) => {
               </>
 
               {userData && userData?.branches?.length > 1 && (
-        <Dropdown>
-          <Dropdown.Toggle
-            variant="default"
-            id="branch-dropdown"
-            style={{
-              marginRight: 5,
-              fontWeight: "bold",
-              color: "#000", // Default text color
-            }}
-          >
-            Select Branch
-            <FontAwesomeIcon
-              icon={faSortDown}
-              style={{
-                fontSize: "20px",
-                marginBottom: "1px",
-                color: "#000",
-                marginLeft: 5
-              }}
-            />
-          </Dropdown.Toggle>
+                <Dropdown>
+                  <Dropdown.Toggle
+                    variant="default"
+                    id="branch-dropdown"
+                    style={{
+                      marginRight: 5,
+                      fontWeight: "bold",
+                      color: "#000", // Default text color
+                    }}
+                  >
+                    Select Branch
+                    <FontAwesomeIcon
+                      icon={faSortDown}
+                      style={{
+                        fontSize: "20px",
+                        marginBottom: "1px",
+                        color: "#000",
+                        marginLeft: 5,
+                      }}
+                    />
+                  </Dropdown.Toggle>
 
-          <Dropdown.Menu>
-            {userData?.branches.map((item) => (
-              <Dropdown.Item
-                as="button"
-                key={item?.id}
-                onClick={() => handleBranchChange({ value: item.id, label: item.branchName })}
-                style={{
-                  fontWeight: "bold",
-                  color:
-                    userData?.fkBranchId === item?.id
-                      ? "#fff"
-                      : "#000", // Active link color
-                  backgroundColor:
-                    userData?.fkBranchId === item?.id
-                      ? "#4B90F0"
-                      : "", // Active background color
-                }}
-              >
-                {item?.branchName}
-              </Dropdown.Item>
-            ))}
-          </Dropdown.Menu>
-        </Dropdown>
-      )}
+                  <Dropdown.Menu>
+                    {userData?.branches.map((item) => (
+                      <Dropdown.Item
+                        as="button"
+                        key={item?.id}
+                        onClick={() =>
+                          handleBranchChange({
+                            value: item.id,
+                            label: item.branchName,
+                          })
+                        }
+                        style={{
+                          fontWeight: "bold",
+                          color:
+                            userData?.fkBranchId === item?.id ? "#fff" : "#000", // Active link color
+                          backgroundColor:
+                            userData?.fkBranchId === item?.id ? "#4B90F0" : "", // Active background color
+                        }}
+                      >
+                        {item?.branchName}
+                      </Dropdown.Item>
+                    ))}
+                  </Dropdown.Menu>
+                </Dropdown>
+              )}
 
               {/* {shouldRenderEfiling ? (
               <>
@@ -322,6 +323,16 @@ export const CustomNavbar = ({ module, centerlogohide, navItems }) => {
           </Dropdown.Toggle>
           <div className="clearfix"></div>
           <Dropdown.Menu>
+          <Dropdown.Item
+              style={{ border: "none" }}
+              onClick={async (e) => {
+                e.preventDefault();
+                navigation("/efiling/dashboard/changepassword");
+              }}
+            >
+              <i className="bx bx-user fs-5"></i>
+              <span>Change Password</span>
+            </Dropdown.Item>
             <Dropdown.Item
               style={{ border: "none" }}
               onClick={async (e) => {

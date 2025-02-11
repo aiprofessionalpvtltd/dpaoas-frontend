@@ -25,11 +25,14 @@ import moment from "moment";
 import { getUserData } from "../../../../../api/Auth";
 import { DeleteModal } from "../../../../../components/DeleteModal";
 import { Button, Modal } from "react-bootstrap";
+import {
+  handlePreviewNotingDoc,
+} from "../../../../../components/QuestionBranch/QuestionPDFPreview";
 
 function QMSSearchQuestion() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { members, sessions, currentSession } = useContext(AuthContext);
+  const { members, sessions, currentSession, divisions } = useContext(AuthContext);
   const UserData = getUserData();
   const [currentPage, setCurrentPage] = useState(0);
   const [searchedData, setSearchedData] = useState([]);
@@ -64,6 +67,7 @@ function QMSSearchQuestion() {
       religion: "",
       gender: "",
       memberPosition: "",
+      isExact:false
     },
     onSubmit: (values) => {
       // Handle form submission here
@@ -85,7 +89,8 @@ function QMSSearchQuestion() {
       const subjectMatter = [res?.englishText, res?.urduText]
         .filter(Boolean)
         .join(", ");
-      const cleanedSubjectMatter = subjectMatter.replace(/(<([^>]+)>)/gi, "");
+      const cleanedSubjectMatter = subjectMatter.replace(/(<([^>]+)>)/gi, "").replace(/&nbsp;/gi, " ")
+      .replace(/\s+/g, " ");
       return {
         SrNo: index,
         QID: res?.id,
@@ -133,6 +138,7 @@ function QMSSearchQuestion() {
       gender: values?.gender,
       religion: values?.religion,
       noticeOfficeDiaryNo: values?.noticeOfficeDiaryNo,
+      isExact: values?.isExact,
     };
 
     try {
@@ -229,12 +235,7 @@ function QMSSearchQuestion() {
       const dashboardData = transformLeavesData(location?.state);
       setSearchedData(dashboardData);
     } else {
-      const values = {
-        fromSession: formik?.values?.fromSession
-          ? formik?.values?.fromSession
-          : currentSession?.id,
-      };
-      SearchQuestionApi(values);
+      SearchQuestionApi(formik.values);
     }
   }, [location?.state, currentSession, currentPage]);
 
@@ -251,6 +252,41 @@ function QMSSearchQuestion() {
     };
 
     SearchQuestionApi(values);
+  };
+
+  const handlePreviewAllData = async () => {
+    const searchParams = {
+      fromSessionNo: formik.values.fromSession,
+      toSessionNo: formik.values.toSession,
+      memberName: formik.values.memberName,
+      questionCategory: formik.values.category,
+      keyword: formik.values.keyword,
+      questionID: formik.values?.questionID,
+      questionStatus: formik.values.questionStatus,
+      questionDiaryNo: formik.values.questionDiaryNo,
+      noticeOfficeDiaryDateFrom: formik.values.fromNoticeDate,
+      noticeOfficeDiaryDateTo: formik.values.toNoticeDate,
+      fileStatus: formik.values.fileStatus,
+      groups: formik.values.groups,
+      divisions: formik.values.divisions,
+      memberPosition: formik.values?.memberPosition,
+      questionSentStatus: "inQuestion",
+      gender: formik.values?.gender,
+      religion: formik.values?.religion,
+      noticeOfficeDiaryNo: formik.values?.noticeOfficeDiaryNo,
+      isExact: formik.values?.isExact,
+      
+    };
+
+    try {
+      const response = await searchQuestion(searchParams, 0, count); // Fetch all data
+      if (response?.success) {
+        const allData = transformLeavesData(response?.data?.questions);
+        handlePreviewNotingDoc(allData);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
   };
 
   return (
@@ -372,28 +408,6 @@ function QMSSearchQuestion() {
                   </div>
                 </div>
                 <div class="row">
-                  {/* <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label">From Session</label>
-                      <select
-                        class="form-select"
-                        value={formik.values.fromSession}
-                        id="fromSession"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                      >
-                        <option value={""} selected disabled hidden>
-                          Select
-                        </option>
-                        {sessions &&
-                          sessions.map((item) => (
-                            <option key={item.id} value={item.id}>
-                              {item?.sessionName}
-                            </option>
-                          ))}
-                      </select>
-                    </div>
-                  </div> */}
                   <div className="col">
                     <div className="mb-3">
                       <label className="form-label">From Session</label>
@@ -617,9 +631,77 @@ function QMSSearchQuestion() {
                       </select>
                     </div>
                   </div>
+                  <div class="col-3">
+                      <div class="mb-3">
+                        <label class="form-label">Division</label>
+                        <select
+                          class={`form-select`}
+                          placeholder="Division"
+                          value={formik.values.divisions}
+                          onChange={(event) => {
+                            formik.handleChange(event);
+                          }}
+                          onBlur={formik.handleBlur}
+                          name="divisions"
+                          id="divisions"
+                        >
+                          <option selected value="" disabled hidden>
+                            Select
+                          </option>
+                          {divisions &&
+                            divisions.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item?.divisionName}
+                              </option>
+                            ))}
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-3">
+                    <div class="mb-3">
+                      <div class="form-check" style={{ marginTop: "39px" }}>
+                        <input
+                          class={`form-check-input ${
+                            formik.touched.isExact && formik.errors.isExact
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                          type="checkbox"
+                          id="flexCheckDefault"
+                          checked={formik.values.isExact}
+                          onChange={() =>
+                            formik.setFieldValue(
+                              "isExact",
+                              !formik.values.isExact
+                            )
+                          }
+                        />
+                        <label class="form-check-label" for="flexCheckDefault">
+                          Is Exact
+                        </label>
+                        
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <div class="row">
                   <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                  
+                  <button
+                      class="btn btn-primary"
+                      type="button"
+                      onClick={() => navigate("/qms/search/question/compare")}
+                    >
+                      Compare
+                    </button>
+                    <button
+                      class="btn btn-primary"
+                      type="button"
+                      onClick={handlePreviewAllData}
+                      disabled={searchedData?.length > 0 ? false : true}
+                    >
+                      Preview PDF
+                    </button>
                     <button class="btn btn-primary" type="submit">
                       Search
                     </button>
@@ -634,19 +716,6 @@ function QMSSearchQuestion() {
                 </div>
               </form>
               <div class="dash-detail-container" style={{ marginTop: "20px" }}>
-                {/* <div class="row">
-                  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                    <button class="btn btn-primary mb-3" type="submit">
-                      Print Questions
-                    </button>
-                    <button class="btn btn-primary mb-3" type="submit">
-                      Annual Report
-                    </button>
-                    <button class="btn btn-warning mb-3" type="submit">
-                      Defferd Questions
-                    </button>
-                  </div>
-                </div> */}
                 <CustomTable
                   block={false}
                   headerShown={true}

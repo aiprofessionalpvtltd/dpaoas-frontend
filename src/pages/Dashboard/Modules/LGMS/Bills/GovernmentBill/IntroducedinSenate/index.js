@@ -7,6 +7,7 @@ import { LegislationSideBarItems } from "../../../../../../../utils/sideBarItems
 import { Layout } from "../../../../../../../components/Layout";
 import Header from "../../../../../../../components/Header";
 import { getAllGovernmentSenateBills } from "../../../../../../../api/APIs/Services/LegislationModule.service";
+import { showErrorMessage } from "../../../../../../../utils/ToastAlert";
 
 const AllGovernmentSenateBills = () => {
   const navigate = useNavigate();
@@ -68,7 +69,7 @@ const AllGovernmentSenateBills = () => {
             "YYYY-MM-DD"
           ).format("DD-MM-YYYY")
         : "---",
-      dateOfPassingTheBillByTheSenate: item?.dateOfPassageBySenate
+      dateOnWhichTheBillByTheSenate: item?.dateOfPassageBySenate
         ? moment(item?.dateOfPassageBySenate, "YYYY-MM-DD").format("DD-MM-YYYY")
         : "---",
       dateOnWhichTheBillTransmittedToNA: item?.dateOfTransmissionToNA
@@ -83,25 +84,65 @@ const AllGovernmentSenateBills = () => {
     }));
   };
 
+  // // Handle API Call (Get All Government Bills Senate)
+  // const getGovernmentSenateBillApi = useCallback(async () => {
+  //   const searchParams = {
+  //     billCategory: "Government Bill",
+  //     billFrom: "From Senate",
+  //   };
+
+  //   const response = await getAllGovernmentSenateBills(
+  //     currentPage,
+  //     pageSize,
+  //     searchParams
+  //   );
+  //   if (response?.success) {
+  //     setCount(response?.data?.count);
+  //     const governmentSenateBillData = response?.data?.senateBills;
+  //     const transformAllGovernmentSenateBillData =
+  //       transformGovernmentSenateBillData(governmentSenateBillData);
+  //     setGovernmantSenateBill(transformAllGovernmentSenateBillData);
+  //     // showSuccessMessage(response?.message)
+  //   }
+  // }, [selectedbillFrom, currentPage, pageSize]);
+
+  // useEffect(() => {
+  //   getGovernmentSenateBillApi();
+  // }, [getGovernmentSenateBillApi]);
+
   // Handle API Call (Get All Government Bills Senate)
   const getGovernmentSenateBillApi = useCallback(async () => {
-    const searchParams = {
-      billCategory: "Government Bill",
-      billFrom: "From Senate",
-    };
+    try {
+      const searchParams = {
+        billCategory: "Government Bill",
+        billFrom: "From Senate",
+      };
 
-    const response = await getAllGovernmentSenateBills(
-      currentPage,
-      pageSize,
-      searchParams
-    );
-    if (response?.success) {
-      setCount(response?.data?.count);
-      const governmentSenateBillData = response?.data?.senateBills;
-      const transformAllGovernmentSenateBillData =
-        transformGovernmentSenateBillData(governmentSenateBillData);
-      setGovernmantSenateBill(transformAllGovernmentSenateBillData);
-      // showSuccessMessage(response?.message)
+      const response = await getAllGovernmentSenateBills(
+        currentPage,
+        pageSize,
+        searchParams
+      );
+
+      if (response?.success) {
+        setCount(response?.data?.count);
+        const governmentSenateBillData = response?.data?.senateBills;
+        const transformAllGovernmentSenateBillData =
+          transformGovernmentSenateBillData(governmentSenateBillData);
+        setGovernmantSenateBill(transformAllGovernmentSenateBillData);
+        // showSuccessMessage(response?.message)
+      } else {
+        console.error("API Error:", response?.message);
+        // Optionally, show an error message to the user
+        // showErrorMessage(response?.message || "Failed to fetch data");
+      }
+    } catch (error) {
+      console.error("Error fetching government senate bills:", error);
+      // Optionally, show an error message to the user
+      showErrorMessage(
+        error?.response?.data?.message ||
+          "Something went wrong. Please try again later."
+      );
     }
   }, [selectedbillFrom, currentPage, pageSize]);
 
@@ -118,14 +159,18 @@ const AllGovernmentSenateBills = () => {
   // Create Government Bill
   const handleGovernmentSenateBill = () => {
     navigate("/lgms/dashboard/bills/senate-bills", {
-      state: { category: "Government Bill", billFrom: "From Senate" },
+      state: {
+        category: "Government Bill",
+        billFrom: "From Senate",
+        forPerson: "Ministers",
+      },
     });
   };
 
   // Edit Bill Introduced in Senate
   const handleEditSenateBill = (id, item) => {
     navigate("/lgms/dashboard/bills/edit/senate-bills", {
-      state: { id, item },
+      state: { id, item, forPerson: "Ministers" },
     });
   };
 
@@ -149,7 +194,7 @@ const AllGovernmentSenateBills = () => {
 
       <div class="container-fluid">
         <IntroducedInSenate
-          addBtnText={"Government Bill (Introduced In Senate)"}
+          addBtnText={"Create New Government Bill (Introduced In Senate)"}
           handleAdd={handleGovernmentSenateBill}
           tableTitle={"Government Bills Data (Introduced In Senate)"}
           data={governmentSenateBill}

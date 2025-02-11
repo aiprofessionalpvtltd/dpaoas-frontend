@@ -666,7 +666,9 @@ export const deleteCaseById = async (id) => {
 
 export const getPendingCasesThroughSearchParams = async (queryParams) => {
   try {
-    const response = await axiosClient.get(`/cases/getAllPendingCases?${queryParams}`);
+    const response = await axiosClient.get(
+      `/cases/getAllPendingCases?${queryParams}`
+    );
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
@@ -863,7 +865,12 @@ export const assignFR = async (frId, data) => {
   }
 };
 
-export const getAllFreshReceipt = async (userId, branchId, currentPage, pageSize) => {
+export const getAllFreshReceipt = async (
+  userId,
+  branchId,
+  currentPage,
+  pageSize
+) => {
   try {
     //   const token = getAuthToken();
     const response = await axiosClient.get(
@@ -885,11 +892,11 @@ export const getAllFreshReceipt = async (userId, branchId, currentPage, pageSize
 export const getPendingFreshReceipts = async (queryParams) => {
   const url = `/freshReceipt/getAllPendingFRs?${queryParams}`;
   try {
-      const response = await axiosClient.get(url);
-      return response?.data;
+    const response = await axiosClient.get(url);
+    return response?.data;
   } catch (error) {
-      console.error("Error fetching API endpoint:", error);
-      throw error;
+    console.error("Error fetching API endpoint:", error);
+    throw error;
   }
 };
 
@@ -1603,6 +1610,16 @@ export const DeleteNotificationApprovedCasesByIdAPI = async (
     //     "Content-Type": "multipart/form-data",
     //   },
     // });
+    return response?.data;
+  } catch (error) {
+    console.log("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const updatePassword = async (data) => {
+  try {
+    const response = await axiosClient.post(`/users/change-password`, data);
     return response?.data;
   } catch (error) {
     console.log("Error fetching API endpoint:", error);

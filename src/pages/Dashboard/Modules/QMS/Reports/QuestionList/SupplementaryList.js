@@ -147,18 +147,21 @@ function SupplementaryList() {
   };
 
   const printList = async (id) => {
-    try {
-      const response = await printSuppFromList(id)
-      if (response.success) {
-        showSuccessMessage(response?.message)
-        const jsonString = JSON.stringify(response?.data);
-        const encodedJsonString = encodeURIComponent(jsonString);
-        const url = `/qms/questionList/priveiw-suplementry-list?state=${encodedJsonString}`;
-        window.open(url, "_blank");
-      }
-    } catch (error) {
-      showErrorMessage(error?.response?.data?.message)
-    }
+    const encodedJsonString = encodeURIComponent(id);
+    const url = `/qms/questionList/priveiw-suplementry-list?state=${encodedJsonString}`;
+    window.open(url, "_blank");
+    // try {
+    //   const response = await printSuppFromList(id)
+    //   if (response.success) {
+    //     showSuccessMessage(response?.message)
+    //     const jsonString = JSON.stringify(response?.data);
+    //     const encodedJsonString = encodeURIComponent(jsonString);
+    //     const url = `/qms/questionList/priveiw-suplementry-list?state=${encodedJsonString}`;
+    //     window.open(url, "_blank");
+    //   }
+    // } catch (error) {
+    //   showErrorMessage(error?.response?.data?.message)
+    // }
   };
 
   const deleteList = async (data) => {

@@ -62,6 +62,7 @@ const AllManageCommitteeRecoomendation = () => {
       setCount(response?.data?.count);
     } catch (error) {
       console.log("Error", error);
+      showErrorMessage(error?.response?.data?.message);
     }
   }, [count, setCount, pageSize, currentPage]);
 

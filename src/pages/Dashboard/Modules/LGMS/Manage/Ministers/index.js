@@ -22,7 +22,7 @@ function LGMSMinisters() {
   const [count, setCount] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [toUpdateMemberId, setToUpdateMemberId] = useState(null);
-  const pageSize = 10; // Set your desired page size
+  const pageSize = 100; // Set your desired page size
 
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
@@ -33,11 +33,12 @@ function LGMSMinisters() {
     return apiData.map((item) => ({
       id: item.id,
       ministerName: `${item.mnaName}`,
-      ministerTenure: item?.tenures?.tenureName
-        ? item?.tenures?.tenureName
+      ministerTenure: item?.tenuresMinisters?.tenureName
+        ? item?.tenuresMinisters?.tenureName
         : "---",
-      ministerParliamentaryYear: item?.parliamentaryYears?.parliamentaryTenure
-        ? item?.parliamentaryYears?.parliamentaryTenure
+      ministerParliamentaryYear: item?.mnaParliamentaryYears
+        ?.parliamentaryTenure
+        ? item?.mnaParliamentaryYears?.parliamentaryTenure
         : "---",
       politicalParty: `${item?.politicalParties?.partyName}`,
       minstries: item?.ministries
@@ -103,7 +104,7 @@ function LGMSMinisters() {
       <Header
         dashboardLink={"lgms/dashboard"}
         addLink1={"/lgms/dashboard/manage/members/list"}
-        title1={"Members"}
+        title1={"Ministers"}
       />
       <ToastContainer />
 

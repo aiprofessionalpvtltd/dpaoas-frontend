@@ -832,3 +832,38 @@ export const GroupMinistryQuestionData = async (fromSessionNo, toSessionNo) => {
     throw error;
   }
 };
+
+//Compare Question 
+export const compareQuestion = async (searchParams, currentPage, pageSize) => {
+  try {
+    // Filter out empty values
+    const filteredSearchParams = Object.fromEntries(
+      Object.entries(searchParams).filter(([_, value]) => value !== "")
+    );
+    const response = await axiosClient.get(
+      `/questions/compareSearch?currentPage=${currentPage}&pageSize=${pageSize}`,
+      {
+        params: filteredSearchParams,
+      }
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+//
+// hour Statement Question List Count
+export const getQuestionListCountsHourStatement = async (id) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClient.get(
+      `questionList/getQuestionListCounts/${id}`
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};

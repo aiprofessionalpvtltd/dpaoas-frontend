@@ -16,6 +16,7 @@ import {
   getAllBillStatus,
   getAllCommitteeRecommendation,
   getAllCommitties,
+  getAllMinisters,
   mainSearchApi,
 } from "../../../../../../../api/APIs/Services/LegislationModule.service";
 import { getAllParliamentaryYears } from "../../../../../../../api/APIs/Services/ManageQMS.service";
@@ -29,15 +30,16 @@ import RecievedFromNA from "../../../../../../../components/LegislationBills/Rec
 
 const SearchLegislationGovernmentBills = () => {
   const navigate = useNavigate();
-  const { ministryData, members, sessions } = useContext(AuthContext);
+  const { ministryData, sessions } = useContext(AuthContext);
   const [currentPage, setCurrentPage] = useState(0);
   const [pageValue, setPageValue] = useState(null);
   const [count, setCount] = useState(null);
   const [concerndCommitte, setConcerndCommitte] = useState(null);
   const [billFrom, setBillFrom] = useState();
   const [remarksAttachmentVal, setRemarksAttachmentVal] = useState();
-
+  const [isColumnChecked, setIsColumnChecked] = useState([]);
   const [searchdata, setSearchData] = useState([]);
+  const [ministers, setMinisters] = useState([]);
   const [billdata, setBilldata] = useState([]);
   const [parliamentaryYears, setParliamentaryYears] = useState([]);
   const [commiteeRecommendations, setCommitteeRecommendations] = useState([]);
@@ -76,6 +78,21 @@ const SearchLegislationGovernmentBills = () => {
     formik.setFieldValue("PresetedInHOuseOn", date);
     setIsPresentedCalenderOpen(false);
   };
+
+  const getAllMinisterApi = async () => {
+    try {
+      const response = await getAllMinisters(0, 5000, "Ministers");
+      if (response?.success) {
+        setMinisters(response.data?.mnas);
+      }
+    } catch (error) {
+      console.log(error?.response?.data?.message);
+    }
+  };
+
+  useEffect(() => {
+    getAllMinisterApi();
+  }, []);
 
   // Transform Government Bill Introduced In Senate Data
   const transformGovernmentSenateBillData = (apiData) => {
@@ -431,6 +448,7 @@ const SearchLegislationGovernmentBills = () => {
   const handleResetForm = () => {
     formik.resetForm();
     setSearchData([]);
+    setIsColumnChecked([]);
     setRemarksAttachmentVal(false);
   };
 
@@ -554,14 +572,14 @@ const SearchLegislationGovernmentBills = () => {
 
                   <div className="form-group col-3">
                     <label htmlFor="senator" className="form-label">
-                      Member Name
+                      Minister Name
                     </label>
                     <Select
                       options={
-                        members &&
-                        members?.map((item) => ({
+                        ministers &&
+                        ministers?.map((item) => ({
                           value: item.id,
-                          label: item?.memberName,
+                          label: item?.mnaName,
                         }))
                       }
                       id="selectedSenator"
@@ -952,12 +970,11 @@ const SearchLegislationGovernmentBills = () => {
                     >
                       Reset
                     </button>
-                    {/* <button type="" className="btn btn-primary me-2">
-                      Print
-                    </button>
-                    <button type="" className="btn btn-primary">
-                      Annual Report
-                    </button> */}
+                    {isColumnChecked.length > 0 && (
+                      <button type="button" className="btn btn-primary">
+                        View Report
+                      </button>
+                    )}
                   </div>
                 </div>
               </form>
@@ -982,6 +999,9 @@ const SearchLegislationGovernmentBills = () => {
                     pageSize={pageSize}
                     totalCount={count}
                     hideTableTopButton={true}
+                    iscolumnCheckbox={isColumnChecked}
+                    isColumncheck={true}
+                    setIsColumnCheckBox={setIsColumnChecked}
                   />
                 ) : billFrom === "From NA" ? (
                   <RecievedFromNA
@@ -1000,6 +1020,9 @@ const SearchLegislationGovernmentBills = () => {
                     pageSize={pageSize}
                     totalCount={count}
                     hideTableTopButton={true}
+                    iscolumnCheckbox={isColumnChecked}
+                    isColumncheck={true}
+                    setIsColumnCheckBox={setIsColumnChecked}
                   />
                 ) : (
                   "No Data"

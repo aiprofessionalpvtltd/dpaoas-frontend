@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import { Layout } from "../../../../../../components/Layout";
 import Header from "../../../../../../components/Header";
 import { QMSSideBarItems } from "../../../../../../utils/sideBarItems";
+import Select from "react-select";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import TimePicker from "react-time-picker";
@@ -54,7 +55,7 @@ function QMSNewQuestion() {
       englishText: "",
       urduText: "",
       fkDivisionId: "",
-      questionDiaryNo: "",
+      // questionDiaryNo: "",
       fkGroupId: "",
     },
     validationSchema: validationSchema,
@@ -81,7 +82,7 @@ function QMSNewQuestion() {
     formData.append("submittedBy", userData?.fkUserId);
     formData.append("questionSentStatus", "inQuestion");
     formData.append("fkDivisionId", values?.fkDivisionId);
-    formData.append("questionDiaryNo", values?.questionDiaryNo);
+    // formData.append("questionDiaryNo", values?.questionDiaryNo);
     formData.append("fkGroupId", values?.fkGroupId);
 
     try {
@@ -233,45 +234,43 @@ function QMSNewQuestion() {
                     <div class="col">
                       <div class="mb-3">
                         <label class="form-label">Member Name</label>
-                        {/* <input
-                          className={`form-control ${
-                            formik.touched.fkMemberId &&
-                            formik.errors.fkMemberId
-                              ? "is-invalid"
-                              : ""
-                          }`}
-                          type="text"
-                          id="fkMemberId"
-                          value={formik.values.fkMemberId}
+                        <Select
+                          options={
+                            members &&
+                            members.map((item) => ({
+                              value: item.id,
+                              label: item.memberName,
+                            }))
+                          }
+                          onChange={(selectedOption) => {
+                            formik.setFieldValue(
+                              "fkMemberId",
+                              selectedOption?.value || null
+                            ); // Set the id as the value
+                          }}
+                          onBlur={formik.handleBlur}
+                          value={
+                            members &&
+                            members.find(
+                              (item) => item.id === formik.values.fkMemberId
+                            ) // Match the selected option
+                              ? {
+                                  value: formik.values.fkMemberId,
+                                  label: members.find(
+                                    (item) =>
+                                      item.id === formik.values.fkMemberId
+                                  ).memberName,
+                                }
+                              : null
+                          }
                           name="fkMemberId"
-                          onBlur={formik.handleBlur}
-                          onChange={formik.handleChange}
-                        /> */}
-                        <select
-                          class={`form-select ${
-                            formik.touched.fkMemberId &&
-                            formik.errors.fkMemberId
-                              ? "is-invalid"
-                              : ""
-                          }`}
-                          placeholder={formik.values.fkMemberId}
-                          onChange={formik.handleChange}
-                          id="fkMemberId"
-                          onBlur={formik.handleBlur}
-                        >
-                          <option selected disabled hidden>
-                            Select
-                          </option>
-                          {members &&
-                            members.map((item) => (
-                              <option key={item.id} value={item.id}>
-                                {item?.memberName}
-                              </option>
-                            ))}
-                        </select>
+                        />
                         {formik.touched.fkMemberId &&
                           formik.errors.fkMemberId && (
-                            <div class="invalid-feedback">
+                            <div
+                              class="invalid-feedback"
+                              style={{ display: "block" }}
+                            >
                               {formik.errors.fkMemberId}
                             </div>
                           )}
@@ -411,7 +410,7 @@ function QMSNewQuestion() {
                       </div>
                     </div>
                   </div>
-                  <div className="row">
+                  {/* <div className="row">
                     <div class="col-6">
                       <div class="mb-3">
                         <label class="form-label">Question Diary No</label>
@@ -426,7 +425,7 @@ function QMSNewQuestion() {
                         />
                       </div>
                     </div>
-                  </div>
+                  </div> */}
 
                   <div style={{ marginTop: 10 }}>
                     <Editor

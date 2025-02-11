@@ -1169,6 +1169,24 @@ export const LegislationSideBarItems = [
   },
 
   {
+    itemName: "Finance/Money Bill",
+    link: "/lgms/dashboard/finance-money-bill",
+    icon: faBookOpen,
+    subItems: [
+      {
+        itemName: "Finance/Money Bill List",
+        link: "/lgms/dashboard/bills/legislation-bills/finance-money-bill",
+        icon: faBookOpen,
+      },
+      // {
+      //   itemName: "Search Ordinance",
+      //   link: "/lgms/dashboard/ordinances/search-ordinance",
+      //   icon: faBookOpen,
+      // },
+    ],
+  },
+
+  {
     itemName: "Private Member Bills",
     link: "/lgms/dashboard/bills",
     icon: faBookOpen,
@@ -1190,6 +1208,7 @@ export const LegislationSideBarItems = [
       },
     ],
   },
+
   {
     itemName: "Ordinances",
     link: "/lgms/dashboard/ordinances",
@@ -1209,23 +1228,69 @@ export const LegislationSideBarItems = [
   },
 
   {
+    itemName: "From Notice Office",
+    link: "/lgms/notice-office",
+    icon: faBookOpen,
+    subItems: [
+      // {
+      //   itemName: "Private Member Bill",
+      //   link: "/lgms/legislation/private-bill",
+      //   icon: faFileInvoice,
+      // },
+      {
+        itemName: "List Private Member Bill",
+        link: "/lgms/legislation/private-bill",
+        icon: faFileInvoice,
+      },
+    ],
+  },
+
+  {
+    itemName: "Order of The Day",
+    link: "/lgms/dashboard/order-of-the-day/list",
+    icon: faBookOpen,
+    subItems: [
+      // {
+      //   itemName: "New Order of The Day",
+      //   link: "/lgms/dashboard/order-of-the-day/addedit",
+      //   icon: faBookOpen,
+      // },
+      {
+        itemName: "List Order of The Day",
+        link: "/lgms/dashboard/order-of-the-day/list",
+        icon: faBookOpen,
+      },
+    ],
+  },
+
+  {
     itemName: "Manage",
     link: "/lgms/dashboard/ordinances",
     icon: faBookOpen,
     subItems: [
       {
-        itemName: "Tenures",
+        itemName: "Member's Tenures",
         link: "/lgms/dashboard/manage/tenures/list",
         icon: faBookOpen,
       },
       {
-        itemName: "Terms",
+        itemName: "Member's Terms",
         link: "/lgms/dashboard/manage/terms/list",
         icon: faBookOpen,
       },
       {
-        itemName: "Parliamentary Years",
+        itemName: "Member's Parliamentary Years",
         link: "/lgms/dashboard/manage/parliamentary-year/list",
+        icon: faBookOpen,
+      },
+      {
+        itemName: "Minister's Tenures",
+        link: "/lgms/dashboard/manage/minister-tenures/list",
+        icon: faBookOpen,
+      },
+      {
+        itemName: "Minister's Parliamentary Year",
+        link: "/lgms/dashboard/manage/minister/parliamentary-year/list",
         icon: faBookOpen,
       },
       {
@@ -1236,6 +1301,11 @@ export const LegislationSideBarItems = [
       {
         itemName: "Ministers",
         link: "/lgms/dashboard/manage/ministers/list",
+        icon: faBookOpen,
+      },
+      {
+        itemName: "Ministries",
+        link: "/lgms/dashboard/manage/ministries/list",
         icon: faBookOpen,
       },
 
@@ -1266,23 +1336,6 @@ export const LegislationSideBarItems = [
       //   link: "/lgms/dashboard/manage/committees/list",
       //   icon: faBookOpen,
       // },
-    ],
-  },
-  {
-    itemName: "From Notice Office",
-    link: "/lgms/notice-office",
-    icon: faBookOpen,
-    subItems: [
-      // {
-      //   itemName: "Private Member Bill",
-      //   link: "/lgms/legislation/private-bill",
-      //   icon: faFileInvoice,
-      // },
-      {
-        itemName: "List Private Member Bill",
-        link: "/lgms/legislation/private-bill",
-        icon: faFileInvoice,
-      },
     ],
   },
 ];

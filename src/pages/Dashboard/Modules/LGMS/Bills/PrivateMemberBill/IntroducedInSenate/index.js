@@ -39,15 +39,15 @@ const AllPrivateMemberSenateBills = () => {
       id: item.id,
       fileNumber: item?.fileNumber,
       TitleOfTheBill: item?.billTitle,
-      nameOfMinistersOrMovers:
+      nameOfMovers:
         item?.senateBillMnaMovers?.[0]?.mna?.mnaName ||
         item?.senateBillSenatorMovers
           ?.map((mover) => mover?.member?.memberName)
           .join(", ") ||
         "",
-      // dateOfReceiptOfNotice: item?.noticeDate
-      //   ? moment(item?.noticeDate, "YYYY-MM-DD").format("DD-MM-YYYY")
-      //   : "---",
+      dateOfNotice: item?.noticeDate
+        ? moment(item?.noticeDate, "YYYY-MM-DD").format("DD-MM-YYYY")
+        : "---",
       dateOfIntroductionReferenceToStandingCommittee: item?.introducedInHouses
         ?.introducedInHouseDate
         ? moment(
@@ -63,6 +63,12 @@ const AllPrivateMemberSenateBills = () => {
             "YYYY-MM-DD"
           ).format("DD-MM-YYYY")
         : "---",
+      dateOfNoticeForPassageUnderRule100: item?.memberPassages
+        ?.memeberNoticeDate
+        ? moment(item?.memberPassages?.memeberNoticeDate, "YYYY-MM-DD").format(
+            "DD-MM-YYYY"
+          )
+        : "---",
       dateOfConsiderationOfTheBillBySenate: item?.memberPassages
         ?.dateOfConsiderationBill
         ? moment(
@@ -70,7 +76,7 @@ const AllPrivateMemberSenateBills = () => {
             "YYYY-MM-DD"
           ).format("DD-MM-YYYY")
         : "---",
-      dateOfPassingTheBillByTheSenate: item?.dateOfPassageBySenate
+      dateOnWhichTheBillByTheSenate: item?.dateOfPassageBySenate
         ? moment(item?.dateOfPassageBySenate, "YYYY-MM-DD").format("DD-MM-YYYY")
         : "---",
       dateOnWhichTheBillTransmittedToNA: item?.dateOfTransmissionToNA
@@ -85,25 +91,61 @@ const AllPrivateMemberSenateBills = () => {
     }));
   };
 
+  // // Get Private Member Bills
+  // const getPrivateMemberBills = useCallback(async () => {
+  //   const searchParams = {
+  //     billCategory: "Private Member Bill",
+  //     billFrom: "From Senate",
+  //   };
+
+  //   const response = await getAllPrivateMemberSenateBills(
+  //     currentPage,
+  //     pageSize,
+  //     searchParams
+  //   );
+  //   if (response?.success) {
+  //     setCount(response?.data?.count);
+  //     const privateMemberSenateBillData = response?.data?.senateBills;
+  //     const trnasformAllData = transformPrivateMemberBillSenate(
+  //       privateMemberSenateBillData
+  //     );
+  //     setPrivateMemberSenateBill(trnasformAllData);
+  //   }
+  // }, [selectedbillFrom, currentPage, pageSize]);
+
   // Get Private Member Bills
   const getPrivateMemberBills = useCallback(async () => {
-    const searchParams = {
-      billCategory: "Private Member Bill",
-      billFrom: "From Senate",
-    };
+    try {
+      const searchParams = {
+        billCategory: "Private Member Bill",
+        billFrom: "From Senate",
+      };
 
-    const response = await getAllPrivateMemberSenateBills(
-      currentPage,
-      pageSize,
-      searchParams
-    );
-    if (response?.success) {
-      setCount(response?.data?.count);
-      const privateMemberSenateBillData = response?.data?.senateBills;
-      const trnasformAllData = transformPrivateMemberBillSenate(
-        privateMemberSenateBillData
+      const response = await getAllPrivateMemberSenateBills(
+        currentPage,
+        pageSize,
+        searchParams
       );
-      setPrivateMemberSenateBill(trnasformAllData);
+
+      if (response?.success) {
+        setCount(response?.data?.count);
+        const privateMemberSenateBillData = response?.data?.senateBills;
+        const transformedData = transformPrivateMemberBillSenate(
+          privateMemberSenateBillData
+        );
+        setPrivateMemberSenateBill(transformedData);
+      } else {
+        console.error("API Error:", response?.message);
+        // Optionally show an error message to the user
+        // showErrorMessage(response?.message || "Failed to fetch data");
+      }
+    } catch (error) {
+      console.error("Error fetching private member bills:", error);
+      // Optionally show an error message to the user
+      showErrorMessage(
+        error?.response?.data?.message ||
+          "Something went wrong. Please try again later."
+      );
     }
   }, [selectedbillFrom, currentPage, pageSize]);
 
@@ -126,14 +168,18 @@ const AllPrivateMemberSenateBills = () => {
 
   const handlePrivateMemberSenateBill = () => {
     navigate("/lgms/dashboard/bills/senate-bills", {
-      state: { category: "Private Member Bill", billFrom: "From NA" },
+      state: {
+        category: "Private Member Bill",
+        billFrom: "From NA",
+        forPerson: "Senators",
+      },
     });
   };
 
   // Handle Edit Senate Bills
   const handleEditSenateBill = (id, item) => {
     navigate("/lgms/dashboard/bills/edit/senate-bills", {
-      state: { id, item },
+      state: { id, item, forPerson: "Senators" },
     });
   };
 
@@ -169,7 +215,7 @@ const AllPrivateMemberSenateBills = () => {
       />
       <div class="container-fluid">
         <IntroducedInSenate
-          addBtnText={"Private Member Bill (Introduced In Senate)"}
+          addBtnText={"Create New Private Member Bill (Introduced In Senate)"}
           handleAdd={handlePrivateMemberSenateBill}
           tableTitle={"Private Member Bill Data (Introduced In Senate)"}
           data={privateMemberSenateBill}

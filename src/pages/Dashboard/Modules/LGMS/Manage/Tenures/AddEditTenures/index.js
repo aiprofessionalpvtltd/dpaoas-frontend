@@ -21,6 +21,7 @@ import {
 } from "../../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 import moment from "moment";
+import { createMinisterTenure } from "../../../../../../../api/APIs/Services/LegislationModule.service";
 
 const validationSchema = Yup.object({
   tenure: Yup.string().required("Tenure name is required"),
@@ -33,7 +34,7 @@ function LGMSAddEditTenuresForm() {
   const formik = useFormik({
     initialValues: {
       tenure: location.state ? location.state?.tenureName : "",
-      tenureType: location?.state ? location?.state?.tenureType : "",
+      tenureType: location?.state ? location?.state?.tenureType : "Senators",
       fromDate: location.state ? moment(location.state?.fromDate).toDate() : "",
       toDate: location.state ? moment(location.state?.toDate).toDate() : "",
     },
@@ -51,13 +52,19 @@ function LGMSAddEditTenuresForm() {
   const handleCreateTenures = async (values) => {
     const data = {
       tenureName: values?.tenure,
-      tenureType: values?.tenureType,
+      tenureType: "Senators",
       fromDate: values?.fromDate,
       toDate: values?.toDate,
     };
 
     try {
-      const response = await createTenure(data);
+      let response;
+      if (values?.tenureType === "Senators") {
+        response = await createTenure(data);
+      } else {
+        response = await createMinisterTenure(data);
+      }
+
       if (response?.success) {
         showSuccessMessage(response?.message);
         formik.resetForm();
@@ -73,7 +80,7 @@ function LGMSAddEditTenuresForm() {
   const handleEditTenures = async (values) => {
     const data = {
       tenureName: values?.tenure,
-      tenureType: values?.tenureType,
+      tenureType: "Senators",
       fromDate: values?.fromDate,
       toDate: values?.toDate,
     };
@@ -153,6 +160,7 @@ function LGMSAddEditTenuresForm() {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         value={formik.values.tenureType}
+                        disabled={true}
                       >
                         <option value="" selected disabled hidden>
                           Select
