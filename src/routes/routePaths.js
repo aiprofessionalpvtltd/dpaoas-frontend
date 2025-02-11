@@ -354,6 +354,11 @@ import EditFinanceMoneyBill from "../pages/Dashboard/Modules/LGMS/FinanceMoneyBi
 import QMSBallotResolutionListTemplate from "../pages/Dashboard/Modules/QMS/Resolution/ResolutionList/BallotResolutionTemplate/index.js";
 import PreviewHourStatementList from "../pages/Dashboard/Modules/QMS/Reports/QuestionList/PreviewHourStatementList/index.js";
 import PreviewSinglepageOneQuestion from "../pages/Dashboard/Modules/QMS/Reports/QuestionList/PreviewSinglepageOneQuestion/index.js";
+import GovTranslationIntroduceInSenate from "../pages/Dashboard/Modules/TMS/Legislation/GovernmentBill/GOVTranslateIntroduceInSenate.js";
+import GovTranslationRecivedFromNA from "../pages/Dashboard/Modules/TMS/Legislation/GovernmentBill/GovRecivedFromNA/GovTranslationRecivedFromNA.js";
+import TMSPMBRecivedFromNA from "../pages/Dashboard/Modules/TMS/Legislation/PrivateMemberBill/PMBRecivedFromNA/index.js";
+import PMBTranslationRecivedFromNA from "../pages/Dashboard/Modules/TMS/Legislation/PrivateMemberBill/PMBRecivedFromNA/PMBTranslationRecivedFromNA.js";
+import PMBTranslationIntroduceInSenate from "../pages/Dashboard/Modules/TMS/Legislation/PrivateMemberBill/PMBTranslationIntroduceInSenate.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -779,7 +784,15 @@ export const ProtectedRoutes = [
 
   { path: "/tms/legislation/government-bill-translation/introduce-in-senate", element: <TMSGovIntroduceInSenate /> },
   { path: "/tms/legislation/government-bill-translation/recived-from-na", element: <TMSGOVRecivedFromNA /> },
-  { path: "/tms/legislation/assigned-legislation", element: <TMSPrivateMemberBill /> },
+  { path: "/tms/legislation/government-bill-translation/introduce-in-senate/edit", element: <GovTranslationIntroduceInSenate /> },
+  { path: "/tms/legislation/government-bill-translation/recived-from-na/edit", element: <GovTranslationRecivedFromNA /> },
+
+  { path: "/tms/legislation/private-bill-translation/introduce-in-senate", element: <TMSPrivateMemberBill /> },
+  { path: "/tms/legislation/private-bill-translation/recived-from-na", element: <TMSPMBRecivedFromNA /> },
+  { path: "/tms/legislation/private-bill-translation/introduce-in-senate/edit", element: <PMBTranslationIntroduceInSenate /> },
+  { path: "/tms/legislation/private-bill-translation/recived-from-na/edit", element: <PMBTranslationRecivedFromNA /> },
+
+  
 
 
   { path: "/sms/send-sms", element: <SMSDashboard /> },

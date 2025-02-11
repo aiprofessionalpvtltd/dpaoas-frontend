@@ -192,3 +192,59 @@ export const getMotionRemarksByID = async (mid, userId) => {
     throw error;
   }
 };
+
+
+//Translation Legislation
+
+export const getAllGovernmentBillRemarksByUserId = async (
+  userId,
+  category,
+  currentPage,
+  pageSize
+) => {
+  try {
+    const response = await axiosClient.get(
+      `/translation/getAllGovernmentBillRemarks/${userId}?category=${category}&currentPage=${currentPage}&pageSize=${pageSize}`,
+      {}
+    );
+
+    return response?.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+export const getAllGovintroduceInSenateWithOutUserId = async (
+  category,
+  currentPage,
+  pageSize
+) => {
+  try {
+    const response = await axiosClient.get(
+      `/translation/getAllGovernmentBillRemarks/?category=${category}&currentPage=${currentPage}&pageSize=${pageSize}`,
+      {}
+    );
+
+    return response?.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+
+export const getGovintroduceInSenateById = async (id, userId, category) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClient.get(
+      `/translation/getgovernmentbill-remarks/${id}/${userId}?category=${category}`,
+      {
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // }
+      })
+      return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+}

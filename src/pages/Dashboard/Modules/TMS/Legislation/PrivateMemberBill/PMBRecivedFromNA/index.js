@@ -17,7 +17,7 @@ import { showErrorMessage, showSuccessMessage } from "../../../../../../../utils
 import { getAllGovernmentBillRemarksByUserId, getAllGovintroduceInSenateWithOutUserId } from "../../../../../../../api/APIs/Services/translation.service";
 import { getAllGovernmentSenateBills } from "../../../../../../../api/APIs/Services/LegislationModule.service";
 
-const TMSGOVRecivedFromNA = () => {
+const TMSPMBRecivedFromNA = () => {
     const [governmentSenateBill, setGovernmantSenateBill] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
     const [count, setCount] = useState(null);
@@ -135,7 +135,7 @@ const TMSGOVRecivedFromNA = () => {
     const getGovernmentSenateBillApi = useCallback(async (allRemarks) => {
       try {
         const searchParams = {
-          billCategory: "Government Bill",
+          billCategory: "Private Member Bill",
           billFrom: "From NA",
           introducedBillSentStatus: "toTranslation",
         };
@@ -178,7 +178,7 @@ const TMSGOVRecivedFromNA = () => {
   
   
     const getRemoveAssignedGovintroduceInSenate = useCallback(async () => {
-          const category = "GovernmentBill_FromNA";
+          const category = "PrivateBill_FromNA";
           try {
             const response = await getAllGovintroduceInSenateWithOutUserId(category, 0, 10000);
             if (response?.success) {
@@ -192,7 +192,7 @@ const TMSGOVRecivedFromNA = () => {
   
     const getAllAssignedGovintroduceInSenate = useCallback(async () => {
       const userId = userData?.fkUserId;
-      const category = "GovernmentBill_FromNA";
+      const category = "PrivateBill_FromNA";
       try {
         const response = await getAllGovernmentBillRemarksByUserId(
           userId,
@@ -229,7 +229,7 @@ const TMSGOVRecivedFromNA = () => {
     // HandleEdit
     const handleEdit = async (item) => {
       navigate(
-        "/tms/legislation/government-bill-translation/recived-from-na/edit",
+        "/tms/legislation/private-bill-translation/recived-from-na/edit",
         {
           state: item,
         }
@@ -252,7 +252,7 @@ const TMSGOVRecivedFromNA = () => {
             <div class="row">
               <div class="d-grid gap-2 d-md-flex justify-content-md-start">
                 <button class="btn btn-primary mb-3" type="buttun" onClick={() => navigate(
-                      "/tms/legislation/government-bill-translation/introduce-in-senate"
+                      "/tms/legislation/private-bill-translation/introduce-in-senate"
                     )}>
                   Introduce In Senate
                 </button>
@@ -261,11 +261,11 @@ const TMSGOVRecivedFromNA = () => {
                   type="button"
                   onClick={() =>
                     navigate(
-                      "/tms/legislation/government-bill-translation/recived-from-na"
+                      "/tms/legislation/private-bill-translation/recived-from-na"
                     )
                   }
                 >
-                  Recieved From NA
+                   Recieved From NA
                 </button>
               </div>
             </div>
@@ -289,7 +289,7 @@ const TMSGOVRecivedFromNA = () => {
                           hideBtn={true}
                           hidebtn1={true}
                           data={assiginTableData}
-                          tableTitle="Assiged From NA Bill"
+                          tableTitle="Assiged From NA Privat Bill"
                           handlePageChange={handlePageChange}
                           currentPage={currentPage}
                           totalCount={count}
@@ -313,7 +313,7 @@ const TMSGOVRecivedFromNA = () => {
                       hideBtn={true}
                       hidebtn1={true}
                       data={governmentSenateBill}
-                      tableTitle="Recived From NA Bill"
+                      tableTitle="Recived From NA Private Bill"
                       handlePageChange={handlePageChange}
                       currentPage={currentPage}
                       totalCount={count}
@@ -335,7 +335,7 @@ const TMSGOVRecivedFromNA = () => {
                       hideBtn={true}
                       hidebtn1={true}
                       data={assiginTableData}
-                      tableTitle="Assiged From NA Bill"
+                      tableTitle="Assiged From NA Private Bill"
                       handlePageChange={handlePageChange}
                       currentPage={currentPage}
                       totalCount={count}
@@ -362,4 +362,4 @@ const TMSGOVRecivedFromNA = () => {
     );
   };
 
-export default TMSGOVRecivedFromNA;
+export default TMSPMBRecivedFromNA;

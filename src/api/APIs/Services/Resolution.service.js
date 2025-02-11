@@ -538,7 +538,7 @@ export const getResolutionRemarksByID = async (id, userId) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClient.get(
-      `/translation/getresolution-remarks/${id}/${userId}`,
+      `/translation/getResolutionIdRemarks/${id}/${userId}`,
       {
         // headers: {
         //   Authorization: `Bearer ${token}`,

@@ -11,7 +11,12 @@ import {
 } from "../../../../../../api/APIs/Services/Question.service";
 import moment from "moment";
 import { getUserData } from "../../../../../../api/Auth";
-import { getAllRemarks } from "../../../../../../api/APIs/Services/translation.service";
+import {
+  getAllGovernmentBillRemarksByUserId,
+  getAllGovintroduceInSenateWithOutUserId,
+  getAllRemarks,
+  getLegislationRemarksByUserId,
+} from "../../../../../../api/APIs/Services/translation.service";
 import { useNavigate } from "react-router-dom";
 import {
   showErrorMessage,
@@ -22,86 +27,225 @@ import {
   getResolutionBYID,
   getResolutionRemarksByUserId,
 } from "../../../../../../api/APIs/Services/Resolution.service";
+import { getAllGovernmentSenateBills } from "../../../../../../api/APIs/Services/LegislationModule.service";
 
 const TMSGovIntroduceInSenate = () => {
-  const [resData, setResData] = useState([]);
+  const [governmentSenateBill, setGovernmantSenateBill] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
+  const [assiginTableData, setAssiginTableData] = useState([]);
   const userData = getUserData();
   const pageSize = 10;
   const navigate = useNavigate();
-  const transformLeavesData = (apiData) => {
-    return apiData.map((leave) => {
-      const subjectMatter = [leave?.englishText, leave?.urduText]
-        .filter(Boolean)
-        .join(", ");
-      const cleanedSubjectMatter = subjectMatter.replace(/(<([^>]+)>)/gi, "");
-      return {
-        SrNo: leave.id,
-        memberName:
-          leave?.resolutionMoversAssociation[0]?.memberAssociation?.member,
-        SessionNumber: leave?.session?.sessionName
-          ? leave?.session?.sessionName
-          : "",
-        ResolutionType: leave?.resolutionType ? leave?.resolutionType : "",
-        SubjectMatter: cleanedSubjectMatter ? cleanedSubjectMatter : "",
-        NoticeNo: leave?.noticeDiary?.noticeOfficeDiaryNo
-          ? leave?.noticeDiary?.noticeOfficeDiaryNo
-          : "",
-        ResolutionStatus: leave?.resolutionStatus?.resolutionStatus
-          ? leave?.resolutionStatus?.resolutionStatus
-          : "",
-        Status: leave?.resolutionActive ? leave?.resolutionActive : "",
-        device: leave?.device,
-        createdBy:
-          leave?.resolutionSentStatus === "toResolution"
-            ? "Notice Office"
-            : "---",
-      };
-    });
+  const transformGovernmentSenateBillData = (apiData) => {
+    return apiData?.map((item, index) => ({
+      SNo: index + 1,
+      id: item.id,
+      // internalId: item?.id,
+      fileNumber: item?.fileNumber,
+      billTitle: item?.billTitle,
+      nameOfMinistersOrMovers:
+        item?.senateBillMnaMovers?.[0]?.mna?.mnaName ||
+        item?.senateBillSenatorMovers
+          ?.map((mover) => mover?.member?.memberName)
+          .join(", ") ||
+        "",
+      dateOfReceiptOfNotice: item?.noticeDate
+        ? moment(item?.noticeDate, "YYYY-MM-DD").format("DD-MM-YYYY")
+        : "---",
+      dateOfIntroductionReferenceToStandingCommittee: item?.introducedInHouses
+        ?.introducedInHouseDate
+        ? moment(
+            item?.introducedInHouses?.introducedInHouseDate,
+            "YYYY-MM-DD"
+          ).format("DD-MM-YYYY")
+        : "---",
+
+      dateOfPresentationOfTheReport: item?.introducedInHouses
+        ?.reportPresentationDate
+        ? moment(
+            item?.introducedInHouses?.reportPresentationDate,
+            "YYYY-MM-DD"
+          ).format("DD-MM-YYYY")
+        : "---",
+      dateOfConsiderationOfTheBillBySenate: item?.memberPassages
+        ?.dateOfConsiderationBill
+        ? moment(
+            item?.memberPassages?.dateOfConsiderationBill,
+            "YYYY-MM-DD"
+          ).format("DD-MM-YYYY")
+        : "---",
+      dateOnWhichTheBillByTheSenate: item?.dateOfPassageBySenate
+        ? moment(item?.dateOfPassageBySenate, "YYYY-MM-DD").format("DD-MM-YYYY")
+        : "---",
+      dateOnWhichTheBillTransmittedToNA: item?.dateOfTransmissionToNA
+        ? moment(item?.dateOfTransmissionToNA, "YYYY-MM-DD").format(
+            "DD-MM-YYYY"
+          )
+        : "---",
+      billCategory: item?.billCategory,
+      billFrom: item?.billFrom,
+      remarks: item?.billRemarks,
+      billDocuments: item?.billDocuments,
+    }));
   };
 
-  const getAllAssignedResolutions = useCallback(async () => {
-    const userId = userData?.fkUserId;
-    const category = "Resolution";
+  //TransferData
+  const transformAssiginedGovernmentSenateBillData = (apiData) => {
+    return apiData?.map((item, index) => ({
+      SNo: index + 1,
+      id: item.id,
+      // internalId: item?.id,
+      fileNumber: item?.fileNumber,
+      billTitle: item?.billTitle,
+      nameOfMinistersOrMovers:
+        item?.senateBillMnaMovers?.[0]?.mna?.mnaName ||
+        item?.senateBillSenatorMovers
+          ?.map((mover) => mover?.member?.memberName)
+          .join(", ") ||
+        "",
+      dateOfReceiptOfNotice: item?.noticeDate
+        ? moment(item?.noticeDate, "YYYY-MM-DD").format("DD-MM-YYYY")
+        : "---",
+      dateOfIntroductionReferenceToStandingCommittee: item?.introducedInHouses
+        ?.introducedInHouseDate
+        ? moment(
+            item?.introducedInHouses?.introducedInHouseDate,
+            "YYYY-MM-DD"
+          ).format("DD-MM-YYYY")
+        : "---",
+
+      dateOfPresentationOfTheReport: item?.introducedInHouses
+        ?.reportPresentationDate
+        ? moment(
+            item?.introducedInHouses?.reportPresentationDate,
+            "YYYY-MM-DD"
+          ).format("DD-MM-YYYY")
+        : "---",
+      dateOfConsiderationOfTheBillBySenate: item?.memberPassages
+        ?.dateOfConsiderationBill
+        ? moment(
+            item?.memberPassages?.dateOfConsiderationBill,
+            "YYYY-MM-DD"
+          ).format("DD-MM-YYYY")
+        : "---",
+      dateOnWhichTheBillByTheSenate: item?.dateOfPassageBySenate
+        ? moment(item?.dateOfPassageBySenate, "YYYY-MM-DD").format("DD-MM-YYYY")
+        : "---",
+      dateOnWhichTheBillTransmittedToNA: item?.dateOfTransmissionToNA
+        ? moment(item?.dateOfTransmissionToNA, "YYYY-MM-DD").format(
+            "DD-MM-YYYY"
+          )
+        : "---",
+      billCategory: item?.billCategory,
+      billFrom: item?.billFrom,
+      remarks: item?.billRemarks,
+      billDocuments: item?.billDocuments,
+    }));
+  };
+
+  const getGovernmentSenateBillApi = useCallback(async (allRemarks) => {
     try {
-      const response = await getResolutionRemarksByUserId(
+      const searchParams = {
+        billCategory: "Government Bill",
+        billFrom: "From Senate",
+        introducedBillSentStatus: "toTranslation",
+      };
+
+      const response = await getAllGovernmentSenateBills(
+        currentPage,
+        pageSize,
+        searchParams
+      );
+
+      if (response?.success) {
+        setCount(response?.data?.count);
+        const governmentSenateBillData = response?.data?.senateBills;
+        const transformAllGovernmentSenateBillData =
+          transformGovernmentSenateBillData(governmentSenateBillData);
+          let filteredArray;
+            if (allRemarks?.length > 0) {
+              filteredArray = transformAllGovernmentSenateBillData?.filter(
+                (item) => !allRemarks?.some((obj) => obj?.id === item?.id)
+              );
+              setGovernmantSenateBill(filteredArray);
+            } else {
+              setGovernmantSenateBill(transformAllGovernmentSenateBillData);
+            }
+        // showSuccessMessage(response?.message)
+      } else {
+        console.error("API Error:", response?.message);
+        // Optionally, show an error message to the user
+        // showErrorMessage(response?.message || "Failed to fetch data");
+      }
+    } catch (error) {
+      console.error("Error fetching government senate bills:", error);
+      // Optionally, show an error message to the user
+      showErrorMessage(
+        error?.response?.data?.message ||
+          "Something went wrong. Please try again later."
+      );
+    }
+  }, [currentPage, pageSize]);
+
+
+  const getRemoveAssignedGovintroduceInSenate = useCallback(async () => {
+        const category = "GovernmentBill_FromSenate";
+        try {
+          const response = await getAllGovintroduceInSenateWithOutUserId(category, 0, 10000);
+          if (response?.success) {
+            const transformedData = transformGovernmentSenateBillData(response?.data);
+            getGovernmentSenateBillApi(transformedData);
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      }, []);
+
+  const getAllAssignedGovintroduceInSenate = useCallback(async () => {
+    const userId = userData?.fkUserId;
+    const category = "GovernmentBill_FromSenate";
+    try {
+      const response = await getAllGovernmentBillRemarksByUserId(
         userId,
         category,
         currentPage,
         pageSize
       );
       if (response?.success) {
-        const transformedData = transformLeavesData(response?.data);
+        const transformedData = transformAssiginedGovernmentSenateBillData(
+          response?.data
+        );
         setCount(response?.data?.count);
-        setResData(transformedData);
+        setAssiginTableData(transformedData);
         showSuccessMessage(response?.message);
       }
     } catch (error) {
       console.log(error);
     }
-  }, [currentPage, pageSize, setCount, setResData]);
+  }, [currentPage, pageSize, setCount, setAssiginTableData]);
 
   useEffect(() => {
-    getAllAssignedResolutions();
+    getRemoveAssignedGovintroduceInSenate()
+    getAllAssignedGovintroduceInSenate();
   }, []);
+
+  useEffect(() => {
+    getGovernmentSenateBillApi();
+  }, [currentPage]);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
 
   // HandleEdit
-  const handleEdit = async (id) => {
-    try {
-      const response = await getResolutionBYID(id);
-      if (response?.success) {
-        navigate("/tms/resolution/resolution-translation", {
-          state: response?.data,
-        });
+  const handleEdit = async (item) => {
+    navigate(
+      "/tms/legislation/government-bill-translation/introduce-in-senate/edit",
+      {
+        state: item,
       }
-    } catch (error) {
-      showErrorMessage(error.response.data.message);
-    }
+    );
   };
 
   return (
@@ -122,7 +266,15 @@ const TMSGovIntroduceInSenate = () => {
               <button class="btn btn-primary mb-3" type="submit">
                 Introduce In Senate
               </button>
-              <button class="btn btn-primary mb-3" type="button" onClick={() => navigate("/tms/legislation/government-bill-translation/recived-from-na")}>
+              <button
+                class="btn btn-primary mb-3"
+                type="button"
+                onClick={() =>
+                  navigate(
+                    "/tms/legislation/government-bill-translation/recived-from-na"
+                  )
+                }
+              >
                 Recieved From NA
               </button>
             </div>
@@ -136,6 +288,30 @@ const TMSGovIntroduceInSenate = () => {
             </div>
 
             <div class="card-body">
+            { userData?.designation?.designationName !== "Assistant Director" ? ( 
+
+<div
+class="dash-detail-container"
+style={{ marginTop: "20px" }}
+>
+<CustomTable
+  hideBtn={true}
+  hidebtn1={true}
+  data={assiginTableData}
+  tableTitle="Assiged Introduce In Senate"
+  handlePageChange={handlePageChange}
+  currentPage={currentPage}
+  totalCount={count}
+  pageSize={pageSize}
+  headertitlebgColor={"#666"}
+  headertitletextColor={"#FFF"}
+  showPrint={false}
+  hideEditIcon={false}
+  hideDeleteIcon={true}
+  // handleAdd={(item) => navigate("/")}
+  handleEdit={(item) => handleEdit(item)}
+/>
+</div> ) : (
               <div class="container-fluid">
                 <div
                   class="dash-detail-container"
@@ -144,7 +320,7 @@ const TMSGovIntroduceInSenate = () => {
                   <CustomTable
                     hideBtn={true}
                     hidebtn1={true}
-                    data={resData}
+                    data={governmentSenateBill}
                     tableTitle="Recived Introduce In Senate"
                     handlePageChange={handlePageChange}
                     currentPage={currentPage}
@@ -156,7 +332,7 @@ const TMSGovIntroduceInSenate = () => {
                     hideEditIcon={false}
                     hideDeleteIcon={true}
                     // handleAdd={(item) => navigate("/")}
-                    handleEdit={(item) => handleEdit(item?.SrNo)}
+                    handleEdit={(item) => handleEdit(item)}
                   />
                 </div>
                 <div
@@ -166,7 +342,7 @@ const TMSGovIntroduceInSenate = () => {
                   <CustomTable
                     hideBtn={true}
                     hidebtn1={true}
-                    data={resData}
+                    data={assiginTableData}
                     tableTitle="Assiged Introduce In Senate"
                     handlePageChange={handlePageChange}
                     currentPage={currentPage}
@@ -178,10 +354,11 @@ const TMSGovIntroduceInSenate = () => {
                     hideEditIcon={false}
                     hideDeleteIcon={true}
                     // handleAdd={(item) => navigate("/")}
-                    handleEdit={(item) => handleEdit(item?.SrNo)}
+                    handleEdit={(item) => handleEdit(item)}
                   />
                 </div>
               </div>
+              )}
             </div>
           </div>
         </div>

@@ -748,7 +748,7 @@ export const TMSsidebarItemsDirector = [
       },
       {
         itemName: "Private Bill",
-        link: "/tms/legislation/assigned-legislation",
+        link: "/tms/legislation/private-bill-translation/introduce-in-senate",
         icon: faClipboardList,
       },
       {
@@ -798,7 +798,7 @@ export const TMSsidebarItems = [
       },
       {
         itemName: "Private Bill",
-        link: "/tms/legislation/assigned-legislation",
+        link: "/tms/legislation/private-bill-translation/introduce-in-senate",
         icon: faClipboardList,
       },
       {
