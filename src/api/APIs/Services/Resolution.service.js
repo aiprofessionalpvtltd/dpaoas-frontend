@@ -532,3 +532,76 @@ export const searchResolutionbyColumn = async (searchParams, data) => {
     throw error;
   }
 };
+
+//Translation Resolution
+export const getResolutionRemarksByID = async (id, userId) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClient.get(
+      `/translation/getresolution-remarks/${id}/${userId}`,
+      {
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // }
+      }
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const submitAssiginResolution = async (
+ data, userId
+) => {
+  try {
+    const res = await axiosClient.post(
+      `/translation/remarks/${userId}`,
+      data
+    );
+
+    return res?.data;
+  } catch (error) {
+    console.log("Error in submitQuestion:", error);
+    throw error;
+  }
+};
+
+export const getAllResolutionRemarksWithOutUserId = async (
+  category,
+  currentPage,
+  pageSize
+) => {
+  try {
+    const response = await axiosClient.get(
+      `/translation/getAllResolutionRemarks?category=${category}&currentPage=${currentPage}&pageSize=${pageSize}`,
+      {}
+    );
+
+    return response?.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+export const getResolutionRemarksByUserId = async (
+  userId,
+  category,
+  currentPage,
+  pageSize
+) => {
+  try {
+    const response = await axiosClient.get(
+      `/translation/getAllResolutionRemarks/${userId}?category=${category}&currentPage=${currentPage}&pageSize=${pageSize}`,
+      {}
+    );
+
+    return response?.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+
+

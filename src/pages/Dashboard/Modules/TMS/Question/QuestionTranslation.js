@@ -200,7 +200,7 @@ function QuestionTranslation() {
     try {
       const response = await getQuestionRemarksByID(fkNewQuestionId, userId);
       if (response?.success) {
-        setSingleQuestionRemarks(response?.data);
+        setSingleQuestionRemarks(response?.data[0]?.comment);
       }
     } catch (error) {
       console.log(error);

@@ -33,8 +33,8 @@ export const submitQuestion = async (
       {
         fkQuestionId: fkQuestionId,
         assignedTo: assignedTo,
-        CommentStatus: CommentStatus,
-        comment: comment,
+        // CommentStatus: CommentStatus,
+        comment: comment ? comment : CommentStatus,
         priority: priority,
         category: category,
       },
@@ -101,8 +101,8 @@ export const assignedMotionForTranslation = async (
       {
         fkMotionId: fkMotionId,
         assignedTo: assignedTo,
-        CommentStatus: CommentStatus,
-        comment: comment,
+        // CommentStatus: CommentStatus,
+        comment: comment ? comment : CommentStatus,
         priority: priority,
         category: category,
       },

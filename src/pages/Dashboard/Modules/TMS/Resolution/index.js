@@ -5,6 +5,7 @@ import Header from "../../../../../components/Header";
 import { useNavigate } from "react-router";
 import {
   DeleteResolution,
+  getAllResolutionRemarksWithOutUserId,
   getAllResolutions,
   getResolutionBYID,
   searchResolution,
@@ -23,6 +24,7 @@ import { AuthContext } from "../../../../../api/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import { getUserData } from "../../../../../api/Auth";
+import { getAllRemarksWithOutUserId } from "../../../../../api/APIs/Services/translation.service";
 
 function TMSResolution() {
   const navigate = useNavigate();
@@ -114,7 +116,7 @@ function TMSResolution() {
       noticeOfficeDiaryDateFrom: values.fromNoticeDate,
       noticeOfficeDiaryDateTo: values.toNoticeDate,
       resolutionMovers: values?.memberName?.value,
-      resolutionSentStatus:"inResolution"
+      resolutionSentStatus:"toTranslation"
 
     };
 
@@ -131,19 +133,50 @@ function TMSResolution() {
     }
   };
 
-  const getAllResolutionsApi = useCallback(async () => {
-    const resolutionSentStatus = "inResolution"
-    try {
-      const response = await getAllResolutions(currentPage, pageSize, resolutionSentStatus);
-      if (response?.success) {
-        const transformedData = transformLeavesData(response?.data?.resolution);
-        setCount(response?.data?.count);
-        setResData(transformedData);
+   const getAllAssignedQuestions = useCallback(async () => {
+      const category = "Resolution";
+      try {
+        const response = await getAllResolutionRemarksWithOutUserId(category, 0, 10000);
+        if (response?.success) {
+          const transformedData = transformLeavesData(response?.data);
+          getAllResolutionsApi(transformedData);
+        }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
-    }
-  }, [currentPage, pageSize, setCount, setResData]);
+    }, []);
+
+    useEffect(() => {
+      getAllAssignedQuestions();
+      }, []);
+
+   const getAllResolutionsApi = useCallback(
+      async (allRemarks) => {
+        const resolutionSentStatus = "toTranslation";
+        try {
+          const response = await getAllResolutions(
+            currentPage, pageSize, resolutionSentStatus
+          );
+          if (response?.success) {
+            const transformedData = transformLeavesData(response?.data?.resolution);
+            let filteredArray;
+            if (allRemarks?.length > 0) {
+              filteredArray = transformedData?.filter(
+                (item) => !allRemarks?.some((obj) => obj?.SrNo === item?.SrNo)
+              );
+              setResData(filteredArray);
+            } else {
+              setResData(transformedData);
+            }
+            setCount(response?.data?.count);
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      },
+      [currentPage, pageSize, setCount, setResData]
+    );
+
 
   const handleEdit = async (id) => {
     try {

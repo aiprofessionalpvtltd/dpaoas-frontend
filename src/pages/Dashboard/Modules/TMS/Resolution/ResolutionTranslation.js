@@ -26,6 +26,7 @@ import {
 import moment from "moment";
 import { getUserData } from "../../../../../api/Auth";
 import { UpdateQuestionById } from "../../../../../api/APIs/Services/Question.service";
+import { getResolutionRemarksByID, submitAssiginResolution, UpdateResolution } from "../../../../../api/APIs/Services/Resolution.service";
 // import {
 //   getAllQuestionByID,
 //   getQuestionRemarks,
@@ -48,12 +49,12 @@ function ResoltionTranslation() {
   const userId = userData?.fkUserId;
   const location = useLocation();
   console.log(location)
-  const fkQuestionId = location?.state?.id;
-  const fkNewQuestionId = location?.state?.id;
+  const fkResolutionID = location?.state?.id;
+  const fkNewResolutionId = location?.state?.id;
   const [markToData, setMarkToData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [questionData, setQuestionData] = useState(location.state);
-  const [singleQuestionRemarks, setSingleQuestionRemarks] = useState([]);
+  const [resolutionData, setresolutionData] = useState(location.state);
+  const [singleResolutionRemarks, setSingleResolutionRemarks] = useState([]);
   const [englishText, setEnglishText] = useState(
     location.state?.englishText || ""
   );
@@ -74,8 +75,8 @@ function ResoltionTranslation() {
     formData.append("englishText", englishText);
 
     try {
-      const response = await UpdateQuestionById(
-        fkQuestionId ? fkQuestionId : fkNewQuestionId,
+      const response = await UpdateResolution(
+        fkResolutionID ? fkResolutionID : fkNewResolutionId,
         formData
       );
       if (response?.success) {
@@ -117,7 +118,7 @@ function ResoltionTranslation() {
   };
 
   const formattedDate = moment(
-    questionData?.noticeDiary?.noticeOfficeDiaryDate
+    resolutionData?.noticeDiary?.noticeOfficeDiaryDate
   ).format("DD/MM/YYYY");
   // Component to render PDF preview
   const PdfPreview = ({ pdfUrl }) => {
@@ -169,24 +170,26 @@ function ResoltionTranslation() {
     comment,
   }) => {
     // const userId = userData?.fkUserId;
-    const category = "Question";
+    const category = "Resolution";
+    const payload = {
+      fkResolutionId: fkResolutionID,
+      assignedTo: assignedTo,
+      // CommentStatus: CommentStatus,
+      comment: comment ? comment : CommentStatus,
+      priority: priority,
+      category: category,
+    }
     try {
-      const response = await submitQuestion(
-        assignedTo,
-        CommentStatus,
-        priority,
-        comment,
-        fkQuestionId,
-        category,
-        userId
+      const response = await submitAssiginResolution(
+       payload, userId
       );
       if (response) {
         showSuccessMessage(response?.message);
         setTimeout(() => {
           if (userData?.designation?.designationName === "Assistant Director") {
-            navigate("/tms/question");
+            navigate("/tms/resolution");
           } else {
-            navigate("/tms/assigned-question");
+            navigate("/tms/assigned-resolution");
           }
         }, 1000);
       }
@@ -195,13 +198,14 @@ function ResoltionTranslation() {
     }
   };
 
-  // getQuestionRemarksByIDs
+  // getResolutionRemarksByIDs
 
-  const getQuestionRemarksByIDs = async () => {
+  const getResolutionRemarksByIDs = async () => {
     try {
-      const response = await getQuestionRemarksByID(fkNewQuestionId, userId);
+      const response = await getResolutionRemarksByID(fkNewResolutionId, userId);
       if (response?.success) {
-        setSingleQuestionRemarks(response?.data);
+
+        setSingleResolutionRemarks(response?.data[0]?.comment);
       }
     } catch (error) {
       console.log(error);
@@ -210,8 +214,8 @@ function ResoltionTranslation() {
 
   useEffect(() => {
     getMarkTo();
-    if (fkNewQuestionId) {
-      getQuestionRemarksByIDs();
+    if (fkNewResolutionId) {
+      getResolutionRemarksByIDs();
     }
   }, []);
   return (
@@ -233,13 +237,13 @@ function ResoltionTranslation() {
               <div className="col-4 d-flex">
                 <div className="fw-bold me-1">Member Name:</div>
                 <div className="text-primary">
-                {questionData?.resolutionMoversAssociation?.[0]?.memberAssociation?.memberName}
+                {resolutionData?.resolutionMoversAssociation?.[0]?.memberAssociation?.memberName}
                 </div>
               </div>
               <div className="col-4 d-flex">
                 <div className="fw-bold me-1">Office Diary Number:</div>
                 <div className="text-primary">
-                  {questionData?.noticeDiary?.noticeOfficeDiaryNo}
+                  {resolutionData?.noticeDiary?.noticeOfficeDiaryNo}
                 </div>
               </div>
               <div className="col-4 d-flex">
@@ -249,19 +253,19 @@ function ResoltionTranslation() {
               <div className="col-4 d-flex">
                 <div className="fw-bold me-1">Notice Time:</div>
                 <div className="text-primary">
-                  {questionData?.noticeDiary?.noticeOfficeDiaryTime}
+                  {resolutionData?.noticeDiary?.noticeOfficeDiaryTime}
                 </div>
               </div>
               <div className="col-4 d-flex">
                 <div className="fw-bold me-1">Session:</div>
                 <div className="text-primary">
-                  {questionData?.session?.sessionName}
+                  {resolutionData?.session?.sessionName}
                 </div>
               </div>
               <div className="col-4 d-flex">
-                <div className="fw-bold me-1">Category:</div>
+                <div className="fw-bold me-1">Status:</div>
                 <div className="text-primary">
-                  {questionData?.questionCategory}
+                  {resolutionData?.resolutionStatus?.resolutionStatus}
                 </div>
               </div>
             </div>
@@ -355,8 +359,8 @@ function ResoltionTranslation() {
             </div>
 
             <div style={{ maxHeight: "712px", overflowY: "scroll" }}>
-              {singleQuestionRemarks?.length > 0 ? (
-                singleQuestionRemarks.map((item) => (
+              {singleResolutionRemarks?.length > 0 ? (
+                singleResolutionRemarks.map((item) => (
                   <>
                     {(item?.CommentStatus !== null ||
                       item?.comment !== null) && (

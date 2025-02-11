@@ -327,6 +327,8 @@ import MotionTranslation from "../pages/Dashboard/Modules/TMS/Motion/MotionTrans
 import AssignedMotion from "../pages/Dashboard/Modules/TMS/Motion/AssigendMotion/index.js";
 import TMSAssignedResolution from "../pages/Dashboard/Modules/TMS/Resolution/AssignedResolution/index.js";
 import ResolutionTranslation from "../pages/Dashboard/Modules/TMS/Resolution/ResolutionTranslation.js";
+import TMSGovernmentBill from "../pages/Dashboard/Modules/TMS/Legislation/GovernmentBill/index.js";
+import TMSPrivateMemberBill from "../pages/Dashboard/Modules/TMS/Legislation/PrivateMemberBill/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -736,6 +738,10 @@ export const ProtectedRoutes = [
   { path: "/tms/resolution", element: <TMSResolution /> },
   { path: "/tms/resolution/resolution-translation", element: <ResolutionTranslation /> },
   { path: "/tms/assigned-resolution", element: <TMSAssignedResolution /> },
+
+  { path: "/tms/legislation/government-bill-translation", element: <TMSGovernmentBill /> },
+  { path: "/tms/legislation/assigned-legislation", element: <TMSPrivateMemberBill /> },
+
   { path: "/sms/send-sms", element: <SMSDashboard /> },
   { path: "/sms/send-sms/instant", element: <SMSInstantSMS /> },
   { path: "/sms/send-sms/advanced", element: <SMSAdvancedSMS /> },

@@ -740,17 +740,29 @@ export const TMSsidebarItemsDirector = [
     itemName: "Legislation",
     link: "/tms/legislation",
     icon: faHome,
+    subItems: [
+      {
+        itemName: "Government Bill",
+        link: "/tms/legislation/government-bill-translation",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Private Bill",
+        link: "/tms/legislation/assigned-legislation",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Finance/Money Bill",
+        link: "/tms/legislation/legislation-translation",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "From Notice office",
+        link: "/tms/legislation/assigned-legislation",
+        icon: faClipboardList,
+      },
+    ],
   },
-  {
-    itemName: "Research Branch",
-    link: "/tms/house-business",
-    icon: faHome,
-  },
-  // {
-  //   itemName: "Members",
-  //   link: "/tms/members",
-  //   icon: faHome,
-  // },
 ];
 
 export const TMSsidebarItems = [
@@ -771,24 +783,36 @@ export const TMSsidebarItems = [
   },
   {
     itemName: "Resolution",
-    link: "/tms/resolution",
+    link: "/tms/assigned-resolution",
     icon: faHome,
   },
   {
     itemName: "Legislation",
     link: "/tms/legislation",
     icon: faHome,
+    subItems: [
+      {
+        itemName: "Government Bill",
+        link: "/tms/legislation/government-bill-translation",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Private Bill",
+        link: "/tms/legislation/assigned-legislation",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Finance/Money Bill List",
+        link: "/tms/legislation/legislation-translation",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "From Notice office",
+        link: "/tms/legislation/assigned-legislation",
+        icon: faClipboardList,
+      },
+    ],
   },
-  {
-    itemName: "Research Branch",
-    link: "/tms/house-business",
-    icon: faHome,
-  },
-  // {
-  //   itemName: "Members",
-  //   link: "/tms/members",
-  //   icon: faHome,
-  // },
 ];
 
 //CMS SideBar

@@ -184,8 +184,8 @@ function TMSMotion() {
 
   const getMotionListDataa = useCallback(
     async (allRemarks) => {
-      const motionSentStatus = "inMotion";
-      const motiontoStatus = "toMotion";
+      const motionSentStatus = "toTranslation";
+      const motiontoStatus = "toTranslation";
       try {
         const response = await getAllMotion(
           currentPage,

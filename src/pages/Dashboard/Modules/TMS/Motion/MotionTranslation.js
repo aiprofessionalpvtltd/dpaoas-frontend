@@ -109,7 +109,7 @@ function MotionTranslation() {
     try {
       const response = await getMotionRemarksByID(fkMotionId, userId);
       if (response?.success) {
-        setSingleMotionRemarks(response?.data);
+        setSingleMotionRemarks(response?.data[0]?.comment);
       }
     } catch (error) {
       console.log(error);

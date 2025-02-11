@@ -20,7 +20,7 @@ import {
 import { ToastContainer } from "react-toastify";
 import { getResolutionBYID, getResolutionRemarksByUserId } from "../../../../../../api/APIs/Services/Resolution.service";
 
-const TMSAssignedResolution = () => {
+const TMSGovernmentBill = () => {
   const [resData, setResData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
@@ -115,7 +115,7 @@ const TMSAssignedResolution = () => {
               class="card-header red-bg"
               style={{ background: "#14ae5c !important" }}
             >
-              <h1>Assigned Resolution List</h1>
+              <h1>Assigned Legislation List</h1>
             </div>
             <div class="card-body">
               <div class="container-fluid">
@@ -127,7 +127,7 @@ const TMSAssignedResolution = () => {
                     hideBtn={true}
                     hidebtn1={true}
                     data={resData}
-                    tableTitle="Resolutions"
+                    tableTitle="Questions"
                     handlePageChange={handlePageChange}
                     currentPage={currentPage}
                     totalCount={count}
@@ -150,4 +150,4 @@ const TMSAssignedResolution = () => {
   );
 };
 
-export default TMSAssignedResolution;
+export default TMSGovernmentBill;
