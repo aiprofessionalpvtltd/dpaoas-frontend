@@ -1,29 +1,21 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { Layout } from "../../../../../../components/Layout";
+import { Layout } from "../../../../../../../components/Layout";
 import {
   TMSsidebarItems,
   TMSsidebarItemsDirector,
-} from "../../../../../../utils/sideBarItems";
-import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
-import {
-  getAllQuestion,
-  getAllQuestionByID,
-} from "../../../../../../api/APIs/Services/Question.service";
+} from "../../../../../../../utils/sideBarItems";
+import CustomTable from "../../../../../../../components/CustomComponents/CustomTable";
 import moment from "moment";
-import { getUserData } from "../../../../../../api/Auth";
-import { getAllRemarks } from "../../../../../../api/APIs/Services/translation.service";
+import { getUserData } from "../../../../../../../api/Auth";
 import { useNavigate } from "react-router-dom";
-import {
-  showErrorMessage,
-  showSuccessMessage,
-} from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 import {
   getResolutionBYID,
   getResolutionRemarksByUserId,
-} from "../../../../../../api/APIs/Services/Resolution.service";
+} from "../../../../../../../api/APIs/Services/Resolution.service";
+import { showErrorMessage, showSuccessMessage } from "../../../../../../../utils/ToastAlert";
 
-const TMSGovIntroduceInSenate = () => {
+const TMSGOVRecivedFromNA = () => {
   const [resData, setResData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
@@ -119,7 +111,7 @@ const TMSGovIntroduceInSenate = () => {
         <div class="container-fluid">
           <div class="row">
             <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-              <button class="btn btn-primary mb-3" type="submit">
+              <button class="btn btn-primary mb-3" type="button" onClick={() => navigate("/tms/legislation/government-bill-translation/introduce-in-senate")}>
                 Introduce In Senate
               </button>
               <button class="btn btn-primary mb-3" type="button" onClick={() => navigate("/tms/legislation/government-bill-translation/recived-from-na")}>
@@ -132,7 +124,7 @@ const TMSGovIntroduceInSenate = () => {
               class="card-header red-bg"
               style={{ background: "#14ae5c !important" }}
             >
-              <h1>Introduce In Senate List</h1>
+              <h1>Recived From NA List</h1>
             </div>
 
             <div class="card-body">
@@ -145,7 +137,7 @@ const TMSGovIntroduceInSenate = () => {
                     hideBtn={true}
                     hidebtn1={true}
                     data={resData}
-                    tableTitle="Recived Introduce In Senate"
+                    tableTitle="Recived Recived From NA"
                     handlePageChange={handlePageChange}
                     currentPage={currentPage}
                     totalCount={count}
@@ -167,7 +159,7 @@ const TMSGovIntroduceInSenate = () => {
                     hideBtn={true}
                     hidebtn1={true}
                     data={resData}
-                    tableTitle="Assiged Introduce In Senate"
+                    tableTitle="Assiged Recived From NA"
                     handlePageChange={handlePageChange}
                     currentPage={currentPage}
                     totalCount={count}
@@ -190,4 +182,4 @@ const TMSGovIntroduceInSenate = () => {
   );
 };
 
-export default TMSGovIntroduceInSenate;
+export default TMSGOVRecivedFromNA;

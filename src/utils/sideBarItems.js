@@ -743,7 +743,7 @@ export const TMSsidebarItemsDirector = [
     subItems: [
       {
         itemName: "Government Bill",
-        link: "/tms/legislation/government-bill-translation",
+        link: "/tms/legislation/government-bill-translation/introduce-in-senate",
         icon: faClipboardList,
       },
       {
@@ -793,7 +793,7 @@ export const TMSsidebarItems = [
     subItems: [
       {
         itemName: "Government Bill",
-        link: "/tms/legislation/government-bill-translation",
+        link: "/tms/legislation/government-bill-translation/introduce-in-senate",
         icon: faClipboardList,
       },
       {

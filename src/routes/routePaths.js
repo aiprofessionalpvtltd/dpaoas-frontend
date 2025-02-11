@@ -327,8 +327,9 @@ import MotionTranslation from "../pages/Dashboard/Modules/TMS/Motion/MotionTrans
 import AssignedMotion from "../pages/Dashboard/Modules/TMS/Motion/AssigendMotion/index.js";
 import TMSAssignedResolution from "../pages/Dashboard/Modules/TMS/Resolution/AssignedResolution/index.js";
 import ResolutionTranslation from "../pages/Dashboard/Modules/TMS/Resolution/ResolutionTranslation.js";
-import TMSGovernmentBill from "../pages/Dashboard/Modules/TMS/Legislation/GovernmentBill/index.js";
 import TMSPrivateMemberBill from "../pages/Dashboard/Modules/TMS/Legislation/PrivateMemberBill/index.js";
+import TMSGOVRecivedFromNA from "../pages/Dashboard/Modules/TMS/Legislation/GovernmentBill/GovRecivedFromNA/index.js";
+import TMSGovIntroduceInSenate from "../pages/Dashboard/Modules/TMS/Legislation/GovernmentBill/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -739,8 +740,10 @@ export const ProtectedRoutes = [
   { path: "/tms/resolution/resolution-translation", element: <ResolutionTranslation /> },
   { path: "/tms/assigned-resolution", element: <TMSAssignedResolution /> },
 
-  { path: "/tms/legislation/government-bill-translation", element: <TMSGovernmentBill /> },
+  { path: "/tms/legislation/government-bill-translation/introduce-in-senate", element: <TMSGovIntroduceInSenate /> },
+  { path: "/tms/legislation/government-bill-translation/recived-from-na", element: <TMSGOVRecivedFromNA /> },
   { path: "/tms/legislation/assigned-legislation", element: <TMSPrivateMemberBill /> },
+
 
   { path: "/sms/send-sms", element: <SMSDashboard /> },
   { path: "/sms/send-sms/instant", element: <SMSInstantSMS /> },
