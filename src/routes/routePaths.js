@@ -309,6 +309,7 @@ import DriverDeputedWithOfficer from "../pages/Dashboard/Modules/Transport/Vehic
 import DriverDeputedOnVehicleNo from "../pages/Dashboard/Modules/Transport/VehicleDrivers/DeputedOnVehicleNO/index.js";
 import DriversLicenseType from "../pages/Dashboard/Modules/Transport/VehicleDrivers/DriversLicenseType/index.js";
 import DriversMedicalReport from "../pages/Dashboard/Modules/Transport/VehicleDrivers/MedicalReport/index.js";
+import QuestionTranslation from "../pages/Dashboard/Modules/TMS/Question/QuestionTranslation.js";
 import AddEditVehicleProfile from "../pages/Dashboard/Modules/Transport/Vehicles/VehiclesProfile/AddEditVehicleProfile/index.js";
 import EditAddLogBook from "../pages/Dashboard/Modules/Transport/Vehicles/VehiclesLogBook/AddEditProfile/index.js";
 import EditAddVehMov from "../pages/Dashboard/Modules/Transport/Vehicles/VehiclesMovementRegister/AddEditVehicleMov/index.js";
@@ -322,6 +323,14 @@ import AddEditMedicalRepo from "../pages/Dashboard/Modules/Transport/VehicleDriv
 import AddEditGovernmentBills from "../pages/Dashboard/Modules/Notice/legislationBusiness/GovernmentBill/AddEditGovernmentBill/index.js";
 import UserManulas from "../pages/Dashboard/Modules/EFiling/UserManuals/index.js";
 import EfilingLeaveManagement from "../pages/Dashboard/Modules/EFiling/AddLeave/index.js";
+import AssignedQuestion from "../pages/Dashboard/Modules/TMS/Question/AssignedQuestion/index.js";
+import MotionTranslation from "../pages/Dashboard/Modules/TMS/Motion/MotionTranslation.js";
+import AssignedMotion from "../pages/Dashboard/Modules/TMS/Motion/AssigendMotion/index.js";
+import TMSAssignedResolution from "../pages/Dashboard/Modules/TMS/Resolution/AssignedResolution/index.js";
+import ResolutionTranslation from "../pages/Dashboard/Modules/TMS/Resolution/ResolutionTranslation.js";
+import TMSPrivateMemberBill from "../pages/Dashboard/Modules/TMS/Legislation/PrivateMemberBill/index.js";
+import TMSGOVRecivedFromNA from "../pages/Dashboard/Modules/TMS/Legislation/GovernmentBill/GovRecivedFromNA/index.js";
+import TMSGovIntroduceInSenate from "../pages/Dashboard/Modules/TMS/Legislation/GovernmentBill/index.js";
 import TestingAddSenate from "../pages/Dashboard/Modules/LGMS/Bills/SenateBills/AddSenateBills/TestingAddSenate.js";
 import TestingEditSenateBills from "../pages/Dashboard/Modules/LGMS/Bills/SenateBills/EditSenateBills/TestingEditSenateBill.js";
 import AddEditTestingNABills from "../pages/Dashboard/Modules/LGMS/Bills/NABills/AddNABills/AddTestingNABills.js";
@@ -345,6 +354,17 @@ import EditFinanceMoneyBill from "../pages/Dashboard/Modules/LGMS/FinanceMoneyBi
 import QMSBallotResolutionListTemplate from "../pages/Dashboard/Modules/QMS/Resolution/ResolutionList/BallotResolutionTemplate/index.js";
 import PreviewHourStatementList from "../pages/Dashboard/Modules/QMS/Reports/QuestionList/PreviewHourStatementList/index.js";
 import PreviewSinglepageOneQuestion from "../pages/Dashboard/Modules/QMS/Reports/QuestionList/PreviewSinglepageOneQuestion/index.js";
+import GovTranslationIntroduceInSenate from "../pages/Dashboard/Modules/TMS/Legislation/GovernmentBill/GOVTranslateIntroduceInSenate.js";
+import GovTranslationRecivedFromNA from "../pages/Dashboard/Modules/TMS/Legislation/GovernmentBill/GovRecivedFromNA/GovTranslationRecivedFromNA.js";
+import TMSPMBRecivedFromNA from "../pages/Dashboard/Modules/TMS/Legislation/PrivateMemberBill/PMBRecivedFromNA/index.js";
+import PMBTranslationRecivedFromNA from "../pages/Dashboard/Modules/TMS/Legislation/PrivateMemberBill/PMBRecivedFromNA/PMBTranslationRecivedFromNA.js";
+import PMBTranslationIntroduceInSenate from "../pages/Dashboard/Modules/TMS/Legislation/PrivateMemberBill/PMBTranslationIntroduceInSenate.js";
+import TMSRecivedFinanceBill from "../pages/Dashboard/Modules/TMS/Legislation/financeBill/index.js";
+import TranslationFinanceBill from "../pages/Dashboard/Modules/TMS/Legislation/financeBill/TranslationFinanceBill.js";
+import TMSAssignedFinanceBill from "../pages/Dashboard/Modules/TMS/Legislation/financeBill/AssiginFinanceBill/index.js";
+import TMSRecivedlegislativaBill from "../pages/Dashboard/Modules/TMS/Legislation/legislativaBill/index.js";
+import TranslationLegislative from "../pages/Dashboard/Modules/TMS/Legislation/legislativaBill/TranslationlegislativaBill.js";
+import TMSAssignedlegislativaBill from "../pages/Dashboard/Modules/TMS/Legislation/legislativaBill/AssiginlegislativaBill/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -755,8 +775,37 @@ export const ProtectedRoutes = [
   { path: "/tms/dashboard", element: <TMSDashboard /> },
   { path: "/tms/dashboard/detail", element: <TMSDashboardDetail /> },
   { path: "/tms/question", element: <TMSQuestion /> },
+  { path: "/tms/assigned-question", element: <AssignedQuestion /> },
+  {
+    path: "/tms/question/questionTranslation",
+    element: <QuestionTranslation />,
+  },
+  { path: "/tms/motion/motion-translation", element: <MotionTranslation /> },
+  { path: "/tms/assigned-motion", element: <AssignedMotion /> },
+
   { path: "/tms/motion", element: <TMSMotion /> },
   { path: "/tms/resolution", element: <TMSResolution /> },
+  { path: "/tms/resolution/resolution-translation", element: <ResolutionTranslation /> },
+  { path: "/tms/assigned-resolution", element: <TMSAssignedResolution /> },
+
+  { path: "/tms/legislation/government-bill-translation/introduce-in-senate", element: <TMSGovIntroduceInSenate /> },
+  { path: "/tms/legislation/government-bill-translation/recived-from-na", element: <TMSGOVRecivedFromNA /> },
+  { path: "/tms/legislation/government-bill-translation/introduce-in-senate/edit", element: <GovTranslationIntroduceInSenate /> },
+  { path: "/tms/legislation/government-bill-translation/recived-from-na/edit", element: <GovTranslationRecivedFromNA /> },
+
+  { path: "/tms/legislation/private-bill-translation/introduce-in-senate", element: <TMSPrivateMemberBill /> },
+  { path: "/tms/legislation/private-bill-translation/recived-from-na", element: <TMSPMBRecivedFromNA /> },
+  { path: "/tms/legislation/private-bill-translation/introduce-in-senate/edit", element: <PMBTranslationIntroduceInSenate /> },
+  { path: "/tms/legislation/private-bill-translation/recived-from-na/edit", element: <PMBTranslationRecivedFromNA /> },
+
+  { path: "/tms/finance-bill", element: <TMSRecivedFinanceBill /> },
+  { path: "/tms/finance-bill/finance-bill-translation", element: <TranslationFinanceBill /> },
+  { path: "/tms/finance-bill/assigined-list", element: <TMSAssignedFinanceBill /> },
+
+  { path: "/tms/legislativa-bill", element: <TMSRecivedlegislativaBill /> },
+  { path: "/tms/legislativa-bill/legislativa-bill-translation", element: <TranslationLegislative /> },
+  { path: "/tms/legislativa-bill/assigined-list", element: <TMSAssignedlegislativaBill /> },
+   
   { path: "/sms/send-sms", element: <SMSDashboard /> },
   { path: "/sms/send-sms/instant", element: <SMSInstantSMS /> },
   { path: "/sms/send-sms/advanced", element: <SMSAdvancedSMS /> },

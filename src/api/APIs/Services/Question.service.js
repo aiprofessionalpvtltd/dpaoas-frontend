@@ -48,11 +48,16 @@ export const DeleteQuestion = async (id, Data) => {
   }
 };
 
-export const getAllQuestion = async (page, pageSize, questionSentStatus) => {
+export const getAllQuestion = async (
+  page,
+  pageSize,
+  questionSentStatus,
+  designationName
+) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClient.get(
-      `/questions/all?currentPage=${page}&pageSize=${pageSize}&questionSentStatus=${questionSentStatus}`,
+      `/questions/all?currentPage=${page}&pageSize=${pageSize}&questionSentStatus=${questionSentStatus}&designationName=${designationName}`,
       {
         // headers: {
         //   Authorization: `Bearer ${token}`,

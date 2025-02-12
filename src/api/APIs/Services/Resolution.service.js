@@ -533,6 +533,23 @@ export const searchResolutionbyColumn = async (searchParams, data) => {
   }
 };
 
+//Translation Resolution
+export const getResolutionRemarksByID = async (id, userId) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClient.get(
+      `/translation/getResolutionIdRemarks/${id}/${userId}`,
+      {
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // }
+      })
+      return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
 //ballot Template
 export const allballotResolutionTemplate = async () => {
   try {
@@ -547,6 +564,20 @@ export const allballotResolutionTemplate = async () => {
   }
 };
 
+export const submitAssiginResolution = async (
+ data, userId
+) => {
+  try {
+    const res = await axiosClient.post(
+      `/translation/remarks/${userId}`,
+      data
+    );
+    return res?.data;
+  } catch (error) {
+    console.log("Error in submitQuestion:", error);
+    throw error;
+  }
+};
 //Single record ballot Template
 export const ballotResolutionTemplateByID = async (id) => {
   try {
@@ -560,6 +591,43 @@ export const ballotResolutionTemplateByID = async (id) => {
     throw error;
   }
 };
+
+export const getAllResolutionRemarksWithOutUserId = async (
+  category,
+  currentPage,
+  pageSize
+) => {
+  try {
+    const response = await axiosClient.get(
+      `/translation/getAllResolutionRemarks?category=${category}&currentPage=${currentPage}&pageSize=${pageSize}`,
+      {}
+    );
+
+    return response?.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+export const getResolutionRemarksByUserId = async (
+  userId,
+  category,
+  currentPage,
+  pageSize
+) => {
+  try {
+    const response = await axiosClient.get(
+      `/translation/getAllResolutionRemarks/${userId}?category=${category}&currentPage=${currentPage}&pageSize=${pageSize}`,
+      {}
+    );
+
+    return response?.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+
 
 //Update ballot Template
 export const updateBallotResolutionTemplate = async (id, data) => {
