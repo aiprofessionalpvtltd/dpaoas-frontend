@@ -752,15 +752,15 @@ export const TMSsidebarItemsDirector = [
         icon: faClipboardList,
       },
       {
-        itemName: "Finance/Money Bill",
-        link: "/tms/legislation/legislation-translation",
+        itemName: "Recived Finance/Money Bill",
+        link: "/tms/finance-bill",
         icon: faClipboardList,
       },
       {
-        itemName: "From Notice office",
-        link: "/tms/legislation/assigned-legislation",
+        itemName: "Recived Legislative Bill",
+        link: "/tms/legislativa-bill",
         icon: faClipboardList,
-      },
+      }
     ],
   },
 ];
@@ -802,13 +802,13 @@ export const TMSsidebarItems = [
         icon: faClipboardList,
       },
       {
-        itemName: "Finance/Money Bill List",
-        link: "/tms/legislation/legislation-translation",
+        itemName: "Assigned Finance/Money Bill",
+        link: "/tms/finance-bill/assigined-list",
         icon: faClipboardList,
       },
       {
-        itemName: "From Notice office",
-        link: "/tms/legislation/assigned-legislation",
+        itemName: "Assigned Legislative Bill",
+        link: "/tms/legislativa-bill/assigined-list",
         icon: faClipboardList,
       },
     ],

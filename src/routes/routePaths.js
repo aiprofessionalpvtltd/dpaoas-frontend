@@ -359,6 +359,12 @@ import GovTranslationRecivedFromNA from "../pages/Dashboard/Modules/TMS/Legislat
 import TMSPMBRecivedFromNA from "../pages/Dashboard/Modules/TMS/Legislation/PrivateMemberBill/PMBRecivedFromNA/index.js";
 import PMBTranslationRecivedFromNA from "../pages/Dashboard/Modules/TMS/Legislation/PrivateMemberBill/PMBRecivedFromNA/PMBTranslationRecivedFromNA.js";
 import PMBTranslationIntroduceInSenate from "../pages/Dashboard/Modules/TMS/Legislation/PrivateMemberBill/PMBTranslationIntroduceInSenate.js";
+import TMSRecivedFinanceBill from "../pages/Dashboard/Modules/TMS/Legislation/financeBill/index.js";
+import TranslationFinanceBill from "../pages/Dashboard/Modules/TMS/Legislation/financeBill/TranslationFinanceBill.js";
+import TMSAssignedFinanceBill from "../pages/Dashboard/Modules/TMS/Legislation/financeBill/AssiginFinanceBill/index.js";
+import TMSRecivedlegislativaBill from "../pages/Dashboard/Modules/TMS/Legislation/legislativaBill/index.js";
+import TranslationLegislative from "../pages/Dashboard/Modules/TMS/Legislation/legislativaBill/TranslationlegislativaBill.js";
+import TMSAssignedlegislativaBill from "../pages/Dashboard/Modules/TMS/Legislation/legislativaBill/AssiginlegislativaBill/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -792,9 +798,14 @@ export const ProtectedRoutes = [
   { path: "/tms/legislation/private-bill-translation/introduce-in-senate/edit", element: <PMBTranslationIntroduceInSenate /> },
   { path: "/tms/legislation/private-bill-translation/recived-from-na/edit", element: <PMBTranslationRecivedFromNA /> },
 
-  
+  { path: "/tms/finance-bill", element: <TMSRecivedFinanceBill /> },
+  { path: "/tms/finance-bill/finance-bill-translation", element: <TranslationFinanceBill /> },
+  { path: "/tms/finance-bill/assigined-list", element: <TMSAssignedFinanceBill /> },
 
-
+  { path: "/tms/legislativa-bill", element: <TMSRecivedlegislativaBill /> },
+  { path: "/tms/legislativa-bill/legislativa-bill-translation", element: <TranslationLegislative /> },
+  { path: "/tms/legislativa-bill/assigined-list", element: <TMSAssignedlegislativaBill /> },
+   
   { path: "/sms/send-sms", element: <SMSDashboard /> },
   { path: "/sms/send-sms/instant", element: <SMSInstantSMS /> },
   { path: "/sms/send-sms/advanced", element: <SMSAdvancedSMS /> },

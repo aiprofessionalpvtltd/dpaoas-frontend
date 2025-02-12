@@ -248,3 +248,139 @@ export const getGovintroduceInSenateById = async (id, userId, category) => {
     throw error;
   }
 }
+
+
+export const getAllfinanceMoneyBillWithOutUserId = async (
+  category,
+  currentPage,
+  pageSize
+) => {
+  try {
+    const response = await axiosClient.get(
+      `/translation/getAllFinanceMoneyBillRemarks/?category=${category}&currentPage=${currentPage}&pageSize=${pageSize}`,
+      {}
+    );
+
+    return response?.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+export const getAllFinanceBillRemarksByUserId = async (
+  userId,
+  category,
+  currentPage,
+  pageSize
+) => {
+  try {
+    const response = await axiosClient.get(
+      `/translation/getAllFinanceMoneyBillRemarks/${userId}?category=${category}&currentPage=${currentPage}&pageSize=${pageSize}`,
+      {}
+    );
+
+    return response?.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+export const getFinanceMoneyBillById = async (id, userId, category) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClient.get(
+      `/translation/getfinancebill-remarks/${id}/${userId}?category=${category}`,
+      {
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // }
+      })
+      return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+}
+
+//Legislative Remarks APi
+export const getAllLegislativeBillWithOutUserId = async (
+  category,
+  currentPage,
+  pageSize
+) => {
+  try {
+    const response = await axiosClient.get(
+      `/translation/getAllLegislativeBillRemarks/?category=${category}&currentPage=${currentPage}&pageSize=${pageSize}`,
+      {}
+    );
+
+    return response?.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+export const getAllLegislativBillRemarksByUserId = async (
+  userId,
+  category,
+  currentPage,
+  pageSize
+) => {
+  try {
+    const response = await axiosClient.get(
+      `/translation/getAllLegislativeBillRemarks/${userId}?category=${category}&currentPage=${currentPage}&pageSize=${pageSize}`,
+      {}
+    );
+
+    return response?.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+export const getLegislativeBillById = async (id, userId, category) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClient.get(
+      `/translation/getlegislativebill-remarks/${id}/${userId}?category=${category}`,
+      {
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // }
+      })
+      return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+}
+
+export const translationdashboardStats = async (userId) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClient.get(
+      `/translation/getDashboardStats/${userId}`,
+      {
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // }
+      })
+      return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+}
+
+//Translation Send TO Spacific Branch
+export const fromtranslationSendToBranch = async (id, type) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClient.put(
+      `/translation/sendToSpecificBranchFromTranslation/${type}/${id}`)
+      return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+}

@@ -22,6 +22,7 @@ import {
 import moment from "moment";
 import { getUserData } from "../../../../../../api/Auth";
 import {
+  fromtranslationSendToBranch,
   getAllGovernmentBillRemarksByUserId,
   getAllGovintroduceInSenateWithOutUserId,
   getAllRemarks,
@@ -110,6 +111,48 @@ const TMSPrivateMemberBill = () => {
       // internalId: item?.id,
       fileNumber: item?.fileNumber,
       billTitle: item?.billTitle,
+      nameOfMinistersOrMovers:
+        item?.senateBillMnaMovers?.[0]?.mna?.mnaName ||
+        item?.senateBillSenatorMovers
+          ?.map((mover) => mover?.member?.memberName)
+          .join(", ") ||
+        "",
+      dateOfReceiptOfNotice: item?.noticeDate
+        ? moment(item?.noticeDate, "YYYY-MM-DD").format("DD-MM-YYYY")
+        : "---",
+      dateOfIntroductionReferenceToStandingCommittee: item?.introducedInHouses
+        ?.introducedInHouseDate
+        ? moment(
+            item?.introducedInHouses?.introducedInHouseDate,
+            "YYYY-MM-DD"
+          ).format("DD-MM-YYYY")
+        : "---",
+
+      dateOfPresentationOfTheReport: item?.introducedInHouses
+        ?.reportPresentationDate
+        ? moment(
+            item?.introducedInHouses?.reportPresentationDate,
+            "YYYY-MM-DD"
+          ).format("DD-MM-YYYY")
+        : "---",
+      dateOfConsiderationOfTheBillBySenate: item?.memberPassages
+        ?.dateOfConsiderationBill
+        ? moment(
+            item?.memberPassages?.dateOfConsiderationBill,
+            "YYYY-MM-DD"
+          ).format("DD-MM-YYYY")
+        : "---",
+      dateOnWhichTheBillByTheSenate: item?.dateOfPassageBySenate
+        ? moment(item?.dateOfPassageBySenate, "YYYY-MM-DD").format("DD-MM-YYYY")
+        : "---",
+      dateOnWhichTheBillTransmittedToNA: item?.dateOfTransmissionToNA
+        ? moment(item?.dateOfTransmissionToNA, "YYYY-MM-DD").format(
+            "DD-MM-YYYY"
+          )
+        : "---",
+      billCategory: item?.billCategory,
+      billFrom: item?.billFrom,
+      remarks: item?.billRemarks,
       billDocuments: item?.billDocuments,
     }));
   };
@@ -218,6 +261,18 @@ const TMSPrivateMemberBill = () => {
     );
   };
 
+    const hendleSend = async (id) => { 
+                try {
+                  const response = await fromtranslationSendToBranch(id, "legislation_introducedBill")
+                  if (response?.success) {
+                     showSuccessMessage(response?.message)
+                     window.location.reload()
+                  }
+                } catch (error) {
+                  showErrorMessage(error?.response?.data?.message)
+                }
+              }
+
   return (
     <Layout
       sidebarItems={
@@ -303,6 +358,10 @@ style={{ marginTop: "20px" }}
                     hideDeleteIcon={true}
                     // handleAdd={(item) => navigate("/")}
                     handleEdit={(item) => handleEdit(item)}
+                    showSent={true}
+                      handleSent={(item) => {
+                      hendleSend(item.id)
+                    }}
                   />
                 </div>
                 <div
@@ -325,6 +384,10 @@ style={{ marginTop: "20px" }}
                     hideDeleteIcon={true}
                     // handleAdd={(item) => navigate("/")}
                     handleEdit={(item) => handleEdit(item)}
+                    showSent={true}
+                      handleSent={(item) => {
+                      hendleSend(item.id)
+                    }}
                   />
                 </div>
               </div>

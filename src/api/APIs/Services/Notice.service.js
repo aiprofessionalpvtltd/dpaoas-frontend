@@ -265,16 +265,20 @@ export const DeleteResearchServices = async (id) => {
 };
 
 //Legislative Bill Data
-export const getAllLegislativeBill = async (currentPage, pageSize) => {
+export const getAllLegislativeBill = async (currentPage, pageSize, searchParams) => {
+  const filteredSearchParams = Object.fromEntries(
+    Object.entries(searchParams).filter(([_, value]) => value !== "")
+  );
   try {
     // const token = getAuthToken();
     const response = await axiosClient.get(
-      `/legislativeBills/findall?currentPage=${currentPage}&pageSize=${pageSize}`
-      // {
-      //   // headers: {
-      //   //   Authorization: `Bearer ${token}`,
-      //   // }
-      // },
+      `/legislativeBills/findall?currentPage=${currentPage}&pageSize=${pageSize}`,
+      {
+        params: filteredSearchParams,
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // },
+      }
     );
     return response?.data;
   } catch (error) {

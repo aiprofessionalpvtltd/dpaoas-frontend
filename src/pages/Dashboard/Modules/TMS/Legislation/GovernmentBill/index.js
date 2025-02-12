@@ -12,6 +12,7 @@ import {
 import moment from "moment";
 import { getUserData } from "../../../../../../api/Auth";
 import {
+  fromtranslationSendToBranch,
   getAllGovernmentBillRemarksByUserId,
   getAllGovintroduceInSenateWithOutUserId,
   getAllRemarks,
@@ -248,6 +249,18 @@ const TMSGovIntroduceInSenate = () => {
     );
   };
 
+  const hendleSend = async (id) => {
+          try {
+            const response = await fromtranslationSendToBranch(id, "legislation_introducedBill")
+            if (response?.success) {
+               showSuccessMessage(response?.message)
+               window.location.reload()
+            }
+          } catch (error) {
+            showErrorMessage(error?.response?.data?.message)
+          }
+        }
+
   return (
     <Layout
       sidebarItems={
@@ -310,6 +323,7 @@ style={{ marginTop: "20px" }}
   hideDeleteIcon={true}
   // handleAdd={(item) => navigate("/")}
   handleEdit={(item) => handleEdit(item)}
+
 />
 </div> ) : (
               <div class="container-fluid">
@@ -333,6 +347,10 @@ style={{ marginTop: "20px" }}
                     hideDeleteIcon={true}
                     // handleAdd={(item) => navigate("/")}
                     handleEdit={(item) => handleEdit(item)}
+                    showSent={true}
+                      handleSent={(item) => {
+                      hendleSend(item.id)
+                    }}
                   />
                 </div>
                 <div
@@ -355,6 +373,10 @@ style={{ marginTop: "20px" }}
                     hideDeleteIcon={true}
                     // handleAdd={(item) => navigate("/")}
                     handleEdit={(item) => handleEdit(item)}
+                    showSent={true}
+                      handleSent={(item) => {
+                      hendleSend(item.id)
+                    }}
                   />
                 </div>
               </div>

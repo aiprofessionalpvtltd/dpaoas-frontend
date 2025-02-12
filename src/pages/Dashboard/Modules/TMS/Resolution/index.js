@@ -24,7 +24,7 @@ import { AuthContext } from "../../../../../api/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import { getUserData } from "../../../../../api/Auth";
-import { getAllRemarksWithOutUserId } from "../../../../../api/APIs/Services/translation.service";
+import { fromtranslationSendToBranch, getAllRemarksWithOutUserId } from "../../../../../api/APIs/Services/translation.service";
 
 function TMSResolution() {
   const navigate = useNavigate();
@@ -226,6 +226,18 @@ function TMSResolution() {
     formik.resetForm();
     getAllResolutionsApi();
   };
+
+  const hendleSend = async (id) => {
+        try {
+          const response = await fromtranslationSendToBranch(id, "resolution")
+          if (response?.success) {
+             showSuccessMessage(response?.message)
+             getAllResolutionsApi()
+          }
+        } catch (error) {
+          showErrorMessage(error?.response?.data?.message)
+        }
+      }
 
   return (
     <Layout module={true}  sidebarItems={
@@ -578,6 +590,10 @@ function TMSResolution() {
                       handleDelete={(item) => deleteResolutionApi(item.SrNo)}
                       handleEdit={(item) => handleEdit(item.SrNo)}
                       totalCount={count}
+                      showSent={true}
+                      handleSent={(item) => {
+                      hendleSend(item.SrNo)
+                    }}
                     />
                   </div>
                 </div>

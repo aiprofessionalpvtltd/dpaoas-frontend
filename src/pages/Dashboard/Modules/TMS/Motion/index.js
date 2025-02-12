@@ -28,6 +28,7 @@ import moment from "moment";
 import Select from "react-select";
 import { TMSsidebarItems } from "../../../../../utils/sideBarItems";
 import {
+  fromtranslationSendToBranch,
   getAssignedMotionWithOutUserId,
   getMotionRemarksByID,
 } from "../../../../../api/APIs/Services/translation.service";
@@ -234,7 +235,7 @@ function TMSMotion() {
       motionType: values?.motionType,
       fkMotionStatus: values?.fkmotionStatus,
       memberPosition: values?.memberPosition,
-      motionSentStatus: ["inMotion", "toMotion"],
+      motionSentStatus: "toTranslation",
     };
 
     try {
@@ -288,6 +289,19 @@ function TMSMotion() {
 
     getMotionListDataa();
   }, [getMotionListDataa, formik?.values]);
+
+  const hendleSend = async (id) => {
+      
+      try {
+        const response = await fromtranslationSendToBranch(id, "motion")
+        if (response?.success) {
+           showSuccessMessage(response?.message)
+           getMotionListDataa()
+        }
+      } catch (error) {
+        showErrorMessage(error?.response?.data?.message)
+      }
+    }
 
   return (
     <Layout
@@ -662,7 +676,10 @@ function TMSMotion() {
                     totalCount={count}
                     showPrint={true}
                     handlePrint={(item) => hendlePrint(item?.id)}
-                    // ActionHide={true}
+                    showSent={true}
+                    handleSent={(item) => {
+                      hendleSend(item.id)
+                    }}
                   />
                 </div>
               </form>

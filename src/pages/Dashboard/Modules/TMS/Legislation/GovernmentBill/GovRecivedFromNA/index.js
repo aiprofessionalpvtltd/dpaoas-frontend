@@ -14,7 +14,7 @@ import {
   getResolutionRemarksByUserId,
 } from "../../../../../../../api/APIs/Services/Resolution.service";
 import { showErrorMessage, showSuccessMessage } from "../../../../../../../utils/ToastAlert";
-import { getAllGovernmentBillRemarksByUserId, getAllGovintroduceInSenateWithOutUserId } from "../../../../../../../api/APIs/Services/translation.service";
+import { fromtranslationSendToBranch, getAllGovernmentBillRemarksByUserId, getAllGovintroduceInSenateWithOutUserId } from "../../../../../../../api/APIs/Services/translation.service";
 import { getAllGovernmentSenateBills } from "../../../../../../../api/APIs/Services/LegislationModule.service";
 
 const TMSGOVRecivedFromNA = () => {
@@ -235,6 +235,18 @@ const TMSGOVRecivedFromNA = () => {
         }
       );
     };
+
+     const hendleSend = async (id) => {
+              try {
+                const response = await fromtranslationSendToBranch(id, "legislation_introducedBill")
+                if (response?.success) {
+                   showSuccessMessage(response?.message)
+                   window.location.reload()
+                }
+              } catch (error) {
+                showErrorMessage(error?.response?.data?.message)
+              }
+            }
   
     return (
       <Layout
@@ -325,6 +337,10 @@ const TMSGOVRecivedFromNA = () => {
                       hideDeleteIcon={true}
                       // handleAdd={(item) => navigate("/")}
                       handleEdit={(item) => handleEdit(item)}
+                      showSent={true}
+                      handleSent={(item) => {
+                      hendleSend(item.id)
+                    }}
                     />
                   </div>
                   <div
@@ -347,6 +363,11 @@ const TMSGOVRecivedFromNA = () => {
                       hideDeleteIcon={true}
                       // handleAdd={(item) => navigate("/")}
                       handleEdit={(item) => handleEdit(item)}
+                      showSent={true}
+                      handleSent={(item) => {
+                      hendleSend(item.id)
+                    }}
+                      
                     />
                   </div>
                   </>

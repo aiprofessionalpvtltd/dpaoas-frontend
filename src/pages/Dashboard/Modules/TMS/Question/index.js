@@ -27,7 +27,7 @@ import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
 import Select from "react-select";
 import { getUserData } from "../../../../../api/Auth";
-import { getAllRemarksWithOutUserId } from "../../../../../api/APIs/Services/translation.service";
+import { fromtranslationSendToBranch, getAllRemarksWithOutUserId } from "../../../../../api/APIs/Services/translation.service";
 
 function TMSQuestion() {
   const navigate = useNavigate();
@@ -279,6 +279,20 @@ function TMSQuestion() {
     formik.resetForm();
     getAllQuestionsApi();
   };
+
+
+  const hendleSend = async (id) => {
+   
+    try {
+      const response = await fromtranslationSendToBranch(id, "question")
+      if (response?.success) {
+         showSuccessMessage(response?.message)
+         getAllQuestionsApi()
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message)
+    }
+  }
 
   return (
     <Layout
@@ -643,6 +657,10 @@ function TMSQuestion() {
                     hideDeleteIcon={true}
                     handleAdd={(item) => navigate("/")}
                     handleEdit={(item) => handleEdit(item?.Id)}
+                    showSent={true}
+                    handleSent={(item) => {
+                      hendleSend(item?.Id)
+                    }}
                   />
                 </div>
               </div>
